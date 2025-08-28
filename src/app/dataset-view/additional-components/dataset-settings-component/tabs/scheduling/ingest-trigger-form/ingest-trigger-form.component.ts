@@ -7,14 +7,11 @@
 
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { FlowTriggerInput } from "src/app/api/kamu.graphql.interface";
+import { FlowTriggerRuleInput } from "src/app/api/kamu.graphql.interface";
 import { ScheduleType } from "../../../dataset-settings.model";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MaybeNull } from "src/app/interface/app.types";
-import { FlowTooltipsTexts } from "src/app/common/tooltips/flow-tooltips.text";
 import { MatRadioModule } from "@angular/material/radio";
-import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { TimeDeltaFormComponent } from "src/app/common/components/time-delta-form/time-delta-form.component";
 import { CronExpressionFormComponent } from "src/app/common/components/cron-expression-form/cron-expression-form.component";
 import { IngestTriggerFormType, IngestTriggerFormValue } from "./ingest-trigger-form.types";
@@ -33,20 +30,17 @@ import { BaseComponent } from "src/app/common/components/base.component";
 
         //-----//
         MatRadioModule,
-        MatSlideToggleModule,
 
         //-----//
-        TooltipIconComponent,
         TimeDeltaFormComponent,
         CronExpressionFormComponent,
     ],
 })
 export class IngestTriggerFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public form: FormGroup<IngestTriggerFormType>;
-    @Input({ required: true }) public updateStateToggleLabel: string;
+    @Input({ required: true }) public updatesEnabledControl: FormControl<boolean>;
 
     public readonly ScheduleType: typeof ScheduleType = ScheduleType;
-    public readonly UPDATES_TOOLTIP = FlowTooltipsTexts.UPDATE_SELECTOR_TOOLTIP;
 
     public static buildForm(): FormGroup<IngestTriggerFormType> {
         const cronForm = CronExpressionFormComponent.buildForm();
@@ -56,7 +50,6 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
         timeDeltaForm.disable(); // Initially disabled
 
         return new FormGroup<IngestTriggerFormType>({
-            updatesEnabled: new FormControl<boolean>(false, { nonNullable: true }),
             __typename: new FormControl<MaybeNull<ScheduleType>>(
                 { value: null, disabled: true },
                 { nonNullable: true, validators: [Validators.required] },
@@ -66,7 +59,7 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
         });
     }
 
-    public static buildPollingTriggerInput(ingestTriggerFormValue: IngestTriggerFormValue): FlowTriggerInput {
+    public static buildPollingTriggerRuleInput(ingestTriggerFormValue: IngestTriggerFormValue): FlowTriggerRuleInput {
         switch (ingestTriggerFormValue.__typename) {
             case ScheduleType.TIME_DELTA: {
                 const timeDeltaValue = ingestTriggerFormValue.timeDelta;
@@ -100,7 +93,7 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
 
             /* istanbul ignore next */
             default:
-                throw new Error(`Unknown schedule type`);
+                throw new Error(`Unknown schedule type: ${ingestTriggerFormValue.__typename}`);
         }
     }
 
@@ -111,23 +104,27 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
     private setupFormControlRelationships(): void {
         this.updatesEnabledControl.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((updated: boolean) => {
-                if (updated) {
+            .subscribe((enabled: boolean) => {
+                if (enabled) {
                     this.scheduleTypeControl.enable();
                 } else {
                     this.scheduleTypeControl.disable();
+                    this.timeDeltaControl.disable();
+                    this.cronExpressionControl.disable();
                 }
             });
 
         this.scheduleTypeControl.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((pollingType: ScheduleType) => {
-                if (pollingType === ScheduleType.TIME_DELTA) {
-                    this.cronExpressionControl.disable();
-                    this.timeDeltaControl.enable();
-                } else if (pollingType === ScheduleType.CRON_5_COMPONENT_EXPRESSION) {
-                    this.timeDeltaControl.disable();
-                    this.cronExpressionControl.enable();
+                if (this.updatesEnabledControl.value) {
+                    if (pollingType === ScheduleType.TIME_DELTA) {
+                        this.cronExpressionControl.disable();
+                        this.timeDeltaControl.enable();
+                    } else if (pollingType === ScheduleType.CRON_5_COMPONENT_EXPRESSION) {
+                        this.timeDeltaControl.disable();
+                        this.cronExpressionControl.enable();
+                    }
                 }
             });
     }
@@ -142,9 +139,5 @@ export class IngestTriggerFormComponent extends BaseComponent implements OnInit 
 
     public get cronExpressionControl(): AbstractControl {
         return this.form.controls.cron;
-    }
-
-    public get updatesEnabledControl(): AbstractControl {
-        return this.form.controls.updatesEnabled;
     }
 }

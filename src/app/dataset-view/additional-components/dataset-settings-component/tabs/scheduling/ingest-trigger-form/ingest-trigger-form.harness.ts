@@ -8,7 +8,6 @@
 /* istanbul ignore file */
 
 import { ComponentHarness } from "@angular/cdk/testing";
-import { MatSlideToggleHarness } from "@angular/material/slide-toggle/testing";
 import { ScheduleType } from "../../../dataset-settings.model";
 import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
 import { CronExpressionFormHarness } from "src/app/common/components/cron-expression-form/cron-expression-form.harness";
@@ -18,10 +17,6 @@ import { IngestTriggerFormValue } from "./ingest-trigger-form.types";
 
 export class IngestTriggerFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-ingest-trigger-form";
-
-    private readonly locatorUpdatesToggle = this.locatorFor(
-        MatSlideToggleHarness.with({ selector: '[data-test-id="ingest-trigger-updates-enabled"]' }),
-    );
 
     private readonly locatorScheduleTypeTimeDeltaRadio = this.locatorFor(
         MatRadioButtonHarness.with({ selector: '[data-test-id="trigger-time-delta"]' }),
@@ -34,25 +29,7 @@ export class IngestTriggerFormHarness extends ComponentHarness {
     private readonly locatorTimeDeltaForm = this.locatorForOptional(TimeDeltaFormHarness);
     private readonly locatorCronForm = this.locatorForOptional(CronExpressionFormHarness);
 
-    public async enableUpdates(): Promise<void> {
-        const toggle = await this.locatorUpdatesToggle();
-        if (!(await toggle.isChecked())) {
-            await toggle.toggle();
-        }
-    }
-
-    public async disableUpdates(): Promise<void> {
-        const toggle = await this.locatorUpdatesToggle();
-        if (await toggle.isChecked()) {
-            await toggle.toggle();
-        }
-    }
-
     public async setSelectedScheduleType(scheduleType: ScheduleType): Promise<void> {
-        if (!(await this.isUpdatingEnabled())) {
-            throw new Error("Cannot set schedule type when updates are disabled");
-        }
-
         const timeDeltaRadio = await this.locatorScheduleTypeTimeDeltaRadio();
         const cronRadio = await this.locatorScheduleTypeCronRadio();
 
@@ -71,10 +48,6 @@ export class IngestTriggerFormHarness extends ComponentHarness {
     }
 
     public async setCronExpression(cronExpression: string): Promise<void> {
-        if (!(await this.isUpdatingEnabled())) {
-            throw new Error("Cannot set schedule details when updates are disabled");
-        }
-
         const cronForm = await this.locatorCronForm();
         if (!cronForm) {
             throw new Error("CRON expression form did not appear after selecting radio button");
@@ -84,21 +57,12 @@ export class IngestTriggerFormHarness extends ComponentHarness {
     }
 
     public async setTimeDeltaSchedule(timeDelta: TimeDeltaFormValue): Promise<void> {
-        if (!(await this.isUpdatingEnabled())) {
-            throw new Error("Cannot set schedule details when updates are disabled");
-        }
-
         const timeDeltaForm = await this.locatorTimeDeltaForm();
         if (!timeDeltaForm) {
             throw new Error("Time delta form did not appear after selecting radio button");
         }
 
         await timeDeltaForm.setTimeDelta(timeDelta.every, timeDelta.unit);
-    }
-
-    public async isUpdatingEnabled(): Promise<boolean> {
-        const toggle = await this.locatorUpdatesToggle();
-        return toggle.isChecked();
     }
 
     public async getScheduleType(): Promise<ScheduleType | null> {
@@ -117,7 +81,6 @@ export class IngestTriggerFormHarness extends ComponentHarness {
     }
 
     public async currentFormValue(): Promise<IngestTriggerFormValue> {
-        const updatesEnabled = await this.isUpdatingEnabled();
         const scheduleType = await this.getScheduleType();
 
         let timeDelta: TimeDeltaFormValue = { every: null, unit: null };
@@ -136,7 +99,6 @@ export class IngestTriggerFormHarness extends ComponentHarness {
         }
 
         return {
-            updatesEnabled,
             __typename: scheduleType,
             timeDelta,
             cron,

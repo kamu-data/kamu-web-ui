@@ -1,0 +1,35 @@
+h4 {
+    font-weight: 500;
+    letter-spacing: normal;
+}
+
+.form-control-width {
+    width: 132px;
+}
+
+.form-control-label {
+    min-width: 140px;
+}
+
+@media (width <=1085px) {
+    .form-control-width {
+        width: 80px;
+    }
+}
+
+:host ::ng-deep .mat-mdc-radio-button.has-nested-form .mdc-form-field {
+    align-items: flex-start;
+}
+
+:host ::ng-deep .mat-mdc-radio-button.has-nested-form .mdc-label {
+    display: block;
+}
+
+:host ::ng-deep .mat-mdc-radio-button.has-nested-form .mdc-radio {
+    margin-top: -7px;
+}
+
+.nested-fieldset:disabled {
+    color: var(--mat-radio-disabled-label-color);
+    pointer-events: none;
+}

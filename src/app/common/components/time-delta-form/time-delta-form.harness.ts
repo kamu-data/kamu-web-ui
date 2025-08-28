@@ -16,7 +16,7 @@ export class TimeDeltaFormHarness extends ComponentHarness {
     private readonly locatorEveryInput = this.locatorFor('[data-test-id="time-delta-every"]');
     private readonly locatorUnitSelect = this.locatorFor('[data-test-id="time-delta-unit"]');
 
-    private readonly locatorError = this.locatorForOptional('[data-test-id="error-message"]');
+    private readonly locatorError = this.locatorForOptional('[data-test-id="time-delta-error-message"]');
 
     private static readonly DEFAULT_UNIT_ORDER: TimeUnit[] = [
         TimeUnit.Minutes,

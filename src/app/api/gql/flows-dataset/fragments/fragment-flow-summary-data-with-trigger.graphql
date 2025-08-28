@@ -1,0 +1,9 @@
+fragment FlowSummaryDataWithTrigger on Flow {
+  ...FlowSummaryData
+  relatedTrigger {
+    paused
+    schedule {
+      __typename
+    }
+  }
+}

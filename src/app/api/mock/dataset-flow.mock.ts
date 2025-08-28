@@ -8,7 +8,7 @@
 import {
     AccountProvider,
     AccountType,
-    CancelScheduledTasksMutation,
+    CancelFlowRunMutation,
     DatasetAllFlowsPausedQuery,
     DatasetFlowsInitiatorsQuery,
     DatasetPauseFlowsMutation,
@@ -23,11 +23,10 @@ import {
     FlowStatus,
     FlowSummaryDataFragment,
     FlowItemWidgetDataFragment,
-    GetDatasetFlowTriggersQuery,
     GetDatasetListFlowsQuery,
     GetFlowByIdQuery,
     SetCompactionFlowConfigMutation,
-    SetDatasetFlowTriggersMutation,
+    SetDatasetFlowTriggerMutation,
     SetIngestFlowConfigMutation,
     TaskStatus,
     DatasetTriggerTransformFlowMutation,
@@ -36,6 +35,8 @@ import {
     DatasetTriggerResetToMetadataFlowMutation,
     FlowTriggerBreakingChangeRule,
     FlowTriggerReactiveRule,
+    GetDatasetFlowTriggerQuery,
+    PauseDatasetFlowTriggerMutation,
 } from "./../kamu.graphql.interface";
 import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
@@ -187,7 +188,7 @@ export const mockSetCompactionFlowConfigMutationError: SetCompactionFlowConfigMu
     },
 };
 
-export const mockSetDatasetFlowTriggersSuccess: SetDatasetFlowTriggersMutation = {
+export const mockSetDatasetFlowTriggerSuccess: SetDatasetFlowTriggerMutation = {
     datasets: {
         byId: {
             flows: {
@@ -206,7 +207,7 @@ export const mockSetDatasetFlowTriggersSuccess: SetDatasetFlowTriggersMutation =
     },
 };
 
-export const mockSetDatasetFlowTriggersError: SetDatasetFlowTriggersMutation = {
+export const mockSetDatasetFlowTriggerError: SetDatasetFlowTriggerMutation = {
     datasets: {
         byId: {
             flows: {
@@ -227,12 +228,28 @@ export const mockSetDatasetFlowTriggersError: SetDatasetFlowTriggersMutation = {
     },
 };
 
+export const mockPauseDatasetFlowTriggerSuccess: PauseDatasetFlowTriggerMutation = {
+    datasets: {
+        byId: {
+            flows: {
+                triggers: {
+                    pauseFlow: true,
+                    __typename: "DatasetFlowTriggersMut",
+                },
+                __typename: "DatasetFlowsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
 export const mockCronSchedule: FlowTriggerScheduleRule = {
     __typename: "Cron5ComponentExpression",
     cron5ComponentExpression: "* * * * ?",
 };
 
-export const mockGetDatasetFlowTriggersCronQuery: GetDatasetFlowTriggersQuery = {
+export const mockGetDatasetFlowTriggerCronQuery: GetDatasetFlowTriggerQuery = {
     datasets: {
         __typename: "Datasets",
         byId: {
@@ -241,6 +258,10 @@ export const mockGetDatasetFlowTriggersCronQuery: GetDatasetFlowTriggersQuery = 
                     byType: {
                         paused: false,
                         schedule: mockCronSchedule,
+                        stopPolicy: {
+                            __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+                            maxFailures: 1,
+                        },
                     },
                 },
             },
@@ -248,7 +269,7 @@ export const mockGetDatasetFlowTriggersCronQuery: GetDatasetFlowTriggersQuery = 
     },
 };
 
-export const mockGetDatasetFlowTriggersTimeDeltaQuery: GetDatasetFlowTriggersQuery = {
+export const mockGetDatasetFlowTriggersTimeDeltaQuery: GetDatasetFlowTriggerQuery = {
     datasets: {
         __typename: "Datasets",
         byId: {
@@ -260,6 +281,10 @@ export const mockGetDatasetFlowTriggersTimeDeltaQuery: GetDatasetFlowTriggersQue
                             __typename: "TimeDelta",
                             every: 10,
                             unit: TimeUnit.Minutes,
+                        },
+                        stopPolicy: {
+                            __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+                            maxFailures: 1,
                         },
                     },
                 },
@@ -282,7 +307,7 @@ export const mockBufferingBatchingReactiveRule: FlowTriggerReactiveRule = {
     forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
 };
 
-export const mockGetDatasetFlowTriggersBatchingQuery: GetDatasetFlowTriggersQuery = {
+export const mockGetDatasetFlowTriggersBatchingQuery: GetDatasetFlowTriggerQuery = {
     datasets: {
         __typename: "Datasets",
         byId: {
@@ -303,6 +328,10 @@ export const mockGetDatasetFlowTriggersBatchingQuery: GetDatasetFlowTriggersQuer
                             },
                             forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
                         },
+                        stopPolicy: {
+                            __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+                            maxFailures: 1,
+                        },
                     },
                 },
             },
@@ -310,7 +339,7 @@ export const mockGetDatasetFlowTriggersBatchingQuery: GetDatasetFlowTriggersQuer
     },
 };
 
-export const mockGetDatasetFlowTriggersDefaultBatchingQuery: GetDatasetFlowTriggersQuery = {
+export const mockGetDatasetFlowTriggersDefaultBatchingQuery: GetDatasetFlowTriggerQuery = {
     datasets: {
         __typename: "Datasets",
         byId: {
@@ -329,50 +358,14 @@ export const mockGetDatasetFlowTriggersDefaultBatchingQuery: GetDatasetFlowTrigg
                             },
                             forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
                         },
+                        stopPolicy: {
+                            __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+                            maxFailures: 1,
+                        },
                     },
                 },
             },
         },
-    },
-};
-
-export const mockSetDatasetFlowTriggerSuccess: SetDatasetFlowTriggersMutation = {
-    datasets: {
-        byId: {
-            flows: {
-                triggers: {
-                    setTrigger: {
-                        __typename: "SetFlowTriggerSuccess",
-                        message: "Success",
-                    },
-                    __typename: "DatasetFlowTriggersMut",
-                },
-                __typename: "DatasetFlowsMut",
-            },
-            __typename: "DatasetMut",
-        },
-        __typename: "DatasetsMut",
-    },
-};
-
-export const mockSetDatasetFlowTriggegError: SetDatasetFlowTriggersMutation = {
-    datasets: {
-        byId: {
-            flows: {
-                triggers: {
-                    setTrigger: {
-                        __typename: "FlowIncompatibleDatasetKind",
-                        message: "Error",
-                        expectedDatasetKind: DatasetKind.Derivative,
-                        actualDatasetKind: DatasetKind.Root,
-                    },
-                    __typename: "DatasetFlowTriggersMut",
-                },
-                __typename: "DatasetFlowsMut",
-            },
-            __typename: "DatasetMut",
-        },
-        __typename: "DatasetsMut",
     },
 };
 
@@ -500,6 +493,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             reason: {
                 __typename: "TaskFailureReasonGeneral",
                 message: "Failed",
+                recoverable: true,
             },
         },
         startCondition: null,
@@ -558,6 +552,7 @@ export const mockFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
             reason: {
                 __typename: "TaskFailureReasonGeneral",
                 message: "Failed",
+                recoverable: true,
             },
         },
         startCondition: null,
@@ -688,6 +683,7 @@ export const mockFlowItemWidgetDataFragments: FlowItemWidgetDataFragment[] = [
             reason: {
                 __typename: "TaskFailureReasonGeneral",
                 message: "Failed",
+                recoverable: true,
             },
         },
         timing: {
@@ -728,6 +724,7 @@ export const mockFlowItemWidgetDataFragments: FlowItemWidgetDataFragment[] = [
             reason: {
                 __typename: "TaskFailureReasonGeneral",
                 message: "Failed",
+                recoverable: true,
             },
         },
         timing: {
@@ -870,6 +867,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     reason: {
                                         message: "FAILED",
                                         __typename: "TaskFailureReasonGeneral",
+                                        recoverable: true,
                                     },
                                     __typename: "FlowFailedError",
                                 },
@@ -936,6 +934,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                     reason: {
                                         message: "FAILED",
                                         __typename: "TaskFailureReasonGeneral",
+                                        recoverable: true,
                                     },
                                     __typename: "FlowFailedError",
                                 },
@@ -1353,12 +1352,12 @@ export const mockDatasetTriggerResetToMetadataFlowMutationError: DatasetTriggerR
     },
 };
 
-export const mockCancelScheduledTasksMutationSuccess: CancelScheduledTasksMutation = {
+export const mockCancelFlowRunMutationSuccess: CancelFlowRunMutation = {
     datasets: {
         byId: {
             flows: {
                 runs: {
-                    cancelScheduledTasks: {
+                    cancelFlowRun: {
                         message: "Success",
                         flow: {
                             configSnapshot: {
@@ -1392,7 +1391,7 @@ export const mockCancelScheduledTasksMutationSuccess: CancelScheduledTasksMutati
                             taskIds: [],
                             __typename: "Flow",
                         },
-                        __typename: "CancelScheduledTasksSuccess",
+                        __typename: "CancelFlowRunSuccess",
                     },
                     __typename: "DatasetFlowRunsMut",
                 },
@@ -1404,12 +1403,12 @@ export const mockCancelScheduledTasksMutationSuccess: CancelScheduledTasksMutati
     },
 };
 
-export const mockCancelScheduledTasksMutationError: CancelScheduledTasksMutation = {
+export const mockCancelFlowRunMutationError: CancelFlowRunMutation = {
     datasets: {
         byId: {
             flows: {
                 runs: {
-                    cancelScheduledTasks: {
+                    cancelFlowRun: {
                         __typename: "FlowNotFound",
                         flowId: "230",
                         message: "Flow '230' was not found",
@@ -1586,7 +1585,7 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
     },
 };
 
-export const mockDatasetFlowCompactionMutationSuccess: SetDatasetFlowTriggersMutation = {
+export const mockDatasetFlowCompactionMutationSuccess: SetDatasetFlowTriggerMutation = {
     datasets: {
         byId: {
             flows: {
@@ -1606,7 +1605,7 @@ export const mockDatasetFlowCompactionMutationSuccess: SetDatasetFlowTriggersMut
     },
 };
 
-export const mockDatasetFlowCompactionMutationError: SetDatasetFlowTriggersMutation = {
+export const mockDatasetFlowCompactionMutationError: SetDatasetFlowTriggerMutation = {
     datasets: {
         byId: {
             flows: {

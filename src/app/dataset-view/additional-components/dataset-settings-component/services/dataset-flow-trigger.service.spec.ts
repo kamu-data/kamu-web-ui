@@ -15,16 +15,18 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import { of } from "rxjs";
 import {
-    mockGetDatasetFlowTriggersCronQuery,
-    mockSetDatasetFlowTriggersError,
+    mockGetDatasetFlowTriggerCronQuery,
+    mockPauseDatasetFlowTriggerSuccess,
+    mockSetDatasetFlowTriggerError,
     mockSetDatasetFlowTriggerSuccess,
 } from "src/app/api/mock/dataset-flow.mock";
 import {
     FlowTriggerBreakingChangeRule,
     DatasetFlowType,
-    FlowTriggerInput,
-    GetDatasetFlowTriggersQuery,
+    FlowTriggerRuleInput,
+    GetDatasetFlowTriggerQuery,
     TimeUnit,
+    FlowTriggerStopPolicyInput,
 } from "src/app/api/kamu.graphql.interface";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 import { provideAnimations } from "@angular/platform-browser/animations";
@@ -36,9 +38,8 @@ describe("DatasetFlowTriggerService", () => {
     let navigationService: NavigationService;
 
     const MOCK_DATASET_ID = "did:odf:fed0100d72fc7a0d7ced1ff2d47e3bfeb844390f18a7fa7e24ced6563aa7357dfa2e8";
-    const MOCK_PAUSED = false;
 
-    const MOCK_TRIGGER_INPUT: FlowTriggerInput = {
+    const MOCK_TRIGGER_RULE_INPUT: FlowTriggerRuleInput = {
         reactive: {
             forNewData: {
                 buffering: {
@@ -50,6 +51,12 @@ describe("DatasetFlowTriggerService", () => {
                 },
             },
             forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
+        },
+    };
+
+    const MOCK_TRIGGER_STOP_POLICY_INPUT: FlowTriggerStopPolicyInput = {
+        never: {
+            dummy: true,
         },
     };
 
@@ -68,32 +75,32 @@ describe("DatasetFlowTriggerService", () => {
         expect(service).toBeTruthy();
     });
 
-    it("should check fetchDatasetFlowTriggers method", () => {
-        spyOn(datasetFlowApi, "getDatasetFlowTriggers").and.returnValue(of(mockGetDatasetFlowTriggersCronQuery));
+    it("should check fetchDatasetFlowTrigger method", () => {
+        spyOn(datasetFlowApi, "getDatasetFlowTrigger").and.returnValue(of(mockGetDatasetFlowTriggerCronQuery));
         const subscription$ = service
-            .fetchDatasetFlowTriggers(MOCK_DATASET_ID, DatasetFlowType.Ingest)
-            .subscribe((res: GetDatasetFlowTriggersQuery) => {
+            .fetchDatasetFlowTrigger(MOCK_DATASET_ID, DatasetFlowType.Ingest)
+            .subscribe((res: GetDatasetFlowTriggerQuery) => {
                 expect(res.datasets.byId?.flows.triggers.byType?.schedule?.__typename).toEqual(
                     "Cron5ComponentExpression",
                 );
                 expect(res.datasets.byId?.flows.triggers.byType?.paused).toEqual(
-                    mockGetDatasetFlowTriggersCronQuery.datasets.byId?.flows.triggers.byType?.paused,
+                    mockGetDatasetFlowTriggerCronQuery.datasets.byId?.flows.triggers.byType?.paused,
                 );
             });
 
         expect(subscription$.closed).toBeTrue();
     });
 
-    it("should check setDatasetTriggers with success", fakeAsync(() => {
-        spyOn(datasetFlowApi, "setDatasetFlowTriggers").and.returnValue(of(mockSetDatasetFlowTriggerSuccess));
+    it("should check setDatasetFlowTrigger with success", fakeAsync(() => {
+        spyOn(datasetFlowApi, "setDatasetFlowTrigger").and.returnValue(of(mockSetDatasetFlowTriggerSuccess));
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
 
         const subscription$ = service
-            .setDatasetFlowTriggers({
+            .setDatasetFlowTrigger({
                 datasetId: MOCK_DATASET_ID,
                 datasetFlowType: DatasetFlowType.ExecuteTransform,
-                paused: MOCK_PAUSED,
-                triggerInput: MOCK_TRIGGER_INPUT,
+                triggerRuleInput: MOCK_TRIGGER_RULE_INPUT,
+                triggerStopPolicyInput: MOCK_TRIGGER_STOP_POLICY_INPUT,
                 datasetInfo: mockDatasetInfo,
             })
             .subscribe(() => {
@@ -106,15 +113,15 @@ describe("DatasetFlowTriggerService", () => {
     }));
 
     it("should check setDatasetTriggers with error", fakeAsync(() => {
-        spyOn(datasetFlowApi, "setDatasetFlowTriggers").and.returnValue(of(mockSetDatasetFlowTriggersError));
+        spyOn(datasetFlowApi, "setDatasetFlowTrigger").and.returnValue(of(mockSetDatasetFlowTriggerError));
         const toastrServiceErrorSpy = spyOn(toastService, "error");
 
         const subscription$ = service
-            .setDatasetFlowTriggers({
+            .setDatasetFlowTrigger({
                 datasetId: MOCK_DATASET_ID,
                 datasetFlowType: DatasetFlowType.ExecuteTransform,
-                paused: MOCK_PAUSED,
-                triggerInput: MOCK_TRIGGER_INPUT,
+                triggerRuleInput: MOCK_TRIGGER_RULE_INPUT,
+                triggerStopPolicyInput: MOCK_TRIGGER_STOP_POLICY_INPUT,
                 datasetInfo: mockDatasetInfo,
             })
             .subscribe(() => {
@@ -123,4 +130,20 @@ describe("DatasetFlowTriggerService", () => {
 
         expect(subscription$.closed).toBeTrue();
     }));
+
+    it("should check pauseDatasetFlowTrigger with success", () => {
+        spyOn(datasetFlowApi, "pauseDatasetFlowTrigger").and.returnValue(of(mockPauseDatasetFlowTriggerSuccess));
+        const toastrServiceSuccessSpy = spyOn(toastService, "success");
+
+        const subscription$ = service
+            .pauseDatasetFlowTrigger({
+                datasetId: MOCK_DATASET_ID,
+                datasetFlowType: DatasetFlowType.ExecuteTransform,
+            })
+            .subscribe(() => {
+                expect(toastrServiceSuccessSpy).toHaveBeenCalledTimes(1);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
 });

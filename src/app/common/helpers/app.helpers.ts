@@ -16,8 +16,8 @@ import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from "../guards/access-token-expired.types";
 
-export function requireValue<T>(input: MaybeNull<T>) {
-    if (input === null) throw Error("value is required!");
+export function requireValue<T>(input: MaybeNull<T>, errorMessage?: string): T {
+    if (input === null) throw Error(errorMessage || "value is required!");
     return input;
 }
 

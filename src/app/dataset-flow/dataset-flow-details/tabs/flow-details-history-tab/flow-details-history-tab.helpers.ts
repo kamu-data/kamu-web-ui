@@ -163,7 +163,7 @@ export class DatasetFlowDetailsHelpers {
                                 let mainMessage: string;
                                 switch (event.task.outcome.reason.__typename) {
                                     case "TaskFailureReasonGeneral":
-                                        mainMessage = `An error occurred, see logs for more details`;
+                                        mainMessage = `An${event.task.outcome.reason.recoverable ? "" : " unrecoverable"} error occurred, see logs for more details`;
                                         break;
                                     case "TaskFailureReasonInputDatasetCompacted":
                                         mainMessage = `Input dataset <span class="text-small text-danger">${event.task.outcome.reason.inputDataset.name}</span> was compacted`;

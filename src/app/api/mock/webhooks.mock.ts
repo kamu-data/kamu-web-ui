@@ -8,6 +8,7 @@
 import {
     DatasetWebhookCreateSubscriptionMutation,
     DatasetWebhookPauseSubscriptionMutation,
+    DatasetWebhookReactivateSubscriptionMutation,
     DatasetWebhookRemoveSubscriptionMutation,
     DatasetWebhookResumeSubscriptionMutation,
     DatasetWebhookSubscriptionsQuery,
@@ -187,6 +188,44 @@ export const mockDatasetWebhookResumeSubscriptionMutationError: DatasetWebhookRe
                         status: WebhookSubscriptionStatus.Unreachable,
                         message: "Failed",
                         __typename: "ResumeWebhookSubscriptionResultUnexpected",
+                    },
+                    __typename: "WebhookSubscriptionMut",
+                },
+                __typename: "DatasetWebhooksMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockDatasetWebhookReactivateSubscriptionMutation: DatasetWebhookReactivateSubscriptionMutation = {
+    datasets: {
+        byId: {
+            webhooks: {
+                subscription: {
+                    reactivate: {
+                        message: "Success",
+                        __typename: "ReactivateWebhookSubscriptionResultSuccess",
+                    },
+                    __typename: "WebhookSubscriptionMut",
+                },
+                __typename: "DatasetWebhooksMut",
+            },
+            __typename: "DatasetMut",
+        },
+    },
+};
+
+export const mockDatasetWebhookReactivateSubscriptionMutationError: DatasetWebhookReactivateSubscriptionMutation = {
+    datasets: {
+        byId: {
+            webhooks: {
+                subscription: {
+                    reactivate: {
+                        status: WebhookSubscriptionStatus.Paused,
+                        message: "Failed",
+                        __typename: "ReactivateWebhookSubscriptionResultUnexpected",
                     },
                     __typename: "WebhookSubscriptionMut",
                 },

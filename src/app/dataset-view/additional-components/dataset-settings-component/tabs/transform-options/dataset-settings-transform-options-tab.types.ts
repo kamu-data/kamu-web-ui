@@ -5,16 +5,24 @@
  * included in the LICENSE file.
  */
 
-import { FormGroup } from "@angular/forms";
+import { FormControl, FormGroup } from "@angular/forms";
 import {
     TransformTriggerFormType,
     TransformTriggerFormValue,
 } from "./transform-trigger-form/transform-trigger-form.types";
+import {
+    FlowStopPolicyFormType,
+    FlowStopPolicyFormValue,
+} from "../shared/flow-stop-policy-form/flow-stop-policy-form.types";
 
 export interface TransformSettingsFormType {
+    updatesEnabled: FormControl<boolean>;
     transformTrigger: FormGroup<TransformTriggerFormType>;
+    stopPolicy: FormGroup<FlowStopPolicyFormType>;
 }
 
 export interface TransformSettingsFormValue {
+    updatesEnabled: boolean;
     transformTrigger: TransformTriggerFormValue;
+    stopPolicy: FlowStopPolicyFormValue;
 }

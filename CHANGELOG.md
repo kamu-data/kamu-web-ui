@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - connection failure
   - response timeout
   - bad status code
+- Improved handling of task failures in the flow system:
+  - defining stop policy for Ingest and Transform flows
+  - distinguishing between recoverable and unrecoverable task errors
+## Changed
+- Revised meaning of flow abortion:
+    - flows with scheduled trigger abort both the current flow run, and pause the trigger
+    - flows with reactive trigger abort current run only  
 ### Changed
 - Redesign "Metadata" tab
 - Updated the algorithm for checking the hash of the head

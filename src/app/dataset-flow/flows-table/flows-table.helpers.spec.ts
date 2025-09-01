@@ -69,7 +69,7 @@ describe("FlowTableHelpers", () => {
                 watermarkModified: true,
                 forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
             }),
-        ).toEqual("waiting for a reactive condition");
+        ).toEqual("waiting for input data: 100/500");
     });
 
     it("should check waiting block text with FlowStartConditionExecutor typename", () => {

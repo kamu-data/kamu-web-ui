@@ -12,9 +12,11 @@ import { Observable, map, take } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
     DatasetFlowType,
-    FlowTriggerInput,
-    GetDatasetFlowTriggersQuery,
-    SetDatasetFlowTriggersMutation,
+    FlowTriggerRuleInput,
+    FlowTriggerStopPolicyInput,
+    GetDatasetFlowTriggerQuery,
+    PauseDatasetFlowTriggerMutation,
+    SetDatasetFlowTriggerMutation,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -28,22 +30,22 @@ export class DatasetFlowTriggerService {
     private readonly toastrService = inject(ToastrService);
     private readonly navigationService = inject(NavigationService);
 
-    public fetchDatasetFlowTriggers(
+    public fetchDatasetFlowTrigger(
         datasetId: string,
         datasetFlowType: DatasetFlowType,
-    ): Observable<GetDatasetFlowTriggersQuery> {
-        return this.datasetFlowApi.getDatasetFlowTriggers({ datasetId, datasetFlowType }).pipe(take(1));
+    ): Observable<GetDatasetFlowTriggerQuery> {
+        return this.datasetFlowApi.getDatasetFlowTrigger({ datasetId, datasetFlowType }).pipe(take(1));
     }
 
-    public setDatasetFlowTriggers(params: {
+    public setDatasetFlowTrigger(params: {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
-        paused: boolean;
-        triggerInput: FlowTriggerInput;
+        triggerRuleInput: FlowTriggerRuleInput;
+        triggerStopPolicyInput: FlowTriggerStopPolicyInput;
         datasetInfo: DatasetInfo;
     }): Observable<void> {
-        return this.datasetFlowApi.setDatasetFlowTriggers(params).pipe(
-            map((data: SetDatasetFlowTriggersMutation) => {
+        return this.datasetFlowApi.setDatasetFlowTrigger(params).pipe(
+            map((data: SetDatasetFlowTriggerMutation) => {
                 const triggers = data.datasets.byId?.flows.triggers.setTrigger;
                 if (triggers?.__typename === "SetFlowTriggerSuccess") {
                     setTimeout(() => {
@@ -56,6 +58,14 @@ export class DatasetFlowTriggerService {
                 } else {
                     this.toastrService.error(triggers?.message);
                 }
+            }),
+        );
+    }
+
+    public pauseDatasetFlowTrigger(params: { datasetId: string; datasetFlowType: DatasetFlowType }): Observable<void> {
+        return this.datasetFlowApi.pauseDatasetFlowTrigger(params).pipe(
+            map((_: PauseDatasetFlowTriggerMutation) => {
+                this.toastrService.success("Success");
             }),
         );
     }

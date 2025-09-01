@@ -1,0 +1,31 @@
+mutation setDatasetFlowTrigger(
+  $datasetId: DatasetID!
+  $datasetFlowType: DatasetFlowType!
+  $triggerRuleInput: FlowTriggerRuleInput!
+  $triggerStopPolicyInput: FlowTriggerStopPolicyInput!
+) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        triggers {
+          setTrigger(
+            datasetFlowType: $datasetFlowType
+            triggerRuleInput: $triggerRuleInput
+            triggerStopPolicyInput: $triggerStopPolicyInput
+          ) {
+            message
+
+            ... on FlowIncompatibleDatasetKind {
+              expectedDatasetKind
+              actualDatasetKind
+            }
+
+            ... on FlowInvalidTriggerInputError {
+              reason
+            }
+          }
+        }
+      }
+    }
+  }
+}

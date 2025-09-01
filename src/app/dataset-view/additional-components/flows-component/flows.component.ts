@@ -7,7 +7,7 @@
 
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { DatasetKind, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
-import { combineLatest, map, Observable, switchMap, timer } from "rxjs";
+import { combineLatest, map, Observable, switchMap, take, timer } from "rxjs";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
@@ -160,25 +160,20 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public toggleStateDatasetFlowConfigs(paused: boolean): void {
-        if (!paused) {
-            this.flowsService
-                .datasetPauseFlows({
-                    datasetId: this.flowsData.datasetBasics.id,
-                })
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe();
-        } else {
-            this.flowsService
-                .datasetResumeFlows({
-                    datasetId: this.flowsData.datasetBasics.id,
-                })
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe();
-        }
-        setTimeout(() => {
-            this.refreshFlow();
-            this.cdr.detectChanges();
-        }, this.TIMEOUT_REFRESH_FLOW);
+        const operation$ = paused
+            ? this.flowsService.datasetResumeFlows({
+                  datasetId: this.flowsData.datasetBasics.id,
+              })
+            : this.flowsService.datasetPauseFlows({
+                  datasetId: this.flowsData.datasetBasics.id,
+              });
+
+        operation$.pipe(take(1)).subscribe(() => {
+            setTimeout(() => {
+                this.refreshFlow();
+                this.cdr.detectChanges();
+            }, this.TIMEOUT_REFRESH_FLOW);
+        });
     }
 
     public onSearchByFiltersChange(filters: MaybeNull<FlowsTableFiltersOptions>): void {

@@ -184,10 +184,26 @@ describe("FlowTableHelpers", () => {
         expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[6])).toContain("Aborted at");
     });
 
-    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and failed outcome `, () => {
+    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and failed recoverable outcome `, () => {
         expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[7])).toEqual(
             "An error occurred, see logs for more details",
         );
+    });
+
+    it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and failed unrecoverable outcome `, () => {
+        expect(
+            FlowTableHelpers.descriptionSubMessage({
+                ...mockTableFlowSummaryDataFragments[7],
+                outcome: {
+                    __typename: "FlowFailedError",
+                    reason: {
+                        __typename: "TaskFailureReasonGeneral",
+                        message: "Failed",
+                        recoverable: false,
+                    },
+                },
+            }),
+        ).toEqual("An unrecoverable error occurred, see logs for more details");
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and cacheable source`, () => {

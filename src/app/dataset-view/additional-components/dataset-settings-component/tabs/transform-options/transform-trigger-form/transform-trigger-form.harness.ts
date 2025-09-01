@@ -8,7 +8,6 @@
 /* istanbul ignore file */
 
 import { ComponentHarness } from "@angular/cdk/testing";
-import { MatSlideToggleHarness } from "@angular/material/slide-toggle/testing";
 import { BufferingBatchingRuleFormHarness } from "../buffering-batching-rule-form/buffering-batching-rule-form.harness";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 import { BatchingRuleType } from "../../../dataset-settings.model";
@@ -19,10 +18,6 @@ import { BufferingBatchingRuleFormValue } from "../buffering-batching-rule-form/
 
 export class TransformTriggerFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-transform-trigger-form";
-
-    private readonly locatorUpdatesToggle = this.locatorFor(
-        MatSlideToggleHarness.with({ selector: '[data-test-id="transform-trigger-updates-enabled"]' }),
-    );
 
     private readonly locatorBatchingRuleImmediateRadio = this.locatorFor(
         MatRadioButtonHarness.with({ selector: '[data-test-id="batching-rule-immediate"]' }),
@@ -42,25 +37,7 @@ export class TransformTriggerFormHarness extends ComponentHarness {
         MatRadioButtonHarness.with({ selector: '[data-test-id="breaking-change-recover"]' }),
     );
 
-    public async enableUpdates(): Promise<void> {
-        const toggle = await this.locatorUpdatesToggle();
-        if (!(await toggle.isChecked())) {
-            await toggle.toggle();
-        }
-    }
-
-    public async disableUpdates(): Promise<void> {
-        const toggle = await this.locatorUpdatesToggle();
-        if (await toggle.isChecked()) {
-            await toggle.toggle();
-        }
-    }
-
     public async setSelectedBatchingRuleType(batchingRuleType: BatchingRuleType): Promise<void> {
-        if (!(await this.isUpdatingEnabled())) {
-            throw new Error("Cannot set batching rule type when updates are disabled");
-        }
-
         const immediateRadio = await this.locatorBatchingRuleImmediateRadio();
         const bufferingRadio = await this.locatorBatchingRuleBufferingRadio();
 
@@ -100,10 +77,6 @@ export class TransformTriggerFormHarness extends ComponentHarness {
         minInputRecords: number,
         maxBatchingInterval: TimeDeltaFormValue,
     ): Promise<void> {
-        if (!(await this.isUpdatingEnabled())) {
-            throw new Error("Cannot set schedule details when updates are disabled");
-        }
-
         const bufferingForm = await this.locatorBufferingForm();
         if (!bufferingForm) {
             throw new Error("Buffering form did not appear after selecting radio button");
@@ -111,11 +84,6 @@ export class TransformTriggerFormHarness extends ComponentHarness {
 
         await bufferingForm.setMinRecordsToAwait(minInputRecords);
         await bufferingForm.setMaxBatchingInterval(maxBatchingInterval);
-    }
-
-    public async isUpdatingEnabled(): Promise<boolean> {
-        const toggle = await this.locatorUpdatesToggle();
-        return toggle.isChecked();
     }
 
     public async getBatchingRuleType(): Promise<BatchingRuleType | null> {
@@ -157,12 +125,10 @@ export class TransformTriggerFormHarness extends ComponentHarness {
     }
 
     public async currentFormValue(): Promise<TransformTriggerFormValue> {
-        const updatesEnabled = await this.isUpdatingEnabled();
         const batchingRuleType = await this.getBatchingRuleType();
         const breakingChangeRule = await this.getBreakingChangeRule();
 
         return {
-            updatesEnabled,
             forNewData: {
                 batchingRuleType: batchingRuleType ?? BatchingRuleType.IMMEDIATE,
                 buffering:

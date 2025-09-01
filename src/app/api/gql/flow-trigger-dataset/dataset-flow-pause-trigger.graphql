@@ -1,0 +1,11 @@
+mutation pauseDatasetFlowTrigger($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        triggers {
+          pauseFlow(datasetFlowType: $datasetFlowType)
+        }
+      }
+    }
+  }
+}

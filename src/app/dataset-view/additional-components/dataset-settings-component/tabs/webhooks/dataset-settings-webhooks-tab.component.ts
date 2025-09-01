@@ -189,6 +189,41 @@ export class DatasetSettingsWebhooksTabComponent extends BaseComponent implement
             });
     }
 
+    public reactivateWebhook(subscriptionId: string): void {
+        promiseWithCatch(
+            this.modalService.warning({
+                title: "Reactivate webhook subscription",
+                message: `Do you want to reactivate this webhook subscription? Make sure it is reachable before proceeding.`,
+                bigTextBlock: "Ok",
+                noButtonText: "Cancel",
+                yesButtonText: "Ok",
+                handler: (ok) => {
+                    if (ok) {
+                        this.datasetWebhooksService
+                            .datasetWebhookReactivateSubscription(this.datasetBasics.id, subscriptionId)
+                            .pipe(take(1))
+                            .subscribe((result: boolean) => {
+                                if (result) {
+                                    const currentRows: WebhookSubscription[] = this._rowsSubject$.getValue();
+                                    const updatedRows: WebhookSubscription[] = currentRows.map((row) => {
+                                        return row.id === subscriptionId
+                                            ? {
+                                                  ...row,
+                                                  status: result
+                                                      ? WebhookSubscriptionStatus.Enabled
+                                                      : WebhookSubscriptionStatus.Unreachable,
+                                              }
+                                            : row;
+                                    });
+                                    this._rowsSubject$.next(updatedRows);
+                                }
+                            });
+                    }
+                },
+            }),
+        );
+    }
+
     public openRotateSecretModal(): void {
         this.ngbModalService.open(RotateSecretSubscriptionModalComponent);
     }

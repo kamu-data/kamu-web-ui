@@ -11,6 +11,7 @@ import { map, Observable } from "rxjs";
 import {
     DatasetWebhookCreateSubscriptionMutation,
     DatasetWebhookPauseSubscriptionMutation,
+    DatasetWebhookReactivateSubscriptionMutation,
     DatasetWebhookRemoveSubscriptionMutation,
     DatasetWebhookResumeSubscriptionMutation,
     DatasetWebhookSubscriptionsQuery,
@@ -102,6 +103,23 @@ export class DatasetWebhooksService {
                     return true;
                 } else {
                     this.toastrService.error(data.datasets.byId?.webhooks.subscription?.resume.message);
+                    return false;
+                }
+            }),
+        );
+    }
+
+    public datasetWebhookReactivateSubscription(datasetId: string, id: string): Observable<boolean> {
+        return this.webhooksApi.datasetWebhookReactivateSubscription(datasetId, id).pipe(
+            map((data: DatasetWebhookReactivateSubscriptionMutation) => {
+                if (
+                    data.datasets.byId?.webhooks.subscription?.reactivate.__typename ===
+                    "ReactivateWebhookSubscriptionResultSuccess"
+                ) {
+                    this.toastrService.success(data.datasets.byId.webhooks.subscription.reactivate.message);
+                    return true;
+                } else {
+                    this.toastrService.error(data.datasets.byId?.webhooks.subscription?.reactivate.message);
                     return false;
                 }
             }),

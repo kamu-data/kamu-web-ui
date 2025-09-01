@@ -1,6 +1,6 @@
 fragment FlowConnectionData on FlowConnection {
   nodes {
-    ...FlowSummaryData
+    ...FlowSummaryDataWithTrigger
   }
   totalCount
   pageInfo {

@@ -89,6 +89,7 @@ fragment FlowHistoryData on FlowEvent {
             __typename
             ... on TaskFailureReasonGeneral {
               message
+              recoverable
             }
 
             ... on TaskFailureReasonInputDatasetCompacted {

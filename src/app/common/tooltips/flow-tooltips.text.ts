@@ -11,6 +11,11 @@ export class FlowTooltipsTexts {
     public static readonly RETRY_SELECTOR_TOOLTIP =
         "Enable or disable retries on flow failures with the defined options.";
 
+    public static readonly STOP_POLICY_NEVER_TOOLTIP = "The flow will never be stopped regardless of failures.";
+
+    public static readonly STOP_POLICY_AFTER_CONSECUTIVE_FAILURES_TOOLTIP =
+        "The flow will be stopped after a specified number of consecutive failures.";
+
     public static readonly BREAKING_NO_ACTION_TOOLTIP =
         "No action will be taken on breaking changes. The next flow run will likely fail.";
 

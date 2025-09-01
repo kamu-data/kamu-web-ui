@@ -173,6 +173,21 @@ describe("DatasetSettingsWebhooksTabComponent", () => {
         expect(datasetWebhookResumeSubscriptionSpy).toHaveBeenCalledTimes(1);
     });
 
+    it("should check to reactivate webhook subcription", () => {
+        const datasetWebhookReactivateSubscriptionSpy = spyOn(
+            datasetWebhooksService,
+            "datasetWebhookReactivateSubscription",
+        ).and.returnValue(of(true));
+        const modalWindowSpy = spyOn(modalService, "warning").and.callFake((options: ModalArgumentsInterface) => {
+            options.handler?.call(undefined, true);
+            return Promise.resolve("");
+        });
+
+        component.reactivateWebhook(MOCK_SUBSCRIPTION_ID);
+        expect(datasetWebhookReactivateSubscriptionSpy).toHaveBeenCalledTimes(1);
+        expect(modalWindowSpy).toHaveBeenCalledTimes(1);
+    });
+
     it("should check status badge otions", () => {
         expect(component.webhookStatusBadgeOptions(WebhookSubscriptionStatus.Enabled)).toEqual({
             iconName: "check_circle",

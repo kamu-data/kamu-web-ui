@@ -7,12 +7,10 @@
 
 import { TemporalTablesPropertyComponent } from "../common/temporal-tables-property/temporal-tables-property.component";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
-import { OwnerPropertyComponent } from "../common/owner-property/owner-property.component";
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { DatasetNameByIdPropertyComponent } from "../common/dataset-name-by-id-property/dataset-name-by-id-property.component";
 import { SetTransformTooltipsTexts } from "src/app/common/tooltips/set-transform.text";
 import { getSourcesDescriptors } from "../common-sources/sources-event.source";
-import { VisibilityPropertyComponent } from "../common/visibility-property/visibility-property.component";
 
 export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetTransform.TransformSql.engine": getSourcesDescriptors("SetTransform.TransformSql.engine"),
@@ -51,36 +49,12 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "set-transform-datasetNotAccessible-type",
     },
 
-    "SetTransform.Dataset.kind": {
-        label: "Dataset type:",
-        tooltip: SetTransformTooltipsTexts.DATASET_KIND,
-        presentationComponent: SimplePropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "set-transform-dataset-kind",
-    },
-
-    "SetTransform.Dataset.visibility": {
-        label: "Dataset visibility:",
-        tooltip: SetTransformTooltipsTexts.DATASET_VISIBILITY,
-        presentationComponent: VisibilityPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "set-transform-dataset-visibility",
-    },
-
     "SetTransform.Dataset.name": {
-        label: "Name:",
-        tooltip: SetTransformTooltipsTexts.DATASET_NAME,
+        label: "Dataset:",
+        tooltip: SetTransformTooltipsTexts.DATASET_SUMMARY,
         presentationComponent: DatasetNameByIdPropertyComponent,
         separateRowForValue: false,
         dataTestId: "set-transform-dataset-name",
-    },
-
-    "SetTransform.Dataset.owner": {
-        label: "Owner:",
-        tooltip: SetTransformTooltipsTexts.DATASET_OWNER,
-        presentationComponent: OwnerPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "set-transform-dataset-owner",
     },
 
     "SetTransform.Dataset.alias": {

@@ -467,12 +467,12 @@ export type BuildInfo = {
     rustcSemver?: Maybe<Scalars["String"]>;
 };
 
-export type CancelScheduledTasksResult = {
+export type CancelFlowRunResult = {
     message: Scalars["String"];
 };
 
-export type CancelScheduledTasksSuccess = CancelScheduledTasksResult & {
-    __typename?: "CancelScheduledTasksSuccess";
+export type CancelFlowRunSuccess = CancelFlowRunResult & {
+    __typename?: "CancelFlowRunSuccess";
     flow: Flow;
     message: Scalars["String"];
 };
@@ -1193,7 +1193,7 @@ export type DatasetFlowRunsListFlowsArgs = {
 
 export type DatasetFlowRunsMut = {
     __typename?: "DatasetFlowRunsMut";
-    cancelScheduledTasks: CancelScheduledTasksResult;
+    cancelFlowRun: CancelFlowRunResult;
     triggerCompactionFlow: TriggerFlowResult;
     triggerIngestFlow: TriggerFlowResult;
     triggerResetFlow: TriggerFlowResult;
@@ -1201,7 +1201,7 @@ export type DatasetFlowRunsMut = {
     triggerTransformFlow: TriggerFlowResult;
 };
 
-export type DatasetFlowRunsMutCancelScheduledTasksArgs = {
+export type DatasetFlowRunsMutCancelFlowRunArgs = {
     flowId: Scalars["FlowID"];
 };
 
@@ -1248,8 +1248,8 @@ export type DatasetFlowTriggersMutResumeFlowArgs = {
 
 export type DatasetFlowTriggersMutSetTriggerArgs = {
     datasetFlowType: DatasetFlowType;
-    paused: Scalars["Boolean"];
-    triggerInput: FlowTriggerInput;
+    triggerRuleInput: FlowTriggerRuleInput;
+    triggerStopPolicyInput: FlowTriggerStopPolicyInput;
 };
 
 export enum DatasetFlowType {
@@ -1960,6 +1960,8 @@ export type Flow = {
     outcome?: Maybe<FlowOutcome>;
     /** Primary flow activation cause */
     primaryActivationCause: FlowActivationCause;
+    /** Associated flow trigger */
+    relatedTrigger?: Maybe<FlowTrigger>;
     /** Flow retry policy */
     retryPolicy?: Maybe<FlowRetryPolicy>;
     /** Start condition */
@@ -2302,7 +2304,13 @@ export type FlowInvalidTriggerInputError = SetFlowTriggerResult & {
     reason: Scalars["String"];
 };
 
-export type FlowNotFound = CancelScheduledTasksResult &
+export type FlowInvalidTriggerStopPolicyInputError = SetFlowTriggerResult & {
+    __typename?: "FlowInvalidTriggerStopPolicyInputError";
+    message: Scalars["String"];
+    reason: Scalars["String"];
+};
+
+export type FlowNotFound = CancelFlowRunResult &
     GetFlowResult & {
         __typename?: "FlowNotFound";
         flowId: Scalars["FlowID"];
@@ -2407,6 +2415,7 @@ export type FlowTrigger = {
     paused: Scalars["Boolean"];
     reactive?: Maybe<FlowTriggerReactiveRule>;
     schedule?: Maybe<FlowTriggerScheduleRule>;
+    stopPolicy: FlowTriggerStopPolicy;
 };
 
 export type FlowTriggerBatchingRule = FlowTriggerBatchingRuleBuffering | FlowTriggerBatchingRuleImmediate;
@@ -2440,27 +2449,51 @@ export enum FlowTriggerBreakingChangeRule {
     Recover = "RECOVER",
 }
 
-export type FlowTriggerInput =
-    | { reactive: FlowTriggerReactiveInput; schedule?: never }
-    | { reactive?: never; schedule: FlowTriggerScheduleInput };
-
-export type FlowTriggerReactiveInput = {
-    forBreakingChange: FlowTriggerBreakingChangeRule;
-    forNewData: FlowTriggerBatchingRuleInput;
-};
-
 export type FlowTriggerReactiveRule = {
     __typename?: "FlowTriggerReactiveRule";
     forBreakingChange: FlowTriggerBreakingChangeRule;
     forNewData: FlowTriggerBatchingRule;
 };
 
-export type FlowTriggerScheduleInput =
+export type FlowTriggerRuleInput =
+    | { reactive: FlowTriggerRuleReactiveInput; schedule?: never }
+    | { reactive?: never; schedule: FlowTriggerRuleScheduleInput };
+
+export type FlowTriggerRuleReactiveInput = {
+    forBreakingChange: FlowTriggerBreakingChangeRule;
+    forNewData: FlowTriggerBatchingRuleInput;
+};
+
+export type FlowTriggerRuleScheduleInput =
     /** Supported CRON syntax: min hour dayOfMonth month dayOfWeek */
     | { cron5ComponentExpression: Scalars["String"]; timeDelta?: never }
     | { cron5ComponentExpression?: never; timeDelta: TimeDeltaInput };
 
 export type FlowTriggerScheduleRule = Cron5ComponentExpression | TimeDelta;
+
+export type FlowTriggerStopPolicy = FlowTriggerStopPolicyAfterConsecutiveFailures | FlowTriggerStopPolicyNever;
+
+export type FlowTriggerStopPolicyAfterConsecutiveFailures = {
+    __typename?: "FlowTriggerStopPolicyAfterConsecutiveFailures";
+    maxFailures: Scalars["Int"];
+};
+
+export type FlowTriggerStopPolicyAfterConsecutiveFailuresInput = {
+    maxFailures: Scalars["Int"];
+};
+
+export type FlowTriggerStopPolicyInput =
+    | { afterConsecutiveFailures: FlowTriggerStopPolicyAfterConsecutiveFailuresInput; never?: never }
+    | { afterConsecutiveFailures?: never; never: FlowTriggerStopPolicyNeverInput };
+
+export type FlowTriggerStopPolicyNever = {
+    __typename?: "FlowTriggerStopPolicyNever";
+    dummy: Scalars["Boolean"];
+};
+
+export type FlowTriggerStopPolicyNeverInput = {
+    dummy: Scalars["Boolean"];
+};
 
 export type FlowTypeIsNotSupported = SetFlowTriggerResult & {
     __typename?: "FlowTypeIsNotSupported";
@@ -3005,6 +3038,22 @@ export enum QueryDialect {
     SqlRisingWave = "SQL_RISING_WAVE",
     SqlSpark = "SQL_SPARK",
 }
+
+export type ReactivateWebhookSubscriptionResult = {
+    message: Scalars["String"];
+};
+
+export type ReactivateWebhookSubscriptionResultSuccess = ReactivateWebhookSubscriptionResult & {
+    __typename?: "ReactivateWebhookSubscriptionResultSuccess";
+    message: Scalars["String"];
+    reactivated: Scalars["Boolean"];
+};
+
+export type ReactivateWebhookSubscriptionResultUnexpected = ReactivateWebhookSubscriptionResult & {
+    __typename?: "ReactivateWebhookSubscriptionResultUnexpected";
+    message: Scalars["String"];
+    status: WebhookSubscriptionStatus;
+};
 
 /**
  * Defines how raw data should be read into the structured form.
@@ -3714,6 +3763,7 @@ export type TaskFailureReason =
 export type TaskFailureReasonGeneral = {
     __typename?: "TaskFailureReasonGeneral";
     message: Scalars["String"];
+    recoverable: Scalars["Boolean"];
 };
 
 export type TaskFailureReasonInputDatasetCompacted = {
@@ -4149,6 +4199,7 @@ export type WebhookSubscriptionInvalidTargetUrl = CreateWebhookSubscriptionResul
 export type WebhookSubscriptionMut = {
     __typename?: "WebhookSubscriptionMut";
     pause: PauseWebhookSubscriptionResult;
+    reactivate: ReactivateWebhookSubscriptionResult;
     remove: RemoveWebhookSubscriptionResult;
     resume: ResumeWebhookSubscriptionResult;
     update: UpdateWebhookSubscriptionResult;
@@ -5365,14 +5416,33 @@ export type SetIngestFlowConfigMutation = {
     };
 };
 
-export type SetDatasetFlowTriggersMutationVariables = Exact<{
+export type PauseDatasetFlowTriggerMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     datasetFlowType: DatasetFlowType;
-    paused: Scalars["Boolean"];
-    triggerInput: FlowTriggerInput;
 }>;
 
-export type SetDatasetFlowTriggersMutation = {
+export type PauseDatasetFlowTriggerMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            flows: {
+                __typename?: "DatasetFlowsMut";
+                triggers: { __typename?: "DatasetFlowTriggersMut"; pauseFlow: boolean };
+            };
+        } | null;
+    };
+};
+
+export type SetDatasetFlowTriggerMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    datasetFlowType: DatasetFlowType;
+    triggerRuleInput: FlowTriggerRuleInput;
+    triggerStopPolicyInput: FlowTriggerStopPolicyInput;
+}>;
+
+export type SetDatasetFlowTriggerMutation = {
     __typename?: "Mutation";
     datasets: {
         __typename?: "DatasetsMut";
@@ -5385,11 +5455,12 @@ export type SetDatasetFlowTriggersMutation = {
                     setTrigger:
                         | {
                               __typename?: "FlowIncompatibleDatasetKind";
-                              message: string;
                               expectedDatasetKind: DatasetKind;
                               actualDatasetKind: DatasetKind;
+                              message: string;
                           }
-                        | { __typename?: "FlowInvalidTriggerInputError"; message: string; reason: string }
+                        | { __typename?: "FlowInvalidTriggerInputError"; reason: string; message: string }
+                        | { __typename?: "FlowInvalidTriggerStopPolicyInputError"; message: string }
                         | { __typename?: "FlowPreconditionsNotMet"; message: string }
                         | { __typename?: "FlowTypeIsNotSupported"; message: string }
                         | { __typename?: "SetFlowTriggerSuccess"; message: string };
@@ -5399,12 +5470,12 @@ export type SetDatasetFlowTriggersMutation = {
     };
 };
 
-export type GetDatasetFlowTriggersQueryVariables = Exact<{
+export type GetDatasetFlowTriggerQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     datasetFlowType: DatasetFlowType;
 }>;
 
-export type GetDatasetFlowTriggersQuery = {
+export type GetDatasetFlowTriggerQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
@@ -5432,6 +5503,9 @@ export type GetDatasetFlowTriggersQuery = {
                                   }
                                 | { __typename: "FlowTriggerBatchingRuleImmediate" };
                         } | null;
+                        stopPolicy:
+                            | { __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures"; maxFailures: number }
+                            | { __typename: "FlowTriggerStopPolicyNever" };
                     } | null;
                 };
             };
@@ -5459,12 +5533,12 @@ export type DatasetAllFlowsPausedQuery = {
     };
 };
 
-export type CancelScheduledTasksMutationVariables = Exact<{
+export type CancelFlowRunMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     flowId: Scalars["FlowID"];
 }>;
 
-export type CancelScheduledTasksMutation = {
+export type CancelFlowRunMutation = {
     __typename?: "Mutation";
     datasets: {
         __typename?: "DatasetsMut";
@@ -5474,9 +5548,9 @@ export type CancelScheduledTasksMutation = {
                 __typename?: "DatasetFlowsMut";
                 runs: {
                     __typename?: "DatasetFlowRunsMut";
-                    cancelScheduledTasks:
+                    cancelFlowRun:
                         | {
-                              __typename?: "CancelScheduledTasksSuccess";
+                              __typename?: "CancelFlowRunSuccess";
                               message: string;
                               flow: { __typename?: "Flow" } & FlowSummaryDataFragment;
                           }
@@ -5631,7 +5705,7 @@ export type DatasetResumeFlowsMutation = {
 export type FlowConnectionDataFragment = {
     __typename?: "FlowConnection";
     totalCount: number;
-    nodes: Array<{ __typename?: "Flow" } & FlowSummaryDataFragment>;
+    nodes: Array<{ __typename?: "Flow" } & FlowSummaryDataWithTriggerFragment>;
     pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
 };
 
@@ -5735,7 +5809,7 @@ type FlowHistoryData_FlowEventTaskChanged_Fragment = {
             | {
                   __typename: "TaskOutcomeFailed";
                   reason:
-                      | { __typename: "TaskFailureReasonGeneral"; message: string }
+                      | { __typename: "TaskFailureReasonGeneral"; message: string; recoverable: boolean }
                       | {
                             __typename: "TaskFailureReasonInputDatasetCompacted";
                             message: string;
@@ -5784,7 +5858,7 @@ type FlowOutcomeData_FlowAbortedResult_Fragment = { __typename?: "FlowAbortedRes
 type FlowOutcomeData_FlowFailedError_Fragment = {
     __typename?: "FlowFailedError";
     reason:
-        | { __typename?: "TaskFailureReasonGeneral"; message: string }
+        | { __typename?: "TaskFailureReasonGeneral"; message: string; recoverable: boolean }
         | {
               __typename?: "TaskFailureReasonInputDatasetCompacted";
               message: string;
@@ -5799,6 +5873,15 @@ export type FlowOutcomeDataFragment =
     | FlowOutcomeData_FlowAbortedResult_Fragment
     | FlowOutcomeData_FlowFailedError_Fragment
     | FlowOutcomeData_FlowSuccessResult_Fragment;
+
+export type FlowSummaryDataWithTriggerFragment = {
+    __typename?: "Flow";
+    relatedTrigger?: {
+        __typename?: "FlowTrigger";
+        paused: boolean;
+        schedule?: { __typename: "Cron5ComponentExpression" } | { __typename: "TimeDelta" } | null;
+    } | null;
+} & FlowSummaryDataFragment;
 
 export type FlowSummaryDataFragment = {
     __typename?: "Flow";
@@ -7019,6 +7102,34 @@ export type DatasetWebhookPauseSubscriptionMutation = {
     };
 };
 
+export type DatasetWebhookReactivateSubscriptionMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    id: Scalars["WebhookSubscriptionID"];
+}>;
+
+export type DatasetWebhookReactivateSubscriptionMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            webhooks: {
+                __typename?: "DatasetWebhooksMut";
+                subscription?: {
+                    __typename?: "WebhookSubscriptionMut";
+                    reactivate:
+                        | { __typename?: "ReactivateWebhookSubscriptionResultSuccess"; message: string }
+                        | {
+                              __typename?: "ReactivateWebhookSubscriptionResultUnexpected";
+                              status: WebhookSubscriptionStatus;
+                              message: string;
+                          };
+                } | null;
+            };
+        } | null;
+    };
+};
+
 export type DatasetWebhookRemoveSubscriptionMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     id: Scalars["WebhookSubscriptionID"];
@@ -7293,6 +7404,7 @@ export const FlowOutcomeDataFragmentDoc = gql`
             reason {
                 ... on TaskFailureReasonGeneral {
                     message
+                    recoverable
                 }
                 ... on TaskFailureReasonInputDatasetCompacted {
                     message
@@ -7486,6 +7598,18 @@ export const FlowSummaryDataFragmentDoc = gql`
     ${FlowOutcomeDataFragmentDoc}
     ${TimeDeltaDataFragmentDoc}
 `;
+export const FlowSummaryDataWithTriggerFragmentDoc = gql`
+    fragment FlowSummaryDataWithTrigger on Flow {
+        ...FlowSummaryData
+        relatedTrigger {
+            paused
+            schedule {
+                __typename
+            }
+        }
+    }
+    ${FlowSummaryDataFragmentDoc}
+`;
 export const DatasetPageInfoFragmentDoc = gql`
     fragment DatasetPageInfo on PageBasedInfo {
         hasNextPage
@@ -7497,14 +7621,14 @@ export const DatasetPageInfoFragmentDoc = gql`
 export const FlowConnectionDataFragmentDoc = gql`
     fragment FlowConnectionData on FlowConnection {
         nodes {
-            ...FlowSummaryData
+            ...FlowSummaryDataWithTrigger
         }
         totalCount
         pageInfo {
             ...DatasetPageInfo
         }
     }
-    ${FlowSummaryDataFragmentDoc}
+    ${FlowSummaryDataWithTriggerFragmentDoc}
     ${DatasetPageInfoFragmentDoc}
 `;
 export const FlowHistoryDataFragmentDoc = gql`
@@ -7592,6 +7716,7 @@ export const FlowHistoryDataFragmentDoc = gql`
                             __typename
                             ... on TaskFailureReasonGeneral {
                                 message
+                                recoverable
                             }
                             ... on TaskFailureReasonInputDatasetCompacted {
                                 message
@@ -10327,34 +10452,55 @@ export class SetIngestFlowConfigGQL extends Apollo.Mutation<
         super(apollo);
     }
 }
-export const SetDatasetFlowTriggersDocument = gql`
-    mutation setDatasetFlowTriggers(
+export const PauseDatasetFlowTriggerDocument = gql`
+    mutation pauseDatasetFlowTrigger($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    triggers {
+                        pauseFlow(datasetFlowType: $datasetFlowType)
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class PauseDatasetFlowTriggerGQL extends Apollo.Mutation<
+    PauseDatasetFlowTriggerMutation,
+    PauseDatasetFlowTriggerMutationVariables
+> {
+    document = PauseDatasetFlowTriggerDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const SetDatasetFlowTriggerDocument = gql`
+    mutation setDatasetFlowTrigger(
         $datasetId: DatasetID!
         $datasetFlowType: DatasetFlowType!
-        $paused: Boolean!
-        $triggerInput: FlowTriggerInput!
+        $triggerRuleInput: FlowTriggerRuleInput!
+        $triggerStopPolicyInput: FlowTriggerStopPolicyInput!
     ) {
         datasets {
             byId(datasetId: $datasetId) {
                 flows {
                     triggers {
-                        setTrigger(datasetFlowType: $datasetFlowType, paused: $paused, triggerInput: $triggerInput) {
-                            ... on SetFlowTriggerSuccess {
-                                message
-                            }
+                        setTrigger(
+                            datasetFlowType: $datasetFlowType
+                            triggerRuleInput: $triggerRuleInput
+                            triggerStopPolicyInput: $triggerStopPolicyInput
+                        ) {
+                            message
                             ... on FlowIncompatibleDatasetKind {
-                                message
                                 expectedDatasetKind
                                 actualDatasetKind
                             }
-                            ... on FlowPreconditionsNotMet {
-                                message
-                            }
-                            ... on FlowTypeIsNotSupported {
-                                message
-                            }
                             ... on FlowInvalidTriggerInputError {
-                                message
                                 reason
                             }
                         }
@@ -10368,18 +10514,18 @@ export const SetDatasetFlowTriggersDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class SetDatasetFlowTriggersGQL extends Apollo.Mutation<
-    SetDatasetFlowTriggersMutation,
-    SetDatasetFlowTriggersMutationVariables
+export class SetDatasetFlowTriggerGQL extends Apollo.Mutation<
+    SetDatasetFlowTriggerMutation,
+    SetDatasetFlowTriggerMutationVariables
 > {
-    document = SetDatasetFlowTriggersDocument;
+    document = SetDatasetFlowTriggerDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);
     }
 }
-export const GetDatasetFlowTriggersDocument = gql`
-    query getDatasetFlowTriggers($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
+export const GetDatasetFlowTriggerDocument = gql`
+    query getDatasetFlowTrigger($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
         datasets {
             byId(datasetId: $datasetId) {
                 flows {
@@ -10406,6 +10552,12 @@ export const GetDatasetFlowTriggersDocument = gql`
                                 }
                                 forBreakingChange
                             }
+                            stopPolicy {
+                                __typename
+                                ... on FlowTriggerStopPolicyAfterConsecutiveFailures {
+                                    maxFailures
+                                }
+                            }
                         }
                     }
                 }
@@ -10418,11 +10570,11 @@ export const GetDatasetFlowTriggersDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class GetDatasetFlowTriggersGQL extends Apollo.Query<
-    GetDatasetFlowTriggersQuery,
-    GetDatasetFlowTriggersQueryVariables
+export class GetDatasetFlowTriggerGQL extends Apollo.Query<
+    GetDatasetFlowTriggerQuery,
+    GetDatasetFlowTriggerQueryVariables
 > {
-    document = GetDatasetFlowTriggersDocument;
+    document = GetDatasetFlowTriggerDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);
@@ -10455,18 +10607,18 @@ export class DatasetAllFlowsPausedGQL extends Apollo.Query<
         super(apollo);
     }
 }
-export const CancelScheduledTasksDocument = gql`
-    mutation cancelScheduledTasks($datasetId: DatasetID!, $flowId: FlowID!) {
+export const CancelFlowRunDocument = gql`
+    mutation cancelFlowRun($datasetId: DatasetID!, $flowId: FlowID!) {
         datasets {
             byId(datasetId: $datasetId) {
                 flows {
                     runs {
-                        cancelScheduledTasks(flowId: $flowId) {
+                        cancelFlowRun(flowId: $flowId) {
                             ... on FlowNotFound {
                                 flowId
                                 message
                             }
-                            ... on CancelScheduledTasksSuccess {
+                            ... on CancelFlowRunSuccess {
                                 message
                                 flow {
                                     ...FlowSummaryData
@@ -10484,11 +10636,8 @@ export const CancelScheduledTasksDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class CancelScheduledTasksGQL extends Apollo.Mutation<
-    CancelScheduledTasksMutation,
-    CancelScheduledTasksMutationVariables
-> {
-    document = CancelScheduledTasksDocument;
+export class CancelFlowRunGQL extends Apollo.Mutation<CancelFlowRunMutation, CancelFlowRunMutationVariables> {
+    document = CancelFlowRunDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);
@@ -11164,6 +11313,38 @@ export class DatasetWebhookPauseSubscriptionGQL extends Apollo.Mutation<
     DatasetWebhookPauseSubscriptionMutationVariables
 > {
     document = DatasetWebhookPauseSubscriptionDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetWebhookReactivateSubscriptionDocument = gql`
+    mutation datasetWebhookReactivateSubscription($datasetId: DatasetID!, $id: WebhookSubscriptionID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                webhooks {
+                    subscription(id: $id) {
+                        reactivate {
+                            message
+                            ... on ReactivateWebhookSubscriptionResultUnexpected {
+                                status
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetWebhookReactivateSubscriptionGQL extends Apollo.Mutation<
+    DatasetWebhookReactivateSubscriptionMutation,
+    DatasetWebhookReactivateSubscriptionMutationVariables
+> {
+    document = DatasetWebhookReactivateSubscriptionDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

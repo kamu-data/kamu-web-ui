@@ -26,7 +26,7 @@
     </div>
 
     <div class="container-main row">
-        <div class="col-md-6">
+        <div class="col-md-7">
             <div class="container-content mb-4">
                 <mat-slide-toggle
                     data-test-id="yaml-toggle"
@@ -47,7 +47,7 @@
                 />
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-5">
             <div class="container-content mb-4" *ngIf="datasetHistoryUpdate$ | async as datasetHistory">
                 <app-block-navigation
                     [datasetHistory]="datasetHistory"

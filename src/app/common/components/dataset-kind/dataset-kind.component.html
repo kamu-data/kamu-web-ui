@@ -1,0 +1,9 @@
+<span
+    data-test-id="dataset-kind"
+    class="label label--secondary v-align-middle"
+    [ngClass]="{
+        root: isRoot,
+        derivative: !isRoot,
+    }"
+    >{{ isRoot ? "Root" : "Derivative" }}</span
+>

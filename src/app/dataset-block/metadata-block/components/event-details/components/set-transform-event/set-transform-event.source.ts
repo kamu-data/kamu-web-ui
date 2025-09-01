@@ -51,6 +51,7 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "set-transform-datasetNotAccessible-type",
     },
 
+    //deprecated
     "SetTransform.Dataset.kind": {
         label: "Dataset type:",
         tooltip: SetTransformTooltipsTexts.DATASET_KIND,
@@ -59,6 +60,7 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "set-transform-dataset-kind",
     },
 
+    //deprecated
     "SetTransform.Dataset.visibility": {
         label: "Dataset visibility:",
         tooltip: SetTransformTooltipsTexts.DATASET_VISIBILITY,
@@ -68,13 +70,14 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     },
 
     "SetTransform.Dataset.name": {
-        label: "Name:",
-        tooltip: SetTransformTooltipsTexts.DATASET_NAME,
+        label: "Dataset:",
+        tooltip: SetTransformTooltipsTexts.DATASET_SUMMARY,
         presentationComponent: DatasetNameByIdPropertyComponent,
         separateRowForValue: false,
         dataTestId: "set-transform-dataset-name",
     },
 
+    //deprecated
     "SetTransform.Dataset.owner": {
         label: "Owner:",
         tooltip: SetTransformTooltipsTexts.DATASET_OWNER,

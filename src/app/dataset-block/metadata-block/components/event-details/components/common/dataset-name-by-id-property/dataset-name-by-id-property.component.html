@@ -1,1 +1,18 @@
-<a class="name" [attr.data-test-id]="dataTestId" (click)="navigateToDatasetView()">{{ datasetInfo.datasetName }}</a>
+<div class="d-flex flex-row" *ngIf="datasetBasics">
+    <div class="me-2 mb-1">
+        <a [routerLink]="['/', datasetBasics.owner.accountName]">
+            <img
+                [src]="datasetBasics.owner.avatarUrl || DEFAULT_AVATAR_URL"
+                width="20"
+                height="20"
+                [alt]="'@' + datasetBasics.owner.accountName"
+                [attr.data-test-id]="'user-avatar'"
+            />
+        </a>
+    </div>
+    <a [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name]" data-test-id="dataset-name-property">
+        {{ datasetBasics.owner.accountName }}/{{ datasetBasics.name }}
+    </a>
+    <app-dataset-visibility class="ms-2" [datasetVisibility]="datasetBasics.visibility" />
+    <app-dataset-kind [kind]="datasetBasics.kind" />
+</div>

@@ -121,14 +121,4 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
                 return value;
         }
     }
-
-    // private keyTransformMapper(key: keyof Dataset): string {
-    //     switch (key) {
-    //         case "name":
-    //             return "dataset";
-
-    //         default:
-    //             return key;
-    //     }
-    // }
 }

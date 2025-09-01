@@ -9,7 +9,6 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetBasicsFragment, DatasetByIdQuery } from "src/app/api/kamu.graphql.interface";
-import { NavigationService } from "src/app/services/navigation.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { RouterLink } from "@angular/router";
 import AppValues from "src/app/common/values/app.values";
@@ -39,7 +38,6 @@ export class DatasetNameByIdPropertyComponent extends BasePropertyComponent impl
 
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     private datasetService = inject(DatasetService);
-    private navigationService = inject(NavigationService);
     private cdr = inject(ChangeDetectorRef);
 
     public ngOnInit(): void {

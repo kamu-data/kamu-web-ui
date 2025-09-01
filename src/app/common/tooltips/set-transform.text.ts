@@ -19,4 +19,5 @@ export class SetTransformTooltipsTexts {
     public static readonly DATASET_ALIAS = "Query alias of the dataset.";
     public static readonly DATASET_REF = "A local or remote dataset reference to use in dataset resolutions.";
     public static readonly DATASET_NOT_ACCESSIBLE = "Dataset accessibility";
+    public static readonly DATASET_SUMMARY = "Summary of the dataset";
 }

@@ -6,13 +6,11 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { NgFor, NgIf, TitleCasePipe } from "@angular/common";
+import { NgFor, NgIf } from "@angular/common";
 import { DatasetKind, DatasetTransformFragment } from "src/app/api/kamu.graphql.interface";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { BlockRowDataComponent } from "src/app/common/components/block-row-data/block-row-data.component";
-import { DatasetNamePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/dataset-name-property/dataset-name-property.component";
-import { OwnerPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/owner-property/owner-property.component";
 import { EnginePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/engine-property/engine-property.component";
 import { SqlQueryViewerComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/sql-query-viewer/sql-query-viewer.component";
 import { MatIconModule } from "@angular/material/icon";
@@ -20,6 +18,10 @@ import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interf
 import { isNil } from "src/app/common/helpers/app.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
+import { RouterLink } from "@angular/router";
+import AppValues from "src/app/common/values/app.values";
+import { DatasetVisibilityComponent } from "src/app/common/components/dataset-visibility/dataset-visibility.component";
+import { DatasetKindComponent } from "src/app/common/components/dataset-kind/dataset-kind.component";
 
 @Component({
     selector: "app-metadata-transformation-tab",
@@ -28,17 +30,17 @@ import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.dir
         //-----//
         NgIf,
         NgFor,
-        TitleCasePipe,
+        RouterLink,
 
         //-----//
         MatIconModule,
 
         //-----//
         BlockRowDataComponent,
-        DatasetNamePropertyComponent,
+        DatasetVisibilityComponent,
+        DatasetKindComponent,
         EnginePropertyComponent,
         FeatureFlagDirective,
-        OwnerPropertyComponent,
         SqlQueryViewerComponent,
     ],
     templateUrl: "./metadata-transformation-tab.component.html",
@@ -48,6 +50,7 @@ export class MetadataTransformationTabComponent {
     @Input(RoutingResolvers.METADATA_TRANSFORMATION_TAB_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
 
     private navigationService = inject(NavigationService);
+    public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 
     public get transformation(): MaybeNullOrUndefined<DatasetTransformFragment> {
         return this.datasetMetadataTabData.overviewUpdate.overview.metadata

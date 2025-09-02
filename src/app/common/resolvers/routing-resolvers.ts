@@ -53,4 +53,7 @@ export default class RoutingResolvers {
     public static readonly METADATA_TRANSFORMATION_TAB_KEY = "metadataTransformationTabData";
     public static readonly METADATA_POLLING_SOURCE_TAB_KEY = "metadataPollingSourceTabData";
     public static readonly METADATA_PUSH_SOURCES_TAB_KEY = "metadataPUshSourcesTabData";
+
+    public static readonly WEBHOOKS_ADD_NEW_KEY = "webhooksAddNewData";
+    public static readonly WEBHOOKS_EDIT_KEY = "webhooksEditData";
 }

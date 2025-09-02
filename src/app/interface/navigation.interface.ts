@@ -1,3 +1,4 @@
+import { MaybeNull } from "./app.types";
 /**
  * Copyright Kamu Data, Inc. and contributors. All rights reserved.
  *
@@ -32,4 +33,10 @@ export interface FlowDetailsNavigationParams {
     datasetName: string;
     flowId: string;
     tab?: FlowDetailsTabs;
+}
+
+export interface WebhooksNavigationParams {
+    accountName: string;
+    datasetName: string;
+    tab?: string;
 }

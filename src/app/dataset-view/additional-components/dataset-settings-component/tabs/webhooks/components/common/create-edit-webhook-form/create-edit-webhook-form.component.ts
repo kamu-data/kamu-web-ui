@@ -32,7 +32,6 @@ import { FormValidationErrorsDirective } from "src/app/common/directives/form-va
         FormValidationErrorsDirective,
     ],
     templateUrl: "./create-edit-webhook-form.component.html",
-    styleUrls: ["./create-edit-webhook-form.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateEditWebhookFormComponent {

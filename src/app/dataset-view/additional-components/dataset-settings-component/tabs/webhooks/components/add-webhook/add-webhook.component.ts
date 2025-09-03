@@ -45,7 +45,6 @@ import { CreateEditWebhookFormComponent } from "../common/create-edit-webhook-fo
         CreateEditWebhookFormComponent,
     ],
     templateUrl: "./add-webhook.component.html",
-    styleUrls: ["./add-webhook.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddWebhookComponent extends BaseComponent implements OnInit {

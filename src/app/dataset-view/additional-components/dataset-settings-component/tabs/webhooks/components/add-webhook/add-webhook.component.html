@@ -23,7 +23,7 @@
     </div>
 
     <div class="d-flex flex-wrap justify-content-end my-3" *ngIf="!secret">
-        <button class="btn btn-light me-4" (click)="cancel()" type="button">Cancel</button>
+        <button class="btn btn-light me-4" (click)="navigateToListWebhooks()" type="button">Cancel</button>
         <button
             class="btn btn-success"
             [disabled]="createOrEditSubscriptionForm.invalid"

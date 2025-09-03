@@ -14,11 +14,16 @@ import { WebhooksService } from "src/app/services/webhooks.service";
 import { of } from "rxjs";
 import { CreateEditWebhookFormComponent } from "./../common/create-edit-webhook-form/create-edit-webhook-form.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
+import { mockCreateWebhookSubscriptionSuccess } from "src/app/api/mock/webhooks.mock";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("AddWebhookComponent", () => {
     let component: AddWebhookComponent;
     let fixture: ComponentFixture<AddWebhookComponent>;
     let webhooksService: WebhooksService;
+    let datasetWebhooksService: DatasetWebhooksService;
+    let navigationService: NavigationService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -27,6 +32,8 @@ describe("AddWebhookComponent", () => {
         });
         fixture = TestBed.createComponent(AddWebhookComponent);
         webhooksService = TestBed.inject(WebhooksService);
+        datasetWebhooksService = TestBed.inject(DatasetWebhooksService);
+        navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
         spyOn(webhooksService, "eventTypes").and.returnValue(of([]));
         component.datasetBasics = mockDatasetBasicsRootFragment;
@@ -35,5 +42,21 @@ describe("AddWebhookComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should check to add webhook", () => {
+        const datasetWebhookCreateSubscriptionSpy = spyOn(
+            datasetWebhooksService,
+            "datasetWebhookCreateSubscription",
+        ).and.returnValue(of(mockCreateWebhookSubscriptionSuccess));
+
+        component.addWebhook();
+        expect(datasetWebhookCreateSubscriptionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check to navigate to webhooks list", () => {
+        const navigateToWebhooksSpy = spyOn(navigationService, "navigateToWebhooks");
+        component.navigateToListWebhooks();
+        expect(navigateToWebhooksSpy).toHaveBeenCalledTimes(1);
     });
 });

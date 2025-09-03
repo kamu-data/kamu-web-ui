@@ -70,18 +70,14 @@ export class EditWebhookComponent extends BaseComponent implements OnInit {
                 id: this.editWebhooksData.subscription.id,
                 input: this.createOrEditSubscriptionForm.value as WebhookSubscriptionInput,
             })
-            .subscribe((result) => {
+            .subscribe((result: boolean) => {
                 if (result) {
                     this.navigateToListWebhooks();
                 }
             });
     }
 
-    public cancel(): void {
-        this.navigateToListWebhooks();
-    }
-
-    private navigateToListWebhooks(): void {
+    public navigateToListWebhooks(): void {
         this.navigationService.navigateToWebhooks({
             accountName: this.editWebhooksData.datasetBasics.owner.accountName,
             datasetName: this.editWebhooksData.datasetBasics.name,

@@ -6,14 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import {
-    AbstractControl,
-    FormGroup,
-    FormsModule,
-    NonNullableFormBuilder,
-    ReactiveFormsModule,
-    Validators,
-} from "@angular/forms";
+import { FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { DatasetBasicsFragment, WebhookSubscriptionInput } from "src/app/api/kamu.graphql.interface";
 import { WebhooksService } from "src/app/services/webhooks.service";
 import { MatDividerModule } from "@angular/material/divider";
@@ -66,14 +59,6 @@ export class AddWebhookComponent extends BaseComponent implements OnInit {
     private datasetWebhooksService = inject(DatasetWebhooksService);
     private navigationService = inject(NavigationService);
 
-    public get targetUrlControl(): AbstractControl {
-        return this.createOrEditSubscriptionForm.controls.targetUrl;
-    }
-
-    public get eventTypesControl(): AbstractControl {
-        return this.createOrEditSubscriptionForm.controls.eventTypes;
-    }
-
     public createOrEditSubscriptionForm: FormGroup<WebhookSubscriptionFormType> = this.fb.group({
         targetUrl: this.fb.control("", [Validators.required, Validators.pattern(AppValues.URL_PATTERN_ONLY_HTTPS)]),
         eventTypes: this.fb.control<string[]>([], [Validators.required]),
@@ -109,10 +94,6 @@ export class AddWebhookComponent extends BaseComponent implements OnInit {
                     this.secret = result.secret;
                 }
             });
-    }
-
-    public cancel(): void {
-        this.navigateToListWebhooks();
     }
 
     public navigateToListWebhooks(): void {

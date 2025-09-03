@@ -11,6 +11,7 @@ import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 import { WebhooksApi } from "src/app/api/webhooks.api";
 import {
+    mockDatasetWebhookByIdQuery,
     mockDatasetWebhookCreateSubscriptionMutation,
     mockDatasetWebhookCreateSubscriptionMutationError,
     mockDatasetWebhookPauseSubscriptionMutation,
@@ -63,6 +64,21 @@ describe("DatasetWebhooksService", () => {
             );
         });
         expect(datasetWebhookSubscriptionsSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check dataset webhook subscription by Id", () => {
+        const datasetWebhookSubscriptionByIdSpy = spyOn(webhooksApi, "datasetWebhookSubscriptionById").and.returnValue(
+            of(mockDatasetWebhookByIdQuery),
+        );
+
+        service
+            .datasetWebhookSubscriptionById({ datasetId: DATASET_ID, id: MOCK_SUBSCRIPTION_ID })
+            .subscribe((result: WebhookSubscription) => {
+                expect(result.id).toEqual(
+                    mockDatasetWebhookByIdQuery.datasets.byId?.webhooks.subscription?.id as string,
+                );
+            });
+        expect(datasetWebhookSubscriptionByIdSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check create dataset webhook subscription with success", () => {

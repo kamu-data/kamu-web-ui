@@ -60,4 +60,8 @@ describe("DatasetListItemComponent", () => {
 
         expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(component.row.owner.accountName);
     });
+
+    it("should check kind of the dataset", () => {
+        expect(component.isRoot).toEqual(true);
+    });
 });

@@ -1,21 +1,37 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
 
-import { CreateEditWebhookFormComponent } from './create-edit-webhook-form.component';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { CreateEditWebhookFormComponent } from "./create-edit-webhook-form.component";
+import { NonNullableFormBuilder, Validators } from "@angular/forms";
+import AppValues from "src/app/common/values/app.values";
 
-describe('CreateEditWebhookFormComponent', () => {
-  let component: CreateEditWebhookFormComponent;
-  let fixture: ComponentFixture<CreateEditWebhookFormComponent>;
+describe("CreateEditWebhookFormComponent", () => {
+    let component: CreateEditWebhookFormComponent;
+    let fixture: ComponentFixture<CreateEditWebhookFormComponent>;
+    let fb: NonNullableFormBuilder;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [CreateEditWebhookFormComponent]
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [CreateEditWebhookFormComponent],
+        });
+        fixture = TestBed.createComponent(CreateEditWebhookFormComponent);
+        fb = TestBed.inject(NonNullableFormBuilder);
+        component = fixture.componentInstance;
+        component.createOrEditSubscriptionForm = fb.group({
+            targetUrl: fb.control("", [Validators.required, Validators.pattern(AppValues.URL_PATTERN_ONLY_HTTPS)]),
+            eventTypes: fb.control<string[]>([], [Validators.required]),
+            label: fb.control("", [Validators.maxLength(100)]),
+        });
+        component.dropdownList = [];
+        fixture.detectChanges();
     });
-    fixture = TestBed.createComponent(CreateEditWebhookFormComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 });

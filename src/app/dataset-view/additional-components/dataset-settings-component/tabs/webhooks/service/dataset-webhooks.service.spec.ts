@@ -29,7 +29,7 @@ import {
 import { of } from "rxjs";
 import { TEST_DATASET_ID } from "src/app/api/mock/dataset.mock";
 import { WebhookSubscription } from "src/app/api/kamu.graphql.interface";
-import { CreateWebhookSubscriptionSuccess } from "../create-edit-subscription-modal/create-edit-subscription-modal.model";
+import { CreateWebhookSubscriptionSuccess } from "../dataset-settings-webhooks-tab.component.types";
 
 describe("DatasetWebhooksService", () => {
     let service: DatasetWebhooksService;

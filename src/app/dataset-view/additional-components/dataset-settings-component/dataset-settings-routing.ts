@@ -26,7 +26,6 @@ import { datasetSettingsTransformTabResolverFn } from "./tabs/transform-options/
 import { DatasetSettingsSecretsManagerTabComponent } from "./tabs/variables-and-secrets/dataset-settings-secrets-manager-tab.component";
 import { datasetSettingsVarAndSecretsResolverFn } from "./tabs/variables-and-secrets/resolver/dataset-settings-var-and-secrets.resolver";
 import { DatasetSettingsWebhooksTabComponent } from "./tabs/webhooks/dataset-settings-webhooks-tab.component";
-import { datasetSettingsWebhooksResolverFn } from "./tabs/webhooks/resolver/dataset-settings-webhooks.resolver";
 import ProjectLinks from "../../../project-links";
 import { DatasetSettingsComponent } from "./dataset-settings.component";
 import { datasetSettingsTabResolverFn } from "./resolvers/dataset-settings-tab.resolver";

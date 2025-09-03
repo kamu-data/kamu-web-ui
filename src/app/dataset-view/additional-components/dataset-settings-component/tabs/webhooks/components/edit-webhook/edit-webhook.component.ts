@@ -6,9 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { NgIf } from "@angular/common";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
     NonNullableFormBuilder,
     AbstractControl,
@@ -17,35 +15,25 @@ import {
     FormsModule,
     ReactiveFormsModule,
 } from "@angular/forms";
-import {
-    DatasetBasicsFragment,
-    WebhookSubscriptionInput,
-    WebhookSubscriptionStatus,
-} from "src/app/api/kamu.graphql.interface";
+import { WebhookSubscriptionInput, WebhookSubscriptionStatus } from "src/app/api/kamu.graphql.interface";
 import { ErrorSets } from "src/app/common/directives/form-validation-errors.types";
 import AppValues from "src/app/common/values/app.values";
 import { NavigationService } from "src/app/services/navigation.service";
 import { WebhooksService } from "src/app/services/webhooks.service";
-import {
-    CreateWebhookSubscriptionSuccess,
-    SubscribedEventType,
-    WebhookSubscriptionFormType,
-} from "../../create-edit-subscription-modal/create-edit-subscription-modal.model";
 import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
 import { MatDividerModule } from "@angular/material/divider";
 import { NgSelectModule } from "@ng-select/ng-select";
-import { CopyToClipboardComponent } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.component";
-import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
 import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { MaybeNull } from "src/app/interface/app.types";
+import { EditWebhooksType } from "./edit-webhooks.types";
+import { eventTypesMapper } from "src/app/common/helpers/data.helpers";
+import { SubscribedEventType, WebhookSubscriptionFormType } from "../../dataset-settings-webhooks-tab.component.types";
 
 @Component({
     selector: "app-edit-webhook",
     standalone: true,
     imports: [
         //-----//
-        NgIf,
         FormsModule,
         ReactiveFormsModule,
 
@@ -54,16 +42,14 @@ import { MaybeNull } from "src/app/interface/app.types";
         NgSelectModule,
 
         //-----//
-        CopyToClipboardComponent,
         FormValidationErrorsDirective,
-        FeatureFlagDirective,
     ],
     templateUrl: "./edit-webhook.component.html",
     styleUrls: ["./edit-webhook.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditWebhookComponent extends BaseComponent implements OnInit {
-    @Input(RoutingResolvers.WEBHOOKS_ADD_NEW_KEY) public datasetBasics: DatasetBasicsFragment;
+    @Input(RoutingResolvers.WEBHOOKS_EDIT_KEY) public editWebhooksData: EditWebhooksType;
 
     public dropdownList: SubscribedEventType[] = [];
     public readonly WebhookSubscriptionStatus: typeof WebhookSubscriptionStatus = WebhookSubscriptionStatus;
@@ -89,23 +75,23 @@ export class EditWebhookComponent extends BaseComponent implements OnInit {
     });
 
     public ngOnInit(): void {
-        this.webhooksService
-            .eventTypes()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((eventTypes: SubscribedEventType[]) => {
-                this.dropdownList = eventTypes;
-            });
+        this.dropdownList = this.editWebhooksData.subscription.eventTypes.map((data) => eventTypesMapper(data));
+        this.createOrEditSubscriptionForm.patchValue({
+            targetUrl: this.editWebhooksData.subscription.targetUrl,
+            eventTypes: this.editWebhooksData.subscription.eventTypes,
+            label: this.editWebhooksData.subscription.label,
+        });
     }
 
     public updateWebhook(): void {
         this.datasetWebhooksService
-            .datasetWebhookCreateSubscription(
-                this.datasetBasics.id,
-                this.createOrEditSubscriptionForm.value as WebhookSubscriptionInput,
-            )
-            .subscribe((result: MaybeNull<CreateWebhookSubscriptionSuccess>) => {
+            .datasetWebhookUpdateSubscription({
+                datasetId: this.editWebhooksData.subscription.datasetId as string,
+                id: this.editWebhooksData.subscription.id,
+                input: this.createOrEditSubscriptionForm.value as WebhookSubscriptionInput,
+            })
+            .subscribe((result) => {
                 if (result) {
-                    console.log("==>", result.secret);
                     this.navigateToListWebhooks();
                 }
             });
@@ -117,8 +103,8 @@ export class EditWebhookComponent extends BaseComponent implements OnInit {
 
     private navigateToListWebhooks(): void {
         this.navigationService.navigateToWebhooks({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
+            accountName: this.editWebhooksData.datasetBasics.owner.accountName,
+            datasetName: this.editWebhooksData.datasetBasics.name,
         });
     }
 }

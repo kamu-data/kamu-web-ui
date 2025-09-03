@@ -17,6 +17,7 @@ import { SliceUnit } from "../../dataset-view/additional-components/dataset-sett
 import { DataRow, DatasetSchema, OperationColumnClassEnum } from "../../interface/dataset.interface";
 import { differenceInSeconds } from "date-fns";
 import { ActivatedRouteSnapshot } from "@angular/router";
+import { SubscribedEventType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -421,4 +422,14 @@ export function matchFieldsValidator(controlName: string, matchingControlName: s
 
         return null;
     };
+}
+
+export function eventTypesMapper(name: string): SubscribedEventType {
+    switch (name) {
+        case "DATASET.REF.UPDATED":
+            return { value: "DATASET.REF.UPDATED", name: "Dataset Updated" };
+        /* istanbul ignore next */
+        default:
+            return { value: "Unknown event type", name: "Unknown label" };
+    }
 }

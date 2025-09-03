@@ -1,4 +1,3 @@
-import { AddWebhookComponent } from "./components/add-webhook/add-webhook.component";
 /**
  * Copyright Kamu Data, Inc. and contributors. All rights reserved.
  *
@@ -14,6 +13,7 @@ import { EditWebhookComponent } from "./components/edit-webhook/edit-webhook.com
 import { addWebhookResolverFn } from "./components/add-webhook/resolvers/add-webhook.resolver";
 import { editWebhookResolverFn } from "./components/edit-webhook/resolvers/edit-webhook.resolver";
 import ProjectLinks from "src/app/project-links";
+import { AddWebhookComponent } from "./components/add-webhook/add-webhook.component";
 
 export const WEBHOOKS_TAB_ROUTING: Routes = [
     {

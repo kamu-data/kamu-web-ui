@@ -9,6 +9,7 @@ import { inject, Injectable } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
 import { map, Observable } from "rxjs";
 import {
+    DatasetWebhookByIdQuery,
     DatasetWebhookCreateSubscriptionMutation,
     DatasetWebhookPauseSubscriptionMutation,
     DatasetWebhookReactivateSubscriptionMutation,
@@ -20,7 +21,7 @@ import {
     WebhookSubscriptionInput,
 } from "src/app/api/kamu.graphql.interface";
 import { WebhooksApi } from "src/app/api/webhooks.api";
-import { CreateWebhookSubscriptionSuccess } from "../create-edit-subscription-modal/create-edit-subscription-modal.model";
+import { CreateWebhookSubscriptionSuccess } from "../dataset-settings-webhooks-tab.component.types";
 
 @Injectable({
     providedIn: "root",
@@ -143,6 +144,14 @@ export class DatasetWebhooksService {
                     this.toastrService.error(data.datasets.byId?.webhooks.subscription?.update.message);
                     return false;
                 }
+            }),
+        );
+    }
+
+    public datasetWebhookSubscriptionById(params: { datasetId: string; id: string }): Observable<WebhookSubscription> {
+        return this.webhooksApi.datasetWebhookSubscriptionById(params).pipe(
+            map((data: DatasetWebhookByIdQuery) => {
+                return data.datasets.byId?.webhooks.subscription as WebhookSubscription;
             }),
         );
     }

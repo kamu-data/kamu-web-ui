@@ -1,5 +1,6 @@
-<form [formGroup]="createOrEditSubscriptionForm">
-    <div class="box p-4">
+<h2>Webhooks/Add subscription</h2>
+<div class="box p-4">
+    <form [formGroup]="createOrEditSubscriptionForm">
         <div class="d-flex flex-column mt-4">
             <label for="" class="form-label">Target URL <span class="text-danger">*</span></label>
             <input
@@ -8,6 +9,7 @@
                 formControlName="targetUrl"
                 class="w-100 form-control"
                 #targetUrl
+                [readOnly]="isSecretExist"
             />
             <div
                 class="text-danger fs-12"
@@ -21,7 +23,7 @@
                 Must be publicly reachable via HTTPS. Localhost and private Ips are not allowed
             </p>
         </div>
-        <div class="d-flex flex-column">
+        <div class="d-flex flex-column mt-4">
             <label for="" class="form-label">Subscribed events <span class="text-danger">*</span></label>
             <ng-select
                 [items]="dropdownList"
@@ -29,6 +31,7 @@
                 bindValue="value"
                 formControlName="eventTypes"
                 [multiple]="true"
+                [readonly]="isSecretExist"
                 #eventTypes
             >
                 <ng-template ng-option-tmp let-item="item" let-index="index">
@@ -46,7 +49,14 @@
         </div>
         <div class="d-flex flex-column mt-4">
             <label for="" class="form-label">Label </label>
-            <input #label type="text" data-test-id="target-url" formControlName="label" class="w-100 form-control" />
+            <input
+                #label
+                type="text"
+                [readOnly]="isSecretExist"
+                data-test-id="target-url"
+                formControlName="label"
+                class="w-100 form-control"
+            />
             <div
                 class="text-danger fs-12"
                 [input]="label"
@@ -56,16 +66,36 @@
             ></div>
             <p class="text-muted fs-12">Optinal unique label to identify this webhook subscription</p>
         </div>
-        <div class="d-flex flex-wrap justify-content-end my-3">
-            <button class="btn btn-light" (click)="cancel()" type="button">Cancel</button>
-            <button
-                class="btn btn-success"
-                [disabled]="createOrEditSubscriptionForm.invalid"
-                (click)="addWebhook()"
-                type="button"
-            >
-                Add webhook
-            </button>
+    </form>
+    <div class="d-flex flex-column" *ngIf="secret">
+        <label for="" class="form-label">Secret </label>
+        <div class="d-flex flex-row">
+            <input
+                type="text"
+                data-test-id="subscription-secret-created"
+                [(ngModel)]="secret"
+                class="form-control w-100"
+                readonly
+            />
+            <app-copy-to-clipboard [text]="secret" [dataTestId]="'copyToClipboard-secret'" />
         </div>
+        <p class="text-muted fs-12" role="alert">
+            Make sure to copy your secret now. You won’t be able to see it again!
+        </p>
     </div>
-</form>
+
+    <div class="d-flex flex-wrap justify-content-end my-3" *ngIf="!secret">
+        <button class="btn btn-light me-4" (click)="cancel()" type="button">Cancel</button>
+        <button
+            class="btn btn-success"
+            [disabled]="createOrEditSubscriptionForm.invalid"
+            (click)="addWebhook()"
+            type="button"
+        >
+            Add subscription
+        </button>
+    </div>
+    <div class="d-flex flex-wrap justify-content-end my-3" *ngIf="secret">
+        <button class="btn btn-success" (click)="navigateToListWebhooks()" type="button">Ok</button>
+    </div>
+</div>

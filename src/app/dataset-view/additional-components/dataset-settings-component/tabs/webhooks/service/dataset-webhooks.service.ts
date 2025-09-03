@@ -48,6 +48,7 @@ export class DatasetWebhooksService {
                     data.datasets.byId?.webhooks.createSubscription.__typename ===
                     "CreateWebhookSubscriptionResultSuccess"
                 ) {
+                    this.toastrService.success(data.datasets.byId?.webhooks.createSubscription.message);
                     return {
                         datasetId,
                         secret: data.datasets.byId.webhooks.createSubscription.secret,

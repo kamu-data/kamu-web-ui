@@ -14,16 +14,10 @@ import {
     ReactiveFormsModule,
     Validators,
 } from "@angular/forms";
-import {
-    DatasetBasicsFragment,
-    WebhookSubscriptionInput,
-    WebhookSubscriptionStatus,
-} from "src/app/api/kamu.graphql.interface";
-import { ErrorSets } from "src/app/common/directives/form-validation-errors.types";
+import { DatasetBasicsFragment, WebhookSubscriptionInput } from "src/app/api/kamu.graphql.interface";
 import { WebhooksService } from "src/app/services/webhooks.service";
 import { MatDividerModule } from "@angular/material/divider";
 import { NgSelectModule } from "@ng-select/ng-select";
-import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
 import AppValues from "src/app/common/values/app.values";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { BaseComponent } from "src/app/common/components/base.component";
@@ -38,6 +32,7 @@ import {
     WebhookSubscriptionFormType,
     CreateWebhookSubscriptionSuccess,
 } from "../../dataset-settings-webhooks-tab.component.types";
+import { CreateEditWebhookFormComponent } from "../common/create-edit-webhook-form/create-edit-webhook-form.component";
 
 @Component({
     selector: "app-add-webhook",
@@ -54,7 +49,7 @@ import {
 
         //-----//
         CopyToClipboardComponent,
-        FormValidationErrorsDirective,
+        CreateEditWebhookFormComponent,
     ],
     templateUrl: "./add-webhook.component.html",
     styleUrls: ["./add-webhook.component.scss"],
@@ -65,8 +60,6 @@ export class AddWebhookComponent extends BaseComponent implements OnInit {
 
     public dropdownList: SubscribedEventType[] = [];
     public secret: MaybeUndefined<string>;
-    public readonly WebhookSubscriptionStatus: typeof WebhookSubscriptionStatus = WebhookSubscriptionStatus;
-    public readonly ErrorSets: typeof ErrorSets = ErrorSets;
 
     private fb = inject(NonNullableFormBuilder);
     private webhooksService = inject(WebhooksService);

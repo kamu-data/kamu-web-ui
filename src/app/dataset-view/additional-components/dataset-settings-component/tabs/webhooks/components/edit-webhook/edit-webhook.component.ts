@@ -7,27 +7,18 @@
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { BaseComponent } from "src/app/common/components/base.component";
-import {
-    NonNullableFormBuilder,
-    AbstractControl,
-    FormGroup,
-    Validators,
-    FormsModule,
-    ReactiveFormsModule,
-} from "@angular/forms";
-import { WebhookSubscriptionInput, WebhookSubscriptionStatus } from "src/app/api/kamu.graphql.interface";
-import { ErrorSets } from "src/app/common/directives/form-validation-errors.types";
+import { NonNullableFormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { WebhookSubscriptionInput } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
 import { NavigationService } from "src/app/services/navigation.service";
-import { WebhooksService } from "src/app/services/webhooks.service";
 import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
 import { MatDividerModule } from "@angular/material/divider";
 import { NgSelectModule } from "@ng-select/ng-select";
-import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { EditWebhooksType } from "./edit-webhooks.types";
 import { eventTypesMapper } from "src/app/common/helpers/data.helpers";
 import { SubscribedEventType, WebhookSubscriptionFormType } from "../../dataset-settings-webhooks-tab.component.types";
+import { CreateEditWebhookFormComponent } from "../common/create-edit-webhook-form/create-edit-webhook-form.component";
 
 @Component({
     selector: "app-edit-webhook",
@@ -42,7 +33,7 @@ import { SubscribedEventType, WebhookSubscriptionFormType } from "../../dataset-
         NgSelectModule,
 
         //-----//
-        FormValidationErrorsDirective,
+        CreateEditWebhookFormComponent,
     ],
     templateUrl: "./edit-webhook.component.html",
     styleUrls: ["./edit-webhook.component.scss"],
@@ -52,21 +43,10 @@ export class EditWebhookComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.WEBHOOKS_EDIT_KEY) public editWebhooksData: EditWebhooksType;
 
     public dropdownList: SubscribedEventType[] = [];
-    public readonly WebhookSubscriptionStatus: typeof WebhookSubscriptionStatus = WebhookSubscriptionStatus;
-    public readonly ErrorSets: typeof ErrorSets = ErrorSets;
 
     private fb = inject(NonNullableFormBuilder);
-    private webhooksService = inject(WebhooksService);
     private datasetWebhooksService = inject(DatasetWebhooksService);
     private navigationService = inject(NavigationService);
-
-    public get targetUrlControl(): AbstractControl {
-        return this.createOrEditSubscriptionForm.controls.targetUrl;
-    }
-
-    public get eventTypesControl(): AbstractControl {
-        return this.createOrEditSubscriptionForm.controls.eventTypes;
-    }
 
     public createOrEditSubscriptionForm: FormGroup<WebhookSubscriptionFormType> = this.fb.group({
         targetUrl: this.fb.control("", [Validators.required, Validators.pattern(AppValues.URL_PATTERN_ONLY_HTTPS)]),

@@ -9,6 +9,8 @@ import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/tes
 import { WebhooksApi } from "./webhooks.api";
 import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import {
+    DatasetWebhookReactivateSubscriptionDocument,
+    DatasetWebhookReactivateSubscriptionMutation,
     DatasetWebhookResumeSubscriptionDocument,
     DatasetWebhookResumeSubscriptionMutation,
     DatasetWebhookSubscriptionsQuery,
@@ -20,6 +22,7 @@ import {
 import {
     mockDatasetWebhookCreateSubscriptionMutation,
     mockDatasetWebhookPauseSubscriptionMutation,
+    mockDatasetWebhookReactivateSubscriptionMutation,
     mockDatasetWebhookRemoveSubscriptionMutation,
     mockDatasetWebhookResumeSubscriptionMutation,
     mockDatasetWebhookSubscriptionsQuery,
@@ -170,6 +173,24 @@ describe("WebhooksApi", () => {
 
         op.flush({
             data: mockDatasetWebhookResumeSubscriptionMutation,
+        });
+    });
+
+    it("should check the webhook subscription reactivate", () => {
+        service
+            .datasetWebhookReactivateSubscription(DATASET_ID, MOCK_SUBSCRIPTION_ID)
+            .subscribe((res: DatasetWebhookReactivateSubscriptionMutation) => {
+                expect(res.datasets.byId?.webhooks.subscription?.reactivate.__typename).toEqual(
+                    "ReactivateWebhookSubscriptionResultSuccess",
+                );
+            });
+
+        const op = controller.expectOne(DatasetWebhookReactivateSubscriptionDocument);
+        expect(op.operation.variables.datasetId).toEqual(DATASET_ID);
+        expect(op.operation.variables.id).toEqual(MOCK_SUBSCRIPTION_ID);
+
+        op.flush({
+            data: mockDatasetWebhookReactivateSubscriptionMutation,
         });
     });
 

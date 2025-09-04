@@ -86,6 +86,13 @@
                             >
                             <mat-icon
                                 class="mat-icon-action-size"
+                                (click)="reactivateWebhook(element.id)"
+                                *ngIf="element.status === WebhookSubscriptionStatus.Unreachable"
+                                [title]="'reactivate'"
+                                >domain_disabled</mat-icon
+                            >
+                            <mat-icon
+                                class="mat-icon-action-size"
                                 (click)="openRotateSecretModal()"
                                 *ngIf="element.status === WebhookSubscriptionStatus.Enabled"
                                 [title]="'rotate secret'"

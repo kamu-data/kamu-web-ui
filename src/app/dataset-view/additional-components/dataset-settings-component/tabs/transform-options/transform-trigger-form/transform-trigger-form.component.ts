@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { FlowTriggerBreakingChangeRule, FlowTriggerInput } from "src/app/api/kamu.graphql.interface";
+import { FlowTriggerBreakingChangeRule, FlowTriggerRuleInput } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { FormGroup, FormControl, AbstractControl, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MaybeNull } from "src/app/interface/app.types";
@@ -46,9 +46,8 @@ import { BufferingBatchingRuleFormType } from "../buffering-batching-rule-form/b
 })
 export class TransformTriggerFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public form: FormGroup<TransformTriggerFormType>;
-    @Input({ required: true }) public updateStateToggleLabel: string;
+    @Input({ required: true }) public updatesEnabledControl: FormControl<boolean>;
 
-    public readonly UPDATES_TOOLTIP = FlowTooltipsTexts.UPDATE_SELECTOR_TOOLTIP;
     public readonly BREAKING_NO_ACTION_TOOLTIP = FlowTooltipsTexts.BREAKING_NO_ACTION_TOOLTIP;
     public readonly BREAKING_RECOVER_TOOLTIP = FlowTooltipsTexts.BREAKING_RECOVER_TOOLTIP;
     public readonly NEW_DATA_TRANSFORM_IMMEDIATE_TOOLTIP = FlowTooltipsTexts.NEW_DATA_TRANSFORM_IMMEDIATE_TOOLTIP;
@@ -62,7 +61,6 @@ export class TransformTriggerFormComponent extends BaseComponent implements OnIn
         bufferingForm.disable();
 
         const formGroup = new FormGroup<TransformTriggerFormType>({
-            updatesEnabled: new FormControl<boolean>(false, { nonNullable: true }),
             forNewData: new FormGroup<BatchingRuleFormType>({
                 batchingRuleType: new FormControl<MaybeNull<BatchingRuleType>>(
                     { value: null, disabled: true },
@@ -79,7 +77,9 @@ export class TransformTriggerFormComponent extends BaseComponent implements OnIn
         return formGroup;
     }
 
-    public static buildTransformTriggerInput(transformTriggerFormValue: TransformTriggerFormValue): FlowTriggerInput {
+    public static buildTransformTriggerRuleInput(
+        transformTriggerFormValue: TransformTriggerFormValue,
+    ): FlowTriggerRuleInput {
         switch (transformTriggerFormValue.forNewData.batchingRuleType) {
             case BatchingRuleType.BUFFERING: {
                 const bufferingValue = transformTriggerFormValue.forNewData.buffering;
@@ -124,10 +124,6 @@ export class TransformTriggerFormComponent extends BaseComponent implements OnIn
 
     public ngOnInit(): void {
         this.setupFormControlRelationships();
-    }
-
-    public get updatesEnabledControl(): AbstractControl {
-        return this.form.controls.updatesEnabled;
     }
 
     public get forBreakingChangeControl(): AbstractControl {

@@ -12,7 +12,8 @@ import { map, Observable, of, switchMap } from "rxjs";
 import { inject } from "@angular/core";
 import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetFlowType, GetDatasetFlowTriggersQuery } from "src/app/api/kamu.graphql.interface";
+import { DatasetFlowType, FlowTriggerStopPolicy, GetDatasetFlowTriggerQuery } from "src/app/api/kamu.graphql.interface";
+import { MaybeNull } from "src/app/interface/app.types";
 
 export const datasetSettingsTransformTabResolverFn: ResolveFn<DatasetSettingsTransformOptionsTabData | null> = (
     route: ActivatedRouteSnapshot,
@@ -29,17 +30,40 @@ export const datasetSettingsTransformTabResolverFn: ResolveFn<DatasetSettingsTra
                 return of(null);
             }
             return datasetFlowTriggerService
-                .fetchDatasetFlowTriggers(data.datasetBasics.id, DatasetFlowType.ExecuteTransform)
+                .fetchDatasetFlowTrigger(data.datasetBasics.id, DatasetFlowType.ExecuteTransform)
                 .pipe(
-                    map((query: GetDatasetFlowTriggersQuery) => {
+                    map((query: GetDatasetFlowTriggerQuery) => {
                         const flowTriggers = query.datasets.byId?.flows.triggers.byType;
                         const paused = flowTriggers?.paused ?? true;
                         const reactive = flowTriggers?.reactive ?? null;
+
+                        let stopPolicy: MaybeNull<FlowTriggerStopPolicy> = null;
+                        if (flowTriggers?.stopPolicy) {
+                            switch (flowTriggers.stopPolicy.__typename) {
+                                case "FlowTriggerStopPolicyNever":
+                                    stopPolicy = {
+                                        __typename: "FlowTriggerStopPolicyNever",
+                                        dummy: false,
+                                    };
+                                    break;
+                                case "FlowTriggerStopPolicyAfterConsecutiveFailures":
+                                    stopPolicy = {
+                                        __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+                                        maxFailures: 1,
+                                    };
+                                    break;
+                                /* istanbul ignore next */
+                                default:
+                                    throw new Error("Unknown flow trigger stop policy");
+                            }
+                        }
+
                         return {
                             datasetBasics: data.datasetBasics,
                             datasetPermissions: data.datasetPermissions,
                             reactive,
                             paused,
+                            stopPolicy,
                         } as DatasetSettingsTransformOptionsTabData;
                     }),
                 );

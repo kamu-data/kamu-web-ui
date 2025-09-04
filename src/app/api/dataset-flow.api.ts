@@ -8,8 +8,8 @@
 import { MutationResult } from "apollo-angular";
 import { inject, Injectable } from "@angular/core";
 import {
-    CancelScheduledTasksGQL,
-    CancelScheduledTasksMutation,
+    CancelFlowRunGQL,
+    CancelFlowRunMutation,
     DatasetAllFlowsPausedGQL,
     DatasetAllFlowsPausedQuery,
     DatasetFlowFilters,
@@ -34,19 +34,22 @@ import {
     FlowConfigIngestInput,
     FlowConfigResetInput,
     FlowRetryPolicyInput,
-    FlowTriggerInput,
+    FlowTriggerRuleInput,
+    FlowTriggerStopPolicyInput,
     GetDatasetFlowConfigsGQL,
     GetDatasetFlowConfigsQuery,
-    GetDatasetFlowTriggersGQL,
-    GetDatasetFlowTriggersQuery,
+    GetDatasetFlowTriggerGQL,
+    GetDatasetFlowTriggerQuery,
     GetDatasetListFlowsGQL,
     GetDatasetListFlowsQuery,
     GetFlowByIdGQL,
     GetFlowByIdQuery,
+    PauseDatasetFlowTriggerGQL,
+    PauseDatasetFlowTriggerMutation,
     SetCompactionFlowConfigGQL,
     SetCompactionFlowConfigMutation,
-    SetDatasetFlowTriggersGQL,
-    SetDatasetFlowTriggersMutation,
+    SetDatasetFlowTriggerGQL,
+    SetDatasetFlowTriggerMutation,
     SetIngestFlowConfigGQL,
     SetIngestFlowConfigMutation,
 } from "./kamu.graphql.interface";
@@ -70,10 +73,11 @@ export class DatasetFlowApi {
     private datasetTriggerResetToMetadataFlowGQL = inject(DatasetTriggerResetToMetadataFlowGQL);
 
     private datasetFlowByIdGQL = inject(GetFlowByIdGQL);
-    private cancelScheduledTasksGQL = inject(CancelScheduledTasksGQL);
+    private cancelFlowRunGQL = inject(CancelFlowRunGQL);
     private datasetFlowsInitiatorsGQL = inject(DatasetFlowsInitiatorsGQL);
-    private setDatasetFlowTriggersGQL = inject(SetDatasetFlowTriggersGQL);
-    private getDatasetFlowTriggersGQL = inject(GetDatasetFlowTriggersGQL);
+    private setDatasetFlowTriggerGQL = inject(SetDatasetFlowTriggerGQL);
+    private pauseDatasetFlowTriggerGQL = inject(PauseDatasetFlowTriggerGQL);
+    private getDatasetFlowTriggerGQL = inject(GetDatasetFlowTriggerGQL);
 
     private setIngestFlowConfigGQL = inject(SetIngestFlowConfigGQL);
     private setCompactionFlowConfigGQL = inject(SetCompactionFlowConfigGQL);
@@ -183,25 +187,37 @@ export class DatasetFlowApi {
             );
     }
 
-    public setDatasetFlowTriggers(params: {
+    public setDatasetFlowTrigger(params: {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
-        paused: boolean;
-        triggerInput: FlowTriggerInput;
-    }): Observable<SetDatasetFlowTriggersMutation> {
-        return this.setDatasetFlowTriggersGQL.mutate(params).pipe(
+        triggerRuleInput: FlowTriggerRuleInput;
+        triggerStopPolicyInput: FlowTriggerStopPolicyInput;
+    }): Observable<SetDatasetFlowTriggerMutation> {
+        return this.setDatasetFlowTriggerGQL.mutate(params).pipe(
             first(),
-            map((result: MutationResult<SetDatasetFlowTriggersMutation>) => {
-                return result.data as SetDatasetFlowTriggersMutation;
+            map((result: MutationResult<SetDatasetFlowTriggerMutation>) => {
+                return result.data as SetDatasetFlowTriggerMutation;
             }),
         );
     }
 
-    public getDatasetFlowTriggers(params: {
+    public pauseDatasetFlowTrigger(params: {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
-    }): Observable<GetDatasetFlowTriggersQuery> {
-        return this.getDatasetFlowTriggersGQL
+    }): Observable<PauseDatasetFlowTriggerMutation> {
+        return this.pauseDatasetFlowTriggerGQL.mutate(params).pipe(
+            first(),
+            map((result: MutationResult<PauseDatasetFlowTriggerMutation>) => {
+                return result.data as PauseDatasetFlowTriggerMutation;
+            }),
+        );
+    }
+
+    public getDatasetFlowTrigger(params: {
+        datasetId: string;
+        datasetFlowType: DatasetFlowType;
+    }): Observable<GetDatasetFlowTriggerQuery> {
+        return this.getDatasetFlowTriggerGQL
             .watch(params, {
                 ...noCacheFetchPolicy,
                 context: {
@@ -209,7 +225,7 @@ export class DatasetFlowApi {
                 },
             })
             .valueChanges.pipe(
-                map((result: ApolloQueryResult<GetDatasetFlowTriggersQuery>) => {
+                map((result: ApolloQueryResult<GetDatasetFlowTriggerQuery>) => {
                     return result.data;
                 }),
             );
@@ -289,19 +305,16 @@ export class DatasetFlowApi {
             );
     }
 
-    public cancelScheduledTasks(params: {
-        datasetId: string;
-        flowId: string;
-    }): Observable<CancelScheduledTasksMutation> {
-        return this.cancelScheduledTasksGQL
+    public cancelFlowRun(params: { datasetId: string; flowId: string }): Observable<CancelFlowRunMutation> {
+        return this.cancelFlowRunGQL
             .mutate({
                 datasetId: params.datasetId,
                 flowId: params.flowId,
             })
             .pipe(
                 first(),
-                map((result: MutationResult<CancelScheduledTasksMutation>) => {
-                    return result.data as CancelScheduledTasksMutation;
+                map((result: MutationResult<CancelFlowRunMutation>) => {
+                    return result.data as CancelFlowRunMutation;
                 }),
             );
     }

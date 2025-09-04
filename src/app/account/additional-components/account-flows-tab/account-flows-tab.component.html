@@ -50,7 +50,7 @@
                 [accountFlowInitiators]="flowConnectionData.flowInitiators"
                 [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
                 (searchByFiltersChange)="onSearchByFiltersChange($event)"
-                (cancelFlowChange)="onCancelFlow($event)"
+                (abortFlowChange)="onAbortFlow($event)"
             ></app-flows-table>
             <div class="mt-50px">
                 <app-pagination

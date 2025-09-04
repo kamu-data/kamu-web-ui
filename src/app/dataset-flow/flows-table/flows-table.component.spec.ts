@@ -18,7 +18,6 @@ import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { SimpleChanges } from "@angular/core";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { mockDatasets, mockFlowSummaryDataFragmentShowForceLink } from "./flows-table.helpers.mock";
-import { mockDatasetMainDataId } from "src/app/search/mock.data";
 import { provideToastr, ToastrService } from "ngx-toastr";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { of } from "rxjs";
@@ -32,7 +31,6 @@ describe("FlowsTableComponent", () => {
     let modalService: ModalService;
     let datasetFlowsService: DatasetFlowsService;
     let toastService: ToastrService;
-    const MOCK_FLOW_ID = "1";
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -85,13 +83,62 @@ describe("FlowsTableComponent", () => {
         expect(component.dataSource.data).toEqual(mockFlowSummaryDataFragments);
     });
 
-    it("should check show modal window with warning", () => {
+    it("should check show modal window for aborting flow", () => {
         const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, false);
             return Promise.resolve("");
         });
-        component.cancelFlow(MOCK_FLOW_ID, mockDatasetMainDataId);
-        expect(modalWindowSpy).toHaveBeenCalledWith(jasmine.objectContaining({ title: "Cancel flow" }));
+        component.abortFlow(mockFlowSummaryDataFragments[0]);
+        expect(modalWindowSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                title: "Abort flow",
+                message: "Do you want to abort this flow?",
+            }),
+        );
+    });
+
+    it("should check show modal window for aborting flow with enabled schedule", () => {
+        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
+            options.handler?.call(undefined, false);
+            return Promise.resolve("");
+        });
+        component.abortFlow({
+            ...mockFlowSummaryDataFragments[0],
+            relatedTrigger: {
+                paused: false,
+                schedule: {
+                    __typename: "TimeDelta",
+                },
+            },
+        });
+        expect(modalWindowSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                title: "Abort flow",
+                message: "Do you want to abort this flow? This will also pause the scheduled updates.",
+            }),
+        );
+    });
+
+    it("should check show modal window for aborting flow with paused schedule", () => {
+        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
+            options.handler?.call(undefined, false);
+            return Promise.resolve("");
+        });
+        component.abortFlow({
+            ...mockFlowSummaryDataFragments[0],
+            relatedTrigger: {
+                paused: true,
+                schedule: {
+                    __typename: "TimeDelta",
+                },
+            },
+        });
+        expect(modalWindowSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                title: "Abort flow",
+                message: "Do you want to abort this flow?",
+            }),
+        );
     });
 
     it("should check search method", () => {
@@ -110,7 +157,7 @@ describe("FlowsTableComponent", () => {
         expect(component.showForceUpdateLink(mockFlowSummaryDataFragmentShowForceLink)).toEqual(true);
     });
 
-    it("should check trigger flow with force udate option", fakeAsync(() => {
+    it("should check trigger flow with force update option", fakeAsync(() => {
         const datasetTriggerIngestFlowSpy = spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(
             of(true),
         );

@@ -22,7 +22,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     protected readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
     protected readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
     protected readonly FlowStatus: typeof FlowStatus = FlowStatus;
-    public readonly TIMEOUT_REFRESH_FLOW = 800;
+    public readonly TIMEOUT_REFRESH_FLOW = 1000;
 
     protected readonly flowsService = inject(DatasetFlowsService);
     protected readonly navigationService = inject(NavigationService);
@@ -55,10 +55,14 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
         }
     }
 
-    public onCancelFlow(params: CancelFlowArgs): void {
+    public onAbortFlow(params: CancelFlowArgs): void {
+        const datasetId: string = requireValue(
+            params.datasetId,
+            "Aborting flows without datasetId is not supported yet",
+        );
         this.flowsService
-            .cancelScheduledTasks({
-                datasetId: params.datasetId,
+            .cancelFlowRun({
+                datasetId,
                 flowId: params.flowId,
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -66,6 +70,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
                 if (success) {
                     setTimeout(() => {
                         this.refreshFlow();
+                        this.cdr.detectChanges();
                     }, this.TIMEOUT_REFRESH_FLOW);
                 }
             });

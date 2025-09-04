@@ -1,33 +1,17 @@
 <div>
     <form [formGroup]="form">
-        <div class="mt-4 ms-1 px-2 pb-1 d-flex gap-1">
-            <mat-slide-toggle
-                color="primary"
-                class="mat-elevation-z0"
-                formControlName="updatesEnabled"
-                data-test-id="ingest-trigger-updates-enabled"
-            >
-                <span class="ps-2"> {{ updateStateToggleLabel }}</span>
-            </mat-slide-toggle>
-            <app-tooltip-icon class="d-block" [tooltip]="UPDATES_TOOLTIP" />
-        </div>
-
         <div class="position-relative border border-1 mt-4 rounded-3">
             <div>
                 <span class="position-absolute text-muted group-box-label text-uppercase">Triggers</span>
                 <div class="p-4">
                     <mat-radio-group
-                        class="d-flex flex-column row-gap-4 mt-4"
+                        class="d-flex flex-column row-gap-2"
                         formControlName="__typename"
                         data-test-id="ingest-trigger-type"
                         aria-label="Select an option"
                         color="primary"
                     >
-                        <mat-radio-button
-                            disableRipple="true"
-                            [value]="ScheduleType.TIME_DELTA"
-                            data-test-id="trigger-time-delta"
-                        >
+                        <mat-radio-button [value]="ScheduleType.TIME_DELTA" data-test-id="trigger-time-delta">
                             <app-time-delta-form [form]="form.controls.timeDelta"></app-time-delta-form>
                         </mat-radio-button>
                         <mat-radio-button
@@ -38,7 +22,7 @@
                         </mat-radio-button>
                     </mat-radio-group>
 
-                    <div class="text-muted fs-12 border-top px-4 py-4 mt-4">
+                    <div class="text-muted fs-12 border-top px-2 py-2 mt-2">
                         Cron expression accepted values
                         <div class="fs-12">1. minutes: 0-59 * , -</div>
                         <div class="fs-12">2. hours: 0-23 * , -</div>

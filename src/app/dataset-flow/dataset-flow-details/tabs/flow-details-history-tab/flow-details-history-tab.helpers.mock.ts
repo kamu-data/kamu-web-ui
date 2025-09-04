@@ -410,6 +410,7 @@ export const flowEventSubMessageResults: string[] = [
     "Transformed 10 new records in 2 new blocks",
     "Failed to get increment. Block is missing: f1620bc8ac3dbfd913b83d35ee853dd1b11987874b4f5071f6f31d585c09d4579fc5b",
     "Task #1 (retry attempt 1 of 3)",
+    "An unrecoverable error occurred, see logs for more details",
 ];
 
 export const mockFlowHistoryDataOutcomeOptions: FlowOutcomeDataFragment[] = [
@@ -422,6 +423,7 @@ export const mockFlowHistoryDataOutcomeOptions: FlowOutcomeDataFragment[] = [
         reason: {
             __typename: "TaskFailureReasonGeneral",
             message: "Failed due to some reason",
+            recoverable: true,
         },
     },
     {

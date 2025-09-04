@@ -1,4 +1,4 @@
-query getDatasetFlowTriggers($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
+query getDatasetFlowTrigger($datasetId: DatasetID!, $datasetFlowType: DatasetFlowType!) {
   datasets {
     byId(datasetId: $datasetId) {
       flows {
@@ -26,6 +26,13 @@ query getDatasetFlowTriggers($datasetId: DatasetID!, $datasetFlowType: DatasetFl
                 }
               }
               forBreakingChange
+            }
+
+            stopPolicy {
+              __typename
+              ... on FlowTriggerStopPolicyAfterConsecutiveFailures {
+                maxFailures
+              }
             }
           }
         }

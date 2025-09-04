@@ -4,12 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [Unreleased] 
+### Added
+- Flows table: visualizing the latest batching condition statictics
+### Changed
+- Metadata tab: combined "Dataset Type", "Name", and "Owner" into one property "Dataset"
+
+## [0.56.0] - 2025-08-28
 ### Added
 - Visualizing webhook task failures in flow table and history, differentiating between:
   - connection failure
   - response timeout
   - bad status code
+- Improved handling of task failures in the flow system:
+  - defining stop policy for Ingest and Transform flows
+  - distinguishing between recoverable and unrecoverable task errors
+## Changed
+- Revised meaning of flow abortion:
+    - flows with scheduled trigger abort both the current flow run, and pause the trigger
+    - flows with reactive trigger abort current run only  
 ### Changed
 - Redesign "Metadata" tab
 - Updated the algorithm for checking the hash of the head

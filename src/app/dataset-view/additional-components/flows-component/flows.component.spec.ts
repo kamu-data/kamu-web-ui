@@ -109,7 +109,9 @@ describe("FlowsComponent", () => {
     }));
 
     it("should check toggle state for flow configurations with pause=true", fakeAsync(() => {
-        const datasetResumeFlowsSpy = spyOn(datasetFlowsService, "datasetResumeFlows").and.returnValue(of());
+        const datasetResumeFlowsSpy = spyOn(datasetFlowsService, "datasetResumeFlows").and.returnValue(
+            of(void 0).pipe(delay(0)),
+        );
         const mockPause = true;
         const refreshFlowSpy = spyOn(component, "refreshFlow");
         component.toggleStateDatasetFlowConfigs(mockPause);
@@ -120,7 +122,9 @@ describe("FlowsComponent", () => {
     }));
 
     it("should check toggle state for flow configurations with pause=false", fakeAsync(() => {
-        const datasetPauseFlowsSpy = spyOn(datasetFlowsService, "datasetPauseFlows").and.returnValue(of());
+        const datasetPauseFlowsSpy = spyOn(datasetFlowsService, "datasetPauseFlows").and.returnValue(
+            of(void 0).pipe(delay(0)),
+        );
         const mockPause = false;
         const refreshFlowSpy = spyOn(component, "refreshFlow");
         component.toggleStateDatasetFlowConfigs(mockPause);
@@ -139,10 +143,10 @@ describe("FlowsComponent", () => {
         flush();
     }));
 
-    it("should check cancel flow button", fakeAsync(() => {
+    it("should check abort flow button", fakeAsync(() => {
         const refreshFlowSpy = spyOn(component, "refreshFlow");
-        spyOn(datasetFlowsService, "cancelScheduledTasks").and.returnValue(of(true));
-        component.onCancelFlow({ flowId: MOCK_FLOW_ID, datasetId: mockDatasetMainDataId });
+        spyOn(datasetFlowsService, "cancelFlowRun").and.returnValue(of(true));
+        component.onAbortFlow({ flowId: MOCK_FLOW_ID, datasetId: mockDatasetMainDataId });
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
         flush();

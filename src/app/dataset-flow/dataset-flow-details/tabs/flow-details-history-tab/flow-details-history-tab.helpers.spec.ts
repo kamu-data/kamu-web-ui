@@ -67,6 +67,7 @@ describe("DatasetFlowDetailsHelpers", () => {
                         reason: {
                             __typename: "TaskFailureReasonGeneral",
                             message: "Failed due to some reason",
+                            recoverable: true,
                         },
                     },
                 },
@@ -101,7 +102,7 @@ describe("DatasetFlowDetailsHelpers", () => {
         });
     });
 
-    it(`should check flow event submessage with typename = FlowEventTaskChanged and flow outcome = Failed`, () => {
+    it(`should check flow event submessage with typename = FlowEventTaskChanged and flow outcome = Failed (recoverable)`, () => {
         expect(
             DatasetFlowDetailsHelpers.flowEventSubMessage(
                 {
@@ -112,6 +113,7 @@ describe("DatasetFlowDetailsHelpers", () => {
                             reason: {
                                 __typename: "TaskFailureReasonGeneral",
                                 message: "Failed due to some reason",
+                                recoverable: true,
                             },
                         },
                     },
@@ -119,6 +121,27 @@ describe("DatasetFlowDetailsHelpers", () => {
                 mockFlowSummaryDataFragments[4],
             ),
         ).toEqual(flowEventSubMessageResults[12]);
+    });
+
+    it(`should check flow event submessage with typename = FlowEventTaskChanged and flow outcome = Failed (unrecoverable)`, () => {
+        expect(
+            DatasetFlowDetailsHelpers.flowEventSubMessage(
+                {
+                    ...mockHistoryFragmentWithFinishedStatus,
+                    task: {
+                        outcome: {
+                            __typename: "TaskOutcomeFailed",
+                            reason: {
+                                __typename: "TaskFailureReasonGeneral",
+                                message: "Failed due to some reason",
+                                recoverable: false,
+                            },
+                        },
+                    },
+                } as FlowHistoryDataFragment,
+                mockFlowSummaryDataFragments[4],
+            ),
+        ).toEqual(flowEventSubMessageResults[18]);
     });
 
     it(`should check flow event submessage with typename = FlowEventTaskChanged and flow outcome = Success (ingestResult=null)`, () => {

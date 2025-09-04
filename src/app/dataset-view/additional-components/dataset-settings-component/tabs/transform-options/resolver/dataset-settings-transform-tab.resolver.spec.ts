@@ -81,9 +81,9 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
         permissionsChangesSpy.and.returnValue(of(mockReadonlyDatasetPermissionsFragment));
         spyOn(navigationService, "navigateToPageNotFound").and.stub();
 
-        const fetchDatasetFlowTriggersSpy: jasmine.Spy = spyOn(
+        const fetchDatasetFlowTriggerSpy: jasmine.Spy = spyOn(
             datasetFlowTriggerService,
-            "fetchDatasetFlowTriggers",
+            "fetchDatasetFlowTrigger",
         ).and.stub();
 
         const resolver$ = executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
@@ -95,14 +95,14 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
                 expect(data).toBeNull();
             });
 
-        expect(fetchDatasetFlowTriggersSpy).not.toHaveBeenCalled();
+        expect(fetchDatasetFlowTriggerSpy).not.toHaveBeenCalled();
         expect(resolverSubscription$.closed).toBeTrue();
     });
 
-    it("should call fetchDatasetFlowTriggers with correct parameters", () => {
-        const fetchDatasetFlowTriggersSpy: jasmine.Spy = spyOn(
+    it("should call fetchDatasetFlowTrigger with correct parameters", () => {
+        const fetchDatasetFlowTriggerSpy: jasmine.Spy = spyOn(
             datasetFlowTriggerService,
-            "fetchDatasetFlowTriggers",
+            "fetchDatasetFlowTrigger",
         ).and.returnValue(
             of({
                 datasets: {
@@ -112,6 +112,9 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
                                 byType: {
                                     paused: true,
                                     reactive: null,
+                                    stopPolicy: {
+                                        __typename: "FlowTriggerStopPolicyNever",
+                                    },
                                 },
                             },
                         },
@@ -130,11 +133,15 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
                     datasetBasics: mockDatasetBasicsDerivedFragment,
                     datasetPermissions: mockFullPowerDatasetPermissionsFragment,
                     reactive: null,
+                    stopPolicy: {
+                        __typename: "FlowTriggerStopPolicyNever",
+                        dummy: false,
+                    },
                     paused: true,
                 });
             });
 
-        expect(fetchDatasetFlowTriggersSpy).toHaveBeenCalledWith(
+        expect(fetchDatasetFlowTriggerSpy).toHaveBeenCalledWith(
             mockDatasetBasicsDerivedFragment.id,
             DatasetFlowType.ExecuteTransform,
         );
@@ -143,7 +150,7 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
     });
 
     it("should correctly map flowTriggers to paused and reactive", () => {
-        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTriggers").and.returnValue(
+        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").and.returnValue(
             of(mockGetDatasetFlowTriggersBatchingQuery),
         );
 
@@ -157,6 +164,10 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
                     datasetBasics: mockDatasetBasicsDerivedFragment,
                     datasetPermissions: mockFullPowerDatasetPermissionsFragment,
                     reactive: mockBufferingBatchingReactiveRule,
+                    stopPolicy: {
+                        __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+                        maxFailures: 1,
+                    },
                     paused:
                         mockGetDatasetFlowTriggersBatchingQuery.datasets.byId?.flows.triggers.byType?.paused || false,
                 });
@@ -165,7 +176,7 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
     });
 
     it("should correctly map flowTriggers when no data is defined", () => {
-        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTriggers").and.returnValue(
+        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").and.returnValue(
             of({
                 datasets: {
                     __typename: "Datasets",
@@ -190,15 +201,16 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
                     datasetBasics: mockDatasetBasicsDerivedFragment,
                     datasetPermissions: mockFullPowerDatasetPermissionsFragment,
                     reactive: null,
+                    stopPolicy: null,
                     paused: true,
                 });
             });
         expect(resolverSubscription$.closed).toBeTrue();
     });
 
-    it("should handle errors from fetchDatasetFlowTriggers", () => {
+    it("should handle errors from fetchDatasetFlowTrigger", () => {
         const errorMessage = "Failed to fetch flow triggers";
-        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTriggers").and.throwError(errorMessage);
+        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").and.throwError(errorMessage);
 
         const resolver$ = executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
         expect(resolver$).not.toBeNull();

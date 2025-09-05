@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DatasetInfo, FlowDetailsNavigationParams } from "../interface/navigation.interface";
+import { DatasetInfo, FlowDetailsNavigationParams, WebhooksNavigationParams } from "../interface/navigation.interface";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
@@ -15,6 +15,7 @@ import { FlowDetailsTabs } from "../dataset-flow/dataset-flow-details/dataset-fl
 import { AccountSettingsTabs } from "../account/settings/account-settings.constants";
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
 import { MetadataTabs } from "./../dataset-view/additional-components/metadata-component/metadata.constants";
+import { SettingsTabsEnum } from "../dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 
 @Injectable({ providedIn: "root" })
 export class NavigationService {
@@ -120,6 +121,14 @@ export class NavigationService {
                 },
             ),
         );
+    }
+
+    public navigateToWebhooks(params: WebhooksNavigationParams): void {
+        const route = [params.accountName, params.datasetName, DatasetViewTypeEnum.Settings, SettingsTabsEnum.WEBHOOKS];
+        if (params.tab) {
+            route.push(params.tab);
+        }
+        promiseWithCatch(this.router.navigate(route));
     }
 
     public navigateToLogin(redirectUrl?: string): void {

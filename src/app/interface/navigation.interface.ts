@@ -33,3 +33,9 @@ export interface FlowDetailsNavigationParams {
     flowId: string;
     tab?: FlowDetailsTabs;
 }
+
+export interface WebhooksNavigationParams {
+    accountName: string;
+    datasetName: string;
+    tab?: string;
+}

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Flows table: visualizing the latest batching condition statictics
 ### Changed
 - Metadata tab: combined "Dataset Type", "Name", and "Owner" into one property "Dataset"
+- Webhooks tab: all modal windows have been removed
 
 ## [0.56.0] - 2025-08-28
 ### Added

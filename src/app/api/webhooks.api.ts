@@ -7,6 +7,8 @@
 
 import { inject, Injectable } from "@angular/core";
 import {
+    DatasetWebhookByIdGQL,
+    DatasetWebhookByIdQuery,
     DatasetWebhookCreateSubscriptionGQL,
     DatasetWebhookCreateSubscriptionMutation,
     DatasetWebhookPauseSubscriptionGQL,
@@ -40,6 +42,7 @@ export class WebhooksApi {
     private datasetWebhookResumeSubscriptionGQL = inject(DatasetWebhookResumeSubscriptionGQL);
     private datasetWebhookReactivateSubscriptionGQL = inject(DatasetWebhookReactivateSubscriptionGQL);
     private datasetWebhookUpdateSubscriptionGQL = inject(DatasetWebhookUpdateSubscriptionGQL);
+    private datasetWebhookSubscriptionByIdGQL = inject(DatasetWebhookByIdGQL);
 
     public webhookEventTypes(): Observable<WebhookEventTypesQuery> {
         return this.webhookEventTypesGQL.watch().valueChanges.pipe(
@@ -128,6 +131,18 @@ export class WebhooksApi {
             first(),
             map((result: MutationResult<DatasetWebhookUpdateSubscriptionMutation>) => {
                 return result.data as DatasetWebhookUpdateSubscriptionMutation;
+            }),
+        );
+    }
+
+    public datasetWebhookSubscriptionById(params: {
+        datasetId: string;
+        id: string;
+    }): Observable<DatasetWebhookByIdQuery> {
+        return this.datasetWebhookSubscriptionByIdGQL.watch({ ...params }, noCacheFetchPolicy).valueChanges.pipe(
+            first(),
+            map((result: ApolloQueryResult<DatasetWebhookByIdQuery>) => {
+                return result.data;
             }),
         );
     }

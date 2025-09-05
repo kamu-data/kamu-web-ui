@@ -12,7 +12,7 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { of } from "rxjs";
 import { mockWebhookEventTypesQuery } from "../api/mock/webhooks.mock";
 import { WebhooksApi } from "./../api/webhooks.api";
-import { SubscribedEventType } from "../dataset-view/additional-components/dataset-settings-component/tabs/webhooks/create-edit-subscription-modal/create-edit-subscription-modal.model";
+import { SubscribedEventType } from "../dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
 
 describe("WebhooksService", () => {
     let service: WebhooksService;

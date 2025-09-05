@@ -26,7 +26,6 @@ import { datasetSettingsTransformTabResolverFn } from "./tabs/transform-options/
 import { DatasetSettingsSecretsManagerTabComponent } from "./tabs/variables-and-secrets/dataset-settings-secrets-manager-tab.component";
 import { datasetSettingsVarAndSecretsResolverFn } from "./tabs/variables-and-secrets/resolver/dataset-settings-var-and-secrets.resolver";
 import { DatasetSettingsWebhooksTabComponent } from "./tabs/webhooks/dataset-settings-webhooks-tab.component";
-import { datasetSettingsWebhooksResolverFn } from "./tabs/webhooks/resolver/dataset-settings-webhooks.resolver";
 import ProjectLinks from "../../../project-links";
 import { DatasetSettingsComponent } from "./dataset-settings.component";
 import { datasetSettingsTabResolverFn } from "./resolvers/dataset-settings-tab.resolver";
@@ -136,10 +135,12 @@ export const DATASET_SETTINGS_ROUTES: Routes = [
                 data: {
                     [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.WEBHOOKS,
                 },
-                resolve: {
-                    [RoutingResolvers.DATASET_SETTINGS_WEBHOOKS_KEY]: datasetSettingsWebhooksResolverFn,
-                    [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
-                },
+
+                loadChildren: () =>
+                    import(
+                        /* webpackChunkName: "dataset-view-settings-webhooks" */
+                        "./tabs/webhooks/dataset-settings-webhooks-tab-routing"
+                    ).then((m) => m.WEBHOOKS_TAB_ROUTING),
             },
         ],
     },

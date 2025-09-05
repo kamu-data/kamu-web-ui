@@ -5,9 +5,32 @@
  * included in the LICENSE file.
  */
 
-import { WebhookSubscription } from "src/app/api/kamu.graphql.interface";
+import { FormControl } from "@angular/forms";
+import {
+    WebhookSubscription,
+    WebhookSubscriptionInput,
+    WebhookSubscriptionStatus,
+} from "src/app/api/kamu.graphql.interface";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
 export interface DatasetSettingsWebhookTabData extends DatasetViewData {
     subscriptions: WebhookSubscription[];
 }
+
+export interface SubscribedEventType {
+    name: string;
+    value: string;
+}
+
+export interface CreateWebhookSubscriptionSuccess {
+    input: WebhookSubscriptionInput;
+    subscriptionId: string;
+    status?: WebhookSubscriptionStatus;
+    secret: string;
+}
+
+export type WebhookSubscriptionFormType = {
+    eventTypes: FormControl<string[]>;
+    label: FormControl<string>;
+    targetUrl: FormControl<string>;
+};

@@ -7046,6 +7046,33 @@ export type SemanticSearchDatasetsOverviewQuery = {
     };
 };
 
+export type DatasetWebhookByIdQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    id: Scalars["WebhookSubscriptionID"];
+}>;
+
+export type DatasetWebhookByIdQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            webhooks: {
+                __typename?: "DatasetWebhooks";
+                subscription?: {
+                    __typename?: "WebhookSubscription";
+                    id: string;
+                    label: string;
+                    datasetId?: string | null;
+                    targetUrl: string;
+                    eventTypes: Array<string>;
+                    status: WebhookSubscriptionStatus;
+                } | null;
+            };
+        } | null;
+    };
+};
+
 export type DatasetWebhookCreateSubscriptionMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
     input: WebhookSubscriptionInput;
@@ -11233,6 +11260,35 @@ export class SemanticSearchDatasetsOverviewGQL extends Apollo.Query<
     SemanticSearchDatasetsOverviewQueryVariables
 > {
     document = SemanticSearchDatasetsOverviewDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetWebhookByIdDocument = gql`
+    query datasetWebhookById($datasetId: DatasetID!, $id: WebhookSubscriptionID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                webhooks {
+                    subscription(id: $id) {
+                        id
+                        label
+                        datasetId
+                        targetUrl
+                        eventTypes
+                        status
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetWebhookByIdGQL extends Apollo.Query<DatasetWebhookByIdQuery, DatasetWebhookByIdQueryVariables> {
+    document = DatasetWebhookByIdDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

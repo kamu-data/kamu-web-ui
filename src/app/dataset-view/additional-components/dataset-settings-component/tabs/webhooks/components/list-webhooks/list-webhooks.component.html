@@ -15,7 +15,7 @@
             <button class="btn btn-success" (click)="createWebhook()" type="button">Add webhook</button>
         </div>
         <div class="border">
-            <table mat-table [dataSource]="(dataSource$ | async)!" class="w-100">
+            <table mat-table [dataSource]="(dataSource$ | async)!" [trackBy]="trackByWebhookId" class="w-100">
                 <!-- Event Column -->
                 <ng-container matColumnDef="event">
                     <th mat-header-cell *matHeaderCellDef>Event</th>

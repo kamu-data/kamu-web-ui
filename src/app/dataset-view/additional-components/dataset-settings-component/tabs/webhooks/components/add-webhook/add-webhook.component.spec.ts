@@ -12,11 +12,12 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { WebhooksService } from "src/app/services/webhooks.service";
 import { of } from "rxjs";
-import { CreateEditWebhookFormComponent } from "./../common/create-edit-webhook-form/create-edit-webhook-form.component";
+import { WebhookFormComponent } from "../common/webhook-form/webhook-form.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
 import { mockCreateWebhookSubscriptionSuccess } from "src/app/api/mock/webhooks.mock";
 import { NavigationService } from "src/app/services/navigation.service";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 
 describe("AddWebhookComponent", () => {
     let component: AddWebhookComponent;
@@ -28,8 +29,10 @@ describe("AddWebhookComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo, provideToastr()],
-            imports: [AddWebhookComponent, CreateEditWebhookFormComponent, SharedTestModule],
+            imports: [AddWebhookComponent, WebhookFormComponent, SharedTestModule],
         });
+        registerMatSvgIcons();
+
         fixture = TestBed.createComponent(AddWebhookComponent);
         webhooksService = TestBed.inject(WebhooksService);
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);

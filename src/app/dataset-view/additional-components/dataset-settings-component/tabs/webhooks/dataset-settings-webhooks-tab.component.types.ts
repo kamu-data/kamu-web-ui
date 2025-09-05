@@ -26,7 +26,7 @@ export interface CreateWebhookSubscriptionSuccess {
     input: WebhookSubscriptionInput;
     subscriptionId: string;
     status?: WebhookSubscriptionStatus;
-    secret?: string;
+    secret: string;
 }
 
 export type WebhookSubscriptionFormType = {

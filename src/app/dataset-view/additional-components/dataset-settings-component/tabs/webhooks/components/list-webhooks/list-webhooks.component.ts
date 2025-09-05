@@ -49,11 +49,13 @@ import ProjectLinks from "src/app/project-links";
 })
 export class ListWebhooksComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_WEBHOOKS_KEY) public webhooksViewData: DatasetSettingsWebhookTabData;
+
     public readonly DISPLAY_COLUMNS: string[] = ["event", "status", "actions"];
     public readonly WebhookSubscriptionStatus: typeof WebhookSubscriptionStatus = WebhookSubscriptionStatus;
     private readonly _rowsSubject$ = new BehaviorSubject<WebhookSubscription[]>([]);
     public readonly rows$ = this._rowsSubject$.asObservable();
     public readonly dataSource$: Observable<WebhookSubscription[]> = this.rows$;
+
     private datasetWebhooksService = inject(DatasetWebhooksService);
     private modalService = inject(ModalService);
     private navigationService = inject(NavigationService);
@@ -105,25 +107,21 @@ export class ListWebhooksComponent implements OnInit {
             }),
         );
     }
+
     public pauseWebhook(subscriptionId: string): void {
         this.datasetWebhooksService
             .datasetWebhookPauseSubscription(this.datasetBasics.id, subscriptionId)
             .pipe(take(1))
             .subscribe((result: boolean) => {
                 if (result) {
-                    const currentRows: WebhookSubscription[] = this._rowsSubject$.getValue();
-                    const updatedRows: WebhookSubscription[] = currentRows.map((row) => {
-                        return row.id === subscriptionId
-                            ? {
-                                  ...row,
-                                  status: result ? WebhookSubscriptionStatus.Paused : WebhookSubscriptionStatus.Enabled,
-                              }
-                            : row;
-                    });
-                    this._rowsSubject$.next(updatedRows);
+                    this.updateRowStatus(
+                        (row) => row.id === subscriptionId,
+                        result ? WebhookSubscriptionStatus.Paused : WebhookSubscriptionStatus.Enabled,
+                    );
                 }
             });
     }
+
     public reactivateWebhook(subscriptionId: string): void {
         promiseWithCatch(
             this.modalService.warning({
@@ -139,18 +137,12 @@ export class ListWebhooksComponent implements OnInit {
                             .pipe(take(1))
                             .subscribe((result: boolean) => {
                                 if (result) {
-                                    const currentRows: WebhookSubscription[] = this._rowsSubject$.getValue();
-                                    const updatedRows: WebhookSubscription[] = currentRows.map((row) => {
-                                        return row.id === subscriptionId
-                                            ? {
-                                                  ...row,
-                                                  status: result
-                                                      ? WebhookSubscriptionStatus.Enabled
-                                                      : WebhookSubscriptionStatus.Unreachable,
-                                              }
-                                            : row;
-                                    });
-                                    this._rowsSubject$.next(updatedRows);
+                                    this.updateRowStatus(
+                                        (row) => row.id === subscriptionId,
+                                        result
+                                            ? WebhookSubscriptionStatus.Enabled
+                                            : WebhookSubscriptionStatus.Unreachable,
+                                    );
                                 }
                             });
                     }
@@ -174,19 +166,14 @@ export class ListWebhooksComponent implements OnInit {
             .pipe(take(1))
             .subscribe((result: boolean) => {
                 if (result) {
-                    const currentRows: WebhookSubscription[] = this._rowsSubject$.getValue();
-                    const updatedRows: WebhookSubscription[] = currentRows.map((row) => {
-                        return row.id === subscriptionId
-                            ? {
-                                  ...row,
-                                  status: result ? WebhookSubscriptionStatus.Enabled : WebhookSubscriptionStatus.Paused,
-                              }
-                            : row;
-                    });
-                    this._rowsSubject$.next(updatedRows);
+                    this.updateRowStatus(
+                        (row) => row.id === subscriptionId,
+                        result ? WebhookSubscriptionStatus.Enabled : WebhookSubscriptionStatus.Paused,
+                    );
                 }
             });
     }
+
     /* istanbul ignore next */
     public viewDeliveryReport(): void {
         promiseWithCatch(
@@ -210,5 +197,15 @@ export class ListWebhooksComponent implements OnInit {
         className: string;
     } {
         return WebhooksHelpers.webhookStatusBadgeOptions(status);
+    }
+
+    public trackByWebhookId(index: number, item: WebhookSubscription): string {
+        return item.id;
+    }
+
+    private updateRowStatus(predicate: (row: WebhookSubscription) => boolean, status: WebhookSubscriptionStatus): void {
+        const current = this._rowsSubject$.getValue();
+        const updated = current.map((row) => (predicate(row) ? { ...row, status } : row));
+        this._rowsSubject$.next(updated);
     }
 }

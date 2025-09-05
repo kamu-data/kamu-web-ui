@@ -7,7 +7,7 @@
             formControlName="targetUrl"
             class="w-100 form-control"
             #targetUrl
-            [readOnly]="isSecretExist"
+            [readOnly]="disabled"
         />
         <div
             class="text-danger fs-12"
@@ -27,7 +27,7 @@
             bindValue="value"
             formControlName="eventTypes"
             [multiple]="true"
-            [readonly]="isSecretExist"
+            [readonly]="disabled"
             #eventTypes
         >
             <ng-template ng-option-tmp let-item="item" let-index="index">
@@ -48,7 +48,7 @@
         <input
             #label
             type="text"
-            [readOnly]="isSecretExist"
+            [readOnly]="disabled"
             data-test-id="target-url"
             formControlName="label"
             class="w-100 form-control"

@@ -6,20 +6,20 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { CreateEditWebhookFormComponent } from "./create-edit-webhook-form.component";
+import { WebhookFormComponent } from "./webhook-form.component";
 import { NonNullableFormBuilder, Validators } from "@angular/forms";
 import AppValues from "src/app/common/values/app.values";
 
 describe("CreateEditWebhookFormComponent", () => {
-    let component: CreateEditWebhookFormComponent;
-    let fixture: ComponentFixture<CreateEditWebhookFormComponent>;
+    let component: WebhookFormComponent;
+    let fixture: ComponentFixture<WebhookFormComponent>;
     let fb: NonNullableFormBuilder;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [CreateEditWebhookFormComponent],
+            imports: [WebhookFormComponent],
         });
-        fixture = TestBed.createComponent(CreateEditWebhookFormComponent);
+        fixture = TestBed.createComponent(WebhookFormComponent);
         fb = TestBed.inject(NonNullableFormBuilder);
         component = fixture.componentInstance;
         component.createOrEditSubscriptionForm = fb.group({

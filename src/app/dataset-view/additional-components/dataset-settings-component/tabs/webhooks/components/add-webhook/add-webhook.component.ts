@@ -12,26 +12,27 @@ import { WebhooksService } from "src/app/services/webhooks.service";
 import { MatDividerModule } from "@angular/material/divider";
 import { NgSelectModule } from "@ng-select/ng-select";
 import AppValues from "src/app/common/values/app.values";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { NavigationService } from "src/app/services/navigation.service";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import { NgIf } from "@angular/common";
+import { AsyncPipe, NgIf } from "@angular/common";
 import { CopyToClipboardComponent } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.component";
 import {
     SubscribedEventType,
     WebhookSubscriptionFormType,
     CreateWebhookSubscriptionSuccess,
 } from "../../dataset-settings-webhooks-tab.component.types";
-import { CreateEditWebhookFormComponent } from "../common/create-edit-webhook-form/create-edit-webhook-form.component";
+import { WebhookFormComponent } from "../common/webhook-form/webhook-form.component";
+import { BehaviorSubject, map, Observable } from "rxjs";
 
 @Component({
     selector: "app-add-webhook",
     standalone: true,
     imports: [
         //-----//
+        AsyncPipe,
         NgIf,
         FormsModule,
         ReactiveFormsModule,
@@ -42,7 +43,7 @@ import { CreateEditWebhookFormComponent } from "../common/create-edit-webhook-fo
 
         //-----//
         CopyToClipboardComponent,
-        CreateEditWebhookFormComponent,
+        WebhookFormComponent,
     ],
     templateUrl: "./add-webhook.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,8 +51,8 @@ import { CreateEditWebhookFormComponent } from "../common/create-edit-webhook-fo
 export class AddWebhookComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.WEBHOOKS_ADD_NEW_KEY) public datasetBasics: DatasetBasicsFragment;
 
-    public dropdownList: SubscribedEventType[] = [];
-    public secret: MaybeUndefined<string>;
+    public dropdownList$: Observable<SubscribedEventType[]>;
+    private secret$ = new BehaviorSubject<string | undefined>(undefined);
 
     private fb = inject(NonNullableFormBuilder);
     private webhooksService = inject(WebhooksService);
@@ -64,17 +65,20 @@ export class AddWebhookComponent extends BaseComponent implements OnInit {
         label: this.fb.control("", [Validators.maxLength(100)]),
     });
 
-    public get isSecretExist(): boolean {
-        return Boolean(this.secret);
+    public get secretChanges(): Observable<MaybeUndefined<string>> {
+        return this.secret$.asObservable();
+    }
+
+    public secretChanged(value: string): void {
+        this.secret$.next(value);
+    }
+
+    public get hasSecret$(): Observable<boolean> {
+        return this.secret$.pipe(map((secret) => !!secret));
     }
 
     public ngOnInit(): void {
-        this.webhooksService
-            .eventTypes()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((eventTypes: SubscribedEventType[]) => {
-                this.dropdownList = eventTypes;
-            });
+        this.dropdownList$ = this.webhooksService.eventTypes();
     }
 
     public addWebhook(): void {
@@ -83,6 +87,7 @@ export class AddWebhookComponent extends BaseComponent implements OnInit {
                 this.datasetBasics.id,
                 this.createOrEditSubscriptionForm.value as WebhookSubscriptionInput,
             )
+
             .subscribe((result: MaybeNull<CreateWebhookSubscriptionSuccess>) => {
                 if (result) {
                     this.createOrEditSubscriptionForm.patchValue({
@@ -90,7 +95,7 @@ export class AddWebhookComponent extends BaseComponent implements OnInit {
                         eventTypes: result.input.eventTypes,
                         label: result.input.label,
                     });
-                    this.secret = result.secret;
+                    this.secretChanged(result.secret);
                 }
             });
     }

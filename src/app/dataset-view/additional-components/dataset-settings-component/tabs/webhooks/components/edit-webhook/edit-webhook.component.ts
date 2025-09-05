@@ -18,7 +18,7 @@ import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { EditWebhooksType } from "./edit-webhooks.types";
 import { eventTypesMapper } from "src/app/common/helpers/data.helpers";
 import { SubscribedEventType, WebhookSubscriptionFormType } from "../../dataset-settings-webhooks-tab.component.types";
-import { CreateEditWebhookFormComponent } from "../common/create-edit-webhook-form/create-edit-webhook-form.component";
+import { WebhookFormComponent } from "../common/webhook-form/webhook-form.component";
 
 @Component({
     selector: "app-edit-webhook",
@@ -33,7 +33,7 @@ import { CreateEditWebhookFormComponent } from "../common/create-edit-webhook-fo
         NgSelectModule,
 
         //-----//
-        CreateEditWebhookFormComponent,
+        WebhookFormComponent,
     ],
     templateUrl: "./edit-webhook.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -31,13 +31,13 @@ import { FormValidationErrorsDirective } from "src/app/common/directives/form-va
         //-----//
         FormValidationErrorsDirective,
     ],
-    templateUrl: "./create-edit-webhook-form.component.html",
+    templateUrl: "./webhook-form.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateEditWebhookFormComponent {
+export class WebhookFormComponent {
     @Input({ required: true }) public createOrEditSubscriptionForm: FormGroup<WebhookSubscriptionFormType>;
     @Input({ required: true }) public dropdownList: SubscribedEventType[] = [];
-    @Input() public isSecretExist: boolean;
+    @Input() public disabled: boolean;
 
     public readonly ErrorSets: typeof ErrorSets = ErrorSets;
 }

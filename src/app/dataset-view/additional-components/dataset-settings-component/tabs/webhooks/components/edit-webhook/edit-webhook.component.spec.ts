@@ -10,7 +10,7 @@ import { EditWebhookComponent } from "./edit-webhook.component";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { CreateEditWebhookFormComponent } from "../common/create-edit-webhook-form/create-edit-webhook-form.component";
+import { WebhookFormComponent } from "../common/webhook-form/webhook-form.component";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { WebhookSubscriptionStatus } from "src/app/api/kamu.graphql.interface";
 import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
@@ -26,7 +26,7 @@ describe("EditWebhookComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo, provideToastr()],
-            imports: [EditWebhookComponent, CreateEditWebhookFormComponent, SharedTestModule],
+            imports: [EditWebhookComponent, WebhookFormComponent, SharedTestModule],
         });
         fixture = TestBed.createComponent(EditWebhookComponent);
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);

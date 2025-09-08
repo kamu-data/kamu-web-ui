@@ -1,39 +1,44 @@
 <h2>Webhooks/Add subscription</h2>
-<div class="box p-4" *ngIf="secretChanges | async as secret">
+<div class="box p-4">
     <app-create-edit-webhook-form
         [createOrEditSubscriptionForm]="createOrEditSubscriptionForm"
         [dropdownList]="(dropdownList$ | async)!"
         [disabled]="(hasSecret$ | async)!"
     />
-    <div class="d-flex flex-column" *ngIf="secret">
-        <label for="" class="form-label">Secret </label>
-        <div class="d-flex flex-row">
-            <input
-                type="text"
-                data-test-id="subscription-secret-created"
-                [ngModel]="secret"
-                class="form-control w-100"
-                readonly
-            />
-            <app-copy-to-clipboard [text]="secret" [dataTestId]="'copyToClipboard-secret'" />
-        </div>
-        <p class="text-muted fs-12" role="alert">
-            Make sure to copy your secret now. You won’t be able to see it again!
-        </p>
-    </div>
 
-    <div class="d-flex flex-wrap justify-content-end my-3" *ngIf="!secret">
-        <button class="btn btn-light me-4" (click)="navigateToListWebhooks()" type="button">Cancel</button>
-        <button
-            class="btn btn-success"
-            [disabled]="createOrEditSubscriptionForm.invalid"
-            (click)="addWebhook()"
-            type="button"
-        >
-            Add subscription
-        </button>
-    </div>
-    <div class="d-flex flex-wrap justify-content-end my-3" *ngIf="secret">
-        <button class="btn btn-success" (click)="navigateToListWebhooks()" type="button">Ok</button>
-    </div>
+    <ng-container *ngIf="secretChanges | async as secret; else noSecret">
+        <div class="d-flex flex-column" *ngIf="secret">
+            <label for="" class="form-label">Secret </label>
+            <div class="d-flex flex-row">
+                <input
+                    type="text"
+                    data-test-id="subscription-secret-created"
+                    [ngModel]="secret"
+                    class="form-control w-100"
+                    readonly
+                />
+                <app-copy-to-clipboard [text]="secret" [dataTestId]="'copyToClipboard-secret'" />
+            </div>
+            <p class="text-muted fs-12" role="alert">
+                Make sure to copy your secret now. You won’t be able to see it again!
+            </p>
+        </div>
+        <div class="d-flex flex-wrap justify-content-end my-3" *ngIf="secret">
+            <button class="btn btn-success" (click)="navigateToListWebhooks()" type="button">Ok</button>
+        </div>
+    </ng-container>
+
+    <ng-template #noSecret>
+        <div class="d-flex flex-wrap justify-content-end my-3">
+            <button class="btn btn-light me-4" (click)="navigateToListWebhooks()" type="button">Cancel</button>
+            <button
+                class="btn btn-success"
+                [disabled]="createOrEditSubscriptionForm.invalid"
+                (click)="addWebhook()"
+                type="button"
+            >
+                Add subscription
+            </button>
+        </div>
+    </ng-template>
 </div>

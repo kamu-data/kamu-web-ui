@@ -1,9 +1,6 @@
 <h2>Webhooks/Manage subscription</h2>
 <div class="box p-4">
-    <app-create-edit-webhook-form
-        [createOrEditSubscriptionForm]="createOrEditSubscriptionForm"
-        [dropdownList]="dropdownList"
-    />
+    <app-webhook-form [createOrEditSubscriptionForm]="createOrEditSubscriptionForm" [dropdownList]="dropdownList" />
     <div class="d-flex flex-wrap justify-content-end my-3">
         <button class="btn btn-light me-4" (click)="navigateToListWebhooks()" type="button">Cancel</button>
         <button

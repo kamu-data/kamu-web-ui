@@ -1,16 +1,17 @@
 <h2>Webhooks/Add subscription</h2>
 <div class="box p-4">
-    <app-create-edit-webhook-form
+    <app-webhook-form
         [createOrEditSubscriptionForm]="createOrEditSubscriptionForm"
         [dropdownList]="(dropdownList$ | async)!"
         [disabled]="(hasSecret$ | async)!"
     />
 
     <ng-container *ngIf="secretChanges | async as secret; else noSecret">
-        <div class="d-flex flex-column">
+        <div class="d-flex flex-column secret-container">
             <label for="" class="form-label">Secret </label>
             <div class="d-flex flex-row">
                 <input
+                    id="secret-created"
                     type="text"
                     data-test-id="subscription-secret-created"
                     [ngModel]="secret"

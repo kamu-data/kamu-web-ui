@@ -17,7 +17,7 @@ import { ErrorSets } from "src/app/common/directives/form-validation-errors.type
 import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
 
 @Component({
-    selector: "app-create-edit-webhook-form",
+    selector: "app-webhook-form",
     standalone: true,
     imports: [
         //-----//

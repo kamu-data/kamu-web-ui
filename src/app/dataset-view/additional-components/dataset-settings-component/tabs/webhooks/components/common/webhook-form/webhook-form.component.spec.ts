@@ -10,7 +10,7 @@ import { WebhookFormComponent } from "./webhook-form.component";
 import { NonNullableFormBuilder, Validators } from "@angular/forms";
 import AppValues from "src/app/common/values/app.values";
 
-describe("CreateEditWebhookFormComponent", () => {
+describe("WebhookFormComponent", () => {
     let component: WebhookFormComponent;
     let fixture: ComponentFixture<WebhookFormComponent>;
     let fb: NonNullableFormBuilder;

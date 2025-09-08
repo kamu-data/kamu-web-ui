@@ -46,6 +46,7 @@ import { BehaviorSubject, map, Observable } from "rxjs";
         WebhookFormComponent,
     ],
     templateUrl: "./add-webhook.component.html",
+    styleUrls: ["./add-webhook.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddWebhookComponent extends BaseComponent implements OnInit {

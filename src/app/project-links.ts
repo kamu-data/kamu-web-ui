@@ -24,6 +24,9 @@ export default class ProjectLinks {
     public static readonly URL_QUERY_EXPLAINER: string = "v/query-explainer";
     public static readonly URL_QUERY: string = "v/query";
 
+    // webhooks
+    public static readonly URL_WEBHOOK_NEW: string = "new";
+
     public static readonly ALL_URLS: string[] = [
         ProjectLinks.URL_HOME,
         ProjectLinks.URL_LOGIN,
@@ -57,4 +60,6 @@ export default class ProjectLinks {
     public static readonly URL_QUERY_PARAM_SQL_QUERY: string = "sqlQuery";
     public static readonly URL_QUERY_PARAM_REDIRECT_URL: string = "redirectUrl";
     public static readonly URL_QUERY_PARAM_CODE: string = "code";
+
+    public static readonly URL_PARAM_WEBHOOK_ID: string = "webhookId";
 }

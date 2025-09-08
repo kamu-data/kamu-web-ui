@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Flows table: visualizing the latest batching condition statictics
 ### Changed
 - Metadata tab: combined "Dataset Type", "Name", and "Owner" into one property "Dataset"
+- Webhooks tab: all modal windows have been removed
 
 ## [0.56.0] - 2025-08-28
 ### Added
@@ -19,11 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved handling of task failures in the flow system:
   - defining stop policy for Ingest and Transform flows
   - distinguishing between recoverable and unrecoverable task errors
-## Changed
+### Changed
 - Revised meaning of flow abortion:
     - flows with scheduled trigger abort both the current flow run, and pause the trigger
     - flows with reactive trigger abort current run only  
-### Changed
 - Redesign "Metadata" tab
 - Updated the algorithm for checking the hash of the head
 - Replaced local storage methods for URL redirection with `redirectUrl` parameter

@@ -15,7 +15,7 @@ query accountListFlows(
           tiles: listFlows(
             page: 0
             perPage: $perPageTiles
-            filters: { byFlowType: null, byStatus: null, byInitiator: null, byDatasetIds: [] }
+            filters: { byProcessType: null, byStatus: null, byInitiator: null, byDatasetIds: [] }
           ) {
             ...FlowConnectionWidgetData
           }

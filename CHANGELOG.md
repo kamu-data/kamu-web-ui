@@ -46,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - skipping empty batching conditions
   - skipping duration of the initiation event
   - differentiating between "run duration" and "total time"
+- Highlighted the first item in quick search with the eye icon
 ### Changed
 - Numerous flow system API corrections addressed
 - No more "recursive" flags in compaction and reset flows

@@ -16,6 +16,8 @@ import {
     DatasetFlowType,
     DatasetFlowsInitiatorsGQL,
     DatasetFlowsInitiatorsQuery,
+    DatasetFlowsProcessesGQL,
+    DatasetFlowsProcessesQuery,
     DatasetPauseFlowsGQL,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsGQL,
@@ -81,6 +83,16 @@ export class DatasetFlowApi {
 
     private setIngestFlowConfigGQL = inject(SetIngestFlowConfigGQL);
     private setCompactionFlowConfigGQL = inject(SetCompactionFlowConfigGQL);
+
+    private datasetFlowsProcessesGQL = inject(DatasetFlowsProcessesGQL);
+
+    public getDatasetFlowsProcesses(params: { datasetId: string }): Observable<DatasetFlowsProcessesQuery> {
+        return this.datasetFlowsProcessesGQL.watch(params, noCacheFetchPolicy).valueChanges.pipe(
+            map((result: ApolloQueryResult<DatasetFlowsProcessesQuery>) => {
+                return result.data;
+            }),
+        );
+    }
 
     public datasetTriggerIngestFlow(params: {
         datasetId: string;

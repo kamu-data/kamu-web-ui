@@ -48,6 +48,10 @@ a {
     color: #0969da;
 }
 
+.link-settings {
+    color: black !important;
+}
+
 .pt-1px {
     padding-top: 1px;
 }
@@ -82,4 +86,12 @@ a {
     background-color: #fff2f2;
     border: 1px solid #ef6363;
     border-radius: 6px;
+}
+
+.webhook-label {
+    padding-left: 2px;
+}
+
+.channels-container {
+    background: #f6f8fa;
 }

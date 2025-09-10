@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -6328,6 +6328,86 @@ export type DatasetTriggerTransformFlowMutation = {
     };
 };
 
+export type DatasetFlowsProcessesQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+}>;
+
+export type DatasetFlowsProcessesQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            flows: {
+                __typename?: "DatasetFlows";
+                processes: {
+                    __typename?: "DatasetFlowProcesses";
+                    primary?: {
+                        __typename?: "FlowProcess";
+                        flowType: DatasetFlowType;
+                        flowTrigger: { __typename?: "FlowTrigger" } & FlowTriggerDataFragment;
+                        runtimeState: { __typename?: "FlowProcessRuntimeState" } & FlowProcessRuntimeStateDataFragment;
+                    } | null;
+                    webhooks: {
+                        __typename?: "WebhookFlowSubProcessGroup";
+                        rollup: {
+                            __typename?: "FlowProcessGroupRollup";
+                            total: number;
+                            active: number;
+                            failing: number;
+                            paused: number;
+                            stopped: number;
+                            worstConsecutiveFailures: number;
+                        };
+                        subprocesses: Array<{
+                            __typename?: "WebhookFlowSubProcess";
+                            id: string;
+                            name: string;
+                            flowTrigger: { __typename?: "FlowTrigger" } & FlowTriggerDataFragment;
+                            runtimeState: {
+                                __typename?: "FlowProcessRuntimeState";
+                            } & FlowProcessRuntimeStateDataFragment;
+                        }>;
+                    };
+                };
+            };
+        } | null;
+    };
+};
+
+export type FlowProcessRuntimeStateDataFragment = {
+    __typename?: "FlowProcessRuntimeState";
+    effectiveState: FlowProcessRuntimeStateEnum;
+    consecutiveFailures: number;
+    lastSuccessAt?: string | null;
+    lastAttemptAt?: string | null;
+    lastFailureAt?: string | null;
+    nextPlannedAt?: string | null;
+};
+
+export type FlowTriggerDataFragment = {
+    __typename?: "FlowTrigger";
+    paused: boolean;
+    schedule?:
+        | { __typename?: "Cron5ComponentExpression"; cron5ComponentExpression: string }
+        | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
+        | null;
+    reactive?: {
+        __typename?: "FlowTriggerReactiveRule";
+        forBreakingChange: FlowTriggerBreakingChangeRule;
+        forNewData:
+            | {
+                  __typename?: "FlowTriggerBatchingRuleBuffering";
+                  minRecordsToAwait: number;
+                  maxBatchingInterval: { __typename?: "TimeDelta"; every: number; unit: TimeUnit };
+              }
+            | { __typename?: "FlowTriggerBatchingRuleImmediate" };
+    } | null;
+    stopPolicy:
+        | { __typename?: "FlowTriggerStopPolicyAfterConsecutiveFailures"; maxFailures: number }
+        | { __typename?: "FlowTriggerStopPolicyNever"; dummy: boolean };
+};
+
 export type AddDataEventFragment = {
     __typename?: "AddData";
     prevCheckpoint?: string | null;
@@ -7965,6 +8045,50 @@ export const FlowConnectionWidgetDataFragmentDoc = gql`
         totalCount
     }
     ${FlowItemWidgetDataFragmentDoc}
+`;
+export const FlowProcessRuntimeStateDataFragmentDoc = gql`
+    fragment FlowProcessRuntimeStateData on FlowProcessRuntimeState {
+        effectiveState
+        consecutiveFailures
+        lastSuccessAt
+        lastAttemptAt
+        lastFailureAt
+        nextPlannedAt
+    }
+`;
+export const FlowTriggerDataFragmentDoc = gql`
+    fragment FlowTriggerData on FlowTrigger {
+        paused
+        schedule {
+            ... on TimeDelta {
+                ...TimeDeltaData
+            }
+            ... on Cron5ComponentExpression {
+                cron5ComponentExpression
+            }
+        }
+        reactive {
+            forNewData {
+                ... on FlowTriggerBatchingRuleBuffering {
+                    minRecordsToAwait
+                    maxBatchingInterval {
+                        every
+                        unit
+                    }
+                }
+            }
+            forBreakingChange
+        }
+        stopPolicy {
+            ... on FlowTriggerStopPolicyNever {
+                dummy
+            }
+            ... on FlowTriggerStopPolicyAfterConsecutiveFailures {
+                maxFailures
+            }
+        }
+    }
+    ${TimeDeltaDataFragmentDoc}
 `;
 export const AccessTokenDataFragmentDoc = gql`
     fragment AccessTokenData on ViewAccessToken {
@@ -11202,6 +11326,63 @@ export class DatasetTriggerTransformFlowGQL extends Apollo.Mutation<
     DatasetTriggerTransformFlowMutationVariables
 > {
     document = DatasetTriggerTransformFlowDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetFlowsProcessesDocument = gql`
+    query datasetFlowsProcesses($datasetId: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    processes {
+                        primary {
+                            flowType
+                            flowTrigger {
+                                ...FlowTriggerData
+                            }
+                            runtimeState {
+                                ...FlowProcessRuntimeStateData
+                            }
+                        }
+                        webhooks {
+                            rollup {
+                                total
+                                active
+                                failing
+                                paused
+                                stopped
+                                worstConsecutiveFailures
+                            }
+                            subprocesses {
+                                id
+                                name
+                                flowTrigger {
+                                    ...FlowTriggerData
+                                }
+                                runtimeState {
+                                    ...FlowProcessRuntimeStateData
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${FlowTriggerDataFragmentDoc}
+    ${FlowProcessRuntimeStateDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetFlowsProcessesGQL extends Apollo.Query<
+    DatasetFlowsProcessesQuery,
+    DatasetFlowsProcessesQueryVariables
+> {
+    document = DatasetFlowsProcessesDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

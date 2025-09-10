@@ -15,6 +15,7 @@ export interface DatasetNavigationParams {
     section?: string;
     state?: object;
     sqlQuery?: string;
+    webhookId?: string;
 }
 export interface DatasetInfo {
     accountName: string;

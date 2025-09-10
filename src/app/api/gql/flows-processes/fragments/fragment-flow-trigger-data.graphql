@@ -1,0 +1,31 @@
+fragment FlowTriggerData on FlowTrigger {
+  paused
+  schedule {
+    ... on TimeDelta {
+      ...TimeDeltaData
+    }
+    ... on Cron5ComponentExpression {
+      cron5ComponentExpression
+    }
+  }
+  reactive {
+    forNewData {
+      ... on FlowTriggerBatchingRuleBuffering {
+        minRecordsToAwait
+        maxBatchingInterval {
+          every
+          unit
+        }
+      }
+    }
+    forBreakingChange
+  }
+  stopPolicy {
+    ... on FlowTriggerStopPolicyNever {
+      dummy
+    }
+    ... on FlowTriggerStopPolicyAfterConsecutiveFailures {
+      maxFailures
+    }
+  }
+}

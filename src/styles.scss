@@ -1513,6 +1513,18 @@ select {
     color: #239a59;
 }
 
+.enabled-failing-status {
+    color: #ffa500;
+}
+
+.pause-status {
+    color: #ffde21;
+}
+
+.stopped-status {
+    color: #ef6363;
+}
+
 .running-status {
     color: #8bdaaf;
 }

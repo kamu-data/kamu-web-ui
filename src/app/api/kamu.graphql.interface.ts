@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -152,9 +152,42 @@ export type AccountFieldNonUnique = CreateAccountResult & {
 
 export type AccountFlowFilters = {
     byDatasetIds: Array<Scalars["DatasetID"]>;
-    byFlowType?: InputMaybe<DatasetFlowType>;
     byInitiator?: InputMaybe<InitiatorFilterInput>;
+    byProcessType?: InputMaybe<FlowProcessTypeFilterInput>;
     byStatus?: InputMaybe<FlowStatus>;
+};
+
+export type AccountFlowProcessDatasetCard = {
+    __typename?: "AccountFlowProcessDatasetCard";
+    dataset: Dataset;
+    processes: DatasetFlowProcesses;
+};
+
+export type AccountFlowProcessDatasetCardConnection = {
+    __typename?: "AccountFlowProcessDatasetCardConnection";
+    edges: Array<AccountFlowProcessDatasetCardEdge>;
+    /** A shorthand for `edges { node { ... } }` */
+    nodes: Array<AccountFlowProcessDatasetCard>;
+    /** Page information */
+    pageInfo: PageBasedInfo;
+    /** Approximate number of total nodes */
+    totalCount: Scalars["Int"];
+};
+
+export type AccountFlowProcessDatasetCardEdge = {
+    __typename?: "AccountFlowProcessDatasetCardEdge";
+    node: AccountFlowProcessDatasetCard;
+};
+
+export type AccountFlowProcesses = {
+    __typename?: "AccountFlowProcesses";
+    datasetCards: AccountFlowProcessDatasetCardConnection;
+    primaryRollup: FlowProcessGroupRollup;
+};
+
+export type AccountFlowProcessesDatasetCardsArgs = {
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
 };
 
 export type AccountFlowRuns = {
@@ -183,6 +216,8 @@ export type AccountFlowTriggersMut = {
 
 export type AccountFlows = {
     __typename?: "AccountFlows";
+    /** Returns interface for flow processes summary queries */
+    processes: AccountFlowProcesses;
     /** Returns interface for flow runs queries */
     runs: AccountFlowRuns;
     /** Returns interface for flow triggers queries */
@@ -415,6 +450,13 @@ export type AttachmentsEmbedded = {
 export type Auth = {
     __typename?: "Auth";
     enabledProviders: Array<AccountProvider>;
+    relations: AuthRelationConnection;
+};
+
+export type AuthRelationsArgs = {
+    accountIds: Array<Scalars["AccountID"]>;
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
 };
 
 export type AuthMut = {
@@ -433,6 +475,29 @@ export type AuthMutLoginArgs = {
     deviceCode?: InputMaybe<Scalars["DeviceCode"]>;
     loginCredentialsJson: Scalars["String"];
     loginMethod: AccountProvider;
+};
+
+export type AuthRelation = {
+    __typename?: "AuthRelation";
+    account: Account;
+    dataset: Dataset;
+    role: DatasetAccessRole;
+};
+
+export type AuthRelationConnection = {
+    __typename?: "AuthRelationConnection";
+    edges: Array<AuthRelationEdge>;
+    /** A shorthand for `edges { node { ... } }` */
+    nodes: Array<AuthRelation>;
+    /** Page information */
+    pageInfo: PageBasedInfo;
+    /** Approximate number of total nodes */
+    totalCount: Scalars["Int"];
+};
+
+export type AuthRelationEdge = {
+    __typename?: "AuthRelationEdge";
+    node: AuthRelation;
 };
 
 export type AuthWeb3Mut = {
@@ -1169,9 +1234,15 @@ export type DatasetFlowConfigsMutSetIngestConfigArgs = {
 };
 
 export type DatasetFlowFilters = {
-    byFlowType?: InputMaybe<DatasetFlowType>;
     byInitiator?: InputMaybe<InitiatorFilterInput>;
+    byProcessType?: InputMaybe<FlowProcessTypeFilterInput>;
     byStatus?: InputMaybe<FlowStatus>;
+};
+
+export type DatasetFlowProcesses = {
+    __typename?: "DatasetFlowProcesses";
+    primary?: Maybe<FlowProcess>;
+    webhooks: WebhookFlowSubProcessGroup;
 };
 
 export type DatasetFlowRuns = {
@@ -1264,6 +1335,8 @@ export type DatasetFlows = {
     __typename?: "DatasetFlows";
     /** Returns interface for flow configurations queries */
     configs: DatasetFlowConfigs;
+    /** Returns interface for flow processes queries */
+    processes: DatasetFlowProcesses;
     /** Returns interface for flow runs queries */
     runs: DatasetFlowRuns;
     /** Returns interface for flow triggers queries */
@@ -2326,6 +2399,52 @@ export type FlowPreconditionsNotMet = SetFlowConfigResult &
         message: Scalars["String"];
         preconditions: Scalars["String"];
     };
+
+export type FlowProcess = {
+    __typename?: "FlowProcess";
+    flowTrigger: FlowTrigger;
+    flowType: DatasetFlowType;
+    runtimeState: FlowProcessRuntimeState;
+};
+
+export type FlowProcessGroupRollup = {
+    __typename?: "FlowProcessGroupRollup";
+    active: Scalars["Int"];
+    failing: Scalars["Int"];
+    paused: Scalars["Int"];
+    stopped: Scalars["Int"];
+    total: Scalars["Int"];
+    worstConsecutiveFailures: Scalars["Int"];
+};
+
+export type FlowProcessRuntimeState = {
+    __typename?: "FlowProcessRuntimeState";
+    consecutiveFailures: Scalars["Int"];
+    effectiveState: FlowProcessRuntimeStateEnum;
+    lastAttemptAt?: Maybe<Scalars["DateTime"]>;
+    lastFailureAt?: Maybe<Scalars["DateTime"]>;
+    lastSuccessAt?: Maybe<Scalars["DateTime"]>;
+    nextPlannedAt?: Maybe<Scalars["DateTime"]>;
+};
+
+export enum FlowProcessRuntimeStateEnum {
+    Active = "ACTIVE",
+    Failing = "FAILING",
+    PausedManual = "PAUSED_MANUAL",
+    StoppedAuto = "STOPPED_AUTO",
+}
+
+export type FlowProcessTypeFilterInput =
+    | { primary: FlowProcessTypePrimaryFilterInput; webhooks?: never }
+    | { primary?: never; webhooks: FlowProcessTypeWebhooksFilterInput };
+
+export type FlowProcessTypePrimaryFilterInput = {
+    byFlowTypes?: InputMaybe<Array<DatasetFlowType>>;
+};
+
+export type FlowProcessTypeWebhooksFilterInput = {
+    subscriptionIds?: InputMaybe<Array<Scalars["WebhookSubscriptionID"]>>;
+};
 
 export enum FlowRetryBackoffType {
     Exponential = "EXPONENTIAL",
@@ -4155,6 +4274,20 @@ export type ViewDatasetEnvVarEdge = {
 export type WebSocketProtocolDesc = {
     __typename?: "WebSocketProtocolDesc";
     url: Scalars["String"];
+};
+
+export type WebhookFlowSubProcess = {
+    __typename?: "WebhookFlowSubProcess";
+    flowTrigger: FlowTrigger;
+    id: Scalars["WebhookSubscriptionID"];
+    name: Scalars["String"];
+    runtimeState: FlowProcessRuntimeState;
+};
+
+export type WebhookFlowSubProcessGroup = {
+    __typename?: "WebhookFlowSubProcessGroup";
+    rollup: FlowProcessGroupRollup;
+    subprocesses: Array<WebhookFlowSubProcess>;
 };
 
 export type WebhookSubscription = {
@@ -6195,6 +6328,86 @@ export type DatasetTriggerTransformFlowMutation = {
     };
 };
 
+export type DatasetFlowsProcessesQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+}>;
+
+export type DatasetFlowsProcessesQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            flows: {
+                __typename?: "DatasetFlows";
+                processes: {
+                    __typename?: "DatasetFlowProcesses";
+                    primary?: {
+                        __typename?: "FlowProcess";
+                        flowType: DatasetFlowType;
+                        flowTrigger: { __typename?: "FlowTrigger" } & FlowTriggerDataFragment;
+                        runtimeState: { __typename?: "FlowProcessRuntimeState" } & FlowProcessRuntimeStateDataFragment;
+                    } | null;
+                    webhooks: {
+                        __typename?: "WebhookFlowSubProcessGroup";
+                        rollup: {
+                            __typename?: "FlowProcessGroupRollup";
+                            total: number;
+                            active: number;
+                            failing: number;
+                            paused: number;
+                            stopped: number;
+                            worstConsecutiveFailures: number;
+                        };
+                        subprocesses: Array<{
+                            __typename?: "WebhookFlowSubProcess";
+                            id: string;
+                            name: string;
+                            flowTrigger: { __typename?: "FlowTrigger" } & FlowTriggerDataFragment;
+                            runtimeState: {
+                                __typename?: "FlowProcessRuntimeState";
+                            } & FlowProcessRuntimeStateDataFragment;
+                        }>;
+                    };
+                };
+            };
+        } | null;
+    };
+};
+
+export type FlowProcessRuntimeStateDataFragment = {
+    __typename?: "FlowProcessRuntimeState";
+    effectiveState: FlowProcessRuntimeStateEnum;
+    consecutiveFailures: number;
+    lastSuccessAt?: string | null;
+    lastAttemptAt?: string | null;
+    lastFailureAt?: string | null;
+    nextPlannedAt?: string | null;
+};
+
+export type FlowTriggerDataFragment = {
+    __typename?: "FlowTrigger";
+    paused: boolean;
+    schedule?:
+        | { __typename?: "Cron5ComponentExpression"; cron5ComponentExpression: string }
+        | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
+        | null;
+    reactive?: {
+        __typename?: "FlowTriggerReactiveRule";
+        forBreakingChange: FlowTriggerBreakingChangeRule;
+        forNewData:
+            | {
+                  __typename?: "FlowTriggerBatchingRuleBuffering";
+                  minRecordsToAwait: number;
+                  maxBatchingInterval: { __typename?: "TimeDelta"; every: number; unit: TimeUnit };
+              }
+            | { __typename?: "FlowTriggerBatchingRuleImmediate" };
+    } | null;
+    stopPolicy:
+        | { __typename?: "FlowTriggerStopPolicyAfterConsecutiveFailures"; maxFailures: number }
+        | { __typename?: "FlowTriggerStopPolicyNever"; dummy: boolean };
+};
+
 export type AddDataEventFragment = {
     __typename?: "AddData";
     prevCheckpoint?: string | null;
@@ -7833,6 +8046,50 @@ export const FlowConnectionWidgetDataFragmentDoc = gql`
     }
     ${FlowItemWidgetDataFragmentDoc}
 `;
+export const FlowProcessRuntimeStateDataFragmentDoc = gql`
+    fragment FlowProcessRuntimeStateData on FlowProcessRuntimeState {
+        effectiveState
+        consecutiveFailures
+        lastSuccessAt
+        lastAttemptAt
+        lastFailureAt
+        nextPlannedAt
+    }
+`;
+export const FlowTriggerDataFragmentDoc = gql`
+    fragment FlowTriggerData on FlowTrigger {
+        paused
+        schedule {
+            ... on TimeDelta {
+                ...TimeDeltaData
+            }
+            ... on Cron5ComponentExpression {
+                cron5ComponentExpression
+            }
+        }
+        reactive {
+            forNewData {
+                ... on FlowTriggerBatchingRuleBuffering {
+                    minRecordsToAwait
+                    maxBatchingInterval {
+                        every
+                        unit
+                    }
+                }
+            }
+            forBreakingChange
+        }
+        stopPolicy {
+            ... on FlowTriggerStopPolicyNever {
+                dummy
+            }
+            ... on FlowTriggerStopPolicyAfterConsecutiveFailures {
+                maxFailures
+            }
+        }
+    }
+    ${TimeDeltaDataFragmentDoc}
+`;
 export const AccessTokenDataFragmentDoc = gql`
     fragment AccessTokenData on ViewAccessToken {
         id
@@ -8989,7 +9246,7 @@ export const AccountListFlowsDocument = gql`
                         tiles: listFlows(
                             page: 0
                             perPage: $perPageTiles
-                            filters: { byFlowType: null, byStatus: null, byInitiator: null, byDatasetIds: [] }
+                            filters: { byProcessType: null, byStatus: null, byInitiator: null, byDatasetIds: [] }
                         ) {
                             ...FlowConnectionWidgetData
                         }
@@ -10761,7 +11018,7 @@ export const GetDatasetListFlowsDocument = gql`
                         tiles: listFlows(
                             page: 0
                             perPage: $perPageTiles
-                            filters: { byFlowType: null, byStatus: null, byInitiator: null }
+                            filters: { byProcessType: null, byStatus: null, byInitiator: null }
                         ) {
                             ...FlowConnectionWidgetData
                         }
@@ -11069,6 +11326,63 @@ export class DatasetTriggerTransformFlowGQL extends Apollo.Mutation<
     DatasetTriggerTransformFlowMutationVariables
 > {
     document = DatasetTriggerTransformFlowDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetFlowsProcessesDocument = gql`
+    query datasetFlowsProcesses($datasetId: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                flows {
+                    processes {
+                        primary {
+                            flowType
+                            flowTrigger {
+                                ...FlowTriggerData
+                            }
+                            runtimeState {
+                                ...FlowProcessRuntimeStateData
+                            }
+                        }
+                        webhooks {
+                            rollup {
+                                total
+                                active
+                                failing
+                                paused
+                                stopped
+                                worstConsecutiveFailures
+                            }
+                            subprocesses {
+                                id
+                                name
+                                flowTrigger {
+                                    ...FlowTriggerData
+                                }
+                                runtimeState {
+                                    ...FlowProcessRuntimeStateData
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${FlowTriggerDataFragmentDoc}
+    ${FlowProcessRuntimeStateDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetFlowsProcessesGQL extends Apollo.Query<
+    DatasetFlowsProcessesQuery,
+    DatasetFlowsProcessesQueryVariables
+> {
+    document = DatasetFlowsProcessesDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

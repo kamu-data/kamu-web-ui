@@ -60,6 +60,7 @@ export default class ProjectLinks {
     public static readonly URL_QUERY_PARAM_SQL_QUERY: string = "sqlQuery";
     public static readonly URL_QUERY_PARAM_REDIRECT_URL: string = "redirectUrl";
     public static readonly URL_QUERY_PARAM_CODE: string = "code";
+    public static readonly URL_QUERY_PARAM_WEBHOOK_ID: string = "webhookId";
 
     public static readonly URL_PARAM_WEBHOOK_ID: string = "webhookId";
 }

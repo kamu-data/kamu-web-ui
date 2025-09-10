@@ -113,10 +113,40 @@ type AccountFieldNonUnique implements CreateAccountResult {
 }
 
 input AccountFlowFilters {
-	byFlowType: DatasetFlowType
 	byStatus: FlowStatus
 	byInitiator: InitiatorFilterInput
 	byDatasetIds: [DatasetID!]!
+	byProcessType: FlowProcessTypeFilterInput
+}
+
+type AccountFlowProcessDatasetCard {
+	dataset: Dataset!
+	processes: DatasetFlowProcesses!
+}
+
+type AccountFlowProcessDatasetCardConnection {
+	"""
+	A shorthand for `edges { node { ... } }`
+	"""
+	nodes: [AccountFlowProcessDatasetCard!]!
+	"""
+	Approximate number of total nodes
+	"""
+	totalCount: Int!
+	"""
+	Page information
+	"""
+	pageInfo: PageBasedInfo!
+	edges: [AccountFlowProcessDatasetCardEdge!]!
+}
+
+type AccountFlowProcessDatasetCardEdge {
+	node: AccountFlowProcessDatasetCard!
+}
+
+type AccountFlowProcesses {
+	primaryRollup: FlowProcessGroupRollup!
+	datasetCards(page: Int, perPage: Int): AccountFlowProcessDatasetCardConnection!
 }
 
 type AccountFlowRuns {
@@ -137,6 +167,10 @@ type AccountFlowTriggersMut {
 }
 
 type AccountFlows {
+	"""
+	Returns interface for flow processes summary queries
+	"""
+	processes: AccountFlowProcesses!
 	"""
 	Returns interface for flow runs queries
 	"""
@@ -371,6 +405,7 @@ type AttachmentsEmbedded {
 
 type Auth {
 	enabledProviders: [AccountProvider!]!
+	relations(accountIds: [AccountID!]!, page: Int, perPage: Int): AuthRelationConnection!
 }
 
 type AuthMut {
@@ -380,6 +415,32 @@ type AuthMut {
 	web3: AuthWeb3Mut!
 	login(loginMethod: AccountProvider!, loginCredentialsJson: String!, deviceCode: DeviceCode): LoginResponse!
 	accountDetails(accessToken: String!): Account!
+}
+
+type AuthRelation {
+	account: Account!
+	role: DatasetAccessRole!
+	dataset: Dataset!
+}
+
+type AuthRelationConnection {
+	"""
+	A shorthand for `edges { node { ... } }`
+	"""
+	nodes: [AuthRelation!]!
+	"""
+	Approximate number of total nodes
+	"""
+	totalCount: Int!
+	"""
+	Page information
+	"""
+	pageInfo: PageBasedInfo!
+	edges: [AuthRelationEdge!]!
+}
+
+type AuthRelationEdge {
+	node: AuthRelation!
 }
 
 type AuthWeb3Mut {
@@ -1099,9 +1160,14 @@ type DatasetFlowConfigsMut {
 }
 
 input DatasetFlowFilters {
-	byFlowType: DatasetFlowType
 	byStatus: FlowStatus
 	byInitiator: InitiatorFilterInput
+	byProcessType: FlowProcessTypeFilterInput
+}
+
+type DatasetFlowProcesses {
+	primary: FlowProcess
+	webhooks: WebhookFlowSubProcessGroup!
 }
 
 type DatasetFlowRuns {
@@ -1159,6 +1225,10 @@ type DatasetFlows {
 	Returns interface for flow runs queries
 	"""
 	runs: DatasetFlowRuns!
+	"""
+	Returns interface for flow processes queries
+	"""
+	processes: DatasetFlowProcesses!
 }
 
 type DatasetFlowsMut {
@@ -2248,6 +2318,50 @@ union FlowOutcome = FlowSuccessResult | FlowFailedError | FlowAbortedResult
 type FlowPreconditionsNotMet implements SetFlowConfigResult & TriggerFlowResult & SetFlowTriggerResult {
 	preconditions: String!
 	message: String!
+}
+
+type FlowProcess {
+	flowType: DatasetFlowType!
+	flowTrigger: FlowTrigger!
+	runtimeState: FlowProcessRuntimeState!
+}
+
+type FlowProcessGroupRollup {
+	total: Int!
+	active: Int!
+	failing: Int!
+	paused: Int!
+	stopped: Int!
+	worstConsecutiveFailures: Int!
+}
+
+type FlowProcessRuntimeState {
+	effectiveState: FlowProcessRuntimeStateEnum!
+	consecutiveFailures: Int!
+	lastSuccessAt: DateTime
+	lastAttemptAt: DateTime
+	lastFailureAt: DateTime
+	nextPlannedAt: DateTime
+}
+
+enum FlowProcessRuntimeStateEnum {
+	ACTIVE
+	FAILING
+	PAUSED_MANUAL
+	STOPPED_AUTO
+}
+
+input FlowProcessTypeFilterInput @oneOf {
+	primary: FlowProcessTypePrimaryFilterInput
+	webhooks: FlowProcessTypeWebhooksFilterInput
+}
+
+input FlowProcessTypePrimaryFilterInput {
+	byFlowTypes: [DatasetFlowType!]
+}
+
+input FlowProcessTypeWebhooksFilterInput {
+	subscriptionIds: [WebhookSubscriptionID!]
 }
 
 enum FlowRetryBackoffType {
@@ -4117,6 +4231,18 @@ type WebSocketProtocolDesc {
 }
 
 scalar WebhookEventType
+
+type WebhookFlowSubProcess {
+	id: WebhookSubscriptionID!
+	name: String!
+	flowTrigger: FlowTrigger!
+	runtimeState: FlowProcessRuntimeState!
+}
+
+type WebhookFlowSubProcessGroup {
+	rollup: FlowProcessGroupRollup!
+	subprocesses: [WebhookFlowSubProcess!]!
+}
 
 type WebhookSubscription {
 	"""

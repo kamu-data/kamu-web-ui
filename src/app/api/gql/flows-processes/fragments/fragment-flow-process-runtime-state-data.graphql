@@ -1,0 +1,8 @@
+fragment FlowProcessRuntimeStateData on FlowProcessRuntimeState {
+  effectiveState
+  consecutiveFailures
+  lastSuccessAt
+  lastAttemptAt
+  lastFailureAt
+  nextPlannedAt
+}

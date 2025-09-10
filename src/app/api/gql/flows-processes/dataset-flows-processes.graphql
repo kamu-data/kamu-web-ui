@@ -1,0 +1,39 @@
+query datasetFlowsProcesses($datasetId: DatasetID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      flows {
+        processes {
+          primary {
+            flowType
+            flowTrigger {
+              ...FlowTriggerData
+            }
+            runtimeState {
+              ...FlowProcessRuntimeStateData
+            }
+          }
+          webhooks {
+            rollup {
+              total
+              active
+              failing
+              paused
+              stopped
+              worstConsecutiveFailures
+            }
+            subprocesses {
+              id
+              name
+              flowTrigger {
+                ...FlowTriggerData
+              }
+              runtimeState {
+                ...FlowProcessRuntimeStateData
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

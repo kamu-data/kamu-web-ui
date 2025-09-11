@@ -21,9 +21,14 @@ export enum ScheduleType {
     CRON_5_COMPONENT_EXPRESSION = "Cron5ComponentExpression",
 }
 
-export enum ThrottlingGroupEnum {
-    AWAIT_FOR = "awaitFor",
-    AWAIT_UNTIL = "awaitUntil",
+export enum BatchingRuleType {
+    IMMEDIATE = "Immediate",
+    BUFFERING = "Buffering",
+}
+
+export enum FlowTriggerStopPolicyType {
+    NEVER = "Never",
+    AFTER_CONSECUTIVE_FAILURES = "AfterConsecutiveFailures",
 }
 
 export interface DatasetSettingsSidePanelItem {

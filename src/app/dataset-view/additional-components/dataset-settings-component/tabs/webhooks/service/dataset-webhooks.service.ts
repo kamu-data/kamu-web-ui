@@ -9,8 +9,10 @@ import { inject, Injectable } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
 import { map, Observable } from "rxjs";
 import {
+    DatasetWebhookByIdQuery,
     DatasetWebhookCreateSubscriptionMutation,
     DatasetWebhookPauseSubscriptionMutation,
+    DatasetWebhookReactivateSubscriptionMutation,
     DatasetWebhookRemoveSubscriptionMutation,
     DatasetWebhookResumeSubscriptionMutation,
     DatasetWebhookSubscriptionsQuery,
@@ -19,7 +21,7 @@ import {
     WebhookSubscriptionInput,
 } from "src/app/api/kamu.graphql.interface";
 import { WebhooksApi } from "src/app/api/webhooks.api";
-import { CreateWebhookSubscriptionSuccess } from "../create-edit-subscription-modal/create-edit-subscription-modal.model";
+import { CreateWebhookSubscriptionSuccess } from "../dataset-settings-webhooks-tab.component.types";
 
 @Injectable({
     providedIn: "root",
@@ -46,6 +48,7 @@ export class DatasetWebhooksService {
                     data.datasets.byId?.webhooks.createSubscription.__typename ===
                     "CreateWebhookSubscriptionResultSuccess"
                 ) {
+                    this.toastrService.success(data.datasets.byId?.webhooks.createSubscription.message);
                     return {
                         datasetId,
                         secret: data.datasets.byId.webhooks.createSubscription.secret,
@@ -108,6 +111,23 @@ export class DatasetWebhooksService {
         );
     }
 
+    public datasetWebhookReactivateSubscription(datasetId: string, id: string): Observable<boolean> {
+        return this.webhooksApi.datasetWebhookReactivateSubscription(datasetId, id).pipe(
+            map((data: DatasetWebhookReactivateSubscriptionMutation) => {
+                if (
+                    data.datasets.byId?.webhooks.subscription?.reactivate.__typename ===
+                    "ReactivateWebhookSubscriptionResultSuccess"
+                ) {
+                    this.toastrService.success(data.datasets.byId.webhooks.subscription.reactivate.message);
+                    return true;
+                } else {
+                    this.toastrService.error(data.datasets.byId?.webhooks.subscription?.reactivate.message);
+                    return false;
+                }
+            }),
+        );
+    }
+
     public datasetWebhookUpdateSubscription(params: {
         datasetId: string;
         id: string;
@@ -125,6 +145,14 @@ export class DatasetWebhooksService {
                     this.toastrService.error(data.datasets.byId?.webhooks.subscription?.update.message);
                     return false;
                 }
+            }),
+        );
+    }
+
+    public datasetWebhookSubscriptionById(params: { datasetId: string; id: string }): Observable<WebhookSubscription> {
+        return this.webhooksApi.datasetWebhookSubscriptionById(params).pipe(
+            map((data: DatasetWebhookByIdQuery) => {
+                return data.datasets.byId?.webhooks.subscription as WebhookSubscription;
             }),
         );
     }

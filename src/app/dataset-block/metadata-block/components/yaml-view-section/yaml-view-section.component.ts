@@ -7,10 +7,8 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
-import { SupportedEvents } from "../event-details/supported.events";
-import { eventsWithYamlView } from "./yaml-view-section.types";
-import { YamlEventViewerComponent } from "../../../../common/components/yaml-event-viewer/yaml-event-viewer.component";
-import { NgIf } from "@angular/common";
+import { MarkdownModule } from "ngx-markdown";
+import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
 
 @Component({
     selector: "app-yaml-view-section",
@@ -19,17 +17,13 @@ import { NgIf } from "@angular/common";
     standalone: true,
     imports: [
         //-----//
-        NgIf,
+        MarkdownModule,
 
         //-----//
-        YamlEventViewerComponent,
+        MarkdownFormatPipe,
     ],
 })
 export class YamlViewSectionComponent {
     @Input({ required: true }) public blockAsYaml: string;
     @Input({ required: true }) public block: MetadataBlockFragment;
-
-    public get isEventWithYamlView(): boolean {
-        return eventsWithYamlView.includes(this.block.event.__typename as SupportedEvents);
-    }
 }

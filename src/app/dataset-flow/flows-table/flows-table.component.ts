@@ -21,12 +21,13 @@ import {
     ViewChildren,
 } from "@angular/core";
 import {
-    FlowSummaryDataFragment,
     FlowStatus,
     FlowStartCondition,
     Dataset,
     AccountFragment,
     DatasetBasicsFragment,
+    FlowSummaryDataWithTriggerFragment,
+    FlowSummaryDataFragment,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
 import { MatTable, MatTableDataSource, MatTableModule } from "@angular/material/table";
@@ -85,7 +86,7 @@ import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
     ],
 })
 export class FlowsTableComponent extends BaseComponent implements OnInit, OnChanges {
-    @Input({ required: true }) public nodes: FlowSummaryDataFragment[];
+    @Input({ required: true }) public nodes: FlowSummaryDataWithTriggerFragment[];
     @Input({ required: true }) public filterByStatus: MaybeNull<FlowStatus>;
     @Input({ required: true }) public onlySystemFlows: boolean;
     @Input({ required: true }) public searchByAccount: AccountFragment[] = [];
@@ -96,9 +97,9 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
 
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public searchByFiltersChange = new EventEmitter<MaybeNull<FlowsTableFiltersOptions>>();
-    @Output() public cancelFlowChange = new EventEmitter<CancelFlowArgs>();
+    @Output() public abortFlowChange = new EventEmitter<CancelFlowArgs>();
 
-    @ViewChild(MatTable) private table: MaybeNull<MatTable<FlowSummaryDataFragment>> = null;
+    @ViewChild(MatTable) private table: MaybeNull<MatTable<FlowSummaryDataWithTriggerFragment>> = null;
     @ViewChildren(MatMenuTrigger) private triggersMatMenu: QueryList<MatMenuTrigger>;
 
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
@@ -115,7 +116,8 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     private readonly datasetFlowsService = inject(DatasetFlowsService);
     private readonly toastrService = inject(ToastrService);
 
-    public dataSource: MatTableDataSource<FlowSummaryDataFragment> = new MatTableDataSource<FlowSummaryDataFragment>();
+    public dataSource: MatTableDataSource<FlowSummaryDataWithTriggerFragment> =
+        new MatTableDataSource<FlowSummaryDataWithTriggerFragment>();
 
     public filterAccountSettings: DropdownSettings = DROPDOWN_ACCOUNT_SETTINGS;
     public dropdownDatasetList: DatasetBasicsFragment[] = [];
@@ -134,11 +136,12 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         const nodesChange: SimpleChange = changes.nodes;
         if (!nodesChange || !nodesChange.currentValue) return;
 
-        const newNodes: FlowSummaryDataFragment[] = nodesChange.currentValue as FlowSummaryDataFragment[];
+        const newNodes: FlowSummaryDataWithTriggerFragment[] =
+            nodesChange.currentValue as FlowSummaryDataWithTriggerFragment[];
         const existingData = this.dataSource.data;
 
         // Build lookup map from current data
-        const existingById = new Map<string, FlowSummaryDataFragment>();
+        const existingById = new Map<string, FlowSummaryDataWithTriggerFragment>();
         for (const row of existingData) {
             existingById.set(row.flowId, row);
         }
@@ -163,20 +166,20 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         this.table?.renderRows();
     }
 
-    public flowTypeDescription(flow: FlowSummaryDataFragment): string {
-        return FlowTableHelpers.flowTypeDescription(flow);
+    public flowTypeDescription(flow: FlowSummaryDataWithTriggerFragment): string {
+        return FlowTableHelpers.flowTypeDescription(flow as FlowSummaryDataFragment);
     }
 
-    public descriptionColumnOptions(element: FlowSummaryDataFragment): { icon: string; class: string } {
-        return FlowTableHelpers.descriptionColumnTableOptions(element);
+    public descriptionColumnOptions(element: FlowSummaryDataWithTriggerFragment): { icon: string; class: string } {
+        return FlowTableHelpers.descriptionColumnTableOptions(element as FlowSummaryDataFragment);
     }
 
-    public descriptionDatasetFlowEndOfMessage(element: FlowSummaryDataFragment): string {
-        return FlowTableHelpers.descriptionEndOfMessage(element);
+    public descriptionDatasetFlowEndOfMessage(element: FlowSummaryDataWithTriggerFragment): string {
+        return FlowTableHelpers.descriptionEndOfMessage(element as FlowSummaryDataFragment);
     }
 
-    public descriptionDatasetFlowSubMessage(element: FlowSummaryDataFragment): string {
-        return FlowTableHelpers.descriptionSubMessage(element);
+    public descriptionDatasetFlowSubMessage(element: FlowSummaryDataWithTriggerFragment): string {
+        return FlowTableHelpers.descriptionSubMessage(element as FlowSummaryDataFragment);
     }
 
     public onSearch(): void {
@@ -202,7 +205,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     }
 
     public durationTimingText(node: FlowSummaryDataFragment): string {
-        return FlowTableHelpers.durationTimingText(node);
+        return FlowTableHelpers.runDurationTimingText(node);
     }
 
     public tooltipText(node: FlowSummaryDataFragment): string {
@@ -241,16 +244,28 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         return dataset;
     }
 
-    public cancelFlow(flowId: string, datasetId: string): void {
+    public abortFlow(flowElement: FlowSummaryDataWithTriggerFragment): void {
+        let message = "Do you want to abort this flow?";
+
+        // Warn about pausing schedule triggers, if they are still on
+        if (flowElement.relatedTrigger) {
+            if (!flowElement.relatedTrigger.paused && flowElement.relatedTrigger.schedule) {
+                message += " This will also pause the scheduled updates.";
+            }
+        }
+
         promiseWithCatch(
             this.modalService.error({
-                title: "Cancel flow",
-                message: "Do you want to cancel the flow?",
+                title: "Abort flow",
+                message,
                 yesButtonText: "Ok",
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        this.cancelFlowChange.emit({ flowId, datasetId });
+                        this.abortFlowChange.emit({
+                            flowId: flowElement.flowId,
+                            datasetId: flowElement.datasetId ?? null,
+                        });
                     }
                 },
             }),

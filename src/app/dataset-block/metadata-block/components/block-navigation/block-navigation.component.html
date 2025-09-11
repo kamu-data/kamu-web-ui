@@ -32,7 +32,7 @@
             >
             </ng-select>
         </div>
-        <div class="d-flex flex-column gap-4" *ngIf="datasetHistory">
+        <div class="d-flex flex-column gap-3" *ngIf="datasetHistory">
             <ng-container
                 *ngIf="
                     datasetHistory.history
@@ -40,25 +40,42 @@
                         | blockHashFilter: searchHash as result
                 "
             >
-                <div *ngFor="let block of result" class="d-flex lh-lg align-items-center justify-content-between">
-                    <div class="flex-grow-1 no-wrap lh-1">
-                        <mat-icon class="d-inline align-middle fs-4">tag</mat-icon>
-                        <app-display-hash
-                            [value]="block.blockHash"
-                            [navigationTargetDataset]="datasetInfo"
-                            [showCopyButton]="false"
-                        />
-                        <div
-                            [innerHTML]="highlightHash(block.blockHash, searchHash)"
-                            class="ms-4 fs-10 text-muted"
-                        ></div>
+                <div *ngFor="let block of result" class="d-flex align-items-center justify-content-between">
+                    <div class="flex-grow-1 no-wrap d-flex flex-row">
+                        <div class="number-width d-inline-block">
+                            <span class="d-inline-block">{{ block.sequenceNumber }} </span>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <div class="d-flex flex-row">
+                                <a
+                                    class="ml-11 d-inline-block"
+                                    [class.fw-bold]="currentBlockHash === block.blockHash"
+                                    [routerLink]="[
+                                        '/',
+                                        datasetInfo.accountName,
+                                        datasetInfo.datasetName,
+                                        URL_BLOCK,
+                                        block.blockHash,
+                                    ]"
+                                    >{{ block.event.__typename }}</a
+                                >
+                                <span
+                                    *ngIf="currentBlockHash === block.blockHash"
+                                    class="badge-current ms-2 d-inline-block"
+                                    >current</span
+                                >
+                            </div>
+                            <div
+                                [innerHTML]="highlightHash(block.blockHash, searchHash)"
+                                class="ml-11 mt-1 fs-12 text-muted font-monospace"
+                                [class.fw-bold]="currentBlockHash === block.blockHash"
+                            ></div>
+                        </div>
                     </div>
-                    <div class="me-4 align-self-baseline" *ngIf="currentBlockHash === block.blockHash">
+
+                    <!-- <div class="align-self-baseline" *ngIf="currentBlockHash === block.blockHash">
                         <span class="badge bg-success">current</span>
-                    </div>
-                    <div class="">
-                        <p>{{ block.event.__typename }}</p>
-                    </div>
+                    </div> -->
                 </div>
                 <ng-container *ngIf="result.length === 0">
                     <p class="mt-4 text-center">No block matches</p>

@@ -6,6 +6,7 @@
             <div class="mt-2 text-break">
                 <span
                     data-test-id="input-hash"
+                    class="font-monospace"
                     [class.error-color]="isInputHashError(commitmentData.sqlQueryVerify?.error)"
                     >{{ commitmentData.sqlQueryExplainerResponse.commitment.inputHash }}
                 </span>
@@ -20,6 +21,7 @@
             <div class="mt-2 text-break">
                 <span
                     data-test-id="output-hash"
+                    class="font-monospace"
                     [class.error-color]="isOutputMismatchError(commitmentData.sqlQueryVerify?.error)"
                 >
                     {{ commitmentData.sqlQueryExplainerResponse.commitment.outputHash }}</span
@@ -35,6 +37,7 @@
             <div class="mt-2 text-break">
                 <span
                     data-test-id="sub-queries-hash"
+                    class="font-monospace"
                     [class.error-color]="isSubQueriesHashError(commitmentData.sqlQueryVerify?.error)"
                     >{{ commitmentData.sqlQueryExplainerResponse.commitment.subQueriesHash }}
                 </span>
@@ -63,13 +66,13 @@
         </div>
         <div class="m-4">
             <div class="fw-semibold">ODF Node DID:</div>
-            <div class="mt-2 text-break">
+            <div class="mt-2 text-break font-monospace">
                 {{ commitmentData.sqlQueryExplainerResponse.proof.verificationMethod }}
             </div>
         </div>
         <div class="m-4">
             <div class="fw-semibold">Signature:</div>
-            <div class="mt-2 text-break">
+            <div class="mt-2 text-break font-monospace">
                 <span [class.error-color]="isBadSignatureError(commitmentData.sqlQueryVerify?.error)">
                     {{ commitmentData.sqlQueryExplainerResponse.proof.proofValue }}
                 </span>

@@ -7,7 +7,7 @@
 
 import { MaybeUndefined } from "src/app/interface/app.types";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { AccountExtendedFragment, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
+import { AccountBasicsFragment, AccountProvider, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -50,13 +50,14 @@ export class OverviewHistorySummaryHeaderComponent {
         return this.metadataBlockFragment ? this.metadataBlockFragment.systemTime : "";
     }
 
-    public get authorInfo(): AccountExtendedFragment {
+    public get authorInfo(): AccountBasicsFragment {
         return this.metadataBlockFragment?.author
             ? this.metadataBlockFragment.author
             : {
                   id: "",
                   accountName: AppValues.DEFAULT_USER_DISPLAY_NAME,
                   avatarUrl: AppValues.DEFAULT_AVATAR_URL,
+                  accountProvider: AccountProvider.Password,
               };
     }
 

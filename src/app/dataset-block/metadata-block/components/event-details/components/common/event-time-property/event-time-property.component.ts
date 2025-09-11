@@ -27,4 +27,8 @@ export class EventTimePropertyComponent extends BasePropertyComponent {
     public get isFromPath(): boolean {
         return this.data.__typename === "EventTimeSourceFromPath";
     }
+
+    public get isFromSystemTime(): boolean {
+        return this.data.__typename === "EventTimeSourceFromSystemTime";
+    }
 }

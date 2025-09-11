@@ -1,0 +1,172 @@
+<div class="d-flex flex-column gap-4">
+    <div class="position-relative border border-1 p-2 rounded-3 mt-4">
+        <span class="position-absolute text-muted group-box-label text-uppercase">Read</span>
+        <div class="mx-4" *ngIf="sourceEvent.read.__typename">
+            <app-block-row-data [tooltip]="'Determines where data is sourced from.'" [label]="'Type:'">
+                <span>{{ ReadSectionMapping[sourceEvent.read.__typename] }}</span>
+            </app-block-row-data>
+        </div>
+        <div class="mx-4" *ngIf="sourceEvent.read.schema && sourceEvent.read.schema.length > 0">
+            <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.SCHEMA" [label]="'Schema:'">
+                <app-schema-property [data]="sourceEvent.read.schema" />
+            </app-block-row-data>
+        </div>
+        <div class="mx-4" *ngIf="sourceEvent.read.__typename === 'ReadStepCsv'">
+            <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.HEADER" [label]="'Header:'">
+                <span>{{ sourceEvent.read.header }}</span>
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="sourceEvent.read.separator"
+                [tooltip]="SOURCES_TOOLTIPS.SEPARATOR"
+                [label]="'Separator:'"
+            >
+                <app-separator-property [data]="sourceEvent.read.separator" />
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="sourceEvent.read.quote"
+                [tooltip]="SOURCES_TOOLTIPS.QUOTE"
+                [label]="'Quote character:'"
+            >
+                <span>{{ sourceEvent.read.quote }}</span>
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="sourceEvent.read.encoding"
+                [tooltip]="SOURCES_TOOLTIPS.ENCODING"
+                [label]="'Encoding:'"
+            >
+                <span>{{ sourceEvent.read.encoding }}</span>
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="sourceEvent.read.escape"
+                [tooltip]="SOURCES_TOOLTIPS.ESCAPE"
+                [label]="'Escape character:'"
+            >
+                <span>{{ sourceEvent.read.escape }}</span>
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="sourceEvent.read.inferSchema"
+                [tooltip]="SOURCES_TOOLTIPS.INFER_SCHEMA"
+                [label]="'Infer schema:'"
+            >
+                <span>{{ sourceEvent.read.inferSchema }}</span>
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="sourceEvent.read.nullValue"
+                [tooltip]="SOURCES_TOOLTIPS.NULL_VALUE"
+                [label]="'Null value:'"
+            >
+                <span>{{ sourceEvent.read.nullValue }}</span>
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="sourceEvent.read.dateFormat"
+                [tooltip]="SOURCES_TOOLTIPS.DATE_FORMAT"
+                [label]="'Date format:'"
+            >
+                <span>{{ sourceEvent.read.dateFormat }}</span>
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="sourceEvent.read.timestampFormat"
+                [tooltip]="SOURCES_TOOLTIPS.TIMESTAMP_FORMAT"
+                [label]="'Timestamp format:'"
+            >
+                <span>{{ sourceEvent.read.timestampFormat }}</span>
+            </app-block-row-data>
+        </div>
+
+        <div class="mx-4" *ngIf="sourceEvent.read.__typename === 'ReadStepJson'">
+            <app-block-row-data
+                *ngIf="sourceEvent.read.encoding"
+                [tooltip]="SOURCES_TOOLTIPS.ENCODING"
+                [label]="'Encoding:'"
+            >
+                <span>{{ sourceEvent.read.encoding }}</span>
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="sourceEvent.read.dateFormat"
+                [tooltip]="SOURCES_TOOLTIPS.DATE_FORMAT"
+                [label]="'Date format:'"
+            >
+                <span>{{ sourceEvent.read.dateFormat }}</span>
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="sourceEvent.read.timestampFormat"
+                [tooltip]="SOURCES_TOOLTIPS.TIMESTAMP_FORMAT"
+                [label]="'Timestamp format:'"
+            >
+                <span>{{ sourceEvent.read.timestampFormat }}</span>
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="sourceEvent.read.subPath"
+                [tooltip]="SOURCES_TOOLTIPS.SUB_PATH"
+                [label]="'SubPath:'"
+            >
+                <span>{{ sourceEvent.read.subPath }}</span>
+            </app-block-row-data>
+        </div>
+
+        <div class="mx-4" *ngIf="sourceEvent.read.__typename === 'ReadStepEsriShapefile'">
+            <app-block-row-data
+                *ngIf="sourceEvent.read.subPath"
+                [tooltip]="SOURCES_TOOLTIPS.SUB_PATH"
+                [label]="'SubPath:'"
+            >
+                <span>{{ sourceEvent.read.subPath }}</span>
+            </app-block-row-data>
+        </div>
+    </div>
+    <div *ngIf="sourceEvent.preprocess" class="position-relative border border-1 p-2 rounded-3">
+        <span class="position-absolute text-muted group-box-label text-uppercase">Preprocess</span>
+        <div class="mx-4">
+            <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.ENGINE" [label]="'Engine:'">
+                <app-engine-property [data]="sourceEvent.preprocess.engine" />
+            </app-block-row-data>
+        </div>
+
+        <div class="mx-4">
+            <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.QUERIES" [label]="'Queries:'"> </app-block-row-data>
+            <div class="row my-4">
+                <app-sql-query-viewer [data]="sourceEvent.preprocess.queries" />
+            </div>
+        </div>
+    </div>
+    <div class="position-relative border border-1 p-2 rounded-3">
+        <span class="position-absolute text-muted group-box-label text-uppercase">Merge</span>
+        <div class="mx-4" *ngIf="sourceEvent.merge.__typename">
+            <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.MERGE_STRATEGY_APPEND" [label]="'Strategy:'">
+                <app-merge-strategy-property [data]="sourceEvent.merge.__typename" />
+            </app-block-row-data>
+        </div>
+
+        <div class="mx-4" *ngIf="sourceEvent.merge.__typename == 'MergeStrategyLedger'">
+            <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.PRIMARY_KEYS" [label]="'Primary key:'">
+                <app-cards-property [data]="sourceEvent.merge.primaryKey" />
+            </app-block-row-data>
+        </div>
+        <div class="mx-4" *ngIf="sourceEvent.merge.__typename === 'MergeStrategySnapshot'">
+            <app-block-row-data
+                *ngIf="sourceEvent.merge.primaryKey.length"
+                [tooltip]="SOURCES_TOOLTIPS.PRIMARY_KEYS"
+                [label]="'Primary key:'"
+            >
+                <app-cards-property [data]="sourceEvent.merge.primaryKey" />
+            </app-block-row-data>
+            <app-block-row-data
+                *ngIf="sourceEvent.merge.compareColumns?.length"
+                [tooltip]="SOURCES_TOOLTIPS.COMPARE_COLUMNS"
+                [label]="'Compare columns:'"
+            >
+                <app-cards-property [data]="sourceEvent.merge.compareColumns!" />
+            </app-block-row-data>
+        </div>
+        <div class="mx-4" *ngIf="sourceEvent.merge.__typename === 'MergeStrategyChangelogStream'">
+            <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.PRIMARY_KEYS" [label]="'Primary key:'">
+                <app-cards-property [data]="sourceEvent.merge.primaryKey" />
+            </app-block-row-data>
+        </div>
+        <div class="mx-4" *ngIf="sourceEvent.merge.__typename === 'MergeStrategyUpsertStream'">
+            <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.PRIMARY_KEYS" [label]="'Primary key:'">
+                <app-cards-property [data]="sourceEvent.merge.primaryKey" />
+            </app-block-row-data>
+        </div>
+    </div>
+</div>

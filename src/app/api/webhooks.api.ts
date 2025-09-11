@@ -7,10 +7,14 @@
 
 import { inject, Injectable } from "@angular/core";
 import {
+    DatasetWebhookByIdGQL,
+    DatasetWebhookByIdQuery,
     DatasetWebhookCreateSubscriptionGQL,
     DatasetWebhookCreateSubscriptionMutation,
     DatasetWebhookPauseSubscriptionGQL,
     DatasetWebhookPauseSubscriptionMutation,
+    DatasetWebhookReactivateSubscriptionGQL,
+    DatasetWebhookReactivateSubscriptionMutation,
     DatasetWebhookRemoveSubscriptionGQL,
     DatasetWebhookRemoveSubscriptionMutation,
     DatasetWebhookResumeSubscriptionGQL,
@@ -36,7 +40,9 @@ export class WebhooksApi {
     private datasetWebhookRemoveSubscriptionGQL = inject(DatasetWebhookRemoveSubscriptionGQL);
     private datasetWebhookPauseSubscriptionGQL = inject(DatasetWebhookPauseSubscriptionGQL);
     private datasetWebhookResumeSubscriptionGQL = inject(DatasetWebhookResumeSubscriptionGQL);
+    private datasetWebhookReactivateSubscriptionGQL = inject(DatasetWebhookReactivateSubscriptionGQL);
     private datasetWebhookUpdateSubscriptionGQL = inject(DatasetWebhookUpdateSubscriptionGQL);
+    private datasetWebhookSubscriptionByIdGQL = inject(DatasetWebhookByIdGQL);
 
     public webhookEventTypes(): Observable<WebhookEventTypesQuery> {
         return this.webhookEventTypesGQL.watch().valueChanges.pipe(
@@ -104,6 +110,18 @@ export class WebhooksApi {
         );
     }
 
+    public datasetWebhookReactivateSubscription(
+        datasetId: string,
+        id: string,
+    ): Observable<DatasetWebhookReactivateSubscriptionMutation> {
+        return this.datasetWebhookReactivateSubscriptionGQL.mutate({ datasetId, id }).pipe(
+            first(),
+            map((result: MutationResult<DatasetWebhookReactivateSubscriptionMutation>) => {
+                return result.data as DatasetWebhookReactivateSubscriptionMutation;
+            }),
+        );
+    }
+
     public datasetWebhookUpdateSubscription(params: {
         datasetId: string;
         id: string;
@@ -113,6 +131,18 @@ export class WebhooksApi {
             first(),
             map((result: MutationResult<DatasetWebhookUpdateSubscriptionMutation>) => {
                 return result.data as DatasetWebhookUpdateSubscriptionMutation;
+            }),
+        );
+    }
+
+    public datasetWebhookSubscriptionById(params: {
+        datasetId: string;
+        id: string;
+    }): Observable<DatasetWebhookByIdQuery> {
+        return this.datasetWebhookSubscriptionByIdGQL.watch({ ...params }, noCacheFetchPolicy).valueChanges.pipe(
+            first(),
+            map((result: ApolloQueryResult<DatasetWebhookByIdQuery>) => {
+                return result.data;
             }),
         );
     }

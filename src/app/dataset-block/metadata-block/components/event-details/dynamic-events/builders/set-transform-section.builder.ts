@@ -64,7 +64,12 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
                                     ? (object.dataset as TransformInputDatasetNotAccessible)
                                     : (object.dataset as TransformInputDatasetAccessible).dataset,
                             ).forEach(([key, value]) => {
-                                if (event.__typename && item.inputDataset && key !== "__typename") {
+                                if (
+                                    event.__typename &&
+                                    item.inputDataset &&
+                                    key !== "__typename" &&
+                                    ["id", "name", "alias"].includes(key)
+                                ) {
                                     rows.push(
                                         this.buildSupportedRow(
                                             event.__typename,
@@ -75,6 +80,7 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
                                                 : ((item.inputDataset as TransformInputDatasetAccessible).dataset
                                                       .__typename as string),
                                             key,
+                                            // this.keyTransformMapper(key as keyof Dataset),
 
                                             this.valueTransformMapper(key as keyof Dataset, value, item),
                                         ),

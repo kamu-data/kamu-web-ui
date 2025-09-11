@@ -5,14 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { mockPublicDatasetVisibility } from "src/app/search/mock.data";
+import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
 import { DatasetAutocompleteItem, TypeNames } from "../../interface/search.interface";
-import {
-    AccountProvider,
-    DatasetKind,
-    SearchDatasetsAutocompleteQuery,
-    SearchDatasetsOverviewQuery,
-} from "../kamu.graphql.interface";
+import { DatasetKind, SearchDatasetsAutocompleteQuery, SearchDatasetsOverviewQuery } from "../kamu.graphql.interface";
 
 export const TEST_ACCOUNT_ID = "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f";
 
@@ -56,10 +51,8 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                     kind: DatasetKind.Derivative,
                                     name: "rhine-basin.netherlands",
                                     owner: {
-                                        id: "did:odf:fed011d18a62694a81fa4e3a0801f67721fa46c97c74617e6d07756eec09a6f6280d7",
-                                        accountName: "deltares.nl",
                                         __typename: "Account",
-                                        accountProvider: AccountProvider.Password,
+                                        ...mockOwnerFieldsWithAvatar,
                                     },
                                     alias: "deltares.nl/rhine-basin.netherlands",
                                     visibility: {
@@ -76,9 +69,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "alberta.case-details",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/alberta.case-details",
                     visibility: mockPublicDatasetVisibility,
@@ -118,10 +109,8 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                     kind: DatasetKind.Derivative,
                                     name: "rhine-basin.netherlands",
                                     owner: {
-                                        id: "did:odf:fed011d18a62694a81fa4e3a0801f67721fa46c97c74617e6d07756eec09a6f6280d7",
-                                        accountName: "deltares.nl",
                                         __typename: "Account",
-                                        accountProvider: AccountProvider.Password,
+                                        ...mockOwnerFieldsWithAvatar,
                                     },
                                     alias: "deltares.nl/rhine-basin.netherlands",
                                     visibility: {
@@ -138,9 +127,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "alberta.case-details.hm",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/alberta.case-details.hm",
                     visibility: mockPublicDatasetVisibility,
@@ -180,10 +167,8 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                     kind: DatasetKind.Derivative,
                                     name: "rhine-basin.netherlands",
                                     owner: {
-                                        id: "did:odf:fed011d18a62694a81fa4e3a0801f67721fa46c97c74617e6d07756eec09a6f6280d7",
-                                        accountName: "deltares.nl",
                                         __typename: "Account",
-                                        accountProvider: AccountProvider.Password,
+                                        ...mockOwnerFieldsWithAvatar,
                                     },
                                     alias: "deltares.nl/rhine-basin.netherlands",
                                     visibility: {
@@ -200,9 +185,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "british-columbia.case-details",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/british-columbia.case-details",
                     visibility: mockPublicDatasetVisibility,
@@ -242,10 +225,8 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                     kind: DatasetKind.Derivative,
                                     name: "rhine-basin.netherlands",
                                     owner: {
-                                        id: "did:odf:fed011d18a62694a81fa4e3a0801f67721fa46c97c74617e6d07756eec09a6f6280d7",
-                                        accountName: "deltares.nl",
                                         __typename: "Account",
-                                        accountProvider: AccountProvider.Password,
+                                        ...mockOwnerFieldsWithAvatar,
                                     },
                                     alias: "deltares.nl/rhine-basin.netherlands",
                                     visibility: {
@@ -262,9 +243,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "british-columbia.case-details.hm",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/british-columbia.case-details.hm",
                     visibility: mockPublicDatasetVisibility,
@@ -304,10 +283,8 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                     kind: DatasetKind.Derivative,
                                     name: "rhine-basin.netherlands",
                                     owner: {
-                                        id: "did:odf:fed011d18a62694a81fa4e3a0801f67721fa46c97c74617e6d07756eec09a6f6280d7",
-                                        accountName: "deltares.nl",
                                         __typename: "Account",
-                                        accountProvider: AccountProvider.Password,
+                                        ...mockOwnerFieldsWithAvatar,
                                     },
                                     alias: "deltares.nl/rhine-basin.netherlands",
                                     visibility: {
@@ -324,9 +301,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "canada.case-details",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/canada.case-details",
                     visibility: mockPublicDatasetVisibility,
@@ -357,9 +332,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "canada.daily-cases",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/canada.daily-cases",
                     visibility: mockPublicDatasetVisibility,
@@ -383,9 +356,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "co.alphavantage.tickers.daily.spy",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/co.alphavantage.tickers.daily.spy",
                     visibility: mockPublicDatasetVisibility,
@@ -415,9 +386,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "com.cryptocompare.ohlcv.eth-usd",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/com.cryptocompare.ohlcv.eth-usd",
                     visibility: mockPublicDatasetVisibility,
@@ -441,9 +410,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "net.rocketpool.reth.mint-burn",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/net.rocketpool.reth.mint-burn",
                     visibility: mockPublicDatasetVisibility,
@@ -482,10 +449,8 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                     kind: DatasetKind.Derivative,
                                     name: "rhine-basin.netherlands",
                                     owner: {
-                                        id: "did:odf:fed011d18a62694a81fa4e3a0801f67721fa46c97c74617e6d07756eec09a6f6280d7",
-                                        accountName: "deltares.nl",
                                         __typename: "Account",
-                                        accountProvider: AccountProvider.Password,
+                                        ...mockOwnerFieldsWithAvatar,
                                     },
                                     alias: "deltares.nl/rhine-basin.netherlands",
                                     visibility: {
@@ -502,9 +467,7 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     name: "ontario.case-details",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/ontario.case-details",
                     visibility: mockPublicDatasetVisibility,
@@ -535,9 +498,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "alberta.case-details",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/alberta.case-details",
                     visibility: mockPublicDatasetVisibility,
@@ -549,9 +510,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "alberta.case-details.hm",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/alberta.case-details.hm",
                     visibility: mockPublicDatasetVisibility,
@@ -563,9 +522,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "british-columbia.case-details",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/british-columbia.case-details",
                     visibility: mockPublicDatasetVisibility,
@@ -577,9 +534,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "british-columbia.case-details.hm",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/british-columbia.case-details.hm",
                     visibility: mockPublicDatasetVisibility,
@@ -591,9 +546,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "canada.case-details",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/canada.case-details",
                     visibility: mockPublicDatasetVisibility,
@@ -605,9 +558,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "canada.daily-cases",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/canada.daily-cases",
                     visibility: mockPublicDatasetVisibility,
@@ -619,9 +570,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "co.alphavantage.tickers.daily.spy",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/co.alphavantage.tickers.daily.spy",
                     visibility: mockPublicDatasetVisibility,
@@ -633,9 +582,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "com.cryptocompare.ohlcv.eth-usd",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/com.cryptocompare.ohlcv.eth-usd",
                     visibility: mockPublicDatasetVisibility,
@@ -647,9 +594,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "ontario.case-details",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/ontario.case-details",
                     visibility: mockPublicDatasetVisibility,
@@ -661,9 +606,7 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     name: "ontario.case-details.hm",
                     owner: {
                         __typename: "Account",
-                        id: TEST_ACCOUNT_ID,
-                        accountName: "kamu",
-                        accountProvider: AccountProvider.Password,
+                        ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/ontario.case-details.hm",
                     visibility: mockPublicDatasetVisibility,
@@ -681,9 +624,8 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "a",
             kind: DatasetKind.Root,
             owner: {
-                id: "anonymous",
-                accountName: "anonymous",
-                accountProvider: AccountProvider.Password,
+                __typename: "Account",
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: "anonymous/a",
             visibility: mockPublicDatasetVisibility,
@@ -698,9 +640,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "alberta.case-details",
             owner: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/alberta.case-details",
             visibility: mockPublicDatasetVisibility,
@@ -716,9 +656,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "alberta.case-details.hm",
             owner: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/alberta.case-details.hm",
             visibility: mockPublicDatasetVisibility,
@@ -734,9 +672,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "british-columbia.case-details",
             owner: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/british-columbia.case-details",
             visibility: mockPublicDatasetVisibility,
@@ -752,9 +688,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "british-columbia.case-details.hm",
             owner: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/british-columbia.case-details.hm",
             visibility: mockPublicDatasetVisibility,
@@ -770,9 +704,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "canada.case-details",
             owner: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/canada.case-details",
             visibility: mockPublicDatasetVisibility,
@@ -788,9 +720,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "canada.daily-cases",
             owner: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/canada.daily-cases",
             visibility: mockPublicDatasetVisibility,
@@ -806,9 +736,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "co.alphavantage.tickers.daily.spy",
             owner: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/co.alphavantage.tickers.daily.spy",
             visibility: mockPublicDatasetVisibility,
@@ -824,9 +752,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "com.cryptocompare.ohlcv.eth-usd",
             owner: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/com.cryptocompare.ohlcv.eth-usd",
             visibility: mockPublicDatasetVisibility,
@@ -842,9 +768,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "ontario.case-details",
             owner: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/ontario.case-details",
             visibility: mockPublicDatasetVisibility,
@@ -860,9 +784,7 @@ export const searchResult: DatasetAutocompleteItem[] = [
             name: "ontario.case-details.hm",
             owner: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/ontario.case-details.hm",
             visibility: mockPublicDatasetVisibility,

@@ -19,6 +19,7 @@ import {
     TEST_ACCOUNT_NAME,
     mockDatasetPushSyncStatusesQuery,
     mockDatasetListDownstreamsQuery,
+    TEST_LOGIN_RESULT,
 } from "./mock/dataset.mock";
 import {
     MOCK_NEW_DATASET_NAME,
@@ -370,7 +371,7 @@ describe("DatasetApi", () => {
         const subscription$ = service
             .getDatasetInfoByAccountAndDatasetName(TEST_LOGIN, TEST_DATASET_NAME)
             .subscribe((res: DatasetByAccountAndDatasetNameQuery) => {
-                expect(res.datasets.byOwnerAndName?.owner.accountName).toEqual(TEST_LOGIN);
+                expect(res.datasets.byOwnerAndName?.owner.accountName).toEqual(TEST_LOGIN_RESULT);
                 expect(res.datasets.byOwnerAndName?.name).toEqual(TEST_DATASET_NAME);
             });
 

@@ -5,8 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit, OnChanges, ChangeDetectorRef, inject } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from "@angular/forms";
+import { NgFor } from "@angular/common";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "../base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -23,17 +24,47 @@ import { FormValidationErrorsDirective } from "../../directives/form-validation-
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
+        NgFor,
         ReactiveFormsModule,
 
         //-----//
         FormValidationErrorsDirective,
     ],
 })
-export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
+export class TimeDeltaFormComponent extends BaseComponent implements OnInit, OnChanges {
     @Input({ required: true }) public form: FormGroup<TimeDeltaFormType>;
     @Input() public label: string = "Launch every:";
+    @Input() public excludeUnits: TimeUnit[] = [];
 
     public readonly TimeUnit: typeof TimeUnit = TimeUnit;
+    private readonly cdr = inject(ChangeDetectorRef);
+
+    public availableUnits: { value: TimeUnit; label: string }[] = [];
+
+    public ngOnInit(): void {
+        this.updateAvailableUnits();
+        this.setEveryTimeValidator();
+        this.subscribeToFormStatusChanges();
+    }
+
+    public ngOnChanges(): void {
+        this.updateAvailableUnits();
+    }
+
+    private updateAvailableUnits(): void {
+        const allUnits = [
+            { value: TimeUnit.Minutes, label: "Minutes" },
+            { value: TimeUnit.Hours, label: "Hours" },
+            { value: TimeUnit.Days, label: "Days" },
+            { value: TimeUnit.Weeks, label: "Weeks" },
+        ];
+
+        this.availableUnits = allUnits.filter((unit) => !this.excludeUnits.includes(unit.value));
+    }
+
+    public trackByUnit(index: number, item: { value: TimeUnit; label: string }): TimeUnit {
+        return item.value;
+    }
 
     private everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = everyTimeMapperValidators;
 
@@ -42,10 +73,6 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
             every: new FormControl<MaybeNull<number>>({ value: null, disabled: false }, [Validators.required]),
             unit: new FormControl<MaybeNull<TimeUnit>>({ value: null, disabled: false }, [Validators.required]),
         });
-    }
-
-    public ngOnInit(): void {
-        this.setEveryTimeValidator();
     }
 
     public get everyControl(): FormControl<MaybeNull<number>> {
@@ -65,5 +92,11 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
                     this.everyControl.updateValueAndValidity();
                 }
             });
+    }
+
+    private subscribeToFormStatusChanges(): void {
+        this.form.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.cdr.markForCheck();
+        });
     }
 }

@@ -9,6 +9,10 @@ import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/tes
 import { WebhooksApi } from "./webhooks.api";
 import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import {
+    DatasetWebhookByIdDocument,
+    DatasetWebhookByIdQuery,
+    DatasetWebhookReactivateSubscriptionDocument,
+    DatasetWebhookReactivateSubscriptionMutation,
     DatasetWebhookResumeSubscriptionDocument,
     DatasetWebhookResumeSubscriptionMutation,
     DatasetWebhookSubscriptionsQuery,
@@ -18,8 +22,10 @@ import {
     WebhookEventTypesQuery,
 } from "./kamu.graphql.interface";
 import {
+    mockDatasetWebhookByIdQuery,
     mockDatasetWebhookCreateSubscriptionMutation,
     mockDatasetWebhookPauseSubscriptionMutation,
+    mockDatasetWebhookReactivateSubscriptionMutation,
     mockDatasetWebhookRemoveSubscriptionMutation,
     mockDatasetWebhookResumeSubscriptionMutation,
     mockDatasetWebhookSubscriptionsQuery,
@@ -173,6 +179,24 @@ describe("WebhooksApi", () => {
         });
     });
 
+    it("should check the webhook subscription reactivate", () => {
+        service
+            .datasetWebhookReactivateSubscription(DATASET_ID, MOCK_SUBSCRIPTION_ID)
+            .subscribe((res: DatasetWebhookReactivateSubscriptionMutation) => {
+                expect(res.datasets.byId?.webhooks.subscription?.reactivate.__typename).toEqual(
+                    "ReactivateWebhookSubscriptionResultSuccess",
+                );
+            });
+
+        const op = controller.expectOne(DatasetWebhookReactivateSubscriptionDocument);
+        expect(op.operation.variables.datasetId).toEqual(DATASET_ID);
+        expect(op.operation.variables.id).toEqual(MOCK_SUBSCRIPTION_ID);
+
+        op.flush({
+            data: mockDatasetWebhookReactivateSubscriptionMutation,
+        });
+    });
+
     it("should check the webhook subscription update", () => {
         service
             .datasetWebhookUpdateSubscription({
@@ -196,6 +220,27 @@ describe("WebhooksApi", () => {
 
         op.flush({
             data: mockDatasetWebhookUpdateSubscriptionMutation,
+        });
+    });
+
+    it("should check the webhook subscription by Id", () => {
+        service
+            .datasetWebhookSubscriptionById({
+                datasetId: DATASET_ID,
+                id: MOCK_SUBSCRIPTION_ID,
+            })
+            .subscribe((res: DatasetWebhookByIdQuery) => {
+                expect(res.datasets.byId?.webhooks.subscription?.id).toEqual(
+                    mockDatasetWebhookByIdQuery.datasets.byId?.webhooks.subscription?.id,
+                );
+            });
+
+        const op = controller.expectOne(DatasetWebhookByIdDocument);
+        expect(op.operation.variables.datasetId).toEqual(DATASET_ID);
+        expect(op.operation.variables.id).toEqual(MOCK_SUBSCRIPTION_ID);
+
+        op.flush({
+            data: mockDatasetWebhookByIdQuery,
         });
     });
 });

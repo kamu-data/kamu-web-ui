@@ -13,8 +13,8 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import { of } from "rxjs";
 import {
-    mockCancelScheduledTasksMutationError,
-    mockCancelScheduledTasksMutationSuccess,
+    mockCancelFlowRunMutationError,
+    mockCancelFlowRunMutationSuccess,
     mockDatasetAllFlowsPausedQuery,
     mockDatasetFlowsInitiatorsQuery,
     mockDatasetPauseFlowsMutationError,
@@ -27,6 +27,8 @@ import {
     mockDatasetTriggerIngestFlowMutationError,
     mockDatasetTriggerResetFlowMutation,
     mockDatasetTriggerResetFlowMutationError,
+    mockDatasetTriggerResetToMetadataFlowMutation,
+    mockDatasetTriggerResetToMetadataFlowMutationError,
     mockDatasetTriggerTransformFlowMutation,
     mockDatasetTriggerTransformFlowMutationError,
     mockGetDatasetListFlowsQuery,
@@ -188,7 +190,10 @@ describe("DatasetFlowsService", () => {
         const subscription$ = service
             .datasetTriggerCompactionFlow({
                 datasetId: MOCK_DATASET_ID,
-                compactionConfigInput: { metadataOnly: { recursive: true } },
+                compactionConfigInput: {
+                    maxSliceRecords: 10000,
+                    maxSliceSize: 3000000,
+                },
             })
             .subscribe((result: boolean) => {
                 expect(result).toBe(true);
@@ -206,7 +211,7 @@ describe("DatasetFlowsService", () => {
         const subscription$ = service
             .datasetTriggerCompactionFlow({
                 datasetId: MOCK_DATASET_ID,
-                compactionConfigInput: { full: { recursive: true, maxSliceRecords: 1000, maxSliceSize: 10000 } },
+                compactionConfigInput: { maxSliceRecords: 1000, maxSliceSize: 10000 },
             })
             .subscribe(() => {
                 expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
@@ -221,7 +226,7 @@ describe("DatasetFlowsService", () => {
         const subscription$ = service
             .datasetTriggerResetFlow({
                 datasetId: MOCK_DATASET_ID,
-                resetConfigInput: { mode: { toSeed: {} }, recursive: false },
+                resetConfigInput: { mode: { toSeed: {} } },
             })
             .subscribe((result: boolean) => {
                 expect(result).toBe(true);
@@ -238,7 +243,6 @@ describe("DatasetFlowsService", () => {
             .datasetTriggerResetFlow({
                 datasetId: MOCK_DATASET_ID,
                 resetConfigInput: {
-                    recursive: false,
                     mode: { custom: { newHeadHash: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX" } },
                 },
             })
@@ -249,11 +253,44 @@ describe("DatasetFlowsService", () => {
         expect(subscription$.closed).toBeTrue();
     });
 
-    it("should check cancel scheduled tasks", () => {
-        spyOn(datasetFlowApi, "cancelScheduledTasks").and.returnValue(of(mockCancelScheduledTasksMutationSuccess));
+    it("should check trigger dataset reset to metadata flow", () => {
+        spyOn(datasetFlowApi, "datasetTriggerResetToMetadataFlow").and.returnValue(
+            of(mockDatasetTriggerResetToMetadataFlowMutation),
+        );
 
         const subscription$ = service
-            .cancelScheduledTasks({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID })
+            .datasetTriggerResetToMetadataFlow({
+                datasetId: MOCK_DATASET_ID,
+            })
+            .subscribe((result: boolean) => {
+                expect(result).toBe(true);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check trigger dataset reset to metadata flow with error", () => {
+        spyOn(datasetFlowApi, "datasetTriggerResetToMetadataFlow").and.returnValue(
+            of(mockDatasetTriggerResetToMetadataFlowMutationError),
+        );
+        const toastrServiceErrorSpy = spyOn(toastService, "error");
+
+        const subscription$ = service
+            .datasetTriggerResetToMetadataFlow({
+                datasetId: MOCK_DATASET_ID,
+            })
+            .subscribe(() => {
+                expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check cancel flow", () => {
+        spyOn(datasetFlowApi, "cancelFlowRun").and.returnValue(of(mockCancelFlowRunMutationSuccess));
+
+        const subscription$ = service
+            .cancelFlowRun({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID })
             .subscribe((result: boolean) => {
                 expect(result).toEqual(true);
             });
@@ -261,16 +298,16 @@ describe("DatasetFlowsService", () => {
         expect(subscription$.closed).toBeTrue();
     });
 
-    it("should check cancel scheduled tasks with error", () => {
-        spyOn(datasetFlowApi, "cancelScheduledTasks").and.returnValue(of(mockCancelScheduledTasksMutationError));
+    it("should check cancel flow with error", () => {
+        spyOn(datasetFlowApi, "cancelFlowRun").and.returnValue(of(mockCancelFlowRunMutationError));
         const toastrServiceErrorSpy = spyOn(toastService, "error");
 
         const subscription$ = service
-            .cancelScheduledTasks({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID })
+            .cancelFlowRun({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID })
             .subscribe((result: boolean) => {
                 expect(result).toEqual(false);
                 expect(toastrServiceErrorSpy).toHaveBeenCalledWith(
-                    mockCancelScheduledTasksMutationError.datasets.byId?.flows.runs.cancelScheduledTasks.message,
+                    mockCancelFlowRunMutationError.datasets.byId?.flows.runs.cancelFlowRun.message,
                 );
             });
 

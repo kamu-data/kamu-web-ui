@@ -26,14 +26,29 @@
     </div>
 
     <div class="container-main row">
-        <div class="col-md-6">
+        <div class="col-md-7">
             <div class="container-content mb-4">
-                <app-block-header [block]="metadata.block" [datasetInfo]="datasetInfo" />
-                <app-event-details [block]="metadata.block" [datasetInfo]="datasetInfo" />
+                <mat-slide-toggle
+                    data-test-id="yaml-toggle"
+                    color="primary"
+                    class="mat-elevation-z0"
+                    (change)="toggleYamlView($event)"
+                >
+                    <span class="ps-2">Show as YAML</span>
+                </mat-slide-toggle>
+                <ng-container *ngIf="blockView === BlockView.PROPERTIES">
+                    <app-block-header [block]="metadata.block" [datasetInfo]="datasetInfo" />
+                    <app-event-details [block]="metadata.block" [datasetInfo]="datasetInfo" />
+                </ng-container>
+                <app-yaml-view-section
+                    *ngIf="blockView === BlockView.YAML"
+                    [blockAsYaml]="metadata.blockAsYaml"
+                    [block]="metadata.block"
+                />
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="container-content" *ngIf="datasetHistoryUpdate$ | async as datasetHistory">
+        <div class="col-md-5">
+            <div class="container-content mb-4" *ngIf="datasetHistoryUpdate$ | async as datasetHistory">
                 <app-block-navigation
                     [datasetHistory]="datasetHistory"
                     [currentBlockHash]="blockHash"
@@ -41,7 +56,6 @@
                     (onPageChangeEmit)="onPageChange($event)"
                 />
             </div>
-            <app-yaml-view-section [blockAsYaml]="metadata.blockAsYaml" [block]="metadata.block" />
         </div>
     </div>
 </div>

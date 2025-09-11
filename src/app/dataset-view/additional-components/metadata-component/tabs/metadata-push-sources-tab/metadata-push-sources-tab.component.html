@@ -1,0 +1,34 @@
+<ng-container *ngIf="pushSources?.length">
+    <div class="position-relative border border-1 p-4 rounded-3 mb-4" *ngFor="let source of pushSources; let i = index">
+        <span class="position-absolute text-muted group-box-label text-uppercase"
+            >#{{ i + 1 }} Push source &lt;
+            <span class="text-normal text-muted fs-10" [attr.data-test-id]="'source-name-' + i">
+                {{ !source.sourceName ? "default" : source.sourceName }}</span
+            >
+            &gt;</span
+        >
+        <div class="d-flex justify-content-start mt-2" *ngIf="canEditAddPushSource">
+            <button
+                appFeatureFlag="dataset.panel.metadata.editPushSource"
+                class="edit-push-source-btn border-1 bg-light border rounded-2 me-3 btn btn-sm justify-content-between align-items-center"
+                data-test-id="'edit-source-link'"
+                (click)="navigateToEditAddPushSource(source.sourceName!)"
+            >
+                <mat-icon class="mat-icon-svg-size me-2 text-muted" svgIcon="pencil" />
+                <span class="fs-12 me-2">Edit push source</span>
+            </button>
+            <button
+                appFeatureFlag="dataset.panel.metadata.deletePushSource"
+                class="delete-push-source-btn border-1 bg-light border rounded-2 px-2 btn btn-sm justify-content-between align-items-center"
+                data-test-id="'edit-source-link'"
+                (click)="onDeletePushSource()"
+            >
+                <mat-icon class="text-muted fs-4 d-block">delete</mat-icon>
+                <span class="fs-12 me-2 d-block"> Delete push source</span>
+            </button>
+        </div>
+        <div class="mt-1">
+            <app-source-event-common-data [sourceEvent]="source" />
+        </div>
+    </div>
+</ng-container>

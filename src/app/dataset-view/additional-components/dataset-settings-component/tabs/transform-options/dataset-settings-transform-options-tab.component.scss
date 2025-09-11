@@ -1,3 +1,36 @@
-.pb-80 {
-    padding-bottom: 80px;
+:host {
+    ::ng-deep {
+        .mat-slide-toggle {
+            .mat-slide-toggle-ripple {
+                position: relative;
+            }
+        }
+
+        .mdc-switch {
+            .mdc-switch__ripple {
+                display: none;
+            }
+        }
+
+        .mat-mdc-radio-button {
+            --mat-radio-checked-ripple-color: transparent;
+            --mat-radio-ripple-color: transparent;
+        }
+
+        .mat-mdc-radio-label {
+            white-space: normal;
+        }
+    }
+}
+
+.custom-container {
+    padding-bottom: 50px;
+}
+
+@media (width <=1085px) {
+    .custom-container {
+        .form-control-width {
+            width: 80px;
+        }
+    }
 }

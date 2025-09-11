@@ -9,16 +9,26 @@ import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { DatasetApi } from "src/app/api/dataset.api";
-import { GetMetadataBlockQuery, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
-import { MaybeUndefined } from "src/app/interface/app.types";
+import {
+    AddPushSource,
+    GetMetadataBlockQuery,
+    MetadataBlockFragment,
+    MetadataEventType,
+    MetadataManifestFormat,
+} from "src/app/api/kamu.graphql.interface";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { MetadataBlockInfo } from "./metadata-block.types";
+import { MetadataBlockExtended } from "./../../api/kamu.graphql.interface";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Injectable({
     providedIn: "root",
 })
 export class BlockService {
+    public sourceNames: string[] = [];
     private datasetApi = inject(DatasetApi);
+    private navigationService = inject(NavigationService);
 
     public requestMetadataBlock(info: DatasetInfo, blockHash: string): Observable<MaybeUndefined<MetadataBlockInfo>> {
         return this.datasetApi.getBlockByHash({ ...info, blockHash }).pipe(
@@ -37,6 +47,60 @@ export class BlockService {
         return this.datasetApi.getSystemTimeBlockByHash(datasetId, blockHash).pipe(
             map((data) => {
                 return new Date(data.datasets.byId?.metadata.chain.blockByHash?.systemTime ?? "");
+            }),
+        );
+    }
+
+    public getPollingSourceBlock(params: {
+        accountName: string;
+        datasetName: string;
+        encoding: MetadataManifestFormat;
+    }): Observable<MaybeNull<string>> {
+        return this.datasetApi
+            .getBlocksByEventType({ ...params, eventTypes: [MetadataEventType.SetPollingSource] })
+            .pipe(
+                map((data) => {
+                    const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection as MetadataBlockExtended[];
+                    return blocks.length ? (blocks[0].encoded?.content as string) : null;
+                }),
+            );
+    }
+
+    public getSetTransformBlock(params: {
+        accountName: string;
+        datasetName: string;
+        encoding: MetadataManifestFormat;
+    }): Observable<MaybeNull<string>> {
+        return this.datasetApi.getBlocksByEventType({ ...params, eventTypes: [MetadataEventType.SetTransform] }).pipe(
+            map((data) => {
+                const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection as MetadataBlockExtended[];
+                return blocks.length ? (blocks[0].encoded?.content as string) : null;
+            }),
+        );
+    }
+
+    public getAddPushSourceBlock(params: {
+        accountName: string;
+        datasetName: string;
+        sourceName: string;
+        encoding: MetadataManifestFormat;
+    }): Observable<MaybeNull<string>> {
+        return this.datasetApi.getBlocksByEventType({ ...params, eventTypes: [MetadataEventType.AddPushSource] }).pipe(
+            map((data) => {
+                const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection as MetadataBlockExtended[];
+                this.sourceNames = blocks.map((item) => (item.event as AddPushSource).sourceName);
+                if (params.sourceName) {
+                    if (!this.sourceNames.includes(params.sourceName)) {
+                        this.navigationService.navigateToPageNotFound();
+                    }
+                    const block = blocks.filter(
+                        (item) =>
+                            item.event.__typename === "AddPushSource" && item.event.sourceName === params.sourceName,
+                    )[0];
+                    return block.encoded?.content as string;
+                } else {
+                    return null;
+                }
             }),
         );
     }

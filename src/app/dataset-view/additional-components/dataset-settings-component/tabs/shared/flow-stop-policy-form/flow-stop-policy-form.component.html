@@ -1,0 +1,73 @@
+<div>
+    <form [formGroup]="form">
+        <div class="position-relative border border-1 mt-2 rounded-3">
+            <div>
+                <span class="position-absolute text-muted group-box-label text-uppercase">Stop Policy</span>
+                <div class="p-4">
+                    <mat-radio-group
+                        class="d-flex flex-column row-gap-2"
+                        formControlName="stopPolicyType"
+                        data-test-id="stop-policy-type"
+                        aria-label="Select an option"
+                        color="primary"
+                    >
+                        <mat-radio-button
+                            [value]="StopPolicyType.AFTER_CONSECUTIVE_FAILURES"
+                            class="has-nested-form"
+                            data-test-id="stop-policy-after-consecutive-failures"
+                            #consecutiveFailuresRadioButton
+                        >
+                            <div class="d-flex flex-column">
+                                <div class="d-flex align-items-center">
+                                    On consecutive failures
+                                    <app-tooltip-icon class="ps-2 pt-1" [tooltip]="CONSECUTIVE_FAILURES_TOOLTIP" />
+                                </div>
+                                <fieldset
+                                    class="nested-fieldset"
+                                    [attr.disabled]="consecutiveFailuresRadioButton.checked ? null : 'true'"
+                                >
+                                    <div class="d-flex align-items-center gap-3 ms-1 px-2 pt-2">
+                                        <label
+                                            for="maxFailures"
+                                            class="form-control-label"
+                                            [class.disabled]="form.controls.maxFailures.disabled"
+                                            >Max failures:</label
+                                        >
+                                        <input
+                                            id="maxFailures"
+                                            type="number"
+                                            min="1"
+                                            formControlName="maxFailures"
+                                            class="form-control form-control-width"
+                                            data-test-id="stop-policy-max-failures-input"
+                                            #maxFailures
+                                        />
+                                        <span
+                                            class="text-danger ms-4 fs-12 d-flex align-items-end text-break"
+                                            [input]="maxFailures"
+                                            [fieldLabel]="'Max failures'"
+                                            [appFieldError]="['min', 'required']"
+                                            [group]="form"
+                                            [dataTestId]="'stop-policy-max-failures-error-message'"
+                                        ></span>
+                                    </div>
+                                    <div class="ms-1 px-2 pt-2 pb-2">
+                                        <small class="text-muted">
+                                            Maximum number of consecutive failures before the flow is stopped.
+                                        </small>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </mat-radio-button>
+                        <mat-radio-button [value]="StopPolicyType.NEVER" data-test-id="stop-policy-never">
+                            <div class="d-flex align-items-center">
+                                Never
+                                <app-tooltip-icon class="ps-2 pt-1" [tooltip]="NEVER_TOOLTIP" />
+                            </div>
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

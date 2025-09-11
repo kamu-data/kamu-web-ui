@@ -49,7 +49,9 @@ describe("NavigationService", () => {
     it("should test navigate to login", () => {
         const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToLogin();
-        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_LOGIN]);
+        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_LOGIN], {
+            queryParams: { redirectUrl: undefined },
+        });
     });
 
     it("should test navigate to settings", () => {

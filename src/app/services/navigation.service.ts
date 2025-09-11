@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DatasetInfo, FlowDetailsNavigationParams } from "../interface/navigation.interface";
+import { DatasetInfo, FlowDetailsNavigationParams, WebhooksNavigationParams } from "../interface/navigation.interface";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
@@ -13,6 +13,9 @@ import { DatasetNavigationParams, MetadataBlockNavigationParams } from "../inter
 import ProjectLinks from "../project-links";
 import { FlowDetailsTabs } from "../dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { AccountSettingsTabs } from "../account/settings/account-settings.constants";
+import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
+import { MetadataTabs } from "./../dataset-view/additional-components/metadata-component/metadata.constants";
+import { SettingsTabsEnum } from "../dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 
 @Injectable({ providedIn: "root" })
 export class NavigationService {
@@ -68,6 +71,17 @@ export class NavigationService {
         );
     }
 
+    public navigateToMetadata(params: DatasetInfo, tab?: MetadataTabs): void {
+        promiseWithCatch(
+            this.router.navigate([
+                params.accountName,
+                params.datasetName,
+                DatasetViewTypeEnum.Metadata,
+                tab ? tab : MetadataTabs.Watermark,
+            ]),
+        );
+    }
+
     public navigateToMetadataBlock(params: MetadataBlockNavigationParams): void {
         promiseWithCatch(
             this.router.navigate([params.accountName, params.datasetName, ProjectLinks.URL_BLOCK, params.blockHash]),
@@ -109,8 +123,22 @@ export class NavigationService {
         );
     }
 
-    public navigateToLogin(): void {
-        promiseWithCatch(this.router.navigate([ProjectLinks.URL_LOGIN]));
+    public navigateToWebhooks(params: WebhooksNavigationParams): void {
+        const route = [params.accountName, params.datasetName, DatasetViewTypeEnum.Settings, SettingsTabsEnum.WEBHOOKS];
+        if (params.tab) {
+            route.push(params.tab);
+        }
+        promiseWithCatch(this.router.navigate(route));
+    }
+
+    public navigateToLogin(redirectUrl?: string): void {
+        promiseWithCatch(
+            this.router.navigate([ProjectLinks.URL_LOGIN], {
+                queryParams: {
+                    [ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL]: redirectUrl,
+                },
+            }),
+        );
     }
 
     public navigateToOwnerView(ownerName: string, tab?: string, page?: number): void {

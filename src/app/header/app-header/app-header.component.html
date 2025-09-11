@@ -54,7 +54,6 @@
                                     placeholder="Search or jump to..."
                                     [inputFormatter]="formatter"
                                     [(ngModel)]="searchQuery"
-                                    [focusFirst]="false"
                                     aria-label="Search"
                                     aria-describedby="addon-wrapping"
                                     (click)="onClickInput()"
@@ -63,9 +62,14 @@
                                     (focusin)="onFocus($event)"
                                 />
                             </div>
-                            <ng-template #rt let-r="result" let-t="term">
+                            <ng-template #rt let-r="result" let-t="term" let-index="index">
                                 <div class="result-container d-flex align-items-center">
-                                    <i class="bi bi-journal-album mr-2"></i>
+                                    {{ index }}
+                                    <i *ngIf="r.__typename === TypeNames.allDataType" class="bi bi-eye-fill mr-2"></i>
+                                    <i
+                                        *ngIf="r.__typename === TypeNames.datasetType"
+                                        class="bi bi-journal-album mr-2"
+                                    ></i>
                                     <ngb-highlight
                                         *ngIf="!r.dummy"
                                         [result]="r.dataset.owner.accountName + '/' + r.dataset.name"

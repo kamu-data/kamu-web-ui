@@ -30,7 +30,8 @@ export class PageNotFoundComponent {
     }
 
     public navigateToLogin(): void {
-        this.navigationService.navigateToLogin();
+        const redirectUrl = window.location.pathname;
+        this.navigationService.navigateToLogin(redirectUrl);
     }
 
     public get isAuthenticated(): boolean {

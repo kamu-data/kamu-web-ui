@@ -98,6 +98,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     public readonly URL_SETTINGS = ProjectLinks.URL_SETTINGS;
     public readonly URL_QUERY = ProjectLinks.URL_QUERY;
     public readonly URL_ACCOUNT_SELECT = ProjectLinks.URL_ACCOUNT_SELECT;
+    public readonly TypeNames: typeof TypeNames = TypeNames;
 
     private appSearchAPI = inject(SearchApi);
     private route = inject(ActivatedRoute);

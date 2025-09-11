@@ -11,10 +11,13 @@ import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 import { WebhooksApi } from "src/app/api/webhooks.api";
 import {
+    mockDatasetWebhookByIdQuery,
     mockDatasetWebhookCreateSubscriptionMutation,
     mockDatasetWebhookCreateSubscriptionMutationError,
     mockDatasetWebhookPauseSubscriptionMutation,
     mockDatasetWebhookPauseSubscriptionMutationError,
+    mockDatasetWebhookReactivateSubscriptionMutation,
+    mockDatasetWebhookReactivateSubscriptionMutationError,
     mockDatasetWebhookRemoveSubscriptionMutation,
     mockDatasetWebhookRemoveSubscriptionMutationError,
     mockDatasetWebhookResumeSubscriptionMutation,
@@ -27,7 +30,7 @@ import {
 import { of } from "rxjs";
 import { TEST_DATASET_ID } from "src/app/api/mock/dataset.mock";
 import { WebhookSubscription } from "src/app/api/kamu.graphql.interface";
-import { CreateWebhookSubscriptionSuccess } from "../create-edit-subscription-modal/create-edit-subscription-modal.model";
+import { CreateWebhookSubscriptionSuccess } from "../dataset-settings-webhooks-tab.component.types";
 
 describe("DatasetWebhooksService", () => {
     let service: DatasetWebhooksService;
@@ -61,6 +64,21 @@ describe("DatasetWebhooksService", () => {
             );
         });
         expect(datasetWebhookSubscriptionsSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check dataset webhook subscription by Id", () => {
+        const datasetWebhookSubscriptionByIdSpy = spyOn(webhooksApi, "datasetWebhookSubscriptionById").and.returnValue(
+            of(mockDatasetWebhookByIdQuery),
+        );
+
+        service
+            .datasetWebhookSubscriptionById({ datasetId: DATASET_ID, id: MOCK_SUBSCRIPTION_ID })
+            .subscribe((result: WebhookSubscription) => {
+                expect(result.id).toEqual(
+                    mockDatasetWebhookByIdQuery.datasets.byId?.webhooks.subscription?.id as string,
+                );
+            });
+        expect(datasetWebhookSubscriptionByIdSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check create dataset webhook subscription with success", () => {
@@ -181,6 +199,36 @@ describe("DatasetWebhooksService", () => {
         });
 
         expect(datasetWebhookResumeSubscriptionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check reactivate dataset webhook subscription with success", () => {
+        const datasetWebhookReactivateSubscriptionSpy = spyOn(
+            webhooksApi,
+            "datasetWebhookReactivateSubscription",
+        ).and.returnValue(of(mockDatasetWebhookReactivateSubscriptionMutation));
+        const toastrServiceSuccessSpy = spyOn(toastrService, "success");
+
+        service.datasetWebhookReactivateSubscription(DATASET_ID, MOCK_SUBSCRIPTION_ID).subscribe((result: boolean) => {
+            expect(result).toEqual(true);
+            expect(toastrServiceSuccessSpy).toHaveBeenCalledTimes(1);
+        });
+
+        expect(datasetWebhookReactivateSubscriptionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check reactivate dataset webhook subscription with error", () => {
+        const datasetWebhookReactivateSubscriptionSpy = spyOn(
+            webhooksApi,
+            "datasetWebhookReactivateSubscription",
+        ).and.returnValue(of(mockDatasetWebhookReactivateSubscriptionMutationError));
+        const toastrServiceErrorSpy = spyOn(toastrService, "error");
+
+        service.datasetWebhookReactivateSubscription(DATASET_ID, MOCK_SUBSCRIPTION_ID).subscribe((result: boolean) => {
+            expect(result).toEqual(false);
+            expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
+        });
+
+        expect(datasetWebhookReactivateSubscriptionSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check update dataset webhook subscription with success", () => {

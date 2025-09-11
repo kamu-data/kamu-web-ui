@@ -42,3 +42,22 @@
     top: -1px;
     color: #999;
 }
+
+.number-width {
+    width: 17px;
+    text-align: right;
+}
+
+.ml-11 {
+    margin-left: 11px;
+}
+
+.badge-current {
+    font-size: 10px;
+    background: deepskyblue;
+    margin-left: 5px;
+    border-radius: 7px;
+    padding: 0 4px;
+    color: white;
+    font-weight: 500;
+}

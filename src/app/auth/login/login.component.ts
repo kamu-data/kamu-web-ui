@@ -59,6 +59,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
     private loginMethodsService = inject(LoginMethodsService);
     private appConfigService = inject(AppConfigService);
     private navigationService = inject(NavigationService);
+    private redirectUrl: MaybeNull<string>;
 
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;
     public readonly AccountProvider = AccountProvider;
@@ -72,12 +73,9 @@ export class LoginComponent extends BaseComponent implements OnInit {
         this.loginService.passwordLoginErrorOccurrences.pipe(shareReplay());
 
     public ngOnInit(): void {
-        const redirectUrl = this.route.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL);
-        if (redirectUrl && this.localStorageService.accessToken) {
-            this.navigationService.navigateToReplacedPath(redirectUrl);
-        } else if (redirectUrl) {
-            this.localStorageService.setRedirectAfterLoginUrl(redirectUrl);
-            this.navigationService.navigateToReplacedPath(ProjectLinks.URL_LOGIN);
+        this.redirectUrl = this.route.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL);
+        if (this.redirectUrl && this.localStorageService.accessToken) {
+            this.navigationService.navigateToReplacedPath(this.redirectUrl);
         } else {
             const loginMethods: AccountProvider[] = this.loginMethodsService.loginMethods;
             if (loginMethods.length === 1) {
@@ -110,16 +108,16 @@ export class LoginComponent extends BaseComponent implements OnInit {
     public onSelectedLoginMethod(loginMethod: AccountProvider): void {
         this.selectedLoginMethod = loginMethod;
         if (loginMethod === AccountProvider.OauthGithub) {
-            this.loginService.gotoGithub();
+            this.loginService.gotoGithub(this.redirectUrl);
         }
     }
 
     public async onWeb3WalletLogin(): Promise<void> {
-        await this.loginService.web3WalletLogin();
+        await this.loginService.web3WalletLogin(this.redirectUrl);
     }
 
     public onPasswordLogin(): void {
-        this.loginService.passwordLogin(this.passwordLoginForm.value as PasswordLoginCredentials);
+        this.loginService.passwordLogin(this.passwordLoginForm.value as PasswordLoginCredentials, this.redirectUrl);
     }
 
     public resetPasswordLoginError(): void {

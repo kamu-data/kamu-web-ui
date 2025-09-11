@@ -20,11 +20,11 @@
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
 
-    &__title-row {
+    &-title-row {
         display: flex;
         justify-content: space-between;
 
-        &__dataset-name {
+        &-dataset-name {
             display: flex;
             justify-content: left;
 
@@ -34,7 +34,7 @@
         }
     }
 
-    &__title {
+    &-title {
         display: flex;
         background: none;
         border: none;
@@ -49,13 +49,13 @@
         }
     }
 
-    &__additional-block {
+    &-additional-block {
         display: flex;
         align-items: baseline;
         gap: 5px;
     }
 
-    &__description {
+    &-description {
         font-size: 14px;
     }
 }

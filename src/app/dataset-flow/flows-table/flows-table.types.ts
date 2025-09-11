@@ -28,7 +28,7 @@ export interface TransformDescriptionTableData {
 
 export interface CancelFlowArgs {
     flowId: string;
-    datasetId: string;
+    datasetId: MaybeNull<string>;
 }
 
 export interface FlowsTableOptions {

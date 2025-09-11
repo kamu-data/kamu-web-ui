@@ -16,6 +16,10 @@ import {
     DatasetsTotalCountByAccountNameQuery,
     DatasetListDownstreamsGQL,
     DatasetListDownstreamsQuery,
+    DatasetBlocksByEventTypeGQL,
+    MetadataEventType,
+    DatasetBlocksByEventTypeQuery,
+    MetadataManifestFormat,
 } from "./kamu.graphql.interface";
 import {
     CommitEventToDatasetGQL,
@@ -94,6 +98,31 @@ export class DatasetApi {
     private datasetSystemTimeBlockByHashGQL = inject(DatasetSystemTimeBlockByHashGQL);
     private datasetPushSyncStatusesGQL = inject(DatasetPushSyncStatusesGQL);
     private datasetListDownstreamsGQL = inject(DatasetListDownstreamsGQL);
+    private datasetBlocksByEventTypeGQL = inject(DatasetBlocksByEventTypeGQL);
+
+    public getBlocksByEventType(params: {
+        accountName: string;
+        datasetName: string;
+        eventTypes: [MetadataEventType];
+        encoding: MetadataManifestFormat;
+    }): Observable<DatasetBlocksByEventTypeQuery> {
+        return this.datasetBlocksByEventTypeGQL
+            .watch(
+                { ...params },
+                {
+                    ...noCacheFetchPolicy,
+                    context: {
+                        skipLoading: true,
+                    },
+                },
+            )
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<DatasetBlocksByEventTypeQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
 
     public getDatasetMainData(params: {
         accountName: string;

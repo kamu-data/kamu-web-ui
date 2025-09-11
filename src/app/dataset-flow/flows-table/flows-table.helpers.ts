@@ -10,6 +10,7 @@ import {
     FlowStatus,
     FlowSummaryDataFragment,
     FlowTimingRecords,
+    FlowTriggerBatchingRuleBuffering,
 } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 import AppValues from "src/app/common/values/app.values";
@@ -29,17 +30,15 @@ export class FlowTableHelpers {
             case "FlowDescriptionDatasetExecuteTransform":
                 return `Execute transformation`;
             case "FlowDescriptionDatasetHardCompaction":
-                if (
-                    flow.configSnapshot?.__typename === "FlowConfigRuleCompaction" &&
-                    flow.configSnapshot.compactionMode.__typename === "FlowConfigCompactionModeMetadataOnly"
-                ) {
-                    return "Reset";
-                }
                 return `Hard compaction`;
             case "FlowDescriptionSystemGC":
                 return `Garbage collector`;
             case "FlowDescriptionDatasetReset":
                 return `Reset to seed`;
+            case "FlowDescriptionDatasetResetToMetadata":
+                return `Reset to metadata only`;
+            case "FlowDescriptionWebhookDeliver":
+                return "Webhook message delivery";
             /* istanbul ignore next */
             default:
                 return "Unsupported flow description";
@@ -160,31 +159,40 @@ export class FlowTableHelpers {
 
                             case "FlowDescriptionDatasetHardCompaction":
                                 switch (element.description.compactionResult?.__typename) {
-                                    case "FlowDescriptionHardCompactionSuccess":
-                                        if (
-                                            element.configSnapshot?.__typename === "FlowConfigRuleCompaction" &&
-                                            element.configSnapshot.compactionMode.__typename ===
-                                                "FlowConfigCompactionModeMetadataOnly"
-                                        ) {
-                                            return "All data except metadata has been deleted";
-                                        }
+                                    case "FlowDescriptionReorganizationSuccess":
                                         return `Compacted ${element.description.compactionResult.originalBlocksCount} original blocks to ${element.description.compactionResult.resultingBlocksCount} resulting blocks`;
 
-                                    case "FlowDescriptionHardCompactionNothingToDo":
+                                    case "FlowDescriptionReorganizationNothingToDo":
                                         return element.description.compactionResult.message;
+
                                     /* istanbul ignore next */
                                     default:
                                         return "Unknown compaction result typename";
                                 }
 
                             case "FlowDescriptionDatasetReset":
-                                switch (element.description.__typename) {
-                                    case "FlowDescriptionDatasetReset":
-                                        return "All dataset history has been cleared";
+                                return "All dataset history has been cleared";
+
+                            case "FlowDescriptionDatasetResetToMetadata":
+                                switch (element.description.resetToMetadataResult?.__typename) {
+                                    case "FlowDescriptionReorganizationSuccess":
+                                        return `All data except metadata has been deleted. Original blocks: ${element.description.resetToMetadataResult.originalBlocksCount}. Resulting blocks: ${element.description.resetToMetadataResult.resultingBlocksCount}.`;
+
+                                    case "FlowDescriptionReorganizationNothingToDo":
+                                        return element.description.resetToMetadataResult.message;
                                     /* istanbul ignore next */
                                     default:
-                                        return "Unknown reset result typename";
+                                        return "Unknown reset to metadata result typename";
                                 }
+
+                            case "FlowDescriptionWebhookDeliver":
+                                return (
+                                    `Delivered message ${element.description.eventType} ` +
+                                    (element.description.label.length > 0
+                                        ? `via subscription "${element.description.label}"`
+                                        : `to ${element.description.targetUrl}`)
+                                );
+
                             // TODO
                             //  - GC
                             /* istanbul ignore next */
@@ -201,9 +209,12 @@ export class FlowTableHelpers {
                     case "FlowFailedError": {
                         switch (element.outcome.reason.__typename) {
                             case "TaskFailureReasonGeneral":
-                                return `An error occurred, see logs for more details`;
+                                return `An${element.outcome.reason.recoverable ? "" : " unrecoverable"} error occurred, see logs for more details`;
                             case "TaskFailureReasonInputDatasetCompacted": {
                                 return `Input dataset <a class="text-small text-danger">${element.outcome.reason.inputDataset.name}</a> was hard compacted`;
+                            }
+                            case "TaskFailureReasonWebhookDeliveryProblem": {
+                                return `${element.outcome.reason.message}<br>Target URL: ${element.outcome.reason.targetUrl}`;
                             }
                             /* istanbul ignore next */
                             default:
@@ -222,6 +233,10 @@ export class FlowTableHelpers {
                 switch (element.description.__typename) {
                     case "FlowDescriptionDatasetHardCompaction":
                         return "Running hard compaction";
+                    case "FlowDescriptionDatasetResetToMetadata":
+                        return "Resetting dataset to metadata only";
+                    case "FlowDescriptionDatasetReset":
+                        return "Resetting dataset";
                     case "FlowDescriptionDatasetPollingIngest":
                         {
                             const fetchStep = element.description.pollingSource.fetch;
@@ -242,6 +257,15 @@ export class FlowTableHelpers {
                             engineDesc.label ?? engineDesc.name
                         }" engine`;
                     }
+                    case "FlowDescriptionWebhookDeliver": {
+                        return (
+                            `Delivering message ${element.description.eventType} ` +
+                            (element.description.label.length
+                                ? `via subscription "${element.description.label}"`
+                                : `to ${element.description.targetUrl}`)
+                        );
+                    }
+
                     // TODO: consider what to display for other flow types
                     //  - push ingest
                     //  - compacting
@@ -262,7 +286,7 @@ export class FlowTableHelpers {
                     case "FlowStartConditionSchedule": {
                         return `wake up time: ${formatDistanceToNowStrict(node.startCondition.wakeUpAt, { addSuffix: true })}`;
                     }
-                    case "FlowStartConditionBatching":
+                    case "FlowStartConditionReactive":
                         return `deadline time: ${formatDistanceToNowStrict(node.startCondition.batchingDeadline, { addSuffix: true })}`;
                     /* istanbul ignore next */
                     default:
@@ -305,7 +329,7 @@ export class FlowTableHelpers {
         }
     }
 
-    public static durationTimingText(flowNode: { timing: FlowTimingRecords; outcome?: MaybeNull<object> }): string {
+    public static fullDurationTimingText(flowNode: { timing: FlowTimingRecords; outcome?: MaybeNull<object> }): string {
         if (flowNode.outcome) {
             if (flowNode.timing.lastAttemptFinishedAt) {
                 return DataHelpers.durationTask(flowNode.timing.initiatedAt, flowNode.timing.lastAttemptFinishedAt);
@@ -318,13 +342,34 @@ export class FlowTableHelpers {
         }
     }
 
+    public static runDurationTimingText(flowNode: { timing: FlowTimingRecords; outcome?: MaybeNull<object> }): string {
+        if (flowNode.outcome) {
+            if (flowNode.timing.firstAttemptScheduledAt && flowNode.timing.lastAttemptFinishedAt) {
+                return DataHelpers.durationTask(
+                    flowNode.timing.firstAttemptScheduledAt,
+                    flowNode.timing.lastAttemptFinishedAt,
+                );
+            } else {
+                // Aborted?
+                return "-";
+            }
+        } else {
+            if (flowNode.timing.firstAttemptScheduledAt) {
+                return DataHelpers.durationTask(flowNode.timing.firstAttemptScheduledAt, new Date().toISOString());
+            } else {
+                // Waiting?
+                return "-";
+            }
+        }
+    }
+
     public static waitingBlockText(startCondition: MaybeNull<FlowStartCondition>): string {
         switch (startCondition?.__typename) {
             case "FlowStartConditionThrottling":
                 return "waiting for a throttling condition";
 
-            case "FlowStartConditionBatching":
-                return "waiting for a batching condition";
+            case "FlowStartConditionReactive":
+                return `waiting for input data: ${startCondition.accumulatedRecordsCount}/${(startCondition.activeBatchingRule as FlowTriggerBatchingRuleBuffering).minRecordsToAwait}`;
 
             case "FlowStartConditionExecutor": {
                 return "waiting for a free executor";
@@ -366,7 +411,7 @@ export class FlowTableHelpers {
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,
                         )}`;
                     }
-                    case "FlowStartConditionBatching":
+                    case "FlowStartConditionReactive":
                         return `Deadline time: ${format(
                             node.startCondition.batchingDeadline,
                             AppValues.CRON_EXPRESSION_DATE_FORMAT,

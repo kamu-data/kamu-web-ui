@@ -9,7 +9,6 @@ import {
     AddPushSourceEventFragment,
     DatasetKind,
     DatasetTransformFragment,
-    LicenseFragment,
     SetPollingSourceEventFragment,
 } from "../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, inject } from "@angular/core";
@@ -19,31 +18,18 @@ import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service
 import { MetadataSchemaUpdate } from "../../dataset.subscriptions.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetMetadataSummaryFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
-import { isNil, momentConvertDateToLocalWithFormat, promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import { momentConvertDateToLocalWithFormat } from "src/app/common/helpers/app.helpers";
 import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "src/app/interface/app.types";
-import { NavigationService } from "src/app/services/navigation.service";
-import { ModalService } from "src/app/common/components/modal/modal.service";
 import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { DatasetOverviewTabData } from "../../dataset-view.interface";
-import { CardsPropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
-import { MergeStrategyPropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";
-import { SchemaPropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/schema-property/schema-property.component";
-import { RouterLink } from "@angular/router";
-import { SqlQueryViewerComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/sql-query-viewer/sql-query-viewer.component";
-import { EnginePropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/engine-property/engine-property.component";
-import { OwnerPropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/owner-property/owner-property.component";
-import { DatasetNamePropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/dataset-name-property/dataset-name-property.component";
-import { DisplayTimeComponent } from "../../../common/components/display-time/display-time.component";
-import { YamlEventViewerComponent } from "../../../common/components/yaml-event-viewer/yaml-event-viewer.component";
-import { LinkPropertyComponent } from "../../../dataset-block/metadata-block/components/event-details/components/common/link-property/link-property.component";
-import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";
-import { BlockRowDataComponent } from "../../../common/components/block-row-data/block-row-data.component";
+import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { RouterLink, RouterOutlet } from "@angular/router";
 import { MatIconModule } from "@angular/material/icon";
 import { CommitNavigatorComponent } from "./components/commit-navigator/commit-navigator.component";
 import { FeatureFlagDirective } from "../../../common/directives/feature-flag.directive";
-import { NgIf, NgFor, NgTemplateOutlet, TitleCasePipe } from "@angular/common";
+import { NgIf, NgFor, NgClass } from "@angular/common";
+import { METADATA_TAB_MENU_ITEMS, MetadataMenuItem, MetadataTabs } from "./metadata.constants";
 
 @Component({
     selector: "app-metadata",
@@ -55,9 +41,9 @@ import { NgIf, NgFor, NgTemplateOutlet, TitleCasePipe } from "@angular/common";
         //-----//
         NgIf,
         NgFor,
-        NgTemplateOutlet,
         RouterLink,
-        TitleCasePipe,
+        RouterOutlet,
+        NgClass,
 
         //-----//
         MatIconModule,
@@ -65,33 +51,15 @@ import { NgIf, NgFor, NgTemplateOutlet, TitleCasePipe } from "@angular/common";
         //-----//
         CommitNavigatorComponent,
         FeatureFlagDirective,
-        BlockRowDataComponent,
-        DynamicTableComponent,
-        LinkPropertyComponent,
-        YamlEventViewerComponent,
-        DisplayTimeComponent,
-        DatasetNamePropertyComponent,
-        OwnerPropertyComponent,
-        EnginePropertyComponent,
-        SqlQueryViewerComponent,
-        SchemaPropertyComponent,
-        MergeStrategyPropertyComponent,
-        CardsPropertyComponent,
     ],
 })
 export class MetadataComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_METADATA_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
+    @Input(RoutingResolvers.DATASET_METADATA_ACTIVE_TAB_KEY) public activeTab: MetadataTabs;
     @Output() public pageChangeEmit = new EventEmitter<number>();
 
-    public readonly ReadSectionMapping: Record<string, string> = {
-        ReadStepCsv: "Csv",
-        ReadStepGeoJson: "Geo json",
-        ReadStepEsriShapefile: "Esri shapefile",
-        ReadStepParquet: "Parquet",
-        ReadStepJson: "Json",
-        ReadStepNdJson: "Newline-delimited json",
-        ReadStepNdGeoJson: "Newline-delimited geo json",
-    };
+    public readonly METADATA_MENU_DESCRIPTORS: MetadataMenuItem[] = METADATA_TAB_MENU_ITEMS;
+    public readonly MetadataTabs: typeof MetadataTabs = MetadataTabs;
 
     public currentState?: {
         schema: MaybeNull<DatasetSchema>;
@@ -100,10 +68,10 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     };
 
     public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
+    public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
+    public readonly URL_PARAM_ADD_PUSH_SOURCE = ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE;
 
     private datasetSubsService = inject(DatasetSubscriptionsService);
-    private navigationService = inject(NavigationService);
-    private modalService = inject(ModalService);
 
     public ngOnInit() {
         this.datasetSubsService.metadataSchemaChanges
@@ -117,6 +85,25 @@ export class MetadataComponent extends BaseComponent implements OnInit {
             });
     }
 
+    public getRouteLink(tab: MetadataTabs): string {
+        return `/${this.datasetMetadataTabData.datasetBasics.owner.accountName}/${this.datasetMetadataTabData.datasetBasics.name}/${DatasetViewTypeEnum.Metadata}/${tab}`;
+    }
+
+    public getVisibilityMenuItem(tab: MetadataTabs): boolean {
+        switch (tab) {
+            case MetadataTabs.PollingSource:
+                return Boolean(this.currentPollingSource);
+            case MetadataTabs.PushSources:
+                return Boolean(this.currentPushSources?.length);
+            case MetadataTabs.Transformation:
+                return Boolean(this.currentTransform);
+            case MetadataTabs.Watermark:
+                return this.isRoot;
+            default:
+                return true;
+        }
+    }
+
     public onPageChange(currentPage: number): void {
         this.pageChangeEmit.emit(currentPage);
     }
@@ -125,20 +112,16 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         return this.currentState ? this.currentState.pageInfo.currentPage + 1 : 1;
     }
 
+    public get isRoot(): boolean {
+        return this.datasetMetadataTabData.datasetBasics.kind === DatasetKind.Root;
+    }
+
     public get totalPages(): number {
         return this.currentState?.pageInfo.totalPages ?? 1;
     }
 
     public get latestBlockHash(): string {
         return this.currentState ? this.currentState.metadataSummary.metadata.chain.blocks.nodes[0].blockHash : "";
-    }
-
-    public get currentLicense(): MaybeNullOrUndefined<LicenseFragment> {
-        return this.currentState?.metadataSummary.metadata.currentLicense;
-    }
-
-    public get currentWatermark(): MaybeNullOrUndefined<string> {
-        return this.currentState?.metadataSummary.metadata.currentWatermark;
     }
 
     public get currentPollingSource(): MaybeNullOrUndefined<SetPollingSourceEventFragment> {
@@ -163,101 +146,6 @@ export class MetadataComponent extends BaseComponent implements OnInit {
                   isTextDate: true,
               })
             : "";
-    }
-
-    public get canEditSetPollingSource(): boolean {
-        if (this.currentState) {
-            return (
-                this.datasetMetadataTabData.datasetBasics.kind === DatasetKind.Root &&
-                !isNil(this.currentState.metadataSummary.metadata.currentPollingSource) &&
-                this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit
-            );
-        } else {
-            return false;
-        }
-    }
-
-    public get canEditAddPushSource(): boolean {
-        if (this.currentState) {
-            return (
-                this.datasetMetadataTabData.datasetBasics.kind === DatasetKind.Root &&
-                this.currentState.metadataSummary.metadata.currentPushSources.length > 0 &&
-                this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit
-            );
-        } else {
-            return false;
-        }
-    }
-
-    public get canEditSetTransform(): boolean {
-        if (this.currentState) {
-            return (
-                this.datasetMetadataTabData.datasetBasics.kind === DatasetKind.Derivative &&
-                !isNil(this.currentState.metadataSummary.metadata.currentTransform) &&
-                this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit
-            );
-        } else {
-            return false;
-        }
-    }
-
-    public navigateToEditPollingSource(): void {
-        this.navigationService.navigateToAddPollingSource({
-            accountName: this.datasetMetadataTabData.datasetBasics.owner.accountName,
-            datasetName: this.datasetMetadataTabData.datasetBasics.name,
-        });
-    }
-
-    public navigateToEditAddPushSource(sourceName: string): void {
-        this.navigationService.navigateToAddPushSource(
-            {
-                accountName: this.datasetMetadataTabData.datasetBasics.owner.accountName,
-                datasetName: this.datasetMetadataTabData.datasetBasics.name,
-            },
-            sourceName,
-        );
-    }
-
-    public navigateToAddPushSource(): void {
-        this.navigationService.navigateToAddPushSource({
-            accountName: this.datasetMetadataTabData.datasetBasics.owner.accountName,
-            datasetName: this.datasetMetadataTabData.datasetBasics.name,
-        });
-    }
-
-    public navigateToEditSetTransform(): void {
-        this.navigationService.navigateToSetTransform({
-            accountName: this.datasetMetadataTabData.datasetBasics.owner.accountName,
-            datasetName: this.datasetMetadataTabData.datasetBasics.name,
-        });
-    }
-
-    public onDeletePollingSource(): void {
-        promiseWithCatch(
-            this.modalService.warning({
-                message: "Feature coming soon",
-                yesButtonText: "Ok",
-            }),
-        );
-        //TODO:
-        // this.trackSubscription(
-        //     this.datasetCommitService
-        //         .commitEventToDataset(
-        //             this.getDatasetInfoFromUrl().accountName,
-        //             this.getDatasetInfoFromUrl().datasetName,
-        //             this.yamlEventService.buildYamlDisablePollingSourceEvent(),
-        //         )
-        //         .subscribe(),
-        // );
-    }
-
-    public onDeletePushSource(): void {
-        promiseWithCatch(
-            this.modalService.warning({
-                message: "Feature coming soon",
-                yesButtonText: "Ok",
-            }),
-        );
     }
 
     public hasAnySource(): boolean {

@@ -16,14 +16,29 @@ export class TimeDeltaFormHarness extends ComponentHarness {
     private readonly locatorEveryInput = this.locatorFor('[data-test-id="time-delta-every"]');
     private readonly locatorUnitSelect = this.locatorFor('[data-test-id="time-delta-unit"]');
 
-    private readonly locatorError = this.locatorForOptional('[data-test-id="error-message"]');
+    private readonly locatorError = this.locatorForOptional('[data-test-id="time-delta-error-message"]');
 
-    private static readonly UNIT_INDEX: Record<TimeUnit, number> = {
-        MINUTES: 0,
-        HOURS: 1,
-        DAYS: 2,
-        WEEKS: 3,
-    };
+    private static readonly DEFAULT_UNIT_ORDER: TimeUnit[] = [
+        TimeUnit.Minutes,
+        TimeUnit.Hours,
+        TimeUnit.Days,
+        TimeUnit.Weeks,
+    ];
+
+    private readonly locatorOptionElements = this.locatorForAll('[data-test-id="time-delta-unit"] option');
+
+    public async getAvailableUnits(): Promise<TimeUnit[]> {
+        const optionElements = await this.locatorOptionElements();
+
+        const units: TimeUnit[] = [];
+        for (const option of optionElements) {
+            const value: unknown = await option.getProperty("value");
+            if (typeof value === "string" && Object.values(TimeUnit).includes(value as TimeUnit)) {
+                units.push(value as TimeUnit);
+            }
+        }
+        return units;
+    }
 
     public async setTimeDelta(every: number | "" | null, unit: TimeUnit | null): Promise<void> {
         const input = await this.locatorEveryInput();
@@ -41,9 +56,11 @@ export class TimeDeltaFormHarness extends ComponentHarness {
         if (unit === null) {
             await select.clear();
         } else {
-            const index = TimeDeltaFormHarness.UNIT_INDEX[unit];
-            if (index === undefined) {
-                throw new Error(`Unknown unit: ${unit}`);
+            // Get available units and find the index
+            const availableUnits = await this.getAvailableUnits();
+            const index = availableUnits.indexOf(unit);
+            if (index === -1) {
+                throw new Error(`Unit ${unit} is not available in the current configuration`);
             }
             await select.selectOptions(index);
             await select.blur();

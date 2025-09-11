@@ -12,18 +12,18 @@ import { provideToastr } from "ngx-toastr";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { ModalService } from "src/app/common/components/modal/modal.service";
-import { DatasetCompactionService } from "../../services/dataset-compaction.service";
 import { of } from "rxjs";
 import { NavigationService } from "src/app/services/navigation.service";
 import AppValues from "src/app/common/values/app.values";
 import { ActivatedRoute } from "@angular/router";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+import { DatasetFlowsService } from "../../../flows-component/services/dataset-flows.service";
 
 describe("DatasetSettingsCompactingTabComponent", () => {
     let component: DatasetSettingsCompactingTabComponent;
     let fixture: ComponentFixture<DatasetSettingsCompactingTabComponent>;
     let modalService: ModalService;
-    let datasetCompactionService: DatasetCompactionService;
+    let datasetFlowsService: DatasetFlowsService;
     let navigationService: NavigationService;
 
     beforeEach(async () => {
@@ -58,7 +58,7 @@ describe("DatasetSettingsCompactingTabComponent", () => {
         fixture = TestBed.createComponent(DatasetSettingsCompactingTabComponent);
         component = fixture.componentInstance;
         modalService = TestBed.inject(ModalService);
-        datasetCompactionService = TestBed.inject(DatasetCompactionService);
+        datasetFlowsService = TestBed.inject(DatasetFlowsService);
         navigationService = TestBed.inject(NavigationService);
         component.compactingTabData = {
             datasetBasics: mockDatasetBasicsDerivedFragment,
@@ -73,7 +73,9 @@ describe("DatasetSettingsCompactingTabComponent", () => {
 
     it("should check run hard compacting", fakeAsync(() => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
-        const runHardCompactionSpy = spyOn(datasetCompactionService, "runHardCompaction").and.returnValue(of(true));
+        const runHardCompactionSpy = spyOn(datasetFlowsService, "datasetTriggerCompactionFlow").and.returnValue(
+            of(true),
+        );
         const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");

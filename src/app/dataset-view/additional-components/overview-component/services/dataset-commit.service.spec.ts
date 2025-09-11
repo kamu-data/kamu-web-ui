@@ -74,7 +74,7 @@ describe("DatasetCommitService", () => {
         return commitService.getIdByAccountNameAndDatasetName(TEST_ACCOUNT_NAME, TEST_DATASET_NAME);
     }
 
-    function requestCommitEvent(): Observable<void> {
+    function requestCommitEvent(): Observable<boolean> {
         return commitService.commitEventToDataset({
             accountId: TEST_ACCOUNT_ID,
             accountName: TEST_ACCOUNT_NAME,
@@ -142,8 +142,9 @@ describe("DatasetCommitService", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
         const commitEventSpy = spyOn(datasetApi, "commitEvent").and.returnValue(of(mockCommitEventToDatasetMutation));
 
-        requestCommitEvent().subscribe(() => {
+        requestCommitEvent().subscribe((result) => {
             tick();
+            expect(result).toEqual(true);
         });
         flush();
 
@@ -152,7 +153,7 @@ describe("DatasetCommitService", () => {
             event: TEST_EVENT_CONTENT,
             accountId: TEST_ACCOUNT_ID,
         });
-        expectNavigatedToDatasetOverview();
+        // expectNavigatedToDatasetOverview();
     }));
 
     [mockCommitEventToDatasetResultAppendError, mockCommitEventToDataseMetadataManifestMalformedError].forEach(

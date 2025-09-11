@@ -195,6 +195,21 @@ export class AppComponent extends BaseComponent implements OnInit {
             .addSvgIcon("ethereum-2", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/ethereum-2.svg"))
             .addSvgIcon("metamask", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/metamask.svg"))
             .addSvgIcon(
+                "table-chart-outline",
+                this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/table-chart-outline.svg"),
+            )
+            .addSvgIcon(
+                "receipt_long",
+                this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/receipt_long.svg"),
+            )
+            .addSvgIcon("timeline", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/timeline.svg"))
+            .addSvgIcon(
+                "source_notes",
+                this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/source_notes.svg"),
+            )
+            .addSvgIcon("enable", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/enable.svg"))
+            .addSvgIcon("add", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/add.svg"))
+            .addSvgIcon(
                 "configuration",
                 this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/configuration.svg"),
             );
@@ -226,10 +241,12 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     public onLogin(): void {
-        if (this.router.url !== `/${ProjectLinks.URL_PAGE_NOT_FOUND}`)
-            this.localStorageService.setRedirectAfterLoginUrl(this.router.url);
-
-        this.navigationService.navigateToLogin();
+        const redirectUrl = this.router.url;
+        if (![`/${ProjectLinks.URL_PAGE_NOT_FOUND}`, `/${ProjectLinks.URL_SEARCH}`].includes(redirectUrl)) {
+            this.navigationService.navigateToLogin(redirectUrl);
+        } else {
+            this.navigationService.navigateToLogin();
+        }
     }
 
     public onLogout(): void {

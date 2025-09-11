@@ -28,7 +28,7 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
         label: "Schema:",
         tooltip: SourcesTooltipsTexts.SCHEMA,
         presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: false,
+        separateRowForValue: true,
         dataTestId: "readStepCsv-schema",
     },
     "ReadStepCsv.separator": {

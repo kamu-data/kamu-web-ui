@@ -5,9 +5,12 @@
  * included in the LICENSE file.
  */
 
+import { CreateWebhookSubscriptionSuccess } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
 import {
+    DatasetWebhookByIdQuery,
     DatasetWebhookCreateSubscriptionMutation,
     DatasetWebhookPauseSubscriptionMutation,
+    DatasetWebhookReactivateSubscriptionMutation,
     DatasetWebhookRemoveSubscriptionMutation,
     DatasetWebhookResumeSubscriptionMutation,
     DatasetWebhookSubscriptionsQuery,
@@ -198,6 +201,44 @@ export const mockDatasetWebhookResumeSubscriptionMutationError: DatasetWebhookRe
     },
 };
 
+export const mockDatasetWebhookReactivateSubscriptionMutation: DatasetWebhookReactivateSubscriptionMutation = {
+    datasets: {
+        byId: {
+            webhooks: {
+                subscription: {
+                    reactivate: {
+                        message: "Success",
+                        __typename: "ReactivateWebhookSubscriptionResultSuccess",
+                    },
+                    __typename: "WebhookSubscriptionMut",
+                },
+                __typename: "DatasetWebhooksMut",
+            },
+            __typename: "DatasetMut",
+        },
+    },
+};
+
+export const mockDatasetWebhookReactivateSubscriptionMutationError: DatasetWebhookReactivateSubscriptionMutation = {
+    datasets: {
+        byId: {
+            webhooks: {
+                subscription: {
+                    reactivate: {
+                        status: WebhookSubscriptionStatus.Paused,
+                        message: "Failed",
+                        __typename: "ReactivateWebhookSubscriptionResultUnexpected",
+                    },
+                    __typename: "WebhookSubscriptionMut",
+                },
+                __typename: "DatasetWebhooksMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
 export const mockDatasetWebhookUpdateSubscriptionMutation: DatasetWebhookUpdateSubscriptionMutation = {
     datasets: {
         byId: {
@@ -236,4 +277,32 @@ export const mockDatasetWebhookUpdateSubscriptionMutationError: DatasetWebhookUp
         },
         __typename: "DatasetsMut",
     },
+};
+
+export const mockDatasetWebhookByIdQuery: DatasetWebhookByIdQuery = {
+    datasets: {
+        byId: {
+            webhooks: {
+                subscription: {
+                    id: "7a6781a8-233d-47bf-86cc-c1ae585a38bd",
+                    label: "Label",
+                    datasetId: "did:odf:fed01888a6a44954894780978ac256fa224b97fc42d6541c681147a552abd02fb6f93",
+                    targetUrl: "https://mock.com/",
+                    eventTypes: ["DATASET.REF.UPDATED"],
+                    status: WebhookSubscriptionStatus.Enabled,
+                    __typename: "WebhookSubscription",
+                },
+                __typename: "DatasetWebhooks",
+            },
+            __typename: "Dataset",
+        },
+        __typename: "Datasets",
+    },
+};
+
+export const mockCreateWebhookSubscriptionSuccess: CreateWebhookSubscriptionSuccess = {
+    input: mockWebhookSubscriptionInput,
+    subscriptionId: "121231-32232-433434-12sasas",
+    status: WebhookSubscriptionStatus.Enabled,
+    secret: "sSASADSDF22323ssfdgfhfhhhh",
 };

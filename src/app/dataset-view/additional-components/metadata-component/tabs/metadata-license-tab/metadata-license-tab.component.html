@@ -1,0 +1,39 @@
+<div class="d-flex justify-content-start mb-4" *ngIf="canEditLicense">
+    <button
+        class="border-1 bg-light border edit-license-btn rounded-2 me-3 btn btn-sm justify-content-between align-items-center"
+        data-test-id="edit-license"
+        (click)="onEditLicense()"
+    >
+        <mat-icon class="mat-icon-svg-size me-1 text-muted" [svgIcon]="license ? 'pencil' : 'add'" />
+        <span class="fs-12 me-2">{{ license ? "Edit" : "Add" }} license</span>
+    </button>
+</div>
+<div *ngIf="license; else noLicense" class="position-relative border border-1 p-2 rounded-3">
+    <span class="position-absolute text-muted group-box-label text-uppercase">License</span>
+    <div class="mx-4">
+        <app-block-row-data [tooltip]="'Unique identifier of the license.'" [label]="'ID:'">
+            <span data-test-id="license-short-name">{{ license.shortName }}</span>
+        </app-block-row-data>
+    </div>
+
+    <div class="mx-4">
+        <app-block-row-data [tooltip]="'Full name of the license.'" [label]="'Name:'">
+            <span data-test-id="license-name"> {{ license.name }}</span>
+        </app-block-row-data>
+    </div>
+
+    <div class="mx-4" *ngIf="license.spdxId">
+        <app-block-row-data [tooltip]="'License identifier from the SPDX License List.'" [label]="'SPDX ID:'">
+            <span data-test-id="license-spdxId"> {{ license.spdxId }}</span>
+        </app-block-row-data>
+    </div>
+
+    <div class="mx-4">
+        <app-block-row-data [tooltip]="'Link to the official website.'" [label]="'Website:'">
+            <app-link-property data-test-id="license-websiteUrl" [data]="license.websiteUrl" />
+        </app-block-row-data>
+    </div>
+</div>
+<ng-template #noLicense>
+    <p>There is no license</p>
+</ng-template>

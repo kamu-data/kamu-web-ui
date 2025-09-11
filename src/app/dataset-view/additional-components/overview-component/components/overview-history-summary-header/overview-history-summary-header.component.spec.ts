@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { OverviewHistorySummaryHeaderComponent } from "./overview-history-summary-header.component";
-import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
+import { AccountProvider, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { TEST_DATASET_NAME, mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { provideToastr } from "ngx-toastr";
@@ -50,6 +50,7 @@ describe("OverviewHistorySummaryHeaderComponent", () => {
             id: "",
             accountName: AppValues.DEFAULT_USER_DISPLAY_NAME,
             avatarUrl: AppValues.DEFAULT_AVATAR_URL,
+            accountProvider: AccountProvider.Password,
         });
         expect(component.systemTime).toBe("");
     });

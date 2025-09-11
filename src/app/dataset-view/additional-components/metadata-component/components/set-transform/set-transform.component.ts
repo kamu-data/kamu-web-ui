@@ -92,7 +92,6 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
         } else {
             this.initDefaultQueriesSection();
         }
-        this.history = this.editService.history;
     }
 
     private initDefaultQueriesSection(query = ""): void {
@@ -165,6 +164,12 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
                 ),
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe();
+            .subscribe(() => {
+                this.navigationServices.navigateToDatasetView({
+                    accountName: this.getDatasetInfoFromUrl().accountName,
+                    datasetName: this.getDatasetInfoFromUrl().datasetName,
+                    tab: DatasetViewTypeEnum.Overview,
+                });
+            });
     }
 }

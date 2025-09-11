@@ -12,13 +12,14 @@ import ProjectLinks from "src/app/project-links";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { AccountProvider } from "src/app/api/kamu.graphql.interface";
 import { LoginMethodsService } from "../login-methods.service";
+import { RedirectUrlTestModule } from "src/app/common/modules/redirect-url-test.module";
 
 describe("LoginGuard", () => {
     let guard: LoginGuard;
     let loginMethodsService: LoginMethodsService;
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ApolloTestingModule],
+            imports: [ApolloTestingModule, RedirectUrlTestModule],
         });
         guard = TestBed.inject(LoginGuard);
         loginMethodsService = TestBed.inject(LoginMethodsService);

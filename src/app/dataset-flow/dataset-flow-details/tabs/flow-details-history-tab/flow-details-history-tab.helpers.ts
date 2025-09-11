@@ -12,19 +12,21 @@ import {
     FlowEventScheduledForActivation,
     FlowEventStartConditionUpdated,
     FlowEventTaskChanged,
-    FlowEventTriggerAdded,
     FlowHistoryDataFragment,
     FlowOutcomeDataFragment,
     FlowStartCondition,
     FlowStatus,
     FlowSummaryDataFragment,
-    FlowTriggerInstance,
+    FlowActivationCause,
     TaskStatus,
+    FlowEventActivationCauseAdded,
 } from "src/app/api/kamu.graphql.interface";
 import { pluralize } from "src/app/common/helpers/app.helpers";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import AppValues from "src/app/common/values/app.values";
 import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
+import ProjectLinks from "src/app/project-links";
+import { FlowDetailsTabs } from "../../dataset-flow-details.types";
 
 export class DatasetFlowDetailsHelpers {
     public static flowEventDescription(
@@ -34,7 +36,7 @@ export class DatasetFlowDetailsHelpers {
         const eventTypename = flowEvent.__typename;
         switch (eventTypename) {
             case "FlowEventInitiated":
-                return `Flow initiated ${this.describeTrigger((flowEvent as FlowEventInitiated).trigger)}`;
+                return `Flow initiated ${this.describeActivationCause((flowEvent as FlowEventInitiated).activationCause)}`;
             case "FlowEventAborted":
                 return "Flow was aborted";
             case "FlowEventTaskChanged": {
@@ -43,8 +45,8 @@ export class DatasetFlowDetailsHelpers {
                     flowDetails,
                 )} task ${DatasetFlowDetailsHelpers.flowEventEndOfMessage(event)}`;
             }
-            case "FlowEventTriggerAdded":
-                return `Additionally triggered ${this.describeTrigger((flowEvent as FlowEventTriggerAdded).trigger)}`;
+            case "FlowEventActivationCauseAdded":
+                return `Additionally triggered ${this.describeActivationCause((flowEvent as FlowEventActivationCauseAdded).activationCause)}`;
             case "FlowEventStartConditionUpdated": {
                 const startConditionEvent = flowEvent as FlowEventStartConditionUpdated;
                 return `Waiting for ${this.describeStartCondition(startConditionEvent)}`;
@@ -66,7 +68,7 @@ export class DatasetFlowDetailsHelpers {
                 return { icon: "flag_circle", class: "completed-status" };
             case "FlowEventAborted":
                 return { icon: "cancel", class: "aborted-outcome" };
-            case "FlowEventTriggerAdded":
+            case "FlowEventActivationCauseAdded":
                 return { icon: "add_circle", class: "text-muted" };
             case "FlowEventStartConditionUpdated":
                 return { icon: "downloading", class: "text-muted" };
@@ -126,8 +128,8 @@ export class DatasetFlowDetailsHelpers {
         const eventTypename = flowEvent.__typename;
         switch (eventTypename) {
             case "FlowEventInitiated":
-            case "FlowEventTriggerAdded":
-                return this.describeTriggerDetails((flowEvent as FlowEventInitiated).trigger);
+            case "FlowEventActivationCauseAdded":
+                return this.describeActivationCauseDetails((flowEvent as FlowEventInitiated).activationCause);
             case "FlowConfigSnapshotModified": {
                 const event = flowEvent as FlowConfigSnapshotModified;
                 switch (event.configSnapshot.__typename) {
@@ -161,10 +163,13 @@ export class DatasetFlowDetailsHelpers {
                                 let mainMessage: string;
                                 switch (event.task.outcome.reason.__typename) {
                                     case "TaskFailureReasonGeneral":
-                                        mainMessage = `An error occurred, see logs for more details`;
+                                        mainMessage = `An${event.task.outcome.reason.recoverable ? "" : " unrecoverable"} error occurred, see logs for more details`;
                                         break;
                                     case "TaskFailureReasonInputDatasetCompacted":
                                         mainMessage = `Input dataset <span class="text-small text-danger">${event.task.outcome.reason.inputDataset.name}</span> was compacted`;
+                                        break;
+                                    case "TaskFailureReasonWebhookDeliveryProblem":
+                                        mainMessage = `${event.task.outcome.reason.message}<br>Target URL: ${event.task.outcome.reason.targetUrl}`;
                                         break;
                                     /* istanbul ignore next */
                                     default:
@@ -228,10 +233,10 @@ export class DatasetFlowDetailsHelpers {
 
                                     case "FlowDescriptionDatasetHardCompaction":
                                         switch (flowDetails.description.compactionResult?.__typename) {
-                                            case "FlowDescriptionHardCompactionSuccess":
+                                            case "FlowDescriptionReorganizationSuccess":
                                                 return `Compacted ${flowDetails.description.compactionResult.originalBlocksCount} original blocks to ${flowDetails.description.compactionResult.resultingBlocksCount} resulting blocks`;
 
-                                            case "FlowDescriptionHardCompactionNothingToDo":
+                                            case "FlowDescriptionReorganizationNothingToDo":
                                                 return flowDetails.description.compactionResult.message;
                                             /* istanbul ignore next */
                                             default:
@@ -239,13 +244,28 @@ export class DatasetFlowDetailsHelpers {
                                         }
 
                                     case "FlowDescriptionDatasetReset":
-                                        switch (flowDetails.description.__typename) {
-                                            case "FlowDescriptionDatasetReset":
-                                                return "All dataset history has been cleared.";
+                                        return "All dataset history has been cleared.";
+
+                                    case "FlowDescriptionDatasetResetToMetadata":
+                                        switch (flowDetails.description.resetToMetadataResult?.__typename) {
+                                            case "FlowDescriptionReorganizationSuccess":
+                                                return `All data except metadata has been deleted. Original blocks: ${flowDetails.description.resetToMetadataResult.originalBlocksCount}. Resulting blocks: ${flowDetails.description.resetToMetadataResult.resultingBlocksCount}`;
+
+                                            case "FlowDescriptionReorganizationNothingToDo":
+                                                return flowDetails.description.resetToMetadataResult.message;
+
                                             /* istanbul ignore next */
                                             default:
-                                                return "Unknown reset result typename";
+                                                return "Unknown compaction result typename";
                                         }
+
+                                    case "FlowDescriptionWebhookDeliver":
+                                        return (
+                                            `Delivered message ${flowDetails.description.eventType} ` +
+                                            (flowDetails.description.label.length > 0
+                                                ? `via subscription "${flowDetails.description.label}"`
+                                                : `to ${flowDetails.description.targetUrl}`)
+                                        );
 
                                     // TODO
                                     //  - GC
@@ -295,32 +315,67 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    private static describeTrigger(trigger: FlowTriggerInstance): string {
-        switch (trigger.__typename) {
-            case "FlowTriggerAutoPolling":
+    private static describeActivationCause(activationCause: FlowActivationCause): string {
+        switch (activationCause.__typename) {
+            case "FlowActivationCauseAutoPolling":
                 return "automatically";
-            case "FlowTriggerManual":
+            case "FlowActivationCauseManual":
                 return "manually";
-            case "FlowTriggerPush":
-                return "after push event";
-            case "FlowTriggerInputDatasetFlow":
-                return "after input dataset event";
+            case "FlowActivationCauseDatasetUpdate":
+                switch (activationCause.source.__typename) {
+                    case "FlowActivationCauseDatasetUpdateSourceUpstreamFlow":
+                        return "after upstream flow event";
+                    case "FlowActivationCauseDatasetUpdateSourceHttpIngest":
+                        return "after HTTP push ingest event";
+                    case "FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange":
+                        return "after detected external change";
+                    case "FlowActivationCauseDatasetUpdateSourceSmartProtocolPush":
+                        return "after smart protocol push event";
+                    /* istanbul ignore next */
+                    default:
+                        throw new Error("Unknown activation cause data source");
+                }
             /* istanbul ignore next */
             default:
-                throw new Error("Unknown trigger typename");
+                throw new Error("Unknown activation cause typename");
         }
     }
 
-    private static describeTriggerDetails(trigger: FlowTriggerInstance): string {
-        switch (trigger.__typename) {
-            case "FlowTriggerAutoPolling":
+    private static describeActivationCauseDetails(activationCause: FlowActivationCause): string {
+        switch (activationCause.__typename) {
+            case "FlowActivationCauseAutoPolling":
                 return "";
-            case "FlowTriggerManual":
-                return `Triggered by ${trigger.initiator.accountName}`;
-            case "FlowTriggerPush":
-                return "";
-            case "FlowTriggerInputDatasetFlow":
-                return `Input dataset: ${trigger.dataset.owner.accountName}/${trigger.dataset.name}`;
+            case "FlowActivationCauseManual":
+                return `Triggered by <a class="fs-12" href="${DatasetFlowDetailsHelpers.accountHyperlink(activationCause.initiator.accountName)}">${activationCause.initiator.accountName}</a>`;
+            case "FlowActivationCauseDatasetUpdate": {
+                const datasetHyperlink = DatasetFlowDetailsHelpers.datasetHyperlink(
+                    activationCause.dataset.owner.accountName,
+                    activationCause.dataset.name,
+                );
+                const inputDatasetLink = `Input dataset: <a class="fs-12" href="${datasetHyperlink}">${activationCause.dataset.owner.accountName}/${activationCause.dataset.name}</a>`;
+                switch (activationCause.source.__typename) {
+                    case "FlowActivationCauseDatasetUpdateSourceUpstreamFlow": {
+                        const flowHistoryHyperlink = DatasetFlowDetailsHelpers.flowHistoryHyperlink(
+                            activationCause.dataset.owner.accountName,
+                            activationCause.dataset.name,
+                            activationCause.source.flowId,
+                        );
+
+                        const flowHistoryLink =
+                            `<a class="fs-12" href="${flowHistoryHyperlink}">` +
+                            `Flow #${activationCause.source.flowId}</a>`;
+                        return `${flowHistoryLink}. ${inputDatasetLink}`;
+                    }
+                    case "FlowActivationCauseDatasetUpdateSourceHttpIngest":
+                    case "FlowActivationCauseDatasetUpdateSourceSmartProtocolPush":
+                    case "FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange":
+                        return inputDatasetLink;
+
+                    /* istanbul ignore next */
+                    default:
+                        throw new Error("Unknown activation cause data source");
+                }
+            }
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown trigger typename");
@@ -331,8 +386,8 @@ export class DatasetFlowDetailsHelpers {
         switch (startConditionEvent.startCondition.__typename) {
             case "FlowStartConditionThrottling":
                 return "throttling condition";
-            case "FlowStartConditionBatching":
-                return "batching condition";
+            case "FlowStartConditionReactive":
+                return "reactive condition";
             case "FlowStartConditionExecutor":
                 return "free executor";
             case "FlowStartConditionSchedule":
@@ -354,16 +409,29 @@ export class DatasetFlowDetailsHelpers {
                     startCondition.wakeUpAt,
                     AppValues.CRON_EXPRESSION_DATE_FORMAT,
                 )}, shifted from ${format(startCondition.shiftedFrom, AppValues.TIME_FORMAT)}`;
-            case "FlowStartConditionBatching":
-                return `Accumulated ${startCondition.accumulatedRecordsCount}/${
-                    startCondition.activeBatchingRule.minRecordsToAwait
-                } records. Watermark ${
-                    startCondition.watermarkModified ? "modified" : "unchanged"
-                }. Deadline at ${format(startCondition.batchingDeadline, AppValues.CRON_EXPRESSION_DATE_FORMAT)}`;
+
+            case "FlowStartConditionReactive":
+                switch (startCondition.activeBatchingRule.__typename) {
+                    case "FlowTriggerBatchingRuleBuffering":
+                        return `Accumulated ${startCondition.accumulatedRecordsCount}/${
+                            startCondition.activeBatchingRule.minRecordsToAwait
+                        } records. Watermark ${
+                            startCondition.watermarkModified ? "modified" : "unchanged"
+                        }. Deadline at ${format(startCondition.batchingDeadline, AppValues.CRON_EXPRESSION_DATE_FORMAT)}`; /* istanbul ignore next */
+
+                    case "FlowTriggerBatchingRuleImmediate":
+                        return "Waiting for input data";
+
+                    default:
+                        throw new Error("Unknown batching rule typename");
+                }
+
             case "FlowStartConditionExecutor":
                 return this.describeTaskIdentity(startCondition.taskId, flowDetails);
+
             case "FlowStartConditionSchedule":
                 return `Wake up time at ${format(startCondition.wakeUpAt, AppValues.CRON_EXPRESSION_DATE_FORMAT)}`;
+
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown start condition typename");
@@ -391,5 +459,20 @@ export class DatasetFlowDetailsHelpers {
             default:
                 return "";
         }
+    }
+
+    private static accountHyperlink(accountName: string): string {
+        return `/${accountName}`;
+    }
+
+    private static datasetHyperlink(ownerName: string, datasetName: string): string {
+        return `/${ownerName}/${datasetName}`;
+    }
+
+    private static flowHistoryHyperlink(ownerName: string, datasetName: string, flowId: string): string {
+        return (
+            `${DatasetFlowDetailsHelpers.datasetHyperlink(ownerName, datasetName)}/` +
+            `${ProjectLinks.URL_FLOW_DETAILS}/${flowId}/${FlowDetailsTabs.HISTORY}`
+        );
     }
 }

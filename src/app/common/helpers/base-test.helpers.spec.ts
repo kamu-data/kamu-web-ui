@@ -12,6 +12,7 @@ import { ReplaySubject } from "rxjs";
 import { ActivatedRoute, RouterEvent } from "@angular/router";
 import { MaybeNull } from "../../interface/app.types";
 import { MatIconRegistry } from "@angular/material/icon";
+import ProjectLinks from "src/app/project-links";
 
 export function findElement<T>(fixture: ComponentFixture<T>, selector: string): DebugElement {
     return fixture.debugElement.query(By.css(selector));
@@ -119,6 +120,22 @@ export const snapshotParamMapMock = {
     },
 };
 
+export const snapshotRedirectUrlMock = {
+    provide: ActivatedRoute,
+    useValue: {
+        snapshot: {
+            queryParamMap: {
+                get: (key: string) => {
+                    switch (key) {
+                        case ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL:
+                            return "";
+                    }
+                },
+            },
+        },
+    },
+};
+
 export function getInputElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): HTMLInputElement {
     return getElementByDataTestId(fixture, id) as HTMLInputElement;
 }
@@ -174,6 +191,12 @@ export function registerMatSvgIcons(): void {
         "webhook",
         "metamask",
         "ethereum-2",
+        "table-chart-outline",
+        "receipt_long",
+        "timeline",
+        "source_notes",
+        "enable",
+        "add",
         "configuration",
     ];
     icons.forEach((icon: string) => {

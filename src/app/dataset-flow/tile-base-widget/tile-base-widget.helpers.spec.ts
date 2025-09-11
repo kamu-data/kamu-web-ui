@@ -17,6 +17,7 @@ describe("TileBaseWidgetHelpers", () => {
         "aborted-class",
         "failed-class",
         "retrying-class",
+        "failed-class",
     ];
 
     mockFlowItemWidgetDataFragments.forEach((item: FlowItemWidgetDataFragment, index: number) => {

@@ -31,6 +31,8 @@ import { EthereumGatewayFactory } from "./ethereum/ethereum.gateway.factory";
 import { MockEthereumGatewayFactory, MockEthereumGateway } from "./ethereum/mock.ethereum.gateway";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 
+import { RedirectUrlTestModule } from "src/app/common/modules/redirect-url-test.module";
+
 describe("LoginService", () => {
     let service: LoginService;
     let navigationService: NavigationService;
@@ -42,7 +44,7 @@ describe("LoginService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [AuthApi, Apollo, { provide: EthereumGatewayFactory, useClass: MockEthereumGatewayFactory }],
-            imports: [ApolloTestingModule, HttpClientTestingModule],
+            imports: [ApolloTestingModule, HttpClientTestingModule, RedirectUrlTestModule],
         });
 
         localStorageService = TestBed.inject(LocalStorageService);
@@ -74,7 +76,7 @@ describe("LoginService", () => {
         const accountSubscription$ = service.accountChanges.pipe(first()).subscribe();
 
         const credentials: GithubLoginCredentials = { code: TEST_GITHUB_CODE };
-        service.githubLogin(credentials);
+        service.githubLogin(credentials, null);
         tick();
 
         expect(authApiSpy).toHaveBeenCalledOnceWith(credentials, undefined);
@@ -99,8 +101,9 @@ describe("LoginService", () => {
         const accountSubscription$ = service.accountChanges.pipe(first()).subscribe();
 
         const credentials: GithubLoginCredentials = { code: TEST_GITHUB_CODE };
+
         expect(() => {
-            service.githubLogin(credentials);
+            service.githubLogin(credentials, null);
             tick();
         }).toThrow(exception);
 
@@ -126,7 +129,7 @@ describe("LoginService", () => {
         const accountSubscription$ = service.accountChanges.pipe(first()).subscribe();
 
         const credentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
-        service.passwordLogin(credentials);
+        service.passwordLogin(credentials, null);
 
         expect(authApiSpy).toHaveBeenCalledOnceWith(credentials, undefined);
         expect(navigateSpy).toHaveBeenCalledTimes(1);
@@ -164,7 +167,7 @@ describe("LoginService", () => {
         const accountSubscription$ = service.accountChanges.pipe(first()).subscribe();
 
         const credentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
-        service.passwordLogin(credentials);
+        service.passwordLogin(credentials, null);
 
         expect(callbackLoginResponse).toEqual(mockPasswordLoginResponse.auth.login);
 
@@ -181,7 +184,7 @@ describe("LoginService", () => {
         spyOnProperty(appConfigService, "githubClientId", "get").and.returnValue("mockId");
         expect(
             service
-                .githubLoginLink()
+                .githubLoginLink(null)
                 .includes("https://github.com/login/oauth/authorize?scope=user:email&client_id=mockId"),
         ).toEqual(true);
     });
@@ -205,7 +208,7 @@ describe("LoginService", () => {
         );
 
         // Act
-        promiseWithCatch(service.web3WalletLogin());
+        promiseWithCatch(service.web3WalletLogin(null));
         tick();
 
         // Assert
@@ -236,7 +239,7 @@ describe("LoginService", () => {
         );
 
         // Act
-        promiseWithCatch(service.web3WalletLogin());
+        promiseWithCatch(service.web3WalletLogin(null));
         tick();
 
         // Assert
@@ -262,7 +265,7 @@ describe("LoginService", () => {
         const fetchAccountAndTokenSpy = spyOn(authApi, "fetchAccountAndTokenFromWeb3Wallet");
 
         // Act
-        promiseWithCatch(service.web3WalletLogin());
+        promiseWithCatch(service.web3WalletLogin(null));
         tick();
 
         // Assert
@@ -290,7 +293,7 @@ describe("LoginService", () => {
         const fetchAccountAndTokenSpy = spyOn(authApi, "fetchAccountAndTokenFromWeb3Wallet");
 
         // Act
-        promiseWithCatch(service.web3WalletLogin());
+        promiseWithCatch(service.web3WalletLogin(null));
         tick();
 
         // Assert

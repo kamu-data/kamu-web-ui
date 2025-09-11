@@ -72,13 +72,7 @@ export const mockDatasetInfo: DatasetInfo = {
     datasetName: "test name",
 };
 
-export const mockOwnerFields: AccountBasicsFragment = {
-    id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-    accountName: "kamu",
-    accountProvider: AccountProvider.Password,
-};
-
-export const mockOwnerFieldsWithAvatar: AccountBasicsFragment & { avatarUrl?: string } = {
+export const mockOwnerFieldsWithAvatar: AccountBasicsFragment = {
     id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
     accountName: "kamu",
     avatarUrl: TEST_AVATAR_URL,
@@ -101,8 +95,8 @@ export const mockAutocompleteItems: DatasetAutocompleteItem[] = [
             id: "id1",
             kind: DatasetKind.Root,
             name: "mockName1",
-            owner: mockOwnerFields,
-            alias: mockOwnerFields.accountName + "/mockName1",
+            owner: mockOwnerFieldsWithAvatar,
+            alias: mockOwnerFieldsWithAvatar.accountName + "/mockName1",
             visibility: mockPublicDatasetVisibility,
         },
         dummy: false,
@@ -114,8 +108,8 @@ export const mockAutocompleteItems: DatasetAutocompleteItem[] = [
             id: "id2",
             kind: DatasetKind.Derivative,
             name: "mockName2",
-            owner: mockOwnerFields,
-            alias: mockOwnerFields.accountName + "/mockName2",
+            owner: mockOwnerFieldsWithAvatar,
+            alias: mockOwnerFieldsWithAvatar.accountName + "/mockName2",
             visibility: mockPublicDatasetVisibility,
         },
         dummy: false,
@@ -138,7 +132,7 @@ export const mockMetadataCurrentInfo: DatasetCurrentInfoFragment = {
     ],
 };
 
-const mockMetadataCurrentLicense: LicenseFragment = {
+export const mockMetadataCurrentLicense: LicenseFragment = {
     __typename: "SetLicense",
     shortName: "OGL-Canada-2.0",
     name: "Open Government Licence - Canada",
@@ -155,9 +149,9 @@ export const mockDatasetSearchResult: DatasetSearchResult = {
             name: "alberta.case-details",
             owner: {
                 __typename: "Account",
-                ...mockOwnerFields,
+                ...mockOwnerFieldsWithAvatar,
             },
-            alias: mockOwnerFields.accountName + "/alberta.case-details",
+            alias: mockOwnerFieldsWithAvatar.accountName + "/alberta.case-details",
             createdAt: "2022-08-05T21:17:30.613911358+00:00",
             lastUpdatedAt: "2022-08-05T21:19:28.817281255+00:00",
             visibility: mockPublicDatasetVisibility,
@@ -204,8 +198,8 @@ export const mockDatasetBasicsRootFragment: DatasetBasicsFragment = {
     id: "id",
     kind: DatasetKind.Root,
     name: "mockNameRoot",
-    owner: { __typename: "Account", ...mockOwnerFields },
-    alias: mockOwnerFields.accountName + "/mockNameRoot",
+    owner: { __typename: "Account", ...mockOwnerFieldsWithAvatar },
+    alias: mockOwnerFieldsWithAvatar.accountName + "/mockNameRoot",
     visibility: mockPublicDatasetVisibility,
 };
 
@@ -214,7 +208,7 @@ export const mockDatasetBasicsDerivedFragment: DatasetBasicsFragment = {
     kind: DatasetKind.Derivative,
     name: "mockNameDerived",
     owner: { __typename: "Account", ...mockOwnerFieldsWithAvatar },
-    alias: mockOwnerFields.accountName + "/mockNameDerived",
+    alias: mockOwnerFieldsWithAvatar.accountName + "/mockNameDerived",
     visibility: mockPublicDatasetVisibility,
 };
 
@@ -325,9 +319,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
             name: "alberta.case-details",
             owner: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/alberta.case-details",
             visibility: mockPublicDatasetVisibility,
@@ -441,9 +433,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                 sequenceNumber: 6,
                                 author: {
                                     __typename: "Account",
-                                    id: TEST_ACCOUNT_ID,
-                                    accountName: "kamu",
-                                    avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                                    ...mockOwnerFieldsWithAvatar,
                                 },
                                 event: {
                                     __typename: "AddData",
@@ -548,10 +538,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
             name: "covid19.canada.daily-cases",
             owner: {
                 __typename: "Account",
-                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                accountName: "kamu",
-                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                accountProvider: AccountProvider.Password,
+                ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/covid19.canada.daily-cases",
             visibility: {
@@ -627,10 +614,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                             },
                                             owner: {
                                                 __typename: "Account",
-                                                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                                                accountName: "kamu",
-                                                accountProvider: AccountProvider.Password,
+                                                ...mockOwnerFieldsWithAvatar,
                                             },
                                             id: "did:odf:fed0174642a09caa34103a8a625acf548c56768a04aabe00ba2629cb18ac193433b07",
                                             kind: DatasetKind.Derivative,
@@ -693,11 +677,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                             },
                                                             owner: {
                                                                 __typename: "Account",
-                                                                avatarUrl:
-                                                                    "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                                                                accountName: "kamu",
-                                                                accountProvider: AccountProvider.Password,
+                                                                ...mockOwnerFieldsWithAvatar,
                                                             },
                                                             id: "did:odf:fed0180891d1a8dd7744447baab2a269542a7185052bdfe9e60d2641449ba24f4ea22",
                                                             kind: DatasetKind.Derivative,
@@ -721,10 +701,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                             },
                                             owner: {
                                                 __typename: "Account",
-                                                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                                                accountName: "kamu",
-                                                accountProvider: AccountProvider.Password,
+                                                ...mockOwnerFieldsWithAvatar,
                                             },
                                             id: "did:odf:fed01af38acc0c8391a79e3b596b2548782f74b2f7796d7b9a11e38e61231a472cb02",
                                             kind: DatasetKind.Derivative,
@@ -748,10 +725,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                             },
                             owner: {
                                 __typename: "Account",
-                                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                                accountName: "kamu",
-                                accountProvider: AccountProvider.Password,
+                                ...mockOwnerFieldsWithAvatar,
                             },
                             id: "did:odf:fed01c8788dc7825dc95dfaa6c67f989b758d3ebcb1efcb9f47ea914470bd1f7f2bbb",
                             kind: DatasetKind.Derivative,
@@ -1002,9 +976,9 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
             name: "alberta.case-details",
             owner: {
                 __typename: "Account",
-                ...mockOwnerFields,
+                ...mockOwnerFieldsWithAvatar,
             },
-            alias: mockOwnerFields.accountName + "/alberta.case-details",
+            alias: mockOwnerFieldsWithAvatar.accountName + "/alberta.case-details",
             visibility: mockPublicDatasetVisibility,
         },
     },
@@ -1355,8 +1329,7 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 0,
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "Seed",
@@ -1372,8 +1345,7 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 0,
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "Seed",
@@ -1389,8 +1361,7 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 1,
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "SetPollingSource",
@@ -1428,8 +1399,7 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 0,
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "Seed",
@@ -1457,8 +1427,7 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 0,
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "Seed",
@@ -1474,8 +1443,7 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 0,
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "Seed",
@@ -1491,8 +1459,7 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 1,
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "AddPushSource",
@@ -1521,8 +1488,7 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
             sequenceNumber: 0,
             author: {
                 __typename: "Account",
-                id: TEST_ACCOUNT_ID,
-                accountName: "kamu",
+                ...mockOwnerFieldsWithAvatar,
             },
             event: {
                 __typename: "Seed",

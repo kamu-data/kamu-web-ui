@@ -39,8 +39,12 @@ export class FlowDetailsSummaryTabComponent {
         return FlowTableHelpers.flowTypeDescription(flow);
     }
 
-    public flowDuration(): string {
-        return FlowTableHelpers.durationTimingText(this.flowDetails);
+    public flowFullDuration(): string {
+        return FlowTableHelpers.fullDurationTimingText(this.flowDetails);
+    }
+
+    public flowRunDuration(): string {
+        return FlowTableHelpers.runDurationTimingText(this.flowDetails);
     }
 
     public flowOutcomeMessage: Record<string, string> = {

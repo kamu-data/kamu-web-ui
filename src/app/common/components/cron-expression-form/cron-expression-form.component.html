@@ -1,6 +1,6 @@
 <div class="d-flex align-items-center gap-3 ms-1 px-2" data-test-id="cron-expression-form" [formGroup]="form">
     <div class="d-flex align-middle">
-        <span class="form-control-label d-block">{{ label }}</span>
+        <span class="form-control-label d-block" [class.disabled]="form.disabled">{{ label }}</span>
     </div>
     <input
         type="text"
@@ -25,6 +25,6 @@
         [fieldLabel]="'Expression'"
         [appFieldError]="['required', 'invalidCronExpression']"
         [group]="form"
-        [dataTestId]="'error-message'"
+        [dataTestId]="'cron-error-message'"
     ></span>
 </div>

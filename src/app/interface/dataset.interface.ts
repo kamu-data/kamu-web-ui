@@ -57,6 +57,7 @@ export interface DatasetsAccountResolverResponse {
 
 export interface DatasetRequestBySql {
     query: string;
+    enabledProof?: boolean;
     limit?: number;
     skip?: number;
 }

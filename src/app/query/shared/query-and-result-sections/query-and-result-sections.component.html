@@ -115,14 +115,14 @@
     <p class="sql-error-message" data-test-id="sql-error-message">{{ sqlError }}</p>
 </ng-container>
 <ng-container>
-    <ng-container *ngIf="!sqlError && sqlQueryResponse?.schema?.fields?.length">
+    <ng-container *ngIf="!sqlError && sqlQueryResponse?.schema?.length">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="box-title align-items-center pb-3 m-0">Result:</h2>
         </div>
         <ng-container *ngIf="currentData.length; else noRecords">
             <app-dynamic-table
                 [hasTableHeader]="true"
-                [schemaFields]="sqlQueryResponse?.schema?.fields!"
+                [schemaFields]="sqlQueryResponse?.schema!"
                 [dataRows]="currentData"
                 [idTable]="'result-query-table'"
             />
@@ -133,12 +133,12 @@
         </ng-template>
     </ng-container>
 
-    <ng-container *ngIf="enabledProof && proofResponse && !sqlError">
+    <ng-container *ngIf="enabledProof && sqlQueryResponse?.proofResponse && !sqlError">
         <div class="d-flex justify-content-between align-items-center mt-4">
             <h2 class="box-title align-items-center pb-3 m-0">Query Proof:</h2>
         </div>
         <div class="mt-2">
-            <markdown clipboard class="variable-binding" [data]="jsonWrapper(proofResponse)" />
+            <markdown clipboard class="variable-binding" [data]="jsonWrapper(sqlQueryResponse?.proofResponse)" />
         </div>
         <div class="d-flex justify-content-end mt-4 pb-30">
             <button
@@ -152,4 +152,4 @@
     </ng-container>
 </ng-container>
 
-<ng-content *ngIf="sqlQueryResponse?.schema?.fields?.length == 0 && !sqlLoading && !sqlError"></ng-content>
+<ng-content *ngIf="sqlQueryResponse?.schema?.length == 0 && !sqlLoading && !sqlError"></ng-content>

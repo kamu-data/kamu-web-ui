@@ -21,7 +21,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
 import { NavigationService } from "src/app/services/navigation.service";
-import { SqlQueryResponseState } from "src/app/query/global-query/global-query.model";
+import { SqlQueryRestResponseState } from "src/app/query/global-query/global-query.model";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 import { SessionStorageService } from "src/app/services/session-storage.service";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
@@ -55,7 +55,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     private offsetColumnName = AppValues.DEFAULT_OFFSET_COLUMN_NAME;
     public overviewUpdate$: Observable<OverviewUpdate>;
     public sqlErrorMarker$: Observable<string>;
-    public sqlQueryResponse$: Observable<MaybeNull<SqlQueryResponseState>>;
+    public sqlQueryResponse$: Observable<MaybeNull<SqlQueryRestResponseState>>;
     public readonly MONACO_PLACEHOLDER = "Please type your query here...";
     private visibilityDocumentChange$ = fromEvent(document, "visibilitychange");
 
@@ -101,9 +101,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     public onRunSQLRequest(params: DatasetRequestBySql): void {
-        this.ngZone.run(() => {
-            this.sqlLoading = true;
-        });
+        this.sqlLoading = true;
         this.sqlQueryService
             // TODO: Propagate limit from UI and display when it was reached
             .requestDataSqlRun(params)

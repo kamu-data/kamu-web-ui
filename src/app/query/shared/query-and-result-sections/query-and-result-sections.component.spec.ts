@@ -168,6 +168,5 @@ describe("QueryAndResultSectionsComponent", () => {
         component.runSQLRequest({ query: "select * from 'mock-dataset'" });
 
         expect(processQuerySpy).toHaveBeenCalledTimes(1);
-        expect(component.proofResponse).toEqual(mockQueryExplainerResponse);
     });
 });

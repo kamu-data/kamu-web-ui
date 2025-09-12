@@ -57,8 +57,9 @@ import { GraphQLError } from "graphql";
 import { TEST_AVATAR_URL } from "../api/mock/auth.mock";
 import { AddPushSourceEditFormType } from "../dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 import { OdfDefaultValues } from "../common/values/app-odf-default.values";
-import { SqlQueryResponseState } from "../query/global-query/global-query.model";
+import { SqlQueryRestResponseState } from "../query/global-query/global-query.model";
 import { OperationColumnClassEnum } from "../interface/dataset.interface";
+import { SqlQueryRestResponse } from "../query-explainer/query-explainer.types";
 
 export const mockPageBasedInfo: PageBasedInfo = {
     currentPage: 1,
@@ -1626,7 +1627,7 @@ export const mockDatasetHeadBlockHashQuery: DatasetHeadBlockHashQuery = {
     },
 };
 
-export const mockSqlQueryResponseState: SqlQueryResponseState = {
+export const mockSqlQueryResponseState: SqlQueryRestResponseState = {
     content: [
         {
             offset: {
@@ -1679,76 +1680,141 @@ export const mockSqlQueryResponseState: SqlQueryResponseState = {
             },
         },
     ],
-    schema: {
-        name: "arrow_schema",
-        type: "struct",
-        fields: [
+    schema: [
+        {
+            name: "offset",
+            repetition: "REQUIRED",
+            type: "INT64",
+        },
+        {
+            name: "op",
+            repetition: "REQUIRED",
+            type: "INT32",
+        },
+        {
+            name: "system_time",
+            repetition: "REQUIRED",
+            type: "INT64",
+            logicalType: "TIMESTAMP(MILLIS,true)",
+        },
+        {
+            name: "block_time",
+            repetition: "OPTIONAL",
+            type: "INT64",
+            logicalType: "TIMESTAMP(MILLIS,true)",
+        },
+        {
+            name: "block_number",
+            repetition: "OPTIONAL",
+            type: "INT64",
+        },
+        {
+            name: "transaction_hash",
+            repetition: "OPTIONAL",
+            type: "BYTE_ARRAY",
+            logicalType: "STRING",
+        },
+        {
+            name: "account_symbol",
+            repetition: "OPTIONAL",
+            type: "BYTE_ARRAY",
+            logicalType: "STRING",
+        },
+        {
+            name: "token_symbol",
+            repetition: "OPTIONAL",
+            type: "BYTE_ARRAY",
+            logicalType: "STRING",
+        },
+        {
+            name: "token_amount",
+            repetition: "OPTIONAL",
+            type: "FLOAT",
+        },
+        {
+            name: "eth_amount",
+            repetition: "OPTIONAL",
+            type: "FLOAT",
+        },
+        {
+            name: "token_balance",
+            repetition: "OPTIONAL",
+            type: "FLOAT",
+        },
+        {
+            name: "token_book_value_eth",
+            repetition: "OPTIONAL",
+            type: "FLOAT",
+        },
+    ],
+    involvedDatasetsId: ["did:odf:fed01df8964328b3b36fdfc5b140c5aea8795d445403a577428b2eafa5111f47dc212"],
+};
+
+export const mockSqlQueryRestResponse: SqlQueryRestResponse = {
+    input: {
+        query: "select\n  *\nfrom 'kamu/account.tokens.portfolio'",
+        queryDialect: "SqlDataFusion",
+        dataFormat: "JsonAoS",
+        include: ["Input", "Schema"],
+        schemaFormat: "ArrowJson",
+        datasets: [
             {
-                name: "offset",
-                repetition: "REQUIRED",
-                type: "INT64",
-            },
-            {
-                name: "op",
-                repetition: "REQUIRED",
-                type: "INT32",
-            },
-            {
-                name: "system_time",
-                repetition: "REQUIRED",
-                type: "INT64",
-                logicalType: "TIMESTAMP(MILLIS,true)",
-            },
-            {
-                name: "block_time",
-                repetition: "OPTIONAL",
-                type: "INT64",
-                logicalType: "TIMESTAMP(MILLIS,true)",
-            },
-            {
-                name: "block_number",
-                repetition: "OPTIONAL",
-                type: "INT64",
-            },
-            {
-                name: "transaction_hash",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "STRING",
-            },
-            {
-                name: "account_symbol",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "STRING",
-            },
-            {
-                name: "token_symbol",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "STRING",
-            },
-            {
-                name: "token_amount",
-                repetition: "OPTIONAL",
-                type: "FLOAT",
-            },
-            {
-                name: "eth_amount",
-                repetition: "OPTIONAL",
-                type: "FLOAT",
-            },
-            {
-                name: "token_balance",
-                repetition: "OPTIONAL",
-                type: "FLOAT",
-            },
-            {
-                name: "token_book_value_eth",
-                repetition: "OPTIONAL",
-                type: "FLOAT",
+                id: "did:odf:fed01888a6a44954894780978ac256fa224b97fc42d6541c681147a552abd02fb6f93",
+                alias: "kamu/account.tokens.portfolio",
+                blockHash: "f1620684b445c341c3d526a3e6b0915d90ab9964dc48c75762904c53969a02f8e88a8",
             },
         ],
+        skip: 0,
+        limit: 50,
     },
-    involvedDatasetsId: ["did:odf:fed01df8964328b3b36fdfc5b140c5aea8795d445403a577428b2eafa5111f47dc212"],
+    output: {
+        data: [
+            {
+                account_symbol: "eth",
+                block_number: 22325499,
+                block_time: "2025-04-22T15:39:47Z",
+                eth_amount: 0,
+                offset: 326,
+                op: 0,
+                system_time: "2025-04-23T01:08:52.262Z",
+                token_amount: -25,
+                token_balance: 76.26065,
+                token_book_value_eth: 0,
+                token_symbol: "ynETHx",
+                transaction_hash: "0x483510f3928951a2ddf34e8e20934066e1aa7ef2a5a3809dba6ee47feede1d7f",
+            },
+            {
+                account_symbol: "eth",
+                block_number: 22325499,
+                block_time: "2025-04-22T15:39:47Z",
+                eth_amount: 0,
+                offset: 327,
+                op: 0,
+                system_time: "2025-04-23T01:08:52.262Z",
+                token_amount: 25.95809,
+                token_balance: 1023.493,
+                token_book_value_eth: 0.0014627598,
+                token_symbol: "WETH",
+                transaction_hash: "0x483510f3928951a2ddf34e8e20934066e1aa7ef2a5a3809dba6ee47feede1d7f",
+            },
+        ],
+        dataFormat: "JsonAoS",
+        schema: {
+            fields: [
+                {
+                    name: "offset",
+                },
+                {
+                    name: "op",
+                },
+                {
+                    name: "system_time",
+                },
+                {
+                    name: "block_time",
+                },
+            ],
+        },
+        schemaFormat: "ArrowJson",
+    },
 };

@@ -109,7 +109,7 @@ export class SqlQueryService {
 
         return this.http.post<SqlQueryRestResponse>(url.href, body, { headers }).pipe(
             map((result: SqlQueryRestResponse) => {
-                const involvedDatasetsId = result.input.datasets?.map((item) => item.id) ?? [];
+                const involvedDatasetsId = result.input.datasets?.map((item) => item.id) as string[];
                 const columnNames: string[] = result.output?.schema.fields.map((item) => item.name) as string[];
                 const content: DataRow[] = parseDataFromJsonAoSFormat(result.output?.data as object[], columnNames);
                 const schema: DataSchemaField[] = extractSchemaFieldsFromData(content[0] ?? []);

@@ -19,10 +19,8 @@ import {
 } from "src/app/common/helpers/base-test.helpers.spec";
 import { mockSqlErrorUpdate } from "../../../dataset-view/additional-components/data-tabs.mock";
 import { Clipboard } from "@angular/cdk/clipboard";
-import { QueryExplainerService } from "src/app/query-explainer/query-explainer.service";
 import { of } from "rxjs";
 import { mockUploadPrepareResponse } from "src/app/api/mock/upload-file.mock";
-import { mockQueryExplainerResponse } from "src/app/query-explainer/query-explainer.mocks";
 import { FileUploadService } from "src/app/services/file-upload.service";
 import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
@@ -34,7 +32,6 @@ describe("QueryAndResultSectionsComponent", () => {
     let fixture: ComponentFixture<QueryAndResultSectionsComponent>;
     let clipboard: Clipboard;
     let toastrService: ToastrService;
-    let queryExplainerService: QueryExplainerService;
     let fileUploadService: FileUploadService;
     let engineService: EngineService;
 
@@ -53,7 +50,6 @@ describe("QueryAndResultSectionsComponent", () => {
         component = fixture.componentInstance;
         clipboard = TestBed.inject(Clipboard);
         toastrService = TestBed.inject(ToastrService);
-        queryExplainerService = TestBed.inject(QueryExplainerService);
         fileUploadService = TestBed.inject(FileUploadService);
         engineService = TestBed.inject(EngineService);
         spyOn(engineService, "engines").and.returnValue(of(mockEngines));
@@ -119,6 +115,7 @@ describe("QueryAndResultSectionsComponent", () => {
             query: component.sqlRequestCode,
             skip: component.currentData.length,
             limit: limit,
+            enabledProof: false,
         };
 
         component.loadMore(limit);
@@ -161,12 +158,13 @@ describe("QueryAndResultSectionsComponent", () => {
 
     it("should run the query when the Generate proof' switch is enabled", () => {
         component.enabledProof = true;
-        const processQuerySpy = spyOn(queryExplainerService, "processQueryWithProof").and.returnValue(
-            of(mockQueryExplainerResponse),
-        );
+        fixture.detectChanges();
+        const runSQLRequestEmitSpy = spyOn(component.runSQLRequestEmit, "emit");
 
         component.runSQLRequest({ query: "select * from 'mock-dataset'" });
-
-        expect(processQuerySpy).toHaveBeenCalledTimes(1);
+        expect(runSQLRequestEmitSpy).toHaveBeenCalledOnceWith({
+            query: "select * from 'mock-dataset'",
+            enabledProof: true,
+        });
     });
 });

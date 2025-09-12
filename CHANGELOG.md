@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Metadata tab: combined "Dataset Type", "Name", and "Owner" into one property "Dataset"
 - Webhooks tab: all modal windows have been removed
+- Lineage tab: added mapper `chainId -> chainName`
 
 ## [0.56.0] - 2025-08-28
 ### Added

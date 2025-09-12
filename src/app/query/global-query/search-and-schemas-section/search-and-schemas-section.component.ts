@@ -15,7 +15,7 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
-import { GlobalQuerySearchItem, SqlQueryResponseState } from "../global-query.model";
+import { GlobalQuerySearchItem, SqlQueryRestResponseState } from "../global-query.model";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
@@ -90,7 +90,7 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
     public ngOnInit(): void {
         this.sqlQueryService.sqlQueryResponseChanges
             .pipe(
-                switchMap((sqlQueryResponse: MaybeNull<SqlQueryResponseState>) => {
+                switchMap((sqlQueryResponse: MaybeNull<SqlQueryRestResponseState>) => {
                     if (sqlQueryResponse) {
                         const schemaResponses = sqlQueryResponse.involvedDatasetsId.map((id: string) =>
                             this.datasetService.requestDatasetSchema(id),

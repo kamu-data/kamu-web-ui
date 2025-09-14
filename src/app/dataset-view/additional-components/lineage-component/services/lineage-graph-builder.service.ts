@@ -256,7 +256,7 @@ export class LineageGraphBuilderService {
             case "FetchStepMqtt":
                 return `${step.host}:${step.port}`;
             case "FetchStepEthereumLogs":
-                return this.ethereumLogsChainIdMapper(step.chainId as number);
+                return step.nodeUrl ? step.nodeUrl : this.ethereumLogsChainIdMapper(step.chainId as number);
             default:
                 throw new Error(`Unknown source label type ${step.__typename}`);
         }

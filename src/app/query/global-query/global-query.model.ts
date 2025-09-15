@@ -20,7 +20,7 @@ export interface SqlQueryResponseState {
     involvedDatasetsId: string[];
 }
 
-export interface SqlQueryRestResponseState {
+export interface SqlQueryBasicResponse {
     schema: DataSchemaField[];
     content: DataRow[];
     involvedDatasetsId: string[];

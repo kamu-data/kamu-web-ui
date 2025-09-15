@@ -57,9 +57,9 @@ import { GraphQLError } from "graphql";
 import { TEST_AVATAR_URL } from "../api/mock/auth.mock";
 import { AddPushSourceEditFormType } from "../dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 import { OdfDefaultValues } from "../common/values/app-odf-default.values";
-import { SqlQueryRestResponseState } from "../query/global-query/global-query.model";
+import { SqlQueryBasicResponse } from "../query/global-query/global-query.model";
 import { OperationColumnClassEnum } from "../interface/dataset.interface";
-import { SqlQueryRestResponse } from "../query-explainer/query-explainer.types";
+import { SqlQueryExplanationResponse } from "../query-explainer/query-explainer.types";
 
 export const mockPageBasedInfo: PageBasedInfo = {
     currentPage: 1,
@@ -1627,7 +1627,7 @@ export const mockDatasetHeadBlockHashQuery: DatasetHeadBlockHashQuery = {
     },
 };
 
-export const mockSqlQueryResponseState: SqlQueryRestResponseState = {
+export const mockSqlQueryResponseState: SqlQueryBasicResponse = {
     content: [
         {
             offset: {
@@ -1750,7 +1750,7 @@ export const mockSqlQueryResponseState: SqlQueryRestResponseState = {
     involvedDatasetsId: ["did:odf:fed01df8964328b3b36fdfc5b140c5aea8795d445403a577428b2eafa5111f47dc212"],
 };
 
-export const mockSqlQueryRestResponse: SqlQueryRestResponse = {
+export const mockSqlQueryRestResponse: SqlQueryExplanationResponse = {
     input: {
         query: "select\n  *\nfrom 'kamu/account.tokens.portfolio'",
         queryDialect: "SqlDataFusion",

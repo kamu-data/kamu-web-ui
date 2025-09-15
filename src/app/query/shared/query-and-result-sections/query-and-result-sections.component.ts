@@ -31,7 +31,7 @@ import { FileUploadService } from "src/app/services/file-upload.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { AppConfigService } from "src/app/app-config.service";
-import { SqlQueryResponseState, SqlQueryRestResponseState } from "src/app/query/global-query/global-query.model";
+import { SqlQueryResponseState, SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
 import { EngineDesc } from "src/app/api/kamu.graphql.interface";
 import { map, Observable } from "rxjs";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
@@ -49,6 +49,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { FormsModule } from "@angular/forms";
 import { MarkdownModule } from "ngx-markdown";
 import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
+import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
 
 @Component({
     selector: "app-query-and-result-sections",
@@ -73,6 +74,7 @@ import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/too
 
         //-----//
         EngineSelectComponent,
+        MarkdownFormatPipe,
         SqlEditorComponent,
         RequestTimerComponent,
         DynamicTableComponent,
@@ -84,7 +86,7 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     @Input({ required: true }) public sqlLoading: boolean;
     @Input({ required: true }) public sqlError: MaybeNull<string>;
     @Input({ required: true }) public sqlRequestCode: string;
-    @Input({ required: true }) public sqlQueryResponse: MaybeNull<SqlQueryRestResponseState>;
+    @Input({ required: true }) public sqlQueryResponse: MaybeNull<SqlQueryBasicResponse>;
     @Input({ required: true }) public monacoPlaceholder: string = "";
     @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
 

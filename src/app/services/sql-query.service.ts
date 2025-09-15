@@ -11,11 +11,11 @@ import { MaybeNull } from "../interface/app.types";
 import { DataSqlErrorUpdate } from "../dataset-view/dataset.subscriptions.interface";
 import { DatasetRequestBySql, DataRow, DataSchemaField } from "../interface/dataset.interface";
 import { parseDataFromJsonAoSFormat } from "../common/helpers/data.helpers";
-import { SqlQueryRestResponseState } from "../query/global-query/global-query.model";
+import { SqlQueryBasicResponse } from "../query/global-query/global-query.model";
 import { HttpErrorResponse, HttpClient, HttpHeaders } from "@angular/common/http";
 import { AppConfigService } from "../app-config.service";
 import {
-    SqlQueryRestResponse,
+    SqlQueryExplanationResponse,
     QueryExplainerCommitmentType,
     QueryExplainerInputType,
 } from "../query-explainer/query-explainer.types";
@@ -33,16 +33,16 @@ export class SqlQueryService {
     private loggedUserService = inject(LoggedUserService);
     private localStorageService = inject(LocalStorageService);
 
-    private sqlQueryResponse$: Subject<MaybeNull<SqlQueryRestResponseState>> = new ReplaySubject<
-        MaybeNull<SqlQueryRestResponseState>
+    private sqlQueryResponse$: Subject<MaybeNull<SqlQueryBasicResponse>> = new ReplaySubject<
+        MaybeNull<SqlQueryBasicResponse>
     >(1 /*bufferSize*/);
     private sqlError$: Subject<DataSqlErrorUpdate> = new ReplaySubject<DataSqlErrorUpdate>(1 /*bufferSize*/);
 
-    public emitSqlQueryResponseChanged(dataUpdate: MaybeNull<SqlQueryRestResponseState>): void {
+    public emitSqlQueryResponseChanged(dataUpdate: MaybeNull<SqlQueryBasicResponse>): void {
         this.sqlQueryResponse$.next(dataUpdate);
     }
 
-    public get sqlQueryResponseChanges(): Observable<MaybeNull<SqlQueryRestResponseState>> {
+    public get sqlQueryResponseChanges(): Observable<MaybeNull<SqlQueryBasicResponse>> {
         return this.sqlQueryResponse$.asObservable();
     }
 
@@ -100,20 +100,16 @@ export class SqlQueryService {
             limit: params.limit ? params.limit : AppValues.SQL_QUERY_LIMIT,
             skip: params.skip,
         };
-        let headers = new HttpHeaders();
-        if (this.loggedUserService.isAuthenticated) {
-            headers = headers
-                .set("Authorization", `Bearer ${this.localStorageService.accessToken}`)
-                .set(AppValues.HEADERS_SKIP_LOADING_KEY, `true`);
-        }
 
-        return this.http.post<SqlQueryRestResponse>(url.href, body, { headers }).pipe(
-            map((result: SqlQueryRestResponse) => {
+        const headers = new HttpHeaders().set(AppValues.HEADERS_SKIP_LOADING_KEY, `true`);
+
+        return this.http.post<SqlQueryExplanationResponse>(url.href, body, { headers }).pipe(
+            map((result: SqlQueryExplanationResponse) => {
                 const involvedDatasetsId = result.input.datasets?.map((item) => item.id) as string[];
                 const columnNames: string[] = result.output?.schema.fields.map((item) => item.name) as string[];
                 const content: DataRow[] = parseDataFromJsonAoSFormat(result.output?.data as object[], columnNames);
                 const schema: DataSchemaField[] = extractSchemaFieldsFromData(content[0] ?? []);
-                const sqlQueryResponse: SqlQueryRestResponseState = !result.proof
+                const sqlQueryResponse: SqlQueryBasicResponse = !result.proof
                     ? {
                           content,
                           schema,

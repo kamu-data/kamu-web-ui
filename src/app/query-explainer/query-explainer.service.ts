@@ -85,11 +85,8 @@ export class QueryExplainerService {
             query,
             include: ["Schema"],
         };
-        let headers = new HttpHeaders();
-        if (this.loggedUserService.isAuthenticated) {
-            headers = headers.set("Authorization", `Bearer ${this.localStorageService.accessToken}`);
-        }
-        return this.http.post<QueryExplainerDataJsonAosResponse>(url.href, body, { headers }).pipe(
+
+        return this.http.post<QueryExplainerDataJsonAosResponse>(url.href, body).pipe(
             catchError((e: HttpErrorResponse) => {
                 this.toastrService.error("", (e.error as { message: string }).message, {
                     disableTimeOut: "timeOut",

@@ -33,7 +33,7 @@ export interface QueryExplainerProofResponse {
     subQueries?: unknown[];
 }
 
-export interface SqlQueryRestResponse {
+export interface SqlQueryExplanationResponse {
     input: QueryExplainerInputType;
     output?: QueryExplainerOutputType;
     proof?: QueryExplainerProofType;

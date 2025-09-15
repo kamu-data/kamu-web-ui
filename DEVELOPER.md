@@ -133,7 +133,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 1. While on the feature branch, create a `CHANGELOG` entry for the new version
 2. Create PR, wait for tests, then merge
 3. Checkout and pull master
-4. Run `npm release-{major,minor,patch}` - this will increment the version in all places, commit the changes and crate a new git tag, update LICENSE.txt and CHANGELOG.md files
+4. Run `npm run release-{major,minor,patch}` - this will increment the version in all places, commit the changes and crate a new git tag, update LICENSE.txt and CHANGELOG.md files
 5. Push the version change and the tag: `git push`
 6. GitHub Actions will pick up the new tag and create a new GitHub release from it
 

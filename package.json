@@ -18,7 +18,10 @@
     "prettier": "prettier --write '**/*.{ts,scss,js,html,spec.ts}'",
     "prettier-check": "prettier --check '**/*.{ts,scss,js,html,spec.ts}'",
     "gql-update-schema": "curl https://raw.githubusercontent.com/kamu-data/kamu-cli/master/resources/schema.gql > resources/schema.graphql",
-    "gql-codegen": "graphql-codegen --config gql-codegen.yml && prettier --write src/app/api/kamu.graphql.interface.ts && sed -i 's/import { gql } from \"apollo-angular\"/import { gql } from \"@apollo\\/client\\/core\"/g' src/app/api/kamu.graphql.interface.ts"
+    "gql-codegen": "graphql-codegen --config gql-codegen.yml && prettier --write src/app/api/kamu.graphql.interface.ts && sed -i 's/import { gql } from \"apollo-angular\"/import { gql } from \"@apollo\\/client\\/core\"/g' src/app/api/kamu.graphql.interface.ts",
+    "release-patch": "npm version patch && node update-changelog.js",
+    "release-minor": "npm version minor && node update-changelog.js",
+    "release-major": "npm version major && node update-changelog.js"
   },
   "private": true,
   "dependencies": {

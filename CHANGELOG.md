@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Release automation script
+- Lineage tab: added mapper `chainId -> chainName`
 
 ## [0.57.0] - 2025-09-12
 ### Added

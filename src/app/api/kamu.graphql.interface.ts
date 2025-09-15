@@ -6459,7 +6459,7 @@ export type CurrentSourceFetchUrlFragment = {
         __typename?: "SetPollingSource";
         fetch:
             | { __typename?: "FetchStepContainer" }
-            | { __typename?: "FetchStepEthereumLogs"; nodeUrl?: string | null }
+            | { __typename?: "FetchStepEthereumLogs"; nodeUrl?: string | null; chainId?: number | null }
             | { __typename?: "FetchStepFilesGlob" }
             | { __typename?: "FetchStepMqtt"; host: string; port: number }
             | { __typename?: "FetchStepUrl"; url: string };
@@ -7901,6 +7901,7 @@ export const CurrentSourceFetchUrlFragmentDoc = gql`
                 }
                 ... on FetchStepEthereumLogs {
                     nodeUrl
+                    chainId
                 }
             }
         }

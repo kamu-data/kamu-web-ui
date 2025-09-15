@@ -12,6 +12,7 @@ fragment CurrentSourceFetchUrl on DatasetMetadata {
 
       ... on FetchStepEthereumLogs {
         nodeUrl
+        chainId
       }
     }
   }

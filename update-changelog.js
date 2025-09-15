@@ -39,5 +39,5 @@ linesLicense[lineIndexLicense] = `Licensed Work:             Kamu Web UI Version
 fs.writeFileSync(licensePath, linesLicense.join("\n"));
 
 // Commit changes
-// execSync("git add LICENSE.txt CHANGELOG.md", { stdio: "inherit" });
-// execSync(`git commit -m "Release v${version}"`, { stdio: "inherit" });
+execSync("git add LICENSE.txt CHANGELOG.md", { stdio: "inherit" });
+execSync(`git commit -m "Release v${version}"`, { stdio: "inherit" });

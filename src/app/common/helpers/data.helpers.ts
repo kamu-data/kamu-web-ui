@@ -18,6 +18,7 @@ import { DataRow, DatasetSchema, OperationColumnClassEnum } from "../../interfac
 import { differenceInSeconds } from "date-fns";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { SubscribedEventType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
+import { Network } from "ethers";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -431,5 +432,15 @@ export function eventTypesMapper(name: string): SubscribedEventType {
         /* istanbul ignore next */
         default:
             return { value: "Unknown event type", name: "Unknown label" };
+    }
+}
+
+export function chainNameFromId(chainId: number): string {
+    try {
+        // Returns an ethers Network object for known chains
+        const net = Network.from(chainId);
+        return net.name; // e.g. "mainnet", "sepolia"
+    } catch {
+        return "unknown";
     }
 }

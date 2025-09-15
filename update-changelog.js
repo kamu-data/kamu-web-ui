@@ -13,8 +13,13 @@ if (!fs.existsSync(changelogPath)) {
 }
 
 const lines = fs.readFileSync(changelogPath, "utf8").split(/\r?\n/);
+const lineIndex = lines.findIndex((line) => line.includes("[Unreleased]"));
 
-const lineIndex = 6;
+if (lineIndex === -1) {
+  console.error('Label "Unreleased" not found in CHANGELOG.md');
+  process.exit(1);
+}
+
 lines[lineIndex] = `## [${version}] - ${today}`;
 
 fs.writeFileSync(changelogPath, lines.join("\n"));
@@ -34,5 +39,5 @@ linesLicense[lineIndexLicense] = `Licensed Work:             Kamu Web UI Version
 fs.writeFileSync(licensePath, linesLicense.join("\n"));
 
 // Commit changes
-execSync("git add LICENSE.txt CHANGELOG.md", { stdio: "inherit" });
-execSync(`git commit -m "Release v${version}"`, { stdio: "inherit" });
+// execSync("git add LICENSE.txt CHANGELOG.md", { stdio: "inherit" });
+// execSync(`git commit -m "Release v${version}"`, { stdio: "inherit" });

@@ -7,7 +7,7 @@
 
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { catchError, EMPTY, map, Observable, of, tap } from "rxjs";
+import { catchError, EMPTY, map, Observable, of, ReplaySubject, Subject, tap } from "rxjs";
 import { AppConfigService } from "src/app/app-config.service";
 import {
     QueryExplainerDataJsonAosResponse,
@@ -30,6 +30,18 @@ export class QueryExplainerService {
     private loggedUserService = inject(LoggedUserService);
     private localStorageService = inject(LocalStorageService);
     private baseUrl: string;
+
+    private proofResponse$: Subject<QueryExplainerProofResponse> = new ReplaySubject<QueryExplainerProofResponse>(
+        1 /*bufferSize*/,
+    );
+
+    public emitProofResponseChanged(data: QueryExplainerProofResponse): void {
+        this.proofResponse$.next(data);
+    }
+
+    public get proofResponseChanges(): Observable<QueryExplainerProofResponse> {
+        return this.proofResponse$.asObservable();
+    }
 
     public constructor() {
         this.baseUrl = `${this.appConfigService.apiServerHttpUrl}`;
@@ -73,11 +85,8 @@ export class QueryExplainerService {
             query,
             include: ["Schema"],
         };
-        let headers = new HttpHeaders();
-        if (this.loggedUserService.isAuthenticated) {
-            headers = headers.set("Authorization", `Bearer ${this.localStorageService.accessToken}`);
-        }
-        return this.http.post<QueryExplainerDataJsonAosResponse>(url.href, body, { headers }).pipe(
+
+        return this.http.post<QueryExplainerDataJsonAosResponse>(url.href, body).pipe(
             catchError((e: HttpErrorResponse) => {
                 this.toastrService.error("", (e.error as { message: string }).message, {
                     disableTimeOut: "timeOut",

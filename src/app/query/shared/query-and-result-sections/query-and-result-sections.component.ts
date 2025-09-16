@@ -27,13 +27,11 @@ import { BaseComponent } from "src/app/common/components/base.component";
 import { UploadPrepareResponse, UploadPrepareData } from "src/app/interface/ingest-via-file-upload.types";
 import { DataRow, DatasetRequestBySql } from "src/app/interface/dataset.interface";
 import ProjectLinks from "src/app/project-links";
-import { QueryExplainerService } from "src/app/query-explainer/query-explainer.service";
-import { QueryExplainerProofResponse } from "src/app/query-explainer/query-explainer.types";
 import { FileUploadService } from "src/app/services/file-upload.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { AppConfigService } from "src/app/app-config.service";
-import { SqlQueryResponseState } from "src/app/query/global-query/global-query.model";
+import { SqlQueryResponseState, SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
 import { EngineDesc } from "src/app/api/kamu.graphql.interface";
 import { map, Observable } from "rxjs";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
@@ -46,7 +44,12 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatIconModule } from "@angular/material/icon";
 import { EngineSelectComponent } from "../../../dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { NgIf, AsyncPipe, NgClass } from "@angular/common";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { FormsModule } from "@angular/forms";
+import { MarkdownModule } from "ngx-markdown";
+import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
+import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
 
 @Component({
     selector: "app-query-and-result-sections",
@@ -58,31 +61,36 @@ import { NgIf, AsyncPipe } from "@angular/common";
         //-----//
         AsyncPipe,
         NgIf,
+        NgClass,
+        FormsModule,
 
         //-----//
         MatIconModule,
         MatMenuModule,
         MatDividerModule,
         MatProgressBarModule,
+        MatSlideToggleModule,
+        MarkdownModule,
 
         //-----//
         EngineSelectComponent,
+        MarkdownFormatPipe,
         SqlEditorComponent,
         RequestTimerComponent,
         DynamicTableComponent,
         LoadMoreComponent,
+        TooltipIconComponent,
     ],
 })
 export class QueryAndResultSectionsComponent extends BaseComponent implements OnInit, OnChanges {
     @Input({ required: true }) public sqlLoading: boolean;
     @Input({ required: true }) public sqlError: MaybeNull<string>;
     @Input({ required: true }) public sqlRequestCode: string;
-    @Input({ required: true }) public sqlQueryResponse: MaybeNull<SqlQueryResponseState>;
+    @Input({ required: true }) public sqlQueryResponse: MaybeNull<SqlQueryBasicResponse>;
     @Input({ required: true }) public monacoPlaceholder: string = "";
     @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
 
     private loggedUserService = inject(LoggedUserService);
-    private queryExplainerService = inject(QueryExplainerService);
     private fileUploadService = inject(FileUploadService);
     private navigationService = inject(NavigationService);
     private clipboard = inject(Clipboard);
@@ -98,6 +106,8 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     public isAllDataLoaded: boolean;
     public selectedEngine = AppValues.DEFAULT_ENGINE_NAME.toLowerCase();
     public knownEngines$: Observable<EngineDesc[]>;
+    public enabledProof: boolean = false;
+    public readonly GENERATE_PROOF_TOOLTIP: string = "Please log in to use this feature";
 
     public ngOnInit(): void {
         this.knownEngines$ = this.engineService.engines().pipe(map((result) => result.data.knownEngines));
@@ -121,6 +131,10 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
         return this.loggedUserService.isAdmin;
     }
 
+    public get isAuthenticated(): boolean {
+        return this.loggedUserService.isAuthenticated;
+    }
+
     private resetRowsLimits(): void {
         this.skipRows = undefined;
         this.rowsLimit = AppValues.SQL_QUERY_LIMIT;
@@ -130,6 +144,7 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
         if (initialSqlRun) {
             this.resetRowsLimits();
         }
+        params.enabledProof = this.enabledProof;
         this.runSQLRequestEmit.emit(params);
     }
 
@@ -152,34 +167,30 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
 
     public verifyQueryResult(): void {
         let uploadToken: string;
-        this.queryExplainerService
-            .processQueryWithProof(this.sqlRequestCode)
-            .pipe(
-                switchMap((response: QueryExplainerProofResponse) => {
-                    const file = new File(
-                        [
-                            new Blob([JSON.stringify(response, null, 2)], {
-                                type: "application/json",
-                            }),
-                        ],
-                        "query-explainer.json",
-                    );
-                    return this.fileUploadService.uploadFilePrepare(file).pipe(
-                        tap((data) => (uploadToken = data.uploadToken)),
-                        switchMap((uploadPrepareResponse: UploadPrepareResponse) =>
-                            this.fileUploadService.prepareUploadData(uploadPrepareResponse, file),
-                        ),
-                        switchMap(({ uploadPrepareResponse, bodyObject, uploadHeaders }: UploadPrepareData) =>
-                            this.fileUploadService.uploadFileByMethod(
-                                uploadPrepareResponse.method,
-                                uploadPrepareResponse.uploadUrl,
-                                bodyObject,
-                                uploadHeaders,
-                            ),
-                        ),
-                    );
+        const file = new File(
+            [
+                new Blob([JSON.stringify(this.sqlQueryResponse?.proofResponse, null, 2)], {
+                    type: "application/json",
                 }),
+            ],
+            "query-explainer.json",
+        );
 
+        this.fileUploadService
+            .uploadFilePrepare(file)
+            .pipe(
+                tap((data) => (uploadToken = data.uploadToken)),
+                switchMap((uploadPrepareResponse: UploadPrepareResponse) =>
+                    this.fileUploadService.prepareUploadData(uploadPrepareResponse, file),
+                ),
+                switchMap(({ uploadPrepareResponse, bodyObject, uploadHeaders }: UploadPrepareData) =>
+                    this.fileUploadService.uploadFileByMethod(
+                        uploadPrepareResponse.method,
+                        uploadPrepareResponse.uploadUrl,
+                        bodyObject,
+                        uploadHeaders,
+                    ),
+                ),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(() => {
@@ -209,5 +220,9 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
 
     public get isUserAuthenticated(): boolean {
         return this.loggedUserService.isAuthenticated;
+    }
+
+    public jsonWrapper(json: unknown): string {
+        return "```json\n" + JSON.stringify(json, null, 2) + "\n```";
     }
 }

@@ -8,6 +8,7 @@
 import { HttpHeaders } from "@angular/common/http";
 import { DataSchemaFormat, QueryDialect } from "src/app/api/kamu.graphql.interface";
 import { UploadPrepareResponse } from "src/app/interface/ingest-via-file-upload.types";
+import { DataRow } from "../interface/dataset.interface";
 
 export enum QueryExplainerDataFormat {
     JsonAoS = "JsonAoS",
@@ -32,6 +33,15 @@ export interface QueryExplainerProofResponse {
     subQueries?: unknown[];
 }
 
+export interface SqlQueryExplanationResponse {
+    input: QueryExplainerInputType;
+    output?: QueryExplainerOutputType;
+    proof?: QueryExplainerProofType;
+    commitment?: QueryExplainerCommitmentType;
+    // TODO: need implementation
+    subQueries?: unknown[];
+}
+
 export interface QueryExplainerInputOutputResponse {
     input: QueryExplainerInputType;
     output?: QueryExplainerOutputType;
@@ -42,7 +52,7 @@ export interface QueryExplainerDataJsonAosResponse {
 }
 
 export interface QueryExplainerOutputType {
-    data: object[] | [string[]];
+    data: object[] | [string[]] | DataRow[];
     dataFormat: keyof typeof QueryExplainerDataFormat;
     schema: QueryExplainerSchemaType;
     schemaFormat: keyof typeof DataSchemaFormat;

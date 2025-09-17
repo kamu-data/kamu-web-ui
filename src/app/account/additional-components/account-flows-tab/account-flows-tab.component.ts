@@ -80,7 +80,7 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
                         perPageTable: this.TABLE_FLOW_RUNS_PER_PAGE,
                         perPageTiles: this.WIDGET_FLOW_RUNS_PER_PAGE,
                         filters: {
-                            byFlowType: null,
+                            byProcessType: null,
                             byStatus: filterByStatus,
                             byInitiator: filterByInitiator,
                             byDatasetIds: datasetsIds ?? [],

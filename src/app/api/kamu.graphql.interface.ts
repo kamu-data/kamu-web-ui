@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "apollo-angular";
+import { gql } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -46,6 +46,7 @@ export type Scalars = {
     Email: string;
     EventID: string;
     EvmWalletAddress: string;
+    ExtraAttributes: string;
     ExtraData: string;
     FlowID: string;
     Multihash: string;
@@ -96,6 +97,13 @@ export type Account = {
     id: Scalars["AccountID"];
     /** Indicates the administrator status */
     isAdmin: Scalars["Boolean"];
+    /** Returns datasets belonging to this account */
+    ownedDatasets: DatasetConnection;
+};
+
+export type AccountOwnedDatasetsArgs = {
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
 };
 
 export type AccountAccessTokens = {
@@ -237,6 +245,8 @@ export type AccountMut = {
     __typename?: "AccountMut";
     /** Access to the mutable flow configurations of this account */
     accessTokens: AccountAccessTokensMut;
+    /** Convert to read-only accessor to an account */
+    account: Account;
     /** Delete a selected account. Allowed only for admin users */
     delete: DeleteAccountResult;
     /** Access to the mutable flow configurations of this account */
@@ -303,38 +313,70 @@ export type AccountWithRoleEdge = {
 
 export type Accounts = {
     __typename?: "Accounts";
-    /** Returns account by its ID */
+    /** Returns an account by its ID, if found */
     byId?: Maybe<Account>;
-    /** Returns account by its name */
+    /** Returns accounts by their IDs */
+    byIds: Array<Account>;
+    /** Returns an account by its name, if found */
     byName?: Maybe<Account>;
+    /** Returns accounts by their names */
+    byNames: Array<Account>;
+    /** Returns the account that is making the call (authorized subject) */
+    me: Account;
 };
 
 export type AccountsByIdArgs = {
     accountId: Scalars["AccountID"];
 };
 
+export type AccountsByIdsArgs = {
+    accountIds: Array<Scalars["AccountID"]>;
+    skipMissing: Scalars["Boolean"];
+};
+
 export type AccountsByNameArgs = {
     name: Scalars["AccountName"];
+};
+
+export type AccountsByNamesArgs = {
+    accountNames: Array<Scalars["AccountName"]>;
+    skipMissing: Scalars["Boolean"];
 };
 
 export type AccountsMut = {
     __typename?: "AccountsMut";
     /** Returns a mutable account by its id */
     byId?: Maybe<AccountMut>;
+    /** Returns mutable accounts by their IDs */
+    byIds: Array<AccountMut>;
     /** Returns a mutable account by its name */
     byName?: Maybe<AccountMut>;
+    /** Returns accounts by their names */
+    byNames: Array<AccountMut>;
     /** Create a new account */
     createAccount: CreateAccountResult;
     /** Create wallet accounts */
     createWalletAccounts: CreateWalletAccountsResult;
+    /** Returns the mutable account that is making the call (authorized subject) */
+    me: AccountMut;
 };
 
 export type AccountsMutByIdArgs = {
     accountId: Scalars["AccountID"];
 };
 
+export type AccountsMutByIdsArgs = {
+    accountIds: Array<Scalars["AccountID"]>;
+    skipMissing: Scalars["Boolean"];
+};
+
 export type AccountsMutByNameArgs = {
     accountName: Scalars["AccountName"];
+};
+
+export type AccountsMutByNamesArgs = {
+    accountNames: Array<Scalars["AccountName"]>;
+    skipMissing: Scalars["Boolean"];
 };
 
 export type AccountsMutCreateAccountArgs = {
@@ -353,6 +395,8 @@ export type AccountsMutCreateWalletAccountsArgs = {
  */
 export type AddData = {
     __typename?: "AddData";
+    /** ODF extensions. */
+    extra?: Maybe<Scalars["ExtraAttributes"]>;
     /**
      * Describes checkpoint written during this transaction, if any. If an
      * engine operation resulted in no updates to the checkpoint, but
@@ -768,18 +812,21 @@ export type ColumnInput = {
 };
 
 export type CommitResult = {
+    isSuccess: Scalars["Boolean"];
     message: Scalars["String"];
 };
 
 export type CommitResultAppendError = CommitResult &
     UpdateReadmeResult & {
         __typename?: "CommitResultAppendError";
+        isSuccess: Scalars["Boolean"];
         message: Scalars["String"];
     };
 
 export type CommitResultSuccess = CommitResult &
     UpdateReadmeResult & {
         __typename?: "CommitResultSuccess";
+        isSuccess: Scalars["Boolean"];
         message: Scalars["String"];
         newHead: Scalars["Multihash"];
         oldHead?: Maybe<Scalars["Multihash"]>;
@@ -990,6 +1037,8 @@ export type DataSchema = {
 
 export enum DataSchemaFormat {
     ArrowJson = "ARROW_JSON",
+    OdfJson = "ODF_JSON",
+    OdfYaml = "ODF_YAML",
     Parquet = "PARQUET",
     ParquetJson = "PARQUET_JSON",
 }
@@ -1071,6 +1120,11 @@ export enum DatasetAccessRole {
     Maintainer = "MAINTAINER",
     /** Role opening the possibility for read-only access */
     Reader = "READER",
+}
+
+export enum DatasetArchetype {
+    Collection = "COLLECTION",
+    VersionedFile = "VERSIONED_FILE",
 }
 
 export type DatasetCollaboration = {
@@ -1377,6 +1431,11 @@ export type DatasetMetadata = {
     __typename?: "DatasetMetadata";
     /** Access to the temporal metadata chain of the dataset */
     chain: MetadataChain;
+    /**
+     * Experimental: Current archetype as per `kamu.dev/archetype` annotation,
+     * if any
+     */
+    currentArchetype?: Maybe<DatasetArchetype>;
     /** Current downstream dependencies of a dataset */
     currentDownstreamDependencies: Array<DependencyDatasetResult>;
     /** Current descriptive information about the dataset */
@@ -1441,6 +1500,8 @@ export type DatasetMut = {
     asVersionedFile?: Maybe<VersionedFileMut>;
     /** Access to collaboration management methods */
     collaboration: DatasetCollaborationMut;
+    /** Convert to read-only accessor to a dataset */
+    dataset: Dataset;
     /** Delete the dataset */
     delete: DeleteResult;
     /** Access to the mutable flow configurations of this dataset */
@@ -1567,10 +1628,16 @@ export type Datasets = {
     byAccountId: DatasetConnection;
     /** Returns datasets belonging to the specified account */
     byAccountName: DatasetConnection;
-    /** Returns dataset by its ID */
+    /** Returns a dataset by its ID, if found */
     byId?: Maybe<Dataset>;
+    /** Returns multiple datasets by their IDs */
+    byIds: Array<Dataset>;
     /** Returns dataset by its owner and name */
     byOwnerAndName?: Maybe<Dataset>;
+    /** Returns a dataset by a ID or alias, if found */
+    byRef?: Maybe<Dataset>;
+    /** Returns multiple datasets by their IDs or aliases */
+    byRefs: Array<Dataset>;
 };
 
 export type DatasetsByAccountIdArgs = {
@@ -1589,15 +1656,31 @@ export type DatasetsByIdArgs = {
     datasetId: Scalars["DatasetID"];
 };
 
+export type DatasetsByIdsArgs = {
+    datasetIds: Array<Scalars["DatasetID"]>;
+    skipMissing: Scalars["Boolean"];
+};
+
 export type DatasetsByOwnerAndNameArgs = {
     accountName: Scalars["AccountName"];
     datasetName: Scalars["DatasetName"];
 };
 
+export type DatasetsByRefArgs = {
+    datasetRef: Scalars["DatasetRef"];
+};
+
+export type DatasetsByRefsArgs = {
+    datasetRefs: Array<Scalars["DatasetRef"]>;
+    skipMissing: Scalars["Boolean"];
+};
+
 export type DatasetsMut = {
     __typename?: "DatasetsMut";
-    /** Returns a mutable dataset by its ID */
+    /** Returns a mutable dataset by its ID, if found */
     byId?: Maybe<DatasetMut>;
+    /** Returns mutable datasets by their IDs */
+    byIds: Array<DatasetMut>;
     /**
      * Creates a new collection dataset.
      * Can include schema for extra columns, dataset metadata, and initial
@@ -1618,6 +1701,11 @@ export type DatasetsMut = {
 
 export type DatasetsMutByIdArgs = {
     datasetId: Scalars["DatasetID"];
+};
+
+export type DatasetsMutByIdsArgs = {
+    datasetIds: Array<Scalars["DatasetID"]>;
+    skipMissing: Scalars["Boolean"];
 };
 
 export type DatasetsMutCreateCollectionArgs = {
@@ -2402,10 +2490,16 @@ export type FlowPreconditionsNotMet = SetFlowConfigResult &
 
 export type FlowProcess = {
     __typename?: "FlowProcess";
-    flowTrigger: FlowTrigger;
     flowType: DatasetFlowType;
-    runtimeState: FlowProcessRuntimeState;
+    summary: FlowProcessSummary;
 };
+
+export enum FlowProcessEffectiveState {
+    Active = "ACTIVE",
+    Failing = "FAILING",
+    PausedManual = "PAUSED_MANUAL",
+    StoppedAuto = "STOPPED_AUTO",
+}
 
 export type FlowProcessGroupRollup = {
     __typename?: "FlowProcessGroupRollup";
@@ -2417,22 +2511,16 @@ export type FlowProcessGroupRollup = {
     worstConsecutiveFailures: Scalars["Int"];
 };
 
-export type FlowProcessRuntimeState = {
-    __typename?: "FlowProcessRuntimeState";
+export type FlowProcessSummary = {
+    __typename?: "FlowProcessSummary";
     consecutiveFailures: Scalars["Int"];
-    effectiveState: FlowProcessRuntimeStateEnum;
+    effectiveState: FlowProcessEffectiveState;
     lastAttemptAt?: Maybe<Scalars["DateTime"]>;
     lastFailureAt?: Maybe<Scalars["DateTime"]>;
     lastSuccessAt?: Maybe<Scalars["DateTime"]>;
     nextPlannedAt?: Maybe<Scalars["DateTime"]>;
+    stopPolicy: FlowTriggerStopPolicy;
 };
-
-export enum FlowProcessRuntimeStateEnum {
-    Active = "ACTIVE",
-    Failing = "FAILING",
-    PausedManual = "PAUSED_MANUAL",
-    StoppedAuto = "STOPPED_AUTO",
-}
 
 export type FlowProcessTypeFilterInput =
     | { primary: FlowProcessTypePrimaryFilterInput; webhooks?: never }
@@ -3004,6 +3092,7 @@ export type NameLookupResultEdge = {
 export type NoChanges = CommitResult &
     UpdateReadmeResult & {
         __typename?: "NoChanges";
+        isSuccess: Scalars["Boolean"];
         message: Scalars["String"];
     };
 
@@ -4278,10 +4367,9 @@ export type WebSocketProtocolDesc = {
 
 export type WebhookFlowSubProcess = {
     __typename?: "WebhookFlowSubProcess";
-    flowTrigger: FlowTrigger;
     id: Scalars["WebhookSubscriptionID"];
     name: Scalars["String"];
-    runtimeState: FlowProcessRuntimeState;
+    summary: FlowProcessSummary;
 };
 
 export type WebhookFlowSubProcessGroup = {
@@ -6345,8 +6433,7 @@ export type DatasetFlowsProcessesQuery = {
                     primary?: {
                         __typename?: "FlowProcess";
                         flowType: DatasetFlowType;
-                        flowTrigger: { __typename?: "FlowTrigger" } & FlowTriggerDataFragment;
-                        runtimeState: { __typename?: "FlowProcessRuntimeState" } & FlowProcessRuntimeStateDataFragment;
+                        summary: { __typename?: "FlowProcessSummary" } & FlowProcessSummaryDataFragment;
                     } | null;
                     webhooks: {
                         __typename?: "WebhookFlowSubProcessGroup";
@@ -6363,10 +6450,7 @@ export type DatasetFlowsProcessesQuery = {
                             __typename?: "WebhookFlowSubProcess";
                             id: string;
                             name: string;
-                            flowTrigger: { __typename?: "FlowTrigger" } & FlowTriggerDataFragment;
-                            runtimeState: {
-                                __typename?: "FlowProcessRuntimeState";
-                            } & FlowProcessRuntimeStateDataFragment;
+                            summary: { __typename?: "FlowProcessSummary" } & FlowProcessSummaryDataFragment;
                         }>;
                     };
                 };
@@ -6375,34 +6459,14 @@ export type DatasetFlowsProcessesQuery = {
     };
 };
 
-export type FlowProcessRuntimeStateDataFragment = {
-    __typename?: "FlowProcessRuntimeState";
-    effectiveState: FlowProcessRuntimeStateEnum;
+export type FlowProcessSummaryDataFragment = {
+    __typename?: "FlowProcessSummary";
+    effectiveState: FlowProcessEffectiveState;
     consecutiveFailures: number;
     lastSuccessAt?: string | null;
     lastAttemptAt?: string | null;
     lastFailureAt?: string | null;
     nextPlannedAt?: string | null;
-};
-
-export type FlowTriggerDataFragment = {
-    __typename?: "FlowTrigger";
-    paused: boolean;
-    schedule?:
-        | { __typename?: "Cron5ComponentExpression"; cron5ComponentExpression: string }
-        | ({ __typename?: "TimeDelta" } & TimeDeltaDataFragment)
-        | null;
-    reactive?: {
-        __typename?: "FlowTriggerReactiveRule";
-        forBreakingChange: FlowTriggerBreakingChangeRule;
-        forNewData:
-            | {
-                  __typename?: "FlowTriggerBatchingRuleBuffering";
-                  minRecordsToAwait: number;
-                  maxBatchingInterval: { __typename?: "TimeDelta"; every: number; unit: TimeUnit };
-              }
-            | { __typename?: "FlowTriggerBatchingRuleImmediate" };
-    } | null;
     stopPolicy:
         | { __typename?: "FlowTriggerStopPolicyAfterConsecutiveFailures"; maxFailures: number }
         | { __typename?: "FlowTriggerStopPolicyNever"; dummy: boolean };
@@ -8046,39 +8110,14 @@ export const FlowConnectionWidgetDataFragmentDoc = gql`
     }
     ${FlowItemWidgetDataFragmentDoc}
 `;
-export const FlowProcessRuntimeStateDataFragmentDoc = gql`
-    fragment FlowProcessRuntimeStateData on FlowProcessRuntimeState {
+export const FlowProcessSummaryDataFragmentDoc = gql`
+    fragment FlowProcessSummaryData on FlowProcessSummary {
         effectiveState
         consecutiveFailures
         lastSuccessAt
         lastAttemptAt
         lastFailureAt
         nextPlannedAt
-    }
-`;
-export const FlowTriggerDataFragmentDoc = gql`
-    fragment FlowTriggerData on FlowTrigger {
-        paused
-        schedule {
-            ... on TimeDelta {
-                ...TimeDeltaData
-            }
-            ... on Cron5ComponentExpression {
-                cron5ComponentExpression
-            }
-        }
-        reactive {
-            forNewData {
-                ... on FlowTriggerBatchingRuleBuffering {
-                    minRecordsToAwait
-                    maxBatchingInterval {
-                        every
-                        unit
-                    }
-                }
-            }
-            forBreakingChange
-        }
         stopPolicy {
             ... on FlowTriggerStopPolicyNever {
                 dummy
@@ -8088,7 +8127,6 @@ export const FlowTriggerDataFragmentDoc = gql`
             }
         }
     }
-    ${TimeDeltaDataFragmentDoc}
 `;
 export const AccessTokenDataFragmentDoc = gql`
     fragment AccessTokenData on ViewAccessToken {
@@ -11339,11 +11377,8 @@ export const DatasetFlowsProcessesDocument = gql`
                     processes {
                         primary {
                             flowType
-                            flowTrigger {
-                                ...FlowTriggerData
-                            }
-                            runtimeState {
-                                ...FlowProcessRuntimeStateData
+                            summary {
+                                ...FlowProcessSummaryData
                             }
                         }
                         webhooks {
@@ -11358,11 +11393,8 @@ export const DatasetFlowsProcessesDocument = gql`
                             subprocesses {
                                 id
                                 name
-                                flowTrigger {
-                                    ...FlowTriggerData
-                                }
-                                runtimeState {
-                                    ...FlowProcessRuntimeStateData
+                                summary {
+                                    ...FlowProcessSummaryData
                                 }
                             }
                         }
@@ -11371,8 +11403,7 @@ export const DatasetFlowsProcessesDocument = gql`
             }
         }
     }
-    ${FlowTriggerDataFragmentDoc}
-    ${FlowProcessRuntimeStateDataFragmentDoc}
+    ${FlowProcessSummaryDataFragmentDoc}
 `;
 
 @Injectable({

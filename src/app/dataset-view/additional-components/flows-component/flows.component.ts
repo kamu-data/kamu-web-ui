@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core
 import {
     DatasetFlowProcesses,
     DatasetKind,
-    FlowProcessRuntimeStateEnum,
+    FlowProcessEffectiveState,
     FlowProcessTypeFilterInput,
     FlowStatus,
     InitiatorFilterInput,
@@ -69,7 +69,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public searchFilter = "";
 
     public flowsProcesses$: Observable<DatasetFlowProcesses>;
-    public readonly FlowProcessRuntimeStateEnum: typeof FlowProcessRuntimeStateEnum = FlowProcessRuntimeStateEnum;
+    public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
 
     public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"]; //1
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
@@ -83,35 +83,12 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         "status",
         "consecutive_failures",
         "options",
-    ]; //1
+    ];
 
     public ngOnInit(): void {
         this.getPageFromUrl();
         this.fetchTableData(this.currentPage);
     }
-
-    // public tableSource(data: WebhookFlowSubProcess[]): DataRow[] {
-    //     return data.map((item: WebhookFlowSubProcess) => {
-    //         return {
-    //             subscription: {
-    //                 value: item.name,
-    //                 cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
-    //             },
-    //             state: {
-    //                 value: item.runtimeState.effectiveState,
-    //                 cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
-    //             },
-    //             ["consecutive failures"]: {
-    //                 value: item.runtimeState.consecutiveFailures,
-    //                 cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
-    //             },
-    //         };
-    //     });
-    // }
-
-    // public schemaFields(data: WebhookFlowSubProcess[]): DataSchemaField[] {
-    //     return extractSchemaFieldsFromData(this.tableSource(data)[0] ?? []);
-    // }
 
     public get redirectSection(): SettingsTabsEnum {
         return this.flowsData.datasetBasics.kind === DatasetKind.Root

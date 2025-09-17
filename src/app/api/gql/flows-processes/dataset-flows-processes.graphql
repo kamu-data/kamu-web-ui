@@ -5,11 +5,8 @@ query datasetFlowsProcesses($datasetId: DatasetID!) {
         processes {
           primary {
             flowType
-            flowTrigger {
-              ...FlowTriggerData
-            }
-            runtimeState {
-              ...FlowProcessRuntimeStateData
+            summary {
+              ...FlowProcessSummaryData
             }
           }
           webhooks {
@@ -24,11 +21,8 @@ query datasetFlowsProcesses($datasetId: DatasetID!) {
             subprocesses {
               id
               name
-              flowTrigger {
-                ...FlowTriggerData
-              }
-              runtimeState {
-                ...FlowProcessRuntimeStateData
+              summary {
+                ...FlowProcessSummaryData
               }
             }
           }

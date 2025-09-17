@@ -75,7 +75,7 @@ a {
 }
 
 .pause-container {
-    padding: 10px 30px 10px 20px;
+    padding: 10px 30px 10px 10px;
     background-color: #fff7ea;
     border: 1px solid #ffde21;
     border-radius: 6px;
@@ -94,4 +94,31 @@ a {
 
 .channels-container {
     background: #f6f8fa;
+}
+
+table {
+    width: 100%;
+
+    .mat-mdc-cell {
+        border: 1px solid $app-color-border-default;
+        color: $app-color-fg-default;
+    }
+}
+
+.mat-mdc-header-cell {
+    color: $app-color-fg-default;
+    border: 1px solid $app-color-border-default;
+    font-size: 15px;
+    text-align: center;
+    background: $app-alice-blue !important;
+}
+
+.dynamic-table th.mat-mdc-header-cell,
+.dynamic-table td.mat-mdc-cell,
+.dynamic-table td.mat-mdc-footer-cell,
+.dynamic-table th.mat-mdc-header-cell:first-of-type,
+.dynamic-table td.mat-mdc-cell:first-of-type,
+.dynamic-table td.mat-mdc-footer-cell:first-of-type {
+    padding-left: 10px;
+    padding-right: 10px;
 }

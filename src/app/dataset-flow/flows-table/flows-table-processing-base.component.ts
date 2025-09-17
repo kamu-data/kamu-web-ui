@@ -9,7 +9,12 @@ import { Observable } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { CancelFlowArgs, FlowsTableData, FlowsTableFiltersOptions } from "./flows-table.types";
-import { AccountFragment, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
+import {
+    AccountFragment,
+    DatasetFlowProcesses,
+    FlowStatus,
+    InitiatorFilterInput,
+} from "src/app/api/kamu.graphql.interface";
 import { ChangeDetectorRef, Directive, inject } from "@angular/core";
 import { NavigationService } from "src/app/services/navigation.service";
 import { requireValue } from "src/app/common/helpers/app.helpers";
@@ -39,6 +44,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
         flowsData: FlowsTableData;
         allFlowsPaused: MaybeUndefined<boolean>;
         flowInitiators: AccountFragment[];
+        flowsProcesses?: DatasetFlowProcesses;
     }>;
 
     protected abstract fetchTableData(

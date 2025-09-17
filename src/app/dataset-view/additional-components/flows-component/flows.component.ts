@@ -34,6 +34,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { NgIf, AsyncPipe, DatePipe } from "@angular/common";
 import AppValues from "src/app/common/values/app.values";
+import { MatTableModule } from "@angular/material/table";
 
 @Component({
     selector: "app-flows",
@@ -51,6 +52,7 @@ import AppValues from "src/app/common/values/app.values";
         //-----//
         MatMenuModule,
         MatIconModule,
+        MatTableModule,
         MatDividerModule,
         MatProgressBarModule,
 
@@ -76,17 +78,40 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
     public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
 
+    public readonly SUBSCRIPTIONS_DISPLAY_COLUMNS: string[] = [
+        "subscription",
+        "status",
+        "consecutive_failures",
+        "options",
+    ]; //1
+
     public ngOnInit(): void {
         this.getPageFromUrl();
-        this.fetchFlowsProcesses();
         this.fetchTableData(this.currentPage);
     }
 
-    private fetchFlowsProcesses(): void {
-        this.flowsProcesses$ = timer(0, environment.delay_polling_ms).pipe(
-            switchMap(() => this.flowsService.datasetFlowsProcesses({ datasetId: this.flowsData.datasetBasics.id })),
-        );
-    }
+    // public tableSource(data: WebhookFlowSubProcess[]): DataRow[] {
+    //     return data.map((item: WebhookFlowSubProcess) => {
+    //         return {
+    //             subscription: {
+    //                 value: item.name,
+    //                 cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+    //             },
+    //             state: {
+    //                 value: item.runtimeState.effectiveState,
+    //                 cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+    //             },
+    //             ["consecutive failures"]: {
+    //                 value: item.runtimeState.consecutiveFailures,
+    //                 cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+    //             },
+    //         };
+    //     });
+    // }
+
+    // public schemaFields(data: WebhookFlowSubProcess[]): DataSchemaField[] {
+    //     return extractSchemaFieldsFromData(this.tableSource(data)[0] ?? []);
+    // }
 
     public get redirectSection(): SettingsTabsEnum {
         return this.flowsData.datasetBasics.kind === DatasetKind.Root
@@ -118,8 +143,8 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                     this.flowsService.datasetFlowsProcesses({ datasetId: this.flowsData.datasetBasics.id }),
                 ]),
             ),
-            map(([flowsData, allFlowsPaused, flowInitiators]) => {
-                return { flowsData, allFlowsPaused, flowInitiators };
+            map(([flowsData, allFlowsPaused, flowInitiators, flowsProcesses]) => {
+                return { flowsData, allFlowsPaused, flowInitiators, flowsProcesses };
             }),
         );
     }

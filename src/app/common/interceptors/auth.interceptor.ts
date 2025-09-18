@@ -18,7 +18,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     public intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         const accessToken = this.localStorageService.accessToken;
-        if (accessToken && request.url.includes(this.appConfigService.apiServerHttpUrl)) {
+        if (accessToken && request.url.startsWith(this.appConfigService.apiServerHttpUrl)) {
             const authReq = request.clone({
                 setHeaders: {
                     Authorization: `Bearer ${accessToken}`,

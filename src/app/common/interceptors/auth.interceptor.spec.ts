@@ -10,11 +10,15 @@ import { AuthInterceptor } from "./auth.interceptor";
 import { HTTP_INTERCEPTORS, HttpClient } from "@angular/common/http";
 import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
 import { LocalStorageService } from "src/app/services/local-storage.service";
+import { AppConfigService } from "src/app/app-config.service";
 
 describe("AuthInterceptor", () => {
     let http: HttpClient;
     let httpMock: HttpTestingController;
     let localStorageService: LocalStorageService;
+    const appConfigStub = {
+        apiServerHttpUrl: "https://api.example.com",
+    };
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -26,6 +30,7 @@ describe("AuthInterceptor", () => {
                     useClass: AuthInterceptor,
                     multi: true,
                 },
+                { provide: AppConfigService, useValue: appConfigStub },
             ],
         });
 
@@ -47,9 +52,9 @@ describe("AuthInterceptor", () => {
     it("should add Authorization header if token exists", () => {
         localStorageService.setAccessToken("test-token");
 
-        http.get("/api/test").subscribe();
+        http.get(`${appConfigStub.apiServerHttpUrl}/data`).subscribe();
 
-        const req = httpMock.expectOne("/api/test");
+        const req = httpMock.expectOne(`${appConfigStub.apiServerHttpUrl}/data`);
 
         expect(req.request.headers.has("Authorization")).toBeTrue();
         expect(req.request.headers.get("Authorization")).toBe("Bearer test-token");
@@ -60,9 +65,21 @@ describe("AuthInterceptor", () => {
     it("should not add Authorization header if there is no token", () => {
         localStorageService.setAccessToken(null);
 
-        http.get("/api/test").subscribe();
+        http.get(`${appConfigStub.apiServerHttpUrl}/data`).subscribe();
 
-        const req = httpMock.expectOne("/api/test");
+        const req = httpMock.expectOne(`${appConfigStub.apiServerHttpUrl}/data`);
+
+        expect(req.request.headers.has("Authorization")).toBeFalse();
+
+        req.flush({});
+    });
+
+    it("should not add Authorization header  when requesting another domain", () => {
+        localStorageService.setAccessToken("test-token");
+
+        http.get("https://other.example.com/data").subscribe();
+
+        const req = httpMock.expectOne("https://other.example.com/data");
 
         expect(req.request.headers.has("Authorization")).toBeFalse();
 

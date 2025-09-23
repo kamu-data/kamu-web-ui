@@ -6,6 +6,19 @@
                     <div class="box p-4 w-100" *ngIf="flowConnectionData.flowsProcesses">
                         <div class="d-flex flex-row justify-content-between">
                             <div
+                                class="d-flex gap-2 manual-container"
+                                *ngIf="!flowConnectionData.flowsProcesses.primary"
+                            >
+                                <div><mat-icon class="mannual-udate-icon">add_circle</mat-icon></div>
+                                <div class="d-flex flex-column mt-1">
+                                    <div class="fw-500 fs-16">Manual updates</div>
+                                    <div>
+                                        <span class="text-muted fs-12"> Attempted to update the latest data </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
                                 class="d-flex gap-2 completed-container"
                                 *ngIf="
                                     flowConnectionData.flowsProcesses.primary?.summary?.effectiveState ===
@@ -23,7 +36,8 @@
                                             {{
                                                 flowConnectionData.flowsProcesses.primary?.summary?.lastSuccessAt
                                                     | date: DISPLAY_TIME_FORMAT
-                                            }}(success)</span
+                                            }}
+                                            success</span
                                         >
                                         <span
                                             class="text-muted fs-12"
@@ -36,6 +50,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div
                                 class="d-flex gap-2 failing-container"
                                 *ngIf="
@@ -88,17 +103,19 @@
                                             {{
                                                 flowConnectionData.flowsProcesses.primary?.summary?.lastFailureAt
                                                     | date: DISPLAY_TIME_FORMAT
-                                            }}(failure)</span
+                                            }}
+                                            failure</span
                                         >
                                     </div>
                                 </div>
                             </div>
+
                             <div class="mt-4">
                                 <div class="d-flex flex-row gap-4">
                                     <button
                                         type="button"
                                         (click)="updateNow()"
-                                        class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
+                                        class="badge-button border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
                                     >
                                         <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>
                                         <span class="fs-12 me-2 d-block"> Update now</span>
@@ -106,7 +123,7 @@
                                     <button
                                         type="button"
                                         (click)="toggleStateDatasetFlowConfigs(flowConnectionData.allFlowsPaused!)"
-                                        class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
+                                        class="badge-button border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
                                     >
                                         <mat-icon class="text-muted fs-4 d-block" svgIcon="play_pause" />
                                         <span class="fs-12 me-2 d-block">
@@ -129,7 +146,7 @@
                                     <button
                                         type="button"
                                         (click)="refreshFlow()"
-                                        class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
+                                        class="badge-button border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
                                     >
                                         <mat-icon class="text-muted fs-4 d-block">refresh</mat-icon>
                                         <span class="fs-12 me-2 d-block">Refresh flow</span>
@@ -138,45 +155,116 @@
                             </div>
                         </div>
                         <div class="mt-4">
+                            <mat-chip-listbox [(ngModel)]="selectedCategory" (selectionChange)="onSelectionChange()">
+                                <mat-chip-option [value]="null">All flows</mat-chip-option>
+                                <mat-chip-option
+                                    [value]="isRoot ? DatasetFlowType.Ingest : DatasetFlowType.ExecuteTransform"
+                                    >Updates only</mat-chip-option
+                                >
+                            </mat-chip-listbox>
+                        </div>
+                        <div class="mt-4" *ngIf="flowConnectionData.flowsProcesses.webhooks.rollup.total">
                             <p class="fw-500">Associated channels</p>
-                            <div class="box p-1 d-flex flex-row gap-4 w-50 align-items-center channels-container">
-                                <div class="d-flex ms-2 flex-row align-items-center">
-                                    <span class="text-muted">
-                                        <mat-icon [svgIcon]="'webhook'" />
-                                    </span>
-                                    <span class="webhook-label"> Webhooks </span>
+                            <div class="d-flex flex-row gap-4 align-items-center">
+                                <div
+                                    class="box px-1 py-3 d-flex flex-row gap-4 w-50 align-items-center channels-container"
+                                >
+                                    <div class="d-flex ms-2 flex-row align-items-center">
+                                        <span class="text-muted">
+                                            <mat-icon [svgIcon]="'webhook'" />
+                                        </span>
+                                        <span class="webhook-label"> Webhooks </span>
+                                    </div>
+
+                                    <div class="btn-group" role="group">
+                                        <button
+                                            (click)="setWebhookFilterButton(null)"
+                                            [class.selected-group-button]="selectedWebhookFilterButton === null"
+                                            type="button"
+                                            class="btn btn-outline-secondary"
+                                        >
+                                            total: {{ flowConnectionData.flowsProcesses.webhooks.rollup.total }}
+                                        </button>
+                                        <button
+                                            (click)="setWebhookFilterButton(FlowProcessEffectiveState.Active)"
+                                            [class.selected-group-button]="
+                                                selectedWebhookFilterButton === FlowProcessEffectiveState.Active
+                                            "
+                                            type="button"
+                                            class="btn btn-outline-secondary"
+                                        >
+                                            active: {{ flowConnectionData.flowsProcesses.webhooks.rollup.active }}
+                                        </button>
+                                        <button
+                                            (click)="setWebhookFilterButton(FlowProcessEffectiveState.Failing)"
+                                            [class.selected-group-button]="
+                                                selectedWebhookFilterButton === FlowProcessEffectiveState.Failing
+                                            "
+                                            type="button"
+                                            class="btn btn-outline-secondary"
+                                        >
+                                            failing: {{ flowConnectionData.flowsProcesses.webhooks.rollup.failing }}
+                                        </button>
+                                        <button
+                                            (click)="setWebhookFilterButton(FlowProcessEffectiveState.PausedManual)"
+                                            [class.selected-group-button]="
+                                                selectedWebhookFilterButton === FlowProcessEffectiveState.PausedManual
+                                            "
+                                            type="button"
+                                            class="btn btn-outline-secondary"
+                                        >
+                                            paused: {{ flowConnectionData.flowsProcesses.webhooks.rollup.paused }}
+                                        </button>
+                                        <button
+                                            (click)="setWebhookFilterButton(FlowProcessEffectiveState.StoppedAuto)"
+                                            [class.selected-group-button]="
+                                                selectedWebhookFilterButton === FlowProcessEffectiveState.StoppedAuto
+                                            "
+                                            type="button"
+                                            class="btn btn-outline-secondary"
+                                        >
+                                            stopped: {{ flowConnectionData.flowsProcesses.webhooks.rollup.stopped }}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            (click)="toggleSubprocessesTable()"
+                                            class="border-1 ms-4 bg-light border rounded-2 px-2 btn badge-button btn-sm d-flex justify-content-between align-items-center"
+                                        >
+                                            <mat-icon class="text-muted fs-4 d-block">
+                                                {{ showSubprocessesTable ? "visibility_off" : "visibility" }}</mat-icon
+                                            >
+                                            <span class="fs-12 ms-1 me-2 d-block">
+                                                {{ showSubprocessesTable ? "Hide" : "View" }} details</span
+                                            >
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="text-muted">|</div>
-                                <div>total: {{ flowConnectionData.flowsProcesses.webhooks.rollup.total }}</div>
-                                <div class="text-muted">|</div>
-                                <div>active: {{ flowConnectionData.flowsProcesses.webhooks.rollup.active }}</div>
-                                <div class="text-muted">|</div>
-                                <div>failing: {{ flowConnectionData.flowsProcesses.webhooks.rollup.failing }}</div>
-                                <div class="text-muted">|</div>
-                                <div>paused: {{ flowConnectionData.flowsProcesses.webhooks.rollup.paused }}</div>
-                                <div class="text-muted">|</div>
-                                <div>stopped: {{ flowConnectionData.flowsProcesses.webhooks.rollup.stopped }}</div>
                             </div>
 
-                            <div class="mt-4" *ngIf="flowConnectionData.flowsProcesses.webhooks.subprocesses.length">
+                            <div class="mt-4" *ngIf="showSubprocessesTable">
                                 <div>
                                     <div [id]="'subprocesses-table'" class="dynamic-table">
                                         <table
                                             mat-table
-                                            [dataSource]="flowConnectionData.flowsProcesses.webhooks.subprocesses"
+                                            [dataSource]="
+                                                flowConnectionData.flowsProcesses.webhooks.subprocesses
+                                                    | subprocessStatusFilter: selectedWebhookFilterButton
+                                            "
                                         >
                                             <!-- Subscription Column -->
                                             <ng-container matColumnDef="subscription">
-                                                <th mat-header-cell *matHeaderCellDef>
+                                                <th mat-header-cell *matHeaderCellDef style="width: 45%">
                                                     <span class="text-dark"> subscription </span>
                                                 </th>
                                                 <td mat-cell *matCellDef="let element">
-                                                    {{ element.name }}
+                                                    <a (click)="navigatoToSubscription(element.id)">{{
+                                                        element.name
+                                                    }}</a>
                                                 </td>
                                             </ng-container>
                                             <!-- Status Column -->
                                             <ng-container matColumnDef="status">
-                                                <th mat-header-cell *matHeaderCellDef>
+                                                <th mat-header-cell *matHeaderCellDef style="width: 25%">
                                                     <span class="text-dark"> status </span>
                                                 </th>
 
@@ -187,7 +275,7 @@
 
                                             <!-- Failures Column -->
                                             <ng-container matColumnDef="consecutive_failures">
-                                                <th mat-header-cell *matHeaderCellDef>
+                                                <th mat-header-cell *matHeaderCellDef style="width: 15%">
                                                     <span class="text-dark ps-4"> consecutive failures</span>
                                                 </th>
                                                 <td mat-cell *matCellDef="let element" style="text-align: center">
@@ -197,10 +285,27 @@
 
                                             <!-- Options Column -->
                                             <ng-container matColumnDef="options">
-                                                <th mat-header-cell *matHeaderCellDef>
-                                                    <span class="text-dark ps-4">options</span>
+                                                <th mat-header-cell *matHeaderCellDef style="width: 15%">
+                                                    <span class="text-dark">actions</span>
                                                 </th>
-                                                <td mat-cell *matCellDef="let element" style="text-align: center"></td>
+                                                <td mat-cell *matCellDef="let element" style="text-align: center">
+                                                    <a
+                                                        *ngIf="
+                                                            element.summary.effectiveState ===
+                                                            FlowProcessEffectiveState.Active
+                                                        "
+                                                        (click)="pauseWebhook(element.id)"
+                                                        >pause</a
+                                                    >
+                                                    <a
+                                                        *ngIf="
+                                                            element.summary.effectiveState !==
+                                                            FlowProcessEffectiveState.Active
+                                                        "
+                                                        (click)="resumeWebhook(element.id)"
+                                                        >resume</a
+                                                    >
+                                                </td>
                                             </ng-container>
 
                                             <!-- Row shown when there is no matching data. -->
@@ -209,7 +314,7 @@
                                                     class="mat-cell text-center p-4"
                                                     [attr.colspan]="SUBSCRIPTIONS_DISPLAY_COLUMNS.length"
                                                 >
-                                                    No data matching the filter
+                                                    No data
                                                 </td>
                                             </tr>
 

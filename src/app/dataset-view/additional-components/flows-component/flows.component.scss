@@ -65,6 +65,7 @@ a {
     background-color: #d6ffe8;
     border: 1px solid #a4f4c9;
     border-radius: 6px;
+    height: fit-content;
 }
 
 .failing-container {
@@ -72,6 +73,7 @@ a {
     background-color: #fff7ea;
     border: 1px solid #ffa500;
     border-radius: 6px;
+    height: fit-content;
 }
 
 .pause-container {
@@ -79,6 +81,7 @@ a {
     background-color: #fff7ea;
     border: 1px solid #ffde21;
     border-radius: 6px;
+    height: fit-content;
 }
 
 .stopped-container {
@@ -86,6 +89,19 @@ a {
     background-color: #fff2f2;
     border: 1px solid #ef6363;
     border-radius: 6px;
+    height: fit-content;
+}
+
+.manual-container {
+    padding: 10px 30px 10px 20px;
+    background-color: #e7e7e7;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    height: fit-content;
+}
+
+.mannual-udate-icon {
+    color: #aaa;
 }
 
 .webhook-label {
@@ -94,12 +110,17 @@ a {
 
 .channels-container {
     background: #f6f8fa;
+
+    &:hover {
+        cursor: pointer;
+    }
 }
 
 table {
     width: 100%;
 
-    .mat-mdc-cell {
+    .mat-mdc-cell,
+    .mat-mdc-no-data-row {
         border: 1px solid $app-color-border-default;
         color: $app-color-fg-default;
     }
@@ -122,3 +143,40 @@ table {
     padding-left: 10px;
     padding-right: 10px;
 }
+
+.badge-button {
+    height: 32px;
+}
+
+.action-button {
+    height: 28px !important;
+}
+
+.selected-group-button {
+    color: #000;
+    background-color: #b6c3d2;
+    border-color: #b6c3d2;
+}
+
+.btn-group {
+    > {
+        .btn {
+            margin-left: calc(var(--bs-border-width) * -1);
+            color: #000;
+            border-color: #b6c3d2;
+
+            &:hover {
+                background-color: #b6c3d2;
+                border-color: #b6c3d2;
+            }
+        }
+    }
+
+    > .btn-group {
+        margin-left: calc(var(--bs-border-width) * -1);
+    }
+}
+
+// .mat-mdc-chip-set {
+//     max-width: 150px;
+// }

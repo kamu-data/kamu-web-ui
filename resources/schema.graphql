@@ -125,7 +125,7 @@ input AccountFlowFilters {
 
 type AccountFlowProcessDatasetCard {
 	dataset: Dataset!
-	processes: DatasetFlowProcesses!
+	primary: FlowProcess!
 }
 
 type AccountFlowProcessDatasetCardConnection {
@@ -150,7 +150,7 @@ type AccountFlowProcessDatasetCardEdge {
 
 type AccountFlowProcesses {
 	primaryRollup: FlowProcessGroupRollup!
-	datasetCards(page: Int, perPage: Int): AccountFlowProcessDatasetCardConnection!
+	datasetCards(filters: FlowProcessFilters, ordering: FlowProcessOrdering, page: Int, perPage: Int): AccountFlowProcessDatasetCardConnection!
 }
 
 type AccountFlowRuns {
@@ -2440,6 +2440,38 @@ enum FlowProcessEffectiveState {
 	STOPPED_AUTO
 }
 
+input FlowProcessFilters {
+	"""
+	State filter
+	"""
+	effectiveStateIn: [FlowProcessEffectiveState!]
+	"""
+	All processes with last attempt between these times, inclusive
+	"""
+	lastAttemptBetween: FlowProcessFiltersTimeRange
+	"""
+	All processes with last failure since this time, inclusive
+	"""
+	lastFailureSince: DateTime
+	"""
+	All processes with next planned before this time, inclusive
+	"""
+	nextPlannedBefore: DateTime
+	"""
+	All processes with next planned after this time, inclusive
+	"""
+	nextPlannedAfter: DateTime
+	"""
+	Minimum number of consecutive failures
+	"""
+	minConsecutiveFailures: Int
+}
+
+input FlowProcessFiltersTimeRange {
+	start: DateTime!
+	end: DateTime!
+}
+
 type FlowProcessGroupRollup {
 	total: Int!
 	active: Int!
@@ -2447,6 +2479,38 @@ type FlowProcessGroupRollup {
 	paused: Int!
 	stopped: Int!
 	worstConsecutiveFailures: Int!
+}
+
+enum FlowProcessOrderField {
+	"""
+	Default for “recent activity”.
+	"""
+	LAST_ATTEMPT_AT
+	"""
+	“What’s next”
+	"""
+	NEXT_PLANNED_AT
+	"""
+	Triage hot spots.
+	"""
+	LAST_FAILURE_AT
+	"""
+	Chronic issues first.
+	"""
+	CONSECUTIVE_FAILURES
+	"""
+	Severity bucketing
+	"""
+	EFFECTIVE_STATE
+	"""
+	By flow type
+	"""
+	FLOW_TYPE
+}
+
+input FlowProcessOrdering {
+	field: FlowProcessOrderField!
+	direction: OrderingDirection!
 }
 
 type FlowProcessSummary {
@@ -3011,6 +3075,11 @@ type OffsetInterval {
 	End of the closed interval [start; end].
 	"""
 	end: Int!
+}
+
+enum OrderingDirection {
+	ASC
+	DESC
 }
 
 type PageBasedInfo {

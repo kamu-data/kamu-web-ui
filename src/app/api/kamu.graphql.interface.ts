@@ -168,7 +168,7 @@ export type AccountFlowFilters = {
 export type AccountFlowProcessDatasetCard = {
     __typename?: "AccountFlowProcessDatasetCard";
     dataset: Dataset;
-    processes: DatasetFlowProcesses;
+    primary: FlowProcess;
 };
 
 export type AccountFlowProcessDatasetCardConnection = {
@@ -194,6 +194,8 @@ export type AccountFlowProcesses = {
 };
 
 export type AccountFlowProcessesDatasetCardsArgs = {
+    filters?: InputMaybe<FlowProcessFilters>;
+    ordering?: InputMaybe<FlowProcessOrdering>;
     page?: InputMaybe<Scalars["Int"]>;
     perPage?: InputMaybe<Scalars["Int"]>;
 };
@@ -2501,6 +2503,26 @@ export enum FlowProcessEffectiveState {
     StoppedAuto = "STOPPED_AUTO",
 }
 
+export type FlowProcessFilters = {
+    /** State filter */
+    effectiveStateIn?: InputMaybe<Array<FlowProcessEffectiveState>>;
+    /** All processes with last attempt between these times, inclusive */
+    lastAttemptBetween?: InputMaybe<FlowProcessFiltersTimeRange>;
+    /** All processes with last failure since this time, inclusive */
+    lastFailureSince?: InputMaybe<Scalars["DateTime"]>;
+    /** Minimum number of consecutive failures */
+    minConsecutiveFailures?: InputMaybe<Scalars["Int"]>;
+    /** All processes with next planned after this time, inclusive */
+    nextPlannedAfter?: InputMaybe<Scalars["DateTime"]>;
+    /** All processes with next planned before this time, inclusive */
+    nextPlannedBefore?: InputMaybe<Scalars["DateTime"]>;
+};
+
+export type FlowProcessFiltersTimeRange = {
+    end: Scalars["DateTime"];
+    start: Scalars["DateTime"];
+};
+
 export type FlowProcessGroupRollup = {
     __typename?: "FlowProcessGroupRollup";
     active: Scalars["Int"];
@@ -2509,6 +2531,26 @@ export type FlowProcessGroupRollup = {
     stopped: Scalars["Int"];
     total: Scalars["Int"];
     worstConsecutiveFailures: Scalars["Int"];
+};
+
+export enum FlowProcessOrderField {
+    /** Chronic issues first. */
+    ConsecutiveFailures = "CONSECUTIVE_FAILURES",
+    /** Severity bucketing */
+    EffectiveState = "EFFECTIVE_STATE",
+    /** By flow type */
+    FlowType = "FLOW_TYPE",
+    /** Default for “recent activity”. */
+    LastAttemptAt = "LAST_ATTEMPT_AT",
+    /** Triage hot spots. */
+    LastFailureAt = "LAST_FAILURE_AT",
+    /** “What’s next” */
+    NextPlannedAt = "NEXT_PLANNED_AT",
+}
+
+export type FlowProcessOrdering = {
+    direction: OrderingDirection;
+    field: FlowProcessOrderField;
 };
 
 export type FlowProcessSummary = {
@@ -3114,6 +3156,11 @@ export type OffsetInterval = {
     /** Start of the closed interval [start; end]. */
     start: Scalars["Int"];
 };
+
+export enum OrderingDirection {
+    Asc = "ASC",
+    Desc = "DESC",
+}
 
 export type PageBasedInfo = {
     __typename?: "PageBasedInfo";

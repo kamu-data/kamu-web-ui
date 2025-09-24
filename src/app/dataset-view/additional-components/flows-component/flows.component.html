@@ -48,6 +48,17 @@
                                             >Updates starting...</span
                                         >
                                     </div>
+                                    <div>
+                                        <span
+                                            class="text-muted fs-12"
+                                            *ngIf="flowConnectionData.flowsProcesses.primary?.summary?.nextPlannedAt"
+                                            >Next planned at:
+                                            {{
+                                                flowConnectionData.flowsProcesses.primary?.summary?.nextPlannedAt
+                                                    | date: DISPLAY_TIME_FORMAT
+                                            }}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -62,13 +73,44 @@
                                 <div class="d-flex flex-column mt-1">
                                     <div class="fw-500 fs-16">Updates failing</div>
                                     <div>
-                                        <span class="text-muted fs-12"
-                                            >Flow will stop after
-                                            {{
-                                                flowConnectionData.flowsProcesses.primary?.summary?.consecutiveFailures
-                                            }}
-                                            consecutive failures.</span
+                                        <div
+                                            class="text-muted fs-12"
+                                            *ngIf="
+                                                flowConnectionData.flowsProcesses.primary?.summary?.stopPolicy
+                                                    ?.__typename === 'FlowTriggerStopPolicyAfterConsecutiveFailures'
+                                            "
                                         >
+                                            Flow will stop after
+                                            <span class="text-muted fs-12">
+                                                {{
+                                                    flowConnectionData.flowsProcesses.primary?.summary
+                                                        ?.consecutiveFailures
+                                                }}
+                                                consecutive failures.
+                                            </span>
+                                        </div>
+                                        <div
+                                            class="text-muted fs-12"
+                                            *ngIf="
+                                                flowConnectionData.flowsProcesses.primary?.summary?.stopPolicy
+                                                    ?.__typename === 'FlowTriggerStopPolicyNever'
+                                            "
+                                        >
+                                            <span class="text-muted fs-12">
+                                                {{
+                                                    flowConnectionData.flowsProcesses.primary?.summary
+                                                        ?.consecutiveFailures
+                                                }}
+                                                consecutive failures.
+                                            </span>
+                                        </div>
+                                        <div class="text-muted fs-12">
+                                            Last failure at:
+                                            {{
+                                                flowConnectionData.flowsProcesses.primary?.summary?.lastFailureAt
+                                                    | date: DISPLAY_TIME_FORMAT
+                                            }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -106,6 +148,38 @@
                                             }}
                                             failure</span
                                         >
+                                    </div>
+                                    <div>
+                                        <span
+                                            class="text-muted fs-12"
+                                            *ngIf="
+                                                flowConnectionData.flowsProcesses.primary?.summary?.stopPolicy
+                                                    ?.__typename === 'FlowTriggerStopPolicyNever'
+                                            "
+                                        >
+                                            {{
+                                                flowConnectionData.flowsProcesses.primary?.summary?.consecutiveFailures
+                                            }}
+                                            consecutive failures.
+                                        </span>
+                                        <span
+                                            class="text-muted fs-12"
+                                            *ngIf="
+                                                flowConnectionData.flowsProcesses.primary?.summary?.stopPolicy
+                                                    ?.__typename === 'FlowTriggerStopPolicyAfterConsecutiveFailures'
+                                            "
+                                        >
+                                            {{
+                                                maxFailures(
+                                                    flowConnectionData.flowsProcesses.primary?.summary?.stopPolicy!
+                                                )
+                                            }}
+
+                                            /{{
+                                                flowConnectionData.flowsProcesses.primary?.summary?.consecutiveFailures
+                                            }}
+                                            consecutive failures
+                                        </span>
                                     </div>
                                 </div>
                             </div>

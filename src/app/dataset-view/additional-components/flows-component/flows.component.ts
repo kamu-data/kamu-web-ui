@@ -13,6 +13,8 @@ import {
     FlowProcessEffectiveState,
     FlowProcessTypeFilterInput,
     FlowStatus,
+    FlowTriggerStopPolicy,
+    FlowTriggerStopPolicyAfterConsecutiveFailures,
     InitiatorFilterInput,
 } from "src/app/api/kamu.graphql.interface";
 import { combineLatest, map, Observable, Subject, switchMap, take, timer } from "rxjs";
@@ -119,6 +121,10 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             : SettingsTabsEnum.TRANSFORM_SETTINGS;
     }
 
+    public maxFailures(policy: FlowTriggerStopPolicy): number {
+        return (policy as FlowTriggerStopPolicyAfterConsecutiveFailures).maxFailures;
+    }
+
     public viewFlows(): void {
         this.stopFetchingTableData$.next();
         this.navigationService.navigateToDatasetView({
@@ -215,6 +221,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         datasetFlowType: MaybeNull<FlowsSelectedCategory>,
     ): MaybeNull<FlowProcessTypeFilterInput> {
         if (webhookId) {
+            this.selectedCategory = null;
             return {
                 primary: undefined,
                 webhooks: { subscriptionIds: [webhookId] },

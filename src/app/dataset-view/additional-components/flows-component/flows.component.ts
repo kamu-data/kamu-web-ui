@@ -17,7 +17,7 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { combineLatest, map, Observable, Subject, switchMap, take, timer } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { DatasetOverviewTabData, DatasetViewTypeEnum, FlowsSelectedCategory } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { environment } from "src/environments/environment";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
@@ -104,7 +104,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         this.selectedWebhookFilterButton = value;
     }
 
-    public selectedCategory: MaybeNull<DatasetFlowType> = null;
+    public selectedCategory: MaybeNull<FlowsSelectedCategory>;
 
     private stopFetchingTableData$ = new Subject<void>();
 
@@ -212,7 +212,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     private setProcessTypeFilter(
         webhookId: MaybeUndefined<string>,
-        datasetFlowType: MaybeNull<DatasetFlowType>,
+        datasetFlowType: MaybeNull<FlowsSelectedCategory>,
     ): MaybeNull<FlowProcessTypeFilterInput> {
         if (webhookId) {
             return {
@@ -220,9 +220,9 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                 webhooks: { subscriptionIds: [webhookId] },
             };
         }
-        if (datasetFlowType) {
+        if (datasetFlowType && datasetFlowType !== "ALL") {
             return {
-                primary: { byFlowTypes: [datasetFlowType] },
+                primary: { byFlowTypes: [this.isRoot ? DatasetFlowType.Ingest : DatasetFlowType.ExecuteTransform] },
                 webhooks: undefined,
             };
         } else {

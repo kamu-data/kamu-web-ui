@@ -27,3 +27,5 @@ export interface DatasetViewData {
 export interface DatasetOverviewTabData extends DatasetViewData {
     overviewUpdate: OverviewUpdate;
 }
+
+export type FlowsSelectedCategory = "ALL" | "UPDATES_ONLY";

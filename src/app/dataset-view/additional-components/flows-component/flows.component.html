@@ -155,12 +155,9 @@
                             </div>
                         </div>
                         <div class="mt-4">
-                            <mat-chip-listbox [(ngModel)]="selectedCategory" (selectionChange)="onSelectionChange()">
-                                <mat-chip-option [value]="null">All flows</mat-chip-option>
-                                <mat-chip-option
-                                    [value]="isRoot ? DatasetFlowType.Ingest : DatasetFlowType.ExecuteTransform"
-                                    >Updates only</mat-chip-option
-                                >
+                            <mat-chip-listbox [(ngModel)]="selectedCategory" (change)="onSelectionChange()">
+                                <mat-chip-option [value]="'ALL'">All flows</mat-chip-option>
+                                <mat-chip-option [value]="'UPDATES_ONLY'">Updates only</mat-chip-option>
                             </mat-chip-listbox>
                         </div>
                         <div class="mt-4" *ngIf="flowConnectionData.flowsProcesses.webhooks.rollup.total">

@@ -19,7 +19,12 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { combineLatest, map, Observable, Subject, switchMap, take, timer } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import { DatasetOverviewTabData, DatasetViewTypeEnum, FlowsSelectedCategory } from "../../dataset-view.interface";
+import {
+    DatasetOverviewTabData,
+    DatasetViewTypeEnum,
+    FlowsSelectedCategory,
+    WebhooksSelectedCategory,
+} from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { environment } from "src/environments/environment";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
@@ -106,7 +111,8 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         this.selectedWebhookFilterButton = value;
     }
 
-    public selectedCategory: MaybeNull<FlowsSelectedCategory>;
+    public selectedFlowsCategory: MaybeNull<FlowsSelectedCategory> = "ALL";
+    public selectedWebhooksCategory: MaybeNull<WebhooksSelectedCategory> = null;
 
     private stopFetchingTableData$ = new Subject<void>();
 
@@ -202,7 +208,11 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                         filters: {
                             byStatus: filterByStatus,
                             byInitiator: filterByInitiator,
-                            byProcessType: this.setProcessTypeFilter(this.webhookId, this.selectedCategory),
+                            byProcessType: this.setProcessTypeFilter(
+                                this.webhookId,
+                                this.selectedFlowsCategory,
+                                this.selectedWebhooksCategory,
+                            ),
                         },
                     }),
                     this.flowsService.allFlowsPaused(this.flowsData.datasetBasics.id),
@@ -218,21 +228,30 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     private setProcessTypeFilter(
         webhookId: MaybeUndefined<string>,
-        datasetFlowType: MaybeNull<FlowsSelectedCategory>,
+        datasetFlowFilter: MaybeNull<FlowsSelectedCategory>,
+        webhooksFilter: MaybeNull<WebhooksSelectedCategory>,
     ): MaybeNull<FlowProcessTypeFilterInput> {
+        if (webhooksFilter === "WEBHOOKS") {
+            this.selectedFlowsCategory = null;
+            return {
+                primary: undefined,
+                webhooks: { subscriptionIds: [] },
+            };
+        }
         if (webhookId) {
-            this.selectedCategory = null;
+            this.selectedFlowsCategory = null;
             return {
                 primary: undefined,
                 webhooks: { subscriptionIds: [webhookId] },
             };
         }
-        if (datasetFlowType && datasetFlowType !== "ALL") {
+        if (datasetFlowFilter && datasetFlowFilter !== "ALL") {
             return {
                 primary: { byFlowTypes: [this.isRoot ? DatasetFlowType.Ingest : DatasetFlowType.ExecuteTransform] },
                 webhooks: undefined,
             };
         } else {
+            this.selectedWebhooksCategory = null;
             return null;
         }
     }

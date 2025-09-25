@@ -10,7 +10,6 @@ import {
     FlowStatus,
     FlowSummaryDataFragment,
     FlowTimingRecords,
-    FlowTriggerBatchingRuleBuffering,
 } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 import AppValues from "src/app/common/values/app.values";
@@ -369,7 +368,11 @@ export class FlowTableHelpers {
                 return "waiting for a throttling condition";
 
             case "FlowStartConditionReactive":
-                return `waiting for input data: ${startCondition.accumulatedRecordsCount}/${(startCondition.activeBatchingRule as FlowTriggerBatchingRuleBuffering).minRecordsToAwait}`;
+                if (startCondition.activeBatchingRule.__typename === "FlowTriggerBatchingRuleBuffering") {
+                    return `waiting for input data: ${startCondition.accumulatedRecordsCount}/${startCondition.activeBatchingRule.minRecordsToAwait}`;
+                } else {
+                    return `${startCondition.accumulatedRecordsCount} input records received`;
+                }
 
             case "FlowStartConditionExecutor": {
                 return "waiting for a free executor";

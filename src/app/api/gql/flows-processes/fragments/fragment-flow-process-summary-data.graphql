@@ -1,0 +1,16 @@
+fragment FlowProcessSummaryData on FlowProcessSummary {
+  effectiveState
+  consecutiveFailures
+  lastSuccessAt
+  lastAttemptAt
+  lastFailureAt
+  nextPlannedAt
+  stopPolicy {
+    ... on FlowTriggerStopPolicyNever {
+      dummy
+    }
+    ... on FlowTriggerStopPolicyAfterConsecutiveFailures {
+      maxFailures
+    }
+  }
+}

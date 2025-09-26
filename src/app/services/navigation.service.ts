@@ -116,6 +116,7 @@ export class NavigationService {
                     queryParams: {
                         page: params.page === 1 ? undefined : params.page,
                         sqlQuery: params.sqlQuery,
+                        webhookId: params.webhookId,
                     },
                     state: params.state,
                 },

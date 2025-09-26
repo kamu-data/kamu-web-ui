@@ -68,6 +68,10 @@ type Account {
 	Access to the flow configurations of this account
 	"""
 	accessTokens: AccountAccessTokens!
+	"""
+	Returns datasets belonging to this account
+	"""
+	ownedDatasets(page: Int, perPage: Int): DatasetConnection!
 }
 
 type AccountAccessTokens {
@@ -113,10 +117,40 @@ type AccountFieldNonUnique implements CreateAccountResult {
 }
 
 input AccountFlowFilters {
-	byFlowType: DatasetFlowType
 	byStatus: FlowStatus
 	byInitiator: InitiatorFilterInput
 	byDatasetIds: [DatasetID!]!
+	byProcessType: FlowProcessTypeFilterInput
+}
+
+type AccountFlowProcessDatasetCard {
+	dataset: Dataset!
+	primary: FlowProcess!
+}
+
+type AccountFlowProcessDatasetCardConnection {
+	"""
+	A shorthand for `edges { node { ... } }`
+	"""
+	nodes: [AccountFlowProcessDatasetCard!]!
+	"""
+	Approximate number of total nodes
+	"""
+	totalCount: Int!
+	"""
+	Page information
+	"""
+	pageInfo: PageBasedInfo!
+	edges: [AccountFlowProcessDatasetCardEdge!]!
+}
+
+type AccountFlowProcessDatasetCardEdge {
+	node: AccountFlowProcessDatasetCard!
+}
+
+type AccountFlowProcesses {
+	primaryRollup: FlowProcessGroupRollup!
+	datasetCards(filters: FlowProcessFilters, ordering: FlowProcessOrdering, page: Int, perPage: Int): AccountFlowProcessDatasetCardConnection!
 }
 
 type AccountFlowRuns {
@@ -138,6 +172,10 @@ type AccountFlowTriggersMut {
 
 type AccountFlows {
 	"""
+	Returns interface for flow processes summary queries
+	"""
+	processes: AccountFlowProcesses!
+	"""
 	Returns interface for flow runs queries
 	"""
 	runs: AccountFlowRuns!
@@ -158,6 +196,10 @@ input AccountLookupFilter {
 }
 
 type AccountMut {
+	"""
+	Convert to read-only accessor to an account
+	"""
+	account: Account!
 	"""
 	Update account name
 	"""
@@ -230,24 +272,68 @@ type AccountWithRoleEdge {
 
 type Accounts {
 	"""
-	Returns account by its ID
+	Returns the account that is making the call (authorized subject)
+	"""
+	me: Account!
+	"""
+	Returns an account by its ID, if found
 	"""
 	byId(accountId: AccountID!): Account
 	"""
-	Returns account by its name
+	Returns accounts by their IDs
+	"""
+	byIds(		accountIds: [AccountID!]!,
+		"""
+		Whether to skip unresolved accounts or return an error if one or more are missing
+		"""
+		skipMissing: Boolean!
+	): [Account!]!
+	"""
+	Returns an account by its name, if found
 	"""
 	byName(name: AccountName!): Account
+	"""
+	Returns accounts by their names
+	"""
+	byNames(		accountNames: [AccountName!]!,
+		"""
+		Whether to skip unresolved accounts or return an error if one or more are missing
+		"""
+		skipMissing: Boolean!
+	): [Account!]!
 }
 
 type AccountsMut {
+	"""
+	Returns the mutable account that is making the call (authorized subject)
+	"""
+	me: AccountMut!
 	"""
 	Returns a mutable account by its id
 	"""
 	byId(accountId: AccountID!): AccountMut
 	"""
+	Returns mutable accounts by their IDs
+	"""
+	byIds(		accountIds: [AccountID!]!,
+		"""
+		Whether to skip unresolved accounts or return an error if one or more are missing
+		"""
+		skipMissing: Boolean!
+	): [AccountMut!]!
+	"""
 	Returns a mutable account by its name
 	"""
 	byName(accountName: AccountName!): AccountMut
+	"""
+	Returns accounts by their names
+	"""
+	byNames(		accountNames: [AccountName!]!,
+		"""
+		Whether to skip unresolved accounts or return an error if one or more are missing
+		"""
+		skipMissing: Boolean!
+	): [AccountMut!]!
 	"""
 	Create a new account
 	"""
@@ -298,6 +384,10 @@ type AddData {
 	when resuming.
 	"""
 	newSourceState: SourceState
+	"""
+	ODF extensions.
+	"""
+	extra: ExtraAttributes
 }
 
 """
@@ -371,6 +461,7 @@ type AttachmentsEmbedded {
 
 type Auth {
 	enabledProviders: [AccountProvider!]!
+	relations(accountIds: [AccountID!]!, page: Int, perPage: Int): AuthRelationConnection!
 }
 
 type AuthMut {
@@ -380,6 +471,32 @@ type AuthMut {
 	web3: AuthWeb3Mut!
 	login(loginMethod: AccountProvider!, loginCredentialsJson: String!, deviceCode: DeviceCode): LoginResponse!
 	accountDetails(accessToken: String!): Account!
+}
+
+type AuthRelation {
+	account: Account!
+	role: DatasetAccessRole!
+	dataset: Dataset!
+}
+
+type AuthRelationConnection {
+	"""
+	A shorthand for `edges { node { ... } }`
+	"""
+	nodes: [AuthRelation!]!
+	"""
+	Approximate number of total nodes
+	"""
+	totalCount: Int!
+	"""
+	Page information
+	"""
+	pageInfo: PageBasedInfo!
+	edges: [AuthRelationEdge!]!
+}
+
+type AuthRelationEdge {
+	node: AuthRelation!
 }
 
 type AuthWeb3Mut {
@@ -646,16 +763,19 @@ input ColumnInput {
 }
 
 interface CommitResult {
+	isSuccess: Boolean!
 	message: String!
 }
 
 type CommitResultAppendError implements CommitResult & UpdateReadmeResult {
 	message: String!
+	isSuccess: Boolean!
 }
 
 type CommitResultSuccess implements CommitResult & UpdateReadmeResult {
 	oldHead: Multihash
 	newHead: Multihash!
+	isSuccess: Boolean!
 	message: String!
 }
 
@@ -847,9 +967,11 @@ type DataSchema {
 }
 
 enum DataSchemaFormat {
+	ARROW_JSON
+	ODF_JSON
+	ODF_YAML
 	PARQUET
 	PARQUET_JSON
-	ARROW_JSON
 }
 
 """
@@ -985,6 +1107,11 @@ enum DatasetAccessRole {
 
 scalar DatasetAlias
 
+enum DatasetArchetype {
+	COLLECTION
+	VERSIONED_FILE
+}
+
 type DatasetCollaboration {
 	"""
 	Accounts (and their roles) that have access to the dataset
@@ -1099,9 +1226,14 @@ type DatasetFlowConfigsMut {
 }
 
 input DatasetFlowFilters {
-	byFlowType: DatasetFlowType
 	byStatus: FlowStatus
 	byInitiator: InitiatorFilterInput
+	byProcessType: FlowProcessTypeFilterInput
+}
+
+type DatasetFlowProcesses {
+	primary: FlowProcess
+	webhooks: WebhookFlowSubProcessGroup!
 }
 
 type DatasetFlowRuns {
@@ -1159,6 +1291,10 @@ type DatasetFlows {
 	Returns interface for flow runs queries
 	"""
 	runs: DatasetFlowRuns!
+	"""
+	Returns interface for flow processes queries
+	"""
+	processes: DatasetFlowProcesses!
 }
 
 type DatasetFlowsMut {
@@ -1245,6 +1381,11 @@ type DatasetMetadata {
 	"""
 	currentVocab: SetVocab
 	metadataProjection(eventTypes: [MetadataEventType!]!, head: Multihash): [MetadataBlockExtended!]!
+	"""
+	Experimental: Current archetype as per `kamu.dev/archetype` annotation,
+	if any
+	"""
+	currentArchetype: DatasetArchetype
 }
 
 type DatasetMetadataMut {
@@ -1263,6 +1404,10 @@ type DatasetMetadataPermissions {
 }
 
 type DatasetMut {
+	"""
+	Convert to read-only accessor to a dataset
+	"""
+	dataset: Dataset!
 	"""
 	Access to the mutable metadata of the dataset
 	"""
@@ -1400,9 +1545,31 @@ type DatasetWebhooksPermissions {
 
 type Datasets {
 	"""
-	Returns dataset by its ID
+	Returns a dataset by its ID, if found
 	"""
 	byId(datasetId: DatasetID!): Dataset
+	"""
+	Returns multiple datasets by their IDs
+	"""
+	byIds(		datasetIds: [DatasetID!]!,
+		"""
+		Whether to skip unresolved datasets or return an error if one or more are missing
+		"""
+		skipMissing: Boolean!
+	): [Dataset!]!
+	"""
+	Returns a dataset by a ID or alias, if found
+	"""
+	byRef(datasetRef: DatasetRef!): Dataset
+	"""
+	Returns multiple datasets by their IDs or aliases
+	"""
+	byRefs(		datasetRefs: [DatasetRef!]!,
+		"""
+		Whether to skip unresolved datasets or return an error if one or more are missing
+		"""
+		skipMissing: Boolean!
+	): [Dataset!]!
 	"""
 	Returns dataset by its owner and name
 	"""
@@ -1419,9 +1586,18 @@ type Datasets {
 
 type DatasetsMut {
 	"""
-	Returns a mutable dataset by its ID
+	Returns a mutable dataset by its ID, if found
 	"""
 	byId(datasetId: DatasetID!): DatasetMut
+	"""
+	Returns mutable datasets by their IDs
+	"""
+	byIds(		datasetIds: [DatasetID!]!,
+		"""
+		Whether to skip unresolved datasets or return an error if one or more are missing
+		"""
+		skipMissing: Boolean!
+	): [DatasetMut!]!
 	"""
 	Creates a new empty dataset
 	"""
@@ -1748,6 +1924,8 @@ type ExecuteTransformInput {
 	"""
 	newOffset: Int
 }
+
+scalar ExtraAttributes
 
 scalar ExtraData
 
@@ -2248,6 +2426,114 @@ union FlowOutcome = FlowSuccessResult | FlowFailedError | FlowAbortedResult
 type FlowPreconditionsNotMet implements SetFlowConfigResult & TriggerFlowResult & SetFlowTriggerResult {
 	preconditions: String!
 	message: String!
+}
+
+type FlowProcess {
+	flowType: DatasetFlowType!
+	summary: FlowProcessSummary!
+}
+
+enum FlowProcessEffectiveState {
+	ACTIVE
+	FAILING
+	PAUSED_MANUAL
+	STOPPED_AUTO
+}
+
+input FlowProcessFilters {
+	"""
+	State filter
+	"""
+	effectiveStateIn: [FlowProcessEffectiveState!]
+	"""
+	All processes with last attempt between these times, inclusive
+	"""
+	lastAttemptBetween: FlowProcessFiltersTimeRange
+	"""
+	All processes with last failure since this time, inclusive
+	"""
+	lastFailureSince: DateTime
+	"""
+	All processes with next planned before this time, inclusive
+	"""
+	nextPlannedBefore: DateTime
+	"""
+	All processes with next planned after this time, inclusive
+	"""
+	nextPlannedAfter: DateTime
+	"""
+	Minimum number of consecutive failures
+	"""
+	minConsecutiveFailures: Int
+}
+
+input FlowProcessFiltersTimeRange {
+	start: DateTime!
+	end: DateTime!
+}
+
+type FlowProcessGroupRollup {
+	total: Int!
+	active: Int!
+	failing: Int!
+	paused: Int!
+	stopped: Int!
+	worstConsecutiveFailures: Int!
+}
+
+enum FlowProcessOrderField {
+	"""
+	Default for “recent activity”.
+	"""
+	LAST_ATTEMPT_AT
+	"""
+	“What’s next”
+	"""
+	NEXT_PLANNED_AT
+	"""
+	Triage hot spots.
+	"""
+	LAST_FAILURE_AT
+	"""
+	Chronic issues first.
+	"""
+	CONSECUTIVE_FAILURES
+	"""
+	Severity bucketing
+	"""
+	EFFECTIVE_STATE
+	"""
+	By flow type
+	"""
+	FLOW_TYPE
+}
+
+input FlowProcessOrdering {
+	field: FlowProcessOrderField!
+	direction: OrderingDirection!
+}
+
+type FlowProcessSummary {
+	effectiveState: FlowProcessEffectiveState!
+	consecutiveFailures: Int!
+	stopPolicy: FlowTriggerStopPolicy!
+	lastSuccessAt: DateTime
+	lastAttemptAt: DateTime
+	lastFailureAt: DateTime
+	nextPlannedAt: DateTime
+}
+
+input FlowProcessTypeFilterInput @oneOf {
+	primary: FlowProcessTypePrimaryFilterInput
+	webhooks: FlowProcessTypeWebhooksFilterInput
+}
+
+input FlowProcessTypePrimaryFilterInput {
+	byFlowTypes: [DatasetFlowType!]
+}
+
+input FlowProcessTypeWebhooksFilterInput {
+	subscriptionIds: [WebhookSubscriptionID!]
 }
 
 enum FlowRetryBackoffType {
@@ -2767,6 +3053,7 @@ type NameLookupResultEdge {
 
 type NoChanges implements CommitResult & UpdateReadmeResult {
 	message: String!
+	isSuccess: Boolean!
 }
 
 type OdataProtocolDesc {
@@ -2788,6 +3075,11 @@ type OffsetInterval {
 	End of the closed interval [start; end].
 	"""
 	end: Int!
+}
+
+enum OrderingDirection {
+	ASC
+	DESC
 }
 
 type PageBasedInfo {
@@ -4117,6 +4409,17 @@ type WebSocketProtocolDesc {
 }
 
 scalar WebhookEventType
+
+type WebhookFlowSubProcess {
+	id: WebhookSubscriptionID!
+	name: String!
+	summary: FlowProcessSummary!
+}
+
+type WebhookFlowSubProcessGroup {
+	rollup: FlowProcessGroupRollup!
+	subprocesses: [WebhookFlowSubProcess!]!
+}
 
 type WebhookSubscription {
 	"""

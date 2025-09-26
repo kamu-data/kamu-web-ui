@@ -5,11 +5,26 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { DatasetKind, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
-import { combineLatest, map, Observable, switchMap, take, timer } from "rxjs";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import {
+    DatasetFlowProcesses,
+    DatasetFlowType,
+    DatasetKind,
+    FlowProcessEffectiveState,
+    FlowProcessTypeFilterInput,
+    FlowStatus,
+    FlowTriggerStopPolicy,
+    FlowTriggerStopPolicyAfterConsecutiveFailures,
+    InitiatorFilterInput,
+} from "src/app/api/kamu.graphql.interface";
+import { combineLatest, map, Observable, Subject, switchMap, take, timer } from "rxjs";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
+import {
+    DatasetOverviewTabData,
+    DatasetViewTypeEnum,
+    FlowsSelectedCategory,
+    WebhooksSelectedCategory,
+} from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { environment } from "src/environments/environment";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
@@ -25,7 +40,14 @@ import { RouterLink } from "@angular/router";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { NgIf, AsyncPipe, DatePipe } from "@angular/common";
+import AppValues from "src/app/common/values/app.values";
+import { MatTableModule } from "@angular/material/table";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { SubprocessStatusFilterPipe } from "./pipes/subprocess-status-filter.pipe";
+import { DatasetWebhooksService } from "../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
+import { MatChipsModule } from "@angular/material/chips";
+import { FormsModule } from "@angular/forms";
 
 @Component({
     selector: "app-flows",
@@ -36,30 +58,63 @@ import { NgIf, AsyncPipe } from "@angular/common";
     imports: [
         //-----//
         AsyncPipe,
+        DatePipe,
+        FormsModule,
         NgIf,
         RouterLink,
 
         //-----//
         MatMenuModule,
         MatIconModule,
+        MatTableModule,
         MatDividerModule,
         MatProgressBarModule,
+        MatButtonToggleModule,
+        MatChipsModule,
 
         //-----//
         FlowsTableComponent,
         TileBaseWidgetComponent,
         PaginationComponent,
+        SubprocessStatusFilterPipe,
     ],
 })
 export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_FLOWS_KEY) public flowsData: DatasetOverviewTabData;
+    @Input(ProjectLinks.URL_QUERY_PARAM_WEBHOOK_ID) public webhookId: MaybeUndefined<string>;
 
     public searchFilter = "";
+    private datasetWebhooksService = inject(DatasetWebhooksService);
+
+    public flowsProcesses$: Observable<DatasetFlowProcesses>;
+    public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
+
     public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"]; //1
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
     public readonly SettingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
     public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
+    public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
     public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
+    public readonly DatasetFlowType: typeof DatasetFlowType = DatasetFlowType;
+
+    public readonly SUBSCRIPTIONS_DISPLAY_COLUMNS: string[] = [
+        "subscription",
+        "status",
+        "consecutive_failures",
+        "options",
+    ];
+    public showSubprocessesTable: boolean = false;
+
+    public selectedWebhookFilterButton: MaybeNull<FlowProcessEffectiveState> = null;
+
+    public setWebhookFilterButton(value: MaybeNull<FlowProcessEffectiveState>) {
+        this.selectedWebhookFilterButton = value;
+    }
+
+    public selectedFlowsCategory: MaybeNull<FlowsSelectedCategory> = "ALL";
+    public selectedWebhooksCategory: MaybeNull<WebhooksSelectedCategory> = null;
+
+    private stopFetchingTableData$ = new Subject<void>();
 
     public ngOnInit(): void {
         this.getPageFromUrl();
@@ -70,6 +125,71 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         return this.flowsData.datasetBasics.kind === DatasetKind.Root
             ? SettingsTabsEnum.SCHEDULING
             : SettingsTabsEnum.TRANSFORM_SETTINGS;
+    }
+
+    public maxFailures(policy: FlowTriggerStopPolicy): number {
+        return (policy as FlowTriggerStopPolicyAfterConsecutiveFailures).maxFailures;
+    }
+
+    public viewFlows(): void {
+        this.stopFetchingTableData$.next();
+        this.navigationService.navigateToDatasetView({
+            accountName: this.flowsData.datasetBasics.owner.accountName,
+            datasetName: this.flowsData.datasetBasics.name,
+            tab: DatasetViewTypeEnum.Flows,
+        });
+        this.fetchTableData(this.currentPage);
+    }
+
+    public navigatoToSubscription(subscriptionId: string): void {
+        this.stopFetchingTableData$.next();
+        this.navigationService.navigateToDatasetView({
+            accountName: this.flowsData.datasetBasics.owner.accountName,
+            datasetName: this.flowsData.datasetBasics.name,
+            tab: DatasetViewTypeEnum.Flows,
+            webhookId: subscriptionId,
+        });
+        this.fetchTableData(this.currentPage);
+    }
+
+    public pauseWebhook(subscriptionId: string): void {
+        this.datasetWebhooksService
+            .datasetWebhookPauseSubscription(this.flowsData.datasetBasics.id, subscriptionId)
+            .pipe(take(1))
+            .subscribe((result: boolean) => {
+                if (result) {
+                    setTimeout(() => {
+                        this.stopFetchingTableData$.next();
+                        this.navigationService.navigateToDatasetView({
+                            accountName: this.flowsData.datasetBasics.owner.accountName,
+                            datasetName: this.flowsData.datasetBasics.name,
+                            tab: DatasetViewTypeEnum.Flows,
+                            webhookId: this.webhookId ? this.webhookId : undefined,
+                        });
+                        this.fetchTableData(this.currentPage);
+                    }, 2000);
+                }
+            });
+    }
+
+    public resumeWebhook(subscriptionId: string): void {
+        this.datasetWebhooksService
+            .datasetWebhookResumeSubscription(this.flowsData.datasetBasics.id, subscriptionId)
+            .pipe(take(1))
+            .subscribe((result: boolean) => {
+                if (result) {
+                    setTimeout(() => {
+                        this.stopFetchingTableData$.next();
+                        this.navigationService.navigateToDatasetView({
+                            accountName: this.flowsData.datasetBasics.owner.accountName,
+                            datasetName: this.flowsData.datasetBasics.name,
+                            tab: DatasetViewTypeEnum.Flows,
+                            webhookId: this.webhookId ? this.webhookId : undefined,
+                        });
+                        this.fetchTableData(this.currentPage);
+                    }, 2000);
+                }
+            });
     }
 
     public fetchTableData(
@@ -85,16 +205,71 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                         page: page - 1,
                         perPageTable: this.TABLE_FLOW_RUNS_PER_PAGE,
                         perPageTiles: this.WIDGET_FLOW_RUNS_PER_PAGE,
-                        filters: { byStatus: filterByStatus, byInitiator: filterByInitiator },
+                        filters: {
+                            byStatus: filterByStatus,
+                            byInitiator: filterByInitiator,
+                            byProcessType: this.setProcessTypeFilter(
+                                this.webhookId,
+                                this.selectedFlowsCategory,
+                                this.selectedWebhooksCategory,
+                            ),
+                        },
                     }),
                     this.flowsService.allFlowsPaused(this.flowsData.datasetBasics.id),
                     this.flowsService.flowsInitiators(this.flowsData.datasetBasics.id),
+                    this.flowsService.datasetFlowsProcesses({ datasetId: this.flowsData.datasetBasics.id }),
                 ]),
             ),
-            map(([flowsData, allFlowsPaused, flowInitiators]) => {
-                return { flowsData, allFlowsPaused, flowInitiators };
+            map(([flowsData, allFlowsPaused, flowInitiators, flowsProcesses]) => {
+                return { flowsData, allFlowsPaused, flowInitiators, flowsProcesses };
             }),
         );
+    }
+
+    private setProcessTypeFilter(
+        webhookId: MaybeUndefined<string>,
+        datasetFlowFilter: MaybeNull<FlowsSelectedCategory>,
+        webhooksFilter: MaybeNull<WebhooksSelectedCategory>,
+    ): MaybeNull<FlowProcessTypeFilterInput> {
+        if (webhookId) {
+            this.selectedFlowsCategory = null;
+            this.selectedWebhooksCategory = null;
+            return {
+                primary: undefined,
+                webhooks: { subscriptionIds: [webhookId] },
+            };
+        }
+        if (webhooksFilter === "WEBHOOKS") {
+            return {
+                primary: undefined,
+                webhooks: { subscriptionIds: [] },
+            };
+        }
+        if (datasetFlowFilter === "UPDATES_ONLY") {
+            return {
+                primary: { byFlowTypes: [this.isRoot ? DatasetFlowType.Ingest : DatasetFlowType.ExecuteTransform] },
+                webhooks: undefined,
+            };
+        }
+        return null;
+    }
+
+    public onSelectionFlowsChange(): void {
+        this.selectedWebhooksCategory = null;
+        this.viewFlows();
+    }
+
+    public onSelectionWebhooksChange(): void {
+        this.selectedFlowsCategory = null;
+        this.viewFlows();
+    }
+
+    public toggleSubprocessesTable(): void {
+        this.showSubprocessesTable = !this.showSubprocessesTable;
+    }
+
+    public get isRoot(): boolean {
+        return this.flowsData.datasetBasics.kind === DatasetKind.Root;
     }
 
     public get isSetPollingSourceEmpty(): boolean {

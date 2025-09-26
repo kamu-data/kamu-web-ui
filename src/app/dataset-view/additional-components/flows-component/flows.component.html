@@ -233,7 +233,7 @@
                             </div>
                         </div>
                         <div class="mt-4">
-                            <mat-chip-listbox [(ngModel)]="selectedFlowsCategory" (change)="onSelectionChange()">
+                            <mat-chip-listbox [(ngModel)]="selectedFlowsCategory" (change)="onSelectionFlowsChange()">
                                 <mat-chip-option [value]="'ALL'">All flows</mat-chip-option>
                                 <mat-chip-option [value]="'UPDATES_ONLY'">Updates only</mat-chip-option>
                             </mat-chip-listbox>
@@ -247,7 +247,7 @@
                                     <mat-chip-listbox
                                         class="ms-2"
                                         [(ngModel)]="selectedWebhooksCategory"
-                                        (change)="onSelectionChange()"
+                                        (change)="onSelectionWebhooksChange()"
                                     >
                                         <mat-chip-option [value]="'WEBHOOKS'"> Webhooks</mat-chip-option>
                                     </mat-chip-listbox>
@@ -258,6 +258,7 @@
                                             [class.selected-group-button]="selectedWebhookFilterButton === null"
                                             type="button"
                                             class="btn btn-outline-secondary"
+                                            [disabled]="!showSubprocessesTable"
                                         >
                                             total: {{ flowConnectionData.flowsProcesses.webhooks.rollup.total }}
                                         </button>
@@ -268,6 +269,7 @@
                                             "
                                             type="button"
                                             class="btn btn-outline-secondary"
+                                            [disabled]="!showSubprocessesTable"
                                         >
                                             active: {{ flowConnectionData.flowsProcesses.webhooks.rollup.active }}
                                         </button>
@@ -278,6 +280,7 @@
                                             "
                                             type="button"
                                             class="btn btn-outline-secondary"
+                                            [disabled]="!showSubprocessesTable"
                                         >
                                             failing: {{ flowConnectionData.flowsProcesses.webhooks.rollup.failing }}
                                         </button>
@@ -288,6 +291,7 @@
                                             "
                                             type="button"
                                             class="btn btn-outline-secondary"
+                                            [disabled]="!showSubprocessesTable"
                                         >
                                             paused: {{ flowConnectionData.flowsProcesses.webhooks.rollup.paused }}
                                         </button>
@@ -298,6 +302,7 @@
                                             "
                                             type="button"
                                             class="btn btn-outline-secondary"
+                                            [disabled]="!showSubprocessesTable"
                                         >
                                             stopped: {{ flowConnectionData.flowsProcesses.webhooks.rollup.stopped }}
                                         </button>

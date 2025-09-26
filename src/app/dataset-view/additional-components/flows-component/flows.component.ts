@@ -231,32 +231,36 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         datasetFlowFilter: MaybeNull<FlowsSelectedCategory>,
         webhooksFilter: MaybeNull<WebhooksSelectedCategory>,
     ): MaybeNull<FlowProcessTypeFilterInput> {
-        if (webhooksFilter === "WEBHOOKS") {
-            this.selectedFlowsCategory = null;
-            return {
-                primary: undefined,
-                webhooks: { subscriptionIds: [] },
-            };
-        }
         if (webhookId) {
             this.selectedFlowsCategory = null;
+            this.selectedWebhooksCategory = null;
             return {
                 primary: undefined,
                 webhooks: { subscriptionIds: [webhookId] },
             };
         }
-        if (datasetFlowFilter && datasetFlowFilter !== "ALL") {
+        if (webhooksFilter === "WEBHOOKS") {
+            return {
+                primary: undefined,
+                webhooks: { subscriptionIds: [] },
+            };
+        }
+        if (datasetFlowFilter === "UPDATES_ONLY") {
             return {
                 primary: { byFlowTypes: [this.isRoot ? DatasetFlowType.Ingest : DatasetFlowType.ExecuteTransform] },
                 webhooks: undefined,
             };
-        } else {
-            this.selectedWebhooksCategory = null;
-            return null;
         }
+        return null;
     }
 
-    public onSelectionChange(): void {
+    public onSelectionFlowsChange(): void {
+        this.selectedWebhooksCategory = null;
+        this.viewFlows();
+    }
+
+    public onSelectionWebhooksChange(): void {
+        this.selectedFlowsCategory = null;
         this.viewFlows();
     }
 

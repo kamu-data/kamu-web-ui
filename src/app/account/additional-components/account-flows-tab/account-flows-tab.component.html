@@ -47,6 +47,7 @@
                 [tableOptions]="{
                     displayColumns: DISPLAY_COLUMNS,
                 }"
+                [totalCount]="flowConnectionData.flowsData.connectionDataForTable.totalCount"
                 [accountFlowInitiators]="flowConnectionData.flowInitiators"
                 [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
                 (searchByFiltersChange)="onSearchByFiltersChange($event)"

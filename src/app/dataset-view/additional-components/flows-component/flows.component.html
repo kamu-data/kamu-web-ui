@@ -432,6 +432,7 @@
                     [tableOptions]="{
                         displayColumns: DISPLAY_COLUMNS,
                     }"
+                    [totalCount]="flowConnectionData.flowsData.connectionDataForTable.totalCount"
                     (searchByFiltersChange)="onSearchByFiltersChange($event)"
                     (abortFlowChange)="onAbortFlow($event)"
                 />

@@ -94,6 +94,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     @Input({ required: true }) public tableOptions: FlowsTableOptions;
     @Input({ required: true }) public accountFlowInitiators: AccountFragment[];
     @Input({ required: true }) public involvedDatasets: DatasetBasicsFragment[];
+    @Input({ required: true }) public totalCount: number;
 
     @Output() public filterByStatusChange = new EventEmitter<MaybeNull<FlowStatus>>();
     @Output() public searchByFiltersChange = new EventEmitter<MaybeNull<FlowsTableFiltersOptions>>();

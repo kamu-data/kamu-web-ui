@@ -70,3 +70,10 @@ export const WEBHOOKS_FILTERS_ITEMS: WebhooksFiltersDescriptor[] = [
         valueKey: "stopped",
     },
 ];
+
+export const webhooksStateMapper: Record<FlowProcessEffectiveState, string> = {
+    [FlowProcessEffectiveState.Active]: "ACTIVE",
+    [FlowProcessEffectiveState.Failing]: "FAILING",
+    [FlowProcessEffectiveState.PausedManual]: "PAUSED",
+    [FlowProcessEffectiveState.StoppedAuto]: "STOPPED",
+};

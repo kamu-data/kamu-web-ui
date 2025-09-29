@@ -26,6 +26,7 @@ import {
     WEBHOOKS_FILTERS_ITEMS,
     WebhooksFiltersDescriptor,
     WebhooksSelectedCategory,
+    webhooksStateMapper,
 } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { environment } from "src/environments/environment";
@@ -356,5 +357,9 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             this.searchByAccount = [];
         }
         this.searchByFilters(filters);
+    }
+
+    public webhooksStateMapper(state: FlowProcessEffectiveState): string {
+        return webhooksStateMapper[state];
     }
 }

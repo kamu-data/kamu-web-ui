@@ -5,7 +5,13 @@
  * included in the LICENSE file.
  */
 
-import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
+import {
+    DatasetBasicsFragment,
+    DatasetPermissionsFragment,
+    FlowProcessEffectiveState,
+    FlowProcessGroupRollup,
+} from "../api/kamu.graphql.interface";
+import { MaybeNull } from "../interface/app.types";
 import { OverviewUpdate } from "./dataset.subscriptions.interface";
 
 export enum DatasetViewTypeEnum {
@@ -30,3 +36,37 @@ export interface DatasetOverviewTabData extends DatasetViewData {
 
 export type FlowsSelectedCategory = "ALL" | "UPDATES_ONLY";
 export type WebhooksSelectedCategory = "WEBHOOKS";
+
+export interface WebhooksFiltersDescriptor {
+    label: string;
+    state: MaybeNull<FlowProcessEffectiveState>;
+    valueKey: keyof FlowProcessGroupRollup;
+}
+
+export const WEBHOOKS_FILTERS_ITEMS: WebhooksFiltersDescriptor[] = [
+    {
+        label: "total:",
+        state: null,
+        valueKey: "total",
+    },
+    {
+        label: "active:",
+        state: FlowProcessEffectiveState.Active,
+        valueKey: "active",
+    },
+    {
+        label: "failing:",
+        state: FlowProcessEffectiveState.Failing,
+        valueKey: "failing",
+    },
+    {
+        label: "paused:",
+        state: FlowProcessEffectiveState.PausedManual,
+        valueKey: "paused",
+    },
+    {
+        label: "stopped:",
+        state: FlowProcessEffectiveState.StoppedAuto,
+        valueKey: "stopped",
+    },
+];

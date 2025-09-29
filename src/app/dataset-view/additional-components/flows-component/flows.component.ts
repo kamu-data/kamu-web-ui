@@ -23,6 +23,8 @@ import {
     DatasetOverviewTabData,
     DatasetViewTypeEnum,
     FlowsSelectedCategory,
+    WEBHOOKS_FILTERS_ITEMS,
+    WebhooksFiltersDescriptor,
     WebhooksSelectedCategory,
 } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
@@ -40,7 +42,7 @@ import { RouterLink } from "@angular/router";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
-import { NgIf, AsyncPipe, DatePipe } from "@angular/common";
+import { NgIf, AsyncPipe, DatePipe, NgFor } from "@angular/common";
 import AppValues from "src/app/common/values/app.values";
 import { MatTableModule } from "@angular/material/table";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -61,6 +63,7 @@ import { FormsModule } from "@angular/forms";
         DatePipe,
         FormsModule,
         NgIf,
+        NgFor,
         RouterLink,
 
         //-----//
@@ -87,6 +90,11 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     private datasetWebhooksService = inject(DatasetWebhooksService);
 
     public flowsProcesses$: Observable<DatasetFlowProcesses>;
+    public selectedFlowsCategory: MaybeNull<FlowsSelectedCategory> = "ALL";
+    public selectedWebhooksCategory: MaybeNull<WebhooksSelectedCategory> = null;
+    public showSubprocessesTable: boolean = false;
+    public selectedWebhookFilterButton: MaybeNull<FlowProcessEffectiveState> = null;
+    private stopFetchingTableData$ = new Subject<void>();
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
 
     public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"]; //1
@@ -96,29 +104,21 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
     public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
     public readonly DatasetFlowType: typeof DatasetFlowType = DatasetFlowType;
-
     public readonly SUBSCRIPTIONS_DISPLAY_COLUMNS: string[] = [
         "subscription",
         "status",
         "consecutive_failures",
         "options",
     ];
-    public showSubprocessesTable: boolean = false;
-
-    public selectedWebhookFilterButton: MaybeNull<FlowProcessEffectiveState> = null;
-
-    public setWebhookFilterButton(value: MaybeNull<FlowProcessEffectiveState>) {
-        this.selectedWebhookFilterButton = value;
-    }
-
-    public selectedFlowsCategory: MaybeNull<FlowsSelectedCategory> = "ALL";
-    public selectedWebhooksCategory: MaybeNull<WebhooksSelectedCategory> = null;
-
-    private stopFetchingTableData$ = new Subject<void>();
+    public readonly WEBHOOKS_FILTERS_OPTIONS: WebhooksFiltersDescriptor[] = WEBHOOKS_FILTERS_ITEMS;
 
     public ngOnInit(): void {
         this.getPageFromUrl();
         this.fetchTableData(this.currentPage);
+    }
+
+    public setWebhookFilterButton(value: MaybeNull<FlowProcessEffectiveState>) {
+        this.selectedWebhookFilterButton = value;
     }
 
     public get redirectSection(): SettingsTabsEnum {

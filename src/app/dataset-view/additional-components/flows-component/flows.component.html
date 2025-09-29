@@ -253,59 +253,21 @@
                                     </mat-chip-listbox>
 
                                     <div class="btn-group" role="group">
-                                        <button
-                                            (click)="setWebhookFilterButton(null)"
-                                            [class.selected-group-button]="selectedWebhookFilterButton === null"
-                                            type="button"
-                                            class="btn btn-outline-secondary"
-                                            [disabled]="!showSubprocessesTable"
-                                        >
-                                            total: {{ flowConnectionData.flowsProcesses.webhooks.rollup.total }}
-                                        </button>
-                                        <button
-                                            (click)="setWebhookFilterButton(FlowProcessEffectiveState.Active)"
-                                            [class.selected-group-button]="
-                                                selectedWebhookFilterButton === FlowProcessEffectiveState.Active
-                                            "
-                                            type="button"
-                                            class="btn btn-outline-secondary"
-                                            [disabled]="!showSubprocessesTable"
-                                        >
-                                            active: {{ flowConnectionData.flowsProcesses.webhooks.rollup.active }}
-                                        </button>
-                                        <button
-                                            (click)="setWebhookFilterButton(FlowProcessEffectiveState.Failing)"
-                                            [class.selected-group-button]="
-                                                selectedWebhookFilterButton === FlowProcessEffectiveState.Failing
-                                            "
-                                            type="button"
-                                            class="btn btn-outline-secondary"
-                                            [disabled]="!showSubprocessesTable"
-                                        >
-                                            failing: {{ flowConnectionData.flowsProcesses.webhooks.rollup.failing }}
-                                        </button>
-                                        <button
-                                            (click)="setWebhookFilterButton(FlowProcessEffectiveState.PausedManual)"
-                                            [class.selected-group-button]="
-                                                selectedWebhookFilterButton === FlowProcessEffectiveState.PausedManual
-                                            "
-                                            type="button"
-                                            class="btn btn-outline-secondary"
-                                            [disabled]="!showSubprocessesTable"
-                                        >
-                                            paused: {{ flowConnectionData.flowsProcesses.webhooks.rollup.paused }}
-                                        </button>
-                                        <button
-                                            (click)="setWebhookFilterButton(FlowProcessEffectiveState.StoppedAuto)"
-                                            [class.selected-group-button]="
-                                                selectedWebhookFilterButton === FlowProcessEffectiveState.StoppedAuto
-                                            "
-                                            type="button"
-                                            class="btn btn-outline-secondary"
-                                            [disabled]="!showSubprocessesTable"
-                                        >
-                                            stopped: {{ flowConnectionData.flowsProcesses.webhooks.rollup.stopped }}
-                                        </button>
+                                        <ng-container *ngFor="let option of WEBHOOKS_FILTERS_OPTIONS">
+                                            <button
+                                                (click)="setWebhookFilterButton(option.state)"
+                                                [class.selected-group-button]="
+                                                    selectedWebhookFilterButton === option.state
+                                                "
+                                                type="button"
+                                                class="btn btn-outline-secondary"
+                                                [disabled]="!showSubprocessesTable"
+                                            >
+                                                {{ option.label }}
+                                                {{ flowConnectionData.flowsProcesses.webhooks.rollup[option.valueKey] }}
+                                            </button>
+                                        </ng-container>
+
                                         <button
                                             type="button"
                                             (click)="toggleSubprocessesTable()"

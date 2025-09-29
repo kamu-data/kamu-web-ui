@@ -13,4 +13,6 @@ fragment FlowProcessSummaryData on FlowProcessSummary {
       maxFailures
     }
   }
+  autoStoppedReason
+  autoStoppedAt
 }

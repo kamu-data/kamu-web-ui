@@ -2357,6 +2357,11 @@ type FlowEventActivationCauseAdded implements FlowEvent {
 	activationCause: FlowActivationCause!
 }
 
+type FlowEventCompleted implements FlowEvent {
+	eventId: EventID!
+	eventTime: DateTime!
+}
+
 type FlowEventInitiated implements FlowEvent {
 	eventId: EventID!
 	eventTime: DateTime!
@@ -2431,6 +2436,11 @@ type FlowPreconditionsNotMet implements SetFlowConfigResult & TriggerFlowResult 
 type FlowProcess {
 	flowType: DatasetFlowType!
 	summary: FlowProcessSummary!
+}
+
+enum FlowProcessAutoStopReason {
+	STOP_POLICY
+	UNRECOVERABLE_FAILURE
 }
 
 enum FlowProcessEffectiveState {
@@ -2521,6 +2531,8 @@ type FlowProcessSummary {
 	lastAttemptAt: DateTime
 	lastFailureAt: DateTime
 	nextPlannedAt: DateTime
+	autoStoppedReason: FlowProcessAutoStopReason
+	autoStoppedAt: DateTime
 }
 
 input FlowProcessTypeFilterInput @oneOf {
@@ -2612,10 +2624,13 @@ type FlowTimingRecords {
 	"""
 	runningSince: DateTime
 	"""
-	Recorded time of finish (successful or failed after retry) or abortion
-	(Finished state seen at least once)
+	Recorded time of finish of the latest task
 	"""
 	lastAttemptFinishedAt: DateTime
+	"""
+	Recorded time of flow completion (success or failure)
+	"""
+	completedAt: DateTime
 }
 
 type FlowTrigger {

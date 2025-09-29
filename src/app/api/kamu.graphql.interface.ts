@@ -2404,6 +2404,12 @@ export type FlowEventActivationCauseAdded = FlowEvent & {
     eventTime: Scalars["DateTime"];
 };
 
+export type FlowEventCompleted = FlowEvent & {
+    __typename?: "FlowEventCompleted";
+    eventId: Scalars["EventID"];
+    eventTime: Scalars["DateTime"];
+};
+
 export type FlowEventInitiated = FlowEvent & {
     __typename?: "FlowEventInitiated";
     activationCause: FlowActivationCause;
@@ -2496,6 +2502,11 @@ export type FlowProcess = {
     summary: FlowProcessSummary;
 };
 
+export enum FlowProcessAutoStopReason {
+    StopPolicy = "STOP_POLICY",
+    UnrecoverableFailure = "UNRECOVERABLE_FAILURE",
+}
+
 export enum FlowProcessEffectiveState {
     Active = "ACTIVE",
     Failing = "FAILING",
@@ -2555,6 +2566,8 @@ export type FlowProcessOrdering = {
 
 export type FlowProcessSummary = {
     __typename?: "FlowProcessSummary";
+    autoStoppedAt?: Maybe<Scalars["DateTime"]>;
+    autoStoppedReason?: Maybe<FlowProcessAutoStopReason>;
     consecutiveFailures: Scalars["Int"];
     effectiveState: FlowProcessEffectiveState;
     lastAttemptAt?: Maybe<Scalars["DateTime"]>;
@@ -2644,14 +2657,13 @@ export type FlowTimingRecords = {
     __typename?: "FlowTimingRecords";
     /** Recorded time of last task scheduling */
     awaitingExecutorSince?: Maybe<Scalars["DateTime"]>;
+    /** Recorded time of flow completion (success or failure) */
+    completedAt?: Maybe<Scalars["DateTime"]>;
     /** First scheduling time */
     firstAttemptScheduledAt?: Maybe<Scalars["DateTime"]>;
     /** Initiation time */
     initiatedAt: Scalars["DateTime"];
-    /**
-     * Recorded time of finish (successful or failed after retry) or abortion
-     * (Finished state seen at least once)
-     */
+    /** Recorded time of finish of the latest task */
     lastAttemptFinishedAt?: Maybe<Scalars["DateTime"]>;
     /** Recorded start of running (Running state seen at least once) */
     runningSince?: Maybe<Scalars["DateTime"]>;
@@ -5861,6 +5873,9 @@ export type GetFlowByIdQuery = {
                                             __typename?: "FlowEventActivationCauseAdded";
                                         } & FlowHistoryData_FlowEventActivationCauseAdded_Fragment)
                                       | ({
+                                            __typename?: "FlowEventCompleted";
+                                        } & FlowHistoryData_FlowEventCompleted_Fragment)
+                                      | ({
                                             __typename?: "FlowEventInitiated";
                                         } & FlowHistoryData_FlowEventInitiated_Fragment)
                                       | ({
@@ -6011,6 +6026,12 @@ type FlowHistoryData_FlowEventActivationCauseAdded_Fragment = {
         | { __typename: "FlowActivationCauseManual"; initiator: { __typename?: "Account" } & AccountFragment };
 };
 
+type FlowHistoryData_FlowEventCompleted_Fragment = {
+    __typename: "FlowEventCompleted";
+    eventId: string;
+    eventTime: string;
+};
+
 type FlowHistoryData_FlowEventInitiated_Fragment = {
     __typename: "FlowEventInitiated";
     eventId: string;
@@ -6094,6 +6115,7 @@ export type FlowHistoryDataFragment =
     | FlowHistoryData_FlowConfigSnapshotModified_Fragment
     | FlowHistoryData_FlowEventAborted_Fragment
     | FlowHistoryData_FlowEventActivationCauseAdded_Fragment
+    | FlowHistoryData_FlowEventCompleted_Fragment
     | FlowHistoryData_FlowEventInitiated_Fragment
     | FlowHistoryData_FlowEventScheduledForActivation_Fragment
     | FlowHistoryData_FlowEventStartConditionUpdated_Fragment
@@ -6514,6 +6536,8 @@ export type FlowProcessSummaryDataFragment = {
     lastAttemptAt?: string | null;
     lastFailureAt?: string | null;
     nextPlannedAt?: string | null;
+    autoStoppedReason?: FlowProcessAutoStopReason | null;
+    autoStoppedAt?: string | null;
     stopPolicy:
         | { __typename?: "FlowTriggerStopPolicyAfterConsecutiveFailures"; maxFailures: number }
         | { __typename?: "FlowTriggerStopPolicyNever"; dummy: boolean };
@@ -8173,6 +8197,8 @@ export const FlowProcessSummaryDataFragmentDoc = gql`
                 maxFailures
             }
         }
+        autoStoppedReason
+        autoStoppedAt
     }
 `;
 export const AccessTokenDataFragmentDoc = gql`

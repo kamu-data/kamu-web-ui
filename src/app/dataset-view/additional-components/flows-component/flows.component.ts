@@ -132,16 +132,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         return (policy as FlowTriggerStopPolicyAfterConsecutiveFailures).maxFailures;
     }
 
-    public viewFlows(): void {
-        this.stopFetchingTableData$.next();
-        this.navigationService.navigateToDatasetView({
-            accountName: this.flowsData.datasetBasics.owner.accountName,
-            datasetName: this.flowsData.datasetBasics.name,
-            tab: DatasetViewTypeEnum.Flows,
-        });
-        this.fetchTableData(this.currentPage);
-    }
-
     public navigatoToSubscription(subscriptionId: string): void {
         this.stopFetchingTableData$.next();
         this.navigationService.navigateToDatasetView({
@@ -257,12 +247,12 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     public onSelectionFlowsChange(): void {
         this.selectedWebhooksCategory = null;
-        this.viewFlows();
+        this.refreshFlow();
     }
 
     public onSelectionWebhooksChange(): void {
         this.selectedFlowsCategory = null;
-        this.viewFlows();
+        this.refreshFlow();
     }
 
     public toggleSubprocessesTable(): void {

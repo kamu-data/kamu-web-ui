@@ -152,10 +152,22 @@
                                                 flowConnectionData.flowsProcesses.primary?.summary?.lastFailureAt
                                                     | date: DISPLAY_TIME_FORMAT
                                             }}
-                                            failure</span
-                                        >
+                                        </span>
                                     </div>
                                     <div>
+                                        <span
+                                            *ngIf="
+                                                flowConnectionData.flowsProcesses.primary?.summary?.autoStoppedReason
+                                            "
+                                            class="text-muted fs-12"
+                                            >Reason:
+                                            {{
+                                                flowConnectionData.flowsProcesses.primary?.summary
+                                                    ?.autoStoppedReason === FlowProcessAutoStopReason.StopPolicy
+                                                    ? "stop policy"
+                                                    : "unrecoverable failure"
+                                            }},
+                                        </span>
                                         <span
                                             class="text-muted fs-12"
                                             *ngIf="

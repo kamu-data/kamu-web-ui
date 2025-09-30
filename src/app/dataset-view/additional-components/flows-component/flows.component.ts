@@ -10,6 +10,7 @@ import {
     DatasetFlowProcesses,
     DatasetFlowType,
     DatasetKind,
+    FlowProcessAutoStopReason,
     FlowProcessEffectiveState,
     FlowProcessTypeFilterInput,
     FlowStatus,
@@ -97,6 +98,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public selectedWebhookFilterButton: MaybeNull<FlowProcessEffectiveState> = null;
     private stopFetchingTableData$ = new Subject<void>();
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
+    public readonly FlowProcessAutoStopReason: typeof FlowProcessAutoStopReason = FlowProcessAutoStopReason;
 
     public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"]; //1
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;

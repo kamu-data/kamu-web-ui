@@ -151,16 +151,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             .pipe(take(1))
             .subscribe((result: boolean) => {
                 if (result) {
-                    setTimeout(() => {
-                        this.stopFetchingTableData$.next();
-                        this.navigationService.navigateToDatasetView({
-                            accountName: this.flowsData.datasetBasics.owner.accountName,
-                            datasetName: this.flowsData.datasetBasics.name,
-                            tab: DatasetViewTypeEnum.Flows,
-                            webhookId: this.webhookId ? this.webhookId : undefined,
-                        });
-                        this.fetchTableData(this.currentPage);
-                    }, 2000);
+                    this.refreshFlow();
                 }
             });
     }
@@ -171,16 +162,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             .pipe(take(1))
             .subscribe((result: boolean) => {
                 if (result) {
-                    setTimeout(() => {
-                        this.stopFetchingTableData$.next();
-                        this.navigationService.navigateToDatasetView({
-                            accountName: this.flowsData.datasetBasics.owner.accountName,
-                            datasetName: this.flowsData.datasetBasics.name,
-                            tab: DatasetViewTypeEnum.Flows,
-                            webhookId: this.webhookId ? this.webhookId : undefined,
-                        });
-                        this.fetchTableData(this.currentPage);
-                    }, 2000);
+                    this.refreshFlow();
                 }
             });
     }

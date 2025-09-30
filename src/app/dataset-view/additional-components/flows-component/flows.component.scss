@@ -176,3 +176,21 @@ table {
         margin-left: calc(var(--bs-border-width) * -1);
     }
 }
+
+.action-link {
+    height: auto !important;
+    color: #000;
+}
+
+.mat-icon-size {
+    height: auto !important;
+    font-size: 16px !important;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.action-cell {
+    text-align: center;
+}

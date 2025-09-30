@@ -94,7 +94,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public flowsProcesses$: Observable<DatasetFlowProcesses>;
     public selectedFlowsCategory: MaybeNull<FlowsSelectedCategory> = "ALL";
     public selectedWebhooksCategory: MaybeNull<WebhooksSelectedCategory> = null;
-    public showSubprocessesTable: boolean = false;
     public selectedWebhookFilterButton: MaybeNull<FlowProcessEffectiveState> = null;
     private stopFetchingTableData$ = new Subject<void>();
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
@@ -118,6 +117,10 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public ngOnInit(): void {
         this.getPageFromUrl();
         this.fetchTableData(this.currentPage);
+    }
+
+    public get showSubprocessesTable(): boolean {
+        return this.selectedWebhooksCategory === "WEBHOOKS";
     }
 
     public setWebhookFilterButton(value: MaybeNull<FlowProcessEffectiveState>) {
@@ -231,16 +234,30 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     public onSelectionFlowsChange(): void {
         this.selectedWebhooksCategory = null;
+        this.navigationService.navigateToDatasetView({
+            accountName: this.flowsData.datasetBasics.owner.accountName,
+            datasetName: this.flowsData.datasetBasics.name,
+            tab: DatasetViewTypeEnum.Flows,
+        });
         this.refreshFlow();
     }
 
     public onSelectionWebhooksChange(): void {
         this.selectedFlowsCategory = null;
+        this.navigationService.navigateToDatasetView({
+            accountName: this.flowsData.datasetBasics.owner.accountName,
+            datasetName: this.flowsData.datasetBasics.name,
+            tab: DatasetViewTypeEnum.Flows,
+        });
         this.refreshFlow();
     }
 
-    public toggleSubprocessesTable(): void {
-        this.showSubprocessesTable = !this.showSubprocessesTable;
+    public navigateToWebhookSettings(subscriptionId: string): void {
+        this.navigationService.navigateToWebhooks({
+            accountName: this.flowsData.datasetBasics.owner.accountName,
+            datasetName: this.flowsData.datasetBasics.name,
+            tab: subscriptionId,
+        });
     }
 
     public get isRoot(): boolean {

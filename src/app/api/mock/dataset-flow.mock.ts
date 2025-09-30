@@ -330,7 +330,7 @@ export const mockGetDatasetFlowTriggersBatchingQuery: GetDatasetFlowTriggerQuery
                         },
                         stopPolicy: {
                             __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
-                            maxFailures: 1,
+                            maxFailures: 5,
                         },
                     },
                 },

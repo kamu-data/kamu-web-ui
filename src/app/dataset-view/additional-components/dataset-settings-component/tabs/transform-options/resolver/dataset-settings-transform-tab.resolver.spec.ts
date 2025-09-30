@@ -166,7 +166,7 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
                     reactive: mockBufferingBatchingReactiveRule,
                     stopPolicy: {
                         __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
-                        maxFailures: 1,
+                        maxFailures: 5,
                     },
                     paused:
                         mockGetDatasetFlowTriggersBatchingQuery.datasets.byId?.flows.triggers.byType?.paused || false,

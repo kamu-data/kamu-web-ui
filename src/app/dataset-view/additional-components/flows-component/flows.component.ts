@@ -121,7 +121,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public get showSubprocessesTable(): boolean {
-        return this.selectedWebhooksCategory === "WEBHOOKS";
+        return this.selectedWebhooksCategory === "WEBHOOKS" || Boolean(this.webhookId);
     }
 
     public setWebhookFilterButton(value: MaybeNull<FlowProcessEffectiveState>) {
@@ -155,7 +155,10 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             .pipe(take(1))
             .subscribe((result: boolean) => {
                 if (result) {
-                    this.refreshFlow();
+                    setTimeout(() => {
+                        this.refreshFlow();
+                        this.cdr.detectChanges();
+                    }, this.TIMEOUT_REFRESH_FLOW);
                 }
             });
     }
@@ -166,7 +169,10 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             .pipe(take(1))
             .subscribe((result: boolean) => {
                 if (result) {
-                    this.refreshFlow();
+                    setTimeout(() => {
+                        this.refreshFlow();
+                        this.cdr.detectChanges();
+                    }, this.TIMEOUT_REFRESH_FLOW);
                 }
             });
     }
@@ -199,6 +205,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                     this.flowsService.datasetFlowsProcesses({ datasetId: this.flowsData.datasetBasics.id }),
                 ]),
             ),
+
             map(([flowsData, allFlowsPaused, flowInitiators, flowsProcesses]) => {
                 return { flowsData, allFlowsPaused, flowInitiators, flowsProcesses };
             }),

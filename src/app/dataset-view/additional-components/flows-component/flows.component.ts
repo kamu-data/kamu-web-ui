@@ -158,7 +158,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                     setTimeout(() => {
                         this.refreshFlow();
                         this.cdr.detectChanges();
-                    }, this.TIMEOUT_REFRESH_FLOW);
+                    }, AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS);
                 }
             });
     }
@@ -172,7 +172,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                     setTimeout(() => {
                         this.refreshFlow();
                         this.cdr.detectChanges();
-                    }, this.TIMEOUT_REFRESH_FLOW);
+                    }, AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS);
                 }
             });
     }

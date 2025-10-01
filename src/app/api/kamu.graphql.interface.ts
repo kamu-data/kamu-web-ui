@@ -1297,7 +1297,7 @@ export type DatasetFlowFilters = {
 
 export type DatasetFlowProcesses = {
     __typename?: "DatasetFlowProcesses";
-    primary?: Maybe<FlowProcess>;
+    primary: FlowProcess;
     webhooks: WebhookFlowSubProcessGroup;
 };
 
@@ -2512,6 +2512,7 @@ export enum FlowProcessEffectiveState {
     Failing = "FAILING",
     PausedManual = "PAUSED_MANUAL",
     StoppedAuto = "STOPPED_AUTO",
+    Unconfigured = "UNCONFIGURED",
 }
 
 export type FlowProcessFilters = {
@@ -2541,6 +2542,7 @@ export type FlowProcessGroupRollup = {
     paused: Scalars["Int"];
     stopped: Scalars["Int"];
     total: Scalars["Int"];
+    unconfigured: Scalars["Int"];
     worstConsecutiveFailures: Scalars["Int"];
 };
 
@@ -6499,11 +6501,11 @@ export type DatasetFlowsProcessesQuery = {
                 __typename?: "DatasetFlows";
                 processes: {
                     __typename?: "DatasetFlowProcesses";
-                    primary?: {
+                    primary: {
                         __typename?: "FlowProcess";
                         flowType: DatasetFlowType;
                         summary: { __typename?: "FlowProcessSummary" } & FlowProcessSummaryDataFragment;
-                    } | null;
+                    };
                     webhooks: {
                         __typename?: "WebhookFlowSubProcessGroup";
                         rollup: {
@@ -6513,6 +6515,7 @@ export type DatasetFlowsProcessesQuery = {
                             failing: number;
                             paused: number;
                             stopped: number;
+                            unconfigured: number;
                             worstConsecutiveFailures: number;
                         };
                         subprocesses: Array<{
@@ -11465,6 +11468,7 @@ export const DatasetFlowsProcessesDocument = gql`
                                 failing
                                 paused
                                 stopped
+                                unconfigured
                                 worstConsecutiveFailures
                             }
                             subprocesses {

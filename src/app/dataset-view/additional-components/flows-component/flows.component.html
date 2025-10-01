@@ -14,7 +14,11 @@
                             <div *ngIf="!hasPushSources">
                                 <div
                                     class="d-flex gap-2 manual-container"
-                                    *ngIf="!flowConnectionData.flowsProcesses.primary"
+                                    *ngIf="
+                                        flowConnectionData.flowsProcesses.primary.summary.effectiveState ===
+                                            FlowProcessEffectiveState.Unconfigured &&
+                                        flowConnectionData.flowsProcesses.primary.summary.lastAttemptAt
+                                    "
                                 >
                                     <div><mat-icon class="mannual-udate-icon">add_circle</mat-icon></div>
                                     <div class="d-flex flex-column mt-1">
@@ -28,7 +32,7 @@
                                 <div
                                     class="d-flex gap-2 completed-container"
                                     *ngIf="
-                                        flowConnectionData.flowsProcesses.primary?.summary?.effectiveState ===
+                                        flowConnectionData.flowsProcesses.primary.summary.effectiveState ===
                                         FlowProcessEffectiveState.Active
                                     "
                                 >
@@ -43,7 +47,7 @@
                                                 "
                                                 >Last run:
                                                 {{
-                                                    flowConnectionData.flowsProcesses.primary?.summary?.lastSuccessAt
+                                                    flowConnectionData.flowsProcesses.primary.summary.lastSuccessAt
                                                         | date: DISPLAY_TIME_FORMAT
                                                 }}
                                                 success</span
@@ -66,7 +70,7 @@
                                                 "
                                                 >Next planned:
                                                 {{
-                                                    flowConnectionData.flowsProcesses.primary?.summary?.nextPlannedAt
+                                                    flowConnectionData.flowsProcesses.primary.summary.nextPlannedAt
                                                         | date: DISPLAY_TIME_FORMAT
                                                 }}
                                             </span>
@@ -94,17 +98,16 @@
                                             >
                                                 Next planned:
                                                 {{
-                                                    flowConnectionData.flowsProcesses.primary?.summary?.nextPlannedAt
+                                                    flowConnectionData.flowsProcesses.primary.summary.nextPlannedAt
                                                         | date: DISPLAY_TIME_FORMAT
                                                 }},
                                                 <span class="text-muted fs-12">
                                                     {{
-                                                        flowConnectionData.flowsProcesses.primary?.summary
-                                                            ?.consecutiveFailures
+                                                        flowConnectionData.flowsProcesses.primary.summary
+                                                            .consecutiveFailures
                                                     }}/{{
                                                         maxFailures(
-                                                            flowConnectionData.flowsProcesses.primary?.summary
-                                                                ?.stopPolicy!
+                                                            flowConnectionData.flowsProcesses.primary.summary.stopPolicy
                                                         )
                                                     }}
 
@@ -120,8 +123,8 @@
                                             >
                                                 <span class="text-muted fs-12">
                                                     {{
-                                                        flowConnectionData.flowsProcesses.primary?.summary
-                                                            ?.consecutiveFailures
+                                                        flowConnectionData.flowsProcesses.primary.summary
+                                                            .consecutiveFailures
                                                     }}
                                                     consecutive failures.
                                                 </span>
@@ -129,7 +132,7 @@
                                             <div class="text-muted fs-12">
                                                 Last failure at:
                                                 {{
-                                                    flowConnectionData.flowsProcesses.primary?.summary?.lastFailureAt
+                                                    flowConnectionData.flowsProcesses.primary.summary.lastFailureAt
                                                         | date: DISPLAY_TIME_FORMAT
                                                 }}
                                             </div>
@@ -165,7 +168,7 @@
                                             <span class="text-muted fs-12"
                                                 >Last run:
                                                 {{
-                                                    flowConnectionData.flowsProcesses.primary?.summary?.lastFailureAt
+                                                    flowConnectionData.flowsProcesses.primary.summary.lastFailureAt
                                                         | date: DISPLAY_TIME_FORMAT
                                                 }}
                                             </span>
@@ -179,8 +182,8 @@
                                                 class="text-muted fs-12"
                                                 >Reason:
                                                 {{
-                                                    flowConnectionData.flowsProcesses.primary?.summary
-                                                        ?.autoStoppedReason === FlowProcessAutoStopReason.StopPolicy
+                                                    flowConnectionData.flowsProcesses.primary.summary
+                                                        .autoStoppedReason === FlowProcessAutoStopReason.StopPolicy
                                                         ? "stop policy"
                                                         : "unrecoverable failure"
                                                 }}
@@ -193,8 +196,8 @@
                                                 "
                                             >
                                                 {{
-                                                    flowConnectionData.flowsProcesses.primary?.summary
-                                                        ?.consecutiveFailures
+                                                    flowConnectionData.flowsProcesses.primary.summary
+                                                        .consecutiveFailures
                                                 }}
                                                 consecutive failures.
                                             </span>
@@ -209,11 +212,11 @@
                                                 "
                                             >
                                                 ,{{
-                                                    flowConnectionData.flowsProcesses.primary?.summary
-                                                        ?.consecutiveFailures
+                                                    flowConnectionData.flowsProcesses.primary.summary
+                                                        .consecutiveFailures
                                                 }}/{{
                                                     maxFailures(
-                                                        flowConnectionData.flowsProcesses.primary?.summary?.stopPolicy!
+                                                        flowConnectionData.flowsProcesses.primary.summary.stopPolicy
                                                     )
                                                 }}
                                                 consecutive failures
@@ -236,7 +239,11 @@
                                     </button>
                                     <button
                                         type="button"
-                                        *ngIf="!hasPushSources"
+                                        *ngIf="
+                                            !hasPushSources &&
+                                            flowConnectionData.flowsProcesses.primary.summary.effectiveState !==
+                                                FlowProcessEffectiveState.Unconfigured
+                                        "
                                         (click)="toggleStateDatasetFlowConfigs(flowConnectionData.allFlowsPaused!)"
                                         class="badge-button border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
                                     >
@@ -304,19 +311,21 @@
                                                 {{ flowConnectionData.flowsProcesses.webhooks.rollup[option.valueKey] }}
                                             </button>
                                         </ng-container>
-
-                                        <!-- <button
+                                        <button
+                                            (click)="setWebhookFilterButton(FlowProcessEffectiveState.PausedManual)"
+                                            [class.selected-group-button]="
+                                                selectedWebhookFilterButton === FlowProcessEffectiveState.PausedManual
+                                            "
                                             type="button"
-                                            (click)="toggleSubprocessesTable()"
-                                            class="border-1 ms-4 bg-light border rounded-2 px-2 btn badge-button btn-sm d-flex justify-content-between align-items-center"
+                                            class="btn btn-outline-secondary"
+                                            [disabled]="!showSubprocessesTable"
                                         >
-                                            <mat-icon class="text-muted fs-4 d-block">
-                                                {{ showSubprocessesTable ? "visibility_off" : "visibility" }}</mat-icon
-                                            >
-                                            <span class="fs-12 ms-1 me-2 d-block">
-                                                {{ showSubprocessesTable ? "Hide" : "View" }} details</span
-                                            >
-                                        </button> -->
+                                            paused:
+                                            {{
+                                                flowConnectionData.flowsProcesses.webhooks.rollup.paused +
+                                                    flowConnectionData.flowsProcesses.webhooks.rollup.unconfigured
+                                            }}
+                                        </button>
                                     </div>
                                 </div>
                             </div>

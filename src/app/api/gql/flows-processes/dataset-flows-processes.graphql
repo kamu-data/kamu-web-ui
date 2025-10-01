@@ -16,6 +16,7 @@ query datasetFlowsProcesses($datasetId: DatasetID!) {
               failing
               paused
               stopped
+              unconfigured
               worstConsecutiveFailures
             }
             subprocesses {

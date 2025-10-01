@@ -59,11 +59,12 @@ export const WEBHOOKS_FILTERS_ITEMS: WebhooksFiltersDescriptor[] = [
         state: FlowProcessEffectiveState.Failing,
         valueKey: "failing",
     },
-    {
-        label: "paused:",
-        state: FlowProcessEffectiveState.PausedManual,
-        valueKey: "paused",
-    },
+    // {
+    //     label: "paused:",
+    //     state: FlowProcessEffectiveState.PausedManual,
+    //     valueKey: "paused",
+    // },
+
     {
         label: "stopped:",
         state: FlowProcessEffectiveState.StoppedAuto,
@@ -76,4 +77,5 @@ export const webhooksStateMapper: Record<FlowProcessEffectiveState, string> = {
     [FlowProcessEffectiveState.Failing]: "FAILING",
     [FlowProcessEffectiveState.PausedManual]: "PAUSED",
     [FlowProcessEffectiveState.StoppedAuto]: "STOPPED",
+    [FlowProcessEffectiveState.Unconfigured]: "UNCONFIGURATED",
 };

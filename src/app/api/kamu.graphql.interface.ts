@@ -8145,6 +8145,10 @@ export const FlowHistoryDataFragmentDoc = gql`
                 __typename
             }
         }
+        ... on FlowEventCompleted {
+            eventId
+            eventTime
+        }
     }
     ${AccountFragmentDoc}
     ${DatasetBasicsFragmentDoc}

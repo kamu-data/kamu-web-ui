@@ -44,7 +44,7 @@ import { RouterLink } from "@angular/router";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
-import { NgIf, AsyncPipe, DatePipe, NgFor } from "@angular/common";
+import { NgIf, AsyncPipe, DatePipe, NgFor, NgClass } from "@angular/common";
 import AppValues from "src/app/common/values/app.values";
 import { MatTableModule } from "@angular/material/table";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -64,6 +64,7 @@ import { FormsModule } from "@angular/forms";
         AsyncPipe,
         DatePipe,
         FormsModule,
+        NgClass,
         NgIf,
         NgFor,
         RouterLink,

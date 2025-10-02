@@ -299,7 +299,12 @@
                                     <div class="btn-group" role="group">
                                         <ng-container *ngFor="let option of WEBHOOKS_FILTERS_OPTIONS">
                                             <button
-                                                (click)="setWebhookFilterButton(option.state)"
+                                                (click)="
+                                                    setWebhookFilterButton(
+                                                        option.state,
+                                                        flowConnectionData.flowsProcesses.webhooks.subprocesses
+                                                    )
+                                                "
                                                 [class.selected-group-button]="
                                                     selectedWebhookFilterButton === option.state
                                                 "
@@ -312,7 +317,12 @@
                                             </button>
                                         </ng-container>
                                         <button
-                                            (click)="setWebhookFilterButton(FlowProcessEffectiveState.PausedManual)"
+                                            (click)="
+                                                setWebhookFilterButton(
+                                                    FlowProcessEffectiveState.PausedManual,
+                                                    flowConnectionData.flowsProcesses.webhooks.subprocesses
+                                                )
+                                            "
                                             [class.selected-group-button]="
                                                 selectedWebhookFilterButton === FlowProcessEffectiveState.PausedManual
                                             "
@@ -445,7 +455,11 @@
 
             <ng-container *ngIf="flowConnectionData">
                 <app-flows-table
-                    [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
+                    [nodes]="
+                        selectedWebhookFilterButton && !selectedWebhooksIds.length
+                            ? []
+                            : flowConnectionData.flowsData.connectionDataForTable.nodes
+                    "
                     [filterByStatus]="filterByStatus"
                     [onlySystemFlows]="onlySystemFlows"
                     [searchByAccount]="searchByAccount"
@@ -454,7 +468,11 @@
                     [tableOptions]="{
                         displayColumns: DISPLAY_COLUMNS,
                     }"
-                    [totalCount]="flowConnectionData.flowsData.connectionDataForTable.totalCount"
+                    [totalCount]="
+                        selectedWebhookFilterButton && !selectedWebhooksIds.length
+                            ? 0
+                            : flowConnectionData.flowsData.connectionDataForTable.totalCount
+                    "
                     (searchByFiltersChange)="onSearchByFiltersChange($event)"
                     (abortFlowChange)="onAbortFlow($event)"
                 />

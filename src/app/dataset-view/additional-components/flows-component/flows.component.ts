@@ -17,8 +17,9 @@ import {
     FlowTriggerStopPolicy,
     FlowTriggerStopPolicyAfterConsecutiveFailures,
     InitiatorFilterInput,
+    WebhookFlowSubProcess,
 } from "src/app/api/kamu.graphql.interface";
-import { combineLatest, map, Observable, Subject, switchMap, take, timer } from "rxjs";
+import { combineLatest, map, Observable, switchMap, take, timer } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import {
     DatasetOverviewTabData,
@@ -96,7 +97,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public selectedFlowsCategory: MaybeNull<FlowsSelectedCategory> = "ALL";
     public selectedWebhooksCategory: MaybeNull<WebhooksSelectedCategory> = null;
     public selectedWebhookFilterButton: MaybeNull<FlowProcessEffectiveState> = null;
-    private stopFetchingTableData$ = new Subject<void>();
+    public selectedWebhooksIds: string[] = [];
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
     public readonly FlowProcessAutoStopReason: typeof FlowProcessAutoStopReason = FlowProcessAutoStopReason;
 
@@ -124,8 +125,13 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         return this.selectedWebhooksCategory === "WEBHOOKS" || Boolean(this.webhookId);
     }
 
-    public setWebhookFilterButton(value: MaybeNull<FlowProcessEffectiveState>) {
+    public setWebhookFilterButton(value: MaybeNull<FlowProcessEffectiveState>, subprocesses: WebhookFlowSubProcess[]) {
         this.selectedWebhookFilterButton = value;
+        this.selectedWebhooksIds = subprocesses
+            .filter((x) => x.summary.effectiveState === value)
+            .map((item) => item.id);
+
+        this.refreshFlow();
     }
 
     public get redirectSection(): SettingsTabsEnum {
@@ -139,7 +145,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public navigatoToSubscription(subscriptionId: string): void {
-        this.stopFetchingTableData$.next();
         this.navigationService.navigateToDatasetView({
             accountName: this.flowsData.datasetBasics.owner.accountName,
             datasetName: this.flowsData.datasetBasics.name,
@@ -228,7 +233,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         if (webhooksFilter === "WEBHOOKS") {
             return {
                 primary: undefined,
-                webhooks: { subscriptionIds: [] },
+                webhooks: { subscriptionIds: this.selectedWebhooksIds },
             };
         }
         if (datasetFlowFilter === "UPDATES_ONLY") {

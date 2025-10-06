@@ -114,6 +114,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     ];
 
     public ngOnInit(): void {
+        this.selectedWebhooksIds = this.webhookId ? [this.webhookId] : [];
         this.getPageFromUrl();
         this.fetchTableData(this.currentPage);
     }
@@ -162,6 +163,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public navigatoToSubscription(subscriptionId: string): void {
+        this.selectedWebhookFilterButtons = [];
         this.navigationService.navigateToDatasetView({
             accountName: this.flowsData.datasetBasics.owner.accountName,
             datasetName: this.flowsData.datasetBasics.name,
@@ -242,6 +244,8 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         if (webhookId) {
             this.selectedFlowsCategory = null;
             this.selectedWebhooksCategory = "WEBHOOKS";
+            this.selectedWebhooksIds = this.webhookId ? [this.webhookId] : [];
+            this;
             return {
                 primary: undefined,
                 webhooks: { subscriptionIds: [webhookId] },
@@ -265,7 +269,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     public onSelectionFlowsChange(): void {
         this.selectedWebhooksCategory = null;
-        this.selectedWebhookFilterButtons = [];
+
         this.selectedWebhooksIds = [];
         this.navigationService.navigateToDatasetView({
             accountName: this.flowsData.datasetBasics.owner.accountName,
@@ -277,6 +281,10 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     public onSelectionWebhooksChange(): void {
         this.selectedFlowsCategory = null;
+        if (this.selectedWebhooksCategory && this.selectedWebhookFilterButtons.length) {
+            this.selectedWebhookFilterButtons = [];
+        }
+
         this.navigationService.navigateToDatasetView({
             accountName: this.flowsData.datasetBasics.owner.accountName,
             datasetName: this.flowsData.datasetBasics.name,

@@ -17,7 +17,11 @@ export class SubprocessStatusFilterPipe implements PipeTransform {
     public transform(
         subprocesses: WebhookFlowSubProcess[],
         filter: FlowProcessEffectiveCustomState[],
+        webhookIds: string[],
     ): WebhookFlowSubProcess[] {
+        if (webhookIds.length) {
+            return subprocesses.filter((item) => webhookIds.includes(item.id));
+        }
         if (!filter.length || filter.includes("")) return subprocesses;
 
         return subprocesses.filter((item) => filter.includes(item.summary.effectiveState));

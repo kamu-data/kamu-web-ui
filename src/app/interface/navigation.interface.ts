@@ -6,6 +6,7 @@
  */
 
 import { FlowDetailsTabs } from "../dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { FlowProcessEffectiveCustomState, FlowsCategoryUnion } from "../dataset-view/dataset-view.interface";
 
 export interface DatasetNavigationParams {
     accountName: string;
@@ -16,6 +17,8 @@ export interface DatasetNavigationParams {
     state?: object;
     sqlQuery?: string;
     webhookId?: string[];
+    category?: FlowsCategoryUnion;
+    webhooksState?: FlowProcessEffectiveCustomState[];
 }
 export interface DatasetInfo {
     accountName: string;

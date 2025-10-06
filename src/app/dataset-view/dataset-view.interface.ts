@@ -49,7 +49,7 @@ export type FlowProcessEffectiveCustomState =
     | FlowProcessEffectiveState.PausedManual
     | FlowProcessEffectiveState.StoppedAuto
     | FlowProcessEffectiveState.Unconfigured
-    | "";
+    | "total";
 
 export const webhooksStateMapper: Record<FlowProcessEffectiveState, string> = {
     [FlowProcessEffectiveState.Active]: "ACTIVE",
@@ -58,3 +58,5 @@ export const webhooksStateMapper: Record<FlowProcessEffectiveState, string> = {
     [FlowProcessEffectiveState.StoppedAuto]: "STOPPED",
     [FlowProcessEffectiveState.Unconfigured]: "UNCONFIGURATED",
 };
+
+export type FlowsCategoryUnion = FlowsSelectedCategory | WebhooksSelectedCategory;

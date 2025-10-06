@@ -199,3 +199,13 @@ table {
     color: #fff;
     background: #3f51b5;
 }
+
+:host {
+    ::ng-deep {
+        .mat-button-toggle-button {
+            .mat-button-toggle-label-content {
+                line-height: 36px !important;
+            }
+        }
+    }
+}

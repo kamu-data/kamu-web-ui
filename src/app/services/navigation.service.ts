@@ -117,6 +117,8 @@ export class NavigationService {
                         page: params.page === 1 ? undefined : params.page,
                         sqlQuery: params.sqlQuery,
                         webhookId: params.webhookId?.length ? params.webhookId.join(",") : undefined,
+                        category: params.category ? params.category : undefined,
+                        webhooksState: params.webhooksState?.join(","),
                     },
                     state: params.state,
                 },

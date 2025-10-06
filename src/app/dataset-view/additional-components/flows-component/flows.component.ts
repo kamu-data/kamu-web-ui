@@ -20,11 +20,12 @@ import {
     WebhookFlowSubProcess,
 } from "src/app/api/kamu.graphql.interface";
 import { combineLatest, map, Observable, switchMap, take, timer } from "rxjs";
-import { MaybeNull } from "src/app/interface/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import {
     DatasetOverviewTabData,
     DatasetViewTypeEnum,
     FlowProcessEffectiveCustomState,
+    FlowsCategoryUnion,
     FlowsSelectedCategory,
     WebhooksSelectedCategory,
     webhooksStateMapper,
@@ -50,7 +51,7 @@ import { MatTableModule } from "@angular/material/table";
 import { MatButtonToggleChange, MatButtonToggleModule } from "@angular/material/button-toggle";
 import { SubprocessStatusFilterPipe } from "./pipes/subprocess-status-filter.pipe";
 import { DatasetWebhooksService } from "../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
-import { MatChipsModule } from "@angular/material/chips";
+import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
 import { FormsModule } from "@angular/forms";
 
 @Component({
@@ -89,14 +90,23 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     @Input(ProjectLinks.URL_QUERY_PARAM_WEBHOOK_ID) public set setWebhookId(value: MaybeNull<string>) {
         this.webhookId = value ? value.split(",") : [];
     }
+    @Input(ProjectLinks.URL_QUERY_PARAM_FLOWS_CATEGORY) public set setFlowsCategory(value: FlowsCategoryUnion) {
+        if (value === "webhooks") {
+            this.selectedWebhooksCategory = "webhooks";
+        } else if (value === "updates") {
+            this.selectedFlowsCategory = "updates";
+        } else {
+            this.selectedFlowsCategory = "all";
+        }
+    }
 
     public searchFilter = "";
     public webhookId: string[] = [];
     private datasetWebhooksService = inject(DatasetWebhooksService);
 
     public flowsProcesses$: Observable<DatasetFlowProcesses>;
-    public selectedFlowsCategory: MaybeNull<FlowsSelectedCategory> = "all";
-    public selectedWebhooksCategory: MaybeNull<WebhooksSelectedCategory> = null;
+    public selectedFlowsCategory: MaybeUndefined<FlowsSelectedCategory> = undefined;
+    public selectedWebhooksCategory: MaybeUndefined<WebhooksSelectedCategory> = undefined;
     public selectedWebhookFilterButtons: FlowProcessEffectiveCustomState[] = [];
     public selectedWebhooksIds: string[] = [];
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
@@ -132,18 +142,17 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     public onToggleWebhookFilter(event: MatButtonToggleChange, subprocesses: WebhookFlowSubProcess[]): void {
         const states = event.value as FlowProcessEffectiveCustomState[];
-
-        if (states.includes("")) {
+        if (states.includes("total")) {
             this.selectedWebhooksIds = subprocesses.map((item) => item.id);
             this.navigationService.navigateToDatasetView({
                 accountName: this.flowsData.datasetBasics.owner.accountName,
                 datasetName: this.flowsData.datasetBasics.name,
                 tab: DatasetViewTypeEnum.Flows,
+                category: this.selectedWebhooksCategory as FlowsCategoryUnion,
             });
             this.refreshFlow();
             return;
         }
-
         this.selectedWebhooksIds = subprocesses
             .filter((x) => states.includes(x.summary.effectiveState))
             .map((item) => item.id);
@@ -151,6 +160,8 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             accountName: this.flowsData.datasetBasics.owner.accountName,
             datasetName: this.flowsData.datasetBasics.name,
             tab: DatasetViewTypeEnum.Flows,
+            category: this.selectedWebhooksCategory as FlowsCategoryUnion,
+            webhooksState: states.length ? states : undefined,
         });
         this.refreshFlow();
     }
@@ -241,11 +252,11 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     private setProcessTypeFilter(
         webhookId: string[],
-        datasetFlowFilter: MaybeNull<FlowsSelectedCategory>,
-        webhooksFilter: MaybeNull<WebhooksSelectedCategory>,
+        datasetFlowFilter: MaybeUndefined<FlowsSelectedCategory>,
+        webhooksFilter: MaybeUndefined<WebhooksSelectedCategory>,
     ): MaybeNull<FlowProcessTypeFilterInput> {
         if (webhookId.length) {
-            this.selectedFlowsCategory = null;
+            this.selectedFlowsCategory = undefined;
             this.selectedWebhooksCategory = "webhooks";
             this.selectedWebhooksIds = this.webhookId.length ? this.webhookId : [];
             return {
@@ -269,19 +280,20 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         return null;
     }
 
-    public onSelectionFlowsChange(): void {
-        this.selectedWebhooksCategory = null;
+    public onSelectionFlowsChange(event: MatChipListboxChange): void {
+        this.selectedWebhooksCategory = undefined;
         this.selectedWebhookFilterButtons = [];
         this.navigationService.navigateToDatasetView({
             accountName: this.flowsData.datasetBasics.owner.accountName,
             datasetName: this.flowsData.datasetBasics.name,
             tab: DatasetViewTypeEnum.Flows,
+            category: event.value as FlowsCategoryUnion,
         });
         this.refreshFlow();
     }
 
-    public onSelectionWebhooksChange(): void {
-        this.selectedFlowsCategory = null;
+    public onSelectionWebhooksChange(event: MatChipListboxChange): void {
+        this.selectedFlowsCategory = undefined;
         if (this.selectedWebhooksCategory && this.selectedWebhookFilterButtons.length) {
             this.selectedWebhookFilterButtons = [];
         }
@@ -293,6 +305,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             accountName: this.flowsData.datasetBasics.owner.accountName,
             datasetName: this.flowsData.datasetBasics.name,
             tab: DatasetViewTypeEnum.Flows,
+            category: (event.value as FlowsCategoryUnion) ?? undefined,
         });
 
         this.refreshFlow();

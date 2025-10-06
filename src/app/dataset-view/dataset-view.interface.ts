@@ -34,8 +34,8 @@ export interface DatasetOverviewTabData extends DatasetViewData {
     overviewUpdate: OverviewUpdate;
 }
 
-export type FlowsSelectedCategory = "ALL" | "UPDATES_ONLY";
-export type WebhooksSelectedCategory = "WEBHOOKS";
+export type FlowsSelectedCategory = "all" | "updates";
+export type WebhooksSelectedCategory = "webhooks";
 
 export interface WebhooksFiltersDescriptor {
     label: string;

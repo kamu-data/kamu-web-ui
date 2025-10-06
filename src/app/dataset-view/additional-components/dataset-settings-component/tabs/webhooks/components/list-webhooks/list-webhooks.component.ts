@@ -180,7 +180,7 @@ export class ListWebhooksComponent implements OnInit {
             accountName: this.datasetBasics.owner.accountName,
             datasetName: this.datasetBasics.name,
             tab: DatasetViewTypeEnum.Flows,
-            webhookId: subscription.id,
+            webhookId: [subscription.id],
         });
     }
 

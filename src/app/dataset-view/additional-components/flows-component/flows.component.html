@@ -278,8 +278,8 @@
                         </div>
                         <div class="mt-4">
                             <mat-chip-listbox [(ngModel)]="selectedFlowsCategory" (change)="onSelectionFlowsChange()">
-                                <mat-chip-option [value]="'ALL'">All flows</mat-chip-option>
-                                <mat-chip-option [value]="'UPDATES_ONLY'"
+                                <mat-chip-option [value]="'all'">All flows</mat-chip-option>
+                                <mat-chip-option [value]="'updates'"
                                     >{{ isRoot ? "Ingest" : "Transform" }} only</mat-chip-option
                                 >
                             </mat-chip-listbox>
@@ -295,7 +295,7 @@
                                         [(ngModel)]="selectedWebhooksCategory"
                                         (change)="onSelectionWebhooksChange()"
                                     >
-                                        <mat-chip-option [value]="'WEBHOOKS'"> Webhooks</mat-chip-option>
+                                        <mat-chip-option [value]="'webhooks'"> Webhooks</mat-chip-option>
                                     </mat-chip-listbox>
 
                                     <mat-button-toggle-group

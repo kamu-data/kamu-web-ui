@@ -20,7 +20,7 @@ import {
     WebhookFlowSubProcess,
 } from "src/app/api/kamu.graphql.interface";
 import { combineLatest, map, Observable, switchMap, take, timer } from "rxjs";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import {
     DatasetOverviewTabData,
     DatasetViewTypeEnum,
@@ -86,13 +86,16 @@ import { FormsModule } from "@angular/forms";
 })
 export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_FLOWS_KEY) public flowsData: DatasetOverviewTabData;
-    @Input(ProjectLinks.URL_QUERY_PARAM_WEBHOOK_ID) public webhookId: MaybeUndefined<string>;
+    @Input(ProjectLinks.URL_QUERY_PARAM_WEBHOOK_ID) public set setWebhookId(value: MaybeNull<string>) {
+        this.webhookId = value ? value.split(",") : [];
+    }
 
     public searchFilter = "";
+    public webhookId: string[] = [];
     private datasetWebhooksService = inject(DatasetWebhooksService);
 
     public flowsProcesses$: Observable<DatasetFlowProcesses>;
-    public selectedFlowsCategory: MaybeNull<FlowsSelectedCategory> = "ALL";
+    public selectedFlowsCategory: MaybeNull<FlowsSelectedCategory> = "all";
     public selectedWebhooksCategory: MaybeNull<WebhooksSelectedCategory> = null;
     public selectedWebhookFilterButtons: FlowProcessEffectiveCustomState[] = [];
     public selectedWebhooksIds: string[] = [];
@@ -114,7 +117,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     ];
 
     public ngOnInit(): void {
-        this.selectedWebhooksIds = this.webhookId ? [this.webhookId] : [];
+        this.selectedWebhooksIds = this.webhookId.length ? this.webhookId : [];
         this.getPageFromUrl();
         this.fetchTableData(this.currentPage);
     }
@@ -124,7 +127,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public get isWebhookCategoryActive(): boolean {
-        return this.selectedWebhooksCategory === "WEBHOOKS";
+        return this.selectedWebhooksCategory === "webhooks";
     }
 
     public onToggleWebhookFilter(event: MatButtonToggleChange, subprocesses: WebhookFlowSubProcess[]): void {
@@ -168,7 +171,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             accountName: this.flowsData.datasetBasics.owner.accountName,
             datasetName: this.flowsData.datasetBasics.name,
             tab: DatasetViewTypeEnum.Flows,
-            webhookId: subscriptionId,
+            webhookId: [subscriptionId],
         });
         this.fetchTableData(this.currentPage);
     }
@@ -237,27 +240,26 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     private setProcessTypeFilter(
-        webhookId: MaybeUndefined<string>,
+        webhookId: string[],
         datasetFlowFilter: MaybeNull<FlowsSelectedCategory>,
         webhooksFilter: MaybeNull<WebhooksSelectedCategory>,
     ): MaybeNull<FlowProcessTypeFilterInput> {
-        if (webhookId) {
+        if (webhookId.length) {
             this.selectedFlowsCategory = null;
-            this.selectedWebhooksCategory = "WEBHOOKS";
-            this.selectedWebhooksIds = this.webhookId ? [this.webhookId] : [];
-            this;
-            return {
-                primary: undefined,
-                webhooks: { subscriptionIds: [webhookId] },
-            };
-        }
-        if (webhooksFilter === "WEBHOOKS") {
+            this.selectedWebhooksCategory = "webhooks";
+            this.selectedWebhooksIds = this.webhookId.length ? this.webhookId : [];
             return {
                 primary: undefined,
                 webhooks: { subscriptionIds: this.selectedWebhooksIds },
             };
         }
-        if (datasetFlowFilter === "UPDATES_ONLY") {
+        if (webhooksFilter === "webhooks") {
+            return {
+                primary: undefined,
+                webhooks: { subscriptionIds: this.selectedWebhooksIds },
+            };
+        }
+        if (datasetFlowFilter === "updates") {
             return {
                 primary: { byFlowTypes: [this.isRoot ? DatasetFlowType.Ingest : DatasetFlowType.ExecuteTransform] },
                 webhooks: undefined,
@@ -269,8 +271,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     public onSelectionFlowsChange(): void {
         this.selectedWebhooksCategory = null;
-
-        this.selectedWebhooksIds = [];
+        this.selectedWebhookFilterButtons = [];
         this.navigationService.navigateToDatasetView({
             accountName: this.flowsData.datasetBasics.owner.accountName,
             datasetName: this.flowsData.datasetBasics.name,
@@ -283,6 +284,9 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         this.selectedFlowsCategory = null;
         if (this.selectedWebhooksCategory && this.selectedWebhookFilterButtons.length) {
             this.selectedWebhookFilterButtons = [];
+        }
+        if (!this.selectedWebhooksCategory) {
+            this.selectedWebhooksIds = [];
         }
 
         this.navigationService.navigateToDatasetView({

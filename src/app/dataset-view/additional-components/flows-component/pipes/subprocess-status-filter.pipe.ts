@@ -6,8 +6,8 @@
  */
 
 import { Pipe, PipeTransform } from "@angular/core";
-import { FlowProcessEffectiveState, WebhookFlowSubProcess } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/interface/app.types";
+import { WebhookFlowSubProcess } from "src/app/api/kamu.graphql.interface";
+import { FlowProcessEffectiveCustomState } from "src/app/dataset-view/dataset-view.interface";
 
 @Pipe({
     name: "subprocessStatusFilter",
@@ -16,9 +16,10 @@ import { MaybeNull } from "src/app/interface/app.types";
 export class SubprocessStatusFilterPipe implements PipeTransform {
     public transform(
         subprocesses: WebhookFlowSubProcess[],
-        filter: MaybeNull<FlowProcessEffectiveState>,
+        filter: FlowProcessEffectiveCustomState[],
     ): WebhookFlowSubProcess[] {
-        if (!filter) return subprocesses;
-        return subprocesses.filter((item) => item.summary.effectiveState === filter);
+        if (!filter.length || filter.includes("")) return subprocesses;
+
+        return subprocesses.filter((item) => filter.includes(item.summary.effectiveState));
     }
 }

@@ -192,7 +192,7 @@
                                                 class="text-muted fs-12"
                                                 *ngIf="
                                                     flowConnectionData.flowsProcesses.primary?.summary?.stopPolicy
-                                                        ?.__typename === 'FlowTriggerStopPolicyNever'
+                                                        ?.__typename === 'FlowTriggerStopPolicyAfterConsecutiveFailures'
                                                 "
                                             >
                                                 {{
@@ -279,7 +279,9 @@
                         <div class="mt-4">
                             <mat-chip-listbox [(ngModel)]="selectedFlowsCategory" (change)="onSelectionFlowsChange()">
                                 <mat-chip-option [value]="'ALL'">All flows</mat-chip-option>
-                                <mat-chip-option [value]="'UPDATES_ONLY'">Updates only</mat-chip-option>
+                                <mat-chip-option [value]="'UPDATES_ONLY'"
+                                    >{{ isRoot ? "Ingest" : "Transform" }} only</mat-chip-option
+                                >
                             </mat-chip-listbox>
                         </div>
                         <div class="mt-4" *ngIf="flowConnectionData.flowsProcesses.webhooks.rollup.total">
@@ -296,47 +298,49 @@
                                         <mat-chip-option [value]="'WEBHOOKS'"> Webhooks</mat-chip-option>
                                     </mat-chip-listbox>
 
-                                    <div class="btn-group" role="group">
-                                        <ng-container *ngFor="let option of WEBHOOKS_FILTERS_OPTIONS">
-                                            <button
-                                                (click)="
-                                                    setWebhookFilterButton(
-                                                        option.state,
-                                                        flowConnectionData.flowsProcesses.webhooks.subprocesses
-                                                    )
-                                                "
-                                                [class.selected-group-button]="
-                                                    selectedWebhookFilterButton === option.state
-                                                "
-                                                type="button"
-                                                class="btn btn-outline-secondary"
-                                                [disabled]="!showSubprocessesTable"
-                                            >
-                                                {{ option.label }}
-                                                {{ flowConnectionData.flowsProcesses.webhooks.rollup[option.valueKey] }}
-                                            </button>
-                                        </ng-container>
-                                        <button
-                                            (click)="
-                                                setWebhookFilterButton(
-                                                    FlowProcessEffectiveState.PausedManual,
-                                                    flowConnectionData.flowsProcesses.webhooks.subprocesses
-                                                )
-                                            "
-                                            [class.selected-group-button]="
-                                                selectedWebhookFilterButton === FlowProcessEffectiveState.PausedManual
-                                            "
-                                            type="button"
-                                            class="btn btn-outline-secondary"
-                                            [disabled]="!showSubprocessesTable"
+                                    <mat-button-toggle-group
+                                        [(ngModel)]="selectedWebhookFilterButtons"
+                                        (change)="
+                                            onToggleWebhookFilter(
+                                                $event,
+                                                flowConnectionData.flowsProcesses.webhooks.subprocesses
+                                            )
+                                        "
+                                        multiple
+                                        [disabled]="!isWebhookCategoryActive"
+                                    >
+                                        <mat-button-toggle value=""
+                                            >total:
+                                            {{
+                                                flowConnectionData.flowsProcesses.webhooks.rollup.total
+                                            }}</mat-button-toggle
                                         >
-                                            paused:
+                                        <mat-button-toggle [value]="FlowProcessEffectiveState.Active"
+                                            >active:
+                                            {{
+                                                flowConnectionData.flowsProcesses.webhooks.rollup.active
+                                            }}</mat-button-toggle
+                                        >
+                                        <mat-button-toggle [value]="FlowProcessEffectiveState.Failing"
+                                            >failing:
+                                            {{
+                                                flowConnectionData.flowsProcesses.webhooks.rollup.failing
+                                            }}</mat-button-toggle
+                                        >
+                                        <mat-button-toggle [value]="FlowProcessEffectiveState.StoppedAuto"
+                                            >stopped:
+                                            {{
+                                                flowConnectionData.flowsProcesses.webhooks.rollup.stopped
+                                            }}</mat-button-toggle
+                                        >
+                                        <mat-button-toggle [value]="FlowProcessEffectiveState.PausedManual"
+                                            >paused:
                                             {{
                                                 flowConnectionData.flowsProcesses.webhooks.rollup.paused +
                                                     flowConnectionData.flowsProcesses.webhooks.rollup.unconfigured
-                                            }}
-                                        </button>
-                                    </div>
+                                            }}</mat-button-toggle
+                                        >
+                                    </mat-button-toggle-group>
                                 </div>
                             </div>
 
@@ -347,7 +351,7 @@
                                             mat-table
                                             [dataSource]="
                                                 flowConnectionData.flowsProcesses.webhooks.subprocesses
-                                                    | subprocessStatusFilter: selectedWebhookFilterButton
+                                                    | subprocessStatusFilter: selectedWebhookFilterButtons
                                             "
                                         >
                                             <!-- Subscription Column -->
@@ -456,7 +460,7 @@
             <ng-container *ngIf="flowConnectionData">
                 <app-flows-table
                     [nodes]="
-                        selectedWebhookFilterButton && !selectedWebhooksIds.length
+                        selectedWebhookFilterButtons.length && !selectedWebhooksIds.length
                             ? []
                             : flowConnectionData.flowsData.connectionDataForTable.nodes
                     "
@@ -469,7 +473,7 @@
                         displayColumns: DISPLAY_COLUMNS,
                     }"
                     [totalCount]="
-                        selectedWebhookFilterButton && !selectedWebhooksIds.length
+                        selectedWebhookFilterButtons.length && !selectedWebhooksIds.length
                             ? 0
                             : flowConnectionData.flowsData.connectionDataForTable.totalCount
                     "

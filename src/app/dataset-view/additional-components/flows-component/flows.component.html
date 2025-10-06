@@ -283,10 +283,11 @@
                             >
                                 <mat-chip-option [value]="'all'">All flows</mat-chip-option>
                                 <mat-chip-option [value]="'updates'"
-                                    >{{ isRoot ? "Ingest" : "Transform" }} only</mat-chip-option
-                                >
+                                    >{{ isRoot ? "Ingest" : "Transform" }}
+                                </mat-chip-option>
                             </mat-chip-listbox>
                         </div>
+
                         <div class="mt-4" *ngIf="flowConnectionData.flowsProcesses.webhooks.rollup.total">
                             <p class="fw-500">Associated channels</p>
                             <div class="d-flex flex-row gap-4 align-items-center">
@@ -347,16 +348,41 @@
                                 </div>
                             </div>
 
-                            <div class="mt-4" *ngIf="showSubprocessesTable">
+                            <div
+                                class="d-inline-block mt-2 d-flex flex-row align-items-center"
+                                *ngIf="selectedWebhooksChips.length"
+                            >
+                                Selected subscriptions:
+                                <mat-chip-set class="ms-2">
+                                    <mat-chip *ngFor="let webhook of selectedWebhooksChips">
+                                        {{ webhook }}
+                                        <button
+                                            matChipRemove
+                                            (click)="
+                                                remove(webhook, flowConnectionData.flowsProcesses.webhooks.subprocesses)
+                                            "
+                                        >
+                                            <mat-icon>cancel</mat-icon>
+                                        </button>
+                                    </mat-chip>
+                                </mat-chip-set>
+                            </div>
+
+                            <div
+                                class="mt-4"
+                                *ngIf="showSubprocessesTable"
+                                [ngClass]="{
+                                    'mt-2': selectedWebhooksChips.length,
+                                    'mt-4': !selectedWebhooksChips.length,
+                                }"
+                            >
                                 <div class="w-75">
                                     <div [id]="'subprocesses-table'" class="dynamic-table">
                                         <table
                                             mat-table
                                             [dataSource]="
                                                 flowConnectionData.flowsProcesses.webhooks.subprocesses
-                                                    | subprocessStatusFilter
-                                                        : selectedWebhookFilterButtons
-                                                        : selectedWebhooksIds
+                                                    | subprocessStatusFilter: selectedWebhookFilterButtons
                                             "
                                         >
                                             <!-- Subscription Column -->
@@ -367,7 +393,7 @@
                                                 <td mat-cell *matCellDef="let element">
                                                     <a
                                                         class="subscription-name"
-                                                        (click)="navigatoToSubscription(element.id)"
+                                                        (click)="navigatoToSubscription(element)"
                                                         >{{ element.name }}</a
                                                     >
                                                 </td>

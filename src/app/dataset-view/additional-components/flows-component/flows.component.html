@@ -22,7 +22,7 @@
                                 >
                                     <div><mat-icon class="mannual-udate-icon">add_circle</mat-icon></div>
                                     <div class="d-flex flex-column mt-1">
-                                        <div class="fw-500 fs-16">Manual updates</div>
+                                        <div class="fw-500 fs-16">Manual {{ isRoot ? "ingest" : "transform" }}</div>
                                         <div>
                                             <span class="text-muted fs-12"> Attempted to update the latest data </span>
                                         </div>
@@ -178,10 +178,22 @@
                                                 {{
                                                     flowConnectionData.flowProcesses.primary.summary
                                                         .autoStoppedReason === FlowProcessAutoStopReason.StopPolicy
-                                                        ? "stop policy"
+                                                        ? "stop policy "
                                                         : "unrecoverable failure"
                                                 }}
                                             </span>
+
+                                            <span
+                                                *ngIf="
+                                                    flowConnectionData.flowProcesses.primary?.summary
+                                                        ?.autoStoppedReason ===
+                                                    FlowProcessAutoStopReason.UnrecoverableFailure
+                                                "
+                                                class="text-muted fs-12"
+                                            >
+                                                -
+                                            </span>
+
                                             <span
                                                 class="text-muted fs-12"
                                                 *ngIf="
@@ -192,7 +204,7 @@
                                                 {{
                                                     flowConnectionData.flowProcesses.primary.summary.consecutiveFailures
                                                 }}
-                                                consecutive failures.
+                                                consecutive failures
                                             </span>
                                             <span
                                                 class="text-muted fs-12"
@@ -204,7 +216,8 @@
                                                         ?.autoStoppedReason === FlowProcessAutoStopReason.StopPolicy
                                                 "
                                             >
-                                                ,{{
+                                                -
+                                                {{
                                                     flowConnectionData.flowProcesses.primary.summary
                                                         .consecutiveFailures
                                                 }}/{{

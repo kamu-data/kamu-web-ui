@@ -133,9 +133,9 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         if (index >= 0) {
             this.selectedWebhooksChips.splice(index, 1);
         }
-
         const removedId = subprocesses.filter((item) => item.name === subscriptionName)[0].id;
         this.selectedWebhooksIds = this.selectedWebhooksIds.filter((item) => item !== removedId);
+
         this.navigationService.navigateToDatasetView({
             accountName: this.flowsData.datasetBasics.owner.accountName,
             datasetName: this.flowsData.datasetBasics.name,
@@ -195,6 +195,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         }
         this.selectedWebhookFilterButtons = [];
         this.selectedWebhooksCategory = undefined;
+
         this.navigationService.navigateToDatasetView({
             accountName: this.flowsData.datasetBasics.owner.accountName,
             datasetName: this.flowsData.datasetBasics.name,
@@ -305,7 +306,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                 webhooks: undefined,
             };
         }
-
+        this.selectedFlowsCategory = "all";
         return null;
     }
 

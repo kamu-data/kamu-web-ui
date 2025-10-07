@@ -38,7 +38,7 @@
                                 >
                                     <div><mat-icon class="completed-status">check_circle</mat-icon></div>
                                     <div class="d-flex flex-column mt-1">
-                                        <div class="fw-500 fs-16">Updates active</div>
+                                        <div class="fw-500 fs-16">{{ isRoot ? "Ingest" : "Transform" }} active</div>
                                         <div>
                                             <span
                                                 class="text-muted fs-12"
@@ -59,7 +59,7 @@
                                                         ?.lastSuccessAt &&
                                                     !flowConnectionData.flowsProcesses.primary?.summary?.lastFailureAt
                                                 "
-                                                >Updates starting...</span
+                                                >{{ isRoot ? "Ingest" : "Transform" }} starting...</span
                                             >
                                         </div>
                                         <div>
@@ -87,7 +87,7 @@
                                 >
                                     <div><mat-icon class="enabled-failing-status">warning</mat-icon></div>
                                     <div class="d-flex flex-column mt-1">
-                                        <div class="fw-500 fs-16">Updates failing</div>
+                                        <div class="fw-500 fs-16">{{ isRoot ? "Ingest" : "Transform" }} failing</div>
                                         <div>
                                             <div
                                                 class="text-muted fs-12"
@@ -148,7 +148,7 @@
                                 >
                                     <div><mat-icon class="pause-status">pause_circle</mat-icon></div>
                                     <div class="d-flex flex-column mt-1">
-                                        <div class="fw-500 fs-16">Updates paused</div>
+                                        <div class="fw-500 fs-16">{{ isRoot ? "Ingest" : "Transform" }} paused</div>
                                         <div>
                                             <span class="text-muted fs-12">Reason: paused manually by user</span>
                                         </div>
@@ -163,7 +163,7 @@
                                 >
                                     <div><mat-icon class="stopped-status">warning</mat-icon></div>
                                     <div class="d-flex flex-column mt-1">
-                                        <div class="fw-500 fs-16">Updates stopped</div>
+                                        <div class="fw-500 fs-16">{{ isRoot ? "Ingest" : "Transform" }} stopped</div>
                                         <div>
                                             <span class="text-muted fs-12"
                                                 >Last run:
@@ -282,7 +282,7 @@
                                 (change)="onSelectionFlowsChange($event)"
                             >
                                 <mat-chip-option [value]="'all'">All flows</mat-chip-option>
-                                <mat-chip-option [value]="'updates'"
+                                <mat-chip-option *ngIf="!hasPushSources" [value]="'updates'"
                                     >{{ isRoot ? "Ingest" : "Transform" }}
                                 </mat-chip-option>
                             </mat-chip-listbox>

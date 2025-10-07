@@ -5,8 +5,9 @@
  * included in the LICENSE file.
  */
 
+import { FlowProcessEffectiveState } from "../api/kamu.graphql.interface";
 import { FlowDetailsTabs } from "../dataset-flow/dataset-flow-details/dataset-flow-details.types";
-import { FlowProcessEffectiveCustomState, FlowsCategoryUnion } from "../dataset-view/dataset-view.interface";
+import { FlowsCategoryUnion } from "../dataset-view/dataset-view.interface";
 
 export interface DatasetNavigationParams {
     accountName: string;
@@ -18,7 +19,7 @@ export interface DatasetNavigationParams {
     sqlQuery?: string;
     webhookId?: string[];
     category?: FlowsCategoryUnion;
-    webhooksState?: FlowProcessEffectiveCustomState[];
+    webhooksState?: FlowProcessEffectiveState[];
 }
 export interface DatasetInfo {
     accountName: string;

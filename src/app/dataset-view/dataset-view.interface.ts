@@ -43,14 +43,6 @@ export interface WebhooksFiltersDescriptor {
     valueKey: keyof FlowProcessGroupRollup;
 }
 
-export type FlowProcessEffectiveCustomState =
-    | FlowProcessEffectiveState.Active
-    | FlowProcessEffectiveState.Failing
-    | FlowProcessEffectiveState.PausedManual
-    | FlowProcessEffectiveState.StoppedAuto
-    | FlowProcessEffectiveState.Unconfigured
-    | "total";
-
 export const webhooksStateMapper: Record<FlowProcessEffectiveState, string> = {
     [FlowProcessEffectiveState.Active]: "ACTIVE",
     [FlowProcessEffectiveState.Failing]: "FAILING",

@@ -19,12 +19,11 @@ import {
     InitiatorFilterInput,
     WebhookFlowSubProcess,
 } from "src/app/api/kamu.graphql.interface";
-import { combineLatest, map, Observable, switchMap, take, timer } from "rxjs";
+import { combineLatest, map, Observable, of, switchMap, take, tap, timer } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import {
     DatasetOverviewTabData,
     DatasetViewTypeEnum,
-    FlowProcessEffectiveCustomState,
     FlowsCategoryUnion,
     FlowsSelectedCategory,
     WebhooksSelectedCategory,
@@ -89,26 +88,27 @@ import { FormsModule } from "@angular/forms";
 export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_FLOWS_KEY) public flowsData: DatasetOverviewTabData;
     @Input(ProjectLinks.URL_QUERY_PARAM_WEBHOOK_ID) public set setWebhookId(value: MaybeNull<string>) {
-        this.webhookId = value ? value.split(",") : [];
+        this.webhookIds = value ? value.split(",") : [];
+    }
+    @Input(ProjectLinks.URL_QUERY_PARAM_WEBHOOKS_STATE) public set setWebhookState(value: MaybeNull<string>) {
+        this.selectedWebhookFilterButtons = value ? (value.split(",") as FlowProcessEffectiveState[]) : [];
     }
     @Input(ProjectLinks.URL_QUERY_PARAM_FLOWS_CATEGORY) public set setFlowsCategory(value: FlowsCategoryUnion) {
         if (value === "webhooks") {
-            this.selectedWebhooksCategory = "webhooks";
-        } else if (value === "updates") {
-            this.selectedFlowsCategory = "updates";
+            this.selectedWebhooksCategory = value;
         } else {
-            this.selectedFlowsCategory = "all";
+            this.selectedFlowsCategory = value;
         }
     }
 
     public searchFilter = "";
-    public webhookId: string[] = [];
+    public webhookIds: string[] = [];
     private datasetWebhooksService = inject(DatasetWebhooksService);
 
     public flowsProcesses$: Observable<DatasetFlowProcesses>;
     public selectedFlowsCategory: MaybeUndefined<FlowsSelectedCategory> = undefined;
     public selectedWebhooksCategory: MaybeUndefined<WebhooksSelectedCategory> = undefined;
-    public selectedWebhookFilterButtons: FlowProcessEffectiveCustomState[] = [];
+    public selectedWebhookFilterButtons: FlowProcessEffectiveState[] = [];
     public selectedWebhooksIds: string[] = [];
     public selectedWebhooksChips: string[] = [];
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
@@ -146,13 +146,13 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public ngOnInit(): void {
-        this.selectedWebhooksIds = this.webhookId.length ? this.webhookId : [];
+        this.selectedWebhooksIds = this.webhookIds.length ? this.webhookIds : [];
         this.getPageFromUrl();
         this.fetchTableData(this.currentPage);
     }
 
     public get showSubprocessesTable(): boolean {
-        return this.isWebhookCategoryActive || Boolean(this.webhookId);
+        return this.isWebhookCategoryActive || Boolean(this.webhookIds.length);
     }
 
     public get isWebhookCategoryActive(): boolean {
@@ -160,20 +160,8 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public onToggleWebhookFilter(event: MatButtonToggleChange, subprocesses: WebhookFlowSubProcess[]): void {
-        const states = event.value as FlowProcessEffectiveCustomState[];
+        const states = event.value as FlowProcessEffectiveState[];
         this.selectedWebhooksChips = [];
-
-        if (states.includes("total")) {
-            this.selectedWebhooksIds = subprocesses.map((item) => item.id);
-            this.navigationService.navigateToDatasetView({
-                accountName: this.flowsData.datasetBasics.owner.accountName,
-                datasetName: this.flowsData.datasetBasics.name,
-                tab: DatasetViewTypeEnum.Flows,
-                category: this.selectedWebhooksCategory as FlowsCategoryUnion,
-            });
-            this.refreshFlow();
-            return;
-        }
         this.selectedWebhooksIds = subprocesses
             .filter((x) => states.includes(x.summary.effectiveState))
             .map((item) => item.id);
@@ -250,7 +238,20 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         filterByInitiator?: MaybeNull<InitiatorFilterInput>,
     ): void {
         this.flowConnectionData$ = timer(0, environment.delay_polling_ms).pipe(
-            switchMap(() =>
+            switchMap(() => this.flowsService.datasetFlowsProcesses({ datasetId: this.flowsData.datasetBasics.id })),
+            tap((flowProcesses: DatasetFlowProcesses) => {
+                const subprocessesNames = flowProcesses.webhooks.subprocesses
+                    .filter((item) => this.webhookIds.includes(item.id))
+                    .map((x) => x.name);
+                this.selectedWebhooksChips = subprocessesNames;
+
+                if (this.selectedWebhookFilterButtons.length) {
+                    this.selectedWebhooksIds = flowProcesses.webhooks.subprocesses
+                        .filter((item) => this.selectedWebhookFilterButtons.includes(item.summary.effectiveState))
+                        .map((x) => x.id);
+                }
+            }),
+            switchMap((flowProcesses: DatasetFlowProcesses) =>
                 combineLatest([
                     this.flowsService.datasetFlowsList({
                         datasetId: this.flowsData.datasetBasics.id,
@@ -261,7 +262,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                             byStatus: filterByStatus,
                             byInitiator: filterByInitiator,
                             byProcessType: this.setProcessTypeFilter(
-                                this.webhookId,
+                                this.webhookIds,
                                 this.selectedFlowsCategory,
                                 this.selectedWebhooksCategory,
                             ),
@@ -269,16 +270,12 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                     }),
                     this.flowsService.allFlowsPaused(this.flowsData.datasetBasics.id),
                     this.flowsService.flowsInitiators(this.flowsData.datasetBasics.id),
-                    this.flowsService.datasetFlowsProcesses({ datasetId: this.flowsData.datasetBasics.id }),
+                    of(flowProcesses),
                 ]),
             ),
 
-            map(([flowsData, allFlowsPaused, flowInitiators, flowsProcesses]) => {
-                const subprocessesNames = flowsProcesses.webhooks.subprocesses
-                    .filter((item) => this.webhookId.includes(item.id))
-                    .map((x) => x.name);
-                this.selectedWebhooksChips = subprocessesNames;
-                return { flowsData, allFlowsPaused, flowInitiators, flowsProcesses };
+            map(([flowsData, allFlowsPaused, flowInitiators, flowProcesses]) => {
+                return { flowsData, allFlowsPaused, flowInitiators, flowProcesses };
             }),
         );
     }
@@ -290,7 +287,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     ): MaybeNull<FlowProcessTypeFilterInput> {
         if (webhookId.length) {
             this.selectedFlowsCategory = undefined;
-            this.selectedWebhooksIds = this.webhookId.length ? this.webhookId : [];
+            this.selectedWebhooksIds = this.webhookIds.length ? this.webhookIds : [];
             return {
                 primary: undefined,
                 webhooks: { subscriptionIds: this.selectedWebhooksIds },

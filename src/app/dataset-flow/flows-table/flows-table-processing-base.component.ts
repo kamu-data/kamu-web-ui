@@ -44,7 +44,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
         flowsData: FlowsTableData;
         allFlowsPaused: MaybeUndefined<boolean>;
         flowInitiators: AccountFragment[];
-        flowsProcesses?: DatasetFlowProcesses;
+        flowProcesses?: DatasetFlowProcesses;
     }>;
 
     protected abstract fetchTableData(

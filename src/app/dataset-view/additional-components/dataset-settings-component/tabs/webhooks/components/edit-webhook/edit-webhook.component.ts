@@ -19,6 +19,7 @@ import { EditWebhooksType } from "./edit-webhooks.types";
 import { eventTypesMapper } from "src/app/common/helpers/data.helpers";
 import { SubscribedEventType, WebhookSubscriptionFormType } from "../../dataset-settings-webhooks-tab.component.types";
 import { WebhookFormComponent } from "../common/webhook-form/webhook-form.component";
+import { Location } from "@angular/common";
 
 @Component({
     selector: "app-edit-webhook",
@@ -46,6 +47,7 @@ export class EditWebhookComponent extends BaseComponent implements OnInit {
     private fb = inject(NonNullableFormBuilder);
     private datasetWebhooksService = inject(DatasetWebhooksService);
     private navigationService = inject(NavigationService);
+    private location = inject(Location);
 
     public createOrEditSubscriptionForm: FormGroup<WebhookSubscriptionFormType> = this.fb.group({
         targetUrl: this.fb.control("", [Validators.required, Validators.pattern(AppValues.URL_PATTERN_ONLY_HTTPS)]),
@@ -81,5 +83,9 @@ export class EditWebhookComponent extends BaseComponent implements OnInit {
             accountName: this.editWebhooksData.datasetBasics.owner.accountName,
             datasetName: this.editWebhooksData.datasetBasics.name,
         });
+    }
+
+    public onCancel(): void {
+        this.location.back();
     }
 }

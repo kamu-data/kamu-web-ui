@@ -3,7 +3,7 @@
         <ng-container *ngIf="flowConnectionData.flowsData.connectionDataForWidget.nodes.length; else noRuns">
             <div>
                 <div class="mt-4">
-                    <div class="box p-4 w-100" *ngIf="flowConnectionData.flowsProcesses">
+                    <div class="box p-4 w-100" *ngIf="flowConnectionData.flowProcesses">
                         <div
                             class="d-flex flex-row"
                             [ngClass]="{
@@ -15,9 +15,9 @@
                                 <div
                                     class="d-flex gap-2 manual-container"
                                     *ngIf="
-                                        flowConnectionData.flowsProcesses.primary.summary.effectiveState ===
+                                        flowConnectionData.flowProcesses.primary.summary.effectiveState ===
                                             FlowProcessEffectiveState.Unconfigured &&
-                                        flowConnectionData.flowsProcesses.primary.summary.lastAttemptAt
+                                        flowConnectionData.flowProcesses.primary.summary.lastAttemptAt
                                     "
                                 >
                                     <div><mat-icon class="mannual-udate-icon">add_circle</mat-icon></div>
@@ -32,7 +32,7 @@
                                 <div
                                     class="d-flex gap-2 completed-container"
                                     *ngIf="
-                                        flowConnectionData.flowsProcesses.primary.summary.effectiveState ===
+                                        flowConnectionData.flowProcesses.primary.summary.effectiveState ===
                                         FlowProcessEffectiveState.Active
                                     "
                                 >
@@ -42,12 +42,10 @@
                                         <div>
                                             <span
                                                 class="text-muted fs-12"
-                                                *ngIf="
-                                                    flowConnectionData.flowsProcesses.primary?.summary?.lastSuccessAt
-                                                "
+                                                *ngIf="flowConnectionData.flowProcesses.primary?.summary?.lastSuccessAt"
                                                 >Last run:
                                                 {{
-                                                    flowConnectionData.flowsProcesses.primary.summary.lastSuccessAt
+                                                    flowConnectionData.flowProcesses.primary.summary.lastSuccessAt
                                                         | date: DISPLAY_TIME_FORMAT
                                                 }}
                                                 success</span
@@ -55,9 +53,8 @@
                                             <span
                                                 class="text-muted fs-12"
                                                 *ngIf="
-                                                    !flowConnectionData.flowsProcesses.primary?.summary
-                                                        ?.lastSuccessAt &&
-                                                    !flowConnectionData.flowsProcesses.primary?.summary?.lastFailureAt
+                                                    !flowConnectionData.flowProcesses.primary?.summary?.lastSuccessAt &&
+                                                    !flowConnectionData.flowProcesses.primary?.summary?.lastFailureAt
                                                 "
                                                 >{{ isRoot ? "Ingest" : "Transform" }} starting...</span
                                             >
@@ -65,12 +62,10 @@
                                         <div>
                                             <span
                                                 class="text-muted fs-12"
-                                                *ngIf="
-                                                    flowConnectionData.flowsProcesses.primary?.summary?.nextPlannedAt
-                                                "
+                                                *ngIf="flowConnectionData.flowProcesses.primary?.summary?.nextPlannedAt"
                                                 >Next planned:
                                                 {{
-                                                    flowConnectionData.flowsProcesses.primary.summary.nextPlannedAt
+                                                    flowConnectionData.flowProcesses.primary.summary.nextPlannedAt
                                                         | date: DISPLAY_TIME_FORMAT
                                                 }}
                                             </span>
@@ -81,7 +76,7 @@
                                 <div
                                     class="d-flex gap-2 failing-container"
                                     *ngIf="
-                                        flowConnectionData.flowsProcesses.primary?.summary?.effectiveState ===
+                                        flowConnectionData.flowProcesses.primary?.summary?.effectiveState ===
                                         FlowProcessEffectiveState.Failing
                                     "
                                 >
@@ -92,22 +87,22 @@
                                             <div
                                                 class="text-muted fs-12"
                                                 *ngIf="
-                                                    flowConnectionData.flowsProcesses.primary?.summary?.stopPolicy
+                                                    flowConnectionData.flowProcesses.primary?.summary?.stopPolicy
                                                         ?.__typename === 'FlowTriggerStopPolicyAfterConsecutiveFailures'
                                                 "
                                             >
                                                 Next planned:
                                                 {{
-                                                    flowConnectionData.flowsProcesses.primary.summary.nextPlannedAt
+                                                    flowConnectionData.flowProcesses.primary.summary.nextPlannedAt
                                                         | date: DISPLAY_TIME_FORMAT
                                                 }},
                                                 <span class="text-muted fs-12">
                                                     {{
-                                                        flowConnectionData.flowsProcesses.primary.summary
+                                                        flowConnectionData.flowProcesses.primary.summary
                                                             .consecutiveFailures
                                                     }}/{{
                                                         maxFailures(
-                                                            flowConnectionData.flowsProcesses.primary.summary.stopPolicy
+                                                            flowConnectionData.flowProcesses.primary.summary.stopPolicy
                                                         )
                                                     }}
 
@@ -117,13 +112,13 @@
                                             <div
                                                 class="text-muted fs-12"
                                                 *ngIf="
-                                                    flowConnectionData.flowsProcesses.primary?.summary?.stopPolicy
+                                                    flowConnectionData.flowProcesses.primary?.summary?.stopPolicy
                                                         ?.__typename === 'FlowTriggerStopPolicyNever'
                                                 "
                                             >
                                                 <span class="text-muted fs-12">
                                                     {{
-                                                        flowConnectionData.flowsProcesses.primary.summary
+                                                        flowConnectionData.flowProcesses.primary.summary
                                                             .consecutiveFailures
                                                     }}
                                                     consecutive failures.
@@ -132,7 +127,7 @@
                                             <div class="text-muted fs-12">
                                                 Last failure at:
                                                 {{
-                                                    flowConnectionData.flowsProcesses.primary.summary.lastFailureAt
+                                                    flowConnectionData.flowProcesses.primary.summary.lastFailureAt
                                                         | date: DISPLAY_TIME_FORMAT
                                                 }}
                                             </div>
@@ -142,7 +137,7 @@
                                 <div
                                     class="d-flex gap-2 pause-container"
                                     *ngIf="
-                                        flowConnectionData.flowsProcesses.primary?.summary?.effectiveState ===
+                                        flowConnectionData.flowProcesses.primary?.summary?.effectiveState ===
                                         FlowProcessEffectiveState.PausedManual
                                     "
                                 >
@@ -157,7 +152,7 @@
                                 <div
                                     class="d-flex gap-2 stopped-container"
                                     *ngIf="
-                                        flowConnectionData.flowsProcesses.primary?.summary?.effectiveState ===
+                                        flowConnectionData.flowProcesses.primary?.summary?.effectiveState ===
                                         FlowProcessEffectiveState.StoppedAuto
                                     "
                                 >
@@ -168,7 +163,7 @@
                                             <span class="text-muted fs-12"
                                                 >Last run:
                                                 {{
-                                                    flowConnectionData.flowsProcesses.primary.summary.lastFailureAt
+                                                    flowConnectionData.flowProcesses.primary.summary.lastFailureAt
                                                         | date: DISPLAY_TIME_FORMAT
                                                 }}
                                             </span>
@@ -176,13 +171,12 @@
                                         <div>
                                             <span
                                                 *ngIf="
-                                                    flowConnectionData.flowsProcesses.primary?.summary
-                                                        ?.autoStoppedReason
+                                                    flowConnectionData.flowProcesses.primary?.summary?.autoStoppedReason
                                                 "
                                                 class="text-muted fs-12"
                                                 >Reason:
                                                 {{
-                                                    flowConnectionData.flowsProcesses.primary.summary
+                                                    flowConnectionData.flowProcesses.primary.summary
                                                         .autoStoppedReason === FlowProcessAutoStopReason.StopPolicy
                                                         ? "stop policy"
                                                         : "unrecoverable failure"
@@ -191,32 +185,31 @@
                                             <span
                                                 class="text-muted fs-12"
                                                 *ngIf="
-                                                    flowConnectionData.flowsProcesses.primary?.summary?.stopPolicy
+                                                    flowConnectionData.flowProcesses.primary?.summary?.stopPolicy
                                                         ?.__typename === 'FlowTriggerStopPolicyAfterConsecutiveFailures'
                                                 "
                                             >
                                                 {{
-                                                    flowConnectionData.flowsProcesses.primary.summary
-                                                        .consecutiveFailures
+                                                    flowConnectionData.flowProcesses.primary.summary.consecutiveFailures
                                                 }}
                                                 consecutive failures.
                                             </span>
                                             <span
                                                 class="text-muted fs-12"
                                                 *ngIf="
-                                                    flowConnectionData.flowsProcesses.primary?.summary?.stopPolicy
+                                                    flowConnectionData.flowProcesses.primary?.summary?.stopPolicy
                                                         ?.__typename ===
                                                         'FlowTriggerStopPolicyAfterConsecutiveFailures' &&
-                                                    flowConnectionData.flowsProcesses.primary?.summary
+                                                    flowConnectionData.flowProcesses.primary?.summary
                                                         ?.autoStoppedReason === FlowProcessAutoStopReason.StopPolicy
                                                 "
                                             >
                                                 ,{{
-                                                    flowConnectionData.flowsProcesses.primary.summary
+                                                    flowConnectionData.flowProcesses.primary.summary
                                                         .consecutiveFailures
                                                 }}/{{
                                                     maxFailures(
-                                                        flowConnectionData.flowsProcesses.primary.summary.stopPolicy
+                                                        flowConnectionData.flowProcesses.primary.summary.stopPolicy
                                                     )
                                                 }}
                                                 consecutive failures
@@ -241,7 +234,7 @@
                                         type="button"
                                         *ngIf="
                                             !hasPushSources &&
-                                            flowConnectionData.flowsProcesses.primary.summary.effectiveState !==
+                                            flowConnectionData.flowProcesses.primary.summary.effectiveState !==
                                                 FlowProcessEffectiveState.Unconfigured
                                         "
                                         (click)="toggleStateDatasetFlowConfigs(flowConnectionData.allFlowsPaused!)"
@@ -288,7 +281,7 @@
                             </mat-chip-listbox>
                         </div>
 
-                        <div class="mt-4" *ngIf="flowConnectionData.flowsProcesses.webhooks.rollup.total">
+                        <div class="mt-4" *ngIf="flowConnectionData.flowProcesses.webhooks.rollup.total">
                             <p class="fw-500">Associated channels</p>
                             <div class="d-flex flex-row gap-4 align-items-center">
                                 <div
@@ -302,46 +295,44 @@
                                         <mat-chip-option [value]="'webhooks'"> Webhooks</mat-chip-option>
                                     </mat-chip-listbox>
 
+                                    <span class="fw-500"
+                                        >total: {{ flowConnectionData.flowProcesses.webhooks.rollup.total }}</span
+                                    >
+
                                     <mat-button-toggle-group
                                         [(ngModel)]="selectedWebhookFilterButtons"
                                         (change)="
                                             onToggleWebhookFilter(
                                                 $event,
-                                                flowConnectionData.flowsProcesses.webhooks.subprocesses
+                                                flowConnectionData.flowProcesses.webhooks.subprocesses
                                             )
                                         "
                                         multiple
                                         [disabled]="!isWebhookCategoryActive"
                                     >
-                                        <mat-button-toggle value="total"
-                                            >total:
-                                            {{
-                                                flowConnectionData.flowsProcesses.webhooks.rollup.total
-                                            }}</mat-button-toggle
-                                        >
                                         <mat-button-toggle [value]="FlowProcessEffectiveState.Active"
                                             >active:
                                             {{
-                                                flowConnectionData.flowsProcesses.webhooks.rollup.active
+                                                flowConnectionData.flowProcesses.webhooks.rollup.active
                                             }}</mat-button-toggle
                                         >
                                         <mat-button-toggle [value]="FlowProcessEffectiveState.Failing"
                                             >failing:
                                             {{
-                                                flowConnectionData.flowsProcesses.webhooks.rollup.failing
+                                                flowConnectionData.flowProcesses.webhooks.rollup.failing
                                             }}</mat-button-toggle
                                         >
                                         <mat-button-toggle [value]="FlowProcessEffectiveState.StoppedAuto"
                                             >stopped:
                                             {{
-                                                flowConnectionData.flowsProcesses.webhooks.rollup.stopped
+                                                flowConnectionData.flowProcesses.webhooks.rollup.stopped
                                             }}</mat-button-toggle
                                         >
                                         <mat-button-toggle [value]="FlowProcessEffectiveState.PausedManual"
                                             >paused:
                                             {{
-                                                flowConnectionData.flowsProcesses.webhooks.rollup.paused +
-                                                    flowConnectionData.flowsProcesses.webhooks.rollup.unconfigured
+                                                flowConnectionData.flowProcesses.webhooks.rollup.paused +
+                                                    flowConnectionData.flowProcesses.webhooks.rollup.unconfigured
                                             }}</mat-button-toggle
                                         >
                                     </mat-button-toggle-group>
@@ -359,7 +350,7 @@
                                         <button
                                             matChipRemove
                                             (click)="
-                                                remove(webhook, flowConnectionData.flowsProcesses.webhooks.subprocesses)
+                                                remove(webhook, flowConnectionData.flowProcesses.webhooks.subprocesses)
                                             "
                                         >
                                             <mat-icon>cancel</mat-icon>
@@ -381,7 +372,7 @@
                                         <table
                                             mat-table
                                             [dataSource]="
-                                                flowConnectionData.flowsProcesses.webhooks.subprocesses
+                                                flowConnectionData.flowProcesses.webhooks.subprocesses
                                                     | subprocessStatusFilter: selectedWebhookFilterButtons
                                             "
                                         >

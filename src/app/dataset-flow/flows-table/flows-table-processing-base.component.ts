@@ -42,7 +42,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
 
     protected flowConnectionData$: Observable<{
         flowsData: FlowsTableData;
-        allFlowsPaused: MaybeUndefined<boolean>;
+        allFlowsPaused?: MaybeUndefined<boolean>;
         flowInitiators: AccountFragment[];
         flowProcesses?: DatasetFlowProcesses;
     }>;

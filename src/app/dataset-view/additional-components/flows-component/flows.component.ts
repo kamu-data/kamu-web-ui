@@ -52,6 +52,8 @@ import { SubprocessStatusFilterPipe } from "./pipes/subprocess-status-filter.pip
 import { DatasetWebhooksService } from "../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
 import { FormsModule } from "@angular/forms";
+import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import { ModalService } from "src/app/common/components/modal/modal.service";
 
 @Component({
     selector: "app-flows",
@@ -104,13 +106,14 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public searchFilter = "";
     public webhookIds: string[] = [];
     private datasetWebhooksService = inject(DatasetWebhooksService);
+    private modalService = inject(ModalService);
 
     public flowsProcesses$: Observable<DatasetFlowProcesses>;
     public selectedFlowsCategory: MaybeUndefined<FlowsSelectedCategory> = undefined;
     public selectedWebhooksCategory: MaybeUndefined<WebhooksSelectedCategory> = undefined;
     public selectedWebhookFilterButtons: FlowProcessEffectiveState[] = [];
     public selectedWebhooksIds: string[] = [];
-    public selectedWebhooksChips: string[] = [];
+    public selectedSubscriptions: string[] = [];
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
     public readonly FlowProcessAutoStopReason: typeof FlowProcessAutoStopReason = FlowProcessAutoStopReason;
 
@@ -128,23 +131,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         "options",
     ];
 
-    public remove(subscriptionName: string, subprocesses: WebhookFlowSubProcess[]): void {
-        const index = this.selectedWebhooksChips.indexOf(subscriptionName);
-        if (index >= 0) {
-            this.selectedWebhooksChips.splice(index, 1);
-        }
-        const removedId = subprocesses.filter((item) => item.name === subscriptionName)[0].id;
-        this.selectedWebhooksIds = this.selectedWebhooksIds.filter((item) => item !== removedId);
-
-        this.navigationService.navigateToDatasetView({
-            accountName: this.flowsData.datasetBasics.owner.accountName,
-            datasetName: this.flowsData.datasetBasics.name,
-            tab: DatasetViewTypeEnum.Flows,
-            webhookId: this.selectedWebhooksIds,
-        });
-        this.fetchTableData(this.currentPage);
-    }
-
     public ngOnInit(): void {
         this.selectedWebhooksIds = this.webhookIds.length ? this.webhookIds : [];
         this.getPageFromUrl();
@@ -159,9 +145,26 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         return this.selectedWebhooksCategory === "webhooks";
     }
 
+    public removeSelectedWebhook(subscriptionName: string, subprocesses: WebhookFlowSubProcess[]): void {
+        const index = this.selectedSubscriptions.indexOf(subscriptionName);
+        if (index >= 0) {
+            this.selectedSubscriptions.splice(index, 1);
+        }
+        const removedId = subprocesses.filter((item) => item.name === subscriptionName)[0].id;
+        this.selectedWebhooksIds = this.selectedWebhooksIds.filter((item) => item !== removedId);
+
+        this.navigationService.navigateToDatasetView({
+            accountName: this.flowsData.datasetBasics.owner.accountName,
+            datasetName: this.flowsData.datasetBasics.name,
+            tab: DatasetViewTypeEnum.Flows,
+            webhookId: this.selectedWebhooksIds,
+        });
+        this.fetchTableData(this.currentPage);
+    }
+
     public onToggleWebhookFilter(event: MatButtonToggleChange, subprocesses: WebhookFlowSubProcess[]): void {
         const states = event.value as FlowProcessEffectiveState[];
-        this.selectedWebhooksChips = [];
+        this.selectedSubscriptions = [];
         this.selectedWebhooksIds = subprocesses
             .filter((x) => states.includes(x.summary.effectiveState))
             .map((item) => item.id);
@@ -189,8 +192,8 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         if (this.selectedWebhooksCategory || this.selectedFlowsCategory) {
             this.selectedWebhooksIds = [];
         }
-        if (!this.selectedWebhooksChips.includes(process.name)) {
-            this.selectedWebhooksChips.push(process.name);
+        if (!this.selectedSubscriptions.includes(process.name)) {
+            this.selectedSubscriptions.push(process.name);
             this.selectedWebhooksIds.push(process.id);
         }
         this.selectedWebhookFilterButtons = [];
@@ -244,7 +247,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                 const subprocessesNames = flowProcesses.webhooks.subprocesses
                     .filter((item) => this.webhookIds.includes(item.id))
                     .map((x) => x.name);
-                this.selectedWebhooksChips = subprocessesNames;
+                this.selectedSubscriptions = subprocessesNames;
 
                 if (this.selectedWebhookFilterButtons.length) {
                     this.selectedWebhooksIds = flowProcesses.webhooks.subprocesses
@@ -269,14 +272,13 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                             ),
                         },
                     }),
-                    this.flowsService.allFlowsPaused(this.flowsData.datasetBasics.id),
                     this.flowsService.flowsInitiators(this.flowsData.datasetBasics.id),
                     of(flowProcesses),
                 ]),
             ),
 
-            map(([flowsData, allFlowsPaused, flowInitiators, flowProcesses]) => {
-                return { flowsData, allFlowsPaused, flowInitiators, flowProcesses };
+            map(([flowsData, flowInitiators, flowProcesses]) => {
+                return { flowsData, flowInitiators, flowProcesses };
             }),
         );
     }
@@ -327,7 +329,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         const category = event.value as FlowsCategoryUnion;
         if (category && this.selectedWebhookFilterButtons.length) {
             this.selectedWebhookFilterButtons = [];
-            this.selectedWebhooksChips = [];
+            this.selectedSubscriptions = [];
         }
         if (!category) {
             this.selectedWebhooksIds = [];
@@ -419,14 +421,41 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         });
     }
 
-    public toggleStateDatasetFlowConfigs(paused: boolean): void {
-        const operation$ = paused
-            ? this.flowsService.datasetResumeFlows({
-                  datasetId: this.flowsData.datasetBasics.id,
-              })
-            : this.flowsService.datasetPauseFlows({
-                  datasetId: this.flowsData.datasetBasics.id,
-              });
+    public toggleStateDatasetFlowConfigs(state: FlowProcessEffectiveState): void {
+        let operation$: Observable<void> = of();
+        if (state === FlowProcessEffectiveState.Active) {
+            operation$ = this.flowsService.datasetPauseFlows({
+                datasetId: this.flowsData.datasetBasics.id,
+            });
+        } else if (state === FlowProcessEffectiveState.StoppedAuto) {
+            promiseWithCatch(
+                this.modalService.error({
+                    title: "Resume updates",
+                    message: "Have you confirmed that all issues have been resolved?",
+                    yesButtonText: "Ok",
+                    noButtonText: "Cancel",
+                    handler: (ok) => {
+                        if (ok) {
+                            this.flowsService
+                                .datasetResumeFlows({
+                                    datasetId: this.flowsData.datasetBasics.id,
+                                })
+                                .pipe(take(1))
+                                .subscribe(() => {
+                                    setTimeout(() => {
+                                        this.refreshFlow();
+                                        this.cdr.detectChanges();
+                                    }, this.TIMEOUT_REFRESH_FLOW);
+                                });
+                        }
+                    },
+                }),
+            );
+        } else {
+            operation$ = this.flowsService.datasetResumeFlows({
+                datasetId: this.flowsData.datasetBasics.id,
+            });
+        }
 
         operation$.pipe(take(1)).subscribe(() => {
             setTimeout(() => {

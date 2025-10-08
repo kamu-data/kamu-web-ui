@@ -10,8 +10,6 @@ import { inject, Injectable } from "@angular/core";
 import {
     CancelFlowRunGQL,
     CancelFlowRunMutation,
-    DatasetAllFlowsPausedGQL,
-    DatasetAllFlowsPausedQuery,
     DatasetFlowFilters,
     DatasetFlowType,
     DatasetFlowsInitiatorsGQL,
@@ -66,7 +64,6 @@ export class DatasetFlowApi {
     private getDatasetListFlowsGQL = inject(GetDatasetListFlowsGQL);
     private datasetPauseFlowsGQL = inject(DatasetPauseFlowsGQL);
     private datasetResumeFlowsGQL = inject(DatasetResumeFlowsGQL);
-    private datasetAllFlowsPausedGQL = inject(DatasetAllFlowsPausedGQL);
 
     private datasetTriggerIngestFlowGQL = inject(DatasetTriggerIngestFlowGQL);
     private datasetTriggetTransformFlowGQL = inject(DatasetTriggerTransformFlowGQL);
@@ -297,14 +294,6 @@ export class DatasetFlowApi {
                     return result.data as DatasetResumeFlowsMutation;
                 }),
             );
-    }
-
-    public allFlowsPaused(datasetId: string): Observable<DatasetAllFlowsPausedQuery> {
-        return this.datasetAllFlowsPausedGQL.watch({ datasetId }, noCacheFetchPolicy).valueChanges.pipe(
-            map((result: ApolloQueryResult<DatasetAllFlowsPausedQuery>) => {
-                return result.data;
-            }),
-        );
     }
 
     public getFlowById(params: { datasetId: string; flowId: string }): Observable<GetFlowByIdQuery> {

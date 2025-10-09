@@ -10,18 +10,19 @@ import {
     DatasetFlowProcesses,
     DatasetFlowType,
     DatasetKind,
+    FlowProcess,
     FlowProcessAutoStopReason,
     FlowProcessEffectiveState,
     FlowProcessTypeFilterInput,
     FlowStatus,
-    FlowTriggerStopPolicy,
-    FlowTriggerStopPolicyAfterConsecutiveFailures,
     InitiatorFilterInput,
     WebhookFlowSubProcess,
 } from "src/app/api/kamu.graphql.interface";
 import { combineLatest, map, Observable, of, switchMap, take, tap, timer } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import {
+    DatasetFlowBadgeHelpers,
+    DatasetFlowsBadgeStyle,
     DatasetOverviewTabData,
     DatasetViewTypeEnum,
     FlowsCategoryUnion,
@@ -44,7 +45,7 @@ import { RouterLink } from "@angular/router";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
-import { NgIf, AsyncPipe, DatePipe, NgClass, NgFor } from "@angular/common";
+import { NgIf, AsyncPipe, NgClass, NgFor } from "@angular/common";
 import AppValues from "src/app/common/values/app.values";
 import { MatTableModule } from "@angular/material/table";
 import { MatButtonToggleChange, MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -54,7 +55,7 @@ import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
 import { FormsModule } from "@angular/forms";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { ModalService } from "src/app/common/components/modal/modal.service";
-
+import { DatasetFlowsBadgeTexts } from "./../../dataset-view.interface";
 @Component({
     selector: "app-flows",
     templateUrl: "./flows.component.html",
@@ -64,7 +65,6 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
     imports: [
         //-----//
         AsyncPipe,
-        DatePipe,
         FormsModule,
         NgClass,
         NgIf,
@@ -96,11 +96,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         this.selectedWebhookFilterButtons = value ? (value.split(",") as FlowProcessEffectiveState[]) : [];
     }
     @Input(ProjectLinks.URL_QUERY_PARAM_FLOWS_CATEGORY) public set setFlowsCategory(value: FlowsCategoryUnion) {
-        if (value === "webhooks") {
-            this.selectedWebhooksCategory = value;
-        } else {
-            this.selectedFlowsCategory = value;
-        }
+        value === "webhooks" ? (this.selectedWebhooksCategory = value) : (this.selectedFlowsCategory = value);
     }
 
     public searchFilter = "";
@@ -182,10 +178,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         return this.flowsData.datasetBasics.kind === DatasetKind.Root
             ? SettingsTabsEnum.SCHEDULING
             : SettingsTabsEnum.TRANSFORM_SETTINGS;
-    }
-
-    public maxFailures(policy: FlowTriggerStopPolicy): number {
-        return (policy as FlowTriggerStopPolicyAfterConsecutiveFailures).maxFailures;
     }
 
     public navigatoToSubscription(process: WebhookFlowSubProcess): void {
@@ -474,5 +466,17 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     public webhooksStateMapper(state: FlowProcessEffectiveState): string {
         return webhooksStateMapper[state];
+    }
+
+    public trackBySubscriptionId(index: number, item: WebhookFlowSubProcess): string {
+        return item.id;
+    }
+
+    public badgeStyles(element: FlowProcess): DatasetFlowsBadgeStyle {
+        return DatasetFlowBadgeHelpers.badgeStyles(element);
+    }
+
+    public badgeMessages(element: FlowProcess, isRoot: boolean): DatasetFlowsBadgeTexts {
+        return DatasetFlowBadgeHelpers.badgeMessages(element, isRoot);
     }
 }

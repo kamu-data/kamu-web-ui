@@ -1346,8 +1346,6 @@ export type DatasetFlowRunsMutTriggerResetFlowArgs = {
 
 export type DatasetFlowTriggers = {
     __typename?: "DatasetFlowTriggers";
-    /** Checks if all triggers of this dataset are disabled */
-    allPaused: Scalars["Boolean"];
     /** Returns defined trigger for a flow of specified type */
     byType?: Maybe<FlowTrigger>;
 };
@@ -5796,24 +5794,6 @@ export type GetDatasetFlowTriggerQuery = {
 };
 
 export type TimeDeltaDataFragment = { __typename?: "TimeDelta"; every: number; unit: TimeUnit };
-
-export type DatasetAllFlowsPausedQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-}>;
-
-export type DatasetAllFlowsPausedQuery = {
-    __typename?: "Query";
-    datasets: {
-        __typename?: "Datasets";
-        byId?: {
-            __typename?: "Dataset";
-            flows: {
-                __typename?: "DatasetFlows";
-                triggers: { __typename?: "DatasetFlowTriggers"; allPaused: boolean };
-            };
-        } | null;
-    };
-};
 
 export type CancelFlowRunMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"];
@@ -10977,33 +10957,6 @@ export class GetDatasetFlowTriggerGQL extends Apollo.Query<
     GetDatasetFlowTriggerQueryVariables
 > {
     document = GetDatasetFlowTriggerDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const DatasetAllFlowsPausedDocument = gql`
-    query datasetAllFlowsPaused($datasetId: DatasetID!) {
-        datasets {
-            byId(datasetId: $datasetId) {
-                flows {
-                    triggers {
-                        allPaused
-                    }
-                }
-            }
-        }
-    }
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class DatasetAllFlowsPausedGQL extends Apollo.Query<
-    DatasetAllFlowsPausedQuery,
-    DatasetAllFlowsPausedQueryVariables
-> {
-    document = DatasetAllFlowsPausedDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

@@ -10,7 +10,7 @@ import {
     DatasetFlowProcesses,
     DatasetFlowType,
     DatasetKind,
-    FlowProcess,
+    DatasetFlowProcess,
     FlowProcessAutoStopReason,
     FlowProcessEffectiveState,
     FlowProcessTypeFilterInput,
@@ -472,11 +472,11 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         return item.id;
     }
 
-    public badgeStyles(element: FlowProcess): DatasetFlowsBadgeStyle {
+    public badgeStyles(element: DatasetFlowProcess): DatasetFlowsBadgeStyle {
         return DatasetFlowBadgeHelpers.badgeStyles(element);
     }
 
-    public badgeMessages(element: FlowProcess, isRoot: boolean): DatasetFlowsBadgeTexts {
+    public badgeMessages(element: DatasetFlowProcess, isRoot: boolean): DatasetFlowsBadgeTexts {
         return DatasetFlowBadgeHelpers.badgeMessages(element, isRoot);
     }
 }

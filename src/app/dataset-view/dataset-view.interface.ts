@@ -9,7 +9,7 @@ import { DatePipe } from "@angular/common";
 import {
     DatasetBasicsFragment,
     DatasetPermissionsFragment,
-    FlowProcess,
+    DatasetFlowProcess,
     FlowProcessAutoStopReason,
     FlowProcessEffectiveState,
     FlowProcessGroupRollup,
@@ -72,7 +72,7 @@ export interface DatasetFlowsBadgeTexts {
 
 export class DatasetFlowBadgeHelpers {
     public static datePipe = new DatePipe("en-US");
-    public static badgeStyles(flowProcess: FlowProcess): DatasetFlowsBadgeStyle {
+    public static badgeStyles(flowProcess: DatasetFlowProcess): DatasetFlowsBadgeStyle {
         switch (flowProcess.summary.effectiveState) {
             case FlowProcessEffectiveState.Unconfigured:
                 return {
@@ -111,7 +111,7 @@ export class DatasetFlowBadgeHelpers {
         }
     }
 
-    public static badgeMessages(flowProcess: FlowProcess, isRoot: boolean): DatasetFlowsBadgeTexts {
+    public static badgeMessages(flowProcess: DatasetFlowProcess, isRoot: boolean): DatasetFlowsBadgeTexts {
         switch (flowProcess.summary.effectiveState) {
             case FlowProcessEffectiveState.Unconfigured:
                 return {

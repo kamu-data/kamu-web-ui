@@ -165,35 +165,49 @@ export type AccountFlowFilters = {
     byStatus?: InputMaybe<FlowStatus>;
 };
 
-export type AccountFlowProcessDatasetCard = {
-    __typename?: "AccountFlowProcessDatasetCard";
-    dataset: Dataset;
-    primary: FlowProcess;
-};
+export type AccountFlowProcessCard = DatasetFlowProcess | WebhookFlowSubProcess;
 
-export type AccountFlowProcessDatasetCardConnection = {
-    __typename?: "AccountFlowProcessDatasetCardConnection";
-    edges: Array<AccountFlowProcessDatasetCardEdge>;
+export type AccountFlowProcessCardConnection = {
+    __typename?: "AccountFlowProcessCardConnection";
+    edges: Array<AccountFlowProcessCardEdge>;
     /** A shorthand for `edges { node { ... } }` */
-    nodes: Array<AccountFlowProcessDatasetCard>;
+    nodes: Array<AccountFlowProcessCard>;
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
     totalCount: Scalars["Int"];
 };
 
-export type AccountFlowProcessDatasetCardEdge = {
-    __typename?: "AccountFlowProcessDatasetCardEdge";
-    node: AccountFlowProcessDatasetCard;
+export type AccountFlowProcessCardEdge = {
+    __typename?: "AccountFlowProcessCardEdge";
+    node: AccountFlowProcessCard;
 };
 
 export type AccountFlowProcesses = {
     __typename?: "AccountFlowProcesses";
-    datasetCards: AccountFlowProcessDatasetCardConnection;
+    allCards: AccountFlowProcessCardConnection;
+    fullRollup: FlowProcessGroupRollup;
+    primaryCards: DatasetFlowProcessConnection;
     primaryRollup: FlowProcessGroupRollup;
+    webhookCards: WebhookFlowSubProcessConnection;
+    webhookRollup: FlowProcessGroupRollup;
 };
 
-export type AccountFlowProcessesDatasetCardsArgs = {
+export type AccountFlowProcessesAllCardsArgs = {
+    filters?: InputMaybe<FlowProcessFilters>;
+    ordering?: InputMaybe<FlowProcessOrdering>;
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+};
+
+export type AccountFlowProcessesPrimaryCardsArgs = {
+    filters?: InputMaybe<FlowProcessFilters>;
+    ordering?: InputMaybe<FlowProcessOrdering>;
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+};
+
+export type AccountFlowProcessesWebhookCardsArgs = {
     filters?: InputMaybe<FlowProcessFilters>;
     ordering?: InputMaybe<FlowProcessOrdering>;
     page?: InputMaybe<Scalars["Int"]>;
@@ -1295,9 +1309,32 @@ export type DatasetFlowFilters = {
     byStatus?: InputMaybe<FlowStatus>;
 };
 
+export type DatasetFlowProcess = {
+    __typename?: "DatasetFlowProcess";
+    dataset: Dataset;
+    flowType: DatasetFlowType;
+    summary: FlowProcessSummary;
+};
+
+export type DatasetFlowProcessConnection = {
+    __typename?: "DatasetFlowProcessConnection";
+    edges: Array<DatasetFlowProcessEdge>;
+    /** A shorthand for `edges { node { ... } }` */
+    nodes: Array<DatasetFlowProcess>;
+    /** Page information */
+    pageInfo: PageBasedInfo;
+    /** Approximate number of total nodes */
+    totalCount: Scalars["Int"];
+};
+
+export type DatasetFlowProcessEdge = {
+    __typename?: "DatasetFlowProcessEdge";
+    node: DatasetFlowProcess;
+};
+
 export type DatasetFlowProcesses = {
     __typename?: "DatasetFlowProcesses";
-    primary: FlowProcess;
+    primary: DatasetFlowProcess;
     webhooks: WebhookFlowSubProcessGroup;
 };
 
@@ -2493,12 +2530,6 @@ export type FlowPreconditionsNotMet = SetFlowConfigResult &
         message: Scalars["String"];
         preconditions: Scalars["String"];
     };
-
-export type FlowProcess = {
-    __typename?: "FlowProcess";
-    flowType: DatasetFlowType;
-    summary: FlowProcessSummary;
-};
 
 export enum FlowProcessAutoStopReason {
     StopPolicy = "STOP_POLICY",
@@ -4428,7 +4459,24 @@ export type WebhookFlowSubProcess = {
     __typename?: "WebhookFlowSubProcess";
     id: Scalars["WebhookSubscriptionID"];
     name: Scalars["String"];
+    parentDataset?: Maybe<Dataset>;
     summary: FlowProcessSummary;
+};
+
+export type WebhookFlowSubProcessConnection = {
+    __typename?: "WebhookFlowSubProcessConnection";
+    edges: Array<WebhookFlowSubProcessEdge>;
+    /** A shorthand for `edges { node { ... } }` */
+    nodes: Array<WebhookFlowSubProcess>;
+    /** Page information */
+    pageInfo: PageBasedInfo;
+    /** Approximate number of total nodes */
+    totalCount: Scalars["Int"];
+};
+
+export type WebhookFlowSubProcessEdge = {
+    __typename?: "WebhookFlowSubProcessEdge";
+    node: WebhookFlowSubProcess;
 };
 
 export type WebhookFlowSubProcessGroup = {
@@ -6482,7 +6530,7 @@ export type DatasetFlowsProcessesQuery = {
                 processes: {
                     __typename?: "DatasetFlowProcesses";
                     primary: {
-                        __typename?: "FlowProcess";
+                        __typename?: "DatasetFlowProcess";
                         flowType: DatasetFlowType;
                         summary: { __typename?: "FlowProcessSummary" } & FlowProcessSummaryDataFragment;
                     };

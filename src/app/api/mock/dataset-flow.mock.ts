@@ -1696,7 +1696,7 @@ export const mockDatasetFlowsProcessesQuery: DatasetFlowsProcessesQuery = {
                             autoStoppedAt: "2025-10-08T14:37:08.783727337+00:00",
                             __typename: "FlowProcessSummary",
                         },
-                        __typename: "FlowProcess",
+                        __typename: "DatasetFlowProcess",
                     },
                     webhooks: {
                         rollup: {

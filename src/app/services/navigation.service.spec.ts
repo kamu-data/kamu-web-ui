@@ -161,7 +161,13 @@ describe("NavigationService", () => {
         const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToDatasetView(mockParams);
         expect(routerSpy).toHaveBeenCalledWith([mockParams.accountName, mockParams.datasetName, mockParams.tab], {
-            queryParams: { sqlQuery: undefined, page: undefined },
+            queryParams: {
+                sqlQuery: undefined,
+                page: undefined,
+                webhookId: undefined,
+                category: undefined,
+                webhooksState: undefined,
+            },
             state: undefined,
         });
     });
@@ -176,7 +182,13 @@ describe("NavigationService", () => {
         const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToDatasetView(mockParams);
         expect(routerSpy).toHaveBeenCalledWith([mockParams.accountName, mockParams.datasetName, mockParams.tab], {
-            queryParams: { page: mockParams.page, sqlQuery: undefined },
+            queryParams: {
+                page: mockParams.page,
+                sqlQuery: undefined,
+                webhookId: undefined,
+                category: undefined,
+                webhooksState: undefined,
+            },
             state: undefined,
         });
     });

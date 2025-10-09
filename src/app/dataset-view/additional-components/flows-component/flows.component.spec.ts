@@ -22,9 +22,10 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { mockOverviewUpdate } from "../data-tabs.mock";
-import { mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
+import { mockDatasetFlowsProcessesQuery, mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
+import { DatasetFlowProcesses, FlowProcessEffectiveState } from "src/app/api/kamu.graphql.interface";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;
@@ -97,9 +98,11 @@ describe("FlowsComponent", () => {
     it("should empty block is visible", fakeAsync(() => {
         fixture.detectChanges();
         mockFlowsTableData.connectionDataForWidget.nodes = [];
-        spyOn(datasetFlowsService, "allFlowsPaused").and.returnValue(of(false));
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData));
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
+        spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+        );
         tick();
         fixture.detectChanges();
 
@@ -112,9 +115,9 @@ describe("FlowsComponent", () => {
         const datasetResumeFlowsSpy = spyOn(datasetFlowsService, "datasetResumeFlows").and.returnValue(
             of(void 0).pipe(delay(0)),
         );
-        const mockPause = true;
+
         const refreshFlowSpy = spyOn(component, "refreshFlow");
-        component.toggleStateDatasetFlowConfigs(mockPause);
+        component.toggleStateDatasetFlowConfigs(FlowProcessEffectiveState.Failing);
         expect(datasetResumeFlowsSpy).toHaveBeenCalledTimes(1);
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
@@ -125,9 +128,9 @@ describe("FlowsComponent", () => {
         const datasetPauseFlowsSpy = spyOn(datasetFlowsService, "datasetPauseFlows").and.returnValue(
             of(void 0).pipe(delay(0)),
         );
-        const mockPause = false;
+
         const refreshFlowSpy = spyOn(component, "refreshFlow");
-        component.toggleStateDatasetFlowConfigs(mockPause);
+        component.toggleStateDatasetFlowConfigs(FlowProcessEffectiveState.Active);
         expect(datasetPauseFlowsSpy).toHaveBeenCalledTimes(1);
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
@@ -185,7 +188,9 @@ describe("FlowsComponent", () => {
     it("should check init loading block", fakeAsync(() => {
         fixture.detectChanges();
         mockFlowsTableData.connectionDataForWidget.nodes = [];
-        spyOn(datasetFlowsService, "allFlowsPaused").and.returnValue(of(false));
+        spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+        );
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData).pipe(delay(10)));
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
         tick(5);
@@ -204,7 +209,9 @@ describe("FlowsComponent", () => {
         fixture.detectChanges();
         mockFlowsTableData.connectionDataForWidget.nodes = [];
         mockFlowsTableData.connectionDataForTable.nodes = [];
-        spyOn(datasetFlowsService, "allFlowsPaused").and.returnValue(of(false));
+        spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+        );
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData).pipe(delay(10)));
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
         tick(10);
@@ -231,7 +238,9 @@ describe("FlowsComponent", () => {
         fixture.detectChanges();
         mockFlowsTableData.connectionDataForWidget.nodes = [];
         mockFlowsTableData.connectionDataForTable.nodes = [];
-        spyOn(datasetFlowsService, "allFlowsPaused").and.returnValue(of(false));
+        spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+        );
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData).pipe(delay(10)));
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
         tick(10);

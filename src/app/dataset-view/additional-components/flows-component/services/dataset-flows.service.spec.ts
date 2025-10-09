@@ -15,7 +15,6 @@ import { of } from "rxjs";
 import {
     mockCancelFlowRunMutationError,
     mockCancelFlowRunMutationSuccess,
-    mockDatasetAllFlowsPausedQuery,
     mockDatasetFlowsInitiatorsQuery,
     mockDatasetPauseFlowsMutationError,
     mockDatasetPauseFlowsMutationSuccess,
@@ -310,16 +309,6 @@ describe("DatasetFlowsService", () => {
                     mockCancelFlowRunMutationError.datasets.byId?.flows.runs.cancelFlowRun.message,
                 );
             });
-
-        expect(subscription$.closed).toBeTrue();
-    });
-
-    it("should check all flows paused", () => {
-        spyOn(datasetFlowApi, "allFlowsPaused").and.returnValue(of(mockDatasetAllFlowsPausedQuery));
-
-        const subscription$ = service.allFlowsPaused(MOCK_DATASET_ID).subscribe((result) => {
-            expect(result).toEqual(mockDatasetAllFlowsPausedQuery.datasets.byId?.flows.triggers.allPaused);
-        });
 
         expect(subscription$.closed).toBeTrue();
     });

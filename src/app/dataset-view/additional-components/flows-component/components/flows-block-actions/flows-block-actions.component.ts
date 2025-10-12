@@ -47,6 +47,7 @@ import AppValues from "src/app/common/values/app.values";
         MatIconModule,
     ],
     templateUrl: "./flows-block-actions.component.html",
+    styleUrls: ["./flows-block-actions.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowsBlockActionsComponent extends BaseComponent {
@@ -69,6 +70,18 @@ export class FlowsBlockActionsComponent extends BaseComponent {
 
     public get hasPushSources(): boolean {
         return Boolean(this.flowsData.overviewUpdate.overview.metadata.currentPushSources.length);
+    }
+
+    public get showUpdateNowButton(): boolean {
+        return !this.hasPushSources;
+    }
+
+    public get showPauseOrResumeButton(): boolean {
+        return (
+            !this.hasPushSources &&
+            this.flowConnectionData?.flowProcesses?.primary.summary.effectiveState !==
+                FlowProcessEffectiveState.Unconfigured
+        );
     }
 
     public updateNow(): void {

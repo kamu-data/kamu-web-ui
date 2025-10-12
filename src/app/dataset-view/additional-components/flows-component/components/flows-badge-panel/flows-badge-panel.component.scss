@@ -1,0 +1,43 @@
+.completed-container {
+    padding: 10px 30px 10px 20px;
+    background-color: #d6ffe8;
+    border: 1px solid #a4f4c9;
+    border-radius: 6px;
+    height: fit-content;
+}
+
+.failing-container {
+    padding: 10px 30px 10px 20px;
+    background-color: #fff7ea;
+    border: 1px solid #ffa500;
+    border-radius: 6px;
+    height: fit-content;
+}
+
+.pause-container {
+    padding: 10px 30px 10px 10px;
+    background-color: #fff7ea;
+    border: 1px solid #ffde21;
+    border-radius: 6px;
+    height: fit-content;
+}
+
+.stopped-container {
+    padding: 10px 30px 10px 20px;
+    background-color: #fff2f2;
+    border: 1px solid #ef6363;
+    border-radius: 6px;
+    height: fit-content;
+}
+
+.manual-container {
+    padding: 10px 30px 10px 20px;
+    background-color: #e7e7e7;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    height: fit-content;
+}
+
+.mannual-update-status {
+    color: #aaa;
+}

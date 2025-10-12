@@ -5,12 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import {
     DatasetFlowProcesses,
     DatasetFlowType,
     DatasetKind,
-    DatasetFlowProcess,
     FlowProcessAutoStopReason,
     FlowProcessEffectiveState,
     FlowProcessTypeFilterInput,
@@ -49,13 +48,11 @@ import {
     FlowsSelectedCategory,
     WebhooksSelectedCategory,
     webhooksStateMapper,
-    DatasetFlowsBadgeStyle,
-    DatasetFlowBadgeHelpers,
-    DatasetFlowsBadgeTexts,
     WebhooksFiltersOptions,
 } from "./flows.helpers";
 import { FlowsBlockActionsComponent } from "./components/flows-block-actions/flows-block-actions.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { FlowsBadgePanelComponent } from "./components/flows-badge-panel/flows-badge-panel.component";
 @Component({
     selector: "app-flows",
     templateUrl: "./flows.component.html",
@@ -83,6 +80,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
         //-----//
         FlowsTableComponent,
         FlowsBlockActionsComponent,
+        FlowsBadgePanelComponent,
         TileBaseWidgetComponent,
         PaginationComponent,
         SubprocessStatusFilterPipe,
@@ -99,9 +97,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     @Input(ProjectLinks.URL_QUERY_PARAM_FLOWS_CATEGORY) public set setFlowsCategory(value: FlowsCategoryUnion) {
         value === "webhooks" ? (this.selectedWebhooksCategory = value) : (this.selectedFlowsCategory = value);
     }
-
-    @ViewChild(FlowsBlockActionsComponent, { static: false })
-    public flowsBlockActionsComponent!: FlowsBlockActionsComponent;
 
     public webhookIds: string[] = [];
     private datasetWebhooksService = inject(DatasetWebhooksService);
@@ -147,6 +142,10 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     public get isWebhookCategoryActive(): boolean {
         return this.selectedWebhooksCategory === "webhooks";
+    }
+
+    public get showPanelButtons(): boolean {
+        return !this.hasPushSources;
     }
 
     public removeSelectedWebhook(subscriptionName: string, subprocesses: WebhookFlowSubProcess[]): void {
@@ -435,13 +434,5 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     public trackBySubscriptionId(index: number, item: WebhookFlowSubProcess): string {
         return item.id;
-    }
-
-    public badgeStyles(element: DatasetFlowProcess): DatasetFlowsBadgeStyle {
-        return DatasetFlowBadgeHelpers.badgeStyles(element);
-    }
-
-    public badgeMessages(element: DatasetFlowProcess, isRoot: boolean): DatasetFlowsBadgeTexts {
-        return DatasetFlowBadgeHelpers.badgeMessages(element, isRoot);
     }
 }

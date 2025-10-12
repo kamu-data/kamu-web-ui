@@ -7,52 +7,15 @@
                         <div
                             class="d-flex flex-row"
                             [ngClass]="{
-                                'justify-content-between': !hasPushSources,
-                                'justify-content-end': hasPushSources,
+                                'justify-content-between': showPanelButtons,
+                                'justify-content-end': !showPanelButtons,
                             }"
                         >
-                            <div *ngIf="!hasPushSources">
-                                <div
-                                    class="d-flex gap-2"
-                                    [ngClass]="badgeStyles(flowConnectionData.flowProcesses.primary).containerClass"
-                                >
-                                    <div>
-                                        <mat-icon
-                                            [ngClass]="badgeStyles(flowConnectionData.flowProcesses.primary).iconClass"
-                                            >{{
-                                                badgeStyles(flowConnectionData.flowProcesses.primary).iconName
-                                            }}</mat-icon
-                                        >
-                                    </div>
-                                    <div class="d-flex flex-column mt-1">
-                                        <div class="fw-500 fs-16">
-                                            {{
-                                                badgeMessages(flowConnectionData.flowProcesses.primary, isRoot).message
-                                            }}
-                                        </div>
-                                        <div>
-                                            <span class="text-muted fs-12">
-                                                {{
-                                                    badgeMessages(flowConnectionData.flowProcesses.primary, isRoot)
-                                                        .subMessage
-                                                }}
-                                            </span>
-                                        </div>
-                                        <div
-                                            *ngIf="
-                                                badgeMessages(flowConnectionData.flowProcesses.primary, isRoot)
-                                                    .additionalMessage
-                                            "
-                                        >
-                                            <span class="text-muted fs-12">
-                                                {{
-                                                    badgeMessages(flowConnectionData.flowProcesses.primary, isRoot)
-                                                        .additionalMessage
-                                                }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div *ngIf="showPanelButtons">
+                                <app-flows-badge-panel
+                                    [flowConnectionData]="flowConnectionData"
+                                    [datasetKind]="flowsData.datasetBasics.kind"
+                                />
                             </div>
                             <div class="d-flex align-items-center">
                                 <app-flows-block-actions

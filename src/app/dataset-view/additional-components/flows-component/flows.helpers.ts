@@ -68,6 +68,14 @@ export interface DatasetFlowsBadgeTexts {
     additionalMessage?: string;
 }
 
+export interface FlowsSelectionState {
+    flowsCategory?: FlowsSelectedCategory;
+    webhooksCategory?: WebhooksSelectedCategory;
+    webhookFilterButtons: FlowProcessEffectiveState[];
+    webhooksIds: string[];
+    subscriptions: string[];
+}
+
 export class DatasetFlowBadgeHelpers {
     public static datePipe = new DatePipe("en-US");
     public static badgeStyles(flowProcess: DatasetFlowProcess): DatasetFlowsBadgeStyle {

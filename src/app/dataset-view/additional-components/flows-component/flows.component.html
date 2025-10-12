@@ -28,7 +28,7 @@
                         </div>
                         <div class="mt-4">
                             <mat-chip-listbox
-                                [(ngModel)]="selectedFlowsCategory"
+                                [(ngModel)]="flowsSelectionState.flowsCategory"
                                 (change)="onSelectionFlowsChange($event)"
                             >
                                 <mat-chip-option [value]="'all'">All flows</mat-chip-option>
@@ -46,7 +46,7 @@
                                 >
                                     <mat-chip-listbox
                                         class="ms-2"
-                                        [(ngModel)]="selectedWebhooksCategory"
+                                        [(ngModel)]="flowsSelectionState.webhooksCategory"
                                         (change)="onSelectionWebhooksChange($event)"
                                     >
                                         <mat-chip-option [value]="'webhooks'"> Webhooks</mat-chip-option>
@@ -57,7 +57,7 @@
                                     >
 
                                     <mat-button-toggle-group
-                                        [(ngModel)]="selectedWebhookFilterButtons"
+                                        [(ngModel)]="flowsSelectionState.webhookFilterButtons"
                                         (change)="
                                             onToggleWebhookFilter(
                                                 $event,
@@ -96,11 +96,11 @@
 
                             <div
                                 class="d-inline-block mt-2 d-flex flex-row align-items-center"
-                                *ngIf="selectedSubscriptions.length"
+                                *ngIf="flowsSelectionState.subscriptions.length"
                             >
                                 Selected subscriptions:
                                 <mat-chip-set class="ms-2">
-                                    <mat-chip *ngFor="let webhook of selectedSubscriptions">
+                                    <mat-chip *ngFor="let webhook of flowsSelectionState.subscriptions">
                                         {{ webhook }}
                                         <button
                                             matChipRemove
@@ -121,8 +121,8 @@
                                 class="mt-4"
                                 *ngIf="showSubprocessesTable"
                                 [ngClass]="{
-                                    'mt-2': selectedSubscriptions.length,
-                                    'mt-4': !selectedSubscriptions.length,
+                                    'mt-2': flowsSelectionState.subscriptions.length,
+                                    'mt-4': !flowsSelectionState.subscriptions.length,
                                 }"
                             >
                                 <div class="w-75">
@@ -131,7 +131,7 @@
                                             mat-table
                                             [dataSource]="
                                                 flowConnectionData.flowProcesses.webhooks.subprocesses
-                                                    | subprocessStatusFilter: selectedWebhookFilterButtons
+                                                    | subprocessStatusFilter: flowsSelectionState.webhookFilterButtons
                                             "
                                             [trackBy]="trackBySubscriptionId"
                                         >
@@ -241,7 +241,7 @@
             <ng-container *ngIf="flowConnectionData">
                 <app-flows-table
                     [nodes]="
-                        selectedWebhookFilterButtons.length && !selectedWebhooksIds.length
+                        flowsSelectionState.webhookFilterButtons.length && !flowsSelectionState.webhooksIds.length
                             ? []
                             : flowConnectionData.flowsData.connectionDataForTable.nodes
                     "
@@ -254,7 +254,7 @@
                         displayColumns: DISPLAY_COLUMNS,
                     }"
                     [totalCount]="
-                        selectedWebhookFilterButtons.length && !selectedWebhooksIds.length
+                        flowsSelectionState.webhookFilterButtons.length && !flowsSelectionState.webhooksIds.length
                             ? 0
                             : flowConnectionData.flowsData.connectionDataForTable.totalCount
                     "

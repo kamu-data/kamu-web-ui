@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit, ViewChild } from "@angular/core";
 import {
     DatasetFlowProcesses,
     DatasetFlowType,
@@ -17,25 +17,16 @@ import {
     FlowStatus,
     InitiatorFilterInput,
     WebhookFlowSubProcess,
+    AccountFragment,
 } from "src/app/api/kamu.graphql.interface";
 import { combineLatest, map, Observable, of, switchMap, take, tap, timer } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import {
-    DatasetFlowBadgeHelpers,
-    DatasetFlowsBadgeStyle,
-    DatasetOverviewTabData,
-    DatasetViewTypeEnum,
-    FlowsCategoryUnion,
-    FlowsSelectedCategory,
-    WebhooksSelectedCategory,
-    webhooksStateMapper,
-} from "../../dataset-view.interface";
+import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { environment } from "src/environments/environment";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
-import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
+import { FlowsTableData, FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
 import ProjectLinks from "src/app/project-links";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { PaginationComponent } from "../../../common/components/pagination-component/pagination.component";
@@ -53,9 +44,18 @@ import { SubprocessStatusFilterPipe } from "./pipes/subprocess-status-filter.pip
 import { DatasetWebhooksService } from "../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
 import { FormsModule } from "@angular/forms";
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { DatasetFlowsBadgeTexts } from "./../../dataset-view.interface";
+import {
+    FlowsCategoryUnion,
+    FlowsSelectedCategory,
+    WebhooksSelectedCategory,
+    webhooksStateMapper,
+    DatasetFlowsBadgeStyle,
+    DatasetFlowBadgeHelpers,
+    DatasetFlowsBadgeTexts,
+    WebhooksFiltersOptions,
+} from "./flows.helpers";
+import { FlowsBlockActionsComponent } from "./components/flows-block-actions/flows-block-actions.component";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 @Component({
     selector: "app-flows",
     templateUrl: "./flows.component.html",
@@ -82,6 +82,7 @@ import { DatasetFlowsBadgeTexts } from "./../../dataset-view.interface";
 
         //-----//
         FlowsTableComponent,
+        FlowsBlockActionsComponent,
         TileBaseWidgetComponent,
         PaginationComponent,
         SubprocessStatusFilterPipe,
@@ -99,11 +100,17 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         value === "webhooks" ? (this.selectedWebhooksCategory = value) : (this.selectedFlowsCategory = value);
     }
 
-    public searchFilter = "";
+    @ViewChild(FlowsBlockActionsComponent, { static: false })
+    public flowsBlockActionsComponent!: FlowsBlockActionsComponent;
+
     public webhookIds: string[] = [];
     private datasetWebhooksService = inject(DatasetWebhooksService);
-    private modalService = inject(ModalService);
 
+    public flowConnectionData$: Observable<{
+        flowsData: FlowsTableData;
+        flowInitiators: AccountFragment[];
+        flowProcesses?: DatasetFlowProcesses;
+    }>;
     public flowsProcesses$: Observable<DatasetFlowProcesses>;
     public selectedFlowsCategory: MaybeUndefined<FlowsSelectedCategory> = undefined;
     public selectedWebhooksCategory: MaybeUndefined<WebhooksSelectedCategory> = undefined;
@@ -120,6 +127,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
     public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
     public readonly DatasetFlowType: typeof DatasetFlowType = DatasetFlowType;
+    public readonly WEBHOOKS_FILTERS_OPTIONS = WebhooksFiltersOptions;
     public readonly SUBSCRIPTIONS_DISPLAY_COLUMNS: string[] = [
         "subscription",
         "status",
@@ -180,7 +188,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             : SettingsTabsEnum.TRANSFORM_SETTINGS;
     }
 
-    public navigatoToSubscription(process: WebhookFlowSubProcess): void {
+    public navigateToSubscription(process: WebhookFlowSubProcess): void {
         if (this.selectedWebhooksCategory || this.selectedFlowsCategory) {
             this.selectedWebhooksIds = [];
         }
@@ -270,6 +278,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             ),
 
             map(([flowsData, flowInitiators, flowProcesses]) => {
+                console.log("pro=", flowProcesses);
                 return { flowsData, flowInitiators, flowProcesses };
             }),
         );
@@ -410,50 +419,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                     this.cdr.detectChanges();
                 }, this.TIMEOUT_REFRESH_FLOW);
             }
-        });
-    }
-
-    public toggleStateDatasetFlowConfigs(state: FlowProcessEffectiveState): void {
-        let operation$: Observable<void> = of();
-        if (state === FlowProcessEffectiveState.Active) {
-            operation$ = this.flowsService.datasetPauseFlows({
-                datasetId: this.flowsData.datasetBasics.id,
-            });
-        } else if (state === FlowProcessEffectiveState.StoppedAuto) {
-            promiseWithCatch(
-                this.modalService.error({
-                    title: "Resume updates",
-                    message: "Have you confirmed that all issues have been resolved?",
-                    yesButtonText: "Ok",
-                    noButtonText: "Cancel",
-                    handler: (ok) => {
-                        if (ok) {
-                            this.flowsService
-                                .datasetResumeFlows({
-                                    datasetId: this.flowsData.datasetBasics.id,
-                                })
-                                .pipe(take(1))
-                                .subscribe(() => {
-                                    setTimeout(() => {
-                                        this.refreshFlow();
-                                        this.cdr.detectChanges();
-                                    }, this.TIMEOUT_REFRESH_FLOW);
-                                });
-                        }
-                    },
-                }),
-            );
-        } else {
-            operation$ = this.flowsService.datasetResumeFlows({
-                datasetId: this.flowsData.datasetBasics.id,
-            });
-        }
-
-        operation$.pipe(take(1)).subscribe(() => {
-            setTimeout(() => {
-                this.refreshFlow();
-                this.cdr.detectChanges();
-            }, this.TIMEOUT_REFRESH_FLOW);
         });
     }
 

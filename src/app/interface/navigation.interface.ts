@@ -7,7 +7,7 @@
 
 import { FlowProcessEffectiveState } from "../api/kamu.graphql.interface";
 import { FlowDetailsTabs } from "../dataset-flow/dataset-flow-details/dataset-flow-details.types";
-import { FlowsCategoryUnion } from "../dataset-view/dataset-view.interface";
+import { FlowsCategoryUnion } from "../dataset-view/additional-components/flows-component/flows.helpers";
 
 export interface DatasetNavigationParams {
     accountName: string;

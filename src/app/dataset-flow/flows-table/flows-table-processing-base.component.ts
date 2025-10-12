@@ -9,25 +9,21 @@ import { Observable } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { CancelFlowArgs, FlowsTableData, FlowsTableFiltersOptions } from "./flows-table.types";
-import {
-    AccountFragment,
-    DatasetFlowProcesses,
-    FlowStatus,
-    InitiatorFilterInput,
-} from "src/app/api/kamu.graphql.interface";
+import { AccountFragment, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
 import { ChangeDetectorRef, Directive, inject } from "@angular/core";
 import { NavigationService } from "src/app/services/navigation.service";
 import { requireValue } from "src/app/common/helpers/app.helpers";
 import ProjectLinks from "src/app/project-links";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import AppValues from "src/app/common/values/app.values";
 
 @Directive()
 export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     protected readonly WIDGET_FLOW_RUNS_PER_PAGE: number = 150;
     protected readonly TABLE_FLOW_RUNS_PER_PAGE: number = 15;
     protected readonly FlowStatus: typeof FlowStatus = FlowStatus;
-    public readonly TIMEOUT_REFRESH_FLOW = 1000;
+    public readonly TIMEOUT_REFRESH_FLOW = AppValues.TIMEOUT_REFRESH_FLOW_MS;
 
     protected readonly flowsService = inject(DatasetFlowsService);
     protected readonly navigationService = inject(NavigationService);
@@ -39,13 +35,6 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     public currentPage = 1;
 
     protected tileWidgetData$: Observable<MaybeUndefined<FlowsTableData>>;
-
-    protected flowConnectionData$: Observable<{
-        flowsData: FlowsTableData;
-        allFlowsPaused?: MaybeUndefined<boolean>;
-        flowInitiators: AccountFragment[];
-        flowProcesses?: DatasetFlowProcesses;
-    }>;
 
     protected abstract fetchTableData(
         page: number,

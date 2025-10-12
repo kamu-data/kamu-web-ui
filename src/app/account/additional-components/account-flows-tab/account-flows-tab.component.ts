@@ -6,8 +6,8 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, NgZone, OnInit } from "@angular/core";
-import { combineLatest, map, of, switchMap, timer } from "rxjs";
-import { MaybeNull } from "src/app/interface/app.types";
+import { combineLatest, map, Observable, of, switchMap, timer } from "rxjs";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import {
     AccountFragment,
     DatasetBasicsFragment,
@@ -19,7 +19,7 @@ import { AccountService } from "src/app/account/account.service";
 import { AccountTabs } from "../../account.constants";
 import { environment } from "src/environments/environment";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
-import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
+import { FlowsTableData, FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { PaginationComponent } from "../../../common/components/pagination-component/pagination.component";
@@ -56,6 +56,11 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
     private readonly loggedUserService = inject(LoggedUserService);
     private readonly ngZone = inject(NgZone);
 
+    public flowConnectionData$: Observable<{
+        flowsData: FlowsTableData;
+        allFlowsPaused?: MaybeUndefined<boolean>;
+        flowInitiators: AccountFragment[];
+    }>;
     public nodes: FlowSummaryDataFragment[] = [];
     public searchByDataset: DatasetBasicsFragment[] = [];
     public filters: MaybeNull<FlowsTableFiltersOptions>;

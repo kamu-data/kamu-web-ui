@@ -166,7 +166,7 @@ export class DatasetFlowBadgeHelpers {
 function subMessagesFailingStateHelper(summary: FlowProcessSummary): string {
     switch (summary.stopPolicy.__typename) {
         case "FlowTriggerStopPolicyAfterConsecutiveFailures":
-            return `Next planned: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.nextPlannedAt, AppValues.DISPLAY_TIME_FORMAT)}, ${summary.consecutiveFailures}/${summary.stopPolicy.maxFailures}`;
+            return `Next planned: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.nextPlannedAt, AppValues.DISPLAY_TIME_FORMAT)}, ${summary.consecutiveFailures}/${summary.stopPolicy.maxFailures} consecutive failures`;
         case "FlowTriggerStopPolicyNever":
             return `${summary.consecutiveFailures} consecutive failures`;
         default:

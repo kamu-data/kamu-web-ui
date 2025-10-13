@@ -1,0 +1,154 @@
+<div *ngIf="flowConnectionData.flowProcesses">
+    <p class="fw-500">Associated channels</p>
+    <div class="d-flex flex-row gap-4 align-items-center">
+        <div class="box px-1 py-3 d-flex flex-row gap-4 w-75 align-items-center channels-container">
+            <mat-chip-listbox
+                class="ms-2"
+                [(ngModel)]="flowsSelectionState.webhooksCategory"
+                (change)="onSelectionWebhooksChange($event)"
+            >
+                <mat-chip-option [value]="'webhooks'"> Webhooks</mat-chip-option>
+            </mat-chip-listbox>
+
+            <span class="fw-500">total: {{ flowConnectionData.flowProcesses.webhooks.rollup.total }}</span>
+
+            <mat-button-toggle-group
+                [(ngModel)]="flowsSelectionState.webhookFilterButtons"
+                (change)="onToggleWebhookFilter($event, flowConnectionData.flowProcesses.webhooks.subprocesses)"
+                multiple
+                [disabled]="!isWebhookCategoryActive"
+            >
+                <ng-container *ngFor="let item of WEBHOOKS_FILTERS_OPTIONS">
+                    <mat-button-toggle
+                        *ngIf="item.state !== FlowProcessEffectiveState.PausedManual; else pausedSate"
+                        [value]="item.state"
+                        >{{ item.label }}
+                        {{ flowConnectionData.flowProcesses.webhooks.rollup[item.valueKey] }}</mat-button-toggle
+                    >
+                    <ng-template #pausedSate>
+                        <mat-button-toggle [value]="item.state"
+                            >{{ item.label }}
+                            {{
+                                flowConnectionData.flowProcesses.webhooks.rollup.paused +
+                                    flowConnectionData.flowProcesses.webhooks.rollup.unconfigured
+                            }}</mat-button-toggle
+                        >
+                    </ng-template>
+                </ng-container>
+            </mat-button-toggle-group>
+        </div>
+    </div>
+
+    <div
+        class="d-inline-block mt-2 d-flex flex-row align-items-center"
+        *ngIf="flowsSelectionState.subscriptions.length"
+    >
+        Selected subscriptions:
+        <mat-chip-set class="ms-2">
+            <mat-chip *ngFor="let webhook of flowsSelectionState.subscriptions">
+                {{ webhook }}
+                <button
+                    matChipRemove
+                    (click)="removeSelectedWebhook(webhook, flowConnectionData.flowProcesses.webhooks.subprocesses)"
+                >
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </mat-chip>
+        </mat-chip-set>
+    </div>
+
+    <div
+        class="mt-4"
+        *ngIf="showSubprocessesTable"
+        [ngClass]="{
+            'mt-2': flowsSelectionState.subscriptions.length,
+            'mt-4': !flowsSelectionState.subscriptions.length,
+        }"
+    >
+        <div class="w-75">
+            <div [id]="'subprocesses-table'" class="dynamic-table">
+                <table
+                    mat-table
+                    [dataSource]="
+                        flowConnectionData.flowProcesses.webhooks.subprocesses
+                            | subprocessStatusFilter: flowsSelectionState.webhookFilterButtons
+                    "
+                    [trackBy]="trackBySubscriptionId"
+                >
+                    <!-- Subscription Column -->
+                    <ng-container matColumnDef="subscription">
+                        <th mat-header-cell *matHeaderCellDef style="width: 40%">
+                            <span class="text-dark"> subscription </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <a class="subscription-name" (click)="navigateToSubscription(element)">{{
+                                element.name
+                            }}</a>
+                        </td>
+                    </ng-container>
+                    <!-- Status Column -->
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef style="width: 25%">
+                            <span class="text-dark"> status </span>
+                        </th>
+
+                        <td mat-cell *matCellDef="let element" style="text-align: center">
+                            {{ webhooksStateMapper(element.summary.effectiveState) }}
+                        </td>
+                    </ng-container>
+
+                    <!-- Failures Column -->
+                    <ng-container matColumnDef="consecutive_failures">
+                        <th mat-header-cell *matHeaderCellDef style="width: 20%">
+                            <span class="text-dark ps-4"> consecutive failures</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: center">
+                            {{ element.summary.consecutiveFailures }}
+                        </td>
+                    </ng-container>
+
+                    <!-- Options Column -->
+                    <ng-container matColumnDef="options">
+                        <th mat-header-cell *matHeaderCellDef style="width: 15%">
+                            <span class="text-dark">actions</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="action-cell">
+                            <mat-icon
+                                *ngIf="element.summary.effectiveState === FlowProcessEffectiveState.Active"
+                                (click)="pauseWebhook(element.id)"
+                                class="mat-icon-size text-muted mt-1"
+                                [title]="'pause'"
+                                >pause</mat-icon
+                            >
+
+                            <mat-icon
+                                *ngIf="element.summary.effectiveState !== FlowProcessEffectiveState.Active"
+                                class="mat-icon-size text-muted mt-1"
+                                [title]="'resume'"
+                                (click)="resumeWebhook(element.id)"
+                                >play_arrow</mat-icon
+                            >
+
+                            <mat-icon
+                                class="mat-icon-size ms-2 text-muted mt-1"
+                                [title]="'edit'"
+                                (click)="navigateToWebhookSettings(element.id)"
+                                >edit</mat-icon
+                            >
+                        </td>
+                    </ng-container>
+
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell text-center p-4" [attr.colspan]="SUBSCRIPTIONS_DISPLAY_COLUMNS.length">
+                            No data
+                        </td>
+                    </tr>
+
+                    <tr mat-header-row *matHeaderRowDef="SUBSCRIPTIONS_DISPLAY_COLUMNS"></tr>
+                    <tr mat-row *matRowDef="let row; columns: SUBSCRIPTIONS_DISPLAY_COLUMNS"></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -8,12 +8,12 @@
 import { DatePipe } from "@angular/common";
 import {
     FlowProcessEffectiveState,
-    DatasetFlowProcess,
     FlowProcessSummary,
     FlowProcessAutoStopReason,
     FlowTriggerStopPolicyAfterConsecutiveFailures,
     AccountFragment,
     DatasetFlowProcesses,
+    FlowProcessSummaryDataFragment,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
@@ -87,8 +87,8 @@ export const webhooksStateMapper: Record<FlowProcessEffectiveState, string> = {
 
 export class DatasetFlowBadgeHelpers {
     public static datePipe = new DatePipe("en-US");
-    public static badgeStyles(flowProcess: DatasetFlowProcess): DatasetFlowsBadgeStyle {
-        switch (flowProcess.summary.effectiveState) {
+    public static badgeStyles(effectiveState: FlowProcessEffectiveState): DatasetFlowsBadgeStyle {
+        switch (effectiveState) {
             case FlowProcessEffectiveState.Unconfigured:
                 return {
                     containerClass: "manual-container",
@@ -126,8 +126,8 @@ export class DatasetFlowBadgeHelpers {
         }
     }
 
-    public static badgeMessages(flowProcess: DatasetFlowProcess, isRoot: boolean): DatasetFlowsBadgeTexts {
-        switch (flowProcess.summary.effectiveState) {
+    public static badgeMessages(summary: FlowProcessSummaryDataFragment, isRoot: boolean): DatasetFlowsBadgeTexts {
+        switch (summary.effectiveState) {
             case FlowProcessEffectiveState.Unconfigured:
                 return {
                     message: `Manual ${isRoot ? "ingest" : "transform"}`,
@@ -136,14 +136,14 @@ export class DatasetFlowBadgeHelpers {
             case FlowProcessEffectiveState.Active:
                 return {
                     message: `${isRoot ? "Ingest" : "Transform"} active`,
-                    subMessage: subMessagesActiveStateHelper(flowProcess.summary, isRoot),
-                    additionalMessage: additionalMessagesActiveStateHelper(flowProcess.summary),
+                    subMessage: subMessagesActiveStateHelper(summary, isRoot),
+                    additionalMessage: additionalMessagesActiveStateHelper(summary),
                 };
             case FlowProcessEffectiveState.Failing:
                 return {
                     message: `${isRoot ? "Ingest" : "Transform"} failing`,
-                    subMessage: subMessagesFailingStateHelper(flowProcess.summary),
-                    additionalMessage: `Last failure at: ${DatasetFlowBadgeHelpers.datePipe.transform(flowProcess.summary.lastFailureAt, AppValues.DISPLAY_TIME_FORMAT)}`,
+                    subMessage: subMessagesFailingStateHelper(summary),
+                    additionalMessage: `Last failure at: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.lastFailureAt, AppValues.DISPLAY_TIME_FORMAT)}`,
                 };
             case FlowProcessEffectiveState.PausedManual:
                 return {
@@ -154,8 +154,8 @@ export class DatasetFlowBadgeHelpers {
             case FlowProcessEffectiveState.StoppedAuto:
                 return {
                     message: `${isRoot ? "Ingest" : "Transform"} stopped`,
-                    subMessage: `Last run: ${DatasetFlowBadgeHelpers.datePipe.transform(flowProcess.summary.lastFailureAt, AppValues.DISPLAY_TIME_FORMAT)}`,
-                    additionalMessage: additionalMessagesStoppedAutoHelper(flowProcess.summary),
+                    subMessage: `Last run: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.lastFailureAt, AppValues.DISPLAY_TIME_FORMAT)}`,
+                    additionalMessage: additionalMessagesStoppedAutoHelper(summary),
                 };
             default:
                 throw new Error("Unsupported flow process effective state for messages");
@@ -163,7 +163,7 @@ export class DatasetFlowBadgeHelpers {
     }
 }
 
-function subMessagesFailingStateHelper(summary: FlowProcessSummary): string {
+function subMessagesFailingStateHelper(summary: FlowProcessSummaryDataFragment): string {
     switch (summary.stopPolicy.__typename) {
         case "FlowTriggerStopPolicyAfterConsecutiveFailures":
             return `Next planned: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.nextPlannedAt, AppValues.DISPLAY_TIME_FORMAT)}, ${summary.consecutiveFailures}/${summary.stopPolicy.maxFailures} consecutive failures`;
@@ -174,7 +174,7 @@ function subMessagesFailingStateHelper(summary: FlowProcessSummary): string {
     }
 }
 
-function subMessagesActiveStateHelper(summary: FlowProcessSummary, isRoot: boolean): string {
+function subMessagesActiveStateHelper(summary: FlowProcessSummaryDataFragment, isRoot: boolean): string {
     if (summary.lastSuccessAt) {
         return `Last run: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.lastSuccessAt, AppValues.DISPLAY_TIME_FORMAT)}`;
     }
@@ -192,7 +192,7 @@ function additionalMessagesActiveStateHelper(summary: FlowProcessSummary): strin
     }
 }
 
-function additionalMessagesStoppedAutoHelper(summary: FlowProcessSummary): string {
+function additionalMessagesStoppedAutoHelper(summary: FlowProcessSummaryDataFragment): string {
     if (summary.autoStoppedReason === FlowProcessAutoStopReason.StopPolicy) {
         return `Reason: stop policy ${summary.consecutiveFailures} consecutive failures - ${summary.consecutiveFailures}/${(summary.stopPolicy as FlowTriggerStopPolicyAfterConsecutiveFailures).maxFailures} consecutive failures`;
     }

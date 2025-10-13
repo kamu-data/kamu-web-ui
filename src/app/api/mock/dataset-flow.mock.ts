@@ -39,6 +39,7 @@ import {
     FlowProcessEffectiveState,
     DatasetFlowType,
     FlowProcessAutoStopReason,
+    FlowProcessSummaryDataFragment,
 } from "./../kamu.graphql.interface";
 import {
     GetDatasetFlowConfigsQuery,
@@ -1761,4 +1762,20 @@ export const mockDatasetFlowsProcessesQuery: DatasetFlowsProcessesQuery = {
         },
         __typename: "Datasets",
     },
+};
+
+export const mockFlowProcessSummaryDataFragment: FlowProcessSummaryDataFragment = {
+    effectiveState: FlowProcessEffectiveState.Active,
+    consecutiveFailures: 0,
+    lastSuccessAt: "2025-10-13T16:53:08.689881136+00:00",
+    lastAttemptAt: "2025-10-13T16:53:08.689881136+00:00",
+    lastFailureAt: null,
+    nextPlannedAt: "2025-10-13T16:55:08.689881136+00:00",
+    stopPolicy: {
+        maxFailures: 1,
+        __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+    },
+    autoStoppedReason: null,
+    autoStoppedAt: null,
+    __typename: "FlowProcessSummary",
 };

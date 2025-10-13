@@ -40,10 +40,10 @@ export class FlowsBadgePanelComponent {
     }
 
     public badgeStyles(element: DatasetFlowProcess): DatasetFlowsBadgeStyle {
-        return DatasetFlowBadgeHelpers.badgeStyles(element);
+        return DatasetFlowBadgeHelpers.badgeStyles(element.summary.effectiveState);
     }
 
     public badgeMessages(element: DatasetFlowProcess, isRoot: boolean): DatasetFlowsBadgeTexts {
-        return DatasetFlowBadgeHelpers.badgeMessages(element, isRoot);
+        return DatasetFlowBadgeHelpers.badgeMessages(element.summary, isRoot);
     }
 }

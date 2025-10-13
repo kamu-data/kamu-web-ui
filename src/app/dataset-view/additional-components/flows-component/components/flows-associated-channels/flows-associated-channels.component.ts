@@ -20,23 +20,19 @@ import { MatButtonToggleChange, MatButtonToggleModule } from "@angular/material/
 import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
-import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTableModule } from "@angular/material/table";
-import { SubprocessStatusFilterPipe } from "../../pipes/subprocess-status-filter.pipe";
 import {
     DatasetFlowsTabState,
     FlowsCategoryUnion,
     FlowsSelectionState,
     WebhooksFiltersOptions,
-    webhooksStateMapper,
 } from "../../flows.helpers";
 import { FlowProcessEffectiveState, WebhookFlowSubProcess } from "src/app/api/kamu.graphql.interface";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { NavigationService } from "src/app/services/navigation.service";
-import { take } from "rxjs";
-import AppValues from "src/app/common/values/app.values";
 import { DatasetWebhooksService } from "../../../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
+import { SubscriptionsTableComponent } from "./components/subscriptions-table/subscriptions-table.component";
 
 @Component({
     selector: "app-flows-associated-channels",
@@ -49,7 +45,6 @@ import { DatasetWebhooksService } from "../../../dataset-settings-component/tabs
         NgFor,
 
         //-----//
-        MatMenuModule,
         MatIconModule,
         MatTableModule,
         MatDividerModule,
@@ -58,7 +53,7 @@ import { DatasetWebhooksService } from "../../../dataset-settings-component/tabs
         MatChipsModule,
 
         //-----//
-        SubprocessStatusFilterPipe,
+        SubscriptionsTableComponent,
     ],
     templateUrl: "./flows-associated-channels.component.html",
     styleUrls: ["./flows-associated-channels.component.scss"],
@@ -91,6 +86,10 @@ export class FlowsAssociatedChannelsComponent {
         return this.flowsSelectionState.webhooksCategory === "webhooks";
     }
 
+    public refreshFlow(): void {
+        this.refreshEmitter.emit();
+    }
+
     public onSelectionWebhooksChange(event: MatChipListboxChange): void {
         this.flowsSelectionState.flowsCategory = undefined;
         const category = event.value as FlowsCategoryUnion;
@@ -108,7 +107,7 @@ export class FlowsAssociatedChannelsComponent {
             tab: DatasetViewTypeEnum.Flows,
             category: category ?? undefined,
         });
-        this.refreshEmitter.emit();
+        this.refreshFlow();
     }
 
     public onToggleWebhookFilter(event: MatButtonToggleChange, subprocesses: WebhookFlowSubProcess[]): void {
@@ -124,7 +123,7 @@ export class FlowsAssociatedChannelsComponent {
             category: this.flowsSelectionState.flowsCategory as FlowsCategoryUnion,
             webhooksState: states.length ? states : undefined,
         });
-        this.refreshEmitter.emit();
+        this.refreshFlow();
     }
 
     public removeSelectedWebhook(subscriptionName: string, subprocesses: WebhookFlowSubProcess[]): void {
@@ -143,72 +142,6 @@ export class FlowsAssociatedChannelsComponent {
             tab: DatasetViewTypeEnum.Flows,
             webhookId: this.flowsSelectionState.webhooksIds,
         });
-        this.refreshEmitter.emit();
-    }
-
-    public navigateToSubscription(process: WebhookFlowSubProcess): void {
-        if (this.flowsSelectionState.webhooksCategory || this.flowsSelectionState.flowsCategory) {
-            this.flowsSelectionState.webhooksIds = [];
-        }
-        if (!this.flowsSelectionState.subscriptions.includes(process.name)) {
-            this.flowsSelectionState.subscriptions.push(process.name);
-            this.flowsSelectionState.webhooksIds.push(process.id);
-        }
-        this.flowsSelectionState.webhookFilterButtons = [];
-        this.flowsSelectionState.webhooksCategory = undefined;
-
-        this.navigationService.navigateToDatasetView({
-            accountName: this.flowsData.datasetBasics.owner.accountName,
-            datasetName: this.flowsData.datasetBasics.name,
-            tab: DatasetViewTypeEnum.Flows,
-            webhookId: this.flowsSelectionState.webhooksIds,
-        });
-        this.refreshEmitter.emit();
-    }
-
-    public pauseWebhook(subscriptionId: string): void {
-        this.datasetWebhooksService
-            .datasetWebhookPauseSubscription(this.flowsData.datasetBasics.id, subscriptionId)
-            .pipe(take(1))
-            .subscribe((result: boolean) => {
-                if (result) {
-                    setTimeout(() => {
-                        this.refreshEmitter.emit();
-                        this.cdr.detectChanges();
-                    }, AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS);
-                }
-            });
-    }
-
-    public resumeWebhook(subscriptionId: string): void {
-        this.datasetWebhooksService
-            .datasetWebhookResumeSubscription(this.flowsData.datasetBasics.id, subscriptionId)
-            .pipe(take(1))
-            .subscribe((result: boolean) => {
-                if (result) {
-                    setTimeout(() => {
-                        this.refreshEmitter.emit();
-                        this.cdr.detectChanges();
-                    }, AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS);
-                }
-            });
-    }
-
-    public navigateToWebhookSettings(subscriptionId: string): void {
-        this.flowsSelectionState.webhookFilterButtons = [];
-        this.flowsSelectionState.webhooksIds = [];
-        this.navigationService.navigateToWebhooks({
-            accountName: this.flowsData.datasetBasics.owner.accountName,
-            datasetName: this.flowsData.datasetBasics.name,
-            tab: subscriptionId,
-        });
-    }
-
-    public webhooksStateMapper(state: FlowProcessEffectiveState): string {
-        return webhooksStateMapper[state];
-    }
-
-    public trackBySubscriptionId(index: number, item: WebhookFlowSubProcess): string {
-        return item.id;
+        this.refreshFlow();
     }
 }

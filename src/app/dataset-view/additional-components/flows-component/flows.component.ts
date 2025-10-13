@@ -10,7 +10,6 @@ import {
     DatasetFlowProcesses,
     DatasetFlowType,
     DatasetKind,
-    FlowProcessAutoStopReason,
     FlowProcessEffectiveState,
     FlowProcessTypeFilterInput,
     FlowStatus,
@@ -109,16 +108,12 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     };
     public flowConnectionData$: Observable<DatasetFlowsTabState>;
 
-    public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
-    public readonly FlowProcessAutoStopReason: typeof FlowProcessAutoStopReason = FlowProcessAutoStopReason;
-
     public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"]; //1
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
     public readonly SettingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
     public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
     public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
-    public readonly DatasetFlowType: typeof DatasetFlowType = DatasetFlowType;
 
     public ngOnInit(): void {
         this.getPageFromUrl();

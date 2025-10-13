@@ -198,6 +198,7 @@ export function registerMatSvgIcons(): void {
         "enable",
         "add",
         "configuration",
+        "play_pause",
     ];
     icons.forEach((icon: string) => {
         matIconRegistry.addSvgIcon(icon, domSanitizer.bypassSecurityTrustResourceUrl(`/assets/svg/${icon}.svg`));

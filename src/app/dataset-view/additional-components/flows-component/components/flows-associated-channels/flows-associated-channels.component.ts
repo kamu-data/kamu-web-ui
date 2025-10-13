@@ -5,15 +5,7 @@
  * included in the LICENSE file.
  */
 
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    inject,
-    Input,
-    Output,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from "@angular/core";
 import { NgClass, NgFor, NgIf } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { MatButtonToggleChange, MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -31,7 +23,6 @@ import {
 import { FlowProcessEffectiveState, WebhookFlowSubProcess } from "src/app/api/kamu.graphql.interface";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetWebhooksService } from "../../../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { SubscriptionsTableComponent } from "./components/subscriptions-table/subscriptions-table.component";
 
 @Component({
@@ -66,8 +57,6 @@ export class FlowsAssociatedChannelsComponent {
     @Output() public refreshEmitter: EventEmitter<void> = new EventEmitter<void>();
 
     private navigationService = inject(NavigationService);
-    private datasetWebhooksService = inject(DatasetWebhooksService);
-    private cdr = inject(ChangeDetectorRef);
 
     public readonly WEBHOOKS_FILTERS_OPTIONS = WebhooksFiltersOptions;
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;

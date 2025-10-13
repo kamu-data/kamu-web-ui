@@ -25,7 +25,7 @@ import { mockOverviewUpdate } from "../data-tabs.mock";
 import { mockDatasetFlowsProcessesQuery, mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
-import { DatasetFlowProcesses, FlowProcessEffectiveState } from "src/app/api/kamu.graphql.interface";
+import { DatasetFlowProcesses } from "src/app/api/kamu.graphql.interface";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;
@@ -109,32 +109,6 @@ describe("FlowsComponent", () => {
         const emptyBlock = findElementByDataTestId(fixture, "empty-flow-runs-block");
         expect(emptyBlock).toBeDefined();
         discardPeriodicTasks();
-    }));
-
-    it("should check toggle state for flow configurations with pause=true", fakeAsync(() => {
-        const datasetResumeFlowsSpy = spyOn(datasetFlowsService, "datasetResumeFlows").and.returnValue(
-            of(void 0).pipe(delay(0)),
-        );
-
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
-        component.toggleStateDatasetFlowConfigs(FlowProcessEffectiveState.Failing);
-        expect(datasetResumeFlowsSpy).toHaveBeenCalledTimes(1);
-        tick(component.TIMEOUT_REFRESH_FLOW);
-        expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
-        flush();
-    }));
-
-    it("should check toggle state for flow configurations with pause=false", fakeAsync(() => {
-        const datasetPauseFlowsSpy = spyOn(datasetFlowsService, "datasetPauseFlows").and.returnValue(
-            of(void 0).pipe(delay(0)),
-        );
-
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
-        component.toggleStateDatasetFlowConfigs(FlowProcessEffectiveState.Active);
-        expect(datasetPauseFlowsSpy).toHaveBeenCalledTimes(1);
-        tick(component.TIMEOUT_REFRESH_FLOW);
-        expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
-        flush();
     }));
 
     it("should check update now button", fakeAsync(() => {

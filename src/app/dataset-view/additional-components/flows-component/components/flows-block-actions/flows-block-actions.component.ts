@@ -18,13 +18,7 @@ import { NgIf } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
-import {
-    AccountFragment,
-    DatasetFlowProcesses,
-    DatasetKind,
-    FlowProcessEffectiveState,
-} from "src/app/api/kamu.graphql.interface";
-import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
+import { DatasetKind, FlowProcessEffectiveState } from "src/app/api/kamu.graphql.interface";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { Observable, of, take } from "rxjs";
 import { DatasetFlowsService } from "../../services/dataset-flows.service";
@@ -33,6 +27,7 @@ import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { SettingsTabsEnum } from "../../../dataset-settings-component/dataset-settings.model";
 import AppValues from "src/app/common/values/app.values";
+import { DatasetFlowsTabState } from "../../flows.helpers";
 
 @Component({
     selector: "app-flows-block-actions",
@@ -51,11 +46,7 @@ import AppValues from "src/app/common/values/app.values";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowsBlockActionsComponent extends BaseComponent {
-    @Input({ required: true }) public flowConnectionData: {
-        flowsData: FlowsTableData;
-        flowInitiators: AccountFragment[];
-        flowProcesses?: DatasetFlowProcesses;
-    };
+    @Input({ required: true }) public flowConnectionData: DatasetFlowsTabState;
     @Input({ required: true }) public flowsData: DatasetOverviewTabData;
     @Output() public updateEmitter: EventEmitter<void> = new EventEmitter<void>();
     @Output() public refreshEmitter: EventEmitter<void> = new EventEmitter<void>();

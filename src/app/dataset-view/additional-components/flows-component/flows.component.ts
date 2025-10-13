@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import {
     DatasetFlowProcesses,
     DatasetFlowType,
@@ -15,7 +15,6 @@ import {
     FlowProcessTypeFilterInput,
     FlowStatus,
     InitiatorFilterInput,
-    AccountFragment,
 } from "src/app/api/kamu.graphql.interface";
 import { combineLatest, map, Observable, of, switchMap, tap, timer } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
@@ -23,7 +22,7 @@ import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { environment } from "src/environments/environment";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
-import { FlowsTableData, FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
+import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
 import ProjectLinks from "src/app/project-links";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
@@ -38,15 +37,14 @@ import { NgIf, AsyncPipe, NgClass } from "@angular/common";
 import AppValues from "src/app/common/values/app.values";
 import { MatTableModule } from "@angular/material/table";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
-import { DatasetWebhooksService } from "../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
 import { FormsModule } from "@angular/forms";
 import {
     FlowsCategoryUnion,
     FlowsSelectedCategory,
     WebhooksSelectedCategory,
-    WebhooksFiltersOptions,
     FlowsSelectionState,
+    DatasetFlowsTabState,
 } from "./flows.helpers";
 import { FlowsBlockActionsComponent } from "./components/flows-block-actions/flows-block-actions.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -101,13 +99,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             : (this.flowsSelectionState.flowsCategory = value);
     }
 
-    private datasetWebhooksService = inject(DatasetWebhooksService);
-
-    public flowConnectionData$: Observable<{
-        flowsData: FlowsTableData;
-        flowInitiators: AccountFragment[];
-        flowProcesses?: DatasetFlowProcesses;
-    }>;
     public flowsProcesses$: Observable<DatasetFlowProcesses>;
     public flowsSelectionState: FlowsSelectionState = {
         flowsCategory: undefined,
@@ -116,6 +107,8 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         webhooksIds: [],
         subscriptions: [],
     };
+    public flowConnectionData$: Observable<DatasetFlowsTabState>;
+
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
     public readonly FlowProcessAutoStopReason: typeof FlowProcessAutoStopReason = FlowProcessAutoStopReason;
 
@@ -126,13 +119,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
     public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
     public readonly DatasetFlowType: typeof DatasetFlowType = DatasetFlowType;
-    public readonly WEBHOOKS_FILTERS_OPTIONS = WebhooksFiltersOptions;
-    public readonly SUBSCRIPTIONS_DISPLAY_COLUMNS: string[] = [
-        "subscription",
-        "status",
-        "consecutive_failures",
-        "options",
-    ];
 
     public ngOnInit(): void {
         this.getPageFromUrl();

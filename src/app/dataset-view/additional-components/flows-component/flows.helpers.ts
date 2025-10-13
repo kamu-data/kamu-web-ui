@@ -12,8 +12,11 @@ import {
     FlowProcessSummary,
     FlowProcessAutoStopReason,
     FlowTriggerStopPolicyAfterConsecutiveFailures,
+    AccountFragment,
+    DatasetFlowProcesses,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
+import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 
 export type FlowsSelectedCategory = "all" | "updates";
 export type WebhooksSelectedCategory = "webhooks";
@@ -22,6 +25,33 @@ export interface WebhooksFiltersDescriptor {
     label: string;
     state: FlowProcessEffectiveState;
     valueKey: "active" | "failing" | "paused" | "stopped" | "unconfigured";
+}
+
+export type FlowsCategoryUnion = FlowsSelectedCategory | WebhooksSelectedCategory;
+export interface DatasetFlowsBadgeStyle {
+    containerClass: string;
+    iconClass: string;
+    iconName: string;
+}
+
+export interface DatasetFlowsBadgeTexts {
+    message: string;
+    subMessage: string;
+    additionalMessage?: string;
+}
+
+export interface FlowsSelectionState {
+    flowsCategory?: FlowsSelectedCategory;
+    webhooksCategory?: WebhooksSelectedCategory;
+    webhookFilterButtons: FlowProcessEffectiveState[];
+    webhooksIds: string[];
+    subscriptions: string[];
+}
+
+export interface DatasetFlowsTabState {
+    flowsData: FlowsTableData;
+    flowInitiators: AccountFragment[];
+    flowProcesses?: DatasetFlowProcesses;
 }
 
 export const WebhooksFiltersOptions: WebhooksFiltersDescriptor[] = [
@@ -54,27 +84,6 @@ export const webhooksStateMapper: Record<FlowProcessEffectiveState, string> = {
     [FlowProcessEffectiveState.StoppedAuto]: "STOPPED",
     [FlowProcessEffectiveState.Unconfigured]: "UNCONFIGURED",
 };
-
-export type FlowsCategoryUnion = FlowsSelectedCategory | WebhooksSelectedCategory;
-export interface DatasetFlowsBadgeStyle {
-    containerClass: string;
-    iconClass: string;
-    iconName: string;
-}
-
-export interface DatasetFlowsBadgeTexts {
-    message: string;
-    subMessage: string;
-    additionalMessage?: string;
-}
-
-export interface FlowsSelectionState {
-    flowsCategory?: FlowsSelectedCategory;
-    webhooksCategory?: WebhooksSelectedCategory;
-    webhookFilterButtons: FlowProcessEffectiveState[];
-    webhooksIds: string[];
-    subscriptions: string[];
-}
 
 export class DatasetFlowBadgeHelpers {
     public static datePipe = new DatePipe("en-US");

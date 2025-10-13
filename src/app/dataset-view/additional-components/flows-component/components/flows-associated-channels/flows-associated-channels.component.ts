@@ -25,18 +25,13 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTableModule } from "@angular/material/table";
 import { SubprocessStatusFilterPipe } from "../../pipes/subprocess-status-filter.pipe";
 import {
+    DatasetFlowsTabState,
     FlowsCategoryUnion,
     FlowsSelectionState,
     WebhooksFiltersOptions,
     webhooksStateMapper,
 } from "../../flows.helpers";
-import {
-    AccountFragment,
-    DatasetFlowProcesses,
-    FlowProcessEffectiveState,
-    WebhookFlowSubProcess,
-} from "src/app/api/kamu.graphql.interface";
-import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
+import { FlowProcessEffectiveState, WebhookFlowSubProcess } from "src/app/api/kamu.graphql.interface";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 import { take } from "rxjs";
@@ -71,11 +66,7 @@ import { DatasetWebhooksService } from "../../../dataset-settings-component/tabs
 })
 export class FlowsAssociatedChannelsComponent {
     @Input({ required: true }) public flowsSelectionState: FlowsSelectionState;
-    @Input({ required: true }) public flowConnectionData: {
-        flowsData: FlowsTableData;
-        flowInitiators: AccountFragment[];
-        flowProcesses?: DatasetFlowProcesses;
-    };
+    @Input({ required: true }) public flowConnectionData: DatasetFlowsTabState;
     @Input({ required: true }) public flowsData: DatasetOverviewTabData;
     @Output() public refreshEmitter: EventEmitter<void> = new EventEmitter<void>();
 

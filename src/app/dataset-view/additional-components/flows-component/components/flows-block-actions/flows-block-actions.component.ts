@@ -25,10 +25,8 @@ import {
     FlowProcessEffectiveState,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { Observable, of, take } from "rxjs";
 import { DatasetFlowsService } from "../../services/dataset-flows.service";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { SettingsTabsEnum } from "../../../dataset-settings-component/dataset-settings.model";
 import AppValues from "src/app/common/values/app.values";
@@ -55,6 +53,8 @@ export class FlowsBlockActionsComponent extends BaseComponent {
     @Input({ required: true }) public hasPushSources: boolean;
     @Output() public updateEmitter: EventEmitter<void> = new EventEmitter<void>();
     @Output() public refreshEmitter: EventEmitter<void> = new EventEmitter<void>();
+    @Output() public toggleStateDatasetFlowConfigsEmitter: EventEmitter<FlowProcessEffectiveState> =
+        new EventEmitter<FlowProcessEffectiveState>();
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
     private flowsService = inject(DatasetFlowsService);
@@ -89,46 +89,6 @@ export class FlowsBlockActionsComponent extends BaseComponent {
     }
 
     public toggleStateDatasetFlowConfigs(state: FlowProcessEffectiveState): void {
-        let operation$: Observable<void> = of();
-        if (state === FlowProcessEffectiveState.Active) {
-            operation$ = this.flowsService.datasetPauseFlows({
-                datasetId: this.datasetBasics.id,
-            });
-        } else if (state === FlowProcessEffectiveState.StoppedAuto) {
-            promiseWithCatch(
-                this.modalService.error({
-                    title: "Resume updates",
-                    message: "Have you confirmed that all issues have been resolved?",
-                    yesButtonText: "Ok",
-                    noButtonText: "Cancel",
-                    handler: (ok) => {
-                        if (ok) {
-                            this.flowsService
-                                .datasetResumeFlows({
-                                    datasetId: this.datasetBasics.id,
-                                })
-                                .pipe(take(1))
-                                .subscribe(() => {
-                                    setTimeout(() => {
-                                        this.refreshFlow();
-                                        this.cdr.detectChanges();
-                                    }, this.TIMEOUT_REFRESH_FLOW);
-                                });
-                        }
-                    },
-                }),
-            );
-        } else {
-            operation$ = this.flowsService.datasetResumeFlows({
-                datasetId: this.datasetBasics.id,
-            });
-        }
-
-        operation$.pipe(take(1)).subscribe(() => {
-            setTimeout(() => {
-                this.refreshFlow();
-                this.cdr.detectChanges();
-            }, this.TIMEOUT_REFRESH_FLOW);
-        });
+        this.toggleStateDatasetFlowConfigsEmitter.emit(state);
     }
 }

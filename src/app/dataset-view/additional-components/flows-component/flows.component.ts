@@ -51,6 +51,8 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FlowsBadgePanelComponent } from "./components/flows-badge-panel/flows-badge-panel.component";
 import { FlowsAssociatedChannelsComponent } from "./components/flows-associated-channels/flows-associated-channels.component";
 import { DatasetWebhooksService } from "../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
+import { ModalService } from "src/app/common/components/modal/modal.service";
+import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 @Component({
     selector: "app-flows",
     templateUrl: "./flows.component.html",
@@ -101,6 +103,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     private datasetWebhooksService = inject(DatasetWebhooksService);
+    private modalService = inject(ModalService);
 
     public flowsProcesses$: Observable<DatasetFlowProcesses>;
     public flowsSelectionState: FlowsSelectionState = {
@@ -399,6 +402,50 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                     this.cdr.detectChanges();
                 }, this.TIMEOUT_REFRESH_FLOW);
             }
+        });
+    }
+
+    public toggleStateDatasetFlowConfigs(state: FlowProcessEffectiveState): void {
+        let operation$: Observable<void> = of();
+        if (state === FlowProcessEffectiveState.Active) {
+            operation$ = this.flowsService.datasetPauseFlows({
+                datasetId: this.flowsData.datasetBasics.id,
+            });
+        } else if (state === FlowProcessEffectiveState.StoppedAuto) {
+            promiseWithCatch(
+                this.modalService.error({
+                    title: "Resume updates",
+                    message: "Have you confirmed that all issues have been resolved?",
+                    yesButtonText: "Ok",
+                    noButtonText: "Cancel",
+                    handler: (ok) => {
+                        if (ok) {
+                            this.flowsService
+                                .datasetResumeFlows({
+                                    datasetId: this.flowsData.datasetBasics.id,
+                                })
+                                .pipe(take(1))
+                                .subscribe(() => {
+                                    setTimeout(() => {
+                                        this.refreshFlow();
+                                        this.cdr.detectChanges();
+                                    }, this.TIMEOUT_REFRESH_FLOW);
+                                });
+                        }
+                    },
+                }),
+            );
+        } else {
+            operation$ = this.flowsService.datasetResumeFlows({
+                datasetId: this.flowsData.datasetBasics.id,
+            });
+        }
+
+        operation$.pipe(take(1)).subscribe(() => {
+            setTimeout(() => {
+                this.refreshFlow();
+                this.cdr.detectChanges();
+            }, this.TIMEOUT_REFRESH_FLOW);
         });
     }
 

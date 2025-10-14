@@ -1,7 +1,7 @@
 <div [id]="'subprocesses-table'" class="dynamic-table">
     <table
         mat-table
-        [dataSource]="webhooksData.subprocesses | subprocessStatusFilter: flowsSelectionState.webhookFilterButtons"
+        [dataSource]="subprocesses | subprocessStatusFilter: webhookTableFilters"
         [trackBy]="trackBySubscriptionId"
     >
         <!-- Subscription Column -->

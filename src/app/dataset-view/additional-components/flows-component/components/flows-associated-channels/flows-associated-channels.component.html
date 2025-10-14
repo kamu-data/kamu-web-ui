@@ -13,7 +13,7 @@
 
         <mat-button-toggle-group
             [(ngModel)]="flowsSelectionState.webhookFilterButtons"
-            (change)="onToggleWebhookFilter($event, webhooksData.subprocesses)"
+            (change)="onToggleWebhookFilter($event)"
             multiple
             [disabled]="!isWebhookCategoryActive"
         >
@@ -39,7 +39,7 @@
     <mat-chip-set class="ms-2">
         <mat-chip *ngFor="let webhook of flowsSelectionState.subscriptions">
             {{ webhook }}
-            <button matChipRemove (click)="removeSelectedWebhook(webhook, webhooksData.subprocesses)">
+            <button matChipRemove (click)="removeSelectedWebhook(webhook)">
                 <mat-icon>cancel</mat-icon>
             </button>
         </mat-chip>
@@ -56,10 +56,13 @@
 >
     <div class="w-75">
         <app-subscriptions-table
-            [webhooksData]="webhooksData"
-            [flowsSelectionState]="flowsSelectionState"
+            [subprocesses]="webhooksData.subprocesses"
+            [webhookTableFilters]="flowsSelectionState.webhookFilterButtons"
             [datasetBasics]="datasetBasics"
-            (refreshEmitter)="refreshFlow()"
+            (navigateToWebhookSettingsEmitter)="navigateToWebhookSettings($event)"
+            (navigateToSubscriptionEmitter)="navigateToSubscription($event)"
+            (pauseWebhookEmitter)="pauseWebhook($event)"
+            (resumeWebhookEmitter)="resumeWebhook($event)"
         />
     </div>
 </div>

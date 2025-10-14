@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { NgClass, NgFor, NgIf } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { MatButtonToggleChange, MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -14,16 +14,15 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTableModule } from "@angular/material/table";
-import { FlowsCategoryUnion, FlowsSelectionState, WebhooksFiltersOptions } from "../../flows.helpers";
+import { FlowsSelectionState, WebhooksFiltersOptions, WebhooksSelectedCategory } from "../../flows.helpers";
 import {
     FlowProcessEffectiveState,
     WebhookFlowSubProcess,
     WebhookFlowSubProcessGroup,
 } from "src/app/api/kamu.graphql.interface";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { NavigationService } from "src/app/services/navigation.service";
 import { SubscriptionsTableComponent } from "./components/subscriptions-table/subscriptions-table.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
+import { MaybeUndefined } from "src/app/interface/app.types";
 @Component({
     selector: "app-flows-associated-channels",
     standalone: true,
@@ -53,9 +52,17 @@ export class FlowsAssociatedChannelsComponent {
     @Input({ required: true }) public flowsSelectionState: FlowsSelectionState;
     @Input({ required: true }) public webhooksData: WebhookFlowSubProcessGroup;
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    @Output() public refreshEmitter: EventEmitter<void> = new EventEmitter<void>();
-
-    private navigationService = inject(NavigationService);
+    @Output() public navigateToWebhookSettingsEmitter: EventEmitter<string> = new EventEmitter<string>();
+    @Output() public navigateToSubscriptionEmitter: EventEmitter<WebhookFlowSubProcess> =
+        new EventEmitter<WebhookFlowSubProcess>();
+    @Output() public pauseWebhookEmitter: EventEmitter<string> = new EventEmitter<string>();
+    @Output() public resumeWebhookEmitter: EventEmitter<string> = new EventEmitter<string>();
+    @Output() public selectionWebhooksEmitter: EventEmitter<MaybeUndefined<WebhooksSelectedCategory>> =
+        new EventEmitter<MaybeUndefined<WebhooksSelectedCategory>>();
+    @Output() public toggleWebhookFilterEmitter: EventEmitter<FlowProcessEffectiveState[]> = new EventEmitter<
+        FlowProcessEffectiveState[]
+    >();
+    @Output() public removeSelectedWebhookEmitter: EventEmitter<string> = new EventEmitter<string>();
 
     public readonly WEBHOOKS_FILTERS_OPTIONS = WebhooksFiltersOptions;
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
@@ -74,62 +81,31 @@ export class FlowsAssociatedChannelsComponent {
         return this.flowsSelectionState.webhooksCategory === "webhooks";
     }
 
-    public refreshFlow(): void {
-        this.refreshEmitter.emit();
+    public navigateToWebhookSettings(subscriptionId: string): void {
+        this.navigateToWebhookSettingsEmitter.emit(subscriptionId);
+    }
+
+    public navigateToSubscription(process: WebhookFlowSubProcess): void {
+        this.navigateToSubscriptionEmitter.emit(process);
+    }
+
+    public pauseWebhook(subscriptionId: string): void {
+        this.pauseWebhookEmitter.emit(subscriptionId);
+    }
+
+    public resumeWebhook(subscriptionId: string): void {
+        this.resumeWebhookEmitter.emit(subscriptionId);
     }
 
     public onSelectionWebhooksChange(event: MatChipListboxChange): void {
-        this.flowsSelectionState.flowsCategory = undefined;
-        const category = event.value as FlowsCategoryUnion;
-        if (category && this.flowsSelectionState.webhookFilterButtons.length) {
-            this.flowsSelectionState.webhookFilterButtons = [];
-            this.flowsSelectionState.subscriptions = [];
-        }
-        if (!category) {
-            this.flowsSelectionState.webhooksIds = [];
-        }
-
-        this.navigationService.navigateToDatasetView({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
-            tab: DatasetViewTypeEnum.Flows,
-            category: category ?? undefined,
-        });
-        this.refreshFlow();
+        this.selectionWebhooksEmitter.emit(event.value as MaybeUndefined<WebhooksSelectedCategory>);
     }
 
-    public onToggleWebhookFilter(event: MatButtonToggleChange, subprocesses: WebhookFlowSubProcess[]): void {
-        const states = event.value as FlowProcessEffectiveState[];
-        this.flowsSelectionState.subscriptions = [];
-        this.flowsSelectionState.webhooksIds = subprocesses
-            .filter((x) => states.includes(x.summary.effectiveState))
-            .map((item) => item.id);
-        this.navigationService.navigateToDatasetView({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
-            tab: DatasetViewTypeEnum.Flows,
-            category: this.flowsSelectionState.flowsCategory as FlowsCategoryUnion,
-            webhooksState: states.length ? states : undefined,
-        });
-        this.refreshFlow();
+    public onToggleWebhookFilter(event: MatButtonToggleChange): void {
+        this.toggleWebhookFilterEmitter.emit(event.value as FlowProcessEffectiveState[]);
     }
 
-    public removeSelectedWebhook(subscriptionName: string, subprocesses: WebhookFlowSubProcess[]): void {
-        const index = this.flowsSelectionState.subscriptions.indexOf(subscriptionName);
-        if (index >= 0) {
-            this.flowsSelectionState.subscriptions.splice(index, 1);
-        }
-        const removedId = subprocesses.filter((item) => item.name === subscriptionName)[0].id;
-        this.flowsSelectionState.webhooksIds = this.flowsSelectionState.webhooksIds.filter(
-            (item) => item !== removedId,
-        );
-
-        this.navigationService.navigateToDatasetView({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
-            tab: DatasetViewTypeEnum.Flows,
-            webhookId: this.flowsSelectionState.webhooksIds,
-        });
-        this.refreshFlow();
+    public removeSelectedWebhook(subscriptionName: string): void {
+        this.removeSelectedWebhookEmitter.emit(subscriptionName);
     }
 }

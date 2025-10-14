@@ -5,15 +5,7 @@
  * included in the LICENSE file.
  */
 
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    inject,
-    Input,
-    Output,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { NgIf } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -24,18 +16,12 @@ import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTableModule } from "@angular/material/table";
 import { SubprocessStatusFilterPipe } from "../../../../pipes/subprocess-status-filter.pipe";
-import { FlowsSelectionState, webhooksStateMapper } from "../../../../flows.helpers";
+import { webhooksStateMapper } from "../../../../flows.helpers";
 import {
     DatasetBasicsFragment,
     FlowProcessEffectiveState,
     WebhookFlowSubProcess,
-    WebhookFlowSubProcessGroup,
 } from "src/app/api/kamu.graphql.interface";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { take } from "rxjs";
-import AppValues from "src/app/common/values/app.values";
-import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
-import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-subscriptions-table",
@@ -62,14 +48,14 @@ import { NavigationService } from "src/app/services/navigation.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubscriptionsTableComponent {
-    @Input({ required: true }) public webhooksData: WebhookFlowSubProcessGroup;
-    @Input({ required: true }) public flowsSelectionState: FlowsSelectionState;
+    @Input({ required: true }) public subprocesses: WebhookFlowSubProcess[];
+    @Input({ required: true }) public webhookTableFilters: FlowProcessEffectiveState[];
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    @Output() public refreshEmitter: EventEmitter<void> = new EventEmitter<void>();
-
-    private navigationService = inject(NavigationService);
-    private datasetWebhooksService = inject(DatasetWebhooksService);
-    private cdr = inject(ChangeDetectorRef);
+    @Output() public navigateToWebhookSettingsEmitter: EventEmitter<string> = new EventEmitter<string>();
+    @Output() public navigateToSubscriptionEmitter: EventEmitter<WebhookFlowSubProcess> =
+        new EventEmitter<WebhookFlowSubProcess>();
+    @Output() public pauseWebhookEmitter: EventEmitter<string> = new EventEmitter<string>();
+    @Output() public resumeWebhookEmitter: EventEmitter<string> = new EventEmitter<string>();
 
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
     public readonly SUBSCRIPTIONS_DISPLAY_COLUMNS: string[] = [
@@ -79,66 +65,20 @@ export class SubscriptionsTableComponent {
         "options",
     ];
 
-    public refreshFlow() {
-        this.refreshEmitter.emit();
-    }
-
     public navigateToSubscription(process: WebhookFlowSubProcess): void {
-        if (this.flowsSelectionState.webhooksCategory || this.flowsSelectionState.flowsCategory) {
-            this.flowsSelectionState.webhooksIds = [];
-        }
-        if (!this.flowsSelectionState.subscriptions.includes(process.name)) {
-            this.flowsSelectionState.subscriptions.push(process.name);
-            this.flowsSelectionState.webhooksIds.push(process.id);
-        }
-        this.flowsSelectionState.webhookFilterButtons = [];
-        this.flowsSelectionState.webhooksCategory = undefined;
-
-        this.navigationService.navigateToDatasetView({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
-            tab: DatasetViewTypeEnum.Flows,
-            webhookId: this.flowsSelectionState.webhooksIds,
-        });
-        this.refreshFlow();
+        this.navigateToSubscriptionEmitter.emit(process);
     }
 
     public pauseWebhook(subscriptionId: string): void {
-        this.datasetWebhooksService
-            .datasetWebhookPauseSubscription(this.datasetBasics.id, subscriptionId)
-            .pipe(take(1))
-            .subscribe((result: boolean) => {
-                if (result) {
-                    setTimeout(() => {
-                        this.refreshFlow();
-                        this.cdr.detectChanges();
-                    }, AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS);
-                }
-            });
+        this.pauseWebhookEmitter.emit(subscriptionId);
     }
 
     public resumeWebhook(subscriptionId: string): void {
-        this.datasetWebhooksService
-            .datasetWebhookResumeSubscription(this.datasetBasics.id, subscriptionId)
-            .pipe(take(1))
-            .subscribe((result: boolean) => {
-                if (result) {
-                    setTimeout(() => {
-                        this.refreshFlow();
-                        this.cdr.detectChanges();
-                    }, AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS);
-                }
-            });
+        this.resumeWebhookEmitter.emit(subscriptionId);
     }
 
     public navigateToWebhookSettings(subscriptionId: string): void {
-        this.flowsSelectionState.webhookFilterButtons = [];
-        this.flowsSelectionState.webhooksIds = [];
-        this.navigationService.navigateToWebhooks({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
-            tab: subscriptionId,
-        });
+        this.navigateToWebhookSettingsEmitter.emit(subscriptionId);
     }
 
     public webhooksStateMapper(state: FlowProcessEffectiveState): string {

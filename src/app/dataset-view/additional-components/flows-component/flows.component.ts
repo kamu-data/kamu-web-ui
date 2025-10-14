@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import {
     DatasetFlowProcesses,
     DatasetFlowType,
@@ -14,8 +14,9 @@ import {
     FlowProcessTypeFilterInput,
     FlowStatus,
     InitiatorFilterInput,
+    WebhookFlowSubProcess,
 } from "src/app/api/kamu.graphql.interface";
-import { combineLatest, map, Observable, of, switchMap, tap, timer } from "rxjs";
+import { combineLatest, map, Observable, of, switchMap, take, tap, timer } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
@@ -49,6 +50,7 @@ import { FlowsBlockActionsComponent } from "./components/flows-block-actions/flo
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FlowsBadgePanelComponent } from "./components/flows-badge-panel/flows-badge-panel.component";
 import { FlowsAssociatedChannelsComponent } from "./components/flows-associated-channels/flows-associated-channels.component";
+import { DatasetWebhooksService } from "../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 @Component({
     selector: "app-flows",
     templateUrl: "./flows.component.html",
@@ -97,6 +99,8 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             ? (this.flowsSelectionState.webhooksCategory = value)
             : (this.flowsSelectionState.flowsCategory = value);
     }
+
+    private datasetWebhooksService = inject(DatasetWebhooksService);
 
     public flowsProcesses$: Observable<DatasetFlowProcesses>;
     public flowsSelectionState: FlowsSelectionState = {
@@ -209,6 +213,64 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         return null;
     }
 
+    public navigateToWebhookSettings(subscriptionId: string): void {
+        this.flowsSelectionState.webhookFilterButtons = [];
+        this.flowsSelectionState.webhooksIds = [];
+        this.navigationService.navigateToWebhooks({
+            accountName: this.flowsData.datasetBasics.owner.accountName,
+            datasetName: this.flowsData.datasetBasics.name,
+            tab: subscriptionId,
+        });
+    }
+
+    public navigateToSubscription(process: WebhookFlowSubProcess): void {
+        if (this.flowsSelectionState.webhooksCategory || this.flowsSelectionState.flowsCategory) {
+            this.flowsSelectionState.webhooksIds = [];
+        }
+        if (!this.flowsSelectionState.subscriptions.includes(process.name)) {
+            this.flowsSelectionState.subscriptions.push(process.name);
+            this.flowsSelectionState.webhooksIds.push(process.id);
+        }
+        this.flowsSelectionState.webhookFilterButtons = [];
+        this.flowsSelectionState.webhooksCategory = undefined;
+
+        this.navigationService.navigateToDatasetView({
+            accountName: this.flowsData.datasetBasics.owner.accountName,
+            datasetName: this.flowsData.datasetBasics.name,
+            tab: DatasetViewTypeEnum.Flows,
+            webhookId: this.flowsSelectionState.webhooksIds,
+        });
+        this.refreshFlow();
+    }
+
+    public pauseWebhook(subscriptionId: string): void {
+        this.datasetWebhooksService
+            .datasetWebhookPauseSubscription(this.flowsData.datasetBasics.id, subscriptionId)
+            .pipe(take(1))
+            .subscribe((result: boolean) => {
+                if (result) {
+                    setTimeout(() => {
+                        this.refreshFlow();
+                        this.cdr.detectChanges();
+                    }, AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS);
+                }
+            });
+    }
+
+    public resumeWebhook(subscriptionId: string): void {
+        this.datasetWebhooksService
+            .datasetWebhookResumeSubscription(this.flowsData.datasetBasics.id, subscriptionId)
+            .pipe(take(1))
+            .subscribe((result: boolean) => {
+                if (result) {
+                    setTimeout(() => {
+                        this.refreshFlow();
+                        this.cdr.detectChanges();
+                    }, AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS);
+                }
+            });
+    }
+
     public onSelectionFlowsChange(event: MatChipListboxChange): void {
         this.flowsSelectionState.webhooksCategory = undefined;
         this.flowsSelectionState.webhookFilterButtons = [];
@@ -216,7 +278,60 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             accountName: this.flowsData.datasetBasics.owner.accountName,
             datasetName: this.flowsData.datasetBasics.name,
             tab: DatasetViewTypeEnum.Flows,
-            category: event.value as FlowsCategoryUnion,
+            category: event.value as FlowsSelectedCategory,
+        });
+        this.refreshFlow();
+    }
+
+    public onSelectionWebhooksChange(category: MaybeUndefined<WebhooksSelectedCategory>): void {
+        this.flowsSelectionState.flowsCategory = undefined;
+        if (category && this.flowsSelectionState.webhookFilterButtons.length) {
+            this.flowsSelectionState.webhookFilterButtons = [];
+            this.flowsSelectionState.subscriptions = [];
+        }
+        if (!category) {
+            this.flowsSelectionState.webhooksIds = [];
+        }
+
+        this.navigationService.navigateToDatasetView({
+            accountName: this.flowsData.datasetBasics.owner.accountName,
+            datasetName: this.flowsData.datasetBasics.name,
+            tab: DatasetViewTypeEnum.Flows,
+            category: category,
+        });
+        this.refreshFlow();
+    }
+
+    public onToggleWebhookFilter(states: FlowProcessEffectiveState[], subprocesses: WebhookFlowSubProcess[]): void {
+        this.flowsSelectionState.subscriptions = [];
+        this.flowsSelectionState.webhooksIds = subprocesses
+            .filter((x) => states.includes(x.summary.effectiveState))
+            .map((item) => item.id);
+        this.navigationService.navigateToDatasetView({
+            accountName: this.flowsData.datasetBasics.owner.accountName,
+            datasetName: this.flowsData.datasetBasics.name,
+            tab: DatasetViewTypeEnum.Flows,
+            category: this.flowsSelectionState.flowsCategory as WebhooksSelectedCategory,
+            webhooksState: states.length ? states : undefined,
+        });
+        this.refreshFlow();
+    }
+
+    public removeSelectedWebhook(subscriptionName: string, subprocesses: WebhookFlowSubProcess[]): void {
+        const index = this.flowsSelectionState.subscriptions.indexOf(subscriptionName);
+        if (index >= 0) {
+            this.flowsSelectionState.subscriptions.splice(index, 1);
+        }
+        const removedId = subprocesses.filter((item) => item.name === subscriptionName)[0].id;
+        this.flowsSelectionState.webhooksIds = this.flowsSelectionState.webhooksIds.filter(
+            (item) => item !== removedId,
+        );
+
+        this.navigationService.navigateToDatasetView({
+            accountName: this.flowsData.datasetBasics.owner.accountName,
+            datasetName: this.flowsData.datasetBasics.name,
+            tab: DatasetViewTypeEnum.Flows,
+            webhookId: this.flowsSelectionState.webhooksIds,
         });
         this.refreshFlow();
     }

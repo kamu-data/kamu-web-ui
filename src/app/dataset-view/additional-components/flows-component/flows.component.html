@@ -44,7 +44,23 @@
                                 [flowsSelectionState]="flowsSelectionState"
                                 [webhooksData]="flowConnectionData.flowProcesses.webhooks"
                                 [datasetBasics]="flowsData.datasetBasics"
-                                (refreshEmitter)="refreshFlow()"
+                                (navigateToWebhookSettingsEmitter)="navigateToWebhookSettings($event)"
+                                (navigateToSubscriptionEmitter)="navigateToSubscription($event)"
+                                (pauseWebhookEmitter)="pauseWebhook($event)"
+                                (resumeWebhookEmitter)="resumeWebhook($event)"
+                                (selectionWebhooksEmitter)="onSelectionWebhooksChange($event)"
+                                (toggleWebhookFilterEmitter)="
+                                    onToggleWebhookFilter(
+                                        $event,
+                                        flowConnectionData.flowProcesses.webhooks.subprocesses
+                                    )
+                                "
+                                (removeSelectedWebhookEmitter)="
+                                    removeSelectedWebhook(
+                                        $event,
+                                        flowConnectionData.flowProcesses.webhooks.subprocesses
+                                    )
+                                "
                             />
                         </div>
                     </div>

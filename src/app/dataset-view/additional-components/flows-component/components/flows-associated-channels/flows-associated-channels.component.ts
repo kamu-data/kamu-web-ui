@@ -66,12 +66,6 @@ export class FlowsAssociatedChannelsComponent {
 
     public readonly WEBHOOKS_FILTERS_OPTIONS = WebhooksFiltersOptions;
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
-    public readonly SUBSCRIPTIONS_DISPLAY_COLUMNS: string[] = [
-        "subscription",
-        "status",
-        "consecutive_failures",
-        "options",
-    ];
 
     public get showSubprocessesTable(): boolean {
         return this.isWebhookCategoryActive || Boolean(this.flowsSelectionState.webhooksIds.length);

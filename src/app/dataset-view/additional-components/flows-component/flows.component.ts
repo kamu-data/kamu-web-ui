@@ -144,6 +144,11 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         this.flowConnectionData$ = timer(0, environment.delay_polling_ms).pipe(
             switchMap(() => this.flowsService.datasetFlowsProcesses({ datasetId: this.flowsData.datasetBasics.id })),
             tap((flowProcesses: DatasetFlowProcesses) => {
+                const modifiedRollup = {
+                    ...flowProcesses.webhooks.rollup,
+                    paused: flowProcesses.webhooks.rollup.paused + flowProcesses.webhooks.rollup.unconfigured,
+                };
+                flowProcesses.webhooks.rollup = modifiedRollup;
                 this.initFlowsSelectionState(flowProcesses);
             }),
             switchMap((flowProcesses: DatasetFlowProcesses) =>

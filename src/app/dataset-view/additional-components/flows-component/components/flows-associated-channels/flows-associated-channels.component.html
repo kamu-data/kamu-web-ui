@@ -18,17 +18,9 @@
             [disabled]="!isWebhookCategoryActive"
         >
             <ng-container *ngFor="let item of WEBHOOKS_FILTERS_OPTIONS">
-                <mat-button-toggle
-                    *ngIf="item.state !== FlowProcessEffectiveState.PausedManual; else pausedSate"
-                    [value]="item.state"
+                <mat-button-toggle [value]="item.state"
                     >{{ item.label }} {{ webhooksData.rollup[item.valueKey] }}</mat-button-toggle
                 >
-                <ng-template #pausedSate>
-                    <mat-button-toggle [value]="item.state"
-                        >{{ item.label }}
-                        {{ webhooksData.rollup.paused + webhooksData.rollup.unconfigured }}</mat-button-toggle
-                    >
-                </ng-template>
             </ng-container>
         </mat-button-toggle-group>
     </div>

@@ -5,15 +5,7 @@
  * included in the LICENSE file.
  */
 
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    inject,
-    Input,
-    Output,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { NgIf } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
@@ -25,9 +17,7 @@ import {
     FlowProcessEffectiveState,
 } from "src/app/api/kamu.graphql.interface";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetFlowsService } from "../../services/dataset-flows.service";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { ModalService } from "src/app/common/components/modal/modal.service";
 import { SettingsTabsEnum } from "../../../dataset-settings-component/dataset-settings.model";
 import AppValues from "src/app/common/values/app.values";
 
@@ -56,10 +46,6 @@ export class FlowsBlockActionsComponent extends BaseComponent {
     @Output() public toggleStateDatasetFlowConfigsEmitter: EventEmitter<FlowProcessEffectiveState> =
         new EventEmitter<FlowProcessEffectiveState>();
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
-
-    private flowsService = inject(DatasetFlowsService);
-    private cdr = inject(ChangeDetectorRef);
-    private modalService = inject(ModalService);
 
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
     public readonly TIMEOUT_REFRESH_FLOW = AppValues.TIMEOUT_REFRESH_FLOW_MS;

@@ -7,8 +7,8 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FlowsBadgePanelComponent } from "./flows-badge-panel.component";
-import { DatasetFlowProcesses, DatasetKind } from "src/app/api/kamu.graphql.interface";
-import { mockFlowsTableData, mockDatasetFlowsProcessesQuery } from "src/app/api/mock/dataset-flow.mock";
+import { DatasetFlowProcess, DatasetKind } from "src/app/api/kamu.graphql.interface";
+import { mockDatasetFlowsProcessesQuery } from "src/app/api/mock/dataset-flow.mock";
 
 describe("FlowsBadgePanelComponent", () => {
     let component: FlowsBadgePanelComponent;
@@ -20,11 +20,8 @@ describe("FlowsBadgePanelComponent", () => {
         });
         fixture = TestBed.createComponent(FlowsBadgePanelComponent);
         component = fixture.componentInstance;
-        component.flowConnectionData = {
-            flowsData: mockFlowsTableData,
-            flowInitiators: [],
-            flowProcesses: mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses,
-        };
+        component.flowProcess = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes
+            .primary as DatasetFlowProcess;
         component.datasetKind = DatasetKind.Root;
         fixture.detectChanges();
     });

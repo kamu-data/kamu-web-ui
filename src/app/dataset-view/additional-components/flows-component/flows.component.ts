@@ -123,8 +123,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
 
     public ngOnInit(): void {
-        this.getPageFromUrl();
-        this.fetchTableData(this.currentPage);
+        this.refreshFlow();
     }
 
     public get showPanelButtons(): boolean {

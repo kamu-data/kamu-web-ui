@@ -8,10 +8,9 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SubscriptionsTableComponent } from "./subscriptions-table.component";
 import { Apollo } from "apollo-angular";
-import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
-import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { mockDatasetFlowsProcessesQuery, mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
-import { DatasetFlowProcesses } from "src/app/api/kamu.graphql.interface";
+import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { mockDatasetFlowsProcessesQuery } from "src/app/api/mock/dataset-flow.mock";
+import { WebhookFlowSubProcess } from "src/app/api/kamu.graphql.interface";
 import { provideToastr } from "ngx-toastr";
 
 describe("SubscriptionsTableComponent", () => {
@@ -25,23 +24,10 @@ describe("SubscriptionsTableComponent", () => {
         });
         fixture = TestBed.createComponent(SubscriptionsTableComponent);
         component = fixture.componentInstance;
-        component.flowsData = {
-            datasetBasics: mockDatasetBasicsRootFragment,
-            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            overviewUpdate: mockOverviewUpdate,
-        };
-        component.flowConnectionData = {
-            flowsData: mockFlowsTableData,
-            flowInitiators: [],
-            flowProcesses: mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses,
-        };
-        component.flowsSelectionState = {
-            flowsCategory: undefined,
-            webhooksCategory: undefined,
-            webhookFilterButtons: [],
-            webhooksIds: [],
-            subscriptions: [],
-        };
+        component.datasetBasics = mockDatasetBasicsRootFragment;
+        component.subprocesses = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.webhooks
+            .subprocesses as WebhookFlowSubProcess[];
+        component.webhookTableFilters = [];
         fixture.detectChanges();
     });
 

@@ -381,7 +381,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                 page,
             });
         }
-        this.fetchTableData(page);
+        // this.fetchTableData(page);
     }
 
     public updateNow(): void {

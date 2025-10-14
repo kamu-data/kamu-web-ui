@@ -52,17 +52,17 @@ export class FlowsAssociatedChannelsComponent {
     @Input({ required: true }) public flowsSelectionState: FlowsSelectionState;
     @Input({ required: true }) public webhooksData: WebhookFlowSubProcessGroup;
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    @Output() public navigateToWebhookSettingsEmitter: EventEmitter<string> = new EventEmitter<string>();
-    @Output() public navigateToSubscriptionEmitter: EventEmitter<WebhookFlowSubProcess> =
+    @Output() public webhookSettingsClicked: EventEmitter<string> = new EventEmitter<string>();
+    @Output() public subcriptionClicked: EventEmitter<WebhookFlowSubProcess> =
         new EventEmitter<WebhookFlowSubProcess>();
-    @Output() public pauseWebhookEmitter: EventEmitter<string> = new EventEmitter<string>();
-    @Output() public resumeWebhookEmitter: EventEmitter<string> = new EventEmitter<string>();
-    @Output() public selectionWebhooksEmitter: EventEmitter<MaybeUndefined<WebhooksSelectedCategory>> =
+    @Output() public pauseWebhookClicked: EventEmitter<string> = new EventEmitter<string>();
+    @Output() public resumeWebhookClicked: EventEmitter<string> = new EventEmitter<string>();
+    @Output() public selectionWebhooksClicked: EventEmitter<MaybeUndefined<WebhooksSelectedCategory>> =
         new EventEmitter<MaybeUndefined<WebhooksSelectedCategory>>();
-    @Output() public toggleWebhookFilterEmitter: EventEmitter<FlowProcessEffectiveState[]> = new EventEmitter<
+    @Output() public toggleWebhookFilterClicked: EventEmitter<FlowProcessEffectiveState[]> = new EventEmitter<
         FlowProcessEffectiveState[]
     >();
-    @Output() public removeSelectedWebhookEmitter: EventEmitter<string> = new EventEmitter<string>();
+    @Output() public removeSelectedWebhookClicked: EventEmitter<string> = new EventEmitter<string>();
 
     public readonly WEBHOOKS_FILTERS_OPTIONS = WebhooksFiltersOptions;
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
@@ -82,30 +82,30 @@ export class FlowsAssociatedChannelsComponent {
     }
 
     public navigateToWebhookSettings(subscriptionId: string): void {
-        this.navigateToWebhookSettingsEmitter.emit(subscriptionId);
+        this.webhookSettingsClicked.emit(subscriptionId);
     }
 
     public navigateToSubscription(process: WebhookFlowSubProcess): void {
-        this.navigateToSubscriptionEmitter.emit(process);
+        this.subcriptionClicked.emit(process);
     }
 
     public pauseWebhook(subscriptionId: string): void {
-        this.pauseWebhookEmitter.emit(subscriptionId);
+        this.pauseWebhookClicked.emit(subscriptionId);
     }
 
     public resumeWebhook(subscriptionId: string): void {
-        this.resumeWebhookEmitter.emit(subscriptionId);
+        this.resumeWebhookClicked.emit(subscriptionId);
     }
 
     public onSelectionWebhooksChange(event: MatChipListboxChange): void {
-        this.selectionWebhooksEmitter.emit(event.value as MaybeUndefined<WebhooksSelectedCategory>);
+        this.selectionWebhooksClicked.emit(event.value as MaybeUndefined<WebhooksSelectedCategory>);
     }
 
     public onToggleWebhookFilter(event: MatButtonToggleChange): void {
-        this.toggleWebhookFilterEmitter.emit(event.value as FlowProcessEffectiveState[]);
+        this.toggleWebhookFilterClicked.emit(event.value as FlowProcessEffectiveState[]);
     }
 
     public removeSelectedWebhook(subscriptionName: string): void {
-        this.removeSelectedWebhookEmitter.emit(subscriptionName);
+        this.removeSelectedWebhookClicked.emit(subscriptionName);
     }
 }

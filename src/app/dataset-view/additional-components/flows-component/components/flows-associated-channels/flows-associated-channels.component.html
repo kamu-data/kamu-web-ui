@@ -59,10 +59,10 @@
             [subprocesses]="webhooksData.subprocesses"
             [webhookTableFilters]="flowsSelectionState.webhookFilterButtons"
             [datasetBasics]="datasetBasics"
-            (navigateToWebhookSettingsEmitter)="navigateToWebhookSettings($event)"
-            (navigateToSubscriptionEmitter)="navigateToSubscription($event)"
-            (pauseWebhookEmitter)="pauseWebhook($event)"
-            (resumeWebhookEmitter)="resumeWebhook($event)"
+            (webhookSettingsClicked)="navigateToWebhookSettings($event)"
+            (subscriptionClicked)="navigateToSubscription($event)"
+            (pauseWebhookClicked)="pauseWebhook($event)"
+            (resumeWebhookClicked)="resumeWebhook($event)"
         />
     </div>
 </div>

@@ -51,11 +51,11 @@ export class SubscriptionsTableComponent {
     @Input({ required: true }) public subprocesses: WebhookFlowSubProcess[];
     @Input({ required: true }) public webhookTableFilters: FlowProcessEffectiveState[];
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    @Output() public navigateToWebhookSettingsEmitter: EventEmitter<string> = new EventEmitter<string>();
-    @Output() public navigateToSubscriptionEmitter: EventEmitter<WebhookFlowSubProcess> =
+    @Output() public webhookSettingsClicked: EventEmitter<string> = new EventEmitter<string>();
+    @Output() public subscriptionClicked: EventEmitter<WebhookFlowSubProcess> =
         new EventEmitter<WebhookFlowSubProcess>();
-    @Output() public pauseWebhookEmitter: EventEmitter<string> = new EventEmitter<string>();
-    @Output() public resumeWebhookEmitter: EventEmitter<string> = new EventEmitter<string>();
+    @Output() public pauseWebhookClicked: EventEmitter<string> = new EventEmitter<string>();
+    @Output() public resumeWebhookClicked: EventEmitter<string> = new EventEmitter<string>();
 
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
     public readonly SUBSCRIPTIONS_DISPLAY_COLUMNS: string[] = [
@@ -66,19 +66,19 @@ export class SubscriptionsTableComponent {
     ];
 
     public navigateToSubscription(process: WebhookFlowSubProcess): void {
-        this.navigateToSubscriptionEmitter.emit(process);
+        this.subscriptionClicked.emit(process);
     }
 
     public pauseWebhook(subscriptionId: string): void {
-        this.pauseWebhookEmitter.emit(subscriptionId);
+        this.pauseWebhookClicked.emit(subscriptionId);
     }
 
     public resumeWebhook(subscriptionId: string): void {
-        this.resumeWebhookEmitter.emit(subscriptionId);
+        this.resumeWebhookClicked.emit(subscriptionId);
     }
 
     public navigateToWebhookSettings(subscriptionId: string): void {
-        this.navigateToWebhookSettingsEmitter.emit(subscriptionId);
+        this.webhookSettingsClicked.emit(subscriptionId);
     }
 
     public webhooksStateMapper(state: FlowProcessEffectiveState): string {

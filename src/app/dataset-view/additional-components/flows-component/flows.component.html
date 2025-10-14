@@ -45,18 +45,18 @@
                                 [flowsSelectionState]="flowsSelectionState"
                                 [webhooksData]="flowConnectionData.flowProcesses.webhooks"
                                 [datasetBasics]="flowsData.datasetBasics"
-                                (navigateToWebhookSettingsEmitter)="navigateToWebhookSettings($event)"
-                                (navigateToSubscriptionEmitter)="navigateToSubscription($event)"
-                                (pauseWebhookEmitter)="pauseWebhook($event)"
-                                (resumeWebhookEmitter)="resumeWebhook($event)"
-                                (selectionWebhooksEmitter)="onSelectionWebhooksChange($event)"
-                                (toggleWebhookFilterEmitter)="
+                                (webhookSettingsClicked)="navigateToWebhookSettings($event)"
+                                (subcriptionClicked)="navigateToSubscription($event)"
+                                (pauseWebhookClicked)="pauseWebhook($event)"
+                                (resumeWebhookClicked)="resumeWebhook($event)"
+                                (selectionWebhooksClicked)="onSelectionWebhooksChange($event)"
+                                (toggleWebhookFilterClicked)="
                                     onToggleWebhookFilter(
                                         $event,
                                         flowConnectionData.flowProcesses.webhooks.subprocesses
                                     )
                                 "
-                                (removeSelectedWebhookEmitter)="
+                                (removeSelectedWebhookClicked)="
                                     removeSelectedWebhook(
                                         $event,
                                         flowConnectionData.flowProcesses.webhooks.subprocesses

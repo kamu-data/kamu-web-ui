@@ -18,8 +18,13 @@ import { NgIf } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
-import { DatasetKind, FlowProcessEffectiveState } from "src/app/api/kamu.graphql.interface";
-import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import {
+    DatasetBasicsFragment,
+    DatasetFlowProcess,
+    DatasetKind,
+    FlowProcessEffectiveState,
+} from "src/app/api/kamu.graphql.interface";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { Observable, of, take } from "rxjs";
 import { DatasetFlowsService } from "../../services/dataset-flows.service";
 import { BaseComponent } from "src/app/common/components/base.component";
@@ -27,7 +32,6 @@ import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { SettingsTabsEnum } from "../../../dataset-settings-component/dataset-settings.model";
 import AppValues from "src/app/common/values/app.values";
-import { DatasetFlowsTabState } from "../../flows.helpers";
 
 @Component({
     selector: "app-flows-block-actions",
@@ -46,8 +50,9 @@ import { DatasetFlowsTabState } from "../../flows.helpers";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowsBlockActionsComponent extends BaseComponent {
-    @Input({ required: true }) public flowConnectionData: DatasetFlowsTabState;
-    @Input({ required: true }) public flowsData: DatasetOverviewTabData;
+    @Input({ required: true }) public flowProcess: DatasetFlowProcess;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public hasPushSources: boolean;
     @Output() public updateEmitter: EventEmitter<void> = new EventEmitter<void>();
     @Output() public refreshEmitter: EventEmitter<void> = new EventEmitter<void>();
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
@@ -59,19 +64,13 @@ export class FlowsBlockActionsComponent extends BaseComponent {
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
     public readonly TIMEOUT_REFRESH_FLOW = AppValues.TIMEOUT_REFRESH_FLOW_MS;
 
-    public get hasPushSources(): boolean {
-        return Boolean(this.flowsData.overviewUpdate.overview.metadata.currentPushSources.length);
-    }
-
     public get showUpdateNowButton(): boolean {
         return !this.hasPushSources;
     }
 
     public get showPauseOrResumeButton(): boolean {
         return (
-            !this.hasPushSources &&
-            this.flowConnectionData?.flowProcesses?.primary.summary.effectiveState !==
-                FlowProcessEffectiveState.Unconfigured
+            !this.hasPushSources && this.flowProcess.summary.effectiveState !== FlowProcessEffectiveState.Unconfigured
         );
     }
 
@@ -84,7 +83,7 @@ export class FlowsBlockActionsComponent extends BaseComponent {
     }
 
     public get redirectSection(): SettingsTabsEnum {
-        return this.flowsData.datasetBasics.kind === DatasetKind.Root
+        return this.datasetBasics.kind === DatasetKind.Root
             ? SettingsTabsEnum.SCHEDULING
             : SettingsTabsEnum.TRANSFORM_SETTINGS;
     }
@@ -93,7 +92,7 @@ export class FlowsBlockActionsComponent extends BaseComponent {
         let operation$: Observable<void> = of();
         if (state === FlowProcessEffectiveState.Active) {
             operation$ = this.flowsService.datasetPauseFlows({
-                datasetId: this.flowsData.datasetBasics.id,
+                datasetId: this.datasetBasics.id,
             });
         } else if (state === FlowProcessEffectiveState.StoppedAuto) {
             promiseWithCatch(
@@ -106,7 +105,7 @@ export class FlowsBlockActionsComponent extends BaseComponent {
                         if (ok) {
                             this.flowsService
                                 .datasetResumeFlows({
-                                    datasetId: this.flowsData.datasetBasics.id,
+                                    datasetId: this.datasetBasics.id,
                                 })
                                 .pipe(take(1))
                                 .subscribe(() => {
@@ -121,7 +120,7 @@ export class FlowsBlockActionsComponent extends BaseComponent {
             );
         } else {
             operation$ = this.flowsService.datasetResumeFlows({
-                datasetId: this.flowsData.datasetBasics.id,
+                datasetId: this.datasetBasics.id,
             });
         }
 

@@ -1,24 +1,20 @@
-<div *ngIf="flowConnectionData.flowProcesses">
-    <div class="d-flex gap-2" [ngClass]="badgeStyles(flowConnectionData.flowProcesses.primary).containerClass">
-        <div>
-            <mat-icon [ngClass]="badgeStyles(flowConnectionData.flowProcesses.primary).iconClass">{{
-                badgeStyles(flowConnectionData.flowProcesses.primary).iconName
-            }}</mat-icon>
+<div class="d-flex gap-2" [ngClass]="badgeStyles(flowProcess).containerClass">
+    <div>
+        <mat-icon [ngClass]="badgeStyles(flowProcess).iconClass">{{ badgeStyles(flowProcess).iconName }}</mat-icon>
+    </div>
+    <div class="d-flex flex-column mt-1">
+        <div class="fw-500 fs-16">
+            {{ badgeMessages(flowProcess, isRoot).message }}
         </div>
-        <div class="d-flex flex-column mt-1">
-            <div class="fw-500 fs-16">
-                {{ badgeMessages(flowConnectionData.flowProcesses.primary, isRoot).message }}
-            </div>
-            <div>
-                <span class="text-muted fs-12">
-                    {{ badgeMessages(flowConnectionData.flowProcesses.primary, isRoot).subMessage }}
-                </span>
-            </div>
-            <div *ngIf="badgeMessages(flowConnectionData.flowProcesses.primary, isRoot).additionalMessage">
-                <span class="text-muted fs-12">
-                    {{ badgeMessages(flowConnectionData.flowProcesses.primary, isRoot).additionalMessage }}
-                </span>
-            </div>
+        <div>
+            <span class="text-muted fs-12">
+                {{ badgeMessages(flowProcess, isRoot).subMessage }}
+            </span>
+        </div>
+        <div *ngIf="badgeMessages(flowProcess, isRoot).additionalMessage">
+            <span class="text-muted fs-12">
+                {{ badgeMessages(flowProcess, isRoot).additionalMessage }}
+            </span>
         </div>
     </div>
 </div>

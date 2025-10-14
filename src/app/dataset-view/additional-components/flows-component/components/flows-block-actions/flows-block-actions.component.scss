@@ -3,6 +3,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
+    &:hover {
+        background: #ebebeb !important;
+    }
 }
 
 .action-button {

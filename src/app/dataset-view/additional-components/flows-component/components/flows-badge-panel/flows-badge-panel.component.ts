@@ -8,12 +8,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { NgClass, NgIf } from "@angular/common";
 import { DatasetFlowProcess, DatasetKind } from "src/app/api/kamu.graphql.interface";
-import {
-    DatasetFlowsBadgeStyle,
-    DatasetFlowBadgeHelpers,
-    DatasetFlowsBadgeTexts,
-    DatasetFlowsTabState,
-} from "../../flows.helpers";
+import { DatasetFlowsBadgeStyle, DatasetFlowBadgeHelpers, DatasetFlowsBadgeTexts } from "../../flows.helpers";
 import { MatIconModule } from "@angular/material/icon";
 
 @Component({
@@ -33,7 +28,7 @@ import { MatIconModule } from "@angular/material/icon";
 })
 export class FlowsBadgePanelComponent {
     @Input({ required: true }) public datasetKind: DatasetKind;
-    @Input({ required: true }) public flowConnectionData: DatasetFlowsTabState;
+    @Input({ required: true }) public flowProcess: DatasetFlowProcess;
 
     public get isRoot(): boolean {
         return this.datasetKind === DatasetKind.Root;

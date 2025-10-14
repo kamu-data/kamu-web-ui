@@ -14,17 +14,16 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTableModule } from "@angular/material/table";
+import { FlowsCategoryUnion, FlowsSelectionState, WebhooksFiltersOptions } from "../../flows.helpers";
 import {
-    DatasetFlowsTabState,
-    FlowsCategoryUnion,
-    FlowsSelectionState,
-    WebhooksFiltersOptions,
-} from "../../flows.helpers";
-import { FlowProcessEffectiveState, WebhookFlowSubProcess } from "src/app/api/kamu.graphql.interface";
-import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+    FlowProcessEffectiveState,
+    WebhookFlowSubProcess,
+    WebhookFlowSubProcessGroup,
+} from "src/app/api/kamu.graphql.interface";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 import { SubscriptionsTableComponent } from "./components/subscriptions-table/subscriptions-table.component";
-
+import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 @Component({
     selector: "app-flows-associated-channels",
     standalone: true,
@@ -52,8 +51,8 @@ import { SubscriptionsTableComponent } from "./components/subscriptions-table/su
 })
 export class FlowsAssociatedChannelsComponent {
     @Input({ required: true }) public flowsSelectionState: FlowsSelectionState;
-    @Input({ required: true }) public flowConnectionData: DatasetFlowsTabState;
-    @Input({ required: true }) public flowsData: DatasetOverviewTabData;
+    @Input({ required: true }) public webhooksData: WebhookFlowSubProcessGroup;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Output() public refreshEmitter: EventEmitter<void> = new EventEmitter<void>();
 
     private navigationService = inject(NavigationService);
@@ -91,8 +90,8 @@ export class FlowsAssociatedChannelsComponent {
         }
 
         this.navigationService.navigateToDatasetView({
-            accountName: this.flowsData.datasetBasics.owner.accountName,
-            datasetName: this.flowsData.datasetBasics.name,
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
             tab: DatasetViewTypeEnum.Flows,
             category: category ?? undefined,
         });
@@ -106,8 +105,8 @@ export class FlowsAssociatedChannelsComponent {
             .filter((x) => states.includes(x.summary.effectiveState))
             .map((item) => item.id);
         this.navigationService.navigateToDatasetView({
-            accountName: this.flowsData.datasetBasics.owner.accountName,
-            datasetName: this.flowsData.datasetBasics.name,
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
             tab: DatasetViewTypeEnum.Flows,
             category: this.flowsSelectionState.flowsCategory as FlowsCategoryUnion,
             webhooksState: states.length ? states : undefined,
@@ -126,8 +125,8 @@ export class FlowsAssociatedChannelsComponent {
         );
 
         this.navigationService.navigateToDatasetView({
-            accountName: this.flowsData.datasetBasics.owner.accountName,
-            datasetName: this.flowsData.datasetBasics.name,
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
             tab: DatasetViewTypeEnum.Flows,
             webhookId: this.flowsSelectionState.webhooksIds,
         });

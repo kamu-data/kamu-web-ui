@@ -13,14 +13,15 @@
                         >
                             <div *ngIf="showPanelButtons">
                                 <app-flows-badge-panel
-                                    [flowConnectionData]="flowConnectionData"
+                                    [flowProcess]="flowConnectionData.flowProcesses.primary"
                                     [datasetKind]="flowsData.datasetBasics.kind"
                                 />
                             </div>
                             <div class="d-flex align-items-center">
                                 <app-flows-block-actions
-                                    [flowConnectionData]="flowConnectionData"
-                                    [flowsData]="flowsData"
+                                    [flowProcess]="flowConnectionData.flowProcesses.primary"
+                                    [datasetBasics]="flowsData.datasetBasics"
+                                    [hasPushSources]="hasPushSources"
                                     (updateEmitter)="updateNow()"
                                     (refreshEmitter)="refreshFlow()"
                                 />
@@ -41,8 +42,8 @@
                         <div class="mt-4" *ngIf="flowConnectionData.flowProcesses.webhooks.rollup.total">
                             <app-flows-associated-channels
                                 [flowsSelectionState]="flowsSelectionState"
-                                [flowConnectionData]="flowConnectionData"
-                                [flowsData]="flowsData"
+                                [webhooksData]="flowConnectionData.flowProcesses.webhooks"
+                                [datasetBasics]="flowsData.datasetBasics"
                                 (refreshEmitter)="refreshFlow()"
                             />
                         </div>

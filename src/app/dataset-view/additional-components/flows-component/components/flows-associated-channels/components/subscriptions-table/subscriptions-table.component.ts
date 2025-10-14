@@ -24,9 +24,14 @@ import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTableModule } from "@angular/material/table";
 import { SubprocessStatusFilterPipe } from "../../../../pipes/subprocess-status-filter.pipe";
-import { DatasetFlowsTabState, FlowsSelectionState, webhooksStateMapper } from "../../../../flows.helpers";
-import { FlowProcessEffectiveState, WebhookFlowSubProcess } from "src/app/api/kamu.graphql.interface";
-import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { FlowsSelectionState, webhooksStateMapper } from "../../../../flows.helpers";
+import {
+    DatasetBasicsFragment,
+    FlowProcessEffectiveState,
+    WebhookFlowSubProcess,
+    WebhookFlowSubProcessGroup,
+} from "src/app/api/kamu.graphql.interface";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { take } from "rxjs";
 import AppValues from "src/app/common/values/app.values";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
@@ -57,9 +62,9 @@ import { NavigationService } from "src/app/services/navigation.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubscriptionsTableComponent {
-    @Input({ required: true }) public flowConnectionData: DatasetFlowsTabState;
+    @Input({ required: true }) public webhooksData: WebhookFlowSubProcessGroup;
     @Input({ required: true }) public flowsSelectionState: FlowsSelectionState;
-    @Input({ required: true }) public flowsData: DatasetOverviewTabData;
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Output() public refreshEmitter: EventEmitter<void> = new EventEmitter<void>();
 
     private navigationService = inject(NavigationService);
@@ -90,8 +95,8 @@ export class SubscriptionsTableComponent {
         this.flowsSelectionState.webhooksCategory = undefined;
 
         this.navigationService.navigateToDatasetView({
-            accountName: this.flowsData.datasetBasics.owner.accountName,
-            datasetName: this.flowsData.datasetBasics.name,
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
             tab: DatasetViewTypeEnum.Flows,
             webhookId: this.flowsSelectionState.webhooksIds,
         });
@@ -100,7 +105,7 @@ export class SubscriptionsTableComponent {
 
     public pauseWebhook(subscriptionId: string): void {
         this.datasetWebhooksService
-            .datasetWebhookPauseSubscription(this.flowsData.datasetBasics.id, subscriptionId)
+            .datasetWebhookPauseSubscription(this.datasetBasics.id, subscriptionId)
             .pipe(take(1))
             .subscribe((result: boolean) => {
                 if (result) {
@@ -114,7 +119,7 @@ export class SubscriptionsTableComponent {
 
     public resumeWebhook(subscriptionId: string): void {
         this.datasetWebhooksService
-            .datasetWebhookResumeSubscription(this.flowsData.datasetBasics.id, subscriptionId)
+            .datasetWebhookResumeSubscription(this.datasetBasics.id, subscriptionId)
             .pipe(take(1))
             .subscribe((result: boolean) => {
                 if (result) {
@@ -130,8 +135,8 @@ export class SubscriptionsTableComponent {
         this.flowsSelectionState.webhookFilterButtons = [];
         this.flowsSelectionState.webhooksIds = [];
         this.navigationService.navigateToWebhooks({
-            accountName: this.flowsData.datasetBasics.owner.accountName,
-            datasetName: this.flowsData.datasetBasics.name,
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
             tab: subscriptionId,
         });
     }

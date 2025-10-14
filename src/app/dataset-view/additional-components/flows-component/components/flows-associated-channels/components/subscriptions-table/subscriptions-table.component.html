@@ -1,10 +1,7 @@
-<div [id]="'subprocesses-table'" class="dynamic-table" *ngIf="flowConnectionData.flowProcesses">
+<div [id]="'subprocesses-table'" class="dynamic-table">
     <table
         mat-table
-        [dataSource]="
-            flowConnectionData.flowProcesses.webhooks.subprocesses
-                | subprocessStatusFilter: flowsSelectionState.webhookFilterButtons
-        "
+        [dataSource]="webhooksData.subprocesses | subprocessStatusFilter: flowsSelectionState.webhookFilterButtons"
         [trackBy]="trackBySubscriptionId"
     >
         <!-- Subscription Column -->

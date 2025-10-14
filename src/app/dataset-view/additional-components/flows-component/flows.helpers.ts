@@ -51,7 +51,7 @@ export interface FlowsSelectionState {
 export interface DatasetFlowsTabState {
     flowsData: FlowsTableData;
     flowInitiators: AccountFragment[];
-    flowProcesses?: DatasetFlowProcesses;
+    flowProcesses: DatasetFlowProcesses;
 }
 
 export const WebhooksFiltersOptions: WebhooksFiltersDescriptor[] = [

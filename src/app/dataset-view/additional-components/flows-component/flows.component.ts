@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import {
     DatasetFlowProcesses,
     DatasetFlowType,
@@ -59,6 +59,7 @@ import { FlowsSelectionStateService } from "./services/flows-selection-state.ser
     templateUrl: "./flows.component.html",
     styleUrls: ["./flows.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [FlowsSelectionStateService],
     standalone: true,
     imports: [
         //-----//
@@ -86,7 +87,7 @@ import { FlowsSelectionStateService } from "./services/flows-selection-state.ser
         PaginationComponent,
     ],
 })
-export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit, OnDestroy {
+export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_FLOWS_KEY) public flowsData: DatasetOverviewTabData;
     @Input(ProjectLinks.URL_QUERY_PARAM_WEBHOOK_ID) public set setWebhookId(value: MaybeNull<string>) {
         const ids = value ? value.split(",") : [];
@@ -124,10 +125,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         this.refreshFlow();
     }
 
-    public ngOnDestroy(): void {
-        this.flowsSelectionStateService.reset();
-    }
-
     public get showPanelButtons(): boolean {
         return !this.hasPushSources;
     }
@@ -155,7 +152,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                     paused: flowProcesses.webhooks.rollup.paused + flowProcesses.webhooks.rollup.unconfigured,
                 };
                 flowProcesses.webhooks.rollup = modifiedRollup;
-                this.initFlowsSelectionState(flowProcesses);
+                this.flowsSelectionStateService.initFlowsSelectionState(flowProcesses);
             }),
             switchMap((flowProcesses: DatasetFlowProcesses) =>
                 combineLatest([
@@ -183,22 +180,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                 return { flowsData, flowInitiators, flowProcesses };
             }),
         );
-    }
-
-    private initFlowsSelectionState(flowProcesses: DatasetFlowProcesses): void {
-        if (this.flowsSelectionState.webhookFilterButtons.length) {
-            const ids = flowProcesses.webhooks.subprocesses
-                .filter((item) => this.flowsSelectionState.webhookFilterButtons.includes(item.summary.effectiveState))
-                .map((x) => x.id);
-            ids.forEach((id) => this.flowsSelectionStateService.addWebhookId(id));
-        }
-
-        if (this.flowsSelectionState.webhooksIds.length && !this.flowsSelectionState.webhookFilterButtons.length) {
-            const subprocessesNames = flowProcesses.webhooks.subprocesses
-                .filter((item) => this.flowsSelectionState.webhooksIds.includes(item.id))
-                .map((x) => x.name);
-            subprocessesNames.forEach((item) => this.flowsSelectionStateService.addSubscription(item));
-        }
     }
 
     private setProcessTypeFilter(
@@ -240,16 +221,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public navigateToSubscription(process: WebhookFlowSubProcess): void {
-        if (this.flowsSelectionState.webhooksCategory || this.flowsSelectionState.flowsCategory) {
-            this.flowsSelectionStateService.clearWebhookIds();
-        }
-        if (!this.flowsSelectionStateService.hasSubscription(process.name)) {
-            this.flowsSelectionStateService.addSubscription(process.name);
-            this.flowsSelectionStateService.addWebhookId(process.id);
-        }
-        this.flowsSelectionStateService.clearFlowsCategory();
-        this.flowsSelectionStateService.clearWebhookFilters();
-
+        this.flowsSelectionStateService.selectSubscription(process);
         this.navigationService.navigateToDatasetView({
             accountName: this.flowsData.datasetBasics.owner.accountName,
             datasetName: this.flowsData.datasetBasics.name,
@@ -288,10 +260,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public onSelectionFlowsChange(event: MatChipListboxChange): void {
-        this.flowsSelectionStateService.clearWebhooksCategory();
-        this.flowsSelectionStateService.clearWebhookFilters();
-        this.flowsSelectionStateService.clearSubscription();
-        this.flowsSelectionStateService.clearWebhookIds();
+        this.flowsSelectionStateService.reset();
         this.navigationService.navigateToDatasetView({
             accountName: this.flowsData.datasetBasics.owner.accountName,
             datasetName: this.flowsData.datasetBasics.name,
@@ -302,16 +271,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public onSelectionWebhooksChange(category: MaybeUndefined<WebhooksSelectedCategory>): void {
-        this.flowsSelectionStateService.clearFlowsCategory();
-        if (category && this.flowsSelectionState.webhookFilterButtons.length) {
-            this.flowsSelectionStateService.clearWebhookFilters();
-            this.flowsSelectionStateService.clearSubscription();
-        }
-        if (!category) {
-            this.flowsSelectionStateService.clearWebhookIds();
-            this.flowsSelectionStateService.clearWebhooksCategory();
-        }
-
+        this.flowsSelectionStateService.selectWebhookChip(category);
         this.navigationService.navigateToDatasetView({
             accountName: this.flowsData.datasetBasics.owner.accountName,
             datasetName: this.flowsData.datasetBasics.name,
@@ -323,6 +283,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     public onToggleWebhookFilter(states: FlowProcessEffectiveState[], subprocesses: WebhookFlowSubProcess[]): void {
         this.flowsSelectionStateService.clearSubscription();
+        this.flowsSelectionStateService.clearWebhookIds();
         subprocesses
             .filter((x) => states.includes(x.summary.effectiveState))
             .map((item) => item.id)

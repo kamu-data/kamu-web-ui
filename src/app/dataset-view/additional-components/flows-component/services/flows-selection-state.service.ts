@@ -7,8 +7,9 @@
 
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { FlowProcessEffectiveState } from "src/app/api/kamu.graphql.interface";
+import { DatasetFlowProcesses, FlowProcessEffectiveState } from "src/app/api/kamu.graphql.interface";
 import { FlowsSelectionState, FlowsSelectedCategory, WebhooksSelectedCategory } from "../flows.helpers";
+import { MaybeUndefined } from "src/app/interface/app.types";
 
 @Injectable({ providedIn: "root" })
 export class FlowsSelectionStateService {
@@ -104,6 +105,50 @@ export class FlowsSelectionStateService {
 
     public clearWebhookIds(): void {
         this.patch({ webhooksIds: [] });
+    }
+
+    public initFlowsSelectionState(flowProcesses: DatasetFlowProcesses): void {
+        const { webhooksIds, webhookFilterButtons } = this.snapshot;
+        if (webhookFilterButtons.length) {
+            const ids = flowProcesses.webhooks.subprocesses
+                .filter((item) => webhookFilterButtons.includes(item.summary.effectiveState))
+                .map((x) => x.id);
+            ids.forEach((id) => this.addWebhookId(id));
+        }
+
+        if (webhooksIds.length && !webhookFilterButtons.length) {
+            const subprocessesNames = flowProcesses.webhooks.subprocesses
+                .filter((item) => webhooksIds.includes(item.id))
+                .map((x) => x.name);
+            subprocessesNames.forEach((item) => this.addSubscription(item));
+        }
+    }
+
+    public selectSubscription(process: { name: string; id: string }): void {
+        const { webhooksCategory, flowsCategory } = this.snapshot;
+
+        if (webhooksCategory || flowsCategory) {
+            this.clearWebhookIds();
+        }
+
+        this.addSubscription(process.name);
+        this.addWebhookId(process.id);
+
+        this.clearFlowsCategory();
+        this.clearWebhookFilters();
+    }
+
+    public selectWebhookChip(category: MaybeUndefined<WebhooksSelectedCategory>): void {
+        this.clearFlowsCategory();
+        const { webhookFilterButtons } = this.snapshot;
+        if (category && webhookFilterButtons.length) {
+            this.clearWebhookFilters();
+            this.clearSubscription();
+        }
+        if (!category) {
+            this.clearWebhookIds();
+            this.clearWebhooksCategory();
+        }
     }
 
     public reset(): void {

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, NgZone, OnInit } from "@angular/core";
 import { Location, NgIf, AsyncPipe } from "@angular/common";
 import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
 import AppValues from "src/app/common/values/app.values";
@@ -21,7 +21,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
 import { NavigationService } from "src/app/services/navigation.service";
-import { SqlQueryResponseState } from "src/app/query/global-query/global-query.model";
+import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 import { SessionStorageService } from "src/app/services/session-storage.service";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
@@ -33,6 +33,7 @@ import { EditorModule } from "src/app/editor/editor.module";
 @Component({
     selector: "app-data",
     templateUrl: "./data.component.html",
+    styleUrls: ["./data.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
@@ -54,7 +55,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     private offsetColumnName = AppValues.DEFAULT_OFFSET_COLUMN_NAME;
     public overviewUpdate$: Observable<OverviewUpdate>;
     public sqlErrorMarker$: Observable<string>;
-    public sqlQueryResponse$: Observable<MaybeNull<SqlQueryResponseState>>;
+    public sqlQueryResponse$: Observable<MaybeNull<SqlQueryBasicResponse>>;
     public readonly MONACO_PLACEHOLDER = "Please type your query here...";
     private visibilityDocumentChange$ = fromEvent(document, "visibilitychange");
 
@@ -66,6 +67,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     private sessionStorageService = inject(SessionStorageService);
     private cdr = inject(ChangeDetectorRef);
     private cancelRequestService = inject(CancelRequestService);
+    private ngZone = inject(NgZone);
 
     public ngOnInit(): void {
         this.sqlErrorMarker$ = this.sqlQueryService.sqlErrorOccurrences.pipe(

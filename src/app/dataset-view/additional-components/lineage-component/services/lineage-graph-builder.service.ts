@@ -25,6 +25,7 @@ import {
 import { Node, Edge } from "@swimlane/ngx-graph";
 import { MaybeNull } from "src/app/interface/app.types";
 import { isNil } from "src/app/common/helpers/app.helpers";
+import { chainNameFromId } from "src/app/common/helpers/data.helpers";
 
 @Injectable({
     providedIn: "root",
@@ -256,7 +257,7 @@ export class LineageGraphBuilderService {
             case "FetchStepMqtt":
                 return `${step.host}:${step.port}`;
             case "FetchStepEthereumLogs":
-                return step.nodeUrl ?? "Unknown";
+                return step.nodeUrl ? step.nodeUrl : chainNameFromId(step.chainId as number);
             default:
                 throw new Error(`Unknown source label type ${step.__typename}`);
         }

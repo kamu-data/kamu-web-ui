@@ -7,24 +7,29 @@
 
 import { TestBed } from "@angular/core/testing";
 import { SqlQueryService } from "./sql-query.service";
-import { of, first, throwError } from "rxjs";
-import { DatasetApi } from "../api/dataset.api";
-import { mockDatasetDataSqlRunInvalidSqlResponse, mockDatasetDataSqlRunResponse } from "../search/mock.data";
+import { mockSqlQueryRestResponse } from "../search/mock.data";
 import { Apollo } from "apollo-angular";
-import { DataQueryResultError } from "../api/kamu.graphql.interface";
-import { DataSqlErrorUpdate } from "../dataset-view/dataset.subscriptions.interface";
-import { SqlExecutionError } from "../common/values/errors";
+import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
+import { LoggedUserService } from "../auth/logged-user.service";
 
 describe("SqlQueryService", () => {
     let service: SqlQueryService;
-    let datasetApi: DatasetApi;
+    let httpMock: HttpTestingController;
+    let loggedUserService: LoggedUserService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
+            imports: [HttpClientTestingModule],
             providers: [Apollo],
         });
         service = TestBed.inject(SqlQueryService);
-        datasetApi = TestBed.inject(DatasetApi);
+        httpMock = TestBed.inject(HttpTestingController);
+        loggedUserService = TestBed.inject(LoggedUserService);
+        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+    });
+
+    afterEach(() => {
+        httpMock.verify();
     });
 
     it("should be created", () => {
@@ -34,71 +39,33 @@ describe("SqlQueryService", () => {
     it("should check get SQL query data from api", () => {
         const query = "select\n  *\nfrom testTable";
         const limit = 20;
-        spyOn(datasetApi, "getDatasetDataSqlRun").and.returnValue(of(mockDatasetDataSqlRunResponse));
 
-        const subscriptionDataChanges$ = service.sqlQueryResponseChanges.pipe(first()).subscribe();
+        const emitSqlQueryResponseChangedSpy = spyOn(service, "emitSqlQueryResponseChanged");
+
+        service.requestDataSqlRun({ query, limit }).subscribe(() => {
+            expect(emitSqlQueryResponseChangedSpy).toHaveBeenCalledTimes(1);
+        });
+
+        const req = httpMock.expectOne((request) => request.url.includes("/query"));
+        expect(req.request.method).toBe("POST");
+
+        req.flush(mockSqlQueryRestResponse);
+    });
+
+    it("should check to geherate error", () => {
+        const query = "select\n  *\nfrom testTable";
 
         const emitSqlErrorOccurredSpy = spyOn(service, "emitSqlErrorOccurred");
 
-        service.requestDataSqlRun({ query, limit }).subscribe();
+        service.requestDataSqlRun({ query }).subscribe({
+            next: () => {},
+            error: () => fail("error"),
+        });
 
-        expect(subscriptionDataChanges$.closed).toBeTrue();
-        expect(emitSqlErrorOccurredSpy).toHaveBeenCalledWith({ error: "" });
-    });
+        const req = httpMock.expectOne((request) => request.url.includes("/query"));
+        expect(req.request.method).toBe("POST");
 
-    it("should check get SQL query data from api with invalid SQL", () => {
-        const query = "invalid sql query";
-        const limit = 20;
-        spyOn(datasetApi, "getDatasetDataSqlRun").and.returnValue(of(mockDatasetDataSqlRunInvalidSqlResponse));
-
-        const subscriptionDataChanges$ = service.sqlQueryResponseChanges.pipe(first()).subscribe();
-
-        const subscriptionErrorChanges$ = service.sqlErrorOccurrences
-            .pipe(first())
-            .subscribe((update: DataSqlErrorUpdate) => {
-                const errorResult = mockDatasetDataSqlRunInvalidSqlResponse.data.query as DataQueryResultError;
-                expect(update.error).toEqual(errorResult.errorMessage);
-            });
-
-        service.requestDataSqlRun({ query, limit }).subscribe();
-
-        expect(subscriptionDataChanges$.closed).toBeFalse();
-        expect(subscriptionErrorChanges$.closed).toBeTrue();
-    });
-
-    it("should check get SQL query data from api when SQL execution fails softly", () => {
-        const query = "select\n  *\nfrom testTable";
-        const limit = 20;
-        spyOn(datasetApi, "getDatasetDataSqlRun").and.returnValue(of(mockDatasetDataSqlRunInvalidSqlResponse));
-        const emitSqlErrorOccurredSpy = spyOn(service, "emitSqlErrorOccurred");
-
-        const subscription$ = service
-            .requestDataSqlRun({ query, limit })
-            .pipe(first())
-            .subscribe(() => {
-                const errorResult = mockDatasetDataSqlRunInvalidSqlResponse.data.query as DataQueryResultError;
-                expect(emitSqlErrorOccurredSpy).toHaveBeenCalledOnceWith({
-                    error: errorResult.errorMessage,
-                });
-            });
-        expect(subscription$.closed).toBeTrue();
-    });
-
-    it("should check get SQL query data from api when SQL execution fails hardly", () => {
-        const query = "select\n  *\nfrom testTable";
-        const limit = 20;
-        spyOn(datasetApi, "getDatasetDataSqlRun").and.returnValue(throwError(() => new SqlExecutionError()));
-
-        service.sqlQueryResponseChanges.subscribe(() => fail("Unexpected data update"));
-        service.sqlErrorOccurrences.subscribe(() => fail("Unexpected SQL error update"));
-
-        const subscription$ = service
-            .requestDataSqlRun({ query, limit })
-            .pipe(first())
-            .subscribe({
-                next: () => fail("Unexpected success"),
-                error: (e: Error) => expect(e).toEqual(new SqlExecutionError()),
-            });
-        expect(subscription$.closed).toBeTrue();
+        req.flush({ message: "Server message" }, { status: 500, statusText: "Server Error" });
+        expect(emitSqlErrorOccurredSpy).toHaveBeenCalledTimes(1);
     });
 });

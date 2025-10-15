@@ -4,7 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] 
+## [0.58.1] - 2025-09-18
+### Fixed
+- The behavior of the "Verify" button has been corrected.
+
+## [0.58.0] - 2025-09-16
+### Added
+- Release automation script
+- Lineage tab: added mapper `chainId -> chainName`
+- Data tab: added "Generate proof" toggle
+
+## [0.57.0] - 2025-09-12
 ### Added
 - Flows table: visualizing the latest batching condition statictics
 ### Changed
@@ -46,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - skipping empty batching conditions
   - skipping duration of the initiation event
   - differentiating between "run duration" and "total time"
+- Highlighted the first item in quick search with the eye icon
 ### Changed
 - Numerous flow system API corrections addressed
 - No more "recursive" flags in compaction and reset flows

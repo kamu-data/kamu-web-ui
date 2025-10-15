@@ -41,6 +41,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import ProjectLinks from "./app/project-links";
 import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "./app/app-routing";
 import { LoginMethodsService } from "./app/auth/login-methods.service";
+import { AuthInterceptor } from "./app/common/interceptors/auth.interceptor";
 
 const Services = [
     Apollo,
@@ -49,6 +50,12 @@ const Services = [
         useClass: SpinnerInterceptor,
         multi: true,
         deps: [SpinnerService],
+    },
+    {
+        provide: HTTP_INTERCEPTORS,
+        useClass: AuthInterceptor,
+        multi: true,
+        deps: [LocalStorageService],
     },
     {
         provide: ErrorHandler,

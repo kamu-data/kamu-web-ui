@@ -19,6 +19,7 @@ import AppValues from "src/app/common/values/app.values";
 import { dispatchInputEvent, emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { SearchApi } from "src/app/api/search.api";
+import { HttpClientModule } from "@angular/common/http";
 
 describe("SearchAndSchemasSectionComponent", () => {
     let component: SearchAndSchemasSectionComponent;
@@ -30,7 +31,7 @@ describe("SearchAndSchemasSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [SharedTestModule, SearchAndSchemasSectionComponent],
+            imports: [SharedTestModule, HttpClientModule, SearchAndSchemasSectionComponent],
             providers: [Apollo],
         });
         fixture = TestBed.createComponent(SearchAndSchemasSectionComponent);

@@ -14,7 +14,7 @@ import { FlowsSelectionState, FlowsSelectedCategory, WebhooksSelectedCategory } 
 export class FlowsSelectionStateService {
     private readonly state$ = new BehaviorSubject<FlowsSelectionState>({
         webhooksIds: [],
-        flowsCategory: undefined,
+        flowsCategory: "all",
         webhooksCategory: undefined,
         webhookFilterButtons: [],
         subscriptions: [],
@@ -104,5 +104,15 @@ export class FlowsSelectionStateService {
 
     public clearWebhookIds(): void {
         this.patch({ webhooksIds: [] });
+    }
+
+    public reset(): void {
+        this.state$.next({
+            webhooksIds: [],
+            flowsCategory: "all",
+            webhooksCategory: undefined,
+            webhookFilterButtons: [],
+            subscriptions: [],
+        });
     }
 }

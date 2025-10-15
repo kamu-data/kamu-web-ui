@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnDestroy, OnInit } from "@angular/core";
 import {
     DatasetFlowProcesses,
     DatasetFlowType,
@@ -86,7 +86,7 @@ import { FlowsSelectionStateService } from "./services/flows-selection-state.ser
         PaginationComponent,
     ],
 })
-export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit {
+export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit, OnDestroy {
     @Input(RoutingResolvers.DATASET_VIEW_FLOWS_KEY) public flowsData: DatasetOverviewTabData;
     @Input(ProjectLinks.URL_QUERY_PARAM_WEBHOOK_ID) public set setWebhookId(value: MaybeNull<string>) {
         const ids = value ? value.split(",") : [];
@@ -122,6 +122,10 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     public ngOnInit(): void {
         this.refreshFlow();
+    }
+
+    public ngOnDestroy(): void {
+        this.flowsSelectionStateService.reset();
     }
 
     public get showPanelButtons(): boolean {

@@ -25,6 +25,7 @@ import { MatTableModule } from "@angular/material/table";
 import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
 import { NavigationService } from "src/app/services/navigation.service";
 import ProjectLinks from "src/app/project-links";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-list-webhooks",
@@ -174,14 +175,13 @@ export class ListWebhooksComponent implements OnInit {
             });
     }
 
-    /* istanbul ignore next */
-    public viewDeliveryReport(): void {
-        promiseWithCatch(
-            this.modalService.warning({
-                message: "Feature coming soon",
-                yesButtonText: "Ok",
-            }),
-        );
+    public viewDeliveryReport(subscription: WebhookSubscription): void {
+        this.navigationService.navigateToDatasetView({
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
+            tab: DatasetViewTypeEnum.Flows,
+            webhookId: [subscription.id],
+        });
     }
 
     public editWebhook(subscription: WebhookSubscription): void {

@@ -25,7 +25,7 @@
     <div class="mt-5 mb-3">
         <label for="keywords" class="form-label mb-3">Keywords</label>
 
-        <mat-chip-grid #chipList aria-label="Fruit selection">
+        <mat-chip-grid #chipList>
             <mat-chip-row *ngFor="let keyword of keywords" (removed)="removeKeyword(keyword)">
                 {{ keyword }}
                 <button matChipRemove>

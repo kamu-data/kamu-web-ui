@@ -1,0 +1,60 @@
+<p class="fw-500">Associated channels</p>
+<div class="d-flex flex-row gap-4 align-items-center">
+    <div class="box px-1 py-3 d-flex flex-row gap-4 w-75 align-items-center channels-container">
+        <mat-chip-listbox
+            class="ms-2"
+            [(ngModel)]="flowsSelectionState.webhooksCategory"
+            (change)="onSelectionWebhooksChange($event)"
+        >
+            <mat-chip-option [value]="'webhooks'"> Webhooks</mat-chip-option>
+        </mat-chip-listbox>
+
+        <span class="fw-500">total: {{ webhooksData.rollup.total }}</span>
+
+        <mat-button-toggle-group
+            [(ngModel)]="flowsSelectionState.webhookFilterButtons"
+            (change)="onToggleWebhookFilter($event)"
+            multiple
+            [disabled]="!isWebhookCategoryActive"
+        >
+            <ng-container *ngFor="let item of WEBHOOKS_FILTERS_OPTIONS">
+                <mat-button-toggle [value]="item.state"
+                    >{{ item.label }} {{ webhooksData.rollup[item.valueKey] }}</mat-button-toggle
+                >
+            </ng-container>
+        </mat-button-toggle-group>
+    </div>
+</div>
+
+<div class="d-inline-block mt-2 d-flex flex-row align-items-center" *ngIf="flowsSelectionState.subscriptions.length">
+    Selected subscriptions:
+    <mat-chip-set class="ms-2">
+        <mat-chip *ngFor="let webhook of flowsSelectionState.subscriptions">
+            {{ webhook }}
+            <button matChipRemove (click)="removeSelectedWebhook(webhook)">
+                <mat-icon>cancel</mat-icon>
+            </button>
+        </mat-chip>
+    </mat-chip-set>
+</div>
+
+<div
+    class="mt-4"
+    *ngIf="showSubprocessesTable"
+    [ngClass]="{
+        'mt-2': flowsSelectionState.subscriptions.length,
+        'mt-4': !flowsSelectionState.subscriptions.length,
+    }"
+>
+    <div class="w-75">
+        <app-subscriptions-table
+            [subprocesses]="webhooksData.subprocesses"
+            [webhookTableFilters]="flowsSelectionState.webhookFilterButtons"
+            [datasetBasics]="datasetBasics"
+            (webhookSettingsClicked)="navigateToWebhookSettings($event)"
+            (subscriptionClicked)="navigateToSubscription($event)"
+            (pauseWebhookClicked)="pauseWebhook($event)"
+            (resumeWebhookClicked)="resumeWebhook($event)"
+        />
+    </div>
+</div>

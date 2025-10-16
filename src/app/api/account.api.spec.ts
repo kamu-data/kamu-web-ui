@@ -66,7 +66,7 @@ describe("AccountApi", () => {
     const PER_PAGE = 15;
     const ACCOUNT_FILTERS: AccountFlowFilters = {
         byDatasetIds: [],
-        byFlowType: null,
+        byProcessType: null,
         byInitiator: null,
         byStatus: null,
     };

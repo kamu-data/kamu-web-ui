@@ -147,4 +147,9 @@ fragment FlowHistoryData on FlowEvent {
       __typename
     }
   }
+
+  ... on FlowEventCompleted {
+    eventId
+    eventTime
+  }
 }

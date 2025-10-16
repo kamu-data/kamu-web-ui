@@ -9,8 +9,6 @@ import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 import {
-    DatasetAllFlowsPausedDocument,
-    DatasetAllFlowsPausedQuery,
     DatasetFlowType,
     DatasetFlowsInitiatorsDocument,
     DatasetFlowsInitiatorsQuery,
@@ -56,7 +54,6 @@ import {
     mockGetDatasetFlowTriggerCronQuery,
     mockDatasetPauseFlowsMutationSuccess,
     mockDatasetResumeFlowsMutationSuccess,
-    mockDatasetAllFlowsPausedQuery,
     mockRetryPolicyInput,
     mockCompactingGetDatasetFlowConfigsSuccess,
     mockSetCompactionFlowConfigMutation,
@@ -431,18 +428,6 @@ describe("DatasetFlowApi", () => {
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
         op.flush({
             data: mockDatasetResumeFlowsMutationSuccess,
-        });
-    });
-
-    it("should check allFlowsPaused", () => {
-        service.allFlowsPaused(TEST_DATASET_ID).subscribe((res: DatasetAllFlowsPausedQuery) => {
-            expect(res.datasets.byId?.flows.triggers.allPaused).toEqual(true);
-        });
-
-        const op = controller.expectOne(DatasetAllFlowsPausedDocument);
-        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
-        op.flush({
-            data: mockDatasetAllFlowsPausedQuery,
         });
     });
 

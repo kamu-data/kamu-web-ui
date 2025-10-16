@@ -1,5 +1,5 @@
 <h2>Webhooks/Add subscription</h2>
-<div class="box p-4">
+<div class="box p-4 mb-4">
     <app-webhook-form
         [createOrEditSubscriptionForm]="createOrEditSubscriptionForm"
         [dropdownList]="(dropdownList$ | async)!"
@@ -24,7 +24,7 @@
                 Make sure to copy your secret now. You won’t be able to see it again!
             </p>
         </div>
-        <div class="d-flex flex-wrap justify-content-end my-3">
+        <div class="d-flex flex-wrap justify-content-end mt-4 mb-3">
             <button class="btn btn-success" (click)="navigateToListWebhooks()" type="button">Ok</button>
         </div>
     </ng-container>

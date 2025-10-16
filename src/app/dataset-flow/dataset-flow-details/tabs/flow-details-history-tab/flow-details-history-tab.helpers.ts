@@ -55,6 +55,8 @@ export class DatasetFlowDetailsHelpers {
                 return "Flow scheduled for activation";
             case "FlowConfigSnapshotModified":
                 return "Flow configuration was modified";
+            case "FlowEventCompleted":
+                return "Flow completed";
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown event typename");
@@ -101,6 +103,9 @@ export class DatasetFlowDetailsHelpers {
                         throw new Error("Unsupported flow event typename");
                 }
             }
+            case "FlowEventCompleted":
+                return { icon: "sports_score", class: "completed-status" };
+
             /* istanbul ignore next */
             default:
                 throw new Error("Unsupported flow event typename");
@@ -145,6 +150,7 @@ export class DatasetFlowDetailsHelpers {
                 }
             }
             case "FlowEventAborted":
+            case "FlowEventCompleted":
                 return "";
             case "FlowEventScheduledForActivation": {
                 const event = flowEvent as FlowEventScheduledForActivation;

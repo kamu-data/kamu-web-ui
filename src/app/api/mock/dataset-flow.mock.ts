@@ -9,7 +9,6 @@ import {
     AccountProvider,
     AccountType,
     CancelFlowRunMutation,
-    DatasetAllFlowsPausedQuery,
     DatasetFlowsInitiatorsQuery,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
@@ -37,8 +36,18 @@ import {
     FlowTriggerReactiveRule,
     GetDatasetFlowTriggerQuery,
     PauseDatasetFlowTriggerMutation,
+    FlowProcessEffectiveState,
+    DatasetFlowType,
+    FlowProcessAutoStopReason,
+    FlowProcessSummaryDataFragment,
 } from "./../kamu.graphql.interface";
-import { GetDatasetFlowConfigsQuery, DatasetKind, TimeUnit, TimeDeltaInput } from "../kamu.graphql.interface";
+import {
+    GetDatasetFlowConfigsQuery,
+    DatasetKind,
+    TimeUnit,
+    TimeDeltaInput,
+    DatasetFlowsProcessesQuery,
+} from "../kamu.graphql.interface";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import {
     mockDatasetMainDataId,
@@ -330,7 +339,7 @@ export const mockGetDatasetFlowTriggersBatchingQuery: GetDatasetFlowTriggerQuery
                         },
                         stopPolicy: {
                             __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
-                            maxFailures: 1,
+                            maxFailures: 5,
                         },
                     },
                 },
@@ -1459,16 +1468,6 @@ export const mockDatasetFlowByIdResponse: DatasetFlowByIdResponse = {
     flowHistory: mockFlowHistoryDataFragment,
 };
 
-export const mockDatasetAllFlowsPausedQuery: DatasetAllFlowsPausedQuery = {
-    datasets: {
-        __typename: "Datasets",
-        byId: {
-            __typename: "Dataset",
-            flows: { __typename: "DatasetFlows", triggers: { __typename: "DatasetFlowTriggers", allPaused: true } },
-        },
-    },
-};
-
 export const mockGetFlowByIdQueryError: GetFlowByIdQuery = {
     datasets: {
         byId: {
@@ -1674,4 +1673,125 @@ export const mockDatasetFlowsInitiatorsQuery: DatasetFlowsInitiatorsQuery = {
         },
         __typename: "Datasets",
     },
+};
+
+export const mockDatasetFlowsProcessesQuery: DatasetFlowsProcessesQuery = {
+    datasets: {
+        byId: {
+            flows: {
+                processes: {
+                    primary: {
+                        flowType: DatasetFlowType.Ingest,
+                        summary: {
+                            effectiveState: FlowProcessEffectiveState.StoppedAuto,
+                            consecutiveFailures: 1,
+                            lastSuccessAt: null,
+                            lastAttemptAt: "2025-10-08T14:37:08.783727337+00:00",
+                            lastFailureAt: "2025-10-08T14:37:08.783727337+00:00",
+                            nextPlannedAt: null,
+                            stopPolicy: {
+                                maxFailures: 2,
+                                __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+                            },
+                            autoStoppedReason: FlowProcessAutoStopReason.UnrecoverableFailure,
+                            autoStoppedAt: "2025-10-08T14:37:08.783727337+00:00",
+                            __typename: "FlowProcessSummary",
+                        },
+                        __typename: "DatasetFlowProcess",
+                    },
+                    webhooks: {
+                        rollup: {
+                            total: 2,
+                            active: 1,
+                            failing: 0,
+                            paused: 1,
+                            stopped: 0,
+                            unconfigured: 0,
+                            worstConsecutiveFailures: 0,
+                            __typename: "FlowProcessGroupRollup",
+                        },
+                        subprocesses: [
+                            {
+                                id: "a9f33c51-aeda-4003-865f-8dc9712619d7",
+                                name: "qwer",
+                                summary: {
+                                    effectiveState: FlowProcessEffectiveState.Active,
+                                    consecutiveFailures: 0,
+                                    lastSuccessAt: null,
+                                    lastAttemptAt: null,
+                                    lastFailureAt: null,
+                                    nextPlannedAt: null,
+                                    stopPolicy: {
+                                        maxFailures: 5,
+                                        __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+                                    },
+                                    autoStoppedReason: null,
+                                    autoStoppedAt: null,
+                                    __typename: "FlowProcessSummary",
+                                },
+                                __typename: "WebhookFlowSubProcess",
+                            },
+                            {
+                                id: "d20a935e-0ccb-4844-b1bb-f4b5b9b0279a",
+                                name: "qwert",
+                                summary: {
+                                    effectiveState: FlowProcessEffectiveState.PausedManual,
+                                    consecutiveFailures: 0,
+                                    lastSuccessAt: null,
+                                    lastAttemptAt: null,
+                                    lastFailureAt: null,
+                                    nextPlannedAt: null,
+                                    stopPolicy: {
+                                        maxFailures: 5,
+                                        __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+                                    },
+                                    autoStoppedReason: null,
+                                    autoStoppedAt: null,
+                                    __typename: "FlowProcessSummary",
+                                },
+                                __typename: "WebhookFlowSubProcess",
+                            },
+                        ],
+                        __typename: "WebhookFlowSubProcessGroup",
+                    },
+                    __typename: "DatasetFlowProcesses",
+                },
+                __typename: "DatasetFlows",
+            },
+            __typename: "Dataset",
+        },
+        __typename: "Datasets",
+    },
+};
+
+export const mockFlowProcessSummaryDataFragment: FlowProcessSummaryDataFragment = {
+    effectiveState: FlowProcessEffectiveState.Active,
+    consecutiveFailures: 0,
+    lastSuccessAt: "2025-10-13T16:53:08.689881136+00:00",
+    lastAttemptAt: "2025-10-13T16:53:08.689881136+00:00",
+    lastFailureAt: null,
+    nextPlannedAt: "2025-10-13T16:55:08.689881136+00:00",
+    stopPolicy: {
+        maxFailures: 1,
+        __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+    },
+    autoStoppedReason: null,
+    autoStoppedAt: null,
+    __typename: "FlowProcessSummary",
+};
+
+export const mockFlowProcessSummaryDataFragmentNoPolicy: FlowProcessSummaryDataFragment = {
+    effectiveState: FlowProcessEffectiveState.Active,
+    consecutiveFailures: 0,
+    lastSuccessAt: "2025-10-13T16:53:08.689881136+00:00",
+    lastAttemptAt: "2025-10-13T16:53:08.689881136+00:00",
+    lastFailureAt: null,
+    nextPlannedAt: "2025-10-13T16:55:08.689881136+00:00",
+    stopPolicy: {
+        dummy: true,
+        __typename: "FlowTriggerStopPolicyNever",
+    },
+    autoStoppedReason: null,
+    autoStoppedAt: null,
+    __typename: "FlowProcessSummary",
 };

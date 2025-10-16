@@ -10,12 +10,12 @@ import { inject, Injectable } from "@angular/core";
 import {
     CancelFlowRunGQL,
     CancelFlowRunMutation,
-    DatasetAllFlowsPausedGQL,
-    DatasetAllFlowsPausedQuery,
     DatasetFlowFilters,
     DatasetFlowType,
     DatasetFlowsInitiatorsGQL,
     DatasetFlowsInitiatorsQuery,
+    DatasetFlowsProcessesGQL,
+    DatasetFlowsProcessesQuery,
     DatasetPauseFlowsGQL,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsGQL,
@@ -64,7 +64,6 @@ export class DatasetFlowApi {
     private getDatasetListFlowsGQL = inject(GetDatasetListFlowsGQL);
     private datasetPauseFlowsGQL = inject(DatasetPauseFlowsGQL);
     private datasetResumeFlowsGQL = inject(DatasetResumeFlowsGQL);
-    private datasetAllFlowsPausedGQL = inject(DatasetAllFlowsPausedGQL);
 
     private datasetTriggerIngestFlowGQL = inject(DatasetTriggerIngestFlowGQL);
     private datasetTriggetTransformFlowGQL = inject(DatasetTriggerTransformFlowGQL);
@@ -81,6 +80,16 @@ export class DatasetFlowApi {
 
     private setIngestFlowConfigGQL = inject(SetIngestFlowConfigGQL);
     private setCompactionFlowConfigGQL = inject(SetCompactionFlowConfigGQL);
+
+    private datasetFlowsProcessesGQL = inject(DatasetFlowsProcessesGQL);
+
+    public getDatasetFlowsProcesses(params: { datasetId: string }): Observable<DatasetFlowsProcessesQuery> {
+        return this.datasetFlowsProcessesGQL.watch(params, noCacheFetchPolicy).valueChanges.pipe(
+            map((result: ApolloQueryResult<DatasetFlowsProcessesQuery>) => {
+                return result.data;
+            }),
+        );
+    }
 
     public datasetTriggerIngestFlow(params: {
         datasetId: string;
@@ -285,14 +294,6 @@ export class DatasetFlowApi {
                     return result.data as DatasetResumeFlowsMutation;
                 }),
             );
-    }
-
-    public allFlowsPaused(datasetId: string): Observable<DatasetAllFlowsPausedQuery> {
-        return this.datasetAllFlowsPausedGQL.watch({ datasetId }, noCacheFetchPolicy).valueChanges.pipe(
-            map((result: ApolloQueryResult<DatasetAllFlowsPausedQuery>) => {
-                return result.data;
-            }),
-        );
     }
 
     public getFlowById(params: { datasetId: string; flowId: string }): Observable<GetFlowByIdQuery> {

@@ -49,7 +49,7 @@ export const datasetSettingsTransformTabResolverFn: ResolveFn<DatasetSettingsTra
                                 case "FlowTriggerStopPolicyAfterConsecutiveFailures":
                                     stopPolicy = {
                                         __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
-                                        maxFailures: 1,
+                                        maxFailures: flowTriggers?.stopPolicy.maxFailures,
                                     };
                                     break;
                                 /* istanbul ignore next */

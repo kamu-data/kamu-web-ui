@@ -1,0 +1,35 @@
+@import "var";
+
+.mat-button-toggle-appearance-standard.mat-button-toggle-checked {
+    color: #fff;
+    background: #70aab9;
+}
+
+:host {
+    ::ng-deep {
+        .mat-button-toggle-button {
+            .mat-button-toggle-label-content {
+                line-height: 36px !important;
+            }
+        }
+    }
+}
+
+.delete-chip-btn {
+    outline: none;
+    border: none;
+    background: aqua;
+    transform: scale(0.6);
+}
+
+.webhook-label {
+    padding-left: 2px;
+}
+
+.channels-container {
+    background: #f6f8fa;
+
+    &:hover {
+        cursor: pointer;
+    }
+}

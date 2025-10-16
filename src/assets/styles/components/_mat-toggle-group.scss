@@ -1,58 +1,61 @@
-.mat-button-toggle-group {
-    width: fit-content;
-    border-top: none !important;
-    border-left: none !important;
-    border-right: none !important;
-    border-bottom-color: #000 !important;
-
-    .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
-    .mat-button-toggle-group-appearance-standard {
-        border-radius: 0;
-    }
-}
-
-mat-button-toggle-group {
-    box-shadow: none;
-    border-bottom: 1px solid;
-    border-radius: 0 !important;
-}
-
-mat-button-toggle {
-    border: 2px transparent solid !important;
-    padding: 0 5px !important;
-    z-index: 3 !important;
-    outline: none !important;
-    background: inherit !important;
-
-    &.active-link {
+.search-header-container-block,
+.container-content {
+    .mat-button-toggle-group {
+        width: fit-content;
+        border-top: none !important;
+        border-left: none !important;
+        border-right: none !important;
         border-bottom-color: #000 !important;
-        border-radius: 0;
-    }
 
-    &:not(.active-link) {
-        &:hover {
-            box-shadow: none !important;
-            border-bottom: 1px solid !important;
-            border-radius: 0 !important;
+        .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
+        .mat-button-toggle-group-appearance-standard {
+            border-radius: 0;
         }
     }
-}
 
-.mat-button-toggle-disabled {
-    background: inherit;
-}
+    mat-button-toggle-group {
+        box-shadow: none;
+        border-bottom: 1px solid;
+        border-radius: 0 !important;
+    }
 
-.mat-button-toggle-focus-overlay {
-    background: inherit !important;
-}
+    mat-button-toggle {
+        border: 2px transparent solid !important;
+        padding: 0 5px !important;
+        z-index: 3 !important;
+        outline: none !important;
+        background: inherit !important;
 
-.mat-button-toggle-input {
-    background-color: transparent !important;
-    padding-left: 32px !important;
-}
+        &.active-link {
+            border-bottom-color: #000 !important;
+            border-radius: 0;
+        }
 
-.mat-button-toggle-appearance-standard {
-    .mat-button-toggle-label-content {
-        padding: 0 !important;
+        &:not(.active-link) {
+            &:hover {
+                box-shadow: none !important;
+                border-bottom: 1px solid !important;
+                border-radius: 0 !important;
+            }
+        }
+    }
+
+    .mat-button-toggle-disabled {
+        background: inherit;
+    }
+
+    .mat-button-toggle-focus-overlay {
+        background: inherit !important;
+    }
+
+    .mat-button-toggle-input {
+        background-color: transparent !important;
+        padding-left: 32px !important;
+    }
+
+    .mat-button-toggle-appearance-standard {
+        .mat-button-toggle-label-content {
+            padding: 0 !important;
+        }
     }
 }

@@ -12,10 +12,11 @@ import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
     AccountFragment,
     CancelFlowRunMutation,
-    DatasetAllFlowsPausedQuery,
     DatasetBasicsFragment,
     DatasetFlowFilters,
+    DatasetFlowProcesses,
     DatasetFlowsInitiatorsQuery,
+    DatasetFlowsProcessesQuery,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
     DatasetTriggerCompactionFlowMutation,
@@ -41,6 +42,14 @@ import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-detai
 export class DatasetFlowsService {
     private datasetFlowApi = inject(DatasetFlowApi);
     private toastrService = inject(ToastrService);
+
+    public datasetFlowsProcesses(params: { datasetId: string }): Observable<DatasetFlowProcesses> {
+        return this.datasetFlowApi.getDatasetFlowsProcesses(params).pipe(
+            map((data: DatasetFlowsProcessesQuery) => {
+                return data.datasets.byId?.flows.processes as DatasetFlowProcesses;
+            }),
+        );
+    }
 
     public datasetTriggerIngestFlow(params: {
         datasetId: string;
@@ -188,14 +197,6 @@ export class DatasetFlowsService {
                 result
                     ? this.toastrService.success("Flows resumed")
                     : this.toastrService.error("Error, flows not resumed");
-            }),
-        );
-    }
-
-    public allFlowsPaused(datasetId: string): Observable<MaybeUndefined<boolean>> {
-        return this.datasetFlowApi.allFlowsPaused(datasetId).pipe(
-            map((data: DatasetAllFlowsPausedQuery) => {
-                return data.datasets.byId?.flows.triggers.allPaused;
             }),
         );
     }

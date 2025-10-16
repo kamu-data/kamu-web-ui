@@ -1,66 +1,74 @@
 <div class="search-result-container__content mb-20 container-main">
     <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData; else loading">
         <ng-container *ngIf="flowConnectionData.flowsData.connectionDataForWidget.nodes.length; else noRuns">
-            <div class="d-flex justify-content-between">
+            <div>
                 <div class="mt-4">
-                    <h2 class="title">
-                        {{ flowConnectionData.flowsData.connectionDataForWidget.totalCount }} Dataset flow run(s)
-                    </h2>
-                    <div>
-                        <span class="text-muted"> Compute work associated with this dataset </span>
-                    </div>
-                </div>
-                <div class="d-flex flex-column">
-                    <div class="d-flex justify-content-end">
-                        <button
-                            *ngIf="canRunFlows"
-                            class="btn-sm btn custom-edit"
-                            aria-label="Show tasks options"
-                            data-test-id="show-tasks-options"
-                            title="Show options"
-                            #menuTrigger="matMenuTrigger"
-                            [matMenuTriggerFor]="menu"
+                    <div class="box p-4 w-100" *ngIf="flowConnectionData.flowProcesses">
+                        <div
+                            class="d-flex flex-row"
+                            [ngClass]="{
+                                'justify-content-between': showPanelButtons,
+                                'justify-content-end': !showPanelButtons,
+                            }"
                         >
-                            <mat-icon class="mat-icon-svg-size pt-1px" svgIcon="show-options" />
-                        </button>
-                        <mat-menu #menu="matMenu" xPosition="before" [hasBackdrop]="true">
-                            <button mat-menu-item [disabled]="false" (click)="updateNow()">Update now</button>
-                            <mat-divider />
-                            <a
-                                mat-menu-item
-                                [routerLink]="[
-                                    '/',
-                                    flowsData.datasetBasics.owner.accountName,
-                                    flowsData.datasetBasics.name,
-                                    DatasetViewTypeEnum.Settings,
-                                    redirectSection,
-                                ]"
-                                >Update settings</a
+                            <div *ngIf="showPanelButtons">
+                                <app-flows-badge-panel
+                                    [flowProcess]="flowConnectionData.flowProcesses.primary"
+                                    [datasetKind]="flowsData.datasetBasics.kind"
+                                />
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <app-flows-block-actions
+                                    [flowProcess]="flowConnectionData.flowProcesses.primary"
+                                    [datasetBasics]="flowsData.datasetBasics"
+                                    [hasPushSources]="hasPushSources"
+                                    (updateEmitter)="updateNow()"
+                                    (refreshEmitter)="refreshFlow()"
+                                    (toggleStateDatasetFlowConfigsEmitter)="toggleStateDatasetFlowConfigs($event)"
+                                />
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <mat-chip-listbox
+                                [(ngModel)]="flowsSelectionState.flowsCategory"
+                                (change)="onSelectionFlowsChange($event)"
                             >
-                            <mat-divider />
-                            <button
-                                mat-menu-item
-                                (click)="toggleStateDatasetFlowConfigs(flowConnectionData.allFlowsPaused!)"
-                            >
-                                {{ !flowConnectionData.allFlowsPaused ? "Pause" : "Resume" }}
-                                dataset flows
-                            </button>
-                        </mat-menu>
+                                <mat-chip-option [value]="'all'">All flows</mat-chip-option>
+                                <mat-chip-option *ngIf="!hasPushSources" [value]="'updates'"
+                                    >{{ isRoot ? "Ingest" : "Transform" }}
+                                </mat-chip-option>
+                            </mat-chip-listbox>
+                        </div>
+
+                        <div class="mt-4" *ngIf="flowConnectionData.flowProcesses.webhooks.rollup.total">
+                            <app-flows-associated-channels
+                                [flowsSelectionState]="flowsSelectionState"
+                                [webhooksData]="flowConnectionData.flowProcesses.webhooks"
+                                [datasetBasics]="flowsData.datasetBasics"
+                                (webhookSettingsClicked)="navigateToWebhookSettings($event)"
+                                (subcriptionClicked)="navigateToSubscription($event)"
+                                (pauseWebhookClicked)="pauseWebhook($event)"
+                                (resumeWebhookClicked)="resumeWebhook($event)"
+                                (selectionWebhooksClicked)="onSelectionWebhooksChange($event)"
+                                (toggleWebhookFilterClicked)="
+                                    onToggleWebhookFilter(
+                                        $event,
+                                        flowConnectionData.flowProcesses.webhooks.subprocesses
+                                    )
+                                "
+                                (removeSelectedWebhookClicked)="
+                                    removeSelectedWebhook(
+                                        $event,
+                                        flowConnectionData.flowProcesses.webhooks.subprocesses
+                                    )
+                                "
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="d-flex justify-content-end my-4">
-                <button
-                    (click)="refreshFlow()"
-                    class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
-                >
-                    <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>
-                    <span class="fs-12 me-2 d-block"> Refresh flow</span>
-                </button>
-            </div>
-
-            <div class="search-result-container__content mt-2 mb-4">
+            <div class="search-result-container__content mt-4 mb-4">
                 <app-tile-base-widget
                     [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
                     [nodes]="flowConnectionData.flowsData.connectionDataForWidget.nodes"
@@ -70,7 +78,11 @@
 
             <ng-container *ngIf="flowConnectionData">
                 <app-flows-table
-                    [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
+                    [nodes]="
+                        flowsSelectionState.webhookFilterButtons.length && !flowsSelectionState.webhooksIds.length
+                            ? []
+                            : flowConnectionData.flowsData.connectionDataForTable.nodes
+                    "
                     [filterByStatus]="filterByStatus"
                     [onlySystemFlows]="onlySystemFlows"
                     [searchByAccount]="searchByAccount"
@@ -79,6 +91,11 @@
                     [tableOptions]="{
                         displayColumns: DISPLAY_COLUMNS,
                     }"
+                    [totalCount]="
+                        flowsSelectionState.webhookFilterButtons.length && !flowsSelectionState.webhooksIds.length
+                            ? 0
+                            : flowConnectionData.flowsData.connectionDataForTable.totalCount
+                    "
                     (searchByFiltersChange)="onSearchByFiltersChange($event)"
                     (abortFlowChange)="onAbortFlow($event)"
                 />

@@ -1,0 +1,19 @@
+.badge-button {
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        background: #ebebeb !important;
+    }
+}
+
+.action-button {
+    height: 28px !important;
+}
+
+.action-link {
+    height: auto !important;
+    color: #000;
+}

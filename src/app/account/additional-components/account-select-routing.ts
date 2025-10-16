@@ -23,6 +23,7 @@ export const ACCOUNT_SELECT_ROUTES: Routes = [
     {
         path: "",
         component: AccountComponent,
+        runGuardsAndResolvers: "always",
         resolve: { [RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY]: accountActiveTabResolverFn },
         children: [
             {

@@ -157,6 +157,7 @@ export class DatasetFlowBadgeHelpers {
                     subMessage: `Last run: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.lastFailureAt, AppValues.DISPLAY_TIME_FORMAT)}`,
                     additionalMessage: additionalMessagesStoppedAutoHelper(summary),
                 };
+            /* istanbul ignore next */
             default:
                 throw new Error("Unsupported flow process effective state for messages");
         }
@@ -169,6 +170,7 @@ function subMessagesFailingStateHelper(summary: FlowProcessSummaryDataFragment):
             return `Next planned: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.nextPlannedAt, AppValues.DISPLAY_TIME_FORMAT)}, ${summary.consecutiveFailures}/${summary.stopPolicy.maxFailures} consecutive failures`;
         case "FlowTriggerStopPolicyNever":
             return `${summary.consecutiveFailures} consecutive failures`;
+        /* istanbul ignore next */
         default:
             return "";
     }
@@ -181,6 +183,7 @@ function subMessagesActiveStateHelper(summary: FlowProcessSummaryDataFragment, i
     if (!summary.lastSuccessAt && !summary.lastFailureAt) {
         return `${isRoot ? "Ingest" : "Transform"} starting...`;
     }
+    /* istanbul ignore next */
     return "";
 }
 
@@ -199,5 +202,6 @@ function additionalMessagesStoppedAutoHelper(summary: FlowProcessSummaryDataFrag
     if (summary.autoStoppedReason === FlowProcessAutoStopReason.UnrecoverableFailure) {
         return `Reason: unrecoverable failure ${summary.stopPolicy.__typename === "FlowTriggerStopPolicyAfterConsecutiveFailures" ? "- " + summary.consecutiveFailures + "  consecutive failures" : ""}`;
     }
+    /* istanbul ignore next */
     return "";
 }

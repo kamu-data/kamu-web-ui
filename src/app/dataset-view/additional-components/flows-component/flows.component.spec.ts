@@ -25,13 +25,25 @@ import { mockOverviewUpdate } from "../data-tabs.mock";
 import { mockDatasetFlowsProcessesQuery, mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
-import { DatasetFlowProcesses } from "src/app/api/kamu.graphql.interface";
+import { DatasetFlowProcesses, FlowProcessEffectiveState, FlowStatus } from "src/app/api/kamu.graphql.interface";
+import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+import { ModalService } from "src/app/common/components/modal/modal.service";
+import { FlowsSelectionStateService } from "./services/flows-selection-state.service";
+import { DatasetWebhooksService } from "../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
+import AppValues from "src/app/common/values/app.values";
+import { MatChipListboxChange } from "@angular/material/chips";
+import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { mockDatasets } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;
     let fixture: ComponentFixture<FlowsComponent>;
     let datasetFlowsService: DatasetFlowsService;
     let navigationService: NavigationService;
+    let flowsService: DatasetFlowsService;
+    let modalService: ModalService;
+    let datasetWebhooksService: DatasetWebhooksService;
+
     const MOCK_FLOW_ID = "2";
 
     beforeEach(async () => {
@@ -39,6 +51,7 @@ describe("FlowsComponent", () => {
             providers: [
                 Apollo,
                 provideToastr(),
+
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -75,6 +88,10 @@ describe("FlowsComponent", () => {
         fixture = TestBed.createComponent(FlowsComponent);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
         navigationService = TestBed.inject(NavigationService);
+        flowsService = TestBed.inject(DatasetFlowsService);
+        modalService = TestBed.inject(ModalService);
+        datasetWebhooksService = TestBed.inject(DatasetWebhooksService);
+
         component = fixture.componentInstance;
         component.flowsData = {
             datasetBasics: mockDatasetBasicsRootFragment,
@@ -111,11 +128,60 @@ describe("FlowsComponent", () => {
         discardPeriodicTasks();
     }));
 
-    it("should check update now button", fakeAsync(() => {
+    it("should check update now button for root dataset", fakeAsync(() => {
         const refreshFlowSpy = spyOn(component, "refreshFlow");
         spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
         component.updateNow();
         tick(component.TIMEOUT_REFRESH_FLOW);
+        expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+        flush();
+    }));
+
+    it("should check update now button for derivative dataset", fakeAsync(() => {
+        component.flowsData = {
+            datasetBasics: mockDatasetBasicsDerivedFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            overviewUpdate: mockOverviewUpdate,
+        };
+        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        spyOn(datasetFlowsService, "datasetTriggerTransformFlow").and.returnValue(of(true));
+        component.updateNow();
+        tick(component.TIMEOUT_REFRESH_FLOW);
+        expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+        flush();
+    }));
+
+    it(`should check toggle state for dataset flow when state=${FlowProcessEffectiveState.Active}`, fakeAsync(() => {
+        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        const datasetPauseFlowsSpy = spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+        component.toggleStateDatasetFlowConfigs(FlowProcessEffectiveState.Active);
+        tick(component.TIMEOUT_REFRESH_FLOW);
+        expect(datasetPauseFlowsSpy).toHaveBeenCalledTimes(1);
+        expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+        flush();
+    }));
+
+    it(`should check toggle state for dataset flow when state=${FlowProcessEffectiveState.StoppedAuto}`, fakeAsync(() => {
+        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
+            options.handler?.call(undefined, true);
+            return Promise.resolve("");
+        });
+        const datasetResumeFlowsSpy = spyOn(flowsService, "datasetResumeFlows").and.returnValue(of(void 0));
+        component.toggleStateDatasetFlowConfigs(FlowProcessEffectiveState.StoppedAuto);
+        tick(component.TIMEOUT_REFRESH_FLOW);
+        expect(modalServiceSpy).toHaveBeenCalledTimes(1);
+        expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+        expect(datasetResumeFlowsSpy).toHaveBeenCalledTimes(1);
+        flush();
+    }));
+
+    it(`should check toggle state for dataset flow when state=${FlowProcessEffectiveState.Failing}`, fakeAsync(() => {
+        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        const datasetResumeFlowsSpy = spyOn(flowsService, "datasetResumeFlows").and.returnValue(of(void 0));
+        component.toggleStateDatasetFlowConfigs(FlowProcessEffectiveState.Failing);
+        tick(component.TIMEOUT_REFRESH_FLOW);
+        expect(datasetResumeFlowsSpy).toHaveBeenCalledTimes(1);
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
         flush();
     }));
@@ -226,4 +292,197 @@ describe("FlowsComponent", () => {
         expect(updateNowClickSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
+
+    it("should check to show panel buttons init filter with webhook ids", () => {
+        const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
+        const addWebhookIdSpy = spyOn(serviceInComponent, "addWebhookId");
+        const mockWebhookId = "d20a935e-0ccb-4844-b1bb-f4b5b9b0279a,d20a935e-0ccb-4844-b1bb-f4b5b9b0279b";
+        component.setWebhookId = mockWebhookId;
+        expect(addWebhookIdSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it("should check to show panel buttons init filter without webhook id", () => {
+        const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
+        const addWebhookIdSpy = spyOn(serviceInComponent, "addWebhookId");
+        const mockWebhookId = null;
+        component.setWebhookId = mockWebhookId;
+        expect(addWebhookIdSpy).not.toHaveBeenCalled();
+    });
+
+    it("should check to show panel buttons init webhook filter buttons without states", () => {
+        const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
+        const setWebhooksCategorySpy = spyOn(serviceInComponent, "setWebhooksCategory");
+        const mockStates = null;
+        component.setWebhookState = mockStates;
+        expect(setWebhooksCategorySpy).not.toHaveBeenCalled();
+    });
+
+    it("should check to show panel buttons init webhook filter buttons with states", () => {
+        const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
+        const setWebhooksCategorySpy = spyOn(serviceInComponent, "setWebhooksCategory");
+        const mockStates = `${FlowProcessEffectiveState.Active},${FlowProcessEffectiveState.Failing}`;
+        component.setWebhookState = mockStates;
+        expect(setWebhooksCategorySpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check to show panel buttons init webhooks category", () => {
+        const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
+        const setWebhooksCategorySpy = spyOn(serviceInComponent, "setWebhooksCategory");
+        const category = "webhooks";
+        component.setFlowsCategory = category;
+        expect(setWebhooksCategorySpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check to show panel buttons init flows category", () => {
+        const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
+        const setFlowsCategorySpy = spyOn(serviceInComponent, "setFlowsCategory");
+        const category = "updates";
+        component.setFlowsCategory = category;
+        expect(setFlowsCategorySpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check has push sources", () => {
+        fixture.detectChanges();
+        expect(component.hasPushSources).toEqual(false);
+    });
+
+    it("should check to show panel buttons", () => {
+        fixture.detectChanges();
+        expect(component.showPanelButtons).toEqual(true);
+    });
+
+    it("should check to navigate to webhook settings", () => {
+        const mockSubscriptionId = "1234-4444-43222";
+        const navigateToWebhooksSpy = spyOn(navigationService, "navigateToWebhooks");
+        component.navigateToWebhookSettings(mockSubscriptionId);
+        expect(navigateToWebhooksSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                tab: mockSubscriptionId,
+            }),
+        );
+    });
+
+    it("should check to navigate to subscription", () => {
+        const processes = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses;
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        component.navigateToSubscription(processes.webhooks.subprocesses[0]);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check pause webhook", fakeAsync(() => {
+        const mockSubscriptionId = "1234-4444-43222";
+        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        const datasetWebhookPauseSubscriptionSpy = spyOn(
+            datasetWebhooksService,
+            "datasetWebhookPauseSubscription",
+        ).and.returnValue(of(true));
+        component.pauseWebhook(mockSubscriptionId);
+        expect(datasetWebhookPauseSubscriptionSpy).toHaveBeenCalledTimes(1);
+        tick(AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS);
+        expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+        flush();
+    }));
+
+    it("should check resume webhook", fakeAsync(() => {
+        const mockSubscriptionId = "1234-4444-43222";
+        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        const datasetWebhookResumeSubscriptionSpy = spyOn(
+            datasetWebhooksService,
+            "datasetWebhookResumeSubscription",
+        ).and.returnValue(of(true));
+        component.resumeWebhook(mockSubscriptionId);
+        expect(datasetWebhookResumeSubscriptionSpy).toHaveBeenCalledTimes(1);
+        tick(AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS);
+        expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+    }));
+
+    it("should check kind of dataset", () => {
+        fixture.detectChanges();
+        expect(component.isRoot).toEqual(true);
+    });
+
+    it("should check remove selected webhook", () => {
+        const processes = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses;
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        component.removeSelectedWebhook("qwer", processes.webhooks.subprocesses);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                webhookId: [],
+            }),
+        );
+    });
+
+    it("should check toggle webhook filter if states not exist", () => {
+        const processes = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses;
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        component.onToggleWebhookFilter([FlowProcessEffectiveState.Active], processes.webhooks.subprocesses);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                webhooksState: [FlowProcessEffectiveState.Active],
+            }),
+        );
+    });
+
+    it("should check toggle webhook filter if states  exist", () => {
+        const processes = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses;
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        component.onToggleWebhookFilter([], processes.webhooks.subprocesses);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                webhooksState: undefined,
+            }),
+        );
+    });
+
+    it("should check selection `Webhooks` chip", () => {
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        component.onSelectionWebhooksChange("webhooks");
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                category: "webhooks",
+            }),
+        );
+    });
+
+    it("should check selection `Flows`chips", () => {
+        const mockEvent = { value: "updates" } as unknown as MatChipListboxChange;
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        component.onSelectionFlowsChange(mockEvent);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                category: "updates",
+            }),
+        );
+    });
+
+    it("should check set ProcessTypeFilter with webhookId", fakeAsync(() => {
+        const mockWebhookId = "d20a935e-0ccb-4844-b1bb-f4b5b9b0279a,d20a935e-0ccb-4844-b1bb-f4b5b9b0279b";
+        component.setWebhookId = mockWebhookId;
+        fixture.detectChanges();
+        const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
+        const clearFlowsCategorySpy = spyOn(serviceInComponent, "clearFlowsCategory");
+        spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+        );
+        spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData).pipe(delay(10)));
+        spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
+        tick(10);
+        fixture.detectChanges();
+
+        expect(clearFlowsCategorySpy).toHaveBeenCalledTimes(1);
+        discardPeriodicTasks();
+    }));
+
+    it("should check set SearchByFilters", () => {
+        component.onSearchByFiltersChange(null);
+        expect(component.searchByAccount).toEqual([]);
+        const filters = {
+            accounts: [mockAccountDetails],
+            datasets: mockDatasets,
+            status: FlowStatus.Finished,
+            onlySystemFlows: false,
+        };
+        component.onSearchByFiltersChange(filters);
+        expect(component.searchByAccount).toEqual(filters.accounts);
+    });
 });

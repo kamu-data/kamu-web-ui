@@ -67,10 +67,6 @@ export class FlowsSelectionStateService {
         this.patch({ webhookFilterButtons: [], webhooksCategory: undefined });
     }
 
-    public hasSubscription(name: string): boolean {
-        return this.snapshot.subscriptions.includes(name);
-    }
-
     public addSubscription(name: string): void {
         const { subscriptions } = this.snapshot;
         if (!subscriptions.includes(name)) {

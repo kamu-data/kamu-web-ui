@@ -1779,3 +1779,19 @@ export const mockFlowProcessSummaryDataFragment: FlowProcessSummaryDataFragment 
     autoStoppedAt: null,
     __typename: "FlowProcessSummary",
 };
+
+export const mockFlowProcessSummaryDataFragmentNoPolicy: FlowProcessSummaryDataFragment = {
+    effectiveState: FlowProcessEffectiveState.Active,
+    consecutiveFailures: 0,
+    lastSuccessAt: "2025-10-13T16:53:08.689881136+00:00",
+    lastAttemptAt: "2025-10-13T16:53:08.689881136+00:00",
+    lastFailureAt: null,
+    nextPlannedAt: "2025-10-13T16:55:08.689881136+00:00",
+    stopPolicy: {
+        dummy: true,
+        __typename: "FlowTriggerStopPolicyNever",
+    },
+    autoStoppedReason: null,
+    autoStoppedAt: null,
+    __typename: "FlowProcessSummary",
+};

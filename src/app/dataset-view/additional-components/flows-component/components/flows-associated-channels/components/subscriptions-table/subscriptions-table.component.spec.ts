@@ -16,6 +16,7 @@ import { provideToastr } from "ngx-toastr";
 describe("SubscriptionsTableComponent", () => {
     let component: SubscriptionsTableComponent;
     let fixture: ComponentFixture<SubscriptionsTableComponent>;
+    const MOCK_SUBSCRIPTION_ID = "123-456-234-1323";
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -33,5 +34,29 @@ describe("SubscriptionsTableComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should check #navigateToSubscription", () => {
+        const subscriptionClickedSpy = spyOn(component.subscriptionClicked, "emit");
+        component.navigateToSubscription(component.subprocesses[0]);
+        expect(subscriptionClickedSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check #pauseWebhook", () => {
+        const pauseWebhookClickedSpy = spyOn(component.pauseWebhookClicked, "emit");
+        component.pauseWebhook(MOCK_SUBSCRIPTION_ID);
+        expect(pauseWebhookClickedSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check #resumeWebhook", () => {
+        const resumeWebhookClickedSpy = spyOn(component.resumeWebhookClicked, "emit");
+        component.resumeWebhook(MOCK_SUBSCRIPTION_ID);
+        expect(resumeWebhookClickedSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check #navigateToWebhookSettings", () => {
+        const webhookSettingsClickedSpy = spyOn(component.webhookSettingsClicked, "emit");
+        component.navigateToWebhookSettings(MOCK_SUBSCRIPTION_ID);
+        expect(webhookSettingsClickedSpy).toHaveBeenCalledTimes(1);
     });
 });

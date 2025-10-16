@@ -16,6 +16,7 @@ import {
     mockCancelFlowRunMutationError,
     mockCancelFlowRunMutationSuccess,
     mockDatasetFlowsInitiatorsQuery,
+    mockDatasetFlowsProcessesQuery,
     mockDatasetPauseFlowsMutationError,
     mockDatasetPauseFlowsMutationSuccess,
     mockDatasetResumeFlowsMutationError,
@@ -35,7 +36,7 @@ import {
     mockGetFlowByIdQuerySuccess,
 } from "src/app/api/mock/dataset-flow.mock";
 import { MaybeUndefined } from "src/app/interface/app.types";
-import { AccountFragment } from "src/app/api/kamu.graphql.interface";
+import { AccountFragment, DatasetFlowProcesses } from "src/app/api/kamu.graphql.interface";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { provideAnimations } from "@angular/platform-browser/animations";
@@ -63,6 +64,21 @@ describe("DatasetFlowsService", () => {
 
     it("should be created", () => {
         expect(service).toBeTruthy();
+    });
+
+    it("should check get flows prcosses", () => {
+        spyOn(datasetFlowApi, "getDatasetFlowsProcesses").and.returnValue(of(mockDatasetFlowsProcessesQuery));
+        const subscription$ = service
+            .datasetFlowsProcesses({
+                datasetId: MOCK_DATASET_ID,
+            })
+            .subscribe((data: DatasetFlowProcesses) => {
+                expect(data).toEqual(
+                    mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses,
+                );
+            });
+
+        expect(subscription$.closed).toBeTrue();
     });
 
     it("should check get dataset flows list", () => {

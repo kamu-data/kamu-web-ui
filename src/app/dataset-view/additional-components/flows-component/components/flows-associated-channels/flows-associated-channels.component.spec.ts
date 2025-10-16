@@ -18,6 +18,7 @@ import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { SubscriptionsTableComponent } from "./components/subscriptions-table/subscriptions-table.component";
 import { provideToastr } from "ngx-toastr";
 import { MatChipListboxChange } from "@angular/material/chips";
+import { MatButtonToggleChange } from "@angular/material/button-toggle";
 
 describe("FlowsAssociatedChannelsComponent", () => {
     let component: FlowsAssociatedChannelsComponent;
@@ -95,11 +96,26 @@ describe("FlowsAssociatedChannelsComponent", () => {
 
     it("should check to select 1 state", () => {
         const mockChangeEvent = {
-            source: {},
             value: "webhooks",
         };
         const selectionWebhooksEmitterSpy = spyOn(component.selectionWebhooksClicked, "emit");
         component.onSelectionWebhooksChange(mockChangeEvent as MatChipListboxChange);
         expect(selectionWebhooksEmitterSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check toggle webhook filter", () => {
+        const mockChangeEvent = {
+            value: [FlowProcessEffectiveState.Active],
+        };
+        const toggleWebhookFilterClickedSpy = spyOn(component.toggleWebhookFilterClicked, "emit");
+        component.onToggleWebhookFilter(mockChangeEvent as MatButtonToggleChange);
+        expect(toggleWebhookFilterClickedSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check remove selected webhook", () => {
+        const mockSubscriptionName = "1233-444334-3232e32";
+        const removeSelectedWebhookClickedSpy = spyOn(component.removeSelectedWebhookClicked, "emit");
+        component.removeSelectedWebhook(mockSubscriptionName);
+        expect(removeSelectedWebhookClickedSpy).toHaveBeenCalledTimes(1);
     });
 });

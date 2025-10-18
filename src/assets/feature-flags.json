@@ -280,14 +280,10 @@
                 "subfeatures": [
                   {
                     "id": "viewDeliveryReport",
-                    "developmentState": "mockup"
+                    "developmentState": "stable"
                   },
                   {
                     "id": "rotateSecret",
-                    "developmentState": "mockup"
-                  },
-                  {
-                    "id": "verifyNow",
                     "developmentState": "mockup"
                   }
                 ]

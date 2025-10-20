@@ -27,6 +27,8 @@ import { FlowsTableComponent } from "../../../dataset-flow/flows-table/flows-tab
 import { TileBaseWidgetComponent } from "../../../dataset-flow/tile-base-widget/tile-base-widget.component";
 import { MatIconModule } from "@angular/material/icon";
 import { NgIf, AsyncPipe } from "@angular/common";
+import { ParamMap } from "@angular/router";
+import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-account-flows-tab",
@@ -80,7 +82,7 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
             switchMap(() =>
                 combineLatest([
                     this.accountService.getAccountListFlows({
-                        accountName: this.loggedUser.accountName,
+                        accountName: this.accountName,
                         page: page - 1,
                         perPageTable: this.TABLE_FLOW_RUNS_PER_PAGE,
                         perPageTiles: this.WIDGET_FLOW_RUNS_PER_PAGE,
@@ -135,5 +137,10 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
         this.searchByFilters(filters);
         this.searchByDataset = filters?.datasets ?? [];
         this.filters = filters;
+    }
+
+    public get accountName(): string {
+        const paramMap: MaybeUndefined<ParamMap> = this.activatedRoute?.parent?.parent?.snapshot.paramMap;
+        return paramMap?.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME) as string;
     }
 }

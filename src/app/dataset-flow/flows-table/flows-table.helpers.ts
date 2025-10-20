@@ -246,6 +246,8 @@ export class FlowTableHelpers {
                                     return `Polling data from image: ${fetchStep.image}`;
                                 case "FetchStepFilesGlob":
                                     return `Polling data from file: ${fetchStep.path}`;
+                                case "FetchStepEthereumLogs":
+                                    return `Polling data from Ethereum mainnet`;
                             }
                         }
                         break;

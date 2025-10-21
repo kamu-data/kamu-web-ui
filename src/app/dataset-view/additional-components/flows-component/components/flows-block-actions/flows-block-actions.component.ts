@@ -54,6 +54,10 @@ export class FlowsBlockActionsComponent extends BaseComponent {
         return !this.hasPushSources;
     }
 
+    public get pauseableStates(): FlowProcessEffectiveState[] {
+        return [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing];
+    }
+
     public get showPauseOrResumeButton(): boolean {
         return (
             !this.hasPushSources && this.flowProcess.summary.effectiveState !== FlowProcessEffectiveState.Unconfigured

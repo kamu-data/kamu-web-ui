@@ -96,7 +96,7 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Ingest active",
-                subMessage: "Ingest starting...",
+                subMessage: "Ingest running...",
                 additionalMessage: "Next planned: 2025-10-13, 7:55:08 PM",
             },
         },
@@ -107,7 +107,7 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Transform active",
-                subMessage: "Transform starting...",
+                subMessage: "Transform running...",
                 additionalMessage: "Next planned: 2025-10-13, 7:55:08 PM",
             },
         },
@@ -265,7 +265,7 @@ describe("Flows badge messages helper", () => {
             expectedResult: {
                 message: "Transform stopped",
                 subMessage: "Last run: 2025-10-13, 4:29:36 PM",
-                additionalMessage: "Reason: unrecoverable failure - 2  consecutive failures",
+                additionalMessage: "Reason: unrecoverable failure",
             },
         },
         {
@@ -282,7 +282,7 @@ describe("Flows badge messages helper", () => {
             expectedResult: {
                 message: "Transform stopped",
                 subMessage: "Last run: 2025-10-13, 4:29:36 PM",
-                additionalMessage: "Reason: unrecoverable failure ",
+                additionalMessage: "Reason: unrecoverable failure",
             },
         },
     ].forEach(

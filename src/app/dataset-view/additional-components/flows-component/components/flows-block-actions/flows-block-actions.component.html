@@ -17,7 +17,7 @@
         >
             <mat-icon class="text-muted fs-4 d-block" svgIcon="play_pause" />
             <span class="fs-12 me-2 d-block">
-                {{ pauseAllowedStates.includes(flowProcess.summary.effectiveState) ? "Pause" : "Resume" }}
+                {{ pauseableStates.includes(flowProcess.summary.effectiveState) ? "Pause" : "Resume" }}
                 updates</span
             >
         </button>

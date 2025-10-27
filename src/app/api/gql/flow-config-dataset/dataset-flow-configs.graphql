@@ -12,6 +12,7 @@ query getDatasetFlowConfigs($datasetId: DatasetID!, $datasetFlowType: DatasetFlo
             rule {
               ... on FlowConfigRuleIngest {
                 fetchUncacheable
+                fetchNextIteration
               }
 
               ... on FlowConfigRuleReset {

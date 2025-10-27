@@ -18,16 +18,37 @@ export class IngestConfigurationRuleFormHarness extends ComponentHarness {
         MatCheckboxHarness.with({ selector: '[data-test-id="ingest-config-fetch-uncacheable"]' }),
     );
 
+    private readonly locatorFetchNextIterationCheckbox = this.locatorFor(
+        MatCheckboxHarness.with({ selector: '[data-test-id="ingest-config-fetch-next-iteration"]' }),
+    );
+
     public async enableFetchUncacheable(): Promise<void> {
         await this.setFetchUncacheable(true);
+    }
+
+    public async enableFetchNextIteration(): Promise<void> {
+        await this.setFetchNextIteration(true);
     }
 
     public async disableFetchUncacheable(): Promise<void> {
         await this.setFetchUncacheable(false);
     }
 
+    public async disableFetchNextIteration(): Promise<void> {
+        await this.setFetchNextIteration(false);
+    }
+
     private async setFetchUncacheable(value: boolean): Promise<void> {
         const checkbox = await this.locatorFetchUncacheableCheckbox();
+        const currentValue = await checkbox.isChecked();
+
+        if (currentValue !== value) {
+            await checkbox.toggle();
+        }
+    }
+
+    private async setFetchNextIteration(value: boolean): Promise<void> {
+        const checkbox = await this.locatorFetchNextIterationCheckbox();
         const currentValue = await checkbox.isChecked();
 
         if (currentValue !== value) {
@@ -40,11 +61,18 @@ export class IngestConfigurationRuleFormHarness extends ComponentHarness {
         return checkbox.isChecked();
     }
 
+    public async isFetchNextIterationEnabled(): Promise<boolean> {
+        const checkbox = await this.locatorFetchNextIterationCheckbox();
+        return checkbox.isChecked();
+    }
+
     public async currentFormValue(): Promise<IngestConfigurationRuleFormValue> {
         const fetchUncacheable = await this.isFetchUncacheableEnabled();
+        const fetchNextIteration = await this.isFetchNextIterationEnabled();
 
         return {
             fetchUncacheable,
+            fetchNextIteration,
         };
     }
 }

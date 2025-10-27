@@ -2180,6 +2180,7 @@ export type FlowAbortedResult = {
 export type FlowActivationCause =
     | FlowActivationCauseAutoPolling
     | FlowActivationCauseDatasetUpdate
+    | FlowActivationCauseIterationFinished
     | FlowActivationCauseManual;
 
 export type FlowActivationCauseAutoPolling = {
@@ -2220,6 +2221,11 @@ export type FlowActivationCauseDatasetUpdateSourceUpstreamFlow = {
     flowId: Scalars["FlowID"];
 };
 
+export type FlowActivationCauseIterationFinished = {
+    __typename?: "FlowActivationCauseIterationFinished";
+    dummy: Scalars["Boolean"];
+};
+
 export type FlowActivationCauseManual = {
     __typename?: "FlowActivationCauseManual";
     initiator: Account;
@@ -2231,6 +2237,11 @@ export type FlowConfigCompactionInput = {
 };
 
 export type FlowConfigIngestInput = {
+    /**
+     * Flag indicates to trigger next flow iteration right if `has_more` is
+     * true
+     */
+    fetchNextIteration: Scalars["Boolean"];
     /** Flag indicates to ignore cache during ingest step for API calls */
     fetchUncacheable: Scalars["Boolean"];
 };
@@ -2276,6 +2287,7 @@ export type FlowConfigRuleCompaction = {
 
 export type FlowConfigRuleIngest = {
     __typename?: "FlowConfigRuleIngest";
+    fetchNextIteration: Scalars["Boolean"];
     fetchUncacheable: Scalars["Boolean"];
 };
 
@@ -2393,6 +2405,7 @@ export type FlowDescriptionUpdateResult =
 
 export type FlowDescriptionUpdateResultSuccess = {
     __typename?: "FlowDescriptionUpdateResultSuccess";
+    hasMore: Scalars["Boolean"];
     numBlocks: Scalars["Int"];
     numRecords: Scalars["Int"];
     updatedWatermark?: Maybe<Scalars["DateTime"]>;
@@ -3689,6 +3702,16 @@ export type RevokeResultSuccess = RevokeResult & {
     tokenId: Scalars["AccessTokenID"];
 };
 
+export type RotateWebhookSubscriptionSecretResult = {
+    message: Scalars["String"];
+};
+
+export type RotateWebhookSubscriptionSecretSuccess = RotateWebhookSubscriptionSecretResult & {
+    __typename?: "RotateWebhookSubscriptionSecretSuccess";
+    message: Scalars["String"];
+    newSecret: Scalars["String"];
+};
+
 export type Search = {
     __typename?: "Search";
     /**
@@ -4530,6 +4553,7 @@ export type WebhookSubscriptionMut = {
     reactivate: ReactivateWebhookSubscriptionResult;
     remove: RemoveWebhookSubscriptionResult;
     resume: ResumeWebhookSubscriptionResult;
+    rotateSecret: RotateWebhookSubscriptionSecretResult;
     update: UpdateWebhookSubscriptionResult;
 };
 
@@ -5656,7 +5680,11 @@ export type GetDatasetFlowConfigsQuery = {
                                         maxSliceSize: number;
                                         maxSliceRecords: number;
                                     }
-                                  | { __typename?: "FlowConfigRuleIngest"; fetchUncacheable: boolean }
+                                  | {
+                                        __typename?: "FlowConfigRuleIngest";
+                                        fetchUncacheable: boolean;
+                                        fetchNextIteration: boolean;
+                                    }
                                   | {
                                         __typename?: "FlowConfigRuleReset";
                                         oldHeadHash?: string | null;
@@ -6053,6 +6081,7 @@ type FlowHistoryData_FlowEventActivationCauseAdded_Fragment = {
                     }
                   | { __typename: "FlowActivationCauseDatasetUpdateSourceUpstreamFlow"; flowId: string };
           }
+        | { __typename: "FlowActivationCauseIterationFinished" }
         | { __typename: "FlowActivationCauseManual"; initiator: { __typename?: "Account" } & AccountFragment };
 };
 
@@ -6081,6 +6110,7 @@ type FlowHistoryData_FlowEventInitiated_Fragment = {
                     }
                   | { __typename: "FlowActivationCauseDatasetUpdateSourceUpstreamFlow"; flowId: string };
           }
+        | { __typename: "FlowActivationCauseIterationFinished" }
         | { __typename: "FlowActivationCauseManual"; initiator: { __typename?: "Account" } & AccountFragment };
 };
 
@@ -6330,7 +6360,7 @@ export type FlowSummaryDataFragment = {
         | null;
     configSnapshot?:
         | { __typename?: "FlowConfigRuleCompaction" }
-        | { __typename?: "FlowConfigRuleIngest"; fetchUncacheable: boolean }
+        | { __typename?: "FlowConfigRuleIngest"; fetchUncacheable: boolean; fetchNextIteration: boolean }
         | { __typename?: "FlowConfigRuleReset" }
         | null;
     retryPolicy?: { __typename?: "FlowRetryPolicy"; maxAttempts: number } | null;
@@ -7990,6 +8020,7 @@ export const FlowSummaryDataFragmentDoc = gql`
         configSnapshot {
             ... on FlowConfigRuleIngest {
                 fetchUncacheable
+                fetchNextIteration
             }
         }
         taskIds
@@ -10747,6 +10778,7 @@ export const GetDatasetFlowConfigsDocument = gql`
                             rule {
                                 ... on FlowConfigRuleIngest {
                                     fetchUncacheable
+                                    fetchNextIteration
                                 }
                                 ... on FlowConfigRuleReset {
                                     oldHeadHash

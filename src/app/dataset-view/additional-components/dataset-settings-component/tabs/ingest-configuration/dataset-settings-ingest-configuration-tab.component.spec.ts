@@ -53,6 +53,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
             ingestionRule: {
                 __typename: "FlowConfigRuleIngest",
                 fetchUncacheable: false,
+                fetchNextIteration: false,
             },
             retryPolicy: null,
         };
@@ -71,7 +72,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
 
     // Helper function to validate form state consistency
     async function expectFormValueToEqual(expectedValue: {
-        ingestConfig: { fetchUncacheable: boolean };
+        ingestConfig: { fetchUncacheable: boolean; fetchNextIteration: boolean };
         flowRetryPolicy: {
             retriesEnabled: boolean;
             maxAttempts: number;
@@ -100,7 +101,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
         expect(component.form.status).toBe("VALID");
 
         await expectFormValueToEqual({
-            ingestConfig: { fetchUncacheable: false },
+            ingestConfig: { fetchUncacheable: false, fetchNextIteration: false },
             flowRetryPolicy: {
                 retriesEnabled: false,
                 maxAttempts: FlowRetryPolicyFormComponent.DEFAULT_MAX_ATTEMPTS,
@@ -119,13 +120,14 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
 
     it("should check form is valid when loaded with ingestion rule enabled", async () => {
         component.ingestConfigurationTabData.ingestionRule.fetchUncacheable = true;
+        component.ingestConfigurationTabData.ingestionRule.fetchNextIteration = true;
         component.ngAfterViewInit();
         fixture.detectChanges();
 
         expect(component.form.status).toBe("VALID");
 
         await expectFormValueToEqual({
-            ingestConfig: { fetchUncacheable: true },
+            ingestConfig: { fetchUncacheable: true, fetchNextIteration: true },
             flowRetryPolicy: {
                 retriesEnabled: false,
                 maxAttempts: FlowRetryPolicyFormComponent.DEFAULT_MAX_ATTEMPTS,
@@ -143,7 +145,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
         expect(component.form.status).toBe("VALID");
 
         await expectFormValueToEqual({
-            ingestConfig: { fetchUncacheable: false },
+            ingestConfig: { fetchUncacheable: false, fetchNextIteration: false },
             flowRetryPolicy: {
                 retriesEnabled: true,
                 maxAttempts: 5,
@@ -155,6 +157,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
 
     it("should check form is valid when loaded with both ingestion rule and retry policy", async () => {
         component.ingestConfigurationTabData.ingestionRule.fetchUncacheable = true;
+        component.ingestConfigurationTabData.ingestionRule.fetchNextIteration = true;
         component.ingestConfigurationTabData.retryPolicy = MOCK_RETRY_POLICY;
         component.ngAfterViewInit();
         fixture.detectChanges();
@@ -162,7 +165,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
         expect(component.form.status).toBe("VALID");
 
         await expectFormValueToEqual({
-            ingestConfig: { fetchUncacheable: true },
+            ingestConfig: { fetchUncacheable: true, fetchNextIteration: true },
             flowRetryPolicy: {
                 retriesEnabled: true,
                 maxAttempts: 5,
@@ -179,6 +182,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
         ).and.callThrough();
 
         await ingestConfigurationRuleFormHarness.enableFetchUncacheable();
+        await ingestConfigurationRuleFormHarness.enableFetchNextIteration();
         await flowRetryPolicyFormHarness.enableRetries();
         await flowRetryPolicyFormHarness.setMaxAttempts(7);
         await flowRetryPolicyFormHarness.setMinDelay({ every: 45, unit: TimeUnit.Minutes });
@@ -192,7 +196,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
         expect(setDatasetIngestFlowConfigsSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
                 datasetId: mockDatasetBasicsRootFragment.id,
-                ingestConfigInput: { fetchUncacheable: true },
+                ingestConfigInput: { fetchUncacheable: true, fetchNextIteration: true },
                 retryPolicyInput: {
                     maxAttempts: 7,
                     minDelay: { every: 45, unit: TimeUnit.Minutes },
@@ -209,6 +213,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
         ).and.callThrough();
 
         await ingestConfigurationRuleFormHarness.enableFetchUncacheable();
+        await ingestConfigurationRuleFormHarness.enableFetchNextIteration();
         // Keep retry policy disabled
 
         const saveButton = getSaveButton();
@@ -219,7 +224,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
         expect(setDatasetIngestFlowConfigsSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
                 datasetId: mockDatasetBasicsRootFragment.id,
-                ingestConfigInput: { fetchUncacheable: true },
+                ingestConfigInput: { fetchUncacheable: true, fetchNextIteration: true },
                 retryPolicyInput: null,
             }),
         );
@@ -245,7 +250,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
         expect(setDatasetIngestFlowConfigsSpy).toHaveBeenCalledWith(
             jasmine.objectContaining({
                 datasetId: mockDatasetBasicsRootFragment.id,
-                ingestConfigInput: { fetchUncacheable: false },
+                ingestConfigInput: { fetchUncacheable: false, fetchNextIteration: false },
                 retryPolicyInput: {
                     maxAttempts: 2,
                     minDelay: { every: 20, unit: TimeUnit.Minutes },
@@ -289,7 +294,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
 
         // Verify form consistency
         await expectFormValueToEqual({
-            ingestConfig: { fetchUncacheable: true },
+            ingestConfig: { fetchUncacheable: true, fetchNextIteration: false },
             flowRetryPolicy: {
                 retriesEnabled: true,
                 maxAttempts: 8,

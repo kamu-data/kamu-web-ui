@@ -9,8 +9,10 @@ import { FormControl } from "@angular/forms";
 
 export interface IngestConfigurationRuleFormType {
     fetchUncacheable: FormControl<boolean>;
+    fetchNextIteration: FormControl<boolean>;
 }
 
 export interface IngestConfigurationRuleFormValue {
     fetchUncacheable: boolean;
+    fetchNextIteration: boolean;
 }

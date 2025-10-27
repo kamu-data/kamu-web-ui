@@ -37,6 +37,7 @@ describe("DatasetFlowConfigService", () => {
 
     const MOCK_INGEST_INPUT: FlowConfigIngestInput = {
         fetchUncacheable: true,
+        fetchNextIteration: false,
     };
 
     const MOCK_COMPACTION_INPUT: FlowConfigCompactionInput = {
@@ -138,6 +139,7 @@ describe("DatasetFlowConfigService", () => {
                 const expectedIngestRule = mockIngestGetDatasetFlowConfigsSuccess.datasets.byId?.flows.configs.byType
                     ?.rule as FlowConfigRuleIngest;
                 expect(actualIngestRule.fetchUncacheable).toEqual(expectedIngestRule.fetchUncacheable);
+                expect(actualIngestRule.fetchNextIteration).toEqual(expectedIngestRule.fetchNextIteration);
             });
 
         expect(subscription$.closed).toBeTrue();

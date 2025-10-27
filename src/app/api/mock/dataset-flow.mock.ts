@@ -91,6 +91,7 @@ export const mockIngestGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuery 
                         rule: {
                             __typename: "FlowConfigRuleIngest",
                             fetchUncacheable: false,
+                            fetchNextIteration: false,
                         },
                         __typename: "FlowConfiguration",
                     },
@@ -855,6 +856,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 startCondition: null,
                                 configSnapshot: {
                                     fetchUncacheable: false,
+                                    fetchNextIteration: false,
                                     __typename: "FlowConfigRuleIngest",
                                 },
                                 retryPolicy: null,
@@ -892,6 +894,7 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
                                 startCondition: null,
                                 configSnapshot: {
                                     fetchUncacheable: false,
+                                    fetchNextIteration: false,
                                     __typename: "FlowConfigRuleIngest",
                                 },
                                 retryPolicy: null,
@@ -987,6 +990,7 @@ export const mockDatasetTriggerIngestFlowMutation: DatasetTriggerIngestFlowMutat
                         flow: {
                             configSnapshot: {
                                 fetchUncacheable: true,
+                                fetchNextIteration: false,
                                 __typename: "FlowConfigRuleIngest",
                             },
                             datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
@@ -1371,6 +1375,7 @@ export const mockCancelFlowRunMutationSuccess: CancelFlowRunMutation = {
                         flow: {
                             configSnapshot: {
                                 fetchUncacheable: true,
+                                fetchNextIteration: false,
                                 __typename: "FlowConfigRuleIngest",
                             },
                             datasetId: "did:odf:fed01162400e9e5fb02d78805f48580f25589e8c3c21738999e28845f7c9d6818bec7",
@@ -1493,6 +1498,7 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                         flow: {
                             configSnapshot: {
                                 fetchUncacheable: true,
+                                fetchNextIteration: false,
                                 __typename: "FlowConfigRuleIngest",
                             },
                             datasetId: "did:odf:fed016c0070664336545c0f49dc6a7a860c6862ab3336b630c2d7e779394a26da2e1e",

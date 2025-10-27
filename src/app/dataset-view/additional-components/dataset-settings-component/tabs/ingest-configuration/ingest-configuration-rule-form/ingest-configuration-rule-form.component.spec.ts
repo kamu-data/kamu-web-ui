@@ -62,7 +62,10 @@ describe("IngestConfigurationRuleFormComponent", () => {
     });
 
     // Helper function to validate form state consistency
-    async function expectFormValueToEqual(expectedValue: { fetchUncacheable: boolean }): Promise<void> {
+    async function expectFormValueToEqual(expectedValue: {
+        fetchUncacheable: boolean;
+        fetchNextIteration: boolean;
+    }): Promise<void> {
         const domFormValue = await ingestConfigurationRuleFormHarness.currentFormValue();
         expect(domFormValue).toEqual(expectedValue);
         expect(component.form.getRawValue()).toEqual(domFormValue);
@@ -77,6 +80,7 @@ describe("IngestConfigurationRuleFormComponent", () => {
     it("should have default form values", async () => {
         await expectFormValueToEqual({
             fetchUncacheable: false,
+            fetchNextIteration: false,
         });
     });
 
@@ -91,6 +95,22 @@ describe("IngestConfigurationRuleFormComponent", () => {
 
         await expectFormValueToEqual({
             fetchUncacheable: true,
+            fetchNextIteration: false,
+        });
+    });
+
+    it("should enable fetchNextIteration via harness and reflect in form", async () => {
+        expect(component.fetchNextIterationControl.value).toBeFalse();
+        expect(await ingestConfigurationRuleFormHarness.isFetchNextIterationEnabled()).toBeFalse();
+
+        await ingestConfigurationRuleFormHarness.enableFetchNextIteration();
+
+        expect(component.fetchNextIterationControl.value).toBeTrue();
+        expect(await ingestConfigurationRuleFormHarness.isFetchNextIterationEnabled()).toBeTrue();
+
+        await expectFormValueToEqual({
+            fetchUncacheable: false,
+            fetchNextIteration: true,
         });
     });
 
@@ -108,17 +128,45 @@ describe("IngestConfigurationRuleFormComponent", () => {
 
         await expectFormValueToEqual({
             fetchUncacheable: false,
+            fetchNextIteration: false,
+        });
+    });
+
+    it("should disable fetchNextIteration via harness and reflect in form", async () => {
+        // First enable it
+        await ingestConfigurationRuleFormHarness.enableFetchNextIteration();
+        expect(component.fetchNextIterationControl.value).toBeTrue();
+        expect(await ingestConfigurationRuleFormHarness.isFetchNextIterationEnabled()).toBeTrue();
+
+        // Then disable it
+        await ingestConfigurationRuleFormHarness.disableFetchNextIteration();
+
+        expect(component.fetchNextIterationControl.value).toBeFalse();
+        expect(await ingestConfigurationRuleFormHarness.isFetchNextIterationEnabled()).toBeFalse();
+
+        await expectFormValueToEqual({
+            fetchUncacheable: false,
+            fetchNextIteration: false,
         });
     });
 
     it("should build form value from FlowConfigRuleIngest", () => {
-        const mockIngestRule = {
+        const formValue1 = IngestConfigurationRuleFormComponent.buildFormValue({
             fetchUncacheable: true,
-        };
+            fetchNextIteration: false,
+        });
+        expect(formValue1).toEqual({
+            fetchUncacheable: true,
+            fetchNextIteration: false,
+        });
 
-        const formValue = IngestConfigurationRuleFormComponent.buildFormValue(mockIngestRule);
-        expect(formValue).toEqual({
-            fetchUncacheable: true,
+        const formValue2 = IngestConfigurationRuleFormComponent.buildFormValue({
+            fetchUncacheable: false,
+            fetchNextIteration: true,
+        });
+        expect(formValue2).toEqual({
+            fetchUncacheable: false,
+            fetchNextIteration: true,
         });
     });
 
@@ -126,17 +174,31 @@ describe("IngestConfigurationRuleFormComponent", () => {
         const formValue = IngestConfigurationRuleFormComponent.buildFormValue(null);
         expect(formValue).toEqual({
             fetchUncacheable: false,
+            fetchNextIteration: false,
         });
     });
 
     it("should build FlowConfigRuleIngest from form value", () => {
-        const mockFormValue = {
+        const mockFormValue1 = {
             fetchUncacheable: true,
+            fetchNextIteration: false,
         };
 
-        const ingestRule = IngestConfigurationRuleFormComponent.buildFlowConfigIngestInput(mockFormValue);
-        expect(ingestRule).toEqual({
+        const mockFormValue2 = {
+            fetchUncacheable: false,
+            fetchNextIteration: true,
+        };
+
+        const ingestRule1 = IngestConfigurationRuleFormComponent.buildFlowConfigIngestInput(mockFormValue1);
+        expect(ingestRule1).toEqual({
             fetchUncacheable: true,
+            fetchNextIteration: false,
+        });
+
+        const ingestRule2 = IngestConfigurationRuleFormComponent.buildFlowConfigIngestInput(mockFormValue2);
+        expect(ingestRule2).toEqual({
+            fetchUncacheable: false,
+            fetchNextIteration: true,
         });
     });
 

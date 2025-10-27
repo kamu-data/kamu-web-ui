@@ -40,7 +40,10 @@ export const datasetSettingsIngestConfigurationResolverFn: ResolveFn<
                     } else if (isNil(flowConfigRule)) {
                         return {
                             ...data,
-                            ingestionRule: { fetchUncacheable: false } as FlowConfigRuleIngest,
+                            ingestionRule: {
+                                fetchUncacheable: false,
+                                fetchNextIteration: false,
+                            } as FlowConfigRuleIngest,
                             retryPolicy,
                         } as DatasetSettingsIngestConfigurationTabData;
                     } else {

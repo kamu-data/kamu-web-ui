@@ -311,6 +311,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
                                     datasetId: node.datasetId,
                                     ingestConfigInput: {
                                         fetchUncacheable: true,
+                                        fetchNextIteration: false,
                                     },
                                 })
                                 .pipe(takeUntilDestroyed(this.destroyRef))

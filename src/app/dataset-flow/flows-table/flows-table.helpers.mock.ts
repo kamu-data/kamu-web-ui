@@ -1088,6 +1088,7 @@ export const mockFlowSummaryDataFragmentShowForceLink: FlowSummaryDataFragment =
     startCondition: null,
     configSnapshot: {
         fetchUncacheable: false,
+        fetchNextIteration: false,
         __typename: "FlowConfigRuleIngest",
     },
     retryPolicy: null,

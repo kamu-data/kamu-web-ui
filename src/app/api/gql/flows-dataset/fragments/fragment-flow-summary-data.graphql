@@ -177,6 +177,7 @@ fragment FlowSummaryData on Flow {
   configSnapshot {
     ... on FlowConfigRuleIngest {
       fetchUncacheable
+      fetchNextIteration
     }
   }
 

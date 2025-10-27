@@ -12,6 +12,9 @@ fragment FlowHistoryData on FlowEvent {
       ... on FlowActivationCauseAutoPolling {
         __typename
       }
+      ... on FlowActivationCauseIterationFinished {
+        __typename
+      }
       ... on FlowActivationCauseManual {
         initiator {
           ...Account
@@ -114,6 +117,9 @@ fragment FlowHistoryData on FlowEvent {
     activationCause {
       __typename
       ... on FlowActivationCauseAutoPolling {
+        __typename
+      }
+      ... on FlowActivationCauseIterationFinished {
         __typename
       }
       ... on FlowActivationCauseManual {

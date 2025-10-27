@@ -15,5 +15,20 @@
                 Always pulls data even if the source hasn't changed. Useful for uncacheable or real-time sources.
             </small>
         </div>
+        <div class="d-flex align-items-center">
+            <mat-checkbox
+                data-test-id="ingest-config-fetch-next-iteration"
+                formControlName="fetchNextIteration"
+                color="primary"
+            >
+                <div class="d-flex align-items-center">Fetch next iteration automatically</div>
+            </mat-checkbox>
+        </div>
+        <div class="ms-1 px-2 pb-2">
+            <small class="text-muted">
+                Always pulls data for the next iteration automatically, when source signalizes there is more data
+                available to fetch.
+            </small>
+        </div>
     </form>
 </div>

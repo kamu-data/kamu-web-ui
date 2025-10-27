@@ -327,6 +327,8 @@ export class DatasetFlowDetailsHelpers {
                 return "automatically";
             case "FlowActivationCauseManual":
                 return "manually";
+            case "FlowActivationCauseIterationFinished":
+                return "by fetch source, as more data is available";
             case "FlowActivationCauseDatasetUpdate":
                 switch (activationCause.source.__typename) {
                     case "FlowActivationCauseDatasetUpdateSourceUpstreamFlow":
@@ -350,6 +352,7 @@ export class DatasetFlowDetailsHelpers {
     private static describeActivationCauseDetails(activationCause: FlowActivationCause): string {
         switch (activationCause.__typename) {
             case "FlowActivationCauseAutoPolling":
+            case "FlowActivationCauseIterationFinished":
                 return "";
             case "FlowActivationCauseManual":
                 return `Triggered by <a class="fs-12" href="${DatasetFlowDetailsHelpers.accountHyperlink(activationCause.initiator.accountName)}">${activationCause.initiator.accountName}</a>`;

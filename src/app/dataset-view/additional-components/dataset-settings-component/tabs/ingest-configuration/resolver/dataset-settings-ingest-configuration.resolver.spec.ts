@@ -62,6 +62,7 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
                             rule: {
                                 __typename: "FlowConfigRuleIngest",
                                 fetchUncacheable: false,
+                                fetchNextIteration: false,
                             },
                             retryPolicy: {
                                 __typename: "FlowRetryPolicy",
@@ -110,6 +111,7 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
                             rule: {
                                 __typename: "FlowConfigRuleIngest",
                                 fetchUncacheable: true,
+                                fetchNextIteration: false,
                             },
                             retryPolicy: null,
                         },
@@ -209,6 +211,7 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
                     ingestionRule: {
                         __typename: "FlowConfigRuleIngest",
                         fetchUncacheable: false,
+                        fetchNextIteration: false,
                     },
                     retryPolicy: null,
                 });
@@ -237,6 +240,7 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
                     ingestionRule: {
                         __typename: "FlowConfigRuleIngest",
                         fetchUncacheable: false,
+                        fetchNextIteration: false,
                     },
                     retryPolicy: {
                         __typename: "FlowRetryPolicy",
@@ -265,7 +269,7 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
                 expect(data).toEqual({
                     datasetBasics: mockDatasetBasicsRootFragment,
                     datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                    ingestionRule: { fetchUncacheable: false },
+                    ingestionRule: { fetchUncacheable: false, fetchNextIteration: false },
                     retryPolicy: null,
                 });
             });
@@ -289,6 +293,7 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
                     ingestionRule: {
                         __typename: "FlowConfigRuleIngest",
                         fetchUncacheable: true,
+                        fetchNextIteration: false,
                     },
                     retryPolicy: null,
                 });

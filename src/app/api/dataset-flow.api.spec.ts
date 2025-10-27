@@ -138,14 +138,14 @@ describe("DatasetFlowApi", () => {
         service
             .setDatasetFlowIngestConfig({
                 datasetId: TEST_DATASET_ID,
-                ingestConfigInput: { fetchUncacheable: true },
+                ingestConfigInput: { fetchUncacheable: true, fetchNextIteration: true },
                 retryPolicyInput: null,
             })
             .subscribe();
 
         const op = controller.expectOne(SetIngestFlowConfigDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
-        expect(op.operation.variables.ingestConfigInput).toEqual({ fetchUncacheable: true });
+        expect(op.operation.variables.ingestConfigInput).toEqual({ fetchUncacheable: true, fetchNextIteration: true });
         expect(op.operation.variables.retryPolicyInput).toBeNull();
 
         op.flush({
@@ -157,14 +157,14 @@ describe("DatasetFlowApi", () => {
         service
             .setDatasetFlowIngestConfig({
                 datasetId: TEST_DATASET_ID,
-                ingestConfigInput: { fetchUncacheable: true },
+                ingestConfigInput: { fetchUncacheable: true, fetchNextIteration: false },
                 retryPolicyInput: mockRetryPolicyInput,
             })
             .subscribe();
 
         const op = controller.expectOne(SetIngestFlowConfigDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
-        expect(op.operation.variables.ingestConfigInput).toEqual({ fetchUncacheable: true });
+        expect(op.operation.variables.ingestConfigInput).toEqual({ fetchUncacheable: true, fetchNextIteration: false });
         expect(op.operation.variables.retryPolicyInput).toEqual(mockRetryPolicyInput);
 
         op.flush({

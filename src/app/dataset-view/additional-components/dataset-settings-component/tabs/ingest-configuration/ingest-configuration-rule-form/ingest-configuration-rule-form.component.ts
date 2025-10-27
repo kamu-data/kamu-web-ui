@@ -35,22 +35,29 @@ export class IngestConfigurationRuleFormComponent extends BaseComponent {
     public static buildForm(): FormGroup<IngestConfigurationRuleFormType> {
         return new FormGroup<IngestConfigurationRuleFormType>({
             fetchUncacheable: new FormControl<boolean>(false, { nonNullable: true }),
+            fetchNextIteration: new FormControl<boolean>(false, { nonNullable: true }),
         });
     }
 
     public static buildFormValue(ingestionRule: MaybeNull<FlowConfigRuleIngest>): IngestConfigurationRuleFormValue {
         return {
             fetchUncacheable: ingestionRule?.fetchUncacheable ?? false,
+            fetchNextIteration: ingestionRule?.fetchNextIteration ?? false,
         };
     }
 
     public static buildFlowConfigIngestInput(formValue: IngestConfigurationRuleFormValue): FlowConfigRuleIngest {
         return {
             fetchUncacheable: formValue.fetchUncacheable,
+            fetchNextIteration: formValue.fetchNextIteration,
         };
     }
 
     public get fetchUncacheableControl(): FormControl<boolean> {
         return this.form.controls.fetchUncacheable;
+    }
+
+    public get fetchNextIterationControl(): FormControl<boolean> {
+        return this.form.controls.fetchNextIteration;
     }
 }

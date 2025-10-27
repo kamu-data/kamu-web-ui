@@ -8082,6 +8082,9 @@ export const FlowHistoryDataFragmentDoc = gql`
                 ... on FlowActivationCauseAutoPolling {
                     __typename
                 }
+                ... on FlowActivationCauseIterationFinished {
+                    __typename
+                }
                 ... on FlowActivationCauseManual {
                     initiator {
                         ...Account
@@ -8175,6 +8178,9 @@ export const FlowHistoryDataFragmentDoc = gql`
             activationCause {
                 __typename
                 ... on FlowActivationCauseAutoPolling {
+                    __typename
+                }
+                ... on FlowActivationCauseIterationFinished {
                     __typename
                 }
                 ... on FlowActivationCauseManual {

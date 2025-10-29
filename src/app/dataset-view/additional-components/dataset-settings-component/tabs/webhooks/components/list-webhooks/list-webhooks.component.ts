@@ -155,8 +155,8 @@ export class ListWebhooksComponent implements OnInit {
     public rotateSecret(subscriptionId: string): void {
         promiseWithCatch(
             this.modalService.error({
-                title: "Webhook rotate secret",
-                message: `Are you sure?`,
+                title: "Rotate webhook secret",
+                message: `Are you sure you want to rotate the secret associated with this webhook? This would affect the generated signature headers starting from the next notification.`,
 
                 yesButtonText: "Ok",
                 noButtonText: "Cancel",

@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
-import { Location, NgIf } from "@angular/common";
+import { Location } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { CopyToClipboardComponent } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.component";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
@@ -23,7 +23,6 @@ import ProjectLinks from "src/app/project-links";
         FormsModule,
         //-----//
         CopyToClipboardComponent,
-        NgIf,
     ],
     templateUrl: "./rotate-secret-webhook.component.html",
     styleUrls: ["./rotate-secret-webhook.component.scss"],
@@ -44,7 +43,7 @@ export class RotateSecretWebhookComponent implements OnInit {
         this.datasetWebhooksService
             .datasetWebhookRotateSecret(this.datasetBasics.id, this.webhookId)
             .subscribe((data) => {
-                this.secret = data as string;
+                this.secret = data;
                 this.cdr.detectChanges();
             });
     }

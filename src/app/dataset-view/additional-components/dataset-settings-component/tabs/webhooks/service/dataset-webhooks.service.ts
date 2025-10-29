@@ -23,7 +23,6 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { WebhooksApi } from "src/app/api/webhooks.api";
 import { CreateWebhookSubscriptionSuccess } from "../dataset-settings-webhooks-tab.component.types";
-import { MaybeNull } from "src/app/interface/app.types";
 
 @Injectable({
     providedIn: "root",
@@ -79,14 +78,14 @@ export class DatasetWebhooksService {
         );
     }
 
-    public datasetWebhookRotateSecret(datasetId: string, id: string): Observable<MaybeNull<string>> {
+    public datasetWebhookRotateSecret(datasetId: string, id: string): Observable<string> {
         return this.webhooksApi.datasetWebhookRotateSecret(datasetId, id).pipe(
             map((data: DatasetWebhookRotateSecretMutation) => {
                 if (data.datasets.byId?.webhooks.subscription?.rotateSecret) {
                     this.toastrService.success(data.datasets.byId?.webhooks.subscription.rotateSecret.message);
                     return data.datasets.byId.webhooks.subscription.rotateSecret.newSecret;
                 } else {
-                    return null;
+                    return "";
                 }
             }),
         );

@@ -22,6 +22,7 @@ import {
     mockDatasetWebhookRemoveSubscriptionMutationError,
     mockDatasetWebhookResumeSubscriptionMutation,
     mockDatasetWebhookResumeSubscriptionMutationError,
+    mockDatasetWebhookRotateSecretMutation,
     mockDatasetWebhookSubscriptionsQuery,
     mockDatasetWebhookUpdateSubscriptionMutation,
     mockDatasetWebhookUpdateSubscriptionMutationError,
@@ -124,6 +125,21 @@ describe("DatasetWebhooksService", () => {
         });
 
         expect(datasetWebhookRemoveSubscriptionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check rotate secret", () => {
+        const datasetWebhookRotateSecretSpy = spyOn(webhooksApi, "datasetWebhookRotateSecret").and.returnValue(
+            of(mockDatasetWebhookRotateSecretMutation),
+        );
+
+        service.datasetWebhookRotateSecret(DATASET_ID, MOCK_SUBSCRIPTION_ID).subscribe((result: string) => {
+            expect(result).toEqual(
+                mockDatasetWebhookRotateSecretMutation.datasets.byId?.webhooks.subscription?.rotateSecret
+                    .newSecret as string,
+            );
+        });
+
+        expect(datasetWebhookRotateSecretSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check remove dataset webhook subscription with error", () => {

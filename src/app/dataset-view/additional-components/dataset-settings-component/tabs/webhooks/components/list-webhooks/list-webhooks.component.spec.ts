@@ -83,6 +83,17 @@ describe("ListWebhooksComponent", () => {
         expect(modalWindowSpy).toHaveBeenCalledTimes(1);
     });
 
+    it("should check to rotate secret", () => {
+        const navigateToWebhooksSpy = spyOn(navigationService, "navigateToWebhooks").and.returnValue();
+        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
+            options.handler?.call(undefined, true);
+            return Promise.resolve("");
+        });
+        component.rotateSecret(MOCK_SUBSCRIPTION_ID);
+        expect(navigateToWebhooksSpy).toHaveBeenCalledTimes(1);
+        expect(modalWindowSpy).toHaveBeenCalledTimes(1);
+    });
+
     it("should check to pause webhook subcription", () => {
         const datasetWebhookPauseSubscriptionSpy = spyOn(
             datasetWebhooksService,

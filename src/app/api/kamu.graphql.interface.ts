@@ -7620,6 +7620,32 @@ export type DatasetWebhookResumeSubscriptionMutation = {
     };
 };
 
+export type DatasetWebhookRotateSecretMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"];
+    id: Scalars["WebhookSubscriptionID"];
+}>;
+
+export type DatasetWebhookRotateSecretMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            webhooks: {
+                __typename?: "DatasetWebhooksMut";
+                subscription?: {
+                    __typename?: "WebhookSubscriptionMut";
+                    rotateSecret: {
+                        __typename?: "RotateWebhookSubscriptionSecretSuccess";
+                        newSecret: string;
+                        message: string;
+                    };
+                } | null;
+            };
+        } | null;
+    };
+};
+
 export type DatasetWebhookSubscriptionsQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"];
 }>;
@@ -11935,6 +11961,38 @@ export class DatasetWebhookResumeSubscriptionGQL extends Apollo.Mutation<
     DatasetWebhookResumeSubscriptionMutationVariables
 > {
     document = DatasetWebhookResumeSubscriptionDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetWebhookRotateSecretDocument = gql`
+    mutation datasetWebhookRotateSecret($datasetId: DatasetID!, $id: WebhookSubscriptionID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                webhooks {
+                    subscription(id: $id) {
+                        rotateSecret {
+                            ... on RotateWebhookSubscriptionSecretSuccess {
+                                newSecret
+                                message
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetWebhookRotateSecretGQL extends Apollo.Mutation<
+    DatasetWebhookRotateSecretMutation,
+    DatasetWebhookRotateSecretMutationVariables
+> {
+    document = DatasetWebhookRotateSecretDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

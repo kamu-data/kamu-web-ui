@@ -131,6 +131,9 @@ export class NavigationService {
         if (params.tab) {
             route.push(params.tab);
         }
+        if (params.webhookId) {
+            route.push(params.webhookId);
+        }
         promiseWithCatch(this.router.navigate(route));
     }
 

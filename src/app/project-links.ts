@@ -26,6 +26,7 @@ export default class ProjectLinks {
 
     // webhooks
     public static readonly URL_WEBHOOK_NEW: string = "new";
+    public static readonly URL_WEBHOOK_ROTATE_SECRET: string = "rotate-secret";
 
     public static readonly ALL_URLS: string[] = [
         ProjectLinks.URL_HOME,

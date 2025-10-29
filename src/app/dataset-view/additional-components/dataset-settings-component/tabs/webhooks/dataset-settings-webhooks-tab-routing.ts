@@ -14,6 +14,8 @@ import { addWebhookResolverFn } from "./components/add-webhook/resolvers/add-web
 import { editWebhookResolverFn } from "./components/edit-webhook/resolvers/edit-webhook.resolver";
 import ProjectLinks from "src/app/project-links";
 import { AddWebhookComponent } from "./components/add-webhook/add-webhook.component";
+import { RotateSecretWebhookComponent } from "./components/rotate-secret-webhook/rotate-secret-webhook.component";
+import { rotateSecretWebhookResolverFn } from "./components/rotate-secret-webhook/resolvers/rotate-secret-webhook.resolver";
 
 export const WEBHOOKS_TAB_ROUTING: Routes = [
     {
@@ -30,6 +32,18 @@ export const WEBHOOKS_TAB_ROUTING: Routes = [
             [RoutingResolvers.WEBHOOKS_ADD_NEW_KEY]: addWebhookResolverFn,
         },
         component: AddWebhookComponent,
+    },
+    {
+        path: ProjectLinks.URL_WEBHOOK_ROTATE_SECRET,
+        children: [
+            {
+                path: `:${ProjectLinks.URL_PARAM_WEBHOOK_ID}`,
+                resolve: {
+                    [RoutingResolvers.WEBHOOKS_ROTATE_SECRET]: rotateSecretWebhookResolverFn,
+                },
+                component: RotateSecretWebhookComponent,
+            },
+        ],
     },
     {
         path: `:${ProjectLinks.URL_PARAM_WEBHOOK_ID}`,

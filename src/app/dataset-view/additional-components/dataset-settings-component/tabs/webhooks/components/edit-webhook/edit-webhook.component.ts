@@ -20,6 +20,7 @@ import { eventTypesMapper } from "src/app/common/helpers/data.helpers";
 import { SubscribedEventType, WebhookSubscriptionFormType } from "../../dataset-settings-webhooks-tab.component.types";
 import { WebhookFormComponent } from "../common/webhook-form/webhook-form.component";
 import { Location } from "@angular/common";
+import { RouterOutlet } from "@angular/router";
 
 @Component({
     selector: "app-edit-webhook",
@@ -28,6 +29,7 @@ import { Location } from "@angular/common";
         //-----//
         FormsModule,
         ReactiveFormsModule,
+        RouterOutlet,
 
         //-----//
         MatDividerModule,

@@ -15,6 +15,7 @@ import {
     DatasetWebhookReactivateSubscriptionMutation,
     DatasetWebhookRemoveSubscriptionMutation,
     DatasetWebhookResumeSubscriptionMutation,
+    DatasetWebhookRotateSecretMutation,
     DatasetWebhookSubscriptionsQuery,
     DatasetWebhookUpdateSubscriptionMutation,
     WebhookSubscription,
@@ -72,6 +73,19 @@ export class DatasetWebhooksService {
                 } else {
                     this.toastrService.error("Webhook subscription not deleted");
                     return false;
+                }
+            }),
+        );
+    }
+
+    public datasetWebhookRotateSecret(datasetId: string, id: string): Observable<string> {
+        return this.webhooksApi.datasetWebhookRotateSecret(datasetId, id).pipe(
+            map((data: DatasetWebhookRotateSecretMutation) => {
+                if (data.datasets.byId?.webhooks.subscription?.rotateSecret) {
+                    this.toastrService.success(data.datasets.byId?.webhooks.subscription.rotateSecret.message);
+                    return data.datasets.byId.webhooks.subscription.rotateSecret.newSecret;
+                } else {
+                    return "";
                 }
             }),
         );

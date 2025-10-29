@@ -19,6 +19,7 @@ import {
     DatasetWebhookRemoveSubscriptionMutation,
     DatasetWebhookResumeSubscriptionGQL,
     DatasetWebhookResumeSubscriptionMutation,
+    DatasetWebhookRotateSecretGQL,
     DatasetWebhookSubscriptionsGQL,
     DatasetWebhookSubscriptionsQuery,
     DatasetWebhookUpdateSubscriptionGQL,
@@ -31,6 +32,7 @@ import { first, map, Observable } from "rxjs";
 import { ApolloQueryResult } from "@apollo/client";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 import { MutationResult } from "apollo-angular";
+import { DatasetWebhookRotateSecretMutation } from "./kamu.graphql.interface";
 
 @Injectable({ providedIn: "root" })
 export class WebhooksApi {
@@ -43,6 +45,7 @@ export class WebhooksApi {
     private datasetWebhookReactivateSubscriptionGQL = inject(DatasetWebhookReactivateSubscriptionGQL);
     private datasetWebhookUpdateSubscriptionGQL = inject(DatasetWebhookUpdateSubscriptionGQL);
     private datasetWebhookSubscriptionByIdGQL = inject(DatasetWebhookByIdGQL);
+    private datasetWebhookRotateSecretGQL = inject(DatasetWebhookRotateSecretGQL);
 
     public webhookEventTypes(): Observable<WebhookEventTypesQuery> {
         return this.webhookEventTypesGQL.watch().valueChanges.pipe(
@@ -82,6 +85,15 @@ export class WebhooksApi {
             first(),
             map((result: MutationResult<DatasetWebhookRemoveSubscriptionMutation>) => {
                 return result.data as DatasetWebhookRemoveSubscriptionMutation;
+            }),
+        );
+    }
+
+    public datasetWebhookRotateSecret(datasetId: string, id: string): Observable<DatasetWebhookRotateSecretMutation> {
+        return this.datasetWebhookRotateSecretGQL.mutate({ datasetId, id }).pipe(
+            first(),
+            map((result: MutationResult<DatasetWebhookRotateSecretMutation>) => {
+                return result.data as DatasetWebhookRotateSecretMutation;
             }),
         );
     }

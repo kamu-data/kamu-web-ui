@@ -152,11 +152,24 @@ export class ListWebhooksComponent implements OnInit {
         );
     }
 
-    public openRotateSecretModal(): void {
+    public rotateSecret(subscriptionId: string): void {
         promiseWithCatch(
-            this.modalService.warning({
-                message: "Feature coming soon",
+            this.modalService.error({
+                title: "Rotate webhook secret",
+                message: `Are you sure you want to rotate the secret associated with this webhook? This would affect the generated signature headers starting from the next notification.`,
+
                 yesButtonText: "Ok",
+                noButtonText: "Cancel",
+                handler: (ok) => {
+                    if (ok) {
+                        this.navigationService.navigateToWebhooks({
+                            accountName: this.datasetBasics.owner.accountName,
+                            datasetName: this.datasetBasics.name,
+                            tab: ProjectLinks.URL_WEBHOOK_ROTATE_SECRET,
+                            webhookId: subscriptionId,
+                        });
+                    }
+                },
             }),
         );
     }

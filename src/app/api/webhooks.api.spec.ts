@@ -15,6 +15,8 @@ import {
     DatasetWebhookReactivateSubscriptionMutation,
     DatasetWebhookResumeSubscriptionDocument,
     DatasetWebhookResumeSubscriptionMutation,
+    DatasetWebhookRotateSecretDocument,
+    DatasetWebhookRotateSecretMutation,
     DatasetWebhookSubscriptionsQuery,
     DatasetWebhookUpdateSubscriptionDocument,
     DatasetWebhookUpdateSubscriptionMutation,
@@ -28,6 +30,7 @@ import {
     mockDatasetWebhookReactivateSubscriptionMutation,
     mockDatasetWebhookRemoveSubscriptionMutation,
     mockDatasetWebhookResumeSubscriptionMutation,
+    mockDatasetWebhookRotateSecretMutation,
     mockDatasetWebhookSubscriptionsQuery,
     mockDatasetWebhookUpdateSubscriptionMutation,
     mockWebhookEventTypesQuery,
@@ -241,6 +244,24 @@ describe("WebhooksApi", () => {
 
         op.flush({
             data: mockDatasetWebhookByIdQuery,
+        });
+    });
+
+    it("should check to rotate secret for webhook", () => {
+        service
+            .datasetWebhookRotateSecret(DATASET_ID, MOCK_SUBSCRIPTION_ID)
+            .subscribe((res: DatasetWebhookRotateSecretMutation) => {
+                expect(res.datasets.byId?.webhooks.subscription?.rotateSecret.newSecret).toEqual(
+                    mockDatasetWebhookRotateSecretMutation.datasets.byId?.webhooks.subscription?.rotateSecret.newSecret,
+                );
+            });
+
+        const op = controller.expectOne(DatasetWebhookRotateSecretDocument);
+        expect(op.operation.variables.datasetId).toEqual(DATASET_ID);
+        expect(op.operation.variables.id).toEqual(MOCK_SUBSCRIPTION_ID);
+
+        op.flush({
+            data: mockDatasetWebhookRotateSecretMutation,
         });
     });
 });

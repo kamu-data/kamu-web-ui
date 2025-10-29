@@ -91,8 +91,7 @@
                             >
                             <mat-icon
                                 class="mat-icon-action-size"
-                                (click)="openRotateSecretModal()"
-                                *ngIf="element.status === WebhookSubscriptionStatus.Enabled"
+                                (click)="rotateSecret(element.id)"
                                 [title]="'rotate secret'"
                                 >key</mat-icon
                             >

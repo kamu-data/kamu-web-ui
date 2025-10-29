@@ -43,4 +43,5 @@ export interface WebhooksNavigationParams {
     accountName: string;
     datasetName: string;
     tab?: string;
+    webhookId?: string;
 }

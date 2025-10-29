@@ -13,6 +13,7 @@ import {
     DatasetWebhookReactivateSubscriptionMutation,
     DatasetWebhookRemoveSubscriptionMutation,
     DatasetWebhookResumeSubscriptionMutation,
+    DatasetWebhookRotateSecretMutation,
     DatasetWebhookSubscriptionsQuery,
     DatasetWebhookUpdateSubscriptionMutation,
     WebhookEventTypesQuery,
@@ -305,4 +306,24 @@ export const mockCreateWebhookSubscriptionSuccess: CreateWebhookSubscriptionSucc
     subscriptionId: "121231-32232-433434-12sasas",
     status: WebhookSubscriptionStatus.Enabled,
     secret: "sSASADSDF22323ssfdgfhfhhhh",
+};
+
+export const mockDatasetWebhookRotateSecretMutation: DatasetWebhookRotateSecretMutation = {
+    datasets: {
+        byId: {
+            webhooks: {
+                subscription: {
+                    rotateSecret: {
+                        newSecret: "5cb25e871e60edcfcb3227ebf5a5fe9457280eb3603bf5d489e732eddda187c3",
+                        message: "Success",
+                        __typename: "RotateWebhookSubscriptionSecretSuccess",
+                    },
+                    __typename: "WebhookSubscriptionMut",
+                },
+                __typename: "DatasetWebhooksMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
 };

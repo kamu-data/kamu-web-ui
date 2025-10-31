@@ -29,7 +29,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     protected readonly navigationService = inject(NavigationService);
     protected readonly cdr = inject(ChangeDetectorRef);
 
-    protected filterByStatus: MaybeNull<FlowStatus> = null;
+    protected filterByStatus: MaybeNull<FlowStatus> = FlowStatus.Finished;
     public onlySystemFlows = false;
     public searchByAccount: AccountFragment[] = [];
     public currentPage = 1;

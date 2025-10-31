@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, NgZone, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, NgZone, OnInit } from "@angular/core";
 import { combineLatest, map, Observable, of, switchMap, timer } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import {
@@ -29,6 +29,10 @@ import { MatIconModule } from "@angular/material/icon";
 import { NgIf, AsyncPipe } from "@angular/common";
 import { ParamMap } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
+import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
+import { AccountFlowsNav } from "./account-flows-tab.types";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { AccountFlowsType } from "./resolvers/account-flows.resolver";
 
 @Component({
     selector: "app-account-flows-tab",
@@ -44,6 +48,7 @@ import ProjectLinks from "src/app/project-links";
         //-----//
         MatIconModule,
         MatProgressBarModule,
+        NgbNavModule,
 
         //-----//
         FlowsTableComponent,
@@ -52,6 +57,8 @@ import ProjectLinks from "src/app/project-links";
     ],
 })
 export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent implements OnInit {
+    @Input(RoutingResolvers.ACCOUNT_FLOWS_KEY) public accountFlowsData: AccountFlowsType;
+
     public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];
 
     private readonly accountService = inject(AccountService);
@@ -67,9 +74,14 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
     public searchByDataset: DatasetBasicsFragment[] = [];
     public filters: MaybeNull<FlowsTableFiltersOptions>;
 
+    public readonly AccountFlowsNav: typeof AccountFlowsNav = AccountFlowsNav;
+    public readonly FlowStatus: typeof FlowStatus = FlowStatus;
+    public activeStatusNav: FlowStatus = FlowStatus.Finished;
+
     public ngOnInit(): void {
+        this.filterByStatus = this.accountFlowsData.flowGroup;
         this.getPageFromUrl();
-        this.fetchTableData(this.currentPage);
+        this.fetchTableData(this.currentPage, this.filterByStatus);
     }
 
     public fetchTableData(
@@ -114,7 +126,13 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
             );
         } else {
             this.ngZone.run(() =>
-                this.navigationService.navigateToOwnerView(this.loggedUser.accountName, AccountTabs.FLOWS, page),
+                this.navigationService.navigateToOwnerView(
+                    this.loggedUser.accountName,
+                    AccountTabs.FLOWS,
+                    page,
+                    this.accountFlowsData.activeNav,
+                    this.accountFlowsData.flowGroup,
+                ),
             );
         }
         this.currentPage = page;
@@ -142,5 +160,24 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
     public get accountName(): string {
         const paramMap: MaybeUndefined<ParamMap> = this.activatedRoute?.parent?.parent?.snapshot.paramMap;
         return paramMap?.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME) as string;
+    }
+
+    public onNavChange(event: NgbNavChangeEvent): void {
+        const nextNav = event.nextId as AccountFlowsNav;
+        this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.FLOWS, undefined, nextNav);
+    }
+
+    public onNavStatusChange(event: NgbNavChangeEvent): void {
+        const nextNav = event.nextId as FlowStatus;
+        this.filterByStatus = nextNav;
+        this.navigationService.navigateToOwnerView(
+            this.accountName,
+            AccountTabs.FLOWS,
+            undefined,
+            this.accountFlowsData.activeNav,
+            nextNav,
+        );
+        this.getPageFromUrl();
+        this.fetchTableData(this.currentPage, this.filterByStatus);
     }
 }

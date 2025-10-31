@@ -1,69 +1,202 @@
 <div class="container-content overflow-unset mt-4">
     <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData; else loading">
-        <ng-container *ngIf="flowConnectionData.flowsData.connectionDataForWidget.nodes.length">
-            <div class="d-flex justify-content-between">
-                <div class="mt-4">
-                    <h2 class="title">
-                        {{ flowConnectionData.flowsData.connectionDataForWidget.totalCount }} Account flow run(s)
-                    </h2>
-                    <div>
-                        <span class="text-muted">
-                            Compute work associated with datasets belonging to this account
-                        </span>
-                    </div>
-                </div>
-                <div class="d-flex flex-column">
-                    <button
-                        class="border-1 px-3 py-2 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
-                        type="button"
-                        (click)="toggleStateAccountFlowConfigs(flowConnectionData.allFlowsPaused!)"
-                    >
-                        {{ flowConnectionData.allFlowsPaused ? "Resume" : "Pause" }} account flows
-                    </button>
-                </div>
-            </div>
-            <div class="d-flex justify-content-end mt-4 mb-2">
-                <button
-                    (click)="refreshFlow()"
-                    class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
-                >
-                    <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>
-                    <span class="fs-12 me-2 d-block"> Refresh flow</span>
-                </button>
-            </div>
-            <div class="search-result-container__content my-4">
-                <app-tile-base-widget
-                    [nodes]="flowConnectionData.flowsData.connectionDataForWidget.nodes"
-                    [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
-                    [displayAlias]="true"
-                ></app-tile-base-widget>
-            </div>
-            <app-flows-table
-                [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
-                [filterByStatus]="filterByStatus"
-                [onlySystemFlows]="onlySystemFlows"
-                [searchByDataset]="searchByDataset"
-                [searchByAccount]="searchByAccount"
-                [tableOptions]="{
-                    displayColumns: DISPLAY_COLUMNS,
-                }"
-                [totalCount]="flowConnectionData.flowsData.connectionDataForTable.totalCount"
-                [accountFlowInitiators]="flowConnectionData.flowInitiators"
-                [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
-                (searchByFiltersChange)="onSearchByFiltersChange($event)"
-                (abortFlowChange)="onAbortFlow($event)"
-            ></app-flows-table>
-            <div class="mt-50px">
-                <app-pagination
-                    [currentPage]="flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1"
-                    [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
-                    (pageChangeEvent)="onPageChange($event)"
-                ></app-pagination>
-            </div>
-        </ng-container>
+        <ul
+            ngbNav
+            #nav="ngbNav"
+            [(activeId)]="accountFlowsData.activeNav"
+            (navChange)="onNavChange($event)"
+            class="nav-tabs"
+        >
+            <li [ngbNavItem]="AccountFlowsNav.ACTIVITY">
+                <button ngbNavLink>Activity</button>
+                <ng-template ngbNavContent>
+                    <ng-container *ngIf="flowConnectionData.flowsData.connectionDataForWidget.nodes.length">
+                        <div class="d-flex justify-content-between">
+                            <div class="mt-4">
+                                <h2 class="title">
+                                    {{ flowConnectionData.flowsData.connectionDataForWidget.totalCount }} Account flow
+                                    run(s)
+                                </h2>
+                                <div>
+                                    <span class="text-muted">
+                                        Compute work associated with datasets belonging to this account
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-4 mb-2">
+                            <button
+                                class="border-1 me-4 px-3 py-2 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
+                                type="button"
+                                (click)="toggleStateAccountFlowConfigs(flowConnectionData.allFlowsPaused!)"
+                            >
+                                {{ flowConnectionData.allFlowsPaused ? "Resume" : "Pause" }} account flows
+                            </button>
+                            <button
+                                (click)="refreshFlow()"
+                                class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
+                            >
+                                <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>
+                                <span class="fs-12 me-2 d-block"> Refresh flow</span>
+                            </button>
+                        </div>
+                        <div class="search-result-container__content my-4">
+                            <app-tile-base-widget
+                                [nodes]="flowConnectionData.flowsData.connectionDataForWidget.nodes"
+                                [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
+                                [displayAlias]="true"
+                            ></app-tile-base-widget>
+                        </div>
+                        <!-- <app-flows-table
+                            [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
+                            [filterByStatus]="filterByStatus"
+                            [onlySystemFlows]="onlySystemFlows"
+                            [searchByDataset]="searchByDataset"
+                            [searchByAccount]="searchByAccount"
+                            [tableOptions]="{
+                                displayColumns: DISPLAY_COLUMNS,
+                            }"
+                            [totalCount]="flowConnectionData.flowsData.connectionDataForTable.totalCount"
+                            [accountFlowInitiators]="flowConnectionData.flowInitiators"
+                            [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
+                            (searchByFiltersChange)="onSearchByFiltersChange($event)"
+                            (abortFlowChange)="onAbortFlow($event)"
+                        ></app-flows-table>
+                        <div class="mt-50px">
+                            <app-pagination
+                                [currentPage]="
+                                    flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1
+                                "
+                                [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
+                                (pageChangeEvent)="onPageChange($event)"
+                            ></app-pagination>
+                        </div> -->
+                    </ng-container>
 
-        <div data-test-id="empty-block" *ngIf="!flowConnectionData.flowsData.connectionDataForWidget.nodes.length">
-            No flows yet in datasets belonging to this account
+                    <div
+                        data-test-id="empty-block"
+                        *ngIf="!flowConnectionData.flowsData.connectionDataForWidget.nodes.length"
+                    >
+                        No flows yet in datasets belonging to this account
+                    </div>
+                </ng-template>
+            </li>
+            <li [ngbNavItem]="AccountFlowsNav.DATASETS">
+                <button ngbNavLink>Datasets</button>
+                <ng-template ngbNavContent>
+                    <p>
+                        Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four
+                        loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk
+                        aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore
+                        aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente
+                        labore stumptown. Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard
+                        ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher
+                        vero sint qui sapiente accusamus tattooed echo park.
+                    </p>
+                </ng-template>
+            </li>
+        </ul>
+
+        <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+        <div class="mt-2" *ngIf="accountFlowsData.activeNav === AccountFlowsNav.ACTIVITY">
+            <ul
+                ngbNav
+                #navStatus="ngbNav"
+                [(activeId)]="accountFlowsData.flowGroup"
+                (navChange)="onNavStatusChange($event)"
+                class="nav-tabs"
+            >
+                <li [ngbNavItem]="FlowStatus.Finished">
+                    <button ngbNavLink>Finished</button>
+                    <ng-template ngbNavContent>
+                        <app-flows-table
+                            [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
+                            [filterByStatus]="filterByStatus"
+                            [onlySystemFlows]="onlySystemFlows"
+                            [searchByDataset]="searchByDataset"
+                            [searchByAccount]="searchByAccount"
+                            [tableOptions]="{
+                                displayColumns: DISPLAY_COLUMNS,
+                            }"
+                            [totalCount]="flowConnectionData.flowsData.connectionDataForTable.totalCount"
+                            [accountFlowInitiators]="flowConnectionData.flowInitiators"
+                            [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
+                            (searchByFiltersChange)="onSearchByFiltersChange($event)"
+                            (abortFlowChange)="onAbortFlow($event)"
+                        ></app-flows-table>
+                        <div class="mt-50px">
+                            <app-pagination
+                                [currentPage]="
+                                    flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1
+                                "
+                                [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
+                                (pageChangeEvent)="onPageChange($event)"
+                            ></app-pagination>
+                        </div>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="FlowStatus.Running">
+                    <button ngbNavLink>Running</button>
+                    <ng-template ngbNavContent>
+                        <app-flows-table
+                            [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
+                            [filterByStatus]="filterByStatus"
+                            [onlySystemFlows]="onlySystemFlows"
+                            [searchByDataset]="searchByDataset"
+                            [searchByAccount]="searchByAccount"
+                            [tableOptions]="{
+                                displayColumns: DISPLAY_COLUMNS,
+                            }"
+                            [totalCount]="flowConnectionData.flowsData.connectionDataForTable.totalCount"
+                            [accountFlowInitiators]="flowConnectionData.flowInitiators"
+                            [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
+                            (searchByFiltersChange)="onSearchByFiltersChange($event)"
+                            (abortFlowChange)="onAbortFlow($event)"
+                        ></app-flows-table>
+                        <div class="mt-50px">
+                            <app-pagination
+                                [currentPage]="
+                                    flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1
+                                "
+                                [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
+                                (pageChangeEvent)="onPageChange($event)"
+                            ></app-pagination>
+                        </div>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="FlowStatus.Waiting">
+                    <button ngbNavLink>Waiting</button>
+                    <ng-template ngbNavContent>
+                        <app-flows-table
+                            [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
+                            [filterByStatus]="filterByStatus"
+                            [onlySystemFlows]="onlySystemFlows"
+                            [searchByDataset]="searchByDataset"
+                            [searchByAccount]="searchByAccount"
+                            [tableOptions]="{
+                                displayColumns: DISPLAY_COLUMNS,
+                            }"
+                            [totalCount]="flowConnectionData.flowsData.connectionDataForTable.totalCount"
+                            [accountFlowInitiators]="flowConnectionData.flowInitiators"
+                            [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
+                            (searchByFiltersChange)="onSearchByFiltersChange($event)"
+                            (abortFlowChange)="onAbortFlow($event)"
+                        ></app-flows-table>
+                        <div class="mt-50px">
+                            <!-- <app-pagination
+                                [currentPage]="
+                                    flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1
+                                "
+                                [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
+                                (pageChangeEvent)="onPageChange($event)"
+                            ></app-pagination> -->
+                        </div>
+                    </ng-template>
+                </li>
+            </ul>
+
+            <div [ngbNavOutlet]="navStatus" class="mt-2"></div>
         </div>
     </ng-container>
     <ng-template #loading>

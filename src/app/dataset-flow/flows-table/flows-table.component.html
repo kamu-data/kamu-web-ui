@@ -1,4 +1,4 @@
-<div class="mt-4 d-flex">
+<!-- <div class="mt-4 d-flex">
     <div class="w-250px">
         <angular2-multiselect
             [settings]="filterAccountSettings"
@@ -15,7 +15,7 @@
         />
     </div>
 
-    <div class="ms-4">
+   <div class="ms-4">
         <angular2-multiselect
             [settings]="FILTER_STATUS_SETTINGS"
             [data]="dropdownStatustList"
@@ -46,11 +46,11 @@
             [attr.data-test-id]="'only-system-flow'"
         />
         <label class="form-check-label"> Only system flows </label>
-    </div>
-    <div class="me-4">
-        <span class="fw-500">Total Flow Runs: {{ totalCount }}</span>
-    </div>
+    </div> -->
+<div class="me-4 d-flex justify-content-end mb-2 mt-4">
+    <span class="fw-500">Total Flow Runs: {{ totalCount }}</span>
 </div>
+<!-- </div> -->
 
 <table mat-table [dataSource]="dataSource" [trackBy]="trackByFlowId">
     <!-- Description Column -->

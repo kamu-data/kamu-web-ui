@@ -66,4 +66,7 @@ export default class ProjectLinks {
     public static readonly URL_QUERY_PARAM_WEBHOOKS_STATE: string = "webhooksState";
 
     public static readonly URL_PARAM_WEBHOOK_ID: string = "webhookId";
+
+    public static readonly URL_QUERY_PARAM_ACCOUNT_NAV: string = "nav";
+    public static readonly URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS: string = "status";
 }

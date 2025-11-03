@@ -27,12 +27,13 @@ import { FlowsTableComponent } from "../../../dataset-flow/flows-table/flows-tab
 import { TileBaseWidgetComponent } from "../../../dataset-flow/tile-base-widget/tile-base-widget.component";
 import { MatIconModule } from "@angular/material/icon";
 import { NgIf, AsyncPipe } from "@angular/common";
-import { ParamMap } from "@angular/router";
+import { ParamMap, RouterLink } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
 import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 import { AccountFlowsNav } from "./account-flows-tab.types";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { AccountFlowsType } from "./resolvers/account-flows.resolver";
+import AppValues from "src/app/common/values/app.values";
 
 @Component({
     selector: "app-account-flows-tab",
@@ -44,6 +45,7 @@ import { AccountFlowsType } from "./resolvers/account-flows.resolver";
         //-----//
         AsyncPipe,
         NgIf,
+        RouterLink,
 
         //-----//
         MatIconModule,
@@ -76,6 +78,7 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
 
     public readonly AccountFlowsNav: typeof AccountFlowsNav = AccountFlowsNav;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
+    public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public activeStatusNav: FlowStatus = FlowStatus.Finished;
 
     public ngOnInit(): void {
@@ -122,7 +125,13 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
     public onPageChange(page: number): void {
         if (page === 1) {
             this.ngZone.run(() =>
-                this.navigationService.navigateToOwnerView(this.loggedUser.accountName, AccountTabs.FLOWS),
+                this.navigationService.navigateToOwnerView(
+                    this.loggedUser.accountName,
+                    AccountTabs.FLOWS,
+                    undefined,
+                    this.accountFlowsData.activeNav,
+                    this.accountFlowsData.flowGroup,
+                ),
             );
         } else {
             this.ngZone.run(() =>
@@ -169,6 +178,7 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
 
     public onNavStatusChange(event: NgbNavChangeEvent): void {
         const nextNav = event.nextId as FlowStatus;
+        const initialPage = 1;
         this.filterByStatus = nextNav;
         this.navigationService.navigateToOwnerView(
             this.accountName,
@@ -178,6 +188,6 @@ export class AccountFlowsTabComponent extends FlowsTableProcessingBaseComponent 
             nextNav,
         );
         this.getPageFromUrl();
-        this.fetchTableData(this.currentPage, this.filterByStatus);
+        this.fetchTableData(initialPage, this.filterByStatus);
     }
 }

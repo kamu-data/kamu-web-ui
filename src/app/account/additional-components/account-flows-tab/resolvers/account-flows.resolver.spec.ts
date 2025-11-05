@@ -7,11 +7,10 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ResolveFn } from "@angular/router";
-import { accountFlowsResolverFn } from "./account-flows.resolver";
-import { AccountFlowsNav } from "../account-flows-tab.types";
+import { accountFlowsResolverFn, AccountFlowsType } from "./account-flows.resolver";
 
-describe("accountFlowsResolver", () => {
-    const executeResolver: ResolveFn<AccountFlowsNav> = (...resolverParameters) =>
+describe("accountFlowsResolverFn", () => {
+    const executeResolver: ResolveFn<AccountFlowsType> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => accountFlowsResolverFn(...resolverParameters));
 
     beforeEach(() => {

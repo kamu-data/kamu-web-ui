@@ -1,319 +1,132 @@
 <div class="container-content overflow-unset mt-4">
-    <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData; else loading">
-        <ul
-            ngbNav
-            #nav="ngbNav"
-            [(activeId)]="accountFlowsData.activeNav"
-            (navChange)="onNavChange($event)"
-            class="nav-tabs"
-        >
-            <li [ngbNavItem]="AccountFlowsNav.ACTIVITY">
-                <button ngbNavLink>Activity</button>
-                <ng-template ngbNavContent>
-                    <ng-container *ngIf="flowConnectionData.flowsData.connectionDataForWidget.nodes.length">
-                        <div class="d-flex justify-content-between">
-                            <div class="mt-4">
-                                <h2 class="title">
-                                    {{ flowConnectionData.flowsData.connectionDataForWidget.totalCount }} Account flow
-                                    run(s)
-                                </h2>
-                                <div>
-                                    <span class="text-muted">
-                                        Compute work associated with datasets belonging to this account
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end mt-4 mb-2">
-                            <button
-                                class="border-1 me-4 px-3 py-2 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
-                                type="button"
-                                (click)="toggleStateAccountFlowConfigs(flowConnectionData.allFlowsPaused!)"
-                            >
-                                {{ flowConnectionData.allFlowsPaused ? "Resume" : "Pause" }} account flows
-                            </button>
-                            <button
-                                (click)="refreshFlow()"
-                                class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
-                            >
-                                <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>
-                                <span class="fs-12 me-2 d-block"> Refresh flow</span>
-                            </button>
-                        </div>
-                        <div class="search-result-container__content my-4">
-                            <app-tile-base-widget
-                                [nodes]="flowConnectionData.flowsData.connectionDataForWidget.nodes"
-                                [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
-                                [displayAlias]="true"
-                            ></app-tile-base-widget>
-                        </div>
-                        <!-- <app-flows-table
-                            [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
-                            [filterByStatus]="filterByStatus"
-                            [onlySystemFlows]="onlySystemFlows"
-                            [searchByDataset]="searchByDataset"
-                            [searchByAccount]="searchByAccount"
-                            [tableOptions]="{
-                                displayColumns: DISPLAY_COLUMNS,
-                            }"
-                            [totalCount]="flowConnectionData.flowsData.connectionDataForTable.totalCount"
-                            [accountFlowInitiators]="flowConnectionData.flowInitiators"
-                            [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
-                            (searchByFiltersChange)="onSearchByFiltersChange($event)"
-                            (abortFlowChange)="onAbortFlow($event)"
-                        ></app-flows-table>
-                        <div class="mt-50px">
-                            <app-pagination
-                                [currentPage]="
-                                    flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1
-                                "
-                                [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
-                                (pageChangeEvent)="onPageChange($event)"
-                            ></app-pagination>
-                        </div> -->
-                    </ng-container>
-
-                    <div
-                        data-test-id="empty-block"
-                        *ngIf="!flowConnectionData.flowsData.connectionDataForWidget.nodes.length"
-                    >
-                        No flows yet in datasets belonging to this account
-                    </div>
-                </ng-template>
-            </li>
-            <li [ngbNavItem]="AccountFlowsNav.DATASETS">
-                <button ngbNavLink>Datasets</button>
-                <ng-template ngbNavContent>
-                    <div class="cards mt-4">
-                        <div class="card-custom d-flex flex-column">
-                            <div class="header completed-header"></div>
-                            <div class="card-body my-2 p-4">
-                                <span class="label label--secondary v-align-middle dataset">Dataset</span>
-                                <div class="mt-3 mb-2 d-flex flex-row gap-3 align-items-center">
-                                    <div><mat-icon class="icon-size completed-status">check_circle</mat-icon></div>
-                                    <div class="d-flex flex-column">
-                                        <div
-                                            class="dataset-list-container-title-row-dataset-name d-flex align-items-center"
-                                        >
-                                            <a [routerLink]="['/']" class="dataset-list-container-title mb-1 pl-0">
-                                                {{ " kamu/account.tokens.portfolio" }}
-                                            </a>
-                                        </div>
-
-                                        <div class="fw-500 completed-status">Active</div>
-                                    </div>
-                                </div>
-                                <div class="my-4 d-flex align-items-center justify-content-center">
-                                    <div class="d-flex flex-row gap-4">
-                                        <button
-                                            type="button"
-                                            class="badge-button border-1 bg-light border rounded-2 px-2"
-                                        >
-                                            <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>
-                                            <span class="fs-12 me-2 d-block"> Update now</span>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="badge-button border-1 bg-light border rounded-2 px-2 btn btn-sm"
-                                        >
-                                            <mat-icon class="text-muted fs-4 d-block" svgIcon="play_pause" />
-                                            <span class="fs-12 me-2 d-block">
-                                                {{ true ? "Pause" : "Resume" }}
-                                                updates</span
-                                            >
-                                        </button>
-                                        <a
-                                            [routerLink]="['/']"
-                                            class="badge-button border-1 link-underline link-underline-opacity-0 bg-light border rounded-2 px-2 btn btn-sm"
-                                        >
-                                            <mat-icon class="text-muted fs-4 d-block">settings</mat-icon>
-                                            <span class="fs-12 me-2 d-block link-settings">Settings</span>
+    <ul
+        ngbNav
+        #nav="ngbNav"
+        [(activeId)]="accountFlowsData.activeNav"
+        (navChange)="onNavChange($event)"
+        class="nav-tabs"
+    >
+        <li [ngbNavItem]="AccountFlowsNav.ACTIVITY">
+            <button ngbNavLink>Activity</button>
+            <ng-template ngbNavContent>
+                <app-account-flows-activity-subtab [accountFlowsData]="accountFlowsData" [accountName]="accountName" />
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="AccountFlowsNav.DATASETS">
+            <button ngbNavLink>Datasets</button>
+            <ng-template ngbNavContent>
+                <app-account-flows-datasets-subtab [accountName]="accountName" />
+                <div class="d-flex justify-content-end my-2">Total runs: 3</div>
+                <div class="cards mt-4">
+                    <div class="card-custom d-flex flex-column">
+                        <div class="header completed-header"></div>
+                        <div class="card-body my-2 p-4">
+                            <span class="label label--secondary v-align-middle dataset">Dataset</span>
+                            <div class="mt-3 mb-2 d-flex flex-row gap-3 align-items-center">
+                                <div><mat-icon class="icon-size completed-status">check_circle</mat-icon></div>
+                                <div class="d-flex flex-column">
+                                    <div
+                                        class="dataset-list-container-title-row-dataset-name d-flex align-items-center"
+                                    >
+                                        <a [routerLink]="['/']" class="dataset-list-container-title mb-1 pl-0">
+                                            {{ " kamu/account.tokens.portfolio" }}
                                         </a>
                                     </div>
-                                </div>
-                                <div>
-                                    <div>
-                                        <span class="fw-500">Execute transfotmation finished</span>
-                                    </div>
-                                    <div class="mt-2">
-                                        <span class="text-muted fs-12">Last attempt:  2025-10-19, 4:16:41 PM</span>
-                                    </div>
-                                    <!-- <div>
-                                        <span class="text-muted fs-12">Next planned:  2025-10-19, 4:23:41 PM</span>
-                                    </div> -->
+
+                                    <div class="fw-500 completed-status">Active</div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-custom d-flex flex-column">
-                            <div class="header failing-header"></div>
-                            <div class="card-body my-2 p-4">
-                                <span class="label label--secondary v-align-middle webhook">Webhook</span>
-                                <div class="mt-3 mb-2 d-flex flex-row gap-3 align-items-center">
-                                    <div><mat-icon class="icon-size failing-status">warning</mat-icon></div>
-                                    <div class="d-flex flex-column">
-                                        <div
-                                            class="dataset-list-container-title-row-dataset-name d-flex align-items-center"
+                            <div class="my-4 d-flex align-items-center justify-content-center">
+                                <div class="d-flex flex-row gap-4">
+                                    <button type="button" class="badge-button border-1 bg-light border rounded-2 px-2">
+                                        <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>
+                                        <span class="fs-12 me-2 d-block"> Update now</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="badge-button border-1 bg-light border rounded-2 px-2 btn btn-sm"
+                                    >
+                                        <mat-icon class="text-muted fs-4 d-block" svgIcon="play_pause" />
+                                        <span class="fs-12 me-2 d-block">
+                                            {{ true ? "Pause" : "Resume" }}
+                                            updates</span
                                         >
-                                            <a [routerLink]="['/']" class="dataset-list-container-title mb-1 pl-0">
-                                                {{ " webhook-name" }}
-                                            </a>
-                                        </div>
-
-                                        <div class="fw-500 failing-status">Failing (after 2/3 failures)</div>
-                                    </div>
+                                    </button>
+                                    <a
+                                        [routerLink]="['/']"
+                                        class="badge-button border-1 link-underline link-underline-opacity-0 bg-light border rounded-2 px-2 btn btn-sm"
+                                    >
+                                        <mat-icon class="text-muted fs-4 d-block">settings</mat-icon>
+                                        <span class="fs-12 me-2 d-block link-settings">Settings</span>
+                                    </a>
                                 </div>
-                                <div class="my-4 d-flex align-items-center justify-content-center">
-                                    <div class="d-flex flex-row gap-4">
-                                        <!-- <button
-                                            type="button"
-                                            class="badge-button border-1 bg-light border rounded-2 px-2"
-                                        >
-                                            <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>
-                                            <span class="fs-12 me-2 d-block"> Update now</span>
-                                        </button> -->
-                                        <button
-                                            type="button"
-                                            class="badge-button border-1 bg-light border rounded-2 px-2 btn btn-sm"
-                                        >
-                                            <mat-icon class="text-muted fs-4 d-block" svgIcon="play_pause" />
-                                            <span class="fs-12 me-2 d-block">
-                                                {{ true ? "Pause" : "Resume" }}
-                                                webhook</span
-                                            >
-                                        </button>
-                                        <a
-                                            [routerLink]="['/']"
-                                            class="badge-button border-1 link-underline link-underline-opacity-0 bg-light border rounded-2 px-2 btn btn-sm"
-                                        >
-                                            <mat-icon class="text-muted fs-4 d-block">settings</mat-icon>
-                                            <span class="fs-12 me-2 d-block link-settings">Edit webhook</span>
-                                        </a>
-                                    </div>
-                                </div>
+                            </div>
+                            <div>
                                 <div>
-                                    <div>
-                                        <span class="fw-500">Execute transfotmation finished</span>
-                                    </div>
-                                    <div class="mt-2">
-                                        <span class="text-muted fs-12">Last attempt:  2025-10-19, 4:16:41 PM</span>
-                                    </div>
-                                    <div>
-                                        <span class="text-muted fs-12">Next planned:  2025-10-19, 4:23:41 PM</span>
-                                    </div>
+                                    <span class="fw-500">Execute transfotmation finished</span>
+                                </div>
+                                <div class="mt-2">
+                                    <span class="text-muted fs-12">Last attempt:  2025-10-19, 4:16:41 PM</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </ng-template>
-            </li>
-        </ul>
+                    <div class="card-custom d-flex flex-column">
+                        <div class="header failing-header"></div>
+                        <div class="card-body my-2 p-4">
+                            <span class="label label--secondary v-align-middle webhook">Webhook</span>
+                            <div class="mt-3 mb-2 d-flex flex-row gap-3 align-items-center">
+                                <div><mat-icon class="icon-size failing-status">warning</mat-icon></div>
+                                <div class="d-flex flex-column">
+                                    <div
+                                        class="dataset-list-container-title-row-dataset-name d-flex align-items-center"
+                                    >
+                                        <a [routerLink]="['/']" class="dataset-list-container-title mb-1 pl-0">
+                                            {{ " webhook-name" }}
+                                        </a>
+                                    </div>
 
-        <div [ngbNavOutlet]="nav" class="mt-2"></div>
+                                    <div class="fw-500 failing-status">Failing (after 2/3 failures)</div>
+                                </div>
+                            </div>
+                            <div class="my-4 d-flex align-items-center justify-content-center">
+                                <div class="d-flex flex-row gap-4">
+                                    <button
+                                        type="button"
+                                        class="badge-button border-1 bg-light border rounded-2 px-2 btn btn-sm"
+                                    >
+                                        <mat-icon class="text-muted fs-4 d-block" svgIcon="play_pause" />
+                                        <span class="fs-12 me-2 d-block">
+                                            {{ true ? "Pause" : "Resume" }}
+                                            webhook</span
+                                        >
+                                    </button>
+                                    <a
+                                        [routerLink]="['/']"
+                                        class="badge-button border-1 link-underline link-underline-opacity-0 bg-light border rounded-2 px-2 btn btn-sm"
+                                    >
+                                        <mat-icon class="text-muted fs-4 d-block">settings</mat-icon>
+                                        <span class="fs-12 me-2 d-block link-settings">Edit webhook</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <span class="fw-500">Execute transfotmation finished</span>
+                                </div>
+                                <div class="mt-2">
+                                    <span class="text-muted fs-12">Last attempt:  2025-10-19, 4:16:41 PM</span>
+                                </div>
+                                <div>
+                                    <span class="text-muted fs-12">Next planned:  2025-10-19, 4:23:41 PM</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </li>
+    </ul>
 
-        <div class="mt-2" *ngIf="accountFlowsData.activeNav === AccountFlowsNav.ACTIVITY">
-            <ul
-                ngbNav
-                #navStatus="ngbNav"
-                [(activeId)]="accountFlowsData.flowGroup"
-                (navChange)="onNavStatusChange($event)"
-                class="nav-tabs"
-            >
-                <li [ngbNavItem]="FlowStatus.Finished">
-                    <button ngbNavLink>Finished</button>
-                    <ng-template ngbNavContent>
-                        <app-flows-table
-                            [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
-                            [filterByStatus]="filterByStatus"
-                            [onlySystemFlows]="onlySystemFlows"
-                            [searchByDataset]="searchByDataset"
-                            [searchByAccount]="searchByAccount"
-                            [tableOptions]="{
-                                displayColumns: DISPLAY_COLUMNS,
-                            }"
-                            [totalCount]="flowConnectionData.flowsData.connectionDataForTable.totalCount"
-                            [accountFlowInitiators]="flowConnectionData.flowInitiators"
-                            [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
-                            (searchByFiltersChange)="onSearchByFiltersChange($event)"
-                            (abortFlowChange)="onAbortFlow($event)"
-                        ></app-flows-table>
-                        <div class="mt-50px">
-                            <app-pagination
-                                [currentPage]="
-                                    flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1
-                                "
-                                [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
-                                (pageChangeEvent)="onPageChange($event)"
-                            ></app-pagination>
-                        </div>
-                    </ng-template>
-                </li>
-                <li [ngbNavItem]="FlowStatus.Running">
-                    <button ngbNavLink>Running</button>
-                    <ng-template ngbNavContent>
-                        <app-flows-table
-                            [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
-                            [filterByStatus]="filterByStatus"
-                            [onlySystemFlows]="onlySystemFlows"
-                            [searchByDataset]="searchByDataset"
-                            [searchByAccount]="searchByAccount"
-                            [tableOptions]="{
-                                displayColumns: DISPLAY_COLUMNS,
-                            }"
-                            [totalCount]="flowConnectionData.flowsData.connectionDataForTable.totalCount"
-                            [accountFlowInitiators]="flowConnectionData.flowInitiators"
-                            [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
-                            (searchByFiltersChange)="onSearchByFiltersChange($event)"
-                            (abortFlowChange)="onAbortFlow($event)"
-                        ></app-flows-table>
-                        <div class="mt-50px">
-                            <app-pagination
-                                [currentPage]="
-                                    flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1
-                                "
-                                [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
-                                (pageChangeEvent)="onPageChange($event)"
-                            ></app-pagination>
-                        </div>
-                    </ng-template>
-                </li>
-                <li [ngbNavItem]="FlowStatus.Waiting">
-                    <button ngbNavLink>Waiting</button>
-                    <ng-template ngbNavContent>
-                        <app-flows-table
-                            [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
-                            [filterByStatus]="filterByStatus"
-                            [onlySystemFlows]="onlySystemFlows"
-                            [searchByDataset]="searchByDataset"
-                            [searchByAccount]="searchByAccount"
-                            [tableOptions]="{
-                                displayColumns: DISPLAY_COLUMNS,
-                            }"
-                            [totalCount]="flowConnectionData.flowsData.connectionDataForTable.totalCount"
-                            [accountFlowInitiators]="flowConnectionData.flowInitiators"
-                            [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
-                            (searchByFiltersChange)="onSearchByFiltersChange($event)"
-                            (abortFlowChange)="onAbortFlow($event)"
-                        ></app-flows-table>
-                        <div class="mt-50px">
-                            <app-pagination
-                                [currentPage]="
-                                    flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1
-                                "
-                                [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
-                                (pageChangeEvent)="onPageChange($event)"
-                            ></app-pagination>
-                        </div>
-                    </ng-template>
-                </li>
-            </ul>
-
-            <div [ngbNavOutlet]="navStatus" class="mt-2"></div>
-        </div>
-    </ng-container>
-    <ng-template #loading>
-        <div class="position-relative">
-            <mat-progress-bar data-test-id="init-progress-bar" class="position-absolute" mode="indeterminate" />
-        </div>
-        <div class="text-center mt-4">Loading...</div>
-    </ng-template>
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
 </div>

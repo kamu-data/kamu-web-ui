@@ -24,6 +24,7 @@ import ProjectLinks from "src/app/project-links";
         CopyToClipboardComponent,
     ],
     templateUrl: "./rotate-secret-webhook.component.html",
+    styleUrls: ["./rotate-secret-webhook.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RotateSecretWebhookComponent implements OnInit {

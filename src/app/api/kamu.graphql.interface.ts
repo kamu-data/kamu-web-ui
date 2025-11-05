@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -4704,6 +4704,33 @@ export type AccountDatasetFlowsPausedQuery = {
     };
 };
 
+export type AccountFlowsAsCardsQueryVariables = Exact<{
+    name: Scalars["AccountName"];
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+    filters?: InputMaybe<FlowProcessFilters>;
+    ordering?: InputMaybe<FlowProcessOrdering>;
+}>;
+
+export type AccountFlowsAsCardsQuery = {
+    __typename?: "Query";
+    accounts: {
+        __typename?: "Accounts";
+        byName?: {
+            __typename?: "Account";
+            flows: {
+                __typename?: "AccountFlows";
+                processes: {
+                    __typename?: "AccountFlowProcesses";
+                    allCards: {
+                        __typename?: "AccountFlowProcessCardConnection";
+                    } & AccountFlowProcessCardConnectionDataFragment;
+                };
+            };
+        } | null;
+    };
+};
+
 export type AccountListDatasetsWithFlowsQueryVariables = Exact<{
     name: Scalars["AccountName"];
 }>;
@@ -4895,6 +4922,26 @@ export type DatasetConnectionDataFragment = {
             };
         } & DatasetBasicsFragment
     >;
+};
+
+export type AccountFlowProcessCardConnectionDataFragment = {
+    __typename?: "AccountFlowProcessCardConnection";
+    totalCount: number;
+    nodes: Array<
+        | {
+              __typename?: "DatasetFlowProcess";
+              flowType: DatasetFlowType;
+              dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+              summary: { __typename?: "FlowProcessSummary" } & FlowProcessSummaryDataFragment;
+          }
+        | {
+              __typename?: "WebhookFlowSubProcess";
+              id: string;
+              name: string;
+              summary: { __typename?: "FlowProcessSummary" } & FlowProcessSummaryDataFragment;
+          }
+    >;
+    pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
 };
 
 export type AccountWithEmailFragment = {
@@ -7829,6 +7876,63 @@ export const DatasetConnectionDataFragmentDoc = gql`
     ${FetchStepFilesGlobDataFragmentDoc}
     ${FetchStepContainerDataFragmentDoc}
 `;
+export const FlowProcessSummaryDataFragmentDoc = gql`
+    fragment FlowProcessSummaryData on FlowProcessSummary {
+        effectiveState
+        consecutiveFailures
+        lastSuccessAt
+        lastAttemptAt
+        lastFailureAt
+        nextPlannedAt
+        stopPolicy {
+            ... on FlowTriggerStopPolicyNever {
+                dummy
+            }
+            ... on FlowTriggerStopPolicyAfterConsecutiveFailures {
+                maxFailures
+            }
+        }
+        autoStoppedReason
+        autoStoppedAt
+    }
+`;
+export const DatasetPageInfoFragmentDoc = gql`
+    fragment DatasetPageInfo on PageBasedInfo {
+        hasNextPage
+        hasPreviousPage
+        currentPage
+        totalPages
+    }
+`;
+export const AccountFlowProcessCardConnectionDataFragmentDoc = gql`
+    fragment AccountFlowProcessCardConnectionData on AccountFlowProcessCardConnection {
+        nodes {
+            ... on DatasetFlowProcess {
+                flowType
+                dataset {
+                    ...DatasetBasics
+                }
+                summary {
+                    ...FlowProcessSummaryData
+                }
+            }
+            ... on WebhookFlowSubProcess {
+                id
+                name
+                summary {
+                    ...FlowProcessSummaryData
+                }
+            }
+        }
+        totalCount
+        pageInfo {
+            ...DatasetPageInfo
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+    ${FlowProcessSummaryDataFragmentDoc}
+    ${DatasetPageInfoFragmentDoc}
+`;
 export const AccountWithEmailFragmentDoc = gql`
     fragment AccountWithEmail on Account {
         id
@@ -8073,14 +8177,6 @@ export const FlowSummaryDataWithTriggerFragmentDoc = gql`
     }
     ${FlowSummaryDataFragmentDoc}
 `;
-export const DatasetPageInfoFragmentDoc = gql`
-    fragment DatasetPageInfo on PageBasedInfo {
-        hasNextPage
-        hasPreviousPage
-        currentPage
-        totalPages
-    }
-`;
 export const FlowConnectionDataFragmentDoc = gql`
     fragment FlowConnectionData on FlowConnection {
         nodes {
@@ -8278,26 +8374,6 @@ export const FlowConnectionWidgetDataFragmentDoc = gql`
         totalCount
     }
     ${FlowItemWidgetDataFragmentDoc}
-`;
-export const FlowProcessSummaryDataFragmentDoc = gql`
-    fragment FlowProcessSummaryData on FlowProcessSummary {
-        effectiveState
-        consecutiveFailures
-        lastSuccessAt
-        lastAttemptAt
-        lastFailureAt
-        nextPlannedAt
-        stopPolicy {
-            ... on FlowTriggerStopPolicyNever {
-                dummy
-            }
-            ... on FlowTriggerStopPolicyAfterConsecutiveFailures {
-                maxFailures
-            }
-        }
-        autoStoppedReason
-        autoStoppedAt
-    }
 `;
 export const AccessTokenDataFragmentDoc = gql`
     fragment AccessTokenData on ViewAccessToken {
@@ -9403,6 +9479,39 @@ export class AccountDatasetFlowsPausedGQL extends Apollo.Query<
     AccountDatasetFlowsPausedQueryVariables
 > {
     document = AccountDatasetFlowsPausedDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const AccountFlowsAsCardsDocument = gql`
+    query accountFlowsAsCards(
+        $name: AccountName!
+        $page: Int
+        $perPage: Int
+        $filters: FlowProcessFilters
+        $ordering: FlowProcessOrdering
+    ) {
+        accounts {
+            byName(name: $name) {
+                flows {
+                    processes {
+                        allCards(filters: $filters, page: $page, perPage: $perPage, ordering: $ordering) {
+                            ...AccountFlowProcessCardConnectionData
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${AccountFlowProcessCardConnectionDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class AccountFlowsAsCardsGQL extends Apollo.Query<AccountFlowsAsCardsQuery, AccountFlowsAsCardsQueryVariables> {
+    document = AccountFlowsAsCardsDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

@@ -13,6 +13,9 @@ fragment AccountFlowProcessCardConnectionData on AccountFlowProcessCardConnectio
     ... on WebhookFlowSubProcess {
       id
       name
+      parentDataset {
+        ...DatasetBasics
+      }
       summary {
         ...FlowProcessSummaryData
       }

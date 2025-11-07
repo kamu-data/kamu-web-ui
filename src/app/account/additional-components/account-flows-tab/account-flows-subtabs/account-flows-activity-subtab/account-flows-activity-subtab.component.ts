@@ -19,7 +19,11 @@ import {
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { environment } from "src/environments/environment";
 import { AccountFlowsType } from "../../resolvers/account-flows.resolver";
-import { FlowsTableData, FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
+import {
+    CancelFlowArgs,
+    FlowsTableData,
+    FlowsTableFiltersOptions,
+} from "src/app/dataset-flow/flows-table/flows-table.types";
 import { AccountService } from "src/app/account/account.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
@@ -31,6 +35,8 @@ import AppValues from "src/app/common/values/app.values";
 import { AccountFlowsNav } from "../../account-flows-tab.types";
 import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 import { AccountTabs } from "src/app/account/account.constants";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { requireValue } from "src/app/common/helpers/app.helpers";
 
 @Component({
     selector: "app-account-flows-activity-subtab",
@@ -128,6 +134,28 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
 
     public get loggedUser(): AccountFragment {
         return this.loggedUserService.currentlyLoggedInUser;
+    }
+
+    public override onAbortFlow(params: CancelFlowArgs): void {
+        const datasetId: string = requireValue(
+            params.datasetId,
+            "Aborting flows without datasetId is not supported yet",
+        );
+        this.flowsService
+            .cancelFlowRun({
+                datasetId,
+                flowId: params.flowId,
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((success: boolean) => {
+                if (success) {
+                    setTimeout(() => {
+                        this.getPageFromUrl();
+                        this.fetchTableData(this.currentPage, this.filterByStatus);
+                        this.cdr.detectChanges();
+                    }, this.TIMEOUT_REFRESH_FLOW);
+                }
+            });
     }
 
     public onNavChange(event: NgbNavChangeEvent): void {

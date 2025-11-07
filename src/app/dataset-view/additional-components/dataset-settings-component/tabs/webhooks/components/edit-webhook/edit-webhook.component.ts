@@ -75,7 +75,7 @@ export class EditWebhookComponent extends BaseComponent implements OnInit {
             })
             .subscribe((result: boolean) => {
                 if (result) {
-                    this.navigateToListWebhooks();
+                    this.location.back();
                 }
             });
     }

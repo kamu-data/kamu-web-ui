@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "apollo-angular";
+import { gql } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -4938,6 +4938,7 @@ export type AccountFlowProcessCardConnectionDataFragment = {
               __typename?: "WebhookFlowSubProcess";
               id: string;
               name: string;
+              parentDataset?: ({ __typename?: "Dataset" } & DatasetBasicsFragment) | null;
               summary: { __typename?: "FlowProcessSummary" } & FlowProcessSummaryDataFragment;
           }
     >;
@@ -7919,6 +7920,9 @@ export const AccountFlowProcessCardConnectionDataFragmentDoc = gql`
             ... on WebhookFlowSubProcess {
                 id
                 name
+                parentDataset {
+                    ...DatasetBasics
+                }
                 summary {
                     ...FlowProcessSummaryData
                 }

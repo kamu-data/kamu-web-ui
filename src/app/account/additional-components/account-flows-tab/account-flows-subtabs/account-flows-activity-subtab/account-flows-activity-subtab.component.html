@@ -72,7 +72,7 @@
                     </ng-template>
                 </li>
                 <li [ngbNavItem]="FlowStatus.Running">
-                    <button ngbNavLink>Running</button>
+                    <button ngbNavLink>Running/Retrying</button>
                     <ng-template ngbNavContent>
                         <app-flows-table
                             [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"

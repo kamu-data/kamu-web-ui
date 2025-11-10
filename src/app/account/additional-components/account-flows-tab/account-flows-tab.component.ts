@@ -13,7 +13,7 @@ import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatIconModule } from "@angular/material/icon";
-import { ActivatedRoute, ParamMap, RouterLink } from "@angular/router";
+import { ActivatedRoute, ParamMap } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
 import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 import { AccountFlowsNav } from "./account-flows-tab.types";
@@ -31,9 +31,6 @@ import { NavigationService } from "src/app/services/navigation.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
-        //-----//
-        RouterLink,
-
         //-----//
         MatIconModule,
         MatProgressBarModule,
@@ -62,12 +59,6 @@ export class AccountFlowsTabComponent {
     public get loggedUser(): AccountFragment {
         return this.loggedUserService.currentlyLoggedInUser;
     }
-
-    // public onSearchByFiltersChange(filters: MaybeNull<FlowsTableFiltersOptions>): void {
-    //     this.searchByFilters(filters);
-    //     this.searchByDataset = filters?.datasets ?? [];
-    //     this.filters = filters;
-    // }
 
     public get accountName(): string {
         const paramMap: MaybeUndefined<ParamMap> = this.activatedRoute?.parent?.parent?.snapshot.paramMap;

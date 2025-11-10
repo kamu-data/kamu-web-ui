@@ -77,6 +77,17 @@
             </div>
 
             <ng-container *ngIf="flowConnectionData">
+                <app-flow-table-panel-filters
+                    [accountFlowInitiators]="flowConnectionData.flowInitiators"
+                    [onlySystemFlows]="onlySystemFlows"
+                    [hasDatasetColumn]="false"
+                    [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
+                    [selectedDatasetItems]="selectedDatasetItems"
+                    [selectedAccountItems]="selectedAccountItems"
+                    [selectedStatusItems]="selectedStatusItems"
+                    (searchByFiltersChange)="onSearchByFiltersChange($event)"
+                    (resetFiltersChange)="onResetFilters()"
+                />
                 <app-flows-table
                     [nodes]="
                         flowsSelectionState.webhookFilterButtons.length && !flowsSelectionState.webhooksIds.length
@@ -96,7 +107,6 @@
                             ? 0
                             : flowConnectionData.flowsData.connectionDataForTable.totalCount
                     "
-                    (searchByFiltersChange)="onSearchByFiltersChange($event)"
                     (abortFlowChange)="onAbortFlow($event)"
                 />
                 <div class="mt-50px">

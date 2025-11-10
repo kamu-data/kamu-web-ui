@@ -54,7 +54,6 @@ describe("FlowsTableComponent", () => {
             displayColumns: ["description", "information", "creator", "options"],
         };
         component.involvedDatasets = mockDatasets;
-        component.dropdownDatasetList = mockDatasets;
 
         component.accountFlowInitiators = mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators
             .nodes as Account[];
@@ -139,18 +138,6 @@ describe("FlowsTableComponent", () => {
                 message: "Do you want to abort this flow?",
             }),
         );
-    });
-
-    it("should check search method", () => {
-        const searchByFiltersChangeSpy = spyOn(component.searchByFiltersChange, "emit");
-        component.onSearch();
-        expect(searchByFiltersChangeSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it("should check reset filters", () => {
-        const searchByFiltersChangeSpy = spyOn(component.searchByFiltersChange, "emit");
-        component.onResetFilters();
-        expect(searchByFiltersChangeSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check show use-force link", () => {

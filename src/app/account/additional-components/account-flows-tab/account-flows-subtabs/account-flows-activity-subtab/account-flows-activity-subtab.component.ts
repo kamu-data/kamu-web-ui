@@ -21,6 +21,7 @@ import { environment } from "src/environments/environment";
 import { AccountFlowsType } from "../../resolvers/account-flows.resolver";
 import {
     CancelFlowArgs,
+    FilterStatusType,
     FlowsTableData,
     FlowsTableFiltersOptions,
 } from "src/app/dataset-flow/flows-table/flows-table.types";
@@ -37,6 +38,7 @@ import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 import { AccountTabs } from "src/app/account/account.constants";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { requireValue } from "src/app/common/helpers/app.helpers";
+import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table/components/flow-table-panel-filters/flow-table-panel-filters.component";
 
 @Component({
     selector: "app-account-flows-activity-subtab",
@@ -54,6 +56,7 @@ import { requireValue } from "src/app/common/helpers/app.helpers";
         //-----//
         TileBaseWidgetComponent,
         FlowsTableComponent,
+        FlowTablePanelFiltersComponent,
         PaginationComponent,
     ],
     templateUrl: "./account-flows-activity-subtab.component.html",
@@ -68,6 +71,10 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
         allFlowsPaused?: MaybeUndefined<boolean>;
         flowInitiators: AccountFragment[];
     }>;
+
+    public selectedDatasetItems: DatasetBasicsFragment[] = [];
+    public selectedAccountItems: AccountFragment[] = [];
+    public selectedStatusItems: FilterStatusType[] = [];
 
     public readonly DISPLAY_COLUMNS = ["description", "information", "creator", "dataset", "options"];
     public nodes: FlowSummaryDataFragment[] = [];
@@ -208,5 +215,15 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
         this.searchByFilters(filters);
         this.searchByDataset = filters?.datasets ?? [];
         this.filters = filters;
+        if (filters) {
+            this.selectedAccountItems = filters.accounts;
+            this.selectedDatasetItems = filters.datasets;
+        }
+    }
+
+    public onResetFilters(): void {
+        this.selectedDatasetItems = [];
+        this.selectedAccountItems = [];
+        this.selectedStatusItems = [];
     }
 }

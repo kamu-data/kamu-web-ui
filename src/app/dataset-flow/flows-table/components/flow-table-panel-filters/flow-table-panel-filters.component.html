@@ -1,0 +1,50 @@
+<div class="mt-4 d-flex">
+    <div class="w-250px">
+        <angular2-multiselect
+            [settings]="filterAccountSettings"
+            [data]="dropdownAccountList"
+            [(ngModel)]="selectedAccountItems"
+        />
+    </div>
+
+    <div class="ms-4" *ngIf="hasDatasetColumn">
+        <angular2-multiselect
+            [settings]="FILTER_DATASET_SETTINGS"
+            [data]="dropdownDatasetList"
+            [(ngModel)]="selectedDatasetItems"
+        />
+    </div>
+
+    <div class="ms-4" *ngIf="!hasDatasetColumn">
+        <angular2-multiselect
+            [settings]="FILTER_STATUS_SETTINGS"
+            [data]="dropdownStatustList"
+            [(ngModel)]="selectedStatusItems"
+        />
+    </div>
+
+    <div class="d-flex ms-4 align-items-center">
+        <button
+            type="button"
+            class="border-1 bg-light border search-creator-button rounded-2 ps-2 pe-4 btn btn-sm d-flex justify-content-between align-items-center"
+            (click)="onSearch()"
+        >
+            <mat-icon class="fs-4 search-creator-icon d-block me-2">search</mat-icon>
+            <span class="d-block">Search</span>
+        </button>
+
+        <a (click)="onResetFilters()" class="ms-4"> Reset filters </a>
+    </div>
+</div>
+
+<div class="d-flex flex-row justify-content-between align-items-center">
+    <div class="form-check my-3 d-flex gap-2">
+        <input
+            class="form-check-input"
+            type="checkbox"
+            [(ngModel)]="onlySystemFlows"
+            [attr.data-test-id]="'only-system-flow'"
+        />
+        <label class="form-check-label"> Only system flows </label>
+    </div>
+</div>

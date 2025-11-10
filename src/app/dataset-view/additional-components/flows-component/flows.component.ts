@@ -7,6 +7,8 @@
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import {
+    AccountFragment,
+    DatasetBasicsFragment,
     DatasetFlowProcesses,
     DatasetFlowType,
     DatasetKind,
@@ -22,7 +24,7 @@ import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { environment } from "src/environments/environment";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
-import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
+import { FilterStatusType, FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
 import ProjectLinks from "src/app/project-links";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
@@ -54,6 +56,7 @@ import { DatasetWebhooksService } from "../dataset-settings-component/tabs/webho
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { FlowsSelectionStateService } from "./services/flows-selection-state.service";
+import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table/components/flow-table-panel-filters/flow-table-panel-filters.component";
 @Component({
     selector: "app-flows",
     templateUrl: "./flows.component.html",
@@ -83,6 +86,7 @@ import { FlowsSelectionStateService } from "./services/flows-selection-state.ser
         FlowsBlockActionsComponent,
         FlowsBadgePanelComponent,
         FlowsAssociatedChannelsComponent,
+        FlowTablePanelFiltersComponent,
         TileBaseWidgetComponent,
         PaginationComponent,
     ],
@@ -105,6 +109,10 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             ? this.flowsSelectionStateService.setWebhooksCategory(value)
             : this.flowsSelectionStateService.setFlowsCategory(value);
     }
+
+    public selectedDatasetItems: DatasetBasicsFragment[] = [];
+    public selectedAccountItems: AccountFragment[] = [];
+    public selectedStatusItems: FilterStatusType[] = [];
 
     private datasetWebhooksService = inject(DatasetWebhooksService);
     private modalService = inject(ModalService);
@@ -423,9 +431,18 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public onSearchByFiltersChange(filters: MaybeNull<FlowsTableFiltersOptions>): void {
+        if (filters && filters.status) {
+            this.selectedStatusItems = [{ id: filters.status, status: filters.status }];
+        }
         if (!filters) {
             this.searchByAccount = [];
         }
         this.searchByFilters(filters);
+    }
+
+    public onResetFilters(): void {
+        this.selectedDatasetItems = [];
+        this.selectedAccountItems = [];
+        this.selectedStatusItems = [];
     }
 }

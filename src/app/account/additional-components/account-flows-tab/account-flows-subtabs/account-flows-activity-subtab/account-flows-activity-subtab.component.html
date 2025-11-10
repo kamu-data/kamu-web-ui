@@ -33,6 +33,19 @@
                 [displayAlias]="true"
             ></app-tile-base-widget>
         </div>
+        <div>
+            <app-flow-table-panel-filters
+                [accountFlowInitiators]="flowConnectionData.flowInitiators"
+                [onlySystemFlows]="onlySystemFlows"
+                [hasDatasetColumn]="true"
+                [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
+                [selectedDatasetItems]="selectedDatasetItems"
+                [selectedAccountItems]="selectedAccountItems"
+                [selectedStatusItems]="selectedStatusItems"
+                (searchByFiltersChange)="onSearchByFiltersChange($event)"
+                (resetFiltersChange)="onResetFilters()"
+            />
+        </div>
 
         <div class="mt-2">
             <ul
@@ -57,7 +70,6 @@
                             [totalCount]="flowConnectionData.flowsData.connectionDataForTable.totalCount"
                             [accountFlowInitiators]="flowConnectionData.flowInitiators"
                             [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
-                            (searchByFiltersChange)="onSearchByFiltersChange($event)"
                             (abortFlowChange)="onAbortFlow($event)"
                         ></app-flows-table>
                         <div class="mt-50px">

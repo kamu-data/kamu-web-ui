@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, NgZone, OnInit } from "@angular/core";
-import { AsyncPipe, NgClass, NgFor, NgIf } from "@angular/common";
+import { AsyncPipe, DatePipe, NgClass, NgFor, NgIf } from "@angular/common";
 import { AccountService } from "src/app/account/account.service";
 import { Observable, of, switchMap, take, timer } from "rxjs";
 import {
@@ -46,6 +46,7 @@ import { DatasetWebhooksService } from "src/app/dataset-view/additional-componen
     imports: [
         //-----//
         AsyncPipe,
+        DatePipe,
         NgIf,
         NgFor,
         NgClass,
@@ -74,6 +75,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
 
     public accountFlowsCardsData$: Observable<AccountFlowProcessCardConnectionDataFragment>;
     public currentPage: number = 1;
+    public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
     private readonly CARDS_FLOW_RUNS_PER_PAGE: number = 10;
     private readonly TIMEOUT_REFRESH_FLOW = AppValues.TIMEOUT_REFRESH_FLOW_MS;

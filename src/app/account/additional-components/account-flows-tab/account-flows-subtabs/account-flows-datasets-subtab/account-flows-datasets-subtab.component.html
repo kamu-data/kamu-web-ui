@@ -156,12 +156,12 @@
 
                             <div class="mt-2">
                                 <span class="text-muted fs-12" *ngIf="card.summary.lastSuccessAt"
-                                    >Last success: {{ card.summary.lastSuccessAt }}</span
+                                    >Last success: {{ card.summary.lastSuccessAt | date: DISPLAY_TIME_FORMAT }}</span
                                 >
                             </div>
                             <div>
                                 <span class="text-muted fs-12" *ngIf="card.summary.lastFailureAt"
-                                    >Last failure:: {{ card.summary.lastFailureAt }}</span
+                                    >Last failure:: {{ card.summary.lastFailureAt | date: DISPLAY_TIME_FORMAT }}</span
                                 >
                             </div>
                         </div>

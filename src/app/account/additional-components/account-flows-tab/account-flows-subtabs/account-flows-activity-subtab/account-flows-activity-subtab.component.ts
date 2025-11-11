@@ -226,4 +226,10 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
         this.selectedAccountItems = [];
         this.selectedStatusItems = [];
     }
+
+    public refreshNow(): void {
+        this.getPageFromUrl();
+        this.fetchTableData(this.currentPage, this.filterByStatus);
+        this.cdr.detectChanges();
+    }
 }

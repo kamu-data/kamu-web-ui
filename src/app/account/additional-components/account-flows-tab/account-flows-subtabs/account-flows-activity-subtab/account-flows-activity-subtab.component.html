@@ -19,11 +19,11 @@
                 {{ flowConnectionData.allFlowsPaused ? "Resume" : "Pause" }} account flows
             </button>
             <button
-                (click)="refreshFlow()"
+                (click)="refreshNow()"
                 class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
             >
                 <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>
-                <span class="fs-12 me-2 d-block"> Refresh flow</span>
+                <span class="fs-12 me-2 d-block"> Refresh now</span>
             </button>
         </div>
         <div class="search-result-container__content my-4">

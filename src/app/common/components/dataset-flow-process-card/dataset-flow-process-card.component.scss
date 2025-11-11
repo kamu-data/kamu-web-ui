@@ -1,21 +1,15 @@
-.cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 450px);
-    gap: 25px;
-    justify-content: center;
+.header {
+    height: 10px;
+    width: inherit;
+    border-radius: 6px 6px 0 0;
 }
 
-.card-custom {
-    width: 450px;
-    background: #f3f3f3;
-    border-radius: 6px;
-    display: flex;
-    box-sizing: border-box;
-    border: 1px solid #dedede;
+.card-body {
+    padding-left: 30px;
 }
 
-.webhook {
-    background: #efd4dc;
+.dataset {
+    background: #bddef1;
 }
 
 .icon-size {

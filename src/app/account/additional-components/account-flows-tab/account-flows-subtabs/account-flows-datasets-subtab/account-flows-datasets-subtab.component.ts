@@ -8,7 +8,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, NgZone, OnInit } from "@angular/core";
 import { AsyncPipe, DatePipe, NgClass, NgFor, NgIf } from "@angular/common";
 import { AccountService } from "src/app/account/account.service";
-import { Observable, of, switchMap, take, timer } from "rxjs";
+import { Observable, of, switchMap, take, tap, timer } from "rxjs";
 import {
     AccountFlowProcessCardConnectionDataFragment,
     DatasetBasicsFragment,
@@ -39,6 +39,7 @@ import {
 } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
+import { DatasetFlowProcessCardComponent } from "src/app/common/components/dataset-flow-process-card/dataset-flow-process-card.component";
 
 @Component({
     selector: "app-account-flows-datasets-subtab",
@@ -56,6 +57,7 @@ import { DatasetWebhooksService } from "src/app/dataset-view/additional-componen
         MatIconModule,
 
         //-----//
+        DatasetFlowProcessCardComponent,
         PaginationComponent,
     ],
     templateUrl: "./account-flows-datasets-subtab.component.html",
@@ -77,13 +79,12 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     public currentPage: number = 1;
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
-    private readonly CARDS_FLOW_RUNS_PER_PAGE: number = 10;
+    private readonly CARDS_FLOW_PROCESSES_PER_PAGE: number = 9;
     private readonly TIMEOUT_REFRESH_FLOW = AppValues.TIMEOUT_REFRESH_FLOW_MS;
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
     public ngOnInit(): void {
-        this.getPageFromUrl();
-        this.fetchCardsData(this.currentPage);
+        this.fetchCardsData();
     }
 
     public getPageFromUrl(): void {
@@ -126,20 +127,23 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         result$.pipe(take(1)).subscribe((result: boolean) => {
             if (result) {
                 setTimeout(() => {
-                    this.fetchCardsData(this.currentPage);
-                    this.cdr.checkNoChanges();
+                    this.fetchCardsData();
+                    this.cdr.detectChanges();
                 }, this.TIMEOUT_REFRESH_FLOW);
             }
         });
     }
 
-    public fetchCardsData(page: number): void {
+    public fetchCardsData(): void {
         this.accountFlowsCardsData$ = timer(0, environment.delay_polling_ms).pipe(
+            tap(() => {
+                this.getPageFromUrl();
+            }),
             switchMap(() =>
                 this.accountService.getAccountFlowsAsCards({
                     accountName: this.accountName,
-                    page: page - 1,
-                    perPage: this.CARDS_FLOW_RUNS_PER_PAGE,
+                    page: this.currentPage - 1,
+                    perPage: this.CARDS_FLOW_PROCESSES_PER_PAGE,
                     filters: { effectiveStateIn: [] },
                     ordering: { field: FlowProcessOrderField.EffectiveState, direction: OrderingDirection.Asc },
                 }),
@@ -167,8 +171,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
                 ),
             );
         }
-        this.currentPage = page;
-        this.fetchCardsData(this.currentPage);
+        this.fetchCardsData();
     }
 
     public get pauseableStates(): FlowProcessEffectiveState[] {
@@ -198,21 +201,24 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         });
     }
 
-    public toggleStateDatasetCard(state: FlowProcessEffectiveState, datasetBasics: DatasetBasicsFragment): void {
+    public toggleStateDatasetCard(params: {
+        state: FlowProcessEffectiveState;
+        datasetBasics: DatasetBasicsFragment;
+    }): void {
         let operation$: Observable<void> = of();
-        if (state === FlowProcessEffectiveState.Active) {
+        if (params.state === FlowProcessEffectiveState.Active) {
             operation$ = this.flowsService.datasetPauseFlows({
-                datasetId: datasetBasics.id,
+                datasetId: params.datasetBasics.id,
             });
         } else {
             operation$ = this.flowsService.datasetResumeFlows({
-                datasetId: datasetBasics.id,
+                datasetId: params.datasetBasics.id,
             });
         }
 
         operation$.pipe(take(1)).subscribe(() => {
             setTimeout(() => {
-                this.fetchCardsData(this.currentPage);
+                this.fetchCardsData();
                 this.cdr.detectChanges();
             }, this.TIMEOUT_REFRESH_FLOW);
         });
@@ -220,5 +226,10 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
 
     public flowProcessEffectiveStateMapper(state: FlowProcessEffectiveState): string {
         return webhooksStateMapper[state];
+    }
+
+    public refreshNow(): void {
+        this.fetchCardsData();
+        this.cdr.detectChanges();
     }
 }

@@ -159,7 +159,7 @@ export class NavigationService {
     ): void {
         promiseWithCatch(
             this.router.navigate([ownerName, ProjectLinks.URL_ACCOUNT_SELECT, tab], {
-                queryParams: { page, nav, status },
+                queryParams: { nav, status, page },
             }),
         );
     }

@@ -67,6 +67,6 @@ export class AccountFlowsTabComponent {
 
     public onNavChange(event: NgbNavChangeEvent): void {
         const nextNav = event.nextId as AccountFlowsNav;
-        this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.FLOWS, undefined, nextNav);
+        this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.FLOWS, undefined, nextNav, undefined);
     }
 }

@@ -82,6 +82,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
     public ngOnInit(): void {
+        this.getPageFromUrl();
         this.fetchCardsData(this.currentPage);
     }
 

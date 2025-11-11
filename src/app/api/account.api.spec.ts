@@ -17,6 +17,8 @@ import {
     AccountDatasetFlowsPausedDocument,
     AccountDatasetFlowsPausedQuery,
     AccountFlowFilters,
+    AccountFlowsAsCardsDocument,
+    AccountFlowsAsCardsQuery,
     AccountFragment,
     AccountListDatasetsWithFlowsDocument,
     AccountListDatasetsWithFlowsQuery,
@@ -34,10 +36,14 @@ import {
     ChangeAdminPasswordMutation,
     ChangeUserPasswordDocument,
     ChangeUserPasswordMutation,
+    DatasetFlowProcess,
+    DatasetFlowType,
     DeleteAccountByNameDocument,
     DeleteAccountByNameMutation,
     FlowConnectionDataFragment,
+    FlowProcessOrderField,
     ModifyPasswordSuccess,
+    OrderingDirection,
 } from "./kamu.graphql.interface";
 import { TEST_ACCOUNT_EMAIL, TEST_LOGIN, mockAccountDetails } from "./mock/auth.mock";
 import { first } from "rxjs";
@@ -47,6 +53,7 @@ import {
     mockAccountByNameResponse,
     mockAccountChangeEmailMutationSuccess,
     mockAccountDatasetFlowsPausedQuery,
+    mockAccountFlowsAsCardsQuery,
     mockAccountListDatasetsWithFlowsQuery,
     mockAccountListFlowsQuery,
     mockAccountPauseFlowsMutationSuccess,
@@ -315,6 +322,31 @@ describe("AccountApi", () => {
 
         op.flush({
             data: mockChangeUserPasswordMutation,
+        });
+    });
+
+    it("should check account flows cards", () => {
+        service
+            .fetchAccountFlowsAsCards({
+                accountName: ACCOUNT_NAME,
+                page: PAGE,
+                perPage: PER_PAGE,
+                filters: { effectiveStateIn: [] },
+                ordering: { direction: OrderingDirection.Asc, field: FlowProcessOrderField.EffectiveState },
+            })
+            .subscribe((result: AccountFlowsAsCardsQuery) => {
+                expect(result.accounts.byName?.flows.processes.allCards.nodes.length).toEqual(
+                    mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes.allCards.nodes.length,
+                );
+                expect(
+                    (result.accounts.byName?.flows.processes.allCards.nodes[0] as DatasetFlowProcess).flowType,
+                ).toEqual(DatasetFlowType.Ingest);
+            });
+        const op = controller.expectOne(AccountFlowsAsCardsDocument);
+        expect(op.operation.variables.name).toEqual(ACCOUNT_NAME);
+
+        op.flush({
+            data: mockAccountFlowsAsCardsQuery,
         });
     });
 });

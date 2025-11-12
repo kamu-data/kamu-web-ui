@@ -51,7 +51,7 @@
             <ul
                 ngbNav
                 #navStatus="ngbNav"
-                [(activeId)]="accountFlowsData.flowGroup"
+                [(activeId)]="accountFlowsData.flowGroup[0]"
                 (navChange)="onNavStatusChange($event)"
                 class="nav-tabs"
             >

@@ -29,7 +29,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     protected readonly navigationService = inject(NavigationService);
     protected readonly cdr = inject(ChangeDetectorRef);
 
-    protected filterByStatus: MaybeNull<FlowStatus> = FlowStatus.Finished;
+    protected filterByStatus: MaybeNull<FlowStatus[]> = [FlowStatus.Finished];
     public onlySystemFlows = false;
     public searchByAccount: AccountFragment[] = [];
     public currentPage = 1;
@@ -38,7 +38,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
 
     protected abstract fetchTableData(
         page: number,
-        filterByStatus?: MaybeNull<FlowStatus>,
+        filterByStatus?: MaybeNull<FlowStatus[]>,
         filterByInitiator?: MaybeNull<InitiatorFilterInput>,
         datasetsIds?: string[],
     ): void;
@@ -78,7 +78,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     }
 
     protected searchByFilters(filters: MaybeNull<FlowsTableFiltersOptions>): void {
-        this.filterByStatus = filters?.status ?? null;
+        this.filterByStatus = filters?.status?.length ? filters.status : null;
         this.onlySystemFlows = filters?.onlySystemFlows ?? false;
         this.searchByAccount = filters?.accounts ?? [];
         if (!filters) {

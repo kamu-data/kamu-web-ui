@@ -78,7 +78,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         component.accountName = MOCK_ACCOUNT_NAME;
         component.accountFlowsData = {
             activeNav: AccountFlowsNav.DATASETS,
-            flowGroup: FlowStatus.Finished,
+            flowGroup: [FlowStatus.Finished],
         };
         getAccountFlowsAsCardsSpy = spyOn(accountService, "getAccountFlowsAsCards").and.returnValue(
             of(

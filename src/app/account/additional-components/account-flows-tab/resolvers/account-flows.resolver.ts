@@ -12,16 +12,15 @@ import { FlowStatus } from "src/app/api/kamu.graphql.interface";
 
 export interface AccountFlowsType {
     activeNav: AccountFlowsNav;
-    flowGroup: FlowStatus;
+    flowGroup: FlowStatus[];
 }
 
 export const accountFlowsResolverFn: ResolveFn<AccountFlowsType> = (route: ActivatedRouteSnapshot) => {
     const activeNav =
         (route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_ACCOUNT_NAV) as AccountFlowsNav) ??
         AccountFlowsNav.ACTIVITY;
-    const flowGroup =
-        (route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS) as FlowStatus) ??
-        FlowStatus.Finished;
+    const currentNav = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS);
+    const flowGroup = currentNav ? (currentNav.split(",") as FlowStatus[]) : [FlowStatus.Finished];
 
     return {
         activeNav,

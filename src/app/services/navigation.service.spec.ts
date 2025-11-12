@@ -97,13 +97,9 @@ describe("NavigationService", () => {
         const mockOwnerName = "Mock name";
         const testPage = 2;
         const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
-        service.navigateToOwnerView(
-            mockOwnerName,
-            AccountTabs.DATASETS,
-            testPage,
-            AccountFlowsNav.ACTIVITY,
+        service.navigateToOwnerView(mockOwnerName, AccountTabs.DATASETS, testPage, AccountFlowsNav.ACTIVITY, [
             FlowStatus.Finished,
-        );
+        ]);
         expect(routerSpy).toHaveBeenCalledWith([mockOwnerName, ProjectLinks.URL_ACCOUNT_SELECT, AccountTabs.DATASETS], {
             queryParams: { page: testPage, nav: AccountFlowsNav.ACTIVITY, status: FlowStatus.Finished },
         });

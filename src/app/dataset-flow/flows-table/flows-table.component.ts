@@ -83,7 +83,7 @@ import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 })
 export class FlowsTableComponent extends BaseComponent implements OnInit, OnChanges {
     @Input({ required: true }) public nodes: FlowSummaryDataWithTriggerFragment[];
-    @Input({ required: true }) public filterByStatus: MaybeNull<FlowStatus>;
+    @Input({ required: true }) public filterByStatus: MaybeNull<FlowStatus[]>;
     @Input({ required: true }) public onlySystemFlows: boolean;
     @Input({ required: true }) public searchByAccount: AccountFragment[] = [];
     @Input() public searchByDataset: DatasetBasicsFragment[] = [];

@@ -155,11 +155,11 @@ export class NavigationService {
         tab?: AccountTabs,
         page?: number,
         nav?: AccountFlowsNav,
-        status?: FlowStatus,
+        status?: FlowStatus[],
     ): void {
         promiseWithCatch(
             this.router.navigate([ownerName, ProjectLinks.URL_ACCOUNT_SELECT, tab], {
-                queryParams: { nav, status, page },
+                queryParams: { nav, status: status?.join(","), page },
             }),
         );
     }

@@ -66,7 +66,7 @@ describe("AccountFlowsActivitySubtabComponent", () => {
         component.accountName = MOCK_ACCOUNT_NAME;
         component.accountFlowsData = {
             activeNav: AccountFlowsNav.DATASETS,
-            flowGroup: FlowStatus.Finished,
+            flowGroup: [FlowStatus.Finished],
         };
         spyOn(accountService, "accountAllFlowsPaused").and.returnValue(of(false));
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
@@ -148,7 +148,7 @@ describe("AccountFlowsActivitySubtabComponent", () => {
         const filterOptions: FlowsTableFiltersOptions = {
             accounts: mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators.nodes as Account[],
             datasets: mockDatasets,
-            status: FlowStatus.Finished,
+            status: [FlowStatus.Finished],
             onlySystemFlows: false,
         };
         const { accounts, datasets, status } = filterOptions;
@@ -169,7 +169,7 @@ describe("AccountFlowsActivitySubtabComponent", () => {
         const filterOptions: FlowsTableFiltersOptions = {
             accounts: [],
             datasets: [],
-            status: FlowStatus.Finished,
+            status: [FlowStatus.Finished],
             onlySystemFlows: true,
         };
         const { status } = filterOptions;

@@ -97,7 +97,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
 
     public fetchTableData(
         page: number,
-        filterByStatus?: MaybeNull<FlowStatus>,
+        filterByStatus?: MaybeNull<FlowStatus[]>,
         filterByInitiator?: MaybeNull<InitiatorFilterInput>,
         datasetsIds?: string[],
     ): void {
@@ -172,7 +172,8 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
     }
 
     public onNavStatusChange(event: NgbNavChangeEvent): void {
-        const nextNav = event.nextId as FlowStatus;
+        const currentNav = event.nextId as FlowStatus;
+        const nextNav = currentNav === FlowStatus.Running ? [FlowStatus.Running, FlowStatus.Retrying] : [currentNav];
         const initialPage = 1;
         this.filterByStatus = nextNav;
         this.navigationService.navigateToOwnerView(
@@ -183,6 +184,17 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             nextNav,
         );
         this.fetchTableData(initialPage, this.filterByStatus);
+        // const nextNav = event.nextId as FlowStatus;
+        // const initialPage = 1;
+        // this.filterByStatus = nextNav;
+        // this.navigationService.navigateToOwnerView(
+        //     this.accountName,
+        //     AccountTabs.FLOWS,
+        //     undefined,
+        //     this.accountFlowsData.activeNav,
+        //     nextNav,
+        // );
+        // this.fetchTableData(initialPage, this.filterByStatus);
     }
 
     public onPageChange(page: number): void {

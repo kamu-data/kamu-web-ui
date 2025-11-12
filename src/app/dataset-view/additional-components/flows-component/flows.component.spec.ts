@@ -510,7 +510,7 @@ describe("FlowsComponent", () => {
         const filters = {
             accounts: [mockAccountDetails],
             datasets: mockDatasets,
-            status: FlowStatus.Finished,
+            status: [FlowStatus.Finished],
             onlySystemFlows: false,
         };
         component.onSearchByFiltersChange(filters);

@@ -74,9 +74,9 @@ export class FlowTablePanelFiltersComponent implements OnInit {
             status:
                 !this.selectedStatusItems.length || this.selectedStatusItems[0].status === "All"
                     ? this.hasDatasetColumn
-                        ? FlowStatus.Finished
+                        ? [FlowStatus.Finished]
                         : null
-                    : (this.selectedStatusItems[0].status.toUpperCase() as FlowStatus),
+                    : [this.selectedStatusItems[0].status.toUpperCase() as FlowStatus],
             onlySystemFlows: this.onlySystemFlows,
         });
     }
@@ -85,7 +85,7 @@ export class FlowTablePanelFiltersComponent implements OnInit {
         this.searchByFiltersChange.emit({
             accounts: [],
             datasets: [],
-            status: this.hasDatasetColumn ? FlowStatus.Finished : null,
+            status: this.hasDatasetColumn ? [FlowStatus.Finished] : null,
             onlySystemFlows: false,
         });
         this.resetFiltersChange.emit();

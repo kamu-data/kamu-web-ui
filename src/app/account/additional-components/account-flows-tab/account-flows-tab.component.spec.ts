@@ -59,7 +59,7 @@ describe("AccountFlowsTabComponent", () => {
         component = fixture.componentInstance;
         component.accountFlowsData = {
             activeNav: AccountFlowsNav.ACTIVITY,
-            flowGroup: FlowStatus.Finished,
+            flowGroup: [FlowStatus.Finished],
         };
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
     });

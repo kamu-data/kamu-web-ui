@@ -162,7 +162,7 @@ export type AccountFlowFilters = {
     byDatasetIds: Array<Scalars["DatasetID"]>;
     byInitiator?: InputMaybe<InitiatorFilterInput>;
     byProcessType?: InputMaybe<FlowProcessTypeFilterInput>;
-    byStatus?: InputMaybe<FlowStatus>;
+    byStatus?: InputMaybe<Array<FlowStatus>>;
 };
 
 export type AccountFlowProcessCard = DatasetFlowProcess | WebhookFlowSubProcess;
@@ -1125,7 +1125,7 @@ export type Dataset = {
     role?: Maybe<DatasetAccessRole>;
     /** Returns the visibility of dataset */
     visibility: DatasetVisibilityOutput;
-    /** Access to the dataset's webhooks management functionality */
+    /** Access to the dataset's webhook management functionality */
     webhooks: DatasetWebhooks;
 };
 
@@ -1306,7 +1306,7 @@ export type DatasetFlowConfigsMutSetIngestConfigArgs = {
 export type DatasetFlowFilters = {
     byInitiator?: InputMaybe<InitiatorFilterInput>;
     byProcessType?: InputMaybe<FlowProcessTypeFilterInput>;
-    byStatus?: InputMaybe<FlowStatus>;
+    byStatus?: InputMaybe<Array<FlowStatus>>;
 };
 
 export type DatasetFlowProcess = {
@@ -1671,7 +1671,7 @@ export type Datasets = {
     byIds: Array<Dataset>;
     /** Returns dataset by its owner and name */
     byOwnerAndName?: Maybe<Dataset>;
-    /** Returns a dataset by a ID or alias, if found */
+    /** Returns a dataset by an ID or alias, if found */
     byRef?: Maybe<Dataset>;
     /** Returns multiple datasets by their IDs or aliases */
     byRefs: Array<Dataset>;
@@ -1726,7 +1726,7 @@ export type DatasetsMut = {
     createCollection: CreateDatasetFromSnapshotResult;
     /** Creates a new empty dataset */
     createEmpty: CreateDatasetResult;
-    /** Creates a new dataset from provided DatasetSnapshot manifest */
+    /** Creates a new dataset from provided snapshot manifest */
     createFromSnapshot: CreateDatasetFromSnapshotResult;
     /**
      * Creates new versioned file dataset.

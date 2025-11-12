@@ -38,7 +38,7 @@ export interface FlowsTableOptions {
 export interface FlowsTableFiltersOptions {
     accounts: AccountFragment[];
     datasets: DatasetBasicsFragment[];
-    status: MaybeNull<FlowStatus>;
+    status: MaybeNull<FlowStatus[]>;
     onlySystemFlows: boolean;
 }
 

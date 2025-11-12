@@ -149,7 +149,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     public fetchTableData(
         page: number,
-        filterByStatus?: MaybeNull<FlowStatus>,
+        filterByStatus?: MaybeNull<FlowStatus[]>,
         filterByInitiator?: MaybeNull<InitiatorFilterInput>,
     ): void {
         this.flowConnectionData$ = timer(0, environment.delay_polling_ms).pipe(
@@ -434,8 +434,8 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public onSearchByFiltersChange(filters: MaybeNull<FlowsTableFiltersOptions>): void {
-        if (filters && filters.status) {
-            this.selectedStatusItems = [{ id: filters.status, status: filters.status }];
+        if (filters && filters.status?.length) {
+            this.selectedStatusItems = [{ id: filters.status[0], status: filters.status[0] }];
         }
         if (!filters) {
             this.searchByAccount = [];

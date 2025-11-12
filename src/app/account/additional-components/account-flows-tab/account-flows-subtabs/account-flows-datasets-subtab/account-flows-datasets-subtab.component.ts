@@ -79,7 +79,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     public currentPage: number = 1;
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
-    private readonly CARDS_FLOW_PROCESSES_PER_PAGE: number = 9;
+    private readonly CARDS_FLOW_PROCESSES_PER_PAGE: number = 2;
     private readonly TIMEOUT_REFRESH_FLOW = AppValues.TIMEOUT_REFRESH_FLOW_MS;
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
@@ -144,11 +144,20 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
                     accountName: this.accountName,
                     page: this.currentPage - 1,
                     perPage: this.CARDS_FLOW_PROCESSES_PER_PAGE,
-                    filters: { effectiveStateIn: [] },
+                    filters: { effectiveStateIn: this.initialProcessFilters },
                     ordering: { field: FlowProcessOrderField.EffectiveState, direction: OrderingDirection.Asc },
                 }),
             ),
         );
+    }
+
+    private get initialProcessFilters(): FlowProcessEffectiveState[] {
+        return [
+            FlowProcessEffectiveState.Active,
+            FlowProcessEffectiveState.Failing,
+            FlowProcessEffectiveState.PausedManual,
+            FlowProcessEffectiveState.StoppedAuto,
+        ];
     }
 
     public onPageChange(page: number): void {
@@ -171,6 +180,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
                 ),
             );
         }
+        this.currentPage = page;
         this.fetchCardsData();
     }
 
@@ -206,7 +216,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         datasetBasics: DatasetBasicsFragment;
     }): void {
         let operation$: Observable<void> = of();
-        if (params.state === FlowProcessEffectiveState.Active) {
+        if ([FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing].includes(params.state)) {
             operation$ = this.flowsService.datasetPauseFlows({
                 datasetId: params.datasetBasics.id,
             });

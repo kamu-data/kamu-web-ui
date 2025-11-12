@@ -30,7 +30,6 @@ import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dat
     standalone: true,
     imports: [
         //-----//
-
         NgClass,
         RouterLink,
 

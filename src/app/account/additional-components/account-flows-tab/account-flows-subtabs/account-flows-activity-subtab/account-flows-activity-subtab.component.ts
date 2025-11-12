@@ -8,7 +8,7 @@
 import { ChangeDetectionStrategy, Component, inject, Input, NgZone, OnInit } from "@angular/core";
 import { AsyncPipe, NgIf } from "@angular/common";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
-import { timer, switchMap, combineLatest, of, map, Observable } from "rxjs";
+import { timer, switchMap, combineLatest, of, map, Observable, tap } from "rxjs";
 import {
     AccountFragment,
     DatasetBasicsFragment,
@@ -92,7 +92,6 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
 
     public ngOnInit(): void {
         this.filterByStatus = this.accountFlowsData.flowGroup;
-        this.getPageFromUrl();
         this.fetchTableData(this.currentPage, this.filterByStatus);
     }
 
@@ -103,6 +102,9 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
         datasetsIds?: string[],
     ): void {
         this.flowConnectionData$ = timer(0, environment.delay_polling_ms).pipe(
+            tap(() => {
+                this.getPageFromUrl();
+            }),
             switchMap(() =>
                 combineLatest([
                     this.accountService.getAccountListFlows({

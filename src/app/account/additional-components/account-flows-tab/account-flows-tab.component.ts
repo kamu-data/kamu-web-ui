@@ -6,10 +6,9 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
+import { MaybeUndefined } from "src/app/interface/app.types";
 import { AccountFragment, DatasetBasicsFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { AccountTabs } from "../../account.constants";
-import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatIconModule } from "@angular/material/icon";
@@ -42,14 +41,16 @@ import { NavigationService } from "src/app/services/navigation.service";
     ],
 })
 export class AccountFlowsTabComponent {
-    @Input(RoutingResolvers.ACCOUNT_FLOWS_KEY) public accountFlowsData: AccountFlowsType;
+    @Input(RoutingResolvers.ACCOUNT_FLOWS_KEY) public set setAccountFlowsData(value: AccountFlowsType) {
+        this.accountFlowsData = value;
+    }
 
     private readonly loggedUserService = inject(LoggedUserService);
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly navigationService = inject(NavigationService);
 
     public searchByDataset: DatasetBasicsFragment[] = [];
-    public filters: MaybeNull<FlowsTableFiltersOptions>;
+    public accountFlowsData: AccountFlowsType;
 
     public readonly AccountFlowsNav: typeof AccountFlowsNav = AccountFlowsNav;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;

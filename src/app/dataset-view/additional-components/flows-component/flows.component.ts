@@ -57,6 +57,7 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { FlowsSelectionStateService } from "./services/flows-selection-state.service";
 import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table/components/flow-table-panel-filters/flow-table-panel-filters.component";
+import { DatasetFlowProcessCardComponent } from "src/app/common/components/dataset-flow-process-card/dataset-flow-process-card.component";
 @Component({
     selector: "app-flows",
     templateUrl: "./flows.component.html",
@@ -87,6 +88,7 @@ import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table
         FlowsBadgePanelComponent,
         FlowsAssociatedChannelsComponent,
         FlowTablePanelFiltersComponent,
+        DatasetFlowProcessCardComponent,
         TileBaseWidgetComponent,
         PaginationComponent,
     ],
@@ -386,13 +388,16 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         });
     }
 
-    public toggleStateDatasetFlowConfigs(state: FlowProcessEffectiveState): void {
+    public toggleStateDatasetFlowConfigs(params: {
+        state: FlowProcessEffectiveState;
+        datasetBasics: DatasetBasicsFragment;
+    }): void {
         let operation$: Observable<void> = of();
-        if (state === FlowProcessEffectiveState.Active) {
+        if ([FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing].includes(params.state)) {
             operation$ = this.flowsService.datasetPauseFlows({
                 datasetId: this.flowsData.datasetBasics.id,
             });
-        } else if (state === FlowProcessEffectiveState.StoppedAuto) {
+        } else if (params.state === FlowProcessEffectiveState.StoppedAuto) {
             promiseWithCatch(
                 this.modalService.error({
                     title: "Resume updates",

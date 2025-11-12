@@ -6,10 +6,8 @@
  */
 
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
-import { NgIf } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
-import { RouterLink } from "@angular/router";
 import {
     DatasetBasicsFragment,
     DatasetFlowProcess,
@@ -27,8 +25,6 @@ import AppValues from "src/app/common/values/app.values";
     imports: [
         //-----//
         FormsModule,
-        NgIf,
-        RouterLink,
 
         //-----//
         MatIconModule,
@@ -41,10 +37,9 @@ export class FlowsBlockActionsComponent extends BaseComponent {
     @Input({ required: true }) public flowProcess: DatasetFlowProcess;
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public hasPushSources: boolean;
-    @Output() public updateEmitter: EventEmitter<void> = new EventEmitter<void>();
+
     @Output() public refreshEmitter: EventEmitter<void> = new EventEmitter<void>();
-    @Output() public toggleStateDatasetFlowConfigsEmitter: EventEmitter<FlowProcessEffectiveState> =
-        new EventEmitter<FlowProcessEffectiveState>();
+
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
@@ -64,10 +59,6 @@ export class FlowsBlockActionsComponent extends BaseComponent {
         );
     }
 
-    public updateNow(): void {
-        this.updateEmitter.emit();
-    }
-
     public refreshFlow(): void {
         this.refreshEmitter.emit();
     }
@@ -76,9 +67,5 @@ export class FlowsBlockActionsComponent extends BaseComponent {
         return this.datasetBasics.kind === DatasetKind.Root
             ? SettingsTabsEnum.SCHEDULING
             : SettingsTabsEnum.TRANSFORM_SETTINGS;
-    }
-
-    public toggleStateDatasetFlowConfigs(state: FlowProcessEffectiveState): void {
-        this.toggleStateDatasetFlowConfigsEmitter.emit(state);
     }
 }

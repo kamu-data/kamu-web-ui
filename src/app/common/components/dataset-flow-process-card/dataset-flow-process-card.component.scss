@@ -1,11 +1,20 @@
-.header {
-    height: 10px;
-    width: inherit;
-    border-radius: 6px 6px 0 0;
-}
+.card-custom {
+    width: 450px;
+    background: #f3f3f3;
+    border-radius: 6px;
+    display: flex;
+    box-sizing: border-box;
+    border: 1px solid #dedede;
 
-.card-body {
-    padding-left: 30px;
+    .header {
+        height: 10px;
+        width: inherit;
+        border-radius: 6px 6px 0 0;
+    }
+
+    .card-body {
+        padding-left: 30px;
+    }
 }
 
 .dataset {

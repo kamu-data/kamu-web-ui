@@ -9,7 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FlowsBlockActionsComponent } from "./flows-block-actions.component";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { DatasetFlowProcess, FlowProcessEffectiveState } from "src/app/api/kamu.graphql.interface";
+import { DatasetFlowProcess } from "src/app/api/kamu.graphql.interface";
 import { mockDatasetFlowsProcessesQuery } from "src/app/api/mock/dataset-flow.mock";
 import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
@@ -48,24 +48,10 @@ describe("FlowsBlockActionsComponent", () => {
         expect(component.redirectSection).toEqual(SettingsTabsEnum.TRANSFORM_SETTINGS);
     });
 
-    it("should check `Update now` button", () => {
-        fixture.detectChanges();
-        const updateEmitterEmitSpy = spyOn(component.updateEmitter, "emit");
-        component.updateNow();
-        expect(updateEmitterEmitSpy).toHaveBeenCalledTimes(1);
-    });
-
     it("should check `Refresh flow` button", () => {
         fixture.detectChanges();
         const refreshEmitterEmitSpy = spyOn(component.refreshEmitter, "emit");
         component.refreshFlow();
         expect(refreshEmitterEmitSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it("should check toggle effective state", () => {
-        fixture.detectChanges();
-        const toggleStateDatasetFlowConfigsEmitterSpy = spyOn(component.toggleStateDatasetFlowConfigsEmitter, "emit");
-        component.toggleStateDatasetFlowConfigs(FlowProcessEffectiveState.Active);
-        expect(toggleStateDatasetFlowConfigsEmitterSpy).toHaveBeenCalledTimes(1);
     });
 });

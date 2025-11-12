@@ -10,7 +10,7 @@
             </button>
         </div>
         <div class="d-flex justify-content-end mt-4 mb-2 fw-500">Total processes: {{ cardsData.totalCount }}</div>
-        <div class="cards mt-4">
+        <div class="cards mt-4" data-test-id="cards">
             <ng-container *ngFor="let card of cardsData.nodes">
                 <div *ngIf="card.__typename === 'DatasetFlowProcess'" class="card-custom d-flex flex-column">
                     <app-dataset-flow-process-card

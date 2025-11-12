@@ -37,7 +37,6 @@ import {
     webhooksStateMapper,
     DatasetFlowsBadgeTexts,
 } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
-import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { DatasetFlowProcessCardComponent } from "src/app/common/components/dataset-flow-process-card/dataset-flow-process-card.component";
 
@@ -79,9 +78,9 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     public currentPage: number = 1;
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
-    private readonly CARDS_FLOW_PROCESSES_PER_PAGE: number = 2;
-    private readonly TIMEOUT_REFRESH_FLOW = AppValues.TIMEOUT_REFRESH_FLOW_MS;
+    public readonly TIMEOUT_REFRESH_FLOW = AppValues.TIMEOUT_REFRESH_FLOW_MS;
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
+    private readonly CARDS_FLOW_PROCESSES_PER_PAGE: number = 9;
 
     public ngOnInit(): void {
         this.fetchCardsData();
@@ -92,10 +91,6 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         if (pageParam) {
             this.currentPage = +requireValue(pageParam);
         }
-    }
-
-    public redirectSection(dataset: DatasetBasicsFragment): SettingsTabsEnum {
-        return dataset.kind === DatasetKind.Root ? SettingsTabsEnum.SCHEDULING : SettingsTabsEnum.TRANSFORM_SETTINGS;
     }
 
     public badgeStyles(effectiveState: FlowProcessEffectiveState): DatasetFlowsBadgeStyle {
@@ -182,10 +177,6 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         }
         this.currentPage = page;
         this.fetchCardsData();
-    }
-
-    public get pauseableStates(): FlowProcessEffectiveState[] {
-        return [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing];
     }
 
     public updateNow(datasetBasics: DatasetBasicsFragment): void {

@@ -543,3 +543,78 @@ export const mockAccountFlowsAsCardsQuery: AccountFlowsAsCardsQuery = {
         __typename: "Accounts",
     },
 };
+
+export const mockAccountFlowsAsCardsQueryWithWebhook: AccountFlowsAsCardsQuery = {
+    accounts: {
+        byName: {
+            flows: {
+                processes: {
+                    allCards: {
+                        nodes: [
+                            {
+                                id: "d20a935e-0ccb-4844-b1bb-f4b5b9b0279a",
+                                name: "qwert",
+                                summary: {
+                                    effectiveState: FlowProcessEffectiveState.PausedManual,
+                                    consecutiveFailures: 0,
+                                    lastSuccessAt: null,
+                                    lastAttemptAt: null,
+                                    lastFailureAt: null,
+                                    nextPlannedAt: null,
+                                    stopPolicy: {
+                                        maxFailures: 5,
+                                        __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+                                    },
+                                    autoStoppedReason: null,
+                                    autoStoppedAt: null,
+                                    __typename: "FlowProcessSummary",
+                                },
+                                __typename: "WebhookFlowSubProcess",
+                            },
+                        ],
+                        totalCount: 1,
+                        pageInfo: {
+                            hasNextPage: false,
+                            hasPreviousPage: false,
+                            currentPage: 0,
+                            totalPages: 1,
+                            __typename: "PageBasedInfo",
+                        },
+                        __typename: "AccountFlowProcessCardConnection",
+                    },
+                    __typename: "AccountFlowProcesses",
+                },
+                __typename: "AccountFlows",
+            },
+            __typename: "Account",
+        },
+        __typename: "Accounts",
+    },
+};
+
+export const mockAccountFlowsAsCardsQueryEmpty: AccountFlowsAsCardsQuery = {
+    accounts: {
+        byName: {
+            flows: {
+                processes: {
+                    allCards: {
+                        nodes: [],
+                        totalCount: 0,
+                        pageInfo: {
+                            hasNextPage: false,
+                            hasPreviousPage: false,
+                            currentPage: 0,
+                            totalPages: 1,
+                            __typename: "PageBasedInfo",
+                        },
+                        __typename: "AccountFlowProcessCardConnection",
+                    },
+                    __typename: "AccountFlowProcesses",
+                },
+                __typename: "AccountFlows",
+            },
+            __typename: "Account",
+        },
+        __typename: "Accounts",
+    },
+};

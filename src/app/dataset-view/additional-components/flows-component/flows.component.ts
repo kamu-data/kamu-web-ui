@@ -50,7 +50,6 @@ import {
 } from "./flows.helpers";
 import { FlowsBlockActionsComponent } from "./components/flows-block-actions/flows-block-actions.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { FlowsBadgePanelComponent } from "./components/flows-badge-panel/flows-badge-panel.component";
 import { FlowsAssociatedChannelsComponent } from "./components/flows-associated-channels/flows-associated-channels.component";
 import { DatasetWebhooksService } from "../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { ModalService } from "src/app/common/components/modal/modal.service";
@@ -85,7 +84,6 @@ import { DatasetFlowProcessCardComponent } from "src/app/common/components/datas
         //-----//
         FlowsTableComponent,
         FlowsBlockActionsComponent,
-        FlowsBadgePanelComponent,
         FlowsAssociatedChannelsComponent,
         FlowTablePanelFiltersComponent,
         DatasetFlowProcessCardComponent,

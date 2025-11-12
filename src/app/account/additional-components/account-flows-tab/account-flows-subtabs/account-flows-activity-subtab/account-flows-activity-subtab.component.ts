@@ -159,7 +159,6 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             .subscribe((success: boolean) => {
                 if (success) {
                     setTimeout(() => {
-                        this.getPageFromUrl();
                         this.fetchTableData(this.currentPage, this.filterByStatus);
                         this.cdr.detectChanges();
                     }, this.TIMEOUT_REFRESH_FLOW);
@@ -183,7 +182,6 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             this.accountFlowsData.activeNav,
             nextNav,
         );
-        this.getPageFromUrl();
         this.fetchTableData(initialPage, this.filterByStatus);
     }
 
@@ -230,7 +228,6 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
     }
 
     public refreshNow(): void {
-        this.getPageFromUrl();
         this.fetchTableData(this.currentPage, this.filterByStatus);
         this.cdr.detectChanges();
     }

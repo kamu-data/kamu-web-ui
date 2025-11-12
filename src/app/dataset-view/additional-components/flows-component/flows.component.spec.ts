@@ -154,7 +154,10 @@ describe("FlowsComponent", () => {
     it(`should check toggle state for dataset flow when state=${FlowProcessEffectiveState.Active}`, fakeAsync(() => {
         const refreshFlowSpy = spyOn(component, "refreshFlow");
         const datasetPauseFlowsSpy = spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
-        component.toggleStateDatasetFlowConfigs(FlowProcessEffectiveState.Active);
+        component.toggleStateDatasetFlowConfigs({
+            state: FlowProcessEffectiveState.Failing,
+            datasetBasics: mockDatasetBasicsRootFragment,
+        });
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(datasetPauseFlowsSpy).toHaveBeenCalledTimes(1);
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
@@ -168,7 +171,10 @@ describe("FlowsComponent", () => {
             return Promise.resolve("");
         });
         const datasetResumeFlowsSpy = spyOn(flowsService, "datasetResumeFlows").and.returnValue(of(void 0));
-        component.toggleStateDatasetFlowConfigs(FlowProcessEffectiveState.StoppedAuto);
+        component.toggleStateDatasetFlowConfigs({
+            state: FlowProcessEffectiveState.StoppedAuto,
+            datasetBasics: mockDatasetBasicsRootFragment,
+        });
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
@@ -178,10 +184,13 @@ describe("FlowsComponent", () => {
 
     it(`should check toggle state for dataset flow when state=${FlowProcessEffectiveState.Failing}`, fakeAsync(() => {
         const refreshFlowSpy = spyOn(component, "refreshFlow");
-        const datasetResumeFlowsSpy = spyOn(flowsService, "datasetResumeFlows").and.returnValue(of(void 0));
-        component.toggleStateDatasetFlowConfigs(FlowProcessEffectiveState.Failing);
+        const datasetPauseFlowsSpy = spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+        component.toggleStateDatasetFlowConfigs({
+            state: FlowProcessEffectiveState.Failing,
+            datasetBasics: mockDatasetBasicsRootFragment,
+        });
         tick(component.TIMEOUT_REFRESH_FLOW);
-        expect(datasetResumeFlowsSpy).toHaveBeenCalledTimes(1);
+        expect(datasetPauseFlowsSpy).toHaveBeenCalledTimes(1);
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
         flush();
     }));

@@ -248,11 +248,6 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         return DatasetFlowDetailsHelpers.flowStatusAnimationSrc(status);
     }
 
-    // public onResetFilters(): void {
-    //     this.searchByFiltersChange.emit(null);
-    //     this.filterAccountSettings.disabled = false;
-    // }
-
     public get hasDatasetColumn(): boolean {
         return this.tableOptions.displayColumns.includes("dataset");
     }

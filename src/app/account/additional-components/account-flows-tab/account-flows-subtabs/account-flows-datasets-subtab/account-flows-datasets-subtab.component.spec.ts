@@ -31,6 +31,8 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { WebhookFlowProcessCardComponent } from "./components/webhook-flow-process-card/webhook-flow-process-card.component";
+import { DatasetFlowProcessCardComponent } from "src/app/common/components/dataset-flow-process-card/dataset-flow-process-card.component";
 
 describe("AccountFlowsDatasetsSubtabComponent", () => {
     let component: AccountFlowsDatasetsSubtabComponent;
@@ -45,7 +47,13 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [AccountFlowsDatasetsSubtabComponent, SharedTestModule, HttpClientTestingModule],
+            imports: [
+                AccountFlowsDatasetsSubtabComponent,
+                SharedTestModule,
+                HttpClientTestingModule,
+                WebhookFlowProcessCardComponent,
+                DatasetFlowProcessCardComponent,
+            ],
             providers: [
                 Apollo,
                 provideToastr(),
@@ -154,7 +162,10 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
 
     it("should check to edit webhook card", () => {
         const navigateToWebhooksSpy = spyOn(navigationService, "navigateToWebhooks");
-        component.editWebhookCard(mockDatasetBasicsRootFragment, MOCK_SUBSCRIPTION_ID);
+        component.editWebhookCard({
+            datasetBasics: mockDatasetBasicsRootFragment,
+            subscriptionId: MOCK_SUBSCRIPTION_ID,
+        });
         expect(navigateToWebhooksSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -163,11 +174,11 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             datasetWebhooksService,
             "datasetWebhookPauseSubscription",
         ).and.returnValue(of(true));
-        component.toggleWebhookCardState(
-            mockDatasetBasicsRootFragment,
-            MOCK_SUBSCRIPTION_ID,
-            FlowProcessEffectiveState.Active,
-        );
+        component.toggleWebhookCardState({
+            state: FlowProcessEffectiveState.Active,
+            datasetBasics: mockDatasetBasicsRootFragment,
+            subscriptionId: MOCK_SUBSCRIPTION_ID,
+        });
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(datasetWebhookPauseSubscriptionSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
@@ -178,11 +189,11 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             datasetWebhooksService,
             "datasetWebhookResumeSubscription",
         ).and.returnValue(of(true));
-        component.toggleWebhookCardState(
-            mockDatasetBasicsRootFragment,
-            MOCK_SUBSCRIPTION_ID,
-            FlowProcessEffectiveState.StoppedAuto,
-        );
+        component.toggleWebhookCardState({
+            state: FlowProcessEffectiveState.StoppedAuto,
+            datasetBasics: mockDatasetBasicsRootFragment,
+            subscriptionId: MOCK_SUBSCRIPTION_ID,
+        });
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(datasetWebhookResumeSubscriptionSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();

@@ -45,20 +45,6 @@ export class FlowsBlockActionsComponent extends BaseComponent {
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
     public readonly TIMEOUT_REFRESH_FLOW = AppValues.TIMEOUT_REFRESH_FLOW_MS;
 
-    public get showUpdateNowButton(): boolean {
-        return !this.hasPushSources;
-    }
-
-    public get pauseableStates(): FlowProcessEffectiveState[] {
-        return [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing];
-    }
-
-    public get showPauseOrResumeButton(): boolean {
-        return (
-            !this.hasPushSources && this.flowProcess.summary.effectiveState !== FlowProcessEffectiveState.Unconfigured
-        );
-    }
-
     public refreshFlow(): void {
         this.refreshEmitter.emit();
     }

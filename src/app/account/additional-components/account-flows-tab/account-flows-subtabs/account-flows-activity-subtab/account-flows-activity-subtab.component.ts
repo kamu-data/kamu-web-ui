@@ -184,17 +184,6 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             nextNav,
         );
         this.fetchTableData(initialPage, this.filterByStatus);
-        // const nextNav = event.nextId as FlowStatus;
-        // const initialPage = 1;
-        // this.filterByStatus = nextNav;
-        // this.navigationService.navigateToOwnerView(
-        //     this.accountName,
-        //     AccountTabs.FLOWS,
-        //     undefined,
-        //     this.accountFlowsData.activeNav,
-        //     nextNav,
-        // );
-        // this.fetchTableData(initialPage, this.filterByStatus);
     }
 
     public onPageChange(page: number): void {

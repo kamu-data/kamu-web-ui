@@ -42,10 +42,16 @@ describe("FlowsBlockActionsComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check redirect section", () => {
+    it("should check redirect section for derivative dataset", () => {
         component.datasetBasics = mockDatasetBasicsDerivedFragment;
         fixture.detectChanges();
         expect(component.redirectSection).toEqual(SettingsTabsEnum.TRANSFORM_SETTINGS);
+    });
+
+    it("should check redirect section for root dataset", () => {
+        component.datasetBasics = mockDatasetBasicsRootFragment;
+        fixture.detectChanges();
+        expect(component.redirectSection).toEqual(SettingsTabsEnum.SCHEDULING);
     });
 
     it("should check `Refresh flow` button", () => {

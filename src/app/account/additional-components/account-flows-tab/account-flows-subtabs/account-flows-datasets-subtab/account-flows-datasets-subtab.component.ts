@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, NgZone, OnInit } from "@angular/core";
-import { AsyncPipe, DatePipe, NgClass, NgFor, NgIf } from "@angular/common";
+import { AsyncPipe, NgFor, NgIf } from "@angular/common";
 import { AccountService } from "src/app/account/account.service";
 import { Observable, of, switchMap, take, tap, timer } from "rxjs";
 import {
@@ -15,11 +15,9 @@ import {
     DatasetKind,
     FlowProcessEffectiveState,
     FlowProcessOrderField,
-    FlowProcessSummary,
     OrderingDirection,
 } from "src/app/api/kamu.graphql.interface";
 import { environment } from "src/environments/environment";
-import { RouterLink } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
 import { requireValue } from "src/app/common/helpers/app.helpers";
 import { MatIconModule } from "@angular/material/icon";
@@ -31,14 +29,9 @@ import { BaseComponent } from "src/app/common/components/base.component";
 import AppValues from "src/app/common/values/app.values";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import {
-    DatasetFlowsBadgeStyle,
-    DatasetFlowBadgeHelpers,
-    webhooksStateMapper,
-    DatasetFlowsBadgeTexts,
-} from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { DatasetFlowProcessCardComponent } from "src/app/common/components/dataset-flow-process-card/dataset-flow-process-card.component";
+import { WebhookFlowProcessCardComponent } from "./components/webhook-flow-process-card/webhook-flow-process-card.component";
 
 @Component({
     selector: "app-account-flows-datasets-subtab",
@@ -46,11 +39,8 @@ import { DatasetFlowProcessCardComponent } from "src/app/common/components/datas
     imports: [
         //-----//
         AsyncPipe,
-        DatePipe,
         NgIf,
         NgFor,
-        NgClass,
-        RouterLink,
 
         //-----//
         MatIconModule,
@@ -58,6 +48,7 @@ import { DatasetFlowProcessCardComponent } from "src/app/common/components/datas
         //-----//
         DatasetFlowProcessCardComponent,
         PaginationComponent,
+        WebhookFlowProcessCardComponent,
     ],
     templateUrl: "./account-flows-datasets-subtab.component.html",
     styleUrls: ["./account-flows-datasets-subtab.component.scss"],
@@ -93,32 +84,29 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         }
     }
 
-    public badgeStyles(effectiveState: FlowProcessEffectiveState): DatasetFlowsBadgeStyle {
-        return DatasetFlowBadgeHelpers.badgeStyles(effectiveState);
-    }
-
-    public badgeMessages(dataset: DatasetBasicsFragment, summary: FlowProcessSummary): DatasetFlowsBadgeTexts {
-        const isRoot = dataset.kind === DatasetKind.Root;
-        return DatasetFlowBadgeHelpers.badgeMessages(summary, isRoot);
-    }
-
-    public editWebhookCard(dataset: DatasetBasicsFragment, subscriptionId: string): void {
+    public editWebhookCard(params: { datasetBasics: DatasetBasicsFragment; subscriptionId: string }): void {
         this.navigationService.navigateToWebhooks({
-            accountName: dataset.owner.accountName,
-            datasetName: dataset.name,
-            tab: subscriptionId,
+            accountName: params.datasetBasics.owner.accountName,
+            datasetName: params.datasetBasics.name,
+            tab: params.subscriptionId,
         });
     }
 
-    public toggleWebhookCardState(
-        dataset: DatasetBasicsFragment,
-        subscriptionId: string,
-        effectiveState: FlowProcessEffectiveState,
-    ): void {
+    public toggleWebhookCardState(params: {
+        datasetBasics: DatasetBasicsFragment;
+        subscriptionId: string;
+        state: FlowProcessEffectiveState;
+    }): void {
         const result$: Observable<boolean> =
-            effectiveState === FlowProcessEffectiveState.Active
-                ? this.datasetWebhooksService.datasetWebhookPauseSubscription(dataset.id, subscriptionId)
-                : this.datasetWebhooksService.datasetWebhookResumeSubscription(dataset.id, subscriptionId);
+            params.state === FlowProcessEffectiveState.Active
+                ? this.datasetWebhooksService.datasetWebhookPauseSubscription(
+                      params.datasetBasics.id,
+                      params.subscriptionId,
+                  )
+                : this.datasetWebhooksService.datasetWebhookResumeSubscription(
+                      params.datasetBasics.id,
+                      params.subscriptionId,
+                  );
         result$.pipe(take(1)).subscribe((result: boolean) => {
             if (result) {
                 setTimeout(() => {
@@ -223,10 +211,6 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
                 this.cdr.detectChanges();
             }, this.TIMEOUT_REFRESH_FLOW);
         });
-    }
-
-    public flowProcessEffectiveStateMapper(state: FlowProcessEffectiveState): string {
-        return webhooksStateMapper[state];
     }
 
     public refreshNow(): void {

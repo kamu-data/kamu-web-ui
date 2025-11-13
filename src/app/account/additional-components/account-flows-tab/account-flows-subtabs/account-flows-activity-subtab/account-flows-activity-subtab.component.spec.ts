@@ -23,6 +23,7 @@ import { AccountService } from "src/app/account/account.service";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
 import { mockDatasets } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
+import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
 
 describe("AccountFlowsActivitySubtabComponent", () => {
     let component: AccountFlowsActivitySubtabComponent;
@@ -180,5 +181,58 @@ describe("AccountFlowsActivitySubtabComponent", () => {
         component.onSearchByFiltersChange(filterOptions);
 
         expect(fetchTableDataSpy).toHaveBeenCalledWith(component.currentPage, status, { system: true }, []);
+    });
+
+    it("should check to reset filters", () => {
+        component.selectedAccountItems = [mockAccountDetails];
+        component.selectedStatusItems = [{ id: "FINISHED", status: FlowStatus.Finished }];
+        component.onResetFilters();
+        expect(component.selectedAccountItems).toEqual([]);
+        expect(component.selectedStatusItems).toEqual([]);
+    });
+
+    it("should check to refresh page", () => {
+        const fetchTableDataSpy = spyOn(component, "fetchTableData");
+        component.refreshFlow();
+        expect(fetchTableDataSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check to change navigation", () => {
+        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+        const event = {
+            nextId: AccountFlowsNav.DATASETS,
+        } as NgbNavChangeEvent;
+        component.onNavChange(event);
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check to change navigation status with finished status", () => {
+        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+        const event = {
+            nextId: FlowStatus.Finished,
+        } as NgbNavChangeEvent;
+        component.onNavStatusChange(event);
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
+            component.accountName,
+            AccountTabs.FLOWS,
+            undefined,
+            component.accountFlowsData.activeNav,
+            [FlowStatus.Finished],
+        );
+    });
+
+    it("should check to change navigation status with running status", () => {
+        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+        const event = {
+            nextId: FlowStatus.Running,
+        } as NgbNavChangeEvent;
+        component.onNavStatusChange(event);
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
+            component.accountName,
+            AccountTabs.FLOWS,
+            undefined,
+            component.accountFlowsData.activeNav,
+            [FlowStatus.Running, FlowStatus.Retrying],
+        );
     });
 });

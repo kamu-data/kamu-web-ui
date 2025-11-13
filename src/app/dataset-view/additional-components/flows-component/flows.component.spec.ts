@@ -516,4 +516,14 @@ describe("FlowsComponent", () => {
         component.onSearchByFiltersChange(filters);
         expect(component.searchByAccount).toEqual(filters.accounts);
     });
+
+    it("should check to reset filters", () => {
+        component.selectedDatasetItems = [mockDatasetBasicsRootFragment];
+        component.selectedAccountItems = [mockAccountDetails];
+        component.selectedStatusItems = [{ id: "FINISHED", status: FlowStatus.Finished }];
+        component.onResetFilters();
+        expect(component.selectedDatasetItems).toEqual([]);
+        expect(component.selectedAccountItems).toEqual([]);
+        expect(component.selectedStatusItems).toEqual([]);
+    });
 });

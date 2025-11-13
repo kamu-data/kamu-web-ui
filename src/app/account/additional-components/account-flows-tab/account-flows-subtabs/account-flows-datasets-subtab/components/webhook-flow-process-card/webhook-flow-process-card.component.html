@@ -1,0 +1,69 @@
+<div class="card-custom d-flex flex-column">
+    <div class="header" [ngClass]="badgeStyles(summary.effectiveState).containerClass"></div>
+    <div class="card-body my-2 p-4">
+        <span class="label label--secondary v-align-middle webhook">Webhook</span>
+        <div class="mt-3 mb-2 d-flex flex-row gap-3 align-items-center">
+            <div>
+                <mat-icon class="icon-size" [ngClass]="badgeStyles(summary.effectiveState).iconClass">{{
+                    badgeStyles(summary.effectiveState).iconName
+                }}</mat-icon>
+            </div>
+            <div class="d-flex flex-column">
+                <div class="dataset-list-container-title-row-dataset-name d-flex align-items-center">
+                    <a [routerLink]="['/']" class="dataset-list-container-title mb-1 pl-0">
+                        {{ datasetBasics.name }}
+                    </a>
+                </div>
+
+                <div class="fw-500" [ngClass]="badgeStyles(summary.effectiveState).iconClass">
+                    {{ flowProcessEffectiveStateMapper(summary.effectiveState) }}
+                </div>
+            </div>
+        </div>
+        <div class="my-4 d-flex align-items-center justify-content-center">
+            <div class="d-flex flex-row gap-4">
+                <button
+                    type="button"
+                    (click)="toggleWebhookCardState(datasetBasics, subscriptionId, summary.effectiveState)"
+                    class="badge-button border-1 bg-light border rounded-2 px-2 btn btn-sm"
+                >
+                    <mat-icon class="text-muted fs-4 d-block" svgIcon="play_pause" />
+                    <span class="fs-12 me-2 d-block">
+                        {{ summary.effectiveState === FlowProcessEffectiveState.Active ? "Pause" : "Resume" }}
+                        webhook</span
+                    >
+                </button>
+                <button
+                    type="button"
+                    (click)="editWebhookCard(datasetBasics, subscriptionId)"
+                    class="badge-button border-1 bg-light border rounded-2 px-2 btn btn-sm"
+                >
+                    <mat-icon class="text-muted fs-4 d-block">settings</mat-icon>
+                    <span class="fs-12 me-2 d-block link-settings">Edit webhook</span>
+                </button>
+            </div>
+        </div>
+        <div>
+            <div class="mt-2">
+                <span class="fw-500">Parent dataset:</span>
+                <a
+                    [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name]"
+                    class="dataset-list-container-title mb-1 pl-0"
+                >
+                    {{ datasetBasics.owner.accountName }}/{{ datasetBasics.name }}
+                </a>
+            </div>
+
+            <div class="mt-2">
+                <span class="text-muted fs-12" *ngIf="summary.lastSuccessAt"
+                    >Last success: {{ summary.lastSuccessAt | date: DISPLAY_TIME_FORMAT }}</span
+                >
+            </div>
+            <div>
+                <span class="text-muted fs-12" *ngIf="summary.lastFailureAt"
+                    >Last failure: {{ summary.lastFailureAt | date: DISPLAY_TIME_FORMAT }}</span
+                >
+            </div>
+        </div>
+    </div>
+</div>

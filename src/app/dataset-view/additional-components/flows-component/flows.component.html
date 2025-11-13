@@ -11,24 +11,25 @@
                                 'justify-content-end': !showPanelButtons,
                             }"
                         >
-                            <div *ngIf="showPanelButtons">
-                                <app-flows-badge-panel
-                                    [flowProcess]="flowConnectionData.flowProcesses.primary"
-                                    [datasetKind]="flowsData.datasetBasics.kind"
+                            <div *ngIf="showPanelButtons" class="mt-4 ms-4">
+                                <app-dataset-flow-process-card
+                                    [datasetBasics]="flowsData.datasetBasics"
+                                    [summary]="flowConnectionData.flowProcesses.primary.summary"
+                                    (updateNowEmitter)="updateNow()"
+                                    (toggleStateDatasetCardEmitter)="toggleStateDatasetFlowConfigs($event)"
                                 />
                             </div>
-                            <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-start p-4">
                                 <app-flows-block-actions
                                     [flowProcess]="flowConnectionData.flowProcesses.primary"
                                     [datasetBasics]="flowsData.datasetBasics"
                                     [hasPushSources]="hasPushSources"
                                     (updateEmitter)="updateNow()"
                                     (refreshEmitter)="refreshFlow()"
-                                    (toggleStateDatasetFlowConfigsEmitter)="toggleStateDatasetFlowConfigs($event)"
                                 />
                             </div>
                         </div>
-                        <div class="mt-4">
+                        <div class="mt-4 ms-4">
                             <mat-chip-listbox
                                 [(ngModel)]="flowsSelectionState.flowsCategory"
                                 (change)="onSelectionFlowsChange($event)"
@@ -77,6 +78,17 @@
             </div>
 
             <ng-container *ngIf="flowConnectionData">
+                <app-flow-table-panel-filters
+                    [accountFlowInitiators]="flowConnectionData.flowInitiators"
+                    [onlySystemFlows]="onlySystemFlows"
+                    [hasDatasetColumn]="false"
+                    [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
+                    [selectedDatasetItems]="selectedDatasetItems"
+                    [selectedAccountItems]="selectedAccountItems"
+                    [selectedStatusItems]="selectedStatusItems"
+                    (searchByFiltersChange)="onSearchByFiltersChange($event)"
+                    (resetFiltersChange)="onResetFilters()"
+                />
                 <app-flows-table
                     [nodes]="
                         flowsSelectionState.webhookFilterButtons.length && !flowsSelectionState.webhooksIds.length
@@ -96,7 +108,6 @@
                             ? 0
                             : flowConnectionData.flowsData.connectionDataForTable.totalCount
                     "
-                    (searchByFiltersChange)="onSearchByFiltersChange($event)"
                     (abortFlowChange)="onAbortFlow($event)"
                 />
                 <div class="mt-50px">

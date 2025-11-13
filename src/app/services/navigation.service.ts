@@ -16,6 +16,9 @@ import { AccountSettingsTabs } from "../account/settings/account-settings.consta
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
 import { MetadataTabs } from "./../dataset-view/additional-components/metadata-component/metadata.constants";
 import { SettingsTabsEnum } from "../dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { AccountTabs } from "../account/account.constants";
+import { AccountFlowsNav } from "./../account/additional-components/account-flows-tab/account-flows-tab.types";
+import { FlowStatus } from "../api/kamu.graphql.interface";
 
 @Injectable({ providedIn: "root" })
 export class NavigationService {
@@ -147,10 +150,16 @@ export class NavigationService {
         );
     }
 
-    public navigateToOwnerView(ownerName: string, tab?: string, page?: number): void {
+    public navigateToOwnerView(
+        ownerName: string,
+        tab?: AccountTabs,
+        page?: number,
+        nav?: AccountFlowsNav,
+        status?: FlowStatus[],
+    ): void {
         promiseWithCatch(
             this.router.navigate([ownerName, ProjectLinks.URL_ACCOUNT_SELECT, tab], {
-                queryParams: { page },
+                queryParams: { nav, status: status?.join(","), page },
             }),
         );
     }

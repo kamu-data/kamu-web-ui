@@ -7,6 +7,8 @@
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import {
+    AccountFragment,
+    DatasetBasicsFragment,
     DatasetFlowProcesses,
     DatasetFlowType,
     DatasetKind,
@@ -22,7 +24,7 @@ import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
 import { environment } from "src/environments/environment";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
-import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
+import { FilterStatusType, FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
 import ProjectLinks from "src/app/project-links";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
@@ -47,13 +49,13 @@ import {
     DatasetFlowsTabState,
 } from "./flows.helpers";
 import { FlowsBlockActionsComponent } from "./components/flows-block-actions/flows-block-actions.component";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { FlowsBadgePanelComponent } from "./components/flows-badge-panel/flows-badge-panel.component";
 import { FlowsAssociatedChannelsComponent } from "./components/flows-associated-channels/flows-associated-channels.component";
 import { DatasetWebhooksService } from "../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { ModalService } from "src/app/common/components/modal/modal.service";
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { FlowsSelectionStateService } from "./services/flows-selection-state.service";
+import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table/components/flow-table-panel-filters/flow-table-panel-filters.component";
+import { DatasetFlowProcessCardComponent } from "src/app/common/components/dataset-flow-process-card/dataset-flow-process-card.component";
+import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
 @Component({
     selector: "app-flows",
     templateUrl: "./flows.component.html",
@@ -81,8 +83,9 @@ import { FlowsSelectionStateService } from "./services/flows-selection-state.ser
         //-----//
         FlowsTableComponent,
         FlowsBlockActionsComponent,
-        FlowsBadgePanelComponent,
         FlowsAssociatedChannelsComponent,
+        FlowTablePanelFiltersComponent,
+        DatasetFlowProcessCardComponent,
         TileBaseWidgetComponent,
         PaginationComponent,
     ],
@@ -106,9 +109,14 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             : this.flowsSelectionStateService.setFlowsCategory(value);
     }
 
+    public selectedDatasetItems: DatasetBasicsFragment[] = [];
+    public selectedAccountItems: AccountFragment[] = [];
+    public selectedStatusItems: FilterStatusType[] = [];
+
     private datasetWebhooksService = inject(DatasetWebhooksService);
     private modalService = inject(ModalService);
     private flowsSelectionStateService = inject(FlowsSelectionStateService);
+    private datasetCardService = inject(ProcessDatasetCardInteractionService);
 
     public flowsProcesses$: Observable<DatasetFlowProcesses>;
 
@@ -141,7 +149,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     public fetchTableData(
         page: number,
-        filterByStatus?: MaybeNull<FlowStatus>,
+        filterByStatus?: MaybeNull<FlowStatus[]>,
         filterByInitiator?: MaybeNull<InitiatorFilterInput>,
     ): void {
         this.flowConnectionData$ = timer(0, environment.delay_polling_ms).pipe(
@@ -359,73 +367,40 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public updateNow(): void {
-        const datasetTrigger$: Observable<boolean> =
-            this.flowsData.datasetBasics.kind === DatasetKind.Root
-                ? this.flowsService.datasetTriggerIngestFlow({
-                      datasetId: this.flowsData.datasetBasics.id,
-                  })
-                : this.flowsService.datasetTriggerTransformFlow({
-                      datasetId: this.flowsData.datasetBasics.id,
-                  });
-
-        datasetTrigger$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((success: boolean) => {
-            if (success) {
-                setTimeout(() => {
-                    this.refreshFlow();
-                    this.cdr.detectChanges();
-                }, this.TIMEOUT_REFRESH_FLOW);
-            }
+        this.datasetCardService.handleTrigger(this.flowsData.datasetBasics, () => {
+            this.refreshFlow();
+            this.cdr.detectChanges();
         });
     }
 
-    public toggleStateDatasetFlowConfigs(state: FlowProcessEffectiveState): void {
-        let operation$: Observable<void> = of();
-        if (state === FlowProcessEffectiveState.Active) {
-            operation$ = this.flowsService.datasetPauseFlows({
-                datasetId: this.flowsData.datasetBasics.id,
-            });
-        } else if (state === FlowProcessEffectiveState.StoppedAuto) {
-            promiseWithCatch(
-                this.modalService.error({
-                    title: "Resume updates",
-                    message: "Have you confirmed that all issues have been resolved?",
-                    yesButtonText: "Ok",
-                    noButtonText: "Cancel",
-                    handler: (ok) => {
-                        if (ok) {
-                            this.flowsService
-                                .datasetResumeFlows({
-                                    datasetId: this.flowsData.datasetBasics.id,
-                                })
-                                .pipe(take(1))
-                                .subscribe(() => {
-                                    setTimeout(() => {
-                                        this.refreshFlow();
-                                        this.cdr.detectChanges();
-                                    }, this.TIMEOUT_REFRESH_FLOW);
-                                });
-                        }
-                    },
-                }),
-            );
-        } else {
-            operation$ = this.flowsService.datasetResumeFlows({
-                datasetId: this.flowsData.datasetBasics.id,
-            });
-        }
-
-        operation$.pipe(take(1)).subscribe(() => {
-            setTimeout(() => {
+    public toggleStateDatasetFlowConfigs(params: {
+        state: FlowProcessEffectiveState;
+        datasetBasics: DatasetBasicsFragment;
+    }): void {
+        this.datasetCardService.handleToggleState({
+            state: params.state,
+            datasetBasics: params.datasetBasics,
+            onSuccess: () => {
                 this.refreshFlow();
                 this.cdr.detectChanges();
-            }, this.TIMEOUT_REFRESH_FLOW);
+            },
+            confirmModal: true,
         });
     }
 
     public onSearchByFiltersChange(filters: MaybeNull<FlowsTableFiltersOptions>): void {
+        if (filters && filters.status?.length) {
+            this.selectedStatusItems = [{ id: filters.status[0], status: filters.status[0] }];
+        }
         if (!filters) {
             this.searchByAccount = [];
         }
         this.searchByFilters(filters);
+    }
+
+    public onResetFilters(): void {
+        this.selectedDatasetItems = [];
+        this.selectedAccountItems = [];
+        this.selectedStatusItems = [];
     }
 }

@@ -13,12 +13,20 @@ import { AccountApi } from "../api/account.api";
 import { TEST_LOGIN, TEST_PAGE_NUMBER, mockAccountDetails } from "../api/mock/auth.mock";
 import { first, of } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "../interface/app.types";
-import { AccountFlowFilters, AccountFragment, Dataset } from "../api/kamu.graphql.interface";
+import {
+    AccountFlowFilters,
+    AccountFlowProcessCardConnectionDataFragment,
+    AccountFragment,
+    Dataset,
+    FlowProcessOrderField,
+    OrderingDirection,
+} from "../api/kamu.graphql.interface";
 import { mockDatasetsByAccountNameQuery } from "../api/mock/dataset.mock";
 import { DatasetsAccountResponse } from "../interface/dataset.interface";
 import { provideToastr, ToastrService } from "ngx-toastr";
 import {
     mockAccountDatasetFlowsPausedQuery,
+    mockAccountFlowsAsCardsQuery,
     mockAccountListDatasetsWithFlowsQuery,
     mockAccountListFlowsQuery,
     mockAccountPauseFlowsMutationError,
@@ -43,6 +51,9 @@ describe("AccountService", () => {
     let toastService: ToastrService;
     const NEW_PASSWORD = "new-password";
     const OLD_PASSWORD = "old-password";
+    const ACCOUNT_NAME = "accountName";
+    const PAGE = 1;
+    const PER_PAGE = 15;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -288,6 +299,27 @@ describe("AccountService", () => {
             .changeUserPassword({ accountName: TEST_LOGIN, newPassword: NEW_PASSWORD, oldPassword: OLD_PASSWORD })
             .subscribe((result: boolean) => {
                 expect(result).toEqual(false);
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check get all flow cards", () => {
+        spyOn(accountApi, "fetchAccountFlowsAsCards").and.returnValue(of(mockAccountFlowsAsCardsQuery));
+
+        const subscription$ = service
+            .getAccountFlowsAsCards({
+                accountName: ACCOUNT_NAME,
+                page: PAGE,
+                perPage: PER_PAGE,
+                filters: { effectiveStateIn: [] },
+                ordering: { direction: OrderingDirection.Asc, field: FlowProcessOrderField.EffectiveState },
+            })
+            .subscribe((result: AccountFlowProcessCardConnectionDataFragment) => {
+                expect(result).toEqual(
+                    mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
+                        .allCards as AccountFlowProcessCardConnectionDataFragment,
+                );
             });
 
         expect(subscription$.closed).toBeTrue();

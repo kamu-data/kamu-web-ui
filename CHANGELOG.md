@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Added webhook rotate secret feature
+- Splitted the account flow tab into two subtabs: "Activity" and "Datasets"
 
 ## [0.59.3] - 2025-10-28
 ### Added

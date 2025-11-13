@@ -34,6 +34,10 @@ import {
     ChangeAdminPasswordGQL,
     ChangeUserPasswordMutation,
     ChangeAdminPasswordMutation,
+    FlowProcessFilters,
+    FlowProcessOrdering,
+    AccountFlowsAsCardsGQL,
+    AccountFlowsAsCardsQuery,
 } from "./kamu.graphql.interface";
 import { MaybeNull } from "../interface/app.types";
 import { ApolloQueryResult } from "@apollo/client";
@@ -54,6 +58,7 @@ export class AccountApi {
     private changeAccountUsernameGQL = inject(ChangeAccountUsernameGQL);
     private changeAdminPasswordGQL = inject(ChangeAdminPasswordGQL);
     private changeUserPasswordGQL = inject(ChangeUserPasswordGQL);
+    private accountFlowsAsCardsGQL = inject(AccountFlowsAsCardsGQL);
 
     public changeAccountUsername(params: {
         accountName: string;
@@ -160,6 +165,37 @@ export class AccountApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<AccountListFlowsQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public fetchAccountFlowsAsCards(params: {
+        accountName: string;
+        page: number;
+        perPage: number;
+        filters: FlowProcessFilters;
+        ordering: FlowProcessOrdering;
+    }): Observable<AccountFlowsAsCardsQuery> {
+        return this.accountFlowsAsCardsGQL
+            .watch(
+                {
+                    name: params.accountName,
+                    page: params.page,
+                    perPage: params.perPage,
+                    filters: params.filters,
+                    ordering: params.ordering,
+                },
+                {
+                    ...noCacheFetchPolicy,
+                    context: {
+                        skipLoading: true,
+                    },
+                },
+            )
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<AccountFlowsAsCardsQuery>) => {
                     return result.data;
                 }),
             );

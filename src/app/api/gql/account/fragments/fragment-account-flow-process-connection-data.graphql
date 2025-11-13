@@ -1,0 +1,28 @@
+fragment AccountFlowProcessCardConnectionData on AccountFlowProcessCardConnection {
+  nodes {
+    ... on DatasetFlowProcess {
+      flowType
+      dataset {
+        ...DatasetBasics
+      }
+      summary {
+        ...FlowProcessSummaryData
+      }
+    }
+
+    ... on WebhookFlowSubProcess {
+      id
+      name
+      parentDataset {
+        ...DatasetBasics
+      }
+      summary {
+        ...FlowProcessSummaryData
+      }
+    }
+  }
+  totalCount
+  pageInfo {
+    ...DatasetPageInfo
+  }
+}

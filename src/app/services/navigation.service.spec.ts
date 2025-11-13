@@ -19,6 +19,8 @@ import { Router } from "@angular/router";
 import { mockDatasetInfo } from "../search/mock.data";
 import { FlowDetailsTabs } from "../dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { AccountTabs } from "../account/account.constants";
+import { AccountFlowsNav } from "../account/additional-components/account-flows-tab/account-flows-tab.types";
+import { FlowStatus } from "../api/kamu.graphql.interface";
 
 describe("NavigationService", () => {
     let service: NavigationService;
@@ -87,7 +89,7 @@ describe("NavigationService", () => {
         const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToOwnerView(mockOwnerName, AccountTabs.OVERVIEW);
         expect(routerSpy).toHaveBeenCalledWith([mockOwnerName, ProjectLinks.URL_ACCOUNT_SELECT, AccountTabs.OVERVIEW], {
-            queryParams: { page: undefined },
+            queryParams: { page: undefined, nav: undefined, status: undefined },
         });
     });
 
@@ -95,9 +97,11 @@ describe("NavigationService", () => {
         const mockOwnerName = "Mock name";
         const testPage = 2;
         const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
-        service.navigateToOwnerView(mockOwnerName, AccountTabs.DATASETS, testPage);
+        service.navigateToOwnerView(mockOwnerName, AccountTabs.DATASETS, testPage, AccountFlowsNav.ACTIVITY, [
+            FlowStatus.Finished,
+        ]);
         expect(routerSpy).toHaveBeenCalledWith([mockOwnerName, ProjectLinks.URL_ACCOUNT_SELECT, AccountTabs.DATASETS], {
-            queryParams: { page: testPage },
+            queryParams: { page: testPage, nav: AccountFlowsNav.ACTIVITY, status: FlowStatus.Finished },
         });
     });
 

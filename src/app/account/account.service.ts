@@ -8,6 +8,8 @@
 import { MaybeUndefined } from "../interface/app.types";
 import {
     AccountDatasetFlowsPausedQuery,
+    AccountFlowProcessCardConnectionDataFragment,
+    AccountFlowsAsCardsQuery,
     AccountListDatasetsWithFlowsQuery,
     AccountPauseFlowsMutation,
     AccountResumeFlowsMutation,
@@ -19,6 +21,8 @@ import {
     DatasetsTotalCountByAccountNameQuery,
     DeleteAccountByNameMutation,
     FlowConnectionWidgetDataFragment,
+    FlowProcessFilters,
+    FlowProcessOrdering,
 } from "../api/kamu.graphql.interface";
 import { AccountFlowFilters, AccountFragment, FlowConnectionDataFragment } from "../api/kamu.graphql.interface";
 import { AccountApi } from "../api/account.api";
@@ -100,6 +104,20 @@ export class AccountService {
                         .tiles as FlowConnectionWidgetDataFragment,
                     involvedDatasets: datasetsWithFlows as DatasetBasicsFragment[],
                 };
+            }),
+        );
+    }
+
+    public getAccountFlowsAsCards(params: {
+        accountName: string;
+        page: number;
+        perPage: number;
+        filters: FlowProcessFilters;
+        ordering: FlowProcessOrdering;
+    }): Observable<AccountFlowProcessCardConnectionDataFragment> {
+        return this.accountApi.fetchAccountFlowsAsCards(params).pipe(
+            map((data: AccountFlowsAsCardsQuery) => {
+                return data.accounts.byName?.flows.processes.allCards as AccountFlowProcessCardConnectionDataFragment;
             }),
         );
     }

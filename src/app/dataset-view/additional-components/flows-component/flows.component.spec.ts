@@ -34,6 +34,7 @@ import AppValues from "src/app/common/values/app.values";
 import { MatChipListboxChange } from "@angular/material/chips";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { mockDatasets } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
+import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;
@@ -43,6 +44,7 @@ describe("FlowsComponent", () => {
     let flowsService: DatasetFlowsService;
     let modalService: ModalService;
     let datasetWebhooksService: DatasetWebhooksService;
+    let datasetCardService: ProcessDatasetCardInteractionService;
 
     const MOCK_FLOW_ID = "2";
 
@@ -91,6 +93,7 @@ describe("FlowsComponent", () => {
         flowsService = TestBed.inject(DatasetFlowsService);
         modalService = TestBed.inject(ModalService);
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);
+        datasetCardService = TestBed.inject(ProcessDatasetCardInteractionService);
 
         component = fixture.componentInstance;
         component.flowsData = {
@@ -151,15 +154,14 @@ describe("FlowsComponent", () => {
         flush();
     }));
 
-    it(`should check toggle state for dataset flow when state=${FlowProcessEffectiveState.Active}`, fakeAsync(() => {
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
-        const datasetPauseFlowsSpy = spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
-        component.toggleStateDatasetFlowConfigs(FlowProcessEffectiveState.Active);
-        tick(component.TIMEOUT_REFRESH_FLOW);
-        expect(datasetPauseFlowsSpy).toHaveBeenCalledTimes(1);
-        expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
-        flush();
-    }));
+    it(`should check toggle state for dataset flow when state=${FlowProcessEffectiveState.Active}`, () => {
+        const handleToggleStateSpy = spyOn(datasetCardService, "handleToggleState");
+        component.toggleStateDatasetFlowConfigs({
+            state: FlowProcessEffectiveState.Active,
+            datasetBasics: mockDatasetBasicsRootFragment,
+        });
+        expect(handleToggleStateSpy).toHaveBeenCalledTimes(1);
+    });
 
     it(`should check toggle state for dataset flow when state=${FlowProcessEffectiveState.StoppedAuto}`, fakeAsync(() => {
         const refreshFlowSpy = spyOn(component, "refreshFlow");
@@ -168,7 +170,10 @@ describe("FlowsComponent", () => {
             return Promise.resolve("");
         });
         const datasetResumeFlowsSpy = spyOn(flowsService, "datasetResumeFlows").and.returnValue(of(void 0));
-        component.toggleStateDatasetFlowConfigs(FlowProcessEffectiveState.StoppedAuto);
+        component.toggleStateDatasetFlowConfigs({
+            state: FlowProcessEffectiveState.StoppedAuto,
+            datasetBasics: mockDatasetBasicsRootFragment,
+        });
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
@@ -178,10 +183,13 @@ describe("FlowsComponent", () => {
 
     it(`should check toggle state for dataset flow when state=${FlowProcessEffectiveState.Failing}`, fakeAsync(() => {
         const refreshFlowSpy = spyOn(component, "refreshFlow");
-        const datasetResumeFlowsSpy = spyOn(flowsService, "datasetResumeFlows").and.returnValue(of(void 0));
-        component.toggleStateDatasetFlowConfigs(FlowProcessEffectiveState.Failing);
+        const datasetPauseFlowsSpy = spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+        component.toggleStateDatasetFlowConfigs({
+            state: FlowProcessEffectiveState.Failing,
+            datasetBasics: mockDatasetBasicsRootFragment,
+        });
         tick(component.TIMEOUT_REFRESH_FLOW);
-        expect(datasetResumeFlowsSpy).toHaveBeenCalledTimes(1);
+        expect(datasetPauseFlowsSpy).toHaveBeenCalledTimes(1);
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
         flush();
     }));
@@ -501,10 +509,20 @@ describe("FlowsComponent", () => {
         const filters = {
             accounts: [mockAccountDetails],
             datasets: mockDatasets,
-            status: FlowStatus.Finished,
+            status: [FlowStatus.Finished],
             onlySystemFlows: false,
         };
         component.onSearchByFiltersChange(filters);
         expect(component.searchByAccount).toEqual(filters.accounts);
+    });
+
+    it("should check to reset filters", () => {
+        component.selectedDatasetItems = [mockDatasetBasicsRootFragment];
+        component.selectedAccountItems = [mockAccountDetails];
+        component.selectedStatusItems = [{ id: "FINISHED", status: FlowStatus.Finished }];
+        component.onResetFilters();
+        expect(component.selectedDatasetItems).toEqual([]);
+        expect(component.selectedAccountItems).toEqual([]);
+        expect(component.selectedStatusItems).toEqual([]);
     });
 });

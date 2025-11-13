@@ -14,11 +14,9 @@ import {
     OnChanges,
     OnInit,
     Output,
-    QueryList,
     SimpleChange,
     SimpleChanges,
     ViewChild,
-    ViewChildren,
 } from "@angular/core";
 import {
     FlowStatus,
@@ -31,15 +29,13 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
 import { MatTable, MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { capitalizeString, promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { FlowTableHelpers } from "./flows-table.helpers";
-import { MatMenuTrigger, MatMenuModule } from "@angular/material/menu";
+import { MatMenuModule } from "@angular/material/menu";
 import {
     CancelFlowArgs,
-    DROPDOWN_ACCOUNT_SETTINGS,
     DROPDOWN_DATASET_SETTINGS,
     DROPDOWN_STATUS_SETTINGS,
-    FilterStatusType,
     FlowsTableFiltersOptions,
     FlowsTableOptions,
 } from "./flows-table.types";
@@ -87,7 +83,7 @@ import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 })
 export class FlowsTableComponent extends BaseComponent implements OnInit, OnChanges {
     @Input({ required: true }) public nodes: FlowSummaryDataWithTriggerFragment[];
-    @Input({ required: true }) public filterByStatus: MaybeNull<FlowStatus>;
+    @Input({ required: true }) public filterByStatus: MaybeNull<FlowStatus[]>;
     @Input({ required: true }) public onlySystemFlows: boolean;
     @Input({ required: true }) public searchByAccount: AccountFragment[] = [];
     @Input() public searchByDataset: DatasetBasicsFragment[] = [];
@@ -101,13 +97,11 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     @Output() public abortFlowChange = new EventEmitter<CancelFlowArgs>();
 
     @ViewChild(MatTable) private table: MaybeNull<MatTable<FlowSummaryDataWithTriggerFragment>> = null;
-    @ViewChildren(MatMenuTrigger) private triggersMatMenu: QueryList<MatMenuTrigger>;
 
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly DEFAULT_FLOW_INITIATOR = AppValues.DEFAULT_FLOW_INITIATOR;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly FlowDetailsTabs: typeof FlowDetailsTabs = FlowDetailsTabs;
-    private readonly FILTERED_ITEMS_COUNT = 10;
 
     public readonly URL_FLOW_DETAILS = ProjectLinks.URL_FLOW_DETAILS;
     public readonly FILTER_DATASET_SETTINGS: DropdownSettings = DROPDOWN_DATASET_SETTINGS;
@@ -120,17 +114,8 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     public dataSource: MatTableDataSource<FlowSummaryDataWithTriggerFragment> =
         new MatTableDataSource<FlowSummaryDataWithTriggerFragment>();
 
-    public filterAccountSettings: DropdownSettings = DROPDOWN_ACCOUNT_SETTINGS;
-    public dropdownDatasetList: DatasetBasicsFragment[] = [];
-    public selectedDatasetItems: DatasetBasicsFragment[] = [];
-    public dropdownAccountList: AccountFragment[] = [];
-    public selectedAccountItems: AccountFragment[] = [];
-    public dropdownStatustList: FilterStatusType[] = [];
-    public selectedStatusItems: FilterStatusType[] = [];
-
     public ngOnInit(): void {
         this.dataSource.data = this.nodes;
-        this.initializeFilters();
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
@@ -181,20 +166,6 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
 
     public descriptionDatasetFlowSubMessage(element: FlowSummaryDataWithTriggerFragment): string {
         return FlowTableHelpers.descriptionSubMessage(element as FlowSummaryDataFragment);
-    }
-
-    public onSearch(): void {
-        this.triggersMatMenu.get(1)?.closeMenu();
-        this.triggersMatMenu.get(2)?.closeMenu();
-        this.searchByFiltersChange.emit({
-            accounts: this.selectedAccountItems,
-            datasets: this.selectedDatasetItems,
-            status:
-                !this.selectedStatusItems.length || this.selectedStatusItems[0].status === "All"
-                    ? null
-                    : (this.selectedStatusItems[0].status.toUpperCase() as FlowStatus),
-            onlySystemFlows: this.onlySystemFlows,
-        });
     }
 
     public durationBlockVisible(node: FlowSummaryDataFragment): boolean {
@@ -277,11 +248,6 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         return DatasetFlowDetailsHelpers.flowStatusAnimationSrc(status);
     }
 
-    public onResetFilters(): void {
-        this.searchByFiltersChange.emit(null);
-        this.filterAccountSettings.disabled = false;
-    }
-
     public get hasDatasetColumn(): boolean {
         return this.tableOptions.displayColumns.includes("dataset");
     }
@@ -327,23 +293,6 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
                 },
             }),
         );
-    }
-
-    private initializeFilters(): void {
-        this.dropdownDatasetList = this.involvedDatasets.slice(0, this.FILTERED_ITEMS_COUNT);
-        this.selectedDatasetItems = this.searchByDataset;
-
-        this.dropdownAccountList = this.accountFlowInitiators.slice(0, this.FILTERED_ITEMS_COUNT);
-        this.selectedAccountItems = this.searchByAccount;
-
-        this.dropdownStatustList = Object.entries(FlowStatus).map(([key]) => {
-            return { id: key, status: key };
-        });
-        this.dropdownStatustList = [{ id: "All", status: "All" }, ...this.dropdownStatustList];
-        this.selectedStatusItems = this.filterByStatus
-            ? [{ id: capitalizeString(this.filterByStatus), status: capitalizeString(this.filterByStatus) }]
-            : [];
-        this.filterAccountSettings.disabled = this.onlySystemFlows;
     }
 
     public trackByFlowId(index: number, item: FlowSummaryDataFragment): string {

@@ -18,6 +18,7 @@ import RoutingResolvers from "../../common/resolvers/routing-resolvers";
 import ProjectLinks from "../../project-links";
 import { AccountComponent } from "../account.component";
 import { accountActiveTabResolverFn } from "../resolver/account-active-tab.resolver";
+import { accountFlowsResolverFn } from "./account-flows-tab/resolvers/account-flows.resolver";
 
 export const ACCOUNT_SELECT_ROUTES: Routes = [
     {
@@ -48,6 +49,8 @@ export const ACCOUNT_SELECT_ROUTES: Routes = [
                         data: {
                             [ProjectLinks.URL_PARAM_TAB]: AccountTabs.FLOWS,
                         },
+                        resolve: { [RoutingResolvers.ACCOUNT_FLOWS_KEY]: accountFlowsResolverFn },
+                        runGuardsAndResolvers: "always",
                         canActivate: [AuthenticatedGuard],
                         component: AccountFlowsTabComponent,
                     },

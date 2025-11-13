@@ -2,40 +2,6 @@
     <div class="d-flex flex-row gap-4">
         <button
             type="button"
-            *ngIf="showUpdateNowButton"
-            (click)="updateNow()"
-            class="badge-button border-1 bg-light border rounded-2 px-2"
-        >
-            <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>
-            <span class="fs-12 me-2 d-block"> Update now</span>
-        </button>
-        <button
-            type="button"
-            *ngIf="showPauseOrResumeButton"
-            (click)="toggleStateDatasetFlowConfigs(flowProcess.summary.effectiveState!)"
-            class="badge-button border-1 bg-light border rounded-2 px-2 btn btn-sm"
-        >
-            <mat-icon class="text-muted fs-4 d-block" svgIcon="play_pause" />
-            <span class="fs-12 me-2 d-block">
-                {{ pauseableStates.includes(flowProcess.summary.effectiveState) ? "Pause" : "Resume" }}
-                updates</span
-            >
-        </button>
-        <a
-            [routerLink]="[
-                '/',
-                datasetBasics.owner.accountName,
-                datasetBasics.name,
-                DatasetViewTypeEnum.Settings,
-                redirectSection,
-            ]"
-            class="badge-button border-1 link-underline link-underline-opacity-0 bg-light border rounded-2 px-2 btn btn-sm"
-        >
-            <mat-icon class="text-muted fs-4 d-block">settings</mat-icon>
-            <span class="fs-12 me-2 d-block link-settings">Settings</span>
-        </a>
-        <button
-            type="button"
             (click)="refreshFlow()"
             class="badge-button border-1 bg-light border rounded-2 px-2 btn btn-sm"
         >

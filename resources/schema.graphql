@@ -117,7 +117,7 @@ type AccountFieldNonUnique implements CreateAccountResult {
 }
 
 input AccountFlowFilters {
-	byStatus: FlowStatus
+	byStatus: [FlowStatus!]
 	byInitiator: InitiatorFilterInput
 	byDatasetIds: [DatasetID!]!
 	byProcessType: FlowProcessTypeFilterInput
@@ -1074,7 +1074,7 @@ type Dataset {
 	"""
 	collaboration: DatasetCollaboration!
 	"""
-	Access to the dataset's webhooks management functionality
+	Access to the dataset's webhook management functionality
 	"""
 	webhooks: DatasetWebhooks!
 	"""
@@ -1227,7 +1227,7 @@ type DatasetFlowConfigsMut {
 }
 
 input DatasetFlowFilters {
-	byStatus: FlowStatus
+	byStatus: [FlowStatus!]
 	byInitiator: InitiatorFilterInput
 	byProcessType: FlowProcessTypeFilterInput
 }
@@ -1581,7 +1581,7 @@ type Datasets {
 		skipMissing: Boolean!
 	): [Dataset!]!
 	"""
-	Returns a dataset by a ID or alias, if found
+	Returns a dataset by an ID or alias, if found
 	"""
 	byRef(datasetRef: DatasetRef!): Dataset
 	"""
@@ -1626,7 +1626,7 @@ type DatasetsMut {
 	"""
 	createEmpty(datasetKind: DatasetKind!, datasetAlias: DatasetAlias!, datasetVisibility: DatasetVisibility!): CreateDatasetResult!
 	"""
-	Creates a new dataset from provided DatasetSnapshot manifest
+	Creates a new dataset from provided snapshot manifest
 	"""
 	createFromSnapshot(snapshot: String!, snapshotFormat: MetadataManifestFormat!, datasetVisibility: DatasetVisibility!): CreateDatasetFromSnapshotResult!
 	"""

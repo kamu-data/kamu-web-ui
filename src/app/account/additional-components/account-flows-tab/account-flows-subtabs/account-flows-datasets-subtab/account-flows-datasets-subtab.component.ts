@@ -177,11 +177,11 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         });
     }
 
-    public async toggleStateDatasetCard(params: {
+    public toggleStateDatasetCard(params: {
         state: FlowProcessEffectiveState;
         datasetBasics: DatasetBasicsFragment;
-    }): Promise<void> {
-        await this.datasetCardService.handleToggleState({
+    }): void {
+        this.datasetCardService.handleToggleState({
             state: params.state,
             datasetBasics: params.datasetBasics,
             onSuccess: () => {

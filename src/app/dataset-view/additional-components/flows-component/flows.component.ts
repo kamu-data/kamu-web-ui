@@ -373,11 +373,11 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         });
     }
 
-    public async toggleStateDatasetFlowConfigs(params: {
+    public toggleStateDatasetFlowConfigs(params: {
         state: FlowProcessEffectiveState;
         datasetBasics: DatasetBasicsFragment;
-    }): Promise<void> {
-        await this.datasetCardService.handleToggleState({
+    }): void {
+        this.datasetCardService.handleToggleState({
             state: params.state,
             datasetBasics: params.datasetBasics,
             onSuccess: () => {

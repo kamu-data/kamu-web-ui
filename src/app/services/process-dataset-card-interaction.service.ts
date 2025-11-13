@@ -11,6 +11,7 @@ import { Observable, of, take } from "rxjs";
 import { DatasetBasicsFragment, DatasetKind, FlowProcessEffectiveState } from "../api/kamu.graphql.interface";
 import AppValues from "../common/values/app.values";
 import { ModalService } from "src/app/common/components/modal/modal.service";
+import { promiseWithCatch } from "../common/helpers/app.helpers";
 
 @Injectable({
     providedIn: "root",
@@ -35,12 +36,12 @@ export class ProcessDatasetCardInteractionService {
         });
     }
 
-    public async handleToggleState(params: {
+    public handleToggleState(params: {
         state: FlowProcessEffectiveState;
         datasetBasics: DatasetBasicsFragment;
         onSuccess: () => void;
         confirmModal?: boolean;
-    }): Promise<void> {
+    }): void {
         const { state, datasetBasics, onSuccess, confirmModal } = params;
 
         const executeToggle = () => {
@@ -61,15 +62,17 @@ export class ProcessDatasetCardInteractionService {
         };
 
         if (confirmModal && state === FlowProcessEffectiveState.StoppedAuto) {
-            await this.modalService.error({
-                title: "Resume updates",
-                message: "Have you confirmed that all issues have been resolved?",
-                yesButtonText: "Ok",
-                noButtonText: "Cancel",
-                handler: (ok) => {
-                    ok && executeToggle();
-                },
-            });
+            promiseWithCatch(
+                this.modalService.error({
+                    title: "Resume updates",
+                    message: "Have you confirmed that all issues have been resolved?",
+                    yesButtonText: "Ok",
+                    noButtonText: "Cancel",
+                    handler: (ok) => {
+                        ok && executeToggle();
+                    },
+                }),
+            );
         } else {
             executeToggle();
         }

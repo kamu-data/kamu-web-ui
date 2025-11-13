@@ -8,11 +8,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, NgZone, OnInit } from "@angular/core";
 import { AsyncPipe, NgFor, NgIf } from "@angular/common";
 import { AccountService } from "src/app/account/account.service";
-import { Observable, of, switchMap, take, tap, timer } from "rxjs";
+import { Observable, switchMap, take, tap, timer } from "rxjs";
 import {
     AccountFlowProcessCardConnectionDataFragment,
     DatasetBasicsFragment,
-    DatasetKind,
     FlowProcessEffectiveState,
     FlowProcessOrderField,
     OrderingDirection,
@@ -32,6 +31,7 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { DatasetFlowProcessCardComponent } from "src/app/common/components/dataset-flow-process-card/dataset-flow-process-card.component";
 import { WebhookFlowProcessCardComponent } from "./components/webhook-flow-process-card/webhook-flow-process-card.component";
+import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
 
 @Component({
     selector: "app-account-flows-datasets-subtab",
@@ -64,6 +64,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     private readonly flowsService = inject(DatasetFlowsService);
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly datasetWebhooksService = inject(DatasetWebhooksService);
+    private readonly datasetCardService = inject(ProcessDatasetCardInteractionService);
 
     public accountFlowsCardsData$: Observable<AccountFlowProcessCardConnectionDataFragment>;
     public currentPage: number = 1;
@@ -110,8 +111,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         result$.pipe(take(1)).subscribe((result: boolean) => {
             if (result) {
                 setTimeout(() => {
-                    this.fetchCardsData();
-                    this.cdr.detectChanges();
+                    this.refreshNow();
                 }, this.TIMEOUT_REFRESH_FLOW);
             }
         });
@@ -168,48 +168,25 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     }
 
     public updateNow(datasetBasics: DatasetBasicsFragment): void {
-        const datasetTrigger$: Observable<boolean> =
-            datasetBasics.kind === DatasetKind.Root
-                ? this.flowsService.datasetTriggerIngestFlow({
-                      datasetId: datasetBasics.id,
-                  })
-                : this.flowsService.datasetTriggerTransformFlow({
-                      datasetId: datasetBasics.id,
-                  });
-
-        datasetTrigger$.pipe(take(1)).subscribe((success: boolean) => {
-            if (success) {
-                setTimeout(() => {
-                    this.navigationService.navigateToDatasetView({
-                        accountName: datasetBasics.owner.accountName,
-                        datasetName: datasetBasics.name,
-                        tab: DatasetViewTypeEnum.Flows,
-                    });
-                }, this.TIMEOUT_REFRESH_FLOW);
-            }
+        this.datasetCardService.handleTrigger(datasetBasics, () => {
+            this.navigationService.navigateToDatasetView({
+                accountName: datasetBasics.owner.accountName,
+                datasetName: datasetBasics.name,
+                tab: DatasetViewTypeEnum.Flows,
+            });
         });
     }
 
-    public toggleStateDatasetCard(params: {
+    public async toggleStateDatasetCard(params: {
         state: FlowProcessEffectiveState;
         datasetBasics: DatasetBasicsFragment;
-    }): void {
-        let operation$: Observable<void> = of();
-        if ([FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing].includes(params.state)) {
-            operation$ = this.flowsService.datasetPauseFlows({
-                datasetId: params.datasetBasics.id,
-            });
-        } else {
-            operation$ = this.flowsService.datasetResumeFlows({
-                datasetId: params.datasetBasics.id,
-            });
-        }
-
-        operation$.pipe(take(1)).subscribe(() => {
-            setTimeout(() => {
-                this.fetchCardsData();
-                this.cdr.detectChanges();
-            }, this.TIMEOUT_REFRESH_FLOW);
+    }): Promise<void> {
+        await this.datasetCardService.handleToggleState({
+            state: params.state,
+            datasetBasics: params.datasetBasics,
+            onSuccess: () => {
+                this.refreshNow();
+            },
         });
     }
 

@@ -49,14 +49,13 @@ import {
     DatasetFlowsTabState,
 } from "./flows.helpers";
 import { FlowsBlockActionsComponent } from "./components/flows-block-actions/flows-block-actions.component";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FlowsAssociatedChannelsComponent } from "./components/flows-associated-channels/flows-associated-channels.component";
 import { DatasetWebhooksService } from "../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { ModalService } from "src/app/common/components/modal/modal.service";
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { FlowsSelectionStateService } from "./services/flows-selection-state.service";
 import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table/components/flow-table-panel-filters/flow-table-panel-filters.component";
 import { DatasetFlowProcessCardComponent } from "src/app/common/components/dataset-flow-process-card/dataset-flow-process-card.component";
+import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
 @Component({
     selector: "app-flows",
     templateUrl: "./flows.component.html",
@@ -117,6 +116,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     private datasetWebhooksService = inject(DatasetWebhooksService);
     private modalService = inject(ModalService);
     private flowsSelectionStateService = inject(FlowsSelectionStateService);
+    private datasetCardService = inject(ProcessDatasetCardInteractionService);
 
     public flowsProcesses$: Observable<DatasetFlowProcesses>;
 
@@ -367,69 +367,24 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public updateNow(): void {
-        const datasetTrigger$: Observable<boolean> =
-            this.flowsData.datasetBasics.kind === DatasetKind.Root
-                ? this.flowsService.datasetTriggerIngestFlow({
-                      datasetId: this.flowsData.datasetBasics.id,
-                  })
-                : this.flowsService.datasetTriggerTransformFlow({
-                      datasetId: this.flowsData.datasetBasics.id,
-                  });
-
-        datasetTrigger$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((success: boolean) => {
-            if (success) {
-                setTimeout(() => {
-                    this.refreshFlow();
-                    this.cdr.detectChanges();
-                }, this.TIMEOUT_REFRESH_FLOW);
-            }
+        this.datasetCardService.handleTrigger(this.flowsData.datasetBasics, () => {
+            this.refreshFlow();
+            this.cdr.detectChanges();
         });
     }
 
-    public toggleStateDatasetFlowConfigs(params: {
+    public async toggleStateDatasetFlowConfigs(params: {
         state: FlowProcessEffectiveState;
         datasetBasics: DatasetBasicsFragment;
-    }): void {
-        let operation$: Observable<void> = of();
-        if ([FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing].includes(params.state)) {
-            operation$ = this.flowsService.datasetPauseFlows({
-                datasetId: this.flowsData.datasetBasics.id,
-            });
-        } else if (params.state === FlowProcessEffectiveState.StoppedAuto) {
-            promiseWithCatch(
-                this.modalService.error({
-                    title: "Resume updates",
-                    message: "Have you confirmed that all issues have been resolved?",
-                    yesButtonText: "Ok",
-                    noButtonText: "Cancel",
-                    handler: (ok) => {
-                        if (ok) {
-                            this.flowsService
-                                .datasetResumeFlows({
-                                    datasetId: this.flowsData.datasetBasics.id,
-                                })
-                                .pipe(take(1))
-                                .subscribe(() => {
-                                    setTimeout(() => {
-                                        this.refreshFlow();
-                                        this.cdr.detectChanges();
-                                    }, this.TIMEOUT_REFRESH_FLOW);
-                                });
-                        }
-                    },
-                }),
-            );
-        } else {
-            operation$ = this.flowsService.datasetResumeFlows({
-                datasetId: this.flowsData.datasetBasics.id,
-            });
-        }
-
-        operation$.pipe(take(1)).subscribe(() => {
-            setTimeout(() => {
+    }): Promise<void> {
+        await this.datasetCardService.handleToggleState({
+            state: params.state,
+            datasetBasics: params.datasetBasics,
+            onSuccess: () => {
                 this.refreshFlow();
                 this.cdr.detectChanges();
-            }, this.TIMEOUT_REFRESH_FLOW);
+            },
+            confirmModal: true,
         });
     }
 

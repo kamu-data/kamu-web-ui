@@ -26,7 +26,6 @@ import { AccountTabs } from "src/app/account/account.constants";
 import { AccountFlowsType } from "../../resolvers/account-flows.resolver";
 import { BaseComponent } from "src/app/common/components/base.component";
 import AppValues from "src/app/common/values/app.values";
-import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { DatasetFlowProcessCardComponent } from "src/app/common/components/dataset-flow-process-card/dataset-flow-process-card.component";
@@ -61,7 +60,6 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     private readonly accountService = inject(AccountService);
     private readonly navigationService = inject(NavigationService);
     private readonly ngZone = inject(NgZone);
-    private readonly flowsService = inject(DatasetFlowsService);
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly datasetWebhooksService = inject(DatasetWebhooksService);
     private readonly datasetCardService = inject(ProcessDatasetCardInteractionService);

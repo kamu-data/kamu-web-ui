@@ -26,6 +26,7 @@
                         [datasetBasics]="card.parentDataset"
                         [summary]="card.summary"
                         [subscriptionId]="card.id"
+                        [subscriptionName]="card.name"
                         (toggleWebhookCardStateEmitter)="toggleWebhookCardState($event)"
                         (editWebhookCardEmitter)="editWebhookCard($event)"
                     />

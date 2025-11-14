@@ -46,6 +46,7 @@ export class WebhookFlowProcessCardComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public summary: FlowProcessSummary;
     @Input({ required: true }) public subscriptionId: string;
+    @Input({ required: true }) public subscriptionName: string;
 
     @Output() public toggleWebhookCardStateEmitter = new EventEmitter<{
         datasetBasics: DatasetBasicsFragment;

@@ -152,42 +152,46 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         filterByStatus?: MaybeNull<FlowStatus[]>,
         filterByInitiator?: MaybeNull<InitiatorFilterInput>,
     ): void {
-        this.flowConnectionData$ = timer(0, environment.delay_polling_ms).pipe(
-            switchMap(() => this.flowsService.datasetFlowsProcesses({ datasetId: this.flowsData.datasetBasics.id })),
-            tap((flowProcesses: DatasetFlowProcesses) => {
-                const modifiedRollup = {
-                    ...flowProcesses.webhooks.rollup,
-                    paused: flowProcesses.webhooks.rollup.paused + flowProcesses.webhooks.rollup.unconfigured,
-                };
-                flowProcesses.webhooks.rollup = modifiedRollup;
-                this.flowsSelectionStateService.initFlowsSelectionState(flowProcesses);
-            }),
-            switchMap((flowProcesses: DatasetFlowProcesses) =>
-                combineLatest([
-                    this.flowsService.datasetFlowsList({
-                        datasetId: this.flowsData.datasetBasics.id,
-                        page: page - 1,
-                        perPageTable: this.TABLE_FLOW_RUNS_PER_PAGE,
-                        perPageTiles: this.WIDGET_FLOW_RUNS_PER_PAGE,
-                        filters: {
-                            byStatus: filterByStatus,
-                            byInitiator: filterByInitiator,
-                            byProcessType: this.setProcessTypeFilter(
-                                this.flowsSelectionState.webhooksIds,
-                                this.flowsSelectionState.flowsCategory,
-                                this.flowsSelectionState.webhooksCategory,
-                            ),
-                        },
-                    }),
-                    this.flowsService.flowsInitiators(this.flowsData.datasetBasics.id),
-                    of(flowProcesses),
-                ]),
-            ),
+        this.flowConnectionData$ =
+            // timer(0, environment.delay_polling_ms)
+            of(1).pipe(
+                switchMap(() =>
+                    this.flowsService.datasetFlowsProcesses({ datasetId: this.flowsData.datasetBasics.id }),
+                ),
+                tap((flowProcesses: DatasetFlowProcesses) => {
+                    const modifiedRollup = {
+                        ...flowProcesses.webhooks.rollup,
+                        paused: flowProcesses.webhooks.rollup.paused + flowProcesses.webhooks.rollup.unconfigured,
+                    };
+                    flowProcesses.webhooks.rollup = modifiedRollup;
+                    this.flowsSelectionStateService.initFlowsSelectionState(flowProcesses);
+                }),
+                switchMap((flowProcesses: DatasetFlowProcesses) =>
+                    combineLatest([
+                        this.flowsService.datasetFlowsList({
+                            datasetId: this.flowsData.datasetBasics.id,
+                            page: page - 1,
+                            perPageTable: this.TABLE_FLOW_RUNS_PER_PAGE,
+                            perPageTiles: this.WIDGET_FLOW_RUNS_PER_PAGE,
+                            filters: {
+                                byStatus: filterByStatus,
+                                byInitiator: filterByInitiator,
+                                byProcessType: this.setProcessTypeFilter(
+                                    this.flowsSelectionState.webhooksIds,
+                                    this.flowsSelectionState.flowsCategory,
+                                    this.flowsSelectionState.webhooksCategory,
+                                ),
+                            },
+                        }),
+                        this.flowsService.flowsInitiators(this.flowsData.datasetBasics.id),
+                        of(flowProcesses),
+                    ]),
+                ),
 
-            map(([flowsData, flowInitiators, flowProcesses]) => {
-                return { flowsData, flowInitiators, flowProcesses };
-            }),
-        );
+                map(([flowsData, flowInitiators, flowProcesses]) => {
+                    return { flowsData, flowInitiators, flowProcesses };
+                }),
+            );
     }
 
     private setProcessTypeFilter(

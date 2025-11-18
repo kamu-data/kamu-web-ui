@@ -1,14 +1,189 @@
-<div *ngIf="accountFlowsCardsData$ | async as cardsData">
-    <div *ngIf="cardsData.nodes.length; else noCardsBlock">
-        <div class="d-flex justify-content-end my-4 mb-2">
+<div class="d-flex justify-content-end my-4 mb-2">
+    <button
+        (click)="refreshNow()"
+        class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
+    >
+        <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>
+        <span class="fs-12 me-2 d-block"> Refresh now</span>
+    </button>
+</div>
+<div class="my-4 d-flex flex-row align-items-center">
+    <span class="fw-500 me-4 n">Select filters mode:</span>
+    <mat-button-toggle-group [(ngModel)]="accountFlowsData.datasetsFiltersMode" (change)="onChangeFiltersMode($event)">
+        <mat-button-toggle *ngFor="let item of CARD_FILTERS_MODE_OPTIONS" [value]="item.value">{{
+            item.label
+        }}</mat-button-toggle>
+    </mat-button-toggle-group>
+</div>
+<div class="my-4">
+    <p class="fw-500">Filters</p>
+    <div class="row p-4 box">
+        <div class="col-md-4">
+            <div class="d-flex align-items-center pt-4 mb-3">
+                <div class="position-relative">
+                    <label for="lastFailureDate" class="fw-500 from-label fs-12">Last failure since</label>
+                    <input
+                        [(ngModel)]="lastFailureDate"
+                        [owlDateTime]="lastFailureDatepicker"
+                        class="form-control"
+                        id="lastFailureDate"
+                        [disabled]="!isAdvancedFiltersMode"
+                    />
+                </div>
+                <owl-date-time #lastFailureDatepicker />
+                <span
+                    [owlDateTimeTrigger]="lastFailureDatepicker"
+                    data-test-id="lastFailureDatepicker"
+                    class="trigger ms-2"
+                    ><mat-icon>calendar_month</mat-icon>
+                </span>
+            </div>
+            <div class="d-flex align-items-center pt-4 mb-3">
+                <div class="position-relative">
+                    <label for="nextPlannedBeforeDate" class="fw-500 from-label fs-12">Next planned before</label>
+                    <input
+                        [(ngModel)]="nextPlannedBeforeDate"
+                        [owlDateTime]="nextPlannedBeforeDatepicker"
+                        class="form-control"
+                        id="nextPlannedBeforeDate"
+                        [disabled]="!isAdvancedFiltersMode"
+                    />
+                </div>
+                <owl-date-time #nextPlannedBeforeDatepicker />
+                <span
+                    [owlDateTimeTrigger]="nextPlannedBeforeDatepicker"
+                    data-test-id="nextPlannedBeforeDatepicker"
+                    class="trigger ms-2"
+                    ><mat-icon>calendar_month</mat-icon>
+                </span>
+            </div>
+            <div class="d-flex align-items-center pt-4 mb-3">
+                <div class="position-relative">
+                    <label for="nextPlannedAfter" class="fw-500 from-label fs-12">Next planned after</label>
+                    <input
+                        [(ngModel)]="nextPlannedAfterDate"
+                        [owlDateTime]="nextPlannedAfterDatepicker"
+                        class="form-control"
+                        id="nextPlannedAfter"
+                        [disabled]="!isAdvancedFiltersMode"
+                    />
+                </div>
+                <owl-date-time #nextPlannedAfterDatepicker />
+                <span
+                    [owlDateTimeTrigger]="nextPlannedAfterDatepicker"
+                    data-test-id="nextPlannedAfterDatepicker"
+                    class="trigger ms-2"
+                    ><mat-icon>calendar_month</mat-icon>
+                </span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center mt-4 mb-3">
+                <div class="position-relative">
+                    <label for="fromDate" class="fw-500 from-label fs-12">From</label>
+                    <input
+                        [(ngModel)]="fromFilterDate"
+                        [owlDateTime]="fromdatepicker"
+                        class="form-control"
+                        id="fromDate"
+                        [disabled]="!isAdvancedFiltersMode"
+                    />
+                </div>
+                <owl-date-time #fromdatepicker />
+                <span [owlDateTimeTrigger]="fromdatepicker" data-test-id="fromdatepicker" class="trigger ms-2"
+                    ><mat-icon>calendar_month</mat-icon>
+                </span>
+            </div>
+            <div class="d-flex align-items-center pt-4 mb-3">
+                <div class="position-relative">
+                    <label for="toDate" class="fw-500 from-label fs-12">To</label>
+                    <input
+                        [(ngModel)]="toFilterDate"
+                        [owlDateTime]="todatepicker"
+                        [disabled]="!isAdvancedFiltersMode"
+                        class="form-control"
+                        id="toDate"
+                    />
+                </div>
+                <owl-date-time #todatepicker />
+                <span [owlDateTimeTrigger]="todatepicker" data-test-id="todatepicker" class="trigger ms-2"
+                    ><mat-icon>calendar_month</mat-icon>
+                </span>
+            </div>
+            <div class="d-flex align-items-center pt-4 mb-3">
+                <div class="position-relative">
+                    <label for="minConsecutiveFailures" class="fw-500 from-label fs-12">Min consecutive failures</label>
+                    <input
+                        [(ngModel)]="minConsecutiveFailures"
+                        class="form-control"
+                        id="minConsecutiveFailures"
+                        type="number"
+                        min="0"
+                        [disabled]="!isAdvancedFiltersMode"
+                    />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center pt-4 mb-3">
+                <div class="position-relative container-order">
+                    <label for="order-by-field" class="fw-500 from-label fs-12">Order by field</label>
+                    <ng-select
+                        [items]="ORDER_BY_FIELD_LIST"
+                        [(ngModel)]="selectedOrderField"
+                        [clearable]="false"
+                        bindLabel="label"
+                        bindValue="value"
+                        id="order-by-field"
+                        [disabled]="!isAdvancedFiltersMode"
+                    >
+                        <ng-template ng-option-tmp let-item="item" let-index="index">
+                            <label class="fs-14 inline-block w-100"> {{ item.label }} </label>
+                        </ng-template>
+                    </ng-select>
+                </div>
+            </div>
+            <div class="d-flex align-items-center pt-4 mb-3">
+                <div class="position-relative container-order">
+                    <label for="order-direction" class="fw-500 from-label fs-12">Order direction</label>
+                    <ng-select
+                        [items]="ORDER_DIRECTION_LIST"
+                        [(ngModel)]="selectedOrderDirection"
+                        [clearable]="false"
+                        bindLabel="label"
+                        bindValue="value"
+                        id="order-direction"
+                        [disabled]="!isAdvancedFiltersMode"
+                    >
+                        <ng-template ng-option-tmp let-item="item" let-index="index">
+                            <label class="fs-14 inline-block w-100"> {{ item.label }} </label>
+                        </ng-template>
+                    </ng-select>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end my-2">
             <button
-                (click)="refreshNow()"
+                (click)="resetFilters()"
+                [disabled]="!isAdvancedFiltersMode"
                 class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
             >
-                <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>
-                <span class="fs-12 me-2 d-block"> Refresh now</span>
+                <mat-icon class="text-muted fs-4 d-block">restart_alt</mat-icon>
+                <span class="fs-12 me-2 d-block"> Reset filters</span>
+            </button>
+            <button
+                (click)="refreshNow()"
+                [disabled]="!isAdvancedFiltersMode"
+                class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
+            >
+                <mat-icon class="text-muted fs-4 d-block">filter_alt</mat-icon>
+                <span class="fs-12 me-2 d-block"> Apply filters</span>
             </button>
         </div>
+    </div>
+</div>
+<ng-container *ngIf="accountFlowsCardsData$ | async as cardsData">
+    <div *ngIf="cardsData.nodes.length; else noCardsBlock">
         <div class="d-flex justify-content-end mt-4 mb-2 fw-500">Total processes: {{ cardsData.totalCount }}</div>
         <div class="cards mt-4" data-test-id="cards">
             <ng-container *ngFor="let card of cardsData.nodes">
@@ -42,6 +217,8 @@
         </div>
     </div>
     <ng-template #noCardsBlock>
-        <div class="mt-4" data-test-id="empty-cards-block">No cards belonging to this account</div>
+        <div class="mt-4" data-test-id="empty-cards-block">
+            <span class="fw-bold fs-16">Result: </span> No cards belonging to this account
+        </div>
     </ng-template>
-</div>
+</ng-container>

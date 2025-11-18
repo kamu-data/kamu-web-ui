@@ -15,7 +15,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
 import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
-import { AccountFlowsNav } from "./account-flows-tab.types";
+import { AccountFlowsNav, ProcessCardFilterMode } from "./account-flows-tab.types";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { AccountFlowsType } from "./resolvers/account-flows.resolver";
 import AppValues from "src/app/common/values/app.values";
@@ -68,6 +68,13 @@ export class AccountFlowsTabComponent {
 
     public onNavChange(event: NgbNavChangeEvent): void {
         const nextNav = event.nextId as AccountFlowsNav;
-        this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.FLOWS, undefined, nextNav, undefined);
+        this.navigationService.navigateToOwnerView(
+            this.accountName,
+            AccountTabs.FLOWS,
+            undefined,
+            nextNav,
+            undefined,
+            nextNav === AccountFlowsNav.DATASETS ? ProcessCardFilterMode.RECENT_ACTIVITY : undefined,
+        );
     }
 }

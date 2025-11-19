@@ -24,7 +24,7 @@ import {
     DatasetOverviewFragment,
 } from "src/app/api/kamu.graphql.interface";
 import { NavigationService } from "src/app/services/navigation.service";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { provideToastr } from "ngx-toastr";
@@ -144,16 +144,32 @@ describe("OverviewComponent", () => {
         expect(navigationServiceSpy).toHaveBeenCalledWith(testWebsite);
     });
 
-    it("should open information modal window", () => {
-        const openModalSpy = spyOn(modalService, "open").and.callThrough();
+    it("should open information modal window", async () => {
+        const mockModalRef = jasmine.createSpyObj<NgbModalRef>("NgbModalRef", [], {
+            componentInstance: {},
+            result: Promise.resolve(),
+        });
+
+        const openModalSpy = spyOn(modalService, "open").and.returnValue(mockModalRef);
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.openInformationModal();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
+        await mockModalRef.result;
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should open license modal window", () => {
-        const openModalSpy = spyOn(modalService, "open").and.callThrough();
+    it("should open license modal window", async () => {
+        const mockModalRef = jasmine.createSpyObj<NgbModalRef>("NgbModalRef", [], {
+            componentInstance: {},
+            result: Promise.resolve(),
+        });
+
+        const openModalSpy = spyOn(modalService, "open").and.returnValue(mockModalRef);
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.openLicenseModal();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
+        await mockModalRef.result;
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check Update now button is not visible", () => {
@@ -163,7 +179,7 @@ describe("OverviewComponent", () => {
         expect(updateButton).toBe(undefined);
     });
 
-    it("should check Update now button is not visible when enableScheduling flag eqgual falsw", () => {
+    it("should check Update now button is not visible when enableScheduling flag equal false", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
         spyOnProperty(component, "enableScheduling", "get").and.returnValue(false);
         fixture.detectChanges();

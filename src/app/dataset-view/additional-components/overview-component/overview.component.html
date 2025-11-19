@@ -7,21 +7,21 @@
                 data-test-id="dataset-info-block"
             >
                 <div class="d-flex flex-column me-auto">
-                    <div *ngIf="datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo?.description">
+                    <div *ngIf="datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo.description">
                         <h2 class="box-title align-items-center pb-3">Description</h2>
 
                         <p>{{ datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo.description }}</p>
                     </div>
                     <div
                         class="app-mat-chip"
-                        *ngIf="datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo?.keywords"
+                        *ngIf="datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo.keywords"
                     >
                         <h2 class="box-title align-items-center pt-3">Keywords</h2>
                         <mat-chip-set aria-label="Tags selection">
                             <div
                                 *ngFor="
                                     let keyword of datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo
-                                        ?.keywords
+                                        .keywords
                                 "
                             >
                                 <mat-chip appFeatureFlag="dataset.panel.overview.keywords">{{ keyword }}</mat-chip>

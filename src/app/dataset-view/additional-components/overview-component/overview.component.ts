@@ -275,6 +275,15 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
             size: this.datasetOverviewTabData.overviewUpdate.size,
         };
         modalRefInstance.datasetBasics = this.datasetOverviewTabData.datasetBasics;
+        from(modalRef.result)
+            .pipe(take(1))
+            .subscribe(() => {
+                this.navigationService.navigateToDatasetView({
+                    accountName: this.datasetOverviewTabData.datasetBasics.owner.accountName,
+                    datasetName: this.datasetOverviewTabData.datasetBasics.name,
+                    tab: DatasetViewTypeEnum.Overview,
+                });
+            });
     }
 
     public openLicenseModal(): void {

@@ -120,11 +120,11 @@ export class NavigationService {
                 [params.accountName, params.datasetName, params.tab, ...(params.section ? [params.section] : [])],
                 {
                     queryParams: {
-                        page: params.page === 1 ? undefined : params.page,
                         sqlQuery: params.sqlQuery,
                         webhookId: params.webhookId?.length ? params.webhookId.join(",") : undefined,
                         category: params.category ? params.category : undefined,
                         webhooksState: params.webhooksState?.join(","),
+                        page: params.page === 1 ? undefined : params.page,
                     },
                     state: params.state,
                 },

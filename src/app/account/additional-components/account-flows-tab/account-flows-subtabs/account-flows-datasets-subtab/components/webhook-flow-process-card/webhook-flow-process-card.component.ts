@@ -22,6 +22,7 @@ import {
     DatasetFlowsBadgeTexts,
     webhooksStateMapper,
 } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-webhook-flow-process-card",
@@ -58,6 +59,7 @@ export class WebhookFlowProcessCardComponent {
         subscriptionId: string;
     }>();
 
+    public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
 

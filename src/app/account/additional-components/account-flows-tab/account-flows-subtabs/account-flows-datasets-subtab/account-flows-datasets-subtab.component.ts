@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, NgZone, OnInit } from "@angular/core";
-import { AsyncPipe, NgFor, NgIf } from "@angular/common";
+import { AsyncPipe, NgFor, NgIf, NgTemplateOutlet } from "@angular/common";
 import { AccountService } from "src/app/account/account.service";
 import { Observable, switchMap, take, tap, timer } from "rxjs";
 import {
@@ -39,7 +39,10 @@ import {
     AccountFlowsNav,
     CARD_FILTERS_MODE_OPTIONS,
     CardFilterDescriptor,
-    ORDER_BY_FIELD_LIST,
+    FLOW_PROCESS_STATE_LIST,
+    ORDER_BY_FIELD_LIST_CUSTOM,
+    ORDER_BY_FIELD_LIST_TRIAGE,
+    ORDER_BY_FIELD_LIST_UPCOMING_SCHEDULED,
     ORDER_DIRECTION_LIST,
     ProcessCardFilterMode,
 } from "../../account-flows-tab.types";
@@ -49,6 +52,7 @@ import { DateTimeAdapter, OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@dani
 import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { MY_MOMENT_FORMATS } from "src/app/common/helpers/data.helpers";
 import { NgSelectModule } from "@ng-select/ng-select";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
     selector: "app-account-flows-datasets-subtab",
@@ -63,6 +67,7 @@ import { NgSelectModule } from "@ng-select/ng-select";
         FormsModule,
         NgIf,
         NgFor,
+        NgTemplateOutlet,
 
         //-----//
         MatIconModule,
@@ -92,6 +97,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly datasetWebhooksService = inject(DatasetWebhooksService);
     private readonly datasetCardService = inject(ProcessDatasetCardInteractionService);
+    private readonly toastrService = inject(ToastrService);
 
     public accountFlowsCardsData$: Observable<AccountFlowProcessCardConnectionDataFragment>;
     public currentPage: number = 1;
@@ -102,6 +108,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     public nextPlannedAfterDate: MaybeNull<Date> = null;
     public selectedOrderDirection = OrderingDirection.Desc;
     public selectedOrderField: MaybeNull<FlowProcessOrderField> = null;
+    public selectedFlowProcessStates: FlowProcessEffectiveState[] = [];
     public minConsecutiveFailures = 0;
     public selectedMode: MaybeNull<ProcessCardFilterMode> = ProcessCardFilterMode.TRIAGE;
     public readonly CARD_FILTERS_MODE_OPTIONS: CardFilterDescriptor[] = CARD_FILTERS_MODE_OPTIONS;
@@ -110,7 +117,11 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
     public readonly TIMEOUT_REFRESH_FLOW = AppValues.TIMEOUT_REFRESH_FLOW_MS;
     public readonly ORDER_DIRECTION_LIST = ORDER_DIRECTION_LIST;
-    public readonly ORDER_BY_FIELD_LIST = ORDER_BY_FIELD_LIST;
+    public readonly ORDER_BY_FIELD_LIST_CUSTOM = ORDER_BY_FIELD_LIST_CUSTOM;
+    public readonly ORDER_BY_FIELD_LIST_TRIAGE = ORDER_BY_FIELD_LIST_TRIAGE;
+    public readonly ORDER_BY_FIELD_LIST_UPCOMING_SCHEDULED = ORDER_BY_FIELD_LIST_UPCOMING_SCHEDULED;
+
+    public readonly FLOW_PROCESS_STATE_LIST = FLOW_PROCESS_STATE_LIST;
     public readonly ProcessCardFilterMode: typeof ProcessCardFilterMode = ProcessCardFilterMode;
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
     private readonly CARDS_FLOW_PROCESSES_PER_PAGE: number = 9;
@@ -178,8 +189,24 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         );
     }
 
-    public get isAdvancedFiltersMode(): boolean {
-        return this.accountFlowsData.datasetsFiltersMode === ProcessCardFilterMode.ADVANCED;
+    public get isCustomFiltersMode(): boolean {
+        return this.accountFlowsData.datasetsFiltersMode === ProcessCardFilterMode.CUSTOM;
+    }
+
+    public get isRecentActivityFiltersMode(): boolean {
+        return this.accountFlowsData.datasetsFiltersMode === ProcessCardFilterMode.RECENT_ACTIVITY;
+    }
+
+    public get isTriageFiltersMode(): boolean {
+        return this.accountFlowsData.datasetsFiltersMode === ProcessCardFilterMode.TRIAGE;
+    }
+
+    public get isUpcomingScheduledFiltersMode(): boolean {
+        return this.accountFlowsData.datasetsFiltersMode === ProcessCardFilterMode.UPCOMING_SCHEDULED;
+    }
+
+    public get currentDateTime(): string {
+        return new Date().toISOString();
     }
 
     private get initialProcessFilters(): FlowProcessEffectiveState[] {
@@ -195,27 +222,58 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         switch (this.accountFlowsData.datasetsFiltersMode) {
             case ProcessCardFilterMode.RECENT_ACTIVITY: {
                 this.selectedOrderField = FlowProcessOrderField.LastAttemptAt;
+                this.toFilterDate = new Date();
+                const sixHoursAgoDate = new Date();
+                sixHoursAgoDate.setHours(sixHoursAgoDate.getHours() - 6);
+                if (!this.fromFilterDate) {
+                    this.fromFilterDate = sixHoursAgoDate;
+                }
                 return {
                     effectiveStateIn: this.initialProcessFilters,
+                    lastAttemptBetween: this.toFilterDate
+                        ? {
+                              start: this.fromFilterDate
+                                  ? this.fromFilterDate.toISOString()
+                                  : sixHoursAgoDate.toISOString(),
+                              end: this.toFilterDate.toISOString(),
+                          }
+                        : undefined,
                 };
             }
             case ProcessCardFilterMode.TRIAGE: {
-                this.selectedOrderDirection = OrderingDirection.Desc;
-                this.selectedOrderField = FlowProcessOrderField.ConsecutiveFailures;
                 return {
                     effectiveStateIn: [FlowProcessEffectiveState.StoppedAuto, FlowProcessEffectiveState.Failing],
+                    lastFailureSince: this.lastFailureDate?.toISOString() ?? undefined,
+                    minConsecutiveFailures: this.minConsecutiveFailures,
                 };
             }
             case ProcessCardFilterMode.UPCOMING_SCHEDULED: {
                 this.selectedOrderDirection = OrderingDirection.Desc;
-                this.nextPlannedAfterDate = new Date();
+                this.selectedOrderField = FlowProcessOrderField.NextPlannedAt;
+                this.fromFilterDate = new Date();
+                const sixHoursAfterDate = new Date();
+                sixHoursAfterDate.setHours(sixHoursAfterDate.getHours() - 6);
+                if (!this.toFilterDate) {
+                    this.toFilterDate = sixHoursAfterDate;
+                }
                 return {
                     effectiveStateIn: [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing],
+                    lastAttemptBetween: this.fromFilterDate
+                        ? { start: this.fromFilterDate.toISOString(), end: this.toFilterDate.toISOString() }
+                        : undefined,
                 };
             }
-            case ProcessCardFilterMode.ADVANCED: {
+            case ProcessCardFilterMode.PAUSED: {
+                this.selectedOrderDirection = OrderingDirection.Desc;
                 return {
-                    effectiveStateIn: this.initialProcessFilters,
+                    effectiveStateIn: [FlowProcessEffectiveState.PausedManual],
+                };
+            }
+            case ProcessCardFilterMode.CUSTOM: {
+                return {
+                    effectiveStateIn: this.selectedFlowProcessStates.length
+                        ? this.selectedFlowProcessStates
+                        : this.initialProcessFilters,
                     lastAttemptBetween:
                         this.fromFilterDate && this.toFilterDate
                             ? { start: this.fromFilterDate.toISOString(), end: this.toFilterDate.toISOString() }
@@ -240,6 +298,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         this.selectedOrderDirection = OrderingDirection.Desc;
         this.selectedOrderField = null;
         this.minConsecutiveFailures = 0;
+        this.selectedFlowProcessStates = [];
         this.refreshNow();
     }
 
@@ -269,11 +328,12 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
 
     public updateNow(datasetBasics: DatasetBasicsFragment): void {
         this.datasetCardService.handleTrigger(datasetBasics, () => {
-            this.navigationService.navigateToDatasetView({
-                accountName: datasetBasics.owner.accountName,
-                datasetName: datasetBasics.name,
-                tab: DatasetViewTypeEnum.Flows,
-            });
+            this.toastrService.success("Flow scheduled");
+            // this.navigationService.navigateToDatasetView({
+            //     accountName: datasetBasics.owner.accountName,
+            //     datasetName: datasetBasics.name,
+            //     tab: DatasetViewTypeEnum.Flows,
+            // });
         });
     }
 

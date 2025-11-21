@@ -19,6 +19,15 @@
     margin-top: 50px;
 }
 
+.mr-2px {
+    margin-right: 2px;
+}
+
+.w-attempts {
+    width: 254px;
+    margin-top: 10px;
+}
+
 .cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, 450px);
@@ -27,6 +36,12 @@
 }
 
 .from-label {
+    position: absolute;
+    left: 5px;
+    bottom: 33px;
+}
+
+.time-distance-label {
     position: absolute;
     left: 5px;
     bottom: 33px;

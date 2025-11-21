@@ -152,46 +152,43 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         filterByStatus?: MaybeNull<FlowStatus[]>,
         filterByInitiator?: MaybeNull<InitiatorFilterInput>,
     ): void {
-        this.flowConnectionData$ =
-            // timer(0, environment.delay_polling_ms)
-            of(1).pipe(
-                switchMap(() =>
-                    this.flowsService.datasetFlowsProcesses({ datasetId: this.flowsData.datasetBasics.id }),
-                ),
-                tap((flowProcesses: DatasetFlowProcesses) => {
-                    const modifiedRollup = {
-                        ...flowProcesses.webhooks.rollup,
-                        paused: flowProcesses.webhooks.rollup.paused + flowProcesses.webhooks.rollup.unconfigured,
-                    };
-                    flowProcesses.webhooks.rollup = modifiedRollup;
-                    this.flowsSelectionStateService.initFlowsSelectionState(flowProcesses);
-                }),
-                switchMap((flowProcesses: DatasetFlowProcesses) =>
-                    combineLatest([
-                        this.flowsService.datasetFlowsList({
-                            datasetId: this.flowsData.datasetBasics.id,
-                            page: page - 1,
-                            perPageTable: this.TABLE_FLOW_RUNS_PER_PAGE,
-                            perPageTiles: this.WIDGET_FLOW_RUNS_PER_PAGE,
-                            filters: {
-                                byStatus: filterByStatus,
-                                byInitiator: filterByInitiator,
-                                byProcessType: this.setProcessTypeFilter(
-                                    this.flowsSelectionState.webhooksIds,
-                                    this.flowsSelectionState.flowsCategory,
-                                    this.flowsSelectionState.webhooksCategory,
-                                ),
-                            },
-                        }),
-                        this.flowsService.flowsInitiators(this.flowsData.datasetBasics.id),
-                        of(flowProcesses),
-                    ]),
-                ),
+        console.log("1");
+        this.flowConnectionData$ = timer(0, environment.delay_polling_ms).pipe(
+            switchMap(() => this.flowsService.datasetFlowsProcesses({ datasetId: this.flowsData.datasetBasics.id })),
+            tap((flowProcesses: DatasetFlowProcesses) => {
+                const modifiedRollup = {
+                    ...flowProcesses.webhooks.rollup,
+                    paused: flowProcesses.webhooks.rollup.paused + flowProcesses.webhooks.rollup.unconfigured,
+                };
+                flowProcesses.webhooks.rollup = modifiedRollup;
+                this.flowsSelectionStateService.initFlowsSelectionState(flowProcesses);
+            }),
+            switchMap((flowProcesses: DatasetFlowProcesses) =>
+                combineLatest([
+                    this.flowsService.datasetFlowsList({
+                        datasetId: this.flowsData.datasetBasics.id,
+                        page: page - 1,
+                        perPageTable: this.TABLE_FLOW_RUNS_PER_PAGE,
+                        perPageTiles: this.WIDGET_FLOW_RUNS_PER_PAGE,
+                        filters: {
+                            byStatus: filterByStatus,
+                            byInitiator: filterByInitiator,
+                            byProcessType: this.setProcessTypeFilter(
+                                this.flowsSelectionState.webhooksIds,
+                                this.flowsSelectionState.flowsCategory,
+                                this.flowsSelectionState.webhooksCategory,
+                            ),
+                        },
+                    }),
+                    this.flowsService.flowsInitiators(this.flowsData.datasetBasics.id),
+                    of(flowProcesses),
+                ]),
+            ),
 
-                map(([flowsData, flowInitiators, flowProcesses]) => {
-                    return { flowsData, flowInitiators, flowProcesses };
-                }),
-            );
+            map(([flowsData, flowInitiators, flowProcesses]) => {
+                return { flowsData, flowInitiators, flowProcesses };
+            }),
+        );
     }
 
     private setProcessTypeFilter(
@@ -207,6 +204,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             };
         }
         if (webhooksFilter === "webhooks") {
+            this.flowsSelectionStateService.clearFlowsCategory();
             return {
                 primary: undefined,
                 webhooks: { subscriptionIds: this.flowsSelectionState.webhooksIds },
@@ -279,7 +277,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             tab: DatasetViewTypeEnum.Flows,
             category: event.value as FlowsSelectedCategory,
         });
-        this.refreshFlow();
+        this.fetchTableData(1);
     }
 
     public onSelectionWebhooksChange(category: MaybeUndefined<WebhooksSelectedCategory>): void {
@@ -357,6 +355,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             this.navigationService.navigateToDatasetView({
                 accountName: this.flowsData.datasetBasics.owner.accountName,
                 datasetName: this.flowsData.datasetBasics.name,
+                category: this.flowsSelectionState.webhooksCategory ?? this.flowsSelectionState.flowsCategory,
                 tab: DatasetViewTypeEnum.Flows,
             });
         } else {
@@ -364,6 +363,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                 accountName: this.flowsData.datasetBasics.owner.accountName,
                 datasetName: this.flowsData.datasetBasics.name,
                 tab: DatasetViewTypeEnum.Flows,
+                category: this.flowsSelectionState.webhooksCategory ?? this.flowsSelectionState.flowsCategory,
                 page,
             });
         }

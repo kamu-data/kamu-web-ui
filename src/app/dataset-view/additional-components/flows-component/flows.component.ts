@@ -203,6 +203,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             };
         }
         if (webhooksFilter === "webhooks") {
+            this.flowsSelectionStateService.clearFlowsCategory();
             return {
                 primary: undefined,
                 webhooks: { subscriptionIds: this.flowsSelectionState.webhooksIds },
@@ -275,7 +276,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             tab: DatasetViewTypeEnum.Flows,
             category: event.value as FlowsSelectedCategory,
         });
-        this.refreshFlow();
+        this.fetchTableData(1);
     }
 
     public onSelectionWebhooksChange(category: MaybeUndefined<WebhooksSelectedCategory>): void {
@@ -353,6 +354,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             this.navigationService.navigateToDatasetView({
                 accountName: this.flowsData.datasetBasics.owner.accountName,
                 datasetName: this.flowsData.datasetBasics.name,
+                category: this.flowsSelectionState.webhooksCategory ?? this.flowsSelectionState.flowsCategory,
                 tab: DatasetViewTypeEnum.Flows,
             });
         } else {
@@ -360,6 +362,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                 accountName: this.flowsData.datasetBasics.owner.accountName,
                 datasetName: this.flowsData.datasetBasics.name,
                 tab: DatasetViewTypeEnum.Flows,
+                category: this.flowsSelectionState.webhooksCategory ?? this.flowsSelectionState.flowsCategory,
                 page,
             });
         }

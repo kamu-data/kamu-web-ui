@@ -211,6 +211,7 @@ describe("FlowsComponent", () => {
             accountName: component.flowsData.datasetBasics.owner.accountName,
             datasetName: component.flowsData.datasetBasics.name,
             tab: DatasetViewTypeEnum.Flows,
+            category: "all",
         });
     });
 
@@ -223,6 +224,7 @@ describe("FlowsComponent", () => {
             datasetName: component.flowsData.datasetBasics.name,
             tab: DatasetViewTypeEnum.Flows,
             page,
+            category: "all",
         });
     });
 

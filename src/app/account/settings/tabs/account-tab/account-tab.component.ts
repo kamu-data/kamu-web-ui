@@ -107,7 +107,7 @@ export class AccountTabComponent extends BaseComponent implements OnInit {
     }
 
     public changeUsername(): void {
-        const message = "Do you want to change username";
+        const message = "Do you want to change username?";
         promiseWithCatch(
             this.modalService.error({
                 title: "Change username",

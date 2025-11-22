@@ -8,7 +8,7 @@
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { AccountFlowsActivitySubtabComponent } from "./account-flows-activity-subtab.component";
 import { Account, AccountFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
-import { AccountFlowsNav } from "../../account-flows-tab.types";
+import { AccountFlowsNav, ProcessCardFilterMode } from "../../account-flows-tab.types";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { ActivatedRoute } from "@angular/router";
@@ -68,6 +68,7 @@ describe("AccountFlowsActivitySubtabComponent", () => {
         component.accountFlowsData = {
             activeNav: AccountFlowsNav.DATASETS,
             flowGroup: [FlowStatus.Finished],
+            datasetsFiltersMode: ProcessCardFilterMode.RECENT_ACTIVITY,
         };
         spyOn(accountService, "accountAllFlowsPaused").and.returnValue(of(false));
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);

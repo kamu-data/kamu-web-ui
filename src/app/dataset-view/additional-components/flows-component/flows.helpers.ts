@@ -142,13 +142,14 @@ export class DatasetFlowBadgeHelpers {
             case FlowProcessEffectiveState.Failing:
                 return {
                     message: `${isRoot ? "Ingest" : "Transform"} failing`,
-                    subMessage: subMessagesFailingStateHelper(summary),
-                    additionalMessage: `Last failure at: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.lastFailureAt, AppValues.DISPLAY_TIME_FORMAT)}`,
+                    subMessage: `Last failure at: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.lastFailureAt, AppValues.DISPLAY_TIME_FORMAT)}`,
+                    additionalMessage: subMessagesFailingStateHelper(summary),
                 };
             case FlowProcessEffectiveState.PausedManual:
                 return {
                     message: `${isRoot ? "Ingest" : "Transform"} paused`,
                     subMessage: "Reason: paused manually by user",
+                    additionalMessage: subMessagesPausedStateHelper(summary),
                 };
 
             case FlowProcessEffectiveState.StoppedAuto:
@@ -174,6 +175,26 @@ function subMessagesFailingStateHelper(summary: FlowProcessSummaryDataFragment):
         default:
             return "";
     }
+}
+
+function subMessagesPausedStateHelper(summary: FlowProcessSummaryDataFragment): string {
+    if (summary.lastFailureAt && summary.lastSuccessAt) {
+        const lastFailureAtTime = new Date(summary.lastFailureAt).getTime();
+        const lastSuccessAt = new Date(summary.lastSuccessAt).getTime();
+        if (lastFailureAtTime > lastSuccessAt) {
+            return `Last failure at: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.lastFailureAt, AppValues.DISPLAY_TIME_FORMAT)}`;
+        } else {
+            return `Last success at: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.lastFailureAt, AppValues.DISPLAY_TIME_FORMAT)}`;
+        }
+    }
+    if (summary?.lastFailureAt) {
+        return `Last failure at: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.lastFailureAt, AppValues.DISPLAY_TIME_FORMAT)}`;
+    }
+    if (summary?.lastSuccessAt) {
+        return `Last success at: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.lastSuccessAt, AppValues.DISPLAY_TIME_FORMAT)}`;
+    }
+    /* istanbul ignore next */
+    return "";
 }
 
 function subMessagesActiveStateHelper(summary: FlowProcessSummaryDataFragment, isRoot: boolean): string {

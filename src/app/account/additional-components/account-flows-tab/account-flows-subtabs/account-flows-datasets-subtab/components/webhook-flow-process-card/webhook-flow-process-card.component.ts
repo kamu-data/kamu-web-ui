@@ -16,6 +16,7 @@ import {
     FlowProcessSummary,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import {
     DatasetFlowsBadgeStyle,
     DatasetFlowBadgeHelpers,
@@ -54,14 +55,11 @@ export class WebhookFlowProcessCardComponent {
         state: FlowProcessEffectiveState;
         subscriptionId: string;
     }>();
-    @Output() public editWebhookCardEmitter = new EventEmitter<{
-        datasetBasics: DatasetBasicsFragment;
-        subscriptionId: string;
-    }>();
 
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
+    public readonly SettingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
 
     public badgeStyles(effectiveState: FlowProcessEffectiveState): DatasetFlowsBadgeStyle {
         return DatasetFlowBadgeHelpers.badgeStyles(effectiveState);
@@ -82,9 +80,5 @@ export class WebhookFlowProcessCardComponent {
         state: FlowProcessEffectiveState,
     ): void {
         this.toggleWebhookCardStateEmitter.emit({ datasetBasics, subscriptionId, state });
-    }
-
-    public editWebhookCard(datasetBasics: DatasetBasicsFragment, subscriptionId: string): void {
-        this.editWebhookCardEmitter.emit({ datasetBasics, subscriptionId });
     }
 }

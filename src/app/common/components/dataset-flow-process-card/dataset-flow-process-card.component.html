@@ -18,7 +18,11 @@
             </div>
             <div class="d-flex flex-column">
                 <div class="d-flex align-items-center">
-                    <a [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name]">
+                    <a
+                        [title]="datasetBasics.owner.accountName + '/' + datasetBasics.name"
+                        class="truncate"
+                        [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name]"
+                    >
                         {{ datasetBasics.owner.accountName }}/ {{ datasetBasics.name }}
                     </a>
                 </div>
@@ -44,7 +48,11 @@
                     [disabled]="summary.effectiveState === FlowProcessEffectiveState.Unconfigured"
                     class="badge-button border-1 bg-light border rounded-2 px-2 btn btn-sm"
                 >
-                    <mat-icon class="text-muted fs-4 d-block" svgIcon="play_pause" />
+                    <mat-icon class="text-muted fs-4 d-block">
+                        {{
+                            pauseableStates.includes(summary.effectiveState) ? "pause_circle" : "play_circle"
+                        }}</mat-icon
+                    >
                     <span class="fs-12 me-2 d-block pt-1px">
                         {{ pauseableStates.includes(summary.effectiveState) ? "Pause" : "Resume" }}
                         updates</span

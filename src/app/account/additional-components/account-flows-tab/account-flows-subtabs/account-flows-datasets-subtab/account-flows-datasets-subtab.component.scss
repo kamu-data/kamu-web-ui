@@ -25,7 +25,6 @@
 
 .w-attempts {
     width: 254px;
-    margin-top: 10px;
 }
 
 .cards {
@@ -41,20 +40,34 @@
     bottom: 33px;
 }
 
+.status-label {
+    position: absolute;
+    left: 5px;
+    bottom: 37px;
+}
+
+.order-label {
+    position: absolute;
+    left: 5px;
+    bottom: 23px;
+}
+
 .time-distance-label {
     position: absolute;
     left: 5px;
     bottom: 33px;
 }
 
-.order-label {
-    position: absolute;
-    left: 5px;
-    bottom: 35px;
-}
-
 .container-order {
     width: 200px;
+}
+
+.failures-control {
+    width: 180px;
+}
+
+.ml-6px {
+    margin-left: 6px;
 }
 
 ::ng-deep {

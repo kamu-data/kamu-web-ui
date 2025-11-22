@@ -163,15 +163,6 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         expect(fetchCardsDataSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check to edit webhook card", () => {
-        const navigateToWebhooksSpy = spyOn(navigationService, "navigateToWebhooks");
-        component.editWebhookCard({
-            datasetBasics: mockDatasetBasicsRootFragment,
-            subscriptionId: MOCK_SUBSCRIPTION_ID,
-        });
-        expect(navigateToWebhooksSpy).toHaveBeenCalledTimes(1);
-    });
-
     it("should check to toggle webhook card with active state", fakeAsync(() => {
         const datasetWebhookPauseSubscriptionSpy = spyOn(
             datasetWebhooksService,

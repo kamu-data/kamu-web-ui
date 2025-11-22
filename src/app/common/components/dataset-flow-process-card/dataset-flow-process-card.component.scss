@@ -59,3 +59,10 @@
 .manual-container {
     background-color: #aaa;
 }
+
+.truncate {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 350px;
+}

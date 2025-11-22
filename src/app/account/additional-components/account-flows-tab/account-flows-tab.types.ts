@@ -64,19 +64,6 @@ export interface OrderDirectionOption {
     value: OrderingDirection;
 }
 
-export const ORDER_DIRECTION_LIST = [
-    {
-        id: 1,
-        label: "ASC",
-        value: OrderingDirection.Asc,
-    },
-    {
-        id: 2,
-        label: "DESC",
-        value: OrderingDirection.Desc,
-    },
-];
-
 export interface OrderByFieldOption {
     id: number;
     label: string;
@@ -162,5 +149,32 @@ export const FLOW_PROCESS_STATE_LIST: ProcessFilterStateOption[] = [
         id: 4,
         label: "Stopped",
         value: FlowProcessEffectiveState.StoppedAuto,
+    },
+];
+
+export const FLOW_PROCESS_STATE_LIST_TRIAGE: ProcessFilterStateOption[] = [
+    {
+        id: 1,
+        label: "Failing",
+        value: FlowProcessEffectiveState.Failing,
+    },
+
+    {
+        id: 2,
+        label: "Stopped",
+        value: FlowProcessEffectiveState.StoppedAuto,
+    },
+];
+
+export const FLOW_PROCESS_STATE_LIST_UPCOMING: ProcessFilterStateOption[] = [
+    {
+        id: 1,
+        label: "Active",
+        value: FlowProcessEffectiveState.Active,
+    },
+    {
+        id: 2,
+        label: "Failing",
+        value: FlowProcessEffectiveState.Failing,
     },
 ];

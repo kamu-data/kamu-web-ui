@@ -40,10 +40,11 @@ import {
     CARD_FILTERS_MODE_OPTIONS,
     CardFilterDescriptor,
     FLOW_PROCESS_STATE_LIST,
+    FLOW_PROCESS_STATE_LIST_TRIAGE,
+    FLOW_PROCESS_STATE_LIST_UPCOMING,
     ORDER_BY_FIELD_LIST_CUSTOM,
     ORDER_BY_FIELD_LIST_TRIAGE,
     ORDER_BY_FIELD_LIST_UPCOMING_SCHEDULED,
-    ORDER_DIRECTION_LIST,
     ProcessCardFilterMode,
 } from "../../account-flows-tab.types";
 import { MaybeNull } from "src/app/interface/app.types";
@@ -53,6 +54,7 @@ import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/a
 import { MY_MOMENT_FORMATS } from "src/app/common/helpers/data.helpers";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { ToastrService } from "ngx-toastr";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 @Component({
     selector: "app-account-flows-datasets-subtab",
@@ -73,6 +75,7 @@ import { ToastrService } from "ngx-toastr";
         MatIconModule,
         MatButtonToggleModule,
         MatChipsModule,
+        MatSlideToggleModule,
         NgbNavModule,
         NgSelectModule,
         OwlDateTimeModule,
@@ -106,7 +109,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     public lastFailureDate: MaybeNull<Date> = null;
     public nextPlannedBeforeDate: MaybeNull<Date> = null;
     public nextPlannedAfterDate: MaybeNull<Date> = null;
-    public selectedOrderDirection = OrderingDirection.Desc;
+    public selectedOrderDirection = true;
     public selectedOrderField: MaybeNull<FlowProcessOrderField> = null;
     public selectedFlowProcessStates: FlowProcessEffectiveState[] = [];
     public minConsecutiveFailures = 0;
@@ -116,12 +119,13 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
     public readonly TIMEOUT_REFRESH_FLOW = AppValues.TIMEOUT_REFRESH_FLOW_MS;
-    public readonly ORDER_DIRECTION_LIST = ORDER_DIRECTION_LIST;
     public readonly ORDER_BY_FIELD_LIST_CUSTOM = ORDER_BY_FIELD_LIST_CUSTOM;
     public readonly ORDER_BY_FIELD_LIST_TRIAGE = ORDER_BY_FIELD_LIST_TRIAGE;
     public readonly ORDER_BY_FIELD_LIST_UPCOMING_SCHEDULED = ORDER_BY_FIELD_LIST_UPCOMING_SCHEDULED;
 
     public readonly FLOW_PROCESS_STATE_LIST = FLOW_PROCESS_STATE_LIST;
+    public readonly FLOW_PROCESS_STATE_LIST_TRIAGE = FLOW_PROCESS_STATE_LIST_TRIAGE;
+    public readonly FLOW_PROCESS_STATE_LIST_UPCOMING = FLOW_PROCESS_STATE_LIST_UPCOMING;
     public readonly ProcessCardFilterMode: typeof ProcessCardFilterMode = ProcessCardFilterMode;
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
     private readonly CARDS_FLOW_PROCESSES_PER_PAGE: number = 9;
@@ -135,14 +139,6 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         if (pageParam) {
             this.currentPage = +requireValue(pageParam);
         }
-    }
-
-    public editWebhookCard(params: { datasetBasics: DatasetBasicsFragment; subscriptionId: string }): void {
-        this.navigationService.navigateToWebhooks({
-            accountName: params.datasetBasics.owner.accountName,
-            datasetName: params.datasetBasics.name,
-            tab: params.subscriptionId,
-        });
     }
 
     public toggleWebhookCardState(params: {
@@ -182,7 +178,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
                     filters: this.setFlowProcessFilters(),
                     ordering: {
                         field: this.selectedOrderField ?? FlowProcessOrderField.LastAttemptAt,
-                        direction: this.selectedOrderDirection,
+                        direction: this.orderDirection,
                     },
                 }),
             ),
@@ -191,6 +187,10 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
 
     public get isCustomFiltersMode(): boolean {
         return this.accountFlowsData.datasetsFiltersMode === ProcessCardFilterMode.CUSTOM;
+    }
+
+    public get orderDirection(): OrderingDirection {
+        return this.selectedOrderDirection ? OrderingDirection.Desc : OrderingDirection.Asc;
     }
 
     public get isRecentActivityFiltersMode(): boolean {
@@ -222,14 +222,17 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         switch (this.accountFlowsData.datasetsFiltersMode) {
             case ProcessCardFilterMode.RECENT_ACTIVITY: {
                 this.selectedOrderField = FlowProcessOrderField.LastAttemptAt;
-                this.toFilterDate = new Date();
+                this.toFilterDate = this.toFilterDate ?? new Date();
                 const sixHoursAgoDate = new Date();
                 sixHoursAgoDate.setHours(sixHoursAgoDate.getHours() - 6);
                 if (!this.fromFilterDate) {
                     this.fromFilterDate = sixHoursAgoDate;
                 }
                 return {
-                    effectiveStateIn: this.initialProcessFilters,
+                    effectiveStateIn: this.selectedFlowProcessStates.length
+                        ? this.selectedFlowProcessStates
+                        : this.initialProcessFilters,
+
                     lastAttemptBetween: this.toFilterDate
                         ? {
                               start: this.fromFilterDate
@@ -241,24 +244,29 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
                 };
             }
             case ProcessCardFilterMode.TRIAGE: {
+                this.selectedOrderField = FlowProcessOrderField.ConsecutiveFailures;
+                this.minConsecutiveFailures = 1;
                 return {
-                    effectiveStateIn: [FlowProcessEffectiveState.StoppedAuto, FlowProcessEffectiveState.Failing],
+                    effectiveStateIn: this.selectedFlowProcessStates.length
+                        ? this.selectedFlowProcessStates
+                        : [FlowProcessEffectiveState.StoppedAuto, FlowProcessEffectiveState.Failing],
                     lastFailureSince: this.lastFailureDate?.toISOString() ?? undefined,
                     minConsecutiveFailures: this.minConsecutiveFailures,
                 };
             }
             case ProcessCardFilterMode.UPCOMING_SCHEDULED: {
-                this.selectedOrderDirection = OrderingDirection.Desc;
+                this.selectedOrderDirection = true;
                 this.selectedOrderField = FlowProcessOrderField.NextPlannedAt;
-                this.nextPlannedAfterDate = new Date();
                 return {
-                    effectiveStateIn: [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing],
+                    effectiveStateIn: this.selectedFlowProcessStates.length
+                        ? this.selectedFlowProcessStates
+                        : [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing],
                     nextPlannedBefore: this.nextPlannedBeforeDate?.toISOString() ?? undefined,
                     nextPlannedAfter: this.nextPlannedAfterDate?.toISOString() ?? undefined,
                 };
             }
             case ProcessCardFilterMode.PAUSED: {
-                this.selectedOrderDirection = OrderingDirection.Desc;
+                this.selectedOrderDirection = true;
                 return {
                     effectiveStateIn: [FlowProcessEffectiveState.PausedManual],
                 };
@@ -289,7 +297,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         this.lastFailureDate = null;
         this.nextPlannedBeforeDate = null;
         this.nextPlannedAfterDate = null;
-        this.selectedOrderDirection = OrderingDirection.Desc;
+        this.selectedOrderDirection = true;
         this.selectedOrderField = null;
         this.minConsecutiveFailures = 0;
         this.selectedFlowProcessStates = [];

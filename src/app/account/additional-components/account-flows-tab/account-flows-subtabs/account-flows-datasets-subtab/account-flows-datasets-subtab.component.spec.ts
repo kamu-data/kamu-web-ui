@@ -7,7 +7,7 @@
 
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { AccountFlowsDatasetsSubtabComponent } from "./account-flows-datasets-subtab.component";
-import { AccountFlowsNav } from "../../account-flows-tab.types";
+import { AccountFlowsNav, ProcessCardFilterMode } from "../../account-flows-tab.types";
 import {
     AccountFlowProcessCardConnectionDataFragment,
     FlowProcessEffectiveState,
@@ -87,6 +87,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         component.accountFlowsData = {
             activeNav: AccountFlowsNav.DATASETS,
             flowGroup: [FlowStatus.Finished],
+            datasetsFiltersMode: ProcessCardFilterMode.CUSTOM,
         };
         getAccountFlowsAsCardsSpy = spyOn(accountService, "getAccountFlowsAsCards").and.returnValue(
             of(

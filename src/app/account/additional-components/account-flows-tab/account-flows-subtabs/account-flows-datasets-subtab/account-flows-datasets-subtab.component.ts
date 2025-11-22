@@ -250,17 +250,11 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
             case ProcessCardFilterMode.UPCOMING_SCHEDULED: {
                 this.selectedOrderDirection = OrderingDirection.Desc;
                 this.selectedOrderField = FlowProcessOrderField.NextPlannedAt;
-                this.fromFilterDate = new Date();
-                const sixHoursAfterDate = new Date();
-                sixHoursAfterDate.setHours(sixHoursAfterDate.getHours() - 6);
-                if (!this.toFilterDate) {
-                    this.toFilterDate = sixHoursAfterDate;
-                }
+                this.nextPlannedAfterDate = new Date();
                 return {
                     effectiveStateIn: [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing],
-                    lastAttemptBetween: this.fromFilterDate
-                        ? { start: this.fromFilterDate.toISOString(), end: this.toFilterDate.toISOString() }
-                        : undefined,
+                    nextPlannedBefore: this.nextPlannedBeforeDate?.toISOString() ?? undefined,
+                    nextPlannedAfter: this.nextPlannedAfterDate?.toISOString() ?? undefined,
                 };
             }
             case ProcessCardFilterMode.PAUSED: {

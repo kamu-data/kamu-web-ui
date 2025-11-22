@@ -274,6 +274,7 @@
                             [owlDateTime]="lastFailureDatepicker"
                             class="form-control"
                             id="lastFailureDate"
+                            [max]="currentDateTime"
                         />
                     </div>
                     <owl-date-time #lastFailureDatepicker />
@@ -325,42 +326,6 @@
 <div class="my-4" *ngIf="isUpcomingScheduledFiltersMode">
     <div class="p-4 box">
         <div class="row">
-            <div class="col-md-4">
-                <div class="box p-3 w-attempts">
-                    <div class="d-flex align-items-center mt-4 mb-3">
-                        <div class="position-relative">
-                            <label for="fromDate" class="fw-500 from-label fs-12"> Last attempt from</label>
-                            <input
-                                [(ngModel)]="fromFilterDate"
-                                [owlDateTime]="fromdatepicker"
-                                [min]="currentDateTime"
-                                class="form-control"
-                                id="fromDate"
-                            />
-                        </div>
-                        <owl-date-time #fromdatepicker />
-                        <span [owlDateTimeTrigger]="fromdatepicker" data-test-id="fromdatepicker" class="trigger ms-2"
-                            ><mat-icon>calendar_month</mat-icon>
-                        </span>
-                    </div>
-                    <div class="d-flex align-items-center pt-4 mb-3">
-                        <div class="position-relative">
-                            <label for="toDate" class="fw-500 from-label fs-12">Last attempt to</label>
-                            <input
-                                [(ngModel)]="toFilterDate"
-                                [owlDateTime]="todatepicker"
-                                [min]="currentDateTime"
-                                class="form-control"
-                                id="toDate"
-                            />
-                        </div>
-                        <owl-date-time #todatepicker />
-                        <span [owlDateTimeTrigger]="todatepicker" data-test-id="todatepicker" class="trigger ms-2"
-                            ><mat-icon>calendar_month</mat-icon>
-                        </span>
-                    </div>
-                </div>
-            </div>
             <div class="col-md-4">
                 <div class="d-flex align-items-center pt-4 mb-3">
                     <div class="position-relative">

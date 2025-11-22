@@ -323,11 +323,6 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     public updateNow(datasetBasics: DatasetBasicsFragment): void {
         this.datasetCardService.handleTrigger(datasetBasics, () => {
             this.toastrService.success("Flow scheduled");
-            // this.navigationService.navigateToDatasetView({
-            //     accountName: datasetBasics.owner.accountName,
-            //     datasetName: datasetBasics.name,
-            //     tab: DatasetViewTypeEnum.Flows,
-            // });
         });
     }
 

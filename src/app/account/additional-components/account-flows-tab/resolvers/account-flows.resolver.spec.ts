@@ -9,7 +9,7 @@ import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapshot } from "@angular/router";
 import { accountFlowsResolverFn, AccountFlowsType } from "./account-flows.resolver";
 import ProjectLinks from "src/app/project-links";
-import { AccountFlowsNav } from "../account-flows-tab.types";
+import { AccountFlowsNav, ProcessCardFilterMode } from "../account-flows-tab.types";
 import { FlowStatus } from "src/app/api/kamu.graphql.interface";
 
 describe("accountFlowsResolverFn", () => {
@@ -30,6 +30,7 @@ describe("accountFlowsResolverFn", () => {
             queryParamMap: convertToParamMap({
                 [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_NAV]: AccountFlowsNav.ACTIVITY,
                 [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS]: undefined,
+                [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_FILTERS_MODE]: undefined,
             }),
         } as ActivatedRouteSnapshot;
         const result = await executeResolver(mockRoute, mockState);
@@ -37,6 +38,7 @@ describe("accountFlowsResolverFn", () => {
         expect(result).toEqual({
             activeNav: AccountFlowsNav.ACTIVITY,
             flowGroup: [FlowStatus.Finished],
+            datasetsFiltersMode: ProcessCardFilterMode.RECENT_ACTIVITY,
         });
     });
 
@@ -46,6 +48,7 @@ describe("accountFlowsResolverFn", () => {
             queryParamMap: convertToParamMap({
                 [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_NAV]: AccountFlowsNav.ACTIVITY,
                 [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS]: "RUNNING,RETRYING",
+                [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_FILTERS_MODE]: undefined,
             }),
         } as ActivatedRouteSnapshot;
         const result = await executeResolver(mockRoute, mockState);
@@ -53,6 +56,7 @@ describe("accountFlowsResolverFn", () => {
         expect(result).toEqual({
             activeNav: AccountFlowsNav.ACTIVITY,
             flowGroup: [FlowStatus.Running, FlowStatus.Retrying],
+            datasetsFiltersMode: ProcessCardFilterMode.RECENT_ACTIVITY,
         });
     });
 });

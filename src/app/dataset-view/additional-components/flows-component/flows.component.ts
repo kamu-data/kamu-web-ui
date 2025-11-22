@@ -152,7 +152,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         filterByStatus?: MaybeNull<FlowStatus[]>,
         filterByInitiator?: MaybeNull<InitiatorFilterInput>,
     ): void {
-        console.log("1");
         this.flowConnectionData$ = timer(0, environment.delay_polling_ms).pipe(
             switchMap(() => this.flowsService.datasetFlowsProcesses({ datasetId: this.flowsData.datasetBasics.id })),
             tap((flowProcesses: DatasetFlowProcesses) => {

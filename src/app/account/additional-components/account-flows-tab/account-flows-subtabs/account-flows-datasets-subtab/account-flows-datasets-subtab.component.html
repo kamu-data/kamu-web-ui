@@ -31,12 +31,18 @@
                             id="fromDate"
                             [max]="currentDateTime"
                             [min]="toFilterDate"
+                            readonly
                         />
                     </div>
                     <owl-date-time #fromdatepicker />
-                    <span [owlDateTimeTrigger]="fromdatepicker" data-test-id="fromdatepicker" class="trigger ms-2"
+                    <span
+                        [owlDateTimeTrigger]="fromdatepicker"
+                        id="from-datepicker"
+                        data-test-id="fromdatepicker"
+                        class="trigger ms-2"
                         ><mat-icon>calendar_month</mat-icon>
                     </span>
+                    <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearBeforeControl()">close</mat-icon>
                 </div>
                 <div class="d-flex align-items-center pt-4 mb-3">
                     <div class="position-relative">
@@ -48,12 +54,18 @@
                             [min]="fromFilterDate"
                             class="form-control"
                             id="toDate"
+                            readonly
                         />
                     </div>
                     <owl-date-time #todatepicker />
-                    <span [owlDateTimeTrigger]="todatepicker" data-test-id="todatepicker" class="trigger ms-2"
+                    <span
+                        [owlDateTimeTrigger]="todatepicker"
+                        id="to-datepicker"
+                        data-test-id="todatepicker"
+                        class="trigger ms-2"
                         ><mat-icon>calendar_month</mat-icon>
                     </span>
+                    <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearToControl()">close</mat-icon>
                 </div>
             </div>
             <div class="d-flex align-items-center pt-4 mb-3">
@@ -83,15 +95,18 @@
                             id="nextPlannedAfter"
                             [min]="currentDateTime"
                             [max]="nextPlannedBeforeDate"
+                            readonly
                         />
                     </div>
                     <owl-date-time #nextPlannedAfterDatepicker />
                     <span
                         [owlDateTimeTrigger]="nextPlannedAfterDatepicker"
+                        id="next-planned-after-datepicker"
                         data-test-id="nextPlannedAfterDatepicker"
                         class="trigger ms-2"
                         ><mat-icon>calendar_month</mat-icon>
                     </span>
+                    <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearAfterControl()">close</mat-icon>
                 </div>
                 <div class="d-flex align-items-center pt-4 mb-3">
                     <div class="position-relative">
@@ -102,15 +117,18 @@
                             [min]="nextPlannedAfterDate ?? currentDateTime"
                             class="form-control"
                             id="nextPlannedBeforeDate"
+                            readonly
                         />
                     </div>
                     <owl-date-time #nextPlannedBeforeDatepicker />
                     <span
                         [owlDateTimeTrigger]="nextPlannedBeforeDatepicker"
+                        id="next-planned-before-datepicker"
                         data-test-id="nextPlannedBeforeDatepicker"
                         class="trigger ms-2"
                         ><mat-icon>calendar_month</mat-icon>
                     </span>
+                    <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearBeforeControl()">close</mat-icon>
                 </div>
             </div>
             <div class="d-flex align-items-center pt-4 mb-3">
@@ -214,9 +232,14 @@
                             />
                         </div>
                         <owl-date-time #fromdatepicker />
-                        <span [owlDateTimeTrigger]="fromdatepicker" data-test-id="fromdatepicker" class="trigger ms-2"
+                        <span
+                            [owlDateTimeTrigger]="fromdatepicker"
+                            id="from-datepicker"
+                            data-test-id="fromdatepicker"
+                            class="trigger ms-2"
                             ><mat-icon>calendar_month</mat-icon>
                         </span>
+                        <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearFromControl()">close</mat-icon>
                     </div>
                     <div class="d-flex align-items-center pt-4 mb-3">
                         <div class="position-relative">
@@ -230,9 +253,14 @@
                             />
                         </div>
                         <owl-date-time #todatepicker />
-                        <span [owlDateTimeTrigger]="todatepicker" data-test-id="todatepicker" class="trigger ms-2"
+                        <span
+                            [owlDateTimeTrigger]="todatepicker"
+                            id="to-datepicker"
+                            data-test-id="todatepicker"
+                            class="trigger ms-2"
                             ><mat-icon>calendar_month</mat-icon>
                         </span>
+                        <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearToControl()">close</mat-icon>
                     </div>
                 </div>
             </div>
@@ -279,15 +307,18 @@
                             class="form-control"
                             id="lastFailureDate"
                             [max]="currentDateTime"
+                            readonly
                         />
                     </div>
                     <owl-date-time #lastFailureDatepicker />
                     <span
                         [owlDateTimeTrigger]="lastFailureDatepicker"
+                        id="last-failure-datepicker"
                         data-test-id="lastFailureDatepicker"
                         class="trigger ms-2"
                         ><mat-icon>calendar_month</mat-icon>
                     </span>
+                    <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearLastFailureControl()">close</mat-icon>
                 </div>
                 <div class="d-flex align-items-center pt-4 mb-3 mt-4">
                     <div class="position-relative">
@@ -360,15 +391,18 @@
                                 id="nextPlannedAfter"
                                 [min]="currentDateTime"
                                 [max]="nextPlannedBeforeDate"
+                                readonly
                             />
                         </div>
                         <owl-date-time #nextPlannedAfterDatepicker />
                         <span
                             [owlDateTimeTrigger]="nextPlannedAfterDatepicker"
                             data-test-id="nextPlannedAfterDatepicker"
+                            id="next-planned-after-datepicker"
                             class="trigger ms-2"
                             ><mat-icon>calendar_month</mat-icon>
                         </span>
+                        <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearAfterControl()">close</mat-icon>
                     </div>
                     <div class="d-flex align-items-center pt-4 mb-3">
                         <div class="position-relative">
@@ -379,15 +413,18 @@
                                 class="form-control"
                                 id="nextPlannedBeforeDate"
                                 [min]="nextPlannedAfterDate ?? currentDateTime"
+                                readonly
                             />
                         </div>
                         <owl-date-time #nextPlannedBeforeDatepicker />
                         <span
                             [owlDateTimeTrigger]="nextPlannedBeforeDatepicker"
+                            id="next-planned-before-datepicker"
                             data-test-id="nextPlannedBeforeDatepicker"
                             class="trigger ms-2"
                             ><mat-icon>calendar_month</mat-icon>
                         </span>
+                        <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearBeforeControl()">close</mat-icon>
                     </div>
                 </div>
             </div>

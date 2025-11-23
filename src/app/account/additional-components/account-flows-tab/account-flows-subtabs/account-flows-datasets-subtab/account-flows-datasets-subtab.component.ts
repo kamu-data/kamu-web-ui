@@ -109,10 +109,11 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     public lastFailureDate: MaybeNull<Date> = null;
     public nextPlannedBeforeDate: MaybeNull<Date> = null;
     public nextPlannedAfterDate: MaybeNull<Date> = null;
-    public selectedOrderDirection = true;
+    public selectedOrderDirection: boolean = true;
     public selectedOrderField: MaybeNull<FlowProcessOrderField> = null;
     public selectedFlowProcessStates: FlowProcessEffectiveState[] = [];
-    public minConsecutiveFailures = 0;
+    public minConsecutiveFailures: number = 0;
+    private isFirstInitialization: boolean = false;
     public selectedMode: MaybeNull<ProcessCardFilterMode> = ProcessCardFilterMode.TRIAGE;
     public readonly CARD_FILTERS_MODE_OPTIONS: CardFilterDescriptor[] = CARD_FILTERS_MODE_OPTIONS;
 
@@ -131,6 +132,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     private readonly CARDS_FLOW_PROCESSES_PER_PAGE: number = 9;
 
     public ngOnInit(): void {
+        this.isFirstInitialization = true;
         this.fetchCardsData();
     }
 
@@ -222,25 +224,27 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         switch (this.accountFlowsData.datasetsFiltersMode) {
             case ProcessCardFilterMode.RECENT_ACTIVITY: {
                 this.selectedOrderField = FlowProcessOrderField.LastAttemptAt;
-                this.toFilterDate = this.toFilterDate ?? new Date();
+                this.toFilterDate = this.isFirstInitialization ? new Date() : this.toFilterDate;
                 const sixHoursAgoDate = new Date();
                 sixHoursAgoDate.setHours(sixHoursAgoDate.getHours() - 6);
-                if (!this.fromFilterDate) {
+                if (!this.fromFilterDate && this.isFirstInitialization) {
                     this.fromFilterDate = sixHoursAgoDate;
                 }
+
                 return {
                     effectiveStateIn: this.selectedFlowProcessStates.length
                         ? this.selectedFlowProcessStates
                         : this.initialProcessFilters,
 
-                    lastAttemptBetween: this.toFilterDate
-                        ? {
-                              start: this.fromFilterDate
-                                  ? this.fromFilterDate.toISOString()
-                                  : sixHoursAgoDate.toISOString(),
-                              end: this.toFilterDate.toISOString(),
-                          }
-                        : undefined,
+                    lastAttemptBetween:
+                        this.toFilterDate && this.fromFilterDate
+                            ? {
+                                  start: this.fromFilterDate
+                                      ? this.fromFilterDate.toISOString()
+                                      : sixHoursAgoDate.toISOString(),
+                                  end: this.toFilterDate.toISOString(),
+                              }
+                            : undefined,
                 };
             }
             case ProcessCardFilterMode.TRIAGE: {
@@ -257,14 +261,17 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
             case ProcessCardFilterMode.UPCOMING_SCHEDULED: {
                 this.selectedOrderDirection = true;
                 this.selectedOrderField = FlowProcessOrderField.NextPlannedAt;
-                console.log("after=", this.nextPlannedAfterDate?.toISOString());
-                console.log("before=", this.nextPlannedBeforeDate?.toISOString());
+
                 return {
                     effectiveStateIn: this.selectedFlowProcessStates.length
                         ? this.selectedFlowProcessStates
                         : [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing],
-                    nextPlannedBefore: this.nextPlannedBeforeDate?.toISOString() ?? undefined,
-                    nextPlannedAfter: this.nextPlannedAfterDate?.toISOString() ?? this.currentDateTime,
+                    nextPlannedBefore: this.nextPlannedBeforeDate
+                        ? this.nextPlannedBeforeDate.toISOString()
+                        : undefined,
+                    nextPlannedAfter: this.nextPlannedAfterDate
+                        ? this.nextPlannedAfterDate.toISOString()
+                        : this.currentDateTime,
                 };
             }
             case ProcessCardFilterMode.PAUSED: {
@@ -291,6 +298,28 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
             default:
                 throw new Error("Unknown filters mode");
         }
+    }
+
+    public clearFromControl(): void {
+        this.fromFilterDate = null;
+        this.isFirstInitialization = false;
+    }
+
+    public clearToControl(): void {
+        this.toFilterDate = null;
+        this.isFirstInitialization = false;
+    }
+
+    public clearLastFailureControl(): void {
+        this.lastFailureDate = null;
+    }
+
+    public clearAfterControl(): void {
+        this.nextPlannedAfterDate = null;
+    }
+
+    public clearBeforeControl(): void {
+        this.nextPlannedBeforeDate = null;
     }
 
     public resetFilters(): void {

@@ -24,7 +24,7 @@
 }
 
 .w-attempts {
-    width: 254px;
+    width: 270px;
 }
 
 .cards {
@@ -76,5 +76,16 @@
             min-height: 32px;
             height: 32px;
         }
+    }
+}
+
+#from-datepicker,
+#to-datepicker,
+#last-failure-datepicker,
+#next-planned-after-datepicker,
+#next-planned-before-datepicker,
+.clear-icon {
+    &:hover {
+        cursor: pointer;
     }
 }

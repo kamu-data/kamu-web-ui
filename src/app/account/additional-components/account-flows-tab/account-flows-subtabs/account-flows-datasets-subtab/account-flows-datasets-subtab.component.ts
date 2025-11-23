@@ -244,7 +244,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
                 };
             }
             case ProcessCardFilterMode.TRIAGE: {
-                this.selectedOrderField = FlowProcessOrderField.ConsecutiveFailures;
+                this.selectedOrderField = this.selectedOrderField ?? FlowProcessOrderField.ConsecutiveFailures;
                 this.minConsecutiveFailures = 1;
                 return {
                     effectiveStateIn: this.selectedFlowProcessStates.length
@@ -257,12 +257,14 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
             case ProcessCardFilterMode.UPCOMING_SCHEDULED: {
                 this.selectedOrderDirection = true;
                 this.selectedOrderField = FlowProcessOrderField.NextPlannedAt;
+                console.log("after=", this.nextPlannedAfterDate?.toISOString());
+                console.log("before=", this.nextPlannedBeforeDate?.toISOString());
                 return {
                     effectiveStateIn: this.selectedFlowProcessStates.length
                         ? this.selectedFlowProcessStates
                         : [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing],
                     nextPlannedBefore: this.nextPlannedBeforeDate?.toISOString() ?? undefined,
-                    nextPlannedAfter: this.nextPlannedAfterDate?.toISOString() ?? undefined,
+                    nextPlannedAfter: this.nextPlannedAfterDate?.toISOString() ?? this.currentDateTime,
                 };
             }
             case ProcessCardFilterMode.PAUSED: {

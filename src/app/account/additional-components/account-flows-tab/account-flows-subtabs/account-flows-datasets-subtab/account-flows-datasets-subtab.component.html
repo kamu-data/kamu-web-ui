@@ -81,7 +81,7 @@
                             [owlDateTime]="nextPlannedAfterDatepicker"
                             class="form-control"
                             id="nextPlannedAfter"
-                            [min]="nextPlannedAfterDate || currentDateTime"
+                            [min]="currentDateTime"
                             [max]="nextPlannedBeforeDate"
                         />
                     </div>
@@ -358,7 +358,7 @@
                                 [owlDateTime]="nextPlannedAfterDatepicker"
                                 class="form-control"
                                 id="nextPlannedAfter"
-                                [min]="nextPlannedAfterDate || currentDateTime"
+                                [min]="currentDateTime"
                                 [max]="nextPlannedBeforeDate"
                             />
                         </div>

@@ -77,7 +77,7 @@ export type AccessTokenEdge = {
 
 export type Account = {
     __typename?: "Account";
-    /** Access to the flow configurations of this account */
+    /** Access to the access token management */
     accessTokens: AccountAccessTokens;
     /** Symbolic account name */
     accountName: Scalars["AccountName"];
@@ -99,6 +99,8 @@ export type Account = {
     isAdmin: Scalars["Boolean"];
     /** Returns datasets belonging to this account */
     ownedDatasets: DatasetConnection;
+    /** Access to account usage statistic */
+    usage: AccountUsage;
 };
 
 export type AccountOwnedDatasetsArgs = {
@@ -304,6 +306,11 @@ export enum AccountType {
     Organization = "ORGANIZATION",
     User = "USER",
 }
+
+export type AccountUsage = {
+    __typename?: "AccountUsage";
+    storage: TotalDatasetsStatistic;
+};
 
 export type AccountWithRole = {
     __typename?: "AccountWithRole";
@@ -1190,11 +1197,15 @@ export type DatasetConnection = {
 
 export type DatasetData = {
     __typename?: "DatasetData";
+    /** An estimated size of linked objects */
+    estimatedLinkedObjectsSizeBytes: Scalars["Int"];
     /**
      * An estimated size of data on disk not accounting for replication or
      * caching
      */
-    estimatedSize: Scalars["Int"];
+    estimatedSizeBytes: Scalars["Int"];
+    /** Total number of linked objects in this dataset */
+    numLinkedObjects: Scalars["Int"];
     /** Total number of records in this dataset */
     numRecordsTotal: Scalars["Int"];
     /**
@@ -1214,6 +1225,8 @@ export type DatasetData = {
      * ```
      */
     tail: DataQueryResult;
+    /** An estimated size of all objects in dataset */
+    totalSizeBytes: Scalars["Int"];
 };
 
 export type DatasetDataTailArgs = {
@@ -4159,6 +4172,16 @@ export enum TimeUnit {
     Weeks = "WEEKS",
 }
 
+export type TotalDatasetsStatistic = {
+    __typename?: "TotalDatasetsStatistic";
+    totalCheckpointsSizeBytes: Scalars["Int"];
+    totalDataSizeBytes: Scalars["Int"];
+    totalLinkedObjectsSizeBytes: Scalars["Int"];
+    totalNumLinkedObjects: Scalars["Int"];
+    totalRecords: Scalars["Int"];
+    totalSizeBytes: Scalars["Int"];
+};
+
 /**
  * Engine-specific processing queries that shape the resulting data.
  *
@@ -6948,7 +6971,11 @@ export type DatasetCurrentInfoFragment = {
     keywords?: Array<string> | null;
 };
 
-export type DatasetDataSizeFragment = { __typename?: "DatasetData"; numRecordsTotal: number; estimatedSize: number };
+export type DatasetDataSizeFragment = {
+    __typename?: "DatasetData";
+    numRecordsTotal: number;
+    estimatedSizeBytes: number;
+};
 
 export type DatasetDataFragment = {
     __typename?: "Dataset";
@@ -6973,7 +7000,7 @@ export type DatasetDetailsFragment = {
     __typename?: "Dataset";
     createdAt: string;
     lastUpdatedAt: string;
-    data: { __typename?: "DatasetData"; estimatedSize: number; numRecordsTotal: number };
+    data: { __typename?: "DatasetData"; estimatedSizeBytes: number; numRecordsTotal: number };
     metadata: {
         __typename?: "DatasetMetadata";
         currentWatermark?: string | null;
@@ -8394,7 +8421,7 @@ export const AccessTokenDataFragmentDoc = gql`
 export const DatasetDataSizeFragmentDoc = gql`
     fragment DatasetDataSize on DatasetData {
         numRecordsTotal
-        estimatedSize
+        estimatedSizeBytes
     }
 `;
 export const DataQueryResultSuccessViewFragmentDoc = gql`
@@ -9208,7 +9235,7 @@ export const DatasetDetailsFragmentDoc = gql`
         createdAt
         lastUpdatedAt
         data {
-            estimatedSize
+            estimatedSizeBytes
             numRecordsTotal
         }
         metadata {

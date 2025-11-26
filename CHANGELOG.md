@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.60.1] - 2025-11-26
 ### Fixed
 - Dataset description updated after editing
+- Breaking GQL API change fixed: `estimatedSize` => `estimatedSizeBytes`
 
 ## [0.60.0] - 2025-11-13
 ### Added

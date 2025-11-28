@@ -149,8 +149,8 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Ingest failing",
-                subMessage: "Next planned: 2025-10-13, 7:55:08 PM, 1/1 consecutive failures",
-                additionalMessage: "Last failure at: 2025-10-13, 4:29:36 PM",
+                subMessage: "Last failure at: 2025-10-13, 4:29:36 PM",
+                additionalMessage: "Next planned: 2025-10-13, 7:55:08 PM, 1/1 consecutive failures",
             },
         },
         {
@@ -165,8 +165,8 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Transform failing",
-                subMessage: "Next planned: 2025-10-13, 7:55:08 PM, 1/1 consecutive failures",
-                additionalMessage: "Last failure at: 2025-10-13, 4:29:36 PM",
+                subMessage: "Last failure at: 2025-10-13, 4:29:36 PM",
+                additionalMessage: "Next planned: 2025-10-13, 7:55:08 PM, 1/1 consecutive failures",
             },
         },
         {
@@ -181,8 +181,8 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Ingest failing",
-                subMessage: "1 consecutive failures",
-                additionalMessage: "Last failure at: 2025-10-13, 4:29:36 PM",
+                subMessage: "Last failure at: 2025-10-13, 4:29:36 PM",
+                additionalMessage: "1 consecutive failures",
             },
         },
         {
@@ -196,6 +196,7 @@ describe("Flows badge messages helper", () => {
             expectedResult: {
                 message: "Ingest paused",
                 subMessage: "Reason: paused manually by user",
+                additionalMessage: "Last success at: 2025-10-13, 7:53:08 PM",
             },
         },
         {
@@ -209,6 +210,7 @@ describe("Flows badge messages helper", () => {
             expectedResult: {
                 message: "Transform paused",
                 subMessage: "Reason: paused manually by user",
+                additionalMessage: "Last success at: 2025-10-13, 7:53:08 PM",
             },
         },
         {

@@ -69,4 +69,5 @@ export default class ProjectLinks {
 
     public static readonly URL_QUERY_PARAM_ACCOUNT_NAV: string = "nav";
     public static readonly URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS: string = "status";
+    public static readonly URL_QUERY_PARAM_ACCOUNT_FLOW_FILTERS_MODE: string = "mode";
 }

@@ -46,6 +46,9 @@ import {
     ORDER_BY_FIELD_LIST_TRIAGE,
     ORDER_BY_FIELD_LIST_UPCOMING_SCHEDULED,
     ProcessCardFilterMode,
+    RANGE_LAST_ATTEMPT_LIST,
+    RANGE_NEXT_ATTEMPT_LIST,
+    RangeLastAttemptOption,
 } from "../../account-flows-tab.types";
 import { MaybeNull } from "src/app/interface/app.types";
 import { NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
@@ -55,6 +58,10 @@ import { MY_MOMENT_FORMATS } from "src/app/common/helpers/data.helpers";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { ToastrService } from "ngx-toastr";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import {
+    lastTimeRangeHelper,
+    nextTimeRangeHelper,
+} from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 
 @Component({
     selector: "app-account-flows-datasets-subtab",
@@ -111,6 +118,10 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     public nextPlannedAfterDate: MaybeNull<Date> = null;
     public selectedOrderDirection: boolean = true;
     public selectedOrderField: MaybeNull<FlowProcessOrderField> = null;
+    public selectedQuickRangeLastAttempt: MaybeNull<string> = null;
+    public selectedQuickRangeLastFailure: MaybeNull<string> = null;
+    public selectedQuickRangeNextAttempt: MaybeNull<string> = null;
+
     public selectedFlowProcessStates: FlowProcessEffectiveState[] = [];
     public minConsecutiveFailures: number = 0;
     private isFirstInitialization: boolean = false;
@@ -123,6 +134,8 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     public readonly ORDER_BY_FIELD_LIST_CUSTOM = ORDER_BY_FIELD_LIST_CUSTOM;
     public readonly ORDER_BY_FIELD_LIST_TRIAGE = ORDER_BY_FIELD_LIST_TRIAGE;
     public readonly ORDER_BY_FIELD_LIST_UPCOMING_SCHEDULED = ORDER_BY_FIELD_LIST_UPCOMING_SCHEDULED;
+    public readonly RANGE_LAST_ATTEMPT_LIST = RANGE_LAST_ATTEMPT_LIST;
+    public readonly RANGE_NEXT_ATTEMPT_LIST = RANGE_NEXT_ATTEMPT_LIST;
 
     public readonly FLOW_PROCESS_STATE_LIST = FLOW_PROCESS_STATE_LIST;
     public readonly FLOW_PROCESS_STATE_LIST_TRIAGE = FLOW_PROCESS_STATE_LIST_TRIAGE;
@@ -141,6 +154,20 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         if (pageParam) {
             this.currentPage = +requireValue(pageParam);
         }
+    }
+
+    public onQuickRangeLastFailure(e: RangeLastAttemptOption): void {
+        this.lastFailureDate = lastTimeRangeHelper(e.value);
+    }
+
+    public onQuickRangeNextAttempt(e: RangeLastAttemptOption): void {
+        this.nextPlannedAfterDate = new Date();
+        this.nextPlannedBeforeDate = nextTimeRangeHelper(e.value);
+    }
+
+    public onQuickRangeLastAttempt(e: RangeLastAttemptOption): void {
+        this.fromFilterDate = lastTimeRangeHelper(e.value);
+        this.toFilterDate = new Date();
     }
 
     public toggleWebhookCardState(params: {
@@ -303,6 +330,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     public clearFromControl(): void {
         this.fromFilterDate = null;
         this.isFirstInitialization = false;
+        this.selectedQuickRangeLastAttempt = null;
     }
 
     public clearToControl(): void {
@@ -312,14 +340,17 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
 
     public clearLastFailureControl(): void {
         this.lastFailureDate = null;
+        this.selectedQuickRangeLastFailure = null;
     }
 
     public clearAfterControl(): void {
         this.nextPlannedAfterDate = null;
+        this.selectedQuickRangeNextAttempt = null;
     }
 
     public clearBeforeControl(): void {
         this.nextPlannedBeforeDate = null;
+        this.selectedQuickRangeNextAttempt = null;
     }
 
     public resetFilters(): void {
@@ -332,6 +363,9 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         this.selectedOrderField = null;
         this.minConsecutiveFailures = 0;
         this.selectedFlowProcessStates = [];
+        this.selectedQuickRangeLastAttempt = null;
+        this.selectedQuickRangeLastFailure = null;
+        this.selectedQuickRangeNextAttempt = null;
         this.refreshNow();
     }
 

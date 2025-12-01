@@ -142,7 +142,7 @@ export const mockGraphNode: DatasetLineageBasicsFragment = {
     ...mockDatasetBasicsDerivedFragment,
     createdAt: "2023-09-05T02:14:17.365614388+00:00",
     lastUpdatedAt: "2023-09-05T02:24:48.840536329+00:00",
-    data: { __typename: "DatasetData", numRecordsTotal: 127, estimatedSize: 14515 },
+    data: { __typename: "DatasetData", numRecordsTotal: 127, estimatedSizeBytes: 14515 },
     metadata: {
         ...mockCurrentSourceFetchUrlFragment,
         currentLicense: null,
@@ -192,7 +192,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             __typename: "DatasetData",
 
             numRecordsTotal: 596126,
-            estimatedSize: 6585116,
+            estimatedSizeBytes: 6585116,
         },
         createdAt: "2023-09-03T01:08:55.104604199+00:00",
         lastUpdatedAt: "2023-09-03T01:09:31.587025138+00:00",
@@ -232,7 +232,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             data: {
                 __typename: "DatasetData",
                 numRecordsTotal: 596126,
-                estimatedSize: 6585116,
+                estimatedSizeBytes: 6585116,
             },
             createdAt: "2023-09-03T01:08:55.104604199+00:00",
             lastUpdatedAt: "2023-09-03T01:09:31.587025138+00:00",
@@ -257,7 +257,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             data: {
                 __typename: "DatasetData",
                 numRecordsTotal: 596126,
-                estimatedSize: 6562253,
+                estimatedSizeBytes: 6562253,
             },
             owner: {
                 __typename: "Account",
@@ -289,7 +289,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             data: {
                 __typename: "DatasetData",
                 numRecordsTotal: 4013015,
-                estimatedSize: 39905730,
+                estimatedSizeBytes: 39905730,
             },
             owner: {
                 __typename: "Account",
@@ -321,7 +321,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             data: {
                 __typename: "DatasetData",
                 numRecordsTotal: 1870,
-                estimatedSize: 21685,
+                estimatedSizeBytes: 21685,
             },
             owner: {
                 __typename: "Account",
@@ -369,7 +369,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 data: {
                     __typename: "DatasetData",
                     numRecordsTotal: 596126,
-                    estimatedSize: 6585116,
+                    estimatedSizeBytes: 6585116,
                 },
                 createdAt: "2023-09-03T01:08:55.104604199+00:00",
                 lastUpdatedAt: "2023-09-03T01:09:31.587025138+00:00",
@@ -394,7 +394,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 data: {
                     __typename: "DatasetData",
                     numRecordsTotal: 596126,
-                    estimatedSize: 6562253,
+                    estimatedSizeBytes: 6562253,
                 },
                 owner: {
                     __typename: "Account",
@@ -428,7 +428,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 data: {
                     __typename: "DatasetData",
                     numRecordsTotal: 596126,
-                    estimatedSize: 6562253,
+                    estimatedSizeBytes: 6562253,
                 },
                 owner: {
                     __typename: "Account",
@@ -460,7 +460,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 data: {
                     __typename: "DatasetData",
                     numRecordsTotal: 4013015,
-                    estimatedSize: 39905730,
+                    estimatedSizeBytes: 39905730,
                 },
                 owner: {
                     __typename: "Account",
@@ -494,7 +494,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 data: {
                     __typename: "DatasetData",
                     numRecordsTotal: 4013015,
-                    estimatedSize: 39905730,
+                    estimatedSizeBytes: 39905730,
                 },
                 owner: {
                     __typename: "Account",
@@ -526,7 +526,7 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 data: {
                     __typename: "DatasetData",
                     numRecordsTotal: 1870,
-                    estimatedSize: 21685,
+                    estimatedSizeBytes: 21685,
                 },
                 owner: {
                     __typename: "Account",
@@ -573,7 +573,7 @@ export const mockLineageGraphUpdateWithMqttSource: LineageUpdate = {
         data: {
             __typename: "DatasetData",
             numRecordsTotal: 0,
-            estimatedSize: 0,
+            estimatedSizeBytes: 0,
         },
     },
     nodes: [
@@ -607,7 +607,7 @@ export const mockLineageGraphUpdateWithMqttSource: LineageUpdate = {
             data: {
                 __typename: "DatasetData",
                 numRecordsTotal: 0,
-                estimatedSize: 0,
+                estimatedSizeBytes: 0,
             },
         },
     ],
@@ -756,7 +756,7 @@ export const mockOverviewDataUpdate = {
         data: {
             __typename: "DatasetData",
             numRecordsTotal: 6909,
-            estimatedSize: 1102418,
+            estimatedSizeBytes: 1102418,
         },
         metadata: {
             __typename: "DatasetMetadata",
@@ -873,7 +873,7 @@ export const mockOverviewDataUpdate = {
     size: {
         __typename: "DatasetData",
         numRecordsTotal: 6909,
-        estimatedSize: 1102418,
+        estimatedSizeBytes: 1102418,
     },
 };
 
@@ -908,7 +908,7 @@ export const mockOverviewDataUpdateNullable = {
         data: {
             __typename: "DatasetData",
             numRecordsTotal: 6909,
-            estimatedSize: 1102418,
+            estimatedSizeBytes: 1102418,
         },
         metadata: {
             __typename: "DatasetMetadata",
@@ -978,7 +978,7 @@ export const mockOverviewDataUpdateNullable = {
     size: {
         __typename: "DatasetData",
         numRecordsTotal: 6909,
-        estimatedSize: 1102418,
+        estimatedSizeBytes: 1102418,
     },
 };
 
@@ -1599,7 +1599,7 @@ export const mockOverviewWithSetInfo = {
     data: {
         __typename: "DatasetData",
         numRecordsTotal: 6909,
-        estimatedSize: 1102418,
+        estimatedSizeBytes: 1102418,
     },
     metadata: {
         __typename: "DatasetMetadata",
@@ -1728,7 +1728,7 @@ export const mockOverviewWithSetLicense = {
     data: {
         __typename: "DatasetData",
         numRecordsTotal: 6909,
-        estimatedSize: 1102418,
+        estimatedSizeBytes: 1102418,
     },
     metadata: {
         __typename: "DatasetMetadata",

@@ -492,7 +492,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                     },
                 },
                 numRecordsTotal: 596126,
-                estimatedSize: 6585116,
+                estimatedSizeBytes: 6585116,
             },
             permissions: {
                 __typename: "DatasetPermissions",
@@ -611,7 +611,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                             data: {
                                                 __typename: "DatasetData",
                                                 numRecordsTotal: 1667957,
-                                                estimatedSize: 16494158,
+                                                estimatedSizeBytes: 16494158,
                                             },
                                             owner: {
                                                 __typename: "Account",
@@ -674,7 +674,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                             data: {
                                                                 __typename: "DatasetData",
                                                                 numRecordsTotal: 1384881,
-                                                                estimatedSize: 22514744,
+                                                                estimatedSizeBytes: 22514744,
                                                             },
                                                             owner: {
                                                                 __typename: "Account",
@@ -698,7 +698,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                             data: {
                                                 __typename: "DatasetData",
                                                 numRecordsTotal: 1384881,
-                                                estimatedSize: 13914917,
+                                                estimatedSizeBytes: 13914917,
                                             },
                                             owner: {
                                                 __typename: "Account",
@@ -722,7 +722,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                             data: {
                                 __typename: "DatasetData",
                                 numRecordsTotal: 4048458,
-                                estimatedSize: 39010479,
+                                estimatedSizeBytes: 39010479,
                             },
                             owner: {
                                 __typename: "Account",
@@ -747,7 +747,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
             data: {
                 __typename: "DatasetData",
                 numRecordsTotal: 1870,
-                estimatedSize: 25071,
+                estimatedSizeBytes: 25071,
             },
         },
     },

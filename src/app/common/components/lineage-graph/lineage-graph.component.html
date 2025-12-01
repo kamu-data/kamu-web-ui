@@ -271,7 +271,9 @@
         <div class="mt-1 info d-flex align-items-center">
             <mat-icon class="fs-4 mr-2">folder_open</mat-icon>
             <span data-test-id="side-panel-dataset-size">
-                {{ currentDataset.data.estimatedSize ? (currentDataset.data.estimatedSize | displaySize) : 0 }}
+                {{
+                    currentDataset.data.estimatedSizeBytes ? (currentDataset.data.estimatedSizeBytes | displaySize) : 0
+                }}
                 estimated size
             </span>
         </div>

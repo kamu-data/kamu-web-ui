@@ -2,7 +2,7 @@ fragment DatasetDetails on Dataset {
   createdAt
   lastUpdatedAt
   data {
-    estimatedSize
+    estimatedSizeBytes
     numRecordsTotal
   }
   metadata {

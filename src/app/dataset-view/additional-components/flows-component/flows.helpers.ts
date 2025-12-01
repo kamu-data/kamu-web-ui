@@ -271,6 +271,10 @@ export function lastTimeRangeHelper(selectedRange: RangeLastAttempt): Date {
             today.setDate(today.getDate() - 7);
             return today;
         }
+        case RangeLastAttempt.LAST_30_DAYS: {
+            today.setDate(today.getDate() - 30);
+            return today;
+        }
         case RangeLastAttempt.LAST_90_DAYS: {
             today.setDate(today.getDate() - 90);
             return today;
@@ -333,6 +337,10 @@ export function nextTimeRangeHelper(selectedRange: RangeLastAttempt): Date {
         }
         case RangeLastAttempt.NEXT_7_DAYS: {
             today.setDate(today.getDate() + 7);
+            return today;
+        }
+        case RangeLastAttempt.NEXT_30_DAYS: {
+            today.setDate(today.getDate() + 30);
             return today;
         }
         case RangeLastAttempt.NEXT_90_DAYS: {

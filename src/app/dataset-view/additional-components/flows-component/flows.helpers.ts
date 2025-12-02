@@ -291,6 +291,7 @@ export function lastTimeRangeHelper(selectedRange: RangeLastAttempt): Date {
             today.setFullYear(today.getFullYear() - 2);
             return today;
         }
+        /* istanbul ignore next */
         default:
             return new Date();
     }
@@ -359,6 +360,7 @@ export function nextTimeRangeHelper(selectedRange: RangeLastAttempt): Date {
             today.setFullYear(today.getFullYear() + 2);
             return today;
         }
+        /* istanbul ignore next */
         default:
             return new Date();
     }

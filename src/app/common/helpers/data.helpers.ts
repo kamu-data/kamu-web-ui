@@ -274,7 +274,7 @@ export const getValidators = (validators: JsonFormValidators): ValidatorFn[] => 
 
 export const MY_MOMENT_FORMATS = {
     parseInput: "DD/MM/YY HH:mm:ss",
-    fullPickerInput: "DD/MM/YYYY HH:mm:ss A z",
+    fullPickerInput: "DD/MM/YYYY HH:mm A z",
     datePickerInput: "DD/MM/YYYY",
     timePickerInput: "HH:mm:ss",
     monthYearLabel: "MMM YYYY",

@@ -31,6 +31,8 @@
                                 [max]="toFilterDate ?? currentDateTime"
                                 class="form-control"
                                 id="fromDate"
+                                readonly
+                                (ngModelChange)="onChangeLastAttemptFilter()"
                             />
                         </div>
                         <owl-date-time #fromdatepicker />
@@ -64,14 +66,16 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-center pt-4 mb-3">
-                    <div class="position-absolute">
-                        <label for="toDate" class="fw-500 from-label fs-12">to</label>
+                    <div class="position-relative">
+                        <label for="toDate" class="fw-500 from-label position-absolute fs-12">to</label>
                         <input
                             [(ngModel)]="toFilterDate"
                             [owlDateTime]="todatepicker"
                             [max]="currentDateTime"
                             class="form-control"
                             id="toDate"
+                            readonly
+                            (ngModelChange)="onChangeLastAttemptFilter()"
                         />
                     </div>
                     <owl-date-time #todatepicker />
@@ -147,6 +151,7 @@
                                     [min]="currentDateTime"
                                     [max]="nextPlannedBeforeDate"
                                     readonly
+                                    (ngModelChange)="onChangeNextAttemptFilter()"
                                 />
                             </div>
                             <owl-date-time #nextPlannedAfterDatepicker />
@@ -169,6 +174,7 @@
                                     id="nextPlannedBeforeDate"
                                     [min]="nextPlannedAfterDate ?? currentDateTime"
                                     readonly
+                                    (ngModelChange)="onChangeNextAttemptFilter()"
                                 />
                             </div>
                             <owl-date-time #nextPlannedBeforeDatepicker />
@@ -208,24 +214,6 @@
         <div class="col-md-4 ms-4 mt-4">
             <div class="d-flex align-items-center pt-4 mb-3">
                 <div class="position-relative">
-                    <label for="lastFailureDate" class="fw-500 from-label fs-12">Last failure since</label>
-                    <input
-                        [(ngModel)]="lastFailureDate"
-                        [owlDateTime]="lastFailureDatepicker"
-                        class="form-control"
-                        id="lastFailureDate"
-                    />
-                </div>
-                <owl-date-time #lastFailureDatepicker />
-                <span
-                    [owlDateTimeTrigger]="lastFailureDatepicker"
-                    data-test-id="lastFailureDatepicker"
-                    class="trigger ms-2"
-                    ><mat-icon>calendar_month</mat-icon>
-                </span>
-            </div>
-            <div class="d-flex align-items-center pt-4 mb-3">
-                <div class="position-relative">
                     <label for="minConsecutiveFailures" class="fw-500 from-label fs-12">Min consecutive failures</label>
                     <input
                         [(ngModel)]="minConsecutiveFailures"
@@ -239,6 +227,53 @@
             </div>
         </div>
 
+        <div class="col-md-7 ms-3 mt-4">
+            <div class="d-flex flex-row gap-2 box p-4">
+                <div class="d-flex align-items-center pt-4 mb-3">
+                    <div class="position-relative">
+                        <label for="lastFailureDate" class="fw-500 from-label fs-12">Last failure since</label>
+                        <input
+                            [(ngModel)]="lastFailureDate"
+                            [owlDateTime]="lastFailureDatepicker"
+                            class="form-control"
+                            id="lastFailureDate"
+                            [max]="currentDateTime"
+                            (ngModelChange)="onChangeLastFailureFilter()"
+                            readonly
+                        />
+                    </div>
+                    <owl-date-time #lastFailureDatepicker />
+                    <span
+                        [owlDateTimeTrigger]="lastFailureDatepicker"
+                        id="last-failure-datepicker"
+                        data-test-id="lastFailureDatepicker"
+                        class="trigger ms-2"
+                        ><mat-icon>calendar_month</mat-icon>
+                    </span>
+                    <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearLastFailureControl()">close</mat-icon>
+                </div>
+
+                <div class="w-50 mt-4 position-relative">
+                    <label for="order-by-field-custom" class="fw-500 quick-range-label fs-12">quick ranges</label>
+
+                    <ng-select
+                        class="ms-4"
+                        [items]="RANGE_LAST_ATTEMPT_LIST"
+                        [(ngModel)]="selectedQuickRangeLastFailure"
+                        (change)="onQuickRangeLastFailure($event)"
+                        [clearable]="false"
+                        [searchable]="true"
+                        bindLabel="label"
+                        bindValue="value"
+                        id="time-range-failure"
+                    >
+                        <ng-template ng-option-tmp let-item="item" let-index="index">
+                            <label class="fs-14 inline-block w-100"> {{ item.label }} </label>
+                        </ng-template>
+                    </ng-select>
+                </div>
+            </div>
+        </div>
         <div class="d-flex justify-content-end mt-4 mb-2">
             <button
                 (click)="resetFilters()"
@@ -275,6 +310,8 @@
                                     [max]="toFilterDate ?? currentDateTime"
                                     class="form-control"
                                     id="fromDate"
+                                    (ngModelChange)="onChangeLastAttemptFilter()"
+                                    readonly
                                 />
                             </div>
                             <owl-date-time #fromdatepicker />
@@ -310,14 +347,16 @@
                         </div>
                     </div>
                     <div class="d-flex align-items-center pt-4 mb-3">
-                        <div class="position-absolute">
-                            <label for="toDate" class="fw-500 from-label fs-12">to</label>
+                        <div class="position-relative">
+                            <label for="toDate" class="fw-500 from-label position-absolute fs-12">to</label>
                             <input
                                 [(ngModel)]="toFilterDate"
                                 [owlDateTime]="todatepicker"
                                 [max]="currentDateTime"
                                 class="form-control"
                                 id="toDate"
+                                readonly
+                                (ngModelChange)="onChangeLastAttemptFilter()"
                             />
                         </div>
                         <owl-date-time #todatepicker />
@@ -376,6 +415,7 @@
                                 class="form-control"
                                 id="lastFailureDate"
                                 [max]="currentDateTime"
+                                (ngModelChange)="onChangeLastFailureFilter()"
                                 readonly
                             />
                         </div>
@@ -485,6 +525,7 @@
                                         [min]="currentDateTime"
                                         [max]="nextPlannedBeforeDate"
                                         readonly
+                                        (ngModelChange)="onChangeNextAttemptFilter()"
                                     />
                                 </div>
                                 <owl-date-time #nextPlannedAfterDatepicker />
@@ -507,6 +548,7 @@
                                         id="nextPlannedBeforeDate"
                                         [min]="nextPlannedAfterDate ?? currentDateTime"
                                         readonly
+                                        (ngModelChange)="onChangeNextAttemptFilter()"
                                     />
                                 </div>
                                 <owl-date-time #nextPlannedBeforeDatepicker />

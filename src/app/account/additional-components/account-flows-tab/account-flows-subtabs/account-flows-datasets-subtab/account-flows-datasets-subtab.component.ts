@@ -276,7 +276,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
             }
             case ProcessCardFilterMode.TRIAGE: {
                 this.selectedOrderField = this.selectedOrderField ?? FlowProcessOrderField.ConsecutiveFailures;
-                this.minConsecutiveFailures = 1;
+                this.minConsecutiveFailures = this.minConsecutiveFailures > 1 ? this.minConsecutiveFailures : 1;
                 return {
                     effectiveStateIn: this.selectedFlowProcessStates.length
                         ? this.selectedFlowProcessStates
@@ -286,7 +286,6 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
                 };
             }
             case ProcessCardFilterMode.UPCOMING_SCHEDULED: {
-                this.selectedOrderDirection = true;
                 this.selectedOrderField = FlowProcessOrderField.NextPlannedAt;
 
                 return {
@@ -361,12 +360,28 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         this.nextPlannedAfterDate = null;
         this.selectedOrderDirection = true;
         this.selectedOrderField = null;
-        this.minConsecutiveFailures = 0;
         this.selectedFlowProcessStates = [];
         this.selectedQuickRangeLastAttempt = null;
         this.selectedQuickRangeLastFailure = null;
         this.selectedQuickRangeNextAttempt = null;
+        if (this.accountFlowsData.datasetsFiltersMode === ProcessCardFilterMode.TRIAGE) {
+            this.minConsecutiveFailures = 1;
+        } else {
+            this.minConsecutiveFailures = 0;
+        }
         this.refreshNow();
+    }
+
+    public onChangeLastAttemptFilter(): void {
+        this.selectedQuickRangeLastAttempt = null;
+    }
+
+    public onChangeLastFailureFilter(): void {
+        this.selectedQuickRangeLastFailure = null;
+    }
+
+    public onChangeNextAttemptFilter(): void {
+        this.selectedQuickRangeNextAttempt = null;
     }
 
     public onPageChange(page: number): void {

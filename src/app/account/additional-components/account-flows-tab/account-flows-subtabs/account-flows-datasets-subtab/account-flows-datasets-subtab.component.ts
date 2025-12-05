@@ -40,15 +40,7 @@ import {
     CARD_FILTERS_MODE_OPTIONS,
     CardFilterDescriptor,
     DashboardFiltersOptions,
-    FLOW_PROCESS_STATE_LIST,
-    FLOW_PROCESS_STATE_LIST_TRIAGE,
-    FLOW_PROCESS_STATE_LIST_UPCOMING,
-    ORDER_BY_FIELD_LIST_CUSTOM,
-    ORDER_BY_FIELD_LIST_TRIAGE,
-    ORDER_BY_FIELD_LIST_UPCOMING_SCHEDULED,
     ProcessCardFilterMode,
-    RANGE_LAST_ATTEMPT_LIST,
-    RANGE_NEXT_ATTEMPT_LIST,
 } from "../../account-flows-tab.types";
 import { MaybeNull } from "src/app/interface/app.types";
 import { NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
@@ -137,15 +129,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
     public readonly TIMEOUT_REFRESH_FLOW = AppValues.TIMEOUT_REFRESH_FLOW_MS;
-    public readonly ORDER_BY_FIELD_LIST_CUSTOM = ORDER_BY_FIELD_LIST_CUSTOM;
-    public readonly ORDER_BY_FIELD_LIST_TRIAGE = ORDER_BY_FIELD_LIST_TRIAGE;
-    public readonly ORDER_BY_FIELD_LIST_UPCOMING_SCHEDULED = ORDER_BY_FIELD_LIST_UPCOMING_SCHEDULED;
-    public readonly RANGE_LAST_ATTEMPT_LIST = RANGE_LAST_ATTEMPT_LIST;
-    public readonly RANGE_NEXT_ATTEMPT_LIST = RANGE_NEXT_ATTEMPT_LIST;
 
-    public readonly FLOW_PROCESS_STATE_LIST = FLOW_PROCESS_STATE_LIST;
-    public readonly FLOW_PROCESS_STATE_LIST_TRIAGE = FLOW_PROCESS_STATE_LIST_TRIAGE;
-    public readonly FLOW_PROCESS_STATE_LIST_UPCOMING = FLOW_PROCESS_STATE_LIST_UPCOMING;
     public readonly ProcessCardFilterMode: typeof ProcessCardFilterMode = ProcessCardFilterMode;
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
     private readonly CARDS_FLOW_PROCESSES_PER_PAGE: number = 9;

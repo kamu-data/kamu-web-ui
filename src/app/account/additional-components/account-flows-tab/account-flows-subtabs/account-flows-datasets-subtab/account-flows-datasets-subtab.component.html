@@ -295,111 +295,12 @@
     </div>
 </div>
 <div class="my-4" *ngIf="isRecentActivityFiltersMode">
-    <div class="p-4 box">
-        <div class="row">
-            <div class="col-md-7 ms-3">
-                <span class="fw-500 fs-12 ml-6px">Last attempt</span>
-                <div class="box p-3 w-attempts">
-                    <div class="d-flex flex-row gap-2 mt-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="position-relative">
-                                <label for="fromDate" class="fw-500 from-label fs-12">from</label>
-                                <input
-                                    [(ngModel)]="dashboardFilters.fromFilterDate"
-                                    [owlDateTime]="fromdatepicker"
-                                    [max]="dashboardFilters.toFilterDate ?? currentDateTime"
-                                    class="form-control"
-                                    id="fromDate"
-                                    (ngModelChange)="onChangeLastAttemptFilter()"
-                                    readonly
-                                />
-                            </div>
-                            <owl-date-time #fromdatepicker />
-                            <span
-                                [owlDateTimeTrigger]="fromdatepicker"
-                                id="from-datepicker"
-                                data-test-id="fromdatepicker"
-                                class="trigger ms-2"
-                                ><mat-icon>calendar_month</mat-icon>
-                            </span>
-                            <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearFromControl()">close</mat-icon>
-                        </div>
-                        <div class="w-50 position-relative">
-                            <label for="order-by-field-custom" class="fw-500 quick-range-label fs-12"
-                                >quick ranges</label
-                            >
-
-                            <ng-select
-                                class="ms-4"
-                                [items]="RANGE_LAST_ATTEMPT_LIST"
-                                [(ngModel)]="dashboardFilters.selectedQuickRangeLastAttempt"
-                                (change)="onQuickRangeLastAttempt($event)"
-                                [clearable]="false"
-                                [searchable]="true"
-                                bindLabel="label"
-                                bindValue="value"
-                                id="time-range-attempt"
-                            >
-                                <ng-template ng-option-tmp let-item="item" let-index="index">
-                                    <label class="fs-14 inline-block w-100"> {{ item.label }} </label>
-                                </ng-template>
-                            </ng-select>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center pt-4 mb-3">
-                        <div class="position-relative">
-                            <label for="toDate" class="fw-500 from-label position-absolute fs-12">to</label>
-                            <input
-                                [(ngModel)]="dashboardFilters.toFilterDate"
-                                [owlDateTime]="todatepicker"
-                                [max]="currentDateTime"
-                                class="form-control"
-                                id="toDate"
-                                readonly
-                                (ngModelChange)="onChangeLastAttemptFilter()"
-                            />
-                        </div>
-                        <owl-date-time #todatepicker />
-                        <span
-                            [owlDateTimeTrigger]="todatepicker"
-                            id="to-datepicker"
-                            data-test-id="todatepicker"
-                            class="trigger ms-2"
-                            ><mat-icon>calendar_month</mat-icon>
-                        </span>
-                        <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearToControl()">close</mat-icon>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 ms-4">
-                <div class="d-flex align-items-center pt-4 mb-3 mt-1">
-                    <div class="position-relative container-order">
-                        <label class="fw-500 order-label fs-12">Order direction</label>
-                        <mat-slide-toggle [(ngModel)]="dashboardFilters.selectedOrderDirection" color="primary">
-                            {{ orderDirection }}
-                        </mat-slide-toggle>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center pt-4 mb-3 mt-4">
-                    <div class="position-relative container-order">
-                        <label for="order-direction" class="fw-500 status-label fs-12">Process status</label>
-                        <ng-select
-                            [items]="FLOW_PROCESS_STATE_LIST"
-                            [(ngModel)]="dashboardFilters.selectedFlowProcessStates"
-                            bindLabel="label"
-                            bindValue="value"
-                            [multiple]="true"
-                        >
-                            <ng-template ng-option-tmp let-item="item" let-index="index">
-                                <label class="fs-14 inline-block"> {{ item.label }} </label>
-                            </ng-template>
-                        </ng-select>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <app-recent-activity-filters-view
+        [dashboardFilters]="dashboardFilters"
+        [isFirstInitialization]="isFirstInitialization"
+    >
         <ng-container [ngTemplateOutlet]="applyFiltersTemplate"> </ng-container>
-    </div>
+    </app-recent-activity-filters-view>
 </div>
 <div class="my-4" *ngIf="isTriageFiltersMode">
     <div class="p-4 box">

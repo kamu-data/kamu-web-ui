@@ -10,7 +10,7 @@ import {
     FlowProcessOrderField,
     OrderingDirection,
 } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/interface/app.types";
+import { MaybeUndefined } from "src/app/interface/app.types";
 
 export enum AccountFlowsNav {
     ACTIVITY = "activity",
@@ -378,16 +378,16 @@ export const RANGE_NEXT_ATTEMPT_LIST: RangeLastAttemptOption[] = [
 ];
 
 export interface DashboardFiltersOptions {
-    fromFilterDate: MaybeNull<Date>;
-    toFilterDate: MaybeNull<Date>;
-    lastFailureDate: MaybeNull<Date>;
-    nextPlannedBeforeDate: MaybeNull<Date>;
-    nextPlannedAfterDate: MaybeNull<Date>;
+    fromFilterDate: MaybeUndefined<Date>;
+    toFilterDate: MaybeUndefined<Date>;
+    lastFailureDate: MaybeUndefined<Date>;
+    nextPlannedBeforeDate: MaybeUndefined<Date>;
+    nextPlannedAfterDate: MaybeUndefined<Date>;
     selectedOrderDirection: boolean;
-    selectedOrderField: MaybeNull<FlowProcessOrderField>;
-    selectedQuickRangeLastAttempt: MaybeNull<string>;
-    selectedQuickRangeLastFailure: MaybeNull<string>;
-    selectedQuickRangeNextAttempt: MaybeNull<string>;
+    selectedOrderField: MaybeUndefined<FlowProcessOrderField>;
+    selectedQuickRangeLastAttempt: MaybeUndefined<string>;
+    selectedQuickRangeLastFailure: MaybeUndefined<string>;
+    selectedQuickRangeNextAttempt: MaybeUndefined<string>;
     selectedFlowProcessStates: FlowProcessEffectiveState[];
     minConsecutiveFailures: number;
 }

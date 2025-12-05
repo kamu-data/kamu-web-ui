@@ -64,6 +64,7 @@ import {
     nextTimeRangeHelper,
 } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import { RecentActivityFiltersViewComponent } from "./components/recent-activity-filters-view/recent-activity-filters-view.component";
+import { TriageFiltersViewComponent } from "./components/triage-filters-view/triage-filters-view.component";
 
 @Component({
     selector: "app-account-flows-datasets-subtab",
@@ -94,6 +95,7 @@ import { RecentActivityFiltersViewComponent } from "./components/recent-activity
         DatasetFlowProcessCardComponent,
         PaginationComponent,
         RecentActivityFiltersViewComponent,
+        TriageFiltersViewComponent,
         WebhookFlowProcessCardComponent,
     ],
     templateUrl: "./account-flows-datasets-subtab.component.html",

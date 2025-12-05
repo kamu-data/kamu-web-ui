@@ -1,0 +1,101 @@
+<div class="p-4 box">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="d-flex flex-row gap-2">
+                <div class="d-flex align-items-center pt-4 mb-3">
+                    <div class="position-relative">
+                        <label for="lastFailureDate" class="fw-500 from-label fs-12">Last failure since</label>
+                        <input
+                            [(ngModel)]="dashboardFilters.lastFailureDate"
+                            [owlDateTime]="lastFailureDatepicker"
+                            class="form-control"
+                            id="lastFailureDate"
+                            [max]="currentDateTime"
+                            (ngModelChange)="onChangeLastFailureFilter()"
+                            readonly
+                        />
+                    </div>
+                    <owl-date-time #lastFailureDatepicker />
+                    <span
+                        [owlDateTimeTrigger]="lastFailureDatepicker"
+                        id="last-failure-datepicker"
+                        data-test-id="lastFailureDatepicker"
+                        class="trigger ms-2"
+                        ><mat-icon>calendar_month</mat-icon>
+                    </span>
+                    <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearLastFailureControl()">close</mat-icon>
+                </div>
+
+                <div class="w-50 mt-4 position-relative">
+                    <label for="order-by-field-custom" class="fw-500 quick-range-label fs-12">quick ranges</label>
+
+                    <ng-select
+                        class="ms-4"
+                        [items]="RANGE_LAST_ATTEMPT_LIST"
+                        [(ngModel)]="dashboardFilters.fromFilterDate"
+                        (change)="onQuickRangeLastFailure($event)"
+                        [clearable]="false"
+                        [searchable]="true"
+                        bindLabel="label"
+                        bindValue="value"
+                        id="time-range-failure"
+                    >
+                        <ng-template ng-option-tmp let-item="item" let-index="index">
+                            <label class="fs-14 inline-block w-100"> {{ item.label }} </label>
+                        </ng-template>
+                    </ng-select>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center pt-4 mb-3 mt-4">
+                <div class="position-relative">
+                    <label for="minConsecutiveFailures" class="fw-500 from-label fs-12">Min consecutive failures</label>
+                    <input
+                        [(ngModel)]="dashboardFilters.minConsecutiveFailures"
+                        class="form-control failures-control"
+                        id="minConsecutiveFailures"
+                        type="number"
+                        min="1"
+                        max="10"
+                    />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-center pt-4 mb-3">
+                <div class="position-relative container-order">
+                    <label for="order-by-field-custom" class="fw-500 from-label fs-12">Order by field</label>
+                    <ng-select
+                        [items]="ORDER_BY_FIELD_LIST_TRIAGE"
+                        [(ngModel)]="dashboardFilters.selectedOrderField"
+                        [clearable]="false"
+                        bindLabel="label"
+                        bindValue="value"
+                        id="order-by-field-custom"
+                    >
+                        <ng-template ng-option-tmp let-item="item" let-index="index">
+                            <label class="fs-14 inline-block w-100"> {{ item.label }} </label>
+                        </ng-template>
+                    </ng-select>
+                </div>
+            </div>
+            <div class="d-flex align-items-center pt-4 mt-4">
+                <div class="position-relative container-order">
+                    <label for="order-direction" class="fw-500 status-label fs-12">Process status</label>
+                    <ng-select
+                        [items]="FLOW_PROCESS_STATE_LIST_TRIAGE"
+                        [(ngModel)]="dashboardFilters.selectedFlowProcessStates"
+                        bindLabel="label"
+                        bindValue="value"
+                        [multiple]="true"
+                    >
+                        <ng-template ng-option-tmp let-item="item" let-index="index">
+                            <label class="fs-14 inline-block"> {{ item.label }} </label>
+                        </ng-template>
+                    </ng-select>
+                </div>
+            </div>
+        </div>
+        <ng-content></ng-content>
+    </div>
+</div>

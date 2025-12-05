@@ -7,7 +7,7 @@
 
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { AccountFlowsDatasetsSubtabComponent } from "./account-flows-datasets-subtab.component";
-import { AccountFlowsNav } from "../../account-flows-tab.types";
+import { AccountFlowsNav, ProcessCardFilterMode } from "../../account-flows-tab.types";
 import {
     AccountFlowProcessCardConnectionDataFragment,
     FlowProcessEffectiveState,
@@ -15,7 +15,7 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
-import { provideToastr } from "ngx-toastr";
+import { provideToastr, ToastrService } from "ngx-toastr";
 import { AccountService } from "src/app/account/account.service";
 import { ActivatedRoute } from "@angular/router";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -41,6 +41,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
     let navigationService: NavigationService;
     let datasetWebhooksService: DatasetWebhooksService;
     let datasetFlowsService: DatasetFlowsService;
+    let toastrService: ToastrService;
     const MOCK_ACCOUNT_NAME = "kamu";
     const MOCK_SUBSCRIPTION_ID = "121223-21212-567788";
     let getAccountFlowsAsCardsSpy: jasmine.Spy;
@@ -82,11 +83,13 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         navigationService = TestBed.inject(NavigationService);
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
+        toastrService = TestBed.inject(ToastrService);
         component = fixture.componentInstance;
         component.accountName = MOCK_ACCOUNT_NAME;
         component.accountFlowsData = {
             activeNav: AccountFlowsNav.DATASETS,
             flowGroup: [FlowStatus.Finished],
+            datasetsFiltersMode: ProcessCardFilterMode.CUSTOM,
         };
         getAccountFlowsAsCardsSpy = spyOn(accountService, "getAccountFlowsAsCards").and.returnValue(
             of(
@@ -160,15 +163,6 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         expect(fetchCardsDataSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check to edit webhook card", () => {
-        const navigateToWebhooksSpy = spyOn(navigationService, "navigateToWebhooks");
-        component.editWebhookCard({
-            datasetBasics: mockDatasetBasicsRootFragment,
-            subscriptionId: MOCK_SUBSCRIPTION_ID,
-        });
-        expect(navigateToWebhooksSpy).toHaveBeenCalledTimes(1);
-    });
-
     it("should check to toggle webhook card with active state", fakeAsync(() => {
         const datasetWebhookPauseSubscriptionSpy = spyOn(
             datasetWebhooksService,
@@ -222,26 +216,26 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
     }));
 
     it("should check to update process for card belongs the root dataset", fakeAsync(() => {
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        const toastrSuccessSpy = spyOn(toastrService, "success");
         const datasetTriggerIngestFlowSpy = spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(
             of(true),
         );
         component.updateNow(mockDatasetBasicsRootFragment);
         tick(component.TIMEOUT_REFRESH_FLOW);
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
+        expect(toastrSuccessSpy).toHaveBeenCalledTimes(1);
         expect(datasetTriggerIngestFlowSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
     it("should check to update process for card belongs the derivative dataset", fakeAsync(() => {
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        const toastrSuccessSpy = spyOn(toastrService, "success");
         const datasetTriggerTransformFlowSpy = spyOn(
             datasetFlowsService,
             "datasetTriggerTransformFlow",
         ).and.returnValue(of(true));
         component.updateNow(mockDatasetBasicsDerivedFragment);
         tick(component.TIMEOUT_REFRESH_FLOW);
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
+        expect(toastrSuccessSpy).toHaveBeenCalledTimes(1);
         expect(datasetTriggerTransformFlowSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));

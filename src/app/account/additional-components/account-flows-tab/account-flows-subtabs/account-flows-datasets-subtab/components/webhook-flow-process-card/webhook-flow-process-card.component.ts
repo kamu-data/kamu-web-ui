@@ -16,12 +16,14 @@ import {
     FlowProcessSummary,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import {
     DatasetFlowsBadgeStyle,
     DatasetFlowBadgeHelpers,
     DatasetFlowsBadgeTexts,
     webhooksStateMapper,
 } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-webhook-flow-process-card",
@@ -46,19 +48,18 @@ export class WebhookFlowProcessCardComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public summary: FlowProcessSummary;
     @Input({ required: true }) public subscriptionId: string;
+    @Input({ required: true }) public subscriptionName: string;
 
     @Output() public toggleWebhookCardStateEmitter = new EventEmitter<{
         datasetBasics: DatasetBasicsFragment;
         state: FlowProcessEffectiveState;
         subscriptionId: string;
     }>();
-    @Output() public editWebhookCardEmitter = new EventEmitter<{
-        datasetBasics: DatasetBasicsFragment;
-        subscriptionId: string;
-    }>();
 
+    public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
+    public readonly SettingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
 
     public badgeStyles(effectiveState: FlowProcessEffectiveState): DatasetFlowsBadgeStyle {
         return DatasetFlowBadgeHelpers.badgeStyles(effectiveState);
@@ -79,9 +80,5 @@ export class WebhookFlowProcessCardComponent {
         state: FlowProcessEffectiveState,
     ): void {
         this.toggleWebhookCardStateEmitter.emit({ datasetBasics, subscriptionId, state });
-    }
-
-    public editWebhookCard(datasetBasics: DatasetBasicsFragment, subscriptionId: string): void {
-        this.editWebhookCardEmitter.emit({ datasetBasics, subscriptionId });
     }
 }

@@ -6,13 +6,14 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, NgZone, OnInit } from "@angular/core";
-import { AsyncPipe, NgFor, NgIf } from "@angular/common";
+import { AsyncPipe, NgFor, NgIf, NgTemplateOutlet } from "@angular/common";
 import { AccountService } from "src/app/account/account.service";
 import { Observable, switchMap, take, tap, timer } from "rxjs";
 import {
     AccountFlowProcessCardConnectionDataFragment,
     DatasetBasicsFragment,
     FlowProcessEffectiveState,
+    FlowProcessFilters,
     FlowProcessOrderField,
     OrderingDirection,
 } from "src/app/api/kamu.graphql.interface";
@@ -26,28 +27,66 @@ import { AccountTabs } from "src/app/account/account.constants";
 import { AccountFlowsType } from "../../resolvers/account-flows.resolver";
 import { BaseComponent } from "src/app/common/components/base.component";
 import AppValues from "src/app/common/values/app.values";
-import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { DatasetFlowProcessCardComponent } from "src/app/common/components/dataset-flow-process-card/dataset-flow-process-card.component";
 import { WebhookFlowProcessCardComponent } from "./components/webhook-flow-process-card/webhook-flow-process-card.component";
 import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
+import { MatChipsModule } from "@angular/material/chips";
+import { MatButtonToggleChange, MatButtonToggleModule } from "@angular/material/button-toggle";
+import { FormsModule } from "@angular/forms";
+import {
+    AccountFlowsNav,
+    CARD_FILTERS_MODE_OPTIONS,
+    CardFilterDescriptor,
+    DashboardFiltersOptions,
+    ProcessCardFilterMode,
+} from "../../account-flows-tab.types";
+import { MaybeNull } from "src/app/interface/app.types";
+import { NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
+import { DateTimeAdapter, OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
+import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
+import { MY_MOMENT_FORMATS } from "src/app/common/helpers/data.helpers";
+import { NgSelectModule } from "@ng-select/ng-select";
+import { ToastrService } from "ngx-toastr";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { RecentActivityFiltersViewComponent } from "./components/recent-activity-filters-view/recent-activity-filters-view.component";
+import { TriageFiltersViewComponent } from "./components/triage-filters-view/triage-filters-view.component";
+import { UpcomingScheduledFiltersViewComponent } from "./components/upcoming-scheduled-filters-view/upcoming-scheduled-filters-view.component";
+import { CustomFiltersViewComponent } from "./components/custom-filters-view/custom-filters-view.component";
 
 @Component({
     selector: "app-account-flows-datasets-subtab",
     standalone: true,
+    providers: [
+        { provide: DateTimeAdapter, useClass: MomentDateTimeAdapter },
+        { provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS },
+    ],
     imports: [
         //-----//
         AsyncPipe,
+        FormsModule,
         NgIf,
         NgFor,
+        NgTemplateOutlet,
 
         //-----//
         MatIconModule,
+        MatButtonToggleModule,
+        MatChipsModule,
+        MatSlideToggleModule,
+        NgbNavModule,
+        NgSelectModule,
+        OwlDateTimeModule,
+        OwlMomentDateTimeModule,
 
         //-----//
         DatasetFlowProcessCardComponent,
+        CustomFiltersViewComponent,
         PaginationComponent,
+        RecentActivityFiltersViewComponent,
+        TriageFiltersViewComponent,
+        UpcomingScheduledFiltersViewComponent,
         WebhookFlowProcessCardComponent,
     ],
     templateUrl: "./account-flows-datasets-subtab.component.html",
@@ -61,20 +100,42 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     private readonly accountService = inject(AccountService);
     private readonly navigationService = inject(NavigationService);
     private readonly ngZone = inject(NgZone);
-    private readonly flowsService = inject(DatasetFlowsService);
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly datasetWebhooksService = inject(DatasetWebhooksService);
     private readonly datasetCardService = inject(ProcessDatasetCardInteractionService);
+    private readonly toastrService = inject(ToastrService);
 
     public accountFlowsCardsData$: Observable<AccountFlowProcessCardConnectionDataFragment>;
     public currentPage: number = 1;
+
+    public dashboardFilters: DashboardFiltersOptions = {
+        fromFilterDate: undefined,
+        toFilterDate: undefined,
+        lastFailureDate: undefined,
+        nextPlannedBeforeDate: undefined,
+        nextPlannedAfterDate: undefined,
+        selectedOrderDirection: true,
+        selectedOrderField: undefined,
+        selectedQuickRangeLastAttempt: undefined,
+        selectedQuickRangeLastFailure: undefined,
+        selectedQuickRangeNextAttempt: undefined,
+        selectedFlowProcessStates: [],
+        minConsecutiveFailures: 0,
+        isFirstInitialization: false,
+    };
+    public selectedMode: MaybeNull<ProcessCardFilterMode> = ProcessCardFilterMode.TRIAGE;
+    public readonly CARD_FILTERS_MODE_OPTIONS: CardFilterDescriptor[] = CARD_FILTERS_MODE_OPTIONS;
+
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
     public readonly TIMEOUT_REFRESH_FLOW = AppValues.TIMEOUT_REFRESH_FLOW_MS;
+
+    public readonly ProcessCardFilterMode: typeof ProcessCardFilterMode = ProcessCardFilterMode;
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
     private readonly CARDS_FLOW_PROCESSES_PER_PAGE: number = 9;
 
     public ngOnInit(): void {
+        this.dashboardFilters.isFirstInitialization = true;
         this.fetchCardsData();
     }
 
@@ -83,14 +144,6 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         if (pageParam) {
             this.currentPage = +requireValue(pageParam);
         }
-    }
-
-    public editWebhookCard(params: { datasetBasics: DatasetBasicsFragment; subscriptionId: string }): void {
-        this.navigationService.navigateToWebhooks({
-            accountName: params.datasetBasics.owner.accountName,
-            datasetName: params.datasetBasics.name,
-            tab: params.subscriptionId,
-        });
     }
 
     public toggleWebhookCardState(params: {
@@ -127,11 +180,38 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
                     accountName: this.accountName,
                     page: this.currentPage - 1,
                     perPage: this.CARDS_FLOW_PROCESSES_PER_PAGE,
-                    filters: { effectiveStateIn: this.initialProcessFilters },
-                    ordering: { field: FlowProcessOrderField.EffectiveState, direction: OrderingDirection.Asc },
+                    filters: this.setFlowProcessFilters(),
+                    ordering: {
+                        field: this.dashboardFilters.selectedOrderField ?? FlowProcessOrderField.LastAttemptAt,
+                        direction: this.orderDirection,
+                    },
                 }),
             ),
         );
+    }
+
+    public get isCustomFiltersMode(): boolean {
+        return this.accountFlowsData.datasetsFiltersMode === ProcessCardFilterMode.CUSTOM;
+    }
+
+    public get orderDirection(): OrderingDirection {
+        return this.dashboardFilters.selectedOrderDirection ? OrderingDirection.Desc : OrderingDirection.Asc;
+    }
+
+    public get isRecentActivityFiltersMode(): boolean {
+        return this.accountFlowsData.datasetsFiltersMode === ProcessCardFilterMode.RECENT_ACTIVITY;
+    }
+
+    public get isTriageFiltersMode(): boolean {
+        return this.accountFlowsData.datasetsFiltersMode === ProcessCardFilterMode.TRIAGE;
+    }
+
+    public get isUpcomingScheduledFiltersMode(): boolean {
+        return this.accountFlowsData.datasetsFiltersMode === ProcessCardFilterMode.UPCOMING_SCHEDULED;
+    }
+
+    public get currentDateTime(): string {
+        return new Date().toISOString();
     }
 
     private get initialProcessFilters(): FlowProcessEffectiveState[] {
@@ -143,6 +223,129 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         ];
     }
 
+    private setFlowProcessFilters(): FlowProcessFilters {
+        switch (this.accountFlowsData.datasetsFiltersMode) {
+            case ProcessCardFilterMode.RECENT_ACTIVITY: {
+                this.dashboardFilters = {
+                    ...this.dashboardFilters,
+                    selectedOrderField: FlowProcessOrderField.LastAttemptAt,
+                    toFilterDate: this.dashboardFilters.isFirstInitialization
+                        ? new Date()
+                        : this.dashboardFilters.toFilterDate,
+                };
+                const sixHoursAgoDate = new Date();
+                sixHoursAgoDate.setHours(sixHoursAgoDate.getHours() - 6);
+                if (!this.dashboardFilters.fromFilterDate && this.dashboardFilters.isFirstInitialization) {
+                    this.dashboardFilters = {
+                        ...this.dashboardFilters,
+                        fromFilterDate: sixHoursAgoDate,
+                    };
+                }
+
+                return {
+                    effectiveStateIn: this.dashboardFilters.selectedFlowProcessStates.length
+                        ? this.dashboardFilters.selectedFlowProcessStates
+                        : this.initialProcessFilters,
+
+                    lastAttemptBetween:
+                        this.dashboardFilters.toFilterDate && this.dashboardFilters.fromFilterDate
+                            ? {
+                                  start: this.dashboardFilters.fromFilterDate
+                                      ? this.dashboardFilters.fromFilterDate.toISOString()
+                                      : sixHoursAgoDate.toISOString(),
+                                  end: this.dashboardFilters.toFilterDate.toISOString(),
+                              }
+                            : undefined,
+                };
+            }
+            case ProcessCardFilterMode.TRIAGE: {
+                this.dashboardFilters = {
+                    ...this.dashboardFilters,
+                    selectedOrderField:
+                        this.dashboardFilters.selectedOrderField ?? FlowProcessOrderField.ConsecutiveFailures,
+                    minConsecutiveFailures:
+                        this.dashboardFilters.minConsecutiveFailures > 1
+                            ? this.dashboardFilters.minConsecutiveFailures
+                            : 1,
+                };
+
+                return {
+                    effectiveStateIn: this.dashboardFilters.selectedFlowProcessStates.length
+                        ? this.dashboardFilters.selectedFlowProcessStates
+                        : [FlowProcessEffectiveState.StoppedAuto, FlowProcessEffectiveState.Failing],
+                    lastFailureSince: this.dashboardFilters.lastFailureDate?.toISOString() ?? undefined,
+                    minConsecutiveFailures: this.dashboardFilters.minConsecutiveFailures,
+                };
+            }
+            case ProcessCardFilterMode.UPCOMING_SCHEDULED: {
+                this.dashboardFilters = {
+                    ...this.dashboardFilters,
+                    selectedOrderField: FlowProcessOrderField.NextPlannedAt,
+                };
+
+                return {
+                    effectiveStateIn: this.dashboardFilters.selectedFlowProcessStates.length
+                        ? this.dashboardFilters.selectedFlowProcessStates
+                        : [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing],
+                    nextPlannedBefore: this.dashboardFilters.nextPlannedBeforeDate
+                        ? this.dashboardFilters.nextPlannedBeforeDate.toISOString()
+                        : undefined,
+                    nextPlannedAfter: this.dashboardFilters.nextPlannedAfterDate
+                        ? this.dashboardFilters.nextPlannedAfterDate.toISOString()
+                        : this.currentDateTime,
+                };
+            }
+            case ProcessCardFilterMode.PAUSED: {
+                this.dashboardFilters = {
+                    ...this.dashboardFilters,
+                    selectedOrderDirection: true,
+                };
+                return {
+                    effectiveStateIn: [FlowProcessEffectiveState.PausedManual],
+                };
+            }
+            case ProcessCardFilterMode.CUSTOM: {
+                return {
+                    effectiveStateIn: this.dashboardFilters.selectedFlowProcessStates.length
+                        ? this.dashboardFilters.selectedFlowProcessStates
+                        : this.initialProcessFilters,
+                    lastAttemptBetween:
+                        this.dashboardFilters.fromFilterDate && this.dashboardFilters.toFilterDate
+                            ? {
+                                  start: this.dashboardFilters.fromFilterDate.toISOString(),
+                                  end: this.dashboardFilters.toFilterDate.toISOString(),
+                              }
+                            : undefined,
+                    minConsecutiveFailures: this.dashboardFilters.minConsecutiveFailures,
+                    lastFailureSince: this.dashboardFilters.lastFailureDate?.toISOString() ?? undefined,
+                    nextPlannedBefore: this.dashboardFilters.nextPlannedBeforeDate?.toISOString() ?? undefined,
+                    nextPlannedAfter: this.dashboardFilters.nextPlannedAfterDate?.toISOString() ?? undefined,
+                };
+            }
+            default:
+                throw new Error("Unknown filters mode");
+        }
+    }
+
+    public resetFilters(): void {
+        this.dashboardFilters = {
+            fromFilterDate: undefined,
+            toFilterDate: undefined,
+            lastFailureDate: undefined,
+            nextPlannedBeforeDate: undefined,
+            nextPlannedAfterDate: undefined,
+            selectedOrderDirection: true,
+            selectedOrderField: undefined,
+            selectedFlowProcessStates: [],
+            selectedQuickRangeLastAttempt: undefined,
+            selectedQuickRangeLastFailure: undefined,
+            selectedQuickRangeNextAttempt: undefined,
+            minConsecutiveFailures: this.accountFlowsData.datasetsFiltersMode === ProcessCardFilterMode.TRIAGE ? 1 : 0,
+            isFirstInitialization: false,
+        };
+        this.refreshNow();
+    }
+
     public onPageChange(page: number): void {
         if (page === 1) {
             this.ngZone.run(() =>
@@ -151,6 +354,8 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
                     AccountTabs.FLOWS,
                     undefined,
                     this.accountFlowsData.activeNav,
+                    undefined,
+                    this.accountFlowsData.datasetsFiltersMode,
                 ),
             );
         } else {
@@ -160,6 +365,8 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
                     AccountTabs.FLOWS,
                     page,
                     this.accountFlowsData.activeNav,
+                    undefined,
+                    this.accountFlowsData.datasetsFiltersMode,
                 ),
             );
         }
@@ -169,11 +376,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
 
     public updateNow(datasetBasics: DatasetBasicsFragment): void {
         this.datasetCardService.handleTrigger(datasetBasics, () => {
-            this.navigationService.navigateToDatasetView({
-                accountName: datasetBasics.owner.accountName,
-                datasetName: datasetBasics.name,
-                tab: DatasetViewTypeEnum.Flows,
-            });
+            this.toastrService.success("Flow scheduled");
         });
     }
 
@@ -193,5 +396,19 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     public refreshNow(): void {
         this.fetchCardsData();
         this.cdr.detectChanges();
+    }
+
+    public onChangeFiltersMode(event: MatButtonToggleChange): void {
+        const nextNav = event.value as ProcessCardFilterMode;
+        this.currentPage = 1;
+        this.resetFilters();
+        this.navigationService.navigateToOwnerView(
+            this.accountName,
+            AccountTabs.FLOWS,
+            undefined,
+            AccountFlowsNav.DATASETS,
+            undefined,
+            nextNav,
+        );
     }
 }

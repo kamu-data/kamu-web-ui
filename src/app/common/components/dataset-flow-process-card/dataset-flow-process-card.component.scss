@@ -1,14 +1,14 @@
 .card-custom {
-    width: 450px;
+    width: 430px;
     background: #f3f3f3;
     border-radius: 6px;
     display: flex;
     box-sizing: border-box;
     border: 1px solid #dedede;
+    height: 300px;
 
     .header {
         height: 10px;
-        width: inherit;
         border-radius: 6px 6px 0 0;
     }
 
@@ -58,4 +58,11 @@
 
 .manual-container {
     background-color: #aaa;
+}
+
+.truncate {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 350px;
 }

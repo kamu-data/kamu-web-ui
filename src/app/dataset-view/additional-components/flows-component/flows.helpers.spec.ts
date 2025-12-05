@@ -10,11 +10,19 @@ import {
     FlowProcessEffectiveState,
     FlowProcessSummaryDataFragment,
 } from "src/app/api/kamu.graphql.interface";
-import { DatasetFlowBadgeHelpers, DatasetFlowsBadgeStyle, DatasetFlowsBadgeTexts } from "./flows.helpers";
+import {
+    DatasetFlowBadgeHelpers,
+    DatasetFlowsBadgeStyle,
+    DatasetFlowsBadgeTexts,
+    lastTimeRangeHelper,
+    nextTimeRangeHelper,
+} from "./flows.helpers";
 import {
     mockFlowProcessSummaryDataFragment,
     mockFlowProcessSummaryDataFragmentNoPolicy,
 } from "src/app/api/mock/dataset-flow.mock";
+import { RangeLastAttempt } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import timekeeper from "timekeeper";
 
 describe("Flows badge styles helper", () => {
     [
@@ -149,8 +157,8 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Ingest failing",
-                subMessage: "Next planned: 2025-10-13, 7:55:08 PM, 1/1 consecutive failures",
-                additionalMessage: "Last failure at: 2025-10-13, 4:29:36 PM",
+                subMessage: "Last failure at: 2025-10-13, 4:29:36 PM",
+                additionalMessage: "Next planned: 2025-10-13, 7:55:08 PM, 1/1 consecutive failures",
             },
         },
         {
@@ -165,8 +173,8 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Transform failing",
-                subMessage: "Next planned: 2025-10-13, 7:55:08 PM, 1/1 consecutive failures",
-                additionalMessage: "Last failure at: 2025-10-13, 4:29:36 PM",
+                subMessage: "Last failure at: 2025-10-13, 4:29:36 PM",
+                additionalMessage: "Next planned: 2025-10-13, 7:55:08 PM, 1/1 consecutive failures",
             },
         },
         {
@@ -181,8 +189,8 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Ingest failing",
-                subMessage: "1 consecutive failures",
-                additionalMessage: "Last failure at: 2025-10-13, 4:29:36 PM",
+                subMessage: "Last failure at: 2025-10-13, 4:29:36 PM",
+                additionalMessage: "1 consecutive failures",
             },
         },
         {
@@ -196,6 +204,7 @@ describe("Flows badge messages helper", () => {
             expectedResult: {
                 message: "Ingest paused",
                 subMessage: "Reason: paused manually by user",
+                additionalMessage: "Last success at: 2025-10-13, 7:53:08 PM",
             },
         },
         {
@@ -209,6 +218,7 @@ describe("Flows badge messages helper", () => {
             expectedResult: {
                 message: "Transform paused",
                 subMessage: "Reason: paused manually by user",
+                additionalMessage: "Last success at: 2025-10-13, 7:53:08 PM",
             },
         },
         {
@@ -300,4 +310,152 @@ describe("Flows badge messages helper", () => {
             });
         },
     );
+});
+
+describe("nextTimeRangeHelper helper", () => {
+    beforeAll(() => {
+        const FROZEN_TIME = new Date("2025-12-02 12:00:00");
+        timekeeper.freeze(FROZEN_TIME);
+    });
+
+    [
+        {
+            case: RangeLastAttempt.NEXT_5_MINUTES,
+            expectedResult: new Date("2025-12-02 12:05:00"),
+        },
+        {
+            case: RangeLastAttempt.NEXT_15_MINUTES,
+            expectedResult: new Date("2025-12-02 12:15:00"),
+        },
+        {
+            case: RangeLastAttempt.NEXT_30_MINUTES,
+            expectedResult: new Date("2025-12-02 12:30:00"),
+        },
+        {
+            case: RangeLastAttempt.NEXT_1_HOUR,
+            expectedResult: new Date("2025-12-02 13:00:00"),
+        },
+        {
+            case: RangeLastAttempt.NEXT_3_HOURS,
+            expectedResult: new Date("2025-12-02 15:00:00"),
+        },
+        {
+            case: RangeLastAttempt.NEXT_6_HOURS,
+            expectedResult: new Date("2025-12-02 18:00:00"),
+        },
+        {
+            case: RangeLastAttempt.NEXT_12_HOURS,
+            expectedResult: new Date("2025-12-03 00:00:00"),
+        },
+        {
+            case: RangeLastAttempt.NEXT_24_HOURS,
+            expectedResult: new Date("2025-12-03 12:00:00"),
+        },
+        {
+            case: RangeLastAttempt.NEXT_2_DAYS,
+            expectedResult: new Date("2025-12-4 12:00:00"),
+        },
+        {
+            case: RangeLastAttempt.NEXT_7_DAYS,
+            expectedResult: new Date("2025-12-09 12:00:00"),
+        },
+        {
+            case: RangeLastAttempt.NEXT_30_DAYS,
+            expectedResult: new Date("2026-01-01 12:00:00"),
+        },
+        {
+            case: RangeLastAttempt.NEXT_90_DAYS,
+            expectedResult: new Date("2026-03-02 12:00:00"),
+        },
+        {
+            case: RangeLastAttempt.NEXT_6_MONTH,
+            expectedResult: new Date("2026-06-02 12:00:00"),
+        },
+        {
+            case: RangeLastAttempt.NEXT_1_YEAR,
+            expectedResult: new Date("2026-12-02 12:00:00"),
+        },
+        {
+            case: RangeLastAttempt.NEXT_2_YEAR,
+            expectedResult: new Date("2027-12-02 12:00:00"),
+        },
+    ].forEach((item: { case: RangeLastAttempt; expectedResult: Date }) => {
+        it(`should check date for ${item.case}`, () => {
+            expect(nextTimeRangeHelper(item.case)).toEqual(item.expectedResult);
+        });
+    });
+});
+
+describe("lastTimeRangeHelper helper", () => {
+    beforeAll(() => {
+        const FROZEN_TIME = new Date("2025-12-02 12:00:00");
+        timekeeper.freeze(FROZEN_TIME);
+    });
+
+    [
+        {
+            case: RangeLastAttempt.LAST_5_MINUTES,
+            expectedResult: new Date("2025-12-02 11:55:00"),
+        },
+        {
+            case: RangeLastAttempt.LAST_15_MINUTES,
+            expectedResult: new Date("2025-12-02 11:45:00"),
+        },
+        {
+            case: RangeLastAttempt.LAST_30_MINUTES,
+            expectedResult: new Date("2025-12-02 11:30:00"),
+        },
+        {
+            case: RangeLastAttempt.LAST_1_HOUR,
+            expectedResult: new Date("2025-12-02 11:00:00"),
+        },
+        {
+            case: RangeLastAttempt.LAST_3_HOURS,
+            expectedResult: new Date("2025-12-02 09:00:00"),
+        },
+        {
+            case: RangeLastAttempt.LAST_6_HOURS,
+            expectedResult: new Date("2025-12-02 06:00:00"),
+        },
+        {
+            case: RangeLastAttempt.LAST_12_HOURS,
+            expectedResult: new Date("2025-12-02 00:00:00"),
+        },
+        {
+            case: RangeLastAttempt.LAST_24_HOURS,
+            expectedResult: new Date("2025-12-01 12:00:00"),
+        },
+        {
+            case: RangeLastAttempt.LAST_2_DAYS,
+            expectedResult: new Date("2025-11-30 12:00:00"),
+        },
+        {
+            case: RangeLastAttempt.LAST_7_DAYS,
+            expectedResult: new Date("2025-11-25 12:00:00"),
+        },
+        {
+            case: RangeLastAttempt.LAST_30_DAYS,
+            expectedResult: new Date("2025-11-02 12:00:00"),
+        },
+        {
+            case: RangeLastAttempt.LAST_90_DAYS,
+            expectedResult: new Date("2025-09-03 12:00:00"),
+        },
+        {
+            case: RangeLastAttempt.LAST_6_MONTH,
+            expectedResult: new Date("2025-06-02 12:00:00"),
+        },
+        {
+            case: RangeLastAttempt.LAST_1_YEAR,
+            expectedResult: new Date("2024-12-02 12:00:00"),
+        },
+        {
+            case: RangeLastAttempt.LAST_2_YEAR,
+            expectedResult: new Date("2023-12-02 12:00:00"),
+        },
+    ].forEach((item: { case: RangeLastAttempt; expectedResult: Date }) => {
+        it(`should check date for ${item.case}`, () => {
+            expect(lastTimeRangeHelper(item.case)).toEqual(item.expectedResult);
+        });
+    });
 });

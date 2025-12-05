@@ -84,7 +84,7 @@
                     </ng-template>
                 </li>
                 <li [ngbNavItem]="FlowStatus.Running">
-                    <button ngbNavLink>Running/Retrying</button>
+                    <button ngbNavLink>Running</button>
                     <ng-template ngbNavContent>
                         <app-flows-table
                             [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
@@ -155,8 +155,8 @@
     </div>
 </div>
 <ng-template #loading>
-    <div class="position-relative">
+    <div class="position-relative mb-4">
         <mat-progress-bar data-test-id="init-progress-bar" class="position-absolute" mode="indeterminate" />
     </div>
-    <div class="text-center mt-4">Loading...</div>
+    <div class="text-center pt-4">Loading...</div>
 </ng-template>

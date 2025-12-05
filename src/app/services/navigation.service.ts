@@ -17,7 +17,10 @@ import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
 import { MetadataTabs } from "./../dataset-view/additional-components/metadata-component/metadata.constants";
 import { SettingsTabsEnum } from "../dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { AccountTabs } from "../account/account.constants";
-import { AccountFlowsNav } from "./../account/additional-components/account-flows-tab/account-flows-tab.types";
+import {
+    AccountFlowsNav,
+    ProcessCardFilterMode,
+} from "./../account/additional-components/account-flows-tab/account-flows-tab.types";
 import { FlowStatus } from "../api/kamu.graphql.interface";
 
 @Injectable({ providedIn: "root" })
@@ -117,11 +120,11 @@ export class NavigationService {
                 [params.accountName, params.datasetName, params.tab, ...(params.section ? [params.section] : [])],
                 {
                     queryParams: {
-                        page: params.page === 1 ? undefined : params.page,
                         sqlQuery: params.sqlQuery,
                         webhookId: params.webhookId?.length ? params.webhookId.join(",") : undefined,
                         category: params.category ? params.category : undefined,
                         webhooksState: params.webhooksState?.join(","),
+                        page: params.page === 1 ? undefined : params.page,
                     },
                     state: params.state,
                 },
@@ -156,10 +159,16 @@ export class NavigationService {
         page?: number,
         nav?: AccountFlowsNav,
         status?: FlowStatus[],
+        mode?: ProcessCardFilterMode,
     ): void {
         promiseWithCatch(
             this.router.navigate([ownerName, ProjectLinks.URL_ACCOUNT_SELECT, tab], {
-                queryParams: { nav, status: status?.join(","), page },
+                queryParams: {
+                    [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_NAV]: nav,
+                    [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS]: status?.join(","),
+                    [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_FILTERS_MODE]: mode,
+                    page,
+                },
             }),
         );
     }

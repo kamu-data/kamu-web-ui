@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { DateTimeAdapter, OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
@@ -44,9 +44,11 @@ import { OrderingDirection } from "src/app/api/kamu.graphql.interface";
     styleUrls: ["./recent-activity-filters-view.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RecentActivityFiltersViewComponent {
+export class RecentActivityFiltersViewComponent implements OnInit {
+    public ngOnInit(): void {
+        this.dashboardFilters.isFirstInitialization = true;
+    }
     @Input({ required: true }) public dashboardFilters: DashboardFiltersOptions;
-    @Input({ required: true }) public isFirstInitialization: boolean;
 
     public readonly RANGE_LAST_ATTEMPT_LIST = RANGE_LAST_ATTEMPT_LIST;
     public readonly FLOW_PROCESS_STATE_LIST = FLOW_PROCESS_STATE_LIST;
@@ -65,13 +67,13 @@ export class RecentActivityFiltersViewComponent {
 
     public clearFromControl(): void {
         this.dashboardFilters.fromFilterDate = undefined;
-        this.isFirstInitialization = false;
+        this.dashboardFilters.isFirstInitialization = false;
         this.dashboardFilters.selectedQuickRangeLastAttempt = undefined;
     }
 
     public clearToControl(): void {
         this.dashboardFilters.toFilterDate = undefined;
-        this.isFirstInitialization = false;
+        this.dashboardFilters.isFirstInitialization = false;
     }
 
     public onQuickRangeLastAttempt(e: RangeLastAttemptOption): void {

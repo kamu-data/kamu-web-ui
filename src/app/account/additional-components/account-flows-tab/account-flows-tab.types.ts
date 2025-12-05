@@ -390,4 +390,5 @@ export interface DashboardFiltersOptions {
     selectedQuickRangeNextAttempt: MaybeUndefined<string>;
     selectedFlowProcessStates: FlowProcessEffectiveState[];
     minConsecutiveFailures: number;
+    isFirstInitialization: boolean;
 }

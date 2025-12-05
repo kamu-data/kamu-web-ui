@@ -49,7 +49,6 @@ import {
     ProcessCardFilterMode,
     RANGE_LAST_ATTEMPT_LIST,
     RANGE_NEXT_ATTEMPT_LIST,
-    RangeLastAttemptOption,
 } from "../../account-flows-tab.types";
 import { MaybeNull } from "src/app/interface/app.types";
 import { NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
@@ -59,13 +58,10 @@ import { MY_MOMENT_FORMATS } from "src/app/common/helpers/data.helpers";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { ToastrService } from "ngx-toastr";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import {
-    lastTimeRangeHelper,
-    nextTimeRangeHelper,
-} from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import { RecentActivityFiltersViewComponent } from "./components/recent-activity-filters-view/recent-activity-filters-view.component";
 import { TriageFiltersViewComponent } from "./components/triage-filters-view/triage-filters-view.component";
 import { UpcomingScheduledFiltersViewComponent } from "./components/upcoming-scheduled-filters-view/upcoming-scheduled-filters-view.component";
+import { CustomFiltersViewComponent } from "./components/custom-filters-view/custom-filters-view.component";
 
 @Component({
     selector: "app-account-flows-datasets-subtab",
@@ -94,6 +90,7 @@ import { UpcomingScheduledFiltersViewComponent } from "./components/upcoming-sch
 
         //-----//
         DatasetFlowProcessCardComponent,
+        CustomFiltersViewComponent,
         PaginationComponent,
         RecentActivityFiltersViewComponent,
         TriageFiltersViewComponent,
@@ -132,8 +129,8 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         selectedQuickRangeNextAttempt: undefined,
         selectedFlowProcessStates: [],
         minConsecutiveFailures: 0,
+        isFirstInitialization: false,
     };
-    public isFirstInitialization: boolean = false;
     public selectedMode: MaybeNull<ProcessCardFilterMode> = ProcessCardFilterMode.TRIAGE;
     public readonly CARD_FILTERS_MODE_OPTIONS: CardFilterDescriptor[] = CARD_FILTERS_MODE_OPTIONS;
 
@@ -154,7 +151,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     private readonly CARDS_FLOW_PROCESSES_PER_PAGE: number = 9;
 
     public ngOnInit(): void {
-        this.isFirstInitialization = true;
+        this.dashboardFilters.isFirstInitialization = true;
         this.fetchCardsData();
     }
 
@@ -163,20 +160,6 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         if (pageParam) {
             this.currentPage = +requireValue(pageParam);
         }
-    }
-
-    public onQuickRangeLastFailure(e: RangeLastAttemptOption): void {
-        this.dashboardFilters.lastFailureDate = lastTimeRangeHelper(e.value);
-    }
-
-    public onQuickRangeNextAttempt(e: RangeLastAttemptOption): void {
-        this.dashboardFilters.nextPlannedAfterDate = new Date();
-        this.dashboardFilters.nextPlannedBeforeDate = nextTimeRangeHelper(e.value);
-    }
-
-    public onQuickRangeLastAttempt(e: RangeLastAttemptOption): void {
-        this.dashboardFilters.fromFilterDate = lastTimeRangeHelper(e.value);
-        this.dashboardFilters.toFilterDate = new Date();
     }
 
     public toggleWebhookCardState(params: {
@@ -262,11 +245,13 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
                 this.dashboardFilters = {
                     ...this.dashboardFilters,
                     selectedOrderField: FlowProcessOrderField.LastAttemptAt,
-                    toFilterDate: this.isFirstInitialization ? new Date() : this.dashboardFilters.toFilterDate,
+                    toFilterDate: this.dashboardFilters.isFirstInitialization
+                        ? new Date()
+                        : this.dashboardFilters.toFilterDate,
                 };
                 const sixHoursAgoDate = new Date();
                 sixHoursAgoDate.setHours(sixHoursAgoDate.getHours() - 6);
-                if (!this.dashboardFilters.fromFilterDate && !this.dashboardFilters.selectedQuickRangeLastAttempt) {
+                if (!this.dashboardFilters.fromFilterDate && this.dashboardFilters.isFirstInitialization) {
                     this.dashboardFilters = {
                         ...this.dashboardFilters,
                         fromFilterDate: sixHoursAgoDate,
@@ -290,10 +275,16 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
                 };
             }
             case ProcessCardFilterMode.TRIAGE: {
-                this.dashboardFilters.selectedOrderField =
-                    this.dashboardFilters.selectedOrderField ?? FlowProcessOrderField.ConsecutiveFailures;
-                this.dashboardFilters.minConsecutiveFailures =
-                    this.dashboardFilters.minConsecutiveFailures > 1 ? this.dashboardFilters.minConsecutiveFailures : 1;
+                this.dashboardFilters = {
+                    ...this.dashboardFilters,
+                    selectedOrderField:
+                        this.dashboardFilters.selectedOrderField ?? FlowProcessOrderField.ConsecutiveFailures,
+                    minConsecutiveFailures:
+                        this.dashboardFilters.minConsecutiveFailures > 1
+                            ? this.dashboardFilters.minConsecutiveFailures
+                            : 1,
+                };
+
                 return {
                     effectiveStateIn: this.dashboardFilters.selectedFlowProcessStates.length
                         ? this.dashboardFilters.selectedFlowProcessStates
@@ -303,7 +294,10 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
                 };
             }
             case ProcessCardFilterMode.UPCOMING_SCHEDULED: {
-                this.dashboardFilters.selectedOrderField = FlowProcessOrderField.NextPlannedAt;
+                this.dashboardFilters = {
+                    ...this.dashboardFilters,
+                    selectedOrderField: FlowProcessOrderField.NextPlannedAt,
+                };
 
                 return {
                     effectiveStateIn: this.dashboardFilters.selectedFlowProcessStates.length
@@ -318,7 +312,10 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
                 };
             }
             case ProcessCardFilterMode.PAUSED: {
-                this.dashboardFilters.selectedOrderDirection = true;
+                this.dashboardFilters = {
+                    ...this.dashboardFilters,
+                    selectedOrderDirection: true,
+                };
                 return {
                     effectiveStateIn: [FlowProcessEffectiveState.PausedManual],
                 };
@@ -346,32 +343,6 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         }
     }
 
-    public clearFromControl(): void {
-        this.dashboardFilters.fromFilterDate = undefined;
-        this.isFirstInitialization = false;
-        this.dashboardFilters.selectedQuickRangeLastAttempt = undefined;
-    }
-
-    public clearToControl(): void {
-        this.dashboardFilters.toFilterDate = undefined;
-        this.isFirstInitialization = false;
-    }
-
-    public clearLastFailureControl(): void {
-        this.dashboardFilters.lastFailureDate = undefined;
-        this.dashboardFilters.selectedQuickRangeLastFailure = undefined;
-    }
-
-    public clearAfterControl(): void {
-        this.dashboardFilters.nextPlannedAfterDate = undefined;
-        this.dashboardFilters.selectedQuickRangeNextAttempt = undefined;
-    }
-
-    public clearBeforeControl(): void {
-        this.dashboardFilters.nextPlannedBeforeDate = undefined;
-        this.dashboardFilters.selectedQuickRangeNextAttempt = undefined;
-    }
-
     public resetFilters(): void {
         this.dashboardFilters = {
             fromFilterDate: undefined,
@@ -386,20 +357,9 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
             selectedQuickRangeLastFailure: undefined,
             selectedQuickRangeNextAttempt: undefined,
             minConsecutiveFailures: this.accountFlowsData.datasetsFiltersMode === ProcessCardFilterMode.TRIAGE ? 1 : 0,
+            isFirstInitialization: false,
         };
         this.refreshNow();
-    }
-
-    public onChangeLastAttemptFilter(): void {
-        this.dashboardFilters.selectedQuickRangeLastAttempt = undefined;
-    }
-
-    public onChangeLastFailureFilter(): void {
-        this.dashboardFilters.selectedQuickRangeLastFailure = undefined;
-    }
-
-    public onChangeNextAttemptFilter(): void {
-        this.dashboardFilters.selectedQuickRangeNextAttempt = undefined;
     }
 
     public onPageChange(page: number): void {

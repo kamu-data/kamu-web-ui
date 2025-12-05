@@ -16,268 +16,24 @@
         >
     </mat-button-toggle-group>
 </div>
-<div class="my-4" *ngIf="isCustomFiltersMode">
-    <div class="row p-4 box">
-        <div class="col-md-7 ms-3">
-            <span class="fw-500 fs-12 ml-6px">Last attempt</span>
-            <div class="box p-3 w-attempts">
-                <div class="d-flex flex-row gap-2 mt-4">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="position-relative">
-                            <label for="fromDate" class="fw-500 from-label fs-12">from</label>
-                            <input
-                                [(ngModel)]="dashboardFilters.fromFilterDate"
-                                [owlDateTime]="fromdatepicker"
-                                [max]="dashboardFilters.toFilterDate ?? currentDateTime"
-                                class="form-control"
-                                id="fromDate"
-                                readonly
-                                (ngModelChange)="onChangeLastAttemptFilter()"
-                            />
-                        </div>
-                        <owl-date-time #fromdatepicker />
-                        <span
-                            [owlDateTimeTrigger]="fromdatepicker"
-                            id="from-datepicker"
-                            data-test-id="fromdatepicker"
-                            class="trigger ms-2"
-                            ><mat-icon>calendar_month</mat-icon>
-                        </span>
-                        <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearFromControl()">close</mat-icon>
-                    </div>
-                    <div class="w-50 position-relative">
-                        <label for="order-by-field-custom" class="fw-500 quick-range-label fs-12">quick ranges</label>
 
-                        <ng-select
-                            class="ms-4"
-                            [items]="RANGE_LAST_ATTEMPT_LIST"
-                            [(ngModel)]="dashboardFilters.selectedQuickRangeLastAttempt"
-                            (change)="onQuickRangeLastAttempt($event)"
-                            [clearable]="false"
-                            [searchable]="true"
-                            bindLabel="label"
-                            bindValue="value"
-                            id="time-range-attempt"
-                        >
-                            <ng-template ng-option-tmp let-item="item" let-index="index">
-                                <label class="fs-14 inline-block w-100"> {{ item.label }} </label>
-                            </ng-template>
-                        </ng-select>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center pt-4 mb-3">
-                    <div class="position-relative">
-                        <label for="toDate" class="fw-500 from-label position-absolute fs-12">to</label>
-                        <input
-                            [(ngModel)]="dashboardFilters.toFilterDate"
-                            [owlDateTime]="todatepicker"
-                            [max]="currentDateTime"
-                            class="form-control"
-                            id="toDate"
-                            readonly
-                            (ngModelChange)="onChangeLastAttemptFilter()"
-                        />
-                    </div>
-                    <owl-date-time #todatepicker />
-                    <span
-                        [owlDateTimeTrigger]="todatepicker"
-                        id="to-datepicker"
-                        data-test-id="todatepicker"
-                        class="trigger ms-2"
-                        ><mat-icon>calendar_month</mat-icon>
-                    </span>
-                    <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearToControl()">close</mat-icon>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 ms-4">
-            <div class="d-flex align-items-center pt-4 mb-3">
-                <div class="position-relative container-order">
-                    <label for="order-by-field-custom" class="fw-500 from-label fs-12">Order by field</label>
-                    <ng-select
-                        [items]="ORDER_BY_FIELD_LIST_CUSTOM"
-                        [(ngModel)]="dashboardFilters.selectedOrderField"
-                        [clearable]="false"
-                        bindLabel="label"
-                        bindValue="value"
-                        id="order-by-field-custom"
-                    >
-                        <ng-template ng-option-tmp let-item="item" let-index="index">
-                            <label class="fs-14 inline-block w-100"> {{ item.label }} </label>
-                        </ng-template>
-                    </ng-select>
-                </div>
-            </div>
-            <div class="d-flex align-items-center pt-4 mb-4">
-                <div class="position-relative container-order">
-                    <label class="fw-500 order-label fs-12">Order direction</label>
-                    <mat-slide-toggle [(ngModel)]="dashboardFilters.selectedOrderDirection" color="primary">
-                        {{ orderDirection }}
-                    </mat-slide-toggle>
-                </div>
-            </div>
+<div class="my-4">
+    <app-recent-activity-filters-view *ngIf="isRecentActivityFiltersMode" [dashboardFilters]="dashboardFilters">
+        <ng-container [ngTemplateOutlet]="applyFiltersTemplate"> </ng-container>
+    </app-recent-activity-filters-view>
 
-            <div class="d-flex align-items-center pt-4 mb-3">
-                <div class="position-relative container-order">
-                    <label for="order-direction" class="fw-500 status-label fs-12">Process status</label>
-                    <ng-select
-                        [items]="FLOW_PROCESS_STATE_LIST"
-                        [(ngModel)]="dashboardFilters.selectedFlowProcessStates"
-                        bindLabel="label"
-                        bindValue="value"
-                        [multiple]="true"
-                    >
-                        <ng-template ng-option-tmp let-item="item" let-index="index">
-                            <label class="fs-14 inline-block"> {{ item.label }} </label>
-                        </ng-template>
-                    </ng-select>
-                </div>
-            </div>
-        </div>
+    <app-triage-filters-view *ngIf="isTriageFiltersMode" [dashboardFilters]="dashboardFilters">
+        <ng-container [ngTemplateOutlet]="applyFiltersTemplate"> </ng-container>
+    </app-triage-filters-view>
 
-        <div class="col-md-7 ms-3 mt-4">
-            <span class="fw-500 fs-12 ml-6px">Next planned</span>
-            <div class="box p-4 w-attempts mb-3">
-                <div class="d-flex flex-row gap-2">
-                    <div class="d-flex flex-column align-items-center">
-                        <div class="d-flex align-items-center pt-4 mb-3">
-                            <div class="position-relative">
-                                <label for="nextPlannedAfter" class="fw-500 from-label fs-12">after</label>
-                                <input
-                                    [(ngModel)]="dashboardFilters.nextPlannedAfterDate"
-                                    [owlDateTime]="nextPlannedAfterDatepicker"
-                                    class="form-control"
-                                    id="nextPlannedAfter"
-                                    [min]="currentDateTime"
-                                    [max]="dashboardFilters.nextPlannedBeforeDate"
-                                    readonly
-                                    (ngModelChange)="onChangeNextAttemptFilter()"
-                                />
-                            </div>
-                            <owl-date-time #nextPlannedAfterDatepicker />
-                            <span
-                                [owlDateTimeTrigger]="nextPlannedAfterDatepicker"
-                                data-test-id="nextPlannedAfterDatepicker"
-                                id="next-planned-after-datepicker"
-                                class="trigger ms-2"
-                                ><mat-icon>calendar_month</mat-icon>
-                            </span>
-                            <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearAfterControl()">close</mat-icon>
-                        </div>
-                        <div class="d-flex align-items-center pt-4 mb-3">
-                            <div class="position-relative">
-                                <label for="nextPlannedBeforeDate" class="fw-500 from-label fs-12">before</label>
-                                <input
-                                    [(ngModel)]="dashboardFilters.nextPlannedBeforeDate"
-                                    [owlDateTime]="nextPlannedBeforeDatepicker"
-                                    class="form-control"
-                                    id="nextPlannedBeforeDate"
-                                    [min]="dashboardFilters.nextPlannedAfterDate ?? currentDateTime"
-                                    readonly
-                                    (ngModelChange)="onChangeNextAttemptFilter()"
-                                />
-                            </div>
-                            <owl-date-time #nextPlannedBeforeDatepicker />
-                            <span
-                                [owlDateTimeTrigger]="nextPlannedBeforeDatepicker"
-                                id="next-planned-before-datepicker"
-                                data-test-id="nextPlannedBeforeDatepicker"
-                                class="trigger ms-2"
-                                ><mat-icon>calendar_month</mat-icon>
-                            </span>
-                            <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearBeforeControl()">close</mat-icon>
-                        </div>
-                    </div>
+    <app-upcoming-scheduled-filters-view *ngIf="isUpcomingScheduledFiltersMode" [dashboardFilters]="dashboardFilters">
+        <ng-container [ngTemplateOutlet]="applyFiltersTemplate"> </ng-container>
+    </app-upcoming-scheduled-filters-view>
 
-                    <div class="w-50 position-relative mt-4">
-                        <label for="time-range-next" class="fw-500 quick-next-range-label fs-12">quick ranges</label>
-
-                        <ng-select
-                            class="ms-4"
-                            [items]="RANGE_NEXT_ATTEMPT_LIST"
-                            [(ngModel)]="dashboardFilters.selectedQuickRangeNextAttempt"
-                            (change)="onQuickRangeNextAttempt($event)"
-                            [clearable]="false"
-                            [searchable]="true"
-                            bindLabel="label"
-                            bindValue="value"
-                            id="time-range-next"
-                        >
-                            <ng-template ng-option-tmp let-item="item" let-index="index">
-                                <label class="fs-14 inline-block w-100"> {{ item.label }} </label>
-                            </ng-template>
-                        </ng-select>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 ms-4 mt-4">
-            <div class="d-flex align-items-center pt-4 mb-3">
-                <div class="position-relative">
-                    <label for="minConsecutiveFailures" class="fw-500 from-label fs-12">Min consecutive failures</label>
-                    <input
-                        [(ngModel)]="dashboardFilters.minConsecutiveFailures"
-                        class="form-control failures-control"
-                        id="minConsecutiveFailures"
-                        type="number"
-                        min="0"
-                        max="10"
-                    />
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-7 ms-3 mt-4">
-            <div class="d-flex flex-row gap-2 box p-4">
-                <div class="d-flex align-items-center pt-4 mb-3">
-                    <div class="position-relative">
-                        <label for="lastFailureDate" class="fw-500 from-label fs-12">Last failure since</label>
-                        <input
-                            [(ngModel)]="dashboardFilters.lastFailureDate"
-                            [owlDateTime]="lastFailureDatepicker"
-                            class="form-control"
-                            id="lastFailureDate"
-                            [max]="currentDateTime"
-                            (ngModelChange)="onChangeLastFailureFilter()"
-                            readonly
-                        />
-                    </div>
-                    <owl-date-time #lastFailureDatepicker />
-                    <span
-                        [owlDateTimeTrigger]="lastFailureDatepicker"
-                        id="last-failure-datepicker"
-                        data-test-id="lastFailureDatepicker"
-                        class="trigger ms-2"
-                        ><mat-icon>calendar_month</mat-icon>
-                    </span>
-                    <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearLastFailureControl()">close</mat-icon>
-                </div>
-
-                <div class="w-50 mt-4 position-relative">
-                    <label for="order-by-field-custom" class="fw-500 quick-range-label fs-12">quick ranges</label>
-
-                    <ng-select
-                        class="ms-4"
-                        [items]="RANGE_LAST_ATTEMPT_LIST"
-                        [(ngModel)]="dashboardFilters.selectedQuickRangeLastFailure"
-                        (change)="onQuickRangeLastFailure($event)"
-                        [clearable]="false"
-                        [searchable]="true"
-                        bindLabel="label"
-                        bindValue="value"
-                        id="time-range-failure"
-                    >
-                        <ng-template ng-option-tmp let-item="item" let-index="index">
-                            <label class="fs-14 inline-block w-100"> {{ item.label }} </label>
-                        </ng-template>
-                    </ng-select>
-                </div>
-            </div>
-        </div>
+    <app-custom-filters-view *ngIf="isCustomFiltersMode" [dashboardFilters]="dashboardFilters">
         <div class="d-flex justify-content-end mt-4 mb-2">
             <button
                 (click)="resetFilters()"
-                [disabled]="!isCustomFiltersMode"
                 class="border-1 bg-light border me-4 rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
             >
                 <mat-icon class="text-muted fs-4 d-block">restart_alt</mat-icon>
@@ -285,32 +41,13 @@
             </button>
             <button
                 (click)="refreshNow()"
-                [disabled]="!isCustomFiltersMode"
                 class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
             >
                 <mat-icon class="text-muted fs-4 d-block">filter_alt</mat-icon>
                 <span class="fs-12 me-2 d-block"> Apply filters</span>
             </button>
         </div>
-    </div>
-</div>
-<div class="my-4" *ngIf="isRecentActivityFiltersMode">
-    <app-recent-activity-filters-view
-        [dashboardFilters]="dashboardFilters"
-        [isFirstInitialization]="isFirstInitialization"
-    >
-        <ng-container [ngTemplateOutlet]="applyFiltersTemplate"> </ng-container>
-    </app-recent-activity-filters-view>
-</div>
-<div class="my-4" *ngIf="isTriageFiltersMode">
-    <app-triage-filters-view [dashboardFilters]="dashboardFilters">
-        <ng-container [ngTemplateOutlet]="applyFiltersTemplate"> </ng-container>
-    </app-triage-filters-view>
-</div>
-<div class="my-4" *ngIf="isUpcomingScheduledFiltersMode">
-    <app-upcoming-scheduled-filters-view [dashboardFilters]="dashboardFilters">
-        <ng-container [ngTemplateOutlet]="applyFiltersTemplate"> </ng-container>
-    </app-upcoming-scheduled-filters-view>
+    </app-custom-filters-view>
 </div>
 
 <ng-container *ngIf="accountFlowsCardsData$ | async as cardsData">

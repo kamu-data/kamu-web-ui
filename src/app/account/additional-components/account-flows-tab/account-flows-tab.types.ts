@@ -10,6 +10,7 @@ import {
     FlowProcessOrderField,
     OrderingDirection,
 } from "src/app/api/kamu.graphql.interface";
+import { MaybeNull } from "src/app/interface/app.types";
 
 export enum AccountFlowsNav {
     ACTIVITY = "activity",
@@ -109,6 +110,7 @@ export interface OrderByFieldOption {
     label: string;
     value: FlowProcessOrderField;
 }
+
 export const ORDER_BY_FIELD_LIST_CUSTOM: OrderByFieldOption[] = [
     {
         id: 1,
@@ -374,3 +376,18 @@ export const RANGE_NEXT_ATTEMPT_LIST: RangeLastAttemptOption[] = [
         value: RangeLastAttempt.NEXT_2_YEAR,
     },
 ];
+
+export interface DashboardFiltersOptions {
+    fromFilterDate: MaybeNull<Date>;
+    toFilterDate: MaybeNull<Date>;
+    lastFailureDate: MaybeNull<Date>;
+    nextPlannedBeforeDate: MaybeNull<Date>;
+    nextPlannedAfterDate: MaybeNull<Date>;
+    selectedOrderDirection: boolean;
+    selectedOrderField: MaybeNull<FlowProcessOrderField>;
+    selectedQuickRangeLastAttempt: MaybeNull<string>;
+    selectedQuickRangeLastFailure: MaybeNull<string>;
+    selectedQuickRangeNextAttempt: MaybeNull<string>;
+    selectedFlowProcessStates: FlowProcessEffectiveState[];
+    minConsecutiveFailures: number;
+}

@@ -46,7 +46,7 @@ import { NgIf } from "@angular/common";
 export class DatasetFlowProcessCardComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public summary: FlowProcessSummary;
-    @Input() public isAccountCard = false;
+    @Input() public showFlowsHistoryLink = false;
     @Output() public updateNowEmitter = new EventEmitter<DatasetBasicsFragment>();
     @Output() public toggleStateDatasetCardEmitter = new EventEmitter<{
         state: FlowProcessEffectiveState;

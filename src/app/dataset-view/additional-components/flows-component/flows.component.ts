@@ -51,7 +51,6 @@ import {
 import { FlowsBlockActionsComponent } from "./components/flows-block-actions/flows-block-actions.component";
 import { FlowsAssociatedChannelsComponent } from "./components/flows-associated-channels/flows-associated-channels.component";
 import { DatasetWebhooksService } from "../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
-import { ModalService } from "src/app/common/components/modal/modal.service";
 import { FlowsSelectionStateService } from "./services/flows-selection-state.service";
 import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table/components/flow-table-panel-filters/flow-table-panel-filters.component";
 import { DatasetFlowProcessCardComponent } from "src/app/common/components/dataset-flow-process-card/dataset-flow-process-card.component";
@@ -114,7 +113,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public selectedStatusItems: FilterStatusType[] = [];
 
     private datasetWebhooksService = inject(DatasetWebhooksService);
-    private modalService = inject(ModalService);
     private flowsSelectionStateService = inject(FlowsSelectionStateService);
     private datasetCardService = inject(ProcessDatasetCardInteractionService);
 
@@ -276,7 +274,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             tab: DatasetViewTypeEnum.Flows,
             category: event.value as FlowsSelectedCategory,
         });
-        this.fetchTableData(1);
+        this.refreshFlow();
     }
 
     public onSelectionWebhooksChange(category: MaybeUndefined<WebhooksSelectedCategory>): void {

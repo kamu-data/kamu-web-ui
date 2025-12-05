@@ -4,7 +4,7 @@
         <div class="d-flex fs-12 align-items-center justify-content-between">
             <span class="label label--secondary v-align-middle dataset">Dataset</span>
             <a
-                *ngIf="isAccountCard"
+                *ngIf="showFlowsHistoryLink"
                 [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name, DatasetViewTypeEnum.Flows]"
                 [queryParams]="{ category: 'updates' }"
                 >See flows</a

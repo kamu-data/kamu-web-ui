@@ -1,0 +1,107 @@
+<div class="p-4 box">
+    <div class="row">
+        <div class="col-md-7">
+            <span class="fw-500 fs-12 ml-6px">Next planned</span>
+            <div class="box p-4 w-attempts mb-3">
+                <div class="d-flex flex-row gap-2">
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="d-flex align-items-center pt-4 mb-3">
+                            <div class="position-relative">
+                                <label for="nextPlannedAfter" class="fw-500 from-label fs-12">after</label>
+                                <input
+                                    [(ngModel)]="dashboardFilters.nextPlannedAfterDate"
+                                    [owlDateTime]="nextPlannedAfterDatepicker"
+                                    class="form-control"
+                                    id="nextPlannedAfter"
+                                    [min]="currentDateTime"
+                                    [max]="dashboardFilters.nextPlannedBeforeDate"
+                                    readonly
+                                    (ngModelChange)="onChangeNextAttemptFilter()"
+                                />
+                            </div>
+                            <owl-date-time #nextPlannedAfterDatepicker />
+                            <span
+                                [owlDateTimeTrigger]="nextPlannedAfterDatepicker"
+                                data-test-id="nextPlannedAfterDatepicker"
+                                id="next-planned-after-datepicker"
+                                class="trigger ms-2"
+                                ><mat-icon>calendar_month</mat-icon>
+                            </span>
+                            <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearAfterControl()">close</mat-icon>
+                        </div>
+                        <div class="d-flex align-items-center pt-4 mb-3">
+                            <div class="position-relative">
+                                <label for="nextPlannedBeforeDate" class="fw-500 from-label fs-12">before</label>
+                                <input
+                                    [(ngModel)]="dashboardFilters.nextPlannedBeforeDate"
+                                    [owlDateTime]="nextPlannedBeforeDatepicker"
+                                    class="form-control"
+                                    id="nextPlannedBeforeDate"
+                                    [min]="dashboardFilters.nextPlannedAfterDate ?? currentDateTime"
+                                    readonly
+                                    (ngModelChange)="onChangeNextAttemptFilter()"
+                                />
+                            </div>
+                            <owl-date-time #nextPlannedBeforeDatepicker />
+                            <span
+                                [owlDateTimeTrigger]="nextPlannedBeforeDatepicker"
+                                id="next-planned-before-datepicker"
+                                data-test-id="nextPlannedBeforeDatepicker"
+                                class="trigger ms-2"
+                                ><mat-icon>calendar_month</mat-icon>
+                            </span>
+                            <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearBeforeControl()">close</mat-icon>
+                        </div>
+                    </div>
+
+                    <div class="w-50 position-relative mt-4">
+                        <label for="time-range-next" class="fw-500 quick-next-range-label fs-12">quick ranges</label>
+
+                        <ng-select
+                            class="ms-4"
+                            [items]="RANGE_NEXT_ATTEMPT_LIST"
+                            [(ngModel)]="dashboardFilters.selectedQuickRangeNextAttempt"
+                            (change)="onQuickRangeNextAttempt($event)"
+                            [clearable]="false"
+                            [searchable]="true"
+                            bindLabel="label"
+                            bindValue="value"
+                            id="time-range-next"
+                        >
+                            <ng-template ng-option-tmp let-item="item" let-index="index">
+                                <label class="fs-14 inline-block w-100"> {{ item.label }} </label>
+                            </ng-template>
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 ms-4">
+            <div class="d-flex align-items-center pt-4 mb-3">
+                <div class="position-relative container-order">
+                    <label class="fw-500 order-label fs-12 mt-1">Order direction</label>
+                    <mat-slide-toggle [(ngModel)]="dashboardFilters.selectedOrderDirection" color="primary">
+                        {{ orderDirection }}
+                    </mat-slide-toggle>
+                </div>
+            </div>
+            <div class="d-flex align-items-center pt-4 mt-4">
+                <div class="position-relative container-order">
+                    <label for="order-direction" class="fw-500 status-label fs-12">Process status</label>
+                    <ng-select
+                        [items]="FLOW_PROCESS_STATE_LIST_UPCOMING"
+                        [(ngModel)]="dashboardFilters.selectedFlowProcessStates"
+                        bindLabel="label"
+                        bindValue="value"
+                        [multiple]="true"
+                    >
+                        <ng-template ng-option-tmp let-item="item" let-index="index">
+                            <label class="fs-14 inline-block"> {{ item.label }} </label>
+                        </ng-template>
+                    </ng-select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-content></ng-content>
+</div>

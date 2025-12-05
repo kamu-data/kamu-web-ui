@@ -65,6 +65,7 @@ import {
 } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import { RecentActivityFiltersViewComponent } from "./components/recent-activity-filters-view/recent-activity-filters-view.component";
 import { TriageFiltersViewComponent } from "./components/triage-filters-view/triage-filters-view.component";
+import { UpcomingScheduledFiltersViewComponent } from "./components/upcoming-scheduled-filters-view/upcoming-scheduled-filters-view.component";
 
 @Component({
     selector: "app-account-flows-datasets-subtab",
@@ -96,6 +97,7 @@ import { TriageFiltersViewComponent } from "./components/triage-filters-view/tri
         PaginationComponent,
         RecentActivityFiltersViewComponent,
         TriageFiltersViewComponent,
+        UpcomingScheduledFiltersViewComponent,
         WebhookFlowProcessCardComponent,
     ],
     templateUrl: "./account-flows-datasets-subtab.component.html",

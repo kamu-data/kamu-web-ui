@@ -53,7 +53,7 @@ import { FlowsAssociatedChannelsComponent } from "./components/flows-associated-
 import { DatasetWebhooksService } from "../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { FlowsSelectionStateService } from "./services/flows-selection-state.service";
 import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table/components/flow-table-panel-filters/flow-table-panel-filters.component";
-import { DatasetFlowProcessCardComponent } from "src/app/common/components/dataset-flow-process-card/dataset-flow-process-card.component";
+import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.component";
 import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
 @Component({
     selector: "app-flows",

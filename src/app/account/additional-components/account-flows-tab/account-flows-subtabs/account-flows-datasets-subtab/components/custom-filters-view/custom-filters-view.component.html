@@ -100,7 +100,11 @@
             <div class="d-flex align-items-center pt-4 mb-4">
                 <div class="position-relative container-order">
                     <label class="fw-500 order-label fs-12">order direction</label>
-                    <mat-slide-toggle [(ngModel)]="dashboardFilters.selectedOrderDirection" color="primary">
+                    <mat-slide-toggle
+                        class="order-direction-toggle"
+                        [(ngModel)]="dashboardFilters.selectedOrderDirection"
+                        color="primary"
+                    >
                         {{ orderDirection }}
                     </mat-slide-toggle>
                 </div>

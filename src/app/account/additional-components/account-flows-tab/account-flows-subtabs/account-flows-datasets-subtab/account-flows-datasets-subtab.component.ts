@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, NgZone, OnInit } from "@angular/core";
-import { AsyncPipe, NgFor, NgIf, NgTemplateOutlet } from "@angular/common";
+import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet } from "@angular/common";
 import { AccountService } from "src/app/account/account.service";
 import { Observable, switchMap, take, tap, timer } from "rxjs";
 import {
@@ -68,6 +68,8 @@ import { CustomFiltersViewComponent } from "./components/custom-filters-view/cus
         FormsModule,
         NgIf,
         NgFor,
+        NgSwitch,
+        NgSwitchCase,
         NgTemplateOutlet,
 
         //-----//
@@ -190,24 +192,8 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         );
     }
 
-    public get isCustomFiltersMode(): boolean {
-        return this.accountFlowsData.datasetsFiltersMode === ProcessCardFilterMode.CUSTOM;
-    }
-
     public get orderDirection(): OrderingDirection {
         return this.dashboardFilters.selectedOrderDirection ? OrderingDirection.Desc : OrderingDirection.Asc;
-    }
-
-    public get isRecentActivityFiltersMode(): boolean {
-        return this.accountFlowsData.datasetsFiltersMode === ProcessCardFilterMode.RECENT_ACTIVITY;
-    }
-
-    public get isTriageFiltersMode(): boolean {
-        return this.accountFlowsData.datasetsFiltersMode === ProcessCardFilterMode.TRIAGE;
-    }
-
-    public get isUpcomingScheduledFiltersMode(): boolean {
-        return this.accountFlowsData.datasetsFiltersMode === ProcessCardFilterMode.UPCOMING_SCHEDULED;
     }
 
     public get currentDateTime(): string {
@@ -322,6 +308,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
                     nextPlannedAfter: this.dashboardFilters.nextPlannedAfterDate?.toISOString() ?? undefined,
                 };
             }
+            /* istanbul ignore next */
             default:
                 throw new Error("Unknown filters mode");
         }

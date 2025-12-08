@@ -25,7 +25,12 @@
                             class="trigger ms-2"
                             ><mat-icon>calendar_month</mat-icon>
                         </span>
-                        <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearFromControl()">close</mat-icon>
+                        <mat-icon
+                            data-test-id="clear-from-control"
+                            class="ms-1 mb-1 clear-icon"
+                            (click)="clearFromControl()"
+                            >close</mat-icon
+                        >
                     </div>
                     <div class="w-50 position-relative">
                         <label for="order-by-field-custom" class="fw-500 quick-range-label fs-12">quick ranges</label>
@@ -68,7 +73,9 @@
                         class="trigger ms-2"
                         ><mat-icon>calendar_month</mat-icon>
                     </span>
-                    <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearToControl()">close</mat-icon>
+                    <mat-icon data-test-id="clear-to-control" class="ms-1 mb-1 clear-icon" (click)="clearToControl()"
+                        >close</mat-icon
+                    >
                 </div>
             </div>
         </div>
@@ -145,7 +152,12 @@
                                 class="trigger ms-2"
                                 ><mat-icon>calendar_month</mat-icon>
                             </span>
-                            <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearAfterControl()">close</mat-icon>
+                            <mat-icon
+                                data-test-id="clear-after-control"
+                                class="ms-1 mb-1 clear-icon"
+                                (click)="clearAfterControl()"
+                                >close</mat-icon
+                            >
                         </div>
                         <div class="d-flex align-items-center pt-4 mb-3">
                             <div class="position-relative">
@@ -168,7 +180,12 @@
                                 class="trigger ms-2"
                                 ><mat-icon>calendar_month</mat-icon>
                             </span>
-                            <mat-icon class="ms-1 mb-1 clear-icon" (click)="clearBeforeControl()">close</mat-icon>
+                            <mat-icon
+                                data-test-id="clear-before-control"
+                                class="ms-1 mb-1 clear-icon"
+                                (click)="clearBeforeControl()"
+                                >close</mat-icon
+                            >
                         </div>
                     </div>
 

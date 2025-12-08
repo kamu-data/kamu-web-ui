@@ -108,10 +108,8 @@ describe("FlowsComponent", () => {
     });
 
     it("should check refresh button", () => {
-        const getPageFromUrlSpy = spyOn(component, "getPageFromUrl");
         const fetchTableDataSpy = spyOn(component, "fetchTableData");
         component.refreshFlow();
-        expect(getPageFromUrlSpy).toHaveBeenCalledTimes(1);
         expect(fetchTableDataSpy).toHaveBeenCalledTimes(1);
     });
 

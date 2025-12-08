@@ -7,7 +7,7 @@
 
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { AccountFlowsDatasetsSubtabComponent } from "./account-flows-datasets-subtab.component";
-import { AccountFlowsNav, ProcessCardFilterMode } from "../../account-flows-tab.types";
+import { AccountFlowsNav, DashboardFiltersOptions, ProcessCardFilterMode } from "../../account-flows-tab.types";
 import {
     AccountFlowProcessCardConnectionDataFragment,
     FlowProcessEffectiveState,
@@ -33,6 +33,7 @@ import { DatasetWebhooksService } from "src/app/dataset-view/additional-componen
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { WebhookFlowProcessCardComponent } from "./components/webhook-flow-process-card/webhook-flow-process-card.component";
 import { DatasetFlowProcessCardComponent } from "src/app/common/components/dataset-flow-process-card/dataset-flow-process-card.component";
+import { MatButtonToggleChange } from "@angular/material/button-toggle";
 
 describe("AccountFlowsDatasetsSubtabComponent", () => {
     let component: AccountFlowsDatasetsSubtabComponent;
@@ -45,6 +46,21 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
     const MOCK_ACCOUNT_NAME = "kamu";
     const MOCK_SUBSCRIPTION_ID = "121223-21212-567788";
     let getAccountFlowsAsCardsSpy: jasmine.Spy;
+    const INITIAL_STATE_CUSTOM_FILTERS: DashboardFiltersOptions = {
+        fromFilterDate: undefined,
+        toFilterDate: undefined,
+        lastFailureDate: undefined,
+        nextPlannedBeforeDate: undefined,
+        nextPlannedAfterDate: undefined,
+        selectedOrderDirection: true,
+        selectedOrderField: undefined,
+        selectedQuickRangeLastAttempt: undefined,
+        selectedQuickRangeLastFailure: undefined,
+        selectedQuickRangeNextAttempt: undefined,
+        selectedFlowProcessStates: [],
+        minConsecutiveFailures: 0,
+        isFirstInitialization: false,
+    };
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -91,6 +107,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             flowGroup: [FlowStatus.Finished],
             datasetsFiltersMode: ProcessCardFilterMode.CUSTOM,
         };
+        component.dashboardFilters = INITIAL_STATE_CUSTOM_FILTERS;
         getAccountFlowsAsCardsSpy = spyOn(accountService, "getAccountFlowsAsCards").and.returnValue(
             of(
                 mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
@@ -100,6 +117,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
     });
 
     it("should create", () => {
+        fixture.detectChanges();
         expect(component).toBeTruthy();
     });
 
@@ -111,6 +129,8 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             AccountTabs.FLOWS,
             undefined,
             component.accountFlowsData.activeNav,
+            undefined,
+            component.accountFlowsData.datasetsFiltersMode,
         );
     });
 
@@ -122,6 +142,8 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             AccountTabs.FLOWS,
             2,
             component.accountFlowsData.activeNav,
+            undefined,
+            component.accountFlowsData.datasetsFiltersMode,
         );
     });
 
@@ -237,6 +259,201 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(toastrSuccessSpy).toHaveBeenCalledTimes(1);
         expect(datasetTriggerTransformFlowSpy).toHaveBeenCalledTimes(1);
+        discardPeriodicTasks();
+    }));
+
+    it("should check to change filters mode", () => {
+        const mockChangeEvent = {
+            value: ProcessCardFilterMode.RECENT_ACTIVITY,
+        };
+
+        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+        component.onChangeFiltersMode(mockChangeEvent as MatButtonToggleChange);
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check to get cards for ProcessCardFilterMode.CUSTOM mode", fakeAsync(() => {
+        component.dashboardFilters = {
+            fromFilterDate: new Date(),
+            toFilterDate: new Date(),
+            lastFailureDate: undefined,
+            nextPlannedBeforeDate: undefined,
+            nextPlannedAfterDate: undefined,
+            selectedOrderDirection: true,
+            selectedOrderField: undefined,
+            selectedQuickRangeLastAttempt: undefined,
+            selectedQuickRangeLastFailure: undefined,
+            selectedQuickRangeNextAttempt: undefined,
+            selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
+            minConsecutiveFailures: 0,
+            isFirstInitialization: false,
+        };
+
+        fixture.detectChanges();
+        tick(0);
+        fixture.detectChanges();
+        const cardsBlock = findElementByDataTestId(fixture, "cards");
+        expect(cardsBlock).toBeDefined();
+        expect(getAccountFlowsAsCardsSpy).toHaveBeenCalledTimes(1);
+        discardPeriodicTasks();
+    }));
+
+    it("should check to get cards for ProcessCardFilterMode.PAUSED mode", fakeAsync(() => {
+        component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.PAUSED;
+
+        fixture.detectChanges();
+        tick(0);
+        fixture.detectChanges();
+        const cardsBlock = findElementByDataTestId(fixture, "cards");
+        expect(cardsBlock).toBeDefined();
+        expect(getAccountFlowsAsCardsSpy).toHaveBeenCalledTimes(1);
+        discardPeriodicTasks();
+    }));
+
+    it("should check to get cards for ProcessCardFilterMode.UPCOMING_SCHEDULED mode without selectedFlowProcessStates", fakeAsync(() => {
+        component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.UPCOMING_SCHEDULED;
+
+        fixture.detectChanges();
+        tick(0);
+        fixture.detectChanges();
+        const cardsBlock = findElementByDataTestId(fixture, "cards");
+        expect(cardsBlock).toBeDefined();
+        expect(getAccountFlowsAsCardsSpy).toHaveBeenCalledTimes(1);
+        discardPeriodicTasks();
+    }));
+
+    it("should check to get cards for ProcessCardFilterMode.UPCOMING_SCHEDULED mode with selectedFlowProcessStates", fakeAsync(() => {
+        component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.UPCOMING_SCHEDULED;
+        component.dashboardFilters = {
+            fromFilterDate: undefined,
+            toFilterDate: undefined,
+            lastFailureDate: undefined,
+            nextPlannedBeforeDate: new Date(),
+            nextPlannedAfterDate: new Date(),
+            selectedOrderDirection: true,
+            selectedOrderField: undefined,
+            selectedQuickRangeLastAttempt: undefined,
+            selectedQuickRangeLastFailure: undefined,
+            selectedQuickRangeNextAttempt: undefined,
+            selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
+            minConsecutiveFailures: 0,
+            isFirstInitialization: false,
+        };
+
+        fixture.detectChanges();
+        tick(0);
+        fixture.detectChanges();
+        const cardsBlock = findElementByDataTestId(fixture, "cards");
+        expect(cardsBlock).toBeDefined();
+        expect(getAccountFlowsAsCardsSpy).toHaveBeenCalledTimes(1);
+        discardPeriodicTasks();
+    }));
+
+    it("should check to get cards for ProcessCardFilterMode.TRIAGE mode with minConsecutiveFailures=0 ", fakeAsync(() => {
+        component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.TRIAGE;
+        component.dashboardFilters = {
+            fromFilterDate: undefined,
+            toFilterDate: undefined,
+            lastFailureDate: undefined,
+            nextPlannedBeforeDate: new Date(),
+            nextPlannedAfterDate: new Date(),
+            selectedOrderDirection: true,
+            selectedOrderField: undefined,
+            selectedQuickRangeLastAttempt: undefined,
+            selectedQuickRangeLastFailure: undefined,
+            selectedQuickRangeNextAttempt: undefined,
+            selectedFlowProcessStates: [],
+            minConsecutiveFailures: 0,
+            isFirstInitialization: false,
+        };
+
+        fixture.detectChanges();
+        tick(0);
+        fixture.detectChanges();
+        const cardsBlock = findElementByDataTestId(fixture, "cards");
+        expect(cardsBlock).toBeDefined();
+        expect(getAccountFlowsAsCardsSpy).toHaveBeenCalledTimes(1);
+        discardPeriodicTasks();
+    }));
+
+    it("should check to get cards for ProcessCardFilterMode.TRIAGE mode with minConsecutiveFailures>1 ", fakeAsync(() => {
+        component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.TRIAGE;
+        component.dashboardFilters = {
+            fromFilterDate: undefined,
+            toFilterDate: undefined,
+            lastFailureDate: undefined,
+            nextPlannedBeforeDate: new Date(),
+            nextPlannedAfterDate: new Date(),
+            selectedOrderDirection: true,
+            selectedOrderField: undefined,
+            selectedQuickRangeLastAttempt: undefined,
+            selectedQuickRangeLastFailure: undefined,
+            selectedQuickRangeNextAttempt: undefined,
+            selectedFlowProcessStates: [FlowProcessEffectiveState.Failing],
+            minConsecutiveFailures: 2,
+            isFirstInitialization: false,
+        };
+
+        fixture.detectChanges();
+        tick(0);
+        fixture.detectChanges();
+        const cardsBlock = findElementByDataTestId(fixture, "cards");
+        expect(cardsBlock).toBeDefined();
+        expect(getAccountFlowsAsCardsSpy).toHaveBeenCalledTimes(1);
+        discardPeriodicTasks();
+    }));
+
+    it("should check to get cards for ProcessCardFilterMode.RECENT_ACTIVITY mode with selectedFlowProcessStates", fakeAsync(() => {
+        component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.RECENT_ACTIVITY;
+        component.dashboardFilters = {
+            fromFilterDate: undefined,
+            toFilterDate: undefined,
+            lastFailureDate: undefined,
+            nextPlannedBeforeDate: new Date(),
+            nextPlannedAfterDate: new Date(),
+            selectedOrderDirection: true,
+            selectedOrderField: undefined,
+            selectedQuickRangeLastAttempt: undefined,
+            selectedQuickRangeLastFailure: undefined,
+            selectedQuickRangeNextAttempt: undefined,
+            selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
+            minConsecutiveFailures: 0,
+            isFirstInitialization: false,
+        };
+
+        fixture.detectChanges();
+        tick(0);
+        fixture.detectChanges();
+        const cardsBlock = findElementByDataTestId(fixture, "cards");
+        expect(cardsBlock).toBeDefined();
+        expect(getAccountFlowsAsCardsSpy).toHaveBeenCalledTimes(1);
+        discardPeriodicTasks();
+    }));
+
+    it("should check to get cards for ProcessCardFilterMode.RECENT_ACTIVITY mode witout selectedFlowProcessStates", fakeAsync(() => {
+        component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.RECENT_ACTIVITY;
+        component.dashboardFilters = {
+            fromFilterDate: undefined,
+            toFilterDate: undefined,
+            lastFailureDate: undefined,
+            nextPlannedBeforeDate: undefined,
+            nextPlannedAfterDate: undefined,
+            selectedOrderDirection: false,
+            selectedOrderField: undefined,
+            selectedQuickRangeLastAttempt: undefined,
+            selectedQuickRangeLastFailure: undefined,
+            selectedQuickRangeNextAttempt: undefined,
+            selectedFlowProcessStates: [],
+            minConsecutiveFailures: 0,
+            isFirstInitialization: false,
+        };
+
+        fixture.detectChanges();
+        tick(0);
+        fixture.detectChanges();
+        const cardsBlock = findElementByDataTestId(fixture, "cards");
+        expect(cardsBlock).toBeDefined();
+        expect(getAccountFlowsAsCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 });

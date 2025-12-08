@@ -17,20 +17,26 @@
     </mat-button-toggle-group>
 </div>
 
-<div class="my-4">
-    <app-recent-activity-filters-view *ngIf="isRecentActivityFiltersMode" [dashboardFilters]="dashboardFilters">
+<div class="my-4" [ngSwitch]="accountFlowsData.datasetsFiltersMode">
+    <app-recent-activity-filters-view
+        *ngSwitchCase="ProcessCardFilterMode.RECENT_ACTIVITY"
+        [dashboardFilters]="dashboardFilters"
+    >
         <ng-container [ngTemplateOutlet]="applyFiltersTemplate"> </ng-container>
     </app-recent-activity-filters-view>
 
-    <app-triage-filters-view *ngIf="isTriageFiltersMode" [dashboardFilters]="dashboardFilters">
+    <app-triage-filters-view *ngSwitchCase="ProcessCardFilterMode.TRIAGE" [dashboardFilters]="dashboardFilters">
         <ng-container [ngTemplateOutlet]="applyFiltersTemplate"> </ng-container>
     </app-triage-filters-view>
 
-    <app-upcoming-scheduled-filters-view *ngIf="isUpcomingScheduledFiltersMode" [dashboardFilters]="dashboardFilters">
+    <app-upcoming-scheduled-filters-view
+        *ngSwitchCase="ProcessCardFilterMode.UPCOMING_SCHEDULED"
+        [dashboardFilters]="dashboardFilters"
+    >
         <ng-container [ngTemplateOutlet]="applyFiltersTemplate"> </ng-container>
     </app-upcoming-scheduled-filters-view>
 
-    <app-custom-filters-view *ngIf="isCustomFiltersMode" [dashboardFilters]="dashboardFilters">
+    <app-custom-filters-view *ngSwitchCase="ProcessCardFilterMode.CUSTOM" [dashboardFilters]="dashboardFilters">
         <div class="d-flex justify-content-end mt-4 mb-2">
             <button
                 (click)="resetFilters()"

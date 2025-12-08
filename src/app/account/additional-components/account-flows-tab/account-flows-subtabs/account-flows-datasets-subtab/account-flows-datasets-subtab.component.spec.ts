@@ -7,7 +7,7 @@
 
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { AccountFlowsDatasetsSubtabComponent } from "./account-flows-datasets-subtab.component";
-import { AccountFlowsNav, DashboardFiltersOptions, ProcessCardFilterMode } from "../../account-flows-tab.types";
+import { AccountFlowsNav, ProcessCardFilterMode } from "../../account-flows-tab.types";
 import {
     AccountFlowProcessCardConnectionDataFragment,
     FlowProcessEffectiveState,
@@ -46,21 +46,6 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
     const MOCK_ACCOUNT_NAME = "kamu";
     const MOCK_SUBSCRIPTION_ID = "121223-21212-567788";
     let getAccountFlowsAsCardsSpy: jasmine.Spy;
-    const INITIAL_STATE_CUSTOM_FILTERS: DashboardFiltersOptions = {
-        fromFilterDate: undefined,
-        toFilterDate: undefined,
-        lastFailureDate: undefined,
-        nextPlannedBeforeDate: undefined,
-        nextPlannedAfterDate: undefined,
-        selectedOrderDirection: true,
-        selectedOrderField: undefined,
-        selectedQuickRangeLastAttempt: undefined,
-        selectedQuickRangeLastFailure: undefined,
-        selectedQuickRangeNextAttempt: undefined,
-        selectedFlowProcessStates: [],
-        minConsecutiveFailures: 0,
-        isFirstInitialization: false,
-    };
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -107,7 +92,6 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             flowGroup: [FlowStatus.Finished],
             datasetsFiltersMode: ProcessCardFilterMode.CUSTOM,
         };
-        component.dashboardFilters = INITIAL_STATE_CUSTOM_FILTERS;
         getAccountFlowsAsCardsSpy = spyOn(accountService, "getAccountFlowsAsCards").and.returnValue(
             of(
                 mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
@@ -273,7 +257,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
     });
 
     it("should check to get cards for ProcessCardFilterMode.CUSTOM mode", fakeAsync(() => {
-        component.dashboardFilters = {
+        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({
             fromFilterDate: new Date(),
             toFilterDate: new Date(),
             lastFailureDate: undefined,
@@ -287,7 +271,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-        };
+        });
 
         fixture.detectChanges();
         tick(0);
@@ -324,7 +308,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
 
     it("should check to get cards for ProcessCardFilterMode.UPCOMING_SCHEDULED mode with selectedFlowProcessStates", fakeAsync(() => {
         component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.UPCOMING_SCHEDULED;
-        component.dashboardFilters = {
+        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({
             fromFilterDate: undefined,
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -338,7 +322,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-        };
+        });
 
         fixture.detectChanges();
         tick(0);
@@ -351,7 +335,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
 
     it("should check to get cards for ProcessCardFilterMode.TRIAGE mode with minConsecutiveFailures=0 ", fakeAsync(() => {
         component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.TRIAGE;
-        component.dashboardFilters = {
+        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({
             fromFilterDate: undefined,
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -365,7 +349,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-        };
+        });
 
         fixture.detectChanges();
         tick(0);
@@ -378,7 +362,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
 
     it("should check to get cards for ProcessCardFilterMode.TRIAGE mode with minConsecutiveFailures>1 ", fakeAsync(() => {
         component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.TRIAGE;
-        component.dashboardFilters = {
+        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({
             fromFilterDate: undefined,
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -392,7 +376,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Failing],
             minConsecutiveFailures: 2,
             isFirstInitialization: false,
-        };
+        });
 
         fixture.detectChanges();
         tick(0);
@@ -405,7 +389,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
 
     it("should check to get cards for ProcessCardFilterMode.RECENT_ACTIVITY mode with selectedFlowProcessStates", fakeAsync(() => {
         component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.RECENT_ACTIVITY;
-        component.dashboardFilters = {
+        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({
             fromFilterDate: undefined,
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -419,7 +403,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-        };
+        });
 
         fixture.detectChanges();
         tick(0);
@@ -432,7 +416,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
 
     it("should check to get cards for ProcessCardFilterMode.RECENT_ACTIVITY mode witout selectedFlowProcessStates", fakeAsync(() => {
         component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.RECENT_ACTIVITY;
-        component.dashboardFilters = {
+        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({
             fromFilterDate: undefined,
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -446,7 +430,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-        };
+        });
 
         fixture.detectChanges();
         tick(0);

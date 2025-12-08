@@ -30,7 +30,6 @@ import {
     nextTimeRangeHelper,
 } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import { FlowProcessStatusListComponent } from "../common/flow-process-status-list/flow-process-status-list.component";
-import { JsonPipe } from "@angular/common";
 
 @Component({
     selector: "app-custom-filters-view",

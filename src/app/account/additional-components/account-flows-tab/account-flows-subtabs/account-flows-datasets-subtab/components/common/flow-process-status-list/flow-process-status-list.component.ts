@@ -1,4 +1,3 @@
-import { AccountFlowsFiltersService } from "src/app/account/services/account-flows-filters.service";
 /**
  * Copyright Kamu Data, Inc. and contributors. All rights reserved.
  *
@@ -13,6 +12,7 @@ import {
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 import { FormsModule } from "@angular/forms";
 import { NgSelectModule } from "@ng-select/ng-select";
+import { AccountFlowsFiltersService } from "src/app/account/services/account-flows-filters.service";
 
 @Component({
     selector: "app-flow-process-status-list",

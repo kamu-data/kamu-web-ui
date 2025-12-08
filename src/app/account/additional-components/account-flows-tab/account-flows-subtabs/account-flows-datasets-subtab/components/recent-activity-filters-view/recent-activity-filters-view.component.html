@@ -59,6 +59,7 @@
                             [(ngModel)]="dashboardFilters.toFilterDate"
                             [owlDateTime]="todatepicker"
                             [max]="currentDateTime"
+                            [min]="dashboardFilters.fromFilterDate"
                             class="form-control"
                             id="toDate"
                             readonly

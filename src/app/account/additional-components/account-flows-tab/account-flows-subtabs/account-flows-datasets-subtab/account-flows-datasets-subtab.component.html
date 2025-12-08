@@ -20,23 +20,23 @@
 <div class="my-4" [ngSwitch]="accountFlowsData.datasetsFiltersMode">
     <app-recent-activity-filters-view
         *ngSwitchCase="ProcessCardFilterMode.RECENT_ACTIVITY"
-        [dashboardFilters]="dashboardFilters"
+        [dashboardFilters]="dashboardFiltersState"
     >
         <ng-container [ngTemplateOutlet]="applyFiltersTemplate"> </ng-container>
     </app-recent-activity-filters-view>
 
-    <app-triage-filters-view *ngSwitchCase="ProcessCardFilterMode.TRIAGE" [dashboardFilters]="dashboardFilters">
+    <app-triage-filters-view *ngSwitchCase="ProcessCardFilterMode.TRIAGE" [dashboardFilters]="dashboardFiltersState">
         <ng-container [ngTemplateOutlet]="applyFiltersTemplate"> </ng-container>
     </app-triage-filters-view>
 
     <app-upcoming-scheduled-filters-view
         *ngSwitchCase="ProcessCardFilterMode.UPCOMING_SCHEDULED"
-        [dashboardFilters]="dashboardFilters"
+        [dashboardFilters]="dashboardFiltersState"
     >
         <ng-container [ngTemplateOutlet]="applyFiltersTemplate"> </ng-container>
     </app-upcoming-scheduled-filters-view>
 
-    <app-custom-filters-view *ngSwitchCase="ProcessCardFilterMode.CUSTOM" [dashboardFilters]="dashboardFilters">
+    <app-custom-filters-view *ngSwitchCase="ProcessCardFilterMode.CUSTOM" [dashboardFilters]="dashboardFiltersState">
         <div class="d-flex justify-content-end mt-4 mb-2">
             <button
                 (click)="resetFilters()"

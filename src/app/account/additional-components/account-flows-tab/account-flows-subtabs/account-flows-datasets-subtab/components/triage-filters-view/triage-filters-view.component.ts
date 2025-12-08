@@ -21,6 +21,7 @@ import {
 } from "../../../../account-flows-tab.types";
 import { lastTimeRangeHelper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import { OrderingDirection } from "src/app/api/kamu.graphql.interface";
+import { FlowProcessStatusListComponent } from "../common/flow-process-status-list/flow-process-status-list.component";
 
 @Component({
     selector: "app-triage-filters-view",
@@ -35,6 +36,9 @@ import { OrderingDirection } from "src/app/api/kamu.graphql.interface";
         NgSelectModule,
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
+
+        //-----//
+        FlowProcessStatusListComponent,
     ],
     templateUrl: "./triage-filters-view.component.html",
     styleUrls: ["./triage-filters-view.component.scss"],

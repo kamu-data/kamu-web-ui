@@ -29,6 +29,8 @@ import {
     lastTimeRangeHelper,
     nextTimeRangeHelper,
 } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
+import { FlowProcessStatusListComponent } from "../common/flow-process-status-list/flow-process-status-list.component";
+import { JsonPipe } from "@angular/common";
 
 @Component({
     selector: "app-custom-filters-view",
@@ -43,6 +45,9 @@ import {
         NgSelectModule,
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
+
+        //-----//
+        FlowProcessStatusListComponent,
     ],
     templateUrl: "./custom-filters-view.component.html",
     styleUrls: ["./custom-filters-view.component.scss"],

@@ -20,6 +20,7 @@ import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-
 import { NgSelectModule } from "@ng-select/ng-select";
 import { nextTimeRangeHelper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import { OrderingDirection } from "src/app/api/kamu.graphql.interface";
+import { FlowProcessStatusListComponent } from "../common/flow-process-status-list/flow-process-status-list.component";
 
 @Component({
     selector: "app-upcoming-scheduled-filters-view",
@@ -34,6 +35,9 @@ import { OrderingDirection } from "src/app/api/kamu.graphql.interface";
         NgSelectModule,
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
+
+        //-----//
+        FlowProcessStatusListComponent,
     ],
     templateUrl: "./upcoming-scheduled-filters-view.component.html",
     styleUrls: ["./upcoming-scheduled-filters-view.component.scss"],

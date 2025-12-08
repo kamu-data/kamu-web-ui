@@ -21,6 +21,7 @@ import { NgSelectModule } from "@ng-select/ng-select";
 import { lastTimeRangeHelper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { OrderingDirection } from "src/app/api/kamu.graphql.interface";
+import { FlowProcessStatusListComponent } from "../common/flow-process-status-list/flow-process-status-list.component";
 
 @Component({
     selector: "app-recent-activity-filters-view",
@@ -39,6 +40,9 @@ import { OrderingDirection } from "src/app/api/kamu.graphql.interface";
         NgSelectModule,
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
+
+        //-----//
+        FlowProcessStatusListComponent,
     ],
     templateUrl: "./recent-activity-filters-view.component.html",
     styleUrls: ["./recent-activity-filters-view.component.scss"],

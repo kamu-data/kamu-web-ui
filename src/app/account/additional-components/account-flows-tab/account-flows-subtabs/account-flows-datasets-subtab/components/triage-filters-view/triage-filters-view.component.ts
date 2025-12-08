@@ -20,6 +20,7 @@ import {
     RangeLastAttemptOption,
 } from "../../../../account-flows-tab.types";
 import { lastTimeRangeHelper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
+import { OrderingDirection } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-triage-filters-view",
@@ -48,6 +49,10 @@ export class TriageFiltersViewComponent {
 
     public get currentDateTime(): string {
         return new Date().toISOString();
+    }
+
+    public get orderDirection(): OrderingDirection {
+        return this.dashboardFilters.selectedOrderDirection ? OrderingDirection.Desc : OrderingDirection.Asc;
     }
 
     public onChangeLastAttemptFilter(): void {

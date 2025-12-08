@@ -83,7 +83,7 @@
         <div class="col-md-4 ms-4">
             <div class="d-flex align-items-center pt-4 mb-3 mt-1">
                 <div class="position-relative container-order">
-                    <label class="fw-500 order-label fs-12">Order direction</label>
+                    <label class="fw-500 order-label fs-12">order direction</label>
                     <mat-slide-toggle [(ngModel)]="dashboardFilters.selectedOrderDirection" color="primary">
                         {{ orderDirection }}
                     </mat-slide-toggle>
@@ -91,7 +91,7 @@
             </div>
             <div class="d-flex align-items-center pt-4 mb-3 mt-4">
                 <div class="position-relative container-order">
-                    <label for="order-direction" class="fw-500 status-label fs-12">Process status</label>
+                    <label for="order-direction" class="fw-500 status-label fs-12">process status</label>
                     <ng-select
                         [items]="FLOW_PROCESS_STATE_LIST"
                         [(ngModel)]="dashboardFilters.selectedFlowProcessStates"

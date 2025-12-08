@@ -4,7 +4,7 @@
             <div class="d-flex flex-row gap-2">
                 <div class="d-flex align-items-center pt-4 mb-3">
                     <div class="position-relative">
-                        <label for="lastFailureDate" class="fw-500 from-label fs-12">Last failure since</label>
+                        <label for="lastFailureDate" class="fw-500 from-label fs-12">last failure since</label>
                         <input
                             [(ngModel)]="dashboardFilters.lastFailureDate"
                             [owlDateTime]="lastFailureDatepicker"
@@ -49,7 +49,7 @@
 
             <div class="d-flex align-items-center pt-4 mb-3 mt-4">
                 <div class="position-relative">
-                    <label for="minConsecutiveFailures" class="fw-500 from-label fs-12">Min consecutive failures</label>
+                    <label for="minConsecutiveFailures" class="fw-500 from-label fs-12">min consecutive failures</label>
                     <input
                         [(ngModel)]="dashboardFilters.minConsecutiveFailures"
                         class="form-control failures-control"
@@ -62,9 +62,9 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="d-flex align-items-center pt-4 mb-3">
+            <div class="d-flex align-items-center pt-4 mb-4">
                 <div class="position-relative container-order">
-                    <label for="order-by-field-custom" class="fw-500 from-label fs-12">Order by field</label>
+                    <label for="order-by-field-custom" class="fw-500 from-label fs-12">order by field</label>
                     <ng-select
                         [items]="ORDER_BY_FIELD_LIST_TRIAGE"
                         [(ngModel)]="dashboardFilters.selectedOrderField"
@@ -79,9 +79,17 @@
                     </ng-select>
                 </div>
             </div>
-            <div class="d-flex align-items-center pt-4 mt-4">
+            <div class="d-flex align-items-center pt-4 mb-4">
                 <div class="position-relative container-order">
-                    <label for="order-direction" class="fw-500 status-label fs-12">Process status</label>
+                    <label class="fw-500 order-label fs-12">order direction</label>
+                    <mat-slide-toggle [(ngModel)]="dashboardFilters.selectedOrderDirection" color="primary">
+                        {{ orderDirection }}
+                    </mat-slide-toggle>
+                </div>
+            </div>
+            <div class="d-flex align-items-center mt-4">
+                <div class="position-relative container-order">
+                    <label for="order-direction" class="fw-500 status-label fs-12">process status</label>
                     <ng-select
                         [items]="FLOW_PROCESS_STATE_LIST_TRIAGE"
                         [(ngModel)]="dashboardFilters.selectedFlowProcessStates"

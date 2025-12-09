@@ -1,7 +1,15 @@
 <div class="card-custom d-flex flex-column">
     <div class="header" [ngClass]="badgeStyles(summary.effectiveState).containerClass"></div>
     <div class="card-body my-2 p-4">
-        <span class="label label--secondary v-align-middle webhook">Webhook</span>
+        <div class="d-flex fs-12 align-items-center justify-content-between">
+            <span class="label label--secondary v-align-middle webhook">Webhook</span>
+            <a
+                [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name, DatasetViewTypeEnum.Flows]"
+                [queryParams]="{ category: 'webhooks' }"
+                >See flows</a
+            >
+        </div>
+
         <div class="mt-3 mb-2 d-flex flex-row gap-3 align-items-center">
             <div>
                 <mat-icon class="icon-size" [ngClass]="badgeStyles(summary.effectiveState).iconClass">{{
@@ -10,8 +18,18 @@
             </div>
             <div class="d-flex flex-column">
                 <div class="dataset-list-container-title-row-dataset-name d-flex align-items-center">
-                    <a [routerLink]="['/']" class="dataset-list-container-title mb-1 pl-0">
-                        {{ datasetBasics.name }}
+                    <a
+                        [routerLink]="[
+                            '/',
+                            datasetBasics.owner.accountName,
+                            datasetBasics.name,
+                            DatasetViewTypeEnum.Settings,
+                            SettingsTabsEnum.WEBHOOKS,
+                            subscriptionId,
+                        ]"
+                        class="dataset-list-container-title mb-1 pl-0 truncate"
+                    >
+                        {{ subscriptionName }}
                     </a>
                 </div>
 
@@ -27,20 +45,31 @@
                     (click)="toggleWebhookCardState(datasetBasics, subscriptionId, summary.effectiveState)"
                     class="badge-button border-1 bg-light border rounded-2 px-2 btn btn-sm"
                 >
-                    <mat-icon class="text-muted fs-4 d-block" svgIcon="play_pause" />
+                    <mat-icon class="text-muted fs-4 d-block">
+                        {{
+                            summary.effectiveState === FlowProcessEffectiveState.Active ? "pause_circle" : "play_circle"
+                        }}</mat-icon
+                    >
+
                     <span class="fs-12 me-2 d-block">
                         {{ summary.effectiveState === FlowProcessEffectiveState.Active ? "Pause" : "Resume" }}
                         webhook</span
                     >
                 </button>
-                <button
-                    type="button"
-                    (click)="editWebhookCard(datasetBasics, subscriptionId)"
-                    class="badge-button border-1 bg-light border rounded-2 px-2 btn btn-sm"
+                <a
+                    [routerLink]="[
+                        '/',
+                        datasetBasics.owner.accountName,
+                        datasetBasics.name,
+                        DatasetViewTypeEnum.Settings,
+                        SettingsTabsEnum.WEBHOOKS,
+                        subscriptionId,
+                    ]"
+                    class="badge-button border-1 link-underline link-underline-opacity-0 bg-light border rounded-2 px-2 btn btn-sm"
                 >
                     <mat-icon class="text-muted fs-4 d-block">settings</mat-icon>
-                    <span class="fs-12 me-2 d-block link-settings">Edit webhook</span>
-                </button>
+                    <span class="fs-12 me-2 d-block link-settings">Settings</span>
+                </a>
             </div>
         </div>
         <div>

@@ -18,7 +18,7 @@ import { FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { Apollo } from "apollo-angular";
-import { AccountFlowsNav } from "./account-flows-tab.types";
+import { AccountFlowsNav, ProcessCardFilterMode } from "./account-flows-tab.types";
 import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
 
 describe("AccountFlowsTabComponent", () => {
@@ -60,6 +60,7 @@ describe("AccountFlowsTabComponent", () => {
         component.accountFlowsData = {
             activeNav: AccountFlowsNav.ACTIVITY,
             flowGroup: [FlowStatus.Finished],
+            datasetsFiltersMode: ProcessCardFilterMode.RECENT_ACTIVITY,
         };
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
     });

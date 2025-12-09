@@ -1,6 +1,102 @@
+@import "var";
+
+.mat-button-toggle-appearance-standard.mat-button-toggle-checked {
+    color: #fff;
+    background: #70aab9;
+}
+
+:host {
+    ::ng-deep {
+        .mat-button-toggle-button {
+            .mat-button-toggle-label-content {
+                line-height: 36px !important;
+            }
+        }
+    }
+}
+
+.mt-50px {
+    margin-top: 50px;
+}
+
+.mr-2px {
+    margin-right: 2px;
+}
+
+.w-attempts {
+    width: 100%;
+}
+
 .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 450px);
+    grid-template-columns: repeat(auto-fill, 430px);
     gap: 25px;
-    justify-content: center;
+}
+
+.from-label {
+    position: absolute;
+    left: 5px;
+    bottom: 33px;
+}
+
+.status-label {
+    position: absolute;
+    left: 5px;
+    bottom: 37px;
+}
+
+.order-label {
+    position: absolute;
+    left: 5px;
+    bottom: 23px;
+}
+
+.time-distance-label {
+    position: absolute;
+    left: 5px;
+    bottom: 33px;
+}
+
+.container-order {
+    width: 200px;
+}
+
+.quick-range-label {
+    position: absolute;
+    left: 24px;
+    bottom: 47px;
+}
+
+.quick-next-range-label {
+    position: absolute;
+    left: 24px;
+    bottom: 115px;
+}
+
+.failures-control {
+    width: 180px;
+}
+
+.ml-6px {
+    margin-left: 6px;
+}
+
+::ng-deep {
+    .ng-select.ng-select-single {
+        .ng-select-container {
+            min-height: 32px;
+            height: 32px;
+        }
+    }
+}
+
+#from-datepicker,
+#to-datepicker,
+#last-failure-datepicker,
+#next-planned-after-datepicker,
+#next-planned-before-datepicker,
+.clear-icon {
+    &:hover {
+        cursor: pointer;
+    }
 }

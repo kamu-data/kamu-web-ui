@@ -7,15 +7,14 @@
 
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MaybeUndefined } from "src/app/interface/app.types";
-import { AccountFragment, DatasetBasicsFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { AccountTabs } from "../../account.constants";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatIconModule } from "@angular/material/icon";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
 import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
-import { AccountFlowsNav } from "./account-flows-tab.types";
+import { AccountFlowsNav, ProcessCardFilterMode } from "./account-flows-tab.types";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { AccountFlowsType } from "./resolvers/account-flows.resolver";
 import AppValues from "src/app/common/values/app.values";
@@ -45,7 +44,6 @@ export class AccountFlowsTabComponent {
         this.accountFlowsData = value;
     }
 
-    private readonly loggedUserService = inject(LoggedUserService);
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly navigationService = inject(NavigationService);
 
@@ -55,11 +53,6 @@ export class AccountFlowsTabComponent {
     public readonly AccountFlowsNav: typeof AccountFlowsNav = AccountFlowsNav;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
-    public activeStatusNav: FlowStatus = FlowStatus.Finished;
-
-    public get loggedUser(): AccountFragment {
-        return this.loggedUserService.currentlyLoggedInUser;
-    }
 
     public get accountName(): string {
         const paramMap: MaybeUndefined<ParamMap> = this.activatedRoute?.parent?.parent?.snapshot.paramMap;
@@ -68,6 +61,13 @@ export class AccountFlowsTabComponent {
 
     public onNavChange(event: NgbNavChangeEvent): void {
         const nextNav = event.nextId as AccountFlowsNav;
-        this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.FLOWS, undefined, nextNav, undefined);
+        this.navigationService.navigateToOwnerView(
+            this.accountName,
+            AccountTabs.FLOWS,
+            undefined,
+            nextNav,
+            undefined,
+            nextNav === AccountFlowsNav.DATASETS ? ProcessCardFilterMode.RECENT_ACTIVITY : undefined,
+        );
     }
 }

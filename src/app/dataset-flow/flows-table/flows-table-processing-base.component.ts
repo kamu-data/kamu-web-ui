@@ -72,7 +72,6 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     }
 
     public refreshFlow(): void {
-        this.getPageFromUrl();
         this.fetchTableData(this.currentPage);
         this.cdr.detectChanges();
     }

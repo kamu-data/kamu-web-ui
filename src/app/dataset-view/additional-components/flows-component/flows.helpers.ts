@@ -6,6 +6,7 @@
  */
 
 import { DatePipe } from "@angular/common";
+import { RangeLastAttempt } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 import {
     FlowProcessEffectiveState,
     FlowProcessSummary,
@@ -142,13 +143,14 @@ export class DatasetFlowBadgeHelpers {
             case FlowProcessEffectiveState.Failing:
                 return {
                     message: `${isRoot ? "Ingest" : "Transform"} failing`,
-                    subMessage: subMessagesFailingStateHelper(summary),
-                    additionalMessage: `Last failure at: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.lastFailureAt, AppValues.DISPLAY_TIME_FORMAT)}`,
+                    subMessage: `Last failure at: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.lastFailureAt, AppValues.DISPLAY_TIME_FORMAT)}`,
+                    additionalMessage: subMessagesFailingStateHelper(summary),
                 };
             case FlowProcessEffectiveState.PausedManual:
                 return {
                     message: `${isRoot ? "Ingest" : "Transform"} paused`,
                     subMessage: "Reason: paused manually by user",
+                    additionalMessage: subMessagesPausedStateHelper(summary),
                 };
 
             case FlowProcessEffectiveState.StoppedAuto:
@@ -174,6 +176,26 @@ function subMessagesFailingStateHelper(summary: FlowProcessSummaryDataFragment):
         default:
             return "";
     }
+}
+
+function subMessagesPausedStateHelper(summary: FlowProcessSummaryDataFragment): string {
+    if (summary.lastFailureAt && summary.lastSuccessAt) {
+        const lastFailureAtTime = new Date(summary.lastFailureAt).getTime();
+        const lastSuccessAt = new Date(summary.lastSuccessAt).getTime();
+        if (lastFailureAtTime > lastSuccessAt) {
+            return `Last failure at: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.lastFailureAt, AppValues.DISPLAY_TIME_FORMAT)}`;
+        } else {
+            return `Last success at: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.lastFailureAt, AppValues.DISPLAY_TIME_FORMAT)}`;
+        }
+    }
+    if (summary?.lastFailureAt) {
+        return `Last failure at: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.lastFailureAt, AppValues.DISPLAY_TIME_FORMAT)}`;
+    }
+    if (summary?.lastSuccessAt) {
+        return `Last success at: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.lastSuccessAt, AppValues.DISPLAY_TIME_FORMAT)}`;
+    }
+    /* istanbul ignore next */
+    return "";
 }
 
 function subMessagesActiveStateHelper(summary: FlowProcessSummaryDataFragment, isRoot: boolean): string {
@@ -204,4 +226,142 @@ function additionalMessagesStoppedAutoHelper(summary: FlowProcessSummaryDataFrag
     }
     /* istanbul ignore next */
     return "";
+}
+
+export function lastTimeRangeHelper(selectedRange: RangeLastAttempt): Date {
+    const today = new Date();
+    switch (selectedRange) {
+        case RangeLastAttempt.LAST_5_MINUTES: {
+            today.setMinutes(today.getMinutes() - 5);
+            return today;
+        }
+        case RangeLastAttempt.LAST_15_MINUTES: {
+            today.setMinutes(today.getMinutes() - 15);
+            return today;
+        }
+        case RangeLastAttempt.LAST_30_MINUTES: {
+            today.setMinutes(today.getMinutes() - 30);
+            return today;
+        }
+        case RangeLastAttempt.LAST_1_HOUR: {
+            today.setHours(today.getHours() - 1);
+            return today;
+        }
+        case RangeLastAttempt.LAST_3_HOURS: {
+            today.setHours(today.getHours() - 3);
+            return today;
+        }
+        case RangeLastAttempt.LAST_6_HOURS: {
+            today.setHours(today.getHours() - 6);
+            return today;
+        }
+        case RangeLastAttempt.LAST_12_HOURS: {
+            today.setHours(today.getHours() - 12);
+            return today;
+        }
+        case RangeLastAttempt.LAST_24_HOURS: {
+            today.setHours(today.getHours() - 24);
+            return today;
+        }
+        case RangeLastAttempt.LAST_2_DAYS: {
+            today.setDate(today.getDate() - 2);
+            return today;
+        }
+        case RangeLastAttempt.LAST_7_DAYS: {
+            today.setDate(today.getDate() - 7);
+            return today;
+        }
+        case RangeLastAttempt.LAST_30_DAYS: {
+            today.setDate(today.getDate() - 30);
+            return today;
+        }
+        case RangeLastAttempt.LAST_90_DAYS: {
+            today.setDate(today.getDate() - 90);
+            return today;
+        }
+        case RangeLastAttempt.LAST_6_MONTH: {
+            today.setMonth(today.getMonth() - 6);
+            return today;
+        }
+        case RangeLastAttempt.LAST_1_YEAR: {
+            today.setFullYear(today.getFullYear() - 1);
+            return today;
+        }
+        case RangeLastAttempt.LAST_2_YEAR: {
+            today.setFullYear(today.getFullYear() - 2);
+            return today;
+        }
+        /* istanbul ignore next */
+        default:
+            return new Date();
+    }
+}
+
+export function nextTimeRangeHelper(selectedRange: RangeLastAttempt): Date {
+    const today = new Date();
+    switch (selectedRange) {
+        case RangeLastAttempt.NEXT_5_MINUTES: {
+            today.setMinutes(today.getMinutes() + 5);
+            return today;
+        }
+        case RangeLastAttempt.NEXT_15_MINUTES: {
+            today.setMinutes(today.getMinutes() + 15);
+            return today;
+        }
+        case RangeLastAttempt.NEXT_30_MINUTES: {
+            today.setMinutes(today.getMinutes() + 30);
+            return today;
+        }
+        case RangeLastAttempt.NEXT_1_HOUR: {
+            today.setHours(today.getHours() + 1);
+            return today;
+        }
+        case RangeLastAttempt.NEXT_3_HOURS: {
+            today.setHours(today.getHours() + 3);
+            return today;
+        }
+        case RangeLastAttempt.NEXT_6_HOURS: {
+            today.setHours(today.getHours() + 6);
+            return today;
+        }
+        case RangeLastAttempt.NEXT_12_HOURS: {
+            today.setHours(today.getHours() + 12);
+            return today;
+        }
+        case RangeLastAttempt.NEXT_24_HOURS: {
+            today.setHours(today.getHours() + 24);
+            return today;
+        }
+        case RangeLastAttempt.NEXT_2_DAYS: {
+            today.setDate(today.getDate() + 2);
+            return today;
+        }
+        case RangeLastAttempt.NEXT_7_DAYS: {
+            today.setDate(today.getDate() + 7);
+            return today;
+        }
+        case RangeLastAttempt.NEXT_30_DAYS: {
+            today.setDate(today.getDate() + 30);
+            return today;
+        }
+        case RangeLastAttempt.NEXT_90_DAYS: {
+            today.setDate(today.getDate() + 90);
+            return today;
+        }
+        case RangeLastAttempt.NEXT_6_MONTH: {
+            today.setMonth(today.getMonth() + 6);
+            return today;
+        }
+        case RangeLastAttempt.NEXT_1_YEAR: {
+            today.setFullYear(today.getFullYear() + 1);
+            return today;
+        }
+        case RangeLastAttempt.NEXT_2_YEAR: {
+            today.setFullYear(today.getFullYear() + 2);
+            return today;
+        }
+        /* istanbul ignore next */
+        default:
+            return new Date();
+    }
 }

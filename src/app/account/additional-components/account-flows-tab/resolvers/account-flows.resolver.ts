@@ -6,13 +6,14 @@
  */
 
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
-import { AccountFlowsNav } from "../account-flows-tab.types";
+import { AccountFlowsNav, ProcessCardFilterMode } from "../account-flows-tab.types";
 import ProjectLinks from "src/app/project-links";
 import { FlowStatus } from "src/app/api/kamu.graphql.interface";
 
 export interface AccountFlowsType {
     activeNav: AccountFlowsNav;
     flowGroup: FlowStatus[];
+    datasetsFiltersMode: ProcessCardFilterMode;
 }
 
 export const accountFlowsResolverFn: ResolveFn<AccountFlowsType> = (route: ActivatedRouteSnapshot) => {
@@ -21,9 +22,13 @@ export const accountFlowsResolverFn: ResolveFn<AccountFlowsType> = (route: Activ
         AccountFlowsNav.ACTIVITY;
     const currentNav = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS);
     const flowGroup = currentNav ? (currentNav.split(",") as FlowStatus[]) : [FlowStatus.Finished];
+    const datasetsFiltersMode =
+        (route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_FILTERS_MODE) as ProcessCardFilterMode) ??
+        ProcessCardFilterMode.RECENT_ACTIVITY;
 
     return {
         activeNav,
         flowGroup,
+        datasetsFiltersMode,
     };
 };

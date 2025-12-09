@@ -50,10 +50,4 @@ describe("WebhookFlowProcessCardComponent", () => {
         );
         expect(toggleWebhookCardStateEmitterSpy).toHaveBeenCalledTimes(1);
     });
-
-    it("should check to edit the card state", () => {
-        const editWebhookCardEmitterSpy = spyOn(component.editWebhookCardEmitter, "emit");
-        component.editWebhookCard(mockDatasetBasicsRootFragment, MOCK_SUBSCRIPTION_ID);
-        expect(editWebhookCardEmitterSpy).toHaveBeenCalledTimes(1);
-    });
 });

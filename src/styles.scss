@@ -1666,3 +1666,24 @@ pre.language-sql {
     border-radius: 10px;
     background: #e0e9fe;
 }
+
+.order-direction-toggle {
+    --mdc-switch-unselected-handle-color: #3949ab;
+    --mdc-switch-unselected-pressed-handle-color: #3949ab;
+    --mdc-switch-unselected-pressed-state-layer-color: #3949ab;
+    --mdc-switch-unselected-hover-state-layer-color: #3949ab;
+    --mdc-switch-unselected-hover-handle-color: #3949ab;
+    --mdc-switch-unselected-focus-state-layer-color: #3949ab;
+    --mdc-switch-unselected-focus-handle-color: #3949ab;
+    --mdc-switch-unselected-pressed-track-color: #7986cb;
+    --mdc-switch-unselected-hover-track-color: #7986cb;
+    --mdc-switch-unselected-focus-track-color: #7986cb;
+    --mdc-switch-unselected-track-color: #7986cb;
+
+    &:hover {
+        --mdc-switch-unselected-pressed-track-color: #7986cb;
+        --mdc-switch-unselected-hover-track-color: #7986cb;
+        --mdc-switch-unselected-focus-track-color: #7986cb;
+        --mdc-switch-unselected-track-color: #7986cb;
+    }
+}

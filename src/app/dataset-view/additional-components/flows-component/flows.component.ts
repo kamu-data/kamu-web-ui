@@ -51,10 +51,9 @@ import {
 import { FlowsBlockActionsComponent } from "./components/flows-block-actions/flows-block-actions.component";
 import { FlowsAssociatedChannelsComponent } from "./components/flows-associated-channels/flows-associated-channels.component";
 import { DatasetWebhooksService } from "../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
-import { ModalService } from "src/app/common/components/modal/modal.service";
 import { FlowsSelectionStateService } from "./services/flows-selection-state.service";
 import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table/components/flow-table-panel-filters/flow-table-panel-filters.component";
-import { DatasetFlowProcessCardComponent } from "src/app/common/components/dataset-flow-process-card/dataset-flow-process-card.component";
+import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.component";
 import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
 @Component({
     selector: "app-flows",
@@ -114,7 +113,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public selectedStatusItems: FilterStatusType[] = [];
 
     private datasetWebhooksService = inject(DatasetWebhooksService);
-    private modalService = inject(ModalService);
     private flowsSelectionStateService = inject(FlowsSelectionStateService);
     private datasetCardService = inject(ProcessDatasetCardInteractionService);
 
@@ -203,6 +201,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             };
         }
         if (webhooksFilter === "webhooks") {
+            this.flowsSelectionStateService.clearFlowsCategory();
             return {
                 primary: undefined,
                 webhooks: { subscriptionIds: this.flowsSelectionState.webhooksIds },
@@ -353,6 +352,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             this.navigationService.navigateToDatasetView({
                 accountName: this.flowsData.datasetBasics.owner.accountName,
                 datasetName: this.flowsData.datasetBasics.name,
+                category: this.flowsSelectionState.webhooksCategory ?? this.flowsSelectionState.flowsCategory,
                 tab: DatasetViewTypeEnum.Flows,
             });
         } else {
@@ -360,6 +360,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                 accountName: this.flowsData.datasetBasics.owner.accountName,
                 datasetName: this.flowsData.datasetBasics.name,
                 tab: DatasetViewTypeEnum.Flows,
+                category: this.flowsSelectionState.webhooksCategory ?? this.flowsSelectionState.flowsCategory,
                 page,
             });
         }

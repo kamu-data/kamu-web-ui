@@ -24,12 +24,13 @@ import {
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { EventEmitter } from "@angular/core";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
-
+import { NgIf } from "@angular/common";
 @Component({
     selector: "app-dataset-flow-process-card",
     standalone: true,
     imports: [
         //-----//
+        NgIf,
         NgClass,
         RouterLink,
 
@@ -45,6 +46,7 @@ import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dat
 export class DatasetFlowProcessCardComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public summary: FlowProcessSummary;
+    @Input() public showFlowsHistoryLink = false;
     @Output() public updateNowEmitter = new EventEmitter<DatasetBasicsFragment>();
     @Output() public toggleStateDatasetCardEmitter = new EventEmitter<{
         state: FlowProcessEffectiveState;

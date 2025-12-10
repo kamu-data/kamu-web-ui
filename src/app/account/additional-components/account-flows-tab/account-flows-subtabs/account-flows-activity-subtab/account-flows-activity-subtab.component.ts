@@ -209,7 +209,11 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             );
         }
         this.currentPage = page;
-        this.onSearchByFiltersChange(this.filters);
+        if (!this.filters?.status?.length) {
+            this.refreshNow();
+        } else {
+            this.onSearchByFiltersChange(this.filters);
+        }
     }
 
     public onSearchByFiltersChange(filters: MaybeNull<FlowsTableFiltersOptions>): void {

@@ -89,7 +89,7 @@ export class AccountFlowsFiltersService {
             case ProcessCardFilterMode.TRIAGE: {
                 this.updateFilters({
                     selectedOrderField:
-                        this.currentFiltersSnapshot.selectedOrderField ?? FlowProcessOrderField.ConsecutiveFailures,
+                        this.currentFiltersSnapshot.selectedOrderField ?? FlowProcessOrderField.LastFailureAt,
                     minConsecutiveFailures:
                         this.currentFiltersSnapshot.minConsecutiveFailures > 1
                             ? this.currentFiltersSnapshot.minConsecutiveFailures
@@ -105,7 +105,10 @@ export class AccountFlowsFiltersService {
                 };
             }
             case ProcessCardFilterMode.UPCOMING_SCHEDULED: {
-                this.updateFilters({ selectedOrderField: FlowProcessOrderField.NextPlannedAt });
+                this.updateFilters({
+                    selectedOrderField: FlowProcessOrderField.NextPlannedAt,
+                    selectedOrderDirection: false,
+                });
 
                 return {
                     effectiveStateIn: this.currentFiltersSnapshot.selectedFlowProcessStates.length

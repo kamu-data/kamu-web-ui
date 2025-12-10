@@ -104,6 +104,27 @@ describe("AccountFlowsActivitySubtabComponent", () => {
         );
     });
 
+    it("should check to apply filter status in the request", () => {
+        component.filters = {
+            accounts: mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators.nodes as Account[],
+            datasets: mockDatasets,
+            status: [FlowStatus.Finished],
+            onlySystemFlows: false,
+        };
+        spyOn(navigationService, "navigateToOwnerView");
+        const onSearchByFiltersChangeSpy = spyOn(component, "onSearchByFiltersChange");
+        component.onPageChange(2);
+        expect(onSearchByFiltersChangeSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check to refresh page when filters=null", () => {
+        component.filters = null;
+        spyOn(navigationService, "navigateToOwnerView");
+        const refreshNowSpy = spyOn(component, "refreshNow");
+        component.onPageChange(2);
+        expect(refreshNowSpy).toHaveBeenCalledTimes(1);
+    });
+
     it("should check abort flow button", fakeAsync(() => {
         spyOn(datasetFlowsService, "cancelFlowRun").and.returnValue(of(true));
         const getPageFromUrlSpy = spyOn(component, "getPageFromUrl");

@@ -6,6 +6,7 @@
  */
 
 import {
+    AccountFlowProcessCard,
     FlowProcessEffectiveState,
     FlowProcessOrderField,
     OrderingDirection,
@@ -392,4 +393,9 @@ export interface DashboardFiltersOptions {
     minConsecutiveFailures: number;
     isFirstInitialization: boolean;
     applyFilters: boolean;
+}
+
+export interface ResultFlows {
+    totalCount: number;
+    nodes: AccountFlowProcessCard[];
 }

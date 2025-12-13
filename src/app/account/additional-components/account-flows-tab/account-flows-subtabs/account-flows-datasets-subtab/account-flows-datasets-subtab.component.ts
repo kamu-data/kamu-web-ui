@@ -39,6 +39,7 @@ import {
     CardFilterDescriptor,
     DashboardFiltersOptions,
     ProcessCardFilterMode,
+    ResultFlows,
 } from "../../account-flows-tab.types";
 import { NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 import { DateTimeAdapter, OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
@@ -54,11 +55,6 @@ import { UpcomingScheduledFiltersViewComponent } from "./components/upcoming-sch
 import { CustomFiltersViewComponent } from "./components/custom-filters-view/custom-filters-view.component";
 import { AccountFlowsFiltersService } from "src/app/account/services/account-flows-filters.service";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-
-export interface ResultFlows {
-    totalCount: number;
-    nodes: AccountFlowProcessCard[];
-}
 
 @Component({
     selector: "app-account-flows-datasets-subtab",
@@ -287,5 +283,13 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
             nextNav,
         );
         this.refreshNow();
+    }
+
+    public trackByCardId(index: number, item: AccountFlowProcessCard): string {
+        if ("dataset" in item) {
+            return item.dataset.id;
+        } else {
+            return item.id;
+        }
     }
 }

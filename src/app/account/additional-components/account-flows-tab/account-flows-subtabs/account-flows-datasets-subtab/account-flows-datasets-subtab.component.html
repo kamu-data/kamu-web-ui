@@ -69,7 +69,7 @@
             class="cards mt-4"
             data-test-id="cards"
         >
-            <ng-container *ngFor="let card of cardsData.nodes">
+            <ng-container *ngFor="let card of cardsData.nodes; trackBy: trackByCardId">
                 <div *ngIf="card.__typename === 'DatasetFlowProcess'">
                     <app-dataset-flow-process-card
                         [datasetBasics]="itemToBasics(card.dataset)"

@@ -259,6 +259,10 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         this.triggerFetch();
     }
 
+    public refreshPage(): void {
+        this.fetchCardsData();
+    }
+
     private resetRequestParams(): void {
         this.currentPage = 1;
         this.processesCards = [];

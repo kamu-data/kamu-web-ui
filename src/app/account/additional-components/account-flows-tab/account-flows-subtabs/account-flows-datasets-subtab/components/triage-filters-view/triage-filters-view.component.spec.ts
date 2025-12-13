@@ -33,6 +33,7 @@ describe("TriageFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
+            applyFilters: false,
         };
     });
 

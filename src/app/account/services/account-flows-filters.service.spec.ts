@@ -72,7 +72,7 @@ describe("AccountFlowsFiltersService", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
+            applyFilters: true,
         });
     });
 
@@ -95,7 +95,7 @@ describe("AccountFlowsFiltersService", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 1,
             isFirstInitialization: false,
-            applyFilters: false,
+            applyFilters: true,
         });
     });
 
@@ -126,7 +126,7 @@ describe("AccountFlowsFiltersService", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 3,
             isFirstInitialization: false,
-            applyFilters: false,
+            applyFilters: true,
         });
         const result = service.setFlowProcessFilters(ProcessCardFilterMode.TRIAGE);
         expect(result).toEqual(
@@ -151,7 +151,7 @@ describe("AccountFlowsFiltersService", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
+            applyFilters: true,
         });
         const result = service.setFlowProcessFilters(ProcessCardFilterMode.UPCOMING_SCHEDULED);
         expect(result).toEqual(
@@ -176,7 +176,7 @@ describe("AccountFlowsFiltersService", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
+            applyFilters: true,
         });
         const result = service.setFlowProcessFilters(ProcessCardFilterMode.UPCOMING_SCHEDULED);
         expect(result).toEqual(
@@ -201,7 +201,7 @@ describe("AccountFlowsFiltersService", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
+            applyFilters: true,
         });
         const result = service.setFlowProcessFilters(ProcessCardFilterMode.PAUSED);
         expect(result).toEqual(

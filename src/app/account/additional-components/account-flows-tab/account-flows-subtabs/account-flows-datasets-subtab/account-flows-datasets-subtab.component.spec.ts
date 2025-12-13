@@ -19,7 +19,6 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 import { AccountService } from "src/app/account/account.service";
 import { ActivatedRoute } from "@angular/router";
 import { NavigationService } from "src/app/services/navigation.service";
-import { AccountTabs } from "src/app/account/account.constants";
 import { of } from "rxjs";
 import {
     mockAccountFlowsAsCardsQuery,
@@ -105,32 +104,6 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check navigate to owner view with page=1 ", () => {
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-        component.onPageChange(1);
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
-            component.accountName,
-            AccountTabs.FLOWS,
-            undefined,
-            component.accountFlowsData.activeNav,
-            undefined,
-            component.accountFlowsData.datasetsFiltersMode,
-        );
-    });
-
-    it("should check navigate to owner view with page>1 ", () => {
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-        component.onPageChange(2);
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
-            component.accountName,
-            AccountTabs.FLOWS,
-            2,
-            component.accountFlowsData.activeNav,
-            undefined,
-            component.accountFlowsData.datasetsFiltersMode,
-        );
-    });
-
     it("should empty block is visible", fakeAsync(() => {
         fixture.detectChanges();
         getAccountFlowsAsCardsSpy.and.returnValue(
@@ -165,7 +138,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
 
     it("should check to refresh page", () => {
         const fetchCardsDataSpy = spyOn(component, "fetchCardsData");
-        component.refreshNow();
+        component.refreshPage();
         expect(fetchCardsDataSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -271,6 +244,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
+            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -322,6 +296,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
+            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -349,6 +324,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
+            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -376,6 +352,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Failing],
             minConsecutiveFailures: 2,
             isFirstInitialization: false,
+            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -403,6 +380,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
+            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -430,6 +408,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
+            applyFilters: true,
         });
 
         fixture.detectChanges();

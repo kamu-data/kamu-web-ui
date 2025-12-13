@@ -35,9 +35,10 @@ export default class AppValues {
     public static readonly SQL_QUERY_LIMIT = 50;
     public static readonly SHORT_DELAY_MS = 200;
     public static readonly LONG_DELAY_MS = 2000;
+    public static readonly UPLOAD_FLOW_PROCESSES_PER_PAGE = 15;
     public static readonly SIMULATION_START_CONDITION_DELAY_MS = 1200;
     public static readonly SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS = 2000;
-    public static readonly TIMEOUT_REFRESH_FLOW_MS = 1000;
+    public static readonly TIMEOUT_REFRESH_FLOW_MS = 1500;
     public static readonly SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL = "-  Dataset is unavailable";
     public static readonly DEFAULT_OFFSET_COLUMN_NAME = "offset";
     public static readonly DEFAULT_FLOW_INITIATOR = "system process";

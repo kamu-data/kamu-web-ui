@@ -36,6 +36,7 @@ export class AccountFlowsFiltersService {
         selectedFlowProcessStates: [],
         minConsecutiveFailures: 0,
         isFirstInitialization: false,
+        applyFilters: false,
     };
 
     private filtersSubject$ = new BehaviorSubject<DashboardFiltersOptions>(this.initialFilters);
@@ -156,6 +157,8 @@ export class AccountFlowsFiltersService {
         this.updateFilters({
             ...this.initialFilters,
             minConsecutiveFailures: mode === ProcessCardFilterMode.TRIAGE ? 1 : 0,
+            selectedFlowProcessStates: [],
+            applyFilters: true,
         });
     }
 

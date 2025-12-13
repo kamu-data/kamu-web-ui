@@ -2,7 +2,7 @@
     <label for="order-direction" class="fw-500 status-label fs-12">process status</label>
     <ng-select
         [items]="options"
-        [(ngModel)]="dashboardFiltersState.selectedFlowProcessStates"
+        [(ngModel)]="filters.selectedFlowProcessStates"
         bindLabel="label"
         bindValue="value"
         [multiple]="true"

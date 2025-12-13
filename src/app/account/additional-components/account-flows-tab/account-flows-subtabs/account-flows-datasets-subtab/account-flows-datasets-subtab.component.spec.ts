@@ -419,4 +419,23 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         expect(getAccountFlowsAsCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
+
+    it("should be checked that scrolling is not working", () => {
+        component.loadingCards = true;
+        component.hasNextPage = true;
+        component.onScroll();
+        expect(component.currentPage).toEqual(1);
+
+        component.loadingCards = false;
+        component.hasNextPage = false;
+        component.onScroll();
+        expect(component.currentPage).toEqual(1);
+    });
+
+    it("should check that scrolling is working", () => {
+        component.loadingCards = false;
+        component.hasNextPage = true;
+        component.onScroll();
+        expect(component.currentPage).toEqual(2);
+    });
 });

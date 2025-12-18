@@ -395,7 +395,7 @@ export interface DashboardFiltersOptions {
     applyFilters: boolean;
 }
 
-export interface ResultFlows {
+export interface FlowProcessCardListing {
     totalCount: number;
     nodes: AccountFlowProcessCard[];
 }

@@ -91,7 +91,7 @@
                 </div>
             </ng-container>
         </div>
-        <div *ngIf="loadingCards" class="mt-4">
+        <div *ngIf="loadingCards$ | async" class="mt-4">
             <mat-progress-bar data-test-id="init-progress-bar" mode="indeterminate" />
             <div class="text-center pt-4">Loading...</div>
         </div>

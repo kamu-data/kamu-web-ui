@@ -33,6 +33,7 @@ import { DatasetFlowsService } from "src/app/dataset-view/additional-components/
 import { WebhookFlowProcessCardComponent } from "../../../../../flow-cards/webhook-flow-process-card/webhook-flow-process-card.component";
 import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.component";
 import { MatButtonToggleChange } from "@angular/material/button-toggle";
+import AppValues from "src/app/common/values/app.values";
 
 describe("AccountFlowsDatasetsSubtabComponent", () => {
     let component: AccountFlowsDatasetsSubtabComponent;
@@ -421,21 +422,16 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
     }));
 
     it("should be checked that scrolling is not working", () => {
-        component.loadingCards = true;
-        component.hasNextPage = true;
-        component.onScroll();
-        expect(component.currentPage).toEqual(1);
-
-        component.loadingCards = false;
+        component.processesPerPage = 10;
         component.hasNextPage = false;
         component.onScroll();
-        expect(component.currentPage).toEqual(1);
+        expect(component.processesPerPage).toEqual(10);
     });
 
     it("should check that scrolling is working", () => {
-        component.loadingCards = false;
+        component.processesPerPage = 10;
         component.hasNextPage = true;
         component.onScroll();
-        expect(component.currentPage).toEqual(2);
+        expect(component.processesPerPage).toEqual(AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE);
     });
 });

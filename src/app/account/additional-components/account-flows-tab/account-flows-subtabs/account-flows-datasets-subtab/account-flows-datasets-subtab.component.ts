@@ -8,7 +8,7 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet } from "@angular/common";
 import { AccountService } from "src/app/account/account.service";
-import { combineLatest, map, Observable, startWith, Subject, switchMap, take, timer } from "rxjs";
+import { BehaviorSubject, combineLatest, map, Observable, startWith, Subject, switchMap, take, timer } from "rxjs";
 import {
     AccountFlowProcessCard,
     AccountFlowProcessCardConnectionDataFragment,
@@ -39,7 +39,7 @@ import {
     CardFilterDescriptor,
     DashboardFiltersOptions,
     ProcessCardFilterMode,
-    ResultFlows,
+    FlowProcessCardListing,
 } from "../../account-flows-tab.types";
 import { NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 import { DateTimeAdapter, OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
@@ -108,14 +108,13 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     private readonly toastrService = inject(ToastrService);
     private readonly accountFlowsFiltersService = inject(AccountFlowsFiltersService);
 
-    public accountFlowsCardsData$: Observable<ResultFlows>;
-    public currentPage: number = 1;
+    public accountFlowsCardsData$: Observable<FlowProcessCardListing>;
     public hasNextPage = false;
     public processesCards: AccountFlowProcessCard[] = [];
-    public loadingCards = false;
-    private isToggleCardState = false;
-    private processesPerPage: number = AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE;
-    private fetchTrigger$ = new Subject<void>();
+    public processesPerPage: number = AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE;
+    private readonly loadingCardsSubject$ = new BehaviorSubject<boolean>(false);
+    private readonly toggleCardStateSubject$ = new BehaviorSubject<boolean>(false);
+    private readonly fetchTrigger$ = new Subject<void>();
 
     public readonly CARD_FILTERS_MODE_OPTIONS: CardFilterDescriptor[] = CARD_FILTERS_MODE_OPTIONS;
 
@@ -127,7 +126,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
     public ngOnInit(): void {
-        this.accountFlowsFiltersService.updateFilters({ isFirstInitialization: true });
+        this.loadingCardsSubject$.next(true);
         this.fetchCardsData();
     }
 
@@ -135,14 +134,21 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         return this.accountFlowsFiltersService.currentFiltersSnapshot;
     }
 
+    public get loadingCards$(): Observable<boolean> {
+        return this.loadingCardsSubject$.asObservable();
+    }
+
     public fetchCardsData(): void {
         const polling$ = timer(0, environment.delay_polling_ms);
         const triggerWithInitial$ = this.fetchTrigger$.pipe(startWith(undefined));
+
         this.accountFlowsCardsData$ = combineLatest([polling$, triggerWithInitial$]).pipe(
             switchMap(() =>
                 this.accountService.getAccountFlowsAsCards({
                     accountName: this.accountName,
-                    page: this.currentPage - 1,
+                    page: this.toggleCardStateSubject$.getValue()
+                        ? 0
+                        : Math.ceil(this.processesCards.length / AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE),
                     perPage: this.processesPerPage,
                     filters: this.setFlowProcessFilters(this.accountFlowsData.datasetsFiltersMode),
                     ordering: {
@@ -153,23 +159,18 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
             ),
 
             map((result: AccountFlowProcessCardConnectionDataFragment) => {
-                let newChunkCards = result.nodes as AccountFlowProcessCard[];
+                const newChunkCards = result.nodes as AccountFlowProcessCard[];
                 this.hasNextPage = result.pageInfo.hasNextPage;
 
-                if (
-                    this.dashboardFiltersState.isFirstInitialization ||
-                    this.loadingCards ||
-                    (this.dashboardFiltersState.applyFilters && !this.processesCards.length)
-                ) {
+                if (this.loadingCardsSubject$.getValue()) {
                     this.processesCards = [...this.processesCards, ...newChunkCards];
-                    newChunkCards = [];
                 }
-                if (this.isToggleCardState) {
+                if (this.toggleCardStateSubject$.getValue()) {
                     this.processesCards = newChunkCards;
                 }
-                this.isToggleCardState = false;
-                this.loadingCards = false;
-                this.accountFlowsFiltersService.updateFilters({ isFirstInitialization: false });
+                this.loadingCardsSubject$.next(false);
+                this.toggleCardStateSubject$.next(false);
+
                 return {
                     totalCount: result.totalCount,
                     nodes: this.processesCards,
@@ -178,17 +179,11 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         );
     }
 
-    public triggerFetch(): void {
-        this.fetchTrigger$.next();
-    }
-
     public onScroll(): void {
-        this.processesPerPage = AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE;
-        if (this.loadingCards || !this.hasNextPage) {
+        if (this.loadingCardsSubject$.getValue() || !this.hasNextPage) {
             return;
         }
-        this.currentPage++;
-        this.loadingCards = true;
+        this.processesPerPage = AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE;
         this.refreshNow();
     }
 
@@ -202,6 +197,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
 
     public resetFilters(): void {
         this.resetRequestParams();
+        this.processesPerPage = AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE;
         this.accountFlowsFiltersService.resetFilters(this.accountFlowsData.datasetsFiltersMode);
         this.refreshNow();
     }
@@ -217,8 +213,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         datasetBasics: DatasetBasicsFragment;
     }): void {
         this.processesPerPage = this.processesCards.length;
-        this.isToggleCardState = true;
-        this.currentPage = 1;
+        this.toggleCardStateSubject$.next(true);
         this.datasetCardService.handleToggleState({
             state: params.state,
             datasetBasics: params.datasetBasics,
@@ -234,8 +229,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         state: FlowProcessEffectiveState;
     }): void {
         this.processesPerPage = this.processesCards.length;
-        this.isToggleCardState = true;
-        this.currentPage = 1;
+        this.toggleCardStateSubject$.next(true);
         const result$: Observable<boolean> =
             params.state === FlowProcessEffectiveState.Active
                 ? this.datasetWebhooksService.datasetWebhookPauseSubscription(
@@ -256,7 +250,8 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     }
 
     public refreshNow(): void {
-        this.triggerFetch();
+        this.loadingCardsSubject$.next(true);
+        this.fetchTrigger$.next();
     }
 
     public refreshPage(): void {
@@ -264,13 +259,11 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     }
 
     private resetRequestParams(): void {
-        this.currentPage = 1;
         this.processesCards = [];
     }
 
     public applyFilters(): void {
         this.resetRequestParams();
-        this.accountFlowsFiltersService.updateFilters({ applyFilters: true });
         this.refreshNow();
     }
 

@@ -19,7 +19,6 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 import { AccountService } from "src/app/account/account.service";
 import { ActivatedRoute } from "@angular/router";
 import { NavigationService } from "src/app/services/navigation.service";
-import { AccountTabs } from "src/app/account/account.constants";
 import { of } from "rxjs";
 import {
     mockAccountFlowsAsCardsQuery,
@@ -34,6 +33,7 @@ import { DatasetFlowsService } from "src/app/dataset-view/additional-components/
 import { WebhookFlowProcessCardComponent } from "../../../../../flow-cards/webhook-flow-process-card/webhook-flow-process-card.component";
 import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.component";
 import { MatButtonToggleChange } from "@angular/material/button-toggle";
+import AppValues from "src/app/common/values/app.values";
 
 describe("AccountFlowsDatasetsSubtabComponent", () => {
     let component: AccountFlowsDatasetsSubtabComponent;
@@ -105,32 +105,6 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check navigate to owner view with page=1 ", () => {
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-        component.onPageChange(1);
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
-            component.accountName,
-            AccountTabs.FLOWS,
-            undefined,
-            component.accountFlowsData.activeNav,
-            undefined,
-            component.accountFlowsData.datasetsFiltersMode,
-        );
-    });
-
-    it("should check navigate to owner view with page>1 ", () => {
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-        component.onPageChange(2);
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
-            component.accountName,
-            AccountTabs.FLOWS,
-            2,
-            component.accountFlowsData.activeNav,
-            undefined,
-            component.accountFlowsData.datasetsFiltersMode,
-        );
-    });
-
     it("should empty block is visible", fakeAsync(() => {
         fixture.detectChanges();
         getAccountFlowsAsCardsSpy.and.returnValue(
@@ -165,7 +139,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
 
     it("should check to refresh page", () => {
         const fetchCardsDataSpy = spyOn(component, "fetchCardsData");
-        component.refreshNow();
+        component.refreshPage();
         expect(fetchCardsDataSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -271,6 +245,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
+            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -322,6 +297,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
+            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -349,6 +325,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
+            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -376,6 +353,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Failing],
             minConsecutiveFailures: 2,
             isFirstInitialization: false,
+            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -403,6 +381,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
+            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -430,6 +409,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
+            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -440,4 +420,18 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         expect(getAccountFlowsAsCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
+
+    it("should be checked that scrolling is not working", () => {
+        component.processesPerPage = 10;
+        component.hasNextPage = false;
+        component.onScroll();
+        expect(component.processesPerPage).toEqual(10);
+    });
+
+    it("should check that scrolling is working", () => {
+        component.processesPerPage = 10;
+        component.hasNextPage = true;
+        component.onScroll();
+        expect(component.processesPerPage).toEqual(AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE);
+    });
 });

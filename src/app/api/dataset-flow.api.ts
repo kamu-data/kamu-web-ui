@@ -84,11 +84,18 @@ export class DatasetFlowApi {
     private datasetFlowsProcessesGQL = inject(DatasetFlowsProcessesGQL);
 
     public getDatasetFlowsProcesses(params: { datasetId: string }): Observable<DatasetFlowsProcessesQuery> {
-        return this.datasetFlowsProcessesGQL.watch(params, noCacheFetchPolicy).valueChanges.pipe(
-            map((result: ApolloQueryResult<DatasetFlowsProcessesQuery>) => {
-                return result.data;
-            }),
-        );
+        return this.datasetFlowsProcessesGQL
+            .watch(params, {
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .valueChanges.pipe(
+                map((result: ApolloQueryResult<DatasetFlowsProcessesQuery>) => {
+                    return result.data;
+                }),
+            );
     }
 
     public datasetTriggerIngestFlow(params: {
@@ -321,10 +328,20 @@ export class DatasetFlowApi {
     }
 
     public getDatasetFlowsInitiators(datasetId: string): Observable<DatasetFlowsInitiatorsQuery> {
-        return this.datasetFlowsInitiatorsGQL.watch({ datasetId }, noCacheFetchPolicy).valueChanges.pipe(
-            map((result: ApolloQueryResult<DatasetFlowsInitiatorsQuery>) => {
-                return result.data;
-            }),
-        );
+        return this.datasetFlowsInitiatorsGQL
+            .watch(
+                { datasetId },
+                {
+                    ...noCacheFetchPolicy,
+                    context: {
+                        skipLoading: true,
+                    },
+                },
+            )
+            .valueChanges.pipe(
+                map((result: ApolloQueryResult<DatasetFlowsInitiatorsQuery>) => {
+                    return result.data;
+                }),
+            );
     }
 }

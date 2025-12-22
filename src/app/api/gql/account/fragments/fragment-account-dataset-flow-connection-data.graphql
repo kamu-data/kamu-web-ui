@@ -1,0 +1,15 @@
+fragment DatasetFlowProcessConnectionData on DatasetFlowProcessConnection {
+  nodes {
+    flowType
+    dataset {
+      ...DatasetBasics
+    }
+    summary {
+      ...FlowProcessSummaryData
+    }
+  }
+  totalCount
+  pageInfo {
+    ...DatasetPageInfo
+  }
+}

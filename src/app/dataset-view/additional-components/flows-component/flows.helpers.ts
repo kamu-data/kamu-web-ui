@@ -22,7 +22,7 @@ import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.typ
 export type FlowsSelectedCategory = "all" | "updates";
 export type WebhooksSelectedCategory = "webhooks";
 
-export interface WebhooksFiltersDescriptor {
+export interface RollupFiltersDescriptor {
     label: string;
     state: FlowProcessEffectiveState;
     valueKey: "active" | "failing" | "paused" | "stopped" | "unconfigured";
@@ -55,7 +55,7 @@ export interface DatasetFlowsTabState {
     flowProcesses: DatasetFlowProcesses;
 }
 
-export const WebhooksFiltersOptions: WebhooksFiltersDescriptor[] = [
+export const RollupFiltersOptions: RollupFiltersDescriptor[] = [
     {
         label: "active:",
         state: FlowProcessEffectiveState.Active,

@@ -1,0 +1,19 @@
+query accountWebhookCards(
+  $name: AccountName!
+  $page: Int
+  $perPage: Int
+  $filters: FlowProcessFilters
+  $ordering: FlowProcessOrdering
+) {
+  accounts {
+    byName(name: $name) {
+      flows {
+        processes {
+          webhookCards(filters: $filters, page: $page, perPage: $perPage, ordering: $ordering) {
+            ...WebhookFlowSubProcessConnectionData
+          }
+        }
+      }
+    }
+  }
+}

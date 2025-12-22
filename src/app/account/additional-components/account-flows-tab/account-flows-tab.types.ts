@@ -26,6 +26,12 @@ export enum ProcessCardFilterMode {
     CUSTOM = "custom",
 }
 
+export enum ProcessCardGroup {
+    ALL = "all",
+    DATASETS = "datasets",
+    WEBHOOKS = "webhooks",
+}
+
 export enum RangeLastAttempt {
     LAST_5_MINUTES = "last5Minutes",
     LAST_15_MINUTES = "last15Minutes",

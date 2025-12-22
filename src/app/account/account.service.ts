@@ -12,7 +12,9 @@ import {
     AccountFlowsAsCardsQuery,
     AccountListDatasetsWithFlowsQuery,
     AccountPauseFlowsMutation,
+    AccountPrimaryCardsQuery,
     AccountResumeFlowsMutation,
+    AccountWebhookCardsQuery,
     ChangeAccountUsernameMutation,
     ChangeAdminPasswordMutation,
     ChangeUserPasswordMutation,
@@ -108,7 +110,7 @@ export class AccountService {
         );
     }
 
-    public getAccountFlowsAsCards(params: {
+    public getAccountAllCards(params: {
         accountName: string;
         page: number;
         perPage: number;
@@ -118,6 +120,36 @@ export class AccountService {
         return this.accountApi.fetchAccountFlowsAsCards(params).pipe(
             map((data: AccountFlowsAsCardsQuery) => {
                 return data.accounts.byName?.flows.processes.allCards as AccountFlowProcessCardConnectionDataFragment;
+            }),
+        );
+    }
+
+    public getAccountPrimaryCards(params: {
+        accountName: string;
+        page: number;
+        perPage: number;
+        filters: FlowProcessFilters;
+        ordering: FlowProcessOrdering;
+    }): Observable<AccountFlowProcessCardConnectionDataFragment> {
+        return this.accountApi.fetchAccountPrimaryCards(params).pipe(
+            map((data: AccountPrimaryCardsQuery) => {
+                return data.accounts.byName?.flows.processes
+                    .primaryCards as AccountFlowProcessCardConnectionDataFragment;
+            }),
+        );
+    }
+
+    public getAccountWebhookCards(params: {
+        accountName: string;
+        page: number;
+        perPage: number;
+        filters: FlowProcessFilters;
+        ordering: FlowProcessOrdering;
+    }): Observable<AccountFlowProcessCardConnectionDataFragment> {
+        return this.accountApi.fetchAccountWebhookCards(params).pipe(
+            map((data: AccountWebhookCardsQuery) => {
+                return data.accounts.byName?.flows.processes
+                    .webhookCards as AccountFlowProcessCardConnectionDataFragment;
             }),
         );
     }

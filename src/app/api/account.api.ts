@@ -38,6 +38,10 @@ import {
     FlowProcessOrdering,
     AccountFlowsAsCardsGQL,
     AccountFlowsAsCardsQuery,
+    AccountPrimaryCardsGQL,
+    AccountPrimaryCardsQuery,
+    AccountWebhookCardsGQL,
+    AccountWebhookCardsQuery,
 } from "./kamu.graphql.interface";
 import { MaybeNull } from "../interface/app.types";
 import { ApolloQueryResult } from "@apollo/client";
@@ -59,6 +63,8 @@ export class AccountApi {
     private changeAdminPasswordGQL = inject(ChangeAdminPasswordGQL);
     private changeUserPasswordGQL = inject(ChangeUserPasswordGQL);
     private accountFlowsAsCardsGQL = inject(AccountFlowsAsCardsGQL);
+    private accountPrimaryCardsGQL = inject(AccountPrimaryCardsGQL);
+    private accountWebhookCardsGQL = inject(AccountWebhookCardsGQL);
 
     public changeAccountUsername(params: {
         accountName: string;
@@ -201,6 +207,68 @@ export class AccountApi {
             );
     }
 
+    public fetchAccountPrimaryCards(params: {
+        accountName: string;
+        page: number;
+        perPage: number;
+        filters: FlowProcessFilters;
+        ordering: FlowProcessOrdering;
+    }): Observable<AccountPrimaryCardsQuery> {
+        return this.accountPrimaryCardsGQL
+            .watch(
+                {
+                    name: params.accountName,
+                    page: params.page,
+                    perPage: params.perPage,
+                    filters: params.filters,
+                    ordering: params.ordering,
+                },
+                {
+                    ...noCacheFetchPolicy,
+                    context: {
+                        skipLoading: true,
+                    },
+                },
+            )
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<AccountPrimaryCardsQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public fetchAccountWebhookCards(params: {
+        accountName: string;
+        page: number;
+        perPage: number;
+        filters: FlowProcessFilters;
+        ordering: FlowProcessOrdering;
+    }): Observable<AccountWebhookCardsQuery> {
+        return this.accountWebhookCardsGQL
+            .watch(
+                {
+                    name: params.accountName,
+                    page: params.page,
+                    perPage: params.perPage,
+                    filters: params.filters,
+                    ordering: params.ordering,
+                },
+                {
+                    ...noCacheFetchPolicy,
+                    context: {
+                        skipLoading: true,
+                    },
+                },
+            )
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<AccountWebhookCardsQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
+
     public accountDatasetsWithFlows(accountName: string): Observable<AccountListDatasetsWithFlowsQuery> {
         return this.accountListDatasetsWithFlowsGql
             .watch(
@@ -220,11 +288,21 @@ export class AccountApi {
     }
 
     public accountFlowsPaused(accountName: string): Observable<AccountDatasetFlowsPausedQuery> {
-        return this.accountDatasetFlowsPausedGql.watch({ accountName }, noCacheFetchPolicy).valueChanges.pipe(
-            map((result: ApolloQueryResult<AccountDatasetFlowsPausedQuery>) => {
-                return result.data;
-            }),
-        );
+        return this.accountDatasetFlowsPausedGql
+            .watch(
+                { accountName },
+                {
+                    ...noCacheFetchPolicy,
+                    context: {
+                        skipLoading: true,
+                    },
+                },
+            )
+            .valueChanges.pipe(
+                map((result: ApolloQueryResult<AccountDatasetFlowsPausedQuery>) => {
+                    return result.data;
+                }),
+            );
     }
 
     public accountPauseFlows(accountName: string): Observable<AccountPauseFlowsMutation> {

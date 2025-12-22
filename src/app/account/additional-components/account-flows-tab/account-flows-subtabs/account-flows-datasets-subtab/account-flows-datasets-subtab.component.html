@@ -7,6 +7,15 @@
         <span class="fs-12 me-2 d-block"> Refresh now</span>
     </button>
 </div>
+
+<div class="my-4">
+    <mat-chip-listbox [(ngModel)]="flowsMode" (change)="onFlowsModeChange($event)">
+        <mat-chip-option [value]="ProcessCardGroup.ALL">All flows</mat-chip-option>
+        <mat-chip-option [value]="ProcessCardGroup.DATASETS">Datasets</mat-chip-option>
+        <mat-chip-option [value]="ProcessCardGroup.WEBHOOKS">Webhooks</mat-chip-option>
+    </mat-chip-listbox>
+</div>
+
 <div class="my-4 d-flex flex-row align-items-center">
     <span class="fw-500 me-4 n">Filters:</span>
     <mat-button-toggle-group [(ngModel)]="accountFlowsData.datasetsFiltersMode" (change)="onChangeFiltersMode($event)">

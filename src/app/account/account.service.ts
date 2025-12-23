@@ -10,6 +10,7 @@ import {
     AccountDatasetFlowsPausedQuery,
     AccountFlowProcessCardConnectionDataFragment,
     AccountFlowsAsCardsQuery,
+    AccountFlowsProcessesFullRollupQuery,
     AccountListDatasetsWithFlowsQuery,
     AccountPauseFlowsMutation,
     AccountPrimaryCardsQuery,
@@ -25,6 +26,9 @@ import {
     FlowConnectionWidgetDataFragment,
     FlowProcessFilters,
     FlowProcessOrdering,
+    FlowProcessGroupRollupDataFragment,
+    AccountFlowsProcessesPrimaryRollupQuery,
+    AccountFlowsProcessesWebhookRollupQuery,
 } from "../api/kamu.graphql.interface";
 import { AccountFlowFilters, AccountFragment, FlowConnectionDataFragment } from "../api/kamu.graphql.interface";
 import { AccountApi } from "../api/account.api";
@@ -150,6 +154,30 @@ export class AccountService {
             map((data: AccountWebhookCardsQuery) => {
                 return data.accounts.byName?.flows.processes
                     .webhookCards as AccountFlowProcessCardConnectionDataFragment;
+            }),
+        );
+    }
+
+    public getAccountFlowsProcessesFullRollup(accountName: string): Observable<FlowProcessGroupRollupDataFragment> {
+        return this.accountApi.fetchAccountProcessesFullRollup(accountName).pipe(
+            map((data: AccountFlowsProcessesFullRollupQuery) => {
+                return data.accounts.byName?.flows.processes.fullRollup as FlowProcessGroupRollupDataFragment;
+            }),
+        );
+    }
+
+    public getAccountFlowsProcessesPrimaryRollup(accountName: string): Observable<FlowProcessGroupRollupDataFragment> {
+        return this.accountApi.fetchAccountProcessesPrimaryRollup(accountName).pipe(
+            map((data: AccountFlowsProcessesPrimaryRollupQuery) => {
+                return data.accounts.byName?.flows.processes.primaryRollup as FlowProcessGroupRollupDataFragment;
+            }),
+        );
+    }
+
+    public getAccountFlowsProcessesWebhookRollup(accountName: string): Observable<FlowProcessGroupRollupDataFragment> {
+        return this.accountApi.fetchAccountProcessesWebhookRollup(accountName).pipe(
+            map((data: AccountFlowsProcessesWebhookRollupQuery) => {
+                return data.accounts.byName?.flows.processes.webhookRollup as FlowProcessGroupRollupDataFragment;
             }),
         );
     }

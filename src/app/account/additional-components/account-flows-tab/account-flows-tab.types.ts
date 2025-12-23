@@ -7,7 +7,9 @@
 
 import {
     AccountFlowProcessCard,
+    AccountFlowProcessCardConnectionDataFragment,
     FlowProcessEffectiveState,
+    FlowProcessGroupRollupDataFragment,
     FlowProcessOrderField,
     OrderingDirection,
 } from "src/app/api/kamu.graphql.interface";
@@ -404,4 +406,9 @@ export interface DashboardFiltersOptions {
 export interface FlowProcessCardListing {
     totalCount: number;
     nodes: AccountFlowProcessCard[];
+}
+
+export interface CardsStrategyResult {
+    cards: AccountFlowProcessCardConnectionDataFragment;
+    rollup: FlowProcessGroupRollupDataFragment;
 }

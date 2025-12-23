@@ -11,11 +11,11 @@ import { AccountService } from "src/app/account/account.service";
 import { BehaviorSubject, combineLatest, map, Observable, startWith, Subject, switchMap, take, timer } from "rxjs";
 import {
     AccountFlowProcessCard,
-    AccountFlowProcessCardConnectionDataFragment,
     Dataset,
     DatasetBasicsFragment,
     FlowProcessEffectiveState,
     FlowProcessFilters,
+    FlowProcessGroupRollupDataFragment,
     FlowProcessOrderField,
 } from "src/app/api/kamu.graphql.interface";
 import { environment } from "src/environments/environment";
@@ -41,6 +41,7 @@ import {
     ProcessCardFilterMode,
     FlowProcessCardListing,
     ProcessCardGroup,
+    CardsStrategyResult,
 } from "../../account-flows-tab.types";
 import { NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 import { DateTimeAdapter, OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
@@ -56,6 +57,7 @@ import { UpcomingScheduledFiltersViewComponent } from "./components/upcoming-sch
 import { CustomFiltersViewComponent } from "./components/custom-filters-view/custom-filters-view.component";
 import { AccountFlowsFiltersService } from "src/app/account/services/account-flows-filters.service";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { RollupFiltersOptions } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 
 @Component({
     selector: "app-account-flows-datasets-subtab",
@@ -115,9 +117,11 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     public processesCards: AccountFlowProcessCard[] = [];
     public processesPerPage: number = AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE;
     public flowsMode: ProcessCardGroup = ProcessCardGroup.ALL;
+    public activeRollup: FlowProcessGroupRollupDataFragment;
     private readonly loadingCardsSubject$ = new BehaviorSubject<boolean>(false);
     private readonly toggleCardStateSubject$ = new BehaviorSubject<boolean>(false);
     private readonly fetchTrigger$ = new Subject<void>();
+    public readonly ROLLUP_OPTIONS = RollupFiltersOptions;
 
     public readonly CARD_FILTERS_MODE_OPTIONS: CardFilterDescriptor[] = CARD_FILTERS_MODE_OPTIONS;
 
@@ -149,10 +153,10 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         this.accountFlowsCardsData$ = combineLatest([polling$, triggerWithInitial$]).pipe(
             switchMap(() => this.setCardsStrategy(this.flowsMode)),
 
-            map((result: AccountFlowProcessCardConnectionDataFragment) => {
-                // console.log("===>", result.totalCount);
-                const newChunkCards = result.nodes as AccountFlowProcessCard[];
-                this.hasNextPage = result.pageInfo.hasNextPage;
+            map((data: CardsStrategyResult) => {
+                this.activeRollup = data.rollup;
+                const newChunkCards = data.cards.nodes as AccountFlowProcessCard[];
+                this.hasNextPage = data.cards.pageInfo.hasNextPage;
 
                 if (this.loadingCardsSubject$.getValue()) {
                     this.processesCards = [...this.processesCards, ...newChunkCards];
@@ -162,10 +166,9 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
                 }
                 this.loadingCardsSubject$.next(false);
                 this.toggleCardStateSubject$.next(false);
-                // console.log(" this.processesCards ===>", this.processesCards);
 
                 return {
-                    totalCount: result.totalCount,
+                    totalCount: data.cards.totalCount,
                     nodes: this.processesCards,
                 };
             }),
@@ -199,6 +202,10 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         this.datasetCardService.handleTrigger(datasetBasics, () => {
             this.toastrService.success("Flow scheduled");
         });
+    }
+
+    public onToggleRollup(): void {
+        this.applyFilters();
     }
 
     public toggleStateDatasetCard(params: {
@@ -290,7 +297,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         this.refreshNow();
     }
 
-    private setCardsStrategy(group: ProcessCardGroup): Observable<AccountFlowProcessCardConnectionDataFragment> {
+    private setCardsStrategy(group: ProcessCardGroup): Observable<CardsStrategyResult> {
         const params = {
             accountName: this.accountName,
             page: this.toggleCardStateSubject$.getValue()
@@ -305,11 +312,37 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         };
         switch (group) {
             case ProcessCardGroup.ALL:
-                return this.accountService.getAccountAllCards(params);
+                return combineLatest([
+                    this.accountService.getAccountFlowsProcessesFullRollup(this.accountName),
+                    this.accountService.getAccountAllCards(params),
+                ]).pipe(
+                    map(([rollup, cards]) => ({
+                        cards,
+                        rollup,
+                    })),
+                );
             case ProcessCardGroup.DATASETS:
-                return this.accountService.getAccountPrimaryCards(params);
+                return combineLatest([
+                    this.accountService.getAccountFlowsProcessesPrimaryRollup(this.accountName),
+                    this.accountService.getAccountPrimaryCards(params),
+                ]).pipe(
+                    map(([rollup, cards]) => ({
+                        cards,
+                        rollup,
+                    })),
+                );
+
             case ProcessCardGroup.WEBHOOKS:
-                return this.accountService.getAccountWebhookCards(params);
+                return combineLatest([
+                    this.accountService.getAccountFlowsProcessesWebhookRollup(this.accountName),
+                    this.accountService.getAccountWebhookCards(params),
+                ]).pipe(
+                    map(([rollup, cards]) => ({
+                        cards,
+                        rollup,
+                    })),
+                );
+
             default:
                 throw new Error("Unsupported flow process group");
         }

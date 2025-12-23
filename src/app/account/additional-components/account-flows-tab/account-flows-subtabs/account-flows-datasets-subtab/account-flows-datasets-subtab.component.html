@@ -16,8 +16,36 @@
     </mat-chip-listbox>
 </div>
 
+<div class="my-4 d-flex flex-row align-items-center" *ngIf="activeRollup">
+    <span class="fw-500 me-4">Rollup:</span>
+    <mat-button-toggle-group
+        [(ngModel)]="dashboardFiltersState.selectedFlowProcessStates"
+        (change)="onToggleRollup()"
+        multiple
+        class="me-4"
+        *ngIf="accountFlowsData.datasetsFiltersMode === ProcessCardFilterMode.CUSTOM; else defaultRollup"
+    >
+        <ng-container *ngFor="let item of ROLLUP_OPTIONS">
+            <mat-button-toggle [value]="item.state">
+                <mat-icon aria-hidden="true" class="fs-4 mr-2px mt-2px">{{ item.iconName }}</mat-icon
+                >{{ item.label }} {{ activeRollup[item.valueKey] }}</mat-button-toggle
+            >
+        </ng-container>
+    </mat-button-toggle-group>
+    <ng-template #defaultRollup>
+        <ng-container *ngFor="let item of ROLLUP_OPTIONS">
+            <div class="me-4 rollup-item border d-flex align-items-center">
+                <mat-icon aria-hidden="true" class="fs-4 mr-2px mt-2px">{{ item.iconName }}</mat-icon>
+                {{ item.label }} {{ activeRollup[item.valueKey] }}
+            </div>
+        </ng-container>
+    </ng-template>
+
+    <span class="fw-500 me-4">total: {{ activeRollup.total }}</span>
+</div>
+
 <div class="my-4 d-flex flex-row align-items-center">
-    <span class="fw-500 me-4 n">Filters:</span>
+    <span class="fw-500 me-4">Filters:</span>
     <mat-button-toggle-group [(ngModel)]="accountFlowsData.datasetsFiltersMode" (change)="onChangeFiltersMode($event)">
         <mat-button-toggle *ngFor="let item of CARD_FILTERS_MODE_OPTIONS" [value]="item.value">
             <mat-icon aria-hidden="true" class="fs-4 mr-2px">{{ item.iconName }}</mat-icon

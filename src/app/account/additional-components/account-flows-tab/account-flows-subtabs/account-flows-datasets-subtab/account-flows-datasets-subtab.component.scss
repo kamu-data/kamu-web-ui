@@ -23,6 +23,10 @@
     margin-right: 2px;
 }
 
+.mt-2px {
+    margin-top: 2px;
+}
+
 .w-attempts {
     width: 100%;
 }
@@ -99,4 +103,11 @@
     &:hover {
         cursor: pointer;
     }
+}
+
+.rollup-item {
+    padding: 3px 14px;
+    border: 1px solid black;
+    background-color: #f0eef5;
+    border-radius: 3px;
 }

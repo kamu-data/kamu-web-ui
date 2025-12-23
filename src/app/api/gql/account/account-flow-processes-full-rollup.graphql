@@ -1,0 +1,13 @@
+query accountFlowsProcessesFullRollup($name: AccountName!) {
+  accounts {
+    byName(name: $name) {
+      flows {
+        processes {
+          fullRollup {
+            ...FlowProcessGroupRollupData
+          }
+        }
+      }
+    }
+  }
+}

@@ -4727,6 +4727,69 @@ export type AccountDatasetFlowsPausedQuery = {
     };
 };
 
+export type AccountFlowsProcessesFullRollupQueryVariables = Exact<{
+    name: Scalars["AccountName"];
+}>;
+
+export type AccountFlowsProcessesFullRollupQuery = {
+    __typename?: "Query";
+    accounts: {
+        __typename?: "Accounts";
+        byName?: {
+            __typename?: "Account";
+            flows: {
+                __typename?: "AccountFlows";
+                processes: {
+                    __typename?: "AccountFlowProcesses";
+                    fullRollup: { __typename?: "FlowProcessGroupRollup" } & FlowProcessGroupRollupDataFragment;
+                };
+            };
+        } | null;
+    };
+};
+
+export type AccountFlowsProcessesPrimaryRollupQueryVariables = Exact<{
+    name: Scalars["AccountName"];
+}>;
+
+export type AccountFlowsProcessesPrimaryRollupQuery = {
+    __typename?: "Query";
+    accounts: {
+        __typename?: "Accounts";
+        byName?: {
+            __typename?: "Account";
+            flows: {
+                __typename?: "AccountFlows";
+                processes: {
+                    __typename?: "AccountFlowProcesses";
+                    primaryRollup: { __typename?: "FlowProcessGroupRollup" } & FlowProcessGroupRollupDataFragment;
+                };
+            };
+        } | null;
+    };
+};
+
+export type AccountFlowsProcessesWebhookRollupQueryVariables = Exact<{
+    name: Scalars["AccountName"];
+}>;
+
+export type AccountFlowsProcessesWebhookRollupQuery = {
+    __typename?: "Query";
+    accounts: {
+        __typename?: "Accounts";
+        byName?: {
+            __typename?: "Account";
+            flows: {
+                __typename?: "AccountFlows";
+                processes: {
+                    __typename?: "AccountFlowProcesses";
+                    webhookRollup: { __typename?: "FlowProcessGroupRollup" } & FlowProcessGroupRollupDataFragment;
+                };
+            };
+        } | null;
+    };
+};
+
 export type AccountFlowsAsCardsQueryVariables = Exact<{
     name: Scalars["AccountName"];
     page?: InputMaybe<Scalars["Int"]>;
@@ -6716,16 +6779,7 @@ export type DatasetFlowsProcessesQuery = {
                     };
                     webhooks: {
                         __typename?: "WebhookFlowSubProcessGroup";
-                        rollup: {
-                            __typename?: "FlowProcessGroupRollup";
-                            total: number;
-                            active: number;
-                            failing: number;
-                            paused: number;
-                            stopped: number;
-                            unconfigured: number;
-                            worstConsecutiveFailures: number;
-                        };
+                        rollup: { __typename?: "FlowProcessGroupRollup" } & FlowProcessGroupRollupDataFragment;
                         subprocesses: Array<{
                             __typename?: "WebhookFlowSubProcess";
                             id: string;
@@ -7451,6 +7505,17 @@ export type DatasetTransformFragment = {
             | { __typename?: "TransformInputDatasetNotAccessible"; message: string; datasetRef: string };
     }>;
     transform: { __typename?: "TransformSql" } & DatasetTransformContentFragment;
+};
+
+export type FlowProcessGroupRollupDataFragment = {
+    __typename?: "FlowProcessGroupRollup";
+    total: number;
+    active: number;
+    failing: number;
+    paused: number;
+    stopped: number;
+    unconfigured: number;
+    worstConsecutiveFailures: number;
 };
 
 export type LicenseFragment = {
@@ -9448,6 +9513,17 @@ export const DatasetSearchOverviewFragmentDoc = gql`
     ${DatasetCurrentInfoFragmentDoc}
     ${LicenseFragmentDoc}
 `;
+export const FlowProcessGroupRollupDataFragmentDoc = gql`
+    fragment FlowProcessGroupRollupData on FlowProcessGroupRollup {
+        total
+        active
+        failing
+        paused
+        stopped
+        unconfigured
+        worstConsecutiveFailures
+    }
+`;
 export const CreateAccessTokenDocument = gql`
     mutation createAccessToken($accountId: AccountID!, $tokenName: String!) {
         accounts {
@@ -9630,6 +9706,96 @@ export class AccountDatasetFlowsPausedGQL extends Apollo.Query<
     AccountDatasetFlowsPausedQueryVariables
 > {
     document = AccountDatasetFlowsPausedDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const AccountFlowsProcessesFullRollupDocument = gql`
+    query accountFlowsProcessesFullRollup($name: AccountName!) {
+        accounts {
+            byName(name: $name) {
+                flows {
+                    processes {
+                        fullRollup {
+                            ...FlowProcessGroupRollupData
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${FlowProcessGroupRollupDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class AccountFlowsProcessesFullRollupGQL extends Apollo.Query<
+    AccountFlowsProcessesFullRollupQuery,
+    AccountFlowsProcessesFullRollupQueryVariables
+> {
+    document = AccountFlowsProcessesFullRollupDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const AccountFlowsProcessesPrimaryRollupDocument = gql`
+    query accountFlowsProcessesPrimaryRollup($name: AccountName!) {
+        accounts {
+            byName(name: $name) {
+                flows {
+                    processes {
+                        primaryRollup {
+                            ...FlowProcessGroupRollupData
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${FlowProcessGroupRollupDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class AccountFlowsProcessesPrimaryRollupGQL extends Apollo.Query<
+    AccountFlowsProcessesPrimaryRollupQuery,
+    AccountFlowsProcessesPrimaryRollupQueryVariables
+> {
+    document = AccountFlowsProcessesPrimaryRollupDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const AccountFlowsProcessesWebhookRollupDocument = gql`
+    query accountFlowsProcessesWebhookRollup($name: AccountName!) {
+        accounts {
+            byName(name: $name) {
+                flows {
+                    processes {
+                        webhookRollup {
+                            ...FlowProcessGroupRollupData
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${FlowProcessGroupRollupDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class AccountFlowsProcessesWebhookRollupGQL extends Apollo.Query<
+    AccountFlowsProcessesWebhookRollupQuery,
+    AccountFlowsProcessesWebhookRollupQueryVariables
+> {
+    document = AccountFlowsProcessesWebhookRollupDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);
@@ -11855,13 +12021,7 @@ export const DatasetFlowsProcessesDocument = gql`
                         }
                         webhooks {
                             rollup {
-                                total
-                                active
-                                failing
-                                paused
-                                stopped
-                                unconfigured
-                                worstConsecutiveFailures
+                                ...FlowProcessGroupRollupData
                             }
                             subprocesses {
                                 id
@@ -11877,6 +12037,7 @@ export const DatasetFlowsProcessesDocument = gql`
         }
     }
     ${FlowProcessSummaryDataFragmentDoc}
+    ${FlowProcessGroupRollupDataFragmentDoc}
 `;
 
 @Injectable({

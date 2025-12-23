@@ -42,6 +42,12 @@ import {
     AccountPrimaryCardsQuery,
     AccountWebhookCardsGQL,
     AccountWebhookCardsQuery,
+    AccountFlowsProcessesFullRollupGQL,
+    AccountFlowsProcessesFullRollupQuery,
+    AccountFlowsProcessesPrimaryRollupGQL,
+    AccountFlowsProcessesWebhookRollupGQL,
+    AccountFlowsProcessesPrimaryRollupQuery,
+    AccountFlowsProcessesWebhookRollupQuery,
 } from "./kamu.graphql.interface";
 import { MaybeNull } from "../interface/app.types";
 import { ApolloQueryResult } from "@apollo/client";
@@ -65,6 +71,9 @@ export class AccountApi {
     private accountFlowsAsCardsGQL = inject(AccountFlowsAsCardsGQL);
     private accountPrimaryCardsGQL = inject(AccountPrimaryCardsGQL);
     private accountWebhookCardsGQL = inject(AccountWebhookCardsGQL);
+    private accountFlowsProcessesFullRollupGQL = inject(AccountFlowsProcessesFullRollupGQL);
+    private accountFlowsProcessesPrimaryRollupGQL = inject(AccountFlowsProcessesPrimaryRollupGQL);
+    private accountFlowsProcessesWebhookRollupGQL = inject(AccountFlowsProcessesWebhookRollupGQL);
 
     public changeAccountUsername(params: {
         accountName: string;
@@ -264,6 +273,73 @@ export class AccountApi {
             .valueChanges.pipe(
                 first(),
                 map((result: ApolloQueryResult<AccountWebhookCardsQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public fetchAccountProcessesFullRollup(accountName: string): Observable<AccountFlowsProcessesFullRollupQuery> {
+        return this.accountFlowsProcessesFullRollupGQL
+            .watch(
+                {
+                    name: accountName,
+                },
+                {
+                    ...noCacheFetchPolicy,
+                    context: {
+                        skipLoading: true,
+                    },
+                },
+            )
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<AccountFlowsProcessesFullRollupQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public fetchAccountProcessesPrimaryRollup(
+        accountName: string,
+    ): Observable<AccountFlowsProcessesPrimaryRollupQuery> {
+        return this.accountFlowsProcessesPrimaryRollupGQL
+            .watch(
+                {
+                    name: accountName,
+                },
+                {
+                    ...noCacheFetchPolicy,
+                    context: {
+                        skipLoading: true,
+                    },
+                },
+            )
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<AccountFlowsProcessesPrimaryRollupQuery>) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public fetchAccountProcessesWebhookRollup(
+        accountName: string,
+    ): Observable<AccountFlowsProcessesWebhookRollupQuery> {
+        return this.accountFlowsProcessesWebhookRollupGQL
+            .watch(
+                {
+                    name: accountName,
+                },
+                {
+                    ...noCacheFetchPolicy,
+                    context: {
+                        skipLoading: true,
+                    },
+                },
+            )
+            .valueChanges.pipe(
+                first(),
+                map((result: ApolloQueryResult<AccountFlowsProcessesWebhookRollupQuery>) => {
                     return result.data;
                 }),
             );

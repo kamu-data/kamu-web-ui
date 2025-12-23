@@ -1,0 +1,13 @@
+query accountFlowsProcessesWebhookRollup($name: AccountName!) {
+  accounts {
+    byName(name: $name) {
+      flows {
+        processes {
+          webhookRollup {
+            ...FlowProcessGroupRollupData
+          }
+        }
+      }
+    }
+  }
+}

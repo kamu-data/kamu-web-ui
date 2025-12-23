@@ -26,6 +26,7 @@ export interface RollupFiltersDescriptor {
     label: string;
     state: FlowProcessEffectiveState;
     valueKey: "active" | "failing" | "paused" | "stopped" | "unconfigured";
+    iconName?: string;
 }
 
 export type FlowsCategoryUnion = FlowsSelectedCategory | WebhooksSelectedCategory;
@@ -60,21 +61,25 @@ export const RollupFiltersOptions: RollupFiltersDescriptor[] = [
         label: "active:",
         state: FlowProcessEffectiveState.Active,
         valueKey: "active",
+        iconName: "check_circle",
     },
     {
         label: "failing:",
         state: FlowProcessEffectiveState.Failing,
         valueKey: "failing",
+        iconName: "warning",
     },
     {
         label: "paused:",
         state: FlowProcessEffectiveState.PausedManual,
         valueKey: "paused",
+        iconName: "pause_circle",
     },
     {
         label: "stopped:",
         state: FlowProcessEffectiveState.StoppedAuto,
         valueKey: "stopped",
+        iconName: "error",
     },
 ];
 
@@ -118,7 +123,7 @@ export class DatasetFlowBadgeHelpers {
                 return {
                     containerClass: "stopped-container",
                     iconClass: "stopped-status",
-                    iconName: "warning",
+                    iconName: "error",
                 };
 
             /* istanbul ignore next */

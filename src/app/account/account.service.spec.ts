@@ -18,6 +18,7 @@ import {
     AccountFlowProcessCardConnectionDataFragment,
     AccountFragment,
     Dataset,
+    FlowProcessGroupRollupDataFragment,
     FlowProcessOrderField,
     OrderingDirection,
 } from "../api/kamu.graphql.interface";
@@ -27,6 +28,11 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 import {
     mockAccountDatasetFlowsPausedQuery,
     mockAccountFlowsAsCardsQuery,
+    mockAccountFlowsPrimaryCardsQuery,
+    mockAccountFlowsProcessesFullRollupQuery,
+    mockAccountFlowsProcessesPrimaryRollupQuery,
+    mockAccountFlowsProcessesWebhookRollupQuery,
+    mockAccountFlowsWebhookCardsQuery,
     mockAccountListDatasetsWithFlowsQuery,
     mockAccountListFlowsQuery,
     mockAccountPauseFlowsMutationError,
@@ -54,6 +60,13 @@ describe("AccountService", () => {
     const ACCOUNT_NAME = "accountName";
     const PAGE = 1;
     const PER_PAGE = 15;
+    const CARDS_PARAMS = {
+        accountName: ACCOUNT_NAME,
+        page: PAGE,
+        perPage: PER_PAGE,
+        filters: { effectiveStateIn: [] },
+        ordering: { direction: OrderingDirection.Asc, field: FlowProcessOrderField.EffectiveState },
+    };
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -304,21 +317,96 @@ describe("AccountService", () => {
         expect(subscription$.closed).toBeTrue();
     });
 
-    it("should check get all flow cards", () => {
+    it("should check get flows all cards", () => {
         spyOn(accountApi, "fetchAccountFlowsAsCards").and.returnValue(of(mockAccountFlowsAsCardsQuery));
 
         const subscription$ = service
-            .getAccountFlowsAsCards({
-                accountName: ACCOUNT_NAME,
-                page: PAGE,
-                perPage: PER_PAGE,
-                filters: { effectiveStateIn: [] },
-                ordering: { direction: OrderingDirection.Asc, field: FlowProcessOrderField.EffectiveState },
-            })
+            .getAccountAllCards(CARDS_PARAMS)
             .subscribe((result: AccountFlowProcessCardConnectionDataFragment) => {
                 expect(result).toEqual(
                     mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
                         .allCards as AccountFlowProcessCardConnectionDataFragment,
+                );
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check get flows primary cards", () => {
+        spyOn(accountApi, "fetchAccountPrimaryCards").and.returnValue(of(mockAccountFlowsPrimaryCardsQuery));
+
+        const subscription$ = service
+            .getAccountPrimaryCards(CARDS_PARAMS)
+            .subscribe((result: AccountFlowProcessCardConnectionDataFragment) => {
+                expect(result).toEqual(
+                    mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
+                        .primaryCards as AccountFlowProcessCardConnectionDataFragment,
+                );
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check get flows webhook cards", () => {
+        spyOn(accountApi, "fetchAccountWebhookCards").and.returnValue(of(mockAccountFlowsWebhookCardsQuery));
+
+        const subscription$ = service
+            .getAccountWebhookCards(CARDS_PARAMS)
+            .subscribe((result: AccountFlowProcessCardConnectionDataFragment) => {
+                expect(result).toEqual(
+                    mockAccountFlowsWebhookCardsQuery.accounts.byName?.flows.processes
+                        .webhookCards as AccountFlowProcessCardConnectionDataFragment,
+                );
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check get flows all rollup", () => {
+        spyOn(accountApi, "fetchAccountProcessesFullRollup").and.returnValue(
+            of(mockAccountFlowsProcessesFullRollupQuery),
+        );
+
+        const subscription$ = service
+            .getAccountFlowsProcessesFullRollup(TEST_LOGIN)
+            .subscribe((result: FlowProcessGroupRollupDataFragment) => {
+                expect(result).toEqual(
+                    mockAccountFlowsProcessesFullRollupQuery.accounts.byName?.flows.processes
+                        .fullRollup as FlowProcessGroupRollupDataFragment,
+                );
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check get flows primary rollup", () => {
+        spyOn(accountApi, "fetchAccountProcessesPrimaryRollup").and.returnValue(
+            of(mockAccountFlowsProcessesPrimaryRollupQuery),
+        );
+
+        const subscription$ = service
+            .getAccountFlowsProcessesPrimaryRollup(TEST_LOGIN)
+            .subscribe((result: FlowProcessGroupRollupDataFragment) => {
+                expect(result).toEqual(
+                    mockAccountFlowsProcessesPrimaryRollupQuery.accounts.byName?.flows.processes
+                        .primaryRollup as FlowProcessGroupRollupDataFragment,
+                );
+            });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check get flows webhook rollup", () => {
+        spyOn(accountApi, "fetchAccountProcessesWebhookRollup").and.returnValue(
+            of(mockAccountFlowsProcessesWebhookRollupQuery),
+        );
+
+        const subscription$ = service
+            .getAccountFlowsProcessesWebhookRollup(TEST_LOGIN)
+            .subscribe((result: FlowProcessGroupRollupDataFragment) => {
+                expect(result).toEqual(
+                    mockAccountFlowsProcessesWebhookRollupQuery.accounts.byName?.flows.processes
+                        .webhookRollup as FlowProcessGroupRollupDataFragment,
                 );
             });
 

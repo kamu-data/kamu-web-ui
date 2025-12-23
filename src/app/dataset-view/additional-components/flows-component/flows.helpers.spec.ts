@@ -55,7 +55,7 @@ describe("Flows badge styles helper", () => {
             expectedResult: {
                 containerClass: "stopped-container",
                 iconClass: "stopped-status",
-                iconName: "warning",
+                iconName: "error",
             },
         },
         {

@@ -114,10 +114,12 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
     it("should empty block is visible", fakeAsync(() => {
         fixture.detectChanges();
         getAccountAllCardsSpy.and.returnValue(
-            of(
-                mockAccountFlowsAsCardsQueryEmpty.accounts.byName?.flows.processes
+            of({
+                cards: mockAccountFlowsAsCardsQueryEmpty.accounts.byName?.flows.processes
                     .allCards as AccountFlowProcessCardConnectionDataFragment,
-            ),
+                rollup: mockAccountFlowsAsCardsQueryEmpty.accounts.byName?.flows.processes
+                    .fullRollup as FlowProcessGroupRollupDataFragment,
+            }),
         );
         tick(0);
         fixture.detectChanges();
@@ -130,10 +132,12 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
     it("should check cards is visible", fakeAsync(() => {
         fixture.detectChanges();
         getAccountAllCardsSpy.and.returnValue(
-            of(
-                mockAccountFlowsAsCardsQueryWithWebhook.accounts.byName?.flows.processes
+            of({
+                cards: mockAccountFlowsAsCardsQueryWithWebhook.accounts.byName?.flows.processes
                     .allCards as AccountFlowProcessCardConnectionDataFragment,
-            ),
+                rollup: mockAccountFlowsAsCardsQueryWithWebhook.accounts.byName?.flows.processes
+                    .fullRollup as FlowProcessGroupRollupDataFragment,
+            }),
         );
         tick(0);
         fixture.detectChanges();

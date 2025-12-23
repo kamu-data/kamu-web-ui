@@ -315,10 +315,9 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
                 return this.accountService.getAccountAllCards(params);
             case ProcessCardGroup.DATASETS:
                 return this.accountService.getAccountPrimaryCards(params);
-
             case ProcessCardGroup.WEBHOOKS:
                 return this.accountService.getAccountWebhookCards(params);
-
+            /* istanbul ignore next */
             default:
                 throw new Error("Unsupported flow process group");
         }

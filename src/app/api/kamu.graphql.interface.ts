@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
+import { gql } from "apollo-angular";
 import { Injectable } from "@angular/core";
 import * as Apollo from "apollo-angular";
 export type Maybe<T> = T | null;
@@ -4727,69 +4727,6 @@ export type AccountDatasetFlowsPausedQuery = {
     };
 };
 
-export type AccountFlowsProcessesFullRollupQueryVariables = Exact<{
-    name: Scalars["AccountName"];
-}>;
-
-export type AccountFlowsProcessesFullRollupQuery = {
-    __typename?: "Query";
-    accounts: {
-        __typename?: "Accounts";
-        byName?: {
-            __typename?: "Account";
-            flows: {
-                __typename?: "AccountFlows";
-                processes: {
-                    __typename?: "AccountFlowProcesses";
-                    fullRollup: { __typename?: "FlowProcessGroupRollup" } & FlowProcessGroupRollupDataFragment;
-                };
-            };
-        } | null;
-    };
-};
-
-export type AccountFlowsProcessesPrimaryRollupQueryVariables = Exact<{
-    name: Scalars["AccountName"];
-}>;
-
-export type AccountFlowsProcessesPrimaryRollupQuery = {
-    __typename?: "Query";
-    accounts: {
-        __typename?: "Accounts";
-        byName?: {
-            __typename?: "Account";
-            flows: {
-                __typename?: "AccountFlows";
-                processes: {
-                    __typename?: "AccountFlowProcesses";
-                    primaryRollup: { __typename?: "FlowProcessGroupRollup" } & FlowProcessGroupRollupDataFragment;
-                };
-            };
-        } | null;
-    };
-};
-
-export type AccountFlowsProcessesWebhookRollupQueryVariables = Exact<{
-    name: Scalars["AccountName"];
-}>;
-
-export type AccountFlowsProcessesWebhookRollupQuery = {
-    __typename?: "Query";
-    accounts: {
-        __typename?: "Accounts";
-        byName?: {
-            __typename?: "Account";
-            flows: {
-                __typename?: "AccountFlows";
-                processes: {
-                    __typename?: "AccountFlowProcesses";
-                    webhookRollup: { __typename?: "FlowProcessGroupRollup" } & FlowProcessGroupRollupDataFragment;
-                };
-            };
-        } | null;
-    };
-};
-
 export type AccountFlowsAsCardsQueryVariables = Exact<{
     name: Scalars["AccountName"];
     page?: InputMaybe<Scalars["Int"]>;
@@ -4811,6 +4748,7 @@ export type AccountFlowsAsCardsQuery = {
                     allCards: {
                         __typename?: "AccountFlowProcessCardConnection";
                     } & AccountFlowProcessCardConnectionDataFragment;
+                    fullRollup: { __typename?: "FlowProcessGroupRollup" } & FlowProcessGroupRollupDataFragment;
                 };
             };
         } | null;
@@ -4903,6 +4841,7 @@ export type AccountPrimaryCardsQuery = {
                     primaryCards: {
                         __typename?: "DatasetFlowProcessConnection";
                     } & DatasetFlowProcessConnectionDataFragment;
+                    primaryRollup: { __typename?: "FlowProcessGroupRollup" } & FlowProcessGroupRollupDataFragment;
                 };
             };
         } | null;
@@ -4948,6 +4887,7 @@ export type AccountWebhookCardsQuery = {
                     webhookCards: {
                         __typename?: "WebhookFlowSubProcessConnection";
                     } & WebhookFlowSubProcessConnectionDataFragment;
+                    webhookRollup: { __typename?: "FlowProcessGroupRollup" } & FlowProcessGroupRollupDataFragment;
                 };
             };
         } | null;
@@ -9711,96 +9651,6 @@ export class AccountDatasetFlowsPausedGQL extends Apollo.Query<
         super(apollo);
     }
 }
-export const AccountFlowsProcessesFullRollupDocument = gql`
-    query accountFlowsProcessesFullRollup($name: AccountName!) {
-        accounts {
-            byName(name: $name) {
-                flows {
-                    processes {
-                        fullRollup {
-                            ...FlowProcessGroupRollupData
-                        }
-                    }
-                }
-            }
-        }
-    }
-    ${FlowProcessGroupRollupDataFragmentDoc}
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class AccountFlowsProcessesFullRollupGQL extends Apollo.Query<
-    AccountFlowsProcessesFullRollupQuery,
-    AccountFlowsProcessesFullRollupQueryVariables
-> {
-    document = AccountFlowsProcessesFullRollupDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const AccountFlowsProcessesPrimaryRollupDocument = gql`
-    query accountFlowsProcessesPrimaryRollup($name: AccountName!) {
-        accounts {
-            byName(name: $name) {
-                flows {
-                    processes {
-                        primaryRollup {
-                            ...FlowProcessGroupRollupData
-                        }
-                    }
-                }
-            }
-        }
-    }
-    ${FlowProcessGroupRollupDataFragmentDoc}
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class AccountFlowsProcessesPrimaryRollupGQL extends Apollo.Query<
-    AccountFlowsProcessesPrimaryRollupQuery,
-    AccountFlowsProcessesPrimaryRollupQueryVariables
-> {
-    document = AccountFlowsProcessesPrimaryRollupDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
-export const AccountFlowsProcessesWebhookRollupDocument = gql`
-    query accountFlowsProcessesWebhookRollup($name: AccountName!) {
-        accounts {
-            byName(name: $name) {
-                flows {
-                    processes {
-                        webhookRollup {
-                            ...FlowProcessGroupRollupData
-                        }
-                    }
-                }
-            }
-        }
-    }
-    ${FlowProcessGroupRollupDataFragmentDoc}
-`;
-
-@Injectable({
-    providedIn: "root",
-})
-export class AccountFlowsProcessesWebhookRollupGQL extends Apollo.Query<
-    AccountFlowsProcessesWebhookRollupQuery,
-    AccountFlowsProcessesWebhookRollupQueryVariables
-> {
-    document = AccountFlowsProcessesWebhookRollupDocument;
-
-    constructor(apollo: Apollo.Apollo) {
-        super(apollo);
-    }
-}
 export const AccountFlowsAsCardsDocument = gql`
     query accountFlowsAsCards(
         $name: AccountName!
@@ -9816,12 +9666,16 @@ export const AccountFlowsAsCardsDocument = gql`
                         allCards(filters: $filters, page: $page, perPage: $perPage, ordering: $ordering) {
                             ...AccountFlowProcessCardConnectionData
                         }
+                        fullRollup {
+                            ...FlowProcessGroupRollupData
+                        }
                     }
                 }
             }
         }
     }
     ${AccountFlowProcessCardConnectionDataFragmentDoc}
+    ${FlowProcessGroupRollupDataFragmentDoc}
 `;
 
 @Injectable({
@@ -9947,12 +9801,16 @@ export const AccountPrimaryCardsDocument = gql`
                         primaryCards(filters: $filters, page: $page, perPage: $perPage, ordering: $ordering) {
                             ...DatasetFlowProcessConnectionData
                         }
+                        primaryRollup {
+                            ...FlowProcessGroupRollupData
+                        }
                     }
                 }
             }
         }
     }
     ${DatasetFlowProcessConnectionDataFragmentDoc}
+    ${FlowProcessGroupRollupDataFragmentDoc}
 `;
 
 @Injectable({
@@ -10007,12 +9865,16 @@ export const AccountWebhookCardsDocument = gql`
                         webhookCards(filters: $filters, page: $page, perPage: $perPage, ordering: $ordering) {
                             ...WebhookFlowSubProcessConnectionData
                         }
+                        webhookRollup {
+                            ...FlowProcessGroupRollupData
+                        }
                     }
                 }
             }
         }
     }
     ${WebhookFlowSubProcessConnectionDataFragmentDoc}
+    ${FlowProcessGroupRollupDataFragmentDoc}
 `;
 
 @Injectable({

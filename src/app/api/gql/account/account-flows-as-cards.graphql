@@ -12,6 +12,9 @@ query accountFlowsAsCards(
           allCards(filters: $filters, page: $page, perPage: $perPage, ordering: $ordering) {
             ...AccountFlowProcessCardConnectionData
           }
+          fullRollup {
+            ...FlowProcessGroupRollupData
+          }
         }
       }
     }

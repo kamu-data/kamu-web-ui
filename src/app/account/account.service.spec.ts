@@ -18,7 +18,6 @@ import {
     AccountFlowProcessCardConnectionDataFragment,
     AccountFragment,
     Dataset,
-    FlowProcessGroupRollupDataFragment,
     FlowProcessOrderField,
     OrderingDirection,
 } from "../api/kamu.graphql.interface";
@@ -29,9 +28,6 @@ import {
     mockAccountDatasetFlowsPausedQuery,
     mockAccountFlowsAsCardsQuery,
     mockAccountFlowsPrimaryCardsQuery,
-    mockAccountFlowsProcessesFullRollupQuery,
-    mockAccountFlowsProcessesPrimaryRollupQuery,
-    mockAccountFlowsProcessesWebhookRollupQuery,
     mockAccountFlowsWebhookCardsQuery,
     mockAccountListDatasetsWithFlowsQuery,
     mockAccountListFlowsQuery,
@@ -49,6 +45,7 @@ import {
 } from "../api/mock/account.mock";
 import { FlowsTableData } from "../dataset-flow/flows-table/flows-table.types";
 import { ChangeAccountUsernameResult } from "./settings/account-settings.constants";
+import { CardsStrategyResult } from "./additional-components/account-flows-tab/account-flows-tab.types";
 
 describe("AccountService", () => {
     let service: AccountService;
@@ -320,14 +317,12 @@ describe("AccountService", () => {
     it("should check get flows all cards", () => {
         spyOn(accountApi, "fetchAccountFlowsAsCards").and.returnValue(of(mockAccountFlowsAsCardsQuery));
 
-        const subscription$ = service
-            .getAccountAllCards(CARDS_PARAMS)
-            .subscribe((result: AccountFlowProcessCardConnectionDataFragment) => {
-                expect(result).toEqual(
-                    mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
-                        .allCards as AccountFlowProcessCardConnectionDataFragment,
-                );
-            });
+        const subscription$ = service.getAccountAllCards(CARDS_PARAMS).subscribe((result: CardsStrategyResult) => {
+            expect(result.cards).toEqual(
+                mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
+                    .allCards as AccountFlowProcessCardConnectionDataFragment,
+            );
+        });
 
         expect(subscription$.closed).toBeTrue();
     });
@@ -335,14 +330,12 @@ describe("AccountService", () => {
     it("should check get flows primary cards", () => {
         spyOn(accountApi, "fetchAccountPrimaryCards").and.returnValue(of(mockAccountFlowsPrimaryCardsQuery));
 
-        const subscription$ = service
-            .getAccountPrimaryCards(CARDS_PARAMS)
-            .subscribe((result: AccountFlowProcessCardConnectionDataFragment) => {
-                expect(result).toEqual(
-                    mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
-                        .primaryCards as AccountFlowProcessCardConnectionDataFragment,
-                );
-            });
+        const subscription$ = service.getAccountPrimaryCards(CARDS_PARAMS).subscribe((result: CardsStrategyResult) => {
+            expect(result.cards).toEqual(
+                mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
+                    .primaryCards as AccountFlowProcessCardConnectionDataFragment,
+            );
+        });
 
         expect(subscription$.closed).toBeTrue();
     });
@@ -350,65 +343,12 @@ describe("AccountService", () => {
     it("should check get flows webhook cards", () => {
         spyOn(accountApi, "fetchAccountWebhookCards").and.returnValue(of(mockAccountFlowsWebhookCardsQuery));
 
-        const subscription$ = service
-            .getAccountWebhookCards(CARDS_PARAMS)
-            .subscribe((result: AccountFlowProcessCardConnectionDataFragment) => {
-                expect(result).toEqual(
-                    mockAccountFlowsWebhookCardsQuery.accounts.byName?.flows.processes
-                        .webhookCards as AccountFlowProcessCardConnectionDataFragment,
-                );
-            });
-
-        expect(subscription$.closed).toBeTrue();
-    });
-
-    it("should check get flows all rollup", () => {
-        spyOn(accountApi, "fetchAccountProcessesFullRollup").and.returnValue(
-            of(mockAccountFlowsProcessesFullRollupQuery),
-        );
-
-        const subscription$ = service
-            .getAccountFlowsProcessesFullRollup(TEST_LOGIN)
-            .subscribe((result: FlowProcessGroupRollupDataFragment) => {
-                expect(result).toEqual(
-                    mockAccountFlowsProcessesFullRollupQuery.accounts.byName?.flows.processes
-                        .fullRollup as FlowProcessGroupRollupDataFragment,
-                );
-            });
-
-        expect(subscription$.closed).toBeTrue();
-    });
-
-    it("should check get flows primary rollup", () => {
-        spyOn(accountApi, "fetchAccountProcessesPrimaryRollup").and.returnValue(
-            of(mockAccountFlowsProcessesPrimaryRollupQuery),
-        );
-
-        const subscription$ = service
-            .getAccountFlowsProcessesPrimaryRollup(TEST_LOGIN)
-            .subscribe((result: FlowProcessGroupRollupDataFragment) => {
-                expect(result).toEqual(
-                    mockAccountFlowsProcessesPrimaryRollupQuery.accounts.byName?.flows.processes
-                        .primaryRollup as FlowProcessGroupRollupDataFragment,
-                );
-            });
-
-        expect(subscription$.closed).toBeTrue();
-    });
-
-    it("should check get flows webhook rollup", () => {
-        spyOn(accountApi, "fetchAccountProcessesWebhookRollup").and.returnValue(
-            of(mockAccountFlowsProcessesWebhookRollupQuery),
-        );
-
-        const subscription$ = service
-            .getAccountFlowsProcessesWebhookRollup(TEST_LOGIN)
-            .subscribe((result: FlowProcessGroupRollupDataFragment) => {
-                expect(result).toEqual(
-                    mockAccountFlowsProcessesWebhookRollupQuery.accounts.byName?.flows.processes
-                        .webhookRollup as FlowProcessGroupRollupDataFragment,
-                );
-            });
+        const subscription$ = service.getAccountWebhookCards(CARDS_PARAMS).subscribe((result: CardsStrategyResult) => {
+            expect(result.cards).toEqual(
+                mockAccountFlowsWebhookCardsQuery.accounts.byName?.flows.processes
+                    .webhookCards as AccountFlowProcessCardConnectionDataFragment,
+            );
+        });
 
         expect(subscription$.closed).toBeTrue();
     });

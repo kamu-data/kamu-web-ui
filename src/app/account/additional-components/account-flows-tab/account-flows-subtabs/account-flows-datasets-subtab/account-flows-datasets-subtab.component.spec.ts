@@ -48,15 +48,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
     let toastrService: ToastrService;
     const MOCK_ACCOUNT_NAME = "kamu";
     const MOCK_SUBSCRIPTION_ID = "121223-21212-567788";
-    const MOCK_ROLLUP: FlowProcessGroupRollupDataFragment = {
-        total: 2,
-        active: 1,
-        failing: 0,
-        paused: 1,
-        stopped: 0,
-        unconfigured: 0,
-        worstConsecutiveFailures: 0,
-    };
+
     let getAccountAllCardsSpy: jasmine.Spy;
 
     beforeEach(() => {
@@ -105,12 +97,13 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             datasetsFiltersMode: ProcessCardFilterMode.CUSTOM,
         };
         getAccountAllCardsSpy = spyOn(accountService, "getAccountAllCards").and.returnValue(
-            of(
-                mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
+            of({
+                cards: mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
                     .allCards as AccountFlowProcessCardConnectionDataFragment,
-            ),
+                rollup: mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
+                    .fullRollup as FlowProcessGroupRollupDataFragment,
+            }),
         );
-        spyOn(accountService, "getAccountFlowsProcessesFullRollup").and.returnValue(of(MOCK_ROLLUP));
     });
 
     it("should create", () => {
@@ -456,12 +449,14 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
 
     it("should check toggle rollup on 'datasets' chip", fakeAsync(() => {
         component.flowsMode = ProcessCardGroup.DATASETS;
-        spyOn(accountService, "getAccountFlowsProcessesPrimaryRollup").and.returnValue(of(MOCK_ROLLUP));
+
         const getAccountPrimaryCardsSpy = spyOn(accountService, "getAccountPrimaryCards").and.returnValue(
-            of(
-                mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
+            of({
+                cards: mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
                     .primaryCards as AccountFlowProcessCardConnectionDataFragment,
-            ),
+                rollup: mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
+                    .primaryRollup as FlowProcessGroupRollupDataFragment,
+            }),
         );
         fixture.detectChanges();
         tick(0);
@@ -471,12 +466,14 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
 
     it("should check toggle rollup on 'webhooks' chip", fakeAsync(() => {
         component.flowsMode = ProcessCardGroup.WEBHOOKS;
-        spyOn(accountService, "getAccountFlowsProcessesWebhookRollup").and.returnValue(of(MOCK_ROLLUP));
+
         const getAccountWebhookCardsSpy = spyOn(accountService, "getAccountWebhookCards").and.returnValue(
-            of(
-                mockAccountFlowsWebhookCardsQuery.accounts.byName?.flows.processes
+            of({
+                cards: mockAccountFlowsWebhookCardsQuery.accounts.byName?.flows.processes
                     .webhookCards as AccountFlowProcessCardConnectionDataFragment,
-            ),
+                rollup: mockAccountFlowsWebhookCardsQuery.accounts.byName?.flows.processes
+                    .webhookRollup as FlowProcessGroupRollupDataFragment,
+            }),
         );
         fixture.detectChanges();
         tick(0);

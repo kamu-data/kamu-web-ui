@@ -12,9 +12,6 @@ import {
     AccountChangeEmailMutation,
     AccountDatasetFlowsPausedQuery,
     AccountFlowsAsCardsQuery,
-    AccountFlowsProcessesFullRollupQuery,
-    AccountFlowsProcessesPrimaryRollupQuery,
-    AccountFlowsProcessesWebhookRollupQuery,
     AccountListDatasetsWithFlowsQuery,
     AccountListFlowsQuery,
     AccountPauseFlowsMutation,
@@ -539,6 +536,16 @@ export const mockAccountFlowsAsCardsQuery: AccountFlowsAsCardsQuery = {
                         },
                         __typename: "AccountFlowProcessCardConnection",
                     },
+                    fullRollup: {
+                        total: 14,
+                        active: 1,
+                        failing: 2,
+                        paused: 3,
+                        stopped: 8,
+                        unconfigured: 0,
+                        worstConsecutiveFailures: 14,
+                        __typename: "FlowProcessGroupRollup",
+                    },
                     __typename: "AccountFlowProcesses",
                 },
                 __typename: "AccountFlows",
@@ -587,6 +594,16 @@ export const mockAccountFlowsAsCardsQueryWithWebhook: AccountFlowsAsCardsQuery =
                         },
                         __typename: "AccountFlowProcessCardConnection",
                     },
+                    fullRollup: {
+                        total: 14,
+                        active: 1,
+                        failing: 2,
+                        paused: 3,
+                        stopped: 8,
+                        unconfigured: 0,
+                        worstConsecutiveFailures: 14,
+                        __typename: "FlowProcessGroupRollup",
+                    },
                     __typename: "AccountFlowProcesses",
                 },
                 __typename: "AccountFlows",
@@ -613,6 +630,16 @@ export const mockAccountFlowsAsCardsQueryEmpty: AccountFlowsAsCardsQuery = {
                             __typename: "PageBasedInfo",
                         },
                         __typename: "AccountFlowProcessCardConnection",
+                    },
+                    fullRollup: {
+                        total: 14,
+                        active: 1,
+                        failing: 2,
+                        paused: 3,
+                        stopped: 8,
+                        unconfigured: 0,
+                        worstConsecutiveFailures: 14,
+                        __typename: "FlowProcessGroupRollup",
                     },
                     __typename: "AccountFlowProcesses",
                 },
@@ -679,8 +706,19 @@ export const mockAccountFlowsPrimaryCardsQuery: AccountPrimaryCardsQuery = {
                         },
                         __typename: "DatasetFlowProcessConnection",
                     },
+                    primaryRollup: {
+                        total: 12,
+                        active: 1,
+                        failing: 2,
+                        paused: 2,
+                        stopped: 7,
+                        unconfigured: 0,
+                        worstConsecutiveFailures: 14,
+                        __typename: "FlowProcessGroupRollup",
+                    },
                     __typename: "AccountFlowProcesses",
                 },
+
                 __typename: "AccountFlows",
             },
             __typename: "Account",
@@ -706,71 +744,6 @@ export const mockAccountFlowsWebhookCardsQuery: AccountWebhookCardsQuery = {
                         },
                         __typename: "WebhookFlowSubProcessConnection",
                     },
-                    __typename: "AccountFlowProcesses",
-                },
-                __typename: "AccountFlows",
-            },
-            __typename: "Account",
-        },
-        __typename: "Accounts",
-    },
-};
-
-export const mockAccountFlowsProcessesFullRollupQuery: AccountFlowsProcessesFullRollupQuery = {
-    accounts: {
-        byName: {
-            flows: {
-                processes: {
-                    fullRollup: {
-                        total: 14,
-                        active: 1,
-                        failing: 2,
-                        paused: 3,
-                        stopped: 8,
-                        unconfigured: 0,
-                        worstConsecutiveFailures: 14,
-                        __typename: "FlowProcessGroupRollup",
-                    },
-                    __typename: "AccountFlowProcesses",
-                },
-                __typename: "AccountFlows",
-            },
-            __typename: "Account",
-        },
-        __typename: "Accounts",
-    },
-};
-
-export const mockAccountFlowsProcessesPrimaryRollupQuery: AccountFlowsProcessesPrimaryRollupQuery = {
-    accounts: {
-        byName: {
-            flows: {
-                processes: {
-                    primaryRollup: {
-                        total: 12,
-                        active: 1,
-                        failing: 2,
-                        paused: 2,
-                        stopped: 7,
-                        unconfigured: 0,
-                        worstConsecutiveFailures: 14,
-                        __typename: "FlowProcessGroupRollup",
-                    },
-                    __typename: "AccountFlowProcesses",
-                },
-                __typename: "AccountFlows",
-            },
-            __typename: "Account",
-        },
-        __typename: "Accounts",
-    },
-};
-
-export const mockAccountFlowsProcessesWebhookRollupQuery: AccountFlowsProcessesWebhookRollupQuery = {
-    accounts: {
-        byName: {
-            flows: {
-                processes: {
                     webhookRollup: {
                         total: 2,
                         active: 0,

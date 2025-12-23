@@ -19,12 +19,6 @@ import {
     AccountFlowFilters,
     AccountFlowsAsCardsDocument,
     AccountFlowsAsCardsQuery,
-    AccountFlowsProcessesFullRollupDocument,
-    AccountFlowsProcessesFullRollupQuery,
-    AccountFlowsProcessesPrimaryRollupDocument,
-    AccountFlowsProcessesPrimaryRollupQuery,
-    AccountFlowsProcessesWebhookRollupDocument,
-    AccountFlowsProcessesWebhookRollupQuery,
     AccountFragment,
     AccountListDatasetsWithFlowsDocument,
     AccountListDatasetsWithFlowsQuery,
@@ -65,9 +59,6 @@ import {
     mockAccountDatasetFlowsPausedQuery,
     mockAccountFlowsAsCardsQuery,
     mockAccountFlowsPrimaryCardsQuery,
-    mockAccountFlowsProcessesFullRollupQuery,
-    mockAccountFlowsProcessesPrimaryRollupQuery,
-    mockAccountFlowsProcessesWebhookRollupQuery,
     mockAccountFlowsWebhookCardsQuery,
     mockAccountListDatasetsWithFlowsQuery,
     mockAccountListFlowsQuery,
@@ -409,54 +400,6 @@ describe("AccountApi", () => {
 
         op.flush({
             data: mockAccountFlowsWebhookCardsQuery,
-        });
-    });
-
-    it("should check account flows full rollup", () => {
-        service
-            .fetchAccountProcessesFullRollup(ACCOUNT_NAME)
-            .subscribe((result: AccountFlowsProcessesFullRollupQuery) => {
-                expect(result.accounts.byName?.flows.processes.fullRollup).toEqual(
-                    mockAccountFlowsProcessesFullRollupQuery.accounts.byName?.flows.processes.fullRollup,
-                );
-            });
-        const op = controller.expectOne(AccountFlowsProcessesFullRollupDocument);
-        expect(op.operation.variables.name).toEqual(ACCOUNT_NAME);
-
-        op.flush({
-            data: mockAccountFlowsProcessesFullRollupQuery,
-        });
-    });
-
-    it("should check account flows primary rollup", () => {
-        service
-            .fetchAccountProcessesPrimaryRollup(ACCOUNT_NAME)
-            .subscribe((result: AccountFlowsProcessesPrimaryRollupQuery) => {
-                expect(result.accounts.byName?.flows.processes.primaryRollup).toEqual(
-                    mockAccountFlowsProcessesPrimaryRollupQuery.accounts.byName?.flows.processes.primaryRollup,
-                );
-            });
-        const op = controller.expectOne(AccountFlowsProcessesPrimaryRollupDocument);
-        expect(op.operation.variables.name).toEqual(ACCOUNT_NAME);
-
-        op.flush({
-            data: mockAccountFlowsProcessesPrimaryRollupQuery,
-        });
-    });
-
-    it("should check account flows webhook rollup", () => {
-        service
-            .fetchAccountProcessesWebhookRollup(ACCOUNT_NAME)
-            .subscribe((result: AccountFlowsProcessesWebhookRollupQuery) => {
-                expect(result.accounts.byName?.flows.processes.webhookRollup).toEqual(
-                    mockAccountFlowsProcessesWebhookRollupQuery.accounts.byName?.flows.processes.webhookRollup,
-                );
-            });
-        const op = controller.expectOne(AccountFlowsProcessesWebhookRollupDocument);
-        expect(op.operation.variables.name).toEqual(ACCOUNT_NAME);
-
-        op.flush({
-            data: mockAccountFlowsProcessesWebhookRollupQuery,
         });
     });
 });

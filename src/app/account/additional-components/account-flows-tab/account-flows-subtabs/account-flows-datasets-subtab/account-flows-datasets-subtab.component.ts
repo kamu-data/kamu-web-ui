@@ -312,36 +312,12 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         };
         switch (group) {
             case ProcessCardGroup.ALL:
-                return combineLatest([
-                    this.accountService.getAccountFlowsProcessesFullRollup(this.accountName),
-                    this.accountService.getAccountAllCards(params),
-                ]).pipe(
-                    map(([rollup, cards]) => ({
-                        cards,
-                        rollup,
-                    })),
-                );
+                return this.accountService.getAccountAllCards(params);
             case ProcessCardGroup.DATASETS:
-                return combineLatest([
-                    this.accountService.getAccountFlowsProcessesPrimaryRollup(this.accountName),
-                    this.accountService.getAccountPrimaryCards(params),
-                ]).pipe(
-                    map(([rollup, cards]) => ({
-                        cards,
-                        rollup,
-                    })),
-                );
+                return this.accountService.getAccountPrimaryCards(params);
 
             case ProcessCardGroup.WEBHOOKS:
-                return combineLatest([
-                    this.accountService.getAccountFlowsProcessesWebhookRollup(this.accountName),
-                    this.accountService.getAccountWebhookCards(params),
-                ]).pipe(
-                    map(([rollup, cards]) => ({
-                        cards,
-                        rollup,
-                    })),
-                );
+                return this.accountService.getAccountWebhookCards(params);
 
             default:
                 throw new Error("Unsupported flow process group");

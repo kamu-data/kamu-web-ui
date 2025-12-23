@@ -58,25 +58,25 @@ export interface DatasetFlowsTabState {
 
 export const RollupFiltersOptions: RollupFiltersDescriptor[] = [
     {
-        label: "active:",
+        label: "Active:",
         state: FlowProcessEffectiveState.Active,
         valueKey: "active",
         iconName: "check_circle",
     },
     {
-        label: "failing:",
+        label: "Failing:",
         state: FlowProcessEffectiveState.Failing,
         valueKey: "failing",
         iconName: "warning",
     },
     {
-        label: "paused:",
+        label: "Paused:",
         state: FlowProcessEffectiveState.PausedManual,
         valueKey: "paused",
         iconName: "pause_circle",
     },
     {
-        label: "stopped:",
+        label: "Stopped:",
         state: FlowProcessEffectiveState.StoppedAuto,
         valueKey: "stopped",
         iconName: "error",

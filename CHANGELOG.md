@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Lazy loading of cards when scrolling for account filters.
+- Lazy loading of cards when scrolling for account filters
+- Added rollup section to the flow system status dashboards
 
 ## [0.61.1] - 2025-12-10
 ### Fixed

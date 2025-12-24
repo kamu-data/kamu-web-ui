@@ -9,6 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ReproducedResultSectionComponent } from "./reproduced-result-section.component";
 import { mockQueryExplainerEmptyOutput, mockQueryExplainerOutput } from "../../query-explainer.mocks";
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { provideToastr } from "ngx-toastr";
 
 describe("ReproducedResultSectionComponent", () => {
     let component: ReproducedResultSectionComponent;
@@ -17,6 +18,7 @@ describe("ReproducedResultSectionComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [ReproducedResultSectionComponent],
+            providers: [provideToastr()],
         });
         fixture = TestBed.createComponent(ReproducedResultSectionComponent);
         component = fixture.componentInstance;

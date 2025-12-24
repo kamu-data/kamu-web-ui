@@ -9,6 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { findElementByDataTestId, getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { DynamicTableComponent } from "./dynamic-table.component";
 import { MOCK_DATA_ROWS, MOCK_SCHEMA_FIELDS } from "./dynamic-table.mock";
+import { provideToastr } from "ngx-toastr";
 
 describe("DynamicTableComponent", () => {
     let component: DynamicTableComponent;
@@ -26,6 +27,7 @@ describe("DynamicTableComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [DynamicTableComponent],
+            providers: [provideToastr()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DynamicTableComponent);

@@ -16,6 +16,7 @@ import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FetchStepUrl } from "src/app/api/kamu.graphql.interface";
+import { provideToastr } from "ngx-toastr";
 
 describe("MetadataPollingSourceTabComponent", () => {
     let component: MetadataPollingSourceTabComponent;
@@ -25,7 +26,7 @@ describe("MetadataPollingSourceTabComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [MetadataPollingSourceTabComponent, HttpClientTestingModule, SharedTestModule, MatIconModule],
-            providers: [HIGHLIGHT_OPTIONS_PROVIDER],
+            providers: [HIGHLIGHT_OPTIONS_PROVIDER, provideToastr()],
         });
         fixture = TestBed.createComponent(MetadataPollingSourceTabComponent);
         navigationService = TestBed.inject(NavigationService);

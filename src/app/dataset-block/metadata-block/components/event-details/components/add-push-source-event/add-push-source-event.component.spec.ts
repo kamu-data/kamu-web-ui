@@ -11,6 +11,7 @@ import { mockAddPushSource } from "../../mock.events";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { ReadStepCsv } from "src/app/api/kamu.graphql.interface";
+import { provideToastr } from "ngx-toastr";
 
 describe("AddPushSourceEventComponent", () => {
     let component: AddPushSourceEventComponent;
@@ -19,6 +20,7 @@ describe("AddPushSourceEventComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, AddPushSourceEventComponent],
+            providers: [provideToastr()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AddPushSourceEventComponent);

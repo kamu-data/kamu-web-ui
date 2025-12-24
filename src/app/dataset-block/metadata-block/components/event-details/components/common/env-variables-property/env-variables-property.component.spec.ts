@@ -8,6 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { EnvVariablesPropertyComponent } from "./env-variables-property.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { provideToastr } from "ngx-toastr";
 
 describe("EnvVariablesPropertyComponent", () => {
     let component: EnvVariablesPropertyComponent;
@@ -16,6 +17,7 @@ describe("EnvVariablesPropertyComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, EnvVariablesPropertyComponent],
+            providers: [provideToastr()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(EnvVariablesPropertyComponent);

@@ -56,3 +56,20 @@ table {
 .primary-color {
     color: #000 !important;
 }
+
+.copyable-cell {
+    cursor: copy;
+    transition: background 0.2s;
+
+    &:hover {
+        background-color: rgba(0 0 0 / 10%);
+    }
+
+    &:active {
+        cursor: wait;
+    }
+}
+
+.mat-mdc-cell {
+    user-select: text;
+}

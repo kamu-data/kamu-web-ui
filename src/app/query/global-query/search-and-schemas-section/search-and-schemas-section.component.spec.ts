@@ -20,6 +20,7 @@ import { dispatchInputEvent, emitClickOnElementByDataTestId } from "src/app/comm
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { SearchApi } from "src/app/api/search.api";
 import { HttpClientModule } from "@angular/common/http";
+import { provideToastr } from "ngx-toastr";
 
 describe("SearchAndSchemasSectionComponent", () => {
     let component: SearchAndSchemasSectionComponent;
@@ -32,7 +33,7 @@ describe("SearchAndSchemasSectionComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [SharedTestModule, HttpClientModule, SearchAndSchemasSectionComponent],
-            providers: [Apollo],
+            providers: [Apollo, provideToastr()],
         });
         fixture = TestBed.createComponent(SearchAndSchemasSectionComponent);
         component = fixture.componentInstance;

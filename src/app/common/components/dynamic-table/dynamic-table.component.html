@@ -8,9 +8,11 @@
                 [title]="hasData ? element[disCol].value : element[disCol]"
                 mat-cell
                 [ngClass]="hasData ? element[disCol].cssClass : OperationColumnClassEnum.PRIMARY_COLOR"
-                [class]="'truncate-cell'"
+                [class]="'truncate-cell copyable-cell'"
                 *matCellDef="let element; index as rowIndex"
                 [attr.data-test-id]="'column-name-' + disCol + '-' + rowIndex"
+                [cdkCopyToClipboard]="hasData ? element[disCol].value : element[disCol]"
+                (cdkCopyToClipboardCopied)="showCopyMessage()"
             >
                 {{ hasData ? element[disCol].value : element[disCol] }}
             </td>

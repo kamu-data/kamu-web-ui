@@ -8,6 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SchemaPropertyComponent } from "./schema-property.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { provideToastr } from "ngx-toastr";
 
 describe("SchemaPropertyComponent", () => {
     let component: SchemaPropertyComponent;
@@ -16,6 +17,7 @@ describe("SchemaPropertyComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, SchemaPropertyComponent],
+            providers: [provideToastr()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SchemaPropertyComponent);

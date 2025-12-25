@@ -11,6 +11,7 @@ import { mockOverviewDataUpdate } from "src/app/dataset-view/additional-componen
 import { SetPollingSourceEventFragment } from "src/app/api/kamu.graphql.interface";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
+import { provideToastr } from "ngx-toastr";
 
 describe("SourceEventCommonDataComponent", () => {
     let component: SourceEventCommonDataComponent;
@@ -19,7 +20,7 @@ describe("SourceEventCommonDataComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [SourceEventCommonDataComponent, SharedTestModule],
-            providers: [HIGHLIGHT_OPTIONS_PROVIDER],
+            providers: [HIGHLIGHT_OPTIONS_PROVIDER, provideToastr()],
         });
         fixture = TestBed.createComponent(SourceEventCommonDataComponent);
         component = fixture.componentInstance;

@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.61.0] - 2025-12-09
 ### Added
 - Added dashboard filters for account flows
+- The ability to copy a cell from the data table
 
 ## [0.60.1] - 2025-11-26
 ### Fixed

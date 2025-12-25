@@ -5,11 +5,13 @@
  * included in the LICENSE file.
  */
 
-import { AfterContentInit, ChangeDetectionStrategy, Component, Input, OnChanges, OnInit } from "@angular/core";
+import { AfterContentInit, ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit } from "@angular/core";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";
 import { TableSourceRowInterface } from "./dynamic-table.interface";
 import { NgFor, NgClass, NgIf } from "@angular/common";
+import { ClipboardModule } from "@angular/cdk/clipboard";
+import { ToastrModule, ToastrService } from "ngx-toastr";
 
 @Component({
     selector: "app-dynamic-table",
@@ -25,6 +27,8 @@ import { NgFor, NgClass, NgIf } from "@angular/common";
 
         //-----//
         MatTableModule,
+        ClipboardModule,
+        ToastrModule,
     ],
 })
 export class DynamicTableComponent implements OnInit, OnChanges, AfterContentInit {
@@ -36,6 +40,7 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
     public dataSource = new MatTableDataSource<TableSourceRowInterface>([]);
     public displayedColumns: string[] = [];
     public readonly OperationColumnClassEnum: typeof OperationColumnClassEnum = OperationColumnClassEnum;
+    private toastr = inject(ToastrService);
 
     public ngOnInit(): void {
         this.displayTable();
@@ -71,5 +76,9 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
             this.displayedColumns = this.schemaFields.map((f: DataSchemaField) => f.name);
             this.dataSource.data = this.dataRows;
         }
+    }
+
+    public showCopyMessage() {
+        this.toastr.success(`Copied`);
     }
 }

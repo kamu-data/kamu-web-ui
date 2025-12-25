@@ -9,6 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SetDataSchemaEventComponent } from "./set-data-schema-event.component";
 import { mockSetDataSchema } from "../../mock.events";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { provideToastr } from "ngx-toastr";
 
 describe("SetDataSchemaEventComponent", () => {
     let component: SetDataSchemaEventComponent;
@@ -17,6 +18,7 @@ describe("SetDataSchemaEventComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, SetDataSchemaEventComponent],
+            providers: [provideToastr()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SetDataSchemaEventComponent);

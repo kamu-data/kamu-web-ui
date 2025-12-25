@@ -9,6 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { TopicsPropertyComponent } from "./topics-property.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { MqttQos } from "src/app/api/kamu.graphql.interface";
+import { provideToastr } from "ngx-toastr";
 
 describe("TopicsPropertyComponent", () => {
     let component: TopicsPropertyComponent;
@@ -17,6 +18,7 @@ describe("TopicsPropertyComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, TopicsPropertyComponent],
+            providers: [provideToastr()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(TopicsPropertyComponent);

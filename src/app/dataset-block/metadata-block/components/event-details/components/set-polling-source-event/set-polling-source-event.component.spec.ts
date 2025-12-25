@@ -12,6 +12,7 @@ import { mockSetPollingSourceEvent, mockSetPollingSourceEventWithFetchStepMqtt }
 import { SetPollingSourceEventComponent } from "./set-polling-source-event.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
+import { provideToastr } from "ngx-toastr";
 
 describe("SetPollingSourceEventComponent", () => {
     let component: SetPollingSourceEventComponent;
@@ -20,7 +21,7 @@ describe("SetPollingSourceEventComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, SetPollingSourceEventComponent],
-            providers: [HIGHLIGHT_OPTIONS_PROVIDER],
+            providers: [HIGHLIGHT_OPTIONS_PROVIDER, provideToastr()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SetPollingSourceEventComponent);

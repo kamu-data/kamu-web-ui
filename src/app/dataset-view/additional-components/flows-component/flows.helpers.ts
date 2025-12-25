@@ -6,7 +6,10 @@
  */
 
 import { DatePipe } from "@angular/common";
-import { RangeLastAttempt } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import {
+    ProcessCardFilterMode,
+    RangeLastAttempt,
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 import {
     FlowProcessEffectiveState,
     FlowProcessSummary,
@@ -376,5 +379,27 @@ export function nextTimeRangeHelper(selectedRange: RangeLastAttempt): Date {
         /* istanbul ignore next */
         default:
             return new Date();
+    }
+}
+
+export function rollupAvailabilityMapper(mode: ProcessCardFilterMode, state: FlowProcessEffectiveState): boolean {
+    switch (mode) {
+        case ProcessCardFilterMode.RECENT_ACTIVITY:
+            return [
+                FlowProcessEffectiveState.Active,
+                FlowProcessEffectiveState.Failing,
+                FlowProcessEffectiveState.PausedManual,
+                FlowProcessEffectiveState.StoppedAuto,
+            ].includes(state);
+        case ProcessCardFilterMode.TRIAGE:
+            return [FlowProcessEffectiveState.Failing, FlowProcessEffectiveState.StoppedAuto].includes(state);
+        case ProcessCardFilterMode.PAUSED:
+            return false;
+        case ProcessCardFilterMode.UPCOMING_SCHEDULED:
+            return [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing].includes(state);
+        case ProcessCardFilterMode.CUSTOM:
+            return true;
+        default:
+            throw new Error("Unsupported process card view mode");
     }
 }

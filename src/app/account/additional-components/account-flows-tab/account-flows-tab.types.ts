@@ -17,7 +17,7 @@ import { MaybeUndefined } from "src/app/interface/app.types";
 
 export enum AccountFlowsNav {
     ACTIVITY = "activity",
-    DATASETS = "datasets",
+    PROCESSES = "processes",
 }
 
 export enum ProcessCardFilterMode {

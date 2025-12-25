@@ -6,7 +6,7 @@
  */
 
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
-import { AccountFlowsDatasetsSubtabComponent } from "./account-flows-datasets-subtab.component";
+import { AccountFlowsProcessesSubtabComponent } from "./account-flows-processes-subtab.component";
 import { AccountFlowsNav, ProcessCardFilterMode, ProcessCardGroup } from "../../account-flows-tab.types";
 import {
     AccountFlowProcessCardConnectionDataFragment,
@@ -38,9 +38,9 @@ import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow
 import { MatButtonToggleChange } from "@angular/material/button-toggle";
 import AppValues from "src/app/common/values/app.values";
 
-describe("AccountFlowsDatasetsSubtabComponent", () => {
-    let component: AccountFlowsDatasetsSubtabComponent;
-    let fixture: ComponentFixture<AccountFlowsDatasetsSubtabComponent>;
+describe("AccountFlowsProcessesSubtabComponent", () => {
+    let component: AccountFlowsProcessesSubtabComponent;
+    let fixture: ComponentFixture<AccountFlowsProcessesSubtabComponent>;
     let accountService: AccountService;
     let navigationService: NavigationService;
     let datasetWebhooksService: DatasetWebhooksService;
@@ -54,7 +54,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                AccountFlowsDatasetsSubtabComponent,
+                AccountFlowsProcessesSubtabComponent,
                 SharedTestModule,
                 HttpClientTestingModule,
                 WebhookFlowProcessCardComponent,
@@ -83,7 +83,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
 
         registerMatSvgIcons();
 
-        fixture = TestBed.createComponent(AccountFlowsDatasetsSubtabComponent);
+        fixture = TestBed.createComponent(AccountFlowsProcessesSubtabComponent);
         accountService = TestBed.inject(AccountService);
         navigationService = TestBed.inject(NavigationService);
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);
@@ -92,7 +92,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         component = fixture.componentInstance;
         component.accountName = MOCK_ACCOUNT_NAME;
         component.accountFlowsData = {
-            activeNav: AccountFlowsNav.DATASETS,
+            activeNav: AccountFlowsNav.PROCESSES,
             flowGroup: [FlowStatus.Finished],
             datasetsFiltersMode: ProcessCardFilterMode.CUSTOM,
         };

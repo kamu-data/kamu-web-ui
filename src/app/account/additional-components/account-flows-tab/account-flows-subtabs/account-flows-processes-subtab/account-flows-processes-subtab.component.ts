@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet } from "@angular/common";
 import { AccountService } from "src/app/account/account.service";
 import { BehaviorSubject, combineLatest, map, Observable, startWith, Subject, switchMap, take, timer } from "rxjs";
@@ -57,10 +57,13 @@ import { UpcomingScheduledFiltersViewComponent } from "./components/upcoming-sch
 import { CustomFiltersViewComponent } from "./components/custom-filters-view/custom-filters-view.component";
 import { AccountFlowsFiltersService } from "src/app/account/services/account-flows-filters.service";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { RollupFiltersOptions } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
+import {
+    rollupAvailabilityMapper,
+    RollupFiltersOptions,
+} from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 
 @Component({
-    selector: "app-account-flows-datasets-subtab",
+    selector: "app-account-flows-processes-subtab",
     standalone: true,
     providers: [
         { provide: DateTimeAdapter, useClass: MomentDateTimeAdapter },
@@ -96,11 +99,11 @@ import { RollupFiltersOptions } from "src/app/dataset-view/additional-components
         UpcomingScheduledFiltersViewComponent,
         WebhookFlowProcessCardComponent,
     ],
-    templateUrl: "./account-flows-datasets-subtab.component.html",
-    styleUrls: ["./account-flows-datasets-subtab.component.scss"],
+    templateUrl: "./account-flows-processes-subtab.component.html",
+    styleUrls: ["./account-flows-processes-subtab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implements OnInit {
+export class AccountFlowsProcessesSubtabComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public accountName: string;
     @Input({ required: true }) public accountFlowsData: AccountFlowsType;
 
@@ -110,7 +113,6 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     private readonly datasetCardService = inject(ProcessDatasetCardInteractionService);
     private readonly toastrService = inject(ToastrService);
     private readonly accountFlowsFiltersService = inject(AccountFlowsFiltersService);
-    private readonly cdr = inject(ChangeDetectorRef);
 
     public accountFlowsCardsData$: Observable<FlowProcessCardListing>;
     public hasNextPage = false;
@@ -191,26 +193,8 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         return value as DatasetBasicsFragment;
     }
 
-    public processStatusAvailabilityMapper(mode: ProcessCardFilterMode, state: FlowProcessEffectiveState): boolean {
-        switch (mode) {
-            case ProcessCardFilterMode.RECENT_ACTIVITY:
-                return [
-                    FlowProcessEffectiveState.Active,
-                    FlowProcessEffectiveState.Failing,
-                    FlowProcessEffectiveState.PausedManual,
-                    FlowProcessEffectiveState.StoppedAuto,
-                ].includes(state);
-            case ProcessCardFilterMode.TRIAGE:
-                return [FlowProcessEffectiveState.Failing, FlowProcessEffectiveState.StoppedAuto].includes(state);
-            case ProcessCardFilterMode.PAUSED:
-                return false;
-            case ProcessCardFilterMode.UPCOMING_SCHEDULED:
-                return [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing].includes(state);
-            case ProcessCardFilterMode.CUSTOM:
-                return true;
-            default:
-                throw new Error("Unsupported process card view mode");
-        }
+    public rollupAvailabilityMapper(mode: ProcessCardFilterMode, state: FlowProcessEffectiveState): boolean {
+        return rollupAvailabilityMapper(mode, state);
     }
 
     public resetFilters(): void {
@@ -297,7 +281,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
             this.accountName,
             AccountTabs.FLOWS,
             undefined,
-            AccountFlowsNav.DATASETS,
+            AccountFlowsNav.PROCESSES,
             undefined,
             nextNav,
         );

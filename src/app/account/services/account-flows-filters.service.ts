@@ -124,7 +124,10 @@ export class AccountFlowsFiltersService {
                 };
             }
             case ProcessCardFilterMode.PAUSED: {
-                this.updateFilters({ selectedOrderDirection: true });
+                this.updateFilters({
+                    selectedOrderDirection: true,
+                    selectedFlowProcessStates: [FlowProcessEffectiveState.PausedManual],
+                });
                 return {
                     effectiveStateIn: [FlowProcessEffectiveState.PausedManual],
                 };

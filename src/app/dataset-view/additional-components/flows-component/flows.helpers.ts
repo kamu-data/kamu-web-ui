@@ -394,11 +394,16 @@ export function rollupAvailabilityMapper(mode: ProcessCardFilterMode, state: Flo
         case ProcessCardFilterMode.TRIAGE:
             return [FlowProcessEffectiveState.Failing, FlowProcessEffectiveState.StoppedAuto].includes(state);
         case ProcessCardFilterMode.PAUSED:
-            return false;
+            return [FlowProcessEffectiveState.PausedManual].includes(state);
         case ProcessCardFilterMode.UPCOMING_SCHEDULED:
             return [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing].includes(state);
         case ProcessCardFilterMode.CUSTOM:
-            return true;
+            return [
+                FlowProcessEffectiveState.Active,
+                FlowProcessEffectiveState.Failing,
+                FlowProcessEffectiveState.PausedManual,
+                FlowProcessEffectiveState.StoppedAuto,
+            ].includes(state);
         default:
             throw new Error("Unsupported process card view mode");
     }

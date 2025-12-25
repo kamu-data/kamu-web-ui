@@ -93,10 +93,7 @@
                     </mat-slide-toggle>
                 </div>
             </div>
-            <div class="d-flex align-items-center pt-4 mb-3 mt-4">
-                <app-flow-process-status-list [filters]="dashboardFilters" [options]="FLOW_PROCESS_STATE_LIST" />
-            </div>
         </div>
+        <ng-content></ng-content>
     </div>
-    <ng-content></ng-content>
 </div>

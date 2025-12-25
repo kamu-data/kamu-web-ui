@@ -13,15 +13,13 @@ import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/a
 import { MY_MOMENT_FORMATS } from "src/app/common/helpers/data.helpers";
 import {
     DashboardFiltersOptions,
-    FLOW_PROCESS_STATE_LIST,
     RANGE_LAST_ATTEMPT_LIST,
     RangeLastAttemptOption,
 } from "../../../../account-flows-tab.types";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { lastTimeRangeHelper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { OrderingDirection } from "src/app/api/kamu.graphql.interface";
-import { FlowProcessStatusListComponent } from "../common/flow-process-status-list/flow-process-status-list.component";
+import { FlowProcessEffectiveState, OrderingDirection } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-recent-activity-filters-view",
@@ -40,22 +38,25 @@ import { FlowProcessStatusListComponent } from "../common/flow-process-status-li
         NgSelectModule,
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
-
-        //-----//
-        FlowProcessStatusListComponent,
     ],
     templateUrl: "./recent-activity-filters-view.component.html",
     styleUrls: ["./recent-activity-filters-view.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecentActivityFiltersViewComponent implements OnInit {
-    public ngOnInit(): void {
-        this.dashboardFilters.isFirstInitialization = true;
-    }
     @Input({ required: true }) public dashboardFilters: DashboardFiltersOptions;
 
     public readonly RANGE_LAST_ATTEMPT_LIST = RANGE_LAST_ATTEMPT_LIST;
-    public readonly FLOW_PROCESS_STATE_LIST = FLOW_PROCESS_STATE_LIST;
+
+    public ngOnInit(): void {
+        this.dashboardFilters.isFirstInitialization = true;
+        this.dashboardFilters.selectedFlowProcessStates = [
+            FlowProcessEffectiveState.Active,
+            FlowProcessEffectiveState.Failing,
+            FlowProcessEffectiveState.PausedManual,
+            FlowProcessEffectiveState.StoppedAuto,
+        ];
+    }
 
     public get currentDateTime(): string {
         return new Date().toISOString();

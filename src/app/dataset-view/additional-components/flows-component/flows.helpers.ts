@@ -27,6 +27,8 @@ export interface RollupFiltersDescriptor {
     state: FlowProcessEffectiveState;
     valueKey: "active" | "failing" | "paused" | "stopped" | "unconfigured";
     iconName?: string;
+    iconClass?: string;
+    allowedStates?: FlowProcessEffectiveState[];
 }
 
 export type FlowsCategoryUnion = FlowsSelectedCategory | WebhooksSelectedCategory;
@@ -62,24 +64,30 @@ export const RollupFiltersOptions: RollupFiltersDescriptor[] = [
         state: FlowProcessEffectiveState.Active,
         valueKey: "active",
         iconName: "check_circle",
+        iconClass: "completed-status",
+        allowedStates: [],
     },
     {
         label: "Failing:",
         state: FlowProcessEffectiveState.Failing,
         valueKey: "failing",
         iconName: "warning",
+        iconClass: "enabled-failing-status",
+        allowedStates: [FlowProcessEffectiveState.Failing, FlowProcessEffectiveState.Active],
     },
     {
         label: "Paused:",
         state: FlowProcessEffectiveState.PausedManual,
         valueKey: "paused",
         iconName: "pause_circle",
+        iconClass: "pause-status",
     },
     {
         label: "Stopped:",
         state: FlowProcessEffectiveState.StoppedAuto,
         valueKey: "stopped",
         iconName: "error",
+        iconClass: "stopped-status",
     },
 ];
 

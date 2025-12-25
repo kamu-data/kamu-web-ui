@@ -191,6 +191,28 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         return value as DatasetBasicsFragment;
     }
 
+    public processStatusAvailabilityMapper(mode: ProcessCardFilterMode, state: FlowProcessEffectiveState): boolean {
+        switch (mode) {
+            case ProcessCardFilterMode.RECENT_ACTIVITY:
+                return [
+                    FlowProcessEffectiveState.Active,
+                    FlowProcessEffectiveState.Failing,
+                    FlowProcessEffectiveState.PausedManual,
+                    FlowProcessEffectiveState.StoppedAuto,
+                ].includes(state);
+            case ProcessCardFilterMode.TRIAGE:
+                return [FlowProcessEffectiveState.Failing, FlowProcessEffectiveState.StoppedAuto].includes(state);
+            case ProcessCardFilterMode.PAUSED:
+                return false;
+            case ProcessCardFilterMode.UPCOMING_SCHEDULED:
+                return [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing].includes(state);
+            case ProcessCardFilterMode.CUSTOM:
+                return true;
+            default:
+                throw new Error("Unsupported process card view mode");
+        }
+    }
+
     public resetFilters(): void {
         this.resetRequestParams();
         this.processesPerPage = AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE;

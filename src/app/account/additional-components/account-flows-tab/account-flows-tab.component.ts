@@ -19,7 +19,7 @@ import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { AccountFlowsType } from "./resolvers/account-flows.resolver";
 import AppValues from "src/app/common/values/app.values";
 import { AccountFlowsActivitySubtabComponent } from "./account-flows-subtabs/account-flows-activity-subtab/account-flows-activity-subtab.component";
-import { AccountFlowsDatasetsSubtabComponent } from "./account-flows-subtabs/account-flows-datasets-subtab/account-flows-datasets-subtab.component";
+import { AccountFlowsProcessesSubtabComponent } from "./account-flows-subtabs/account-flows-processes-subtab/account-flows-processes-subtab.component";
 import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
@@ -36,7 +36,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 
         //-----//
         AccountFlowsActivitySubtabComponent,
-        AccountFlowsDatasetsSubtabComponent,
+        AccountFlowsProcessesSubtabComponent,
     ],
 })
 export class AccountFlowsTabComponent {
@@ -67,7 +67,7 @@ export class AccountFlowsTabComponent {
             undefined,
             nextNav,
             undefined,
-            nextNav === AccountFlowsNav.DATASETS ? ProcessCardFilterMode.RECENT_ACTIVITY : undefined,
+            nextNav === AccountFlowsNav.PROCESSES ? ProcessCardFilterMode.RECENT_ACTIVITY : undefined,
         );
     }
 }

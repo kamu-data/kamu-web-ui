@@ -7,7 +7,9 @@
 
 import {
     AccountFlowProcessCard,
+    AccountFlowProcessCardConnectionDataFragment,
     FlowProcessEffectiveState,
+    FlowProcessGroupRollupDataFragment,
     FlowProcessOrderField,
     OrderingDirection,
 } from "src/app/api/kamu.graphql.interface";
@@ -15,7 +17,7 @@ import { MaybeUndefined } from "src/app/interface/app.types";
 
 export enum AccountFlowsNav {
     ACTIVITY = "activity",
-    DATASETS = "datasets",
+    PROCESSES = "processes",
 }
 
 export enum ProcessCardFilterMode {
@@ -24,6 +26,12 @@ export enum ProcessCardFilterMode {
     UPCOMING_SCHEDULED = "upcomingScheduled",
     PAUSED = "paused",
     CUSTOM = "custom",
+}
+
+export enum ProcessCardGroup {
+    ALL = "all",
+    DATASETS = "datasets",
+    WEBHOOKS = "webhooks",
 }
 
 export enum RangeLastAttempt {
@@ -192,33 +200,6 @@ export const FLOW_PROCESS_STATE_LIST: ProcessFilterStateOption[] = [
         id: 4,
         label: "Stopped",
         value: FlowProcessEffectiveState.StoppedAuto,
-    },
-];
-
-export const FLOW_PROCESS_STATE_LIST_TRIAGE: ProcessFilterStateOption[] = [
-    {
-        id: 1,
-        label: "Failing",
-        value: FlowProcessEffectiveState.Failing,
-    },
-
-    {
-        id: 2,
-        label: "Stopped",
-        value: FlowProcessEffectiveState.StoppedAuto,
-    },
-];
-
-export const FLOW_PROCESS_STATE_LIST_UPCOMING: ProcessFilterStateOption[] = [
-    {
-        id: 1,
-        label: "Active",
-        value: FlowProcessEffectiveState.Active,
-    },
-    {
-        id: 2,
-        label: "Failing",
-        value: FlowProcessEffectiveState.Failing,
     },
 ];
 
@@ -392,10 +373,14 @@ export interface DashboardFiltersOptions {
     selectedFlowProcessStates: FlowProcessEffectiveState[];
     minConsecutiveFailures: number;
     isFirstInitialization: boolean;
-    applyFilters: boolean;
 }
 
 export interface FlowProcessCardListing {
     totalCount: number;
     nodes: AccountFlowProcessCard[];
+}
+
+export interface CardsStrategyResult {
+    cards: AccountFlowProcessCardConnectionDataFragment;
+    rollup: FlowProcessGroupRollupDataFragment;
 }

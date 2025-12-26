@@ -6,7 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Lazy loading of cards when scrolling for account filters.
+- Lazy loading of cards when scrolling for account filters
+- Added rollup section to the flow system status dashboards
+- The ability to copy a cell from the data table
 
 ## [0.61.1] - 2025-12-10
 ### Fixed
@@ -15,7 +17,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.61.0] - 2025-12-09
 ### Added
 - Added dashboard filters for account flows
-- The ability to copy a cell from the data table
 
 ## [0.60.1] - 2025-11-26
 ### Fixed

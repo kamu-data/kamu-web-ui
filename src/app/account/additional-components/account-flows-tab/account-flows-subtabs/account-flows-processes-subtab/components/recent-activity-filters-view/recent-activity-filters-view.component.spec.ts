@@ -34,7 +34,6 @@ describe("RecentActivityFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
         };
     });
 
@@ -65,7 +64,6 @@ describe("RecentActivityFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
         };
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "clear-from-control");
@@ -87,7 +85,6 @@ describe("RecentActivityFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
         };
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "clear-to-control");
@@ -109,7 +106,6 @@ describe("RecentActivityFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
         };
         fixture.detectChanges();
         component.onQuickRangeLastAttempt({

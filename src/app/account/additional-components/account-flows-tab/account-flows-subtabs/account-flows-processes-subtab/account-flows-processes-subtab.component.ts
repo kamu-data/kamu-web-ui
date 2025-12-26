@@ -6,9 +6,9 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet } from "@angular/common";
+import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase } from "@angular/common";
 import { AccountService } from "src/app/account/account.service";
-import { BehaviorSubject, combineLatest, map, Observable, startWith, Subject, switchMap, take, timer } from "rxjs";
+import { BehaviorSubject, debounceTime, map, Observable, startWith, Subject, switchMap, take, tap, timer } from "rxjs";
 import {
     AccountFlowProcessCard,
     Dataset,
@@ -77,7 +77,6 @@ import {
         NgFor,
         NgSwitch,
         NgSwitchCase,
-        NgTemplateOutlet,
 
         //-----//
         MatIconModule,
@@ -122,7 +121,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
     public activeRollup: FlowProcessGroupRollupDataFragment;
     private readonly loadingCardsSubject$ = new BehaviorSubject<boolean>(false);
     private readonly toggleCardStateSubject$ = new BehaviorSubject<boolean>(false);
-    private readonly fetchTrigger$ = new Subject<void>();
+    public readonly fetchTrigger$ = new Subject<void>();
     public readonly ROLLUP_OPTIONS = RollupFiltersOptions;
 
     public readonly CARD_FILTERS_MODE_OPTIONS: CardFilterDescriptor[] = CARD_FILTERS_MODE_OPTIONS;
@@ -150,12 +149,12 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
 
     public fetchCardsData(): void {
         const polling$ = timer(0, environment.delay_polling_ms);
-        const triggerWithInitial$ = this.fetchTrigger$.pipe(startWith(undefined));
+        const triggerWithInitial$ = this.fetchTrigger$.pipe(debounceTime(300), startWith(undefined));
 
-        this.accountFlowsCardsData$ = combineLatest([polling$, triggerWithInitial$]).pipe(
+        this.accountFlowsCardsData$ = triggerWithInitial$.pipe(
+            switchMap(() => polling$),
             switchMap(() => this.setCardsStrategy(this.flowsMode)),
-
-            map((data: CardsStrategyResult) => {
+            tap((data: CardsStrategyResult) => {
                 this.activeRollup = data.rollup;
                 const newChunkCards = data.cards.nodes as AccountFlowProcessCard[];
                 this.hasNextPage = data.cards.pageInfo.hasNextPage;
@@ -168,7 +167,8 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
                 }
                 this.loadingCardsSubject$.next(false);
                 this.toggleCardStateSubject$.next(false);
-
+            }),
+            map((data: CardsStrategyResult) => {
                 return {
                     totalCount: data.cards.totalCount,
                     nodes: this.processesCards,
@@ -195,6 +195,23 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
 
     public rollupAvailabilityMapper(mode: ProcessCardFilterMode, state: FlowProcessEffectiveState): boolean {
         return rollupAvailabilityMapper(mode, state);
+    }
+
+    public totalProcessesCountByMode(mode: ProcessCardFilterMode, rollup: FlowProcessGroupRollupDataFragment): number {
+        switch (mode) {
+            case ProcessCardFilterMode.RECENT_ACTIVITY:
+                return rollup.active + rollup.failing + rollup.paused + rollup.stopped;
+            case ProcessCardFilterMode.TRIAGE:
+                return rollup.failing + rollup.stopped;
+            case ProcessCardFilterMode.PAUSED:
+                return rollup.paused;
+            case ProcessCardFilterMode.UPCOMING_SCHEDULED:
+                return rollup.active + rollup.failing;
+            case ProcessCardFilterMode.CUSTOM:
+                return rollup.active + rollup.failing + rollup.paused + rollup.stopped;
+            default:
+                throw new Error("Unsupported process card view mode");
+        }
     }
 
     public resetFilters(): void {

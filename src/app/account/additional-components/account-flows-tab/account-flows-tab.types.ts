@@ -373,7 +373,6 @@ export interface DashboardFiltersOptions {
     selectedFlowProcessStates: FlowProcessEffectiveState[];
     minConsecutiveFailures: number;
     isFirstInitialization: boolean;
-    applyFilters: boolean;
 }
 
 export interface FlowProcessCardListing {

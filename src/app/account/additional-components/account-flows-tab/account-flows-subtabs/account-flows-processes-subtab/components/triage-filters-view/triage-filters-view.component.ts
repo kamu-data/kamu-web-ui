@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
@@ -41,6 +41,7 @@ import { FlowProcessEffectiveState, OrderingDirection } from "src/app/api/kamu.g
 })
 export class TriageFiltersViewComponent implements OnInit {
     @Input({ required: true }) public dashboardFilters: DashboardFiltersOptions;
+    @Output() public applyFilterEmitter = new EventEmitter<void>();
 
     public readonly RANGE_LAST_ATTEMPT_LIST = RANGE_LAST_ATTEMPT_LIST;
     public readonly ORDER_BY_FIELD_LIST_TRIAGE = ORDER_BY_FIELD_LIST_TRIAGE;
@@ -62,18 +63,26 @@ export class TriageFiltersViewComponent implements OnInit {
 
     public onChangeLastAttemptFilter(): void {
         this.dashboardFilters.selectedQuickRangeLastAttempt = undefined;
+        this.applyFilterEmitter.next();
     }
 
     public onChangeLastFailureFilter(): void {
         this.dashboardFilters.selectedQuickRangeLastFailure = undefined;
+        this.applyFilterEmitter.next();
     }
 
     public onQuickRangeLastFailure(e: RangeLastAttemptOption): void {
         this.dashboardFilters.lastFailureDate = lastTimeRangeHelper(e.value);
+        this.applyFilterEmitter.next();
     }
 
     public clearLastFailureControl(): void {
         this.dashboardFilters.lastFailureDate = undefined;
         this.dashboardFilters.selectedQuickRangeLastFailure = undefined;
+        this.applyFilterEmitter.next();
+    }
+
+    public onDirectionToggle(): void {
+        this.applyFilterEmitter.next();
     }
 }

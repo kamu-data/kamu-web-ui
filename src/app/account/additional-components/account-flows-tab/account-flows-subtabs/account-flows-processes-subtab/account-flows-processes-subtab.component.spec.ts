@@ -255,7 +255,6 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -307,7 +306,6 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -335,7 +333,6 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -363,7 +360,6 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Failing],
             minConsecutiveFailures: 2,
             isFirstInitialization: false,
-            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -391,7 +387,6 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -419,7 +414,6 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: true,
         });
 
         fixture.detectChanges();

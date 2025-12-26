@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { DateTimeAdapter, OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
@@ -45,6 +45,7 @@ import { FlowProcessEffectiveState, OrderingDirection } from "src/app/api/kamu.g
 })
 export class RecentActivityFiltersViewComponent implements OnInit {
     @Input({ required: true }) public dashboardFilters: DashboardFiltersOptions;
+    @Output() public applyFilterEmitter = new EventEmitter<void>();
 
     public readonly RANGE_LAST_ATTEMPT_LIST = RANGE_LAST_ATTEMPT_LIST;
 
@@ -58,6 +59,10 @@ export class RecentActivityFiltersViewComponent implements OnInit {
         ];
     }
 
+    public onDirectionToggle(): void {
+        this.applyFilterEmitter.next();
+    }
+
     public get currentDateTime(): string {
         return new Date().toISOString();
     }
@@ -68,6 +73,7 @@ export class RecentActivityFiltersViewComponent implements OnInit {
 
     public onChangeLastAttemptFilter(): void {
         this.dashboardFilters.selectedQuickRangeLastAttempt = undefined;
+        this.applyFilterEmitter.next();
     }
 
     public clearFromControl(): void {
@@ -84,5 +90,6 @@ export class RecentActivityFiltersViewComponent implements OnInit {
     public onQuickRangeLastAttempt(e: RangeLastAttemptOption): void {
         this.dashboardFilters.fromFilterDate = lastTimeRangeHelper(e.value);
         this.dashboardFilters.toFilterDate = new Date();
+        this.applyFilterEmitter.next();
     }
 }

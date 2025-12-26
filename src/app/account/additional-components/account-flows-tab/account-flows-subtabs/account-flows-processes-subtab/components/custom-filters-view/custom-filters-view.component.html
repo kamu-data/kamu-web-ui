@@ -90,6 +90,7 @@
                         bindLabel="label"
                         bindValue="value"
                         id="order-by-field-custom"
+                        (change)="onDirectionToggle()"
                     >
                         <ng-template ng-option-tmp let-item="item" let-index="index">
                             <label class="fs-14 inline-block w-100"> {{ item.label }} </label>
@@ -103,6 +104,7 @@
                     <mat-slide-toggle
                         class="order-direction-toggle"
                         [(ngModel)]="dashboardFilters.selectedOrderDirection"
+                        (change)="onDirectionToggle()"
                         color="primary"
                     >
                         {{ orderDirection }}
@@ -115,6 +117,7 @@
                     <label for="minConsecutiveFailures" class="fw-500 from-label fs-12">min consecutive failures</label>
                     <input
                         [(ngModel)]="dashboardFilters.minConsecutiveFailures"
+                        (change)="onDirectionToggle()"
                         class="form-control failures-control"
                         id="minConsecutiveFailures"
                         type="number"

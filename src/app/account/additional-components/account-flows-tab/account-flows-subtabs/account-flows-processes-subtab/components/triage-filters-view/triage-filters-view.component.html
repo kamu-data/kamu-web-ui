@@ -32,7 +32,7 @@
                     <ng-select
                         class="ms-4"
                         [items]="RANGE_LAST_ATTEMPT_LIST"
-                        [(ngModel)]="dashboardFilters.fromFilterDate"
+                        [(ngModel)]="dashboardFilters.selectedQuickRangeLastFailure"
                         (change)="onQuickRangeLastFailure($event)"
                         [clearable]="false"
                         [searchable]="true"
@@ -52,6 +52,7 @@
                     <label for="minConsecutiveFailures" class="fw-500 from-label fs-12">min consecutive failures</label>
                     <input
                         [(ngModel)]="dashboardFilters.minConsecutiveFailures"
+                        (change)="onDirectionToggle()"
                         class="form-control failures-control"
                         id="minConsecutiveFailures"
                         type="number"
@@ -71,6 +72,7 @@
                         [clearable]="false"
                         bindLabel="label"
                         bindValue="value"
+                        (change)="onDirectionToggle()"
                         id="order-by-field-custom"
                     >
                         <ng-template ng-option-tmp let-item="item" let-index="index">
@@ -85,6 +87,7 @@
                     <mat-slide-toggle
                         class="order-direction-toggle"
                         [(ngModel)]="dashboardFilters.selectedOrderDirection"
+                        (change)="onDirectionToggle()"
                         color="primary"
                     >
                         {{ orderDirection }}

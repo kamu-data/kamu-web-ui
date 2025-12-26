@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
@@ -48,6 +48,7 @@ import {
 })
 export class CustomFiltersViewComponent implements OnInit {
     @Input({ required: true }) public dashboardFilters: DashboardFiltersOptions;
+    @Output() public applyFilterEmitter = new EventEmitter<void>();
 
     public readonly ORDER_BY_FIELD_LIST_CUSTOM = ORDER_BY_FIELD_LIST_CUSTOM;
     public readonly ORDER_BY_FIELD_LIST_TRIAGE = ORDER_BY_FIELD_LIST_TRIAGE;
@@ -68,14 +69,17 @@ export class CustomFiltersViewComponent implements OnInit {
 
     public onChangeLastAttemptFilter(): void {
         this.dashboardFilters.selectedQuickRangeLastAttempt = undefined;
+        this.applyFilterEmitter.next();
     }
 
     public onChangeLastFailureFilter(): void {
         this.dashboardFilters.selectedQuickRangeLastFailure = undefined;
+        this.applyFilterEmitter.next();
     }
 
     public onChangeNextAttemptFilter(): void {
         this.dashboardFilters.selectedQuickRangeNextAttempt = undefined;
+        this.applyFilterEmitter.next();
     }
 
     public get currentDateTime(): string {
@@ -90,39 +94,51 @@ export class CustomFiltersViewComponent implements OnInit {
         this.dashboardFilters.fromFilterDate = undefined;
         this.dashboardFilters.isFirstInitialization = false;
         this.dashboardFilters.selectedQuickRangeLastAttempt = undefined;
+        this.applyFilterEmitter.next();
     }
 
     public clearToControl(): void {
         this.dashboardFilters.toFilterDate = undefined;
         this.dashboardFilters.isFirstInitialization = false;
+        this.applyFilterEmitter.next();
     }
 
     public clearLastFailureControl(): void {
         this.dashboardFilters.lastFailureDate = undefined;
         this.dashboardFilters.selectedQuickRangeLastFailure = undefined;
+        this.applyFilterEmitter.next();
     }
 
     public clearAfterControl(): void {
         this.dashboardFilters.nextPlannedAfterDate = undefined;
         this.dashboardFilters.selectedQuickRangeNextAttempt = undefined;
+        this.applyFilterEmitter.next();
     }
 
     public clearBeforeControl(): void {
         this.dashboardFilters.nextPlannedBeforeDate = undefined;
         this.dashboardFilters.selectedQuickRangeNextAttempt = undefined;
+        this.applyFilterEmitter.next();
     }
 
     public onQuickRangeLastFailure(e: RangeLastAttemptOption): void {
         this.dashboardFilters.lastFailureDate = lastTimeRangeHelper(e.value);
+        this.applyFilterEmitter.next();
     }
 
     public onQuickRangeNextAttempt(e: RangeLastAttemptOption): void {
         this.dashboardFilters.nextPlannedAfterDate = new Date();
         this.dashboardFilters.nextPlannedBeforeDate = nextTimeRangeHelper(e.value);
+        this.applyFilterEmitter.next();
     }
 
     public onQuickRangeLastAttempt(e: RangeLastAttemptOption): void {
         this.dashboardFilters.fromFilterDate = lastTimeRangeHelper(e.value);
         this.dashboardFilters.toFilterDate = new Date();
+        this.applyFilterEmitter.next();
+    }
+
+    public onDirectionToggle(): void {
+        this.applyFilterEmitter.next();
     }
 }

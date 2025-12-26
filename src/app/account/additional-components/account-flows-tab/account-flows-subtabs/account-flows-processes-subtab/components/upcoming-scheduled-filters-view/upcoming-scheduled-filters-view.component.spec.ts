@@ -35,7 +35,6 @@ describe("UpcomingScheduledFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
         };
     });
 
@@ -67,7 +66,6 @@ describe("UpcomingScheduledFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
         };
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "clear-after-control");
@@ -89,7 +87,6 @@ describe("UpcomingScheduledFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
         };
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "clear-before-control");
@@ -111,7 +108,6 @@ describe("UpcomingScheduledFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
         };
         fixture.detectChanges();
         component.onChangeNextAttemptFilter();
@@ -133,7 +129,6 @@ describe("UpcomingScheduledFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
         };
         fixture.detectChanges();
         component.onQuickRangeNextAttempt({

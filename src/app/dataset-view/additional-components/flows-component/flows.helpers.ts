@@ -394,7 +394,7 @@ export function rollupAvailabilityMapper(mode: ProcessCardFilterMode, state: Flo
         case ProcessCardFilterMode.TRIAGE:
             return [FlowProcessEffectiveState.Failing, FlowProcessEffectiveState.StoppedAuto].includes(state);
         case ProcessCardFilterMode.PAUSED:
-            return [FlowProcessEffectiveState.PausedManual].includes(state);
+            return false;
         case ProcessCardFilterMode.UPCOMING_SCHEDULED:
             return [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing].includes(state);
         case ProcessCardFilterMode.CUSTOM:

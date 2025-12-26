@@ -1,5 +1,5 @@
 <div class="p-4 box">
-    <div class="row">
+    <div class="row mb-4">
         <div class="col-md-7 ms-3">
             <span class="fw-500 fs-12 ml-6px">Last attempt</span>
             <div class="box p-3 w-attempts">
@@ -87,6 +87,7 @@
                     <mat-slide-toggle
                         class="order-direction-toggle"
                         [(ngModel)]="dashboardFilters.selectedOrderDirection"
+                        (change)="onDirectionToggle()"
                         color="primary"
                     >
                         {{ orderDirection }}

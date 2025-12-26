@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import {
     DashboardFiltersOptions,
     RANGE_NEXT_ATTEMPT_LIST,
@@ -40,6 +40,7 @@ import { FlowProcessEffectiveState, OrderingDirection } from "src/app/api/kamu.g
 })
 export class UpcomingScheduledFiltersViewComponent implements OnInit {
     @Input({ required: true }) public dashboardFilters: DashboardFiltersOptions;
+    @Output() public applyFilterEmitter = new EventEmitter<void>();
 
     public readonly RANGE_NEXT_ATTEMPT_LIST = RANGE_NEXT_ATTEMPT_LIST;
 
@@ -53,11 +54,13 @@ export class UpcomingScheduledFiltersViewComponent implements OnInit {
     public clearAfterControl(): void {
         this.dashboardFilters.nextPlannedAfterDate = undefined;
         this.dashboardFilters.selectedQuickRangeNextAttempt = undefined;
+        this.applyFilterEmitter.next();
     }
 
     public clearBeforeControl(): void {
         this.dashboardFilters.nextPlannedBeforeDate = undefined;
         this.dashboardFilters.selectedQuickRangeNextAttempt = undefined;
+        this.applyFilterEmitter.next();
     }
 
     public get currentDateTime(): string {
@@ -70,10 +73,12 @@ export class UpcomingScheduledFiltersViewComponent implements OnInit {
 
     public onChangeNextAttemptFilter(): void {
         this.dashboardFilters.selectedQuickRangeNextAttempt = undefined;
+        this.applyFilterEmitter.next();
     }
 
     public onQuickRangeNextAttempt(e: RangeLastAttemptOption): void {
         this.dashboardFilters.nextPlannedAfterDate = new Date();
         this.dashboardFilters.nextPlannedBeforeDate = nextTimeRangeHelper(e.value);
+        this.applyFilterEmitter.next();
     }
 }

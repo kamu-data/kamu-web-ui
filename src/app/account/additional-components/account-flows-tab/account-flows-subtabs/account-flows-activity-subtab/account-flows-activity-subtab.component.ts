@@ -92,7 +92,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
 
     public ngOnInit(): void {
         this.filterByStatus = this.accountFlowsData.flowGroup;
-        this.fetchTableData(this.currentPage, this.filterByStatus);
+        this.refreshNow();
     }
 
     public fetchTableData(
@@ -104,6 +104,9 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
         this.flowConnectionData$ = timer(0, environment.delay_polling_ms).pipe(
             tap(() => {
                 this.getPageFromUrl();
+                if (this.filterByStatus) {
+                    this.selectedStatusItems = [{ id: this.filterByStatus[0], status: this.filterByStatus[0] }];
+                }
             }),
             switchMap(() =>
                 combineLatest([
@@ -136,8 +139,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             this.accountService.accountResumeFlows(this.loggedUser.accountName).subscribe();
         }
         setTimeout(() => {
-            this.refreshFlow();
-            this.cdr.detectChanges();
+            this.refreshNow();
         }, this.TIMEOUT_REFRESH_FLOW);
     }
 
@@ -159,8 +161,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             .subscribe((success: boolean) => {
                 if (success) {
                     setTimeout(() => {
-                        this.fetchTableData(this.currentPage, this.filterByStatus);
-                        this.cdr.detectChanges();
+                        this.refreshNow();
                     }, this.TIMEOUT_REFRESH_FLOW);
                 }
             });
@@ -174,7 +175,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
     public onNavStatusChange(event: NgbNavChangeEvent): void {
         const currentNav = event.nextId as FlowStatus;
         const nextNav = currentNav === FlowStatus.Running ? [FlowStatus.Running, FlowStatus.Retrying] : [currentNav];
-        const initialPage = 1;
+        this.currentPage = 1;
         this.filterByStatus = nextNav;
         this.navigationService.navigateToOwnerView(
             this.accountName,
@@ -183,7 +184,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             this.accountFlowsData.activeNav,
             nextNav,
         );
-        this.fetchTableData(initialPage, this.filterByStatus);
+        this.refreshNow();
     }
 
     public onPageChange(page: number): void {
@@ -224,16 +225,27 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             this.selectedAccountItems = filters.accounts;
             this.selectedDatasetItems = filters.datasets;
         }
+        this.refreshNow();
     }
 
     public onResetFilters(): void {
         this.selectedDatasetItems = [];
         this.selectedAccountItems = [];
         this.selectedStatusItems = [];
+        this.navigationService.navigateToOwnerView(
+            this.accountName,
+            AccountTabs.FLOWS,
+            undefined,
+            this.accountFlowsData.activeNav,
+        );
     }
 
     public refreshNow(): void {
-        this.fetchTableData(this.currentPage, this.filterByStatus);
-        this.cdr.detectChanges();
+        this.fetchTableData(
+            this.currentPage,
+            this.filterByStatus,
+            this.filterInitiator,
+            this.selectedDatasetItems.map((x) => x.id),
+        );
     }
 }

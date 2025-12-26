@@ -30,6 +30,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     protected readonly cdr = inject(ChangeDetectorRef);
 
     protected filterByStatus: MaybeNull<FlowStatus[]> = [FlowStatus.Finished];
+    protected filterInitiator: MaybeNull<InitiatorFilterInput> = null;
     public onlySystemFlows = false;
     public searchByAccount: AccountFragment[] = [];
     public currentPage = 1;
@@ -72,7 +73,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
     }
 
     public refreshFlow(): void {
-        this.fetchTableData(this.currentPage);
+        this.fetchTableData(this.currentPage, this.filterByStatus, this.filterInitiator);
         this.cdr.detectChanges();
     }
 
@@ -81,24 +82,16 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
         this.onlySystemFlows = filters?.onlySystemFlows ?? false;
         this.searchByAccount = filters?.accounts ?? [];
         if (!filters) {
-            this.fetchTableData(this.currentPage, null, null, []);
             this.onlySystemFlows = false;
         } else {
-            const { accounts, datasets, status, onlySystemFlows } = filters;
-            const filterInitiatorOptions: MaybeNull<InitiatorFilterInput> = onlySystemFlows
+            const { accounts, onlySystemFlows } = filters;
+            this.filterInitiator = onlySystemFlows
                 ? { system: true }
                 : accounts.length
                   ? {
                         accounts: accounts.map((item: AccountFragment) => item.id),
                     }
                   : null;
-
-            this.fetchTableData(
-                this.currentPage,
-                status,
-                filterInitiatorOptions,
-                datasets && datasets.length ? datasets.map((item) => item.id) : [],
-            );
         }
     }
 }

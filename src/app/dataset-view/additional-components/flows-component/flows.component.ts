@@ -397,6 +397,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             this.searchByAccount = [];
         }
         this.searchByFilters(filters);
+        this.refreshFlow();
     }
 
     public onResetFilters(): void {

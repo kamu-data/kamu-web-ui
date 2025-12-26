@@ -127,32 +127,32 @@ describe("AccountFlowsActivitySubtabComponent", () => {
 
     it("should check abort flow button", fakeAsync(() => {
         spyOn(datasetFlowsService, "cancelFlowRun").and.returnValue(of(true));
-        const getPageFromUrlSpy = spyOn(component, "getPageFromUrl");
+        const refreshNowSpy = spyOn(component, "refreshNow");
         component.onAbortFlow({ flowId: MOCK_FLOW_ID, datasetId: mockDatasetMainDataId });
         tick(component.TIMEOUT_REFRESH_FLOW);
-        expect(getPageFromUrlSpy).toHaveBeenCalledTimes(1);
+        expect(refreshNowSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
     it("should check toggle state for account configurations with pause=true", fakeAsync(() => {
         const accountResumeFlowsSpy = spyOn(accountService, "accountResumeFlows").and.returnValue(of());
         const mockPause = true;
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        const refreshNowSpy = spyOn(component, "refreshNow");
         component.toggleStateAccountFlowConfigs(mockPause);
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(accountResumeFlowsSpy).toHaveBeenCalledTimes(1);
-        expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+        expect(refreshNowSpy).toHaveBeenCalledTimes(1);
         flush();
     }));
 
     it("should check toggle state for account configurations with pause=false", fakeAsync(() => {
         const accountPauseFlowsSpy = spyOn(accountService, "accountPauseFlows").and.returnValue(of());
         const mockPause = false;
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        const refreshNowSpy = spyOn(component, "refreshNow");
         component.toggleStateAccountFlowConfigs(mockPause);
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(accountPauseFlowsSpy).toHaveBeenCalledTimes(1);
-        expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+        expect(refreshNowSpy).toHaveBeenCalledTimes(1);
         flush();
     }));
 
@@ -206,6 +206,7 @@ describe("AccountFlowsActivitySubtabComponent", () => {
     });
 
     it("should check to reset filters", () => {
+        spyOn(navigationService, "navigateToOwnerView");
         component.selectedAccountItems = [mockAccountDetails];
         component.selectedStatusItems = [{ id: "FINISHED", status: FlowStatus.Finished }];
         component.onResetFilters();

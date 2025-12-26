@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Lazy loading of cards when scrolling for account filters.
+### Fixed
+- Activity tab: search functionality when switching process statuses
 
 ## [0.61.1] - 2025-12-10
 ### Fixed

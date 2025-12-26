@@ -17,6 +17,7 @@ import {
     OrderingDirection,
 } from "src/app/api/kamu.graphql.interface";
 import { BehaviorSubject } from "rxjs";
+import { stripSecondsFromDateToISOString } from "src/app/common/helpers/data.helpers";
 
 @Injectable({
     providedIn: "root",
@@ -79,9 +80,9 @@ export class AccountFlowsFiltersService {
                         this.currentFiltersSnapshot.toFilterDate && this.currentFiltersSnapshot.fromFilterDate
                             ? {
                                   start: this.currentFiltersSnapshot.fromFilterDate
-                                      ? this.currentFiltersSnapshot.fromFilterDate.toISOString()
-                                      : sixHoursAgoDate.toISOString(),
-                                  end: this.currentFiltersSnapshot.toFilterDate.toISOString(),
+                                      ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.fromFilterDate)
+                                      : stripSecondsFromDateToISOString(sixHoursAgoDate),
+                                  end: stripSecondsFromDateToISOString(this.currentFiltersSnapshot.toFilterDate),
                               }
                             : undefined,
                 };
@@ -100,7 +101,9 @@ export class AccountFlowsFiltersService {
                     effectiveStateIn: this.currentFiltersSnapshot.selectedFlowProcessStates.length
                         ? this.currentFiltersSnapshot.selectedFlowProcessStates
                         : [FlowProcessEffectiveState.StoppedAuto, FlowProcessEffectiveState.Failing],
-                    lastFailureSince: this.currentFiltersSnapshot.lastFailureDate?.toISOString() ?? undefined,
+                    lastFailureSince: this.currentFiltersSnapshot.lastFailureDate
+                        ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.lastFailureDate)
+                        : undefined,
                     minConsecutiveFailures: this.currentFiltersSnapshot.minConsecutiveFailures,
                 };
             }
@@ -115,11 +118,11 @@ export class AccountFlowsFiltersService {
                         ? this.currentFiltersSnapshot.selectedFlowProcessStates
                         : [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing],
                     nextPlannedBefore: this.currentFiltersSnapshot.nextPlannedBeforeDate
-                        ? this.currentFiltersSnapshot.nextPlannedBeforeDate.toISOString()
+                        ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.nextPlannedBeforeDate)
                         : undefined,
                     nextPlannedAfter: this.currentFiltersSnapshot.nextPlannedAfterDate
-                        ? this.currentFiltersSnapshot.nextPlannedAfterDate.toISOString()
-                        : new Date().toISOString(),
+                        ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.nextPlannedAfterDate)
+                        : stripSecondsFromDateToISOString(new Date()),
                 };
             }
             case ProcessCardFilterMode.PAUSED: {
@@ -139,14 +142,20 @@ export class AccountFlowsFiltersService {
                     lastAttemptBetween:
                         this.currentFiltersSnapshot.fromFilterDate && this.currentFiltersSnapshot.toFilterDate
                             ? {
-                                  start: this.currentFiltersSnapshot.fromFilterDate.toISOString(),
-                                  end: this.currentFiltersSnapshot.toFilterDate.toISOString(),
+                                  start: stripSecondsFromDateToISOString(this.currentFiltersSnapshot.fromFilterDate),
+                                  end: stripSecondsFromDateToISOString(this.currentFiltersSnapshot.toFilterDate),
                               }
                             : undefined,
                     minConsecutiveFailures: this.currentFiltersSnapshot.minConsecutiveFailures,
-                    lastFailureSince: this.currentFiltersSnapshot.lastFailureDate?.toISOString() ?? undefined,
-                    nextPlannedBefore: this.currentFiltersSnapshot.nextPlannedBeforeDate?.toISOString() ?? undefined,
-                    nextPlannedAfter: this.currentFiltersSnapshot.nextPlannedAfterDate?.toISOString() ?? undefined,
+                    lastFailureSince: this.currentFiltersSnapshot.lastFailureDate
+                        ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.lastFailureDate)
+                        : undefined,
+                    nextPlannedBefore: this.currentFiltersSnapshot.nextPlannedBeforeDate
+                        ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.nextPlannedBeforeDate)
+                        : undefined,
+                    nextPlannedAfter: this.currentFiltersSnapshot.nextPlannedAfterDate
+                        ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.nextPlannedAfterDate)
+                        : undefined,
                 };
             }
             /* istanbul ignore next */

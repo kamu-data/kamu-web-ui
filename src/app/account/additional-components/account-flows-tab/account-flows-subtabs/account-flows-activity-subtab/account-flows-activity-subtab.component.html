@@ -10,22 +10,6 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex justify-content-end mt-4 mb-2">
-            <button
-                class="border-1 me-4 px-3 py-2 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
-                type="button"
-                (click)="toggleStateAccountFlowConfigs(flowConnectionData.allFlowsPaused!)"
-            >
-                {{ flowConnectionData.allFlowsPaused ? "Resume" : "Pause" }} account flows
-            </button>
-            <button
-                (click)="refreshNow()"
-                class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
-            >
-                <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>
-                <span class="fs-12 me-2 d-block"> Refresh now</span>
-            </button>
-        </div>
         <div class="search-result-container__content my-4">
             <app-tile-base-widget
                 [nodes]="flowConnectionData.flowsData.connectionDataForWidget.nodes"
@@ -58,6 +42,10 @@
                 <li [ngbNavItem]="FlowStatus.Finished">
                     <button ngbNavLink>Finished</button>
                     <ng-template ngbNavContent>
+                        <div *ngIf="loadingFlows$ | async" class="mt-4 w-50 mx-auto">
+                            <mat-progress-bar data-test-id="loading-progress-bar" mode="indeterminate" />
+                            <div class="text-center pt-4">Loading...</div>
+                        </div>
                         <app-flows-table
                             [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
                             [filterByStatus]="filterByStatus"
@@ -86,6 +74,10 @@
                 <li [ngbNavItem]="FlowStatus.Running">
                     <button ngbNavLink>Running</button>
                     <ng-template ngbNavContent>
+                        <div *ngIf="loadingFlows$ | async" class="mt-4 w-50 mx-auto">
+                            <mat-progress-bar data-test-id="loading-progress-bar" mode="indeterminate" />
+                            <div class="text-center pt-4">Loading...</div>
+                        </div>
                         <app-flows-table
                             [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
                             [filterByStatus]="filterByStatus"
@@ -115,6 +107,10 @@
                 <li [ngbNavItem]="FlowStatus.Waiting">
                     <button ngbNavLink>Waiting</button>
                     <ng-template ngbNavContent>
+                        <div *ngIf="loadingFlows$ | async" class="mt-4 w-50 mx-auto">
+                            <mat-progress-bar data-test-id="loading-progress-bar" mode="indeterminate" />
+                            <div class="text-center pt-4">Loading...</div>
+                        </div>
                         <app-flows-table
                             [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
                             [filterByStatus]="filterByStatus"

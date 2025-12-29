@@ -24,6 +24,8 @@ describe("SqlEditorComponent", () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(SqlEditorComponent);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
         fixture.detectChanges();
     });
 

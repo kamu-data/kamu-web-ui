@@ -133,13 +133,12 @@ export class SqlQueryService {
                 this.resetSqlError();
             }),
             catchError((e: HttpErrorResponse) => {
-                if (e.message && e.status === 0) {
-                    this.toastrService.error(`Unable to resolve/connect to host: ${e.url}`);
-                }
                 if (e.error && e.status === 400) {
                     this.emitSqlErrorOccurred({
                         error: (e.error as { message: string }).message,
                     });
+                } else {
+                    this.toastrService.error(`Unable to resolve/connect to host: ${e.url}`);
                 }
                 return EMPTY;
             }),

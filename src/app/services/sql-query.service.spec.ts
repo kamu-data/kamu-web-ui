@@ -11,6 +11,7 @@ import { mockSqlQueryRestResponse } from "../search/mock.data";
 import { Apollo } from "apollo-angular";
 import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
 import { LoggedUserService } from "../auth/logged-user.service";
+import { provideToastr } from "ngx-toastr";
 
 describe("SqlQueryService", () => {
     let service: SqlQueryService;
@@ -20,7 +21,7 @@ describe("SqlQueryService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
-            providers: [Apollo],
+            providers: [Apollo, provideToastr()],
         });
         service = TestBed.inject(SqlQueryService);
         httpMock = TestBed.inject(HttpTestingController);
@@ -65,7 +66,7 @@ describe("SqlQueryService", () => {
         const req = httpMock.expectOne((request) => request.url.includes("/query"));
         expect(req.request.method).toBe("POST");
 
-        req.flush({ message: "Server message" }, { status: 500, statusText: "Server Error" });
+        req.flush({ message: "Server message" }, { status: 400, statusText: "Server Error" });
         expect(emitSqlErrorOccurredSpy).toHaveBeenCalledTimes(1);
     });
 });

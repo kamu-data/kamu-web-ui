@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Lazy loading of cards when scrolling for account filters.
+### Fixed
+- CORS error due to incorrect configuration when executing the SQL query
 
 ## [0.61.1] - 2025-12-10
 ### Fixed

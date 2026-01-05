@@ -9,9 +9,11 @@ import {
     AccountFlowProcessCard,
     FlowProcessEffectiveState,
     FlowProcessOrderField,
+    FlowStatus,
+    InitiatorFilterInput,
     OrderingDirection,
 } from "src/app/api/kamu.graphql.interface";
-import { MaybeUndefined } from "src/app/interface/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 
 export enum AccountFlowsNav {
     ACTIVITY = "activity",
@@ -398,4 +400,11 @@ export interface DashboardFiltersOptions {
 export interface FlowProcessCardListing {
     totalCount: number;
     nodes: AccountFlowProcessCard[];
+}
+
+export interface AccountFiltersParams {
+    page: number;
+    filterByStatus: MaybeNull<FlowStatus[]>;
+    filterByInitiator: MaybeNull<InitiatorFilterInput>;
+    datasetsIds: string[];
 }

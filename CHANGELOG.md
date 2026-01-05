@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Lazy loading of cards when scrolling for account filters.
-- Available to execute only the selected SQL
+- "Run Selection" context menu action in SQL query editor
+### Fixed
+- CORS error due to incorrect configuration when executing the SQL query
+- Corrected redirection to a page from a link in an email when the token has expired 
 
 ## [0.61.1] - 2025-12-10
 ### Fixed

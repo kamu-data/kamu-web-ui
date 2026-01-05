@@ -23,6 +23,7 @@ import { extractSchemaFieldsFromData } from "../common/helpers/table.helper";
 import AppValues from "../common/values/app.values";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { LocalStorageService } from "./local-storage.service";
+import { ToastrService } from "ngx-toastr";
 
 @Injectable({
     providedIn: "root",
@@ -32,6 +33,7 @@ export class SqlQueryService {
     private http = inject(HttpClient);
     private loggedUserService = inject(LoggedUserService);
     private localStorageService = inject(LocalStorageService);
+    private toastrService = inject(ToastrService);
 
     private sqlQueryResponse$: Subject<MaybeNull<SqlQueryBasicResponse>> = new ReplaySubject<
         MaybeNull<SqlQueryBasicResponse>
@@ -131,9 +133,13 @@ export class SqlQueryService {
                 this.resetSqlError();
             }),
             catchError((e: HttpErrorResponse) => {
-                this.emitSqlErrorOccurred({
-                    error: (e.error as { message: string }).message,
-                });
+                if (e.error && e.status === 400) {
+                    this.emitSqlErrorOccurred({
+                        error: (e.error as { message: string }).message,
+                    });
+                } else {
+                    this.toastrService.error(`Unable to resolve/connect to host: ${e.url}`);
+                }
                 return EMPTY;
             }),
         );

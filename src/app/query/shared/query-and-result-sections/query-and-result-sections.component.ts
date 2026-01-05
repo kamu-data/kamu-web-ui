@@ -108,6 +108,7 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     public knownEngines$: Observable<EngineDesc[]>;
     public enabledProof: boolean = false;
     public readonly GENERATE_PROOF_TOOLTIP: string = "Please log in to use this feature";
+    public selectedCode: string = "";
 
     public ngOnInit(): void {
         this.knownEngines$ = this.engineService.engines().pipe(map((result) => result.data.knownEngines));
@@ -153,7 +154,7 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
         this.rowsLimit = limit;
 
         const params = {
-            query: this.sqlRequestCode,
+            query: this.selectedCode ? this.selectedCode : this.sqlRequestCode,
             skip: this.skipRows,
             limit,
         };
@@ -161,8 +162,13 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
         this.runSQLRequest(params);
     }
 
-    public runSql(): void {
-        if (this.sqlRequestCode) this.runSQLRequest({ query: this.sqlRequestCode }, true);
+    public runSql(selectedCode: MaybeNull<string>): void {
+        if (selectedCode) {
+            this.selectedCode = selectedCode;
+            this.runSQLRequest({ query: selectedCode }, true);
+        } else {
+            this.runSQLRequest({ query: this.sqlRequestCode }, true);
+        }
     }
 
     public verifyQueryResult(): void {

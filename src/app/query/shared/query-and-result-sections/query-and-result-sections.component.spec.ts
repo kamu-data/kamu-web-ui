@@ -64,7 +64,7 @@ describe("QueryAndResultSectionsComponent", () => {
 
     it("should check run sql query", () => {
         const runSQLRequestSpy = spyOn(component, "runSQLRequest");
-        component.runSql();
+        component.runSql(null);
 
         expect(runSQLRequestSpy).toHaveBeenCalledOnceWith({ query: "select * from 'mock-dataset'" }, true);
     });

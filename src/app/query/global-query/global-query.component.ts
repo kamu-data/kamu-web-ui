@@ -81,7 +81,7 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(() => {
-                this.navigationService.navigateWithSqlQuery(params.query);
+                this.navigationService.navigateWithSqlQuery(this.sqlRequestCode);
             });
     }
 }

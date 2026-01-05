@@ -26,6 +26,7 @@ import { EditorComponent, MonacoEditorModule } from "ngx-monaco-editor-v2";
 import AppValues from "src/app/common/values/app.values";
 import { FormsModule } from "@angular/forms";
 import { NgStyle, NgIf } from "@angular/common";
+import { MaybeNull } from "src/app/interface/app.types";
 
 const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
     theme: "vs",
@@ -63,7 +64,7 @@ const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
 export class SqlEditorComponent extends BaseEditorComponent implements OnInit, OnDestroy {
     public readonly EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = SQL_EDITOR_OPTIONS;
     public getErrorDetails = getSqlError;
-    @Output() public onRunSql = new EventEmitter<null>();
+    @Output() public onRunSql = new EventEmitter<MaybeNull<string>>();
     @Input() public placeholder = AppValues.DEFAULT_MONACO_EDITOR_PLACEHOLDER;
     @ViewChild("monacoEditor") private monaco: EditorComponent;
 
@@ -79,6 +80,7 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnInit, O
     private moveSubscription: Subscription | undefined;
     private div: HTMLElement | null;
     private alive: boolean = true;
+    private selectedText: string;
 
     public ngOnInit(): void {
         /* istanbul ignore next */
@@ -128,21 +130,52 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnInit, O
         super.onInitEditor(editor);
 
         const runQueryFn = () => {
-            this.onRunSql.emit();
+            const selection = editor.getSelection();
+            const model = editor.getModel();
+            if (model && selection) {
+                this.selectedText = model.getValueInRange(selection);
+                this.selectedText ? this.onRunSql.emit(this.selectedText) : this.onRunSql.emit();
+            }
         };
+
+        const hasSelectionKey = editor.createContextKey<boolean>("hasSelection", false);
+
+        // Listen selection changes
+        editor.onDidChangeCursorSelection((e) => {
+            const isSelected = !e.selection.isEmpty();
+            hasSelectionKey.set(isSelected);
+        });
 
         const monaco = getMonacoNamespace();
         /* istanbul ignore else */
         if (monaco) {
             editor.addAction({
                 // An unique identifier of the contributed action.
-                id: "run-sql",
+                id: "run-selected-sql",
                 // A label of the action that will be presented to the user.
-                label: "Run SQL",
+                label: "Run Selection",
+                precondition: "hasSelection",
                 // An optional array of keybindings for the action.
                 keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
                 contextMenuGroupId: "navigation",
-                contextMenuOrder: 1.5,
+
+                contextMenuOrder: 1,
+                // Method that will be executed when the action is triggered.
+                // @param editor The editor instance is passed in as a convenience
+                run: runQueryFn,
+            });
+
+            editor.addAction({
+                // An unique identifier of the contributed action.
+                id: "run-sql",
+                // A label of the action that will be presented to the user.
+                label: "Run SQL",
+                precondition: "!hasSelection",
+                // An optional array of keybindings for the action.
+                keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
+                contextMenuGroupId: "navigation",
+
+                contextMenuOrder: 1,
                 // Method that will be executed when the action is triggered.
                 // @param editor The editor instance is passed in as a convenience
                 run: runQueryFn,

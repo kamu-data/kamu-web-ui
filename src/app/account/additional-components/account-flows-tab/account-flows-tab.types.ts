@@ -11,9 +11,11 @@ import {
     FlowProcessEffectiveState,
     FlowProcessGroupRollupDataFragment,
     FlowProcessOrderField,
+    FlowStatus,
+    InitiatorFilterInput,
     OrderingDirection,
 } from "src/app/api/kamu.graphql.interface";
-import { MaybeUndefined } from "src/app/interface/app.types";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 
 export enum AccountFlowsNav {
     ACTIVITY = "activity",
@@ -383,4 +385,11 @@ export interface FlowProcessCardListing {
 export interface CardsStrategyResult {
     cards: AccountFlowProcessCardConnectionDataFragment;
     rollup: FlowProcessGroupRollupDataFragment;
+}
+
+export interface AccountFiltersParams {
+    page: number;
+    filterByStatus: MaybeNull<FlowStatus[]>;
+    filterByInitiator: MaybeNull<InitiatorFilterInput>;
+    datasetsIds: string[];
 }

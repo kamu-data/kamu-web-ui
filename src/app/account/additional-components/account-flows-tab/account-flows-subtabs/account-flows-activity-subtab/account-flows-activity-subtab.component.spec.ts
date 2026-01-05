@@ -7,7 +7,7 @@
 
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { AccountFlowsActivitySubtabComponent } from "./account-flows-activity-subtab.component";
-import { Account, AccountFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
+import { Account, FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { AccountFlowsNav, ProcessCardFilterMode } from "../../account-flows-tab.types";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
@@ -70,7 +70,6 @@ describe("AccountFlowsActivitySubtabComponent", () => {
             flowGroup: [FlowStatus.Finished],
             datasetsFiltersMode: ProcessCardFilterMode.RECENT_ACTIVITY,
         };
-        spyOn(accountService, "accountAllFlowsPaused").and.returnValue(of(false));
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         spyOn(accountService, "getAccountListFlows").and.returnValue(of(mockFlowsTableData));
         fixture.detectChanges();
@@ -127,32 +126,32 @@ describe("AccountFlowsActivitySubtabComponent", () => {
 
     it("should check abort flow button", fakeAsync(() => {
         spyOn(datasetFlowsService, "cancelFlowRun").and.returnValue(of(true));
-        const getPageFromUrlSpy = spyOn(component, "getPageFromUrl");
+        const refreshNowSpy = spyOn(component, "refreshNow");
         component.onAbortFlow({ flowId: MOCK_FLOW_ID, datasetId: mockDatasetMainDataId });
         tick(component.TIMEOUT_REFRESH_FLOW);
-        expect(getPageFromUrlSpy).toHaveBeenCalledTimes(1);
+        expect(refreshNowSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
     it("should check toggle state for account configurations with pause=true", fakeAsync(() => {
         const accountResumeFlowsSpy = spyOn(accountService, "accountResumeFlows").and.returnValue(of());
         const mockPause = true;
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        const refreshNowSpy = spyOn(component, "refreshNow");
         component.toggleStateAccountFlowConfigs(mockPause);
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(accountResumeFlowsSpy).toHaveBeenCalledTimes(1);
-        expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+        expect(refreshNowSpy).toHaveBeenCalledTimes(1);
         flush();
     }));
 
     it("should check toggle state for account configurations with pause=false", fakeAsync(() => {
         const accountPauseFlowsSpy = spyOn(accountService, "accountPauseFlows").and.returnValue(of());
         const mockPause = false;
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        const refreshNowSpy = spyOn(component, "refreshNow");
         component.toggleStateAccountFlowConfigs(mockPause);
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(accountPauseFlowsSpy).toHaveBeenCalledTimes(1);
-        expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+        expect(refreshNowSpy).toHaveBeenCalledTimes(1);
         flush();
     }));
 
@@ -168,23 +167,27 @@ describe("AccountFlowsActivitySubtabComponent", () => {
     });
 
     it("should check search by filters with filters options", () => {
+        const accounts = mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators
+            .nodes as Account[];
         const filterOptions: FlowsTableFiltersOptions = {
-            accounts: mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators.nodes as Account[],
+            accounts,
             datasets: mockDatasets,
             status: [FlowStatus.Finished],
             onlySystemFlows: false,
         };
-        const { accounts, datasets, status } = filterOptions;
         component.currentPage = 2;
-        const fetchTableDataSpy = spyOn(component, "fetchTableData");
+
+        const updateFiltersSpy = spyOn(component.fetchTrigger$, "next");
         fixture.detectChanges();
         component.onSearchByFiltersChange(filterOptions);
 
-        expect(fetchTableDataSpy).toHaveBeenCalledWith(
-            component.currentPage,
-            status,
-            { accounts: accounts.map((item: AccountFragment) => item.id) },
-            datasets.map((item) => item.id),
+        expect(updateFiltersSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                page: component.currentPage,
+                filterByStatus: [FlowStatus.Finished],
+                filterByInitiator: { accounts: accounts.map((x) => x.id) },
+                datasetsIds: component.selectedDatasetItems.map((x) => x.id),
+            }),
         );
     });
 
@@ -198,14 +201,22 @@ describe("AccountFlowsActivitySubtabComponent", () => {
         const { status } = filterOptions;
         component.currentPage = 1;
         component.onlySystemFlows = true;
-        const fetchTableDataSpy = spyOn(component, "fetchTableData");
+        const updateFiltersSpy = spyOn(component.fetchTrigger$, "next");
         fixture.detectChanges();
         component.onSearchByFiltersChange(filterOptions);
 
-        expect(fetchTableDataSpy).toHaveBeenCalledWith(component.currentPage, status, { system: true }, []);
+        expect(updateFiltersSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                page: component.currentPage,
+                filterByStatus: status,
+                filterByInitiator: { system: true },
+                datasetsIds: component.selectedDatasetItems.map((x) => x.id),
+            }),
+        );
     });
 
     it("should check to reset filters", () => {
+        spyOn(navigationService, "navigateToOwnerView");
         component.selectedAccountItems = [mockAccountDetails];
         component.selectedStatusItems = [{ id: "FINISHED", status: FlowStatus.Finished }];
         component.onResetFilters();

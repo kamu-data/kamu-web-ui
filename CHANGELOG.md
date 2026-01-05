@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Lazy loading of cards when scrolling for account filters
 - Added rollup section to the flow system status dashboards
 - The ability to copy a cell from the data table
+- "Run Selection" context menu action in SQL query editor
+### Fixed
+- CORS error due to incorrect configuration when executing the SQL query
+- Corrected redirection to a page from a link in an email when the token has expired 
+- Activity tab: search functionality when switching process statuses
+
 
 ## [0.61.1] - 2025-12-10
 ### Fixed

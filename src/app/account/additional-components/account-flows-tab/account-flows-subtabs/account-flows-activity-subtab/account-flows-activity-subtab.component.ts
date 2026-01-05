@@ -8,8 +8,9 @@
 import { ChangeDetectionStrategy, Component, inject, Input, NgZone, OnInit } from "@angular/core";
 import { AsyncPipe, NgIf } from "@angular/common";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
-import { timer, switchMap, combineLatest, of, map, Observable, tap } from "rxjs";
+import { timer, switchMap, combineLatest, of, map, Observable, tap, Subject, startWith, BehaviorSubject } from "rxjs";
 import {
+    AccountFlowFilters,
     AccountFragment,
     DatasetBasicsFragment,
     FlowStatus,
@@ -33,7 +34,7 @@ import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/t
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import AppValues from "src/app/common/values/app.values";
-import { AccountFlowsNav } from "../../account-flows-tab.types";
+import { AccountFiltersParams, AccountFlowsNav } from "../../account-flows-tab.types";
 import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 import { AccountTabs } from "src/app/account/account.constants";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -84,7 +85,9 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
     public readonly AccountFlowsNav: typeof AccountFlowsNav = AccountFlowsNav;
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
+    public readonly fetchTrigger$ = new Subject<AccountFiltersParams>();
     public activeStatusNav: FlowStatus = FlowStatus.Finished;
+    private readonly loadingFlowsSubject$ = new BehaviorSubject<boolean>(false);
 
     private readonly accountService = inject(AccountService);
     private readonly loggedUserService = inject(LoggedUserService);
@@ -92,7 +95,11 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
 
     public ngOnInit(): void {
         this.filterByStatus = this.accountFlowsData.flowGroup;
-        this.fetchTableData(this.currentPage, this.filterByStatus);
+        this.refreshNow();
+    }
+
+    public get loadingFlows$(): Observable<boolean> {
+        return this.loadingFlowsSubject$.asObservable();
     }
 
     public fetchTableData(
@@ -101,31 +108,45 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
         filterByInitiator?: MaybeNull<InitiatorFilterInput>,
         datasetsIds?: string[],
     ): void {
-        this.flowConnectionData$ = timer(0, environment.delay_polling_ms).pipe(
+        const polling$ = timer(0, environment.delay_polling_ms);
+        const triggerWithInitial$ = this.fetchTrigger$.pipe(
+            startWith({
+                page,
+                filterByStatus,
+                filterByInitiator,
+                datasetsIds,
+            }),
+        );
+        this.flowConnectionData$ = triggerWithInitial$.pipe(
             tap(() => {
                 this.getPageFromUrl();
             }),
-            switchMap(() =>
-                combineLatest([
-                    this.accountService.getAccountListFlows({
-                        accountName: this.accountName,
-                        page: page - 1,
-                        perPageTable: this.TABLE_FLOW_RUNS_PER_PAGE,
-                        perPageTiles: this.WIDGET_FLOW_RUNS_PER_PAGE,
-                        filters: {
-                            byProcessType: null,
-                            byStatus: filterByStatus,
-                            byInitiator: filterByInitiator,
-                            byDatasetIds: datasetsIds ?? [],
-                        },
+            switchMap((params) =>
+                polling$.pipe(
+                    switchMap(() => {
+                        return combineLatest([
+                            this.accountService.getAccountListFlows({
+                                accountName: this.accountName,
+                                page: params.page - 1,
+                                perPageTable: this.TABLE_FLOW_RUNS_PER_PAGE,
+                                perPageTiles: this.WIDGET_FLOW_RUNS_PER_PAGE,
+                                filters: this.setAccountFilters({
+                                    byProcessType: null,
+                                    byStatus: params.filterByStatus,
+                                    byInitiator: params.filterByInitiator,
+                                    byDatasetIds: params.datasetsIds ?? [],
+                                }),
+                            }),
+                            of([this.loggedUser]),
+                        ]);
                     }),
-                    this.accountService.accountAllFlowsPaused(this.loggedUser.accountName),
-                    of([this.loggedUser]),
-                ]),
+                ),
             ),
-            map(([flowsData, allFlowsPaused, flowInitiators]) => {
-                return { flowsData, allFlowsPaused, flowInitiators };
-            }),
+            tap(() => this.loadingFlowsSubject$.next(false)),
+            map(([flowsData, flowInitiators]) => ({
+                flowsData,
+                flowInitiators,
+            })),
         );
     }
 
@@ -136,9 +157,21 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             this.accountService.accountResumeFlows(this.loggedUser.accountName).subscribe();
         }
         setTimeout(() => {
-            this.refreshFlow();
-            this.cdr.detectChanges();
+            this.refreshNow();
         }, this.TIMEOUT_REFRESH_FLOW);
+    }
+
+    private setAccountFilters(filters: AccountFlowFilters): AccountFlowFilters {
+        const { byProcessType, byStatus, byInitiator, byDatasetIds } = filters;
+        if (byStatus) {
+            this.selectedStatusItems = [{ id: byStatus[0], status: byStatus[0] }];
+        }
+        return {
+            byProcessType,
+            byStatus,
+            byInitiator,
+            byDatasetIds,
+        };
     }
 
     public get loggedUser(): AccountFragment {
@@ -159,8 +192,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             .subscribe((success: boolean) => {
                 if (success) {
                     setTimeout(() => {
-                        this.fetchTableData(this.currentPage, this.filterByStatus);
-                        this.cdr.detectChanges();
+                        this.refreshNow();
                     }, this.TIMEOUT_REFRESH_FLOW);
                 }
             });
@@ -174,7 +206,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
     public onNavStatusChange(event: NgbNavChangeEvent): void {
         const currentNav = event.nextId as FlowStatus;
         const nextNav = currentNav === FlowStatus.Running ? [FlowStatus.Running, FlowStatus.Retrying] : [currentNav];
-        const initialPage = 1;
+        this.currentPage = 1;
         this.filterByStatus = nextNav;
         this.navigationService.navigateToOwnerView(
             this.accountName,
@@ -183,7 +215,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             this.accountFlowsData.activeNav,
             nextNav,
         );
-        this.fetchTableData(initialPage, this.filterByStatus);
+        this.updateFilters();
     }
 
     public onPageChange(page: number): void {
@@ -224,16 +256,37 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             this.selectedAccountItems = filters.accounts;
             this.selectedDatasetItems = filters.datasets;
         }
+        this.updateFilters();
     }
 
     public onResetFilters(): void {
         this.selectedDatasetItems = [];
         this.selectedAccountItems = [];
         this.selectedStatusItems = [];
+        this.navigationService.navigateToOwnerView(
+            this.accountName,
+            AccountTabs.FLOWS,
+            undefined,
+            this.accountFlowsData.activeNav,
+        );
     }
 
     public refreshNow(): void {
-        this.fetchTableData(this.currentPage, this.filterByStatus);
-        this.cdr.detectChanges();
+        this.fetchTableData(
+            this.currentPage,
+            this.filterByStatus,
+            this.filterInitiator,
+            this.selectedDatasetItems.map((x) => x.id),
+        );
+    }
+
+    private updateFilters(): void {
+        this.loadingFlowsSubject$.next(true);
+        this.fetchTrigger$.next({
+            page: this.currentPage,
+            filterByStatus: this.filterByStatus,
+            filterByInitiator: this.filterInitiator,
+            datasetsIds: this.selectedDatasetItems.map((x) => x.id),
+        });
     }
 }

@@ -24,6 +24,7 @@ describe("SqlEditorComponent", () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(SqlEditorComponent);
+
         fixture.detectChanges();
     });
 

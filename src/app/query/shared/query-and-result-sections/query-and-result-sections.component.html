@@ -94,7 +94,7 @@
         [(template)]="sqlRequestCode"
         [error]="sqlError"
         [placeholder]="monacoPlaceholder"
-        (onRunSql)="runSql()"
+        (onRunSql)="runSql($event)"
         (onEditorLoaded)="hideProgressBar()"
     />
 

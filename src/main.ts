@@ -88,6 +88,7 @@ const Services = [
                                     ? ErrorTexts.ERROR_ACCESS_TOKEN_EXPIRED
                                     : graphQLErrors[0].message,
                             );
+                            navigationService.navigateToLogin(window.location.pathname);
                         }
                     } else {
                         graphQLErrors.forEach(({ message }) => {

@@ -128,6 +128,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
 
     public ngOnInit(): void {
+        this.filterByStatus = null;
         this.refreshFlow();
     }
 
@@ -364,7 +365,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                 page,
             });
         }
-        this.fetchTableData(page);
+        this.fetchTableData(page, this.filterByStatus, this.filterInitiator);
     }
 
     public updateNow(): void {

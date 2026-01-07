@@ -4748,6 +4748,7 @@ export type AccountFlowsAsCardsQuery = {
                     allCards: {
                         __typename?: "AccountFlowProcessCardConnection";
                     } & AccountFlowProcessCardConnectionDataFragment;
+                    fullRollup: { __typename?: "FlowProcessGroupRollup" } & FlowProcessGroupRollupDataFragment;
                 };
             };
         } | null;
@@ -4819,6 +4820,34 @@ export type AccountPauseFlowsMutation = {
     };
 };
 
+export type AccountPrimaryCardsQueryVariables = Exact<{
+    name: Scalars["AccountName"];
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+    filters?: InputMaybe<FlowProcessFilters>;
+    ordering?: InputMaybe<FlowProcessOrdering>;
+}>;
+
+export type AccountPrimaryCardsQuery = {
+    __typename?: "Query";
+    accounts: {
+        __typename?: "Accounts";
+        byName?: {
+            __typename?: "Account";
+            flows: {
+                __typename?: "AccountFlows";
+                processes: {
+                    __typename?: "AccountFlowProcesses";
+                    primaryCards: {
+                        __typename?: "DatasetFlowProcessConnection";
+                    } & DatasetFlowProcessConnectionDataFragment;
+                    primaryRollup: { __typename?: "FlowProcessGroupRollup" } & FlowProcessGroupRollupDataFragment;
+                };
+            };
+        } | null;
+    };
+};
+
 export type AccountResumeFlowsMutationVariables = Exact<{
     accountName: Scalars["AccountName"];
 }>;
@@ -4832,6 +4861,34 @@ export type AccountResumeFlowsMutation = {
             flows: {
                 __typename?: "AccountFlowsMut";
                 triggers: { __typename?: "AccountFlowTriggersMut"; resumeAccountDatasetFlows: boolean };
+            };
+        } | null;
+    };
+};
+
+export type AccountWebhookCardsQueryVariables = Exact<{
+    name: Scalars["AccountName"];
+    page?: InputMaybe<Scalars["Int"]>;
+    perPage?: InputMaybe<Scalars["Int"]>;
+    filters?: InputMaybe<FlowProcessFilters>;
+    ordering?: InputMaybe<FlowProcessOrdering>;
+}>;
+
+export type AccountWebhookCardsQuery = {
+    __typename?: "Query";
+    accounts: {
+        __typename?: "Accounts";
+        byName?: {
+            __typename?: "Account";
+            flows: {
+                __typename?: "AccountFlows";
+                processes: {
+                    __typename?: "AccountFlowProcesses";
+                    webhookCards: {
+                        __typename?: "WebhookFlowSubProcessConnection";
+                    } & WebhookFlowSubProcessConnectionDataFragment;
+                    webhookRollup: { __typename?: "FlowProcessGroupRollup" } & FlowProcessGroupRollupDataFragment;
+                };
             };
         } | null;
     };
@@ -4947,6 +5004,18 @@ export type DatasetConnectionDataFragment = {
     >;
 };
 
+export type DatasetFlowProcessConnectionDataFragment = {
+    __typename?: "DatasetFlowProcessConnection";
+    totalCount: number;
+    nodes: Array<{
+        __typename?: "DatasetFlowProcess";
+        flowType: DatasetFlowType;
+        dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+        summary: { __typename?: "FlowProcessSummary" } & FlowProcessSummaryDataFragment;
+    }>;
+    pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
+};
+
 export type AccountFlowProcessCardConnectionDataFragment = {
     __typename?: "AccountFlowProcessCardConnection";
     totalCount: number;
@@ -4965,6 +5034,19 @@ export type AccountFlowProcessCardConnectionDataFragment = {
               summary: { __typename?: "FlowProcessSummary" } & FlowProcessSummaryDataFragment;
           }
     >;
+    pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
+};
+
+export type WebhookFlowSubProcessConnectionDataFragment = {
+    __typename?: "WebhookFlowSubProcessConnection";
+    totalCount: number;
+    nodes: Array<{
+        __typename?: "WebhookFlowSubProcess";
+        id: string;
+        name: string;
+        parentDataset?: ({ __typename?: "Dataset" } & DatasetBasicsFragment) | null;
+        summary: { __typename?: "FlowProcessSummary" } & FlowProcessSummaryDataFragment;
+    }>;
     pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
 };
 
@@ -6637,16 +6719,7 @@ export type DatasetFlowsProcessesQuery = {
                     };
                     webhooks: {
                         __typename?: "WebhookFlowSubProcessGroup";
-                        rollup: {
-                            __typename?: "FlowProcessGroupRollup";
-                            total: number;
-                            active: number;
-                            failing: number;
-                            paused: number;
-                            stopped: number;
-                            unconfigured: number;
-                            worstConsecutiveFailures: number;
-                        };
+                        rollup: { __typename?: "FlowProcessGroupRollup" } & FlowProcessGroupRollupDataFragment;
                         subprocesses: Array<{
                             __typename?: "WebhookFlowSubProcess";
                             id: string;
@@ -7374,6 +7447,17 @@ export type DatasetTransformFragment = {
     transform: { __typename?: "TransformSql" } & DatasetTransformContentFragment;
 };
 
+export type FlowProcessGroupRollupDataFragment = {
+    __typename?: "FlowProcessGroupRollup";
+    total: number;
+    active: number;
+    failing: number;
+    paused: number;
+    stopped: number;
+    unconfigured: number;
+    worstConsecutiveFailures: number;
+};
+
 export type LicenseFragment = {
     __typename?: "SetLicense";
     shortName: string;
@@ -7932,6 +8016,26 @@ export const DatasetPageInfoFragmentDoc = gql`
         totalPages
     }
 `;
+export const DatasetFlowProcessConnectionDataFragmentDoc = gql`
+    fragment DatasetFlowProcessConnectionData on DatasetFlowProcessConnection {
+        nodes {
+            flowType
+            dataset {
+                ...DatasetBasics
+            }
+            summary {
+                ...FlowProcessSummaryData
+            }
+        }
+        totalCount
+        pageInfo {
+            ...DatasetPageInfo
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+    ${FlowProcessSummaryDataFragmentDoc}
+    ${DatasetPageInfoFragmentDoc}
+`;
 export const AccountFlowProcessCardConnectionDataFragmentDoc = gql`
     fragment AccountFlowProcessCardConnectionData on AccountFlowProcessCardConnection {
         nodes {
@@ -7953,6 +8057,27 @@ export const AccountFlowProcessCardConnectionDataFragmentDoc = gql`
                 summary {
                     ...FlowProcessSummaryData
                 }
+            }
+        }
+        totalCount
+        pageInfo {
+            ...DatasetPageInfo
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+    ${FlowProcessSummaryDataFragmentDoc}
+    ${DatasetPageInfoFragmentDoc}
+`;
+export const WebhookFlowSubProcessConnectionDataFragmentDoc = gql`
+    fragment WebhookFlowSubProcessConnectionData on WebhookFlowSubProcessConnection {
+        nodes {
+            id
+            name
+            parentDataset {
+                ...DatasetBasics
+            }
+            summary {
+                ...FlowProcessSummaryData
             }
         }
         totalCount
@@ -9328,6 +9453,17 @@ export const DatasetSearchOverviewFragmentDoc = gql`
     ${DatasetCurrentInfoFragmentDoc}
     ${LicenseFragmentDoc}
 `;
+export const FlowProcessGroupRollupDataFragmentDoc = gql`
+    fragment FlowProcessGroupRollupData on FlowProcessGroupRollup {
+        total
+        active
+        failing
+        paused
+        stopped
+        unconfigured
+        worstConsecutiveFailures
+    }
+`;
 export const CreateAccessTokenDocument = gql`
     mutation createAccessToken($accountId: AccountID!, $tokenName: String!) {
         accounts {
@@ -9530,12 +9666,16 @@ export const AccountFlowsAsCardsDocument = gql`
                         allCards(filters: $filters, page: $page, perPage: $perPage, ordering: $ordering) {
                             ...AccountFlowProcessCardConnectionData
                         }
+                        fullRollup {
+                            ...FlowProcessGroupRollupData
+                        }
                     }
                 }
             }
         }
     }
     ${AccountFlowProcessCardConnectionDataFragmentDoc}
+    ${FlowProcessGroupRollupDataFragmentDoc}
 `;
 
 @Injectable({
@@ -9646,6 +9786,43 @@ export class AccountPauseFlowsGQL extends Apollo.Mutation<
         super(apollo);
     }
 }
+export const AccountPrimaryCardsDocument = gql`
+    query accountPrimaryCards(
+        $name: AccountName!
+        $page: Int
+        $perPage: Int
+        $filters: FlowProcessFilters
+        $ordering: FlowProcessOrdering
+    ) {
+        accounts {
+            byName(name: $name) {
+                flows {
+                    processes {
+                        primaryCards(filters: $filters, page: $page, perPage: $perPage, ordering: $ordering) {
+                            ...DatasetFlowProcessConnectionData
+                        }
+                        primaryRollup {
+                            ...FlowProcessGroupRollupData
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${DatasetFlowProcessConnectionDataFragmentDoc}
+    ${FlowProcessGroupRollupDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class AccountPrimaryCardsGQL extends Apollo.Query<AccountPrimaryCardsQuery, AccountPrimaryCardsQueryVariables> {
+    document = AccountPrimaryCardsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const AccountResumeFlowsDocument = gql`
     mutation accountResumeFlows($accountName: AccountName!) {
         accounts {
@@ -9668,6 +9845,43 @@ export class AccountResumeFlowsGQL extends Apollo.Mutation<
     AccountResumeFlowsMutationVariables
 > {
     document = AccountResumeFlowsDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const AccountWebhookCardsDocument = gql`
+    query accountWebhookCards(
+        $name: AccountName!
+        $page: Int
+        $perPage: Int
+        $filters: FlowProcessFilters
+        $ordering: FlowProcessOrdering
+    ) {
+        accounts {
+            byName(name: $name) {
+                flows {
+                    processes {
+                        webhookCards(filters: $filters, page: $page, perPage: $perPage, ordering: $ordering) {
+                            ...WebhookFlowSubProcessConnectionData
+                        }
+                        webhookRollup {
+                            ...FlowProcessGroupRollupData
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${WebhookFlowSubProcessConnectionDataFragmentDoc}
+    ${FlowProcessGroupRollupDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class AccountWebhookCardsGQL extends Apollo.Query<AccountWebhookCardsQuery, AccountWebhookCardsQueryVariables> {
+    document = AccountWebhookCardsDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);
@@ -11669,13 +11883,7 @@ export const DatasetFlowsProcessesDocument = gql`
                         }
                         webhooks {
                             rollup {
-                                total
-                                active
-                                failing
-                                paused
-                                stopped
-                                unconfigured
-                                worstConsecutiveFailures
+                                ...FlowProcessGroupRollupData
                             }
                             subprocesses {
                                 id
@@ -11691,6 +11899,7 @@ export const DatasetFlowsProcessesDocument = gql`
         }
     }
     ${FlowProcessSummaryDataFragmentDoc}
+    ${FlowProcessGroupRollupDataFragmentDoc}
 `;
 
 @Injectable({

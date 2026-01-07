@@ -6,11 +6,12 @@
  */
 
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
-import { AccountFlowsDatasetsSubtabComponent } from "./account-flows-datasets-subtab.component";
-import { AccountFlowsNav, ProcessCardFilterMode } from "../../account-flows-tab.types";
+import { AccountFlowsProcessesSubtabComponent } from "./account-flows-processes-subtab.component";
+import { AccountFlowsNav, ProcessCardFilterMode, ProcessCardGroup } from "../../account-flows-tab.types";
 import {
     AccountFlowProcessCardConnectionDataFragment,
     FlowProcessEffectiveState,
+    FlowProcessGroupRollupDataFragment,
     FlowStatus,
 } from "src/app/api/kamu.graphql.interface";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
@@ -24,6 +25,8 @@ import {
     mockAccountFlowsAsCardsQuery,
     mockAccountFlowsAsCardsQueryEmpty,
     mockAccountFlowsAsCardsQueryWithWebhook,
+    mockAccountFlowsPrimaryCardsQuery,
+    mockAccountFlowsWebhookCardsQuery,
 } from "src/app/api/mock/account.mock";
 import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
@@ -35,9 +38,9 @@ import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow
 import { MatButtonToggleChange } from "@angular/material/button-toggle";
 import AppValues from "src/app/common/values/app.values";
 
-describe("AccountFlowsDatasetsSubtabComponent", () => {
-    let component: AccountFlowsDatasetsSubtabComponent;
-    let fixture: ComponentFixture<AccountFlowsDatasetsSubtabComponent>;
+describe("AccountFlowsProcessesSubtabComponent", () => {
+    let component: AccountFlowsProcessesSubtabComponent;
+    let fixture: ComponentFixture<AccountFlowsProcessesSubtabComponent>;
     let accountService: AccountService;
     let navigationService: NavigationService;
     let datasetWebhooksService: DatasetWebhooksService;
@@ -45,12 +48,13 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
     let toastrService: ToastrService;
     const MOCK_ACCOUNT_NAME = "kamu";
     const MOCK_SUBSCRIPTION_ID = "121223-21212-567788";
-    let getAccountFlowsAsCardsSpy: jasmine.Spy;
+
+    let getAccountAllCardsSpy: jasmine.Spy;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                AccountFlowsDatasetsSubtabComponent,
+                AccountFlowsProcessesSubtabComponent,
                 SharedTestModule,
                 HttpClientTestingModule,
                 WebhookFlowProcessCardComponent,
@@ -79,7 +83,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
 
         registerMatSvgIcons();
 
-        fixture = TestBed.createComponent(AccountFlowsDatasetsSubtabComponent);
+        fixture = TestBed.createComponent(AccountFlowsProcessesSubtabComponent);
         accountService = TestBed.inject(AccountService);
         navigationService = TestBed.inject(NavigationService);
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);
@@ -88,15 +92,17 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         component = fixture.componentInstance;
         component.accountName = MOCK_ACCOUNT_NAME;
         component.accountFlowsData = {
-            activeNav: AccountFlowsNav.DATASETS,
+            activeNav: AccountFlowsNav.PROCESSES,
             flowGroup: [FlowStatus.Finished],
             datasetsFiltersMode: ProcessCardFilterMode.CUSTOM,
         };
-        getAccountFlowsAsCardsSpy = spyOn(accountService, "getAccountFlowsAsCards").and.returnValue(
-            of(
-                mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
+        getAccountAllCardsSpy = spyOn(accountService, "getAccountAllCards").and.returnValue(
+            of({
+                cards: mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
                     .allCards as AccountFlowProcessCardConnectionDataFragment,
-            ),
+                rollup: mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
+                    .fullRollup as FlowProcessGroupRollupDataFragment,
+            }),
         );
     });
 
@@ -107,11 +113,13 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
 
     it("should empty block is visible", fakeAsync(() => {
         fixture.detectChanges();
-        getAccountFlowsAsCardsSpy.and.returnValue(
-            of(
-                mockAccountFlowsAsCardsQueryEmpty.accounts.byName?.flows.processes
+        getAccountAllCardsSpy.and.returnValue(
+            of({
+                cards: mockAccountFlowsAsCardsQueryEmpty.accounts.byName?.flows.processes
                     .allCards as AccountFlowProcessCardConnectionDataFragment,
-            ),
+                rollup: mockAccountFlowsAsCardsQueryEmpty.accounts.byName?.flows.processes
+                    .fullRollup as FlowProcessGroupRollupDataFragment,
+            }),
         );
         tick(0);
         fixture.detectChanges();
@@ -123,11 +131,13 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
 
     it("should check cards is visible", fakeAsync(() => {
         fixture.detectChanges();
-        getAccountFlowsAsCardsSpy.and.returnValue(
-            of(
-                mockAccountFlowsAsCardsQueryWithWebhook.accounts.byName?.flows.processes
+        getAccountAllCardsSpy.and.returnValue(
+            of({
+                cards: mockAccountFlowsAsCardsQueryWithWebhook.accounts.byName?.flows.processes
                     .allCards as AccountFlowProcessCardConnectionDataFragment,
-            ),
+                rollup: mockAccountFlowsAsCardsQueryWithWebhook.accounts.byName?.flows.processes
+                    .fullRollup as FlowProcessGroupRollupDataFragment,
+            }),
         );
         tick(0);
         fixture.detectChanges();
@@ -245,7 +255,6 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -253,7 +262,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         fixture.detectChanges();
         const cardsBlock = findElementByDataTestId(fixture, "cards");
         expect(cardsBlock).toBeDefined();
-        expect(getAccountFlowsAsCardsSpy).toHaveBeenCalledTimes(1);
+        expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
@@ -265,7 +274,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         fixture.detectChanges();
         const cardsBlock = findElementByDataTestId(fixture, "cards");
         expect(cardsBlock).toBeDefined();
-        expect(getAccountFlowsAsCardsSpy).toHaveBeenCalledTimes(1);
+        expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
@@ -277,7 +286,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         fixture.detectChanges();
         const cardsBlock = findElementByDataTestId(fixture, "cards");
         expect(cardsBlock).toBeDefined();
-        expect(getAccountFlowsAsCardsSpy).toHaveBeenCalledTimes(1);
+        expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
@@ -297,7 +306,6 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -305,7 +313,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         fixture.detectChanges();
         const cardsBlock = findElementByDataTestId(fixture, "cards");
         expect(cardsBlock).toBeDefined();
-        expect(getAccountFlowsAsCardsSpy).toHaveBeenCalledTimes(1);
+        expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
@@ -325,7 +333,6 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -333,7 +340,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         fixture.detectChanges();
         const cardsBlock = findElementByDataTestId(fixture, "cards");
         expect(cardsBlock).toBeDefined();
-        expect(getAccountFlowsAsCardsSpy).toHaveBeenCalledTimes(1);
+        expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
@@ -353,7 +360,6 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Failing],
             minConsecutiveFailures: 2,
             isFirstInitialization: false,
-            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -361,7 +367,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         fixture.detectChanges();
         const cardsBlock = findElementByDataTestId(fixture, "cards");
         expect(cardsBlock).toBeDefined();
-        expect(getAccountFlowsAsCardsSpy).toHaveBeenCalledTimes(1);
+        expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
@@ -381,7 +387,6 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -389,7 +394,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         fixture.detectChanges();
         const cardsBlock = findElementByDataTestId(fixture, "cards");
         expect(cardsBlock).toBeDefined();
-        expect(getAccountFlowsAsCardsSpy).toHaveBeenCalledTimes(1);
+        expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
@@ -409,7 +414,6 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: true,
         });
 
         fixture.detectChanges();
@@ -417,7 +421,7 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         fixture.detectChanges();
         const cardsBlock = findElementByDataTestId(fixture, "cards");
         expect(cardsBlock).toBeDefined();
-        expect(getAccountFlowsAsCardsSpy).toHaveBeenCalledTimes(1);
+        expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
@@ -434,4 +438,44 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
         component.onScroll();
         expect(component.processesPerPage).toEqual(AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE);
     });
+
+    it("should check toggle rollup", () => {
+        const refreshNowSpy = spyOn(component, "refreshNow");
+        component.onToggleRollup();
+        expect(refreshNowSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should check toggle rollup on 'datasets' chip", fakeAsync(() => {
+        component.flowsMode = ProcessCardGroup.DATASETS;
+
+        const getAccountPrimaryCardsSpy = spyOn(accountService, "getAccountPrimaryCards").and.returnValue(
+            of({
+                cards: mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
+                    .primaryCards as AccountFlowProcessCardConnectionDataFragment,
+                rollup: mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
+                    .primaryRollup as FlowProcessGroupRollupDataFragment,
+            }),
+        );
+        fixture.detectChanges();
+        tick(0);
+        expect(getAccountPrimaryCardsSpy).toHaveBeenCalledTimes(1);
+        discardPeriodicTasks();
+    }));
+
+    it("should check toggle rollup on 'webhooks' chip", fakeAsync(() => {
+        component.flowsMode = ProcessCardGroup.WEBHOOKS;
+
+        const getAccountWebhookCardsSpy = spyOn(accountService, "getAccountWebhookCards").and.returnValue(
+            of({
+                cards: mockAccountFlowsWebhookCardsQuery.accounts.byName?.flows.processes
+                    .webhookCards as AccountFlowProcessCardConnectionDataFragment,
+                rollup: mockAccountFlowsWebhookCardsQuery.accounts.byName?.flows.processes
+                    .webhookRollup as FlowProcessGroupRollupDataFragment,
+            }),
+        );
+        fixture.detectChanges();
+        tick(0);
+        expect(getAccountWebhookCardsSpy).toHaveBeenCalledTimes(1);
+        discardPeriodicTasks();
+    }));
 });

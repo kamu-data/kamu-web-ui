@@ -34,7 +34,6 @@ describe("CustomFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
         };
     });
 
@@ -82,7 +81,6 @@ describe("CustomFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
         };
         fixture.detectChanges();
         component.onChangeNextAttemptFilter();
@@ -104,7 +102,6 @@ describe("CustomFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
         };
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "clear-from-control");
@@ -126,7 +123,6 @@ describe("CustomFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
         };
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "clear-to-control");
@@ -148,7 +144,6 @@ describe("CustomFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
         };
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "clear-after-control");
@@ -170,7 +165,6 @@ describe("CustomFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
         };
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "clear-before-control");
@@ -192,7 +186,6 @@ describe("CustomFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
         };
         fixture.detectChanges();
         component.onQuickRangeLastAttempt({
@@ -219,7 +212,6 @@ describe("CustomFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-            applyFilters: false,
         };
         fixture.detectChanges();
         component.onQuickRangeNextAttempt({

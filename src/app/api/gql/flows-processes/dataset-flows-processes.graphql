@@ -11,13 +11,7 @@ query datasetFlowsProcesses($datasetId: DatasetID!) {
           }
           webhooks {
             rollup {
-              total
-              active
-              failing
-              paused
-              stopped
-              unconfigured
-              worstConsecutiveFailures
+              ...FlowProcessGroupRollupData
             }
             subprocesses {
               id

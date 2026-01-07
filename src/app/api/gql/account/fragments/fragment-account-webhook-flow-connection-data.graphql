@@ -1,0 +1,16 @@
+fragment WebhookFlowSubProcessConnectionData on WebhookFlowSubProcessConnection {
+  nodes {
+    id
+    name
+    parentDataset {
+      ...DatasetBasics
+    }
+    summary {
+      ...FlowProcessSummaryData
+    }
+  }
+  totalCount
+  pageInfo {
+    ...DatasetPageInfo
+  }
+}

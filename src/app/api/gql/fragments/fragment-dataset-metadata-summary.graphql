@@ -20,7 +20,7 @@ fragment DatasetMetadataSummary on Dataset {
     currentTransform {
       ...DatasetTransform
     }
-    currentSchema(format: PARQUET_JSON) {
+    currentSchema(format: ODF_JSON) {
       format
       content
     }

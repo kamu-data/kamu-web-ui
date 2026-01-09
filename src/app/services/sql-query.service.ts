@@ -101,6 +101,7 @@ export class SqlQueryService {
             include: params.enabledProof ? ["Input", "Schema", "Proof"] : ["Input", "Schema"],
             limit: params.limit ? params.limit : AppValues.SQL_QUERY_LIMIT,
             skip: params.skip,
+            schemaFormat: "OdfJson",
         };
 
         const headers = new HttpHeaders().set(AppValues.HEADERS_SKIP_LOADING_KEY, `true`);

@@ -6,12 +6,13 @@
  */
 
 import { DataRow, DataSchemaField } from "../../interface/dataset.interface";
+import { OdfTypes } from "../components/dynamic-table/dynamic-table.interface";
 
 export const extractSchemaFieldsFromData = (data: DataRow): DataSchemaField[] => {
     return Object.keys(data).map((item: string) => ({
         name: item,
-        repetition: "",
-        type: "",
-        logicalType: "",
+        type: {
+            kind: OdfTypes.String,
+        },
     }));
 };

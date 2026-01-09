@@ -338,7 +338,12 @@ export type Accounts = {
     __typename?: "Accounts";
     /** Returns an account by its ID, if found */
     byId?: Maybe<Account>;
-    /** Returns accounts by their IDs */
+    /**
+     * Returns accounts by their IDs.
+     *
+     * Order of results is guaranteed to match the inputs. Duplicate inputs
+     * will results in duplicate results.
+     */
     byIds: Array<Account>;
     /** Returns an account by its name, if found */
     byName?: Maybe<Account>;
@@ -370,7 +375,12 @@ export type AccountsMut = {
     __typename?: "AccountsMut";
     /** Returns a mutable account by its id */
     byId?: Maybe<AccountMut>;
-    /** Returns mutable accounts by their IDs */
+    /**
+     * Returns mutable accounts by their IDs.
+     *
+     * Order of results is guaranteed to match the inputs. Duplicate inputs
+     * will results in duplicate results.
+     */
     byIds: Array<AccountMut>;
     /** Returns a mutable account by its name */
     byName?: Maybe<AccountMut>;
@@ -1309,6 +1319,7 @@ export type DatasetFlowConfigsMut = {
 
 export type DatasetFlowConfigsMutSetCompactionConfigArgs = {
     compactionConfigInput: FlowConfigCompactionInput;
+    retryPolicyInput?: InputMaybe<FlowRetryPolicyInput>;
 };
 
 export type DatasetFlowConfigsMutSetIngestConfigArgs = {
@@ -1680,13 +1691,21 @@ export type Datasets = {
     byAccountName: DatasetConnection;
     /** Returns a dataset by its ID, if found */
     byId?: Maybe<Dataset>;
-    /** Returns multiple datasets by their IDs */
+    /**
+     * Returns multiple datasets by their IDs.
+     *
+     * Order of results is guaranteed to match the inputs. Duplicate inputs
+     * will results in duplicate results.
+     */
     byIds: Array<Dataset>;
     /** Returns dataset by its owner and name */
     byOwnerAndName?: Maybe<Dataset>;
     /** Returns a dataset by an ID or alias, if found */
     byRef?: Maybe<Dataset>;
-    /** Returns multiple datasets by their IDs or aliases */
+    /**
+     * Returns multiple datasets by their IDs or aliases. Order of results is
+     * guaranteed to match the inputs.
+     */
     byRefs: Array<Dataset>;
 };
 
@@ -1729,7 +1748,12 @@ export type DatasetsMut = {
     __typename?: "DatasetsMut";
     /** Returns a mutable dataset by its ID, if found */
     byId?: Maybe<DatasetMut>;
-    /** Returns mutable datasets by their IDs */
+    /**
+     * Returns mutable datasets by their IDs.
+     *
+     * Order of results is guaranteed to match the inputs. Duplicate inputs
+     * will results in duplicate results.
+     */
     byIds: Array<DatasetMut>;
     /**
      * Creates a new collection dataset.
@@ -3828,15 +3852,13 @@ export type SetAttachments = {
     attachments: Attachments;
 };
 
-/**
- * Specifies the complete schema of Data Slices added to the Dataset following
- * this event.
- *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#setdataschema-schema
- */
 export type SetDataSchema = {
     __typename?: "SetDataSchema";
     schema: DataSchema;
+};
+
+export type SetDataSchemaSchemaArgs = {
+    format?: InputMaybe<DataSchemaFormat>;
 };
 
 export type SetDatasetVisibilityResult = {
@@ -9094,7 +9116,7 @@ export const SetLicenseEventFragmentDoc = gql`
 `;
 export const SetDataSchemaEventFragmentDoc = gql`
     fragment SetDataSchemaEvent on SetDataSchema {
-        schema {
+        schema(format: ODF_JSON) {
             format
             content
         }
@@ -9185,7 +9207,7 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
             currentTransform {
                 ...DatasetTransform
             }
-            currentSchema(format: PARQUET_JSON) {
+            currentSchema(format: ODF_JSON) {
                 format
                 content
             }
@@ -10313,7 +10335,7 @@ export const GetDatasetDataSqlRunDocument = gql`
             query(
                 query: $query
                 queryDialect: SQL_DATA_FUSION
-                schemaFormat: PARQUET_JSON
+                schemaFormat: ODF_JSON
                 dataFormat: JSON_AOS
                 limit: $limit
                 skip: $skip
@@ -10598,7 +10620,7 @@ export const GetDatasetSchemaDocument = gql`
             byId(datasetId: $datasetId) {
                 ...DatasetBasics
                 metadata {
-                    currentSchema(format: PARQUET_JSON) {
+                    currentSchema(format: ODF_JSON) {
                         format
                         content
                     }

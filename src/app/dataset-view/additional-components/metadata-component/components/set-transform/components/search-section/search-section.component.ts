@@ -117,7 +117,14 @@ export class SearchSectionComponent extends BaseComponent {
                             name: value.dataset.name,
                             children: schema?.fields.length
                                 ? schema.fields
-                                : [{ name: "No schema", type: "", repetition: "" }],
+                                : [
+                                      {
+                                          name: "No schema",
+                                          type: {
+                                              kind: "",
+                                          },
+                                      },
+                                  ],
                             owner,
                         });
                         this.dataSource.data = this.TREE_DATA;

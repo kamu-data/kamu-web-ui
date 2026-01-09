@@ -30,16 +30,16 @@ import { Node } from "@swimlane/ngx-graph";
 import { LineageNodeAccess } from "./lineage-component/lineage-model";
 import { OperationColumnClassEnum } from "src/app/interface/dataset.interface";
 import { TEST_AVATAR_URL } from "src/app/api/mock/auth.mock";
+import { OdfTypes } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 export const mockDataUpdate: DataUpdate = {
     schema: {
-        name: "id",
-        type: "string",
         fields: [
             {
                 name: "mockName",
-                repetition: "mockRepetition",
-                type: "mockType",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
         ],
     },
@@ -984,60 +984,60 @@ export const mockOverviewDataUpdateNullable = {
 
 export const mockMetadataRootUpdate: MetadataSchemaUpdate = {
     schema: {
-        name: "spark_schema",
-        type: "struct",
         fields: [
             {
                 name: "offset",
-                repetition: "OPTIONAL",
-                type: "INT64",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "system_time",
-                repetition: "REQUIRED",
-                type: "INT64",
-                logicalType: "TIMESTAMP_MILLIS",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "date_reported",
-                repetition: "OPTIONAL",
-                type: "INT64",
-                logicalType: "TIMESTAMP_MILLIS",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "id",
-                repetition: "OPTIONAL",
-                type: "INT64",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "zone",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "gender",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "age_group",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "case_status",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "case_type",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
         ],
     },
@@ -1179,60 +1179,60 @@ export const mockMetadataRootUpdate: MetadataSchemaUpdate = {
 
 export const mockMetadataRootPushSourceUpdate: MetadataSchemaUpdate = {
     schema: {
-        name: "spark_schema",
-        type: "struct",
         fields: [
             {
                 name: "offset",
-                repetition: "OPTIONAL",
-                type: "INT64",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "system_time",
-                repetition: "REQUIRED",
-                type: "INT64",
-                logicalType: "TIMESTAMP_MILLIS",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "date_reported",
-                repetition: "OPTIONAL",
-                type: "INT64",
-                logicalType: "TIMESTAMP_MILLIS",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "id",
-                repetition: "OPTIONAL",
-                type: "INT64",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "zone",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "gender",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "age_group",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "case_status",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "case_type",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
         ],
     },
@@ -1369,69 +1369,79 @@ export const mockMetadataRootPushSourceUpdate: MetadataSchemaUpdate = {
 
 export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
     schema: {
-        name: "spark_schema",
-        type: "struct",
         fields: [
             {
                 name: "offset",
-                repetition: "OPTIONAL",
-                type: "INT64",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "system_time",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "block_time",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "token_symbol",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "event_name",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "amount",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "eth_amount",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "block_number",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "block_hash",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "transaction_index",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
 
             {
                 name: "transaction_hash",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "log_index",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
         ],
     },

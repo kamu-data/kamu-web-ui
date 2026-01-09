@@ -455,7 +455,7 @@ export function OdfTypeMapper(type: DataSchemaTypeField): string {
     switch (type.kind) {
         case OdfTypes.Option:
         case OdfTypes.Null:
-            return `${type.kind}<${type.inner ? OdfTypeMapper(type.inner) : type.kind}>`;
+            return `${type.kind}<${type.inner ? OdfTypeMapper(type.inner) : ""}>`;
         case OdfTypes.List:
             return `${type.kind}<${type.itemType && type.itemType.inner ? OdfTypeMapper(type.itemType) : type.itemType?.kind}>`;
         case OdfTypes.Timestamp:

@@ -10,6 +10,7 @@ import { findElementByDataTestId, getElementByDataTestId } from "src/app/common/
 import { DynamicTableComponent } from "./dynamic-table.component";
 import { MOCK_DATA_ROWS, MOCK_SCHEMA_FIELDS } from "./dynamic-table.mock";
 import { provideToastr } from "ngx-toastr";
+import { OdfTypes } from "./dynamic-table.interface";
 
 describe("DynamicTableComponent", () => {
     let component: DynamicTableComponent;
@@ -18,10 +19,16 @@ describe("DynamicTableComponent", () => {
     const mockSchemaFields = [
         {
             name: "offset",
-            repetition: "OPTIONAL",
-            type: "INT64",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
-        { name: "system_time", repetition: "REQUIRED", type: "INT96" },
+        {
+            name: "system_time",
+            type: {
+                kind: OdfTypes.String,
+            },
+        },
     ];
 
     beforeEach(async () => {
@@ -58,7 +65,14 @@ describe("DynamicTableComponent", () => {
     });
 
     it("should check table if schemaFields is exist", () => {
-        component.schemaFields = [{ name: "testName", repetition: "testRepetition", type: "testType" }];
+        component.schemaFields = [
+            {
+                name: "testName",
+                type: {
+                    kind: OdfTypes.String,
+                },
+            },
+        ];
         component.dataRows = [];
         fixture.detectChanges();
         expect(component.dataSource.data).toBeDefined();

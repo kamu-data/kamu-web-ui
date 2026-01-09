@@ -8,8 +8,15 @@
 import { DataSchemaFormat, DatasetKind, MetadataBlockFragment } from "../../api/kamu.graphql.interface";
 import { SliceUnit } from "../../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "../../search/mock.data";
-import { OperationColumnClassEnum } from "../../interface/dataset.interface";
-import { DataHelpers, sliceSizeMapperReverse, operationColumnMapper, setOperationColumnClass } from "./data.helpers";
+import { DataSchemaTypeField, OperationColumnClassEnum } from "../../interface/dataset.interface";
+import {
+    DataHelpers,
+    sliceSizeMapperReverse,
+    operationColumnMapper,
+    setOperationColumnClass,
+    OdfTypeMapper,
+} from "./data.helpers";
+import { OdfTypes } from "../components/dynamic-table/dynamic-table.interface";
 
 export const metadataBlockSetVocab: MetadataBlockFragment = {
     __typename: "MetadataBlockExtended",
@@ -438,5 +445,108 @@ it(`should propagate the name for unknown engines`, () => {
 ].forEach((item: { case: number; expected: OperationColumnClassEnum }) => {
     it(`should check set operation column class with  ${item.case}`, () => {
         expect(setOperationColumnClass(item.case)).toEqual(item.expected);
+    });
+});
+
+[
+    {
+        case: {
+            kind: OdfTypes.Option,
+            inner: {
+                kind: OdfTypes.String,
+            },
+        },
+        expectation: "Option<String>",
+    },
+    {
+        case: {
+            kind: OdfTypes.Null,
+            inner: {
+                kind: OdfTypes.String,
+            },
+        },
+        expectation: "Null<String>",
+    },
+    {
+        case: {
+            kind: OdfTypes.List,
+            itemType: {
+                kind: OdfTypes.Int64,
+            },
+        },
+        expectation: "List<Int64>",
+    },
+    {
+        case: {
+            kind: OdfTypes.List,
+            itemType: {
+                kind: OdfTypes.Option,
+                inner: {
+                    kind: OdfTypes.Float32,
+                },
+            },
+        },
+        expectation: "List<Option<Float32>>",
+    },
+    {
+        case: {
+            kind: OdfTypes.Time,
+            unit: "Millisecond",
+        },
+        expectation: "Time<unit:Millisecond>",
+    },
+    {
+        case: {
+            kind: OdfTypes.Duration,
+            unit: "Millisecond",
+        },
+        expectation: "Duration<unit:Millisecond>",
+    },
+    {
+        case: {
+            kind: OdfTypes.Timestamp,
+            unit: "Millisecond",
+            timezone: "UTC",
+        },
+        expectation: "Timestamp<unit:Millisecond, timezone:UTC>",
+    },
+    {
+        case: {
+            kind: OdfTypes.Map,
+            keyType: {
+                kind: OdfTypes.String,
+            },
+            valueType: {
+                kind: OdfTypes.Int64,
+            },
+        },
+        expectation: `Map<key:String, value:Int64>`,
+    },
+    {
+        case: {
+            kind: OdfTypes.Struct,
+            fields: [
+                {
+                    name: "id",
+                    type: {
+                        kind: OdfTypes.String,
+                    },
+                },
+                {
+                    name: "gender",
+                    type: {
+                        kind: OdfTypes.Option,
+                        inner: {
+                            kind: OdfTypes.String,
+                        },
+                    },
+                },
+            ],
+        },
+        expectation: `Struct<id:String, gender:Option<String>>`,
+    },
+].forEach((item: { case: DataSchemaTypeField; expectation: string }) => {
+    it(`should check OdfTypeMapper with ${item.case.kind}`, () => {
+        expect(OdfTypeMapper(item.case)).toEqual(item.expectation);
     });
 });

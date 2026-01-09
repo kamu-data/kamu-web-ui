@@ -35,7 +35,10 @@
 <div class="mt-4">
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
-            {{ node.name }}&nbsp;&nbsp; <span *ngIf="node.type" class="fw-bold">({{ node.type }})</span>
+            {{ node.name }}&nbsp;&nbsp;
+            <span [title]="OdfTypeMapper(node.type)" *ngIf="node.type" class="fw-bold column-type"
+                >({{ OdfTypeMapper(node.type) }})</span
+            >
             <button
                 *ngIf="node.name === UNAVAILABLE_INPUT_LABEL"
                 class="no-button d-flex"

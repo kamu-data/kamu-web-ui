@@ -456,7 +456,7 @@ it(`should propagate the name for unknown engines`, () => {
                 kind: OdfTypes.String,
             },
         },
-        expectation: "Option<String>",
+        expectation: "String?",
     },
     {
         case: {
@@ -486,21 +486,21 @@ it(`should propagate the name for unknown engines`, () => {
                 },
             },
         },
-        expectation: "List<Option<Float32>>",
+        expectation: "List<Float32?>",
     },
     {
         case: {
             kind: OdfTypes.Time,
             unit: "Millisecond",
         },
-        expectation: "Time<unit:Millisecond>",
+        expectation: "Time<Millisecond>",
     },
     {
         case: {
             kind: OdfTypes.Duration,
             unit: "Millisecond",
         },
-        expectation: "Duration<unit:Millisecond>",
+        expectation: "Duration<Millisecond>",
     },
     {
         case: {
@@ -508,7 +508,7 @@ it(`should propagate the name for unknown engines`, () => {
             unit: "Millisecond",
             timezone: "UTC",
         },
-        expectation: "Timestamp<unit:Millisecond, timezone:UTC>",
+        expectation: "Timestamp<Millisecond, UTC>",
     },
     {
         case: {
@@ -520,7 +520,7 @@ it(`should propagate the name for unknown engines`, () => {
                 kind: OdfTypes.Int64,
             },
         },
-        expectation: `Map<key:String, value:Int64>`,
+        expectation: `Map<String, Int64>`,
     },
     {
         case: {
@@ -543,7 +543,7 @@ it(`should propagate the name for unknown engines`, () => {
                 },
             ],
         },
-        expectation: `Struct<id:String, gender:Option<String>>`,
+        expectation: `Struct<id:String, gender:String?>`,
     },
 ].forEach((item: { case: DataSchemaTypeField; expectation: string }) => {
     it(`should check OdfTypeMapper with ${item.case.kind}`, () => {

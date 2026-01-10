@@ -7,15 +7,17 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { TooltipIconComponent } from "../tooltip-icon/tooltip-icon.component";
+import { NgClass } from "@angular/common";
 
 @Component({
     selector: "app-block-row-data",
     templateUrl: "./block-row-data.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [TooltipIconComponent],
+    imports: [TooltipIconComponent, NgClass],
 })
 export class BlockRowDataComponent {
     @Input({ required: true }) public label: string;
     @Input({ required: true }) public tooltip: string;
+    @Input() public rowClass: string;
 }

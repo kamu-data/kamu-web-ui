@@ -12,7 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CORS error due to incorrect configuration when executing the SQL query
 - Corrected redirection to a page from a link in an email when the token has expired 
 - Activity tab: search functionality when switching process statuses
-
+### Changed
+- The dataset schema has been converted to ODF format 
 
 ## [0.61.1] - 2025-12-10
 ### Fixed

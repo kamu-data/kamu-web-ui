@@ -8,10 +8,11 @@
 import { AfterContentInit, ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit } from "@angular/core";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";
-import { TableSourceRowInterface } from "./dynamic-table.interface";
+import { OdfExtraAttributes, TableSourceRowInterface } from "./dynamic-table.interface";
 import { NgFor, NgClass, NgIf } from "@angular/common";
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { ToastrModule, ToastrService } from "ngx-toastr";
+import { OdfTypeMapper } from "../../helpers/data.helpers";
 
 @Component({
     selector: "app-dynamic-table",
@@ -66,10 +67,26 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
 
             // Special case: displaying schema itself
         } else if (!this.dataRows) {
-            this.dataSource.data = this.schemaFields;
-            const arrFieldsLength = this.schemaFields.map((item) => Object.keys(item).length);
-            const indexFieldMaxLength = arrFieldsLength.indexOf(Math.max.apply(null, arrFieldsLength));
-            this.displayedColumns = Object.keys(this.schemaFields[indexFieldMaxLength]);
+            this.dataSource.data = this.schemaFields.map((x) => {
+                return {
+                    name: { value: x.name, cssClass: "" },
+                    type: {
+                        value:
+                            x.extra && OdfExtraAttributes.EXTRA_ATTRIBUTE_TYPE in x.extra
+                                ? x.extra[OdfExtraAttributes.EXTRA_ATTRIBUTE_TYPE].kind
+                                : OdfTypeMapper(x.type),
+                        cssClass: "",
+                    },
+                    description: {
+                        value:
+                            x.extra && OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION in x.extra
+                                ? x.extra[OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION]
+                                : "",
+                        cssClass: "",
+                    },
+                };
+            });
+            this.displayedColumns = ["name", "type", "description"];
 
             // Casual case, displaying data
         } else {

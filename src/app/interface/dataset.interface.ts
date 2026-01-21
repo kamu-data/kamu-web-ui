@@ -11,6 +11,7 @@ import {
     DependencyDatasetResultNotAccessible,
     PageBasedInfo,
 } from "../api/kamu.graphql.interface";
+import { OdfExtraAttributes, OdfTypes } from "../common/components/dynamic-table/dynamic-table.interface";
 
 export interface DataRow {
     [key: string]: {
@@ -26,16 +27,34 @@ export interface DatasetLineageNode {
 }
 
 export interface DatasetSchema {
-    name: string;
-    type: string;
     fields: DataSchemaField[];
 }
 
 export interface DataSchemaField {
     name: string;
-    repetition: string;
-    type: string;
-    logicalType?: string;
+    type: DataSchemaTypeField;
+    extra?: {
+        [OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION]: string;
+        [OdfExtraAttributes.EXTRA_ATTRIBUTE_TYPE]: {
+            kind: string;
+        };
+        [key: string]: string | Record<string, unknown>;
+    };
+}
+
+export interface DataSchemaTypeField {
+    kind: OdfTypes;
+    unit?: string;
+    timezone?: string;
+    inner?: DataSchemaTypeField;
+    itemType?: DataSchemaTypeField;
+    keyType?: {
+        kind: string;
+    };
+    valueType?: {
+        kind: string;
+    };
+    fields?: DataSchemaField[];
 }
 
 export enum OperationColumnClassEnum {

@@ -15,7 +15,7 @@
             >
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="cell-content">{{ element[disCol].value }}</div>
-                    <div class="cell-content" *ngIf="showBadge(rowIndex, colIndex, schemaFields)">
+                    <div class="cell-content ms-1" *ngIf="showBadge(rowIndex, colIndex, schemaFields)">
                         <span (click)="$event.stopPropagation(); showModal(rowIndex, schemaFields)" class="badge-more"
                             >more</span
                         >

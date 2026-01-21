@@ -82,15 +82,18 @@ table {
 }
 
 .badge-more {
-    font-size: 8px;
+    font-size: 11px !important;
     background: deepskyblue;
-    margin-left: 5px;
     border-radius: 7px;
-    padding: 1px 4px;
+    padding: 1px 6px;
     color: #ffff;
     font-weight: 500;
 
     &:hover {
         cursor: pointer;
     }
+}
+
+.cell-content {
+    height: auto !important;
 }

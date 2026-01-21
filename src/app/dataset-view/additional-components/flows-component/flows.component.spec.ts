@@ -129,6 +129,31 @@ describe("FlowsComponent", () => {
         discardPeriodicTasks();
     }));
 
+    it("should check filter by status during the first request", fakeAsync(() => {
+        fixture.detectChanges();
+        mockFlowsTableData.connectionDataForWidget.nodes = [];
+        const datasetFlowsListSpy = spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(
+            of(mockFlowsTableData),
+        );
+        spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
+        spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+        );
+        tick();
+        fixture.detectChanges();
+
+        expect(datasetFlowsListSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                filters: {
+                    byStatus: null,
+                    byInitiator: null,
+                    byProcessType: null,
+                },
+            }),
+        );
+        discardPeriodicTasks();
+    }));
+
     it("should check update now button for root dataset", fakeAsync(() => {
         const refreshFlowSpy = spyOn(component, "refreshFlow");
         spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));

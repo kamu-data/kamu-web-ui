@@ -7,6 +7,8 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AttributesSchemaModalComponent } from "./attributes-schema-modal.component";
+import { MarkdownModule } from "ngx-markdown";
+import { OdfTypes } from "../../dynamic-table.interface";
 
 describe("AttributesSchemaModalComponent", () => {
     let component: AttributesSchemaModalComponent;
@@ -14,11 +16,17 @@ describe("AttributesSchemaModalComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [AttributesSchemaModalComponent],
+            imports: [AttributesSchemaModalComponent, MarkdownModule.forRoot()],
         });
         fixture = TestBed.createComponent(AttributesSchemaModalComponent);
         component = fixture.componentInstance;
-        fixture.detectChanges();
+        (component.element = {
+            name: "offset",
+            type: {
+                kind: OdfTypes.String,
+            },
+        }),
+            fixture.detectChanges();
     });
 
     it("should create", () => {

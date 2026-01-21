@@ -60,6 +60,7 @@ table {
 .copyable-cell {
     cursor: copy;
     transition: background 0.2s;
+    position: relative;
 
     &:hover {
         background-color: rgba(0 0 0 / 10%);
@@ -72,4 +73,24 @@ table {
 
 .mat-mdc-cell {
     user-select: text;
+}
+
+.container-badge {
+    position: absolute;
+    right: 0;
+    top: 7px;
+}
+
+.badge-more {
+    font-size: 8px;
+    background: deepskyblue;
+    margin-left: 5px;
+    border-radius: 7px;
+    padding: 1px 4px;
+    color: #ffff;
+    font-weight: 500;
+
+    &:hover {
+        cursor: pointer;
+    }
 }

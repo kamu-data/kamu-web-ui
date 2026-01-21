@@ -13,6 +13,8 @@ import { NgFor, NgClass, NgIf } from "@angular/common";
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { ToastrModule, ToastrService } from "ngx-toastr";
 import { OdfTypeMapper } from "../../helpers/data.helpers";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { AttributesSchemaModalComponent } from "./components/attributes-schema-modal/attributes-schema-modal.component";
 
 @Component({
     selector: "app-dynamic-table",
@@ -42,6 +44,7 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
     public displayedColumns: string[] = [];
     public readonly OperationColumnClassEnum: typeof OperationColumnClassEnum = OperationColumnClassEnum;
     private toastr = inject(ToastrService);
+    private ngbModalService = inject(NgbModal);
 
     public ngOnInit(): void {
         this.displayTable();
@@ -97,5 +100,23 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
 
     public showCopyMessage() {
         this.toastr.success(`Copied`);
+    }
+
+    public showBadge(indexRow: number, indexColumn: number, data: DataSchemaField[]): boolean {
+        return (
+            indexColumn === 1 &&
+            !this.hasData &&
+            (Boolean(Object.keys(data[indexRow].extra ?? {}).length) || Boolean(data[indexRow].type?.fields?.length))
+        );
+    }
+
+    public showModal(index: number, data: DataSchemaField[]): void {
+        const modalRef = this.ngbModalService.open(AttributesSchemaModalComponent, {
+            size: "lg",
+            centered: true,
+            scrollable: true,
+        });
+        const modalRefInstance = modalRef.componentInstance as AttributesSchemaModalComponent;
+        modalRefInstance.element = data[index];
     }
 }

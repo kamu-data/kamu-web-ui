@@ -5,7 +5,6 @@
                 {{ disCol }}
             </th>
             <td
-                [title]="element[disCol].value"
                 mat-cell
                 [ngClass]="hasData ? element[disCol].cssClass : OperationColumnClassEnum.PRIMARY_COLOR"
                 [class]="'truncate-cell copyable-cell'"
@@ -15,6 +14,11 @@
                 (cdkCopyToClipboardCopied)="showCopyMessage()"
             >
                 {{ element[disCol].value }}
+                <div *ngIf="showBadge(rowIndex, colIndex, schemaFields)" class="container-badge">
+                    <span (click)="$event.stopPropagation(); showModal(rowIndex, schemaFields)" class="badge-more"
+                        >more</span
+                    >
+                </div>
             </td>
         </ng-container>
 

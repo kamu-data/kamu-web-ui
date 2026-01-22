@@ -87,16 +87,16 @@ table {
         cursor: pointer;
     }
 
-    &::after{
-       content: "...";
-       display: inline-block;
-       vertical-align: middle;
-       margin-bottom: 0.65em;
-       font-weight: bold;
+    &::after {
+        content: "...";
+        display: inline-block;
+        vertical-align: middle;
+        margin-bottom: 0.65em;
+        font-weight: bold;
 
-       &:hover{
-          background: #8d9497;
-       }
+        &:hover {
+            background: #8d9497;
+        }
     }
 }
 

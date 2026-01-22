@@ -20,9 +20,10 @@
                         class="cell-content ms-1 position-relative"
                         *ngIf="showBadge(rowIndex, colIndex, schemaFields)"
                     >
-                        <span (click)="$event.stopPropagation(); showModal(rowIndex, schemaFields)" class="badge-more"
-                            ></span
-                        >
+                        <span
+                            (click)="$event.stopPropagation(); showModal(rowIndex, schemaFields)"
+                            class="badge-more"
+                        ></span>
                     </div>
                 </div>
             </td>

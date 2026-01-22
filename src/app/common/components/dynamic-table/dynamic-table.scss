@@ -75,15 +75,9 @@ table {
     user-select: text;
 }
 
-.container-badge {
-    position: absolute;
-    right: 0;
-    top: 7px;
-}
-
 .badge-more {
-    font-size: 11px !important;
-    background: deepskyblue;
+    font-size: 13px !important;
+    background: #b2bcbf;
     border-radius: 7px;
     padding: 1px 6px;
     color: #ffff;
@@ -91,6 +85,18 @@ table {
 
     &:hover {
         cursor: pointer;
+    }
+
+    &::after{
+       content: "...";
+       display: inline-block;
+       vertical-align: middle;
+       margin-bottom: 0.65em;
+       font-weight: bold;
+
+       &:hover{
+          background: #8d9497;
+       }
     }
 }
 

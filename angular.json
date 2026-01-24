@@ -100,18 +100,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "kamu-platform:build"
+            "buildTarget": "kamu-platform:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "kamu-platform:build:production"
+              "buildTarget": "kamu-platform:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "kamu-platform:build"
+            "buildTarget": "kamu-platform:build"
           }
         },
         "test": {

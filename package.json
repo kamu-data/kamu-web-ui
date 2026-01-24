@@ -73,7 +73,7 @@
     "siwe": "^3.0.0",
     "tslib": "^2.0.0",
     "yaml": "^2.6.1",
-    "zone.js": "~0.13.3"
+    "zone.js": "^0.14.10"
   },
   "overrides": {
     "d3-selection": "3.0.0"

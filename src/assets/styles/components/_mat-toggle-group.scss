@@ -11,6 +11,11 @@
         .mat-button-toggle-group-appearance-standard {
             border-radius: 0;
         }
+
+        .mat-button-toggle-appearance-standard .mat-button-toggle-label-content .mat-pseudo-checkbox,
+        .mat-mdc-button-toggle .mat-pseudo-checkbox {
+            display: none !important;
+        }
     }
 
     mat-button-toggle-group {

@@ -35,9 +35,9 @@ describe("ReadmeSectionComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [SharedTestModule, MarkdownModule.forRoot(), ReadmeSectionComponent],
-    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
+            imports: [SharedTestModule, MarkdownModule.forRoot(), ReadmeSectionComponent],
+            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        }).compileComponents();
 
         registerMatSvgIcons();
 
@@ -116,9 +116,11 @@ describe("ReadmeSectionComponent", () => {
         expect(component.readmeState).toEqual(modifiedReadmeContent);
     });
 
-    it("should check Run and Copy buttons exist", () => {
+    it("should check Run and Copy buttons exist", async () => {
         component.readmeState = "```sql" + "\nselect * from 'account.tokens.portfolio.market-value'" + "\n```";
         component.viewMode = EditMode.Preview;
+        fixture.detectChanges();
+        await fixture.whenStable();
         fixture.detectChanges();
         const copyButtonElement = findNativeElement(fixture, `.markdown-clipboard-button`);
         expect(copyButtonElement).toBeDefined();
@@ -127,10 +129,12 @@ describe("ReadmeSectionComponent", () => {
         expect(runButtonElement).toBeDefined();
     });
 
-    it("should check Run button navigate to Data tab", () => {
+    it("should check Run button navigate to Data tab", async () => {
         component.readmeState = "```sql" + "\nselect * from 'account.tokens.portfolio.market-value'" + "\n```";
         component.viewMode = EditMode.Preview;
 
+        fixture.detectChanges();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         const runButtonElement = findNativeElement(fixture, `.markdown-run-button`) as HTMLLinkElement;
@@ -141,10 +145,12 @@ describe("ReadmeSectionComponent", () => {
         ).toBeTrue();
     });
 
-    it("should check Run button navigate to Data tab with line breaks", () => {
+    it("should check Run button navigate to Data tab with line breaks", async () => {
         component.readmeState = "```sql" + "\nselect\n*\nfrom 'account.tokens.portfolio.market-value'" + "\n```";
         component.viewMode = EditMode.Preview;
 
+        fixture.detectChanges();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         const runButtonElement = findNativeElement(fixture, `.markdown-run-button`) as HTMLLinkElement;

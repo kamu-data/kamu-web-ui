@@ -15,10 +15,11 @@ import {
     mockOverviewDataUpdateNullable,
 } from "../../../data-tabs.mock";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("MetadataWatermarkTabComponent", () => {
     let component: MetadataWatermarkTabComponent;
@@ -27,9 +28,9 @@ describe("MetadataWatermarkTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [MetadataWatermarkTabComponent, HttpClientTestingModule, SharedTestModule],
-        });
+    imports: [MetadataWatermarkTabComponent, SharedTestModule],
+    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
         fixture = TestBed.createComponent(MetadataWatermarkTabComponent);
         modalService = TestBed.inject(NgbModal);
         component = fixture.componentInstance;

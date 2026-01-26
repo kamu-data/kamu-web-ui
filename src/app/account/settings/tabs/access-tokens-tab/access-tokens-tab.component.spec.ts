@@ -10,7 +10,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AccessTokensTabComponent } from "./access-tokens-tab.component";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { ActivatedRoute } from "@angular/router";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
@@ -35,37 +35,38 @@ describe("AccessTokensTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [
-                Apollo,
-                provideToastr(),
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "page":
-                                            return 2;
-                                    }
-                                },
-                            },
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
+    imports: [AccessTokensTabComponent],
+    providers: [
+        Apollo,
+        provideToastr(),
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    queryParamMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "page":
+                                    return 2;
+                            }
+                        },
+                    },
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return "accountName";
+                                case "datasetName":
+                                    return "datasetName";
+                            }
                         },
                     },
                 },
-            ],
-            imports: [HttpClientModule, AccessTokensTabComponent],
-        }).compileComponents();
+            },
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+    ]
+}).compileComponents();
 
         registerMatSvgIcons();
 

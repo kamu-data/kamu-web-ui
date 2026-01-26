@@ -22,7 +22,8 @@ import { EditMode } from "./readme-section.types";
 import { of } from "rxjs";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("ReadmeSectionComponent", () => {
     let component: ReadmeSectionComponent;
@@ -34,9 +35,9 @@ describe("ReadmeSectionComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [SharedTestModule, MarkdownModule.forRoot(), HttpClientTestingModule, ReadmeSectionComponent],
-        }).compileComponents();
+    imports: [SharedTestModule, MarkdownModule.forRoot(), ReadmeSectionComponent],
+    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
 
         registerMatSvgIcons();
 

@@ -9,7 +9,7 @@ import { MetadataPollingSourceTabComponent } from "./metadata-polling-source-tab
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { mockMetadataRootUpdate } from "../../../data-tabs.mock";
 import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { MatIconModule } from "@angular/material/icon";
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
@@ -17,6 +17,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FetchStepUrl } from "src/app/api/kamu.graphql.interface";
 import { provideToastr } from "ngx-toastr";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("MetadataPollingSourceTabComponent", () => {
     let component: MetadataPollingSourceTabComponent;
@@ -25,9 +26,9 @@ describe("MetadataPollingSourceTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [MetadataPollingSourceTabComponent, HttpClientTestingModule, SharedTestModule, MatIconModule],
-            providers: [HIGHLIGHT_OPTIONS_PROVIDER, provideToastr()],
-        });
+    imports: [MetadataPollingSourceTabComponent, SharedTestModule, MatIconModule],
+    providers: [HIGHLIGHT_OPTIONS_PROVIDER, provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
         fixture = TestBed.createComponent(MetadataPollingSourceTabComponent);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;

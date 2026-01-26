@@ -12,8 +12,9 @@ import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ToastrModule } from "ngx-toastr";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("EventDetailsComponent", () => {
     let component: EventDetailsComponent;
@@ -21,9 +22,9 @@ describe("EventDetailsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedTestModule, EventDetailsComponent, ToastrModule.forRoot(), HttpClientTestingModule],
-            providers: [Apollo],
-        }).compileComponents();
+    imports: [SharedTestModule, EventDetailsComponent, ToastrModule.forRoot()],
+    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
 
         registerMatSvgIcons();
 

@@ -10,7 +10,7 @@ import { ActivatedRoute } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { of } from "rxjs";
 import { MetadataBlockComponent } from "./metadata-block.component";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
@@ -19,6 +19,7 @@ import { HarnessLoader } from "@angular/cdk/testing";
 import { MatSlideToggleHarness } from "@angular/material/slide-toggle/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("MetadataBlockComponent", () => {
     let component: MetadataBlockComponent;
@@ -30,33 +31,35 @@ describe("MetadataBlockComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ApolloTestingModule, HttpClientTestingModule, MetadataBlockComponent, MatSlideToggleModule],
-            providers: [
-                provideToastr(),
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        params: of({
-                            accountName: "accountName",
-                            datasetName: "datasetName",
-                            blockHash: "ewrwe213123",
-                        }),
-                        snapshot: {
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
+    imports: [ApolloTestingModule, MetadataBlockComponent, MatSlideToggleModule],
+    providers: [
+        provideToastr(),
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                params: of({
+                    accountName: "accountName",
+                    datasetName: "datasetName",
+                    blockHash: "ewrwe213123",
+                }),
+                snapshot: {
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return "accountName";
+                                case "datasetName":
+                                    return "datasetName";
+                            }
                         },
                     },
                 },
-            ],
-        }).compileComponents();
+            },
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
         registerMatSvgIcons();
 

@@ -12,7 +12,7 @@ import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.sp
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { provideToastr } from "ngx-toastr";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { NavigationService } from "src/app/services/navigation.service";
 import ProjectLinks from "src/app/project-links";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
@@ -21,6 +21,7 @@ import { of } from "rxjs";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { WebhookSubscription, WebhookSubscriptionStatus } from "src/app/api/kamu.graphql.interface";
 import { mockDatasetWebhookByIdQuery } from "src/app/api/mock/webhooks.mock";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("ListWebhooksComponent", () => {
     let component: ListWebhooksComponent;
@@ -32,9 +33,9 @@ describe("ListWebhooksComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo, provideToastr()],
-            imports: [ListWebhooksComponent, SharedTestModule, HttpClientTestingModule],
-        });
+    imports: [ListWebhooksComponent, SharedTestModule],
+    providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(ListWebhooksComponent);

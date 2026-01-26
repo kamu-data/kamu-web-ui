@@ -11,9 +11,10 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AuthApi } from "src/app/api/auth.api";
 import { GithubCallbackComponent } from "./github.callback";
 import { GithubLoginCredentials } from "src/app/api/auth.api.model";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { LoginService } from "../login.service";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("GithubCallbackComponent", () => {
     let component: GithubCallbackComponent;
@@ -28,9 +29,9 @@ describe("GithubCallbackComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, SharedTestModule, GithubCallbackComponent],
-            providers: [AuthApi, Apollo],
-        }).compileComponents();
+    imports: [SharedTestModule, GithubCallbackComponent],
+    providers: [AuthApi, Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
 
         navigationService = TestBed.inject(NavigationService);
         navigateToHomeSpy = spyOn(navigationService, "navigateToHome").and.stub();

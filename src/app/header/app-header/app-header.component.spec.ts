@@ -28,8 +28,9 @@ import AppValues from "src/app/common/values/app.values";
 import { ActivatedRoute, NavigationEnd } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("AppHeaderComponent", () => {
     let component: AppHeaderComponent;
@@ -43,17 +44,19 @@ describe("AppHeaderComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [BrowserAnimationsModule, HttpClientTestingModule, AppHeaderComponent],
-            providers: [
-                Apollo,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
-                    },
-                },
-            ],
-        })
+    imports: [BrowserAnimationsModule, AppHeaderComponent],
+    providers: [
+        Apollo,
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
+            },
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+})
             .overrideComponent(AppHeaderComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

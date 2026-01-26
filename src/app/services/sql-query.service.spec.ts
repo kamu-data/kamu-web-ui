@@ -9,9 +9,10 @@ import { TestBed } from "@angular/core/testing";
 import { SqlQueryService } from "./sql-query.service";
 import { mockSqlQueryRestResponse } from "../search/mock.data";
 import { Apollo } from "apollo-angular";
-import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
+import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { provideToastr } from "ngx-toastr";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("SqlQueryService", () => {
     let service: SqlQueryService;
@@ -20,9 +21,9 @@ describe("SqlQueryService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            providers: [Apollo, provideToastr()],
-        });
+    imports: [],
+    providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
         service = TestBed.inject(SqlQueryService);
         httpMock = TestBed.inject(HttpTestingController);
         loggedUserService = TestBed.inject(LoggedUserService);

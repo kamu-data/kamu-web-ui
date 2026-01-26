@@ -15,7 +15,8 @@ import { EditDetailsModalComponent } from "./edit-details-modal.component";
 import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewWithSetInfo } from "../../../data-tabs.mock";
 import { DatasetDataSizeFragment, DatasetOverviewFragment } from "src/app/api/kamu.graphql.interface";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("EditDetailsModalComponent", () => {
     let component: EditDetailsModalComponent;
@@ -23,9 +24,9 @@ describe("EditDetailsModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, SharedTestModule, EditDetailsModalComponent],
-            providers: [Apollo, NgbActiveModal],
-        }).compileComponents();
+    imports: [SharedTestModule, EditDetailsModalComponent],
+    providers: [Apollo, NgbActiveModal, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
 
         fixture = TestBed.createComponent(EditDetailsModalComponent);
         component = fixture.componentInstance;

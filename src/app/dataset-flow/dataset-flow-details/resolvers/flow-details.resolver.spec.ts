@@ -19,8 +19,9 @@ import ProjectLinks from "src/app/project-links";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.mock";
 import { mockDatasetFlowByIdResponse } from "src/app/api/mock/dataset-flow.mock";
 import { provideToastr } from "ngx-toastr";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideAnimations } from "@angular/platform-browser/animations";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("flowDetailsResolverFn", () => {
     const mockRouterStateSnapshot = {} as RouterStateSnapshot;
@@ -36,9 +37,9 @@ describe("flowDetailsResolverFn", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo, provideAnimations(), provideToastr()],
-            imports: [HttpClientTestingModule],
-        });
+    imports: [],
+    providers: [Apollo, provideAnimations(), provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
         datasetService = TestBed.inject(DatasetService);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);

@@ -11,8 +11,9 @@ import { accountSettingsPasswordAndAuthenticationResolverFn } from "./account-se
 import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { Apollo } from "apollo-angular";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("accountSettingsPasswordAndAuthenticationResolver", () => {
     let loggedUserService: LoggedUserService;
@@ -22,9 +23,9 @@ describe("accountSettingsPasswordAndAuthenticationResolver", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [HttpClientTestingModule],
-        });
+    imports: [],
+    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
         loggedUserService = TestBed.inject(LoggedUserService);
     });

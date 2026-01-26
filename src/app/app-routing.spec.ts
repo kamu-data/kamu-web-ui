@@ -16,7 +16,7 @@ import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { LoggedUserService } from "./auth/logged-user.service";
 import { PageNotFoundComponent } from "./common/components/page-not-found/page-not-found.component";
 import { LoginComponent } from "./auth/login/login.component";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { accountSettingsAccessTokensResolverFn } from "./account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
 import { provideToastr } from "ngx-toastr";
 import { mockAccountDetails } from "./api/mock/auth.mock";
@@ -41,6 +41,7 @@ import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { AppConfigService } from "./app-config.service";
 import { LoginMethodsService } from "./auth/login-methods.service";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("Router", () => {
     let router: Router;
@@ -51,74 +52,68 @@ describe("Router", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                ApolloTestingModule,
-                HttpClientTestingModule,
-                NgxGraphModule,
-                PageNotFoundComponent,
-                LoginComponent,
-            ],
-            schemas: [NO_ERRORS_SCHEMA],
-            providers: [
-                {
-                    provide: AppConfigService,
-                    useValue: {
-                        allowAnonymous: true,
-                    },
-                },
-                {
-                    provide: ROUTES,
-                    multi: true,
-                    useValue: PUBLIC_ROUTES,
-                },
-                provideConditionalGuardedRoutes(),
-                provideCatchAllRoute(),
-                provideAnimations(),
-                provideToastr(),
-                {
-                    provide: accountSettingsAccessTokensResolverFn,
-                    useValue: {
-                        resolve: () =>
-                            of(
-                                mockListAccessTokensQuery.accounts.byId?.accessTokens
-                                    .listAccessTokens as AccessTokenConnection,
-                            ),
-                    },
-                },
-                {
-                    provide: searchResolverFn,
-                    useValue: {
-                        resolve: () => of(mockDatasetSearchResult),
-                    },
-                },
-                {
-                    provide: datasetViewResolverFn,
-                    useValue: {
-                        resolve: () =>
-                            of({
-                                datasetBasics: mockDatasetBasicsDerivedFragment,
-                                datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                            }),
-                    },
-                },
-                {
-                    provide: datasetOverviewTabResolverFn,
-                    useValue: {
-                        resolve: () =>
-                            of({
-                                datasetBasics: mockDatasetBasicsDerivedFragment,
-                                datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                                overviewUpdate: {
-                                    schema: mockMetadataDerivedUpdate.schema,
-                                    content: mockOverviewDataUpdate.content,
-                                    overview: structuredClone(mockOverviewDataUpdateNullable.overview),
-                                    size: mockOverviewDataUpdate.size,
-                                } as OverviewUpdate,
-                            }),
-                    },
-                },
-            ],
-        }).compileComponents();
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [ApolloTestingModule,
+        NgxGraphModule,
+        PageNotFoundComponent,
+        LoginComponent],
+    providers: [
+        {
+            provide: AppConfigService,
+            useValue: {
+                allowAnonymous: true,
+            },
+        },
+        {
+            provide: ROUTES,
+            multi: true,
+            useValue: PUBLIC_ROUTES,
+        },
+        provideConditionalGuardedRoutes(),
+        provideCatchAllRoute(),
+        provideAnimations(),
+        provideToastr(),
+        {
+            provide: accountSettingsAccessTokensResolverFn,
+            useValue: {
+                resolve: () => of(mockListAccessTokensQuery.accounts.byId?.accessTokens
+                    .listAccessTokens as AccessTokenConnection),
+            },
+        },
+        {
+            provide: searchResolverFn,
+            useValue: {
+                resolve: () => of(mockDatasetSearchResult),
+            },
+        },
+        {
+            provide: datasetViewResolverFn,
+            useValue: {
+                resolve: () => of({
+                    datasetBasics: mockDatasetBasicsDerivedFragment,
+                    datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+                }),
+            },
+        },
+        {
+            provide: datasetOverviewTabResolverFn,
+            useValue: {
+                resolve: () => of({
+                    datasetBasics: mockDatasetBasicsDerivedFragment,
+                    datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+                    overviewUpdate: {
+                        schema: mockMetadataDerivedUpdate.schema,
+                        content: mockOverviewDataUpdate.content,
+                        overview: structuredClone(mockOverviewDataUpdateNullable.overview),
+                        size: mockOverviewDataUpdate.size,
+                    } as OverviewUpdate,
+                }),
+            },
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
         router = TestBed.inject(Router);
         location = TestBed.inject(Location);

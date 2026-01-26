@@ -22,7 +22,8 @@ import { DatasetCreateService } from "./dataset-create.service";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { mockAccountDetails } from "../api/mock/auth.mock";
 import { DatasetOperationError } from "../common/values/errors";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("DatasetCreateService", () => {
     let service: DatasetCreateService;
@@ -32,9 +33,9 @@ describe("DatasetCreateService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            providers: [Apollo],
-        });
+    imports: [],
+    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
         service = TestBed.inject(DatasetCreateService);
         datasetApi = TestBed.inject(DatasetApi);
         navigationService = TestBed.inject(NavigationService);

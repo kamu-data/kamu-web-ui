@@ -21,12 +21,13 @@ import {
 } from "src/app/search/mock.data";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
 import { MetadataTabs } from "./metadata.constants";
 import { RouterModule } from "@angular/router";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("MetadataComponent", () => {
     let component: MetadataComponent;
@@ -35,9 +36,9 @@ describe("MetadataComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedTestModule, HttpClientTestingModule, MetadataComponent, RouterModule],
-            providers: [HIGHLIGHT_OPTIONS_PROVIDER],
-        })
+    imports: [SharedTestModule, MetadataComponent, RouterModule],
+    providers: [HIGHLIGHT_OPTIONS_PROVIDER, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
 
             .compileComponents();
 

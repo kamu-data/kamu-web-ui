@@ -8,8 +8,9 @@
 import { mockDatasetEndPoints } from "../../../data-access-panel-mock.data";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DataAccessRestTabComponent } from "./data-access-rest-tab.component";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("DataAccessRestTabComponent", () => {
     let component: DataAccessRestTabComponent;
@@ -17,8 +18,9 @@ describe("DataAccessRestTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, DataAccessRestTabComponent],
-        });
+    imports: [DataAccessRestTabComponent],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
         registerMatSvgIcons();
 

@@ -14,8 +14,9 @@ import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
 import { of } from "rxjs";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { NavigationService } from "src/app/services/navigation.service";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("RotateSecretWebhookComponent", () => {
     let component: RotateSecretWebhookComponent;
@@ -25,9 +26,9 @@ describe("RotateSecretWebhookComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [RotateSecretWebhookComponent, SharedTestModule, HttpClientTestingModule],
-            providers: [Apollo, provideToastr()],
-        });
+    imports: [RotateSecretWebhookComponent, SharedTestModule],
+    providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
         registerMatSvgIcons();
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);
         navigationService = TestBed.inject(NavigationService);

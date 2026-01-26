@@ -8,7 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetViewHeaderComponent } from "./dataset-view-header.component";
 import { mockDatasetBasicsRootFragment, mockDatasetInfo } from "src/app/search/mock.data";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { Apollo } from "apollo-angular";
@@ -17,6 +17,7 @@ import { of } from "rxjs";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("DatasetViewHeaderComponent", () => {
     let component: DatasetViewHeaderComponent;
@@ -26,9 +27,9 @@ describe("DatasetViewHeaderComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [HttpClientTestingModule, SharedTestModule, DatasetViewHeaderComponent],
-        }).compileComponents();
+    imports: [SharedTestModule, DatasetViewHeaderComponent],
+    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
 
         registerMatSvgIcons();
 

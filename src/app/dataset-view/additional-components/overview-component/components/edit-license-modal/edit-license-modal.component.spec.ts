@@ -18,7 +18,8 @@ import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewWithSetLicense } from "../../../data-tabs.mock";
 import { EditLicenseModalComponent } from "./edit-license-modal.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("EditLicenseModalComponent", () => {
     let component: EditLicenseModalComponent;
@@ -26,9 +27,9 @@ describe("EditLicenseModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedTestModule, HttpClientTestingModule, EditLicenseModalComponent],
-            providers: [Apollo, NgbActiveModal],
-        }).compileComponents();
+    imports: [SharedTestModule, EditLicenseModalComponent],
+    providers: [Apollo, NgbActiveModal, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
 
         fixture = TestBed.createComponent(EditLicenseModalComponent);
         component = fixture.componentInstance;

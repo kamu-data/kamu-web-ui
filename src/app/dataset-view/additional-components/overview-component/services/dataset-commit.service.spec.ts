@@ -33,8 +33,9 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 import { first } from "rxjs/operators";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/values/errors";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("DatasetCommitService", () => {
     let commitService: DatasetCommitService;
@@ -52,9 +53,9 @@ describe("DatasetCommitService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [ApolloModule, ApolloTestingModule, HttpClientTestingModule],
-        });
+    imports: [ApolloModule, ApolloTestingModule],
+    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
         datasetApi = TestBed.inject(DatasetApi);
         navigationService = TestBed.inject(NavigationService);
         commitService = TestBed.inject(DatasetCommitService);

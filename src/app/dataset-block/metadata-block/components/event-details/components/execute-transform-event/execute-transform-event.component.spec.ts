@@ -11,9 +11,10 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ExecuteTransformEventComponent } from "./execute-transform-event.component";
 import { provideToastr } from "ngx-toastr";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("ExecuteTransformEventComponent", () => {
     let component: ExecuteTransformEventComponent;
@@ -21,9 +22,9 @@ describe("ExecuteTransformEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [provideToastr()],
-            imports: [ApolloTestingModule, HttpClientTestingModule, SharedTestModule, ExecuteTransformEventComponent],
-        }).compileComponents();
+    imports: [ApolloTestingModule, SharedTestModule, ExecuteTransformEventComponent],
+    providers: [provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
 
         registerMatSvgIcons();
 

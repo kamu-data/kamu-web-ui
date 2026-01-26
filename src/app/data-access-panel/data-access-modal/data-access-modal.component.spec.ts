@@ -10,7 +10,7 @@ import { DataAccessModalComponent } from "./data-access-modal.component";
 import { Apollo } from "apollo-angular";
 import { of } from "rxjs";
 import { mockDatasetEndPoints } from "../data-access-panel-mock.data";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { DataAccessTabsEnum } from "./data-access-modal.model";
@@ -18,6 +18,7 @@ import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { AppConfigService } from "src/app/app-config.service";
 import { ProtocolsService } from "src/app/services/protocols.service";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("DataAccessModalComponent", () => {
     let component: DataAccessModalComponent;
@@ -29,9 +30,9 @@ describe("DataAccessModalComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo, NgbActiveModal],
-            imports: [HttpClientTestingModule, DataAccessModalComponent],
-        });
+    imports: [DataAccessModalComponent],
+    providers: [Apollo, NgbActiveModal, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
         registerMatSvgIcons();
 

@@ -14,12 +14,13 @@ import { DatasetViewComponent } from "./dataset-view.component";
 import { NavigationService } from "../services/navigation.service";
 import { DatasetViewTypeEnum } from "./dataset-view.interface";
 import { of } from "rxjs";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { DatasetSubscriptionsService } from "./dataset.subscriptions.service";
 import { provideToastr } from "ngx-toastr";
 import { registerMatSvgIcons } from "../common/helpers/base-test.helpers.spec";
 import { MOCK_DATASET_INFO } from "./additional-components/metadata-component/components/set-transform/mock.data";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("DatasetViewComponent", () => {
     let component: DatasetViewComponent;
@@ -30,39 +31,41 @@ describe("DatasetViewComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, DatasetViewComponent],
-            providers: [
-                Apollo,
-                provideToastr(),
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "tab":
-                                            return null;
-                                        case "page":
-                                            return "2";
-                                    }
-                                },
-                            },
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return mockDatasetBasicsDerivedFragment.owner.accountName;
-                                        case "datasetName":
-                                            return mockDatasetBasicsDerivedFragment.name;
-                                    }
-                                },
-                            },
+    imports: [DatasetViewComponent],
+    providers: [
+        Apollo,
+        provideToastr(),
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    queryParamMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "tab":
+                                    return null;
+                                case "page":
+                                    return "2";
+                            }
+                        },
+                    },
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return mockDatasetBasicsDerivedFragment.owner.accountName;
+                                case "datasetName":
+                                    return mockDatasetBasicsDerivedFragment.name;
+                            }
                         },
                     },
                 },
-            ],
-        })
+            },
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+})
             .overrideComponent(DatasetViewComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

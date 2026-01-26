@@ -12,8 +12,9 @@ import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ToastrModule } from "ngx-toastr";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("BlockHeaderComponent", () => {
     let component: BlockHeaderComponent;
@@ -21,9 +22,9 @@ describe("BlockHeaderComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedTestModule, BlockHeaderComponent, ToastrModule.forRoot(), HttpClientTestingModule],
-            providers: [Apollo],
-        }).compileComponents();
+    imports: [SharedTestModule, BlockHeaderComponent, ToastrModule.forRoot()],
+    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
 
         registerMatSvgIcons();
 

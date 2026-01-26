@@ -10,7 +10,7 @@ import { LoginComponent } from "./login.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { AppConfigService } from "src/app/app-config.service";
 import { SpinnerComponent } from "src/app/common/components/spinner/spinner/spinner.component";
 import { LoginService } from "./login.service";
@@ -35,6 +35,7 @@ import { MatIconModule } from "@angular/material/icon";
 import ProjectLinks from "src/app/project-links";
 import { AccountProvider } from "src/app/api/kamu.graphql.interface";
 import { LoginMethodsService } from "../login-methods.service";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("LoginComponent", () => {
     let component: LoginComponent;
@@ -76,34 +77,33 @@ describe("LoginComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [
-                Apollo,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        queryParams: mockQueryParams.asObservable(),
-                        snapshot: {
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL:
-                                            return "";
-                                    }
-                                },
-                            },
+    imports: [ApolloTestingModule,
+        ReactiveFormsModule,
+        MatIconModule,
+        LoginComponent,
+        SpinnerComponent],
+    providers: [
+        Apollo,
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                queryParams: mockQueryParams.asObservable(),
+                snapshot: {
+                    queryParamMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL:
+                                    return "";
+                            }
                         },
                     },
                 },
-            ],
-            imports: [
-                ApolloTestingModule,
-                ReactiveFormsModule,
-                HttpClientTestingModule,
-                MatIconModule,
-                LoginComponent,
-                SpinnerComponent,
-            ],
-        }).compileComponents();
+            },
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
         registerMatSvgIcons();
 

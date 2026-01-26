@@ -9,7 +9,7 @@ import { SharedTestModule } from "./../common/modules/shared-test.module";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { QueryExplainerComponent } from "./query-explainer.component";
 import { of } from "rxjs";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideToastr, ToastrService } from "ngx-toastr";
 import { Apollo } from "apollo-angular";
 import { QueryExplainerService } from "./query-explainer.service";
@@ -27,6 +27,7 @@ import {
     setFieldValue,
 } from "../common/helpers/base-test.helpers.spec";
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "../common/helpers/app.helpers";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("QueryExplainerComponent", () => {
     let component: QueryExplainerComponent;
@@ -37,9 +38,9 @@ describe("QueryExplainerComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, SharedTestModule, QueryExplainerComponent],
-            providers: [Apollo, provideToastr(), HIGHLIGHT_OPTIONS_PROVIDER],
-        });
+    imports: [SharedTestModule, QueryExplainerComponent],
+    providers: [Apollo, provideToastr(), HIGHLIGHT_OPTIONS_PROVIDER, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
         registerMatSvgIcons();
 

@@ -8,8 +8,9 @@
 import { mockDatasetEndPoints } from "../../../data-access-panel-mock.data";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DataAccessStreamTabComponent } from "./data-access-stream-tab.component";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("DataAccessStreamTabComponent", () => {
     let component: DataAccessStreamTabComponent;
@@ -17,8 +18,9 @@ describe("DataAccessStreamTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, DataAccessStreamTabComponent],
-        });
+    imports: [DataAccessStreamTabComponent],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
         registerMatSvgIcons();
 

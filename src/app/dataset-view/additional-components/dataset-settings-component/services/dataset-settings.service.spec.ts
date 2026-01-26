@@ -22,10 +22,11 @@ import {
     mockRenameSuccessResponse,
 } from "src/app/search/mock.data";
 import { DeleteDatasetMutation, RenameDatasetMutation } from "src/app/api/kamu.graphql.interface";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
 import { provideToastr } from "ngx-toastr";
 import { provideAnimations } from "@angular/platform-browser/animations";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("DatasetSettingsService", () => {
     let service: DatasetSettingsService;
@@ -39,9 +40,9 @@ describe("DatasetSettingsService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo, provideAnimations(), provideToastr()],
-            imports: [ApolloModule, ApolloTestingModule, HttpClientTestingModule],
-        });
+    imports: [ApolloModule, ApolloTestingModule],
+    providers: [Apollo, provideAnimations(), provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
         service = TestBed.inject(DatasetSettingsService);
         navigationService = TestBed.inject(NavigationService);
         datasetApi = TestBed.inject(DatasetApi);

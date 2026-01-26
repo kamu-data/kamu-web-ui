@@ -21,9 +21,10 @@ import { MOCK_DATASET_INFO } from "../../../metadata-component/components/set-tr
 import ProjectLinks from "src/app/project-links";
 import { ActivatedRoute } from "@angular/router";
 import { of } from "rxjs";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { ApolloTestingModule } from "apollo-angular/testing";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("DatasetSettingsSecretsManagerTabComponent", () => {
     let component: DatasetSettingsSecretsManagerTabComponent;
@@ -35,37 +36,39 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [
-                provideAnimations(),
-                provideToastr(),
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case ProjectLinks.URL_QUERY_PARAM_PAGE:
-                                            return undefined;
-                                    }
-                                },
-                            },
+    imports: [DatasetSettingsSecretsManagerTabComponent, ApolloTestingModule],
+    providers: [
+        provideAnimations(),
+        provideToastr(),
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return "accountName";
+                                case "datasetName":
+                                    return "datasetName";
+                            }
+                        },
+                    },
+                    queryParamMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case ProjectLinks.URL_QUERY_PARAM_PAGE:
+                                    return undefined;
+                            }
                         },
                     },
                 },
-            ],
-            imports: [DatasetSettingsSecretsManagerTabComponent, HttpClientTestingModule, ApolloTestingModule],
-        }).compileComponents();
+            },
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
         registerMatSvgIcons();
 

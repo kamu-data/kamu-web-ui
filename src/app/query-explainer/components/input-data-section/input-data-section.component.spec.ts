@@ -18,11 +18,12 @@ import { ActivatedRoute } from "@angular/router";
 import { of } from "rxjs";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 import ProjectLinks from "src/app/project-links";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { MarkdownModule } from "ngx-markdown";
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
 import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("InputDataSectionComponent", () => {
     let component: InputDataSectionComponent;
@@ -30,27 +31,29 @@ describe("InputDataSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, MarkdownModule.forRoot(), InputDataSectionComponent, MarkdownFormatPipe],
-            providers: [
-                provideToastr(),
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN:
-                                            return "test-upload-token";
-                                    }
-                                },
-                            },
+    imports: [MarkdownModule.forRoot(), InputDataSectionComponent, MarkdownFormatPipe],
+    providers: [
+        provideToastr(),
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    queryParamMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN:
+                                    return "test-upload-token";
+                            }
                         },
                     },
                 },
-                HIGHLIGHT_OPTIONS_PROVIDER,
-            ],
-        });
+            },
+        },
+        HIGHLIGHT_OPTIONS_PROVIDER,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
 
         registerMatSvgIcons();
 

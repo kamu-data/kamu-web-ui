@@ -12,7 +12,7 @@ import { ActivatedRoute } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 import { of, shareReplay } from "rxjs";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
     mockDatasetBasicsRootFragment,
@@ -24,6 +24,7 @@ import { FlowDetailsTabs } from "./dataset-flow-details.types";
 import { mockDatasetFlowByIdResponse, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { NavigationService } from "src/app/services/navigation.service";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("DatasetFlowDetailsComponent", () => {
     let component: DatasetFlowDetailsComponent;
@@ -36,37 +37,36 @@ describe("DatasetFlowDetailsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [
-                Apollo,
-                provideToastr(),
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
+    imports: [
+        //-----//
+        ApolloModule,
+        ApolloTestingModule,
+        //-----//
+        DatasetFlowDetailsComponent],
+    providers: [
+        Apollo,
+        provideToastr(),
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return "accountName";
+                                case "datasetName":
+                                    return "datasetName";
+                            }
                         },
                     },
                 },
-            ],
-            imports: [
-                //-----//
-                HttpClientTestingModule,
-                //-----//
-                ApolloModule,
-                ApolloTestingModule,
-                //-----//
-                DatasetFlowDetailsComponent,
-            ],
-        }).compileComponents();
+            },
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
         registerMatSvgIcons();
 

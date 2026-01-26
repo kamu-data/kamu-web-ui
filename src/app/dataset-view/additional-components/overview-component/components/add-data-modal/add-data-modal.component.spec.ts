@@ -10,7 +10,7 @@ import { Apollo } from "apollo-angular";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AddDataModalComponent } from "./add-data-modal.component";
 import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { FileFromUrlModalComponent } from "../file-from-url-modal/file-from-url-modal.component";
 import { FileUploadService } from "src/app/services/file-upload.service";
@@ -28,9 +28,9 @@ describe("AddDataModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [Apollo, NgbActiveModal],
-            imports: [HttpClientModule, SharedTestModule, AddDataModalComponent],
-        }).compileComponents();
+    imports: [SharedTestModule, AddDataModalComponent],
+    providers: [Apollo, NgbActiveModal, provideHttpClient(withInterceptorsFromDi())]
+}).compileComponents();
 
         fixture = TestBed.createComponent(AddDataModalComponent);
         component = fixture.componentInstance;

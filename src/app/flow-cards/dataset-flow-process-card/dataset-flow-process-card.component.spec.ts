@@ -12,7 +12,8 @@ import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { mockAccountFlowsAsCardsQuery } from "src/app/api/mock/account.mock";
 import { FlowProcessEffectiveState, FlowProcessSummary } from "src/app/api/kamu.graphql.interface";
 import { registerMatSvgIcons } from "../../common/helpers/base-test.helpers.spec";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("DatasetFlowProcessCardComponent", () => {
     let component: DatasetFlowProcessCardComponent;
@@ -20,8 +21,9 @@ describe("DatasetFlowProcessCardComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [DatasetFlowProcessCardComponent, SharedTestModule, HttpClientTestingModule],
-        });
+    imports: [DatasetFlowProcessCardComponent, SharedTestModule],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
         registerMatSvgIcons();
 

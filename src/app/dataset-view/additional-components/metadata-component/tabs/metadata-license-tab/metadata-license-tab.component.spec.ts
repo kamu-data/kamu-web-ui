@@ -19,11 +19,12 @@ import {
     mockOverviewDataUpdateNullable,
 } from "../../../data-tabs.mock";
 import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { MatIconModule } from "@angular/material/icon";
 import { Apollo } from "apollo-angular";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("MetadataLicenseTabComponent", () => {
     let component: MetadataLicenseTabComponent;
@@ -32,9 +33,9 @@ describe("MetadataLicenseTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [MetadataLicenseTabComponent, HttpClientTestingModule, MatIconModule, SharedTestModule],
-        });
+    imports: [MetadataLicenseTabComponent, MatIconModule, SharedTestModule],
+    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(MetadataLicenseTabComponent);

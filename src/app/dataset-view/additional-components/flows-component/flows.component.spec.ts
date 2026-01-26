@@ -18,7 +18,7 @@ import { provideToastr } from "ngx-toastr";
 import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
 import { delay, of } from "rxjs";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { mockOverviewUpdate } from "../data-tabs.mock";
@@ -35,6 +35,7 @@ import { MatChipListboxChange } from "@angular/material/chips";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { mockDatasets } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;
@@ -50,40 +51,41 @@ describe("FlowsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [
-                Apollo,
-                provideToastr(),
-
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "tab":
-                                            return "flows";
-                                        case "page":
-                                            return 2;
-                                    }
-                                },
-                            },
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
+    imports: [FlowsComponent],
+    providers: [
+        Apollo,
+        provideToastr(),
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    queryParamMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "tab":
+                                    return "flows";
+                                case "page":
+                                    return 2;
+                            }
+                        },
+                    },
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return "accountName";
+                                case "datasetName":
+                                    return "datasetName";
+                            }
                         },
                     },
                 },
-            ],
-            imports: [HttpClientTestingModule, FlowsComponent],
-        }).compileComponents();
+            },
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
         registerMatSvgIcons();
 

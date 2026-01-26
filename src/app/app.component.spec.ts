@@ -19,8 +19,9 @@ import { mockAccountFromAccessToken } from "./api/mock/auth.mock";
 import { FetchAccountDetailsGQL } from "./api/kamu.graphql.interface";
 import { LoggedUserService } from "./auth/logged-user.service";
 import { LoginService } from "./auth/login/login.service";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("AppComponent", () => {
     let component: AppComponent;
@@ -33,16 +34,18 @@ describe("AppComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ApolloTestingModule, HttpClientTestingModule, AppComponent],
-            providers: [
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
-                    },
-                },
-            ],
-        }).compileComponents();
+    imports: [ApolloTestingModule, AppComponent],
+    providers: [
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
+            },
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
 
         registerMatSvgIcons();
 

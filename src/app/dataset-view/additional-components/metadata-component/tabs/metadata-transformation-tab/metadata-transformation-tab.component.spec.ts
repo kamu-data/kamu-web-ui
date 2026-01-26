@@ -15,7 +15,8 @@ import {
     mockOverviewDataUpdateNullable,
 } from "../../../data-tabs.mock";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("MetadataTransformationTabComponent", () => {
     let component: MetadataTransformationTabComponent;
@@ -23,8 +24,9 @@ describe("MetadataTransformationTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [MetadataTransformationTabComponent, HttpClientTestingModule],
-        });
+    imports: [MetadataTransformationTabComponent],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
         fixture = TestBed.createComponent(MetadataTransformationTabComponent);
         component = fixture.componentInstance;
         component.datasetMetadataTabData = {

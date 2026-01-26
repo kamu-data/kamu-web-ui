@@ -8,11 +8,12 @@
 import { TestBed } from "@angular/core/testing";
 import { WebhooksService } from "./webhooks.service";
 import { Apollo } from "apollo-angular";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { of } from "rxjs";
 import { mockWebhookEventTypesQuery } from "../api/mock/webhooks.mock";
 import { WebhooksApi } from "./../api/webhooks.api";
 import { SubscribedEventType } from "../dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("WebhooksService", () => {
     let service: WebhooksService;
@@ -20,9 +21,9 @@ describe("WebhooksService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [HttpClientTestingModule],
-        });
+    imports: [],
+    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
         service = TestBed.inject(WebhooksService);
         webhooksApi = TestBed.inject(WebhooksApi);
     });

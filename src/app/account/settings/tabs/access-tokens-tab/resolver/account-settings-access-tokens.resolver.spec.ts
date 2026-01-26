@@ -9,7 +9,7 @@ import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, Router } from "@angular/router";
 import { accountSettingsAccessTokensResolverFn } from "./account-settings-access-tokens.resolver";
 import { AccessTokenConnection } from "src/app/api/kamu.graphql.interface";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
@@ -17,6 +17,7 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import ProjectLinks from "src/app/project-links";
 import { provideAnimations } from "@angular/platform-browser/animations";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("accountSettingsAccessTokensResolverFn", () => {
     let router: Router;
@@ -28,9 +29,9 @@ describe("accountSettingsAccessTokensResolverFn", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo, provideAnimations(), provideToastr()],
-            imports: [HttpClientTestingModule],
-        });
+    imports: [],
+    providers: [Apollo, provideAnimations(), provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
         router = TestBed.inject(Router);
         accessTokenService = TestBed.inject(AccessTokenService);

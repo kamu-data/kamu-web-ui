@@ -8,8 +8,9 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { CommitmentDataSectionComponent } from "./commitment-data-section.component";
 import { mockQueryExplainerResponse, mockVerifyQueryResponseSuccess } from "../../query-explainer.mocks";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("CommitmentDataSectionComponent", () => {
     let component: CommitmentDataSectionComponent;
@@ -17,8 +18,9 @@ describe("CommitmentDataSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, CommitmentDataSectionComponent],
-        });
+    imports: [CommitmentDataSectionComponent],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
         registerMatSvgIcons();
 

@@ -24,13 +24,7 @@ import { AppConfigService } from "./app/app-config.service";
 import { ErrorHandlerService } from "./app/services/error-handler.service";
 import { SpinnerService } from "./app/common/components/spinner/spinner.service";
 import { SpinnerInterceptor } from "./app/common/components/spinner/spinner.interceptor";
-import {
-    HTTP_INTERCEPTORS,
-    HttpHeaders,
-    withInterceptorsFromDi,
-    provideHttpClient,
-    HttpClient,
-} from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpHeaders, withInterceptorsFromDi, provideHttpClient, HttpClient } from "@angular/common/http";
 import { LoggedUserService } from "./app/auth/logged-user.service";
 import { HttpLink } from "apollo-angular/http";
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";

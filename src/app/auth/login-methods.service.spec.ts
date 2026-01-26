@@ -11,16 +11,17 @@ import { LoginMethodsService } from "./login-methods.service";
 import { AuthApi } from "../api/auth.api";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("LoginMethodsService", () => {
     let service: LoginMethodsService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [AuthApi, Apollo],
-            imports: [ApolloTestingModule, HttpClientTestingModule],
-        });
+    imports: [ApolloTestingModule],
+    providers: [AuthApi, Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
         service = TestBed.inject(LoginMethodsService);
     });

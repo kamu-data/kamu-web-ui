@@ -22,7 +22,7 @@ import {
 import { Location } from "@angular/common";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { SessionStorageService } from "src/app/services/session-storage.service";
@@ -48,37 +48,38 @@ describe("DataComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [
-                Apollo,
-                provideToastr(),
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case ProjectLinks.URL_QUERY_PARAM_SQL_QUERY:
-                                            return null;
-                                    }
-                                },
-                            },
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return mockDatasetBasicsDerivedFragment.owner.accountName;
-                                        case "datasetName":
-                                            return mockDatasetBasicsDerivedFragment.name;
-                                    }
-                                },
-                            },
+    imports: [DataComponent],
+    providers: [
+        Apollo,
+        provideToastr(),
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    queryParamMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case ProjectLinks.URL_QUERY_PARAM_SQL_QUERY:
+                                    return null;
+                            }
+                        },
+                    },
+                    paramMap: {
+                        get: (key: string) => {
+                            switch (key) {
+                                case "accountName":
+                                    return mockDatasetBasicsDerivedFragment.owner.accountName;
+                                case "datasetName":
+                                    return mockDatasetBasicsDerivedFragment.name;
+                            }
                         },
                     },
                 },
-            ],
-            imports: [HttpClientModule, DataComponent],
-        }).compileComponents();
+            },
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+    ]
+}).compileComponents();
         fixture = TestBed.createComponent(DataComponent);
         location = TestBed.inject(Location);
         ngbModalService = TestBed.inject(NgbModal);

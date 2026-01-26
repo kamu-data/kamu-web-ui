@@ -7,9 +7,10 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DataAccessKamuCliTabComponent } from "./data-access-kamu-cli-tab.component";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { mockDatasetEndPoints } from "../../../data-access-panel-mock.data";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("DataAccessKamuCliTabComponent", () => {
     let component: DataAccessKamuCliTabComponent;
@@ -17,8 +18,9 @@ describe("DataAccessKamuCliTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, DataAccessKamuCliTabComponent],
-        });
+    imports: [DataAccessKamuCliTabComponent],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
         registerMatSvgIcons();
 

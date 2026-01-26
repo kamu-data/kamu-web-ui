@@ -12,13 +12,14 @@ import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { NgbActiveModal, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetCollaborationsService } from "../dataset-collaborations.service";
 import { of } from "rxjs";
 import { DatasetAccessRole, NameLookupResult } from "src/app/api/kamu.graphql.interface";
 import { mockDatasetSearchCollaboratorQuery } from "src/app/api/mock/dataset-collaborations.mock";
 import AppValues from "src/app/common/values/app.values";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("AddPeopleModalComponent", () => {
     let component: AddPeopleModalComponent;
@@ -28,9 +29,9 @@ describe("AddPeopleModalComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [SharedTestModule, HttpClientTestingModule, AddPeopleModalComponent],
-            providers: [Apollo, NgbActiveModal, provideToastr()],
-        });
+    imports: [SharedTestModule, AddPeopleModalComponent],
+    providers: [Apollo, NgbActiveModal, provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(AddPeopleModalComponent);

@@ -23,7 +23,7 @@ import {
 import { GithubLoginCredentials, LoginResponseType, PasswordLoginCredentials } from "src/app/api/auth.api.model";
 import { AuthenticationError } from "src/app/common/values/errors";
 import { MaybeUndefined } from "src/app/interface/app.types";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { AppConfigService } from "src/app/app-config.service";
 import { SessionStorageService } from "src/app/services/session-storage.service";
@@ -32,6 +32,7 @@ import { MockEthereumGatewayFactory, MockEthereumGateway } from "./ethereum/mock
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 
 import { RedirectUrlTestModule } from "src/app/common/modules/redirect-url-test.module";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("LoginService", () => {
     let service: LoginService;
@@ -43,9 +44,9 @@ describe("LoginService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [AuthApi, Apollo, { provide: EthereumGatewayFactory, useClass: MockEthereumGatewayFactory }],
-            imports: [ApolloTestingModule, HttpClientTestingModule, RedirectUrlTestModule],
-        });
+    imports: [ApolloTestingModule, RedirectUrlTestModule],
+    providers: [AuthApi, Apollo, { provide: EthereumGatewayFactory, useClass: MockEthereumGatewayFactory }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
         localStorageService = TestBed.inject(LocalStorageService);
         localStorageService.reset();

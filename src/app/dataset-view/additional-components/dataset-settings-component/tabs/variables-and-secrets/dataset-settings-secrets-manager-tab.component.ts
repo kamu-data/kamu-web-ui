@@ -20,7 +20,7 @@ import {
     ViewDatasetEnvVarConnection,
 } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { from, take } from "rxjs";
+import { catchError, from, of, take } from "rxjs";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { SettingsTabsEnum } from "../../dataset-settings.model";
@@ -113,7 +113,10 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
             modalRefInstance.row = envVar;
         }
         from(modalRef.result)
-            .pipe(take(1))
+            .pipe(
+                take(1),
+                catchError(() => of(null)),
+            )
             .subscribe((result: string) => {
                 if (result === "Success") {
                     this.updateTable(this.currentPage);

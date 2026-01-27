@@ -16,7 +16,7 @@ import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interf
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { EditLicenseModalComponent } from "../../../overview-component/components/edit-license-modal/edit-license-modal.component";
 import { MatIconModule } from "@angular/material/icon";
-import { from, take } from "rxjs";
+import { catchError, from, of, take } from "rxjs";
 import { NavigationService } from "src/app/services/navigation.service";
 import { MetadataTabs } from "../../metadata.constants";
 
@@ -66,7 +66,10 @@ export class MetadataLicenseTabComponent {
         };
         modalRefInstance.datasetBasics = this.datasetBasics;
         from(modalRef.result)
-            .pipe(take(1))
+            .pipe(
+                take(1),
+                catchError(() => of(null)),
+            )
             .subscribe(() => {
                 this.navigationService.navigateToMetadata(
                     { accountName: this.datasetBasics.owner.accountName, datasetName: this.datasetBasics.name },

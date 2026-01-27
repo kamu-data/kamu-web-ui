@@ -25,7 +25,7 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
 import { SelectionModel } from "@angular/cdk/collections";
 import { DatasetCollaborationsService } from "./dataset-collaborations.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { filter, firstValueFrom, from, map, switchMap, take } from "rxjs";
+import { catchError, filter, firstValueFrom, from, map, of, switchMap, take } from "rxjs";
 import { NavigationEnd, Router, RouterLink } from "@angular/router";
 import AppValues from "src/app/common/values/app.values";
 import { EditCollaboratorModalComponent } from "./edit-collaborator-modal/edit-collaborator-modal.component";
@@ -162,6 +162,7 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
                     }),
                 ),
                 take(1),
+                catchError(() => of(null)),
             )
             .subscribe(() => {
                 this.selection.clear();
@@ -184,6 +185,7 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
                     }),
                 ),
                 take(1),
+                catchError(() => of(null)),
             )
             .subscribe(() => {
                 this.selection.clear();

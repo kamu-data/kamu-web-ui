@@ -15,7 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Activity tab: search functionality when switching process statuses
 ### Changed
 - The dataset schema has been converted to ODF format
+- Flows tab: the status filter was incorrectly initialized for request
 - Changed the display of schemas for the "Data" tab and "Query" page 
+
 
 ## [0.61.1] - 2025-12-10
 ### Fixed

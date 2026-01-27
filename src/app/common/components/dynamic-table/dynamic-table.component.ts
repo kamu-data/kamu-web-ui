@@ -122,11 +122,13 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
     }
 
     public showInfoBadge(indexRow: number, indexColumn: number, data: DataSchemaField[]): boolean {
-        return (
+        return Boolean(
             !this.hasColumnDescriptions &&
-            indexColumn === 1 &&
-            !this.hasData &&
-            Boolean(data[indexRow].extra?.[OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION])
+                indexColumn === 1 &&
+                !this.hasData &&
+                data[indexRow] &&
+                data[indexRow].extra &&
+                data[indexRow].extra?.[OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION],
         );
     }
 

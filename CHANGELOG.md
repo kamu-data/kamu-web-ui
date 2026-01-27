@@ -14,7 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Corrected redirection to a page from a link in an email when the token has expired 
 - Activity tab: search functionality when switching process statuses
 ### Changed
-- The dataset schema has been converted to ODF format 
+- The dataset schema has been converted to ODF format
+- Changed the display of schemas for the "Data" tab and "Query" page 
 
 ## [0.61.1] - 2025-12-10
 ### Fixed

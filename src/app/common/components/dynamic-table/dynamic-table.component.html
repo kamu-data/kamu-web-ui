@@ -7,11 +7,9 @@
             <td
                 mat-cell
                 [title]="colIndex != 1 && !hasData ? element[disCol].value : ''"
+                [class.font-monospace]="!this.hasData && colIndex < 2"
                 [ngClass]="hasData ? element[disCol].cssClass : OperationColumnClassEnum.PRIMARY_COLOR"
                 [class]="'truncate-cell copyable-cell'"
-                [ngClass]="{
-                    'font-monospace': !this.hasData && colIndex < 2,
-                }"
                 *matCellDef="let element; index as rowIndex"
                 [attr.data-test-id]="'column-name-' + disCol + '-' + rowIndex"
                 [cdkCopyToClipboard]="element[disCol].value"

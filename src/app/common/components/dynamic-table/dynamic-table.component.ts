@@ -8,10 +8,15 @@
 import { AfterContentInit, ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit } from "@angular/core";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";
-import { TableSourceRowInterface } from "./dynamic-table.interface";
+import { OdfExtraAttributes, TableSourceRowInterface } from "./dynamic-table.interface";
 import { NgFor, NgClass, NgIf } from "@angular/common";
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { ToastrModule, ToastrService } from "ngx-toastr";
+import { OdfTypeMapper } from "../../helpers/data.helpers";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { AttributesSchemaModalComponent } from "./components/attributes-schema-modal/attributes-schema-modal.component";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @Component({
     selector: "app-dynamic-table",
@@ -26,7 +31,9 @@ import { ToastrModule, ToastrService } from "ngx-toastr";
         NgIf,
 
         //-----//
+        MatIconModule,
         MatTableModule,
+        MatTooltipModule,
         ClipboardModule,
         ToastrModule,
     ],
@@ -35,12 +42,15 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
     @Input({ required: true }) public hasTableHeader: boolean;
     @Input({ required: true }) public schemaFields: DataSchemaField[];
     @Input() public dataRows?: DataRow[];
+    @Input() public hasColumnDescriptions?: boolean = true;
     @Input({ required: true }) public idTable: string;
 
     public dataSource = new MatTableDataSource<TableSourceRowInterface>([]);
     public displayedColumns: string[] = [];
     public readonly OperationColumnClassEnum: typeof OperationColumnClassEnum = OperationColumnClassEnum;
+    public readonly OdfExtraAttributes: typeof OdfExtraAttributes = OdfExtraAttributes;
     private toastr = inject(ToastrService);
+    private ngbModalService = inject(NgbModal);
 
     public ngOnInit(): void {
         this.displayTable();
@@ -66,10 +76,26 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
 
             // Special case: displaying schema itself
         } else if (!this.dataRows) {
-            this.dataSource.data = this.schemaFields;
-            const arrFieldsLength = this.schemaFields.map((item) => Object.keys(item).length);
-            const indexFieldMaxLength = arrFieldsLength.indexOf(Math.max.apply(null, arrFieldsLength));
-            this.displayedColumns = Object.keys(this.schemaFields[indexFieldMaxLength]);
+            this.dataSource.data = this.schemaFields.map((x) => {
+                return {
+                    name: { value: x.name, cssClass: "" },
+                    type: {
+                        value:
+                            x.extra && OdfExtraAttributes.EXTRA_ATTRIBUTE_TYPE in x.extra
+                                ? x.extra[OdfExtraAttributes.EXTRA_ATTRIBUTE_TYPE].kind
+                                : OdfTypeMapper(x.type),
+                        cssClass: "",
+                    },
+                    description: {
+                        value:
+                            x.extra && OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION in x.extra
+                                ? x.extra[OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION]
+                                : "",
+                        cssClass: "",
+                    },
+                };
+            });
+            this.displayedColumns = !this.hasColumnDescriptions ? ["name", "type"] : ["name", "type", "description"];
 
             // Casual case, displaying data
         } else {
@@ -80,5 +106,39 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
 
     public showCopyMessage() {
         this.toastr.success(`Copied`);
+    }
+
+    public showMoreBadge(indexRow: number, indexColumn: number, data: DataSchemaField[]): boolean {
+        return (
+            Boolean(this.hasColumnDescriptions) &&
+            indexColumn === 1 &&
+            !this.hasData &&
+            (Boolean(Object.keys(data[indexRow].extra ?? {}).length) || Boolean(data[indexRow].type?.fields?.length))
+        );
+    }
+
+    public extraDesription(indexRow: number, data: DataSchemaField[]): string {
+        return data[indexRow].extra?.[OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION] as string;
+    }
+
+    public showInfoBadge(indexRow: number, indexColumn: number, data: DataSchemaField[]): boolean {
+        return Boolean(
+            !this.hasColumnDescriptions &&
+                indexColumn === 1 &&
+                !this.hasData &&
+                data[indexRow] &&
+                data[indexRow].extra &&
+                data[indexRow].extra?.[OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION],
+        );
+    }
+
+    public showModal(index: number, data: DataSchemaField[]): void {
+        const modalRef = this.ngbModalService.open(AttributesSchemaModalComponent, {
+            size: "lg",
+            centered: true,
+            scrollable: true,
+        });
+        const modalRefInstance = modalRef.componentInstance as AttributesSchemaModalComponent;
+        modalRefInstance.element = data[index];
     }
 }

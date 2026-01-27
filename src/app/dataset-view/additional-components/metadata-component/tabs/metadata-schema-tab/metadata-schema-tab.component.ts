@@ -9,13 +9,18 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 import { NgIf } from "@angular/common";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetSchema } from "src/app/interface/dataset.interface";
+import { DataSchemaField, DatasetSchema } from "src/app/interface/dataset.interface";
 import { BlockRowDataComponent } from "src/app/common/components/block-row-data/block-row-data.component";
 import { DynamicTableComponent } from "src/app/common/components/dynamic-table/dynamic-table.component";
 import { MatIconModule } from "@angular/material/icon";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { isNil, promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { ModalService } from "src/app/common/components/modal/modal.service";
+import { MarkdownModule } from "ngx-markdown";
+import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
+import * as YAML from "yaml";
+import { SchemaViewMode } from "./metadata-schema-tab.component.types";
+import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 @Component({
     selector: "app-metadata-schema-tab",
@@ -26,10 +31,13 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
 
         //-----//
         MatIconModule,
+        MatSlideToggleModule,
+        MarkdownModule,
 
         //-----//
         BlockRowDataComponent,
         DynamicTableComponent,
+        MarkdownFormatPipe,
     ],
     templateUrl: "./metadata-schema-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,12 +48,23 @@ export class MetadataSchemaTabComponent {
 
     private modalService = inject(ModalService);
 
+    public viewMode: SchemaViewMode = SchemaViewMode.TABLE;
+    public readonly SchemaViewMode: typeof SchemaViewMode = SchemaViewMode;
+
     public get schema(): MaybeNull<DatasetSchema> {
         return this.datasetMetadataTabData.overviewUpdate.schema;
     }
 
     public get canEditSchema(): boolean {
         return !isNil(this.schema) && this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit;
+    }
+
+    public convertToYaml(fields: DataSchemaField[]): string {
+        return YAML.stringify(fields);
+    }
+
+    public toggleYamlView(event: MatSlideToggleChange): void {
+        this.viewMode = event.checked ? SchemaViewMode.YAML : SchemaViewMode.TABLE;
     }
 
     /* istanbul ignore next */

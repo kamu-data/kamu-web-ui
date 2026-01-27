@@ -25,7 +25,9 @@ export type SetTransformYamlType = Omit<SetTransform, "__typename"> & {
 
 export interface DatasetNode {
     name: string;
-    type?: string;
+    type?: {
+        kind: string;
+    };
     owner?: string;
     children?: DatasetNode[];
 }

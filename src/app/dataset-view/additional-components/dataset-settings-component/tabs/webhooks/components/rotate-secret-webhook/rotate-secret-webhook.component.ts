@@ -16,7 +16,6 @@ import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-rotate-secret-webhook",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
@@ -24,7 +23,7 @@ import ProjectLinks from "src/app/project-links";
         CopyToClipboardComponent,
     ],
     templateUrl: "./rotate-secret-webhook.component.html",
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RotateSecretWebhookComponent implements OnInit {
     @Input(RoutingResolvers.WEBHOOKS_ROTATE_SECRET) public datasetBasics: DatasetBasicsFragment;

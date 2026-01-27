@@ -29,25 +29,22 @@ import { BehaviorSubject, map, Observable } from "rxjs";
 
 @Component({
     selector: "app-add-webhook",
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         NgIf,
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatDividerModule,
         NgSelectModule,
-
         //-----//
         CopyToClipboardComponent,
         WebhookFormComponent,
     ],
     templateUrl: "./add-webhook.component.html",
     styleUrls: ["./add-webhook.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddWebhookComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.WEBHOOKS_ADD_NEW_KEY) public datasetBasics: DatasetBasicsFragment;

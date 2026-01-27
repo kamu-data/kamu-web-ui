@@ -29,24 +29,21 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 
 @Component({
     selector: "app-list-webhooks",
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         NgClass,
         NgIf,
-
         //-----//
         MatDividerModule,
         MatIconModule,
         MatTableModule,
-
         //-----//
         FeatureFlagDirective,
     ],
     templateUrl: "./list-webhooks.component.html",
     styleUrls: ["./list-webhooks.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListWebhooksComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_WEBHOOKS_KEY) public webhooksViewData: DatasetSettingsWebhookTabData;

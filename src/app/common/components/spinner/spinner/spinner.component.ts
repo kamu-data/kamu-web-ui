@@ -15,15 +15,13 @@ import { NgIf, AsyncPipe } from "@angular/common";
     templateUrl: "./spinner.component.html",
     styleUrls: ["./spinner.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         NgIf,
-
         //-----//
         MatProgressBarModule,
-    ],
+    ]
 })
 export class SpinnerComponent {
     private spinnerService = inject(SpinnerService);

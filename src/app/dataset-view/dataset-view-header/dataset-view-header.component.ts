@@ -36,21 +36,18 @@ import { MatIconModule } from "@angular/material/icon";
     templateUrl: "./dataset-view-header.component.html",
     styleUrls: ["./dataset-view-header.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         RouterLink,
-
         //-----//
         MatIconModule,
         NgbPopover,
-
         //-----//
         DatasetVisibilityComponent,
         FeatureFlagDirective,
         SearchAdditionalButtonsComponent,
-    ],
+    ]
 })
 export class DatasetViewHeaderComponent extends BaseComponent {
     @Input({ required: true }) public datasetInfo: DatasetInfo;

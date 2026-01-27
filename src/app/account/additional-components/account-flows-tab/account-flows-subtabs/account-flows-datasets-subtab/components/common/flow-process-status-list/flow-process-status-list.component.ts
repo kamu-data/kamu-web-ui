@@ -15,17 +15,15 @@ import { NgSelectModule } from "@ng-select/ng-select";
 
 @Component({
     selector: "app-flow-process-status-list",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
-
         //-----//
         NgSelectModule,
     ],
     templateUrl: "./flow-process-status-list.component.html",
     styleUrls: ["./flow-process-status-list.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FlowProcessStatusListComponent {
     @Input({ required: true }) public options: ProcessFilterStateOption[];

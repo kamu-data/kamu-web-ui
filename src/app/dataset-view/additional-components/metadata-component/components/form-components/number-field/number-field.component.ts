@@ -17,20 +17,17 @@ import { FormValidationErrorsDirective } from "src/app/common/directives/form-va
     selector: "app-number-field",
     templateUrl: "./number-field.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         RxReactiveFormsModule,
-
         //-----//
         TooltipIconComponent,
         FormValidationErrorsDirective,
-    ],
+    ]
 })
 export class NumberFieldComponent extends BaseField {
     @Input({ required: true }) public value: string;

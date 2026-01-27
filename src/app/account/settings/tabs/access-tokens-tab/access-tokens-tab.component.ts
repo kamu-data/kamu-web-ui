@@ -41,7 +41,6 @@ import { NgIf, NgTemplateOutlet, DatePipe } from "@angular/common";
     templateUrl: "./access-tokens-tab.component.html",
     styleUrls: ["./access-tokens-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
@@ -49,18 +48,16 @@ import { NgIf, NgTemplateOutlet, DatePipe } from "@angular/common";
         NgTemplateOutlet,
         ReactiveFormsModule,
         DatePipe,
-
         //-----//
         MatDividerModule,
         MatIconModule,
         MatSlideToggleModule,
         MatTableModule,
-
         //-----//
         FormValidationErrorsDirective,
         CopyToClipboardComponent,
         PaginationComponent,
-    ],
+    ]
 })
 export class AccessTokensTabComponent extends BaseComponent {
     private fb = inject(FormBuilder);

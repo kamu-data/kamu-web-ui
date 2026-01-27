@@ -41,22 +41,19 @@ import { NgIf, DecimalPipe, TitleCasePipe } from "@angular/common";
     templateUrl: "./lineage-graph.component.html",
     styleUrls: ["./lineage-graph.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         DecimalPipe,
         NgIf,
         TitleCasePipe,
-
         //-----//
         GraphModule,
         MatIconModule,
-
         //-----//
         DisplayTimeComponent,
         DisplayDatasetIdPipe,
         DisplaySizePipe,
-    ],
+    ]
 })
 export class LineageGraphComponent implements OnInit, OnChanges {
     @Input({ required: true }) public graph: LineageGraph;

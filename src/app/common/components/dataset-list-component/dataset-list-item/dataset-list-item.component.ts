@@ -26,26 +26,23 @@ import { DatasetKindComponent } from "../../dataset-kind/dataset-kind.component"
     selector: "app-dataset-list-item",
     templateUrl: "./dataset-list-item.component.html",
     styleUrls: ["./dataset-list-item.component.scss"],
-    standalone: true,
     imports: [
         //-----//
         NgFor,
         NgIf,
         RouterLink,
-
         //-----//
         MatChipsModule,
         MatIconModule,
         MatDividerModule,
         NgbPopover,
         NgbRating,
-
         //-----//
         DatasetVisibilityComponent,
         DatasetKindComponent,
         DisplayTimeComponent,
         FeatureFlagDirective,
-    ],
+    ]
 })
 export class DatasetListItemComponent {
     @Input({ required: true }) public row: DatasetSearchOverviewFragment;

@@ -32,17 +32,15 @@ import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/a
         { provide: DateTimeAdapter, useClass: MomentDateTimeAdapter },
         { provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS },
     ],
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
-
         //-----//
         MatDividerModule,
         MatIconModule,
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
-    ],
+    ]
 })
 export class EditWatermarkModalComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public currentWatermark: MaybeNullOrUndefined<string>;

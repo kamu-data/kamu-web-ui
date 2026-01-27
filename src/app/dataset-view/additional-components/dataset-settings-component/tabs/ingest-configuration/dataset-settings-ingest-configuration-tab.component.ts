@@ -26,20 +26,17 @@ import { NgIf } from "@angular/common";
     selector: "app-dataset-settings-ingest-configuration-tab",
     templateUrl: "./dataset-settings-ingest-configuration-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatDividerModule,
-
         //-----//
         FlowRetryPolicyFormComponent,
         IngestConfigurationRuleFormComponent,
-    ],
+    ]
 })
 export class DatasetSettingsIngestConfigurationTabComponent extends BaseComponent implements AfterViewInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_INGEST_CONFIGURATION_KEY)

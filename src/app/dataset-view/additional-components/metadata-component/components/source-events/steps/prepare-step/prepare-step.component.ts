@@ -35,20 +35,17 @@ import { FormValidationErrorsDirective } from "src/app/common/directives/form-va
     styleUrls: ["./prepare-step.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgFor,
         NgIf,
         ReactiveFormsModule,
-
         //-----//
         MatIconModule,
-
         //-----//
         FormValidationErrorsDirective,
-    ],
+    ]
 })
 export class PrepareStepComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public eventYamlByHash: MaybeNull<string> = null;

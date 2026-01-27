@@ -24,20 +24,17 @@ import { MatDividerModule } from "@angular/material/divider";
     templateUrl: "./emails-tab.component.html",
     styleUrls: ["./emails-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         FormsModule,
         NgIf,
         ReactiveFormsModule,
-
         //-----//
         MatDividerModule,
-
         //-----//
         FormValidationErrorsDirective,
-    ],
+    ]
 })
 export class EmailsTabComponent implements OnInit {
     @Input(RoutingResolvers.ACCOUNT_SETTINGS_EMAIL_KEY) public account: AccountWithEmailFragment;

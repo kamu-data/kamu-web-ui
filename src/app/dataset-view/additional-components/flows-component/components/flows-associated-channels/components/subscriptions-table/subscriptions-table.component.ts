@@ -25,12 +25,10 @@ import {
 
 @Component({
     selector: "app-subscriptions-table",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgIf,
-
         //-----//
         MatMenuModule,
         MatIconModule,
@@ -39,13 +37,12 @@ import {
         MatProgressBarModule,
         MatButtonToggleModule,
         MatChipsModule,
-
         //-----//
         SubprocessStatusFilterPipe,
     ],
     templateUrl: "./subscriptions-table.component.html",
     styleUrls: ["./subscriptions-table.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubscriptionsTableComponent {
     @Input({ required: true }) public subprocesses: WebhookFlowSubProcess[];

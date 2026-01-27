@@ -37,16 +37,14 @@ import { NgIf } from "@angular/common";
     templateUrl: "./readme-section.component.html",
     styleUrls: ["./readme-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgIf,
-
         //-----//
         MatIconModule,
         MarkdownModule,
-    ],
+    ]
 })
 export class ReadmeSectionComponent extends BaseComponent implements OnChanges, AfterViewChecked {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

@@ -33,24 +33,21 @@ import { FlowProcessStatusListComponent } from "../common/flow-process-status-li
 
 @Component({
     selector: "app-custom-filters-view",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
-
         //-----//
         MatIconModule,
         MatSlideToggleModule,
         NgSelectModule,
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
-
         //-----//
         FlowProcessStatusListComponent,
     ],
     templateUrl: "./custom-filters-view.component.html",
     styleUrls: ["./custom-filters-view.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomFiltersViewComponent {
     @Input({ required: true }) public dashboardFilters: DashboardFiltersOptions;

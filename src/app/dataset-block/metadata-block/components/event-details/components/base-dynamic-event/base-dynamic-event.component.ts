@@ -28,18 +28,15 @@ import { NgFor, NgIf } from "@angular/common";
     selector: "app-dynamic-base-event",
     templateUrl: "./base-dynamic-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgFor,
         NgIf,
-
         //-----//
         MatIconModule,
-
         //-----//
         BlockRowDataComponent,
-    ],
+    ]
 })
 export class BaseDynamicEventComponent<TEvent extends object> extends BaseComponent implements AfterViewChecked {
     @Input({ required: true }) public event: TEvent;

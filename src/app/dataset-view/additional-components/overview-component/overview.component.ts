@@ -45,7 +45,6 @@ import { NgIf, NgFor, AsyncPipe, DecimalPipe, TitleCasePipe } from "@angular/com
     templateUrl: "overview.component.html",
     styleUrls: ["./overview.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
@@ -54,12 +53,10 @@ import { NgIf, NgFor, AsyncPipe, DecimalPipe, TitleCasePipe } from "@angular/com
         NgIf,
         NgFor,
         RouterLink,
-
         //-----//
         MatChipsModule,
         MatIconModule,
         NgbTooltip,
-
         //-----//
         FeatureFlagDirective,
         OverviewHistorySummaryHeaderComponent,
@@ -69,7 +66,7 @@ import { NgIf, NgFor, AsyncPipe, DecimalPipe, TitleCasePipe } from "@angular/com
         DisplayHashComponent,
         DisplaySizePipe,
         DisplayTimeComponent,
-    ],
+    ]
 })
 export class OverviewComponent extends BaseDatasetDataComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_OVERVIEW_KEY) public datasetOverviewTabData: DatasetOverviewTabData;

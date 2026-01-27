@@ -17,14 +17,12 @@ import { NgIf } from "@angular/common";
     templateUrl: "./schema-property.component.html",
     styleUrls: ["./schema-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
-
         //-----//
         DynamicTableComponent,
-    ],
+    ]
 })
 export class SchemaPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string[];

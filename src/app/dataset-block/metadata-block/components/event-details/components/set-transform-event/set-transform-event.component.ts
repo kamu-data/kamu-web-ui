@@ -17,18 +17,15 @@ import { NgFor, NgIf } from "@angular/common";
     selector: "app-set-transform-event",
     templateUrl: "../base-dynamic-event/base-dynamic-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgFor,
         NgIf,
-
         //-----//
         MatIconModule,
-
         //-----//
         BlockRowDataComponent,
-    ],
+    ]
 })
 export class SetTransformEventComponent extends BaseDynamicEventComponent<SetTransform> implements OnInit {
     public ngOnInit(): void {

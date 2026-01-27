@@ -20,18 +20,16 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
     styleUrls: ["./select-kind-field.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [NgbTooltipConfig],
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgFor,
         ReactiveFormsModule,
-
         //-----//
         MatIconModule,
         NgbTooltip,
         RxReactiveFormsModule,
-    ],
+    ]
 })
 export class SelectKindFieldComponent {
     @Input({ required: true }) public form: FormGroup;

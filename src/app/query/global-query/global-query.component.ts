@@ -27,16 +27,14 @@ import { EditorModule } from "src/app/editor/editor.module";
     templateUrl: "./global-query.component.html",
     styleUrls: ["./global-query.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
-
         //-----//
         EditorModule,
         QueryAndResultSectionsComponent,
         SearchAndSchemasSectionComponent,
-    ],
+    ]
 })
 export class GlobalQueryComponent extends BaseComponent implements OnInit {
     @Input(ProjectLinks.URL_QUERY_PARAM_SQL_QUERY) public set sqlQuery(value: string) {

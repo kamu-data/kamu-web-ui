@@ -30,18 +30,15 @@ import { FormValidationErrorsDirective } from "src/app/common/directives/form-va
 @Component({
     selector: "app-edit-license-modal",
     templateUrl: "./edit-license-modal.component.html",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatDividerModule,
-
         //-----//
         FormValidationErrorsDirective,
-    ],
+    ]
 })
 export class EditLicenseModalComponent extends BaseComponent implements OnInit {
     public activeModal = inject(NgbActiveModal);

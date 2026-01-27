@@ -16,8 +16,7 @@ import { NgIf } from "@angular/common";
     templateUrl: "./page-not-found.component.html",
     styleUrls: ["./page-not-found.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [NgIf],
+    imports: [NgIf]
 })
 export class PageNotFoundComponent {
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;

@@ -31,22 +31,19 @@ import { FlowStopPolicyFormValue } from "../shared/flow-stop-policy-form/flow-st
     templateUrl: "./dataset-settings-transform-options-tab.component.html",
     styleUrls: ["./dataset-settings-transform-options-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatSlideToggleModule,
         MatDividerModule,
-
         //-----//
         TransformTriggerFormComponent,
         FlowStopPolicyFormComponent,
         TooltipIconComponent,
-    ],
+    ]
 })
 export class DatasetSettingsTransformOptionsTabComponent extends BaseComponent implements AfterViewInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_TRANSFORM_KEY)

@@ -30,7 +30,6 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
     selector: "app-flow-retry-policy-form",
     templateUrl: "./flow-retry-policy-form.component.html",
     styleUrls: ["./flow-retry-policy-form.component.scss"],
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
@@ -42,7 +41,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
         FormValidationErrorsDirective,
         TimeDeltaFormComponent,
         TooltipIconComponent,
-    ],
+    ]
 })
 export class FlowRetryPolicyFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public form: FormGroup<FlowRetryPolicyFormType>;

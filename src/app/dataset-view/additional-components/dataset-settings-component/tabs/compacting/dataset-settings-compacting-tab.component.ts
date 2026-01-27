@@ -28,19 +28,16 @@ import { DatasetFlowsService } from "../../../flows-component/services/dataset-f
     templateUrl: "./dataset-settings-compacting-tab.component.html",
     styleUrls: ["./dataset-settings-compacting-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatDividerModule,
-
         //-----//
         TooltipIconComponent,
         FormValidationErrorsDirective,
-    ],
+    ]
 })
 export class DatasetSettingsCompactingTabComponent extends BaseComponent {
     public modalService = inject(ModalService);

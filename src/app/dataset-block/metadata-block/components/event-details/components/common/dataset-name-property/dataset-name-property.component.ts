@@ -15,8 +15,7 @@ import { RouterLink } from "@angular/router";
     templateUrl: "./dataset-name-property.component.html",
     styleUrls: ["./dataset-name-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [RouterLink],
+    imports: [RouterLink]
 })
 export class DatasetNamePropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: { datasetName: string; ownerAccountName: string };

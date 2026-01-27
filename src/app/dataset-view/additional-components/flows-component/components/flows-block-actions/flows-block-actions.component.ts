@@ -21,17 +21,15 @@ import AppValues from "src/app/common/values/app.values";
 
 @Component({
     selector: "app-flows-block-actions",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
-
         //-----//
         MatIconModule,
     ],
     templateUrl: "./flows-block-actions.component.html",
     styleUrls: ["./flows-block-actions.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FlowsBlockActionsComponent extends BaseComponent {
     @Input({ required: true }) public flowProcess: DatasetFlowProcess;

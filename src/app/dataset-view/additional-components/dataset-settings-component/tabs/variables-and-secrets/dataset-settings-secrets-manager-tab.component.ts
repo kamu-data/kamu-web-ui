@@ -46,21 +46,18 @@ export interface EnvVariableElement {
     templateUrl: "./dataset-settings-secrets-manager-tab.component.html",
     styleUrls: ["./dataset-settings-secrets-manager-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgIf,
-
         //-----//
         MatDividerModule,
         MatIconModule,
         MatTableModule,
         MatSortModule,
-
         //-----//
         PaginationComponent,
-    ],
+    ]
 })
 export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_VARIABLES_AND_SECRETS_KEY)

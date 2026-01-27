@@ -16,13 +16,12 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { FormValidationErrorsDirective } from "../../directives/form-validation-errors.directive";
 
 @Component({
-    standalone: true,
     imports: [CronExpressionFormComponent, ReactiveFormsModule],
     template: `<app-cron-expression-form
         [form]="cronForm"
         [label]="'Cron expression :'"
         [placeholder]="'Example: * * * * ?'"
-    />`,
+    />`
 })
 class TestCronExpressionFormComponent {
     public cronForm = CronExpressionFormComponent.buildForm();

@@ -27,21 +27,18 @@ import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dat
 import { NgIf } from "@angular/common";
 @Component({
     selector: "app-dataset-flow-process-card",
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         NgClass,
         RouterLink,
-
         //-----//
         MatIconModule,
-
         //-----//
     ],
     templateUrl: "./dataset-flow-process-card.component.html",
     styleUrls: ["./dataset-flow-process-card.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatasetFlowProcessCardComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

@@ -13,7 +13,6 @@ import { MatIconModule } from "@angular/material/icon";
     templateUrl: "./data-access-export-tab.component.html",
     styleUrls: ["./data-access-export-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [MatIconModule],
+    imports: [MatIconModule]
 })
 export class DataAccessExportTabComponent {}

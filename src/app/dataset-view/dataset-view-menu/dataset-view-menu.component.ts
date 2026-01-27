@@ -36,20 +36,17 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
     templateUrl: "./dataset-view-menu.component.html",
     styleUrls: ["./dataset-view-menu.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         RouterLink,
-
         //-----//
         MatButtonToggleModule,
         MatIconModule,
-
         //-----//
         DataAccessPanelComponent,
         FeatureFlagDirective,
-    ],
+    ]
 })
 export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;

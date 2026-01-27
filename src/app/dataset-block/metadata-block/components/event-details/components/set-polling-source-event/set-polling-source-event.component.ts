@@ -17,18 +17,15 @@ import { NgFor, NgIf } from "@angular/common";
     selector: "app-set-polling-source-event",
     templateUrl: "../base-dynamic-event/base-dynamic-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgFor,
         NgIf,
-
         //-----//
         MatIconModule,
-
         //-----//
         BlockRowDataComponent,
-    ],
+    ]
 })
 export class SetPollingSourceEventComponent extends BaseDynamicEventComponent<SetPollingSource> implements OnInit {
     public ngOnInit(): void {

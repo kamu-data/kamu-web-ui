@@ -52,25 +52,22 @@ import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.dir
     templateUrl: "./search-and-schemas-section.component.html",
     styleUrls: ["./search-and-schemas-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         NgFor,
         FormsModule,
         CdkAccordionModule,
-
         //-----//
         MatDividerModule,
         MatIconModule,
         NgbHighlight,
         NgbTypeahead,
-
         //-----//
         DynamicTableComponent,
         FeatureFlagDirective,
         SavedQueriesSectionComponent,
-    ],
+    ]
 })
 export class SearchAndSchemasSectionComponent extends BaseComponent implements OnInit {
     @Output() public sqlQueryEmit = new EventEmitter<string>();

@@ -25,16 +25,13 @@ import { DatasetKindComponent } from "src/app/common/components/dataset-kind/dat
 
 @Component({
     selector: "app-metadata-transformation-tab",
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         NgFor,
         RouterLink,
-
         //-----//
         MatIconModule,
-
         //-----//
         BlockRowDataComponent,
         DatasetVisibilityComponent,
@@ -44,7 +41,7 @@ import { DatasetKindComponent } from "src/app/common/components/dataset-kind/dat
         SqlQueryViewerComponent,
     ],
     templateUrl: "./metadata-transformation-tab.component.html",
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MetadataTransformationTabComponent {
     @Input(RoutingResolvers.METADATA_TRANSFORMATION_TAB_KEY) public datasetMetadataTabData: DatasetOverviewTabData;

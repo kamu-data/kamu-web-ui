@@ -16,7 +16,6 @@ import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FlowRetryBackoffType, TimeUnit } from "src/app/api/kamu.graphql.interface";
 
 @Component({
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
@@ -24,7 +23,7 @@ import { FlowRetryBackoffType, TimeUnit } from "src/app/api/kamu.graphql.interfa
         //-----//
         FlowRetryPolicyFormComponent,
     ],
-    template: `<app-flow-retry-policy-form [form]="hostForm.controls.flowRetryPolicy" />`,
+    template: `<app-flow-retry-policy-form [form]="hostForm.controls.flowRetryPolicy" />`
 })
 class TestFlowRetryPolicyFormComponent {
     public readonly hostForm = new FormGroup({

@@ -31,23 +31,20 @@ import { BlockService } from "src/app/dataset-block/metadata-block/block.service
     templateUrl: "./add-push-source.component.html",
     styleUrls: ["./add-push-source.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgIf,
         ReactiveFormsModule,
         RouterLink,
-
         //-----//
         MatStepperModule,
-
         //-----//
         BaseStepComponent,
         PreprocessStepComponent,
         SourceNameStepComponent,
         StepperNavigationComponent,
-    ],
+    ]
 })
 export class AddPushSourceComponent extends BaseSourceEventComponent {
     @Input(ProjectLinks.URL_QUERY_PARAM_PUSH_SOURCE_NAME) public queryParamName: string;

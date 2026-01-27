@@ -43,22 +43,19 @@ import { MatIconModule } from "@angular/material/icon";
     templateUrl: "./dataset-settings-access-tab.component.html",
     styleUrls: ["./dataset-settings-access-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgIf,
         TitleCasePipe,
         RouterLink,
-
         //-----//
         MatIconModule,
         MatCheckboxModule,
         MatTableModule,
-
         //-----//
         PaginationComponent,
-    ],
+    ]
 })
 export class DatasetSettingsAccessTabComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_ACCESS_KEY) public accessViewData: DatasetViewData;

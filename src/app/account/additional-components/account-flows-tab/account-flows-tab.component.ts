@@ -27,17 +27,15 @@ import { NavigationService } from "src/app/services/navigation.service";
     templateUrl: "./account-flows-tab.component.html",
     styleUrls: ["./account-flows-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         MatIconModule,
         MatProgressBarModule,
         NgbNavModule,
-
         //-----//
         AccountFlowsActivitySubtabComponent,
         AccountFlowsDatasetsSubtabComponent,
-    ],
+    ]
 })
 export class AccountFlowsTabComponent {
     @Input(RoutingResolvers.ACCOUNT_FLOWS_KEY) public set setAccountFlowsData(value: AccountFlowsType) {

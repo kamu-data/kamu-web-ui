@@ -25,7 +25,6 @@ import { FlowProcessStatusListComponent } from "../common/flow-process-status-li
 
 @Component({
     selector: "app-recent-activity-filters-view",
-    standalone: true,
     providers: [
         { provide: DateTimeAdapter, useClass: MomentDateTimeAdapter },
         { provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS },
@@ -33,20 +32,18 @@ import { FlowProcessStatusListComponent } from "../common/flow-process-status-li
     imports: [
         //-----//
         FormsModule,
-
         //-----//
         MatIconModule,
         MatSlideToggleModule,
         NgSelectModule,
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
-
         //-----//
         FlowProcessStatusListComponent,
     ],
     templateUrl: "./recent-activity-filters-view.component.html",
     styleUrls: ["./recent-activity-filters-view.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RecentActivityFiltersViewComponent implements OnInit {
     public ngOnInit(): void {

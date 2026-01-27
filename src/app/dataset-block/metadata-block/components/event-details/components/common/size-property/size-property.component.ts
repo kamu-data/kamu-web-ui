@@ -13,8 +13,7 @@ import { DisplaySizePipe } from "../../../../../../../common/pipes/display-size.
     selector: "app-size-property",
     templateUrl: "./size-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [DisplaySizePipe],
+    imports: [DisplaySizePipe]
 })
 export class SizePropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: number;

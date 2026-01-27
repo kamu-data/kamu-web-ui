@@ -40,19 +40,17 @@ export interface QueryExplainerComponentData {
     templateUrl: "./query-explainer.component.html",
     styleUrls: ["./query-explainer.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         FormsModule,
         NgIf,
-
         //-----//
         VerifyResultSectionComponent,
         InputDataSectionComponent,
         CommitmentDataSectionComponent,
         ReproducedResultSectionComponent,
-    ],
+    ]
 })
 export class QueryExplainerComponent extends BaseComponent implements OnInit {
     @Input(ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN) public set uploadToken(value: string) {

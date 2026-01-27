@@ -47,7 +47,6 @@ import { NgIf } from "@angular/common";
     templateUrl: "./app-header.component.html",
     styleUrls: ["./app-header.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         NgIf,
         RouterLink,
@@ -60,7 +59,7 @@ import { NgIf } from "@angular/common";
         NotificationIndicatorComponent,
         MatMenuModule,
         DisplayAccountNamePipe,
-    ],
+    ]
 })
 export class AppHeaderComponent extends BaseComponent implements OnInit {
     public readonly APP_LOGO = AppValues.APP_LOGO;

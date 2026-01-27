@@ -61,7 +61,6 @@ import { ProcessDatasetCardInteractionService } from "src/app/services/process-d
     styleUrls: ["./flows.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [FlowsSelectionStateService],
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
@@ -69,7 +68,6 @@ import { ProcessDatasetCardInteractionService } from "src/app/services/process-d
         NgClass,
         NgIf,
         RouterLink,
-
         //-----//
         MatMenuModule,
         MatIconModule,
@@ -78,7 +76,6 @@ import { ProcessDatasetCardInteractionService } from "src/app/services/process-d
         MatProgressBarModule,
         MatButtonToggleModule,
         MatChipsModule,
-
         //-----//
         FlowsTableComponent,
         FlowsBlockActionsComponent,
@@ -87,7 +84,7 @@ import { ProcessDatasetCardInteractionService } from "src/app/services/process-d
         DatasetFlowProcessCardComponent,
         TileBaseWidgetComponent,
         PaginationComponent,
-    ],
+    ]
 })
 export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_FLOWS_KEY) public flowsData: DatasetOverviewTabData;

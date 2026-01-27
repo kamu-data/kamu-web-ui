@@ -35,17 +35,15 @@ import { EditorModule } from "src/app/editor/editor.module";
     templateUrl: "./data.component.html",
     styleUrls: ["./data.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         NgIf,
-
         //-----//
         EditorModule,
         SearchAndSchemasSectionComponent,
         QueryAndResultSectionsComponent,
-    ],
+    ]
 })
 export class DataComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_DATA_KEY) public dataTabData: DatasetOverviewTabData;

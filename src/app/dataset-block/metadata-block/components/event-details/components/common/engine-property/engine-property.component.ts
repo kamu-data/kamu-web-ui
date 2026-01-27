@@ -15,8 +15,7 @@ import { NgIf } from "@angular/common";
     templateUrl: "./engine-property.component.html",
     styleUrls: ["./engine-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [NgIf],
+    imports: [NgIf]
 })
 export class EnginePropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

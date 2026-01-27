@@ -23,19 +23,16 @@ import { NgIf } from "@angular/common";
     templateUrl: "./overview-history-summary-header.component.html",
     styleUrls: ["./overview-history-summary-header.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         RouterLink,
-
         //-----//
         MatIconModule,
-
         //-----//
         DisplayHashComponent,
         DisplayTimeComponent,
-    ],
+    ]
 })
 export class OverviewHistorySummaryHeaderComponent {
     @Input({ required: true }) public metadataBlockFragment: MaybeUndefined<MetadataBlockFragment>;

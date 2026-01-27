@@ -37,24 +37,21 @@ import { EditorModule } from "src/app/editor/editor.module";
             useValue: { showError: true },
         },
     ],
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgIf,
         ReactiveFormsModule,
         RouterLink,
-
         //-----//
         MatStepperModule,
         EditorModule,
-
         //-----//
         BaseStepComponent,
         PrepareStepComponent,
         PreprocessStepComponent,
         StepperNavigationComponent,
-    ],
+    ]
 })
 export class AddPollingSourceComponent extends BaseSourceEventComponent implements OnInit {
     @Input(RoutingResolvers.ADD_POLLING_SOURCE_KEY) public eventYamlByHash: string;

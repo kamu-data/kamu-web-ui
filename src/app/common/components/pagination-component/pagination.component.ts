@@ -14,8 +14,7 @@ import { NgbPagination, NgbPaginationPrevious, NgbPaginationNext } from "@ng-boo
     templateUrl: "./pagination.component.html",
     styleUrls: ["./pagination.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [NgbPagination, NgbPaginationPrevious, NgbPaginationNext],
+    imports: [NgbPagination, NgbPaginationPrevious, NgbPaginationNext]
 })
 export class PaginationComponent {
     @Input({ required: true }) public currentPage: number;

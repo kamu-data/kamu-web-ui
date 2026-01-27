@@ -17,14 +17,12 @@ import { NgIf } from "@angular/common";
     selector: "app-reproduced-result-section",
     templateUrl: "./reproduced-result-section.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
-
         //-----//
         DynamicTableComponent,
-    ],
+    ]
 })
 export class ReproducedResultSectionComponent {
     @Input({ required: true }) public dataJsonAoS: QueryExplainerOutputType;

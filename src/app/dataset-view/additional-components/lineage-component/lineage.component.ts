@@ -26,15 +26,13 @@ import { NgIf, AsyncPipe } from "@angular/common";
     selector: "app-lineage",
     templateUrl: "./lineage.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         NgIf,
-
         //-----//
         LineageGraphComponent,
-    ],
+    ]
 })
 export class LineageComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_INFO_KEY) public set datasetInfo(value: DatasetInfo) {

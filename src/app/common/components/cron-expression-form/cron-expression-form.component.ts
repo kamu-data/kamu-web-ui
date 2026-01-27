@@ -20,15 +20,13 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     templateUrl: "./cron-expression-form.component.html",
     styleUrls: ["./cron-expression-form.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         ReactiveFormsModule,
-
         //-----//
         FormValidationErrorsDirective,
-    ],
+    ]
 })
 export class CronExpressionFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public form: FormGroup<CronExpressionFormType>;

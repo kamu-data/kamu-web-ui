@@ -30,7 +30,6 @@ import { LoginMethodsService } from "../auth/login-methods.service";
     templateUrl: "./dataset-create.component.html",
     styleUrls: ["./dataset-create.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
@@ -38,17 +37,15 @@ import { LoginMethodsService } from "../auth/login-methods.service";
         NgIf,
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatDividerModule,
         MatIconModule,
         NgSelectModule,
-
         //-----//
         FormValidationErrorsDirective,
         YamlEditorComponent,
         EditorModule,
-    ],
+    ]
 })
 export class DatasetCreateComponent extends BaseComponent {
     private cdr = inject(ChangeDetectorRef);

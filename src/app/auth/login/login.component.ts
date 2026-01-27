@@ -31,7 +31,6 @@ import { LoginMethodsService } from "../login-methods.service";
     templateUrl: "./login.component.html",
     styleUrls: ["./login.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
@@ -39,14 +38,12 @@ import { LoginMethodsService } from "../login-methods.service";
         NgIf,
         NgTemplateOutlet,
         ReactiveFormsModule,
-
         //-----//
         MatIconModule,
-
         //-----//
         FormValidationErrorsDirective,
         SpinnerComponent,
-    ],
+    ]
 })
 export class LoginComponent extends BaseComponent implements OnInit {
     public static readonly ERROR_ZERO_METHODS_IN_CONFIG =

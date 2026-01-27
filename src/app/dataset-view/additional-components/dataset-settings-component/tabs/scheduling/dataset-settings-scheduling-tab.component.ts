@@ -31,22 +31,19 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
     templateUrl: "./dataset-settings-scheduling-tab.component.html",
     styleUrls: ["./dataset-settings-scheduling-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatSlideToggleModule,
         MatDividerModule,
-
         //-----//
         IngestTriggerFormComponent,
         FlowStopPolicyFormComponent,
         TooltipIconComponent,
-    ],
+    ]
 })
 export class DatasetSettingsSchedulingTabComponent extends BaseComponent implements AfterViewInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_SCHEDULING_KEY)

@@ -20,22 +20,19 @@ import { MetadataTabData } from "../../metadata.constants";
 
 @Component({
     selector: "app-metadata-push-sources-tab",
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         NgFor,
-
         //-----//
         MatIconModule,
-
         //-----//
         FeatureFlagDirective,
         SourceEventCommonDataComponent,
     ],
     templateUrl: "./metadata-push-sources-tab.component.html",
     styleUrls: ["./metadata-push-sources-tab.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MetadataPushSourcesTabComponent {
     @Input(RoutingResolvers.METADATA_PUSH_SOURCES_TAB_KEY) public datasetMetadataTabData: MetadataTabData;

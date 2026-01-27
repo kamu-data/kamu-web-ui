@@ -16,15 +16,13 @@ import { MatDividerModule } from "@angular/material/divider";
     selector: "app-file-from-url-modal",
     templateUrl: "./file-from-url-modal.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatDividerModule,
-    ],
+    ]
 })
 export class FileFromUrlModalComponent extends BaseComponent {
     public activeModal = inject(NgbActiveModal);

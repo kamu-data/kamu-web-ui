@@ -19,11 +19,9 @@ import { SeparatorPropertyComponent } from "src/app/dataset-block/metadata-block
 
 @Component({
     selector: "app-source-event-common-data",
-    standalone: true,
     imports: [
         //-----//
         NgIf,
-
         //-----//
         BlockRowDataComponent,
         CardsPropertyComponent,
@@ -34,7 +32,7 @@ import { SeparatorPropertyComponent } from "src/app/dataset-block/metadata-block
         SeparatorPropertyComponent,
     ],
     templateUrl: "./source-event-common-data.component.html",
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SourceEventCommonDataComponent {
     @Input({ required: true }) public sourceEvent: SetPollingSourceEventFragment | AddPushSourceEventFragment;

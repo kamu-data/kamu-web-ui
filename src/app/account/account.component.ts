@@ -32,23 +32,20 @@ import { NgIf, AsyncPipe } from "@angular/common";
     templateUrl: "./account.component.html",
     styleUrls: ["./account.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         NgIf,
         RouterLink,
         RouterOutlet,
-
         //-----//
         MatButtonToggleModule,
         MatDividerModule,
         MatIconModule,
-
         //-----//
         DisplayAccountNamePipe,
         FeatureFlagDirective,
-    ],
+    ]
 })
 export class AccountComponent {
     @Input(ProjectLinks.URL_PARAM_ACCOUNT_NAME) public set accountName(value: string) {

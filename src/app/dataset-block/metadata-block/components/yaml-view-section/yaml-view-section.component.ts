@@ -14,14 +14,12 @@ import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
     selector: "app-yaml-view-section",
     templateUrl: "./yaml-view-section.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         MarkdownModule,
-
         //-----//
         MarkdownFormatPipe,
-    ],
+    ]
 })
 export class YamlViewSectionComponent {
     @Input({ required: true }) public blockAsYaml: string;

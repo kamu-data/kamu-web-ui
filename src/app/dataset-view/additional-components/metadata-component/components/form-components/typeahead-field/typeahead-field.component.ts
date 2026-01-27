@@ -19,21 +19,18 @@ import { FormValidationErrorsDirective } from "src/app/common/directives/form-va
     selector: "app-typeahead-field",
     templateUrl: "./typeahead-field.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgIf,
         ReactiveFormsModule,
-
         //-----//
         NgbTypeahead,
         RxReactiveFormsModule,
-
         //-----//
         TooltipIconComponent,
         FormValidationErrorsDirective,
-    ],
+    ]
 })
 export class TypeaheadFieldComponent extends BaseField {
     @Input({ required: true }) public data: string[];

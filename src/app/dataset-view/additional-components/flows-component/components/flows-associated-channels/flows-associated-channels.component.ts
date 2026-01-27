@@ -25,14 +25,12 @@ import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeUndefined } from "src/app/interface/app.types";
 @Component({
     selector: "app-flows-associated-channels",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgClass,
         NgIf,
         NgFor,
-
         //-----//
         MatIconModule,
         MatTableModule,
@@ -40,13 +38,12 @@ import { MaybeUndefined } from "src/app/interface/app.types";
         MatProgressBarModule,
         MatButtonToggleModule,
         MatChipsModule,
-
         //-----//
         SubscriptionsTableComponent,
     ],
     templateUrl: "./flows-associated-channels.component.html",
     styleUrls: ["./flows-associated-channels.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FlowsAssociatedChannelsComponent {
     @Input({ required: true }) public flowsSelectionState: FlowsSelectionState;

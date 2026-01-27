@@ -24,24 +24,21 @@ import { FlowProcessStatusListComponent } from "../common/flow-process-status-li
 
 @Component({
     selector: "app-upcoming-scheduled-filters-view",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
-
         //-----//
         MatIconModule,
         MatSlideToggleModule,
         NgSelectModule,
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
-
         //-----//
         FlowProcessStatusListComponent,
     ],
     templateUrl: "./upcoming-scheduled-filters-view.component.html",
     styleUrls: ["./upcoming-scheduled-filters-view.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UpcomingScheduledFiltersViewComponent {
     @Input({ required: true }) public dashboardFilters: DashboardFiltersOptions;

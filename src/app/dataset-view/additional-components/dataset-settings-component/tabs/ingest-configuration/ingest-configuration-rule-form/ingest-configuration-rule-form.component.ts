@@ -20,14 +20,13 @@ import { MaybeNull } from "src/app/interface/app.types";
     selector: "app-ingest-configuration-rule-form",
     templateUrl: "./ingest-configuration-rule-form.component.html",
     styleUrls: ["./ingest-configuration-rule-form.component.scss"],
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
         ReactiveFormsModule,
         //-----//
         MatCheckboxModule,
-    ],
+    ]
 })
 export class IngestConfigurationRuleFormComponent extends BaseComponent {
     @Input({ required: true }) public form: FormGroup<IngestConfigurationRuleFormType>;

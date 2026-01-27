@@ -15,15 +15,13 @@ import { CopyToClipboardComponent } from "../../../../common/components/copy-to-
     selector: "app-data-access-kamu-cli-tab",
     templateUrl: "./data-access-kamu-cli-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         MatDividerModule,
         MatIconModule,
-
         //-----//
         CopyToClipboardComponent,
-    ],
+    ]
 })
 export class DataAccessKamuCliTabComponent {
     @Input({ required: true }) public cli: CliProtocolDesc;

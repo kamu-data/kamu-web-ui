@@ -18,8 +18,7 @@ import { DisplayHashComponent } from "../../../../../../../common/components/dis
     templateUrl: "./block-interval-property.component.html",
     styleUrls: ["./block-interval-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [DisplayHashComponent],
+    imports: [DisplayHashComponent]
 })
 export class BlockIntervalPropertyComponent extends BasePropertyComponent implements OnInit {
     @Input({ required: true }) public data: { prevBlockHash: string; newBlockHash: string; datasetId: string };

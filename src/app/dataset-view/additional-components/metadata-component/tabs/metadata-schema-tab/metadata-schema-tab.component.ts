@@ -19,21 +19,18 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
 
 @Component({
     selector: "app-metadata-schema-tab",
-    standalone: true,
     imports: [
         //-----//
         NgIf,
-
         //-----//
         MatIconModule,
-
         //-----//
         BlockRowDataComponent,
         DynamicTableComponent,
     ],
     templateUrl: "./metadata-schema-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    styleUrls: ["./metadata-schema-tab.component.scss"],
+    styleUrls: ["./metadata-schema-tab.component.scss"]
 })
 export class MetadataSchemaTabComponent {
     @Input(RoutingResolvers.METADATA_SCHEMA_TAB_KEY) public datasetMetadataTabData: DatasetOverviewTabData;

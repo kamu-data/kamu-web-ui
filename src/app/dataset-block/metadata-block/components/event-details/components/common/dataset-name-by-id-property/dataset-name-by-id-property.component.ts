@@ -25,12 +25,10 @@ import { NgIf } from "@angular/common";
         //-----//
         NgIf,
         RouterLink,
-
         //-----//
         DatasetVisibilityComponent,
         DatasetKindComponent,
-    ],
-    standalone: true,
+    ]
 })
 export class DatasetNameByIdPropertyComponent extends BasePropertyComponent implements OnInit {
     @Input({ required: true }) public data: string;

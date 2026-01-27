@@ -25,20 +25,17 @@ import { NgFor, NgIf } from "@angular/common";
     templateUrl: "./search-additional-buttons-nav.component.html",
     styleUrls: ["./search-additional-buttons.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgFor,
         NgIf,
-
         //-----//
         MatIconModule,
         MatMenuModule,
         MatProgressSpinnerModule,
-
         //-----//
         FeatureFlagDirective,
-    ],
+    ]
 })
 export class SearchAdditionalButtonsNavComponent extends BaseComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

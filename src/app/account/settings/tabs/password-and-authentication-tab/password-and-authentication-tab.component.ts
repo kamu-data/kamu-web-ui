@@ -24,20 +24,17 @@ import { MatDividerModule } from "@angular/material/divider";
     templateUrl: "./password-and-authentication-tab.component.html",
     styleUrls: ["./password-and-authentication-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatDividerModule,
-
         //-----//
         AdminChangePasswordComponent,
         FormValidationErrorsDirective,
-    ],
+    ]
 })
 export class PasswordAndAuthenticationTabComponent implements OnInit {
     @Input(RoutingResolvers.ACCOUNT_SETTINGS_PASSWORD_AND_AUTHENTICATION_KEY) public account: AccountFragment;

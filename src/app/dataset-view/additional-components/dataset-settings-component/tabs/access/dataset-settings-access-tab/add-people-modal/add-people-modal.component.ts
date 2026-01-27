@@ -25,19 +25,17 @@ import { MatDividerModule } from "@angular/material/divider";
     templateUrl: "./add-people-modal.component.html",
     styleUrls: ["./add-people-modal.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgIf,
         NgFor,
-
         //-----//
         MatDividerModule,
         MatProgressSpinnerModule,
         MatIconModule,
         NgbTypeahead,
-    ],
+    ]
 })
 export class AddPeopleModalComponent extends BaseComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

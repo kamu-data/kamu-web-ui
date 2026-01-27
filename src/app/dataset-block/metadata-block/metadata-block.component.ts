@@ -29,15 +29,12 @@ import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/sl
     selector: "app-metadata-block",
     templateUrl: "./metadata-block.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         NgIf,
-
         //-----//
         MatSlideToggleModule,
-
         //-----//
         BlockHeaderComponent,
         BlockNavigationComponent,
@@ -45,7 +42,7 @@ import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/sl
         DatasetViewMenuComponent,
         EventDetailsComponent,
         YamlViewSectionComponent,
-    ],
+    ]
 })
 export class MetadataBlockComponent extends BaseDatasetDataComponent implements OnInit {
     @Input(ProjectLinks.URL_PARAM_BLOCK_HASH) public blockHash: string;

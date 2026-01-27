@@ -16,9 +16,8 @@ import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 
 @Component({
-    standalone: true,
     imports: [BufferingBatchingRuleFormComponent, ReactiveFormsModule],
-    template: `<app-buffering-batching-rule-form [form]="bufferingBatchingForm" />`,
+    template: `<app-buffering-batching-rule-form [form]="bufferingBatchingForm" />`
 })
 class TestBufferingBatchingRuleFormComponent {
     public bufferingBatchingForm = BufferingBatchingRuleFormComponent.buildForm();

@@ -50,16 +50,14 @@ const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
     templateUrl: "./sql-editor.component.html",
     styleUrls: ["./sql-editor.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         NgStyle,
         FormsModule,
-
         //-----//
         MonacoEditorModule,
-    ],
+    ]
 })
 export class SqlEditorComponent extends BaseEditorComponent implements OnInit, OnDestroy {
     public readonly EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = SQL_EDITOR_OPTIONS;

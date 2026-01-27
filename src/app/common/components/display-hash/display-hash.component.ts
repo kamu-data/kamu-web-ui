@@ -18,16 +18,14 @@ import { NgIf, SlicePipe } from "@angular/common";
     selector: "app-display-hash",
     templateUrl: "./display-hash.component.html",
     styleUrls: ["./display-hash.component.scss"],
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         RouterLink,
         SlicePipe,
-
         //-----//
         MatIconModule,
-    ],
+    ]
 })
 export class DisplayHashComponent {
     @Input({ required: true }) public value: string;

@@ -36,19 +36,17 @@ import { EditorModule } from "src/app/editor/editor.module";
     templateUrl: "./set-transform.component.html",
     styleUrls: ["./set-transform.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         RouterLink,
-
         //-----//
         EditorModule,
         EngineSectionComponent,
         QueriesSectionComponent,
         SearchSectionComponent,
         StepperNavigationComponent,
-    ],
+    ]
 })
 export class SetTransformComponent extends BaseMainEventComponent implements OnInit {
     @Input(RoutingResolvers.SET_TRANSFORM_KEY) public eventYamlByHash: string;

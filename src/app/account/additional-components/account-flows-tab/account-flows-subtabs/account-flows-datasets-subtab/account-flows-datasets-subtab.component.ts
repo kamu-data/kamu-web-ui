@@ -58,7 +58,6 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 @Component({
     selector: "app-account-flows-datasets-subtab",
-    standalone: true,
     providers: [
         { provide: DateTimeAdapter, useClass: MomentDateTimeAdapter },
         { provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS },
@@ -72,7 +71,6 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
         NgSwitch,
         NgSwitchCase,
         NgTemplateOutlet,
-
         //-----//
         MatIconModule,
         MatButtonToggleModule,
@@ -84,7 +82,6 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
         InfiniteScrollModule,
-
         //-----//
         DatasetFlowProcessCardComponent,
         CustomFiltersViewComponent,
@@ -95,7 +92,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
     ],
     templateUrl: "./account-flows-datasets-subtab.component.html",
     styleUrls: ["./account-flows-datasets-subtab.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public accountName: string;

@@ -17,9 +17,8 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ReactiveFormsModule } from "@angular/forms";
 
 @Component({
-    standalone: true,
     imports: [TimeDeltaFormComponent, ReactiveFormsModule],
-    template: `<app-time-delta-form [form]="timeDeltaForm" [label]="'Launch every:'" />`,
+    template: `<app-time-delta-form [form]="timeDeltaForm" [label]="'Launch every:'" />`
 })
 class TestTimeDeltaFormComponent {
     public timeDeltaForm = TimeDeltaFormComponent.buildForm();
@@ -29,9 +28,8 @@ class TestTimeDeltaFormComponent {
 }
 
 @Component({
-    standalone: true,
     imports: [TimeDeltaFormComponent, ReactiveFormsModule],
-    template: `<app-time-delta-form [form]="timeDeltaForm" [label]="'Launch every:'" [excludeUnits]="excludeUnits" />`,
+    template: `<app-time-delta-form [form]="timeDeltaForm" [label]="'Launch every:'" [excludeUnits]="excludeUnits" />`
 })
 class TestTimeDeltaFormWithExclusionsComponent {
     public timeDeltaForm = TimeDeltaFormComponent.buildForm();

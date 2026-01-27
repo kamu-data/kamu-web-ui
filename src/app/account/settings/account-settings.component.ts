@@ -31,7 +31,6 @@ import { NgIf, NgFor, NgClass, AsyncPipe } from "@angular/common";
     templateUrl: "./account-settings.component.html",
     styleUrls: ["./account-settings.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
@@ -41,13 +40,11 @@ import { NgIf, NgFor, NgClass, AsyncPipe } from "@angular/common";
         RouterLink,
         RouterLinkActive,
         RouterOutlet,
-
         //-----//
         MatIconModule,
-
         //-----//
         FeatureFlagDirective,
-    ],
+    ]
 })
 export class AccountSettingsComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.ACCOUNT_SETTINGS_ACTIVE_TAB_KEY) public activeTab: AccountSettingsTabs;

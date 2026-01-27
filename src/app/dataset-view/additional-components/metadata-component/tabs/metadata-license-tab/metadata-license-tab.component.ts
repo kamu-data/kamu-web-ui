@@ -22,20 +22,17 @@ import { MetadataTabs } from "../../metadata.constants";
 
 @Component({
     selector: "app-metadata-license-tab",
-    standalone: true,
     imports: [
         //-----//
         NgIf,
-
         //-----//
         MatIconModule,
-
         //-----//
         BlockRowDataComponent,
         LinkPropertyComponent,
     ],
     templateUrl: "./metadata-license-tab.component.html",
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MetadataLicenseTabComponent {
     @Input(RoutingResolvers.METADATA_LICENSE_TAB_KEY) public datasetMetadataTabData: DatasetOverviewTabData;

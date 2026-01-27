@@ -29,7 +29,6 @@ import { NgIf, NgClass, AsyncPipe } from "@angular/common";
     templateUrl: "./dataset-flow-details.component.html",
     styleUrls: ["./dataset-flow-details.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
@@ -38,15 +37,13 @@ import { NgIf, NgClass, AsyncPipe } from "@angular/common";
         RouterLinkActive,
         RouterLink,
         RouterOutlet,
-
         //-----//
         MatIconModule,
-
         //-----//
         DatasetViewHeaderComponent,
         DatasetViewMenuComponent,
         FeatureFlagDirective,
-    ],
+    ]
 })
 export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implements OnInit {
     @Input(RoutingResolvers.FLOW_DETAILS_ACTIVE_TAB_KEY) public activeTab: FlowDetailsTabs;

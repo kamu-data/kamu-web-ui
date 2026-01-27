@@ -35,17 +35,14 @@ import { NgIf, NgFor, AsyncPipe } from "@angular/common";
     templateUrl: "./data-access-modal.component.html",
     styleUrls: ["./data-access-modal.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         NgIf,
         RouterLink,
         NgFor,
-
         //-----//
         MatIconModule,
-
         //-----//
         DataAccessLinkTabComponent,
         DataAccessKamuCliTabComponent,
@@ -56,7 +53,7 @@ import { NgIf, NgFor, AsyncPipe } from "@angular/common";
         DataAccessOdataTabComponent,
         DataAccessExportTabComponent,
         FeatureFlagDirective,
-    ],
+    ]
 })
 export class DataAccessModalComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

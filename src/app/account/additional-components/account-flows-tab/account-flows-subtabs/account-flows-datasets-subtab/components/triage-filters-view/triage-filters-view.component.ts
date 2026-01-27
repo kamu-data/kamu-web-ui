@@ -25,24 +25,21 @@ import { FlowProcessStatusListComponent } from "../common/flow-process-status-li
 
 @Component({
     selector: "app-triage-filters-view",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
-
         //-----//
         MatIconModule,
         MatSlideToggleModule,
         NgSelectModule,
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
-
         //-----//
         FlowProcessStatusListComponent,
     ],
     templateUrl: "./triage-filters-view.component.html",
     styleUrls: ["./triage-filters-view.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TriageFiltersViewComponent {
     @Input({ required: true }) public dashboardFilters: DashboardFiltersOptions;

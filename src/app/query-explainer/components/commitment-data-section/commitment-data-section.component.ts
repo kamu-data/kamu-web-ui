@@ -16,8 +16,7 @@ import { CopyToClipboardComponent } from "../../../common/components/copy-to-cli
     templateUrl: "./commitment-data-section.component.html",
     styleUrls: ["./commitment-data-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [CopyToClipboardComponent],
+    imports: [CopyToClipboardComponent]
 })
 export class CommitmentDataSectionComponent {
     private clipboard = inject(Clipboard);

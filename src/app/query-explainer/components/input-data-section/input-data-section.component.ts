@@ -30,7 +30,6 @@ import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
     templateUrl: "./input-data-section.component.html",
     styleUrls: ["./input-data-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     providers: [MarkdownFormatPipe],
     imports: [
         //-----//
@@ -39,14 +38,12 @@ import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
         NgIf,
         NgFor,
         RouterLink,
-
         //-----//
         MarkdownModule,
-
         //-----//
         DisplayHashComponent,
         MarkdownFormatPipe,
-    ],
+    ]
 })
 export class InputDataSectionComponent implements AfterViewChecked {
     @Input({ required: true }) public blockHashObservables$: Observable<Date>[];

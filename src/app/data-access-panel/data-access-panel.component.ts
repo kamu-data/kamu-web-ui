@@ -20,14 +20,12 @@ import { FeatureFlagDirective } from "../common/directives/feature-flag.directiv
     templateUrl: "./data-access-panel.component.html",
     styleUrls: ["./data-access-panel.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         MatIconModule,
-
         //-----//
         FeatureFlagDirective,
-    ],
+    ]
 })
 export class DataAccessPanelComponent extends BaseComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

@@ -24,20 +24,17 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     templateUrl: "./flow-stop-policy-form.component.html",
     styleUrls: ["./flow-stop-policy-form.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatRadioModule,
         MatSlideToggleModule,
-
         //-----//
         FormValidationErrorsDirective,
         TooltipIconComponent,
-    ],
+    ]
 })
 export class FlowStopPolicyFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public form: FormGroup<FlowStopPolicyFormType>;

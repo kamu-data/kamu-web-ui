@@ -18,15 +18,13 @@ import { MatDividerModule } from "@angular/material/divider";
     templateUrl: "./edit-collaborator-modal.component.html",
     styleUrls: ["./edit-collaborator-modal.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgFor,
         FormsModule,
-
         //-----//
         MatDividerModule,
-    ],
+    ]
 })
 export class EditCollaboratorModalComponent implements OnInit {
     @Input({ required: true }) public collaborator: AccountWithRole;

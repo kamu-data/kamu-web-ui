@@ -18,20 +18,17 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
     templateUrl: "./array-keys-field.component.html",
     styleUrls: ["./array-keys-field.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgFor,
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         NgxTrimDirectiveModule,
         RxReactiveFormsModule,
-
         //-----//
         TooltipIconComponent,
-    ],
+    ]
 })
 export class ArrayKeysFieldComponent extends BaseField {
     @Input({ required: true }) public buttonText: string;

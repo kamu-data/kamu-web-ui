@@ -12,11 +12,10 @@ import { MatIconModule } from "@angular/material/icon";
 
 @Component({
     selector: "app-account-whitelist-not-found",
-    standalone: true,
     imports: [MatIconModule],
     templateUrl: "./account-whitelist-not-found.component.html",
     styleUrls: ["./account-whitelist-not-found.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountWhitelistNotFoundComponent {
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;

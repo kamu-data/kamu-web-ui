@@ -21,7 +21,6 @@ import { TransformTriggerFormValue } from "./transform-trigger-form.types";
 import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
 
 @Component({
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
@@ -32,7 +31,7 @@ import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/ti
     template: `<app-transform-trigger-form
         [form]="hostForm.controls.transformTrigger"
         [updatesEnabledControl]="hostForm.controls.updatesEnabled"
-    />`,
+    />`
 })
 class TestTransformTriggerFormComponent {
     public readonly label = "Enable automatic updates";

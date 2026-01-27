@@ -20,14 +20,12 @@ import { EditorModule } from "src/app/editor/editor.module";
     selector: "app-final-yaml-modal",
     templateUrl: "./final-yaml-modal.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         YamlEditorComponent,
-
         //-----//
         EditorModule,
-    ],
+    ]
 })
 export class FinalYamlModalComponent extends BaseComponent {
     @Input({ required: true }) public yamlTemplate: string;

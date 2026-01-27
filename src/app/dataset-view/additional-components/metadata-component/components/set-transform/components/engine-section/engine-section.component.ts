@@ -31,18 +31,15 @@ import { NgIf } from "@angular/common";
     templateUrl: "./engine-section.component.html",
     styleUrls: ["./engine-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgIf,
-
         //-----//
         MatDividerModule,
-
         //-----//
         EngineSelectComponent,
-    ],
+    ]
 })
 export class EngineSectionComponent extends BaseComponent implements OnInit {
     @Input() public knownEngines: MaybeNull<EngineDesc[]>;

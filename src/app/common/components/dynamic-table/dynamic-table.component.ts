@@ -15,6 +15,8 @@ import { ToastrModule, ToastrService } from "ngx-toastr";
 import { OdfTypeMapper } from "../../helpers/data.helpers";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { AttributesSchemaModalComponent } from "./components/attributes-schema-modal/attributes-schema-modal.component";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @Component({
     selector: "app-dynamic-table",
@@ -29,7 +31,9 @@ import { AttributesSchemaModalComponent } from "./components/attributes-schema-m
         NgIf,
 
         //-----//
+        MatIconModule,
         MatTableModule,
+        MatTooltipModule,
         ClipboardModule,
         ToastrModule,
     ],
@@ -38,11 +42,13 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
     @Input({ required: true }) public hasTableHeader: boolean;
     @Input({ required: true }) public schemaFields: DataSchemaField[];
     @Input() public dataRows?: DataRow[];
+    @Input() public hasColumnDescriptions?: boolean = true;
     @Input({ required: true }) public idTable: string;
 
     public dataSource = new MatTableDataSource<TableSourceRowInterface>([]);
     public displayedColumns: string[] = [];
     public readonly OperationColumnClassEnum: typeof OperationColumnClassEnum = OperationColumnClassEnum;
+    public readonly OdfExtraAttributes: typeof OdfExtraAttributes = OdfExtraAttributes;
     private toastr = inject(ToastrService);
     private ngbModalService = inject(NgbModal);
 
@@ -89,7 +95,7 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
                     },
                 };
             });
-            this.displayedColumns = ["name", "type", "description"];
+            this.displayedColumns = !this.hasColumnDescriptions ? ["name", "type"] : ["name", "type", "description"];
 
             // Casual case, displaying data
         } else {
@@ -102,11 +108,25 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
         this.toastr.success(`Copied`);
     }
 
-    public showBadge(indexRow: number, indexColumn: number, data: DataSchemaField[]): boolean {
+    public showMoreBadge(indexRow: number, indexColumn: number, data: DataSchemaField[]): boolean {
         return (
+            Boolean(this.hasColumnDescriptions) &&
             indexColumn === 1 &&
             !this.hasData &&
             (Boolean(Object.keys(data[indexRow].extra ?? {}).length) || Boolean(data[indexRow].type?.fields?.length))
+        );
+    }
+
+    public extraDesription(indexRow: number, data: DataSchemaField[]): string {
+        return data[indexRow].extra?.[OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION] as string;
+    }
+
+    public showInfoBadge(indexRow: number, indexColumn: number, data: DataSchemaField[]): boolean {
+        return (
+            !this.hasColumnDescriptions &&
+            indexColumn === 1 &&
+            !this.hasData &&
+            Boolean(data[indexRow].extra?.[OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION])
         );
     }
 

@@ -6,9 +6,12 @@
             </th>
             <td
                 mat-cell
-                [title]="element[disCol].value"
+                [title]="colIndex != 1 && !hasData ? element[disCol].value : ''"
                 [ngClass]="hasData ? element[disCol].cssClass : OperationColumnClassEnum.PRIMARY_COLOR"
                 [class]="'truncate-cell copyable-cell'"
+                [ngClass]="{
+                    'font-monospace': !this.hasData && colIndex < 2,
+                }"
                 *matCellDef="let element; index as rowIndex"
                 [attr.data-test-id]="'column-name-' + disCol + '-' + rowIndex"
                 [cdkCopyToClipboard]="element[disCol].value"
@@ -18,12 +21,24 @@
                     <div class="cell-content truncate-cell">{{ element[disCol].value }}</div>
                     <div
                         class="cell-content ms-1 position-relative"
-                        *ngIf="showBadge(rowIndex, colIndex, schemaFields)"
+                        *ngIf="showMoreBadge(rowIndex, colIndex, schemaFields)"
                     >
                         <span
                             (click)="$event.stopPropagation(); showModal(rowIndex, schemaFields)"
                             class="badge-more"
                         ></span>
+                    </div>
+                    <div
+                        class="cell-content ms-1 position-relative"
+                        *ngIf="showInfoBadge(rowIndex, colIndex, schemaFields)"
+                    >
+                        <img
+                            [matTooltip]="extraDesription(rowIndex, schemaFields)"
+                            [matTooltipPosition]="'after'"
+                            class="info-badge"
+                            src="assets/images/information.png"
+                            alt="info-icon"
+                        />
                     </div>
                 </div>
             </td>

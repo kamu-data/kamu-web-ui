@@ -76,10 +76,10 @@ table {
 }
 
 .badge-more {
-    font-size: 13px !important;
+    font-size: 9px !important;
     background: #b2bcbf;
     border-radius: 7px;
-    padding: 1px 6px;
+    padding: 2px 4px;
     color: #ffff;
     font-weight: 500;
 
@@ -102,4 +102,13 @@ table {
 
 .cell-content {
     height: auto !important;
+}
+
+.info-badge {
+    width: 21px !important;
+    height: auto !important;
+
+    &:hover {
+        cursor: pointer;
+    }
 }

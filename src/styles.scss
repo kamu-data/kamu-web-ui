@@ -1,10 +1,10 @@
 @use "@angular/material" as mat;
-@import "@angular/material/prebuilt-themes/indigo-pink.css";
-@import "var";
-@import "bootstrap-icons/font/bootstrap-icons.css";
-@import "bootstrap/scss/bootstrap";
-@import "@danielmoncada/angular-datetime-picker/assets/style/picker.min.css";
-@import "components/index";
+@use "@angular/material/prebuilt-themes/indigo-pink.css";
+@use "var" as *;
+@use "bootstrap-icons/font/bootstrap-icons.css";
+@use "bootstrap/scss/bootstrap";
+@use "@danielmoncada/angular-datetime-picker/assets/style/picker.min.css";
+@use "components/index";
 @include mat.core;
 
 // @include mat.elevation-classes();
@@ -1102,7 +1102,7 @@ router-outlet {
     }
 
     &-warning {
-        color: $warning;
+        color: yellow;
     }
 
     &-ok {
@@ -1111,14 +1111,6 @@ router-outlet {
 
     &-info {
         color: #4494ff;
-    }
-}
-
-.link-green {
-    color: $green-100;
-
-    &__inline {
-        border-bottom: 1px $green-100 solid;
     }
 }
 

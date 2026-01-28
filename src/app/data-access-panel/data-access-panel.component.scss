@@ -1,4 +1,4 @@
-@import "var";
+@use "var" as *;
 
 .btn-group-parent {
     .get-data-button {

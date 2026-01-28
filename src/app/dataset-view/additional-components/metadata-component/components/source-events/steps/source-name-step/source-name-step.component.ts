@@ -7,7 +7,6 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { NgIf } from "@angular/common";
 import { InputFieldComponent } from "../../../form-components/input-field/input-field.component";
 
 @Component({
@@ -16,10 +15,8 @@ import { InputFieldComponent } from "../../../form-components/input-field/input-
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        NgIf,
-        //-----//
         InputFieldComponent,
-    ]
+    ],
 })
 export class SourceNameStepComponent {
     @Input({ required: true }) public form: FormGroup;

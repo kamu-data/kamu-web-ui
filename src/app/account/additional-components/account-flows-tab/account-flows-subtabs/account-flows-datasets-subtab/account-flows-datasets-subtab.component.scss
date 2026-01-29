@@ -12,6 +12,14 @@
                 line-height: 36px !important;
             }
         }
+
+        .mat-button-toggle-checkbox-wrapper {
+            display: none;
+        }
+
+        .mat-button-toggle-checked .mat-button-toggle-button:has(.mat-button-toggle-checkbox-wrapper) {
+            padding-left: 0;
+        }
     }
 }
 

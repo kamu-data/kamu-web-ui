@@ -12,9 +12,12 @@
             border-radius: 0;
         }
 
-        .mat-button-toggle-appearance-standard .mat-button-toggle-label-content .mat-pseudo-checkbox,
-        .mat-mdc-button-toggle .mat-pseudo-checkbox {
-            display: none !important;
+        .mat-button-toggle-checkbox-wrapper {
+            display: none;
+        }
+
+        .mat-button-toggle-checked .mat-button-toggle-button:has(.mat-button-toggle-checkbox-wrapper) {
+            padding-left: 0;
         }
     }
 

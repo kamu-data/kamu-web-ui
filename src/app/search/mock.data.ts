@@ -60,6 +60,7 @@ import { OdfDefaultValues } from "../common/values/app-odf-default.values";
 import { SqlQueryBasicResponse } from "../query/global-query/global-query.model";
 import { OperationColumnClassEnum } from "../interface/dataset.interface";
 import { SqlQueryExplanationResponse } from "../query-explainer/query-explainer.types";
+import { OdfTypes } from "../common/components/dynamic-table/dynamic-table.interface";
 
 export const mockPageBasedInfo: PageBasedInfo = {
     currentPage: 1,
@@ -1683,68 +1684,75 @@ export const mockSqlQueryResponseState: SqlQueryBasicResponse = {
     schema: [
         {
             name: "offset",
-            repetition: "REQUIRED",
-            type: "INT64",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "op",
-            repetition: "REQUIRED",
-            type: "INT32",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "system_time",
-            repetition: "REQUIRED",
-            type: "INT64",
-            logicalType: "TIMESTAMP(MILLIS,true)",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "block_time",
-            repetition: "OPTIONAL",
-            type: "INT64",
-            logicalType: "TIMESTAMP(MILLIS,true)",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "block_number",
-            repetition: "OPTIONAL",
-            type: "INT64",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "transaction_hash",
-            repetition: "OPTIONAL",
-            type: "BYTE_ARRAY",
-            logicalType: "STRING",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "account_symbol",
-            repetition: "OPTIONAL",
-            type: "BYTE_ARRAY",
-            logicalType: "STRING",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "token_symbol",
-            repetition: "OPTIONAL",
-            type: "BYTE_ARRAY",
-            logicalType: "STRING",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "token_amount",
-            repetition: "OPTIONAL",
-            type: "FLOAT",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "eth_amount",
-            repetition: "OPTIONAL",
-            type: "FLOAT",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "token_balance",
-            repetition: "OPTIONAL",
-            type: "FLOAT",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "token_book_value_eth",
-            repetition: "OPTIONAL",
-            type: "FLOAT",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
     ],
     involvedDatasetsId: ["did:odf:fed01df8964328b3b36fdfc5b140c5aea8795d445403a577428b2eafa5111f47dc212"],

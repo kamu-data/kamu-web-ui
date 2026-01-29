@@ -41,6 +41,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { FormsModule } from "@angular/forms";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { NgIf } from "@angular/common";
+import { SessionStorageService } from "src/app/services/session-storage.service";
 
 @Component({
     selector: "app-header",
@@ -105,6 +106,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     private router = inject(Router);
     private cdr = inject(ChangeDetectorRef);
     private navigationService = inject(NavigationService);
+    private sessionStorageService = inject(SessionStorageService);
 
     public ngOnInit(): void {
         this.router.events
@@ -172,6 +174,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     public onSelectItem(event: NgbTypeaheadSelectItemEvent): void {
         this.isSearchActive = false;
         if (event.item) {
+            this.sessionStorageService.removeDatasetSqlCode();
             this.onSelectedDataset.emit(event.item as DatasetAutocompleteItem);
             setTimeout(() => {
                 const typeaheadInput: MaybeNull<HTMLElement> = document.getElementById("typeahead-http");
@@ -197,6 +200,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
 
     public onFocus(event: Event): void {
         this.isSearchActive = true;
+
         event.stopPropagation();
         setTimeout(() => {
             const inputEvent: Event = new Event("input");
@@ -206,6 +210,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
 
     public onSearch(event: Event): void {
         this.isSearchActive = false;
+        this.sessionStorageService.removeDatasetSqlCode();
         setTimeout(() => {
             if (this.isMobileView) {
                 this.triggerMenuClick();

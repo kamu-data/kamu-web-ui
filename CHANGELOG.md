@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Corrected redirection to a page from a link in an email when the token has expired 
 - Activity tab: search functionality when switching process statuses
 - Flows tab: the status filter was incorrectly initialized for request
+### Changed
+- Updated dependencies and Angular to version 19
 
 
 ## [0.61.1] - 2025-12-10

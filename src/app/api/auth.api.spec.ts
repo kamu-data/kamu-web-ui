@@ -6,7 +6,7 @@
  */
 
 import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
-import { Apollo } from "apollo-angular";
+
 import { AuthApi } from "./auth.api";
 import {
     AccountProvider,
@@ -41,7 +41,7 @@ describe("AuthApi", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [AuthApi, Apollo],
+            providers: [AuthApi],
             imports: [ApolloTestingModule],
         });
         service = TestBed.inject(AuthApi);

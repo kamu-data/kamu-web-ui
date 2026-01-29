@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { ApolloModule } from "apollo-angular";
 import { Apollo } from "apollo-angular";
 import {
     mockDatasetBasicsDerivedFragment,
@@ -57,14 +56,20 @@ describe("OverviewComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [ApolloModule,
-        MarkdownModule.forRoot(),
-        OwlDateTimeModule,
-        OwlNativeDateTimeModule,
-        OwlMomentDateTimeModule,
-        SharedTestModule],
-    providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-})
+            imports: [
+                MarkdownModule.forRoot(),
+                OwlDateTimeModule,
+                OwlNativeDateTimeModule,
+                OwlMomentDateTimeModule,
+                SharedTestModule,
+            ],
+            providers: [
+                Apollo,
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        })
             .overrideComponent(OverviewComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

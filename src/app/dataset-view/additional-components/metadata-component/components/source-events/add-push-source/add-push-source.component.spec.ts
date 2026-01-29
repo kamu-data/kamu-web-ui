@@ -8,7 +8,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AddPushSourceComponent } from "./add-push-source.component";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
-import { ApolloTestingModule } from "apollo-angular/testing";
 import { DatasetCommitService } from "../../../../overview-component/services/dataset-commit.service";
 import { from, of } from "rxjs";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
@@ -21,6 +20,7 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { AddPushSourceSection } from "./add-push-source-form.types";
 import { mockAddPushSourceYaml } from "../../set-transform/mock.data";
+import { Apollo } from "apollo-angular";
 
 const providersSection = (name: string) => {
     return [
@@ -55,8 +55,8 @@ describe("AddPushSourceComponent with query parameter name", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: providersSection(mockAddPushSourceYaml),
-            imports: [ApolloTestingModule, BrowserAnimationsModule, AddPushSourceComponent],
+            providers: [...providersSection(mockAddPushSourceYaml), Apollo],
+            imports: [BrowserAnimationsModule, AddPushSourceComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AddPushSourceComponent);
@@ -148,8 +148,8 @@ describe("AddPushSourceComponent without query parameter name", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: providersSection(""),
-            imports: [ApolloTestingModule, BrowserAnimationsModule, AddPushSourceComponent],
+            providers: [providersSection(""), Apollo],
+            imports: [BrowserAnimationsModule, AddPushSourceComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AddPushSourceComponent);

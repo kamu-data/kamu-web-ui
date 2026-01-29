@@ -38,7 +38,7 @@
     "@angular/platform-browser-dynamic": "^19.2.18",
     "@angular/router": "^19.2.18",
     "@angular/service-worker": "19.2.18",
-    "@apollo/client": "^3.14.0",
+    "@apollo/client": "^3.12.7",
     "@danielmoncada/angular-datetime-picker": "^19.1.2",
     "@danielmoncada/angular-datetime-picker-moment-adapter": "^6.0.2",
     "@ng-bootstrap/ng-bootstrap": "^18.0.0",

@@ -10,7 +10,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ALL_URLS_WITHOUT_HEADER, AppComponent } from "./app.component";
 import { isMobileView } from "./common/helpers/app.helpers";
 import { NavigationService } from "./services/navigation.service";
-import { ApolloTestingModule } from "apollo-angular/testing";
 import { of } from "rxjs";
 import ProjectLinks from "./project-links";
 import { registerMatSvgIcons, routerMock, routerMockEventSubject } from "./common/helpers/base-test.helpers.spec";
@@ -22,6 +21,7 @@ import { LoginService } from "./auth/login/login.service";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { Apollo } from "apollo-angular";
 
 describe("AppComponent", () => {
     let component: AppComponent;
@@ -34,18 +34,26 @@ describe("AppComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [ApolloTestingModule, AppComponent],
-    providers: [
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
-            },
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-}).compileComponents();
+            imports: [AppComponent],
+            providers: [
+                {
+                    provide: Apollo,
+                    useValue: {
+                        client: {
+                            clearStore: jasmine.createSpy("clearStore").and.resolveTo(Promise.resolve()),
+                        },
+                    },
+                },
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
+                    },
+                },
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

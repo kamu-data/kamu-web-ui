@@ -32,9 +32,7 @@
               "base": "dist/kamu-platform"
             },
             "index": "src/index.html",
-            "polyfills": [
-              "src/polyfills.ts"
-            ],
+            "polyfills": ["src/polyfills.ts"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/assets/svg",
@@ -105,6 +103,10 @@
           "configurations": {
             "production": {
               "buildTarget": "kamu-platform:build:production"
+            },
+            "development": {
+              "liveReload": false,
+              "hmr": false
             }
           }
         },

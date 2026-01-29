@@ -42,6 +42,7 @@ import { provideAnimations } from "@angular/platform-browser/animations";
 import { AppConfigService } from "./app-config.service";
 import { LoginMethodsService } from "./auth/login-methods.service";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { Apollo } from "apollo-angular";
 
 describe("Router", () => {
     let router: Router;
@@ -52,68 +53,71 @@ describe("Router", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [ApolloTestingModule,
-        NgxGraphModule,
-        PageNotFoundComponent,
-        LoginComponent],
-    providers: [
-        {
-            provide: AppConfigService,
-            useValue: {
-                allowAnonymous: true,
-            },
-        },
-        {
-            provide: ROUTES,
-            multi: true,
-            useValue: PUBLIC_ROUTES,
-        },
-        provideConditionalGuardedRoutes(),
-        provideCatchAllRoute(),
-        provideAnimations(),
-        provideToastr(),
-        {
-            provide: accountSettingsAccessTokensResolverFn,
-            useValue: {
-                resolve: () => of(mockListAccessTokensQuery.accounts.byId?.accessTokens
-                    .listAccessTokens as AccessTokenConnection),
-            },
-        },
-        {
-            provide: searchResolverFn,
-            useValue: {
-                resolve: () => of(mockDatasetSearchResult),
-            },
-        },
-        {
-            provide: datasetViewResolverFn,
-            useValue: {
-                resolve: () => of({
-                    datasetBasics: mockDatasetBasicsDerivedFragment,
-                    datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                }),
-            },
-        },
-        {
-            provide: datasetOverviewTabResolverFn,
-            useValue: {
-                resolve: () => of({
-                    datasetBasics: mockDatasetBasicsDerivedFragment,
-                    datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                    overviewUpdate: {
-                        schema: mockMetadataDerivedUpdate.schema,
-                        content: mockOverviewDataUpdate.content,
-                        overview: structuredClone(mockOverviewDataUpdateNullable.overview),
-                        size: mockOverviewDataUpdate.size,
-                    } as OverviewUpdate,
-                }),
-            },
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-}).compileComponents();
+            schemas: [NO_ERRORS_SCHEMA],
+            imports: [ApolloTestingModule, NgxGraphModule, PageNotFoundComponent, LoginComponent],
+            providers: [
+                Apollo,
+                {
+                    provide: AppConfigService,
+                    useValue: {
+                        allowAnonymous: true,
+                    },
+                },
+                {
+                    provide: ROUTES,
+                    multi: true,
+                    useValue: PUBLIC_ROUTES,
+                },
+                provideConditionalGuardedRoutes(),
+                provideCatchAllRoute(),
+                provideAnimations(),
+                provideToastr(),
+                {
+                    provide: accountSettingsAccessTokensResolverFn,
+                    useValue: {
+                        resolve: () =>
+                            of(
+                                mockListAccessTokensQuery.accounts.byId?.accessTokens
+                                    .listAccessTokens as AccessTokenConnection,
+                            ),
+                    },
+                },
+                {
+                    provide: searchResolverFn,
+                    useValue: {
+                        resolve: () => of(mockDatasetSearchResult),
+                    },
+                },
+                {
+                    provide: datasetViewResolverFn,
+                    useValue: {
+                        resolve: () =>
+                            of({
+                                datasetBasics: mockDatasetBasicsDerivedFragment,
+                                datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+                            }),
+                    },
+                },
+                {
+                    provide: datasetOverviewTabResolverFn,
+                    useValue: {
+                        resolve: () =>
+                            of({
+                                datasetBasics: mockDatasetBasicsDerivedFragment,
+                                datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+                                overviewUpdate: {
+                                    schema: mockMetadataDerivedUpdate.schema,
+                                    content: mockOverviewDataUpdate.content,
+                                    overview: structuredClone(mockOverviewDataUpdateNullable.overview),
+                                    size: mockOverviewDataUpdate.size,
+                                } as OverviewUpdate,
+                            }),
+                    },
+                },
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        }).compileComponents();
 
         router = TestBed.inject(Router);
         location = TestBed.inject(Location);

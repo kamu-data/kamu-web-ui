@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { Apollo, ApolloModule } from "apollo-angular";
+import { Apollo } from "apollo-angular";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { DatasetFlowDetailsComponent } from "./dataset-flow-details.component";
 import { ActivatedRoute } from "@angular/router";
@@ -25,6 +25,7 @@ import { mockDatasetFlowByIdResponse, mockFlowSummaryDataFragments } from "src/a
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { NavigationService } from "src/app/services/navigation.service";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { importProvidersFrom } from "@angular/core";
 
 describe("DatasetFlowDetailsComponent", () => {
     let component: DatasetFlowDetailsComponent;
@@ -37,36 +38,35 @@ describe("DatasetFlowDetailsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [
-        //-----//
-        ApolloModule,
-        ApolloTestingModule,
-        //-----//
-        DatasetFlowDetailsComponent],
-    providers: [
-        Apollo,
-        provideToastr(),
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return "accountName";
-                                case "datasetName":
-                                    return "datasetName";
-                            }
+            imports: [
+                //-----//
+                DatasetFlowDetailsComponent,
+            ],
+            providers: [
+                Apollo,
+                importProvidersFrom(ApolloTestingModule),
+                provideToastr(),
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-}).compileComponents();
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

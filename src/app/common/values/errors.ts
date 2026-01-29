@@ -6,7 +6,7 @@
  */
 
 import { NavigationService } from "../../services/navigation.service";
-import { ApolloError } from "@apollo/client/core";
+import { ApolloError } from "@apollo/client";
 import { ErrorTexts } from "./errors.text";
 import { logError } from "../helpers/app.helpers";
 import { LoggedUserService } from "../../auth/logged-user.service";

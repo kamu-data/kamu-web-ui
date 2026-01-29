@@ -33,8 +33,8 @@
     </div>
 </ng-template>
 <div class="mt-4">
-    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree">
-        <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+    <mat-tree #tree [dataSource]="dataSource" [childrenAccessor]="childrenAccessor">
+        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
             {{ node.name }}&nbsp;&nbsp; <span *ngIf="node.type" class="fw-bold">({{ node.type }})</span>
             <button
                 *ngIf="node.name === UNAVAILABLE_INPUT_LABEL"
@@ -46,33 +46,31 @@
             </button>
         </mat-tree-node>
 
-        <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
-            <div class="mat-tree-node">
-                <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
-                    <mat-icon class="mat-icon-rtl-mirror">
-                        {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
-                    </mat-icon>
-                </button>
-                <div class="d-flex align-items-center justify-content-between node-name-block">
-                    <div class="node-link">
-                        <a class="node-name" [routerLink]="['/', node.owner]" target="_blank"> {{ node.owner }} </a>/
-                        <a class="node-name" [routerLink]="['/', node.owner, node.name]" target="_blank">
-                            {{ node.name }}</a
-                        >
-                    </div>
-                    <button
-                        class="no-button d-flex"
-                        (click)="deleteInputDataset(node.owner + '/' + node.name)"
-                        title="Delete input dataset"
+        <mat-tree-node
+            *matTreeNodeDef="let node; when: hasChild"
+            matTreeNodeToggle
+            [cdkTreeNodeTypeaheadLabel]="node.name"
+        >
+            <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+                <mat-icon class="mat-icon-rtl-mirror">
+                    {{ tree.isExpanded(node) ? "expand_more" : "chevron_right" }}
+                </mat-icon>
+            </button>
+            <div class="d-flex align-items-center justify-content-between node-name-block">
+                <div class="node-link">
+                    <a class="node-name" [routerLink]="['/', node.owner]" target="_blank"> {{ node.owner }} </a>/
+                    <a class="node-name" [routerLink]="['/', node.owner, node.name]" target="_blank">
+                        {{ node.name }}</a
                     >
-                        <mat-icon class="fs-4 hover">delete</mat-icon>
-                    </button>
                 </div>
+                <button
+                    class="no-button d-flex"
+                    (click)="deleteInputDataset(node.owner + '/' + node.name)"
+                    title="Delete input dataset"
+                >
+                    <mat-icon class="fs-4 hover">delete</mat-icon>
+                </button>
             </div>
-
-            <div [class.example-tree-invisible]="!treeControl.isExpanded(node)" role="group">
-                <ng-container matTreeNodeOutlet></ng-container>
-            </div>
-        </mat-nested-tree-node>
+        </mat-tree-node>
     </mat-tree>
 </div>

@@ -8,8 +8,7 @@
 import { MaybeUndefined } from "../../../../interface/app.types";
 import { TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { DatasetCommitService } from "./dataset-commit.service";
-import { Apollo, ApolloModule } from "apollo-angular";
-import { ApolloTestingModule } from "apollo-angular/testing";
+import { Apollo } from "apollo-angular";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { Observable, Subscription, of } from "rxjs";
 import {
@@ -53,9 +52,8 @@ describe("DatasetCommitService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [ApolloModule, ApolloTestingModule],
-    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
         datasetApi = TestBed.inject(DatasetApi);
         navigationService = TestBed.inject(NavigationService);
         commitService = TestBed.inject(DatasetCommitService);

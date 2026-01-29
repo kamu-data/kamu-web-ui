@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { ApolloTestingModule } from "apollo-angular/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { OffsetIntervalPropertyComponent } from "./offset-interval-property.component";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -14,6 +13,8 @@ import { of } from "rxjs";
 import { mockDatasetMainDataResponse } from "src/app/search/mock.data";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { Apollo } from "apollo-angular";
+import { ApolloTestingModule } from "apollo-angular/testing";
 
 describe("OffsetIntervalPropertyComponent", () => {
     let component: OffsetIntervalPropertyComponent;
@@ -23,7 +24,8 @@ describe("OffsetIntervalPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ApolloTestingModule, SharedTestModule, OffsetIntervalPropertyComponent],
+            providers: [Apollo],
+            imports: [SharedTestModule, OffsetIntervalPropertyComponent, ApolloTestingModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(OffsetIntervalPropertyComponent);

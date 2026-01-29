@@ -6,7 +6,7 @@
             </th>
             <td
                 mat-cell
-                [title]="colIndex != 1 && !hasData ? element[disCol].value : ''"
+                [title]="colIndex != 0 && !hasData ? element[disCol].value : ''"
                 [class.font-monospace]="!this.hasData && colIndex < 2"
                 [ngClass]="hasData ? element[disCol].cssClass : OperationColumnClassEnum.PRIMARY_COLOR"
                 [class]="'truncate-cell copyable-cell'"
@@ -30,13 +30,12 @@
                         class="cell-content ms-1 position-relative"
                         *ngIf="showInfoBadge(rowIndex, colIndex, schemaFields)"
                     >
-                        <img
+                        <mat-icon
                             [matTooltip]="extraDesription(rowIndex, schemaFields)"
                             [matTooltipPosition]="'after'"
-                            class="info-badge"
-                            src="assets/images/information.png"
-                            alt="info-icon"
-                        />
+                            class="info-badge text-muted"
+                            >help_outline</mat-icon
+                        >
                     </div>
                 </div>
             </td>

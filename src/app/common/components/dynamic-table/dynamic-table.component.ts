@@ -124,7 +124,7 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
     public showInfoBadge(indexRow: number, indexColumn: number, data: DataSchemaField[]): boolean {
         return Boolean(
             !this.hasColumnDescriptions &&
-                indexColumn === 1 &&
+                indexColumn === 0 &&
                 !this.hasData &&
                 data[indexRow] &&
                 data[indexRow].extra &&

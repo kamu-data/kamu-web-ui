@@ -105,8 +105,9 @@ table {
 }
 
 .info-badge {
-    width: 21px !important;
+    width: 12px !important;
     height: auto !important;
+    transform: scale(1.5);
 
     &:hover {
         cursor: pointer;

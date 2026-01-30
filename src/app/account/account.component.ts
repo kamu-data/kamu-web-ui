@@ -45,7 +45,7 @@ import { NgIf, AsyncPipe } from "@angular/common";
         //-----//
         DisplayAccountNamePipe,
         FeatureFlagDirective,
-    ]
+    ],
 })
 export class AccountComponent {
     @Input(ProjectLinks.URL_PARAM_ACCOUNT_NAME) public set accountName(value: string) {

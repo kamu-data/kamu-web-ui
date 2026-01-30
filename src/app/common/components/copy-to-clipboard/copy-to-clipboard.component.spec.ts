@@ -17,9 +17,9 @@ describe("CopyToClipboardComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [CopyToClipboardComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [CopyToClipboardComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
 
         registerMatSvgIcons();
         fixture = TestBed.createComponent(CopyToClipboardComponent);

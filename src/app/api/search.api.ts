@@ -61,13 +61,13 @@ export class SearchApi {
 
     public overviewDatasetSemanticSearch(
         prompt: string,
-        perPage = SEARCH_RESULTS_PER_PAGE,
+        limit = SEARCH_RESULTS_PER_PAGE,
     ): Observable<SemanticSearchDatasetsOverviewQuery> {
         return this.semanticSearchDatasetsOverviewGQL
             .watch(
                 {
                     prompt,
-                    perPage,
+                    limit,
                 },
                 {
                     fetchPolicy: "network-only",

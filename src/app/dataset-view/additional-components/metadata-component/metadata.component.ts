@@ -36,7 +36,6 @@ import { METADATA_TAB_MENU_ITEMS, MetadataMenuItem, MetadataTabs } from "./metad
     templateUrl: "./metadata.component.html",
     styleUrls: ["./metadata.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
@@ -44,10 +43,8 @@ import { METADATA_TAB_MENU_ITEMS, MetadataMenuItem, MetadataTabs } from "./metad
         RouterLink,
         RouterOutlet,
         NgClass,
-
         //-----//
         MatIconModule,
-
         //-----//
         CommitNavigatorComponent,
         FeatureFlagDirective,

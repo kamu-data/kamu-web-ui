@@ -20,15 +20,12 @@ import { MetadataTabData } from "../../metadata.constants";
 
 @Component({
     selector: "app-metadata-push-sources-tab",
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         NgFor,
-
         //-----//
         MatIconModule,
-
         //-----//
         FeatureFlagDirective,
         SourceEventCommonDataComponent,

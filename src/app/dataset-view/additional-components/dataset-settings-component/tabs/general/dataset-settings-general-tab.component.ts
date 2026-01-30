@@ -50,19 +50,16 @@ import { MatDividerModule } from "@angular/material/divider";
     templateUrl: "./dataset-settings-general-tab.component.html",
     styleUrls: ["./dataset-settings-general-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         FormsModule,
         NgIf,
         ReactiveFormsModule,
-
         //-----//
         MatCheckboxModule,
         MatDividerModule,
         MatRadioModule,
-
         //-----//
         FeatureFlagDirective,
         FormValidationErrorsDirective,

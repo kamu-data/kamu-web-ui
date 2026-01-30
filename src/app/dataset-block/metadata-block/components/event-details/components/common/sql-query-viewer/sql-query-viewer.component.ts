@@ -15,12 +15,10 @@ import { NgFor, NgIf } from "@angular/common";
     selector: "app-sql-query-viewer",
     templateUrl: "./sql-query-viewer.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgFor,
         NgIf,
-
         //-----//
         HighlightModule,
     ],

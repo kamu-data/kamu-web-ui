@@ -15,11 +15,9 @@ import { NgSelectModule } from "@ng-select/ng-select";
 
 @Component({
     selector: "app-flow-process-status-list",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
-
         //-----//
         NgSelectModule,
     ],

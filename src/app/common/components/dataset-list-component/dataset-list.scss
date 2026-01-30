@@ -1,4 +1,4 @@
-@import "var";
+@use "var" as *;
 
 .dataset-list-total-count {
     margin: 0;

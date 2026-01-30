@@ -15,7 +15,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "allowedCommonJsDependencies": [
               "zen-observable",
@@ -28,10 +28,11 @@
               "@tweenjs/tween.js",
               "siwe"
             ],
-            "outputPath": "dist/kamu-platform",
+            "outputPath": {
+              "base": "dist/kamu-platform"
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["src/polyfills.ts"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/assets/svg",
@@ -71,12 +72,11 @@
               "node_modules/katex/dist/katex.min.js",
               "node_modules/clipboard/dist/clipboard.min.js"
             ],
-            "vendorChunk": true,
             "extractLicenses": false,
-            "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "browser": "src/main.ts"
           },
           "configurations": {
             "production": {
@@ -90,9 +90,7 @@
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
+              "extractLicenses": true
             }
           },
           "defaultConfiguration": ""
@@ -100,18 +98,22 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "kamu-platform:build"
+            "buildTarget": "kamu-platform:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "kamu-platform:build:production"
+              "buildTarget": "kamu-platform:build:production"
+            },
+            "development": {
+              "liveReload": false,
+              "hmr": false
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "kamu-platform:build"
+            "buildTarget": "kamu-platform:build"
           }
         },
         "test": {

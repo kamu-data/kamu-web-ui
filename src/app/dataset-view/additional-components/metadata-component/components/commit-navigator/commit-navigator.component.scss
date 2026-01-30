@@ -1,4 +1,4 @@
-@import "var";
+@use "var" as *;
 
 .paginate-container {
     margin-top: 16px;

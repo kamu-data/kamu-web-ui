@@ -19,14 +19,11 @@ import { ModalService } from "src/app/common/components/modal/modal.service";
 
 @Component({
     selector: "app-metadata-schema-tab",
-    standalone: true,
     imports: [
         //-----//
         NgIf,
-
         //-----//
         MatIconModule,
-
         //-----//
         BlockRowDataComponent,
         DynamicTableComponent,

@@ -22,7 +22,8 @@ import { EditMode } from "./readme-section.types";
 import { of } from "rxjs";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("ReadmeSectionComponent", () => {
     let component: ReadmeSectionComponent;
@@ -34,8 +35,8 @@ describe("ReadmeSectionComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [SharedTestModule, MarkdownModule.forRoot(), HttpClientTestingModule, ReadmeSectionComponent],
+            imports: [SharedTestModule, MarkdownModule.forRoot(), ReadmeSectionComponent],
+            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         }).compileComponents();
 
         registerMatSvgIcons();
@@ -115,9 +116,11 @@ describe("ReadmeSectionComponent", () => {
         expect(component.readmeState).toEqual(modifiedReadmeContent);
     });
 
-    it("should check Run and Copy buttons exist", () => {
+    it("should check Run and Copy buttons exist", async () => {
         component.readmeState = "```sql" + "\nselect * from 'account.tokens.portfolio.market-value'" + "\n```";
         component.viewMode = EditMode.Preview;
+        fixture.detectChanges();
+        await fixture.whenStable();
         fixture.detectChanges();
         const copyButtonElement = findNativeElement(fixture, `.markdown-clipboard-button`);
         expect(copyButtonElement).toBeDefined();
@@ -126,10 +129,12 @@ describe("ReadmeSectionComponent", () => {
         expect(runButtonElement).toBeDefined();
     });
 
-    it("should check Run button navigate to Data tab", () => {
+    it("should check Run button navigate to Data tab", async () => {
         component.readmeState = "```sql" + "\nselect * from 'account.tokens.portfolio.market-value'" + "\n```";
         component.viewMode = EditMode.Preview;
 
+        fixture.detectChanges();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         const runButtonElement = findNativeElement(fixture, `.markdown-run-button`) as HTMLLinkElement;
@@ -140,10 +145,12 @@ describe("ReadmeSectionComponent", () => {
         ).toBeTrue();
     });
 
-    it("should check Run button navigate to Data tab with line breaks", () => {
+    it("should check Run button navigate to Data tab with line breaks", async () => {
         component.readmeState = "```sql" + "\nselect\n*\nfrom 'account.tokens.portfolio.market-value'" + "\n```";
         component.viewMode = EditMode.Preview;
 
+        fixture.detectChanges();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         const runButtonElement = findNativeElement(fixture, `.markdown-run-button`) as HTMLLinkElement;

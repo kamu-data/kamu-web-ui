@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NestedTreeControl } from "@angular/cdk/tree";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatTreeNestedDataSource, MatTreeModule } from "@angular/material/tree";
 import { NgbTypeaheadSelectItemEvent, NgbTypeahead, NgbHighlight } from "@ng-bootstrap/ng-bootstrap";
@@ -21,7 +20,6 @@ import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.int
 import { DatasetNode } from "../../set-transform.types";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
-import { NavigationService } from "src/app/services/navigation.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { RouterLink } from "@angular/router";
@@ -35,13 +33,11 @@ import { MatIconModule } from "@angular/material/icon";
     templateUrl: "./search-section.component.html",
     styleUrls: ["./search-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgIf,
         RouterLink,
-
         //-----//
         MatIconModule,
         MatTreeModule,
@@ -56,14 +52,16 @@ export class SearchSectionComponent extends BaseComponent {
     @Input({ required: true }) public inputDatasets: Set<string>;
     @Input({ required: true }) public datasetInfo: DatasetInfo;
 
-    public treeControl = new NestedTreeControl<DatasetNode>((node) => node.children);
     @Input({ required: true }) public dataSource: MatTreeNestedDataSource<DatasetNode>;
     @Input({ required: true }) public TREE_DATA: DatasetNode[];
     public readonly UNAVAILABLE_INPUT_LABEL: string = AppValues.SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL;
 
     private appSearchAPI = inject(SearchApi);
     private datasetService = inject(DatasetService);
-    private navigationService = inject(NavigationService);
+
+    public childrenAccessor(node: DatasetNode): DatasetNode[] {
+        return node.children ?? [];
+    }
 
     public search: OperatorFunction<string, DatasetAutocompleteItem[]> = (text$: Observable<string>) => {
         return text$.pipe(

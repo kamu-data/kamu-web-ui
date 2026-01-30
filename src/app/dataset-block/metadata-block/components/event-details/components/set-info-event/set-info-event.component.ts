@@ -16,11 +16,9 @@ import { NgIf } from "@angular/common";
     selector: "app-set-info-event",
     templateUrl: "./set-info-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
-
         //-----//
         BlockRowDataComponent,
         CardsPropertyComponent,

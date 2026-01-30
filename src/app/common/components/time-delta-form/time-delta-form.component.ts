@@ -20,13 +20,11 @@ import { FormValidationErrorsDirective } from "../../directives/form-validation-
     selector: "app-time-delta-form",
     templateUrl: "./time-delta-form.component.html",
     styleUrls: ["./time-delta-form.component.scss"],
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
         NgFor,
         ReactiveFormsModule,
-
         //-----//
         FormValidationErrorsDirective,
     ],

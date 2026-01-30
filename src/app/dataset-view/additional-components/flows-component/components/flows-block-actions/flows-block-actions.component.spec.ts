@@ -14,8 +14,9 @@ import { mockDatasetFlowsProcessesQuery } from "src/app/api/mock/dataset-flow.mo
 import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { SettingsTabsEnum } from "../../../dataset-settings-component/dataset-settings.model";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("FlowsBlockActionsComponent", () => {
     let component: FlowsBlockActionsComponent;
@@ -23,8 +24,13 @@ describe("FlowsBlockActionsComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [FlowsBlockActionsComponent, SharedTestModule, HttpClientTestingModule],
-            providers: [Apollo, provideToastr()],
+            imports: [FlowsBlockActionsComponent, SharedTestModule],
+            providers: [
+                Apollo,
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
         });
 
         registerMatSvgIcons();

@@ -14,11 +14,9 @@ import { NgIf } from "@angular/common";
     selector: "app-hash-property",
     templateUrl: "./hash-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
-
         //-----//
         DisplayHashComponent,
     ],

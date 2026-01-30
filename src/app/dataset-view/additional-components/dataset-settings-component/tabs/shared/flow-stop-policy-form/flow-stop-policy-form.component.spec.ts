@@ -18,7 +18,6 @@ import { FlowStopPolicyFormHarness } from "./flow-stop-policy-form.harness";
 import { FlowTriggerStopPolicyType } from "../../../dataset-settings.model";
 
 @Component({
-    standalone: true,
     imports: [
         //-----//
         FormsModule,

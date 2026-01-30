@@ -25,18 +25,15 @@ import ProjectLinks from "src/app/project-links";
     templateUrl: "./block-navigation.component.html",
     styleUrls: ["./block-navigation.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgIf,
         NgFor,
         RouterLink,
-
         //-----//
         MatIconModule,
         NgSelectModule,
-
         //-----//
         BlockHashFilterPipe,
         EventTypeFilterPipe,

@@ -15,15 +15,12 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
     selector: "app-checkbox-field",
     templateUrl: "./checkbox-field.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         RxReactiveFormsModule,
-
         //-----//
         TooltipIconComponent,
     ],

@@ -18,7 +18,6 @@ import { NgIf, UpperCasePipe, TitleCasePipe, DatePipe } from "@angular/common";
     selector: "app-flow-details-summary-tab",
     templateUrl: "./flow-details-summary-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf, UpperCasePipe, TitleCasePipe, DatePipe],
 })
 export class FlowDetailsSummaryTabComponent {

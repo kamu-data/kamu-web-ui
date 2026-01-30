@@ -17,7 +17,6 @@ import { DynamicTableComponent } from "../../../../../../../common/components/dy
     templateUrl: "./env-variables-property.component.html",
     styleUrls: ["./env-variables-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [DynamicTableComponent],
 })
 export class EnvVariablesPropertyComponent extends BasePropertyComponent {

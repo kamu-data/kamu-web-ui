@@ -29,15 +29,12 @@ import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/sl
     selector: "app-metadata-block",
     templateUrl: "./metadata-block.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         NgIf,
-
         //-----//
         MatSlideToggleModule,
-
         //-----//
         BlockHeaderComponent,
         BlockNavigationComponent,

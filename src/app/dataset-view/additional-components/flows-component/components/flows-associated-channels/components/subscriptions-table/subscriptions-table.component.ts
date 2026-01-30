@@ -25,12 +25,10 @@ import {
 
 @Component({
     selector: "app-subscriptions-table",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgIf,
-
         //-----//
         MatMenuModule,
         MatIconModule,
@@ -39,7 +37,6 @@ import {
         MatProgressBarModule,
         MatButtonToggleModule,
         MatChipsModule,
-
         //-----//
         SubprocessStatusFilterPipe,
     ],

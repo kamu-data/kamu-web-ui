@@ -24,17 +24,14 @@ import { RouterOutlet } from "@angular/router";
 
 @Component({
     selector: "app-edit-webhook",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         ReactiveFormsModule,
         RouterOutlet,
-
         //-----//
         MatDividerModule,
         NgSelectModule,
-
         //-----//
         WebhookFormComponent,
     ],

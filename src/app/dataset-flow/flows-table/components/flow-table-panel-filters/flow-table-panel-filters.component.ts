@@ -23,12 +23,10 @@ import { MaybeNull } from "src/app/interface/app.types";
 
 @Component({
     selector: "app-flow-table-panel-filters",
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         FormsModule,
-
         //-----//
         AngularMultiSelectModule,
         MatIconModule,

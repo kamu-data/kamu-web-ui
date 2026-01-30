@@ -12,9 +12,10 @@ import { mockPageBasedInfo } from "src/app/search/mock.data";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { provideToastr } from "ngx-toastr";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import AppValues from "src/app/common/values/app.values";
 import { SharedTestModule } from "../../modules/shared-test.module";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("TimelineComponent", () => {
     let component: TimelineComponent;
@@ -22,8 +23,8 @@ describe("TimelineComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [provideToastr()],
-            imports: [HttpClientTestingModule, SharedTestModule, TimelineComponent],
+            imports: [SharedTestModule, TimelineComponent],
+            providers: [provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         }).compileComponents();
 
         registerMatSvgIcons();

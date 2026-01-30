@@ -15,11 +15,9 @@ import { RouterOutlet } from "@angular/router";
     selector: "app-dataset-settings-webhooks-tab",
     templateUrl: "./dataset-settings-webhooks-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         RouterOutlet,
-
         //-----//
         MatDividerModule,
         MatIconModule,

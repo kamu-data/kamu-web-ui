@@ -18,13 +18,11 @@ import { ToastrModule, ToastrService } from "ngx-toastr";
     templateUrl: "./dynamic-table.component.html",
     styleUrls: ["./dynamic-table.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgClass,
         NgFor,
         NgIf,
-
         //-----//
         MatTableModule,
         ClipboardModule,

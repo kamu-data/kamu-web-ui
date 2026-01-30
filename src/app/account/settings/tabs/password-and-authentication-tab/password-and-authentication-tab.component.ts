@@ -24,16 +24,13 @@ import { MatDividerModule } from "@angular/material/divider";
     templateUrl: "./password-and-authentication-tab.component.html",
     styleUrls: ["./password-and-authentication-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatDividerModule,
-
         //-----//
         AdminChangePasswordComponent,
         FormValidationErrorsDirective,

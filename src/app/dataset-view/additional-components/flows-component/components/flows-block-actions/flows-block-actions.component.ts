@@ -21,11 +21,9 @@ import AppValues from "src/app/common/values/app.values";
 
 @Component({
     selector: "app-flows-block-actions",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
-
         //-----//
         MatIconModule,
     ],

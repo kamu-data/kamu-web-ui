@@ -37,18 +37,15 @@ import { EditorModule } from "src/app/editor/editor.module";
             useValue: { showError: true },
         },
     ],
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgIf,
         ReactiveFormsModule,
         RouterLink,
-
         //-----//
         MatStepperModule,
         EditorModule,
-
         //-----//
         BaseStepComponent,
         PrepareStepComponent,

@@ -1,4 +1,4 @@
-@import "var";
+@use "var" as *;
 
 .mat-button-toggle-appearance-standard.mat-button-toggle-checked {
     color: #fff;

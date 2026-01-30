@@ -29,16 +29,13 @@ import { BufferingBatchingRuleFormType } from "../buffering-batching-rule-form/b
     templateUrl: "./transform-trigger-form.component.html",
     styleUrls: ["./transform-trigger-form.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatSlideToggleModule,
         MatRadioModule,
-
         //-----//
         TooltipIconComponent,
         BufferingBatchingRuleFormComponent,

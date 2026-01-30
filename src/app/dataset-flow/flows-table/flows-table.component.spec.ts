@@ -10,7 +10,7 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 import { FlowsTableComponent } from "./flows-table.component";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { Account } from "src/app/api/kamu.graphql.interface";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { MatTableHarness } from "@angular/material/table/testing";
@@ -23,6 +23,7 @@ import { DatasetFlowsService } from "src/app/dataset-view/additional-components/
 import { of } from "rxjs";
 import { registerMatSvgIcons } from "../../common/helpers/base-test.helpers.spec";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;
@@ -34,8 +35,13 @@ describe("FlowsTableComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [Apollo, provideToastr()],
-            imports: [HttpClientTestingModule, SharedTestModule, FlowsTableComponent],
+            imports: [SharedTestModule, FlowsTableComponent],
+            providers: [
+                Apollo,
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
         }).compileComponents();
 
         // Note: for some reason this icon is not loaded

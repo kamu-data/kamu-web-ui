@@ -13,11 +13,12 @@ import { SearchService } from "src/app/search/search.service";
 import { Apollo } from "apollo-angular";
 import { Observable, of } from "rxjs";
 import { DatasetSearchResult } from "src/app/interface/search.interface";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { mockDatasetSearchResult } from "src/app/search/mock.data";
 import { provideToastr } from "ngx-toastr";
 import { AppConfigService } from "src/app/app-config.service";
 import { provideAnimations } from "@angular/platform-browser/animations";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("searchResolverFn", () => {
     let routeSnapshot: ActivatedRouteSnapshot;
@@ -34,6 +35,7 @@ describe("searchResolverFn", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
+            imports: [],
             providers: [
                 provideAnimations(),
                 provideToastr(),
@@ -44,8 +46,9 @@ describe("searchResolverFn", () => {
                         queryParamMap: {},
                     },
                 },
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
             ],
-            imports: [HttpClientTestingModule],
         });
         searchService = TestBed.inject(SearchService);
         router = TestBed.inject(Router);

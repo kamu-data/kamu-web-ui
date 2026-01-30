@@ -13,7 +13,6 @@ import { JsonPipe } from "@angular/common";
     selector: "app-unsupported-property",
     templateUrl: "./unsupported-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [JsonPipe],
 })
 export class UnsupportedPropertyComponent extends BasePropertyComponent {

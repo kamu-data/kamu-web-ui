@@ -56,14 +56,12 @@ import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
     templateUrl: "./query-and-result-sections.component.html",
     styleUrls: ["./query-and-result-sections.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         NgIf,
         NgClass,
         FormsModule,
-
         //-----//
         MatIconModule,
         MatMenuModule,
@@ -71,7 +69,6 @@ import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
         MatProgressBarModule,
         MatSlideToggleModule,
         MarkdownModule,
-
         //-----//
         EngineSelectComponent,
         MarkdownFormatPipe,

@@ -18,16 +18,13 @@ import { FormValidationErrorsDirective } from "src/app/common/directives/form-va
 
 @Component({
     selector: "app-webhook-form",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatDividerModule,
         NgSelectModule,
-
         //-----//
         FormValidationErrorsDirective,
     ],

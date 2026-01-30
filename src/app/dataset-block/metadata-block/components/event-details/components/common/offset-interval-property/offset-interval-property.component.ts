@@ -22,7 +22,6 @@ import { NgIf } from "@angular/common";
     templateUrl: "./offset-interval-property.component.html",
     styleUrls: ["./offset-interval-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf],
 })
 export class OffsetIntervalPropertyComponent extends BasePropertyComponent implements OnInit {

@@ -8,7 +8,6 @@
 import { DatasetApi } from "src/app/api/dataset.api";
 import { TestBed } from "@angular/core/testing";
 import { AccountService } from "./account.service";
-import { ApolloTestingModule } from "apollo-angular/testing";
 import { AccountApi } from "../api/account.api";
 import { TEST_LOGIN, TEST_PAGE_NUMBER, mockAccountDetails } from "../api/mock/auth.mock";
 import { first, of } from "rxjs";
@@ -43,6 +42,7 @@ import {
 } from "../api/mock/account.mock";
 import { FlowsTableData } from "../dataset-flow/flows-table/flows-table.types";
 import { ChangeAccountUsernameResult } from "./settings/account-settings.constants";
+import { Apollo } from "apollo-angular";
 
 describe("AccountService", () => {
     let service: AccountService;
@@ -57,8 +57,7 @@ describe("AccountService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [provideToastr()],
-            imports: [ApolloTestingModule],
+            providers: [Apollo, provideToastr()],
         });
         service = TestBed.inject(AccountService);
         toastService = TestBed.inject(ToastrService);

@@ -16,13 +16,11 @@ import { NgIf, NgFor, KeyValuePipe } from "@angular/common";
     selector: "app-set-vocab-event",
     templateUrl: "./set-vocab-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         NgFor,
         KeyValuePipe,
-
         //-----//
         BlockRowDataComponent,
         CardsPropertyComponent,

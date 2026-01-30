@@ -8,7 +8,6 @@
 import { TestBed } from "@angular/core/testing";
 import { DatasetFlowsService } from "./dataset-flows.service";
 import { Apollo } from "apollo-angular";
-import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr, ToastrService } from "ngx-toastr";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import { of } from "rxjs";
@@ -38,8 +37,9 @@ import {
 import { MaybeUndefined } from "src/app/interface/app.types";
 import { AccountFragment, DatasetFlowProcesses } from "src/app/api/kamu.graphql.interface";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideAnimations } from "@angular/platform-browser/animations";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("DatasetFlowsService", () => {
     let service: DatasetFlowsService;
@@ -54,8 +54,13 @@ describe("DatasetFlowsService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo, provideAnimations(), provideToastr()],
-            imports: [ApolloTestingModule, HttpClientTestingModule],
+            providers: [
+                Apollo,
+                provideAnimations(),
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
         });
         service = TestBed.inject(DatasetFlowsService);
         datasetFlowApi = TestBed.inject(DatasetFlowApi);

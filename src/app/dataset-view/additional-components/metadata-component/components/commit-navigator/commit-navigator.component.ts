@@ -14,11 +14,9 @@ import { MatIconModule } from "@angular/material/icon";
     templateUrl: "commit-navigator.component.html",
     styleUrls: ["commit-navigator.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         SlicePipe,
-
         //-----//
         MatIconModule,
     ],

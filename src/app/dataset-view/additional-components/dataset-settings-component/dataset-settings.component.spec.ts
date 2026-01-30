@@ -9,7 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { DatasetSettingsComponent } from "./dataset-settings.component";
 import { Apollo } from "apollo-angular";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ActivatedRoute } from "@angular/router";
 import { provideToastr } from "ngx-toastr";
 import { SettingsTabsEnum } from "./dataset-settings.model";
@@ -19,6 +19,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { mockMetadataRootUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
 import { of } from "rxjs";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("DatasetSettingsComponent", () => {
     let component: DatasetSettingsComponent;
@@ -27,6 +28,7 @@ describe("DatasetSettingsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            imports: [DatasetSettingsComponent],
             providers: [
                 Apollo,
                 provideToastr(),
@@ -51,8 +53,9 @@ describe("DatasetSettingsComponent", () => {
                         },
                     },
                 },
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
             ],
-            imports: [HttpClientTestingModule, DatasetSettingsComponent],
         })
             .overrideComponent(DatasetSettingsComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

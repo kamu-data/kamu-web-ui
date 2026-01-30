@@ -26,18 +26,15 @@ import { MatDividerModule } from "@angular/material/divider";
     templateUrl: "./flow-details-history-tab.component.html",
     styleUrls: ["./flow-details-history-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgFor,
         NgIf,
         NgClass,
         DatePipe,
-
         //-----//
         MatDividerModule,
         MatIconModule,
-
         //-----//
         SafeHtmlPipe,
     ],

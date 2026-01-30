@@ -19,7 +19,6 @@ import { FormValidationErrorsDirective } from "../../../../../../common/directiv
     templateUrl: "./admin-change-password.component.html",
     styleUrls: ["./admin-change-password.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [FormsModule, ReactiveFormsModule, FormValidationErrorsDirective],
 })
 export class AdminChangePasswordComponent implements OnInit {

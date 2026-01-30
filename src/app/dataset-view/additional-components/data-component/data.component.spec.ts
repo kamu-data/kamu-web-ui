@@ -22,7 +22,7 @@ import {
 import { Location } from "@angular/common";
 import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { SessionStorageService } from "src/app/services/session-storage.service";
@@ -48,6 +48,7 @@ describe("DataComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            imports: [DataComponent],
             providers: [
                 Apollo,
                 provideToastr(),
@@ -76,8 +77,8 @@ describe("DataComponent", () => {
                         },
                     },
                 },
+                provideHttpClient(withInterceptorsFromDi()),
             ],
-            imports: [HttpClientModule, DataComponent],
         }).compileComponents();
         fixture = TestBed.createComponent(DataComponent);
         location = TestBed.inject(Location);

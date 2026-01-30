@@ -38,19 +38,16 @@ export interface SchemaType {
     templateUrl: "./schema-field.component.html",
     styleUrls: ["./schema-field.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatTableModule,
         NgbTypeahead,
         MatIconModule,
         RxReactiveFormsModule,
-
         //-----//
         TooltipIconComponent,
     ],

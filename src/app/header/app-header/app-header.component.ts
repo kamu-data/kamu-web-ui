@@ -47,7 +47,6 @@ import { NgIf } from "@angular/common";
     templateUrl: "./app-header.component.html",
     styleUrls: ["./app-header.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         NgIf,
         RouterLink,

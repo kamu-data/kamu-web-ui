@@ -10,6 +10,7 @@ import { StepperNavigationComponent } from "./stepper-navigation.component";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { SetPollingSourceSection } from "../source-events/add-polling-source/add-polling-source-form.types";
 import { CdkStepper } from "@angular/cdk/stepper";
+import { ChangeDetectorRef, ElementRef } from "@angular/core";
 
 describe("StepperNavigationComponent", () => {
     let component: StepperNavigationComponent;
@@ -18,7 +19,14 @@ describe("StepperNavigationComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [StepperNavigationComponent],
-            providers: [{ provide: CdkStepper, useClass: CdkStepper }],
+            providers: [
+                { provide: CdkStepper, useClass: CdkStepper },
+                { provide: ChangeDetectorRef, useValue: { detectChanges: () => {} } },
+                {
+                    provide: ElementRef,
+                    useValue: new ElementRef(document.createElement("div")),
+                },
+            ],
         }).compileComponents();
 
         fixture = TestBed.createComponent(StepperNavigationComponent);

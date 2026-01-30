@@ -7,18 +7,13 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { NgIf } from "@angular/common";
 import { InputFieldComponent } from "../../../form-components/input-field/input-field.component";
 
 @Component({
     selector: "app-source-name-step",
     templateUrl: "./source-name-step.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
-        //-----//
-        NgIf,
-
         //-----//
         InputFieldComponent,
     ],

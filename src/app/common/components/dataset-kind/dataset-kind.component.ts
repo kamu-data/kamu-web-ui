@@ -11,7 +11,6 @@ import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-dataset-kind",
-    standalone: true,
     imports: [NgClass],
     templateUrl: "./dataset-kind.component.html",
     styleUrls: ["./dataset-kind.component.scss"],

@@ -10,7 +10,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { LineageComponent } from "./lineage.component";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { ApolloModule } from "apollo-angular";
 import { AccountService } from "src/app/account/account.service";
 import { of } from "rxjs";
 import { provideToastr, ToastrService } from "ngx-toastr";
@@ -19,6 +18,7 @@ import { LineageGraphNodeData } from "./lineage-model";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { DatasetService } from "../../dataset.service";
+import { Apollo } from "apollo-angular";
 
 describe("LineageComponent", () => {
     let component: LineageComponent;
@@ -31,8 +31,8 @@ describe("LineageComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [provideToastr()],
-            imports: [ApolloModule, SharedTestModule, LineageComponent],
+            providers: [Apollo, provideToastr()],
+            imports: [SharedTestModule, LineageComponent],
         }).compileComponents();
 
         accountService = TestBed.inject(AccountService);

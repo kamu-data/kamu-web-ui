@@ -19,14 +19,12 @@ import { CopyToClipboardComponent } from "../../../../common/components/copy-to-
     templateUrl: "./data-access-link-tab.component.html",
     styleUrls: ["./data-access-link-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         MatCheckboxModule,
         MatIconModule,
         MatTooltipModule,
         MatDividerModule,
-
         //-----//
         CopyToClipboardComponent,
         FeatureFlagDirective,

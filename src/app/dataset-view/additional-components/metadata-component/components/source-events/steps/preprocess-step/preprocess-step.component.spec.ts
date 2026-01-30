@@ -7,7 +7,6 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { PreprocessStepComponent } from "./preprocess-step.component";
-import { ApolloTestingModule } from "apollo-angular/testing";
 import {
     mockPreprocessStepValue,
     mockPreprocessStepValueWithoutQueries,
@@ -16,9 +15,10 @@ import {
     mockSetPollingSourceEventYamlWithoutPreprocess,
 } from "../../../set-transform/mock.data";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { ChangeDetectionStrategy } from "@angular/core";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { EditorModule } from "src/app/editor/editor.module";
+import { Apollo } from "apollo-angular";
+import { ApolloTestingModule } from "apollo-angular/testing";
 
 describe("PreprocessStepComponent", () => {
     let component: PreprocessStepComponent;
@@ -26,12 +26,9 @@ describe("PreprocessStepComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ApolloTestingModule, SharedTestModule, PreprocessStepComponent, EditorModule],
-        })
-            .overrideComponent(PreprocessStepComponent, {
-                set: { changeDetection: ChangeDetectionStrategy.Default },
-            })
-            .compileComponents();
+            providers: [Apollo],
+            imports: [SharedTestModule, PreprocessStepComponent, EditorModule, ApolloTestingModule],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(PreprocessStepComponent);
         component = fixture.componentInstance;

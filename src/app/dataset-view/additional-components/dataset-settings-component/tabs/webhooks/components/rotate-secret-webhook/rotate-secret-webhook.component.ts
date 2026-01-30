@@ -16,7 +16,6 @@ import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-rotate-secret-webhook",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,

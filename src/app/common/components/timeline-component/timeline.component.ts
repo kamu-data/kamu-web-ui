@@ -23,16 +23,13 @@ import { NgFor } from "@angular/common";
     templateUrl: "./timeline.component.html",
     styleUrls: ["timeline.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgFor,
         RouterLink,
-
         //-----//
         MatIconModule,
         NgbPopover,
-
         //-----//
         DisplayTimeComponent,
         DisplayHashComponent,

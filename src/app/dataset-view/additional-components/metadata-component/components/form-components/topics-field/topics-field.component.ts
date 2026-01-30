@@ -20,18 +20,15 @@ import { TooltipIconComponent } from "../../../../../../common/components/toolti
     templateUrl: "./topics-field.component.html",
     styleUrls: ["./topics-field.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgIf,
         NgFor,
         ReactiveFormsModule,
-
         //-----//
         NgxTrimDirectiveModule,
         RxReactiveFormsModule,
-
         //-----//
         TooltipIconComponent,
     ],

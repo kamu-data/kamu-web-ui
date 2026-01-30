@@ -14,8 +14,9 @@ import { DatasetCreateService } from "./dataset-create.service";
 import { SharedTestModule } from "../common/modules/shared-test.module";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { mockAccountDetails } from "../api/mock/auth.mock";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ApolloTestingModule } from "apollo-angular/testing";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("DatasetCreateComponent", () => {
     let component: DatasetCreateComponent;
@@ -25,7 +26,8 @@ describe("DatasetCreateComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ApolloTestingModule, HttpClientTestingModule, SharedTestModule, DatasetCreateComponent],
+            imports: [ApolloTestingModule, SharedTestModule, DatasetCreateComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         })
             .overrideComponent(DatasetCreateComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

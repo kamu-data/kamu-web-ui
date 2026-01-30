@@ -14,7 +14,6 @@ import { NgClass } from "@angular/common";
     templateUrl: "./dataset-visibility.component.html",
     styleUrls: ["./dataset-visibility.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgClass],
 })
 export class DatasetVisibilityComponent {

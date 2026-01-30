@@ -31,16 +31,13 @@ import { NgIf } from "@angular/common";
     templateUrl: "./search-additional-buttons.component.html",
     styleUrls: ["./search-additional-buttons.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
-
         //-----//
         MatButtonModule,
         MatIconModule,
         MatMenuModule,
-
         //-----//
         SearchAdditionalButtonsNavComponent,
     ],

@@ -22,12 +22,10 @@ import { NgIf } from "@angular/common";
     selector: "app-dataset",
     templateUrl: "./dataset-view.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         RouterOutlet,
-
         //-----//
         DatasetViewHeaderComponent,
         DatasetViewMenuComponent,

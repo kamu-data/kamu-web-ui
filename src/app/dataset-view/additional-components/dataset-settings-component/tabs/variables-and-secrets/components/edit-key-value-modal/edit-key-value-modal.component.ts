@@ -26,18 +26,15 @@ import { MatDividerModule } from "@angular/material/divider";
     templateUrl: "./edit-key-value-modal.component.html",
     styleUrls: ["./edit-key-value-modal.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatDividerModule,
         MatIconModule,
         MatTooltipModule,
-
         //-----//
         FormValidationErrorsDirective,
     ],

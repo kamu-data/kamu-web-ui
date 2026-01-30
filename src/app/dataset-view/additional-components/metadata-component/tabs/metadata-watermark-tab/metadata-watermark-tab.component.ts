@@ -15,21 +15,18 @@ import { MatIconModule } from "@angular/material/icon";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { EditWatermarkModalComponent } from "../../../overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
-import { from, take } from "rxjs";
+import { catchError, from, of, take } from "rxjs";
 import { MetadataTabs } from "../../metadata.constants";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-metadata-watermark-tab",
-    standalone: true,
     imports: [
         //-----//
         NgIf,
-
         //-----//
         MatIconModule,
-
         //-----//
         BlockRowDataComponent,
         DisplayTimeComponent,
@@ -61,7 +58,10 @@ export class MetadataWatermarkTabComponent {
         modalRefInstance.currentWatermark = this.watermark;
         modalRefInstance.datasetBasics = this.datasetMetadataTabData.datasetBasics;
         from(modalRef.result)
-            .pipe(take(1))
+            .pipe(
+                take(1),
+                catchError(() => of(null)),
+            )
             .subscribe(() => {
                 this.navigationService.navigateToMetadata(
                     { accountName: this.datasetBasics.owner.accountName, datasetName: this.datasetBasics.name },

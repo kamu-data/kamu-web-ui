@@ -11,8 +11,9 @@ import { mockFullPowerDatasetPermissionsFragment, mockDatasetBasicsRootFragment 
 import { mockMetadataRootUpdate } from "../../../data-tabs.mock";
 import { NavigationService } from "src/app/services/navigation.service";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("MetadataPushSourcesTabComponent", () => {
     let component: MetadataPushSourcesTabComponent;
@@ -21,7 +22,8 @@ describe("MetadataPushSourcesTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [MetadataPushSourcesTabComponent, HttpClientTestingModule, SharedTestModule],
+            imports: [MetadataPushSourcesTabComponent, SharedTestModule],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         });
         fixture = TestBed.createComponent(MetadataPushSourcesTabComponent);
         navigationService = TestBed.inject(NavigationService);

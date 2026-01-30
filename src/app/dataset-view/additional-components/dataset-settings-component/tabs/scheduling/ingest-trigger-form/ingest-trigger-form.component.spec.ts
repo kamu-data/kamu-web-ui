@@ -19,7 +19,6 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angul
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 
 @Component({
-    standalone: true,
     imports: [
         //-----//
         FormsModule,

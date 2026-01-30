@@ -43,7 +43,7 @@ import { MaybeUndefined } from "src/app/interface/app.types";
     ],
     templateUrl: "./flows-associated-channels.component.html",
     styleUrls: ["./flows-associated-channels.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowsAssociatedChannelsComponent {
     @Input({ required: true }) public flowsSelectionState: FlowsSelectionState;

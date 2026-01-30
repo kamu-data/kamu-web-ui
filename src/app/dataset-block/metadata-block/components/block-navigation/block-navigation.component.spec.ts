@@ -25,9 +25,9 @@ describe("BlockNavigationComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [BlockNavigationComponent, SharedTestModule],
-    providers: [provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
+            imports: [BlockNavigationComponent, SharedTestModule],
+            providers: [provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

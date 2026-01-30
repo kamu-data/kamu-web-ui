@@ -32,7 +32,7 @@ import { MetadataTabs } from "../../metadata.constants";
         LinkPropertyComponent,
     ],
     templateUrl: "./metadata-license-tab.component.html",
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataLicenseTabComponent {
     @Input(RoutingResolvers.METADATA_LICENSE_TAB_KEY) public datasetMetadataTabData: DatasetOverviewTabData;

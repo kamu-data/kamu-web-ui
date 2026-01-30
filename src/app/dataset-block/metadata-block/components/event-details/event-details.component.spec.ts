@@ -22,9 +22,9 @@ describe("EventDetailsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [SharedTestModule, EventDetailsComponent, ToastrModule.forRoot()],
-    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
+            imports: [SharedTestModule, EventDetailsComponent, ToastrModule.forRoot()],
+            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

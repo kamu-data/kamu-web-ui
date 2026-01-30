@@ -53,7 +53,7 @@ import { NgIf, DecimalPipe, TitleCasePipe } from "@angular/common";
         DisplayTimeComponent,
         DisplayDatasetIdPipe,
         DisplaySizePipe,
-    ]
+    ],
 })
 export class LineageGraphComponent implements OnInit, OnChanges {
     @Input({ required: true }) public graph: LineageGraph;

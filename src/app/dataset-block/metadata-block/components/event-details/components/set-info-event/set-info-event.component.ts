@@ -22,7 +22,7 @@ import { NgIf } from "@angular/common";
         //-----//
         BlockRowDataComponent,
         CardsPropertyComponent,
-    ]
+    ],
 })
 export class SetInfoEventComponent extends BaseComponent {
     @Input({ required: true }) public event: SetInfo;

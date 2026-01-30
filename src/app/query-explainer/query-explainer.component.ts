@@ -50,7 +50,7 @@ export interface QueryExplainerComponentData {
         InputDataSectionComponent,
         CommitmentDataSectionComponent,
         ReproducedResultSectionComponent,
-    ]
+    ],
 })
 export class QueryExplainerComponent extends BaseComponent implements OnInit {
     @Input(ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN) public set uploadToken(value: string) {

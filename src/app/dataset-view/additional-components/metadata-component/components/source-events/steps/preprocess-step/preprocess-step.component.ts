@@ -37,7 +37,7 @@ import { NGX_MONACO_EDITOR_CONFIG } from "ngx-monaco-editor-v2";
             provide: NGX_MONACO_EDITOR_CONFIG,
             useValue: {},
         },
-    ]
+    ],
 })
 export class PreprocessStepComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public showPreprocessStep: boolean;

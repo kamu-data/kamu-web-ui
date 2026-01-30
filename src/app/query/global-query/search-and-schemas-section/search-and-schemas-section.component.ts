@@ -67,7 +67,7 @@ import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.dir
         DynamicTableComponent,
         FeatureFlagDirective,
         SavedQueriesSectionComponent,
-    ]
+    ],
 })
 export class SearchAndSchemasSectionComponent extends BaseComponent implements OnInit {
     @Output() public sqlQueryEmit = new EventEmitter<string>();

@@ -25,7 +25,7 @@ import { NgFor, NgIf } from "@angular/common";
         MatIconModule,
         //-----//
         BlockRowDataComponent,
-    ]
+    ],
 })
 export class AddDataEventComponent extends BaseDynamicEventComponent<AddData> implements OnChanges, OnInit {
     public ngOnChanges(changes: SimpleChanges): void {

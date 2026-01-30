@@ -20,7 +20,7 @@ import { CopyToClipboardComponent } from "../../../../common/components/copy-to-
         MatIconModule,
         //-----//
         CopyToClipboardComponent,
-    ]
+    ],
 })
 export class DataAccessStreamTabComponent {
     @Input({ required: true }) public kafka: KafkaProtocolDesc;

@@ -23,7 +23,7 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
         RxReactiveFormsModule,
         //-----//
         TooltipIconComponent,
-    ]
+    ],
 })
 export class CacheFieldComponent extends BaseField {
     private fb = inject(FormBuilder);

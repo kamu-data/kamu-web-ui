@@ -33,7 +33,7 @@ import { FeatureFlagDirective } from "../common/directives/feature-flag.directiv
         DatasetListComponent,
         FeatureFlagDirective,
         PaginationComponent,
-    ]
+    ],
 })
 export class SearchComponent implements OnInit {
     @Input(ProjectLinks.URL_QUERY_PARAM_QUERY) public set search(value: string) {

@@ -43,7 +43,7 @@ import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
         //-----//
         DisplayHashComponent,
         MarkdownFormatPipe,
-    ]
+    ],
 })
 export class InputDataSectionComponent implements AfterViewChecked {
     @Input({ required: true }) public blockHashObservables$: Observable<Date>[];

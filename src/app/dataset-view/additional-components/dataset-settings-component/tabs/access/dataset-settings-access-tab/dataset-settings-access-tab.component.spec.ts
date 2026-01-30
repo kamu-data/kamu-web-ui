@@ -40,38 +40,38 @@ describe("DatasetSettingsAccessTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [DatasetSettingsAccessTabComponent],
-    providers: [
-        Apollo,
-        provideToastr(),
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    queryParamMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "page":
-                                    return 2;
-                            }
-                        },
-                    },
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return "accountName";
-                                case "datasetName":
-                                    return "datasetName";
-                            }
+            imports: [DatasetSettingsAccessTabComponent],
+            providers: [
+                Apollo,
+                provideToastr(),
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            queryParamMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "page":
+                                            return 2;
+                                    }
+                                },
+                            },
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-    ]
-});
+                provideHttpClient(withInterceptorsFromDi()),
+            ],
+        });
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(DatasetSettingsAccessTabComponent);

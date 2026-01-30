@@ -22,9 +22,9 @@ describe("MetadataPushSourcesTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [MetadataPushSourcesTabComponent, SharedTestModule],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [MetadataPushSourcesTabComponent, SharedTestModule],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
         fixture = TestBed.createComponent(MetadataPushSourcesTabComponent);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;

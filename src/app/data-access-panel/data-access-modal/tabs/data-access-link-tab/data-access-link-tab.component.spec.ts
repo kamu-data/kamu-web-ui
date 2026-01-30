@@ -23,9 +23,9 @@ describe("DataAccessLinkTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [DataAccessLinkTabComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [DataAccessLinkTabComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
 
         registerMatSvgIcons();
 

@@ -35,7 +35,7 @@ import { MatDividerModule } from "@angular/material/divider";
         MatProgressSpinnerModule,
         MatIconModule,
         NgbTypeahead,
-    ]
+    ],
 })
 export class AddPeopleModalComponent extends BaseComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

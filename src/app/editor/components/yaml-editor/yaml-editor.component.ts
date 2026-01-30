@@ -32,7 +32,7 @@ const YAML_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = 
         NgStyle,
         //-----//
         MonacoEditorModule,
-    ]
+    ],
 })
 export class YamlEditorComponent extends BaseEditorComponent {
     public readonly YAML_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = YAML_EDITOR_OPTIONS;

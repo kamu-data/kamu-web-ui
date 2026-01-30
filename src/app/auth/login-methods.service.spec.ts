@@ -19,9 +19,9 @@ describe("LoginMethodsService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [ApolloTestingModule],
-    providers: [AuthApi, Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [ApolloTestingModule],
+            providers: [AuthApi, Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
 
         service = TestBed.inject(LoginMethodsService);
     });

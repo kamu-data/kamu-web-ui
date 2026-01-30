@@ -34,7 +34,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
         //-----//
         FormValidationErrorsDirective,
         TooltipIconComponent,
-    ]
+    ],
 })
 export class FlowStopPolicyFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public form: FormGroup<FlowStopPolicyFormType>;

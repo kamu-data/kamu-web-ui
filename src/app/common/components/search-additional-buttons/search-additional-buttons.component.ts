@@ -40,7 +40,7 @@ import { NgIf } from "@angular/common";
         MatMenuModule,
         //-----//
         SearchAdditionalButtonsNavComponent,
-    ]
+    ],
 })
 export class SearchAdditionalButtonsComponent implements OnInit {
     @Input({ required: true })

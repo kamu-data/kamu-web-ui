@@ -25,7 +25,7 @@ import { EditorModule } from "src/app/editor/editor.module";
         YamlEditorComponent,
         //-----//
         EditorModule,
-    ]
+    ],
 })
 export class FinalYamlModalComponent extends BaseComponent {
     @Input({ required: true }) public yamlTemplate: string;

@@ -26,7 +26,7 @@ import { MatIconModule } from "@angular/material/icon";
         MatIconModule,
         //-----//
         SqlEditorComponent,
-    ]
+    ],
 })
 export class QueriesSectionComponent {
     @Input({ required: true }) public queries: Omit<SqlQueryStep, "__typename">[];

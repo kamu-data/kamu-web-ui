@@ -22,7 +22,7 @@ import { NgIf } from "@angular/common";
         NgIf,
         //-----//
         DynamicTableComponent,
-    ]
+    ],
 })
 export class ReproducedResultSectionComponent {
     @Input({ required: true }) public dataJsonAoS: QueryExplainerOutputType;

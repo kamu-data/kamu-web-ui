@@ -28,7 +28,7 @@ import { CopyToClipboardComponent } from "../../../../common/components/copy-to-
         //-----//
         CopyToClipboardComponent,
         FeatureFlagDirective,
-    ]
+    ],
 })
 export class DataAccessLinkTabComponent {
     @Input({ required: true }) public webLink: LinkProtocolDesc;

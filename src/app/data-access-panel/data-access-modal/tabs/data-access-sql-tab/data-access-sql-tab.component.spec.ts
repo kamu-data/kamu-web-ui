@@ -18,9 +18,9 @@ describe("DataAccessSqlTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [DataAccessSqlTabComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [DataAccessSqlTabComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
 
         registerMatSvgIcons();
 

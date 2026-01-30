@@ -27,7 +27,7 @@ import { ToastrModule, ToastrService } from "ngx-toastr";
         MatTableModule,
         ClipboardModule,
         ToastrModule,
-    ]
+    ],
 })
 export class DynamicTableComponent implements OnInit, OnChanges, AfterContentInit {
     @Input({ required: true }) public hasTableHeader: boolean;

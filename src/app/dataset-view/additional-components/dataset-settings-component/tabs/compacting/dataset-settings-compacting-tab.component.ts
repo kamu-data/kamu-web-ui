@@ -37,7 +37,7 @@ import { DatasetFlowsService } from "../../../flows-component/services/dataset-f
         //-----//
         TooltipIconComponent,
         FormValidationErrorsDirective,
-    ]
+    ],
 })
 export class DatasetSettingsCompactingTabComponent extends BaseComponent {
     public modalService = inject(ModalService);

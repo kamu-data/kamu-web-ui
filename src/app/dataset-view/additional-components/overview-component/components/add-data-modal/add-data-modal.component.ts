@@ -30,7 +30,7 @@ import { MatDividerModule } from "@angular/material/divider";
         MatDividerModule,
         //-----//
         FeatureFlagDirective,
-    ]
+    ],
 })
 export class AddDataModalComponent extends BaseComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

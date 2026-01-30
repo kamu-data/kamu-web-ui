@@ -66,7 +66,7 @@ import { NgIf, NgFor, AsyncPipe, DecimalPipe, TitleCasePipe } from "@angular/com
         DisplayHashComponent,
         DisplaySizePipe,
         DisplayTimeComponent,
-    ]
+    ],
 })
 export class OverviewComponent extends BaseDatasetDataComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_OVERVIEW_KEY) public datasetOverviewTabData: DatasetOverviewTabData;

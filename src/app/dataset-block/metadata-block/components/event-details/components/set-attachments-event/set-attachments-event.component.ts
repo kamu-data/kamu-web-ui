@@ -23,7 +23,7 @@ import { NgFor } from "@angular/common";
         MarkdownModule,
         //-----//
         BlockRowDataComponent,
-    ]
+    ],
 })
 export class SetAttachmentsEventComponent extends BaseComponent {
     @Input({ required: true }) public event: SetAttachments;

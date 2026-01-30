@@ -18,9 +18,9 @@ describe("DataAccessKamuCliTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [DataAccessKamuCliTabComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [DataAccessKamuCliTabComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
 
         registerMatSvgIcons();
 

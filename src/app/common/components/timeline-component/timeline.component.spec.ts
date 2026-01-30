@@ -23,9 +23,9 @@ describe("TimelineComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [SharedTestModule, TimelineComponent],
-    providers: [provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
+            imports: [SharedTestModule, TimelineComponent],
+            providers: [provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

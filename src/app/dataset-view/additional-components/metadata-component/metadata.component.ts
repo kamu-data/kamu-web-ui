@@ -48,7 +48,7 @@ import { METADATA_TAB_MENU_ITEMS, MetadataMenuItem, MetadataTabs } from "./metad
         //-----//
         CommitNavigatorComponent,
         FeatureFlagDirective,
-    ]
+    ],
 })
 export class MetadataComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_METADATA_KEY) public datasetMetadataTabData: DatasetOverviewTabData;

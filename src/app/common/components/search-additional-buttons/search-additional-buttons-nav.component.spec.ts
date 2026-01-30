@@ -20,9 +20,9 @@ describe("SearchAdditionalButtonsNavComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [SharedTestModule, SearchAdditionalButtonsNavComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-})
+            imports: [SharedTestModule, SearchAdditionalButtonsNavComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        })
             .overrideComponent(SearchAdditionalButtonsNavComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

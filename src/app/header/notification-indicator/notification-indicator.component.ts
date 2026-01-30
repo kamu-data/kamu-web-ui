@@ -15,7 +15,7 @@ import { MatIconModule } from "@angular/material/icon";
     selector: "app-notification-indicator",
     templateUrl: "./notification-indicator.html",
     styleUrls: ["./notification-indicator.scss"],
-    imports: [MatIconModule]
+    imports: [MatIconModule],
 })
 export class NotificationIndicatorComponent {
     private modalService = inject(ModalService);

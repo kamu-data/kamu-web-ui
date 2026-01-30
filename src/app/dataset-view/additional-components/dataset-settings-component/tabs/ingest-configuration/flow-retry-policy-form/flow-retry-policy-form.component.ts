@@ -41,7 +41,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
         FormValidationErrorsDirective,
         TimeDeltaFormComponent,
         TooltipIconComponent,
-    ]
+    ],
 })
 export class FlowRetryPolicyFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public form: FormGroup<FlowRetryPolicyFormType>;

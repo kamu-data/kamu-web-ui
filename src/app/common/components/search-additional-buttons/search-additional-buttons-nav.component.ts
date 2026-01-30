@@ -35,7 +35,7 @@ import { NgFor, NgIf } from "@angular/common";
         MatProgressSpinnerModule,
         //-----//
         FeatureFlagDirective,
-    ]
+    ],
 })
 export class SearchAdditionalButtonsNavComponent extends BaseComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

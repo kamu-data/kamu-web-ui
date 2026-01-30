@@ -35,21 +35,21 @@ describe("searchResolverFn", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [],
-    providers: [
-        provideAnimations(),
-        provideToastr(),
-        Apollo,
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                queryParamMap: {},
-            },
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-});
+            imports: [],
+            providers: [
+                provideAnimations(),
+                provideToastr(),
+                Apollo,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        queryParamMap: {},
+                    },
+                },
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        });
         searchService = TestBed.inject(SearchService);
         router = TestBed.inject(Router);
         appConfigService = TestBed.inject(AppConfigService);

@@ -35,9 +35,14 @@ describe("FlowsTableComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [SharedTestModule, FlowsTableComponent],
-    providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
+            imports: [SharedTestModule, FlowsTableComponent],
+            providers: [
+                Apollo,
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        }).compileComponents();
 
         // Note: for some reason this icon is not loaded
         registerMatSvgIcons();

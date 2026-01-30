@@ -44,7 +44,7 @@ import { BlockService } from "src/app/dataset-block/metadata-block/block.service
         PreprocessStepComponent,
         SourceNameStepComponent,
         StepperNavigationComponent,
-    ]
+    ],
 })
 export class AddPushSourceComponent extends BaseSourceEventComponent {
     @Input(ProjectLinks.URL_QUERY_PARAM_PUSH_SOURCE_NAME) public queryParamName: string;

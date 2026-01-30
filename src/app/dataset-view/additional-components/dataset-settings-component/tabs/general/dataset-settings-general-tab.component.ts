@@ -65,7 +65,7 @@ import { MatDividerModule } from "@angular/material/divider";
         FormValidationErrorsDirective,
         TooltipIconComponent,
         DatasetVisibilityComponent,
-    ]
+    ],
 })
 export class DatasetSettingsGeneralTabComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_GENERAL_KEY) public generalTabData: DatasetViewData;

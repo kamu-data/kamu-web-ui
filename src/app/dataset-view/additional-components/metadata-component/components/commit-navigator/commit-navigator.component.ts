@@ -19,7 +19,7 @@ import { MatIconModule } from "@angular/material/icon";
         SlicePipe,
         //-----//
         MatIconModule,
-    ]
+    ],
 })
 export class CommitNavigatorComponent implements OnChanges {
     @Input({ required: true }) public date = "";

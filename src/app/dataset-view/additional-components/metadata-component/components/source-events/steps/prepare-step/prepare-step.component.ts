@@ -45,7 +45,7 @@ import { FormValidationErrorsDirective } from "src/app/common/directives/form-va
         MatIconModule,
         //-----//
         FormValidationErrorsDirective,
-    ]
+    ],
 })
 export class PrepareStepComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public eventYamlByHash: MaybeNull<string> = null;

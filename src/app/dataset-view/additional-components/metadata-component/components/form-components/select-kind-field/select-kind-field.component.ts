@@ -29,7 +29,7 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
         MatIconModule,
         NgbTooltip,
         RxReactiveFormsModule,
-    ]
+    ],
 })
 export class SelectKindFieldComponent {
     @Input({ required: true }) public form: FormGroup;

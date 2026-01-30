@@ -58,7 +58,7 @@ import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table
         PaginationComponent,
     ],
     templateUrl: "./account-flows-activity-subtab.component.html",
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBaseComponent implements OnInit {
     @Input({ required: true }) public accountFlowsData: AccountFlowsType;

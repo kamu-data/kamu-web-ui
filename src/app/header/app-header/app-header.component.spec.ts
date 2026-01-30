@@ -44,19 +44,19 @@ describe("AppHeaderComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [BrowserAnimationsModule, AppHeaderComponent],
-    providers: [
-        Apollo,
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
-            },
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-})
+            imports: [BrowserAnimationsModule, AppHeaderComponent],
+            providers: [
+                Apollo,
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
+                    },
+                },
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        })
             .overrideComponent(AppHeaderComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

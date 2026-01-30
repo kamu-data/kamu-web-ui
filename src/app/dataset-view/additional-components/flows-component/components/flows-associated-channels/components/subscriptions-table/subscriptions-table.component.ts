@@ -42,7 +42,7 @@ import {
     ],
     templateUrl: "./subscriptions-table.component.html",
     styleUrls: ["./subscriptions-table.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubscriptionsTableComponent {
     @Input({ required: true }) public subprocesses: WebhookFlowSubProcess[];

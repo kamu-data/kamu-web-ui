@@ -47,7 +47,7 @@ import { FlowProcessStatusListComponent } from "../common/flow-process-status-li
     ],
     templateUrl: "./custom-filters-view.component.html",
     styleUrls: ["./custom-filters-view.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomFiltersViewComponent {
     @Input({ required: true }) public dashboardFilters: DashboardFiltersOptions;

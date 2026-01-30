@@ -32,7 +32,7 @@ import { MetadataTabData } from "../../metadata.constants";
     ],
     templateUrl: "./metadata-push-sources-tab.component.html",
     styleUrls: ["./metadata-push-sources-tab.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataPushSourcesTabComponent {
     @Input(RoutingResolvers.METADATA_PUSH_SOURCES_TAB_KEY) public datasetMetadataTabData: MetadataTabData;

@@ -29,7 +29,7 @@ import { TimeUnit } from "src/app/api/kamu.graphql.interface";
     template: `<app-ingest-trigger-form
         [form]="hostForm.controls.ingestTrigger"
         [updatesEnabledControl]="hostForm.controls.updatesEnabled"
-    />`
+    />`,
 })
 class TestIngestTriggerFormComponent {
     public readonly label = "Enable automatic updates";

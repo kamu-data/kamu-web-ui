@@ -32,7 +32,7 @@ import { NgIf, AsyncPipe } from "@angular/common";
         NgIf,
         //-----//
         LineageGraphComponent,
-    ]
+    ],
 })
 export class LineageComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_INFO_KEY) public set datasetInfo(value: DatasetInfo) {

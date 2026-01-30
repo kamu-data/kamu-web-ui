@@ -19,9 +19,9 @@ describe("DataAccessOdataTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [DataAccessOdataTabComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [DataAccessOdataTabComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
 
         registerMatSvgIcons();
 

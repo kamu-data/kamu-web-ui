@@ -37,9 +37,15 @@ describe("flowDetailsResolverFn", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [],
-    providers: [Apollo, provideAnimations(), provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [],
+            providers: [
+                Apollo,
+                provideAnimations(),
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        });
 
         datasetService = TestBed.inject(DatasetService);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);

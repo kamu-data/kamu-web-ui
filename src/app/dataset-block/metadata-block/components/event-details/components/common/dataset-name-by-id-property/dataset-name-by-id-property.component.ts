@@ -28,7 +28,7 @@ import { NgIf } from "@angular/common";
         //-----//
         DatasetVisibilityComponent,
         DatasetKindComponent,
-    ]
+    ],
 })
 export class DatasetNameByIdPropertyComponent extends BasePropertyComponent implements OnInit {
     @Input({ required: true }) public data: string;

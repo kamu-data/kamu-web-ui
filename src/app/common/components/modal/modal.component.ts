@@ -33,7 +33,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     template: `
         <div class="modal__container" #container tabindex="1" [ngClass]="{ modal__invisible: !isVisible }"></div>
     `,
-    imports: [NgClass]
+    imports: [NgClass],
 })
 export class ModalComponent extends BaseComponent implements OnInit {
     @ViewChild("container", { read: ViewContainerRef })

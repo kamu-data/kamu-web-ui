@@ -34,7 +34,7 @@ import { MatDividerModule } from "@angular/material/divider";
         MatDividerModule,
         //-----//
         FormValidationErrorsDirective,
-    ]
+    ],
 })
 export class EmailsTabComponent implements OnInit {
     @Input(RoutingResolvers.ACCOUNT_SETTINGS_EMAIL_KEY) public account: AccountWithEmailFragment;

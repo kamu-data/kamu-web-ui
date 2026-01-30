@@ -36,7 +36,7 @@ import { NgFor, NgIf } from "@angular/common";
         MatIconModule,
         //-----//
         BlockRowDataComponent,
-    ]
+    ],
 })
 export class BaseDynamicEventComponent<TEvent extends object> extends BaseComponent implements AfterViewChecked {
     @Input({ required: true }) public event: TEvent;

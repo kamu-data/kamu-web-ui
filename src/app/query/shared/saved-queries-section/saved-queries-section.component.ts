@@ -25,7 +25,7 @@ import { CdkAccordionModule } from "@angular/cdk/accordion";
         CdkAccordionModule,
         MatIconModule,
         MatButtonModule,
-    ]
+    ],
 })
 export class SavedQueriesSectionComponent {
     public savedQueries = DataTabValues.savedQueries;

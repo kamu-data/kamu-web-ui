@@ -33,9 +33,9 @@ describe("MetadataLicenseTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [MetadataLicenseTabComponent, MatIconModule, SharedTestModule],
-    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [MetadataLicenseTabComponent, MatIconModule, SharedTestModule],
+            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(MetadataLicenseTabComponent);

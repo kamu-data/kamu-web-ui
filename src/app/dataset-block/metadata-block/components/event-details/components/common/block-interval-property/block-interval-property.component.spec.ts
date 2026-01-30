@@ -24,9 +24,9 @@ describe("BlockIntervalPropertyComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [ApolloTestingModule, SharedTestModule, BlockIntervalPropertyComponent],
-    providers: [provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
+            imports: [ApolloTestingModule, SharedTestModule, BlockIntervalPropertyComponent],
+            providers: [provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

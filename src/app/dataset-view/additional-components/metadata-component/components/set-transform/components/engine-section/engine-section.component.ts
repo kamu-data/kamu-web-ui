@@ -39,7 +39,7 @@ import { NgIf } from "@angular/common";
         MatDividerModule,
         //-----//
         EngineSelectComponent,
-    ]
+    ],
 })
 export class EngineSectionComponent extends BaseComponent implements OnInit {
     @Input() public knownEngines: MaybeNull<EngineDesc[]>;

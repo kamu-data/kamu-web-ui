@@ -28,9 +28,9 @@ describe("MetadataWatermarkTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [MetadataWatermarkTabComponent, SharedTestModule],
-    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [MetadataWatermarkTabComponent, SharedTestModule],
+            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
         fixture = TestBed.createComponent(MetadataWatermarkTabComponent);
         modalService = TestBed.inject(NgbModal);
         component = fixture.componentInstance;

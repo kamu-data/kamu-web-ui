@@ -26,7 +26,7 @@ import { NgIf } from "@angular/common";
         NgIf,
         //-----//
         MatIconModule,
-    ]
+    ],
 })
 export class VerifyResultSectionComponent {
     @Input({ required: true }) public verifyResponse: MaybeNull<VerifyQueryResponse>;

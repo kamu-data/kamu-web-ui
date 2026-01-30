@@ -43,7 +43,7 @@ import { EditorModule } from "src/app/editor/editor.module";
         EditorModule,
         SearchAndSchemasSectionComponent,
         QueryAndResultSectionsComponent,
-    ]
+    ],
 })
 export class DataComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_DATA_KEY) public dataTabData: DatasetOverviewTabData;

@@ -38,9 +38,15 @@ describe("QueryExplainerComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [SharedTestModule, QueryExplainerComponent],
-    providers: [Apollo, provideToastr(), HIGHLIGHT_OPTIONS_PROVIDER, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [SharedTestModule, QueryExplainerComponent],
+            providers: [
+                Apollo,
+                provideToastr(),
+                HIGHLIGHT_OPTIONS_PROVIDER,
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        });
 
         registerMatSvgIcons();
 

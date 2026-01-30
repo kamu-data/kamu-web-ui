@@ -64,7 +64,7 @@ import { NgIf, NgFor, TitleCasePipe } from "@angular/common";
         TypeaheadFieldComponent,
         NumberFieldComponent,
         TopicsFieldComponent,
-    ]
+    ],
 })
 export class BaseStepComponent extends BaseComponent implements OnInit {
     public parentForm: FormGroup;

@@ -31,29 +31,29 @@ describe("InputDataSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [MarkdownModule.forRoot(), InputDataSectionComponent, MarkdownFormatPipe],
-    providers: [
-        provideToastr(),
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    queryParamMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN:
-                                    return "test-upload-token";
-                            }
+            imports: [MarkdownModule.forRoot(), InputDataSectionComponent, MarkdownFormatPipe],
+            providers: [
+                provideToastr(),
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            queryParamMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN:
+                                            return "test-upload-token";
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-        HIGHLIGHT_OPTIONS_PROVIDER,
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-});
+                HIGHLIGHT_OPTIONS_PROVIDER,
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        });
 
         registerMatSvgIcons();
 

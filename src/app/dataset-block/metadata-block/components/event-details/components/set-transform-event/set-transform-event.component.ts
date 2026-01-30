@@ -25,7 +25,7 @@ import { NgFor, NgIf } from "@angular/common";
         MatIconModule,
         //-----//
         BlockRowDataComponent,
-    ]
+    ],
 })
 export class SetTransformEventComponent extends BaseDynamicEventComponent<SetTransform> implements OnInit {
     public ngOnInit(): void {

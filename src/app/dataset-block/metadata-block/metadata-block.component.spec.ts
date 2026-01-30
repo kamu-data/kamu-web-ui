@@ -31,35 +31,35 @@ describe("MetadataBlockComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [ApolloTestingModule, MetadataBlockComponent, MatSlideToggleModule],
-    providers: [
-        provideToastr(),
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                params: of({
-                    accountName: "accountName",
-                    datasetName: "datasetName",
-                    blockHash: "ewrwe213123",
-                }),
-                snapshot: {
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return "accountName";
-                                case "datasetName":
-                                    return "datasetName";
-                            }
+            imports: [ApolloTestingModule, MetadataBlockComponent, MatSlideToggleModule],
+            providers: [
+                provideToastr(),
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        params: of({
+                            accountName: "accountName",
+                            datasetName: "datasetName",
+                            blockHash: "ewrwe213123",
+                        }),
+                        snapshot: {
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-}).compileComponents();
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

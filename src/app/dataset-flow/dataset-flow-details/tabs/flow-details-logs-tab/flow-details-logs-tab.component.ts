@@ -24,7 +24,7 @@ import { NgIf } from "@angular/common";
         NgIf,
         //-----//
         MatIconModule,
-    ]
+    ],
 })
 export class FlowDetailsLogsTabComponent {
     @Input(RoutingResolvers.FLOW_DETAILS_LOGS_KEY) public flowDetails: DatasetFlowByIdResponse;

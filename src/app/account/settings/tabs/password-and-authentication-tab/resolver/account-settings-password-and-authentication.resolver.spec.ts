@@ -23,9 +23,9 @@ describe("accountSettingsPasswordAndAuthenticationResolver", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [],
-    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [],
+            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
 
         loggedUserService = TestBed.inject(LoggedUserService);
     });

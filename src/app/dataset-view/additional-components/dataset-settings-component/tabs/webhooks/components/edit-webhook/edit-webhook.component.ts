@@ -36,7 +36,7 @@ import { RouterOutlet } from "@angular/router";
         WebhookFormComponent,
     ],
     templateUrl: "./edit-webhook.component.html",
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditWebhookComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.WEBHOOKS_EDIT_KEY) public editWebhooksData: EditWebhooksType;

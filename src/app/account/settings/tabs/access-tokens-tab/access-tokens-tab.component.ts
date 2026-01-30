@@ -57,7 +57,7 @@ import { NgIf, NgTemplateOutlet, DatePipe } from "@angular/common";
         FormValidationErrorsDirective,
         CopyToClipboardComponent,
         PaginationComponent,
-    ]
+    ],
 })
 export class AccessTokensTabComponent extends BaseComponent {
     private fb = inject(FormBuilder);

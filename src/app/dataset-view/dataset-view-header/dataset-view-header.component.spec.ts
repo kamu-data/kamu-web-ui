@@ -27,9 +27,9 @@ describe("DatasetViewHeaderComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [SharedTestModule, DatasetViewHeaderComponent],
-    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
+            imports: [SharedTestModule, DatasetViewHeaderComponent],
+            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

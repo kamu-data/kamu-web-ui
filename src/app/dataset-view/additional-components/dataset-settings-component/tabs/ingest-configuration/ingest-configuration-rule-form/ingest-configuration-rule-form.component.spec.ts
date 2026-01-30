@@ -22,7 +22,7 @@ import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
         //-----//
         IngestConfigurationRuleFormComponent,
     ],
-    template: `<app-ingest-configuration-rule-form [form]="hostForm.controls.ingestConfigurationRule" />`
+    template: `<app-ingest-configuration-rule-form [form]="hostForm.controls.ingestConfigurationRule" />`,
 })
 class TestIngestConfigurationRuleFormComponent {
     public readonly hostForm = new FormGroup({

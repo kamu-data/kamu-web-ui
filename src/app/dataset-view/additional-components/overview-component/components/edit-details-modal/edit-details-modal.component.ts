@@ -38,7 +38,7 @@ import { MatDividerModule } from "@angular/material/divider";
         MatDividerModule,
         MatIconModule,
         MatChipsModule,
-    ]
+    ],
 })
 export class EditDetailsModalComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public currentState?: {

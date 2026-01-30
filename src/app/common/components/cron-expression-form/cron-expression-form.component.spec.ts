@@ -21,7 +21,7 @@ import { FormValidationErrorsDirective } from "../../directives/form-validation-
         [form]="cronForm"
         [label]="'Cron expression :'"
         [placeholder]="'Example: * * * * ?'"
-    />`
+    />`,
 })
 class TestCronExpressionFormComponent {
     public cronForm = CronExpressionFormComponent.buildForm();

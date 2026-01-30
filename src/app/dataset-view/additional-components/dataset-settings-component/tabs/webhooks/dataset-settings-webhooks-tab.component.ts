@@ -22,6 +22,6 @@ import { RouterOutlet } from "@angular/router";
         MatDividerModule,
         MatIconModule,
         MatTableModule,
-    ]
+    ],
 })
 export class DatasetSettingsWebhooksTabComponent {}

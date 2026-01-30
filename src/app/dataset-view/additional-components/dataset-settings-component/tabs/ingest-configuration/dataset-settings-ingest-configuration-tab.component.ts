@@ -36,7 +36,7 @@ import { NgIf } from "@angular/common";
         //-----//
         FlowRetryPolicyFormComponent,
         IngestConfigurationRuleFormComponent,
-    ]
+    ],
 })
 export class DatasetSettingsIngestConfigurationTabComponent extends BaseComponent implements AfterViewInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_INGEST_CONFIGURATION_KEY)

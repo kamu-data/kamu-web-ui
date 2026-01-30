@@ -35,7 +35,7 @@ import { NgIf } from "@angular/common";
         DisplayTimeComponent,
         DisplayHashComponent,
         FeatureFlagDirective,
-    ]
+    ],
 })
 export class BlockHeaderComponent extends BaseComponent {
     @Input({ required: true }) public datasetInfo: DatasetInfo;

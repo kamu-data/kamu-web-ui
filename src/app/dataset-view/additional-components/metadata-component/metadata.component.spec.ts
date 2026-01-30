@@ -36,9 +36,13 @@ describe("MetadataComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [SharedTestModule, MetadataComponent, RouterModule],
-    providers: [HIGHLIGHT_OPTIONS_PROVIDER, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-})
+            imports: [SharedTestModule, MetadataComponent, RouterModule],
+            providers: [
+                HIGHLIGHT_OPTIONS_PROVIDER,
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        })
 
             .compileComponents();
 

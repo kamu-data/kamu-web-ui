@@ -21,9 +21,9 @@ describe("DatasetFlowProcessCardComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [DatasetFlowProcessCardComponent, SharedTestModule],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [DatasetFlowProcessCardComponent, SharedTestModule],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
 
         registerMatSvgIcons();
 

@@ -30,9 +30,14 @@ describe("DataAccessModalComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [DataAccessModalComponent],
-    providers: [Apollo, NgbActiveModal, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [DataAccessModalComponent],
+            providers: [
+                Apollo,
+                NgbActiveModal,
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        });
 
         registerMatSvgIcons();
 

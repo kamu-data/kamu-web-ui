@@ -29,9 +29,9 @@ describe("GithubCallbackComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [SharedTestModule, GithubCallbackComponent],
-    providers: [AuthApi, Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
+            imports: [SharedTestModule, GithubCallbackComponent],
+            providers: [AuthApi, Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        }).compileComponents();
 
         navigationService = TestBed.inject(NavigationService);
         navigateToHomeSpy = spyOn(navigationService, "navigateToHome").and.stub();

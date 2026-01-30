@@ -26,7 +26,7 @@ import { MatButtonModule } from "@angular/material/button";
         MatButtonModule,
         MatIconModule,
         MatButtonToggleModule,
-    ]
+    ],
 })
 export class LoadMoreComponent {
     public rowsNumber: number = AppValues.SQL_QUERY_LIMIT;

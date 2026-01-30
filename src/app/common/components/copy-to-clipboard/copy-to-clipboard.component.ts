@@ -15,7 +15,7 @@ import { MatIconModule } from "@angular/material/icon";
     templateUrl: "./copy-to-clipboard.component.html",
     styleUrls: ["./copy-to-clipboard.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatIconModule]
+    imports: [MatIconModule],
 })
 export class CopyToClipboardComponent {
     @Input({ required: true }) public text: string;

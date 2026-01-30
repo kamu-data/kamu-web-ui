@@ -22,7 +22,7 @@ import { NgIf } from "@angular/common";
         //-----//
         BlockRowDataComponent,
         LinkPropertyComponent,
-    ]
+    ],
 })
 export class SetLicenseEventComponent extends BaseComponent {
     @Input({ required: true }) public event: SetLicense;

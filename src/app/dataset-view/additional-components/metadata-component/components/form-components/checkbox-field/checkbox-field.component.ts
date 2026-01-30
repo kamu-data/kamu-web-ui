@@ -23,7 +23,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
         RxReactiveFormsModule,
         //-----//
         TooltipIconComponent,
-    ]
+    ],
 })
 export class CheckboxFieldComponent extends BaseField {
     @Input({ required: true }) public checked: boolean;

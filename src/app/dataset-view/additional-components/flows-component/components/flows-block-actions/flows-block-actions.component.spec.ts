@@ -24,9 +24,14 @@ describe("FlowsBlockActionsComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [FlowsBlockActionsComponent, SharedTestModule],
-    providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [FlowsBlockActionsComponent, SharedTestModule],
+            providers: [
+                Apollo,
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        });
 
         registerMatSvgIcons();
 

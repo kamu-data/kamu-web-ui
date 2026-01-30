@@ -77,7 +77,7 @@ import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
         DynamicTableComponent,
         LoadMoreComponent,
         TooltipIconComponent,
-    ]
+    ],
 })
 export class QueryAndResultSectionsComponent extends BaseComponent implements OnInit, OnChanges {
     @Input({ required: true }) public sqlLoading: boolean;

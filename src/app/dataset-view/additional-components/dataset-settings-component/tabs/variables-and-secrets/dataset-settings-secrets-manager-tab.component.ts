@@ -57,7 +57,7 @@ export interface EnvVariableElement {
         MatSortModule,
         //-----//
         PaginationComponent,
-    ]
+    ],
 })
 export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_VARIABLES_AND_SECRETS_KEY)

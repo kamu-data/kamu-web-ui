@@ -27,7 +27,7 @@ import { FormValidationErrorsDirective } from "../../directives/form-validation-
         ReactiveFormsModule,
         //-----//
         FormValidationErrorsDirective,
-    ]
+    ],
 })
 export class TimeDeltaFormComponent extends BaseComponent implements OnInit, OnChanges {
     @Input({ required: true }) public form: FormGroup<TimeDeltaFormType>;

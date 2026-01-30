@@ -29,7 +29,7 @@ import { NgIf } from "@angular/common";
         //-----//
         DatasetViewHeaderComponent,
         DatasetViewMenuComponent,
-    ]
+    ],
 })
 export class DatasetViewComponent extends BaseDatasetDataComponent implements OnDestroy {
     @Input(RoutingResolvers.DATASET_VIEW_ACTIVE_TAB_KEY) public datasetViewType: DatasetViewTypeEnum;

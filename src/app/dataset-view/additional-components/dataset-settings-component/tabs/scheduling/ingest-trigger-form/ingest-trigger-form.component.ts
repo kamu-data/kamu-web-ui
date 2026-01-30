@@ -31,7 +31,7 @@ import { BaseComponent } from "src/app/common/components/base.component";
         //-----//
         TimeDeltaFormComponent,
         CronExpressionFormComponent,
-    ]
+    ],
 })
 export class IngestTriggerFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public form: FormGroup<IngestTriggerFormType>;

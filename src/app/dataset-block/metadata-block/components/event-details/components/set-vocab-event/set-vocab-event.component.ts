@@ -24,7 +24,7 @@ import { NgIf, NgFor, KeyValuePipe } from "@angular/common";
         //-----//
         BlockRowDataComponent,
         CardsPropertyComponent,
-    ]
+    ],
 })
 export class SetVocabEventComponent extends BaseComponent {
     @Input({ required: true }) public event: SetVocab;

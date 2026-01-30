@@ -29,7 +29,7 @@ import { FormValidationErrorsDirective } from "src/app/common/directives/form-va
         FormValidationErrorsDirective,
     ],
     templateUrl: "./webhook-form.component.html",
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WebhookFormComponent {
     @Input({ required: true }) public createOrEditSubscriptionForm: FormGroup<WebhookSubscriptionFormType>;

@@ -25,7 +25,7 @@ import { NgFor, NgIf } from "@angular/common";
         MatIconModule,
         //-----//
         BlockRowDataComponent,
-    ]
+    ],
 })
 export class AddPushSourceEventComponent extends BaseDynamicEventComponent<AddPushSource> implements OnInit {
     public ngOnInit(): void {

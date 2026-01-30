@@ -27,7 +27,7 @@ import { TimeUnit } from "src/app/api/kamu.graphql.interface";
         //-----//
         FormValidationErrorsDirective,
         TimeDeltaFormComponent,
-    ]
+    ],
 })
 export class BufferingBatchingRuleFormComponent extends BaseComponent {
     @Input({ required: true }) public form: FormGroup<BufferingBatchingRuleFormType>;

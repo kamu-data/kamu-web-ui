@@ -43,7 +43,7 @@ import { FlowStopPolicyFormValue } from "../shared/flow-stop-policy-form/flow-st
         TransformTriggerFormComponent,
         FlowStopPolicyFormComponent,
         TooltipIconComponent,
-    ]
+    ],
 })
 export class DatasetSettingsTransformOptionsTabComponent extends BaseComponent implements AfterViewInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_TRANSFORM_KEY)

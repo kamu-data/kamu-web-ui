@@ -24,9 +24,14 @@ describe("EditDetailsModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [SharedTestModule, EditDetailsModalComponent],
-    providers: [Apollo, NgbActiveModal, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
+            imports: [SharedTestModule, EditDetailsModalComponent],
+            providers: [
+                Apollo,
+                NgbActiveModal,
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(EditDetailsModalComponent);
         component = fixture.componentInstance;

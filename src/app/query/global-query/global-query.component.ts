@@ -34,7 +34,7 @@ import { EditorModule } from "src/app/editor/editor.module";
         EditorModule,
         QueryAndResultSectionsComponent,
         SearchAndSchemasSectionComponent,
-    ]
+    ],
 })
 export class GlobalQueryComponent extends BaseComponent implements OnInit {
     @Input(ProjectLinks.URL_QUERY_PARAM_SQL_QUERY) public set sqlQuery(value: string) {

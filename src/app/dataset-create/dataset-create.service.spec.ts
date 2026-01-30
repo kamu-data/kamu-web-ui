@@ -33,9 +33,9 @@ describe("DatasetCreateService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [],
-    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [],
+            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
         service = TestBed.inject(DatasetCreateService);
         datasetApi = TestBed.inject(DatasetApi);
         navigationService = TestBed.inject(NavigationService);

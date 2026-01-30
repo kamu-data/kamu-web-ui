@@ -30,7 +30,7 @@ import { FormValidationErrorsDirective } from "src/app/common/directives/form-va
         //-----//
         TooltipIconComponent,
         FormValidationErrorsDirective,
-    ]
+    ],
 })
 export class InputFieldComponent extends BaseField {
     @Input() public value: string;

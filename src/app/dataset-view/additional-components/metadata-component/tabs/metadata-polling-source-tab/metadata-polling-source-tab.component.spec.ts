@@ -26,9 +26,14 @@ describe("MetadataPollingSourceTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [MetadataPollingSourceTabComponent, SharedTestModule, MatIconModule],
-    providers: [HIGHLIGHT_OPTIONS_PROVIDER, provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [MetadataPollingSourceTabComponent, SharedTestModule, MatIconModule],
+            providers: [
+                HIGHLIGHT_OPTIONS_PROVIDER,
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        });
         fixture = TestBed.createComponent(MetadataPollingSourceTabComponent);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;

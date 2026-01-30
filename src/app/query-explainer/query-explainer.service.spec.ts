@@ -24,9 +24,15 @@ describe("QueryExplainerService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [],
-    providers: [Apollo, provideAnimations(), provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [],
+            providers: [
+                Apollo,
+                provideAnimations(),
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        });
         httpTestingController = TestBed.inject(HttpTestingController);
         service = TestBed.inject(QueryExplainerService);
         appConfigService = TestBed.inject(AppConfigService);

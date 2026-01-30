@@ -23,9 +23,9 @@ describe("WebhookFlowProcessCardComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [WebhookFlowProcessCardComponent, SharedTestModule],
-    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [WebhookFlowProcessCardComponent, SharedTestModule],
+            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
 
         registerMatSvgIcons();
 

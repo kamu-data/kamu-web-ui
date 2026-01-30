@@ -18,9 +18,9 @@ describe("CommitmentDataSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [CommitmentDataSectionComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [CommitmentDataSectionComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
 
         registerMatSvgIcons();
 

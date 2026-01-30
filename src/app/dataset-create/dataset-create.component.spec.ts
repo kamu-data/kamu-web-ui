@@ -26,9 +26,9 @@ describe("DatasetCreateComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [ApolloTestingModule, SharedTestModule, DatasetCreateComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-})
+            imports: [ApolloTestingModule, SharedTestModule, DatasetCreateComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        })
             .overrideComponent(DatasetCreateComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

@@ -28,9 +28,9 @@ describe("AddDataModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [SharedTestModule, AddDataModalComponent],
-    providers: [Apollo, NgbActiveModal, provideHttpClient(withInterceptorsFromDi())]
-}).compileComponents();
+            imports: [SharedTestModule, AddDataModalComponent],
+            providers: [Apollo, NgbActiveModal, provideHttpClient(withInterceptorsFromDi())],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(AddDataModalComponent);
         component = fixture.componentInstance;

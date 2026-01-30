@@ -21,7 +21,7 @@ import { NgIf, AsyncPipe } from "@angular/common";
         NgIf,
         //-----//
         MatProgressBarModule,
-    ]
+    ],
 })
 export class SpinnerComponent {
     private spinnerService = inject(SpinnerService);

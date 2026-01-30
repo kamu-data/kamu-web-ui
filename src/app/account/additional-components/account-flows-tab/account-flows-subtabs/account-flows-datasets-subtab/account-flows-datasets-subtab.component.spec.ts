@@ -50,32 +50,34 @@ describe("AccountFlowsDatasetsSubtabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [AccountFlowsDatasetsSubtabComponent,
-        SharedTestModule,
-        WebhookFlowProcessCardComponent,
-        DatasetFlowProcessCardComponent],
-    providers: [
-        Apollo,
-        provideToastr(),
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    queryParamMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "page":
-                                    return "1";
-                            }
+            imports: [
+                AccountFlowsDatasetsSubtabComponent,
+                SharedTestModule,
+                WebhookFlowProcessCardComponent,
+                DatasetFlowProcessCardComponent,
+            ],
+            providers: [
+                Apollo,
+                provideToastr(),
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            queryParamMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "page":
+                                            return "1";
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-});
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        });
 
         registerMatSvgIcons();
 

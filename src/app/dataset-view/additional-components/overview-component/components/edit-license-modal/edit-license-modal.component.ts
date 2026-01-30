@@ -38,7 +38,7 @@ import { FormValidationErrorsDirective } from "src/app/common/directives/form-va
         MatDividerModule,
         //-----//
         FormValidationErrorsDirective,
-    ]
+    ],
 })
 export class EditLicenseModalComponent extends BaseComponent implements OnInit {
     public activeModal = inject(NgbActiveModal);

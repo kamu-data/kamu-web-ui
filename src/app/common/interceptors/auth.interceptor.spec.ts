@@ -22,19 +22,19 @@ describe("AuthInterceptor", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [],
-    providers: [
-        AuthInterceptor,
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: AuthInterceptor,
-            multi: true,
-        },
-        { provide: AppConfigService, useValue: appConfigStub },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-});
+            imports: [],
+            providers: [
+                AuthInterceptor,
+                {
+                    provide: HTTP_INTERCEPTORS,
+                    useClass: AuthInterceptor,
+                    multi: true,
+                },
+                { provide: AppConfigService, useValue: appConfigStub },
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        });
 
         http = TestBed.inject(HttpClient);
         httpMock = TestBed.inject(HttpTestingController);

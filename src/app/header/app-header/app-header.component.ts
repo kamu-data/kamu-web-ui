@@ -59,7 +59,7 @@ import { NgIf } from "@angular/common";
         NotificationIndicatorComponent,
         MatMenuModule,
         DisplayAccountNamePipe,
-    ]
+    ],
 })
 export class AppHeaderComponent extends BaseComponent implements OnInit {
     public readonly APP_LOGO = AppValues.APP_LOGO;

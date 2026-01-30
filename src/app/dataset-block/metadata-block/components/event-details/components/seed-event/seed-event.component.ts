@@ -25,7 +25,7 @@ import { BlockRowDataComponent } from "../../../../../../common/components/block
         MatIconModule,
         //-----//
         BlockRowDataComponent,
-    ]
+    ],
 })
 export class SeedEventComponent extends BaseComponent {
     @Input({ required: true }) public event: Seed;

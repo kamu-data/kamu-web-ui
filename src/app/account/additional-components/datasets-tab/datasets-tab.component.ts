@@ -27,7 +27,7 @@ import { NgIf, NgFor } from "@angular/common";
         //-----//
         DatasetListItemComponent,
         PaginationComponent,
-    ]
+    ],
 })
 export class DatasetsTabComponent {
     @Input(RoutingResolvers.ACCOUNT_DATASETS_KEY) public accountResolverResponse: DatasetsAccountResolverResponse;

@@ -12,6 +12,6 @@ import { AccountTabComponent } from "../../settings/tabs/account-tab/account-tab
     selector: "app-settings-tab",
     templateUrl: "./settings-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [AccountTabComponent]
+    imports: [AccountTabComponent],
 })
 export class SettingsTabComponent {}

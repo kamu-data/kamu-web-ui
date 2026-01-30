@@ -25,7 +25,7 @@ import { NgFor, NgIf } from "@angular/common";
         MatIconModule,
         //-----//
         BlockRowDataComponent,
-    ]
+    ],
 })
 export class SetPollingSourceEventComponent extends BaseDynamicEventComponent<SetPollingSource> implements OnInit {
     public ngOnInit(): void {

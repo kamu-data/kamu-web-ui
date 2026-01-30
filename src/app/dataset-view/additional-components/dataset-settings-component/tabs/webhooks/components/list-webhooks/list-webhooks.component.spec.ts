@@ -33,9 +33,14 @@ describe("ListWebhooksComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [ListWebhooksComponent, SharedTestModule],
-    providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [ListWebhooksComponent, SharedTestModule],
+            providers: [
+                Apollo,
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        });
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(ListWebhooksComponent);

@@ -51,41 +51,41 @@ describe("FlowsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [FlowsComponent],
-    providers: [
-        Apollo,
-        provideToastr(),
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    queryParamMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "tab":
-                                    return "flows";
-                                case "page":
-                                    return 2;
-                            }
-                        },
-                    },
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return "accountName";
-                                case "datasetName":
-                                    return "datasetName";
-                            }
+            imports: [FlowsComponent],
+            providers: [
+                Apollo,
+                provideToastr(),
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            queryParamMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "tab":
+                                            return "flows";
+                                        case "page":
+                                            return 2;
+                                    }
+                                },
+                            },
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-}).compileComponents();
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

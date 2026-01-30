@@ -55,7 +55,7 @@ import { MatIconModule } from "@angular/material/icon";
         MatTableModule,
         //-----//
         PaginationComponent,
-    ]
+    ],
 })
 export class DatasetSettingsAccessTabComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_ACCESS_KEY) public accessViewData: DatasetViewData;

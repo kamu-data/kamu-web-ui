@@ -32,7 +32,7 @@ import { MaybeNull } from "src/app/interface/app.types";
         MatIconModule,
     ],
     templateUrl: "./flow-table-panel-filters.component.html",
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowTablePanelFiltersComponent implements OnInit {
     @Input({ required: true }) public onlySystemFlows: boolean;

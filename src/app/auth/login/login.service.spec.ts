@@ -44,9 +44,15 @@ describe("LoginService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [ApolloTestingModule, RedirectUrlTestModule],
-    providers: [AuthApi, Apollo, { provide: EthereumGatewayFactory, useClass: MockEthereumGatewayFactory }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [ApolloTestingModule, RedirectUrlTestModule],
+            providers: [
+                AuthApi,
+                Apollo,
+                { provide: EthereumGatewayFactory, useClass: MockEthereumGatewayFactory },
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        });
 
         localStorageService = TestBed.inject(LocalStorageService);
         localStorageService.reset();

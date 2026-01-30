@@ -19,9 +19,9 @@ describe("SearchAdditionalButtonsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [SharedTestModule],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-})
+            imports: [SharedTestModule],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        })
             .overrideComponent(SearchAdditionalButtonsComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

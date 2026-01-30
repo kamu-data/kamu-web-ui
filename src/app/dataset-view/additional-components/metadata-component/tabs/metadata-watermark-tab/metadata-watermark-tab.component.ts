@@ -32,7 +32,7 @@ import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
         DisplayTimeComponent,
     ],
     templateUrl: "./metadata-watermark-tab.component.html",
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataWatermarkTabComponent {
     @Input(RoutingResolvers.METADATA_WATERMARK_TAB_KEY) public datasetMetadataTabData: DatasetOverviewTabData;

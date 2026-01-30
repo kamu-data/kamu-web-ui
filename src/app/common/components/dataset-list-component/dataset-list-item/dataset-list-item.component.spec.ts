@@ -26,16 +26,18 @@ describe("DatasetListItemComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [MatChipsModule,
-        NgbRatingModule,
-        MatDividerModule,
-        MatIconModule,
-        NgbModule,
-        SharedTestModule,
-        RouterModule,
-        DatasetListItemComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
+            imports: [
+                MatChipsModule,
+                NgbRatingModule,
+                MatDividerModule,
+                MatIconModule,
+                NgbModule,
+                SharedTestModule,
+                RouterModule,
+                DatasetListItemComponent,
+            ],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

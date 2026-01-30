@@ -30,7 +30,7 @@ import { FormValidationErrorsDirective } from "src/app/common/directives/form-va
         //-----//
         TooltipIconComponent,
         FormValidationErrorsDirective,
-    ]
+    ],
 })
 export class TypeaheadFieldComponent extends BaseField {
     @Input({ required: true }) public data: string[];

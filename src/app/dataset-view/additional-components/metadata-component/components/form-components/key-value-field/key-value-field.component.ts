@@ -29,7 +29,7 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
         RxReactiveFormsModule,
         //-----//
         TooltipIconComponent,
-    ]
+    ],
 })
 export class KeyValueFieldComponent extends BaseField {
     @Input({ required: true }) public buttonText: string;

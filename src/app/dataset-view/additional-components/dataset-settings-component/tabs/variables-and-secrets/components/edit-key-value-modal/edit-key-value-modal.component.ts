@@ -37,7 +37,7 @@ import { MatDividerModule } from "@angular/material/divider";
         MatTooltipModule,
         //-----//
         FormValidationErrorsDirective,
-    ]
+    ],
 })
 export class EditKeyValueModalComponent extends BaseComponent implements OnInit {
     public activeModal = inject(NgbActiveModal);

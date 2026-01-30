@@ -43,7 +43,7 @@ import { LoginMethodsService } from "../login-methods.service";
         //-----//
         FormValidationErrorsDirective,
         SpinnerComponent,
-    ]
+    ],
 })
 export class LoginComponent extends BaseComponent implements OnInit {
     public static readonly ERROR_ZERO_METHODS_IN_CONFIG =

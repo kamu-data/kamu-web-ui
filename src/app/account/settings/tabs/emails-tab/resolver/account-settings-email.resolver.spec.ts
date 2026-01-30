@@ -28,9 +28,15 @@ describe("accountSettingsEmailResolverFn", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [],
-    providers: [Apollo, provideAnimations(), provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [],
+            providers: [
+                Apollo,
+                provideAnimations(),
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        });
 
         accountEmailService = TestBed.inject(AccountEmailService);
         loggedUserService = TestBed.inject(LoggedUserService);

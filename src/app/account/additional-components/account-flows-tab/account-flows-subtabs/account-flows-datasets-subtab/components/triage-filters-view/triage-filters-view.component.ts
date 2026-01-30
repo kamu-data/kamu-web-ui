@@ -39,7 +39,7 @@ import { FlowProcessStatusListComponent } from "../common/flow-process-status-li
     ],
     templateUrl: "./triage-filters-view.component.html",
     styleUrls: ["./triage-filters-view.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TriageFiltersViewComponent {
     @Input({ required: true }) public dashboardFilters: DashboardFiltersOptions;

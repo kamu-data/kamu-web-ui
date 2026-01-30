@@ -22,7 +22,7 @@ import { MatDividerModule } from "@angular/material/divider";
         ReactiveFormsModule,
         //-----//
         MatDividerModule,
-    ]
+    ],
 })
 export class FileFromUrlModalComponent extends BaseComponent {
     public activeModal = inject(NgbActiveModal);

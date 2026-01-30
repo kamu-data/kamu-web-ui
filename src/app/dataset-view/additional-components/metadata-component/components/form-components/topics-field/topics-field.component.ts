@@ -31,7 +31,7 @@ import { TooltipIconComponent } from "../../../../../../common/components/toolti
         RxReactiveFormsModule,
         //-----//
         TooltipIconComponent,
-    ]
+    ],
 })
 export class TopicsFieldComponent extends BaseField {
     @Input({ required: true }) public buttonText: string;

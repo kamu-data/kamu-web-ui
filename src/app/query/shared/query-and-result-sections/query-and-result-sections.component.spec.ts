@@ -38,12 +38,14 @@ describe("QueryAndResultSectionsComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [EditorModule,
-        SharedTestModule,
-        QueryAndResultSectionsComponent,
-        MarkdownModule.forRoot()],
-    providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [EditorModule, SharedTestModule, QueryAndResultSectionsComponent, MarkdownModule.forRoot()],
+            providers: [
+                Apollo,
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        });
         fixture = TestBed.createComponent(QueryAndResultSectionsComponent);
         component = fixture.componentInstance;
         clipboard = TestBed.inject(Clipboard);

@@ -26,9 +26,14 @@ describe("RotateSecretWebhookComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [RotateSecretWebhookComponent, SharedTestModule],
-    providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [RotateSecretWebhookComponent, SharedTestModule],
+            providers: [
+                Apollo,
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        });
         registerMatSvgIcons();
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);
         navigationService = TestBed.inject(NavigationService);

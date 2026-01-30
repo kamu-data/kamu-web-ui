@@ -31,9 +31,14 @@ describe("AddDataEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [SharedTestModule, AddDataEventComponent],
-    providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-})
+            imports: [SharedTestModule, AddDataEventComponent],
+            providers: [
+                Apollo,
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        })
             .overrideComponent(AddDataEventComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

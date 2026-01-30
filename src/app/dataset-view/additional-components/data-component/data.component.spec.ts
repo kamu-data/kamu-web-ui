@@ -48,38 +48,38 @@ describe("DataComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [DataComponent],
-    providers: [
-        Apollo,
-        provideToastr(),
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    queryParamMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case ProjectLinks.URL_QUERY_PARAM_SQL_QUERY:
-                                    return null;
-                            }
-                        },
-                    },
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return mockDatasetBasicsDerivedFragment.owner.accountName;
-                                case "datasetName":
-                                    return mockDatasetBasicsDerivedFragment.name;
-                            }
+            imports: [DataComponent],
+            providers: [
+                Apollo,
+                provideToastr(),
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            queryParamMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case ProjectLinks.URL_QUERY_PARAM_SQL_QUERY:
+                                            return null;
+                                    }
+                                },
+                            },
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return mockDatasetBasicsDerivedFragment.owner.accountName;
+                                        case "datasetName":
+                                            return mockDatasetBasicsDerivedFragment.name;
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-    ]
-}).compileComponents();
+                provideHttpClient(withInterceptorsFromDi()),
+            ],
+        }).compileComponents();
         fixture = TestBed.createComponent(DataComponent);
         location = TestBed.inject(Location);
         ngbModalService = TestBed.inject(NgbModal);

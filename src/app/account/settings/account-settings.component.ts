@@ -44,7 +44,7 @@ import { NgIf, NgFor, NgClass, AsyncPipe } from "@angular/common";
         MatIconModule,
         //-----//
         FeatureFlagDirective,
-    ]
+    ],
 })
 export class AccountSettingsComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.ACCOUNT_SETTINGS_ACTIVE_TAB_KEY) public activeTab: AccountSettingsTabs;

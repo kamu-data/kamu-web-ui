@@ -22,7 +22,7 @@ import { NgIf } from "@angular/common";
         NgIf,
         //-----//
         DynamicTableComponent,
-    ]
+    ],
 })
 export class SchemaPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string[];

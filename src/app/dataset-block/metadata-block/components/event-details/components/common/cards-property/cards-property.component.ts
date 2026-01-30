@@ -14,7 +14,7 @@ import { NgIf, NgFor } from "@angular/common";
     templateUrl: "./cards-property.component.html",
     styleUrls: ["./cards-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, NgFor]
+    imports: [NgIf, NgFor],
 })
 export class CardsPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string[];

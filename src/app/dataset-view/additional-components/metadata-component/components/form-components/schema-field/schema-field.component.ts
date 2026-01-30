@@ -50,7 +50,7 @@ export interface SchemaType {
         RxReactiveFormsModule,
         //-----//
         TooltipIconComponent,
-    ]
+    ],
 })
 export class SchemaFieldComponent extends BaseField implements AfterViewInit {
     @ViewChild(MatTable) private table: MatTable<unknown>;

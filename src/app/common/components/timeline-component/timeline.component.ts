@@ -34,7 +34,7 @@ import { NgFor } from "@angular/common";
         DisplayTimeComponent,
         DisplayHashComponent,
         FeatureFlagDirective,
-    ]
+    ],
 })
 export class TimelineComponent {
     @Input({ required: true }) public history: MetadataBlockFragment[];

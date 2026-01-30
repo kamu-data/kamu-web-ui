@@ -47,7 +47,7 @@ import { MatIconModule } from "@angular/material/icon";
         DatasetVisibilityComponent,
         FeatureFlagDirective,
         SearchAdditionalButtonsComponent,
-    ]
+    ],
 })
 export class DatasetViewHeaderComponent extends BaseComponent {
     @Input({ required: true }) public datasetInfo: DatasetInfo;

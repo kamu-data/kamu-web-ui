@@ -34,7 +34,7 @@ import { NgFor, NgClass, NgIf, SlicePipe, DatePipe } from "@angular/common";
         SlicePipe,
         //-----//
         NgbPopover,
-    ]
+    ],
 })
 export class TileBaseWidgetComponent {
     @Input({ required: true }) public nodes: FlowItemWidgetDataFragment[];

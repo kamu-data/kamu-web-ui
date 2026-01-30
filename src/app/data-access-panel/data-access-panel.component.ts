@@ -25,7 +25,7 @@ import { FeatureFlagDirective } from "../common/directives/feature-flag.directiv
         MatIconModule,
         //-----//
         FeatureFlagDirective,
-    ]
+    ],
 })
 export class DataAccessPanelComponent extends BaseComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

@@ -29,9 +29,15 @@ describe("AddPeopleModalComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [SharedTestModule, AddPeopleModalComponent],
-    providers: [Apollo, NgbActiveModal, provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [SharedTestModule, AddPeopleModalComponent],
+            providers: [
+                Apollo,
+                NgbActiveModal,
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        });
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(AddPeopleModalComponent);

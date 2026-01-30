@@ -35,7 +35,7 @@ import { NgIf, AsyncPipe } from "@angular/common";
         //-----//
         TimelineComponent,
         PaginationComponent,
-    ]
+    ],
 })
 export class HistoryComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_INFO_KEY) public datasetInfo: DatasetInfo;

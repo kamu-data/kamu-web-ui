@@ -53,7 +53,7 @@ import { NgIf, NgFor, AsyncPipe } from "@angular/common";
         DataAccessOdataTabComponent,
         DataAccessExportTabComponent,
         FeatureFlagDirective,
-    ]
+    ],
 })
 export class DataAccessModalComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

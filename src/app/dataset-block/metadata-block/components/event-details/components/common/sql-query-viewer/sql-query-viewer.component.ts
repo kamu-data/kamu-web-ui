@@ -21,7 +21,7 @@ import { NgFor, NgIf } from "@angular/common";
         NgIf,
         //-----//
         HighlightModule,
-    ]
+    ],
 })
 export class SqlQueryViewerComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: SqlQueryStep[];

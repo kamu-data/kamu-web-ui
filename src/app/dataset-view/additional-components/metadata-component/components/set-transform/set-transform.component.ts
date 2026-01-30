@@ -46,7 +46,7 @@ import { EditorModule } from "src/app/editor/editor.module";
         QueriesSectionComponent,
         SearchSectionComponent,
         StepperNavigationComponent,
-    ]
+    ],
 })
 export class SetTransformComponent extends BaseMainEventComponent implements OnInit {
     @Input(RoutingResolvers.SET_TRANSFORM_KEY) public eventYamlByHash: string;

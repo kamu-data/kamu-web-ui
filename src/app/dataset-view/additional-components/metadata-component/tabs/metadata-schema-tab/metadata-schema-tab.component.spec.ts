@@ -25,9 +25,9 @@ describe("MetadataSchemaTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [MetadataSchemaTabComponent],
-    providers: [provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [MetadataSchemaTabComponent],
+            providers: [provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
         fixture = TestBed.createComponent(MetadataSchemaTabComponent);
         component = fixture.componentInstance;
         component.datasetMetadataTabData = {

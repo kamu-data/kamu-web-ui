@@ -26,7 +26,7 @@ import { NgIf, NgFor } from "@angular/common";
         //-----//
         FeatureFlagDirective,
         DatasetListItemComponent,
-    ]
+    ],
 })
 export class DatasetListComponent {
     @Input({ required: true }) public dataSource: DatasetSearchOverviewFragment[];

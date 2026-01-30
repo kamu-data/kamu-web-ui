@@ -47,7 +47,7 @@ import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/a
 import { MY_MOMENT_FORMATS } from "src/app/common/helpers/data.helpers";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { ToastrService } from "ngx-toastr";
-import { InfiniteScrollModule } from "ngx-infinite-scroll";
+import { InfiniteScrollDirective } from "ngx-infinite-scroll";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { RecentActivityFiltersViewComponent } from "./components/recent-activity-filters-view/recent-activity-filters-view.component";
 import { TriageFiltersViewComponent } from "./components/triage-filters-view/triage-filters-view.component";
@@ -81,7 +81,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
         NgSelectModule,
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
-        InfiniteScrollModule,
+        InfiniteScrollDirective,
         //-----//
         DatasetFlowProcessCardComponent,
         CustomFiltersViewComponent,
@@ -92,7 +92,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
     ],
     templateUrl: "./account-flows-datasets-subtab.component.html",
     styleUrls: ["./account-flows-datasets-subtab.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public accountName: string;

@@ -28,35 +28,35 @@ describe("DatasetSettingsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [DatasetSettingsComponent],
-    providers: [
-        Apollo,
-        provideToastr(),
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                fragment: of(""),
-                snapshot: {
-                    queryParamMap: {
-                        get: () => null,
-                    },
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return mockDatasetBasicsDerivedFragment.owner.accountName;
-                                case "datasetName":
-                                    return mockDatasetBasicsDerivedFragment.name;
-                            }
+            imports: [DatasetSettingsComponent],
+            providers: [
+                Apollo,
+                provideToastr(),
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        fragment: of(""),
+                        snapshot: {
+                            queryParamMap: {
+                                get: () => null,
+                            },
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return mockDatasetBasicsDerivedFragment.owner.accountName;
+                                        case "datasetName":
+                                            return mockDatasetBasicsDerivedFragment.name;
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-})
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        })
             .overrideComponent(DatasetSettingsComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

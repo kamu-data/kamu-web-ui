@@ -37,7 +37,7 @@ import { MatDividerModule } from "@angular/material/divider";
         MatIconModule,
         //-----//
         SafeHtmlPipe,
-    ]
+    ],
 })
 export class FlowDetailsHistoryTabComponent {
     @Input(RoutingResolvers.FLOW_DETAILS_HISTORY_KEY) public response: DatasetFlowByIdResponse;

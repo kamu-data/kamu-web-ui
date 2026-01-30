@@ -35,7 +35,7 @@ import { NavigationService } from "src/app/services/navigation.service";
         //-----//
         AccountFlowsActivitySubtabComponent,
         AccountFlowsDatasetsSubtabComponent,
-    ]
+    ],
 })
 export class AccountFlowsTabComponent {
     @Input(RoutingResolvers.ACCOUNT_FLOWS_KEY) public set setAccountFlowsData(value: AccountFlowsType) {

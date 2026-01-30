@@ -18,9 +18,9 @@ describe("FeatureFlagsService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
         service = TestBed.inject(FeatureFlagsService);
         appConfigService = TestBed.inject(AppConfigService);
     });

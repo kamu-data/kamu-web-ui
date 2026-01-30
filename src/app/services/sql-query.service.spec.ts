@@ -21,9 +21,14 @@ describe("SqlQueryService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [],
-    providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [],
+            providers: [
+                Apollo,
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        });
         service = TestBed.inject(SqlQueryService);
         httpMock = TestBed.inject(HttpTestingController);
         loggedUserService = TestBed.inject(LoggedUserService);

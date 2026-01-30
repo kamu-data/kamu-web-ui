@@ -32,39 +32,39 @@ describe("HistoryComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [SharedTestModule, HistoryComponent],
-    providers: [
-        Apollo,
-        provideToastr(),
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return "accountName";
-                                case "datasetName":
-                                    return "datasetName";
-                            }
-                        },
-                    },
-                    queryParamMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case ProjectLinks.URL_QUERY_PARAM_PAGE:
-                                    return undefined;
-                            }
+            imports: [SharedTestModule, HistoryComponent],
+            providers: [
+                Apollo,
+                provideToastr(),
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return "accountName";
+                                        case "datasetName":
+                                            return "datasetName";
+                                    }
+                                },
+                            },
+                            queryParamMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case ProjectLinks.URL_QUERY_PARAM_PAGE:
+                                            return undefined;
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-}).compileComponents();
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        }).compileComponents();
 
         registerMatSvgIcons();
 

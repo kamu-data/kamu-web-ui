@@ -23,7 +23,7 @@ import { MatStepperModule } from "@angular/material/stepper";
         //-----//
         MatButtonModule,
         MatStepperModule,
-    ]
+    ],
 })
 export class StepperNavigationComponent {
     @Input() public nextStep: MaybeNull<SourcesSection> = null;

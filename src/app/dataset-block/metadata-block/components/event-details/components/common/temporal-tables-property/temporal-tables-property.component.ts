@@ -20,7 +20,7 @@ import { NgFor } from "@angular/common";
         NgFor,
         //-----//
         CardsPropertyComponent,
-    ]
+    ],
 })
 export class TemporalTablesPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: TemporalTable[];

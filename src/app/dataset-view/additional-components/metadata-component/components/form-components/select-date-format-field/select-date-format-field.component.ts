@@ -31,7 +31,7 @@ import { TooltipIconComponent } from "../../../../../../common/components/toolti
         InputFieldComponent,
         TooltipIconComponent,
         TypeaheadFieldComponent,
-    ]
+    ],
 })
 export class SelectDateFormatFieldComponent extends BaseField implements OnInit {
     @Input({ required: true }) public innerTooltips: Record<string, string>;

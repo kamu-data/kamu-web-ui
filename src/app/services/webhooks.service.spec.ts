@@ -21,9 +21,9 @@ describe("WebhooksService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [],
-    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [],
+            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
         service = TestBed.inject(WebhooksService);
         webhooksApi = TestBed.inject(WebhooksApi);
     });

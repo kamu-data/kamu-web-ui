@@ -43,7 +43,7 @@ import { NgIf, NgClass, AsyncPipe } from "@angular/common";
         DatasetViewHeaderComponent,
         DatasetViewMenuComponent,
         FeatureFlagDirective,
-    ]
+    ],
 })
 export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implements OnInit {
     @Input(RoutingResolvers.FLOW_DETAILS_ACTIVE_TAB_KEY) public activeTab: FlowDetailsTabs;

@@ -29,7 +29,7 @@ import AppValues from "src/app/common/values/app.values";
     ],
     templateUrl: "./flows-block-actions.component.html",
     styleUrls: ["./flows-block-actions.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowsBlockActionsComponent extends BaseComponent {
     @Input({ required: true }) public flowProcess: DatasetFlowProcess;

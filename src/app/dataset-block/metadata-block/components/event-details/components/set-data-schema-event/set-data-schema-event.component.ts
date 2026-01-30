@@ -25,7 +25,7 @@ import { BlockRowDataComponent } from "../../../../../../common/components/block
         //-----//
         BlockRowDataComponent,
         DynamicTableComponent,
-    ]
+    ],
 })
 export class SetDataSchemaEventComponent extends BaseComponent {
     @Input({ required: true }) public event: SetDataSchema;

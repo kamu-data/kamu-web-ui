@@ -19,7 +19,7 @@ import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
         MarkdownModule,
         //-----//
         MarkdownFormatPipe,
-    ]
+    ],
 })
 export class YamlViewSectionComponent {
     @Input({ required: true }) public blockAsYaml: string;

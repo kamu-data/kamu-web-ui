@@ -46,7 +46,7 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
         //-----//
         DataAccessPanelComponent,
         FeatureFlagDirective,
-    ]
+    ],
 })
 export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;

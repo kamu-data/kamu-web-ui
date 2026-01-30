@@ -24,9 +24,9 @@ describe("MetadataTransformationTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [MetadataTransformationTabComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [MetadataTransformationTabComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
         fixture = TestBed.createComponent(MetadataTransformationTabComponent);
         component = fixture.componentInstance;
         component.datasetMetadataTabData = {

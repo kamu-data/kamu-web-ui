@@ -13,7 +13,7 @@ import { JsonPipe } from "@angular/common";
     selector: "app-unsupported-property",
     templateUrl: "./unsupported-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [JsonPipe]
+    imports: [JsonPipe],
 })
 export class UnsupportedPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: unknown;

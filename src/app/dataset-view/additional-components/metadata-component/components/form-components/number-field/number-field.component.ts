@@ -27,7 +27,7 @@ import { FormValidationErrorsDirective } from "src/app/common/directives/form-va
         //-----//
         TooltipIconComponent,
         FormValidationErrorsDirective,
-    ]
+    ],
 })
 export class NumberFieldComponent extends BaseField {
     @Input({ required: true }) public value: string;

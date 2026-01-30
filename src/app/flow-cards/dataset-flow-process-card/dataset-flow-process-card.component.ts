@@ -38,7 +38,7 @@ import { NgIf } from "@angular/common";
     ],
     templateUrl: "./dataset-flow-process-card.component.html",
     styleUrls: ["./dataset-flow-process-card.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetFlowProcessCardComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

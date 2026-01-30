@@ -31,41 +31,41 @@ describe("DatasetViewComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [DatasetViewComponent],
-    providers: [
-        Apollo,
-        provideToastr(),
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    queryParamMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "tab":
-                                    return null;
-                                case "page":
-                                    return "2";
-                            }
-                        },
-                    },
-                    paramMap: {
-                        get: (key: string) => {
-                            switch (key) {
-                                case "accountName":
-                                    return mockDatasetBasicsDerivedFragment.owner.accountName;
-                                case "datasetName":
-                                    return mockDatasetBasicsDerivedFragment.name;
-                            }
+            imports: [DatasetViewComponent],
+            providers: [
+                Apollo,
+                provideToastr(),
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        snapshot: {
+                            queryParamMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "tab":
+                                            return null;
+                                        case "page":
+                                            return "2";
+                                    }
+                                },
+                            },
+                            paramMap: {
+                                get: (key: string) => {
+                                    switch (key) {
+                                        case "accountName":
+                                            return mockDatasetBasicsDerivedFragment.owner.accountName;
+                                        case "datasetName":
+                                            return mockDatasetBasicsDerivedFragment.name;
+                                    }
+                                },
+                            },
                         },
                     },
                 },
-            },
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-})
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        })
             .overrideComponent(DatasetViewComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },
             })

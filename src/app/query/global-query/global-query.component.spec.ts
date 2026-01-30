@@ -28,9 +28,14 @@ describe("GlobalQueryComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [SharedTestModule, GlobalQueryComponent],
-    providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [SharedTestModule, GlobalQueryComponent],
+            providers: [
+                Apollo,
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        });
         fixture = TestBed.createComponent(GlobalQueryComponent);
         component = fixture.componentInstance;
         component.sqlQuery = SQL_QUERY;

@@ -42,7 +42,7 @@ import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/sl
         DatasetViewMenuComponent,
         EventDetailsComponent,
         YamlViewSectionComponent,
-    ]
+    ],
 })
 export class MetadataBlockComponent extends BaseDatasetDataComponent implements OnInit {
     @Input(ProjectLinks.URL_PARAM_BLOCK_HASH) public blockHash: string;

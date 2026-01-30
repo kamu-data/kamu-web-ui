@@ -12,7 +12,7 @@ import { TooltipIconComponent } from "../tooltip-icon/tooltip-icon.component";
     selector: "app-block-row-data",
     templateUrl: "./block-row-data.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TooltipIconComponent]
+    imports: [TooltipIconComponent],
 })
 export class BlockRowDataComponent {
     @Input({ required: true }) public label: string;

@@ -57,7 +57,7 @@ const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
         FormsModule,
         //-----//
         MonacoEditorModule,
-    ]
+    ],
 })
 export class SqlEditorComponent extends BaseEditorComponent implements OnInit, OnDestroy {
     public readonly EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = SQL_EDITOR_OPTIONS;

@@ -24,7 +24,7 @@ import { MatDividerModule } from "@angular/material/divider";
         FormsModule,
         //-----//
         MatDividerModule,
-    ]
+    ],
 })
 export class EditCollaboratorModalComponent implements OnInit {
     @Input({ required: true }) public collaborator: AccountWithRole;

@@ -51,7 +51,7 @@ import { EditorModule } from "src/app/editor/editor.module";
         PrepareStepComponent,
         PreprocessStepComponent,
         StepperNavigationComponent,
-    ]
+    ],
 })
 export class AddPollingSourceComponent extends BaseSourceEventComponent implements OnInit {
     @Input(RoutingResolvers.ADD_POLLING_SOURCE_KEY) public eventYamlByHash: string;

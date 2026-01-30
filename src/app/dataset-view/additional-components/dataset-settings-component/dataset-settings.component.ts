@@ -45,7 +45,7 @@ import { NgFor, NgIf } from "@angular/common";
         MatDividerModule,
         //-----//
         FeatureFlagDirective,
-    ]
+    ],
 })
 export class DatasetSettingsComponent extends BaseComponent {
     public readonly DATASET_SETTINGS_SIDE_PANEL_DATA: DatasetSettingsSidePanelItem[] = DATASET_SETTINGS_SIDE_PANEL_DATA;

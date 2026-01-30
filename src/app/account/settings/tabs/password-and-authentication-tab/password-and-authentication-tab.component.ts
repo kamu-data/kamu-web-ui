@@ -34,7 +34,7 @@ import { MatDividerModule } from "@angular/material/divider";
         //-----//
         AdminChangePasswordComponent,
         FormValidationErrorsDirective,
-    ]
+    ],
 })
 export class PasswordAndAuthenticationTabComponent implements OnInit {
     @Input(RoutingResolvers.ACCOUNT_SETTINGS_PASSWORD_AND_AUTHENTICATION_KEY) public account: AccountFragment;

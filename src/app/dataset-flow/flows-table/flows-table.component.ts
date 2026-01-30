@@ -76,7 +76,7 @@ import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
         MatDividerModule,
         //-----//
         SafeHtmlPipe,
-    ]
+    ],
 })
 export class FlowsTableComponent extends BaseComponent implements OnInit, OnChanges {
     @Input({ required: true }) public nodes: FlowSummaryDataWithTriggerFragment[];

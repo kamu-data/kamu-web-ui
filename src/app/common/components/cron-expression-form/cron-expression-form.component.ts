@@ -26,7 +26,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
         ReactiveFormsModule,
         //-----//
         FormValidationErrorsDirective,
-    ]
+    ],
 })
 export class CronExpressionFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public form: FormGroup<CronExpressionFormType>;

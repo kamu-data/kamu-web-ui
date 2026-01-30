@@ -40,7 +40,7 @@ import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/a
         MatIconModule,
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
-    ]
+    ],
 })
 export class EditWatermarkModalComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public currentWatermark: MaybeNullOrUndefined<string>;

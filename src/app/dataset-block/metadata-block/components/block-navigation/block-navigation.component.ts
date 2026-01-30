@@ -38,7 +38,7 @@ import ProjectLinks from "src/app/project-links";
         BlockHashFilterPipe,
         EventTypeFilterPipe,
         PaginationComponent,
-    ]
+    ],
 })
 export class BlockNavigationComponent {
     @Input({ required: true }) public datasetHistory: MaybeNull<DatasetHistoryUpdate>;

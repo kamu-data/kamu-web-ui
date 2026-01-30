@@ -21,7 +21,7 @@ import { CopyToClipboardComponent } from "../../../../common/components/copy-to-
         MatIconModule,
         //-----//
         CopyToClipboardComponent,
-    ]
+    ],
 })
 export class DataAccessRestTabComponent {
     @Input({ required: true }) public rest: RestProtocolDesc;

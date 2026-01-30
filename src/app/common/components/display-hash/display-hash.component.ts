@@ -25,7 +25,7 @@ import { NgIf, SlicePipe } from "@angular/common";
         SlicePipe,
         //-----//
         MatIconModule,
-    ]
+    ],
 })
 export class DisplayHashComponent {
     @Input({ required: true }) public value: string;

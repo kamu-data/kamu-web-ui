@@ -32,9 +32,9 @@ describe("SearchAndSchemasSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [SharedTestModule, SearchAndSchemasSectionComponent],
-    providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi())]
-});
+            imports: [SharedTestModule, SearchAndSchemasSectionComponent],
+            providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi())],
+        });
         fixture = TestBed.createComponent(SearchAndSchemasSectionComponent);
         component = fixture.componentInstance;
         sqlQueryService = TestBed.inject(SqlQueryService);

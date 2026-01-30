@@ -26,7 +26,7 @@ import { MaybeNull } from "src/app/interface/app.types";
         ReactiveFormsModule,
         //-----//
         MatCheckboxModule,
-    ]
+    ],
 })
 export class IngestConfigurationRuleFormComponent extends BaseComponent {
     @Input({ required: true }) public form: FormGroup<IngestConfigurationRuleFormType>;

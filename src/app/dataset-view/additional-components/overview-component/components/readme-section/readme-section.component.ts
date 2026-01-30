@@ -44,7 +44,7 @@ import { NgIf } from "@angular/common";
         //-----//
         MatIconModule,
         MarkdownModule,
-    ]
+    ],
 })
 export class ReadmeSectionComponent extends BaseComponent implements OnChanges, AfterViewChecked {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

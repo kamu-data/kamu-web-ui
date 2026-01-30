@@ -32,10 +32,12 @@ describe("FileUploadService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [SharedTestModule,
-        RouterTestingModule.withRoutes([{ path: "kamu/mockNameRoot", component: DatasetViewComponent }])],
-    providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [
+                SharedTestModule,
+                RouterTestingModule.withRoutes([{ path: "kamu/mockNameRoot", component: DatasetViewComponent }]),
+            ],
+            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
         service = TestBed.inject(FileUploadService);
         protocolsService = TestBed.inject(ProtocolsService);
         appConfigService = TestBed.inject(AppConfigService);

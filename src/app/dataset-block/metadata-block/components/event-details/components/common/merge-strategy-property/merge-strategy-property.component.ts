@@ -16,7 +16,7 @@ import { NgIf } from "@angular/common";
     templateUrl: "./merge-strategy-property.component.html",
     styleUrls: ["./merge-strategy-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf]
+    imports: [NgIf],
 })
 export class MergeStrategyPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

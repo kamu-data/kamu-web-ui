@@ -39,7 +39,7 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
     ],
     templateUrl: "./webhook-flow-process-card.component.html",
     styleUrls: ["./webhook-flow-process-card.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WebhookFlowProcessCardComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

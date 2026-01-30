@@ -30,7 +30,7 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
         //-----//
         TooltipIconComponent,
         InputFieldComponent,
-    ]
+    ],
 })
 export class JsonKindFieldComponent extends BaseField implements OnInit {
     @Input({ required: true }) public controlDescriptors: ReadFormatControlType[];

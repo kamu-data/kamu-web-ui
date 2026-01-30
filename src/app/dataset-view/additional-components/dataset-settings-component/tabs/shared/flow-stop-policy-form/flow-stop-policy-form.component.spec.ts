@@ -28,7 +28,7 @@ import { FlowTriggerStopPolicyType } from "../../../dataset-settings.model";
     template: `<app-flow-stop-policy-form
         [form]="hostForm.controls.stopPolicy"
         [updatesEnabledControl]="hostForm.controls.updatesEnabled"
-    />`
+    />`,
 })
 class TestFlowStopPolicyFormComponent {
     public readonly hostForm = new FormGroup({

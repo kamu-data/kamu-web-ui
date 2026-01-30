@@ -14,7 +14,7 @@ import { DatasetKind } from "src/app/api/kamu.graphql.interface";
     imports: [NgClass],
     templateUrl: "./dataset-kind.component.html",
     styleUrls: ["./dataset-kind.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatasetKindComponent {
     @Input({ required: true }) public kind: DatasetKind;

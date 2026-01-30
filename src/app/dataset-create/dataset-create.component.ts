@@ -45,7 +45,7 @@ import { LoginMethodsService } from "../auth/login-methods.service";
         FormValidationErrorsDirective,
         YamlEditorComponent,
         EditorModule,
-    ]
+    ],
 })
 export class DatasetCreateComponent extends BaseComponent {
     private cdr = inject(ChangeDetectorRef);

@@ -43,7 +43,7 @@ import { FlowProcessStatusListComponent } from "../common/flow-process-status-li
     ],
     templateUrl: "./recent-activity-filters-view.component.html",
     styleUrls: ["./recent-activity-filters-view.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecentActivityFiltersViewComponent implements OnInit {
     public ngOnInit(): void {

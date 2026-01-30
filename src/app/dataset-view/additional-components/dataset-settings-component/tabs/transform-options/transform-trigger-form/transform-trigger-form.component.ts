@@ -39,7 +39,7 @@ import { BufferingBatchingRuleFormType } from "../buffering-batching-rule-form/b
         //-----//
         TooltipIconComponent,
         BufferingBatchingRuleFormComponent,
-    ]
+    ],
 })
 export class TransformTriggerFormComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public form: FormGroup<TransformTriggerFormType>;

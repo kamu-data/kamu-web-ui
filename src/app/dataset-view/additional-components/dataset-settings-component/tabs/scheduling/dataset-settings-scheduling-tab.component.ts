@@ -43,7 +43,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
         IngestTriggerFormComponent,
         FlowStopPolicyFormComponent,
         TooltipIconComponent,
-    ]
+    ],
 })
 export class DatasetSettingsSchedulingTabComponent extends BaseComponent implements AfterViewInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_SCHEDULING_KEY)

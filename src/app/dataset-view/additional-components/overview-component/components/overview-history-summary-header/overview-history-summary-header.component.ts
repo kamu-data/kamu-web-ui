@@ -32,7 +32,7 @@ import { NgIf } from "@angular/common";
         //-----//
         DisplayHashComponent,
         DisplayTimeComponent,
-    ]
+    ],
 })
 export class OverviewHistorySummaryHeaderComponent {
     @Input({ required: true }) public metadataBlockFragment: MaybeUndefined<MetadataBlockFragment>;

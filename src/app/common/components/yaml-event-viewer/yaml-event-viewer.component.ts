@@ -13,7 +13,7 @@ import { HighlightModule } from "ngx-highlightjs";
     selector: "app-yaml-event-viewer",
     templateUrl: "./yaml-event-viewer.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [HighlightModule]
+    imports: [HighlightModule],
 })
 export class YamlEventViewerComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

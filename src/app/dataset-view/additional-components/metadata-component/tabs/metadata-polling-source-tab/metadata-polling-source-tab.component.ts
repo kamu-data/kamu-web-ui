@@ -51,7 +51,7 @@ import { TopicsPropertyComponent } from "src/app/dataset-block/metadata-block/co
     ],
     templateUrl: "./metadata-polling-source-tab.component.html",
     styleUrls: ["./metadata-polling-source-tab.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataPollingSourceTabComponent {
     @Input(RoutingResolvers.METADATA_POLLING_SOURCE_TAB_KEY) public datasetMetadataTabData: MetadataTabData;

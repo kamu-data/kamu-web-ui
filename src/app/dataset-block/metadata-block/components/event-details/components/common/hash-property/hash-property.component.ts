@@ -19,7 +19,7 @@ import { NgIf } from "@angular/common";
         NgIf,
         //-----//
         DisplayHashComponent,
-    ]
+    ],
 })
 export class HashPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

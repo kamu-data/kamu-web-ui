@@ -42,7 +42,7 @@ import { DatasetKindComponent } from "../../dataset-kind/dataset-kind.component"
         DatasetKindComponent,
         DisplayTimeComponent,
         FeatureFlagDirective,
-    ]
+    ],
 })
 export class DatasetListItemComponent {
     @Input({ required: true }) public row: DatasetSearchOverviewFragment;

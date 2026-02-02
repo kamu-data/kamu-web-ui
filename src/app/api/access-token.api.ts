@@ -6,7 +6,8 @@
  */
 
 import { inject, Injectable } from "@angular/core";
-import { EMPTY, Observable, catchError, first, map } from "rxjs";
+import { Observable, first, map } from "rxjs";
+import { onlyCompleteData } from "apollo-angular";
 import {
     CreateAccessTokenGQL,
     CreateAccessTokenMutation,
@@ -37,6 +38,7 @@ export class AccessTokenApi {
                 ...noCacheFetchPolicy,
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<ListAccessTokensQuery>) => {
                     return result.data as ListAccessTokensQuery;
@@ -50,7 +52,6 @@ export class AccessTokenApi {
             map((result: ApolloLink.Result<CreateAccessTokenMutation>) => {
                 return result.data as CreateAccessTokenMutation;
             }),
-            catchError(() => EMPTY),
         );
     }
 
@@ -60,7 +61,6 @@ export class AccessTokenApi {
             map((result: ApolloLink.Result<RevokeAccessTokenMutation>) => {
                 return result.data as RevokeAccessTokenMutation;
             }),
-            catchError(() => EMPTY),
         );
     }
 }

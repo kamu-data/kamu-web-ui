@@ -7,7 +7,8 @@
 
 import { inject, Injectable } from "@angular/core";
 import { catchError, first, map } from "rxjs/operators";
-import { EMPTY, Observable, of } from "rxjs";
+import { onlyCompleteData } from "apollo-angular";
+import { Observable, of } from "rxjs";
 import {
     AccountFragment,
     AccountProvider,
@@ -39,6 +40,7 @@ export class AuthApi {
 
     public readEnabledLoginMethods(): Observable<AccountProvider[]> {
         return this.getEnabledLoginMethodsGQL.watch().valueChanges.pipe(
+            onlyCompleteData(),
             first(),
             map((result: ObservableQuery.Result<GetEnabledLoginMethodsQuery>) => {
                 return result.data?.auth?.enabledProviders ?? [];
@@ -107,7 +109,6 @@ export class AuthApi {
                 map((result: ApolloLink.Result<LoginMutation>) => {
                     return result.data?.auth.login as LoginResponseType;
                 }),
-                catchError(() => EMPTY),
             );
     }
 
@@ -116,7 +117,6 @@ export class AuthApi {
             map((result: ApolloLink.Result<FetchAccountDetailsMutation>) => {
                 return result.data?.auth.accountDetails as AccountFragment;
             }),
-            catchError(() => EMPTY),
         );
     }
 
@@ -125,7 +125,6 @@ export class AuthApi {
             map((result: ApolloLink.Result<LoginWeb3WalletMutation>) => {
                 return result.data?.auth.web3.eip4361AuthNonce.value as string;
             }),
-            catchError(() => EMPTY),
         );
     }
 }

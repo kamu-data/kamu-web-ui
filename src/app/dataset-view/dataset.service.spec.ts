@@ -28,6 +28,7 @@ import {
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
 import { of } from "rxjs";
+import { ApolloLink, InMemoryCache } from "@apollo/client/core";
 import { DatasetNotFoundError, SqlExecutionError } from "../common/values/errors";
 import { DatasetHistoryUpdate, LineageUpdate, OverviewUpdate } from "./dataset.subscriptions.interface";
 import { first } from "rxjs/operators";
@@ -57,9 +58,8 @@ describe("AppDatasetService", () => {
                     provide: APOLLO_OPTIONS,
                     useFactory: () => {
                         return {
-                            cache: {
-                                evict: () => null,
-                            },
+                            cache: new InMemoryCache(),
+                            link: new ApolloLink(() => of({ data: {} })),
                         };
                     },
                 },

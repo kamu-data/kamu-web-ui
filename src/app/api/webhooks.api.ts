@@ -32,6 +32,7 @@ import { first, map, Observable } from "rxjs";
 import { ApolloLink, ObservableQuery } from "@apollo/client/core";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 import { DatasetWebhookRotateSecretMutation } from "./kamu.graphql.interface";
+import { onlyCompleteData } from "apollo-angular";
 
 @Injectable({ providedIn: "root" })
 export class WebhooksApi {
@@ -48,6 +49,7 @@ export class WebhooksApi {
 
     public webhookEventTypes(): Observable<WebhookEventTypesQuery> {
         return this.webhookEventTypesGQL.watch().valueChanges.pipe(
+            onlyCompleteData(),
             first(),
             map((result: ObservableQuery.Result<WebhookEventTypesQuery>) => {
                 return result.data as WebhookEventTypesQuery;
@@ -57,6 +59,7 @@ export class WebhooksApi {
 
     public datasetWebhookSubscriptions(datasetId: string): Observable<DatasetWebhookSubscriptionsQuery> {
         return this.datasetWebhookSubscriptionsGQL.watch({ variables: { datasetId }, ...noCacheFetchPolicy }).valueChanges.pipe(
+            onlyCompleteData(),
             first(),
             map((result: ObservableQuery.Result<DatasetWebhookSubscriptionsQuery>) => {
                 return result.data as DatasetWebhookSubscriptionsQuery;
@@ -151,6 +154,7 @@ export class WebhooksApi {
         id: string;
     }): Observable<DatasetWebhookByIdQuery> {
         return this.datasetWebhookSubscriptionByIdGQL.watch({ variables: { ...params }, ...noCacheFetchPolicy }).valueChanges.pipe(
+            onlyCompleteData(),
             first(),
             map((result: ObservableQuery.Result<DatasetWebhookByIdQuery>) => {
                 return result.data as DatasetWebhookByIdQuery;

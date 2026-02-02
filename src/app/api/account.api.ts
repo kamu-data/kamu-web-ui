@@ -7,6 +7,7 @@
 
 import { EMPTY, Observable, catchError, first, map } from "rxjs";
 import { inject, Injectable } from "@angular/core";
+import { onlyCompleteData } from "apollo-angular";
 import {
     AccountByNameGQL,
     AccountByNameQuery,
@@ -118,6 +119,7 @@ export class AccountApi {
                 ...noCacheFetchPolicy,
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<AccountWithEmailQuery>) => {
                     return result.data as AccountWithEmailQuery;
@@ -133,6 +135,7 @@ export class AccountApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<AccountByNameQuery>) => {
                     return (result.data?.accounts?.byName ?? null) as MaybeNull<AccountFragment>;
@@ -162,6 +165,7 @@ export class AccountApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<AccountListFlowsQuery>) => {
                     return result.data as AccountListFlowsQuery;
@@ -191,6 +195,7 @@ export class AccountApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<AccountFlowsAsCardsQuery>) => {
                     return result.data as AccountFlowsAsCardsQuery;
@@ -208,6 +213,7 @@ export class AccountApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 map((result: ObservableQuery.Result<AccountListDatasetsWithFlowsQuery>) => {
                     return result.data as AccountListDatasetsWithFlowsQuery;
                 }),
@@ -216,6 +222,7 @@ export class AccountApi {
 
     public accountFlowsPaused(accountName: string): Observable<AccountDatasetFlowsPausedQuery> {
         return this.accountDatasetFlowsPausedGql.watch({ variables: { accountName }, ...noCacheFetchPolicy }).valueChanges.pipe(
+            onlyCompleteData(),
             map((result: ObservableQuery.Result<AccountDatasetFlowsPausedQuery>) => {
                 return result.data as AccountDatasetFlowsPausedQuery;
             }),

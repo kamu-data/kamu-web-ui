@@ -22,6 +22,7 @@ import {
 } from "./kamu.graphql.interface";
 import { first, map, Observable } from "rxjs";
 import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { onlyCompleteData } from "apollo-angular";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 
 @Injectable({ providedIn: "root" })
@@ -38,6 +39,7 @@ export class DatasetCollaborationApi {
         perPage?: number;
     }): Observable<DatasetListCollaboratorsQuery> {
         return this.datasetListCollaboratorsGQL.watch({ variables: params, ...noCacheFetchPolicy }).valueChanges.pipe(
+            onlyCompleteData(),
             first(),
 
             map((result: ObservableQuery.Result<DatasetListCollaboratorsQuery>) => {
@@ -53,6 +55,7 @@ export class DatasetCollaborationApi {
         perPage: number;
     }): Observable<SearchCollaboratorQuery> {
         return this.searchCollaboratorGQL.watch({ variables: params, ...noCacheFetchPolicy }).valueChanges.pipe(
+            onlyCompleteData(),
             first(),
             map((result: ObservableQuery.Result<SearchCollaboratorQuery>) => {
                 return result.data as SearchCollaboratorQuery;
@@ -87,6 +90,7 @@ export class DatasetCollaborationApi {
 
     public getDatasetUserRole(datasetId: string): Observable<DatasetUserRoleQuery> {
         return this.datasetUserRoleGQL.watch({ variables: { datasetId }, ...noCacheFetchPolicy }).valueChanges.pipe(
+            onlyCompleteData(),
             first(),
             map((result: ObservableQuery.Result<DatasetUserRoleQuery>) => {
                 return result.data as DatasetUserRoleQuery;

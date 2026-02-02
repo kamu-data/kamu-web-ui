@@ -10,6 +10,7 @@ import { Observable, first, map } from "rxjs";
 import { DatasetProtocolsGQL, DatasetProtocolsQuery } from "./kamu.graphql.interface";
 import { DatasetInfo } from "../interface/navigation.interface";
 import { ObservableQuery } from "@apollo/client/core";
+import { onlyCompleteData } from "apollo-angular";
 
 @Injectable({
     providedIn: "root",
@@ -19,6 +20,7 @@ export class ProtocolsApi {
 
     public getProtocols(datasetInfo: DatasetInfo): Observable<DatasetProtocolsQuery> {
         return this.protocolsGQL.watch({ variables: { ...datasetInfo } }).valueChanges.pipe(
+            onlyCompleteData(),
             first(),
             map((result: ObservableQuery.Result<DatasetProtocolsQuery>) => {
                 return result.data as DatasetProtocolsQuery;

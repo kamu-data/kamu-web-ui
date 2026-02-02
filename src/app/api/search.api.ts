@@ -10,6 +10,7 @@ import { inject, Injectable } from "@angular/core";
 
 import { map, first, catchError } from "rxjs/operators";
 import { EMPTY, Observable, of } from "rxjs";
+import { onlyCompleteData } from "apollo-angular";
 import { DatasetAutocompleteItem, TypeNames } from "../interface/search.interface";
 
 import {
@@ -49,6 +50,7 @@ export class SearchApi {
                 errorPolicy: "all",
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<SearchDatasetsOverviewQuery>) => {
                     return result.data as SearchDatasetsOverviewQuery;
@@ -71,6 +73,7 @@ export class SearchApi {
                 errorPolicy: "all",
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<SemanticSearchDatasetsOverviewQuery>) => {
                     return result.data as SemanticSearchDatasetsOverviewQuery;
@@ -89,6 +92,7 @@ export class SearchApi {
         return this.searchDatasetsAutocompleteGQL
             .watch({ variables: { query: id, perPage }, context: { skipLoading: true } })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<SearchDatasetsAutocompleteQuery>) => {
                     const nodesList: DatasetAutocompleteItem[] = (result.data?.search?.query?.nodes ?? []).map((node) => ({

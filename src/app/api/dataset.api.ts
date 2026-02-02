@@ -67,6 +67,7 @@ import { ApolloLink, ObservableQuery } from "@apollo/client/core";
 import { inject, Injectable } from "@angular/core";
 import { map, first } from "rxjs/operators";
 import { Observable } from "rxjs";
+import { onlyCompleteData } from "apollo-angular";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { StoreObject } from "@apollo/client/cache";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
@@ -114,6 +115,7 @@ export class DatasetApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<DatasetBlocksByEventTypeQuery>) => {
                     return result.data as DatasetBlocksByEventTypeQuery;
@@ -137,6 +139,7 @@ export class DatasetApi {
                 errorPolicy: "all",
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<GetDatasetMainDataQuery>) => {
                     return result.data as GetDatasetMainDataQuery;
@@ -154,6 +157,7 @@ export class DatasetApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<GetDatasetDataSqlRunQuery>) => {
                     return result.data as GetDatasetDataSqlRunQuery;
@@ -173,6 +177,7 @@ export class DatasetApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<GetDatasetBasicsWithPermissionsQuery>) => {
                     return result.data as GetDatasetBasicsWithPermissionsQuery;
@@ -196,6 +201,7 @@ export class DatasetApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<GetDatasetHistoryQuery>) => {
                     return result.data as GetDatasetHistoryQuery;
@@ -212,6 +218,7 @@ export class DatasetApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<GetDatasetLineageQuery>) => {
                     return result.data as GetDatasetLineageQuery;
@@ -227,6 +234,7 @@ export class DatasetApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<GetDatasetSchemaQuery>) => {
                     return result.data as GetDatasetSchemaQuery;
@@ -242,6 +250,7 @@ export class DatasetApi {
         return this.datasetsByAccountNameGQL
             .watch({ variables: { accountName, perPage, page }, ...noCacheFetchPolicy })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<DatasetsByAccountNameQuery>) => {
                     return result.data as DatasetsByAccountNameQuery;
@@ -251,6 +260,7 @@ export class DatasetApi {
 
     public fetchDatasetsTotalCountByAccountName(accountName: string): Observable<DatasetsTotalCountByAccountNameQuery> {
         return this.datasetsTotalCountByAccountNameGQL.watch({ variables: { accountName }, ...noCacheFetchPolicy }).valueChanges.pipe(
+            onlyCompleteData(),
             first(),
             map((result: ObservableQuery.Result<DatasetsTotalCountByAccountNameQuery>) => {
                 return result.data as DatasetsTotalCountByAccountNameQuery;
@@ -272,6 +282,7 @@ export class DatasetApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<GetMetadataBlockQuery>) => {
                     return result.data as GetMetadataBlockQuery;
@@ -287,6 +298,7 @@ export class DatasetApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<DatasetByIdQuery>) => {
                     return result.data as DatasetByIdQuery;
@@ -306,6 +318,7 @@ export class DatasetApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<DatasetSystemTimeBlockByHashQuery>) => {
                     return result.data as DatasetSystemTimeBlockByHashQuery;
@@ -325,6 +338,7 @@ export class DatasetApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<DatasetByAccountAndDatasetNameQuery>) => {
                     return result.data as DatasetByAccountAndDatasetNameQuery;
@@ -506,6 +520,7 @@ export class DatasetApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<DatasetHeadBlockHashQuery>) => {
                     return result.data as DatasetHeadBlockHashQuery;
@@ -523,6 +538,7 @@ export class DatasetApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<DatasetPushSyncStatusesQuery>) => {
                     return result.data as DatasetPushSyncStatusesQuery;
@@ -540,6 +556,7 @@ export class DatasetApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<DatasetListDownstreamsQuery>) => {
                     return result.data as DatasetListDownstreamsQuery;

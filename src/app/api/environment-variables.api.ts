@@ -19,6 +19,7 @@ import {
 import { inject, Injectable } from "@angular/core";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { onlyCompleteData } from "apollo-angular";
 import { updateCacheHelper } from "../common/helpers/apollo-cache.helper";
 
 @Injectable({
@@ -37,6 +38,7 @@ export class EnvironmentVariablesApi {
         perPage: number;
     }): Observable<ListEnvVariablesQuery> {
         return this.listEnvVariablesGQL.watch({ variables: { ...params }, ...noCacheFetchPolicy }).valueChanges.pipe(
+            onlyCompleteData(),
             first(),
             map((result: ObservableQuery.Result<ListEnvVariablesQuery>) => {
                 return result.data as ListEnvVariablesQuery;
@@ -100,6 +102,7 @@ export class EnvironmentVariablesApi {
         datasetEnvVarId: string;
     }): Observable<ExposedEnvVariableValueQuery> {
         return this.exposedEnvVariableValueGQL.watch({ variables: { ...params }, ...noCacheFetchPolicy }).valueChanges.pipe(
+            onlyCompleteData(),
             first(),
             map((result: ObservableQuery.Result<ExposedEnvVariableValueQuery>) => {
                 return result.data as ExposedEnvVariableValueQuery;

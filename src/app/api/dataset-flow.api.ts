@@ -55,6 +55,7 @@ import {
 } from "./kamu.graphql.interface";
 import { Observable, first, map } from "rxjs";
 import { ObservableQuery } from "@apollo/client/core";
+import { onlyCompleteData } from "apollo-angular";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 import { MaybeNull } from "../interface/app.types";
 
@@ -93,6 +94,7 @@ export class DatasetFlowApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 map((result: ObservableQuery.Result<DatasetFlowsProcessesQuery>) => {
                     return result.data as DatasetFlowsProcessesQuery;
                 }),
@@ -162,6 +164,7 @@ export class DatasetFlowApi {
         return this.getDatasetFlowConfigsGQL
             .watch({ variables: { datasetId: params.datasetId, datasetFlowType: params.datasetFlowType }, ...noCacheFetchPolicy })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 map((result: ObservableQuery.Result<GetDatasetFlowConfigsQuery>) => {
                     return result.data as GetDatasetFlowConfigsQuery;
                 }),
@@ -247,6 +250,7 @@ export class DatasetFlowApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 map((result: ObservableQuery.Result<GetDatasetFlowTriggerQuery>) => {
                     return result.data as GetDatasetFlowTriggerQuery;
                 }),
@@ -275,6 +279,7 @@ export class DatasetFlowApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 map((result: ObservableQuery.Result<GetDatasetListFlowsQuery>) => {
                     return result.data as GetDatasetListFlowsQuery;
                 }),
@@ -315,6 +320,7 @@ export class DatasetFlowApi {
         return this.datasetFlowByIdGQL
             .watch({ variables: { datasetId: params.datasetId, flowId: params.flowId }, ...noCacheFetchPolicy })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 map((result: ObservableQuery.Result<GetFlowByIdQuery>) => {
                     return result.data as GetFlowByIdQuery;
                 }),
@@ -347,6 +353,7 @@ export class DatasetFlowApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 map((result: ObservableQuery.Result<DatasetFlowsInitiatorsQuery>) => {
                     return result.data as DatasetFlowsInitiatorsQuery;
                 }),

@@ -68,10 +68,7 @@ export const updateCacheHelper = (
     });
 };
 
-export const resetCacheHelper = (
-    cache: ApolloCache,
-    params: { accountId: string; datasetId: string },
-): void => {
+export const resetCacheHelper = (cache: ApolloCache, params: { accountId: string; datasetId: string }): void => {
     const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
         cache.identify(DatasetApi.generateAccountKeyFragment(params.accountId)),
         params.datasetId,

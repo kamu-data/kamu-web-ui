@@ -64,12 +64,14 @@ export class AccountApi {
         accountName: string;
         newName: string;
     }): Observable<ChangeAccountUsernameMutation> {
-        return this.changeAccountUsernameGQL.mutate({ variables: { accountName: params.accountName, newName: params.newName } }).pipe(
-            first(),
-            map((result: ApolloLink.Result<ChangeAccountUsernameMutation>) => {
-                return result.data as ChangeAccountUsernameMutation;
-            }),
-        );
+        return this.changeAccountUsernameGQL
+            .mutate({ variables: { accountName: params.accountName, newName: params.newName } })
+            .pipe(
+                first(),
+                map((result: ApolloLink.Result<ChangeAccountUsernameMutation>) => {
+                    return result.data as ChangeAccountUsernameMutation;
+                }),
+            );
     }
 
     public changeAccountEmail(params: {
@@ -221,12 +223,14 @@ export class AccountApi {
     }
 
     public accountFlowsPaused(accountName: string): Observable<AccountDatasetFlowsPausedQuery> {
-        return this.accountDatasetFlowsPausedGql.watch({ variables: { accountName }, ...noCacheFetchPolicy }).valueChanges.pipe(
-            onlyCompleteData(),
-            map((result: ObservableQuery.Result<AccountDatasetFlowsPausedQuery>) => {
-                return result.data as AccountDatasetFlowsPausedQuery;
-            }),
-        );
+        return this.accountDatasetFlowsPausedGql
+            .watch({ variables: { accountName }, ...noCacheFetchPolicy })
+            .valueChanges.pipe(
+                onlyCompleteData(),
+                map((result: ObservableQuery.Result<AccountDatasetFlowsPausedQuery>) => {
+                    return result.data as AccountDatasetFlowsPausedQuery;
+                }),
+            );
     }
 
     public accountPauseFlows(accountName: string): Observable<AccountPauseFlowsMutation> {

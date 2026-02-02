@@ -162,7 +162,10 @@ export class DatasetFlowApi {
         datasetFlowType: DatasetFlowType;
     }): Observable<GetDatasetFlowConfigsQuery> {
         return this.getDatasetFlowConfigsGQL
-            .watch({ variables: { datasetId: params.datasetId, datasetFlowType: params.datasetFlowType }, ...noCacheFetchPolicy })
+            .watch({
+                variables: { datasetId: params.datasetId, datasetFlowType: params.datasetFlowType },
+                ...noCacheFetchPolicy,
+            })
             .valueChanges.pipe(
                 onlyCompleteData(),
                 map((result: ObservableQuery.Result<GetDatasetFlowConfigsQuery>) => {

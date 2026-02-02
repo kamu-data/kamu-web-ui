@@ -55,7 +55,12 @@ export class EnvironmentVariablesApi {
     }): Observable<UpsertEnvVariableMutation> {
         return this.upsertEnvVariableGQL
             .mutate({
-                variables: { datasetId: params.datasetId, key: params.key, value: params.value, isSecret: params.isSecret },
+                variables: {
+                    datasetId: params.datasetId,
+                    key: params.key,
+                    value: params.value,
+                    isSecret: params.isSecret,
+                },
                 update: (cache) => {
                     updateCacheHelper(cache, {
                         accountId: params.accountId,
@@ -101,12 +106,14 @@ export class EnvironmentVariablesApi {
         datasetName: string;
         datasetEnvVarId: string;
     }): Observable<ExposedEnvVariableValueQuery> {
-        return this.exposedEnvVariableValueGQL.watch({ variables: { ...params }, ...noCacheFetchPolicy }).valueChanges.pipe(
-            onlyCompleteData(),
-            first(),
-            map((result: ObservableQuery.Result<ExposedEnvVariableValueQuery>) => {
-                return result.data as ExposedEnvVariableValueQuery;
-            }),
-        );
+        return this.exposedEnvVariableValueGQL
+            .watch({ variables: { ...params }, ...noCacheFetchPolicy })
+            .valueChanges.pipe(
+                onlyCompleteData(),
+                first(),
+                map((result: ObservableQuery.Result<ExposedEnvVariableValueQuery>) => {
+                    return result.data as ExposedEnvVariableValueQuery;
+                }),
+            );
     }
 }

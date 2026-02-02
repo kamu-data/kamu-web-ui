@@ -95,11 +95,13 @@ export class SearchApi {
                 onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<SearchDatasetsAutocompleteQuery>) => {
-                    const nodesList: DatasetAutocompleteItem[] = (result.data?.search?.query?.nodes ?? []).map((node) => ({
-                        dataset: node as DatasetBasicsFragment,
-                        dummy: false,
-                        __typename: node.__typename as TypeNames,
-                    }));
+                    const nodesList: DatasetAutocompleteItem[] = (result.data?.search?.query?.nodes ?? []).map(
+                        (node) => ({
+                            dataset: node as DatasetBasicsFragment,
+                            dummy: false,
+                            __typename: node.__typename as TypeNames,
+                        }),
+                    );
                     // Add dummy result that opens search view
                     nodesList.unshift({
                         __typename: TypeNames.allDataType,

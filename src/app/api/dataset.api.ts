@@ -259,13 +259,15 @@ export class DatasetApi {
     }
 
     public fetchDatasetsTotalCountByAccountName(accountName: string): Observable<DatasetsTotalCountByAccountNameQuery> {
-        return this.datasetsTotalCountByAccountNameGQL.watch({ variables: { accountName }, ...noCacheFetchPolicy }).valueChanges.pipe(
-            onlyCompleteData(),
-            first(),
-            map((result: ObservableQuery.Result<DatasetsTotalCountByAccountNameQuery>) => {
-                return result.data as DatasetsTotalCountByAccountNameQuery;
-            }),
-        );
+        return this.datasetsTotalCountByAccountNameGQL
+            .watch({ variables: { accountName }, ...noCacheFetchPolicy })
+            .valueChanges.pipe(
+                onlyCompleteData(),
+                first(),
+                map((result: ObservableQuery.Result<DatasetsTotalCountByAccountNameQuery>) => {
+                    return result.data as DatasetsTotalCountByAccountNameQuery;
+                }),
+            );
     }
 
     public getBlockByHash(params: {

@@ -58,13 +58,15 @@ export class WebhooksApi {
     }
 
     public datasetWebhookSubscriptions(datasetId: string): Observable<DatasetWebhookSubscriptionsQuery> {
-        return this.datasetWebhookSubscriptionsGQL.watch({ variables: { datasetId }, ...noCacheFetchPolicy }).valueChanges.pipe(
-            onlyCompleteData(),
-            first(),
-            map((result: ObservableQuery.Result<DatasetWebhookSubscriptionsQuery>) => {
-                return result.data as DatasetWebhookSubscriptionsQuery;
-            }),
-        );
+        return this.datasetWebhookSubscriptionsGQL
+            .watch({ variables: { datasetId }, ...noCacheFetchPolicy })
+            .valueChanges.pipe(
+                onlyCompleteData(),
+                first(),
+                map((result: ObservableQuery.Result<DatasetWebhookSubscriptionsQuery>) => {
+                    return result.data as DatasetWebhookSubscriptionsQuery;
+                }),
+            );
     }
 
     public datasetWebhookCreateSubscription(
@@ -153,12 +155,14 @@ export class WebhooksApi {
         datasetId: string;
         id: string;
     }): Observable<DatasetWebhookByIdQuery> {
-        return this.datasetWebhookSubscriptionByIdGQL.watch({ variables: { ...params }, ...noCacheFetchPolicy }).valueChanges.pipe(
-            onlyCompleteData(),
-            first(),
-            map((result: ObservableQuery.Result<DatasetWebhookByIdQuery>) => {
-                return result.data as DatasetWebhookByIdQuery;
-            }),
-        );
+        return this.datasetWebhookSubscriptionByIdGQL
+            .watch({ variables: { ...params }, ...noCacheFetchPolicy })
+            .valueChanges.pipe(
+                onlyCompleteData(),
+                first(),
+                map((result: ObservableQuery.Result<DatasetWebhookByIdQuery>) => {
+                    return result.data as DatasetWebhookByIdQuery;
+                }),
+            );
     }
 }

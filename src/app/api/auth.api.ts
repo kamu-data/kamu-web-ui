@@ -94,9 +94,7 @@ export class AuthApi {
                 variables: { login_method: loginMethod, login_credentials_json: loginCredentialsJson, deviceCode },
                 update: (cache) => {
                     const cacheMap = cache.extract() as object[];
-                    const datasetCachedKeys = Object.keys(cacheMap).filter((item: string) =>
-                        item.includes("Dataset:"),
-                    );
+                    const datasetCachedKeys = Object.keys(cacheMap).filter((item: string) => item.includes("Dataset:"));
                     datasetCachedKeys.forEach((key) => {
                         cache.evict({
                             id: key,

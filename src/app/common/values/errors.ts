@@ -114,13 +114,9 @@ export class KamuErrorHandler implements KamuErrorVisitor {
     }
 
     public visitApolloError(_e: CombinedGraphQLErrors): void {
-        this.toastrService.error(
-            "",
-            ErrorTexts.ERROR_TECHNICAL_SUPPORT,
-            {
-                disableTimeOut: "timeOut",
-            },
-        );
+        this.toastrService.error("", ErrorTexts.ERROR_TECHNICAL_SUPPORT, {
+            disableTimeOut: "timeOut",
+        });
     }
 
     public visitDatasetNotFoundError(): void {

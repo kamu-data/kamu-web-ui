@@ -19,6 +19,7 @@ import { apolloCache } from "./app/common/helpers/apollo-cache.helper";
 import { ErrorTexts } from "./app/common/values/errors.text";
 import { ToastrService } from "ngx-toastr";
 import { onError } from "@apollo/client/link/error";
+import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import { ApolloLink } from "@apollo/client/core";
 import { LocalStorageService } from "./app/services/local-storage.service";
 import { AppConfigService } from "./app/app-config.service";
@@ -132,27 +133,32 @@ bootstrapApplication(AppComponent, {
             });
 
             // 2. Error Middleware
-            const errorMiddleware = onError(({ graphQLErrors, networkError }) => {
+            const errorMiddleware = onError((errorOptions) => {
+                const { error } = errorOptions;
                 const toastrService = injector.get(ToastrService);
 
-                if (graphQLErrors) {
-                    const firstMsg = graphQLErrors[0].message;
-                    if (firstMsg === ErrorTexts.ERROR_ACCOUNT_IS_NOT_WHITELISTED) {
-                        navigationService.navigateToPath(ProjectLinks.URL_ACCOUNT_WHITELIST_PAGE_NOT_FOUND);
-                    } else if (firstMsg === ErrorTexts.ERROR_ACCESS_TOKEN) {
-                        const token = localStorageService.accessToken;
-                        if (token) {
-                            toastrService.error(
-                                isAccessTokenExpired(token) ? ErrorTexts.ERROR_ACCESS_TOKEN_EXPIRED : firstMsg,
-                            );
-                            navigationService.navigateToLogin(window.location.pathname);
+                // Check if it's a GraphQL error (errors from the GraphQL server)
+                if (CombinedGraphQLErrors.is(error)) {
+                    const graphQLErrors = error.errors;
+                    if (graphQLErrors && graphQLErrors.length > 0) {
+                        const firstMsg = graphQLErrors[0].message;
+                        if (firstMsg === ErrorTexts.ERROR_ACCOUNT_IS_NOT_WHITELISTED) {
+                            navigationService.navigateToPath(ProjectLinks.URL_ACCOUNT_WHITELIST_PAGE_NOT_FOUND);
+                        } else if (firstMsg === ErrorTexts.ERROR_ACCESS_TOKEN) {
+                            const token = localStorageService.accessToken;
+                            if (token) {
+                                toastrService.error(
+                                    isAccessTokenExpired(token) ? ErrorTexts.ERROR_ACCESS_TOKEN_EXPIRED : firstMsg,
+                                );
+                                navigationService.navigateToLogin(window.location.pathname);
+                            }
+                        } else {
+                            graphQLErrors.forEach((err) => toastrService.error(err.message));
                         }
-                    } else {
-                        graphQLErrors.forEach(({ message }) => toastrService.error(message));
                     }
-                }
-
-                if (networkError) {
+                } else if (error) {
+                    // Network error (e.g., connection failed, timeout, etc.)
+                    logError(error);
                     toastrService.error(ErrorTexts.ERROR_NETWORK_DESCRIPTION, "", { disableTimeOut: true });
                 }
             });

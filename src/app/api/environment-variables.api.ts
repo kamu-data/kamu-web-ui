@@ -18,8 +18,7 @@ import {
 } from "./kamu.graphql.interface";
 import { inject, Injectable } from "@angular/core";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
-import { ApolloQueryResult } from "@apollo/client";
-import { MutationResult } from "apollo-angular";
+import { ApolloLink, ObservableQuery } from "@apollo/client/core";
 import { updateCacheHelper } from "../common/helpers/apollo-cache.helper";
 
 @Injectable({
@@ -37,10 +36,10 @@ export class EnvironmentVariablesApi {
         page: number;
         perPage: number;
     }): Observable<ListEnvVariablesQuery> {
-        return this.listEnvVariablesGQL.watch({ ...params }, noCacheFetchPolicy).valueChanges.pipe(
+        return this.listEnvVariablesGQL.watch({ variables: { ...params }, ...noCacheFetchPolicy }).valueChanges.pipe(
             first(),
-            map((result: ApolloQueryResult<ListEnvVariablesQuery>) => {
-                return result.data;
+            map((result: ObservableQuery.Result<ListEnvVariablesQuery>) => {
+                return result.data as ListEnvVariablesQuery;
             }),
         );
     }
@@ -53,21 +52,19 @@ export class EnvironmentVariablesApi {
         isSecret: boolean;
     }): Observable<UpsertEnvVariableMutation> {
         return this.upsertEnvVariableGQL
-            .mutate(
-                { datasetId: params.datasetId, key: params.key, value: params.value, isSecret: params.isSecret },
-                {
-                    update: (cache) => {
-                        updateCacheHelper(cache, {
-                            accountId: params.accountId,
-                            datasetId: params.datasetId,
-                            fieldNames: ["envVars"],
-                        });
-                    },
+            .mutate({
+                variables: { datasetId: params.datasetId, key: params.key, value: params.value, isSecret: params.isSecret },
+                update: (cache) => {
+                    updateCacheHelper(cache, {
+                        accountId: params.accountId,
+                        datasetId: params.datasetId,
+                        fieldNames: ["envVars"],
+                    });
                 },
-            )
+            })
             .pipe(
                 first(),
-                map((result: MutationResult<UpsertEnvVariableMutation>) => {
+                map((result: ApolloLink.Result<UpsertEnvVariableMutation>) => {
                     return result.data as UpsertEnvVariableMutation;
                 }),
             );
@@ -79,21 +76,19 @@ export class EnvironmentVariablesApi {
         datasetEnvVarId: string;
     }): Observable<DeleteEnvVariableMutation> {
         return this.deleteEnvVariableGQL
-            .mutate(
-                { ...params },
-                {
-                    update: (cache, { data }) => {
-                        const id = cache.identify({
-                            __typename: "ViewDatasetEnvVar",
-                            id: (data as DeleteEnvVariableMutation).datasets.byId?.envVars.deleteEnvVariable.envVarId,
-                        });
-                        cache.evict({ id });
-                    },
+            .mutate({
+                variables: { ...params },
+                update: (cache, { data }) => {
+                    const id = cache.identify({
+                        __typename: "ViewDatasetEnvVar",
+                        id: (data as DeleteEnvVariableMutation).datasets.byId?.envVars.deleteEnvVariable.envVarId,
+                    });
+                    cache.evict({ id });
                 },
-            )
+            })
             .pipe(
                 first(),
-                map((result: MutationResult<DeleteEnvVariableMutation>) => {
+                map((result: ApolloLink.Result<DeleteEnvVariableMutation>) => {
                     return result.data as DeleteEnvVariableMutation;
                 }),
             );
@@ -104,10 +99,10 @@ export class EnvironmentVariablesApi {
         datasetName: string;
         datasetEnvVarId: string;
     }): Observable<ExposedEnvVariableValueQuery> {
-        return this.exposedEnvVariableValueGQL.watch({ ...params }, noCacheFetchPolicy).valueChanges.pipe(
+        return this.exposedEnvVariableValueGQL.watch({ variables: { ...params }, ...noCacheFetchPolicy }).valueChanges.pipe(
             first(),
-            map((result: ApolloQueryResult<ExposedEnvVariableValueQuery>) => {
-                return result.data;
+            map((result: ObservableQuery.Result<ExposedEnvVariableValueQuery>) => {
+                return result.data as ExposedEnvVariableValueQuery;
             }),
         );
     }

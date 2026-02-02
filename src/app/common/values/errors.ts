@@ -6,7 +6,7 @@
  */
 
 import { NavigationService } from "../../services/navigation.service";
-import { ApolloError } from "@apollo/client";
+import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import { ErrorTexts } from "./errors.text";
 import { logError } from "../helpers/app.helpers";
 import { LoggedUserService } from "../../auth/logged-user.service";
@@ -19,9 +19,9 @@ export abstract class KamuError extends Error {
 }
 
 export class CustomApolloError extends KamuError {
-    private apolloError: ApolloError;
+    private apolloError: CombinedGraphQLErrors;
 
-    public constructor(apolloError: ApolloError) {
+    public constructor(apolloError: CombinedGraphQLErrors) {
         super();
         this.apolloError = apolloError;
     }
@@ -96,7 +96,7 @@ interface KamuErrorVisitor {
     visitDatasetNotFoundError(e: DatasetNotFoundError): void;
     visitAccountNotFoundError(e: AccountNotFoundError): void;
     visitDatasetOperationError(e: DatasetOperationError): void;
-    visitApolloError(e: ApolloError): void;
+    visitApolloError(e: CombinedGraphQLErrors): void;
     visitAuthenticationError(e: AuthenticationError): void;
     visitFileUploadError(e: FileUploadError): void;
 }
@@ -113,10 +113,10 @@ export class KamuErrorHandler implements KamuErrorVisitor {
         return this.injector.get(ToastrService);
     }
 
-    public visitApolloError(e: ApolloError): void {
+    public visitApolloError(_e: CombinedGraphQLErrors): void {
         this.toastrService.error(
             "",
-            e.networkError ? ErrorTexts.ERROR_NETWORK_DESCRIPTION : ErrorTexts.ERROR_TECHNICAL_SUPPORT,
+            ErrorTexts.ERROR_TECHNICAL_SUPPORT,
             {
                 disableTimeOut: "timeOut",
             },

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ApolloQueryResult } from "@apollo/client/core";
+import { ObservableQuery } from "@apollo/client/core";
 import { inject, Injectable } from "@angular/core";
 
 import { map, first, catchError } from "rxjs/operators";
@@ -39,21 +39,19 @@ export class SearchApi {
         perPage = SEARCH_RESULTS_PER_PAGE,
     ): Observable<SearchDatasetsOverviewQuery> {
         return this.searchDatasetsOverviewGQL
-            .watch(
-                {
+            .watch({
+                variables: {
                     query: searchQuery,
                     perPage,
                     page,
                 },
-                {
-                    fetchPolicy: "network-only",
-                    errorPolicy: "all",
-                },
-            )
+                fetchPolicy: "network-only",
+                errorPolicy: "all",
+            })
             .valueChanges.pipe(
                 first(),
-                map((result: ApolloQueryResult<SearchDatasetsOverviewQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<SearchDatasetsOverviewQuery>) => {
+                    return result.data as SearchDatasetsOverviewQuery;
                 }),
                 catchError(() => EMPTY),
             );
@@ -64,20 +62,18 @@ export class SearchApi {
         perPage = SEARCH_RESULTS_PER_PAGE,
     ): Observable<SemanticSearchDatasetsOverviewQuery> {
         return this.semanticSearchDatasetsOverviewGQL
-            .watch(
-                {
+            .watch({
+                variables: {
                     prompt,
                     perPage,
                 },
-                {
-                    fetchPolicy: "network-only",
-                    errorPolicy: "all",
-                },
-            )
+                fetchPolicy: "network-only",
+                errorPolicy: "all",
+            })
             .valueChanges.pipe(
                 first(),
-                map((result: ApolloQueryResult<SemanticSearchDatasetsOverviewQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<SemanticSearchDatasetsOverviewQuery>) => {
+                    return result.data as SemanticSearchDatasetsOverviewQuery;
                 }),
                 catchError(() => EMPTY),
             );
@@ -91,11 +87,11 @@ export class SearchApi {
             return of([]);
         }
         return this.searchDatasetsAutocompleteGQL
-            .watch({ query: id, perPage }, { context: { skipLoading: true } })
+            .watch({ variables: { query: id, perPage }, context: { skipLoading: true } })
             .valueChanges.pipe(
                 first(),
-                map((result: ApolloQueryResult<SearchDatasetsAutocompleteQuery>) => {
-                    const nodesList: DatasetAutocompleteItem[] = result.data.search.query.nodes.map((node) => ({
+                map((result: ObservableQuery.Result<SearchDatasetsAutocompleteQuery>) => {
+                    const nodesList: DatasetAutocompleteItem[] = (result.data?.search?.query?.nodes ?? []).map((node) => ({
                         dataset: node as DatasetBasicsFragment,
                         dummy: false,
                         __typename: node.__typename as TypeNames,

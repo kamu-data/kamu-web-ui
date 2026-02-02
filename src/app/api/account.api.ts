@@ -40,8 +40,7 @@ import {
     AccountFlowsAsCardsQuery,
 } from "./kamu.graphql.interface";
 import { MaybeNull } from "../interface/app.types";
-import { ApolloQueryResult } from "@apollo/client";
-import { MutationResult } from "apollo-angular";
+import { ApolloLink, ObservableQuery } from "@apollo/client/core";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 
 @Injectable({ providedIn: "root" })
@@ -64,9 +63,9 @@ export class AccountApi {
         accountName: string;
         newName: string;
     }): Observable<ChangeAccountUsernameMutation> {
-        return this.changeAccountUsernameGQL.mutate({ accountName: params.accountName, newName: params.newName }).pipe(
+        return this.changeAccountUsernameGQL.mutate({ variables: { accountName: params.accountName, newName: params.newName } }).pipe(
             first(),
-            map((result: MutationResult<ChangeAccountUsernameMutation>) => {
+            map((result: ApolloLink.Result<ChangeAccountUsernameMutation>) => {
                 return result.data as ChangeAccountUsernameMutation;
             }),
         );
@@ -76,9 +75,9 @@ export class AccountApi {
         accountName: string;
         newEmail: string;
     }): Observable<AccountChangeEmailMutation> {
-        return this.accountChangeEmailGQL.mutate(params).pipe(
+        return this.accountChangeEmailGQL.mutate({ variables: params }).pipe(
             first(),
-            map((result: MutationResult<AccountChangeEmailMutation>) => {
+            map((result: ApolloLink.Result<AccountChangeEmailMutation>) => {
                 return result.data as AccountChangeEmailMutation;
             }),
         );
@@ -88,9 +87,9 @@ export class AccountApi {
         accountName: string;
         password: string;
     }): Observable<ChangeAdminPasswordMutation> {
-        return this.changeAdminPasswordGQL.mutate(params).pipe(
+        return this.changeAdminPasswordGQL.mutate({ variables: params }).pipe(
             first(),
-            map((result: MutationResult<ChangeAdminPasswordMutation>) => {
+            map((result: ApolloLink.Result<ChangeAdminPasswordMutation>) => {
                 return result.data as ChangeAdminPasswordMutation;
             }),
         );
@@ -101,9 +100,9 @@ export class AccountApi {
         oldPassword: string;
         newPassword: string;
     }): Observable<ChangeUserPasswordMutation> {
-        return this.changeUserPasswordGQL.mutate(params).pipe(
+        return this.changeUserPasswordGQL.mutate({ variables: params }).pipe(
             first(),
-            map((result: MutationResult<ChangeUserPasswordMutation>) => {
+            map((result: ApolloLink.Result<ChangeUserPasswordMutation>) => {
                 return result.data as ChangeUserPasswordMutation;
             }),
             catchError(() => EMPTY),
@@ -112,16 +111,16 @@ export class AccountApi {
 
     public fetchAccountWithEmail(accountName: string): Observable<AccountWithEmailQuery> {
         return this.accountWithEmailGql
-            .watch(
-                {
+            .watch({
+                variables: {
                     accountName,
                 },
-                noCacheFetchPolicy,
-            )
+                ...noCacheFetchPolicy,
+            })
             .valueChanges.pipe(
                 first(),
-                map((result: ApolloQueryResult<AccountWithEmailQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<AccountWithEmailQuery>) => {
+                    return result.data as AccountWithEmailQuery;
                 }),
             );
     }
@@ -129,12 +128,14 @@ export class AccountApi {
     public fetchAccountByName(accountName: string): Observable<MaybeNull<AccountFragment>> {
         return this.accountByNameGql
             .watch({
-                accountName,
+                variables: {
+                    accountName,
+                },
             })
             .valueChanges.pipe(
                 first(),
-                map((result: ApolloQueryResult<AccountByNameQuery>) => {
-                    return result.data.accounts.byName ?? null;
+                map((result: ObservableQuery.Result<AccountByNameQuery>) => {
+                    return (result.data?.accounts?.byName ?? null) as MaybeNull<AccountFragment>;
                 }),
             );
     }
@@ -147,25 +148,23 @@ export class AccountApi {
         filters: AccountFlowFilters;
     }): Observable<AccountListFlowsQuery> {
         return this.accountListFlowsGql
-            .watch(
-                {
+            .watch({
+                variables: {
                     name: params.accountName,
                     page: params.page,
                     perPageTable: params.perPageTable,
                     perPageTiles: params.perPageTiles,
                     filters: params.filters,
                 },
-                {
-                    ...noCacheFetchPolicy,
-                    context: {
-                        skipLoading: true,
-                    },
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
                 },
-            )
+            })
             .valueChanges.pipe(
                 first(),
-                map((result: ApolloQueryResult<AccountListFlowsQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<AccountListFlowsQuery>) => {
+                    return result.data as AccountListFlowsQuery;
                 }),
             );
     }
@@ -178,51 +177,47 @@ export class AccountApi {
         ordering: FlowProcessOrdering;
     }): Observable<AccountFlowsAsCardsQuery> {
         return this.accountFlowsAsCardsGQL
-            .watch(
-                {
+            .watch({
+                variables: {
                     name: params.accountName,
                     page: params.page,
                     perPage: params.perPage,
                     filters: params.filters,
                     ordering: params.ordering,
                 },
-                {
-                    ...noCacheFetchPolicy,
-                    context: {
-                        skipLoading: true,
-                    },
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
                 },
-            )
+            })
             .valueChanges.pipe(
                 first(),
-                map((result: ApolloQueryResult<AccountFlowsAsCardsQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<AccountFlowsAsCardsQuery>) => {
+                    return result.data as AccountFlowsAsCardsQuery;
                 }),
             );
     }
 
     public accountDatasetsWithFlows(accountName: string): Observable<AccountListDatasetsWithFlowsQuery> {
         return this.accountListDatasetsWithFlowsGql
-            .watch(
-                { name: accountName },
-                {
-                    ...noCacheFetchPolicy,
-                    context: {
-                        skipLoading: true,
-                    },
+            .watch({
+                variables: { name: accountName },
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
                 },
-            )
+            })
             .valueChanges.pipe(
-                map((result: ApolloQueryResult<AccountListDatasetsWithFlowsQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<AccountListDatasetsWithFlowsQuery>) => {
+                    return result.data as AccountListDatasetsWithFlowsQuery;
                 }),
             );
     }
 
     public accountFlowsPaused(accountName: string): Observable<AccountDatasetFlowsPausedQuery> {
-        return this.accountDatasetFlowsPausedGql.watch({ accountName }, noCacheFetchPolicy).valueChanges.pipe(
-            map((result: ApolloQueryResult<AccountDatasetFlowsPausedQuery>) => {
-                return result.data;
+        return this.accountDatasetFlowsPausedGql.watch({ variables: { accountName }, ...noCacheFetchPolicy }).valueChanges.pipe(
+            map((result: ObservableQuery.Result<AccountDatasetFlowsPausedQuery>) => {
+                return result.data as AccountDatasetFlowsPausedQuery;
             }),
         );
     }
@@ -230,11 +225,13 @@ export class AccountApi {
     public accountPauseFlows(accountName: string): Observable<AccountPauseFlowsMutation> {
         return this.accountPauseFlowsGql
             .mutate({
-                accountName,
+                variables: {
+                    accountName,
+                },
             })
             .pipe(
                 first(),
-                map((result: MutationResult<AccountPauseFlowsMutation>) => {
+                map((result: ApolloLink.Result<AccountPauseFlowsMutation>) => {
                     return result.data as AccountPauseFlowsMutation;
                 }),
             );
@@ -243,11 +240,13 @@ export class AccountApi {
     public accountResumeFlows(accountName: string): Observable<AccountResumeFlowsMutation> {
         return this.accountResumeFlowsGql
             .mutate({
-                accountName,
+                variables: {
+                    accountName,
+                },
             })
             .pipe(
                 first(),
-                map((result: MutationResult<AccountResumeFlowsMutation>) => {
+                map((result: ApolloLink.Result<AccountResumeFlowsMutation>) => {
                     return result.data as AccountResumeFlowsMutation;
                 }),
             );
@@ -256,11 +255,13 @@ export class AccountApi {
     public deleteAccountByName(accountName: string): Observable<DeleteAccountByNameMutation> {
         return this.deleteAccountByNameGQL
             .mutate({
-                accountName,
+                variables: {
+                    accountName,
+                },
             })
             .pipe(
                 first(),
-                map((result: MutationResult<DeleteAccountByNameMutation>) => {
+                map((result: ApolloLink.Result<DeleteAccountByNameMutation>) => {
                     return result.data as DeleteAccountByNameMutation;
                 }),
             );

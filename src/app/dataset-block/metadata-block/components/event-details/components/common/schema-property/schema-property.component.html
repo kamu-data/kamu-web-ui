@@ -1,7 +1,6 @@
 <div class="container-table w-100" *ngIf="data.length; else noSchema">
     <app-dynamic-table
         [hasTableHeader]="true"
-        [schemaFields]="schemaFields"
         [dataRows]="tableSource"
         [idTable]="'set-polling-source-schema'"
         [attr.data-test-id]="dataTestId"

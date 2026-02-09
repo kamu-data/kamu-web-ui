@@ -39,14 +39,12 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 })
 export class DynamicTableComponent implements OnInit, OnChanges {
     @Input({ required: true }) public hasTableHeader: boolean;
-    @Input({ required: true }) public schemaFields: DataSchemaField[];
-    @Input() public dataRows: DataRow[];
+    @Input({ required: true }) public dataRows: DataRow[];
     @Input({ required: true }) public idTable: string;
     @Input({ required: true }) public viewMode: DynamicTableViewMode;
     @Input({ required: true }) public displayedColumns: string[];
 
     public dataSource = new MatTableDataSource<TableSourceRowInterface>([]);
-    // public displayedColumns: string[] = [];
     public readonly OperationColumnClassEnum: typeof OperationColumnClassEnum = OperationColumnClassEnum;
     public readonly OdfExtraAttributes: typeof OdfExtraAttributes = OdfExtraAttributes;
     public readonly DynamicTableViewMode: typeof DynamicTableViewMode = DynamicTableViewMode;
@@ -76,9 +74,8 @@ export class DynamicTableComponent implements OnInit, OnChanges {
 
     private displayTable(): void {
         // Corner case - schema is empty, nothing to display
-        if (this.schemaFields.length === 0) {
+        if (this.displayedColumns.length === 0) {
             this.dataSource.data = [];
-            this.displayedColumns = [];
         } else {
             this.dataSource.data = this.dataRows;
         }
@@ -97,7 +94,7 @@ export class DynamicTableComponent implements OnInit, OnChanges {
     }
 
     public extraDesription(element: DataRow): string {
-        return element["description"].value as string;
+        return "description" in element ? (element["description"].value as string) : "";
     }
 
     public showInfoBadge(indexColumn: number, element: DataRow): boolean {

@@ -448,105 +448,97 @@ it(`should propagate the name for unknown engines`, () => {
     });
 });
 
-[
-    {
-        case: {
+describe("OdfTypeMapper", () => {
+    it("should map simple types correctly", () => {
+        const field: DataSchemaTypeField = { kind: OdfTypes.Int32 };
+        expect(OdfTypeMapper(field)).toBe("Int32");
+    });
+
+    it("should map Option type with recursion", () => {
+        const field: DataSchemaTypeField = {
             kind: OdfTypes.Option,
-            inner: {
-                kind: OdfTypes.String,
-            },
-        },
-        expectation: "String?",
-    },
-    {
-        case: {
+            inner: { kind: OdfTypes.String },
+        };
+        expect(OdfTypeMapper(field)).toBe("String?");
+    });
+
+    it("should map Null type", () => {
+        const field: DataSchemaTypeField = {
             kind: OdfTypes.Null,
-            inner: {
-                kind: OdfTypes.String,
-            },
-        },
-        expectation: "Null<String>",
-    },
-    {
-        case: {
+            inner: { kind: OdfTypes.String },
+        };
+        expect(OdfTypeMapper(field)).toBe("Null<String>");
+    });
+
+    it("should map Duration type", () => {
+        const field: DataSchemaTypeField = {
+            kind: OdfTypes.Duration,
+            unit: "Millisecond",
+        };
+        expect(OdfTypeMapper(field)).toBe("Duration<Millisecond>");
+    });
+
+    it("should map Time type", () => {
+        const field: DataSchemaTypeField = {
+            kind: OdfTypes.Time,
+            unit: "Millisecond",
+        };
+        expect(OdfTypeMapper(field)).toBe("Time<Millisecond>");
+    });
+
+    it("should map List type", () => {
+        const field: DataSchemaTypeField = {
             kind: OdfTypes.List,
-            itemType: {
-                kind: OdfTypes.Int64,
-            },
-        },
-        expectation: "List<Int64>",
-    },
-    {
-        case: {
+            itemType: { kind: OdfTypes.Float64 },
+        };
+        expect(OdfTypeMapper(field)).toBe("List<Float64>");
+    });
+
+    it("should map Timestamp with unit and timezone", () => {
+        const field: DataSchemaTypeField = {
+            kind: OdfTypes.Timestamp,
+            unit: "ms",
+            timezone: "UTC",
+        };
+        expect(OdfTypeMapper(field)).toBe("Timestamp<ms, UTC>");
+    });
+
+    it("should map Map type with key and value types", () => {
+        const field: DataSchemaTypeField = {
+            kind: OdfTypes.Map,
+            keyType: { kind: "String" },
+            valueType: { kind: "Int64" },
+        };
+        expect(OdfTypeMapper(field)).toBe("Map<String, Int64>");
+    });
+
+    it("should map Struct with fields", () => {
+        const field: DataSchemaTypeField = {
+            kind: OdfTypes.Struct,
+            fields: [
+                { name: "id", type: { kind: OdfTypes.Int32 } },
+                { name: "name", type: { kind: OdfTypes.String } },
+            ],
+        };
+        expect(OdfTypeMapper(field)).toBe("Struct<id:Int32, name:String>");
+    });
+
+    it("should handle nested complex types (List of Options)", () => {
+        const field: DataSchemaTypeField = {
             kind: OdfTypes.List,
             itemType: {
                 kind: OdfTypes.Option,
-                inner: {
-                    kind: OdfTypes.Float32,
-                },
+                inner: { kind: OdfTypes.Int32 },
             },
-        },
-        expectation: "List<Float32?>",
-    },
-    {
-        case: {
-            kind: OdfTypes.Time,
-            unit: "Millisecond",
-        },
-        expectation: "Time<Millisecond>",
-    },
-    {
-        case: {
-            kind: OdfTypes.Duration,
-            unit: "Millisecond",
-        },
-        expectation: "Duration<Millisecond>",
-    },
-    {
-        case: {
-            kind: OdfTypes.Timestamp,
-            unit: "Millisecond",
-            timezone: "UTC",
-        },
-        expectation: "Timestamp<Millisecond, UTC>",
-    },
-    {
-        case: {
-            kind: OdfTypes.Map,
-            keyType: {
-                kind: OdfTypes.String,
-            },
-            valueType: {
-                kind: OdfTypes.Int64,
-            },
-        },
-        expectation: `Map<String, Int64>`,
-    },
-    {
-        case: {
+        };
+        expect(OdfTypeMapper(field)).toBe("List<Int32?>");
+    });
+
+    it("should return empty string for empty Struct", () => {
+        const field: DataSchemaTypeField = {
             kind: OdfTypes.Struct,
-            fields: [
-                {
-                    name: "id",
-                    type: {
-                        kind: OdfTypes.String,
-                    },
-                },
-                {
-                    name: "gender",
-                    type: {
-                        kind: OdfTypes.Option,
-                        inner: {
-                            kind: OdfTypes.String,
-                        },
-                    },
-                },
-            ],
-        },
-        expectation: `Struct<id:String, gender:String?>`,
-    },
-].forEach((item: { case: DataSchemaTypeField; expectation: string }) => {
-    it(`should check OdfTypeMapper with ${item.case.kind}`, () => {
-        expect(OdfTypeMapper(item.case)).toEqual(item.expectation);
+            fields: [],
+        };
+        expect(OdfTypeMapper(field)).toBe("");
     });
 });

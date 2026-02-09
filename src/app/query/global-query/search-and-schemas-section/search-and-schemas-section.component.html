@@ -96,7 +96,6 @@
                         <div *ngIf="item.schema; else emptySchemaTemplate">
                             <app-dynamic-table
                                 [hasTableHeader]="true"
-                                [schemaFields]="item.schema.fields"
                                 [idTable]="'schema-block-table'"
                                 [viewMode]="DynamicTableViewMode.SCHEMA"
                                 [displayedColumns]="['name', 'type']"

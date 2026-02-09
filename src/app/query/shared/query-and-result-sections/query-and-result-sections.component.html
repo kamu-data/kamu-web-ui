@@ -121,7 +121,6 @@
         <ng-container *ngIf="currentData.length; else noRecords">
             <app-dynamic-table
                 [hasTableHeader]="true"
-                [schemaFields]="sqlQueryResponse?.schema!"
                 [dataRows]="currentData"
                 [displayedColumns]="inferTableSchema(sqlQueryResponse?.schema!)"
                 [idTable]="'result-query-table'"

@@ -8,28 +8,14 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { findElementByDataTestId, getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { DynamicTableComponent } from "./dynamic-table.component";
-import { MOCK_DATA_ROWS, MOCK_SCHEMA_FIELDS } from "./dynamic-table.mock";
+import { MOCK_DATA_ROWS } from "./dynamic-table.mock";
 import { provideToastr } from "ngx-toastr";
-import { OdfTypes } from "./dynamic-table.interface";
+import { DynamicTableViewMode } from "./dynamic-table.interface";
+import { SimpleChanges } from "@angular/core";
 
 describe("DynamicTableComponent", () => {
     let component: DynamicTableComponent;
     let fixture: ComponentFixture<DynamicTableComponent>;
-
-    const mockSchemaFields = [
-        {
-            name: "offset",
-            type: {
-                kind: OdfTypes.String,
-            },
-        },
-        {
-            name: "system_time",
-            type: {
-                kind: OdfTypes.String,
-            },
-        },
-    ];
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -39,7 +25,8 @@ describe("DynamicTableComponent", () => {
 
         fixture = TestBed.createComponent(DynamicTableComponent);
         component = fixture.componentInstance;
-        component.schemaFields = mockSchemaFields;
+        component.displayedColumns = ["offset", "op", "system_time", "block_time"];
+        component.viewMode = DynamicTableViewMode.DATA;
         component.hasTableHeader = true;
         component.idTable = "idTable";
     });
@@ -50,38 +37,30 @@ describe("DynamicTableComponent", () => {
 
     it("should check column names", () => {
         fixture.detectChanges();
-        component.ngOnChanges();
-        Object.keys(mockSchemaFields[0]).forEach((item: string, index: number) => {
+        const nodesSimpleChanges: SimpleChanges = {
+            dataRows: {
+                previousValue: undefined,
+                currentValue: [],
+                firstChange: true,
+                isFirstChange: () => true,
+            },
+        };
+        component.ngOnChanges(nodesSimpleChanges);
+
+        component.displayedColumns.forEach((item: string, index: number) => {
             const el = getElementByDataTestId(fixture, `column-header-name-${index}`);
             expect(el.textContent).toEqual(` ${item} `);
         });
     });
 
     it("should check table if schemaFields is empty", () => {
-        component.schemaFields = [];
+        component.displayedColumns = [];
         fixture.detectChanges();
         expect(component.dataSource.data).toEqual([]);
-        expect(component.displayedColumns).toEqual([]);
-    });
-
-    it("should check table if schemaFields is exist", () => {
-        component.schemaFields = [
-            {
-                name: "testName",
-                type: {
-                    kind: OdfTypes.String,
-                },
-            },
-        ];
-        component.dataRows = [];
-        fixture.detectChanges();
-        expect(component.dataSource.data).toBeDefined();
-        expect(component.displayedColumns).toBeDefined();
     });
 
     it("should check column 'op' classes", () => {
         component.dataRows = MOCK_DATA_ROWS;
-        component.schemaFields = MOCK_SCHEMA_FIELDS;
         fixture.detectChanges();
 
         const cell0 = findElementByDataTestId(fixture, "column-name-op-0");

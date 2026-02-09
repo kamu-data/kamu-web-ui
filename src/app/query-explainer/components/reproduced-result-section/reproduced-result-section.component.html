@@ -4,7 +4,6 @@
         <app-dynamic-table
             *ngIf="tableSource(dataJsonAoS).length; else emptyResult"
             [hasTableHeader]="true"
-            [schemaFields]="schemaFields(dataJsonAoS)"
             [idTable]="'query-explainer-table'"
             [dataRows]="tableSource(dataJsonAoS)"
             [attr.data-test-id]="'query-explainer-table'"

@@ -49,6 +49,8 @@ export type Scalars = {
     ExtraAttributes: string;
     ExtraData: string;
     FlowID: string;
+    /** A scalar that can represent any JSON value. */
+    JSON: string;
     Multihash: string;
     TaskID: string;
     URL: string;
@@ -486,6 +488,16 @@ export type AddPushSource = {
 export type Admin = {
     __typename?: "Admin";
     selfTest: Scalars["String"];
+};
+
+export type AdminMut = {
+    __typename?: "AdminMut";
+    search: AdminSearchMut;
+};
+
+export type AdminSearchMut = {
+    __typename?: "AdminSearchMut";
+    resetSearchIndices: Scalars["String"];
 };
 
 export type ApplyRolesMatrixResult = {
@@ -2842,6 +2854,29 @@ export type FlowTypeIsNotSupported = SetFlowTriggerResult & {
     message: Scalars["String"];
 };
 
+export type FullTextSearchHighlight = {
+    __typename?: "FullTextSearchHighlight";
+    bestFragment: Scalars["String"];
+    field: Scalars["String"];
+};
+
+export type FullTextSearchHit = {
+    __typename?: "FullTextSearchHit";
+    highlights?: Maybe<Array<FullTextSearchHighlight>>;
+    id: Scalars["String"];
+    schemaName: Scalars["String"];
+    score?: Maybe<Scalars["Float"]>;
+    source: Scalars["JSON"];
+};
+
+export type FullTextSearchResponse = {
+    __typename?: "FullTextSearchResponse";
+    hits: Array<FullTextSearchHit>;
+    timeout: Scalars["Boolean"];
+    tookMs: Scalars["Int"];
+    totalHits: Scalars["Int"];
+};
+
 export type GetFlowResult = {
     message: Scalars["String"];
 };
@@ -3189,6 +3224,8 @@ export type Mutation = {
      * system. This groups deals with their identities and permissions.
      */
     accounts: AccountsMut;
+    /** Admin-related functionality group */
+    admin: AdminMut;
     /** Authentication and authorization-related functionality group */
     auth: AuthMut;
     /**
@@ -3762,6 +3799,13 @@ export type Search = {
      * versatile interface to the user consisting of just one input field.
      */
     query: SearchResultConnection;
+    queryFullText: FullTextSearchResponse;
+    /**
+     * Searches for datasets and other objects managed by the
+     * current node using a prompt, mixing full-text and natural language
+     * methods
+     */
+    queryHybrid: SearchResultExConnection;
     /**
      * Searches for datasets and other objects managed by the
      * current node using a prompt in natural language
@@ -3782,8 +3826,19 @@ export type SearchQueryArgs = {
     query: Scalars["String"];
 };
 
-export type SearchQueryNaturalLanguageArgs = {
+export type SearchQueryFullTextArgs = {
+    page?: InputMaybe<Scalars["Int"]>;
     perPage?: InputMaybe<Scalars["Int"]>;
+    prompt: Scalars["String"];
+};
+
+export type SearchQueryHybridArgs = {
+    limit?: InputMaybe<Scalars["Int"]>;
+    prompt: Scalars["String"];
+};
+
+export type SearchQueryNaturalLanguageArgs = {
+    limit?: InputMaybe<Scalars["Int"]>;
     prompt: Scalars["String"];
 };
 
@@ -7532,7 +7587,7 @@ export type SearchDatasetsOverviewQuery = {
 
 export type SemanticSearchDatasetsOverviewQueryVariables = Exact<{
     prompt: Scalars["String"];
-    perPage?: InputMaybe<Scalars["Int"]>;
+    limit?: InputMaybe<Scalars["Int"]>;
 }>;
 
 export type SemanticSearchDatasetsOverviewQuery = {
@@ -11884,9 +11939,9 @@ export class SearchDatasetsOverviewGQL extends Apollo.Query<
     }
 }
 export const SemanticSearchDatasetsOverviewDocument = gql`
-    query semanticSearchDatasetsOverview($prompt: String!, $perPage: Int) {
+    query semanticSearchDatasetsOverview($prompt: String!, $limit: Int) {
         search {
-            queryNaturalLanguage(prompt: $prompt, perPage: $perPage) {
+            queryNaturalLanguage(prompt: $prompt, limit: $limit) {
                 nodes {
                     item {
                         ... on Dataset {

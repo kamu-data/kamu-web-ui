@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Changed the display of schemas for the "Data" tab and "Query" page 
+
+## [0.61.2] - 2026-01-30
 ### Added
 - Lazy loading of cards when scrolling for account filters.
 - "Run Selection" context menu action in SQL query editor
@@ -16,8 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - The dataset schema has been converted to ODF format
 - Flows tab: the status filter was incorrectly initialized for request
-- Changed the display of schemas for the "Data" tab and "Query" page 
-
+- Corrected natural language search query after server API changes
 
 ## [0.61.1] - 2025-12-10
 ### Fixed

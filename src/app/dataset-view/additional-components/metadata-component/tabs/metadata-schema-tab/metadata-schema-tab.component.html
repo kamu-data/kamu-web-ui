@@ -35,7 +35,10 @@
             class="mb-2"
             [hasTableHeader]="true"
             [schemaFields]="schema.fields"
+            [displayedColumns]="['name', 'type', 'description']"
+            [dataRows]="schemaData(schema.fields)"
             [idTable]="'schema-block-table'"
+            [viewMode]="DynamicTableViewMode.SCHEMA_AND_DESCRIPTION"
         />
 
         <markdown

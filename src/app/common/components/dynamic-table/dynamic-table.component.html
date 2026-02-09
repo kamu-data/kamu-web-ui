@@ -1,14 +1,17 @@
 <div [id]="idTable" style="width: 100%; overflow: auto" class="dynamic-table">
     <table mat-table [dataSource]="dataSource">
-        <ng-container *ngFor="let disCol of displayedColumns; let colIndex = index" matColumnDef="{{ disCol }}">
+        <ng-container
+            *ngFor="let disCol of displayedColumns; trackBy: trackByColumn; let colIndex = index"
+            matColumnDef="{{ disCol }}"
+        >
             <th mat-header-cell *matHeaderCellDef [attr.data-test-id]="'column-header-name-' + colIndex">
                 {{ disCol }}
             </th>
             <td
                 mat-cell
-                [title]="colIndex != 0 && !hasData ? element[disCol].value : ''"
-                [class.font-monospace]="!this.hasData && colIndex < 2"
-                [ngClass]="hasData ? element[disCol].cssClass : OperationColumnClassEnum.PRIMARY_COLOR"
+                [title]="element[disCol].value"
+                [class.font-monospace]="viewMode !== DynamicTableViewMode.DATA && colIndex < 2"
+                [ngClass]="element[disCol].cssClass"
                 [class]="'truncate-cell copyable-cell'"
                 *matCellDef="let element; index as rowIndex"
                 [attr.data-test-id]="'column-name-' + disCol + '-' + rowIndex"
@@ -17,25 +20,16 @@
             >
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="cell-content truncate-cell">{{ element[disCol].value }}</div>
-                    <div
-                        class="cell-content ms-1 position-relative"
-                        *ngIf="showMoreBadge(rowIndex, colIndex, schemaFields)"
-                    >
-                        <span
-                            (click)="$event.stopPropagation(); showModal(rowIndex, schemaFields)"
-                            class="badge-more"
-                        ></span>
+                    <div class="cell-content ms-1 position-relative" *ngIf="showMoreBadge(colIndex, element)">
+                        <span (click)="$event.stopPropagation(); showModal(element)" class="badge-more"></span>
                     </div>
                     <div
+                        [matTooltip]="extraDesription(element)"
+                        [matTooltipPosition]="'after'"
                         class="cell-content ms-1 mt-1 position-relative"
-                        *ngIf="showInfoBadge(rowIndex, colIndex, schemaFields)"
+                        *ngIf="showInfoBadge(colIndex, element)"
                     >
-                        <mat-icon
-                            [matTooltip]="extraDesription(rowIndex, schemaFields)"
-                            [matTooltipPosition]="'after'"
-                            class="info-badge text-muted"
-                            >help_outline</mat-icon
-                        >
+                        <mat-icon class="info-badge text-muted">help_outline</mat-icon>
                     </div>
                 </div>
             </td>

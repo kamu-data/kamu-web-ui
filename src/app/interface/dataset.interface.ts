@@ -15,7 +15,7 @@ import { OdfExtraAttributes, OdfTypes } from "../common/components/dynamic-table
 
 export interface DataRow {
     [key: string]: {
-        value: string | number;
+        value: string | number | DataSchemaField;
         cssClass: string;
     };
 }

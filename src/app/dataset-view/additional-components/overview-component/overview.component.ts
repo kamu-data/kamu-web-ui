@@ -39,6 +39,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { FeatureFlagDirective } from "../../../common/directives/feature-flag.directive";
 import { MatChipsModule } from "@angular/material/chips";
 import { NgIf, NgFor, AsyncPipe, DecimalPipe, TitleCasePipe } from "@angular/common";
+import { DynamicTableViewMode } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { DataSchemaField } from "src/app/interface/dataset.interface";
 
 @Component({
     selector: "app-overview",
@@ -81,6 +83,7 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
     public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
     public readonly URL_PARAM_ADD_PUSH_SOURCE = ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE;
+    public readonly DynamicTableViewMode: typeof DynamicTableViewMode = DynamicTableViewMode;
 
     public datasetOverviewTabData$: Observable<DatasetOverviewTabData>;
     private ngbModalService = inject(NgbModal);
@@ -263,6 +266,10 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
         } else {
             return false;
         }
+    }
+
+    public inferTableSchema(schema: DataSchemaField[]): string[] {
+        return schema.map((f: DataSchemaField) => f.name);
     }
 
     public openInformationModal() {

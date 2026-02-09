@@ -11,6 +11,7 @@ import { EnvVar } from "src/app/api/kamu.graphql.interface";
 import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";
 import { BasePropertyComponent } from "../base-property/base-property.component";
 import { DynamicTableComponent } from "../../../../../../../common/components/dynamic-table/dynamic-table.component";
+import { DynamicTableViewMode } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
     selector: "app-env-variables-property",
@@ -22,6 +23,8 @@ import { DynamicTableComponent } from "../../../../../../../common/components/dy
 })
 export class EnvVariablesPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: EnvVar[];
+
+    public readonly DynamicTableViewMode: typeof DynamicTableViewMode = DynamicTableViewMode;
 
     public get tableSource(): DataRow[] {
         const result: DataRow[] = [];
@@ -42,5 +45,9 @@ export class EnvVariablesPropertyComponent extends BasePropertyComponent {
 
     public get schemaFields(): DataSchemaField[] {
         return extractSchemaFieldsFromData(this.tableSource[0]);
+    }
+
+    public inferTableSchema(schema: DataSchemaField[]): string[] {
+        return schema.map((f: DataSchemaField) => f.name);
     }
 }

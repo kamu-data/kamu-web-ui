@@ -25,7 +25,7 @@ import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import AppValues from "src/app/common/values/app.values";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { UploadPrepareResponse, UploadPrepareData } from "src/app/interface/ingest-via-file-upload.types";
-import { DataRow, DatasetRequestBySql } from "src/app/interface/dataset.interface";
+import { DataRow, DataSchemaField, DatasetRequestBySql } from "src/app/interface/dataset.interface";
 import ProjectLinks from "src/app/project-links";
 import { FileUploadService } from "src/app/services/file-upload.service";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -44,12 +44,13 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatIconModule } from "@angular/material/icon";
 import { EngineSelectComponent } from "../../../dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
-import { NgIf, AsyncPipe, NgClass } from "@angular/common";
+import { NgIf, AsyncPipe } from "@angular/common";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { FormsModule } from "@angular/forms";
 import { MarkdownModule } from "ngx-markdown";
 import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
+import { DynamicTableViewMode } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
     selector: "app-query-and-result-sections",
@@ -61,7 +62,6 @@ import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
         //-----//
         AsyncPipe,
         NgIf,
-        NgClass,
         FormsModule,
 
         //-----//
@@ -108,10 +108,15 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     public knownEngines$: Observable<EngineDesc[]>;
     public enabledProof: boolean = false;
     public readonly GENERATE_PROOF_TOOLTIP: string = "Please log in to use this feature";
+    public readonly DynamicTableViewMode: typeof DynamicTableViewMode = DynamicTableViewMode;
     public selectedCode: string = "";
 
     public ngOnInit(): void {
         this.knownEngines$ = this.engineService.engines().pipe(map((result) => result.data.knownEngines));
+    }
+
+    public inferTableSchema(schema: DataSchemaField[]): string[] {
+        return schema.map((f: DataSchemaField) => f.name);
     }
 
     public ngOnChanges(changes: SimpleChanges): void {

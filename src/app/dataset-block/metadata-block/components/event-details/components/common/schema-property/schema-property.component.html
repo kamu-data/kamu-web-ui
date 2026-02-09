@@ -5,6 +5,8 @@
         [dataRows]="tableSource"
         [idTable]="'set-polling-source-schema'"
         [attr.data-test-id]="dataTestId"
+        [viewMode]="DynamicTableViewMode.SCHEMA"
+        [displayedColumns]="['name', 'type']"
     />
 </div>
 

@@ -10,6 +10,9 @@
                 [hasTableHeader]="true"
                 [schemaFields]="datasetSchema.fields"
                 [idTable]="'set-data-schema-event'"
+                [viewMode]="DynamicTableViewMode.SCHEMA"
+                [displayedColumns]="['name', 'type']"
+                [dataRows]="schemaData(datasetSchema.fields)"
             />
         </app-block-row-data>
     </div>

@@ -5,14 +5,13 @@
  * included in the LICENSE file.
  */
 
-import { AfterContentInit, ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";
-import { OdfExtraAttributes, TableSourceRowInterface } from "./dynamic-table.interface";
+import { DynamicTableViewMode, OdfExtraAttributes, TableSourceRowInterface } from "./dynamic-table.interface";
 import { NgFor, NgClass, NgIf } from "@angular/common";
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { ToastrModule, ToastrService } from "ngx-toastr";
-import { OdfTypeMapper } from "../../helpers/data.helpers";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { AttributesSchemaModalComponent } from "./components/attributes-schema-modal/attributes-schema-modal.component";
 import { MatIconModule } from "@angular/material/icon";
@@ -38,17 +37,19 @@ import { MatTooltipModule } from "@angular/material/tooltip";
         ToastrModule,
     ],
 })
-export class DynamicTableComponent implements OnInit, OnChanges, AfterContentInit {
+export class DynamicTableComponent implements OnInit, OnChanges {
     @Input({ required: true }) public hasTableHeader: boolean;
     @Input({ required: true }) public schemaFields: DataSchemaField[];
-    @Input() public dataRows?: DataRow[];
-    @Input() public hasColumnDescriptions?: boolean = true;
+    @Input() public dataRows: DataRow[];
     @Input({ required: true }) public idTable: string;
+    @Input({ required: true }) public viewMode: DynamicTableViewMode;
+    @Input({ required: true }) public displayedColumns: string[];
 
     public dataSource = new MatTableDataSource<TableSourceRowInterface>([]);
-    public displayedColumns: string[] = [];
+    // public displayedColumns: string[] = [];
     public readonly OperationColumnClassEnum: typeof OperationColumnClassEnum = OperationColumnClassEnum;
     public readonly OdfExtraAttributes: typeof OdfExtraAttributes = OdfExtraAttributes;
+    public readonly DynamicTableViewMode: typeof DynamicTableViewMode = DynamicTableViewMode;
     private toastr = inject(ToastrService);
     private ngbModalService = inject(NgbModal);
 
@@ -56,16 +57,21 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
         this.displayTable();
     }
 
-    public ngOnChanges(): void {
-        this.displayTable();
-    }
-
-    public ngAfterContentInit(): void {
-        this.displayTable();
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (
+            changes.dataRows &&
+            JSON.stringify(changes.dataRows.currentValue) !== JSON.stringify(changes.dataRows.previousValue)
+        ) {
+            this.displayTable();
+        }
     }
 
     public get hasData(): boolean {
         return Boolean(this.dataRows?.length);
+    }
+
+    public trackByColumn(index: number, item: string): string {
+        return item;
     }
 
     private displayTable(): void {
@@ -73,33 +79,7 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
         if (this.schemaFields.length === 0) {
             this.dataSource.data = [];
             this.displayedColumns = [];
-
-            // Special case: displaying schema itself
-        } else if (!this.dataRows) {
-            this.dataSource.data = this.schemaFields.map((x) => {
-                return {
-                    name: { value: x.name, cssClass: "" },
-                    type: {
-                        value:
-                            x.extra && OdfExtraAttributes.EXTRA_ATTRIBUTE_TYPE in x.extra
-                                ? x.extra[OdfExtraAttributes.EXTRA_ATTRIBUTE_TYPE].kind
-                                : OdfTypeMapper(x.type),
-                        cssClass: "",
-                    },
-                    description: {
-                        value:
-                            x.extra && OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION in x.extra
-                                ? x.extra[OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION]
-                                : "",
-                        cssClass: "",
-                    },
-                };
-            });
-            this.displayedColumns = !this.hasColumnDescriptions ? ["name", "type"] : ["name", "type", "description"];
-
-            // Casual case, displaying data
         } else {
-            this.displayedColumns = this.schemaFields.map((f: DataSchemaField) => f.name);
             this.dataSource.data = this.dataRows;
         }
     }
@@ -108,37 +88,31 @@ export class DynamicTableComponent implements OnInit, OnChanges, AfterContentIni
         this.toastr.success(`Copied`);
     }
 
-    public showMoreBadge(indexRow: number, indexColumn: number, data: DataSchemaField[]): boolean {
+    public showMoreBadge(indexColumn: number, element: DataRow): boolean {
         return (
-            Boolean(this.hasColumnDescriptions) &&
+            this.viewMode === DynamicTableViewMode.SCHEMA_AND_DESCRIPTION &&
             indexColumn === 1 &&
-            !this.hasData &&
-            (Boolean(Object.keys(data[indexRow].extra ?? {}).length) || Boolean(data[indexRow].type?.fields?.length))
+            Boolean(element["extraKeys"].value)
         );
     }
 
-    public extraDesription(indexRow: number, data: DataSchemaField[]): string {
-        return data[indexRow].extra?.[OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION] as string;
+    public extraDesription(element: DataRow): string {
+        return element["description"].value as string;
     }
 
-    public showInfoBadge(indexRow: number, indexColumn: number, data: DataSchemaField[]): boolean {
+    public showInfoBadge(indexColumn: number, element: DataRow): boolean {
         return Boolean(
-            !this.hasColumnDescriptions &&
-                indexColumn === 0 &&
-                !this.hasData &&
-                data[indexRow] &&
-                data[indexRow].extra &&
-                data[indexRow].extra?.[OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION],
+            this.viewMode === DynamicTableViewMode.SCHEMA && indexColumn === 0 && this.extraDesription(element),
         );
     }
 
-    public showModal(index: number, data: DataSchemaField[]): void {
+    public showModal(element: DataRow): void {
         const modalRef = this.ngbModalService.open(AttributesSchemaModalComponent, {
             size: "lg",
             centered: true,
             scrollable: true,
         });
         const modalRefInstance = modalRef.componentInstance as AttributesSchemaModalComponent;
-        modalRefInstance.element = data[index];
+        modalRefInstance.element = element["extraKeys"].value as DataSchemaField;
     }
 }

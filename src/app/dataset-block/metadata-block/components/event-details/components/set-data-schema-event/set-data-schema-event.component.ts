@@ -10,10 +10,12 @@ import { SetDataSchema } from "src/app/api/kamu.graphql.interface";
 import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
 import { MaybeNull } from "src/app/interface/app.types";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { DatasetSchema } from "src/app/interface/dataset.interface";
+import { DataRow, DataSchemaField, DatasetSchema } from "src/app/interface/dataset.interface";
 import { DynamicTableComponent } from "../../../../../../common/components/dynamic-table/dynamic-table.component";
 import { NgIf } from "@angular/common";
 import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
+import { DynamicTableViewMode } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { prepareSchemaData } from "src/app/common/helpers/data.helpers";
 
 @Component({
     selector: "app-set-data-schema-event",
@@ -32,7 +34,17 @@ import { BlockRowDataComponent } from "../../../../../../common/components/block
 export class SetDataSchemaEventComponent extends BaseComponent {
     @Input({ required: true }) public event: SetDataSchema;
 
+    public readonly DynamicTableViewMode: typeof DynamicTableViewMode = DynamicTableViewMode;
+
     public get datasetSchema(): MaybeNull<DatasetSchema> {
         return parseCurrentSchema(this.event.schema);
+    }
+
+    public inferTableSchema(schema: DataSchemaField[]): string[] {
+        return schema.map((f: DataSchemaField) => f.name);
+    }
+
+    public schemaData(schema: DataSchemaField[]): DataRow[] {
+        return prepareSchemaData(schema);
     }
 }

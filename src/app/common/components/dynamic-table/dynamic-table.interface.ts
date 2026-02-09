@@ -5,9 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
+import { DataRow } from "src/app/interface/dataset.interface";
 
-export type TableSourceRowInterface = DataSchemaField | DataRow;
+export type TableSourceRowInterface = DataRow;
 
 export enum OdfTypes {
     Binary = "Binary",
@@ -39,4 +39,10 @@ export enum OdfTypes {
 export enum OdfExtraAttributes {
     EXTRA_ATTRIBUTE_DESCRIPTION = "opendatafabric.org/description",
     EXTRA_ATTRIBUTE_TYPE = "opendatafabric.org/type",
+}
+
+export enum DynamicTableViewMode {
+    DATA = "data",
+    SCHEMA = "schema",
+    SCHEMA_AND_DESCRIPTION = "schemaAndDescription",
 }

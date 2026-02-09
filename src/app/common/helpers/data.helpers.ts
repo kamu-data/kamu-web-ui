@@ -16,6 +16,7 @@ import { convertSecondsToHumanReadableFormat, removeAllLineBreaks } from "./app.
 import { SliceUnit } from "../../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 import {
     DataRow,
+    DataSchemaField,
     DataSchemaTypeField,
     DatasetSchema,
     OperationColumnClassEnum,
@@ -24,7 +25,7 @@ import { differenceInSeconds } from "date-fns";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { SubscribedEventType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
 import { Network } from "ethers";
-import { OdfTypes } from "../components/dynamic-table/dynamic-table.interface";
+import { OdfExtraAttributes, OdfTypes } from "../components/dynamic-table/dynamic-table.interface";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -473,4 +474,30 @@ export function OdfTypeMapper(type: DataSchemaTypeField): string {
         default:
             return type.kind;
     }
+}
+
+export function prepareSchemaData(schema: DataSchemaField[]): DataRow[] {
+    return schema.map((x) => {
+        return {
+            name: { value: x.name, cssClass: OperationColumnClassEnum.PRIMARY_COLOR },
+            type: {
+                value:
+                    x.extra && OdfExtraAttributes.EXTRA_ATTRIBUTE_TYPE in x.extra
+                        ? x.extra[OdfExtraAttributes.EXTRA_ATTRIBUTE_TYPE].kind
+                        : OdfTypeMapper(x.type),
+                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+            },
+            description: {
+                value:
+                    x.extra && OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION in x.extra
+                        ? x.extra[OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION]
+                        : "",
+                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+            },
+            extraKeys: {
+                value: x.extra && Object.keys(x.extra).length ? x : "",
+                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+            },
+        };
+    });
 }

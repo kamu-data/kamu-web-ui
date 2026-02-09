@@ -152,10 +152,12 @@
                     data-test-id="data-tail-block"
                     [hasTableHeader]="true"
                     [schemaFields]="datasetOverviewTabData.overviewUpdate.schema.fields"
+                    [displayedColumns]="inferTableSchema(datasetOverviewTabData.overviewUpdate.schema.fields)"
                     [dataRows]="
                         datasetOverviewTabData.overviewUpdate ? datasetOverviewTabData.overviewUpdate.content : []
                     "
                     [idTable]="'overview-data-table'"
+                    [viewMode]="DynamicTableViewMode.DATA"
                 />
                 <ng-template #noData>
                     <div

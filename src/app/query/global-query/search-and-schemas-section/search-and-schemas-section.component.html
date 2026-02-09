@@ -98,7 +98,9 @@
                                 [hasTableHeader]="true"
                                 [schemaFields]="item.schema.fields"
                                 [idTable]="'schema-block-table'"
-                                [hasColumnDescriptions]="false"
+                                [viewMode]="DynamicTableViewMode.SCHEMA"
+                                [displayedColumns]="['name', 'type']"
+                                [dataRows]="schemaData(item.schema.fields)"
                             />
                         </div>
                         <ng-template #emptySchemaTemplate>

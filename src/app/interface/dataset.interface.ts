@@ -42,20 +42,58 @@ export interface DataSchemaField {
     };
 }
 
-export interface DataSchemaTypeField {
+interface DataSchemaBaseField {
     kind: OdfTypes;
-    unit?: string;
-    timezone?: string;
-    inner?: DataSchemaTypeField;
-    itemType?: DataSchemaTypeField;
-    keyType?: {
-        kind: string;
-    };
-    valueType?: {
-        kind: string;
-    };
-    fields?: DataSchemaField[];
 }
+
+interface DataSchemaOptionField extends DataSchemaBaseField {
+    kind: OdfTypes.Option;
+    inner: DataSchemaTypeField;
+}
+interface DataSchemaNullField extends DataSchemaBaseField {
+    kind: OdfTypes.Null;
+    inner?: DataSchemaTypeField;
+}
+interface DataSchemaListField extends DataSchemaBaseField {
+    kind: OdfTypes.List;
+    itemType: DataSchemaTypeField;
+}
+interface DataSchemaTimeField extends DataSchemaBaseField {
+    kind: OdfTypes.Timestamp | OdfTypes.Duration | OdfTypes.Time;
+    unit: string;
+    timezone?: string;
+}
+interface DataSchemaMapField extends DataSchemaBaseField {
+    kind: OdfTypes.Map;
+    keyType: { kind: string };
+    valueType: { kind: string };
+}
+interface DataSchemaStructField extends DataSchemaBaseField {
+    kind: OdfTypes.Struct;
+    fields: { name: string; type: DataSchemaTypeField }[];
+}
+interface DataSchemaDefaultField extends DataSchemaBaseField {
+    kind: Exclude<
+        OdfTypes,
+        | OdfTypes.Option
+        | OdfTypes.Null
+        | OdfTypes.List
+        | OdfTypes.Timestamp
+        | OdfTypes.Duration
+        | OdfTypes.Time
+        | OdfTypes.Map
+        | OdfTypes.Struct
+    >;
+}
+
+export type DataSchemaTypeField =
+    | DataSchemaOptionField
+    | DataSchemaNullField
+    | DataSchemaListField
+    | DataSchemaTimeField
+    | DataSchemaMapField
+    | DataSchemaStructField
+    | DataSchemaDefaultField;
 
 export enum OperationColumnClassEnum {
     SECONDARY_COLOR = "secondary-color",

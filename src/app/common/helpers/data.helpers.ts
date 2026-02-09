@@ -455,22 +455,26 @@ export function chainNameFromId(chainId: number): string {
 export function OdfTypeMapper(type: DataSchemaTypeField): string {
     switch (type.kind) {
         case OdfTypes.Option:
-            return type.inner ? `${OdfTypeMapper(type.inner)}?` : "";
+            return `${OdfTypeMapper(type.inner)}?`;
         case OdfTypes.Null:
             return `${type.kind}<${type.inner ? OdfTypeMapper(type.inner) : ""}>`;
-        case OdfTypes.List:
-            return `${type.kind}<${type.itemType && type.itemType.inner ? OdfTypeMapper(type.itemType) : type.itemType?.kind}>`;
+        case OdfTypes.List: {
+            const innerContent =
+                "inner" in type.itemType && type.itemType.inner ? OdfTypeMapper(type.itemType) : type.itemType.kind;
+            return `${type.kind}<${innerContent}>`;
+        }
         case OdfTypes.Timestamp:
             return `${type.kind}<${type.unit}, ${type.timezone}>`;
         case OdfTypes.Duration:
         case OdfTypes.Time:
             return `${type.kind}<${type.unit}>`;
         case OdfTypes.Map:
-            return `${type.kind}<${type.keyType?.kind}, ${type.valueType?.kind}>`;
+            return `${type.kind}<${type.keyType.kind}, ${type.valueType.kind}>`;
         case OdfTypes.Struct:
-            return type.fields?.length
+            return type.fields.length
                 ? `${type.kind}<${type.fields.map((x) => `${x.name}:${OdfTypeMapper(x.type)}`).join(", ")}>`
                 : "";
+
         default:
             return type.kind;
     }

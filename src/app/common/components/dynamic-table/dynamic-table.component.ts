@@ -8,7 +8,12 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";
-import { DynamicTableViewMode, OdfExtraAttributes, TableSourceRowInterface } from "./dynamic-table.interface";
+import {
+    ColumnDescriptor,
+    DynamicTableViewMode,
+    OdfExtraAttributes,
+    TableSourceRowInterface,
+} from "./dynamic-table.interface";
 import { NgFor, NgClass, NgIf } from "@angular/common";
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { ToastrModule, ToastrService } from "ngx-toastr";
@@ -41,8 +46,9 @@ export class DynamicTableComponent implements OnInit, OnChanges {
     @Input({ required: true }) public hasTableHeader: boolean;
     @Input({ required: true }) public dataRows: DataRow[];
     @Input({ required: true }) public idTable: string;
-    @Input({ required: true }) public viewMode: DynamicTableViewMode;
-    @Input({ required: true }) public displayedColumns: string[];
+    // @Input({ required: true }) public viewMode: DynamicTableViewMode;
+    // @Input({ required: true }) public displayedColumns: string[];
+    @Input({ required: true }) public columnDescriptors: ColumnDescriptor[];
 
     public dataSource = new MatTableDataSource<TableSourceRowInterface>([]);
     public readonly OperationColumnClassEnum: typeof OperationColumnClassEnum = OperationColumnClassEnum;
@@ -53,6 +59,10 @@ export class DynamicTableComponent implements OnInit, OnChanges {
 
     public ngOnInit(): void {
         this.displayTable();
+    }
+
+    public get displayedColumns(): string[] {
+        return this.columnDescriptors.map((item) => item.columnName);
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
@@ -68,8 +78,8 @@ export class DynamicTableComponent implements OnInit, OnChanges {
         return Boolean(this.dataRows?.length);
     }
 
-    public trackByColumn(index: number, item: string): string {
-        return item;
+    public trackByColumn(index: number, item: ColumnDescriptor): string {
+        return item.columnName;
     }
 
     private displayTable(): void {
@@ -85,22 +95,16 @@ export class DynamicTableComponent implements OnInit, OnChanges {
         this.toastr.success(`Copied`);
     }
 
-    public showMoreBadge(indexColumn: number, element: DataRow): boolean {
-        return (
-            this.viewMode === DynamicTableViewMode.SCHEMA_AND_DESCRIPTION &&
-            indexColumn === 1 &&
-            Boolean(element["extraKeys"].value)
-        );
+    public showMoreBadge(columnDescriptor: ColumnDescriptor, element: DataRow): boolean {
+        return Boolean(columnDescriptor.showMoreBadge) && Boolean(element["extraKeys"].value);
     }
 
     public extraDesription(element: DataRow): string {
         return "description" in element ? (element["description"].value as string) : "";
     }
 
-    public showInfoBadge(indexColumn: number, element: DataRow): boolean {
-        return Boolean(
-            this.viewMode === DynamicTableViewMode.SCHEMA && indexColumn === 0 && this.extraDesription(element),
-        );
+    public showInfoBadge(columnDescriptor: ColumnDescriptor, element: DataRow): boolean {
+        return Boolean(columnDescriptor.showInfoBadge && this.extraDesription(element));
     }
 
     public showModal(element: DataRow): void {

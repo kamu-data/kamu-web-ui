@@ -10,7 +10,6 @@ import { findElementByDataTestId, getElementByDataTestId } from "src/app/common/
 import { DynamicTableComponent } from "./dynamic-table.component";
 import { MOCK_DATA_ROWS } from "./dynamic-table.mock";
 import { provideToastr } from "ngx-toastr";
-import { DynamicTableViewMode } from "./dynamic-table.interface";
 import { SimpleChanges } from "@angular/core";
 
 describe("DynamicTableComponent", () => {
@@ -25,8 +24,12 @@ describe("DynamicTableComponent", () => {
 
         fixture = TestBed.createComponent(DynamicTableComponent);
         component = fixture.componentInstance;
-        component.displayedColumns = ["offset", "op", "system_time", "block_time"];
-        component.viewMode = DynamicTableViewMode.DATA;
+        component.columnDescriptors = [
+            { columnName: "offset" },
+            { columnName: "op" },
+            { columnName: "system_time" },
+            { columnName: "block_time" },
+        ];
         component.hasTableHeader = true;
         component.idTable = "idTable";
     });
@@ -54,7 +57,7 @@ describe("DynamicTableComponent", () => {
     });
 
     it("should check table if schemaFields is empty", () => {
-        component.displayedColumns = [];
+        component.columnDescriptors = [];
         fixture.detectChanges();
         expect(component.dataSource.data).toEqual([]);
     });

@@ -122,9 +122,8 @@
             <app-dynamic-table
                 [hasTableHeader]="true"
                 [dataRows]="currentData"
-                [displayedColumns]="inferTableSchema(sqlQueryResponse?.schema!)"
+                [columnDescriptors]="inferTableSchema(sqlQueryResponse?.schema!)"
                 [idTable]="'result-query-table'"
-                [viewMode]="DynamicTableViewMode.DATA"
             />
             <app-load-more [isAllDataLoaded]="isAllDataLoaded" (loadMoreEmit)="loadMore($event)" class="mt-4" />
         </ng-container>

@@ -151,12 +151,11 @@
                     *ngIf="datasetOverviewTabData && datasetOverviewTabData.overviewUpdate.schema; else noData"
                     data-test-id="data-tail-block"
                     [hasTableHeader]="true"
-                    [displayedColumns]="inferTableSchema(datasetOverviewTabData.overviewUpdate.schema.fields)"
+                    [columnDescriptors]="inferTableSchema(datasetOverviewTabData.overviewUpdate.schema.fields)"
                     [dataRows]="
                         datasetOverviewTabData.overviewUpdate ? datasetOverviewTabData.overviewUpdate.content : []
                     "
                     [idTable]="'overview-data-table'"
-                    [viewMode]="DynamicTableViewMode.DATA"
                 />
                 <ng-template #noData>
                     <div

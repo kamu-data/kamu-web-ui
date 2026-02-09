@@ -97,8 +97,10 @@
                             <app-dynamic-table
                                 [hasTableHeader]="true"
                                 [idTable]="'schema-block-table'"
-                                [viewMode]="DynamicTableViewMode.SCHEMA"
-                                [displayedColumns]="['name', 'type']"
+                                [columnDescriptors]="[
+                                    { columnName: 'name', showInfoBadge: true },
+                                    { columnName: 'type' },
+                                ]"
                                 [dataRows]="schemaData(item.schema.fields)"
                             />
                         </div>

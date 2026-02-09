@@ -7,8 +7,7 @@
             [idTable]="'query-explainer-table'"
             [dataRows]="tableSource(dataJsonAoS)"
             [attr.data-test-id]="'query-explainer-table'"
-            [displayedColumns]="inferTableSchema(schemaFields(dataJsonAoS))"
-            [viewMode]="DynamicTableViewMode.DATA"
+            [columnDescriptors]="inferTableSchema(schemaFields(dataJsonAoS))"
         />
         <ng-template #emptyResult>
             <p data-test-id="emptyResult">0 records</p>

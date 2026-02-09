@@ -9,8 +9,7 @@
                 *ngIf="datasetSchema"
                 [hasTableHeader]="true"
                 [idTable]="'set-data-schema-event'"
-                [viewMode]="DynamicTableViewMode.SCHEMA"
-                [displayedColumns]="['name', 'type']"
+                [columnDescriptors]="[{ columnName: 'name' }, { columnName: 'type' }]"
                 [dataRows]="schemaData(datasetSchema.fields)"
             />
         </app-block-row-data>

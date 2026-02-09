@@ -34,10 +34,13 @@
             *ngIf="viewMode === SchemaViewMode.TABLE"
             class="mb-2"
             [hasTableHeader]="true"
-            [displayedColumns]="['name', 'type', 'description']"
+            [columnDescriptors]="[
+                { columnName: 'name' },
+                { columnName: 'type', showMoreBadge: true },
+                { columnName: 'description' },
+            ]"
             [dataRows]="schemaData(schema.fields)"
             [idTable]="'schema-block-table'"
-            [viewMode]="DynamicTableViewMode.SCHEMA_AND_DESCRIPTION"
         />
 
         <markdown

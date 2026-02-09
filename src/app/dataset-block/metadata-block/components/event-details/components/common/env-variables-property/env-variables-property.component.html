@@ -4,7 +4,6 @@
         [dataRows]="tableSource"
         [idTable]="'set-polling-source-env-variables'"
         [attr.data-test-id]="dataTestId"
-        [viewMode]="DynamicTableViewMode.DATA"
-        [displayedColumns]="inferTableSchema(schemaFields)"
+        [columnDescriptors]="inferTableSchema(schemaFields)"
     />
 </div>

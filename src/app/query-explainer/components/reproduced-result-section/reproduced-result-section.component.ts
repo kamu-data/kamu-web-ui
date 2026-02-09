@@ -12,7 +12,10 @@ import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
 import { parseDataFromJsonAoSFormat } from "src/app/common/helpers/data.helpers";
 import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";
 import { NgIf } from "@angular/common";
-import { DynamicTableViewMode } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import {
+    ColumnDescriptor,
+    DynamicTableViewMode,
+} from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
     selector: "app-reproduced-result-section",
@@ -41,7 +44,7 @@ export class ReproducedResultSectionComponent {
         return extractSchemaFieldsFromData(this.tableSource(output)[0] ?? []);
     }
 
-    public inferTableSchema(schema: DataSchemaField[]): string[] {
-        return schema.map((f: DataSchemaField) => f.name);
+    public inferTableSchema(schema: DataSchemaField[]): ColumnDescriptor[] {
+        return schema.map((f: DataSchemaField) => ({ columnName: f.name }));
     }
 }

@@ -50,7 +50,10 @@ import { FormsModule } from "@angular/forms";
 import { MarkdownModule } from "ngx-markdown";
 import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
-import { DynamicTableViewMode } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import {
+    ColumnDescriptor,
+    DynamicTableViewMode,
+} from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
     selector: "app-query-and-result-sections",
@@ -115,8 +118,8 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
         this.knownEngines$ = this.engineService.engines().pipe(map((result) => result.data.knownEngines));
     }
 
-    public inferTableSchema(schema: DataSchemaField[]): string[] {
-        return schema.map((f: DataSchemaField) => f.name);
+    public inferTableSchema(schema: DataSchemaField[]): ColumnDescriptor[] {
+        return schema.map((f: DataSchemaField) => ({ columnName: f.name }));
     }
 
     public ngOnChanges(changes: SimpleChanges): void {

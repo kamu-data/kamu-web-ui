@@ -1,10 +1,9 @@
 <div class="container-table">
     <app-dynamic-table
         [hasTableHeader]="true"
-        [displayedColumns]="inferTableSchema(schemaFields)"
+        [columnDescriptors]="inferTableSchema(schemaFields)"
         [dataRows]="tableSource"
         [idTable]="'set-polling-source-topics'"
         [attr.data-test-id]="dataTestId"
-        [viewMode]="DynamicTableViewMode.DATA"
     />
 </div>

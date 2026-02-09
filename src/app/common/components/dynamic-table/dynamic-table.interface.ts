@@ -46,3 +46,9 @@ export enum DynamicTableViewMode {
     SCHEMA = "schema",
     SCHEMA_AND_DESCRIPTION = "schemaAndDescription",
 }
+
+export interface ColumnDescriptor {
+    columnName: string;
+    showMoreBadge?: boolean;
+    showInfoBadge?: boolean;
+}

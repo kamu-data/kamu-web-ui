@@ -11,7 +11,6 @@ import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/inte
 import { BasePropertyComponent } from "../base-property/base-property.component";
 import { DynamicTableComponent } from "../../../../../../../common/components/dynamic-table/dynamic-table.component";
 import { NgIf } from "@angular/common";
-import { DynamicTableViewMode } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
     selector: "app-schema-property",
@@ -29,8 +28,6 @@ import { DynamicTableViewMode } from "src/app/common/components/dynamic-table/dy
 })
 export class SchemaPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string[];
-
-    public readonly DynamicTableViewMode: typeof DynamicTableViewMode = DynamicTableViewMode;
 
     public get tableSource(): DataRow[] {
         return this.data.map((item: string) => ({

@@ -21,7 +21,6 @@ import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
 import * as YAML from "yaml";
 import { SchemaViewMode } from "./metadata-schema-tab.component.types";
 import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { DynamicTableViewMode } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 import { prepareSchemaData } from "src/app/common/helpers/data.helpers";
 
 @Component({
@@ -52,7 +51,6 @@ export class MetadataSchemaTabComponent {
 
     public viewMode: SchemaViewMode = SchemaViewMode.TABLE;
     public readonly SchemaViewMode: typeof SchemaViewMode = SchemaViewMode;
-    public readonly DynamicTableViewMode: typeof DynamicTableViewMode = DynamicTableViewMode;
 
     public get schema(): MaybeNull<DatasetSchema> {
         return this.datasetMetadataTabData.overviewUpdate.schema;

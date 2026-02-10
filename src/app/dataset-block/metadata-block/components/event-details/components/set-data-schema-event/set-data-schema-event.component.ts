@@ -14,7 +14,6 @@ import { DataRow, DataSchemaField, DatasetSchema } from "src/app/interface/datas
 import { DynamicTableComponent } from "../../../../../../common/components/dynamic-table/dynamic-table.component";
 import { NgIf } from "@angular/common";
 import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
-import { DynamicTableViewMode } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 import { prepareSchemaData } from "src/app/common/helpers/data.helpers";
 
 @Component({
@@ -33,8 +32,6 @@ import { prepareSchemaData } from "src/app/common/helpers/data.helpers";
 })
 export class SetDataSchemaEventComponent extends BaseComponent {
     @Input({ required: true }) public event: SetDataSchema;
-
-    public readonly DynamicTableViewMode: typeof DynamicTableViewMode = DynamicTableViewMode;
 
     public get datasetSchema(): MaybeNull<DatasetSchema> {
         return parseCurrentSchema(this.event.schema);

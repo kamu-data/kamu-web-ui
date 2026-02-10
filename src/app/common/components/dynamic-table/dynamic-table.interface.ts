@@ -41,12 +41,6 @@ export enum OdfExtraAttributes {
     EXTRA_ATTRIBUTE_TYPE = "opendatafabric.org/type",
 }
 
-export enum DynamicTableViewMode {
-    DATA = "data",
-    SCHEMA = "schema",
-    SCHEMA_AND_DESCRIPTION = "schemaAndDescription",
-}
-
 export interface ColumnDescriptor {
     columnName: string;
     showMoreBadge?: boolean;

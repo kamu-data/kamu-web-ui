@@ -8,12 +8,7 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";
-import {
-    ColumnDescriptor,
-    DynamicTableViewMode,
-    OdfExtraAttributes,
-    TableSourceRowInterface,
-} from "./dynamic-table.interface";
+import { ColumnDescriptor, OdfExtraAttributes, TableSourceRowInterface } from "./dynamic-table.interface";
 import { NgFor, NgClass, NgIf } from "@angular/common";
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { ToastrModule, ToastrService } from "ngx-toastr";
@@ -46,14 +41,11 @@ export class DynamicTableComponent implements OnInit, OnChanges {
     @Input({ required: true }) public hasTableHeader: boolean;
     @Input({ required: true }) public dataRows: DataRow[];
     @Input({ required: true }) public idTable: string;
-    // @Input({ required: true }) public viewMode: DynamicTableViewMode;
-    // @Input({ required: true }) public displayedColumns: string[];
     @Input({ required: true }) public columnDescriptors: ColumnDescriptor[];
 
     public dataSource = new MatTableDataSource<TableSourceRowInterface>([]);
     public readonly OperationColumnClassEnum: typeof OperationColumnClassEnum = OperationColumnClassEnum;
     public readonly OdfExtraAttributes: typeof OdfExtraAttributes = OdfExtraAttributes;
-    public readonly DynamicTableViewMode: typeof DynamicTableViewMode = DynamicTableViewMode;
     private toastr = inject(ToastrService);
     private ngbModalService = inject(NgbModal);
 

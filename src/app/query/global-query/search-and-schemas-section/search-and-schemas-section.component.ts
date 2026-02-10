@@ -46,7 +46,6 @@ import { MatIconModule } from "@angular/material/icon";
 import { FormsModule } from "@angular/forms";
 import { NgIf, NgFor } from "@angular/common";
 import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
-import { DynamicTableViewMode } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 import { prepareSchemaData } from "src/app/common/helpers/data.helpers";
 
 @Component({
@@ -83,7 +82,6 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
 
     private readonly delayTime: number = AppValues.SHORT_DELAY_MS;
     private readonly SQL_DEFAULT_TEMPLATE = `select\n  *\nfrom`;
-    public readonly DynamicTableViewMode: typeof DynamicTableViewMode = DynamicTableViewMode;
 
     private cdr = inject(ChangeDetectorRef);
     private datasetService = inject(DatasetService);

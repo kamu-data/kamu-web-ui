@@ -50,10 +50,7 @@ import { FormsModule } from "@angular/forms";
 import { MarkdownModule } from "ngx-markdown";
 import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
-import {
-    ColumnDescriptor,
-    DynamicTableViewMode,
-} from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { ColumnDescriptor } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
     selector: "app-query-and-result-sections",
@@ -111,7 +108,6 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     public knownEngines$: Observable<EngineDesc[]>;
     public enabledProof: boolean = false;
     public readonly GENERATE_PROOF_TOOLTIP: string = "Please log in to use this feature";
-    public readonly DynamicTableViewMode: typeof DynamicTableViewMode = DynamicTableViewMode;
     public selectedCode: string = "";
 
     public ngOnInit(): void {

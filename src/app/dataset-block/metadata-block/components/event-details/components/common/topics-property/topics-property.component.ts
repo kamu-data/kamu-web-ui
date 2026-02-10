@@ -11,10 +11,7 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
 import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";
 import { extractSchemaFieldsFromData } from "src/app/common/helpers/table.helper";
 import { DynamicTableComponent } from "../../../../../../../common/components/dynamic-table/dynamic-table.component";
-import {
-    ColumnDescriptor,
-    DynamicTableViewMode,
-} from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { ColumnDescriptor } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
     selector: "app-topics-property",
@@ -26,8 +23,6 @@ import {
 })
 export class TopicsPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: MqttTopicSubscription[];
-
-    public readonly DynamicTableViewMode: typeof DynamicTableViewMode = DynamicTableViewMode;
 
     public get tableSource(): DataRow[] {
         const result: DataRow[] = [];

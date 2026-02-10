@@ -36,8 +36,13 @@ import {
     SearchDatasetsOverviewQuery,
 } from "../api/kamu.graphql.interface";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
-import { DatasetInfo } from "../interface/navigation.interface";
-import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode, TypeNames } from "../interface/search.interface";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
+import {
+    DatasetAutocompleteItem,
+    DatasetSearchResult,
+    SearchMode,
+    TypeNames,
+} from "src/app/interface/search.interface";
 import {
     FetchKind,
     ReadKind,
@@ -58,7 +63,7 @@ import { TEST_AVATAR_URL } from "../api/mock/auth.mock";
 import { AddPushSourceEditFormType } from "../dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 import { OdfDefaultValues } from "../common/values/app-odf-default.values";
 import { SqlQueryBasicResponse } from "../query/global-query/global-query.model";
-import { OdfTypes } from "../interface/dataset-schema.interface";
+import { OdfTypes } from "src/app/interface/dataset-schema.interface";
 import { SqlQueryExplanationResponse } from "../query-explainer/query-explainer.types";
 import { DynamicTableColumnClassEnum } from "../common/components/dynamic-table/dynamic-table.interface";
 

@@ -8,7 +8,7 @@
 import { DataSchemaFormat, DatasetKind, MetadataBlockFragment } from "../../api/kamu.graphql.interface";
 import { SliceUnit } from "../../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "../../search/mock.data";
-import { DataSchemaTypeField, OdfTypes } from "../../interface/dataset-schema.interface";
+import { DataSchemaTypeField, OdfTypes } from "src/app/interface/dataset-schema.interface";
 import {
     DataHelpers,
     sliceSizeMapperReverse,

@@ -9,9 +9,9 @@ import { AppConfigService } from "src/app/app-config.service";
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable, Subject, catchError, finalize, first, of, switchMap, tap } from "rxjs";
-import { MaybeUndefined } from "../interface/app.types";
+import { MaybeUndefined } from "src/app/interface/app.types";
 import { LocalStorageService } from "./local-storage.service";
-import { DatasetInfo } from "../interface/navigation.interface";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetBasicsFragment, DatasetEndpoints } from "../api/kamu.graphql.interface";
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
 import { NavigationService } from "./navigation.service";
@@ -20,7 +20,7 @@ import {
     UploadPrepareResponse,
     UploadPrepareData,
     UploadAvailableMethod,
-} from "../interface/ingest-via-file-upload.types";
+} from "src/app/interface/ingest-via-file-upload.types";
 import { FileUploadError } from "../common/values/errors";
 import { UnsubscribeDestroyRefAdapter } from "../common/components/unsubscribe.ondestroy.adapter";
 

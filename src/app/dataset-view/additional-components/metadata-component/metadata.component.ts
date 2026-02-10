@@ -12,7 +12,7 @@ import {
     SetPollingSourceEventFragment,
 } from "../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, inject } from "@angular/core";
-import { DatasetSchema } from "../../../interface/dataset-schema.interface";
+import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import AppValues from "../../../common/values/app.values";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { MetadataSchemaUpdate } from "../../dataset.subscriptions.interface";

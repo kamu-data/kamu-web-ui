@@ -7,9 +7,9 @@
 
 import { inject, Injectable } from "@angular/core";
 import { EMPTY, Observable, ReplaySubject, Subject, catchError, map } from "rxjs";
-import { MaybeNull } from "../interface/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { DataSqlErrorUpdate } from "../dataset-view/dataset.subscriptions.interface";
-import { DatasetRequestBySql } from "../interface/dataset.interface";
+import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
 import { parseDataFromJsonAoSFormat } from "../common/helpers/data.helpers";
 import { SqlQueryBasicResponse } from "../query/global-query/global-query.model";
 import { HttpErrorResponse, HttpClient, HttpHeaders } from "@angular/common/http";
@@ -25,7 +25,7 @@ import { LoggedUserService } from "../auth/logged-user.service";
 import { LocalStorageService } from "./local-storage.service";
 import { ToastrService } from "ngx-toastr";
 import { DynamicTableDataRow } from "../common/components/dynamic-table/dynamic-table.interface";
-import { DataSchemaField } from "../interface/dataset-schema.interface";
+import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
 
 @Injectable({
     providedIn: "root",

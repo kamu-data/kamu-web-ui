@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ModalArgumentsInterface } from "../../../interface/modal.interface";
+import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 
 export abstract class DynamicComponent {
     public context: ModalArgumentsInterface;

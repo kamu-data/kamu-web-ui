@@ -12,8 +12,8 @@ import {
     DatasetOverviewFragment,
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
-import { DatasetSchema } from "../interface/dataset-schema.interface";
-import { MaybeNull } from "../interface/app.types";
+import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
+import { MaybeNull } from "src/app/interface/app.types";
 import { DynamicTableDataRow } from "../common/components/dynamic-table/dynamic-table.interface";
 
 export interface OverviewUpdate {

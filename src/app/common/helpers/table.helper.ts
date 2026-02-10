@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DataSchemaField, OdfTypes } from "../../interface/dataset-schema.interface";
+import { DataSchemaField, OdfTypes } from "src/app/interface/dataset-schema.interface";
 import { DynamicTableDataRow } from "../components/dynamic-table/dynamic-table.interface";
 
 export const extractSchemaFieldsFromData = (data: DynamicTableDataRow): DataSchemaField[] => {

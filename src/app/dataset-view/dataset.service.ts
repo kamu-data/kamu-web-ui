@@ -22,10 +22,10 @@ import {
     GetDatasetLineageQuery,
     GetDatasetSchemaQuery,
 } from "../api/kamu.graphql.interface";
-import { DatasetInfo } from "../interface/navigation.interface";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { inject, Injectable, Injector } from "@angular/core";
 import { combineLatest, Observable, of, ReplaySubject, Subject } from "rxjs";
-import { DatasetLineageNode } from "../interface/dataset.interface";
+import { DatasetLineageNode } from "src/app/interface/dataset.interface";
 import {
     DatasetBasicsFragment,
     DatasetDataSizeFragment,
@@ -40,13 +40,13 @@ import { DatasetHistoryUpdate, MetadataSchemaUpdate, OverviewUpdate } from "./da
 import { DatasetApi } from "../api/dataset.api";
 import { DatasetNotFoundError, SqlExecutionError } from "../common/values/errors";
 import { map } from "rxjs/operators";
-import { MaybeNull } from "../interface/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { parseCurrentSchema } from "../common/helpers/app.helpers";
 import { APOLLO_OPTIONS } from "apollo-angular";
 import { resetCacheHelper } from "../common/helpers/apollo-cache.helper";
 import { parseDataRows } from "../common/helpers/data.helpers";
 import { DynamicTableDataRow } from "../common/components/dynamic-table/dynamic-table.interface";
-import { DatasetSchema } from "../interface/dataset-schema.interface";
+import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
 
 @Injectable({ providedIn: "root" })
 export class DatasetService {

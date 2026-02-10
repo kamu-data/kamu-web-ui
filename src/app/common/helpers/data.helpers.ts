@@ -9,7 +9,7 @@ import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@ang
 import { DataQueryResultSuccessViewFragment, MetadataBlockFragment, TimeUnit } from "../../api/kamu.graphql.interface";
 import { EventPropertyLogo } from "../../dataset-block/metadata-block/components/event-details/supported.events";
 import { JsonFormValidators } from "../../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
-import { MaybeUndefined } from "../../interface/app.types";
+import { MaybeUndefined } from "src/app/interface/app.types";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
 import { convertSecondsToHumanReadableFormat, removeAllLineBreaks } from "./app.helpers";
@@ -20,7 +20,7 @@ import {
     DatasetSchema,
     OdfExtraAttributes,
     OdfTypes,
-} from "../../interface/dataset-schema.interface";
+} from "src/app/interface/dataset-schema.interface";
 import { differenceInSeconds } from "date-fns";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { SubscribedEventType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";

@@ -20,6 +20,10 @@ export enum DynamicTableColumnClassEnum {
 
 export interface DynamicTableColumnDescriptor {
     columnName: string;
-    showMoreBadge?: boolean;
-    showInfoBadge?: boolean;
+    showMoreBadge?: {
+        extraElementKey: string;
+    };
+    showInfoBadge?: {
+        extraElementKey: string;
+    };
 }

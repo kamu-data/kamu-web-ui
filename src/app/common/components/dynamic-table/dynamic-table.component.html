@@ -10,7 +10,7 @@
             <td
                 mat-cell
                 [title]="
-                    showInfoBadge(columnDescriptor, element) || showMoreBadge(columnDescriptor, element)
+                    shouldShowInfoBadge(columnDescriptor, element) || shouldShowMoreBadge(columnDescriptor, element)
                         ? ''
                         : element[columnDescriptor.columnName].value
                 "
@@ -26,14 +26,23 @@
             >
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="cell-content truncate-cell">{{ element[columnDescriptor.columnName].value }}</div>
-                    <div class="cell-content ms-1 position-relative" *ngIf="showMoreBadge(columnDescriptor, element)">
-                        <span (click)="$event.stopPropagation(); showModal(element)" class="badge-more"></span>
+                    <div
+                        class="cell-content ms-1 position-relative"
+                        *ngIf="shouldShowMoreBadge(columnDescriptor, element)"
+                    >
+                        <span
+                            (click)="
+                                $event.stopPropagation();
+                                showMoreModal(element, columnDescriptor.showMoreBadge?.extraElementKey)
+                            "
+                            class="badge-more"
+                        ></span>
                     </div>
                     <div
-                        [matTooltip]="extraDesription(element)"
+                        [matTooltip]="extraDescription(element, columnDescriptor.showInfoBadge?.extraElementKey)"
                         [matTooltipPosition]="'after'"
                         class="cell-content ms-1 mt-1 position-relative"
-                        *ngIf="showInfoBadge(columnDescriptor, element)"
+                        *ngIf="shouldShowInfoBadge(columnDescriptor, element)"
                     >
                         <mat-icon class="info-badge text-muted">help_outline</mat-icon>
                     </div>

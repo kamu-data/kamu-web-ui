@@ -15,6 +15,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { DynamicTableColumnDescriptor, DynamicTableDataRow } from "./dynamic-table.interface";
 import { AttributesSchemaModalComponent } from "./components/attributes-schema-modal/attributes-schema-modal.component";
+import { MaybeUndefined } from "src/app/interface/app.types";
 
 @Component({
     selector: "app-dynamic-table",
@@ -73,7 +74,7 @@ export class DynamicTableComponent implements OnInit, OnChanges {
     }
 
     private displayTable(): void {
-        // Corner case - schema is empty, nothing to display
+        // Corner case - no columns, nothing to display
         if (this.displayedColumns.length === 0) {
             this.dataSource.data = [];
         } else {
@@ -85,25 +86,32 @@ export class DynamicTableComponent implements OnInit, OnChanges {
         this.toastr.success(`Copied`);
     }
 
-    public showMoreBadge(columnDescriptor: DynamicTableColumnDescriptor, element: DynamicTableDataRow): boolean {
-        return Boolean(columnDescriptor.showMoreBadge) && Boolean(element["extraKeys"].value);
+    public shouldShowMoreBadge(columnDescriptor: DynamicTableColumnDescriptor, element: DynamicTableDataRow): boolean {
+        if (!columnDescriptor.showMoreBadge) return false;
+        const key = columnDescriptor.showMoreBadge.extraElementKey;
+        return Boolean(element[key]?.value);
     }
 
-    public extraDesription(element: DynamicTableDataRow): string {
-        return "description" in element ? (element["description"].value as string) : "";
+    public extraDescription(element: DynamicTableDataRow, key: MaybeUndefined<string>): string {
+        if (key === undefined) return "";
+        return key in element ? (element[key].value as string) : "";
     }
 
-    public showInfoBadge(columnDescriptor: DynamicTableColumnDescriptor, element: DynamicTableDataRow): boolean {
-        return Boolean(columnDescriptor.showInfoBadge && this.extraDesription(element));
+    public shouldShowInfoBadge(columnDescriptor: DynamicTableColumnDescriptor, element: DynamicTableDataRow): boolean {
+        if (!columnDescriptor.showInfoBadge) return false;
+        const key = columnDescriptor.showInfoBadge.extraElementKey;
+        return Boolean(this.extraDescription(element, key));
     }
 
-    public showModal(element: DynamicTableDataRow): void {
+    public showMoreModal(element: DynamicTableDataRow, key: MaybeUndefined<string>): void {
+        if (key === undefined) return;
+
         const modalRef = this.ngbModalService.open(AttributesSchemaModalComponent, {
             size: "lg",
             centered: true,
             scrollable: true,
         });
         const modalRefInstance = modalRef.componentInstance as AttributesSchemaModalComponent;
-        modalRefInstance.element = element["extraKeys"].value;
+        modalRefInstance.element = element[key].value;
     }
 }

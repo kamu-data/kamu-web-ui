@@ -36,7 +36,7 @@
             [hasTableHeader]="true"
             [columnDescriptors]="[
                 { columnName: 'name' },
-                { columnName: 'type', showMoreBadge: true },
+                { columnName: 'type', showMoreBadge: { extraElementKey: 'extraKeys' } },
                 { columnName: 'description' },
             ]"
             [dataRows]="schemaData(schema.fields)"

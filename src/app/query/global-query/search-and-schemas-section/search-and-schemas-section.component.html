@@ -98,7 +98,7 @@
                                 [hasTableHeader]="true"
                                 [idTable]="'schema-block-table'"
                                 [columnDescriptors]="[
-                                    { columnName: 'name', showInfoBadge: true },
+                                    { columnName: 'name', showInfoBadge: { extraElementKey: 'description' } },
                                     { columnName: 'type' },
                                 ]"
                                 [dataRows]="schemaData(item.schema.fields)"

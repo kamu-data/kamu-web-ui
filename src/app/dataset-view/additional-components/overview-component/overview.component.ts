@@ -39,8 +39,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { FeatureFlagDirective } from "../../../common/directives/feature-flag.directive";
 import { MatChipsModule } from "@angular/material/chips";
 import { NgIf, NgFor, AsyncPipe, DecimalPipe, TitleCasePipe } from "@angular/common";
-import { ColumnDescriptor } from "src/app/common/components/dynamic-table/dynamic-table.interface";
-import { DataSchemaField } from "src/app/interface/dataset.interface";
+import { DynamicTableColumnDescriptor } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
 
 @Component({
     selector: "app-overview",
@@ -267,7 +267,7 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
         }
     }
 
-    public inferTableSchema(schema: DataSchemaField[]): ColumnDescriptor[] {
+    public inferTableSchema(schema: DataSchemaField[]): DynamicTableColumnDescriptor[] {
         return schema.map((f: DataSchemaField) => ({ columnName: f.name }));
     }
 

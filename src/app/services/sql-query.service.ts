@@ -9,7 +9,7 @@ import { inject, Injectable } from "@angular/core";
 import { EMPTY, Observable, ReplaySubject, Subject, catchError, map } from "rxjs";
 import { MaybeNull } from "../interface/app.types";
 import { DataSqlErrorUpdate } from "../dataset-view/dataset.subscriptions.interface";
-import { DatasetRequestBySql, DataRow, DataSchemaField } from "../interface/dataset.interface";
+import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { parseDataFromJsonAoSFormat } from "../common/helpers/data.helpers";
 import { SqlQueryBasicResponse } from "../query/global-query/global-query.model";
 import { HttpErrorResponse, HttpClient, HttpHeaders } from "@angular/common/http";
@@ -24,6 +24,8 @@ import AppValues from "../common/values/app.values";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { LocalStorageService } from "./local-storage.service";
 import { ToastrService } from "ngx-toastr";
+import { DynamicTableDataRow } from "../common/components/dynamic-table/dynamic-table.interface";
+import { DataSchemaField } from "../interface/dataset-schema.interface";
 
 @Injectable({
     providedIn: "root",
@@ -110,7 +112,10 @@ export class SqlQueryService {
             map((result: SqlQueryExplanationResponse) => {
                 const involvedDatasetsId = result.input.datasets?.map((item) => item.id) as string[];
                 const columnNames: string[] = result.output?.schema.fields.map((item) => item.name) as string[];
-                const content: DataRow[] = parseDataFromJsonAoSFormat(result.output?.data as object[], columnNames);
+                const content: DynamicTableDataRow[] = parseDataFromJsonAoSFormat(
+                    result.output?.data as object[],
+                    columnNames,
+                );
                 const schema: DataSchemaField[] = extractSchemaFieldsFromData(content[0] ?? []);
                 const sqlQueryResponse: SqlQueryBasicResponse = !result.proof
                     ? {

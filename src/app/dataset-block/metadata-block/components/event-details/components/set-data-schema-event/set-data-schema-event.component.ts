@@ -10,11 +10,12 @@ import { SetDataSchema } from "src/app/api/kamu.graphql.interface";
 import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
 import { MaybeNull } from "src/app/interface/app.types";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { DataRow, DataSchemaField, DatasetSchema } from "src/app/interface/dataset.interface";
+import { DataSchemaField, DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import { DynamicTableComponent } from "../../../../../../common/components/dynamic-table/dynamic-table.component";
 import { NgIf } from "@angular/common";
 import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
 import { prepareSchemaData } from "src/app/common/helpers/data.helpers";
+import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
     selector: "app-set-data-schema-event",
@@ -41,7 +42,7 @@ export class SetDataSchemaEventComponent extends BaseComponent {
         return schema.map((f: DataSchemaField) => f.name);
     }
 
-    public schemaData(schema: DataSchemaField[]): DataRow[] {
+    public schemaData(schema: DataSchemaField[]): DynamicTableDataRow[] {
         return prepareSchemaData(schema);
     }
 }

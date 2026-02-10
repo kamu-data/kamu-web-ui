@@ -6,11 +6,11 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { provideToastr } from "ngx-toastr";
+import { SimpleChanges } from "@angular/core";
 import { findElementByDataTestId, getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { DynamicTableComponent } from "./dynamic-table.component";
 import { MOCK_DATA_ROWS } from "./dynamic-table.mock";
-import { provideToastr } from "ngx-toastr";
-import { SimpleChanges } from "@angular/core";
 
 describe("DynamicTableComponent", () => {
     let component: DynamicTableComponent;

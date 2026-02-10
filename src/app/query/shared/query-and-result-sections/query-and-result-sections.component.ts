@@ -25,7 +25,7 @@ import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import AppValues from "src/app/common/values/app.values";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { UploadPrepareResponse, UploadPrepareData } from "src/app/interface/ingest-via-file-upload.types";
-import { DataRow, DataSchemaField, DatasetRequestBySql } from "src/app/interface/dataset.interface";
+import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
 import ProjectLinks from "src/app/project-links";
 import { FileUploadService } from "src/app/services/file-upload.service";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -50,7 +50,11 @@ import { FormsModule } from "@angular/forms";
 import { MarkdownModule } from "ngx-markdown";
 import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
-import { ColumnDescriptor } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import {
+    DynamicTableColumnDescriptor,
+    DynamicTableDataRow,
+} from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
 
 @Component({
     selector: "app-query-and-result-sections",
@@ -102,7 +106,7 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     public skipRows: MaybeUndefined<number>;
     public rowsLimit: number = AppValues.SQL_QUERY_LIMIT;
     public editorLoaded = false;
-    public currentData: DataRow[] = [];
+    public currentData: DynamicTableDataRow[] = [];
     public isAllDataLoaded: boolean;
     public selectedEngine = AppValues.DEFAULT_ENGINE_NAME.toLowerCase();
     public knownEngines$: Observable<EngineDesc[]>;
@@ -114,7 +118,7 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
         this.knownEngines$ = this.engineService.engines().pipe(map((result) => result.data.knownEngines));
     }
 
-    public inferTableSchema(schema: DataSchemaField[]): ColumnDescriptor[] {
+    public inferTableSchema(schema: DataSchemaField[]): DynamicTableColumnDescriptor[] {
         return schema.map((f: DataSchemaField) => ({ columnName: f.name }));
     }
 

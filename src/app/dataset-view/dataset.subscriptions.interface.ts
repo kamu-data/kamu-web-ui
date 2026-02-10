@@ -12,19 +12,20 @@ import {
     DatasetOverviewFragment,
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
-import { DataRow, DatasetSchema } from "../interface/dataset.interface";
+import { DatasetSchema } from "../interface/dataset-schema.interface";
 import { MaybeNull } from "../interface/app.types";
+import { DynamicTableDataRow } from "../common/components/dynamic-table/dynamic-table.interface";
 
 export interface OverviewUpdate {
     schema: MaybeNull<DatasetSchema>;
-    content: DataRow[];
+    content: DynamicTableDataRow[];
     overview: DatasetOverviewFragment;
     size: DatasetDataSizeFragment;
 }
 
 export interface DataUpdate {
     schema: MaybeNull<DatasetSchema>;
-    content: DataRow[];
+    content: DynamicTableDataRow[];
     currentVocab?: SetVocab;
 }
 

@@ -7,15 +7,14 @@
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";
-import { ColumnDescriptor, OdfExtraAttributes, TableSourceRowInterface } from "./dynamic-table.interface";
 import { NgFor, NgClass, NgIf } from "@angular/common";
 import { ClipboardModule } from "@angular/cdk/clipboard";
 import { ToastrModule, ToastrService } from "ngx-toastr";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { AttributesSchemaModalComponent } from "./components/attributes-schema-modal/attributes-schema-modal.component";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { DynamicTableColumnDescriptor, DynamicTableDataRow } from "./dynamic-table.interface";
+import { AttributesSchemaModalComponent } from "./components/attributes-schema-modal/attributes-schema-modal.component";
 
 @Component({
     selector: "app-dynamic-table",
@@ -39,15 +38,14 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 })
 export class DynamicTableComponent implements OnInit, OnChanges {
     @Input({ required: true }) public hasTableHeader: boolean;
-    @Input({ required: true }) public dataRows: DataRow[];
+    @Input({ required: true }) public dataRows: DynamicTableDataRow[];
     @Input({ required: true }) public idTable: string;
-    @Input({ required: true }) public columnDescriptors: ColumnDescriptor[];
+    @Input({ required: true }) public columnDescriptors: DynamicTableColumnDescriptor[];
 
-    public dataSource = new MatTableDataSource<TableSourceRowInterface>([]);
-    public readonly OperationColumnClassEnum: typeof OperationColumnClassEnum = OperationColumnClassEnum;
-    public readonly OdfExtraAttributes: typeof OdfExtraAttributes = OdfExtraAttributes;
-    private toastr = inject(ToastrService);
-    private ngbModalService = inject(NgbModal);
+    private readonly toastr = inject(ToastrService);
+    private readonly ngbModalService = inject(NgbModal);
+
+    public dataSource = new MatTableDataSource<DynamicTableDataRow>([]);
 
     public ngOnInit(): void {
         this.displayTable();
@@ -70,7 +68,7 @@ export class DynamicTableComponent implements OnInit, OnChanges {
         return Boolean(this.dataRows?.length);
     }
 
-    public trackByColumn(index: number, item: ColumnDescriptor): string {
+    public trackByColumn(index: number, item: DynamicTableColumnDescriptor): string {
         return item.columnName;
     }
 
@@ -87,25 +85,25 @@ export class DynamicTableComponent implements OnInit, OnChanges {
         this.toastr.success(`Copied`);
     }
 
-    public showMoreBadge(columnDescriptor: ColumnDescriptor, element: DataRow): boolean {
+    public showMoreBadge(columnDescriptor: DynamicTableColumnDescriptor, element: DynamicTableDataRow): boolean {
         return Boolean(columnDescriptor.showMoreBadge) && Boolean(element["extraKeys"].value);
     }
 
-    public extraDesription(element: DataRow): string {
+    public extraDesription(element: DynamicTableDataRow): string {
         return "description" in element ? (element["description"].value as string) : "";
     }
 
-    public showInfoBadge(columnDescriptor: ColumnDescriptor, element: DataRow): boolean {
+    public showInfoBadge(columnDescriptor: DynamicTableColumnDescriptor, element: DynamicTableDataRow): boolean {
         return Boolean(columnDescriptor.showInfoBadge && this.extraDesription(element));
     }
 
-    public showModal(element: DataRow): void {
+    public showModal(element: DynamicTableDataRow): void {
         const modalRef = this.ngbModalService.open(AttributesSchemaModalComponent, {
             size: "lg",
             centered: true,
             scrollable: true,
         });
         const modalRefInstance = modalRef.componentInstance as AttributesSchemaModalComponent;
-        modalRefInstance.element = element["extraKeys"].value as DataSchemaField;
+        modalRefInstance.element = element["extraKeys"].value;
     }
 }

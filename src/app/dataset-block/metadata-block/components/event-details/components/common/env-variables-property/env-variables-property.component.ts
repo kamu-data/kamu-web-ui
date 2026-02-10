@@ -8,10 +8,14 @@
 import { extractSchemaFieldsFromData } from "../../../../../../../common/helpers/table.helper";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { EnvVar } from "src/app/api/kamu.graphql.interface";
-import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";
+import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
 import { BasePropertyComponent } from "../base-property/base-property.component";
 import { DynamicTableComponent } from "../../../../../../../common/components/dynamic-table/dynamic-table.component";
-import { ColumnDescriptor } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import {
+    DynamicTableColumnClassEnum,
+    DynamicTableColumnDescriptor,
+    DynamicTableDataRow,
+} from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
     selector: "app-env-variables-property",
@@ -24,17 +28,17 @@ import { ColumnDescriptor } from "src/app/common/components/dynamic-table/dynami
 export class EnvVariablesPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: EnvVar[];
 
-    public get tableSource(): DataRow[] {
-        const result: DataRow[] = [];
+    public get tableSource(): DynamicTableDataRow[] {
+        const result: DynamicTableDataRow[] = [];
         this.data.forEach(({ name, value }: EnvVar) =>
             result.push({
                 name: {
                     value: name,
-                    cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                    cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
                 },
                 value: {
                     value: value ? value : "null",
-                    cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                    cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
                 },
             }),
         );
@@ -45,7 +49,7 @@ export class EnvVariablesPropertyComponent extends BasePropertyComponent {
         return extractSchemaFieldsFromData(this.tableSource[0]);
     }
 
-    public inferTableSchema(schema: DataSchemaField[]): ColumnDescriptor[] {
+    public inferTableSchema(schema: DataSchemaField[]): DynamicTableColumnDescriptor[] {
         return schema.map((f: DataSchemaField) => ({ columnName: f.name }));
     }
 }

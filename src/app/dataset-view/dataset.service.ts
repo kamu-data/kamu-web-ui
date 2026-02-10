@@ -25,7 +25,7 @@ import {
 import { DatasetInfo } from "../interface/navigation.interface";
 import { inject, Injectable, Injector } from "@angular/core";
 import { combineLatest, Observable, of, ReplaySubject, Subject } from "rxjs";
-import { DataRow, DatasetLineageNode, DatasetSchema } from "../interface/dataset.interface";
+import { DatasetLineageNode } from "../interface/dataset.interface";
 import {
     DatasetBasicsFragment,
     DatasetDataSizeFragment,
@@ -45,6 +45,8 @@ import { parseCurrentSchema } from "../common/helpers/app.helpers";
 import { APOLLO_OPTIONS } from "apollo-angular";
 import { resetCacheHelper } from "../common/helpers/apollo-cache.helper";
 import { parseDataRows } from "../common/helpers/data.helpers";
+import { DynamicTableDataRow } from "../common/components/dynamic-table/dynamic-table.interface";
+import { DatasetSchema } from "../interface/dataset-schema.interface";
 
 @Injectable({ providedIn: "root" })
 export class DatasetService {
@@ -273,7 +275,7 @@ export class DatasetService {
         schema: MaybeNull<DatasetSchema>,
         tail: DataQueryResultSuccessViewFragment,
     ): void {
-        const content: DataRow[] = parseDataRows(tail);
+        const content: DynamicTableDataRow[] = parseDataRows(tail);
 
         const overviewDataUpdate: OverviewUpdate = {
             schema,

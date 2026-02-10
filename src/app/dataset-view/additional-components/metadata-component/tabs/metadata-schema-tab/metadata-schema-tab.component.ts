@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 import { NgIf } from "@angular/common";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { MaybeNull } from "src/app/interface/app.types";
-import { DataRow, DataSchemaField, DatasetSchema } from "src/app/interface/dataset.interface";
+import { DataSchemaField, DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import { BlockRowDataComponent } from "src/app/common/components/block-row-data/block-row-data.component";
 import { DynamicTableComponent } from "src/app/common/components/dynamic-table/dynamic-table.component";
 import { MatIconModule } from "@angular/material/icon";
@@ -22,6 +22,7 @@ import * as YAML from "yaml";
 import { SchemaViewMode } from "./metadata-schema-tab.component.types";
 import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { prepareSchemaData } from "src/app/common/helpers/data.helpers";
+import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
     selector: "app-metadata-schema-tab",
@@ -64,7 +65,7 @@ export class MetadataSchemaTabComponent {
         return schema.map((f: DataSchemaField) => f.name);
     }
 
-    public schemaData(schema: DataSchemaField[]): DataRow[] {
+    public schemaData(schema: DataSchemaField[]): DynamicTableDataRow[] {
         return prepareSchemaData(schema);
     }
 

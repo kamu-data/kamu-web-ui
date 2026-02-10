@@ -15,17 +15,17 @@ import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
 import { convertSecondsToHumanReadableFormat, removeAllLineBreaks } from "./app.helpers";
 import { SliceUnit } from "../../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 import {
-    DataRow,
     DataSchemaField,
     DataSchemaTypeField,
     DatasetSchema,
-    OperationColumnClassEnum,
-} from "../../interface/dataset.interface";
+    OdfExtraAttributes,
+    OdfTypes,
+} from "../../interface/dataset-schema.interface";
 import { differenceInSeconds } from "date-fns";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { SubscribedEventType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
 import { Network } from "ethers";
-import { OdfExtraAttributes, OdfTypes } from "../components/dynamic-table/dynamic-table.interface";
+import { DynamicTableColumnClassEnum, DynamicTableDataRow } from "../components/dynamic-table/dynamic-table.interface";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -341,7 +341,7 @@ export function parseSchema(schemaContent: string): DatasetSchema {
     return JSON.parse(removeAllLineBreaks(schemaContent)) as DatasetSchema;
 }
 
-export function parseDataRows(successResult: DataQueryResultSuccessViewFragment): DataRow[] {
+export function parseDataRows(successResult: DataQueryResultSuccessViewFragment): DynamicTableDataRow[] {
     const content: string = successResult.data.content;
     const parsedData = JSON.parse(content) as object[];
     if (parsedData.length) {
@@ -353,7 +353,7 @@ export function parseDataRows(successResult: DataQueryResultSuccessViewFragment)
     }
 }
 
-export function parseDataFromJsonAoSFormat(data: object[], columnNames: string[]): DataRow[] {
+export function parseDataFromJsonAoSFormat(data: object[], columnNames: string[]): DynamicTableDataRow[] {
     return data.map((dataItem: object) => {
         const arr = columnNames.map((key: string) => {
             const keyObject = key as keyof typeof dataItem;
@@ -363,7 +363,7 @@ export function parseDataFromJsonAoSFormat(data: object[], columnNames: string[]
                     cssClass:
                         key === "op"
                             ? setOperationColumnClass(dataItem[keyObject])
-                            : OperationColumnClassEnum.PRIMARY_COLOR,
+                            : DynamicTableColumnClassEnum.PRIMARY_COLOR,
                 },
             };
         });
@@ -389,16 +389,16 @@ export function operationColumnMapper(value: string | number): string {
     } else return value;
 }
 
-export function setOperationColumnClass(value: number): OperationColumnClassEnum {
+export function setOperationColumnClass(value: number): DynamicTableColumnClassEnum {
     switch (value) {
         case 1:
-            return OperationColumnClassEnum.ERROR_COLOR;
+            return DynamicTableColumnClassEnum.ERROR_COLOR;
         case 2:
         case 3:
-            return OperationColumnClassEnum.SECONDARY_COLOR;
+            return DynamicTableColumnClassEnum.SECONDARY_COLOR;
 
         default:
-            return OperationColumnClassEnum.PRIMARY_COLOR;
+            return DynamicTableColumnClassEnum.PRIMARY_COLOR;
     }
 }
 
@@ -480,27 +480,27 @@ export function OdfTypeMapper(type: DataSchemaTypeField): string {
     }
 }
 
-export function prepareSchemaData(schema: DataSchemaField[]): DataRow[] {
+export function prepareSchemaData(schema: DataSchemaField[]): DynamicTableDataRow[] {
     return schema.map((x) => {
         return {
-            name: { value: x.name, cssClass: OperationColumnClassEnum.PRIMARY_COLOR },
+            name: { value: x.name, cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR },
             type: {
                 value:
                     x.extra && OdfExtraAttributes.EXTRA_ATTRIBUTE_TYPE in x.extra
                         ? x.extra[OdfExtraAttributes.EXTRA_ATTRIBUTE_TYPE].kind
                         : OdfTypeMapper(x.type),
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             description: {
                 value:
                     x.extra && OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION in x.extra
                         ? x.extra[OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION]
                         : "",
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             extraKeys: {
                 value: x.extra && Object.keys(x.extra).length ? x : "",
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
         };
     });

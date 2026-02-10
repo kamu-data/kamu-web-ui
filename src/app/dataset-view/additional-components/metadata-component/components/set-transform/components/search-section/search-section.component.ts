@@ -16,7 +16,7 @@ import { SearchApi } from "src/app/api/search.api";
 import { MaybeNull } from "src/app/interface/app.types";
 import AppValues from "src/app/common/values/app.values";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { DataSchemaTypeField, DatasetSchema } from "src/app/interface/dataset.interface";
+import { DataSchemaTypeField, DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { DatasetNode } from "../../set-transform.types";
 import { BaseComponent } from "src/app/common/components/base.component";

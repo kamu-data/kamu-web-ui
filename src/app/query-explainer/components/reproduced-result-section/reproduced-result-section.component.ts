@@ -8,11 +8,14 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { QueryExplainerOutputType } from "../../query-explainer.types";
 import { extractSchemaFieldsFromData } from "src/app/common/helpers/table.helper";
-import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
+import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
 import { parseDataFromJsonAoSFormat } from "src/app/common/helpers/data.helpers";
 import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";
 import { NgIf } from "@angular/common";
-import { ColumnDescriptor } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import {
+    DynamicTableColumnDescriptor,
+    DynamicTableDataRow,
+} from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
     selector: "app-reproduced-result-section",
@@ -30,7 +33,7 @@ import { ColumnDescriptor } from "src/app/common/components/dynamic-table/dynami
 export class ReproducedResultSectionComponent {
     @Input({ required: true }) public dataJsonAoS: QueryExplainerOutputType;
 
-    public tableSource(output: QueryExplainerOutputType): DataRow[] {
+    public tableSource(output: QueryExplainerOutputType): DynamicTableDataRow[] {
         const columnNames: string[] = output.schema.fields.map((item) => item.name);
         return parseDataFromJsonAoSFormat(output.data, columnNames);
     }
@@ -39,7 +42,7 @@ export class ReproducedResultSectionComponent {
         return extractSchemaFieldsFromData(this.tableSource(output)[0] ?? []);
     }
 
-    public inferTableSchema(schema: DataSchemaField[]): ColumnDescriptor[] {
+    public inferTableSchema(schema: DataSchemaField[]): DynamicTableColumnDescriptor[] {
         return schema.map((f: DataSchemaField) => ({ columnName: f.name }));
     }
 }

@@ -46,7 +46,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { FormsModule } from "@angular/forms";
 import { NgIf, NgFor } from "@angular/common";
 import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
-import { prepareSchemaData } from "src/app/common/helpers/data.helpers";
+import { schemaAsDataRows } from "src/app/common/helpers/data-schema.helpers";
 import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
@@ -127,7 +127,7 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
     }
 
     public schemaData(schema: DataSchemaField[]): DynamicTableDataRow[] {
-        return prepareSchemaData(schema);
+        return schemaAsDataRows(schema);
     }
 
     public removeDataset(datasetAlias: string): void {

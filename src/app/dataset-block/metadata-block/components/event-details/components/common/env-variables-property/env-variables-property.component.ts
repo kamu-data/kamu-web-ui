@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { extractSchemaFieldsFromData } from "../../../../../../../common/helpers/table.helper";
+import { extractSchemaFieldsFromData } from "../../../../../../../common/helpers/data-schema.helpers";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { EnvVar } from "src/app/api/kamu.graphql.interface";
 import { DataSchemaField } from "src/app/interface/dataset-schema.interface";

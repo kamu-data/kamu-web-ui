@@ -7,7 +7,7 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { QueryExplainerOutputType } from "../../query-explainer.types";
-import { extractSchemaFieldsFromData } from "src/app/common/helpers/table.helper";
+import { extractSchemaFieldsFromData } from "src/app/common/helpers/data-schema.helpers";
 import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
 import { parseDataFromJsonAoSFormat } from "src/app/common/helpers/data.helpers";
 import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";

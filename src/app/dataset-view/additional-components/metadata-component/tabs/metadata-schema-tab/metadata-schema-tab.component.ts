@@ -21,7 +21,7 @@ import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
 import * as YAML from "yaml";
 import { SchemaViewMode } from "./metadata-schema-tab.component.types";
 import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { prepareSchemaData } from "src/app/common/helpers/data.helpers";
+import { schemaAsDataRows } from "src/app/common/helpers/data-schema.helpers";
 import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
@@ -66,7 +66,7 @@ export class MetadataSchemaTabComponent {
     }
 
     public schemaData(schema: DataSchemaField[]): DynamicTableDataRow[] {
-        return prepareSchemaData(schema);
+        return schemaAsDataRows(schema);
     }
 
     public convertToYaml(fields: DataSchemaField[]): string {

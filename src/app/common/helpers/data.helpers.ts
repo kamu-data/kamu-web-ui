@@ -12,15 +12,8 @@ import { JsonFormValidators } from "../../dataset-view/additional-components/met
 import { MaybeUndefined } from "src/app/interface/app.types";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
-import { convertSecondsToHumanReadableFormat, removeAllLineBreaks } from "./app.helpers";
+import { convertSecondsToHumanReadableFormat } from "./app.helpers";
 import { SliceUnit } from "../../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
-import {
-    DataSchemaField,
-    DataSchemaTypeField,
-    DatasetSchema,
-    OdfExtraAttributes,
-    OdfTypes,
-} from "src/app/interface/dataset-schema.interface";
 import { differenceInSeconds } from "date-fns";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { SubscribedEventType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
@@ -337,10 +330,6 @@ export function sliceSizeMapperReverse(sizeInBytes: number): { size: number; uni
     }
 }
 
-export function parseSchema(schemaContent: string): DatasetSchema {
-    return JSON.parse(removeAllLineBreaks(schemaContent)) as DatasetSchema;
-}
-
 export function parseDataRows(successResult: DataQueryResultSuccessViewFragment): DynamicTableDataRow[] {
     const content: string = successResult.data.content;
     const parsedData = JSON.parse(content) as object[];
@@ -450,58 +439,4 @@ export function chainNameFromId(chainId: number): string {
     } catch {
         return "unknown";
     }
-}
-
-export function OdfTypeMapper(type: DataSchemaTypeField): string {
-    switch (type.kind) {
-        case OdfTypes.Option:
-            return `${OdfTypeMapper(type.inner)}?`;
-        case OdfTypes.Null:
-            return `${type.kind}<${type.inner ? OdfTypeMapper(type.inner) : ""}>`;
-        case OdfTypes.List: {
-            const innerContent =
-                "inner" in type.itemType && type.itemType.inner ? OdfTypeMapper(type.itemType) : type.itemType.kind;
-            return `${type.kind}<${innerContent}>`;
-        }
-        case OdfTypes.Timestamp:
-            return `${type.kind}<${type.unit}, ${type.timezone}>`;
-        case OdfTypes.Duration:
-        case OdfTypes.Time:
-            return `${type.kind}<${type.unit}>`;
-        case OdfTypes.Map:
-            return `${type.kind}<${type.keyType.kind}, ${type.valueType.kind}>`;
-        case OdfTypes.Struct:
-            return type.fields.length
-                ? `${type.kind}<${type.fields.map((x) => `${x.name}:${OdfTypeMapper(x.type)}`).join(", ")}>`
-                : "";
-
-        default:
-            return type.kind;
-    }
-}
-
-export function prepareSchemaData(schema: DataSchemaField[]): DynamicTableDataRow[] {
-    return schema.map((x) => {
-        return {
-            name: { value: x.name, cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR },
-            type: {
-                value:
-                    x.extra && OdfExtraAttributes.EXTRA_ATTRIBUTE_TYPE in x.extra
-                        ? x.extra[OdfExtraAttributes.EXTRA_ATTRIBUTE_TYPE].kind
-                        : OdfTypeMapper(x.type),
-                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
-            },
-            description: {
-                value:
-                    x.extra && OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION in x.extra
-                        ? x.extra[OdfExtraAttributes.EXTRA_ATTRIBUTE_DESCRIPTION]
-                        : "",
-                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
-            },
-            extraKeys: {
-                value: x.extra && Object.keys(x.extra).length ? x : "",
-                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
-            },
-        };
-    });
 }

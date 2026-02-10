@@ -14,7 +14,7 @@ import { DataSchemaField, DatasetSchema } from "src/app/interface/dataset-schema
 import { DynamicTableComponent } from "../../../../../../common/components/dynamic-table/dynamic-table.component";
 import { NgIf } from "@angular/common";
 import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
-import { prepareSchemaData } from "src/app/common/helpers/data.helpers";
+import { schemaAsDataRows } from "src/app/common/helpers/data-schema.helpers";
 import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
@@ -43,6 +43,6 @@ export class SetDataSchemaEventComponent extends BaseComponent {
     }
 
     public schemaData(schema: DataSchemaField[]): DynamicTableDataRow[] {
-        return prepareSchemaData(schema);
+        return schemaAsDataRows(schema);
     }
 }

@@ -8,14 +8,7 @@
 import { DataSchemaFormat, DatasetKind, MetadataBlockFragment } from "../../api/kamu.graphql.interface";
 import { SliceUnit } from "../../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "../../search/mock.data";
-import { DataSchemaTypeField, OdfTypes } from "src/app/interface/dataset-schema.interface";
-import {
-    DataHelpers,
-    sliceSizeMapperReverse,
-    operationColumnMapper,
-    setOperationColumnClass,
-    OdfTypeMapper,
-} from "./data.helpers";
+import { DataHelpers, sliceSizeMapperReverse, operationColumnMapper, setOperationColumnClass } from "./data.helpers";
 import { DynamicTableColumnClassEnum } from "../components/dynamic-table/dynamic-table.interface";
 
 export const metadataBlockSetVocab: MetadataBlockFragment = {
@@ -445,100 +438,5 @@ it(`should propagate the name for unknown engines`, () => {
 ].forEach((item: { case: number; expected: DynamicTableColumnClassEnum }) => {
     it(`should check set operation column class with  ${item.case}`, () => {
         expect(setOperationColumnClass(item.case)).toEqual(item.expected);
-    });
-});
-
-describe("OdfTypeMapper", () => {
-    it("should map simple types correctly", () => {
-        const field: DataSchemaTypeField = { kind: OdfTypes.Int32 };
-        expect(OdfTypeMapper(field)).toBe("Int32");
-    });
-
-    it("should map Option type with recursion", () => {
-        const field: DataSchemaTypeField = {
-            kind: OdfTypes.Option,
-            inner: { kind: OdfTypes.String },
-        };
-        expect(OdfTypeMapper(field)).toBe("String?");
-    });
-
-    it("should map Null type", () => {
-        const field: DataSchemaTypeField = {
-            kind: OdfTypes.Null,
-            inner: { kind: OdfTypes.String },
-        };
-        expect(OdfTypeMapper(field)).toBe("Null<String>");
-    });
-
-    it("should map Duration type", () => {
-        const field: DataSchemaTypeField = {
-            kind: OdfTypes.Duration,
-            unit: "Millisecond",
-        };
-        expect(OdfTypeMapper(field)).toBe("Duration<Millisecond>");
-    });
-
-    it("should map Time type", () => {
-        const field: DataSchemaTypeField = {
-            kind: OdfTypes.Time,
-            unit: "Millisecond",
-        };
-        expect(OdfTypeMapper(field)).toBe("Time<Millisecond>");
-    });
-
-    it("should map List type", () => {
-        const field: DataSchemaTypeField = {
-            kind: OdfTypes.List,
-            itemType: { kind: OdfTypes.Float64 },
-        };
-        expect(OdfTypeMapper(field)).toBe("List<Float64>");
-    });
-
-    it("should map Timestamp with unit and timezone", () => {
-        const field: DataSchemaTypeField = {
-            kind: OdfTypes.Timestamp,
-            unit: "ms",
-            timezone: "UTC",
-        };
-        expect(OdfTypeMapper(field)).toBe("Timestamp<ms, UTC>");
-    });
-
-    it("should map Map type with key and value types", () => {
-        const field: DataSchemaTypeField = {
-            kind: OdfTypes.Map,
-            keyType: { kind: "String" },
-            valueType: { kind: "Int64" },
-        };
-        expect(OdfTypeMapper(field)).toBe("Map<String, Int64>");
-    });
-
-    it("should map Struct with fields", () => {
-        const field: DataSchemaTypeField = {
-            kind: OdfTypes.Struct,
-            fields: [
-                { name: "id", type: { kind: OdfTypes.Int32 } },
-                { name: "name", type: { kind: OdfTypes.String } },
-            ],
-        };
-        expect(OdfTypeMapper(field)).toBe("Struct<id:Int32, name:String>");
-    });
-
-    it("should handle nested complex types (List of Options)", () => {
-        const field: DataSchemaTypeField = {
-            kind: OdfTypes.List,
-            itemType: {
-                kind: OdfTypes.Option,
-                inner: { kind: OdfTypes.Int32 },
-            },
-        };
-        expect(OdfTypeMapper(field)).toBe("List<Int32?>");
-    });
-
-    it("should return empty string for empty Struct", () => {
-        const field: DataSchemaTypeField = {
-            kind: OdfTypes.Struct,
-            fields: [],
-        };
-        expect(OdfTypeMapper(field)).toBe("");
     });
 });

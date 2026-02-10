@@ -29,7 +29,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { NgIf } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
-import { OdfTypeMapper } from "src/app/common/helpers/data.helpers";
+import { odfType2String } from "src/app/common/helpers/data-schema.helpers";
 
 @Component({
     selector: "app-search-section",
@@ -152,7 +152,7 @@ export class SearchSectionComponent extends BaseComponent {
         return !!node.children && node.children.length > 0;
     }
 
-    public OdfTypeMapper(type: DataSchemaTypeField): string {
-        return OdfTypeMapper(type);
+    public odfType2String(type: DataSchemaTypeField): string {
+        return odfType2String(type);
     }
 }

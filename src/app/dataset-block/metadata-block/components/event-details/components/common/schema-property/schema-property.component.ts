@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { extractSchemaFieldsFromData } from "src/app/common/helpers/table.helper";
+import { extractSchemaFieldsFromData } from "src/app/common/helpers/data-schema.helpers";
 import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
 import { BasePropertyComponent } from "../base-property/base-property.component";
 import { DynamicTableComponent } from "src/app/common/components/dynamic-table/dynamic-table.component";

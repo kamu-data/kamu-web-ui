@@ -19,7 +19,7 @@ import {
     QueryExplainerCommitmentType,
     QueryExplainerInputType,
 } from "../query-explainer/query-explainer.types";
-import { extractSchemaFieldsFromData } from "../common/helpers/table.helper";
+import { extractSchemaFieldsFromData } from "../common/helpers/data-schema.helpers";
 import AppValues from "../common/values/app.values";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { LocalStorageService } from "./local-storage.service";

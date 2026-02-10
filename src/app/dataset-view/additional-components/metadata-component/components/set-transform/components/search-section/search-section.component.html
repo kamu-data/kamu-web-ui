@@ -36,8 +36,8 @@
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle class="container-tree-node">
             <span class="font-monospace">{{ node.name }}: </span>
-            <span [title]="OdfTypeMapper(node.type)" *ngIf="node.type" class="column-type font-monospace">
-                {{ OdfTypeMapper(node.type) }}</span
+            <span [title]="odfType2String(node.type)" *ngIf="node.type" class="column-type font-monospace">
+                {{ odfType2String(node.type) }}</span
             >
             <button
                 *ngIf="node.name === UNAVAILABLE_INPUT_LABEL"

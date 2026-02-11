@@ -6,11 +6,15 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { extractSchemaFieldsFromData } from "src/app/common/helpers/table.helper";
-import { DataRow, DataSchemaField, OperationColumnClassEnum } from "src/app/interface/dataset.interface";
+import { extractSchemaFieldsFromData } from "src/app/common/helpers/data-schema.helpers";
+import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
 import { BasePropertyComponent } from "../base-property/base-property.component";
-import { DynamicTableComponent } from "../../../../../../../common/components/dynamic-table/dynamic-table.component";
+import { DynamicTableComponent } from "src/app/common/components/dynamic-table/dynamic-table.component";
 import { NgIf } from "@angular/common";
+import {
+    DynamicTableColumnClassEnum,
+    DynamicTableDataRow,
+} from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
     selector: "app-schema-property",
@@ -29,15 +33,15 @@ import { NgIf } from "@angular/common";
 export class SchemaPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string[];
 
-    public get tableSource(): DataRow[] {
+    public get tableSource(): DynamicTableDataRow[] {
         return this.data.map((item: string) => ({
             name: {
                 value: item.split(" ")[0],
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             type: {
                 value: item.split(" ")[1],
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
         }));
     }

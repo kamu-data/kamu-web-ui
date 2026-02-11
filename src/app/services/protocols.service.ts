@@ -10,7 +10,7 @@ import { inject, Injectable } from "@angular/core";
 import { ProtocolsApi } from "../api/protocols.api";
 import { Observable, map } from "rxjs";
 import { DatasetEndpoints, DatasetProtocolsQuery } from "../api/kamu.graphql.interface";
-import { DatasetInfo } from "../interface/navigation.interface";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
 
 @Injectable({
     providedIn: "root",

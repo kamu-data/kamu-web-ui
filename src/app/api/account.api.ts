@@ -39,7 +39,7 @@ import {
     AccountFlowsAsCardsGQL,
     AccountFlowsAsCardsQuery,
 } from "./kamu.graphql.interface";
-import { MaybeNull } from "../interface/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { ApolloQueryResult } from "@apollo/client";
 import { MutationResult } from "apollo-angular";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";

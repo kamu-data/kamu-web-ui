@@ -9171,7 +9171,7 @@ export const SetLicenseEventFragmentDoc = gql`
 `;
 export const SetDataSchemaEventFragmentDoc = gql`
     fragment SetDataSchemaEvent on SetDataSchema {
-        schema {
+        schema(format: ODF_JSON) {
             format
             content
         }
@@ -9262,7 +9262,7 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
             currentTransform {
                 ...DatasetTransform
             }
-            currentSchema(format: PARQUET_JSON) {
+            currentSchema(format: ODF_JSON) {
                 format
                 content
             }
@@ -10390,7 +10390,7 @@ export const GetDatasetDataSqlRunDocument = gql`
             query(
                 query: $query
                 queryDialect: SQL_DATA_FUSION
-                schemaFormat: PARQUET_JSON
+                schemaFormat: ODF_JSON
                 dataFormat: JSON_AOS
                 limit: $limit
                 skip: $skip
@@ -10675,7 +10675,7 @@ export const GetDatasetSchemaDocument = gql`
             byId(datasetId: $datasetId) {
                 ...DatasetBasics
                 metadata {
-                    currentSchema(format: PARQUET_JSON) {
+                    currentSchema(format: ODF_JSON) {
                         format
                         content
                     }

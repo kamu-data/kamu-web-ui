@@ -5,9 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
+import { DynamicTableDataRow } from "./dynamic-table.interface";
 
-export const MOCK_DATA_ROWS: DataRow[] = [
+export const MOCK_DATA_ROWS: DynamicTableDataRow[] = [
     {
         offset: {
             value: 285,
@@ -80,11 +80,4 @@ export const MOCK_DATA_ROWS: DataRow[] = [
             cssClass: "primary-color",
         },
     },
-];
-
-export const MOCK_SCHEMA_FIELDS: DataSchemaField[] = [
-    { name: "offset", repetition: "REQUIRED", type: "INT64" },
-    { name: "op", repetition: "REQUIRED", type: "INT32" },
-    { name: "system_time", repetition: "REQUIRED", type: "INT64" },
-    { name: "block_time", repetition: "OPTIONAL", type: "INT64" },
 ];

@@ -10,7 +10,7 @@ import { inject, Injectable } from "@angular/core";
 
 import { map, first, catchError } from "rxjs/operators";
 import { EMPTY, Observable, of } from "rxjs";
-import { DatasetAutocompleteItem, TypeNames } from "../interface/search.interface";
+import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 
 import {
     SearchDatasetsAutocompleteGQL,

@@ -4,14 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Changed
+- Changed the display of schemas for the "Data" tab and "Query" page 
+
 ## [0.61.2] - 2026-01-30
 ### Added
 - Lazy loading of cards when scrolling for account filters.
 - "Run Selection" context menu action in SQL query editor
+- Support for displaying column annotations
 ### Fixed
 - CORS error due to incorrect configuration when executing the SQL query
 - Corrected redirection to a page from a link in an email when the token has expired 
 - Activity tab: search functionality when switching process statuses
+### Changed
+- The dataset schema has been converted to ODF format
 - Flows tab: the status filter was incorrectly initialized for request
 - Corrected natural language search query after server API changes
 

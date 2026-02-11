@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { MaybeUndefined } from "../interface/app.types";
+import { MaybeUndefined } from "src/app/interface/app.types";
 import {
     AccountDatasetFlowsPausedQuery,
     AccountFlowProcessCardConnectionDataFragment,
@@ -30,9 +30,9 @@ import { Observable, combineLatest, forkJoin } from "rxjs";
 import { DatasetApi } from "../api/dataset.api";
 import { inject, Injectable } from "@angular/core";
 import { DatasetsByAccountNameQuery } from "../api/kamu.graphql.interface";
-import { DatasetsAccountResponse } from "../interface/dataset.interface";
+import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
 import { map } from "rxjs/operators";
-import { MaybeNull } from "../interface/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { ToastrService } from "ngx-toastr";
 import { FlowsTableData } from "../dataset-flow/flows-table/flows-table.types";
 import { ChangeAccountUsernameResult } from "./settings/account-settings.constants";

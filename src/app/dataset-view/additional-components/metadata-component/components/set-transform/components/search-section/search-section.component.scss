@@ -1,3 +1,5 @@
+@import "var";
+
 .mat-tree {
     .mat-tree-node {
         .mat-icon-button {
@@ -10,7 +12,15 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 270px;
+    width: 220px;
+}
+
+.column-type {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 65%;
+    color: grey;
 }
 
 .inner-btn {
@@ -62,7 +72,7 @@
 }
 
 .tree div[role="group"] > .mat-tree-node {
-    padding-left: 25px;
+    padding-left: 6px;
     padding-bottom: 5px;
 }
 
@@ -76,4 +86,9 @@ mat-tree {
 
 .search-control {
     padding: 6px 33px 6px 10px;
+}
+
+.container-tree-node {
+    display: flex;
+    gap: 10px;
 }

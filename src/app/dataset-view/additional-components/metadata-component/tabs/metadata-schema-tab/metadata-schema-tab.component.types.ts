@@ -5,8 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
-
-export abstract class DynamicComponent {
-    public context: ModalArgumentsInterface;
+export enum SchemaViewMode {
+    TABLE = "table",
+    YAML = "yaml",
 }

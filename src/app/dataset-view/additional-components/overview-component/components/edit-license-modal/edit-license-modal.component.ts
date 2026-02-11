@@ -17,7 +17,7 @@ import {
     SetLicense,
 } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetSchema, DataRow } from "src/app/interface/dataset.interface";
+import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -26,6 +26,7 @@ import { LicenseFormType } from "./edit-license-modal.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatDividerModule } from "@angular/material/divider";
 import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
+import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
     selector: "app-edit-license-modal",
@@ -53,7 +54,7 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public currentState?: {
         schema: MaybeNull<DatasetSchema>;
-        data: DataRow[];
+        data: DynamicTableDataRow[];
         overview: DatasetOverviewFragment;
         size: DatasetDataSizeFragment;
     };

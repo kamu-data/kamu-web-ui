@@ -9,7 +9,7 @@ import { Apollo } from "apollo-angular";
 import { SearchApi } from "../api/search.api";
 import { TestBed } from "@angular/core/testing";
 import { SearchService } from "./search.service";
-import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode } from "../interface/search.interface";
+import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode } from "src/app/interface/search.interface";
 import { mockAutocompleteItems, mockSearchDatasetOverviewQuery } from "./mock.data";
 import { of, throwError } from "rxjs";
 import { first } from "rxjs/operators";

@@ -14,7 +14,7 @@ import {
     DatasetNavigationParams,
     FlowDetailsNavigationParams,
     MetadataBlockNavigationParams,
-} from "../interface/navigation.interface";
+} from "src/app/interface/navigation.interface";
 import { Router } from "@angular/router";
 import { mockDatasetInfo } from "../search/mock.data";
 import { FlowDetailsTabs } from "../dataset-flow/dataset-flow-details/dataset-flow-details.types";

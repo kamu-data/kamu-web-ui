@@ -17,13 +17,13 @@ import {
 } from "@angular/core";
 
 import { DynamicComponent } from "./dynamic.component";
-import { ModalCommandInterface, ModalComponentType } from "../../../interface/modal.interface";
+import { ModalCommandInterface, ModalComponentType } from "src/app/interface/modal.interface";
 import { ModalDialogComponent } from "./modal-dialog.component";
 import { ModalImageComponent } from "./modal-image.component";
 import { ModalService } from "./modal.service";
 import { ModalSpinnerComponent } from "./modal-spinner.component";
 import { Location, NgClass } from "@angular/common";
-import { ModalMappingsComponent } from "../../../interface/modal.interface";
+import { ModalMappingsComponent } from "src/app/interface/modal.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { MaybeUndefined } from "src/app/interface/app.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";

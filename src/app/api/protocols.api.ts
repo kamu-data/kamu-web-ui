@@ -8,7 +8,7 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable, first, map } from "rxjs";
 import { DatasetProtocolsGQL, DatasetProtocolsQuery } from "./kamu.graphql.interface";
-import { DatasetInfo } from "../interface/navigation.interface";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { ApolloQueryResult } from "@apollo/client";
 
 @Injectable({

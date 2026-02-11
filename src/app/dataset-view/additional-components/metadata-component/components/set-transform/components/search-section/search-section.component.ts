@@ -16,7 +16,7 @@ import { SearchApi } from "src/app/api/search.api";
 import { MaybeNull } from "src/app/interface/app.types";
 import AppValues from "src/app/common/values/app.values";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { DatasetSchema } from "src/app/interface/dataset.interface";
+import { DataSchemaTypeField, DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { DatasetNode } from "../../set-transform.types";
 import { BaseComponent } from "src/app/common/components/base.component";
@@ -29,6 +29,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { NgIf } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
+import { odfType2String } from "src/app/common/helpers/data-schema.helpers";
 
 @Component({
     selector: "app-search-section",
@@ -117,7 +118,14 @@ export class SearchSectionComponent extends BaseComponent {
                             name: value.dataset.name,
                             children: schema?.fields.length
                                 ? schema.fields
-                                : [{ name: "No schema", type: "", repetition: "" }],
+                                : [
+                                      {
+                                          name: "No schema",
+                                          type: {
+                                              kind: "",
+                                          },
+                                      },
+                                  ],
                             owner,
                         });
                         this.dataSource.data = this.TREE_DATA;
@@ -142,5 +150,9 @@ export class SearchSectionComponent extends BaseComponent {
 
     public hasChild(_: number, node: DatasetNode): boolean {
         return !!node.children && node.children.length > 0;
+    }
+
+    public odfType2String(type: DataSchemaTypeField): string {
+        return odfType2String(type);
     }
 }

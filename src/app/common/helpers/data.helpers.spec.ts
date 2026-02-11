@@ -8,8 +8,8 @@
 import { DataSchemaFormat, DatasetKind, MetadataBlockFragment } from "../../api/kamu.graphql.interface";
 import { SliceUnit } from "../../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "../../search/mock.data";
-import { OperationColumnClassEnum } from "../../interface/dataset.interface";
 import { DataHelpers, sliceSizeMapperReverse, operationColumnMapper, setOperationColumnClass } from "./data.helpers";
+import { DynamicTableColumnClassEnum } from "../components/dynamic-table/dynamic-table.interface";
 
 export const metadataBlockSetVocab: MetadataBlockFragment = {
     __typename: "MetadataBlockExtended",
@@ -431,11 +431,11 @@ it(`should propagate the name for unknown engines`, () => {
 });
 
 [
-    { case: 0, expected: OperationColumnClassEnum.PRIMARY_COLOR },
-    { case: 1, expected: OperationColumnClassEnum.ERROR_COLOR },
-    { case: 2, expected: OperationColumnClassEnum.SECONDARY_COLOR },
-    { case: 3, expected: OperationColumnClassEnum.SECONDARY_COLOR },
-].forEach((item: { case: number; expected: OperationColumnClassEnum }) => {
+    { case: 0, expected: DynamicTableColumnClassEnum.PRIMARY_COLOR },
+    { case: 1, expected: DynamicTableColumnClassEnum.ERROR_COLOR },
+    { case: 2, expected: DynamicTableColumnClassEnum.SECONDARY_COLOR },
+    { case: 3, expected: DynamicTableColumnClassEnum.SECONDARY_COLOR },
+].forEach((item: { case: number; expected: DynamicTableColumnClassEnum }) => {
     it(`should check set operation column class with  ${item.case}`, () => {
         expect(setOperationColumnClass(item.case)).toEqual(item.expected);
     });

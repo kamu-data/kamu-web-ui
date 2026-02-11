@@ -5,11 +5,15 @@
  * included in the LICENSE file.
  */
 
-import { DatasetInfo, FlowDetailsNavigationParams, WebhooksNavigationParams } from "../interface/navigation.interface";
+import {
+    DatasetInfo,
+    FlowDetailsNavigationParams,
+    WebhooksNavigationParams,
+} from "src/app/interface/navigation.interface";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { DatasetNavigationParams, MetadataBlockNavigationParams } from "../interface/navigation.interface";
+import { DatasetNavigationParams, MetadataBlockNavigationParams } from "src/app/interface/navigation.interface";
 import ProjectLinks from "../project-links";
 import { FlowDetailsTabs } from "../dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { AccountSettingsTabs } from "../account/settings/account-settings.constants";

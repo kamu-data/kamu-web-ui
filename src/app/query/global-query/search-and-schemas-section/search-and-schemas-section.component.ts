@@ -32,7 +32,7 @@ import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "src/app/api/kamu.g
 import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
 import { NgbTypeaheadSelectItemEvent, NgbTypeahead, NgbHighlight } from "@ng-bootstrap/ng-bootstrap";
 import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetSchema } from "src/app/interface/dataset.interface";
+import { DataSchemaField, DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { SearchApi } from "src/app/api/search.api";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -46,6 +46,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { FormsModule } from "@angular/forms";
 import { NgIf, NgFor } from "@angular/common";
 import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
+import { schemaAsDataRows } from "src/app/common/helpers/data-schema.helpers";
+import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
     selector: "app-search-and-schemas-section",
@@ -122,6 +124,10 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
                 return result;
             }),
         );
+    }
+
+    public schemaData(schema: DataSchemaField[]): DynamicTableDataRow[] {
+        return schemaAsDataRows(schema);
     }
 
     public removeDataset(datasetAlias: string): void {

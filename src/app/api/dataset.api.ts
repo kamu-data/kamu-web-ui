@@ -68,7 +68,7 @@ import { inject, Injectable } from "@angular/core";
 import { map, first } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { MutationResult } from "apollo-angular";
-import { DatasetRequestBySql } from "../interface/dataset.interface";
+import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
 import { StoreObject } from "@apollo/client/cache";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 import { resetCacheHelper, updateCacheHelper } from "../common/helpers/apollo-cache.helper";

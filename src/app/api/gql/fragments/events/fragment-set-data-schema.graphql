@@ -1,5 +1,5 @@
 fragment SetDataSchemaEvent on SetDataSchema {
-  schema {
+  schema(format: ODF_JSON) {
     format
     content
   }

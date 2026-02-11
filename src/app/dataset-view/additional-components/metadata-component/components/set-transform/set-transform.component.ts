@@ -10,7 +10,7 @@ import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angu
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetSchema } from "src/app/interface/dataset.interface";
+import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import { GetDatasetSchemaQuery, SqlQueryStep } from "src/app/api/kamu.graphql.interface";
 import { EditSetTransformService } from "./edit-set-transform..service";
 import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";

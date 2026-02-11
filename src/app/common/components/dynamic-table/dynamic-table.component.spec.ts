@@ -6,23 +6,29 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { provideToastr } from "ngx-toastr";
+import { provideToastr, ToastrService } from "ngx-toastr";
 import { SimpleChanges } from "@angular/core";
 import { findElementByDataTestId, getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { DynamicTableComponent } from "./dynamic-table.component";
-import { MOCK_DATA_ROWS } from "./dynamic-table.mock";
+import { MOCK_DATA_ROWS, MOCK_DATA_ROWS_SHOW_MORE_BADGE } from "./dynamic-table.mock";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { MarkdownModule } from "ngx-markdown";
 
 describe("DynamicTableComponent", () => {
     let component: DynamicTableComponent;
     let fixture: ComponentFixture<DynamicTableComponent>;
+    let ngbModalService: NgbModal;
+    let toastService: ToastrService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [DynamicTableComponent],
+            imports: [DynamicTableComponent, MarkdownModule.forRoot()],
             providers: [provideToastr()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DynamicTableComponent);
+        ngbModalService = TestBed.inject(NgbModal);
+        toastService = TestBed.inject(ToastrService);
         component = fixture.componentInstance;
         component.columnDescriptors = [
             { columnName: "offset" },
@@ -36,6 +42,26 @@ describe("DynamicTableComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should check to copy cell content", () => {
+        component.dataRows = MOCK_DATA_ROWS_SHOW_MORE_BADGE;
+        component.columnDescriptors = [
+            {
+                columnName: "name",
+            },
+            {
+                columnName: "type",
+            },
+            {
+                columnName: "description",
+            },
+        ];
+        fixture.detectChanges();
+        const successToastServiceSpy = spyOn(toastService, "success");
+        const cell0 = findElementByDataTestId(fixture, "column-name-type-0");
+        cell0?.click();
+        expect(successToastServiceSpy).toHaveBeenCalledWith("Copied");
     });
 
     it("should check column names", () => {
@@ -74,5 +100,70 @@ describe("DynamicTableComponent", () => {
         expect(cell1?.classList.contains("error-color")).toBe(true);
         expect(cell2?.classList.contains("secondary-color")).toBe(true);
         expect(cell3?.classList.contains("secondary-color")).toBe(true);
+    });
+
+    it("The 'showMore' badge should be checked", () => {
+        component.dataRows = MOCK_DATA_ROWS_SHOW_MORE_BADGE;
+        component.columnDescriptors = [
+            {
+                columnName: "name",
+            },
+            {
+                columnName: "type",
+                showMoreBadge: {
+                    extraElementKey: "extraKeys",
+                },
+            },
+            {
+                columnName: "description",
+            },
+        ];
+        fixture.detectChanges();
+
+        const showMoreBadge = findElementByDataTestId(fixture, "show-more-type-0");
+        expect(showMoreBadge).toBeDefined();
+    });
+
+    it("The 'showInfo' tooltip should be checked", () => {
+        component.dataRows = MOCK_DATA_ROWS_SHOW_MORE_BADGE;
+        component.columnDescriptors = [
+            {
+                columnName: "name",
+                showInfoBadge: {
+                    extraElementKey: "description",
+                },
+            },
+            {
+                columnName: "type",
+            },
+        ];
+        fixture.detectChanges();
+
+        const showInfoIcon = findElementByDataTestId(fixture, "show-info-name-0");
+        expect(showInfoIcon).toBeDefined();
+    });
+
+    it("The 'showMore' badge should open the modal window", () => {
+        const ngbModalServiceSpy = spyOn(ngbModalService, "open").and.callThrough();
+        component.dataRows = MOCK_DATA_ROWS_SHOW_MORE_BADGE;
+        component.columnDescriptors = [
+            {
+                columnName: "name",
+            },
+            {
+                columnName: "type",
+                showMoreBadge: {
+                    extraElementKey: "extraKeys",
+                },
+            },
+            {
+                columnName: "description",
+            },
+        ];
+        fixture.detectChanges();
+
+        const showMoreBadge = findElementByDataTestId(fixture, "show-more-type-0");
+        showMoreBadge?.click();
+        expect(ngbModalServiceSpy).toHaveBeenCalledTimes(1);
     });
 });

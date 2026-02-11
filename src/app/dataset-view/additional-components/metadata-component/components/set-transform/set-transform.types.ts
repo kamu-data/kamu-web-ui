@@ -6,6 +6,7 @@
  */
 
 import { SetTransform, TransformInput } from "src/app/api/kamu.graphql.interface";
+import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
 
 export type TransformSelectedInput = Omit<TransformInput, "__typename" | "dataset">;
 
@@ -25,9 +26,6 @@ export type SetTransformYamlType = Omit<SetTransform, "__typename"> & {
 
 export interface DatasetNode {
     name: string;
-    type?: {
-        kind: string;
-    };
-    owner?: string;
-    children?: DatasetNode[];
+    schema?: DataSchemaField[];
+    owner: string;
 }

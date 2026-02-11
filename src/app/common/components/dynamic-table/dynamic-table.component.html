@@ -14,10 +14,7 @@
                         ? ''
                         : element[columnDescriptor.columnName].value
                 "
-                [class.font-monospace]="
-                    (columnDescriptor.showInfoBadge || columnDescriptor.showMoreBadge) && colIndex < 2
-                "
-                [ngClass]="element[columnDescriptor.columnName].cssClass"
+                [ngClass]="[colIndex < 2 ? tableClass : '', element[columnDescriptor.columnName].cssClass]"
                 [class]="'truncate-cell copyable-cell'"
                 *matCellDef="let element; index as rowIndex"
                 [attr.data-test-id]="'column-name-' + columnDescriptor.columnName + '-' + rowIndex"
@@ -31,6 +28,7 @@
                         *ngIf="shouldShowMoreBadge(columnDescriptor, element)"
                     >
                         <span
+                            [attr.data-test-id]="'show-more-' + columnDescriptor.columnName + '-' + rowIndex"
                             (click)="
                                 $event.stopPropagation();
                                 showMoreModal(element, columnDescriptor.showMoreBadge?.extraElementKey)
@@ -43,6 +41,7 @@
                         [matTooltipPosition]="'after'"
                         class="cell-content ms-1 mt-1 position-relative"
                         *ngIf="shouldShowInfoBadge(columnDescriptor, element)"
+                        [attr.data-test-id]="'show-info-' + columnDescriptor.columnName + '-' + rowIndex"
                     >
                         <mat-icon class="info-badge text-muted">help_outline</mat-icon>
                     </div>

@@ -5,9 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { NestedTreeControl } from "@angular/cdk/tree";
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { MatTreeNestedDataSource, MatTreeModule } from "@angular/material/tree";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
+import { MatTreeModule } from "@angular/material/tree";
 import { NgbTypeaheadSelectItemEvent, NgbTypeahead, NgbHighlight } from "@ng-bootstrap/ng-bootstrap";
 import { OperatorFunction, Observable } from "rxjs";
 import { debounceTime, distinctUntilChanged, map, switchMap } from "rxjs/operators";
@@ -16,20 +15,27 @@ import { SearchApi } from "src/app/api/search.api";
 import { MaybeNull } from "src/app/interface/app.types";
 import AppValues from "src/app/common/values/app.values";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { DataSchemaTypeField, DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { DatasetNode } from "../../set-transform.types";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
-import { NavigationService } from "src/app/services/navigation.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { RouterLink } from "@angular/router";
 import { MatButtonModule } from "@angular/material/button";
-import { NgIf } from "@angular/common";
+import { NgFor, NgIf } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
-import { odfType2String } from "src/app/common/helpers/data-schema.helpers";
+import { CdkAccordionModule } from "@angular/cdk/accordion";
+import { DynamicTableComponent } from "./../../../../../../../common/components/dynamic-table/dynamic-table.component";
+import {
+    DatasetSchema,
+    OdfTypes,
+    DataSchemaTypeField,
+    DataSchemaField,
+} from "src/app/interface/dataset-schema.interface";
+import { odfType2String, schemaAsDataRows } from "src/app/common/helpers/data-schema.helpers";
+import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
     selector: "app-search-section",
@@ -39,8 +45,10 @@ import { odfType2String } from "src/app/common/helpers/data-schema.helpers";
     standalone: true,
     imports: [
         //-----//
+        CdkAccordionModule,
         FormsModule,
         NgIf,
+        NgFor,
         RouterLink,
 
         //-----//
@@ -49,6 +57,9 @@ import { odfType2String } from "src/app/common/helpers/data-schema.helpers";
         MatButtonModule,
         NgbTypeahead,
         NgbHighlight,
+
+        //-----//
+        DynamicTableComponent,
     ],
 })
 export class SearchSectionComponent extends BaseComponent {
@@ -56,15 +67,13 @@ export class SearchSectionComponent extends BaseComponent {
     private readonly delayTime: number = AppValues.SHORT_DELAY_MS;
     @Input({ required: true }) public inputDatasets: Set<string>;
     @Input({ required: true }) public datasetInfo: DatasetInfo;
+    @Input({ required: true }) public inputsViewModel: DatasetNode[];
 
-    public treeControl = new NestedTreeControl<DatasetNode>((node) => node.children);
-    @Input({ required: true }) public dataSource: MatTreeNestedDataSource<DatasetNode>;
-    @Input({ required: true }) public TREE_DATA: DatasetNode[];
     public readonly UNAVAILABLE_INPUT_LABEL: string = AppValues.SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL;
+    public readonly cdr = inject(ChangeDetectorRef);
 
     private appSearchAPI = inject(SearchApi);
     private datasetService = inject(DatasetService);
-    private navigationService = inject(NavigationService);
 
     public search: OperatorFunction<string, DatasetAutocompleteItem[]> = (text$: Observable<string>) => {
         return text$.pipe(
@@ -84,7 +93,7 @@ export class SearchSectionComponent extends BaseComponent {
     };
 
     private get involvedDatasets(): string[] {
-        return this.dataSource.data
+        return this.inputsViewModel
             .map((item: DatasetNode) => `${item.owner}/${item.name}`)
             .concat(`${this.datasetInfo.accountName}/${this.datasetInfo.datasetName}`);
     }
@@ -114,21 +123,24 @@ export class SearchSectionComponent extends BaseComponent {
                             data.datasets.byId.metadata.currentSchema,
                         );
 
-                        this.TREE_DATA.push({
-                            name: value.dataset.name,
-                            children: schema?.fields.length
-                                ? schema.fields
-                                : [
-                                      {
-                                          name: "No schema",
-                                          type: {
-                                              kind: "",
+                        this.inputsViewModel = [
+                            ...this.inputsViewModel,
+                            {
+                                name: value.dataset.name,
+                                schema: schema?.fields.length
+                                    ? schema.fields
+                                    : [
+                                          {
+                                              name: "No schema",
+                                              type: {
+                                                  kind: OdfTypes.String,
+                                              },
                                           },
-                                      },
-                                  ],
-                            owner,
-                        });
-                        this.dataSource.data = this.TREE_DATA;
+                                      ],
+                                owner,
+                            },
+                        ];
+                        this.cdr.detectChanges();
                     }
                 });
         }
@@ -138,21 +150,25 @@ export class SearchSectionComponent extends BaseComponent {
         this.searchDataset = "";
     }
 
-    public deleteInputDataset(alias: string): void {
-        this.TREE_DATA = this.TREE_DATA.filter((item: DatasetNode) => `${item.owner}/${item.name}` !== alias);
-        this.dataSource.data = this.TREE_DATA;
+    public deleteInputDataset(owner: string, name: string): void {
+        const alias = `${owner}/${name}`;
+        this.inputsViewModel = this.inputsViewModel.filter(
+            (item: DatasetNode) => `${item.owner}/${item.name}` !== alias,
+        );
+
         this.inputDatasets.forEach((item) => {
             if (item.includes(alias)) {
                 this.inputDatasets.delete(item);
             }
         });
+        this.cdr.detectChanges();
     }
 
-    public hasChild(_: number, node: DatasetNode): boolean {
-        return !!node.children && node.children.length > 0;
-    }
-
-    public odfType2String(type: DataSchemaTypeField): string {
+    public OdfTypeMapper(type: DataSchemaTypeField): string {
         return odfType2String(type);
+    }
+
+    public schemaData(schema: DataSchemaField[]): DynamicTableDataRow[] {
+        return schemaAsDataRows(schema);
     }
 }

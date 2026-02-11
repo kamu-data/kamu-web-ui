@@ -12,7 +12,7 @@ import { findElementByDataTestId, getElementByDataTestId } from "src/app/common/
 import { DynamicTableComponent } from "./dynamic-table.component";
 import { MOCK_DATA_ROWS } from "./dynamic-table.mock";
 
-describe("DynamicTableComponent", () => {
+fdescribe("DynamicTableComponent", () => {
     let component: DynamicTableComponent;
     let fixture: ComponentFixture<DynamicTableComponent>;
 

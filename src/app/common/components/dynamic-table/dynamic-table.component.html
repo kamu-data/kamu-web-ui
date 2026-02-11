@@ -14,10 +14,7 @@
                         ? ''
                         : element[columnDescriptor.columnName].value
                 "
-                [class.font-monospace]="
-                    (columnDescriptor.showInfoBadge || columnDescriptor.showMoreBadge) && colIndex < 2
-                "
-                [ngClass]="element[columnDescriptor.columnName].cssClass"
+                [ngClass]="[colIndex < 2 ? tableClass : '', element[columnDescriptor.columnName].cssClass]"
                 [class]="'truncate-cell copyable-cell'"
                 *matCellDef="let element; index as rowIndex"
                 [attr.data-test-id]="'column-name-' + columnDescriptor.columnName + '-' + rowIndex"

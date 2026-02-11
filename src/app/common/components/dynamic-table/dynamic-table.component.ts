@@ -42,6 +42,7 @@ export class DynamicTableComponent implements OnInit, OnChanges {
     @Input({ required: true }) public dataRows: DynamicTableDataRow[];
     @Input({ required: true }) public idTable: string;
     @Input({ required: true }) public columnDescriptors: DynamicTableColumnDescriptor[];
+    @Input() public tableClass: string = "";
 
     private readonly toastr = inject(ToastrService);
     private readonly ngbModalService = inject(NgbModal);

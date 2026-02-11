@@ -28,6 +28,7 @@
                         *ngIf="shouldShowMoreBadge(columnDescriptor, element)"
                     >
                         <span
+                            [attr.data-test-id]="'show-more-' + columnDescriptor.columnName + '-' + rowIndex"
                             (click)="
                                 $event.stopPropagation();
                                 showMoreModal(element, columnDescriptor.showMoreBadge?.extraElementKey)
@@ -40,6 +41,7 @@
                         [matTooltipPosition]="'after'"
                         class="cell-content ms-1 mt-1 position-relative"
                         *ngIf="shouldShowInfoBadge(columnDescriptor, element)"
+                        [attr.data-test-id]="'show-info-' + columnDescriptor.columnName + '-' + rowIndex"
                     >
                         <mat-icon class="info-badge text-muted">help_outline</mat-icon>
                     </div>

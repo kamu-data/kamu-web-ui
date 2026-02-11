@@ -66,10 +66,6 @@ export class DynamicTableComponent implements OnInit, OnChanges {
         }
     }
 
-    public get hasData(): boolean {
-        return Boolean(this.dataRows?.length);
-    }
-
     public trackByColumn(index: number, item: DynamicTableColumnDescriptor): string {
         return item.columnName;
     }

@@ -8,7 +8,6 @@
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { SearchSectionComponent } from "./search-section.component";
 import { Apollo } from "apollo-angular";
-import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { of } from "rxjs";
 import AppValues from "src/app/common/values/app.values";
@@ -18,8 +17,8 @@ import { mockDatasetBasicsDerivedFragment, mockDatasetInfo } from "src/app/searc
 import { SearchApi } from "src/app/api/search.api";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockGetDatasetSchemaQuery } from "../../mock.data";
-import { DatasetNode } from "../../set-transform.types";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { provideToastr } from "ngx-toastr";
 
 describe("SearchSectionComponent", () => {
     let component: SearchSectionComponent;
@@ -29,15 +28,14 @@ describe("SearchSectionComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [Apollo],
+            providers: [Apollo, provideToastr()],
             imports: [SharedTestModule, SearchSectionComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SearchSectionComponent);
         component = fixture.componentInstance;
         component.inputDatasets = new Set<string>();
-        component.TREE_DATA = [];
-        component.dataSource = new MatTreeNestedDataSource<DatasetNode>();
+        component.inputsViewModel = [];
         component.datasetInfo = mockDatasetInfo;
         searchApi = TestBed.inject(SearchApi);
         datasetService = TestBed.inject(DatasetService);
@@ -90,43 +88,44 @@ describe("SearchSectionComponent", () => {
         component.onSelectItem(mockNgbTypeaheadSelectItemEvent);
 
         expect(component.inputDatasets.size).toBe(1);
-        expect(component.TREE_DATA.length).toBe(1);
+        expect(component.inputsViewModel.length).toBe(1);
         expect(requestDatasetSchemaSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check delete input dataset", () => {
-        const deletedDatasetAlias = "test-account/com.youtube.playlist.featuring-kamu-data.videos.stats";
+        const deletedDatasetOwner = "test-account";
+        const deletedDatasetName = "com.youtube.playlist.featuring-kamu-data.videos.stats";
         component.inputDatasets = new Set([
             '{"datasetRef":"did:odf:fed0176ed321fcd2fc471d4d1ab06662223be2c76b7e3d3f14c37413e0802e1dca3c1","alias":"kamu/github.stats"}',
             '{"datasetRef":"did:odf:fed01ae1c46fe64c9d50d741989b406b89b6c40f3810e1b7bcc0ed83edc050fba2d9d","alias":"test-account/com.youtube.playlist.featuring-kamu-data.videos.stats"}',
         ]);
-        component.TREE_DATA = [
+        component.inputsViewModel = [
             { name: "kamu/github.stats", owner: "kamu" },
             { name: "com.youtube.playlist.featuring-kamu-data.videos.stats", owner: "test-account" },
         ];
         fixture.detectChanges();
 
-        component.deleteInputDataset(deletedDatasetAlias);
+        component.deleteInputDataset(deletedDatasetOwner, deletedDatasetName);
 
         expect(component.inputDatasets.size).toBe(1);
-        expect(component.TREE_DATA.length).toBe(1);
     });
 
     it("should check deleting with same dataset name, but different account name", () => {
-        const deletedDatasetAlias = "test-account/com.youtube.playlist.featuring-kamu-data.videos.stats";
+        const deletedDatasetOwner = "test-account";
+        const deletedDatasetName = "com.youtube.playlist.featuring-kamu-data.videos.stats";
         component.inputDatasets = new Set([
             '{"datasetRef":"did:odf:fed0176ed321fcd2fc471d4d1ab06662223be2c76b7e3d3f14c37413e0802e1dca3c1","alias":"kamu/com.youtube.playlist.featuring-kamu-data.videos.stats"}',
             '{"datasetRef":"did:odf:fed01ae1c46fe64c9d50d741989b406b89b6c40f3810e1b7bcc0ed83edc050fba2d9d","alias":"test-account/com.youtube.playlist.featuring-kamu-data.videos.stats"}',
         ]);
-        component.TREE_DATA = [
+        component.inputsViewModel = [
             { name: "com.youtube.playlist.featuring-kamu-data.videos.stats", owner: "kamu" },
             { name: "com.youtube.playlist.featuring-kamu-data.videos.stats", owner: "test-account" },
         ];
         fixture.detectChanges();
 
-        component.deleteInputDataset(deletedDatasetAlias);
+        component.deleteInputDataset(deletedDatasetOwner, deletedDatasetName);
 
         expect(component.inputDatasets.size).toBe(1);
-        expect(component.TREE_DATA.length).toBe(1);
+        expect(component.inputsViewModel.length).toBe(1);
     });
 });

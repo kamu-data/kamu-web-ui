@@ -5,7 +5,7 @@
         <div class="d-flex flex-row position-relative">
             <input
                 type="text"
-                class="form-control w-350 search-control"
+                class="form-control search-control"
                 data-test-id="searchInputDatasets"
                 #searchDatasets
                 placeholder="Look up a dataset..."
@@ -33,49 +33,81 @@
     </div>
 </ng-template>
 <div class="mt-4">
-    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree">
-        <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle class="container-tree-node">
-            <span class="font-monospace">{{ node.name }}: </span>
-            <span [title]="odfType2String(node.type)" *ngIf="node.type" class="column-type font-monospace">
-                {{ odfType2String(node.type) }}</span
+    <div>
+        <cdk-accordion [multi]="true" class="example-accordion mt-4" *ngIf="inputsViewModel.length; else emptyTemplate">
+            <cdk-accordion-item
+                *ngFor="let input of inputsViewModel; let index = index"
+                #accordionItem="cdkAccordionItem"
+                class="example-accordion-item"
+                role="button"
+                tabindex="0"
+                [expanded]="false"
             >
-            <button
-                *ngIf="node.name === UNAVAILABLE_INPUT_LABEL"
-                class="no-button d-flex"
-                (click)="deleteInputDataset(node.name)"
-                title="Delete input dataset"
-            >
-                <mat-icon class="fs-4 hover">delete</mat-icon>
-            </button>
-        </mat-tree-node>
-
-        <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
-            <div class="mat-tree-node">
-                <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
-                    <mat-icon class="mat-icon-rtl-mirror">
-                        {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
-                    </mat-icon>
-                </button>
-                <div class="d-flex align-items-center justify-content-between node-name-block">
-                    <div class="node-link">
-                        <a class="node-name" [routerLink]="['/', node.owner]" target="_blank"> {{ node.owner }} </a>/
-                        <a class="node-name" [routerLink]="['/', node.owner, node.name]" target="_blank">
-                            {{ node.name }}</a
+                <div class="datatab-expanding-row">
+                    <div class="datatab-expanding-row-header" (click)="accordionItem.toggle()">
+                        <div class="datatab-expanding-row-header-content pt-1">
+                            <div class="node-link" *ngIf="input.owner; else unavailableDatasetTemplate">
+                                <a
+                                    class="node-name"
+                                    (click)="$event.stopPropagation()"
+                                    [routerLink]="['/', input.owner]"
+                                    target="_blank"
+                                >
+                                    {{ input.owner }} </a
+                                >/
+                                <a
+                                    class="node-name"
+                                    (click)="$event.stopPropagation()"
+                                    [routerLink]="['/', input.owner, input.name]"
+                                    target="_blank"
+                                >
+                                    {{ input.name }}</a
+                                >
+                            </div>
+                            <ng-template #unavailableDatasetTemplate>
+                                <span> {{ input.name }}</span>
+                            </ng-template>
+                        </div>
+                        <ng-template [ngIf]="!accordionItem.expanded">
+                            <mat-icon>keyboard_arrow_down</mat-icon>
+                        </ng-template>
+                        <ng-template [ngIf]="accordionItem.expanded">
+                            <mat-icon>keyboard_arrow_up</mat-icon>
+                        </ng-template>
+                        <mat-icon
+                            (click)="$event.stopPropagation(); deleteInputDataset(input.owner!, input.name)"
+                            title="Delete input dataset"
+                            class="fs-5 hover mt-1 ms-1"
+                            >delete</mat-icon
                         >
                     </div>
-                    <button
-                        class="no-button d-flex"
-                        (click)="deleteInputDataset(node.owner + '/' + node.name)"
-                        title="Delete input dataset"
+                    <div
+                        class="example-accordion-item-body"
+                        role="region"
+                        [style.display]="accordionItem.expanded ? '' : 'none'"
+                        [attr.id]="'accordion-body-' + index"
+                        [attr.aria-labelledby]="'accordion-header-' + index"
                     >
-                        <mat-icon class="fs-4 hover">delete</mat-icon>
-                    </button>
+                        <div *ngIf="input.schema; else emptySchemaTemplate">
+                            <app-dynamic-table
+                                [hasTableHeader]="true"
+                                [idTable]="'schema-block-table'"
+                                [columnDescriptors]="[
+                                    { columnName: 'name', showInfoBadge: { extraElementKey: 'description' } },
+                                    { columnName: 'type' },
+                                ]"
+                                [dataRows]="schemaData(input.schema)"
+                            />
+                        </div>
+                        <ng-template #emptySchemaTemplate>
+                            <p class="mt-3 text-center">No schema</p>
+                        </ng-template>
+                    </div>
                 </div>
-            </div>
-
-            <div [class.example-tree-invisible]="!treeControl.isExpanded(node)" role="group">
-                <ng-container matTreeNodeOutlet></ng-container>
-            </div>
-        </mat-nested-tree-node>
-    </mat-tree>
+            </cdk-accordion-item>
+        </cdk-accordion>
+        <ng-template #emptyTemplate>
+            <p class="mt-4">No datasets selected</p>
+        </ng-template>
+    </div>
 </div>

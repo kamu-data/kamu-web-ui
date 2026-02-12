@@ -14,7 +14,7 @@
     flex-direction: row;
     width: 70%;
     grid-template-columns: 1fr 1fr;
-    grid-gap: 24px;
+    gap: 24px;
 
     > * {
         display: grid;

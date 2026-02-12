@@ -79,7 +79,7 @@ export function excludeAgoWord(value: string): string {
 }
 
 export function cronExpressionNextTime(cronExpression: string): string {
-    const date = cronParser.parseExpression(cronExpression).next().toDate();
+    const date = cronParser.parse(cronExpression).next().toDate();
     return format(date, AppValues.CRON_EXPRESSION_DATE_FORMAT);
 }
 

@@ -46,7 +46,7 @@
     "@popperjs/core": "^2.11.8",
     "@rxweb/reactive-form-validators": "^13.0.1",
     "@schematics/angular": "^19.2.19",
-    "@swimlane/ngx-graph": "8.4.0",
+    "@swimlane/ngx-graph": "^11.0.0",
     "angular2-multiselect-dropdown": "^10.0.0",
     "apollo-angular": "^13.0.0",
     "autoprefixer": "10.4.5",

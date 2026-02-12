@@ -8,7 +8,7 @@
 import { mockNode, mockNodesWithEqualNames } from "../../../search/mock.data";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { LineageComponent } from "./lineage.component";
-import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
+import { Node } from "@swimlane/ngx-graph";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { AccountService } from "src/app/account/account.service";
 import { of } from "rxjs";

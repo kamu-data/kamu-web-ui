@@ -33,7 +33,7 @@ import {
     LineageGraphNodeKind,
     LineageNodeAccess,
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
-import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
+import { Node } from "@swimlane/ngx-graph";
 
 export const TEST_DATASET_ID = "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7";
 export const TEST_DATASET_NAME = "test-dataset";

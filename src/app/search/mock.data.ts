@@ -35,7 +35,7 @@ import {
     LicenseFragment,
     SearchDatasetsOverviewQuery,
 } from "../api/kamu.graphql.interface";
-import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
+import { Node } from "@swimlane/ngx-graph";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import {
     DatasetAutocompleteItem,

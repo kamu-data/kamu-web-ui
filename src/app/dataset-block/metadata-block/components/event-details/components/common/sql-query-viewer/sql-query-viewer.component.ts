@@ -8,7 +8,7 @@
 import { SqlQueryStep } from "../../../../../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { BasePropertyComponent } from "../base-property/base-property.component";
-import { HighlightModule } from "ngx-highlightjs";
+import { Highlight } from "ngx-highlightjs";
 import { NgFor, NgIf } from "@angular/common";
 
 @Component({
@@ -20,7 +20,7 @@ import { NgFor, NgIf } from "@angular/common";
         NgFor,
         NgIf,
         //-----//
-        HighlightModule,
+        Highlight,
     ],
 })
 export class SqlQueryViewerComponent extends BasePropertyComponent {

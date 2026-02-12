@@ -64,7 +64,7 @@
     "marked": "^15.0.0",
     "monaco-editor": "^0.52.2",
     "ng-multiselect-dropdown": "^1.0.0",
-    "ngx-highlightjs": "^7.0.1",
+    "ngx-highlightjs": "^14.0.1",
     "ngx-infinite-scroll": "^19.0.0",
     "ngx-markdown": "^19.1.1",
     "ngx-monaco-editor-v2": "^19.0.2",

@@ -1,6 +1,6 @@
-query semanticSearchDatasetsOverview($prompt: String!, $perPage: Int) {
+query semanticSearchDatasetsOverview($prompt: String!, $limit: Int) {
   search {
-    queryNaturalLanguage(prompt: $prompt, perPage: $perPage) {
+    queryNaturalLanguage(prompt: $prompt, limit: $limit) {
       nodes {
         item {
           ... on Dataset {

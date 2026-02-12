@@ -8,7 +8,7 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable, Subject, map } from "rxjs";
 import { SearchApi } from "../api/search.api";
-import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode } from "../interface/search.interface";
+import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode } from "src/app/interface/search.interface";
 import {
     DatasetSearchOverviewFragment,
     SearchDatasetsOverviewQuery,

@@ -49,6 +49,8 @@ export type Scalars = {
     ExtraAttributes: string;
     ExtraData: string;
     FlowID: string;
+    /** A scalar that can represent any JSON value. */
+    JSON: string;
     Multihash: string;
     TaskID: string;
     URL: string;
@@ -338,7 +340,12 @@ export type Accounts = {
     __typename?: "Accounts";
     /** Returns an account by its ID, if found */
     byId?: Maybe<Account>;
-    /** Returns accounts by their IDs */
+    /**
+     * Returns accounts by their IDs.
+     *
+     * Order of results is guaranteed to match the inputs. Duplicate inputs
+     * will results in duplicate results.
+     */
     byIds: Array<Account>;
     /** Returns an account by its name, if found */
     byName?: Maybe<Account>;
@@ -370,7 +377,12 @@ export type AccountsMut = {
     __typename?: "AccountsMut";
     /** Returns a mutable account by its id */
     byId?: Maybe<AccountMut>;
-    /** Returns mutable accounts by their IDs */
+    /**
+     * Returns mutable accounts by their IDs.
+     *
+     * Order of results is guaranteed to match the inputs. Duplicate inputs
+     * will results in duplicate results.
+     */
     byIds: Array<AccountMut>;
     /** Returns a mutable account by its name */
     byName?: Maybe<AccountMut>;
@@ -476,6 +488,16 @@ export type AddPushSource = {
 export type Admin = {
     __typename?: "Admin";
     selfTest: Scalars["String"];
+};
+
+export type AdminMut = {
+    __typename?: "AdminMut";
+    search: AdminSearchMut;
+};
+
+export type AdminSearchMut = {
+    __typename?: "AdminSearchMut";
+    resetSearchIndices: Scalars["String"];
 };
 
 export type ApplyRolesMatrixResult = {
@@ -1309,6 +1331,7 @@ export type DatasetFlowConfigsMut = {
 
 export type DatasetFlowConfigsMutSetCompactionConfigArgs = {
     compactionConfigInput: FlowConfigCompactionInput;
+    retryPolicyInput?: InputMaybe<FlowRetryPolicyInput>;
 };
 
 export type DatasetFlowConfigsMutSetIngestConfigArgs = {
@@ -1680,13 +1703,21 @@ export type Datasets = {
     byAccountName: DatasetConnection;
     /** Returns a dataset by its ID, if found */
     byId?: Maybe<Dataset>;
-    /** Returns multiple datasets by their IDs */
+    /**
+     * Returns multiple datasets by their IDs.
+     *
+     * Order of results is guaranteed to match the inputs. Duplicate inputs
+     * will results in duplicate results.
+     */
     byIds: Array<Dataset>;
     /** Returns dataset by its owner and name */
     byOwnerAndName?: Maybe<Dataset>;
     /** Returns a dataset by an ID or alias, if found */
     byRef?: Maybe<Dataset>;
-    /** Returns multiple datasets by their IDs or aliases */
+    /**
+     * Returns multiple datasets by their IDs or aliases. Order of results is
+     * guaranteed to match the inputs.
+     */
     byRefs: Array<Dataset>;
 };
 
@@ -1729,7 +1760,12 @@ export type DatasetsMut = {
     __typename?: "DatasetsMut";
     /** Returns a mutable dataset by its ID, if found */
     byId?: Maybe<DatasetMut>;
-    /** Returns mutable datasets by their IDs */
+    /**
+     * Returns mutable datasets by their IDs.
+     *
+     * Order of results is guaranteed to match the inputs. Duplicate inputs
+     * will results in duplicate results.
+     */
     byIds: Array<DatasetMut>;
     /**
      * Creates a new collection dataset.
@@ -2818,6 +2854,29 @@ export type FlowTypeIsNotSupported = SetFlowTriggerResult & {
     message: Scalars["String"];
 };
 
+export type FullTextSearchHighlight = {
+    __typename?: "FullTextSearchHighlight";
+    bestFragment: Scalars["String"];
+    field: Scalars["String"];
+};
+
+export type FullTextSearchHit = {
+    __typename?: "FullTextSearchHit";
+    highlights?: Maybe<Array<FullTextSearchHighlight>>;
+    id: Scalars["String"];
+    schemaName: Scalars["String"];
+    score?: Maybe<Scalars["Float"]>;
+    source: Scalars["JSON"];
+};
+
+export type FullTextSearchResponse = {
+    __typename?: "FullTextSearchResponse";
+    hits: Array<FullTextSearchHit>;
+    timeout: Scalars["Boolean"];
+    tookMs: Scalars["Int"];
+    totalHits: Scalars["Int"];
+};
+
 export type GetFlowResult = {
     message: Scalars["String"];
 };
@@ -3165,6 +3224,8 @@ export type Mutation = {
      * system. This groups deals with their identities and permissions.
      */
     accounts: AccountsMut;
+    /** Admin-related functionality group */
+    admin: AdminMut;
     /** Authentication and authorization-related functionality group */
     auth: AuthMut;
     /**
@@ -3738,6 +3799,13 @@ export type Search = {
      * versatile interface to the user consisting of just one input field.
      */
     query: SearchResultConnection;
+    queryFullText: FullTextSearchResponse;
+    /**
+     * Searches for datasets and other objects managed by the
+     * current node using a prompt, mixing full-text and natural language
+     * methods
+     */
+    queryHybrid: SearchResultExConnection;
     /**
      * Searches for datasets and other objects managed by the
      * current node using a prompt in natural language
@@ -3758,8 +3826,19 @@ export type SearchQueryArgs = {
     query: Scalars["String"];
 };
 
-export type SearchQueryNaturalLanguageArgs = {
+export type SearchQueryFullTextArgs = {
+    page?: InputMaybe<Scalars["Int"]>;
     perPage?: InputMaybe<Scalars["Int"]>;
+    prompt: Scalars["String"];
+};
+
+export type SearchQueryHybridArgs = {
+    limit?: InputMaybe<Scalars["Int"]>;
+    prompt: Scalars["String"];
+};
+
+export type SearchQueryNaturalLanguageArgs = {
+    limit?: InputMaybe<Scalars["Int"]>;
     prompt: Scalars["String"];
 };
 
@@ -3828,15 +3907,13 @@ export type SetAttachments = {
     attachments: Attachments;
 };
 
-/**
- * Specifies the complete schema of Data Slices added to the Dataset following
- * this event.
- *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#setdataschema-schema
- */
 export type SetDataSchema = {
     __typename?: "SetDataSchema";
     schema: DataSchema;
+};
+
+export type SetDataSchemaSchemaArgs = {
+    format?: InputMaybe<DataSchemaFormat>;
 };
 
 export type SetDatasetVisibilityResult = {
@@ -7510,7 +7587,7 @@ export type SearchDatasetsOverviewQuery = {
 
 export type SemanticSearchDatasetsOverviewQueryVariables = Exact<{
     prompt: Scalars["String"];
-    perPage?: InputMaybe<Scalars["Int"]>;
+    limit?: InputMaybe<Scalars["Int"]>;
 }>;
 
 export type SemanticSearchDatasetsOverviewQuery = {
@@ -9094,7 +9171,7 @@ export const SetLicenseEventFragmentDoc = gql`
 `;
 export const SetDataSchemaEventFragmentDoc = gql`
     fragment SetDataSchemaEvent on SetDataSchema {
-        schema {
+        schema(format: ODF_JSON) {
             format
             content
         }
@@ -9185,7 +9262,7 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
             currentTransform {
                 ...DatasetTransform
             }
-            currentSchema(format: PARQUET_JSON) {
+            currentSchema(format: ODF_JSON) {
                 format
                 content
             }
@@ -10313,7 +10390,7 @@ export const GetDatasetDataSqlRunDocument = gql`
             query(
                 query: $query
                 queryDialect: SQL_DATA_FUSION
-                schemaFormat: PARQUET_JSON
+                schemaFormat: ODF_JSON
                 dataFormat: JSON_AOS
                 limit: $limit
                 skip: $skip
@@ -10598,7 +10675,7 @@ export const GetDatasetSchemaDocument = gql`
             byId(datasetId: $datasetId) {
                 ...DatasetBasics
                 metadata {
-                    currentSchema(format: PARQUET_JSON) {
+                    currentSchema(format: ODF_JSON) {
                         format
                         content
                     }
@@ -11862,9 +11939,9 @@ export class SearchDatasetsOverviewGQL extends Apollo.Query<
     }
 }
 export const SemanticSearchDatasetsOverviewDocument = gql`
-    query semanticSearchDatasetsOverview($prompt: String!, $perPage: Int) {
+    query semanticSearchDatasetsOverview($prompt: String!, $limit: Int) {
         search {
-            queryNaturalLanguage(prompt: $prompt, perPage: $perPage) {
+            queryNaturalLanguage(prompt: $prompt, limit: $limit) {
                 nodes {
                     item {
                         ... on Dataset {

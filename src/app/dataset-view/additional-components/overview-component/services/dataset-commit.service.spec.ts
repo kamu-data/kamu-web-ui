@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { MaybeUndefined } from "../../../../interface/app.types";
+import { MaybeUndefined } from "src/app/interface/app.types";
 import { TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { DatasetCommitService } from "./dataset-commit.service";
 import { Apollo } from "apollo-angular";

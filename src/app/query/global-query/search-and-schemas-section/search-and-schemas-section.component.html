@@ -96,8 +96,13 @@
                         <div *ngIf="item.schema; else emptySchemaTemplate">
                             <app-dynamic-table
                                 [hasTableHeader]="true"
-                                [schemaFields]="item.schema.fields"
                                 [idTable]="'schema-block-table'"
+                                [columnDescriptors]="[
+                                    { columnName: 'name', showInfoBadge: { extraElementKey: 'description' } },
+                                    { columnName: 'type' },
+                                ]"
+                                [dataRows]="schemaData(item.schema.fields)"
+                                tableClass="font-monospace"
                             />
                         </div>
                         <ng-template #emptySchemaTemplate>

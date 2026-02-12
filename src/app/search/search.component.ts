@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DatasetSearchResult, SearchFilters } from "../interface/search.interface";
+import { DatasetSearchResult, SearchFilters } from "src/app/interface/search.interface";
 import { ChangeDetectionStrategy, Component, inject, Input, numberAttribute, OnInit } from "@angular/core";
 import { NavigationService } from "../services/navigation.service";
 import ProjectLinks from "../project-links";

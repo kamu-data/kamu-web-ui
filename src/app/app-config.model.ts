@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { FeatureShowMode } from "./interface/feature-flags.interface";
+import { FeatureShowMode } from "src/app/interface/feature-flags.interface";
 import { AccountProvider } from "./api/kamu.graphql.interface";
 
 export interface AppRuntimeConfig {

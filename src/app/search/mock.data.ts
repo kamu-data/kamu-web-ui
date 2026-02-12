@@ -36,8 +36,13 @@ import {
     SearchDatasetsOverviewQuery,
 } from "../api/kamu.graphql.interface";
 import { Node } from "@swimlane/ngx-graph/lib/models/node.model";
-import { DatasetInfo } from "../interface/navigation.interface";
-import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode, TypeNames } from "../interface/search.interface";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
+import {
+    DatasetAutocompleteItem,
+    DatasetSearchResult,
+    SearchMode,
+    TypeNames,
+} from "src/app/interface/search.interface";
 import {
     FetchKind,
     ReadKind,
@@ -58,8 +63,9 @@ import { TEST_AVATAR_URL } from "../api/mock/auth.mock";
 import { AddPushSourceEditFormType } from "../dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 import { OdfDefaultValues } from "../common/values/app-odf-default.values";
 import { SqlQueryBasicResponse } from "../query/global-query/global-query.model";
-import { OperationColumnClassEnum } from "../interface/dataset.interface";
+import { OdfTypes } from "src/app/interface/dataset-schema.interface";
 import { SqlQueryExplanationResponse } from "../query-explainer/query-explainer.types";
+import { DynamicTableColumnClassEnum } from "../common/components/dynamic-table/dynamic-table.interface";
 
 export const mockPageBasedInfo: PageBasedInfo = {
     currentPage: 1,
@@ -1632,119 +1638,126 @@ export const mockSqlQueryResponseState: SqlQueryBasicResponse = {
         {
             offset: {
                 value: 244,
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             op: {
                 value: 0,
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             system_time: {
                 value: "2024-10-26T01:13:21.961Z",
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             block_time: {
                 value: "2024-10-25T19:07:11Z",
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             block_number: {
                 value: 21044617,
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             transaction_hash: {
                 value: "0x5e234037964087cd4326ab685301e01ad3c5ffe41d12fa5addc08332e0a6e16d",
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             account_symbol: {
                 value: "eth",
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             token_symbol: {
                 value: "WOETH",
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             token_amount: {
                 value: -524.67456,
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             eth_amount: {
                 value: 0,
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             token_balance: {
                 value: 0,
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             token_book_value_eth: {
                 value: 0.00016904811,
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
         },
     ],
     schema: [
         {
             name: "offset",
-            repetition: "REQUIRED",
-            type: "INT64",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "op",
-            repetition: "REQUIRED",
-            type: "INT32",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "system_time",
-            repetition: "REQUIRED",
-            type: "INT64",
-            logicalType: "TIMESTAMP(MILLIS,true)",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "block_time",
-            repetition: "OPTIONAL",
-            type: "INT64",
-            logicalType: "TIMESTAMP(MILLIS,true)",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "block_number",
-            repetition: "OPTIONAL",
-            type: "INT64",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "transaction_hash",
-            repetition: "OPTIONAL",
-            type: "BYTE_ARRAY",
-            logicalType: "STRING",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "account_symbol",
-            repetition: "OPTIONAL",
-            type: "BYTE_ARRAY",
-            logicalType: "STRING",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "token_symbol",
-            repetition: "OPTIONAL",
-            type: "BYTE_ARRAY",
-            logicalType: "STRING",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "token_amount",
-            repetition: "OPTIONAL",
-            type: "FLOAT",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "eth_amount",
-            repetition: "OPTIONAL",
-            type: "FLOAT",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "token_balance",
-            repetition: "OPTIONAL",
-            type: "FLOAT",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
         {
             name: "token_book_value_eth",
-            repetition: "OPTIONAL",
-            type: "FLOAT",
+            type: {
+                kind: OdfTypes.String,
+            },
         },
     ],
     involvedDatasetsId: ["did:odf:fed01df8964328b3b36fdfc5b140c5aea8795d445403a577428b2eafa5111f47dc212"],

@@ -15,7 +15,7 @@ import {
 } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { DatasetSchema, DataRow } from "src/app/interface/dataset.interface";
+import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -26,6 +26,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { NgFor } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
+import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
     selector: "app-details-modal",
@@ -43,7 +44,7 @@ import { MatDividerModule } from "@angular/material/divider";
 export class EditDetailsModalComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public currentState?: {
         schema: MaybeNull<DatasetSchema>;
-        data: DataRow[];
+        data: DynamicTableDataRow[];
         overview: DatasetOverviewFragment;
         size: DatasetDataSizeFragment;
     };

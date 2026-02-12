@@ -5,18 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { DatasetKind, TransformInput } from "../../../../../api/kamu.graphql.interface";
+import { DatasetKind } from "../../../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetSchema } from "src/app/interface/dataset.interface";
 import { GetDatasetSchemaQuery, SqlQueryStep } from "src/app/api/kamu.graphql.interface";
 import { EditSetTransformService } from "./edit-set-transform..service";
 import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
 import { DatasetNode, SetTransformYamlType } from "./set-transform.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
-import { catchError, from, of, take } from "rxjs";
+import { catchError, forkJoin, from, map, of, take } from "rxjs";
 import { BaseMainEventComponent } from "../source-events/base-main-event.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import AppValues from "src/app/common/values/app.values";
@@ -57,7 +56,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     public currentSetTransformEvent: MaybeNull<SetTransformYamlType>;
     public queries: Omit<SqlQueryStep, "__typename">[] = [];
     public dataSource = new MatTreeNestedDataSource<DatasetNode>();
-    public TREE_DATA: DatasetNode[] = [];
+    public inputsViewModel: DatasetNode[] = [];
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
     private readonly UNAVAILABLE_INPUT_LABEL: string = AppValues.SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL;
 
@@ -97,39 +96,41 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     }
 
     private getInputDatasetsInfo(): void {
-        this.currentSetTransformEvent?.inputs.forEach((item: TransformInput) => {
-            /* istanbul ignore else */
-            if (item.datasetRef) {
-                this.inputDatasets.add(JSON.stringify(item));
+        const inputs = this.currentSetTransformEvent?.inputs || [];
+        const requests$ = inputs
+            .filter((item) => !!item.datasetRef)
+            .map((item) => {
+                return this.datasetService.requestDatasetSchema(item.datasetRef).pipe(
+                    map((data: GetDatasetSchemaQuery) => {
+                        const schema = parseCurrentSchema(data.datasets.byId?.metadata.currentSchema);
+                        const datasetInfo = item.alias.split("/");
 
-                this.datasetService
-                    .requestDatasetSchema(item.datasetRef)
-                    .pipe(takeUntilDestroyed(this.destroyRef))
-                    .subscribe((data: GetDatasetSchemaQuery) => {
-                        if (data.datasets.byId) {
-                            const schema: MaybeNull<DatasetSchema> = parseCurrentSchema(
-                                data.datasets.byId.metadata.currentSchema,
-                            );
+                        return schema?.fields.length
+                            ? {
+                                  name: datasetInfo.length > 1 ? datasetInfo[1] : item.alias,
+                                  schema: schema?.fields || [],
+                                  owner: datasetInfo.length > 1 ? datasetInfo[0] : AppValues.DEFAULT_ADMIN_ACCOUNT_NAME,
+                              }
+                            : {
+                                  name: this.UNAVAILABLE_INPUT_LABEL,
+                                  schema: [],
+                                  owner: "",
+                              };
+                    }),
+                    catchError(() => {
+                        throw new Error("TransformInput without an 'datasetRef' is unexpected");
+                    }),
+                );
+            });
 
-                            const datasetInfo = item.alias.split("/");
-                            this.TREE_DATA.push({
-                                name: datasetInfo.length > 1 ? datasetInfo[1] : item.alias,
-                                children: schema?.fields,
-                                owner: datasetInfo.length > 1 ? datasetInfo[0] : AppValues.DEFAULT_ADMIN_ACCOUNT_NAME,
-                            });
-                        } else {
-                            this.TREE_DATA.push({
-                                name: this.UNAVAILABLE_INPUT_LABEL,
-                                children: [],
-                                owner: "",
-                            });
-                        }
-                        this.dataSource.data = this.TREE_DATA;
-                    });
-            } else {
-                throw new Error("TransformInput without an 'datasetRef' is unexpected");
-            }
-        });
+        if (requests$.length > 0) {
+            forkJoin(requests$)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((fullList: DatasetNode[]) => {
+                    this.inputsViewModel = fullList;
+                    this.cdr.detectChanges();
+                });
+        }
     }
 
     public onEditYaml(): void {

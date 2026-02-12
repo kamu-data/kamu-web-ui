@@ -8,7 +8,7 @@
 import { HttpHeaders } from "@angular/common/http";
 import { DataSchemaFormat, QueryDialect } from "src/app/api/kamu.graphql.interface";
 import { UploadPrepareResponse } from "src/app/interface/ingest-via-file-upload.types";
-import { DataRow } from "../interface/dataset.interface";
+import { DynamicTableDataRow } from "../common/components/dynamic-table/dynamic-table.interface";
 
 export enum QueryExplainerDataFormat {
     JsonAoS = "JsonAoS",
@@ -52,7 +52,7 @@ export interface QueryExplainerDataJsonAosResponse {
 }
 
 export interface QueryExplainerOutputType {
-    data: object[] | [string[]] | DataRow[];
+    data: object[] | [string[]] | DynamicTableDataRow[];
     dataFormat: keyof typeof QueryExplainerDataFormat;
     schema: QueryExplainerSchemaType;
     schemaFormat: keyof typeof DataSchemaFormat;

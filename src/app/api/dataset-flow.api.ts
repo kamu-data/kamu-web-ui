@@ -57,7 +57,7 @@ import { Observable, first, map } from "rxjs";
 import { ObservableQuery } from "@apollo/client/core";
 import { onlyCompleteData } from "apollo-angular";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
-import { MaybeNull } from "../interface/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 
 @Injectable({ providedIn: "root" })
 export class DatasetFlowApi {

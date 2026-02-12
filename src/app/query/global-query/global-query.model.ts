@@ -6,8 +6,9 @@
  */
 
 import { QueryExplainerProofResponse } from "src/app/query-explainer/query-explainer.types";
-import { MaybeNull } from "../../interface/app.types";
-import { DataRow, DataSchemaField, DatasetSchema } from "src/app/interface/dataset.interface";
+import { MaybeNull } from "src/app/interface/app.types";
+import { DataSchemaField, DatasetSchema } from "src/app/interface/dataset-schema.interface";
+import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 export interface GlobalQuerySearchItem {
     datasetAlias: string;
@@ -16,13 +17,13 @@ export interface GlobalQuerySearchItem {
 
 export interface SqlQueryResponseState {
     schema: MaybeNull<DatasetSchema>;
-    content: DataRow[];
+    content: DynamicTableDataRow[];
     involvedDatasetsId: string[];
 }
 
 export interface SqlQueryBasicResponse {
     schema: DataSchemaField[];
-    content: DataRow[];
+    content: DynamicTableDataRow[];
     involvedDatasetsId: string[];
     proofResponse?: QueryExplainerProofResponse;
 }

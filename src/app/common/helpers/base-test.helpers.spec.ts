@@ -10,7 +10,7 @@ import { By, DomSanitizer } from "@angular/platform-browser";
 import { DebugElement } from "@angular/core";
 import { ReplaySubject } from "rxjs";
 import { ActivatedRoute, RouterEvent } from "@angular/router";
-import { MaybeNull } from "../../interface/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { MatIconRegistry } from "@angular/material/icon";
 import ProjectLinks from "src/app/project-links";
 

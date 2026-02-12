@@ -14,7 +14,7 @@ import {
     SearchDatasetsOverviewQuery,
 } from "./kamu.graphql.interface";
 import { mockSearchOverviewResponse, mockAutoCompleteResponse } from "./mock/search.mock";
-import { DatasetAutocompleteItem } from "../interface/search.interface";
+import { DatasetAutocompleteItem } from "src/app/interface/search.interface";
 
 describe("SearchApi", () => {
     let service: SearchApi;

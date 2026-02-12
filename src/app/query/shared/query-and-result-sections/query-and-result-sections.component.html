@@ -1,5 +1,5 @@
-<div class="sql-query-editor-header d-flex flex-row justify-content-between">
-    <div class="box-title pb-3 m-0 d-flex flex-row align-items-center">
+<div class="sql-query-editor-header d-flex flex-row justify-content-between flex-wrap">
+    <div class="box-title pb-3 m-0 d-flex flex-row align-items-center flex-wrap">
         <span class="d-block me-3">Engine:</span>
         <app-engine-select
             class="me-3"
@@ -12,17 +12,16 @@
         <mat-slide-toggle
             [(ngModel)]="enabledProof"
             color="primary"
-            class="mat-elevation-z0"
+            class="mat-elevation-z0 my-2"
             data-test-id="generate-proof-enabled"
             [disabled]="!isAuthenticated"
-            [ngClass]="{ 'ml-90': isAuthenticated, 'ml-70': !isAuthenticated }"
         >
             <span class="ps-2"> Generate proof</span>
         </mat-slide-toggle>
 
         <app-tooltip-icon *ngIf="!isAuthenticated" class="mt-1 ms-1" [tooltip]="GENERATE_PROOF_TOOLTIP" />
     </div>
-    <div class="btn-group-parent">
+    <div class="btn-group-parent mb-3">
         <div class="d-flex">
             <button
                 appFeatureFlag="dataset.panel.data.editRun.share"
@@ -122,8 +121,8 @@
         <ng-container *ngIf="currentData.length; else noRecords">
             <app-dynamic-table
                 [hasTableHeader]="true"
-                [schemaFields]="sqlQueryResponse?.schema!"
                 [dataRows]="currentData"
+                [columnDescriptors]="inferTableSchema(sqlQueryResponse?.schema!)"
                 [idTable]="'result-query-table'"
             />
             <app-load-more [isAllDataLoaded]="isAllDataLoaded" (loadMoreEmit)="loadMore($event)" class="mt-4" />

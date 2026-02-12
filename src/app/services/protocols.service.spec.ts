@@ -13,7 +13,7 @@ import { of } from "rxjs";
 import { mockDatasetEndPoints, mockDatasetProtocolsQuery } from "../data-access-panel/data-access-panel-mock.data";
 import { mockDatasetInfo } from "../search/mock.data";
 import { DatasetEndpoints } from "../api/kamu.graphql.interface";
-import { MaybeUndefined } from "../interface/app.types";
+import { MaybeUndefined } from "src/app/interface/app.types";
 
 describe("ProtocolsService", () => {
     let service: ProtocolsService;

@@ -6,7 +6,7 @@
  */
 
 import { NavigationService } from "../../../../services/navigation.service";
-import { MaybeNull } from "../../../../interface/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import {
     AccessTokenConnection,
     CreatedAccessToken,

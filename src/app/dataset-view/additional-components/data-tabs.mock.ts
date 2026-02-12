@@ -28,18 +28,18 @@ import {
 } from "src/app/search/mock.data";
 import { Node } from "@swimlane/ngx-graph";
 import { LineageNodeAccess } from "./lineage-component/lineage-model";
-import { OperationColumnClassEnum } from "src/app/interface/dataset.interface";
+import { OdfTypes } from "src/app/interface/dataset-schema.interface";
 import { TEST_AVATAR_URL } from "src/app/api/mock/auth.mock";
+import { DynamicTableColumnClassEnum } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 export const mockDataUpdate: DataUpdate = {
     schema: {
-        name: "id",
-        type: "string",
         fields: [
             {
                 name: "mockName",
-                repetition: "mockRepetition",
-                type: "mockType",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
         ],
     },
@@ -47,7 +47,7 @@ export const mockDataUpdate: DataUpdate = {
         {
             mockName: {
                 value: "someValueOfMockType",
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
         },
     ],
@@ -694,51 +694,51 @@ export const mockOverviewDataUpdate = {
         {
             offset: {
                 value: 6908,
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             system_time: {
                 value: "2022-08-05 21:15:03.947",
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             block_time: {
                 value: "2022-08-05 20:24:55",
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             token_symbol: {
                 value: "rETH",
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             event_name: {
                 value: "TokensMinted",
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             amount: {
                 value: 0.009679238156255232,
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             eth_amount: {
                 value: 0.010000000272564223,
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             block_number: {
                 value: 15284454,
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             block_hash: {
                 value: "0x887569ff02456b8cde2ade8e0ee5b48d441800c8c6d92d1414a9648902807558",
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             transaction_index: {
                 value: 224,
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             transaction_hash: {
                 value: "0xa88698d288550d09653e6cec3038ea30fe8f74eb40941eba93b05024037426d7",
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
             log_index: {
                 value: 355,
-                cssClass: OperationColumnClassEnum.PRIMARY_COLOR,
+                cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
         },
     ],
@@ -984,60 +984,60 @@ export const mockOverviewDataUpdateNullable = {
 
 export const mockMetadataRootUpdate: MetadataSchemaUpdate = {
     schema: {
-        name: "spark_schema",
-        type: "struct",
         fields: [
             {
                 name: "offset",
-                repetition: "OPTIONAL",
-                type: "INT64",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "system_time",
-                repetition: "REQUIRED",
-                type: "INT64",
-                logicalType: "TIMESTAMP_MILLIS",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "date_reported",
-                repetition: "OPTIONAL",
-                type: "INT64",
-                logicalType: "TIMESTAMP_MILLIS",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "id",
-                repetition: "OPTIONAL",
-                type: "INT64",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "zone",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "gender",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "age_group",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "case_status",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "case_type",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
         ],
     },
@@ -1179,60 +1179,60 @@ export const mockMetadataRootUpdate: MetadataSchemaUpdate = {
 
 export const mockMetadataRootPushSourceUpdate: MetadataSchemaUpdate = {
     schema: {
-        name: "spark_schema",
-        type: "struct",
         fields: [
             {
                 name: "offset",
-                repetition: "OPTIONAL",
-                type: "INT64",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "system_time",
-                repetition: "REQUIRED",
-                type: "INT64",
-                logicalType: "TIMESTAMP_MILLIS",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "date_reported",
-                repetition: "OPTIONAL",
-                type: "INT64",
-                logicalType: "TIMESTAMP_MILLIS",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "id",
-                repetition: "OPTIONAL",
-                type: "INT64",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "zone",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "gender",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "age_group",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "case_status",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "case_type",
-                repetition: "OPTIONAL",
-                type: "BYTE_ARRAY",
-                logicalType: "UTF8",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
         ],
     },
@@ -1369,69 +1369,79 @@ export const mockMetadataRootPushSourceUpdate: MetadataSchemaUpdate = {
 
 export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
     schema: {
-        name: "spark_schema",
-        type: "struct",
         fields: [
             {
                 name: "offset",
-                repetition: "OPTIONAL",
-                type: "INT64",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "system_time",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "block_time",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "token_symbol",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "event_name",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "amount",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "eth_amount",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "block_number",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "block_hash",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "transaction_index",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
 
             {
                 name: "transaction_hash",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
             {
                 name: "log_index",
-                repetition: "REQUIRED",
-                type: "INT96",
+                type: {
+                    kind: OdfTypes.String,
+                },
             },
         ],
     },

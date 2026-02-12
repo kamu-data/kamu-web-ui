@@ -73,11 +73,11 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
     public editSourceYaml(form: FormGroup, sourceEvent: SourcesEvents): void {
         const modalRef: NgbModalRef = this.modalService.open(FinalYamlModalComponent, { size: "lg" });
         const instance = modalRef.componentInstance as FinalYamlModalComponent;
-        (instance.yamlTemplate =
+        instance.yamlTemplate =
             this.errorMessage && this.changedEventYamlByHash
                 ? this.changedEventYamlByHash
-                : this.selectSourceEvent(form, sourceEvent)),
-            (instance.datasetInfo = this.getDatasetInfoFromUrl());
+                : this.selectSourceEvent(form, sourceEvent);
+        instance.datasetInfo = this.getDatasetInfoFromUrl();
 
         from(modalRef.result)
             .pipe(

@@ -20,13 +20,13 @@ describe("AttributesSchemaModalComponent", () => {
         });
         fixture = TestBed.createComponent(AttributesSchemaModalComponent);
         component = fixture.componentInstance;
-        (component.element = {
+        ((component.element = {
             name: "offset",
             type: {
                 kind: OdfTypes.String,
             },
         }),
-            fixture.detectChanges();
+            fixture.detectChanges());
     });
 
     it("should create", () => {

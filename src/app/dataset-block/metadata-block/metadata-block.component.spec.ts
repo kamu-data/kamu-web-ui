@@ -66,12 +66,12 @@ describe("MetadataBlockComponent", () => {
         fixture = TestBed.createComponent(MetadataBlockComponent);
         component = fixture.componentInstance;
         loader = TestbedHarnessEnvironment.loader(fixture);
-        (component.metadata = {
+        component.metadata = {
             block: blockFragment,
             blockAsYaml: "test yaml",
             downstreamsCount: 0,
-        }),
-            fixture.detectChanges();
+        };
+        fixture.detectChanges();
     });
 
     it("should create", () => {

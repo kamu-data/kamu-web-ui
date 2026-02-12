@@ -30,9 +30,9 @@ describe("OverviewHistorySummaryHeaderComponent", () => {
 
         fixture = TestBed.createComponent(OverviewHistorySummaryHeaderComponent);
         component = fixture.componentInstance;
-        (component.metadataBlockFragment = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
-            .blockByHash as MetadataBlockFragment),
-            (component.numBlocksTotal = 3);
+        component.metadataBlockFragment = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
+            .blockByHash as MetadataBlockFragment;
+        component.numBlocksTotal = 3;
         component.datasetName = TEST_DATASET_NAME;
         fixture.detectChanges();
     });

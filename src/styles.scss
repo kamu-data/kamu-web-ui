@@ -467,7 +467,7 @@ markdown {
     flex-direction: row;
     width: 100%;
     grid-template-columns: 1fr;
-    grid-gap: 24px;
+    gap: 24px;
 
     &--header {
         grid-template-columns: 1fr 1fr;
@@ -481,8 +481,7 @@ router-outlet {
 
 .app-content__card-columns {
     column-count: 1;
-    grid-column-gap: 1.25rem;
-    column-gap: 1.25rem;
+    gap: 1.25rem;
     orphans: 1;
     widows: 1;
 }
@@ -648,7 +647,7 @@ router-outlet {
     .dataset-view-data-result-container {
         display: grid;
         align-items: start;
-        grid-gap: 25px;
+        gap: 25px;
     }
 
     table {
@@ -661,7 +660,7 @@ router-outlet {
         align-items: center;
         justify-content: space-between;
         grid-template-columns: 1fr 0.25fr;
-        grid-gap: 25px;
+        gap: 25px;
 
         > ul {
             &:first-child {
@@ -869,18 +868,19 @@ router-outlet {
 
     .gist-data {
         overflow: auto;
-        word-wrap: normal;
+        overflow-wrap: normal;
         background-color: $app-color-canvas-overlay;
         border-bottom: 1px solid #ddd;
         border-radius: 6px 6px 0 0;
     }
 
     .markdown-body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji",
+        font-family:
+            -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji",
             "Segoe UI Emoji";
         font-size: 16px;
         line-height: 1.5;
-        word-wrap: break-word;
+        overflow-wrap: break-word;
 
         pre {
             padding: 16px;
@@ -1157,7 +1157,7 @@ router-outlet {
 
 .modal__msg {
     margin: 1em 0;
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 %button__default {
@@ -1326,7 +1326,7 @@ pre {
     display: flex;
     margin-top: 0;
     margin-bottom: 0;
-    word-wrap: break-word;
+    overflow-wrap: anywhere;
 
     code {
         flex: 1;
@@ -1529,7 +1529,7 @@ select {
 .waiting-status,
 .queued-status,
 .retrying-status {
-    color: rgba(181 175 175);
+    color: rgb(181 175 175);
 }
 
 .aborted-outcome {

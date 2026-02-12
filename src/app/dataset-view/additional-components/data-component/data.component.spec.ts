@@ -92,7 +92,7 @@ describe("DataComponent", () => {
         spyOn(navigationService, "navigateWithSqlQuery");
 
         component = fixture.componentInstance;
-        (component.dataTabData = {
+        component.dataTabData = {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: {
@@ -101,8 +101,8 @@ describe("DataComponent", () => {
                 overview: structuredClone(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
                 size: mockOverviewDataUpdate.size,
             } as OverviewUpdate,
-        }),
-            (component.sqlLoading = false);
+        };
+        component.sqlLoading = false;
         component.sqlRequestCode = "";
         spyOn(location, "getState").and.returnValue({ start: 0, end: 100 });
         requestDataSqlRunSpy = spyOn(sqlQueryService, "requestDataSqlRun").and.returnValue(of().pipe());

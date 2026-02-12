@@ -58,11 +58,11 @@ describe("OffsetIntervalPropertyComponent", () => {
     });
 
     it("should check call navigateToQuery", () => {
-        (component.data = {
+        component.data = {
             block: { __typename: "OffsetInterval", start: 0, end: 596125 },
             datasetId: null,
-        }),
-            fixture.detectChanges();
+        };
+        fixture.detectChanges();
         const navigateToQuerySpy = spyOn(navigationService, "navigateToDatasetView");
         component.navigateToQuery();
         expect(navigateToQuerySpy).toHaveBeenCalledTimes(1);

@@ -38,14 +38,14 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
     ) {
         super();
 
-        this.loginService.accessTokenChanges
+        (this.loginService.accessTokenChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((token: string) => this.saveAccessToken(token)),
             this.loginService.accountChanges
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe((user: AccountFragment) => {
                     this.changeUser(user);
-                });
+                }));
     }
 
     public initializeCompletes(): Observable<void> {

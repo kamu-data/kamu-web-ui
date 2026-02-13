@@ -53,7 +53,7 @@
 
      To install a specific version of node: `nvm install 24.13.1`
 
-2. Install packages that project depends on: `npm install`
+2. Install packages that project depends on: `npm ci`
 3. Run application locally: `ng serve` or `npm run start`
 
 ### Running with local GQL server

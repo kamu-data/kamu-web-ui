@@ -1,7 +1,7 @@
 {
   description = "Dev environment with supporting tools";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/4ae2e647537bcdbb82265469442713d066675275";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/25.11";
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
   outputs = { self, nixpkgs, flake-utils }:
@@ -14,7 +14,7 @@
       in {
         devShells.default = pkgs.mkShell {
           buildInputs = [
-            pkgs.nodejs_18
+            pkgs.nodejs_24
           ];
         };
       });

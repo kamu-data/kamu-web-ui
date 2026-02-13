@@ -35,7 +35,7 @@ export class RequestTimerComponent extends BaseComponent implements OnChanges, O
     private ms: number = 0;
     private hh: number = 0;
     private isRunning: boolean = false;
-    private timerId: NodeJS.Timer;
+    private timeout: NodeJS.Timeout;
 
     private cdr = inject(ChangeDetectorRef);
     private cancelRequestService = inject(CancelRequestService);
@@ -72,7 +72,7 @@ export class RequestTimerComponent extends BaseComponent implements OnChanges, O
     private runTimer() {
         if (!this.isRunning) {
             this.isRunning = true;
-            this.timerId = setInterval(() => {
+            this.timeout = setInterval(() => {
                 this.ms++;
                 if (this.ms >= 100) {
                     this.ss++;
@@ -104,7 +104,7 @@ export class RequestTimerComponent extends BaseComponent implements OnChanges, O
 
     private stopTimer(): void {
         this.isRunning = false;
-        clearInterval(this.timerId);
+        clearInterval(this.timeout);
     }
 
     public get durationSqlRequest(): string {

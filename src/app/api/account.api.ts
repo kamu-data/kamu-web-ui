@@ -233,6 +233,7 @@ export class AccountApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<AccountPrimaryCardsQuery>) => {
                     return result.data as AccountPrimaryCardsQuery;
@@ -262,6 +263,7 @@ export class AccountApi {
                 },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<AccountWebhookCardsQuery>) => {
                     return result.data as AccountWebhookCardsQuery;

@@ -12,7 +12,7 @@ query accountWebhookCards(
           webhookCards(filters: $filters, page: $page, perPage: $perPage, ordering: $ordering) {
             ...WebhookFlowSubProcessConnectionData
           }
-          webhookRollup {
+          webhookRollup(filters: $filters) {
             ...FlowProcessGroupRollupData
           }
         }

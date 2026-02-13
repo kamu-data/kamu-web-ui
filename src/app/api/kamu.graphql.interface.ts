@@ -204,6 +204,10 @@ export type AccountFlowProcessesAllCardsArgs = {
     perPage?: InputMaybe<Scalars["Int"]>;
 };
 
+export type AccountFlowProcessesFullRollupArgs = {
+    filters?: InputMaybe<FlowProcessFilters>;
+};
+
 export type AccountFlowProcessesPrimaryCardsArgs = {
     filters?: InputMaybe<FlowProcessFilters>;
     ordering?: InputMaybe<FlowProcessOrdering>;
@@ -211,11 +215,19 @@ export type AccountFlowProcessesPrimaryCardsArgs = {
     perPage?: InputMaybe<Scalars["Int"]>;
 };
 
+export type AccountFlowProcessesPrimaryRollupArgs = {
+    filters?: InputMaybe<FlowProcessFilters>;
+};
+
 export type AccountFlowProcessesWebhookCardsArgs = {
     filters?: InputMaybe<FlowProcessFilters>;
     ordering?: InputMaybe<FlowProcessOrdering>;
     page?: InputMaybe<Scalars["Int"]>;
     perPage?: InputMaybe<Scalars["Int"]>;
+};
+
+export type AccountFlowProcessesWebhookRollupArgs = {
+    filters?: InputMaybe<FlowProcessFilters>;
 };
 
 export type AccountFlowRuns = {
@@ -2667,6 +2679,8 @@ export type FlowProcessSummary = {
     lastFailureAt?: Maybe<Scalars["DateTime"]>;
     lastSuccessAt?: Maybe<Scalars["DateTime"]>;
     nextPlannedAt?: Maybe<Scalars["DateTime"]>;
+    pausedAt?: Maybe<Scalars["DateTime"]>;
+    runningSince?: Maybe<Scalars["DateTime"]>;
     stopPolicy: FlowTriggerStopPolicy;
 };
 
@@ -6820,6 +6834,8 @@ export type FlowProcessSummaryDataFragment = {
     nextPlannedAt?: string | null;
     autoStoppedReason?: FlowProcessAutoStopReason | null;
     autoStoppedAt?: string | null;
+    runningSince?: string | null;
+    pausedAt?: string | null;
     stopPolicy:
         | { __typename?: "FlowTriggerStopPolicyAfterConsecutiveFailures"; maxFailures: number }
         | { __typename?: "FlowTriggerStopPolicyNever"; dummy: boolean };
@@ -8083,6 +8099,8 @@ export const FlowProcessSummaryDataFragmentDoc = gql`
         }
         autoStoppedReason
         autoStoppedAt
+        runningSince
+        pausedAt
     }
 `;
 export const DatasetPageInfoFragmentDoc = gql`
@@ -9743,7 +9761,7 @@ export const AccountFlowsAsCardsDocument = gql`
                         allCards(filters: $filters, page: $page, perPage: $perPage, ordering: $ordering) {
                             ...AccountFlowProcessCardConnectionData
                         }
-                        fullRollup {
+                        fullRollup(filters: $filters) {
                             ...FlowProcessGroupRollupData
                         }
                     }
@@ -9878,7 +9896,7 @@ export const AccountPrimaryCardsDocument = gql`
                         primaryCards(filters: $filters, page: $page, perPage: $perPage, ordering: $ordering) {
                             ...DatasetFlowProcessConnectionData
                         }
-                        primaryRollup {
+                        primaryRollup(filters: $filters) {
                             ...FlowProcessGroupRollupData
                         }
                     }
@@ -9942,7 +9960,7 @@ export const AccountWebhookCardsDocument = gql`
                         webhookCards(filters: $filters, page: $page, perPage: $perPage, ordering: $ordering) {
                             ...WebhookFlowSubProcessConnectionData
                         }
-                        webhookRollup {
+                        webhookRollup(filters: $filters) {
                             ...FlowProcessGroupRollupData
                         }
                     }

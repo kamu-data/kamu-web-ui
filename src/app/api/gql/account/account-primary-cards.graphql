@@ -12,7 +12,7 @@ query accountPrimaryCards(
           primaryCards(filters: $filters, page: $page, perPage: $perPage, ordering: $ordering) {
             ...DatasetFlowProcessConnectionData
           }
-          primaryRollup {
+          primaryRollup(filters: $filters) {
             ...FlowProcessGroupRollupData
           }
         }

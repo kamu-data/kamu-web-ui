@@ -72,9 +72,7 @@
                                 [defaultKind]="MERGE_DEFAULT_KIND"
                                 [sectionName]="steps.MERGE"
                                 [eventYamlByHash]="eventYamlByHash"
-                                [description]="
-                                    'Determines how newly-ingested data should be merged with existing history'
-                                "
+                                [description]="'Determines how newly-ingested data should be merged with existing history'"
                             >
                                 <div *ngIf="errorMessage" class="alert alert-danger mt-2" role="alert">
                                     <p class="text-danger fs-6">Error:<br />{{ errorMessage }}</p>

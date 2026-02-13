@@ -19,17 +19,14 @@ import { FormValidationErrorsDirective } from "src/app/common/directives/form-va
     templateUrl: "./input-field.component.html",
     styleUrls: ["./input-field.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         NgxTrimDirectiveModule,
         RxReactiveFormsModule,
-
         //-----//
         TooltipIconComponent,
         FormValidationErrorsDirective,

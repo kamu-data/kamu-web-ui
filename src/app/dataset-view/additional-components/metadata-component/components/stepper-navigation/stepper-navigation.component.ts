@@ -17,11 +17,9 @@ import { MatStepperModule } from "@angular/material/stepper";
     templateUrl: "./stepper-navigation.component.html",
     styleUrls: ["./stepper-navigation.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
-
         //-----//
         MatButtonModule,
         MatStepperModule,

@@ -7,8 +7,8 @@
 
 import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
-import { Feature, FeatureShowMode } from "../interface/feature-flags.interface";
-import { MaybeNull, MaybeUndefined } from "../interface/app.types";
+import { Feature, FeatureShowMode } from "src/app/interface/feature-flags.interface";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { AppConfigService } from "../app-config.service";
 
 @Injectable({

@@ -29,7 +29,7 @@ import {
     mockRevokeAccessTokenMutation,
 } from "./mock/access-token.mock";
 import { first } from "rxjs";
-import { ApolloError } from "@apollo/client";
+import { CombinedGraphQLErrors } from "@apollo/client/errors";
 
 describe("AccessTokenApi", () => {
     let service: AccessTokenApi;
@@ -97,8 +97,8 @@ describe("AccessTokenApi", () => {
             .pipe(first())
             .subscribe({
                 next: () => fail("Unexpected success"),
-                error: (e: ApolloError) => {
-                    expect(e).toBeTruthy();
+                error: (e: Error) => {
+                    expect(CombinedGraphQLErrors.is(e)).toBe(true);
                 },
             });
 
@@ -133,8 +133,8 @@ describe("AccessTokenApi", () => {
             .pipe(first())
             .subscribe({
                 next: () => fail("Unexpected success"),
-                error: (e: ApolloError) => {
-                    expect(e).toBeTruthy();
+                error: (e: Error) => {
+                    expect(CombinedGraphQLErrors.is(e)).toBe(true);
                 },
             });
         const op = controller.expectOne(RevokeAccessTokenDocument);

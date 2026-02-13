@@ -2,9 +2,10 @@ import {
     enableProdMode,
     ErrorHandler,
     Injector,
-    APP_INITIALIZER,
     SecurityContext,
     importProvidersFrom,
+    inject,
+    provideAppInitializer,
 } from "@angular/core";
 import { environment } from "./environments/environment";
 import { AppComponent } from "./app/app.component";
@@ -18,7 +19,8 @@ import { apolloCache } from "./app/common/helpers/apollo-cache.helper";
 import { ErrorTexts } from "./app/common/values/errors.text";
 import { ToastrService } from "ngx-toastr";
 import { onError } from "@apollo/client/link/error";
-import { ApolloLink, Operation, NextLink } from "@apollo/client/core";
+import { CombinedGraphQLErrors } from "@apollo/client/errors";
+import { ApolloLink } from "@apollo/client/core";
 import { LocalStorageService } from "./app/services/local-storage.service";
 import { AppConfigService } from "./app/app-config.service";
 import { ErrorHandlerService } from "./app/services/error-handler.service";
@@ -33,7 +35,7 @@ import {
 } from "@angular/common/http";
 import { LoggedUserService } from "./app/auth/logged-user.service";
 import { HttpLink } from "apollo-angular/http";
-import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
+import { Apollo, provideApollo } from "apollo-angular";
 import AppValues from "./app/common/values/app.values";
 import { provideRouter, withComponentInputBinding, withRouterConfig } from "@angular/router";
 import { provideToastr } from "ngx-toastr";
@@ -61,100 +63,9 @@ const Services = [
         provide: ErrorHandler,
         useClass: ErrorHandlerService,
     },
-    {
-        provide: APOLLO_OPTIONS,
-        useFactory: (
-            httpLink: HttpLink,
-            appConfig: AppConfigService,
-            localStorageService: LocalStorageService,
-            injector: Injector,
-            navigationService: NavigationService,
-        ) => {
-            const httpMainLink: ApolloLink = httpLink.create({
-                uri: appConfig.apiServerGqlUrl,
-            });
 
-            const errorMiddleware: ApolloLink = onError(({ graphQLErrors, networkError }) => {
-                const toastrService = injector.get(ToastrService);
-
-                if (graphQLErrors) {
-                    if (graphQLErrors[0].message === ErrorTexts.ERROR_ACCOUNT_IS_NOT_WHITELISTED) {
-                        navigationService.navigateToPath(ProjectLinks.URL_ACCOUNT_WHITELIST_PAGE_NOT_FOUND);
-                    } else if (graphQLErrors[0].message === ErrorTexts.ERROR_ACCESS_TOKEN) {
-                        const accessToken: string | null = localStorageService.accessToken;
-                        if (accessToken) {
-                            toastrService.error(
-                                isAccessTokenExpired(accessToken)
-                                    ? ErrorTexts.ERROR_ACCESS_TOKEN_EXPIRED
-                                    : graphQLErrors[0].message,
-                            );
-                            navigationService.navigateToLogin(window.location.pathname);
-                        }
-                    } else {
-                        graphQLErrors.forEach(({ message }) => {
-                            toastrService.error(message);
-                        });
-                    }
-                }
-
-                if (networkError) {
-                    toastrService.error(ErrorTexts.ERROR_NETWORK_DESCRIPTION, "", { disableTimeOut: true });
-                }
-            });
-
-            const authorizationMiddleware: ApolloLink = new ApolloLink((operation: Operation, forward: NextLink) => {
-                const accessToken: string | null = localStorageService.accessToken;
-                if (accessToken) {
-                    operation.setContext({
-                        headers: new HttpHeaders().set(AppValues.HEADERS_AUTHORIZATION_KEY, `Bearer ${accessToken}`),
-                    });
-                }
-                return forward(operation);
-            });
-
-            const globalLoaderMiddleware: ApolloLink = new ApolloLink((operation: Operation, forward: NextLink) => {
-                const context = operation.getContext();
-                const skipLoading = Boolean(context.skipLoading);
-                const headers = context.headers as HttpHeaders;
-                const headersExist = headers && headers.keys().length;
-                if (skipLoading) {
-                    operation.setContext({
-                        headers: headersExist
-                            ? headers.append(AppValues.HEADERS_SKIP_LOADING_KEY, `${skipLoading}`)
-                            : new HttpHeaders().set(AppValues.HEADERS_SKIP_LOADING_KEY, `${skipLoading}`),
-                    });
-                }
-                return forward(operation);
-            });
-
-            return {
-                cache: apolloCache(),
-                link: ApolloLink.from([errorMiddleware, authorizationMiddleware, globalLoaderMiddleware, httpMainLink]),
-            };
-        },
-        deps: [HttpLink, AppConfigService, LocalStorageService, Injector, NavigationService],
-    },
     HIGHLIGHT_OPTIONS_PROVIDER,
-    {
-        provide: APP_INITIALIZER,
-        useFactory: (loggedUserService: LoggedUserService) => {
-            return () => {
-                return loggedUserService.initializeCompletes();
-            };
-        },
-        deps: [LoggedUserService],
-        multi: true,
-    },
-    {
-        provide: APP_INITIALIZER,
-        useFactory: (loginMethodsService: LoginMethodsService) => {
-            return (): Promise<void> => {
-                return firstValueFrom(loginMethodsService.initialize()).catch((e) => logError(e));
-            };
-        },
-        deps: [LoginMethodsService],
-        multi: true,
-    },
+
     {
         provide: MAT_RIPPLE_GLOBAL_OPTIONS,
         useValue: {
@@ -197,6 +108,89 @@ bootstrapApplication(AppComponent, {
             positionClass: "toast-bottom-right",
             newestOnTop: false,
             preventDuplicates: true,
+        }),
+
+        provideAppInitializer(() => {
+            const loggedUserService = inject(LoggedUserService);
+            return loggedUserService.initializeCompletes();
+        }),
+
+        provideAppInitializer(() => {
+            const loginMethodsService = inject(LoginMethodsService);
+            return firstValueFrom(loginMethodsService.initialize()).catch((e) => logError(e));
+        }),
+
+        provideApollo(() => {
+            const httpLink = inject(HttpLink);
+            const appConfig = inject(AppConfigService);
+            const localStorageService = inject(LocalStorageService);
+            const injector = inject(Injector);
+            const navigationService = inject(NavigationService);
+
+            // 1. Main Link
+            const httpMainLink = httpLink.create({
+                uri: appConfig.apiServerGqlUrl,
+            });
+
+            // 2. Error Middleware
+            const errorMiddleware = onError((errorOptions) => {
+                const { error } = errorOptions;
+                const toastrService = injector.get(ToastrService);
+
+                // Check if it's a GraphQL error (errors from the GraphQL server)
+                if (CombinedGraphQLErrors.is(error)) {
+                    const graphQLErrors = error.errors;
+                    if (graphQLErrors && graphQLErrors.length > 0) {
+                        const firstMsg = graphQLErrors[0].message;
+                        if (firstMsg === ErrorTexts.ERROR_ACCOUNT_IS_NOT_WHITELISTED) {
+                            navigationService.navigateToPath(ProjectLinks.URL_ACCOUNT_WHITELIST_PAGE_NOT_FOUND);
+                        } else if (firstMsg === ErrorTexts.ERROR_ACCESS_TOKEN) {
+                            const token = localStorageService.accessToken;
+                            if (token) {
+                                toastrService.error(
+                                    isAccessTokenExpired(token) ? ErrorTexts.ERROR_ACCESS_TOKEN_EXPIRED : firstMsg,
+                                );
+                                navigationService.navigateToLogin(window.location.pathname);
+                            }
+                        } else {
+                            graphQLErrors.forEach((err) => toastrService.error(err.message));
+                        }
+                    }
+                } else if (error) {
+                    // Network error (e.g., connection failed, timeout, etc.)
+                    logError(error);
+                    toastrService.error(ErrorTexts.ERROR_NETWORK_DESCRIPTION, "", { disableTimeOut: true });
+                }
+            });
+
+            // 3. Auth Middleware
+            const authorizationMiddleware = new ApolloLink((operation, forward) => {
+                const token = localStorageService.accessToken;
+                if (token) {
+                    operation.setContext({
+                        headers: new HttpHeaders().set(AppValues.HEADERS_AUTHORIZATION_KEY, `Bearer ${token}`),
+                    });
+                }
+                return forward(operation);
+            });
+
+            // 4. Loader Middleware
+            const globalLoaderMiddleware = new ApolloLink((operation, forward) => {
+                const context = operation.getContext();
+                const skipLoading = !!context.skipLoading;
+                if (skipLoading) {
+                    const headers = (context.headers as HttpHeaders) || new HttpHeaders();
+                    operation.setContext({
+                        headers: headers.set(AppValues.HEADERS_SKIP_LOADING_KEY, `${skipLoading}`),
+                    });
+                }
+                return forward(operation);
+            });
+
+            return {
+                cache: apolloCache(),
+                link: ApolloLink.from([errorMiddleware, authorizationMiddleware, globalLoaderMiddleware, httpMainLink]),
+            };
         }),
         ...Services,
     ],

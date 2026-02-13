@@ -18,13 +18,37 @@
         <app-block-row-data
             [tooltip]="'A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.'"
             [label]="'Schema:'"
+            [rowClass]="'d-flex justify-content-end'"
         >
+            <mat-slide-toggle
+                data-test-id="schema-yaml-toggle"
+                color="primary"
+                class="mat-elevation-z0 mb-4"
+                (change)="toggleYamlView($event)"
+            >
+                <span class="ps-2">Show as YAML</span>
+            </mat-slide-toggle>
         </app-block-row-data>
+
         <app-dynamic-table
+            *ngIf="viewMode === SchemaViewMode.TABLE"
             class="mb-2"
             [hasTableHeader]="true"
-            [schemaFields]="schema.fields"
+            [columnDescriptors]="[
+                { columnName: 'name' },
+                { columnName: 'type', showMoreBadge: { extraElementKey: 'extraKeys' } },
+                { columnName: 'description' },
+            ]"
+            [dataRows]="schemaData(schema.fields)"
             [idTable]="'schema-block-table'"
+            tableClass="font-monospace"
+        />
+
+        <markdown
+            *ngIf="viewMode === SchemaViewMode.YAML"
+            clipboard
+            class="variable-binding"
+            [data]="convertToYaml(schema.fields) | markdownFormat: 'yaml'"
         />
     </div>
 </div>

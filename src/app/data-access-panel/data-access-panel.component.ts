@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { MaybeUndefined } from "../interface/app.types";
+import { MaybeUndefined } from "src/app/interface/app.types";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { DatasetBasicsFragment, DatasetEndpoints } from "src/app/api/kamu.graphql.interface";
 import { Observable } from "rxjs";
@@ -20,11 +20,9 @@ import { FeatureFlagDirective } from "../common/directives/feature-flag.directiv
     templateUrl: "./data-access-panel.component.html",
     styleUrls: ["./data-access-panel.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         MatIconModule,
-
         //-----//
         FeatureFlagDirective,
     ],

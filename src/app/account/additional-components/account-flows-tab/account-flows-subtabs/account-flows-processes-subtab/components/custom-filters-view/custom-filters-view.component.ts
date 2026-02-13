@@ -30,11 +30,9 @@ import {
 
 @Component({
     selector: "app-custom-filters-view",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
-
         //-----//
         MatIconModule,
         MatSlideToggleModule,

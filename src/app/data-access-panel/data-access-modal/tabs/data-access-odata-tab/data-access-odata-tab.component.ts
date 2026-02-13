@@ -15,12 +15,10 @@ import { CopyToClipboardComponent } from "../../../../common/components/copy-to-
     selector: "app-data-access-odata-tab",
     templateUrl: "./data-access-odata-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         MatDividerModule,
         MatIconModule,
-
         //-----//
         CopyToClipboardComponent,
     ],

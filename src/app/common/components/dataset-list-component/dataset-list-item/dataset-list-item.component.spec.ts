@@ -13,10 +13,11 @@ import { NgbModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
 import { MatDividerModule } from "@angular/material/divider";
 import { mockDatasetListItem } from "src/app/api/mock/dataset.mock";
 import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { RouterModule } from "@angular/router";
 import { NavigationService } from "src/app/services/navigation.service";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("DatasetListItemComponent", () => {
     let component: DatasetListItemComponent;
@@ -31,11 +32,11 @@ describe("DatasetListItemComponent", () => {
                 MatDividerModule,
                 MatIconModule,
                 NgbModule,
-                HttpClientTestingModule,
                 SharedTestModule,
                 RouterModule,
                 DatasetListItemComponent,
             ],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         }).compileComponents();
 
         registerMatSvgIcons();

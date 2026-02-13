@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DatasetInfo } from "../../../../../../../interface/navigation.interface";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetByIdQuery } from "../../../../../../../api/kamu.graphql.interface";
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
@@ -18,7 +18,6 @@ import { DisplayHashComponent } from "../../../../../../../common/components/dis
     templateUrl: "./block-interval-property.component.html",
     styleUrls: ["./block-interval-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [DisplayHashComponent],
 })
 export class BlockIntervalPropertyComponent extends BasePropertyComponent implements OnInit {

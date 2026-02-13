@@ -28,6 +28,7 @@ import {
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
 import { of } from "rxjs";
+import { ApolloLink, InMemoryCache } from "@apollo/client/core";
 import { DatasetNotFoundError, SqlExecutionError } from "../common/values/errors";
 import { DatasetHistoryUpdate, LineageUpdate, OverviewUpdate } from "./dataset.subscriptions.interface";
 import { first } from "rxjs/operators";
@@ -41,7 +42,7 @@ import {
     TEST_DATASET_ID,
     TEST_DATASET_NAME,
 } from "../api/mock/dataset.mock";
-import { MaybeNull } from "../interface/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 
 describe("AppDatasetService", () => {
     let service: DatasetService;
@@ -57,9 +58,8 @@ describe("AppDatasetService", () => {
                     provide: APOLLO_OPTIONS,
                     useFactory: () => {
                         return {
-                            cache: {
-                                evict: () => null,
-                            },
+                            cache: new InMemoryCache(),
+                            link: new ApolloLink(() => of({ data: {} })),
                         };
                     },
                 },

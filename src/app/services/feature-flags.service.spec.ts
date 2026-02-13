@@ -5,11 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 import { FeatureFlagsService } from "./feature-flags.service";
 import { AppConfigService } from "../app-config.service";
 import { Feature, FeatureDevelopmentState, FeatureShowMode } from "../interface/feature-flags.interface";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("FeatureFlagsService", () => {
     let service: FeatureFlagsService;
@@ -17,7 +18,8 @@ describe("FeatureFlagsService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
+            imports: [],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         });
         service = TestBed.inject(FeatureFlagsService);
         appConfigService = TestBed.inject(AppConfigService);

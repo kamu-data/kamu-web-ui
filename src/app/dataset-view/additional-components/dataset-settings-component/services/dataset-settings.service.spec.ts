@@ -7,7 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 import { DatasetSettingsService } from "./dataset-settings.service";
-import { Apollo, ApolloModule } from "apollo-angular";
+import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { DatasetApi } from "src/app/api/dataset.api";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -22,10 +22,12 @@ import {
     mockRenameSuccessResponse,
 } from "src/app/search/mock.data";
 import { DeleteDatasetMutation, RenameDatasetMutation } from "src/app/api/kamu.graphql.interface";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
 import { provideToastr } from "ngx-toastr";
 import { provideAnimations } from "@angular/platform-browser/animations";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { importProvidersFrom } from "@angular/core";
 
 describe("DatasetSettingsService", () => {
     let service: DatasetSettingsService;
@@ -39,8 +41,14 @@ describe("DatasetSettingsService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo, provideAnimations(), provideToastr()],
-            imports: [ApolloModule, ApolloTestingModule, HttpClientTestingModule],
+            providers: [
+                Apollo,
+                importProvidersFrom(ApolloTestingModule),
+                provideAnimations(),
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
         });
         service = TestBed.inject(DatasetSettingsService);
         navigationService = TestBed.inject(NavigationService);

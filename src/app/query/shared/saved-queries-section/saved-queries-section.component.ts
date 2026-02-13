@@ -17,12 +17,10 @@ import { CdkAccordionModule } from "@angular/cdk/accordion";
     templateUrl: "./saved-queries-section.component.html",
     styleUrls: ["./saved-queries-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgFor,
         NgIf,
-
         //-----//
         CdkAccordionModule,
         MatIconModule,

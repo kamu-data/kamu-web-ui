@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { MaybeNull } from "../../../../../../interface/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { AfterViewInit, ChangeDetectionStrategy, Component, QueryList, ViewChild, ViewChildren } from "@angular/core";
 import { BaseField } from "../base-field";
 import {
@@ -38,19 +38,16 @@ export interface SchemaType {
     templateUrl: "./schema-field.component.html",
     styleUrls: ["./schema-field.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatTableModule,
         NgbTypeahead,
         MatIconModule,
         RxReactiveFormsModule,
-
         //-----//
         TooltipIconComponent,
     ],

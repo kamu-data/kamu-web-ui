@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { MaybeNull } from "../../../interface/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import {
     DatasetBasicsFragment,
@@ -35,17 +35,14 @@ import { NgFor, NgIf } from "@angular/common";
     templateUrl: "./dataset-settings.component.html",
     styleUrls: ["./dataset-settings.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgFor,
         NgIf,
         RouterOutlet,
-
         //-----//
         MatIconModule,
         MatDividerModule,
-
         //-----//
         FeatureFlagDirective,
     ],

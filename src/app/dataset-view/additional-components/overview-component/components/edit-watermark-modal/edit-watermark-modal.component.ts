@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { MaybeNullOrUndefined } from "../../../../../interface/app.types";
+import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { DateTimeAdapter, OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
@@ -32,11 +32,9 @@ import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/a
         { provide: DateTimeAdapter, useClass: MomentDateTimeAdapter },
         { provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS },
     ],
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
-
         //-----//
         MatDividerModule,
         MatIconModule,

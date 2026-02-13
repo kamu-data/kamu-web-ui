@@ -24,12 +24,10 @@ import { MatDividerModule } from "@angular/material/divider";
     templateUrl: "./add-data-modal.component.html",
     styleUrls: ["./add-data-modal.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         MatIconModule,
         MatDividerModule,
-
         //-----//
         FeatureFlagDirective,
     ],

@@ -11,6 +11,14 @@
         .mat-button-toggle-group-appearance-standard {
             border-radius: 0;
         }
+
+        .mat-button-toggle-checkbox-wrapper {
+            display: none;
+        }
+
+        .mat-button-toggle-checked .mat-button-toggle-button:has(.mat-button-toggle-checkbox-wrapper) {
+            padding-left: 0;
+        }
     }
 
     mat-button-toggle-group {

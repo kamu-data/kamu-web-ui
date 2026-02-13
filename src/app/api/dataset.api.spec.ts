@@ -90,7 +90,7 @@ import { first, Observable } from "rxjs";
 import { DocumentNode } from "graphql";
 import { mockGetDatasetSchemaQuery } from "../dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import AppValues from "../common/values/app.values";
-import { ApolloError } from "@apollo/client/core";
+import { CombinedGraphQLErrors } from "@apollo/client/errors";
 
 describe("DatasetApi", () => {
     let service: DatasetApi;
@@ -669,7 +669,10 @@ describe("DatasetApi", () => {
                 .subscribe({
                     next: () => fail("Unexpected success"),
                     error: (e: Error) => {
-                        expect(e).toEqual(new ApolloError({ graphQLErrors: [mockDataset403OperationError] }));
+                        expect(CombinedGraphQLErrors.is(e)).toBe(true);
+                        if (CombinedGraphQLErrors.is(e)) {
+                            expect(e.errors).toEqual([mockDataset403OperationError]);
+                        }
                     },
                 });
 

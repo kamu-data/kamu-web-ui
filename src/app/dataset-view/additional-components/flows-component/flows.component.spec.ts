@@ -18,7 +18,7 @@ import { provideToastr } from "ngx-toastr";
 import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetFlowsService } from "./services/dataset-flows.service";
 import { delay, of } from "rxjs";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { mockOverviewUpdate } from "../data-tabs.mock";
@@ -35,6 +35,7 @@ import { MatChipListboxChange } from "@angular/material/chips";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { mockDatasets } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;
@@ -50,10 +51,10 @@ describe("FlowsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            imports: [FlowsComponent],
             providers: [
                 Apollo,
                 provideToastr(),
-
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -81,8 +82,9 @@ describe("FlowsComponent", () => {
                         },
                     },
                 },
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
             ],
-            imports: [HttpClientTestingModule, FlowsComponent],
         }).compileComponents();
 
         registerMatSvgIcons();
@@ -126,6 +128,31 @@ describe("FlowsComponent", () => {
 
         const emptyBlock = findElementByDataTestId(fixture, "empty-flow-runs-block");
         expect(emptyBlock).toBeDefined();
+        discardPeriodicTasks();
+    }));
+
+    it("should check filter by status during the first request", fakeAsync(() => {
+        fixture.detectChanges();
+        mockFlowsTableData.connectionDataForWidget.nodes = [];
+        const datasetFlowsListSpy = spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(
+            of(mockFlowsTableData),
+        );
+        spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
+        spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+        );
+        tick();
+        fixture.detectChanges();
+
+        expect(datasetFlowsListSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                filters: {
+                    byStatus: null,
+                    byInitiator: null,
+                    byProcessType: null,
+                },
+            }),
+        );
         discardPeriodicTasks();
     }));
 

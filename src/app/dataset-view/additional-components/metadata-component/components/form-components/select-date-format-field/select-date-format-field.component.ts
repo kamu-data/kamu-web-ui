@@ -20,16 +20,13 @@ import { TooltipIconComponent } from "../../../../../../common/components/toolti
     selector: "app-select-date-format-field",
     templateUrl: "./select-date-format-field.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         RxReactiveFormsModule,
-
         //-----//
         InputFieldComponent,
         TooltipIconComponent,

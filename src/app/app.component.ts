@@ -10,12 +10,12 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, in
 import AppValues from "./common/values/app.values";
 import { filter, map } from "rxjs/operators";
 import { NavigationEnd, Router, RouterEvent, RouterOutlet } from "@angular/router";
-import { DatasetAutocompleteItem, TypeNames } from "./interface/search.interface";
+import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { ModalService } from "./common/components/modal/modal.service";
 import { BaseComponent } from "src/app/common/components/base.component";
 import ProjectLinks from "./project-links";
 import { AccountFragment, AccountProvider, AccountType } from "./api/kamu.graphql.interface";
-import { MaybeNull } from "./interface/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { isMobileView, promiseWithCatch } from "./common/helpers/app.helpers";
 import { AppConfigService } from "./app-config.service";
 import { AppUIConfigFeatureFlags } from "./app-config.model";
@@ -43,11 +43,9 @@ export const ALL_URLS_WITHOUT_HEADER: string[] = [
     selector: "app-root",
     templateUrl: "./app.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         RouterOutlet,
-
         //-----//
         AppHeaderComponent,
         ModalComponent,

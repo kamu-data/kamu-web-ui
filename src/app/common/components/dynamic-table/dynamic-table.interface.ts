@@ -5,6 +5,25 @@
  * included in the LICENSE file.
  */
 
-import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
+export interface DynamicTableDataRow {
+    [key: string]: {
+        value: string | number | object;
+        cssClass: string;
+    };
+}
 
-export type TableSourceRowInterface = DataSchemaField | DataRow;
+export enum DynamicTableColumnClassEnum {
+    SECONDARY_COLOR = "secondary-color",
+    ERROR_COLOR = "error-color",
+    PRIMARY_COLOR = "primary-color",
+}
+
+export interface DynamicTableColumnDescriptor {
+    columnName: string;
+    showMoreBadge?: {
+        extraElementKey: string;
+    };
+    showInfoBadge?: {
+        extraElementKey: string;
+    };
+}

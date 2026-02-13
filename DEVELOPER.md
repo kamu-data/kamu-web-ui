@@ -20,30 +20,30 @@
 
 ### Technologies
 
-- [TypeScript](https://www.typescriptlang.org/), version: 5.1.6;
-- [Node.js](https://nodejs.org/en/download/releases/), version: 18.20.4;
-- [Angular CLI](https://github.com/angular/angular-cli), version 16.2.14.
+- [TypeScript](https://www.typescriptlang.org/), version: 5.8.3;
+- [Node.js](https://nodejs.org/en/download/releases/), version: 24.13.1;
+- [Angular CLI](https://github.com/angular/angular-cli), version 19.2.19.
 
 ### Libraries
 
-- [Angular Material Design](https://material.angular.io/), version: 16.2.14;
-- [Angular Service Worker](https://www.npmjs.com/package/@angular/service-worker), version: 16.2.12;
-- [Apollo Angular (GQL client)](https://apollo-angular.com/docs/), version: 5.0.2;
-- [GraphQL](https://www.npmjs.com/package/graphql), version: 16.8.1;
-- [Bootstrap](https://www.npmjs.com/package/bootstrap), version: 5.3.3;
-- [Popper.js](https://www.npmjs.com/package/@popperjs/core), version: 2.11.8;
-- [Bootstrap Icons](https://www.npmjs.com/package/bootstrap-icons), version: 1.11.3;
-- [Angular powered Bootstrap widgets](https://www.npmjs.com/package/@ng-bootstrap/ng-bootstrap), version: 15.0.0;
-- [Prettier](https://www.npmjs.com/package/prettier), version: 3.2.5;
-- [ngx-markdown](https://www.npmjs.com/package/ngx-markdown), version: 16.0.0;
-- [Karma](https://www.npmjs.com/package/karma), version: 6.4.3;
-- [Jasmine](https://www.npmjs.com/package/jasmine), version: 5.0.2;
+- [Angular Material Design](https://material.angular.io/)
+- [Angular Service Worker](https://www.npmjs.com/package/@angular/service-worker)
+- [Apollo Angular (GQL client)](https://apollo-angular.com/docs/)
+- [GraphQL](https://www.npmjs.com/package/graphql)
+- [Bootstrap](https://www.npmjs.com/package/bootstrap)
+- [Popper.js](https://www.npmjs.com/package/@popperjs/core)
+- [Bootstrap Icons](https://www.npmjs.com/package/bootstrap-icons)
+- [Angular powered Bootstrap widgets](https://www.npmjs.com/package/@ng-bootstrap/ng-bootstrap)
+- [Prettier](https://www.npmjs.com/package/prettier)
+- [ngx-markdown](https://www.npmjs.com/package/ngx-markdown)
+- [Karma](https://www.npmjs.com/package/karma)
+- [Jasmine](https://www.npmjs.com/package/jasmine)
 
 ### Steps for running
 
 1. Do it once:
 
-   - download and install [Node.js](https://nodejs.org/en/download/releases/), version: 18.20.4 
+   - download and install [Node.js](https://nodejs.org/en/download/releases/), version: 24.13.1 
 
    or
 
@@ -51,7 +51,7 @@
 
      Using `nvm` (Node.js Version Manager) makes it easier to install and manage multiple versions of Node.js on a single local environment.
 
-     To install a specific version of node: `nvm install 18.20.4`
+     To install a specific version of node: `nvm install 24.13.1`
 
 2. Install packages that project depends on: `npm install`
 3. Run application locally: `ng serve` or `npm run start`

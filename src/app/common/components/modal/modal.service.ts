@@ -6,7 +6,7 @@
  */
 
 import { Injectable } from "@angular/core";
-import { ModalArgumentsInterface, ModalCommandInterface } from "../../../interface/modal.interface";
+import { ModalArgumentsInterface, ModalCommandInterface } from "src/app/interface/modal.interface";
 import { Subject } from "rxjs";
 
 @Injectable({

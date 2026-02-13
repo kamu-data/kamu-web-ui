@@ -19,7 +19,7 @@ import AppValues from "src/app/common/values/app.values";
 import { dispatchInputEvent, emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { SearchApi } from "src/app/api/search.api";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideToastr } from "ngx-toastr";
 
 describe("SearchAndSchemasSectionComponent", () => {
@@ -32,8 +32,8 @@ describe("SearchAndSchemasSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [SharedTestModule, HttpClientModule, SearchAndSchemasSectionComponent],
-            providers: [Apollo, provideToastr()],
+            imports: [SharedTestModule, SearchAndSchemasSectionComponent],
+            providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi())],
         });
         fixture = TestBed.createComponent(SearchAndSchemasSectionComponent);
         component = fixture.componentInstance;

@@ -23,11 +23,9 @@ import { FlowProcessEffectiveState, OrderingDirection } from "src/app/api/kamu.g
 
 @Component({
     selector: "app-triage-filters-view",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
-
         //-----//
         MatIconModule,
         MatSlideToggleModule,

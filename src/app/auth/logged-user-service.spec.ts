@@ -22,7 +22,7 @@ import {
 } from "../api/mock/auth.mock";
 import { AccountFragment, FetchAccountDetailsDocument, LoginDocument } from "../api/kamu.graphql.interface";
 import { first } from "rxjs/operators";
-import { MaybeNull } from "../interface/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { GithubLoginCredentials, PasswordLoginCredentials } from "../api/auth.api.model";
 import { LoginService } from "./login/login.service";
 import { LocalStorageService } from "../services/local-storage.service";

@@ -12,7 +12,7 @@ import {
     SetPollingSourceEventFragment,
 } from "../../../api/kamu.graphql.interface";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, inject } from "@angular/core";
-import { DatasetSchema } from "../../../interface/dataset.interface";
+import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import AppValues from "../../../common/values/app.values";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import { MetadataSchemaUpdate } from "../../dataset.subscriptions.interface";
@@ -36,7 +36,6 @@ import { METADATA_TAB_MENU_ITEMS, MetadataMenuItem, MetadataTabs } from "./metad
     templateUrl: "./metadata.component.html",
     styleUrls: ["./metadata.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
@@ -44,10 +43,8 @@ import { METADATA_TAB_MENU_ITEMS, MetadataMenuItem, MetadataTabs } from "./metad
         RouterLink,
         RouterOutlet,
         NgClass,
-
         //-----//
         MatIconModule,
-
         //-----//
         CommitNavigatorComponent,
         FeatureFlagDirective,

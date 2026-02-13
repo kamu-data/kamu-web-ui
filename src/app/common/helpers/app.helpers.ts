@@ -7,9 +7,9 @@
 
 import cronParser from "cron-parser";
 
-import { MaybeNull, MaybeNullOrUndefined } from "../../interface/app.types";
+import { MaybeNull, MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { DataSchema } from "../../api/kamu.graphql.interface";
-import { DatasetSchema } from "../../interface/dataset.interface";
+import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import AppValues from "../values/app.values";
 import { format, isSameDay, subDays } from "date-fns";
 import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
@@ -79,7 +79,7 @@ export function excludeAgoWord(value: string): string {
 }
 
 export function cronExpressionNextTime(cronExpression: string): string {
-    const date = cronParser.parseExpression(cronExpression).next().toDate();
+    const date = cronParser.parse(cronExpression).next().toDate();
     return format(date, AppValues.CRON_EXPRESSION_DATE_FORMAT);
 }
 

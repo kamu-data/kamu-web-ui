@@ -18,16 +18,13 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
     selector: "app-order-field",
     templateUrl: "./order-field.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgFor,
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         RxReactiveFormsModule,
-
         //-----//
         TooltipIconComponent,
     ],

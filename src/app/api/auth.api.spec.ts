@@ -6,7 +6,7 @@
  */
 
 import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
-import { Apollo } from "apollo-angular";
+
 import { AuthApi } from "./auth.api";
 import {
     AccountProvider,
@@ -33,7 +33,7 @@ import {
     PasswordLoginCredentials,
     Web3WalletOwnershipVerificationRequest,
 } from "./auth.api.model";
-import { ApolloError } from "@apollo/client";
+import { CombinedGraphQLErrors } from "@apollo/client/errors";
 
 describe("AuthApi", () => {
     let service: AuthApi;
@@ -41,7 +41,7 @@ describe("AuthApi", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [AuthApi, Apollo],
+            providers: [AuthApi],
             imports: [ApolloTestingModule],
         });
         service = TestBed.inject(AuthApi);
@@ -109,8 +109,8 @@ describe("AuthApi", () => {
             .pipe(first())
             .subscribe({
                 next: () => fail("Unexpected success"),
-                error: (e: ApolloError) => {
-                    expect(e).toBeTruthy();
+                error: (e: Error) => {
+                    expect(CombinedGraphQLErrors.is(e)).toBe(true);
                 },
             });
 
@@ -144,8 +144,8 @@ describe("AuthApi", () => {
             .pipe(first())
             .subscribe({
                 next: () => fail("Unexpected success"),
-                error: (e: ApolloError) => {
-                    expect(e).toBeTruthy();
+                error: (e: Error) => {
+                    expect(CombinedGraphQLErrors.is(e)).toBe(true);
                 },
             });
 
@@ -174,8 +174,8 @@ describe("AuthApi", () => {
             .pipe(first())
             .subscribe({
                 next: () => fail("Unexpected success"),
-                error: (e: ApolloError) => {
-                    expect(e).toBeTruthy();
+                error: (e: Error) => {
+                    expect(CombinedGraphQLErrors.is(e)).toBe(true);
                 },
             });
 

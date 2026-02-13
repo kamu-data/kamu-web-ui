@@ -15,15 +15,12 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
     selector: "app-cache-field",
     templateUrl: "./cache-field.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         RxReactiveFormsModule,
-
         //-----//
         TooltipIconComponent,
     ],

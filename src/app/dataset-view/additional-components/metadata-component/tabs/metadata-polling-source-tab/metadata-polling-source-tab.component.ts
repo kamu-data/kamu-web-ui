@@ -31,14 +31,11 @@ import { TopicsPropertyComponent } from "src/app/dataset-block/metadata-block/co
 
 @Component({
     selector: "app-metadata-polling-source-tab",
-    standalone: true,
     imports: [
         //-----//
         NgIf,
-
         //-----//
         MatIconModule,
-
         //-----//
         BlockRowDataComponent,
         CardsPropertyComponent,

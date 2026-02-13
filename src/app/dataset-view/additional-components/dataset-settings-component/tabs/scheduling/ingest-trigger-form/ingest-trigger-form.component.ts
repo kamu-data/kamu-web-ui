@@ -22,15 +22,12 @@ import { BaseComponent } from "src/app/common/components/base.component";
     templateUrl: "./ingest-trigger-form.component.html",
     styleUrls: ["./ingest-trigger-form.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatRadioModule,
-
         //-----//
         TimeDeltaFormComponent,
         CronExpressionFormComponent,

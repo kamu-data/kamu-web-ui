@@ -23,7 +23,6 @@ import { FlowProcessEffectiveState, OrderingDirection } from "src/app/api/kamu.g
 
 @Component({
     selector: "app-recent-activity-filters-view",
-    standalone: true,
     providers: [
         { provide: DateTimeAdapter, useClass: MomentDateTimeAdapter },
         { provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS },
@@ -31,7 +30,6 @@ import { FlowProcessEffectiveState, OrderingDirection } from "src/app/api/kamu.g
     imports: [
         //-----//
         FormsModule,
-
         //-----//
         MatIconModule,
         MatSlideToggleModule,

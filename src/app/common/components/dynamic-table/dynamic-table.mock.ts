@@ -5,9 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
+import { OdfTypes } from "src/app/interface/dataset-schema.interface";
+import { DynamicTableDataRow } from "./dynamic-table.interface";
 
-export const MOCK_DATA_ROWS: DataRow[] = [
+export const MOCK_DATA_ROWS: DynamicTableDataRow[] = [
     {
         offset: {
             value: 285,
@@ -82,9 +83,35 @@ export const MOCK_DATA_ROWS: DataRow[] = [
     },
 ];
 
-export const MOCK_SCHEMA_FIELDS: DataSchemaField[] = [
-    { name: "offset", repetition: "REQUIRED", type: "INT64" },
-    { name: "op", repetition: "REQUIRED", type: "INT32" },
-    { name: "system_time", repetition: "REQUIRED", type: "INT64" },
-    { name: "block_time", repetition: "OPTIONAL", type: "INT64" },
+export const MOCK_DATA_ROWS_SHOW_MORE_BADGE: DynamicTableDataRow[] = [
+    {
+        name: {
+            value: "mri_content_hash",
+            cssClass: "primary-color",
+        },
+        type: {
+            value: "Multihash",
+            cssClass: "primary-color",
+        },
+        description: {
+            value: "This dataset contains daily weather measurements including temperature, precipitation, wind speed, and humidity.\nIt is intended for climate analysis and historical weather trend studies.\n",
+            cssClass: "primary-color",
+        },
+        extraKeys: {
+            value: {
+                name: "mri_content_hash",
+                type: {
+                    kind: OdfTypes.String,
+                },
+                extra: {
+                    "opendatafabric.org/description":
+                        "This dataset contains daily weather measurements including temperature, precipitation, wind speed, and humidity.\nIt is intended for climate analysis and historical weather trend studies.\n",
+                    "opendatafabric.org/type": {
+                        kind: "Multihash",
+                    },
+                },
+            },
+            cssClass: "primary-color",
+        },
+    },
 ];

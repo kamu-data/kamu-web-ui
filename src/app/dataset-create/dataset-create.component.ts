@@ -7,7 +7,7 @@
 
 import { BaseComponent } from "src/app/common/components/base.component";
 import { AccountProvider, DatasetKind, DatasetVisibility } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "../interface/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DatasetCreateService } from "./dataset-create.service";
@@ -30,7 +30,6 @@ import { LoginMethodsService } from "../auth/login-methods.service";
     templateUrl: "./dataset-create.component.html",
     styleUrls: ["./dataset-create.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
@@ -38,12 +37,10 @@ import { LoginMethodsService } from "../auth/login-methods.service";
         NgIf,
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatDividerModule,
         MatIconModule,
         NgSelectModule,
-
         //-----//
         FormValidationErrorsDirective,
         YamlEditorComponent,

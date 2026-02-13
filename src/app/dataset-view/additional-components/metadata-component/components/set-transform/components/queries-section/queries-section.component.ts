@@ -17,16 +17,13 @@ import { MatIconModule } from "@angular/material/icon";
     templateUrl: "./queries-section.component.html",
     styleUrls: ["./queries-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgIf,
         NgFor,
-
         //-----//
         MatIconModule,
-
         //-----//
         SqlEditorComponent,
     ],

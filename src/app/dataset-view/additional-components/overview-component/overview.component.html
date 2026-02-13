@@ -151,7 +151,7 @@
                     *ngIf="datasetOverviewTabData && datasetOverviewTabData.overviewUpdate.schema; else noData"
                     data-test-id="data-tail-block"
                     [hasTableHeader]="true"
-                    [schemaFields]="datasetOverviewTabData.overviewUpdate.schema.fields"
+                    [columnDescriptors]="inferTableSchema(datasetOverviewTabData.overviewUpdate.schema.fields)"
                     [dataRows]="
                         datasetOverviewTabData.overviewUpdate ? datasetOverviewTabData.overviewUpdate.content : []
                     "

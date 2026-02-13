@@ -15,7 +15,6 @@ import { MatIconModule } from "@angular/material/icon";
     templateUrl: "./copy-to-clipboard.component.html",
     styleUrls: ["./copy-to-clipboard.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [MatIconModule],
 })
 export class CopyToClipboardComponent {

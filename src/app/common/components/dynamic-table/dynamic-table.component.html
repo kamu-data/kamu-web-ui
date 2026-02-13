@@ -1,20 +1,51 @@
 <div [id]="idTable" style="width: 100%; overflow: auto" class="dynamic-table">
     <table mat-table [dataSource]="dataSource">
-        <ng-container *ngFor="let disCol of displayedColumns; let colIndex = index" matColumnDef="{{ disCol }}">
+        <ng-container
+            *ngFor="let columnDescriptor of columnDescriptors; trackBy: trackByColumn; let colIndex = index"
+            matColumnDef="{{ columnDescriptor.columnName }}"
+        >
             <th mat-header-cell *matHeaderCellDef [attr.data-test-id]="'column-header-name-' + colIndex">
-                {{ disCol }}
+                {{ columnDescriptor.columnName }}
             </th>
             <td
-                [title]="hasData ? element[disCol].value : element[disCol]"
                 mat-cell
-                [ngClass]="hasData ? element[disCol].cssClass : OperationColumnClassEnum.PRIMARY_COLOR"
+                [title]="
+                    shouldShowInfoBadge(columnDescriptor, element) || shouldShowMoreBadge(columnDescriptor, element)
+                        ? ''
+                        : element[columnDescriptor.columnName].value
+                "
+                [ngClass]="[colIndex < 2 ? tableClass : '', element[columnDescriptor.columnName].cssClass]"
                 [class]="'truncate-cell copyable-cell'"
                 *matCellDef="let element; index as rowIndex"
-                [attr.data-test-id]="'column-name-' + disCol + '-' + rowIndex"
-                [cdkCopyToClipboard]="hasData ? element[disCol].value : element[disCol]"
+                [attr.data-test-id]="'column-name-' + columnDescriptor.columnName + '-' + rowIndex"
+                [cdkCopyToClipboard]="element[columnDescriptor.columnName].value"
                 (cdkCopyToClipboardCopied)="showCopyMessage()"
             >
-                {{ hasData ? element[disCol].value : element[disCol] }}
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="cell-content truncate-cell">{{ element[columnDescriptor.columnName].value }}</div>
+                    <div
+                        class="cell-content ms-1 position-relative"
+                        *ngIf="shouldShowMoreBadge(columnDescriptor, element)"
+                    >
+                        <span
+                            [attr.data-test-id]="'show-more-' + columnDescriptor.columnName + '-' + rowIndex"
+                            (click)="
+                                $event.stopPropagation();
+                                showMoreModal(element, columnDescriptor.showMoreBadge?.extraElementKey)
+                            "
+                            class="badge-more"
+                        ></span>
+                    </div>
+                    <div
+                        [matTooltip]="extraDescription(element, columnDescriptor.showInfoBadge?.extraElementKey)"
+                        [matTooltipPosition]="'after'"
+                        class="cell-content ms-1 mt-1 position-relative"
+                        *ngIf="shouldShowInfoBadge(columnDescriptor, element)"
+                        [attr.data-test-id]="'show-info-' + columnDescriptor.columnName + '-' + rowIndex"
+                    >
+                        <mat-icon class="info-badge text-muted">help_outline</mat-icon>
+                    </div>
+                </div>
             </td>
         </ng-container>
 

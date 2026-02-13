@@ -40,6 +40,7 @@ export const TEST_AVATAR_URL = "http://example.com/image.jpg";
 export const TEST_ACCOUNT_EMAIL = "http://kamu@example.com";
 
 export const mockAccountDetails: AccountFragment = {
+    __typename: "Account",
     id: TEST_ACCOUNT_ID,
     accountName: TEST_LOGIN,
     displayName: TEST_USER_NAME,

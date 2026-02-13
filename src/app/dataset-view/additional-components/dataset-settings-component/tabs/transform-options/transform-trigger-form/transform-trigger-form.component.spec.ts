@@ -21,7 +21,6 @@ import { TransformTriggerFormValue } from "./transform-trigger-form.types";
 import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
 
 @Component({
-    standalone: true,
     imports: [
         //-----//
         FormsModule,

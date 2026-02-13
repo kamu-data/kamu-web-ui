@@ -49,7 +49,7 @@ import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/a
 import { MY_MOMENT_FORMATS } from "src/app/common/helpers/data.helpers";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { ToastrService } from "ngx-toastr";
-import { InfiniteScrollModule } from "ngx-infinite-scroll";
+import { InfiniteScrollDirective } from "ngx-infinite-scroll";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { RecentActivityFiltersViewComponent } from "./components/recent-activity-filters-view/recent-activity-filters-view.component";
 import { TriageFiltersViewComponent } from "./components/triage-filters-view/triage-filters-view.component";
@@ -64,7 +64,7 @@ import {
 
 @Component({
     selector: "app-account-flows-processes-subtab",
-    standalone: true,
+
     providers: [
         { provide: DateTimeAdapter, useClass: MomentDateTimeAdapter },
         { provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS },
@@ -77,7 +77,6 @@ import {
         NgFor,
         NgSwitch,
         NgSwitchCase,
-
         //-----//
         MatIconModule,
         MatButtonToggleModule,
@@ -88,8 +87,7 @@ import {
         NgSelectModule,
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
-        InfiniteScrollModule,
-
+        InfiniteScrollDirective,
         //-----//
         DatasetFlowProcessCardComponent,
         CustomFiltersViewComponent,

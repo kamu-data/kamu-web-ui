@@ -7,9 +7,10 @@
 
 import { inject, Injectable } from "@angular/core";
 import { EnginesGQL, EnginesQuery } from "./kamu.graphql.interface";
-import { ApolloQueryResult } from "@apollo/client";
+import { ObservableQuery } from "@apollo/client/core";
 import { Observable } from "rxjs";
 import { first, map } from "rxjs/operators";
+import { onlyCompleteData } from "apollo-angular";
 
 @Injectable({
     providedIn: "root",
@@ -19,9 +20,10 @@ export class EngineApi {
 
     public getEngines(): Observable<EnginesQuery> {
         return this.enginesGQL.watch().valueChanges.pipe(
+            onlyCompleteData(),
             first(),
-            map((result: ApolloQueryResult<EnginesQuery>) => {
-                return result.data;
+            map((result: ObservableQuery.Result<EnginesQuery>) => {
+                return result.data as EnginesQuery;
             }),
         );
     }

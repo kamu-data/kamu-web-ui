@@ -63,11 +63,11 @@ import {
     DatasetPushSyncStatusesQuery,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
-import { ApolloQueryResult } from "@apollo/client/core";
+import { ApolloLink, ObservableQuery } from "@apollo/client/core";
 import { inject, Injectable } from "@angular/core";
 import { map, first } from "rxjs/operators";
 import { Observable } from "rxjs";
-import { MutationResult } from "apollo-angular";
+import { onlyCompleteData } from "apollo-angular";
 import { DatasetRequestBySql } from "../interface/dataset.interface";
 import { StoreObject } from "@apollo/client/cache";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
@@ -107,19 +107,18 @@ export class DatasetApi {
         encoding: MetadataManifestFormat;
     }): Observable<DatasetBlocksByEventTypeQuery> {
         return this.datasetBlocksByEventTypeGQL
-            .watch(
-                { ...params },
-                {
-                    ...noCacheFetchPolicy,
-                    context: {
-                        skipLoading: true,
-                    },
+            .watch({
+                variables: { ...params },
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
                 },
-            )
+            })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
-                map((result: ApolloQueryResult<DatasetBlocksByEventTypeQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<DatasetBlocksByEventTypeQuery>) => {
+                    return result.data as DatasetBlocksByEventTypeQuery;
                 }),
             );
     }
@@ -130,40 +129,38 @@ export class DatasetApi {
         numRecords?: number;
     }): Observable<GetDatasetMainDataQuery> {
         return this.datasetMainDataGQL
-            .watch(
-                {
+            .watch({
+                variables: {
                     accountName: params.accountName,
                     datasetName: params.datasetName,
                     limit: params.numRecords ?? AppValues.SAMPLE_DATA_LIMIT,
                 },
-                {
-                    fetchPolicy: "cache-first",
-                    errorPolicy: "all",
-                },
-            )
+                fetchPolicy: "cache-first",
+                errorPolicy: "all",
+            })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
-                map((result: ApolloQueryResult<GetDatasetMainDataQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<GetDatasetMainDataQuery>) => {
+                    return result.data as GetDatasetMainDataQuery;
                 }),
             );
     }
 
     public getDatasetDataSqlRun(params: DatasetRequestBySql): Observable<GetDatasetDataSqlRunQuery> {
         return this.datasetDataSqlRunGQL
-            .watch(
-                { query: params.query, limit: params.limit ?? AppValues.SQL_QUERY_LIMIT, skip: params.skip },
-                {
-                    ...noCacheFetchPolicy,
-                    context: {
-                        skipLoading: true,
-                    },
+            .watch({
+                variables: { query: params.query, limit: params.limit ?? AppValues.SQL_QUERY_LIMIT, skip: params.skip },
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
                 },
-            )
+            })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
-                map((result: ApolloQueryResult<GetDatasetDataSqlRunQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<GetDatasetDataSqlRunQuery>) => {
+                    return result.data as GetDatasetDataSqlRunQuery;
                 }),
             );
     }
@@ -174,13 +171,16 @@ export class DatasetApi {
     }): Observable<GetDatasetBasicsWithPermissionsQuery> {
         return this.datasetBasicsWithPermissionGQL
             .watch({
-                accountName: params.accountName,
-                datasetName: params.datasetName,
+                variables: {
+                    accountName: params.accountName,
+                    datasetName: params.datasetName,
+                },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
-                map((result: ApolloQueryResult<GetDatasetBasicsWithPermissionsQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<GetDatasetBasicsWithPermissionsQuery>) => {
+                    return result.data as GetDatasetBasicsWithPermissionsQuery;
                 }),
             );
     }
@@ -193,15 +193,18 @@ export class DatasetApi {
     }): Observable<GetDatasetHistoryQuery> {
         return this.datasetHistoryGQL
             .watch({
-                accountName: params.accountName,
-                datasetName: params.datasetName,
-                perPage: params.numRecords,
-                page: params.numPage,
+                variables: {
+                    accountName: params.accountName,
+                    datasetName: params.datasetName,
+                    perPage: params.numRecords,
+                    page: params.numPage,
+                },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
-                map((result: ApolloQueryResult<GetDatasetHistoryQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<GetDatasetHistoryQuery>) => {
+                    return result.data as GetDatasetHistoryQuery;
                 }),
             );
     }
@@ -209,13 +212,16 @@ export class DatasetApi {
     public getDatasetLineage(params: { accountName: string; datasetName: string }): Observable<GetDatasetLineageQuery> {
         return this.datasetLineageGQL
             .watch({
-                accountName: params.accountName,
-                datasetName: params.datasetName,
+                variables: {
+                    accountName: params.accountName,
+                    datasetName: params.datasetName,
+                },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
-                map((result: ApolloQueryResult<GetDatasetLineageQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<GetDatasetLineageQuery>) => {
+                    return result.data as GetDatasetLineageQuery;
                 }),
             );
     }
@@ -223,12 +229,15 @@ export class DatasetApi {
     public getDatasetSchema(datasetId: string): Observable<GetDatasetSchemaQuery> {
         return this.datasetSchemaGQL
             .watch({
-                datasetId,
+                variables: {
+                    datasetId,
+                },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
-                map((result: ApolloQueryResult<GetDatasetSchemaQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<GetDatasetSchemaQuery>) => {
+                    return result.data as GetDatasetSchemaQuery;
                 }),
             );
     }
@@ -239,22 +248,26 @@ export class DatasetApi {
         perPage = 10,
     ): Observable<DatasetsByAccountNameQuery> {
         return this.datasetsByAccountNameGQL
-            .watch({ accountName, perPage, page }, noCacheFetchPolicy)
+            .watch({ variables: { accountName, perPage, page }, ...noCacheFetchPolicy })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
-                map((result: ApolloQueryResult<DatasetsByAccountNameQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<DatasetsByAccountNameQuery>) => {
+                    return result.data as DatasetsByAccountNameQuery;
                 }),
             );
     }
 
     public fetchDatasetsTotalCountByAccountName(accountName: string): Observable<DatasetsTotalCountByAccountNameQuery> {
-        return this.datasetsTotalCountByAccountNameGQL.watch({ accountName }, noCacheFetchPolicy).valueChanges.pipe(
-            first(),
-            map((result: ApolloQueryResult<DatasetsTotalCountByAccountNameQuery>) => {
-                return result.data;
-            }),
-        );
+        return this.datasetsTotalCountByAccountNameGQL
+            .watch({ variables: { accountName }, ...noCacheFetchPolicy })
+            .valueChanges.pipe(
+                onlyCompleteData(),
+                first(),
+                map((result: ObservableQuery.Result<DatasetsTotalCountByAccountNameQuery>) => {
+                    return result.data as DatasetsTotalCountByAccountNameQuery;
+                }),
+            );
     }
 
     public getBlockByHash(params: {
@@ -264,14 +277,17 @@ export class DatasetApi {
     }): Observable<GetMetadataBlockQuery> {
         return this.metadataBlockGQL
             .watch({
-                accountName: params.accountName,
-                datasetName: params.datasetName,
-                blockHash: params.blockHash,
+                variables: {
+                    accountName: params.accountName,
+                    datasetName: params.datasetName,
+                    blockHash: params.blockHash,
+                },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
-                map((result: ApolloQueryResult<GetMetadataBlockQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<GetMetadataBlockQuery>) => {
+                    return result.data as GetMetadataBlockQuery;
                 }),
             );
     }
@@ -279,12 +295,15 @@ export class DatasetApi {
     public getDatasetInfoById(datasetId: string): Observable<DatasetByIdQuery> {
         return this.datasetByIdGQL
             .watch({
-                datasetId,
+                variables: {
+                    datasetId,
+                },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
-                map((result: ApolloQueryResult<DatasetByIdQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<DatasetByIdQuery>) => {
+                    return result.data as DatasetByIdQuery;
                 }),
             );
     }
@@ -295,13 +314,16 @@ export class DatasetApi {
     ): Observable<DatasetSystemTimeBlockByHashQuery> {
         return this.datasetSystemTimeBlockByHashGQL
             .watch({
-                datasetId,
-                blockHash,
+                variables: {
+                    datasetId,
+                    blockHash,
+                },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
-                map((result: ApolloQueryResult<DatasetSystemTimeBlockByHashQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<DatasetSystemTimeBlockByHashQuery>) => {
+                    return result.data as DatasetSystemTimeBlockByHashQuery;
                 }),
             );
     }
@@ -312,13 +334,16 @@ export class DatasetApi {
     ): Observable<DatasetByAccountAndDatasetNameQuery> {
         return this.datasetByAccountAndDatasetNameGQL
             .watch({
-                accountName,
-                datasetName,
+                variables: {
+                    accountName,
+                    datasetName,
+                },
             })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
-                map((result: ApolloQueryResult<DatasetByAccountAndDatasetNameQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<DatasetByAccountAndDatasetNameQuery>) => {
+                    return result.data as DatasetByAccountAndDatasetNameQuery;
                 }),
             );
     }
@@ -327,9 +352,9 @@ export class DatasetApi {
         snapshot: string;
         datasetVisibility: DatasetVisibility;
     }): Observable<CreateDatasetFromSnapshotMutation> {
-        return this.createDatasetFromSnapshotGQL.mutate({ ...params }).pipe(
+        return this.createDatasetFromSnapshotGQL.mutate({ variables: { ...params } }).pipe(
             first(),
-            map((result: MutationResult<CreateDatasetFromSnapshotMutation>) => {
+            map((result: ApolloLink.Result<CreateDatasetFromSnapshotMutation>) => {
                 return result.data as CreateDatasetFromSnapshotMutation;
             }),
         );
@@ -342,11 +367,13 @@ export class DatasetApi {
     }): Observable<CreateEmptyDatasetMutation> {
         return this.createEmptyDatasetGQL
             .mutate({
-                ...params,
+                variables: {
+                    ...params,
+                },
             })
             .pipe(
                 first(),
-                map((result: MutationResult<CreateEmptyDatasetMutation>) => {
+                map((result: ApolloLink.Result<CreateEmptyDatasetMutation>) => {
                     return result.data as CreateEmptyDatasetMutation;
                 }),
             );
@@ -359,12 +386,14 @@ export class DatasetApi {
     }): Observable<CommitEventToDatasetMutation> {
         return this.commitEventToDatasetGQL
             .mutate({
-                datasetId: params.datasetId,
-                event: params.event,
+                variables: {
+                    datasetId: params.datasetId,
+                    event: params.event,
+                },
             })
             .pipe(
                 first(),
-                map((result: MutationResult<CommitEventToDatasetMutation>) => {
+                map((result: ApolloLink.Result<CommitEventToDatasetMutation>) => {
                     return result.data as CommitEventToDatasetMutation;
                 }),
             );
@@ -377,12 +406,14 @@ export class DatasetApi {
     }): Observable<UpdateReadmeMutation> {
         return this.updateReadmeGQL
             .mutate({
-                datasetId: params.datasetId,
-                content: params.content,
+                variables: {
+                    datasetId: params.datasetId,
+                    content: params.content,
+                },
             })
             .pipe(
                 first(),
-                map((result: MutationResult<UpdateReadmeMutation>) => {
+                map((result: ApolloLink.Result<UpdateReadmeMutation>) => {
                     return result.data as UpdateReadmeMutation;
                 }),
             );
@@ -390,20 +421,18 @@ export class DatasetApi {
 
     public deleteDataset(params: { accountId: string; datasetId: string }): Observable<DeleteDatasetMutation> {
         return this.deleteDatasetGQL
-            .mutate(
-                {
+            .mutate({
+                variables: {
                     datasetId: params.datasetId,
                 },
-                {
-                    update: (cache) => {
-                        // Drop entire dataset object
-                        resetCacheHelper(cache, params);
-                    },
+                update: (cache) => {
+                    // Drop entire dataset object
+                    resetCacheHelper(cache, params);
                 },
-            )
+            })
             .pipe(
                 first(),
-                map((result: MutationResult<DeleteDatasetMutation>) => {
+                map((result: ApolloLink.Result<DeleteDatasetMutation>) => {
                     return result.data as DeleteDatasetMutation;
                 }),
             );
@@ -415,24 +444,22 @@ export class DatasetApi {
         accountId: string;
     }): Observable<RenameDatasetMutation> {
         return this.renameDatasetGQL
-            .mutate(
-                {
+            .mutate({
+                variables: {
                     datasetId: params.datasetId,
                     newName: params.newName,
                 },
-                {
-                    update: (cache) => {
-                        updateCacheHelper(cache, {
-                            accountId: params.accountId,
-                            datasetId: params.datasetId,
-                            fieldNames: ["alias", "name"],
-                        });
-                    },
+                update: (cache) => {
+                    updateCacheHelper(cache, {
+                        accountId: params.accountId,
+                        datasetId: params.datasetId,
+                        fieldNames: ["alias", "name"],
+                    });
                 },
-            )
+            })
             .pipe(
                 first(),
-                map((result: MutationResult<RenameDatasetMutation>) => {
+                map((result: ApolloLink.Result<RenameDatasetMutation>) => {
                     return result.data as RenameDatasetMutation;
                 }),
             );
@@ -445,12 +472,14 @@ export class DatasetApi {
     }): Observable<UpdateWatermarkMutation> {
         return this.updateWatermarkGQL
             .mutate({
-                datasetId: params.datasetId,
-                watermark: params.watermark,
+                variables: {
+                    datasetId: params.datasetId,
+                    watermark: params.watermark,
+                },
             })
             .pipe(
                 first(),
-                map((result: MutationResult<UpdateWatermarkMutation>) => {
+                map((result: ApolloLink.Result<UpdateWatermarkMutation>) => {
                     return result.data as UpdateWatermarkMutation;
                 }),
             );
@@ -462,24 +491,22 @@ export class DatasetApi {
         visibility: DatasetVisibilityInput;
     }): Observable<SetVisibilityDatasetMutation> {
         return this.setVisibilityDatasetGQL
-            .mutate(
-                {
+            .mutate({
+                variables: {
                     datasetId: params.datasetId,
                     visibility: params.visibility,
                 },
-                {
-                    update: (cache) => {
-                        updateCacheHelper(cache, {
-                            accountId: params.accountId,
-                            datasetId: params.datasetId,
-                            fieldNames: ["visibility"],
-                        });
-                    },
+                update: (cache) => {
+                    updateCacheHelper(cache, {
+                        accountId: params.accountId,
+                        datasetId: params.datasetId,
+                        fieldNames: ["visibility"],
+                    });
                 },
-            )
+            })
             .pipe(
                 first(),
-                map((result: MutationResult<SetVisibilityDatasetMutation>) => {
+                map((result: ApolloLink.Result<SetVisibilityDatasetMutation>) => {
                     return result.data as SetVisibilityDatasetMutation;
                 }),
             );
@@ -487,59 +514,54 @@ export class DatasetApi {
 
     public datasetHeadBlockHash(accountName: string, datasetName: string): Observable<DatasetHeadBlockHashQuery> {
         return this.datasetHeadBlockHashGQL
-            .watch(
-                { accountName, datasetName },
-                {
-                    ...noCacheFetchPolicy,
-                    context: {
-                        skipLoading: true,
-                    },
+            .watch({
+                variables: { accountName, datasetName },
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
                 },
-            )
+            })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
-                map((result: ApolloQueryResult<DatasetHeadBlockHashQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<DatasetHeadBlockHashQuery>) => {
+                    return result.data as DatasetHeadBlockHashQuery;
                 }),
             );
     }
 
     public datasetPushSyncStatuses(datasetId: string): Observable<DatasetPushSyncStatusesQuery> {
         return this.datasetPushSyncStatusesGQL
-            .watch(
-                { datasetId },
-
-                {
-                    ...noCacheFetchPolicy,
-                    context: {
-                        skipLoading: true,
-                    },
+            .watch({
+                variables: { datasetId },
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
                 },
-            )
+            })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
-                map((result: ApolloQueryResult<DatasetPushSyncStatusesQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<DatasetPushSyncStatusesQuery>) => {
+                    return result.data as DatasetPushSyncStatusesQuery;
                 }),
             );
     }
 
     public datasetListDownstreams(datasetId: string): Observable<DatasetListDownstreamsQuery> {
         return this.datasetListDownstreamsGQL
-            .watch(
-                { datasetId },
-
-                {
-                    ...noCacheFetchPolicy,
-                    context: {
-                        skipLoading: true,
-                    },
+            .watch({
+                variables: { datasetId },
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
                 },
-            )
+            })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
-                map((result: ApolloQueryResult<DatasetListDownstreamsQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<DatasetListDownstreamsQuery>) => {
+                    return result.data as DatasetListDownstreamsQuery;
                 }),
             );
     }

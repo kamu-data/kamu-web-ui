@@ -11,7 +11,7 @@ import { DatasetViewData, DatasetViewTypeEnum } from "./dataset-view.interface";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
 import { BaseDatasetDataComponent } from "../common/components/base-dataset-data.component";
 import RoutingResolvers from "../common/resolvers/routing-resolvers";
-import { DatasetInfo } from "../interface/navigation.interface";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { map } from "rxjs";
 import { Router, RouterOutlet } from "@angular/router";
 import { DatasetViewMenuComponent } from "./dataset-view-menu/dataset-view-menu.component";
@@ -22,12 +22,10 @@ import { NgIf } from "@angular/common";
     selector: "app-dataset",
     templateUrl: "./dataset-view.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         RouterOutlet,
-
         //-----//
         DatasetViewHeaderComponent,
         DatasetViewMenuComponent,

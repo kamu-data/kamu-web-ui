@@ -28,6 +28,7 @@ import {
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { provideToastr } from "ngx-toastr";
 
 describe("SetTransformComponent", () => {
     let component: SetTransformComponent;
@@ -44,6 +45,7 @@ describe("SetTransformComponent", () => {
         await TestBed.configureTestingModule({
             imports: [ApolloTestingModule, SetTransformComponent],
             providers: [
+                provideToastr(),
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -150,7 +152,7 @@ describe("SetTransformComponent", () => {
         spyOn(datasetService, "requestDatasetSchema").and.callFake(() => of(mockGetDatasetSchemaQuery));
         component.ngOnInit();
         expect(component.currentSetTransformEvent).toEqual(mockParseSetTransformYamlType);
-        expect(component.TREE_DATA.length).toBe(2);
+        expect(component.inputsViewModel.length).toBe(2);
     });
 
     it("should check init queries section when event is not null", () => {

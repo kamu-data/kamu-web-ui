@@ -8,7 +8,6 @@
 import { AccountTabs } from "./account.constants";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
-import { ApolloTestingModule } from "apollo-angular/testing";
 import { AccountComponent } from "./account.component";
 import { BehaviorSubject, of } from "rxjs";
 import { AccountService } from "src/app/account/account.service";
@@ -19,6 +18,7 @@ import { provideToastr } from "ngx-toastr";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { mockAccountDetails, TEST_AVATAR_URL, TEST_LOGIN } from "../api/mock/auth.mock";
 import { findElementByDataTestId } from "../common/helpers/base-test.helpers.spec";
+import { Apollo } from "apollo-angular";
 
 describe("AccountComponent", () => {
     let component: AccountComponent;
@@ -38,8 +38,9 @@ describe("AccountComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ApolloTestingModule, AccountComponent],
+            imports: [AccountComponent],
             providers: [
+                Apollo,
                 provideToastr(),
                 {
                     provide: ActivatedRoute,
@@ -54,6 +55,7 @@ describe("AccountComponent", () => {
         loggedUserService = TestBed.inject(LoggedUserService);
         fetchAccountByNameSpy = spyOn(accountService, "fetchAccountByName").and.returnValue(of(mockAccountDetails));
         spyOnProperty(loggedUserService, "loggedInUserChanges", "get").and.returnValue(of(null));
+        spyOn(accountService, "getDatasetsTotalCountByAccountName").and.returnValue(of(1));
 
         fixture = TestBed.createComponent(AccountComponent);
         component = fixture.componentInstance;

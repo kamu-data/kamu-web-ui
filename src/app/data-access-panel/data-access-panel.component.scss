@@ -1,4 +1,4 @@
-@import "var";
+@use "var" as *;
 
 .btn-group-parent {
     .get-data-button {
@@ -14,4 +14,8 @@
             font-size: 17px;
         }
     }
+}
+
+.nav-margin {
+    margin-right: 20px;
 }

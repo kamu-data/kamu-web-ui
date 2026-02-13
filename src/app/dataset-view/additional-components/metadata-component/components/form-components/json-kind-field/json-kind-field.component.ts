@@ -19,17 +19,14 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
     selector: "app-json-kind-field",
     templateUrl: "./json-kind-field.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgFor,
         NgIf,
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         RxReactiveFormsModule,
-
         //-----//
         TooltipIconComponent,
         InputFieldComponent,

@@ -43,7 +43,6 @@ import { NgIf, NgFor, TitleCasePipe } from "@angular/common";
     templateUrl: "./base-step.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
-    standalone: true,
     imports: [
         //-----//
         NgIf,
@@ -51,7 +50,6 @@ import { NgIf, NgFor, TitleCasePipe } from "@angular/common";
         FormsModule,
         ReactiveFormsModule,
         TitleCasePipe,
-
         //-----//
         ArrayKeysFieldComponent,
         JsonKindFieldComponent,

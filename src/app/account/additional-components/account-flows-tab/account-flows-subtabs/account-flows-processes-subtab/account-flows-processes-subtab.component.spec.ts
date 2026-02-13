@@ -29,7 +29,7 @@ import {
     mockAccountFlowsWebhookCardsQuery,
 } from "src/app/api/mock/account.mock";
 import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
@@ -37,6 +37,7 @@ import { WebhookFlowProcessCardComponent } from "../../../../../flow-cards/webho
 import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.component";
 import { MatButtonToggleChange } from "@angular/material/button-toggle";
 import AppValues from "src/app/common/values/app.values";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("AccountFlowsProcessesSubtabComponent", () => {
     let component: AccountFlowsProcessesSubtabComponent;
@@ -56,7 +57,6 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             imports: [
                 AccountFlowsProcessesSubtabComponent,
                 SharedTestModule,
-                HttpClientTestingModule,
                 WebhookFlowProcessCardComponent,
                 DatasetFlowProcessCardComponent,
             ],
@@ -78,6 +78,8 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
                         },
                     },
                 },
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
             ],
         });
 

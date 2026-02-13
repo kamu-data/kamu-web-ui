@@ -7,12 +7,12 @@
 
 import { TestBed } from "@angular/core/testing";
 import { QueryExplainerService } from "./query-explainer.service";
-import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
+import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideToastr, ToastrService } from "ngx-toastr";
 import { mockQueryExplainerResponse, mockVerifyQueryResponseSuccess } from "./query-explainer.mocks";
 import { QueryExplainerResponse } from "./query-explainer.types";
 import { AppConfigService } from "src/app/app-config.service";
-import { HttpErrorResponse } from "@angular/common/http";
+import { HttpErrorResponse, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { Apollo } from "apollo-angular";
 import { provideAnimations } from "@angular/platform-browser/animations";
 
@@ -24,8 +24,14 @@ describe("QueryExplainerService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            providers: [Apollo, provideAnimations(), provideToastr()],
+            imports: [],
+            providers: [
+                Apollo,
+                provideAnimations(),
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
         });
         httpTestingController = TestBed.inject(HttpTestingController);
         service = TestBed.inject(QueryExplainerService);

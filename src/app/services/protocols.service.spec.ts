@@ -7,14 +7,13 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ProtocolsService } from "./protocols.service";
-import { Apollo, ApolloModule } from "apollo-angular";
-import { ApolloTestingModule } from "apollo-angular/testing";
+import { Apollo } from "apollo-angular";
 import { ProtocolsApi } from "../api/protocols.api";
 import { of } from "rxjs";
 import { mockDatasetEndPoints, mockDatasetProtocolsQuery } from "../data-access-panel/data-access-panel-mock.data";
 import { mockDatasetInfo } from "../search/mock.data";
 import { DatasetEndpoints } from "../api/kamu.graphql.interface";
-import { MaybeUndefined } from "../interface/app.types";
+import { MaybeUndefined } from "src/app/interface/app.types";
 
 describe("ProtocolsService", () => {
     let service: ProtocolsService;
@@ -23,7 +22,6 @@ describe("ProtocolsService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo],
-            imports: [ApolloModule, ApolloTestingModule],
         });
         service = TestBed.inject(ProtocolsService);
         protocolsApi = TestBed.inject(ProtocolsApi);

@@ -9,7 +9,7 @@ import { Injectable } from "@angular/core";
 import { catchError, first } from "rxjs/operators";
 import { EMPTY, Observable, ReplaySubject, Subject } from "rxjs";
 import { NavigationService } from "../services/navigation.service";
-import { MaybeNull } from "../interface/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { AppConfigService } from "../app-config.service";
 import { AccountFragment } from "../api/kamu.graphql.interface";
 import { UnsubscribeDestroyRefAdapter } from "../common/components/unsubscribe.ondestroy.adapter";
@@ -38,14 +38,14 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
     ) {
         super();
 
-        this.loginService.accessTokenChanges
+        (this.loginService.accessTokenChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((token: string) => this.saveAccessToken(token)),
             this.loginService.accountChanges
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe((user: AccountFragment) => {
                     this.changeUser(user);
-                });
+                }));
     }
 
     public initializeCompletes(): Observable<void> {

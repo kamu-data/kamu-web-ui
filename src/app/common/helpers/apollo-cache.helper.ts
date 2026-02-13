@@ -53,7 +53,7 @@ export function apolloCache(): InMemoryCache {
 }
 
 export const updateCacheHelper = (
-    cache: ApolloCache<unknown>,
+    cache: ApolloCache,
     params: { accountId: string; datasetId: string; fieldNames: string[] },
 ): void => {
     const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
@@ -68,10 +68,7 @@ export const updateCacheHelper = (
     });
 };
 
-export const resetCacheHelper = (
-    cache: ApolloCache<unknown>,
-    params: { accountId: string; datasetId: string },
-): void => {
+export const resetCacheHelper = (cache: ApolloCache, params: { accountId: string; datasetId: string }): void => {
     const datasetKeyFragment = DatasetApi.generateDatasetKeyFragment(
         cache.identify(DatasetApi.generateAccountKeyFragment(params.accountId)),
         params.datasetId,

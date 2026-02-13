@@ -21,8 +21,8 @@ import {
     DatasetUserRoleQuery,
 } from "./kamu.graphql.interface";
 import { first, map, Observable } from "rxjs";
-import { ApolloQueryResult } from "@apollo/client";
-import { MutationResult } from "apollo-angular";
+import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { onlyCompleteData } from "apollo-angular";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 
 @Injectable({ providedIn: "root" })
@@ -38,11 +38,12 @@ export class DatasetCollaborationApi {
         page?: number;
         perPage?: number;
     }): Observable<DatasetListCollaboratorsQuery> {
-        return this.datasetListCollaboratorsGQL.watch(params, noCacheFetchPolicy).valueChanges.pipe(
+        return this.datasetListCollaboratorsGQL.watch({ variables: params, ...noCacheFetchPolicy }).valueChanges.pipe(
+            onlyCompleteData(),
             first(),
 
-            map((result: ApolloQueryResult<DatasetListCollaboratorsQuery>) => {
-                return result.data;
+            map((result: ObservableQuery.Result<DatasetListCollaboratorsQuery>) => {
+                return result.data as DatasetListCollaboratorsQuery;
             }),
         );
     }
@@ -53,10 +54,11 @@ export class DatasetCollaborationApi {
         page: number;
         perPage: number;
     }): Observable<SearchCollaboratorQuery> {
-        return this.searchCollaboratorGQL.watch(params, noCacheFetchPolicy).valueChanges.pipe(
+        return this.searchCollaboratorGQL.watch({ variables: params, ...noCacheFetchPolicy }).valueChanges.pipe(
+            onlyCompleteData(),
             first(),
-            map((result: ApolloQueryResult<SearchCollaboratorQuery>) => {
-                return result.data;
+            map((result: ObservableQuery.Result<SearchCollaboratorQuery>) => {
+                return result.data as SearchCollaboratorQuery;
             }),
         );
     }
@@ -66,9 +68,9 @@ export class DatasetCollaborationApi {
         accountId: string;
         role: DatasetAccessRole;
     }): Observable<SetRoleCollaboratorMutation> {
-        return this.setRoleCollaboratorGQL.mutate(params).pipe(
+        return this.setRoleCollaboratorGQL.mutate({ variables: params }).pipe(
             first(),
-            map((result: MutationResult<SetRoleCollaboratorMutation>) => {
+            map((result: ApolloLink.Result<SetRoleCollaboratorMutation>) => {
                 return result.data as SetRoleCollaboratorMutation;
             }),
         );
@@ -78,19 +80,20 @@ export class DatasetCollaborationApi {
         datasetId: string;
         accountIds: string[];
     }): Observable<UnsetRoleCollaboratorMutation> {
-        return this.unsetRoleCollaboratorGQL.mutate({ ...params }).pipe(
+        return this.unsetRoleCollaboratorGQL.mutate({ variables: { ...params } }).pipe(
             first(),
-            map((result: MutationResult<UnsetRoleCollaboratorMutation>) => {
+            map((result: ApolloLink.Result<UnsetRoleCollaboratorMutation>) => {
                 return result.data as UnsetRoleCollaboratorMutation;
             }),
         );
     }
 
     public getDatasetUserRole(datasetId: string): Observable<DatasetUserRoleQuery> {
-        return this.datasetUserRoleGQL.watch({ datasetId }, noCacheFetchPolicy).valueChanges.pipe(
+        return this.datasetUserRoleGQL.watch({ variables: { datasetId }, ...noCacheFetchPolicy }).valueChanges.pipe(
+            onlyCompleteData(),
             first(),
-            map((result: ApolloQueryResult<DatasetUserRoleQuery>) => {
-                return result.data;
+            map((result: ObservableQuery.Result<DatasetUserRoleQuery>) => {
+                return result.data as DatasetUserRoleQuery;
             }),
         );
     }

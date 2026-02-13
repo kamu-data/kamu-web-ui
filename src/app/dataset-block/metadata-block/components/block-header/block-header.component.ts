@@ -23,16 +23,13 @@ import { NgIf } from "@angular/common";
     templateUrl: "./block-header.component.html",
     styleUrls: ["./block-header.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
-
         //-----//
         MatIconModule,
         MatDividerModule,
         MatMenuModule,
-
         //-----//
         BlockRowDataComponent,
         DisplayTimeComponent,

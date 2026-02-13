@@ -10,10 +10,11 @@ import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { mockAddData } from "../../mock.events";
 import { AddDataEventComponent } from "./add-data-event.component";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { Apollo } from "apollo-angular";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("AddDataEventComponent", () => {
     let component: AddDataEventComponent;
@@ -30,8 +31,13 @@ describe("AddDataEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [Apollo, provideToastr()],
-            imports: [HttpClientTestingModule, SharedTestModule, AddDataEventComponent],
+            imports: [SharedTestModule, AddDataEventComponent],
+            providers: [
+                Apollo,
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
         })
             .overrideComponent(AddDataEventComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

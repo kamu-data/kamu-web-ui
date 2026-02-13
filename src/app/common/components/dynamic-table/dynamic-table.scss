@@ -1,4 +1,4 @@
-@import "var";
+@use "var" as *;
 
 .clickable-row {
     .mat-cell {
@@ -60,9 +60,10 @@ table {
 .copyable-cell {
     cursor: copy;
     transition: background 0.2s;
+    position: relative;
 
     &:hover {
-        background-color: rgba(0 0 0 / 10%);
+        background-color: rgb(0 0 0 / 10%);
     }
 
     &:active {
@@ -72,4 +73,43 @@ table {
 
 .mat-mdc-cell {
     user-select: text;
+}
+
+.badge-more {
+    font-size: 9px !important;
+    background: #b2bcbf;
+    border-radius: 7px;
+    padding: 2px 4px;
+    color: #ffff;
+    font-weight: 500;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &::after {
+        content: "...";
+        display: inline-block;
+        vertical-align: middle;
+        margin-bottom: 0.65em;
+        font-weight: bold;
+
+        &:hover {
+            background: #8d9497;
+        }
+    }
+}
+
+.cell-content {
+    height: auto !important;
+}
+
+.info-badge {
+    width: 12px !important;
+    height: auto !important;
+    transform: scale(1.5);
+
+    &:hover {
+        cursor: pointer;
+    }
 }

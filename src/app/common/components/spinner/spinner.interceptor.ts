@@ -15,7 +15,7 @@ import { inject } from "@angular/core";
 
 export class SpinnerInterceptor implements HttpInterceptor {
     private spinnerService = inject(SpinnerService);
-    private timer: NodeJS.Timer;
+    private timer: NodeJS.Timeout;
     public intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         const skipGlobalLoader = Boolean(req.headers.get(AppValues.HEADERS_SKIP_LOADING_KEY));
         if (req.url.includes("/assets") || skipGlobalLoader) {

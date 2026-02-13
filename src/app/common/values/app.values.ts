@@ -39,7 +39,7 @@ export default class AppValues {
     public static readonly SIMULATION_START_CONDITION_DELAY_MS = 1200;
     public static readonly SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS = 2000;
     public static readonly TIMEOUT_REFRESH_FLOW_MS = 1500;
-    public static readonly SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL = "-  Dataset is unavailable";
+    public static readonly SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL = "Dataset is unavailable";
     public static readonly DEFAULT_OFFSET_COLUMN_NAME = "offset";
     public static readonly DEFAULT_FLOW_INITIATOR = "system process";
     public static readonly HEADERS_SKIP_LOADING_KEY = "Skip-loading";

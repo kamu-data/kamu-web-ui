@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { MaybeNull } from "../../interface/app.types";
+import { MaybeNull } from "src/app/interface/app.types";
 import { FormControl } from "@angular/forms";
 
 export interface LoginPageQueryParams {

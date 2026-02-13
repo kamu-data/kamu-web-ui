@@ -22,11 +22,9 @@ import { FlowProcessEffectiveState, OrderingDirection } from "src/app/api/kamu.g
 
 @Component({
     selector: "app-upcoming-scheduled-filters-view",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
-
         //-----//
         MatIconModule,
         MatSlideToggleModule,

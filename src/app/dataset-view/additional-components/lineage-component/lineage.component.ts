@@ -26,12 +26,10 @@ import { NgIf, AsyncPipe } from "@angular/common";
     selector: "app-lineage",
     templateUrl: "./lineage.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         NgIf,
-
         //-----//
         LineageGraphComponent,
     ],

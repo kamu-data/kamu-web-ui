@@ -28,7 +28,6 @@ import { NgIf, NgFor } from "@angular/common";
     templateUrl: "./engine-select.component.html",
     styleUrls: ["./engine-select.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf, NgFor],
 })
 export class EngineSelectComponent implements OnInit {

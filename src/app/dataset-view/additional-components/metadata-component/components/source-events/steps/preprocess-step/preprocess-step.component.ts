@@ -24,12 +24,10 @@ import { NGX_MONACO_EDITOR_CONFIG } from "ngx-monaco-editor-v2";
     templateUrl: "./preprocess-step.component.html",
     styleUrls: ["./preprocess-step.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgIf,
-
         //-----//
         EngineSectionComponent,
         QueriesSectionComponent,

@@ -14,7 +14,6 @@ import { NgIf } from "@angular/common";
     selector: "app-event-time-property",
     templateUrl: "./event-time-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf],
 })
 export class EventTimePropertyComponent extends BasePropertyComponent {

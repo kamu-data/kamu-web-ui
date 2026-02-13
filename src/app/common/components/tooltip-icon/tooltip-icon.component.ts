@@ -14,7 +14,6 @@ import { MatIconModule } from "@angular/material/icon";
     selector: "app-tooltip-icon",
     templateUrl: "./tooltip-icon.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [MatIconModule, NgbTooltip],
 })
 export class TooltipIconComponent {

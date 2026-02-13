@@ -16,7 +16,7 @@ import { EditWatermarkModalComponent } from "./components/edit-watermark-modal/e
 import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { AddDataModalComponent } from "./components/add-data-modal/add-data-modal.component";
-import { from, Observable, take } from "rxjs";
+import { catchError, from, Observable, of, take } from "rxjs";
 import { AppConfigService } from "src/app/app-config.service";
 import { isNil, promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import AppValues from "src/app/common/values/app.values";
@@ -39,13 +39,14 @@ import { MatIconModule } from "@angular/material/icon";
 import { FeatureFlagDirective } from "../../../common/directives/feature-flag.directive";
 import { MatChipsModule } from "@angular/material/chips";
 import { NgIf, NgFor, AsyncPipe, DecimalPipe, TitleCasePipe } from "@angular/common";
+import { DynamicTableColumnDescriptor } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
 
 @Component({
     selector: "app-overview",
     templateUrl: "overview.component.html",
     styleUrls: ["./overview.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
@@ -54,12 +55,10 @@ import { NgIf, NgFor, AsyncPipe, DecimalPipe, TitleCasePipe } from "@angular/com
         NgIf,
         NgFor,
         RouterLink,
-
         //-----//
         MatChipsModule,
         MatIconModule,
         NgbTooltip,
-
         //-----//
         FeatureFlagDirective,
         OverviewHistorySummaryHeaderComponent,
@@ -265,6 +264,10 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
         }
     }
 
+    public inferTableSchema(schema: DataSchemaField[]): DynamicTableColumnDescriptor[] {
+        return schema.map((f: DataSchemaField) => ({ columnName: f.name }));
+    }
+
     public openInformationModal() {
         const modalRef: NgbModalRef = this.ngbModalService.open(EditDetailsModalComponent);
         const modalRefInstance = modalRef.componentInstance as EditDetailsModalComponent;
@@ -276,7 +279,10 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
         };
         modalRefInstance.datasetBasics = this.datasetOverviewTabData.datasetBasics;
         from(modalRef.result)
-            .pipe(take(1))
+            .pipe(
+                take(1),
+                catchError(() => of(null)),
+            )
             .subscribe(() => {
                 this.navigationService.navigateToDatasetView({
                     accountName: this.datasetOverviewTabData.datasetBasics.owner.accountName,
@@ -297,7 +303,10 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
         };
         modalRefInstance.datasetBasics = this.datasetOverviewTabData.datasetBasics;
         from(modalRef.result)
-            .pipe(take(1))
+            .pipe(
+                take(1),
+                catchError(() => of(null)),
+            )
             .subscribe(() => {
                 this.navigationService.navigateToDatasetView({
                     accountName: this.datasetOverviewTabData.datasetBasics.owner.accountName,

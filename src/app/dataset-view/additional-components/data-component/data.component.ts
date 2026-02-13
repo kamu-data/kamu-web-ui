@@ -11,7 +11,7 @@ import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
 import AppValues from "src/app/common/values/app.values";
 import { DatasetKind, OffsetInterval } from "../../../api/kamu.graphql.interface";
 import { DataSqlErrorUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import { DatasetRequestBySql } from "../../../interface/dataset.interface";
+import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { MaybeNull } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";
@@ -35,12 +35,10 @@ import { EditorModule } from "src/app/editor/editor.module";
     templateUrl: "./data.component.html",
     styleUrls: ["./data.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         NgIf,
-
         //-----//
         EditorModule,
         SearchAndSchemasSectionComponent,

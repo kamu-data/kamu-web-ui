@@ -7,21 +7,23 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { QueryExplainerOutputType } from "../../query-explainer.types";
-import { extractSchemaFieldsFromData } from "src/app/common/helpers/table.helper";
-import { DataRow, DataSchemaField } from "src/app/interface/dataset.interface";
+import { extractSchemaFieldsFromData } from "src/app/common/helpers/data-schema.helpers";
+import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
 import { parseDataFromJsonAoSFormat } from "src/app/common/helpers/data.helpers";
 import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";
 import { NgIf } from "@angular/common";
+import {
+    DynamicTableColumnDescriptor,
+    DynamicTableDataRow,
+} from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
     selector: "app-reproduced-result-section",
     templateUrl: "./reproduced-result-section.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
-
         //-----//
         DynamicTableComponent,
     ],
@@ -29,12 +31,16 @@ import { NgIf } from "@angular/common";
 export class ReproducedResultSectionComponent {
     @Input({ required: true }) public dataJsonAoS: QueryExplainerOutputType;
 
-    public tableSource(output: QueryExplainerOutputType): DataRow[] {
+    public tableSource(output: QueryExplainerOutputType): DynamicTableDataRow[] {
         const columnNames: string[] = output.schema.fields.map((item) => item.name);
         return parseDataFromJsonAoSFormat(output.data, columnNames);
     }
 
     public schemaFields(output: QueryExplainerOutputType): DataSchemaField[] {
         return extractSchemaFieldsFromData(this.tableSource(output)[0] ?? []);
+    }
+
+    public inferTableSchema(schema: DataSchemaField[]): DynamicTableColumnDescriptor[] {
+        return schema.map((f: DataSchemaField) => ({ columnName: f.name }));
     }
 }

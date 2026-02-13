@@ -94,7 +94,7 @@ describe("EnvironmentVariablesApi", () => {
             .subscribe((result: UpsertEnvVariableMutation) => {
                 if (result.datasets.byId?.envVars.upsertEnvVariable.__typename === "UpsertDatasetEnvVarResultUpdated") {
                     expect(result.datasets.byId?.envVars.upsertEnvVariable.message).toEqual(
-                        mockUpsertEnvVariableMutationCreated.datasets.byId?.envVars.upsertEnvVariable.message as string,
+                        mockUpsertEnvVariableMutationUpdated.datasets.byId?.envVars.upsertEnvVariable.message as string,
                     );
                 }
             });

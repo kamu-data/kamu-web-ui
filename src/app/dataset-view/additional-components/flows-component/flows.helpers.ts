@@ -165,7 +165,7 @@ export class DatasetFlowBadgeHelpers {
             case FlowProcessEffectiveState.PausedManual:
                 return {
                     message: `${isRoot ? "Ingest" : "Transform"} paused`,
-                    subMessage: "Reason: paused manually by user",
+                    subMessage: `Reason: paused manually by user at ${DatasetFlowBadgeHelpers.datePipe.transform(summary.pausedAt, AppValues.DISPLAY_TIME_FORMAT)}`,
                     additionalMessage: subMessagesPausedStateHelper(summary),
                 };
 

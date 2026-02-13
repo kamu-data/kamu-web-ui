@@ -120,13 +120,11 @@ import { NgClass, NgIf, NgFor } from "@angular/common";
             </div>
         </div>
     `,
-    standalone: true,
     imports: [
         //-----//
         NgClass,
         NgFor,
         NgIf,
-
         //-----//
         MatDividerModule,
     ],

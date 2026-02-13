@@ -16,7 +16,7 @@ import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { LoggedUserService } from "./auth/logged-user.service";
 import { PageNotFoundComponent } from "./common/components/page-not-found/page-not-found.component";
 import { LoginComponent } from "./auth/login/login.component";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { accountSettingsAccessTokensResolverFn } from "./account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
 import { provideToastr } from "ngx-toastr";
 import { mockAccountDetails } from "./api/mock/auth.mock";
@@ -41,6 +41,8 @@ import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { AppConfigService } from "./app-config.service";
 import { LoginMethodsService } from "./auth/login-methods.service";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { Apollo } from "apollo-angular";
 
 describe("Router", () => {
     let router: Router;
@@ -51,15 +53,10 @@ describe("Router", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                ApolloTestingModule,
-                HttpClientTestingModule,
-                NgxGraphModule,
-                PageNotFoundComponent,
-                LoginComponent,
-            ],
             schemas: [NO_ERRORS_SCHEMA],
+            imports: [ApolloTestingModule, NgxGraphModule, PageNotFoundComponent, LoginComponent],
             providers: [
+                Apollo,
                 {
                     provide: AppConfigService,
                     useValue: {
@@ -117,6 +114,8 @@ describe("Router", () => {
                             }),
                     },
                 },
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
             ],
         }).compileComponents();
 

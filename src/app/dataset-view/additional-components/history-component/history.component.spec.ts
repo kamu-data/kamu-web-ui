@@ -9,7 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { mockHistoryUpdate } from "../data-tabs.mock";
 import { HistoryComponent } from "./history.component";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideToastr } from "ngx-toastr";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { MOCK_DATASET_INFO } from "../metadata-component/components/set-transform/mock.data";
@@ -21,6 +21,7 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { ActivatedRoute } from "@angular/router";
 import ProjectLinks from "src/app/project-links";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("HistoryComponent", () => {
     let component: HistoryComponent;
@@ -31,7 +32,7 @@ describe("HistoryComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, SharedTestModule, HistoryComponent],
+            imports: [SharedTestModule, HistoryComponent],
             providers: [
                 Apollo,
                 provideToastr(),
@@ -60,6 +61,8 @@ describe("HistoryComponent", () => {
                         },
                     },
                 },
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
             ],
         }).compileComponents();
 

@@ -8,7 +8,7 @@
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { QueryAndResultSectionsComponent } from "./query-and-result-sections.component";
 import { Apollo } from "apollo-angular";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideToastr, ToastrService } from "ngx-toastr";
 import { EditorModule } from "src/app/editor/editor.module";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
@@ -26,6 +26,7 @@ import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import { MarkdownModule } from "ngx-markdown";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("QueryAndResultSectionsComponent", () => {
     let component: QueryAndResultSectionsComponent;
@@ -37,14 +38,13 @@ describe("QueryAndResultSectionsComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                HttpClientTestingModule,
-                EditorModule,
-                SharedTestModule,
-                QueryAndResultSectionsComponent,
-                MarkdownModule.forRoot(),
+            imports: [EditorModule, SharedTestModule, QueryAndResultSectionsComponent, MarkdownModule.forRoot()],
+            providers: [
+                Apollo,
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
             ],
-            providers: [Apollo, provideToastr()],
         });
         fixture = TestBed.createComponent(QueryAndResultSectionsComponent);
         component = fixture.componentInstance;

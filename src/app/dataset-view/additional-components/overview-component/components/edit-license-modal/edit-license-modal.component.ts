@@ -31,15 +31,12 @@ import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dyn
 @Component({
     selector: "app-edit-license-modal",
     templateUrl: "./edit-license-modal.component.html",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatDividerModule,
-
         //-----//
         FormValidationErrorsDirective,
     ],

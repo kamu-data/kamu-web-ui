@@ -1,4 +1,4 @@
-@import "var";
+@use "var" as *;
 
 :host {
     ::ng-deep {
@@ -94,7 +94,7 @@ td.mat-cell {
 
 .selected-status {
     font-weight: 500;
-    background: rgba(237 232 232);
+    background: rgb(237 232 232);
 }
 
 .select-item {

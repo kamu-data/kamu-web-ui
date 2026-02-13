@@ -8,15 +8,15 @@
 import { TestBed } from "@angular/core/testing";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { EngineApi } from "./engine.api";
-import { Apollo, ApolloModule } from "apollo-angular";
+import { Apollo } from "apollo-angular";
+import { importProvidersFrom } from "@angular/core";
 
 describe("EngineApi", () => {
     let service: EngineApi;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [EngineApi, Apollo],
-            imports: [ApolloModule, ApolloTestingModule],
+            providers: [EngineApi, Apollo, importProvidersFrom(ApolloTestingModule)],
         });
         service = TestBed.inject(EngineApi);
     });

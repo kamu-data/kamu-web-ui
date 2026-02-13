@@ -6,7 +6,6 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
-import { MatTreeModule } from "@angular/material/tree";
 import { NgbTypeaheadSelectItemEvent, NgbTypeahead, NgbHighlight } from "@ng-bootstrap/ng-bootstrap";
 import { OperatorFunction, Observable } from "rxjs";
 import { debounceTime, distinctUntilChanged, map, switchMap } from "rxjs/operators";
@@ -42,7 +41,6 @@ import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dyn
     templateUrl: "./search-section.component.html",
     styleUrls: ["./search-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         CdkAccordionModule,
@@ -50,10 +48,8 @@ import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dyn
         NgIf,
         NgFor,
         RouterLink,
-
         //-----//
         MatIconModule,
-        MatTreeModule,
         MatButtonModule,
         NgbTypeahead,
         NgbHighlight,

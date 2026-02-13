@@ -25,7 +25,6 @@ import { NgFor, NgClass, NgIf, SlicePipe, DatePipe } from "@angular/common";
     templateUrl: "./tile-base-widget.component.html",
     styleUrls: ["./tile-base-widget.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         DatePipe,
@@ -33,7 +32,6 @@ import { NgFor, NgClass, NgIf, SlicePipe, DatePipe } from "@angular/common";
         NgClass,
         NgIf,
         SlicePipe,
-
         //-----//
         NgbPopover,
     ],

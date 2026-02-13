@@ -26,11 +26,9 @@ import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dyn
 
 @Component({
     selector: "app-metadata-schema-tab",
-    standalone: true,
     imports: [
         //-----//
         NgIf,
-
         //-----//
         MatIconModule,
         MatSlideToggleModule,

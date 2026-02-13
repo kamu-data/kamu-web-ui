@@ -10,7 +10,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AccessTokensTabComponent } from "./access-tokens-tab.component";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { ActivatedRoute } from "@angular/router";
 import { NavigationService } from "src/app/services/navigation.service";
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
@@ -35,6 +35,7 @@ describe("AccessTokensTabComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            imports: [AccessTokensTabComponent],
             providers: [
                 Apollo,
                 provideToastr(),
@@ -63,8 +64,8 @@ describe("AccessTokensTabComponent", () => {
                         },
                     },
                 },
+                provideHttpClient(withInterceptorsFromDi()),
             ],
-            imports: [HttpClientModule, AccessTokensTabComponent],
         }).compileComponents();
 
         registerMatSvgIcons();

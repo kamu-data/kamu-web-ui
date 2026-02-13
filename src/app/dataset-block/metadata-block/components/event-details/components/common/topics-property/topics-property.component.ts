@@ -22,7 +22,6 @@ import {
     templateUrl: "./topics-property.component.html",
     styleUrls: ["./topics-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [DynamicTableComponent],
 })
 export class TopicsPropertyComponent extends BasePropertyComponent {

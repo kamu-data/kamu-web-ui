@@ -13,7 +13,6 @@ import { NgClass } from "@angular/common";
     selector: "app-block-row-data",
     templateUrl: "./block-row-data.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [TooltipIconComponent, NgClass],
 })
 export class BlockRowDataComponent {

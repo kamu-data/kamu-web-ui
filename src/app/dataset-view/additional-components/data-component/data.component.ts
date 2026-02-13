@@ -35,12 +35,10 @@ import { EditorModule } from "src/app/editor/editor.module";
     templateUrl: "./data.component.html",
     styleUrls: ["./data.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         NgIf,
-
         //-----//
         EditorModule,
         SearchAndSchemasSectionComponent,

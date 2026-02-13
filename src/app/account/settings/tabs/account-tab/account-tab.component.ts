@@ -34,16 +34,13 @@ import { MatDividerModule } from "@angular/material/divider";
     templateUrl: "./account-tab.component.html",
     styleUrls: ["./account-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         ReactiveFormsModule,
         NgIf,
-
         //-----//
         MatDividerModule,
-
         //-----//
         FormValidationErrorsDirective,
         AdminChangePasswordComponent,

@@ -9,8 +9,9 @@ import { mockDatasetEndPoints } from "../../../data-access-panel-mock.data";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { DataAccessOdataTabComponent } from "./data-access-odata-tab.component";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("DataAccessOdataTabComponent", () => {
     let component: DataAccessOdataTabComponent;
@@ -18,7 +19,8 @@ describe("DataAccessOdataTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, DataAccessOdataTabComponent],
+            imports: [DataAccessOdataTabComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         });
 
         registerMatSvgIcons();

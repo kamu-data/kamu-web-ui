@@ -5,14 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { Apollo, ApolloModule } from "apollo-angular";
+import { Apollo } from "apollo-angular";
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { DatasetFlowDetailsComponent } from "./dataset-flow-details.component";
 import { ActivatedRoute } from "@angular/router";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 import { of, shareReplay } from "rxjs";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
     mockDatasetBasicsRootFragment,
@@ -24,6 +24,8 @@ import { FlowDetailsTabs } from "./dataset-flow-details.types";
 import { mockDatasetFlowByIdResponse, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { NavigationService } from "src/app/services/navigation.service";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { importProvidersFrom } from "@angular/core";
 
 describe("DatasetFlowDetailsComponent", () => {
     let component: DatasetFlowDetailsComponent;
@@ -36,8 +38,13 @@ describe("DatasetFlowDetailsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            imports: [
+                //-----//
+                DatasetFlowDetailsComponent,
+            ],
             providers: [
                 Apollo,
+                importProvidersFrom(ApolloTestingModule),
                 provideToastr(),
                 {
                     provide: ActivatedRoute,
@@ -56,15 +63,8 @@ describe("DatasetFlowDetailsComponent", () => {
                         },
                     },
                 },
-            ],
-            imports: [
-                //-----//
-                HttpClientTestingModule,
-                //-----//
-                ApolloModule,
-                ApolloTestingModule,
-                //-----//
-                DatasetFlowDetailsComponent,
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
             ],
         }).compileComponents();
 

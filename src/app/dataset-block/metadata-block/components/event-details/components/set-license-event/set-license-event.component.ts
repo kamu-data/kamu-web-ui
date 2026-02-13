@@ -16,11 +16,9 @@ import { NgIf } from "@angular/common";
     selector: "app-set-license-event",
     templateUrl: "./set-license-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
-
         //-----//
         BlockRowDataComponent,
         LinkPropertyComponent,

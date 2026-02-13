@@ -23,7 +23,6 @@ import { FormValidationErrorsDirective } from "./form-validation-errors.directiv
             />
         </form>
     `,
-    standalone: true,
     imports: [ReactiveFormsModule, FormValidationErrorsDirective],
 })
 class TestHostComponent {

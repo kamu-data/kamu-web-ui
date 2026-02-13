@@ -29,18 +29,15 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 
 @Component({
     selector: "app-list-webhooks",
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         NgClass,
         NgIf,
-
         //-----//
         MatDividerModule,
         MatIconModule,
         MatTableModule,
-
         //-----//
         FeatureFlagDirective,
     ],

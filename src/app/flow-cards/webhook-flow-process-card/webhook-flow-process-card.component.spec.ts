@@ -12,8 +12,9 @@ import { FlowProcessEffectiveState, FlowProcessSummary } from "src/app/api/kamu.
 import { mockAccountFlowsAsCardsQuery } from "src/app/api/mock/account.mock";
 import { Apollo } from "apollo-angular";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("WebhookFlowProcessCardComponent", () => {
     let component: WebhookFlowProcessCardComponent;
@@ -22,8 +23,8 @@ describe("WebhookFlowProcessCardComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [WebhookFlowProcessCardComponent, SharedTestModule, HttpClientTestingModule],
-            providers: [Apollo],
+            imports: [WebhookFlowProcessCardComponent, SharedTestModule],
+            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         });
 
         registerMatSvgIcons();

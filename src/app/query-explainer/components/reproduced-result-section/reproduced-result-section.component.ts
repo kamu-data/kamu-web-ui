@@ -21,11 +21,9 @@ import {
     selector: "app-reproduced-result-section",
     templateUrl: "./reproduced-result-section.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
-
         //-----//
         DynamicTableComponent,
     ],

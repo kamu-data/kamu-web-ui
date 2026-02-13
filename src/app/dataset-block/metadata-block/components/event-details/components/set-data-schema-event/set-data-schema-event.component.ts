@@ -21,11 +21,9 @@ import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dyn
     selector: "app-set-data-schema-event",
     templateUrl: "./set-data-schema-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
-
         //-----//
         BlockRowDataComponent,
         DynamicTableComponent,

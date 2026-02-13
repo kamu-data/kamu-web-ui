@@ -20,12 +20,10 @@ import { NgIf, NgFor } from "@angular/common";
     selector: "app-datasets-tab",
     templateUrl: "./datasets-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         NgFor,
-
         //-----//
         DatasetListItemComponent,
         PaginationComponent,

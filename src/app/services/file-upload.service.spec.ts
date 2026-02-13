@@ -9,8 +9,8 @@ import { TestBed } from "@angular/core/testing";
 import { FileUploadService } from "./file-upload.service";
 import { Apollo } from "apollo-angular";
 import { mockDatasetBasicsRootFragment, mockDatasetInfo } from "../search/mock.data";
-import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
-import { HttpHeaders } from "@angular/common/http";
+import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
+import { HttpHeaders, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { first, of } from "rxjs";
 import { ProtocolsService } from "./protocols.service";
 import { mockDatasetEndPoints } from "../data-access-panel/data-access-panel-mock.data";
@@ -33,11 +33,10 @@ describe("FileUploadService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                HttpClientTestingModule,
                 SharedTestModule,
                 RouterTestingModule.withRoutes([{ path: "kamu/mockNameRoot", component: DatasetViewComponent }]),
             ],
-            providers: [Apollo],
+            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         });
         service = TestBed.inject(FileUploadService);
         protocolsService = TestBed.inject(ProtocolsService);

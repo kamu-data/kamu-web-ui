@@ -29,18 +29,15 @@ import { BehaviorSubject, map, Observable } from "rxjs";
 
 @Component({
     selector: "app-add-webhook",
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         NgIf,
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatDividerModule,
         NgSelectModule,
-
         //-----//
         CopyToClipboardComponent,
         WebhookFormComponent,

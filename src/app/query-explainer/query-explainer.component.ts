@@ -40,13 +40,11 @@ export interface QueryExplainerComponentData {
     templateUrl: "./query-explainer.component.html",
     styleUrls: ["./query-explainer.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         FormsModule,
         NgIf,
-
         //-----//
         VerifyResultSectionComponent,
         InputDataSectionComponent,

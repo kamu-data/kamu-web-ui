@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Changed the display of schemas for the "Data" tab and "Query" page 
 - SetTransform event: replaced the list of columns and types with a table 
+- Updated dependencies and Angular to version 19
 
 ## [0.61.2] - 2026-01-30
 ### Added

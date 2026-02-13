@@ -17,13 +17,11 @@ import { MatButtonModule } from "@angular/material/button";
     selector: "app-load-more",
     templateUrl: "./load-more.component.html",
     styleUrls: ["./load-more.component.scss"],
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgIf,
         NgFor,
-
         //-----//
         MatButtonModule,
         MatIconModule,

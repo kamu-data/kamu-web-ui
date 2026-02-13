@@ -54,20 +54,17 @@ import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dyn
     templateUrl: "./search-and-schemas-section.component.html",
     styleUrls: ["./search-and-schemas-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         NgFor,
         FormsModule,
         CdkAccordionModule,
-
         //-----//
         MatDividerModule,
         MatIconModule,
         NgbHighlight,
         NgbTypeahead,
-
         //-----//
         DynamicTableComponent,
         FeatureFlagDirective,

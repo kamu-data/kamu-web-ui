@@ -14,7 +14,6 @@ import { NgIf, NgFor } from "@angular/common";
     templateUrl: "./cards-property.component.html",
     styleUrls: ["./cards-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf, NgFor],
 })
 export class CardsPropertyComponent extends BasePropertyComponent {

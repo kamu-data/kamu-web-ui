@@ -19,11 +19,9 @@ import { SeparatorPropertyComponent } from "src/app/dataset-block/metadata-block
 
 @Component({
     selector: "app-source-event-common-data",
-    standalone: true,
     imports: [
         //-----//
         NgIf,
-
         //-----//
         BlockRowDataComponent,
         CardsPropertyComponent,

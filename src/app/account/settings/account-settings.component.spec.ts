@@ -9,7 +9,7 @@ import { mockAccountDetails, mockAccountDetailsWithEmail } from "../../api/mock/
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { AccountSettingsComponent } from "./account-settings.component";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { LoggedUserService } from "../../auth/logged-user.service";
 import {
     findElementByDataTestId,
@@ -21,6 +21,7 @@ import { LoginService } from "../../auth/login/login.service";
 import { provideToastr } from "ngx-toastr";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("AccountSettingsComponent", () => {
     let component: AccountSettingsComponent;
@@ -31,8 +32,8 @@ describe("AccountSettingsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [provideToastr()],
-            imports: [SharedTestModule, ApolloTestingModule, HttpClientTestingModule, AccountSettingsComponent],
+            imports: [SharedTestModule, ApolloTestingModule, AccountSettingsComponent],
+            providers: [provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         }).compileComponents();
 
         registerMatSvgIcons();

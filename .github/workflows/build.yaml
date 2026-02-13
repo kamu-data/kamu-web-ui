@@ -9,7 +9,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: "24"
 
       - uses: actions/cache@v3 # Source: https://gist.github.com/rupeshtiwari/44ebec690f2c01bf1df9b1d215a0e723
         id: cache-nodemodules

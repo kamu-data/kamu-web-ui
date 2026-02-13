@@ -7,8 +7,8 @@
 
 import { TestBed } from "@angular/core/testing";
 import { AuthInterceptor } from "./auth.interceptor";
-import { HTTP_INTERCEPTORS, HttpClient } from "@angular/common/http";
-import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
+import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { AppConfigService } from "src/app/app-config.service";
 
@@ -22,7 +22,7 @@ describe("AuthInterceptor", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
+            imports: [],
             providers: [
                 AuthInterceptor,
                 {
@@ -31,6 +31,8 @@ describe("AuthInterceptor", () => {
                     multi: true,
                 },
                 { provide: AppConfigService, useValue: appConfigStub },
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
             ],
         });
 

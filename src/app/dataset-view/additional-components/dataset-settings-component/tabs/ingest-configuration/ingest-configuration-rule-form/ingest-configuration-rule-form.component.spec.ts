@@ -15,7 +15,6 @@ import { IngestConfigurationRuleFormHarness } from "./ingest-configuration-rule-
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 @Component({
-    standalone: true,
     imports: [
         //-----//
         FormsModule,

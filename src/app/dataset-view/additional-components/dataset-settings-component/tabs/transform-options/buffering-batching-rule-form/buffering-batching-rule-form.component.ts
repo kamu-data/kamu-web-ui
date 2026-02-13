@@ -19,14 +19,11 @@ import { TimeUnit } from "src/app/api/kamu.graphql.interface";
     templateUrl: "./buffering-batching-rule-form.component.html",
     styleUrls: ["./buffering-batching-rule-form.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
-
         //-----//
         FormValidationErrorsDirective,
         TimeDeltaFormComponent,

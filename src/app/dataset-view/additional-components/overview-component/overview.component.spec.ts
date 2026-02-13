@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { ApolloModule } from "apollo-angular";
 import { Apollo } from "apollo-angular";
 import {
     mockDatasetBasicsDerivedFragment,
@@ -26,7 +25,7 @@ import {
 import { NavigationService } from "src/app/services/navigation.service";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideToastr } from "ngx-toastr";
 import { mockSetLicense } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angular-datetime-picker";
@@ -43,6 +42,7 @@ import {
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import AppValues from "src/app/common/values/app.values";
 import { DatasetCollaborationsService } from "../dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("OverviewComponent", () => {
     let component: OverviewComponent;
@@ -57,15 +57,18 @@ describe("OverviewComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [
-                ApolloModule,
-                HttpClientTestingModule,
                 MarkdownModule.forRoot(),
                 OwlDateTimeModule,
                 OwlNativeDateTimeModule,
                 OwlMomentDateTimeModule,
                 SharedTestModule,
             ],
-            providers: [Apollo, provideToastr()],
+            providers: [
+                Apollo,
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
         })
             .overrideComponent(OverviewComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

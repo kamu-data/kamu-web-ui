@@ -22,7 +22,7 @@ import { BaseMainEventComponent } from "./source-events/base-main-event.componen
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { ProcessFormService } from "../services/process-form.service";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { from, take } from "rxjs";
+import { catchError, from, of, take } from "rxjs";
 import { FinalYamlModalComponent } from "./final-yaml-modal/final-yaml-modal.component";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { AddPushSourceEditFormType } from "./source-events/add-push-source/add-push-source-form.types";
@@ -73,14 +73,17 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
     public editSourceYaml(form: FormGroup, sourceEvent: SourcesEvents): void {
         const modalRef: NgbModalRef = this.modalService.open(FinalYamlModalComponent, { size: "lg" });
         const instance = modalRef.componentInstance as FinalYamlModalComponent;
-        (instance.yamlTemplate =
+        instance.yamlTemplate =
             this.errorMessage && this.changedEventYamlByHash
                 ? this.changedEventYamlByHash
-                : this.selectSourceEvent(form, sourceEvent)),
-            (instance.datasetInfo = this.getDatasetInfoFromUrl());
+                : this.selectSourceEvent(form, sourceEvent);
+        instance.datasetInfo = this.getDatasetInfoFromUrl();
 
         from(modalRef.result)
-            .pipe(take(1))
+            .pipe(
+                take(1),
+                catchError(() => of(null)),
+            )
             .subscribe((eventYaml: string) => {
                 this.changedEventYamlByHash = eventYaml;
             });

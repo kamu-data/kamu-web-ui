@@ -19,17 +19,14 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
     templateUrl: "./key-value-field.component.html",
     styleUrls: ["./key-value-field.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgFor,
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         NgxTrimDirectiveModule,
         RxReactiveFormsModule,
-
         //-----//
         TooltipIconComponent,
     ],

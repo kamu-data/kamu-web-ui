@@ -15,7 +15,7 @@ import { EditSetTransformService } from "./edit-set-transform..service";
 import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
 import { DatasetNode, SetTransformYamlType } from "./set-transform.types";
 import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
-import { catchError, forkJoin, from, map, take } from "rxjs";
+import { catchError, forkJoin, from, map, of, take } from "rxjs";
 import { BaseMainEventComponent } from "../source-events/base-main-event.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import AppValues from "src/app/common/values/app.values";
@@ -35,12 +35,10 @@ import { EditorModule } from "src/app/editor/editor.module";
     templateUrl: "./set-transform.component.html",
     styleUrls: ["./set-transform.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgIf,
         RouterLink,
-
         //-----//
         EditorModule,
         EngineSectionComponent,
@@ -148,7 +146,10 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
         instance.enabledSaveBtn = this.isInputDatasetsExist;
 
         from(modalRef.result)
-            .pipe(take(1))
+            .pipe(
+                take(1),
+                catchError(() => of(null)),
+            )
             .subscribe((eventYaml: string) => {
                 this.changedEventYamlByHash = eventYaml;
             });

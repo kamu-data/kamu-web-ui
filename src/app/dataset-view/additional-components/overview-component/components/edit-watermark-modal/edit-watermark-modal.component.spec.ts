@@ -15,13 +15,14 @@ import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test
 import { of } from "rxjs";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { DatasetCommitService } from "../../services/dataset-commit.service";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("EditWatermarkModalComponent", () => {
     let component: EditWatermarkModalComponent;
@@ -32,15 +33,19 @@ describe("EditWatermarkModalComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [Apollo, NgbActiveModal],
             imports: [
                 OwlDateTimeModule,
                 OwlNativeDateTimeModule,
                 OwlMomentDateTimeModule,
                 SharedTestModule,
-                HttpClientTestingModule,
                 EditWatermarkModalComponent,
                 BrowserAnimationsModule,
+            ],
+            providers: [
+                Apollo,
+                NgbActiveModal,
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
             ],
         }).compileComponents();
 
@@ -67,7 +72,8 @@ describe("EditWatermarkModalComponent", () => {
     });
 
     it("should check init minLocalWatermark when currentWatermark is not null", () => {
-        (component.currentWatermark = "2023-03-12T00:00:00+00:00"), fixture.detectChanges();
+        component.currentWatermark = "2023-03-12T00:00:00+00:00";
+        fixture.detectChanges();
         const result = "2023-03-12T00:00:00.000Z";
         expect(component.minLocalWatermark).toEqual(result);
     });

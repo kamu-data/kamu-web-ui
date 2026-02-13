@@ -8,7 +8,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { CopyToClipboardComponent } from "./copy-to-clipboard.component";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("CopyToClipboardComponent", () => {
     let component: CopyToClipboardComponent;
@@ -16,7 +17,8 @@ describe("CopyToClipboardComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, CopyToClipboardComponent],
+            imports: [CopyToClipboardComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         });
 
         registerMatSvgIcons();

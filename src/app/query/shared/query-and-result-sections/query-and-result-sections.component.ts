@@ -61,13 +61,11 @@ import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
     templateUrl: "./query-and-result-sections.component.html",
     styleUrls: ["./query-and-result-sections.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         NgIf,
         FormsModule,
-
         //-----//
         MatIconModule,
         MatMenuModule,
@@ -75,7 +73,6 @@ import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
         MatProgressBarModule,
         MatSlideToggleModule,
         MarkdownModule,
-
         //-----//
         EngineSelectComponent,
         MarkdownFormatPipe,

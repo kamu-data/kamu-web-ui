@@ -6,7 +6,8 @@
  */
 
 import { inject, Injectable } from "@angular/core";
-import { EMPTY, Observable, catchError, first, map } from "rxjs";
+import { Observable, first, map } from "rxjs";
+import { onlyCompleteData } from "apollo-angular";
 import {
     CreateAccessTokenGQL,
     CreateAccessTokenMutation,
@@ -15,8 +16,7 @@ import {
     RevokeAccessTokenGQL,
     RevokeAccessTokenMutation,
 } from "./kamu.graphql.interface";
-import { ApolloQueryResult } from "@apollo/client";
-import { MutationResult } from "apollo-angular";
+import { ApolloLink, ObservableQuery } from "@apollo/client/core";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 
 @Injectable({
@@ -33,37 +33,34 @@ export class AccessTokenApi {
         perPage: number;
     }): Observable<ListAccessTokensQuery> {
         return this.listAccessTokensGQL
-            .watch(
-                { accountId: params.accountId, page: params.page, perPage: params.perPage },
-                {
-                    ...noCacheFetchPolicy,
-                },
-            )
+            .watch({
+                variables: { accountId: params.accountId, page: params.page, perPage: params.perPage },
+                ...noCacheFetchPolicy,
+            })
             .valueChanges.pipe(
+                onlyCompleteData(),
                 first(),
-                map((result: ApolloQueryResult<ListAccessTokensQuery>) => {
-                    return result.data;
+                map((result: ObservableQuery.Result<ListAccessTokensQuery>) => {
+                    return result.data as ListAccessTokensQuery;
                 }),
             );
     }
 
     public createAccessToken(accountId: string, tokenName: string): Observable<CreateAccessTokenMutation> {
-        return this.createAccessTokenGQL.mutate({ accountId, tokenName }).pipe(
+        return this.createAccessTokenGQL.mutate({ variables: { accountId, tokenName } }).pipe(
             first(),
-            map((result: MutationResult<CreateAccessTokenMutation>) => {
+            map((result: ApolloLink.Result<CreateAccessTokenMutation>) => {
                 return result.data as CreateAccessTokenMutation;
             }),
-            catchError(() => EMPTY),
         );
     }
 
     public revokeAccessToken(accountId: string, tokenId: string): Observable<RevokeAccessTokenMutation> {
-        return this.revokeAccessTokenGQL.mutate({ accountId, tokenId }).pipe(
+        return this.revokeAccessTokenGQL.mutate({ variables: { accountId, tokenId } }).pipe(
             first(),
-            map((result: MutationResult<RevokeAccessTokenMutation>) => {
+            map((result: ApolloLink.Result<RevokeAccessTokenMutation>) => {
                 return result.data as RevokeAccessTokenMutation;
             }),
-            catchError(() => EMPTY),
         );
     }
 }

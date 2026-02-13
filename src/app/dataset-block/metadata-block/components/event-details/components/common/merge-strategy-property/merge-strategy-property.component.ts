@@ -16,7 +16,6 @@ import { NgIf } from "@angular/common";
     templateUrl: "./merge-strategy-property.component.html",
     styleUrls: ["./merge-strategy-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [NgIf],
 })
 export class MergeStrategyPropertyComponent extends BasePropertyComponent {

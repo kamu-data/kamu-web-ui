@@ -8,8 +8,9 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable, first, map } from "rxjs";
 import { DatasetProtocolsGQL, DatasetProtocolsQuery } from "./kamu.graphql.interface";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { ApolloQueryResult } from "@apollo/client";
+import { DatasetInfo } from "../interface/navigation.interface";
+import { ObservableQuery } from "@apollo/client/core";
+import { onlyCompleteData } from "apollo-angular";
 
 @Injectable({
     providedIn: "root",
@@ -18,10 +19,11 @@ export class ProtocolsApi {
     private protocolsGQL = inject(DatasetProtocolsGQL);
 
     public getProtocols(datasetInfo: DatasetInfo): Observable<DatasetProtocolsQuery> {
-        return this.protocolsGQL.watch({ ...datasetInfo }).valueChanges.pipe(
+        return this.protocolsGQL.watch({ variables: { ...datasetInfo } }).valueChanges.pipe(
+            onlyCompleteData(),
             first(),
-            map((result: ApolloQueryResult<DatasetProtocolsQuery>) => {
-                return result.data;
+            map((result: ObservableQuery.Result<DatasetProtocolsQuery>) => {
+                return result.data as DatasetProtocolsQuery;
             }),
         );
     }

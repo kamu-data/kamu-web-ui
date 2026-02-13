@@ -14,8 +14,9 @@ import {
 import { mockSeed } from "../../mock.events";
 import { SeedEventComponent } from "./seed-event.component";
 import { provideToastr, ToastrService } from "ngx-toastr";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("SeedEventComponent", () => {
     let component: SeedEventComponent;
@@ -24,8 +25,8 @@ describe("SeedEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [provideToastr()],
-            imports: [HttpClientTestingModule, SharedTestModule, SeedEventComponent],
+            imports: [SharedTestModule, SeedEventComponent],
+            providers: [provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         }).compileComponents();
 
         registerMatSvgIcons();

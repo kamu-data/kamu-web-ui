@@ -15,7 +15,6 @@ import { RouterLink } from "@angular/router";
     templateUrl: "./dataset-name-property.component.html",
     styleUrls: ["./dataset-name-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [RouterLink],
 })
 export class DatasetNamePropertyComponent extends BasePropertyComponent {

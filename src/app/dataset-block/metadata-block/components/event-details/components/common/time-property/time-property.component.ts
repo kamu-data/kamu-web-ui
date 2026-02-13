@@ -13,7 +13,6 @@ import { DisplayTimeComponent } from "../../../../../../../common/components/dis
     selector: "app-time-property",
     templateUrl: "./time-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [DisplayTimeComponent],
 })
 export class TimePropertyComponent extends BasePropertyComponent {

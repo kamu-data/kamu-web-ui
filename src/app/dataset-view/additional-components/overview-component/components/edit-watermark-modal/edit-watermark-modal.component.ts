@@ -32,11 +32,9 @@ import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/a
         { provide: DateTimeAdapter, useClass: MomentDateTimeAdapter },
         { provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS },
     ],
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
-
         //-----//
         MatDividerModule,
         MatIconModule,

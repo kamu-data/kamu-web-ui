@@ -31,12 +31,10 @@ import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dyn
 @Component({
     selector: "app-details-modal",
     templateUrl: "./edit-details-modal.component.html",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgFor,
-
         //-----//
         MatDividerModule,
         MatIconModule,

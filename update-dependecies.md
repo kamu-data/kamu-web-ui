@@ -1,0 +1,13 @@
+- **@angular/material** depends on **@angular/common**
+- **apollo-angular** depends on **@apollo/client**
+- **@danielmoncada/angular-datetime-picker** depends on **@angular/common**
+- **@danielmoncada/angular-datetime-picker-moment-adapter** depends on **@danielmoncada/angular-datetime-picker**
+- **@ng-bootstrap/ng-bootstrap** depends on **@angular/common**
+- **bootstrap** depends on **@angular/common**
+- **@ng-select/ng-select** depends on **@angular/common**
+- **@schematics/angular** depends on **@angular/common**
+- **ngx-markdown** depends on **@angular/common**
+- **marked** depends on **ngx-markdown**
+- **monaco-editor** depends on **@angular/common**
+- **ngx-monaco-editor-v2** depends on **@angular/common**
+- **ngx-infinite-scroll** depends on **@angular/common**

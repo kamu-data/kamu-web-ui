@@ -16,7 +16,6 @@ import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FlowRetryBackoffType, TimeUnit } from "src/app/api/kamu.graphql.interface";
 
 @Component({
-    standalone: true,
     imports: [
         //-----//
         FormsModule,

@@ -24,18 +24,15 @@ import { FlowProcessStatusListComponent } from "../common/flow-process-status-li
 
 @Component({
     selector: "app-upcoming-scheduled-filters-view",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
-
         //-----//
         MatIconModule,
         MatSlideToggleModule,
         NgSelectModule,
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
-
         //-----//
         FlowProcessStatusListComponent,
     ],

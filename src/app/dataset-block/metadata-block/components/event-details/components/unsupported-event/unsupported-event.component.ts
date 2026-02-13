@@ -13,7 +13,6 @@ import { MatIconModule } from "@angular/material/icon";
     selector: "app-unsupported-event",
     templateUrl: "./unsupported-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [MatIconModule],
 })
 export class UnsupportedEventComponent extends BaseComponent {}

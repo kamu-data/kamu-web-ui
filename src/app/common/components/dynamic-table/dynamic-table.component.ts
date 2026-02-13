@@ -22,13 +22,11 @@ import { MaybeUndefined } from "src/app/interface/app.types";
     templateUrl: "./dynamic-table.component.html",
     styleUrls: ["./dynamic-table.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgClass,
         NgFor,
         NgIf,
-
         //-----//
         MatIconModule,
         MatTableModule,

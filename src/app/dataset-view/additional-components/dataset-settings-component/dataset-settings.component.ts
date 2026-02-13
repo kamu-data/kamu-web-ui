@@ -35,17 +35,14 @@ import { NgFor, NgIf } from "@angular/common";
     templateUrl: "./dataset-settings.component.html",
     styleUrls: ["./dataset-settings.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgFor,
         NgIf,
         RouterOutlet,
-
         //-----//
         MatIconModule,
         MatDividerModule,
-
         //-----//
         FeatureFlagDirective,
     ],

@@ -32,19 +32,16 @@ import { NgIf, AsyncPipe } from "@angular/common";
     templateUrl: "./account.component.html",
     styleUrls: ["./account.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         NgIf,
         RouterLink,
         RouterOutlet,
-
         //-----//
         MatButtonToggleModule,
         MatDividerModule,
         MatIconModule,
-
         //-----//
         DisplayAccountNamePipe,
         FeatureFlagDirective,

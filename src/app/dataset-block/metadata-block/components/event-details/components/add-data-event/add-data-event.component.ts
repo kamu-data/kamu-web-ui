@@ -17,15 +17,12 @@ import { NgFor, NgIf } from "@angular/common";
     selector: "app-add-data-event",
     templateUrl: "../base-dynamic-event/base-dynamic-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         NgFor,
         NgIf,
-
         //-----//
         MatIconModule,
-
         //-----//
         BlockRowDataComponent,
     ],

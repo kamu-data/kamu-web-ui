@@ -12,7 +12,7 @@ import { provideToastr } from "ngx-toastr";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { ActivatedRoute } from "@angular/router";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { DatasetCollaborationsService } from "./dataset-collaborations.service";
 import { of } from "rxjs";
 import {
@@ -40,6 +40,7 @@ describe("DatasetSettingsAccessTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
+            imports: [DatasetSettingsAccessTabComponent],
             providers: [
                 Apollo,
                 provideToastr(),
@@ -68,8 +69,8 @@ describe("DatasetSettingsAccessTabComponent", () => {
                         },
                     },
                 },
+                provideHttpClient(withInterceptorsFromDi()),
             ],
-            imports: [HttpClientModule, DatasetSettingsAccessTabComponent],
         });
         registerMatSvgIcons();
 

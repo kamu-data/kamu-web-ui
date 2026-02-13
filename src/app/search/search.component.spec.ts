@@ -10,12 +10,12 @@ import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core
 import { SearchComponent } from "./search.component";
 import { NavigationService } from "../services/navigation.service";
 import { SearchService } from "./search.service";
-import { ApolloTestingModule } from "apollo-angular/testing";
 import { mockSearchOverviewResponse } from "../api/mock/search.mock";
 import { of } from "rxjs";
 import { findElementByDataTestId } from "../common/helpers/base-test.helpers.spec";
 import { mockDatasetSearchResult } from "./mock.data";
 import { SharedTestModule } from "../common/modules/shared-test.module";
+import { Apollo } from "apollo-angular";
 
 describe("SearchComponent", () => {
     let component: SearchComponent;
@@ -29,7 +29,8 @@ describe("SearchComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ApolloTestingModule, SharedTestModule, SearchComponent],
+            imports: [SharedTestModule, SearchComponent],
+            providers: [Apollo],
         }).compileComponents();
     });
 

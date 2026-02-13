@@ -25,14 +25,12 @@ import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeUndefined } from "src/app/interface/app.types";
 @Component({
     selector: "app-flows-associated-channels",
-    standalone: true,
     imports: [
         //-----//
         FormsModule,
         NgClass,
         NgIf,
         NgFor,
-
         //-----//
         MatIconModule,
         MatTableModule,
@@ -40,7 +38,6 @@ import { MaybeUndefined } from "src/app/interface/app.types";
         MatProgressBarModule,
         MatButtonToggleModule,
         MatChipsModule,
-
         //-----//
         SubscriptionsTableComponent,
     ],

@@ -28,12 +28,10 @@ import { NgIf, AsyncPipe } from "@angular/common";
     templateUrl: "./history.component.html",
     styleUrls: ["./history.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         AsyncPipe,
         NgIf,
-
         //-----//
         TimelineComponent,
         PaginationComponent,

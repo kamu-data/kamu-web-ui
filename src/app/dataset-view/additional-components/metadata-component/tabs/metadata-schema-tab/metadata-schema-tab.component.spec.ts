@@ -15,8 +15,9 @@ import {
     mockOverviewDataUpdateNullable,
 } from "../../../data-tabs.mock";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideToastr } from "ngx-toastr";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("MetadataSchemaTabComponent", () => {
     let component: MetadataSchemaTabComponent;
@@ -24,8 +25,8 @@ describe("MetadataSchemaTabComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [MetadataSchemaTabComponent, HttpClientTestingModule],
-            providers: [provideToastr()],
+            imports: [MetadataSchemaTabComponent],
+            providers: [provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         });
         fixture = TestBed.createComponent(MetadataSchemaTabComponent);
         component = fixture.componentInstance;

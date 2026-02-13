@@ -43,11 +43,9 @@ export const ALL_URLS_WITHOUT_HEADER: string[] = [
     selector: "app-root",
     templateUrl: "./app.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         RouterOutlet,
-
         //-----//
         AppHeaderComponent,
         ModalComponent,

@@ -10,7 +10,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SearchAdditionalButtonsComponent } from "./search-additional-buttons.component";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "../../modules/shared-test.module";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("SearchAdditionalButtonsComponent", () => {
     let component: SearchAdditionalButtonsComponent;
@@ -18,7 +19,8 @@ describe("SearchAdditionalButtonsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedTestModule, HttpClientTestingModule],
+            imports: [SharedTestModule],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         })
             .overrideComponent(SearchAdditionalButtonsComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

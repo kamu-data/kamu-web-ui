@@ -15,11 +15,9 @@ import { CopyToClipboardComponent } from "../../../../common/components/copy-to-
     templateUrl: "./data-access-sql-tab.component.html",
     styleUrls: ["./data-access-sql-tab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         //-----//
         MatIconModule,
-
         //-----//
         CopyToClipboardComponent,
     ],

@@ -26,6 +26,8 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 import {
     mockAccountDatasetFlowsPausedQuery,
     mockAccountFlowsAsCardsQuery,
+    mockAccountFlowsPrimaryCardsQuery,
+    mockAccountFlowsWebhookCardsQuery,
     mockAccountListDatasetsWithFlowsQuery,
     mockAccountListFlowsQuery,
     mockAccountPauseFlowsMutationError,
@@ -42,6 +44,7 @@ import {
 } from "../api/mock/account.mock";
 import { FlowsTableData } from "../dataset-flow/flows-table/flows-table.types";
 import { ChangeAccountUsernameResult } from "./settings/account-settings.constants";
+import { CardsStrategyResult } from "./additional-components/account-flows-tab/account-flows-tab.types";
 import { Apollo } from "apollo-angular";
 
 describe("AccountService", () => {
@@ -54,6 +57,13 @@ describe("AccountService", () => {
     const ACCOUNT_NAME = "accountName";
     const PAGE = 1;
     const PER_PAGE = 15;
+    const CARDS_PARAMS = {
+        accountName: ACCOUNT_NAME,
+        page: PAGE,
+        perPage: PER_PAGE,
+        filters: { effectiveStateIn: [] },
+        ordering: { direction: OrderingDirection.Asc, field: FlowProcessOrderField.EffectiveState },
+    };
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -303,23 +313,41 @@ describe("AccountService", () => {
         expect(subscription$.closed).toBeTrue();
     });
 
-    it("should check get all flow cards", () => {
+    it("should check get flows all cards", () => {
         spyOn(accountApi, "fetchAccountFlowsAsCards").and.returnValue(of(mockAccountFlowsAsCardsQuery));
 
-        const subscription$ = service
-            .getAccountFlowsAsCards({
-                accountName: ACCOUNT_NAME,
-                page: PAGE,
-                perPage: PER_PAGE,
-                filters: { effectiveStateIn: [] },
-                ordering: { direction: OrderingDirection.Asc, field: FlowProcessOrderField.EffectiveState },
-            })
-            .subscribe((result: AccountFlowProcessCardConnectionDataFragment) => {
-                expect(result).toEqual(
-                    mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
-                        .allCards as AccountFlowProcessCardConnectionDataFragment,
-                );
-            });
+        const subscription$ = service.getAccountAllCards(CARDS_PARAMS).subscribe((result: CardsStrategyResult) => {
+            expect(result.cards).toEqual(
+                mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
+                    .allCards as AccountFlowProcessCardConnectionDataFragment,
+            );
+        });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check get flows primary cards", () => {
+        spyOn(accountApi, "fetchAccountPrimaryCards").and.returnValue(of(mockAccountFlowsPrimaryCardsQuery));
+
+        const subscription$ = service.getAccountPrimaryCards(CARDS_PARAMS).subscribe((result: CardsStrategyResult) => {
+            expect(result.cards).toEqual(
+                mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
+                    .primaryCards as AccountFlowProcessCardConnectionDataFragment,
+            );
+        });
+
+        expect(subscription$.closed).toBeTrue();
+    });
+
+    it("should check get flows webhook cards", () => {
+        spyOn(accountApi, "fetchAccountWebhookCards").and.returnValue(of(mockAccountFlowsWebhookCardsQuery));
+
+        const subscription$ = service.getAccountWebhookCards(CARDS_PARAMS).subscribe((result: CardsStrategyResult) => {
+            expect(result.cards).toEqual(
+                mockAccountFlowsWebhookCardsQuery.accounts.byName?.flows.processes
+                    .webhookCards as AccountFlowProcessCardConnectionDataFragment,
+            );
+        });
 
         expect(subscription$.closed).toBeTrue();
     });

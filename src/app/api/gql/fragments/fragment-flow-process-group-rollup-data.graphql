@@ -1,0 +1,9 @@
+fragment FlowProcessGroupRollupData on FlowProcessGroupRollup {
+  total
+  active
+  failing
+  paused
+  stopped
+  unconfigured
+  worstConsecutiveFailures
+}

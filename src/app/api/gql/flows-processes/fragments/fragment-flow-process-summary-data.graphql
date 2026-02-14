@@ -15,4 +15,6 @@ fragment FlowProcessSummaryData on FlowProcessSummary {
   }
   autoStoppedReason
   autoStoppedAt
+  runningSince
+  pausedAt
 }

@@ -6,7 +6,10 @@
  */
 
 import { DatePipe } from "@angular/common";
-import { RangeLastAttempt } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import {
+    ProcessCardFilterMode,
+    RangeLastAttempt,
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 import {
     FlowProcessEffectiveState,
     FlowProcessSummary,
@@ -22,10 +25,13 @@ import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.typ
 export type FlowsSelectedCategory = "all" | "updates";
 export type WebhooksSelectedCategory = "webhooks";
 
-export interface WebhooksFiltersDescriptor {
+export interface RollupFiltersDescriptor {
     label: string;
     state: FlowProcessEffectiveState;
     valueKey: "active" | "failing" | "paused" | "stopped" | "unconfigured";
+    iconName?: string;
+    iconClass?: string;
+    allowedStates?: FlowProcessEffectiveState[];
 }
 
 export type FlowsCategoryUnion = FlowsSelectedCategory | WebhooksSelectedCategory;
@@ -55,26 +61,36 @@ export interface DatasetFlowsTabState {
     flowProcesses: DatasetFlowProcesses;
 }
 
-export const WebhooksFiltersOptions: WebhooksFiltersDescriptor[] = [
+export const RollupFiltersOptions: RollupFiltersDescriptor[] = [
     {
-        label: "active:",
+        label: "Active:",
         state: FlowProcessEffectiveState.Active,
         valueKey: "active",
+        iconName: "check_circle",
+        iconClass: "completed-status",
+        allowedStates: [],
     },
     {
-        label: "failing:",
+        label: "Failing:",
         state: FlowProcessEffectiveState.Failing,
         valueKey: "failing",
+        iconName: "warning",
+        iconClass: "enabled-failing-status",
+        allowedStates: [FlowProcessEffectiveState.Failing, FlowProcessEffectiveState.Active],
     },
     {
-        label: "paused:",
+        label: "Paused:",
         state: FlowProcessEffectiveState.PausedManual,
         valueKey: "paused",
+        iconName: "pause_circle",
+        iconClass: "pause-status",
     },
     {
-        label: "stopped:",
+        label: "Stopped:",
         state: FlowProcessEffectiveState.StoppedAuto,
         valueKey: "stopped",
+        iconName: "error",
+        iconClass: "stopped-status",
     },
 ];
 
@@ -118,7 +134,7 @@ export class DatasetFlowBadgeHelpers {
                 return {
                     containerClass: "stopped-container",
                     iconClass: "stopped-status",
-                    iconName: "warning",
+                    iconName: "error",
                 };
 
             /* istanbul ignore next */
@@ -149,7 +165,7 @@ export class DatasetFlowBadgeHelpers {
             case FlowProcessEffectiveState.PausedManual:
                 return {
                     message: `${isRoot ? "Ingest" : "Transform"} paused`,
-                    subMessage: "Reason: paused manually by user",
+                    subMessage: `Reason: paused manually by user at ${DatasetFlowBadgeHelpers.datePipe.transform(summary.pausedAt, AppValues.DISPLAY_TIME_FORMAT)}`,
                     additionalMessage: subMessagesPausedStateHelper(summary),
                 };
 
@@ -363,5 +379,32 @@ export function nextTimeRangeHelper(selectedRange: RangeLastAttempt): Date {
         /* istanbul ignore next */
         default:
             return new Date();
+    }
+}
+
+export function rollupAvailabilityMapper(mode: ProcessCardFilterMode, state: FlowProcessEffectiveState): boolean {
+    switch (mode) {
+        case ProcessCardFilterMode.RECENT_ACTIVITY:
+            return [
+                FlowProcessEffectiveState.Active,
+                FlowProcessEffectiveState.Failing,
+                FlowProcessEffectiveState.PausedManual,
+                FlowProcessEffectiveState.StoppedAuto,
+            ].includes(state);
+        case ProcessCardFilterMode.TRIAGE:
+            return [FlowProcessEffectiveState.Failing, FlowProcessEffectiveState.StoppedAuto].includes(state);
+        case ProcessCardFilterMode.PAUSED:
+            return false;
+        case ProcessCardFilterMode.UPCOMING_SCHEDULED:
+            return [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing].includes(state);
+        case ProcessCardFilterMode.CUSTOM:
+            return [
+                FlowProcessEffectiveState.Active,
+                FlowProcessEffectiveState.Failing,
+                FlowProcessEffectiveState.PausedManual,
+                FlowProcessEffectiveState.StoppedAuto,
+            ].includes(state);
+        default:
+            throw new Error("Unsupported process card view mode");
     }
 }

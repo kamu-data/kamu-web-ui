@@ -12,7 +12,9 @@ import {
     AccountFlowsAsCardsQuery,
     AccountListDatasetsWithFlowsQuery,
     AccountPauseFlowsMutation,
+    AccountPrimaryCardsQuery,
     AccountResumeFlowsMutation,
+    AccountWebhookCardsQuery,
     ChangeAccountUsernameMutation,
     ChangeAdminPasswordMutation,
     ChangeUserPasswordMutation,
@@ -22,6 +24,7 @@ import {
     DeleteAccountByNameMutation,
     FlowConnectionWidgetDataFragment,
     FlowProcessFilters,
+    FlowProcessGroupRollupDataFragment,
     FlowProcessOrdering,
 } from "../api/kamu.graphql.interface";
 import { AccountFlowFilters, AccountFragment, FlowConnectionDataFragment } from "../api/kamu.graphql.interface";
@@ -36,6 +39,7 @@ import { MaybeNull } from "src/app/interface/app.types";
 import { ToastrService } from "ngx-toastr";
 import { FlowsTableData } from "../dataset-flow/flows-table/flows-table.types";
 import { ChangeAccountUsernameResult } from "./settings/account-settings.constants";
+import { CardsStrategyResult } from "./additional-components/account-flows-tab/account-flows-tab.types";
 
 @Injectable({
     providedIn: "root",
@@ -108,16 +112,56 @@ export class AccountService {
         );
     }
 
-    public getAccountFlowsAsCards(params: {
+    public getAccountAllCards(params: {
         accountName: string;
         page: number;
         perPage: number;
         filters: FlowProcessFilters;
         ordering: FlowProcessOrdering;
-    }): Observable<AccountFlowProcessCardConnectionDataFragment> {
+    }): Observable<CardsStrategyResult> {
         return this.accountApi.fetchAccountFlowsAsCards(params).pipe(
             map((data: AccountFlowsAsCardsQuery) => {
-                return data.accounts.byName?.flows.processes.allCards as AccountFlowProcessCardConnectionDataFragment;
+                return {
+                    cards: data.accounts.byName?.flows.processes
+                        .allCards as AccountFlowProcessCardConnectionDataFragment,
+                    rollup: data.accounts.byName?.flows.processes.fullRollup as FlowProcessGroupRollupDataFragment,
+                };
+            }),
+        );
+    }
+
+    public getAccountPrimaryCards(params: {
+        accountName: string;
+        page: number;
+        perPage: number;
+        filters: FlowProcessFilters;
+        ordering: FlowProcessOrdering;
+    }): Observable<CardsStrategyResult> {
+        return this.accountApi.fetchAccountPrimaryCards(params).pipe(
+            map((data: AccountPrimaryCardsQuery) => {
+                return {
+                    cards: data.accounts.byName?.flows.processes
+                        .primaryCards as AccountFlowProcessCardConnectionDataFragment,
+                    rollup: data.accounts.byName?.flows.processes.primaryRollup as FlowProcessGroupRollupDataFragment,
+                };
+            }),
+        );
+    }
+
+    public getAccountWebhookCards(params: {
+        accountName: string;
+        page: number;
+        perPage: number;
+        filters: FlowProcessFilters;
+        ordering: FlowProcessOrdering;
+    }): Observable<CardsStrategyResult> {
+        return this.accountApi.fetchAccountWebhookCards(params).pipe(
+            map((data: AccountWebhookCardsQuery) => {
+                return {
+                    cards: data.accounts.byName?.flows.processes
+                        .webhookCards as AccountFlowProcessCardConnectionDataFragment,
+                    rollup: data.accounts.byName?.flows.processes.webhookRollup as FlowProcessGroupRollupDataFragment,
+                };
             }),
         );
     }

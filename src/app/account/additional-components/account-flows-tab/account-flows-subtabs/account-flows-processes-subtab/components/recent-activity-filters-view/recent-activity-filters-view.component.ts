@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { DateTimeAdapter, OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
@@ -13,15 +13,13 @@ import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/a
 import { MY_MOMENT_FORMATS } from "src/app/common/helpers/data.helpers";
 import {
     DashboardFiltersOptions,
-    FLOW_PROCESS_STATE_LIST,
     RANGE_LAST_ATTEMPT_LIST,
     RangeLastAttemptOption,
 } from "../../../../account-flows-tab.types";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { lastTimeRangeHelper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { OrderingDirection } from "src/app/api/kamu.graphql.interface";
-import { FlowProcessStatusListComponent } from "../common/flow-process-status-list/flow-process-status-list.component";
+import { FlowProcessEffectiveState, OrderingDirection } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-recent-activity-filters-view",
@@ -38,21 +36,30 @@ import { FlowProcessStatusListComponent } from "../common/flow-process-status-li
         NgSelectModule,
         OwlDateTimeModule,
         OwlMomentDateTimeModule,
-        //-----//
-        FlowProcessStatusListComponent,
     ],
     templateUrl: "./recent-activity-filters-view.component.html",
     styleUrls: ["./recent-activity-filters-view.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecentActivityFiltersViewComponent implements OnInit {
-    public ngOnInit(): void {
-        this.dashboardFilters.isFirstInitialization = true;
-    }
     @Input({ required: true }) public dashboardFilters: DashboardFiltersOptions;
+    @Output() public applyFilterEmitter = new EventEmitter<void>();
 
     public readonly RANGE_LAST_ATTEMPT_LIST = RANGE_LAST_ATTEMPT_LIST;
-    public readonly FLOW_PROCESS_STATE_LIST = FLOW_PROCESS_STATE_LIST;
+
+    public ngOnInit(): void {
+        this.dashboardFilters.isFirstInitialization = true;
+        this.dashboardFilters.selectedFlowProcessStates = [
+            FlowProcessEffectiveState.Active,
+            FlowProcessEffectiveState.Failing,
+            FlowProcessEffectiveState.PausedManual,
+            FlowProcessEffectiveState.StoppedAuto,
+        ];
+    }
+
+    public onDirectionToggle(): void {
+        this.applyFilterEmitter.next();
+    }
 
     public get currentDateTime(): string {
         return new Date().toISOString();
@@ -64,6 +71,7 @@ export class RecentActivityFiltersViewComponent implements OnInit {
 
     public onChangeLastAttemptFilter(): void {
         this.dashboardFilters.selectedQuickRangeLastAttempt = undefined;
+        this.applyFilterEmitter.next();
     }
 
     public clearFromControl(): void {
@@ -80,5 +88,6 @@ export class RecentActivityFiltersViewComponent implements OnInit {
     public onQuickRangeLastAttempt(e: RangeLastAttemptOption): void {
         this.dashboardFilters.fromFilterDate = lastTimeRangeHelper(e.value);
         this.dashboardFilters.toFilterDate = new Date();
+        this.applyFilterEmitter.next();
     }
 }

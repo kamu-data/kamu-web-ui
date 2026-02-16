@@ -1783,6 +1783,7 @@ export const mockFlowProcessSummaryDataFragment: FlowProcessSummaryDataFragment 
     },
     autoStoppedReason: null,
     autoStoppedAt: null,
+    pausedAt: "2025-10-13T16:53:08.689881136+00:00",
     __typename: "FlowProcessSummary",
 };
 

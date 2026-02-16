@@ -74,6 +74,11 @@ describe("Flows badge styles helper", () => {
 });
 
 describe("Flows badge messages helper", () => {
+    beforeAll(() => {
+        const FROZEN_TIME = new Date("2025-12-02 12:00:00");
+        timekeeper.freeze(FROZEN_TIME);
+    });
+
     [
         {
             case: {
@@ -203,7 +208,7 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Ingest paused",
-                subMessage: "Reason: paused manually by user",
+                subMessage: "Reason: paused manually by user at 2025-10-13, 7:53:08 PM",
                 additionalMessage: "Last success at: 2025-10-13, 7:53:08 PM",
             },
         },
@@ -217,7 +222,7 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Transform paused",
-                subMessage: "Reason: paused manually by user",
+                subMessage: "Reason: paused manually by user at 2025-10-13, 7:53:08 PM",
                 additionalMessage: "Last success at: 2025-10-13, 7:53:08 PM",
             },
         },

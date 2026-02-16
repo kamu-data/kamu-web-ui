@@ -29,7 +29,8 @@
               "siwe"
             ],
             "outputPath": {
-              "base": "dist/kamu-platform"
+              "base": "dist/kamu-platform",
+              "browser": ""
             },
             "index": "src/index.html",
             "polyfills": ["src/polyfills.ts"],

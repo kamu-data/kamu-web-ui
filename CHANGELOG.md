@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.62.1] - 2026-02-16
+### Fixed
+- Hotfix: proper bundler output configuration to keep `dist/kamu-platform` the valid path
+
+## [0.62.0] - 2026-02-14
 ### Changed
 - Changed the display of schemas for the "Data" tab and "Query" page 
 - SetTransform event: replaced the list of columns and types with a table 

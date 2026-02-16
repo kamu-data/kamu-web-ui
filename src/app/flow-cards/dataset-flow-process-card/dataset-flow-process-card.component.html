@@ -2,7 +2,14 @@
     <div class="header" [ngClass]="badgeStyles(summary.effectiveState).containerClass"></div>
     <div class="card-body my-2 p-4">
         <div class="d-flex fs-12 align-items-center justify-content-between">
-            <span class="label label--secondary v-align-middle dataset">Dataset</span>
+            <div>
+                <span class="label label--secondary v-align-middle dataset">Dataset</span>
+                <img *ngIf="summary.runningSince" [src]="'assets/images/gear.gif'" class="dynamic-icon ms-2" />
+                <span class="ms-1 fs-12 text-muted" *ngIf="summary.runningSince">{{
+                    durationProcessRunning(summary.runningSince)
+                }}</span>
+            </div>
+
             <a
                 *ngIf="showFlowsHistoryLink"
                 [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name, DatasetViewTypeEnum.Flows]"

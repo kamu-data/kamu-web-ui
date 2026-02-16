@@ -152,17 +152,13 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
         this.accountFlowsCardsData$ = triggerWithInitial$.pipe(
             switchMap(() => polling$),
             switchMap(() => this.setCardsStrategy(this.flowsMode)),
+
             tap((data: CardsStrategyResult) => {
                 this.activeRollup = data.rollup;
                 const newChunkCards = data.cards.nodes as AccountFlowProcessCard[];
                 this.hasNextPage = data.cards.pageInfo.hasNextPage;
+                this.processesCards = [...newChunkCards];
 
-                if (this.loadingCardsSubject$.getValue()) {
-                    this.processesCards = [...this.processesCards, ...newChunkCards];
-                }
-                if (this.toggleCardStateSubject$.getValue()) {
-                    this.processesCards = newChunkCards;
-                }
                 this.loadingCardsSubject$.next(false);
                 this.toggleCardStateSubject$.next(false);
             }),
@@ -179,7 +175,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
         if (this.loadingCardsSubject$.getValue() || !this.hasNextPage) {
             return;
         }
-        this.processesPerPage = AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE;
+        this.processesPerPage = this.processesCards.length + AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE;
         this.refreshNow();
     }
 
@@ -321,9 +317,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
     private setCardsStrategy(group: ProcessCardGroup): Observable<CardsStrategyResult> {
         const params = {
             accountName: this.accountName,
-            page: this.toggleCardStateSubject$.getValue()
-                ? 0
-                : Math.ceil(this.processesCards.length / AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE),
+            page: 0,
             perPage: this.processesPerPage,
             filters: this.setFlowProcessFilters(this.accountFlowsData.datasetsFiltersMode),
             ordering: {

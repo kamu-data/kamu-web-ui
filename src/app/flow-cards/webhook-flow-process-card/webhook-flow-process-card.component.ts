@@ -24,6 +24,7 @@ import {
     webhooksStateMapper,
 } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DataHelpers } from "src/app/common/helpers/data.helpers";
 
 @Component({
     selector: "app-webhook-flow-process-card",
@@ -69,6 +70,10 @@ export class WebhookFlowProcessCardComponent {
 
     public flowProcessEffectiveStateMapper(state: FlowProcessEffectiveState): string {
         return webhooksStateMapper[state];
+    }
+
+    public durationProcessRunning(startProcessTime: string): string {
+        return DataHelpers.durationTask(startProcessTime, new Date().toISOString());
     }
 
     public toggleWebhookCardState(

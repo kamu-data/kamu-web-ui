@@ -18,13 +18,12 @@ import { ModalService } from "@common/components/modal/modal.service";
 import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import { AccountSettingsTabs, TokenCreateStep } from "src/app/account/settings/account-settings.constants";
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
+import { AccessTokensTabComponent } from "src/app/account/settings/tabs/access-tokens-tab/access-tokens-tab.component";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
-import { AccessTokensTabComponent } from "./access-tokens-tab.component";
 
 describe("AccessTokensTabComponent", () => {
     let component: AccessTokensTabComponent;

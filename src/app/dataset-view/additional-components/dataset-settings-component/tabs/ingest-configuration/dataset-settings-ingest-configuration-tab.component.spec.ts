@@ -9,19 +9,18 @@ import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { FlowRetryBackoffType, TimeUnit } from "@api/kamu.graphql.interface";
 import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
-import { FlowRetryBackoffType, TimeUnit } from "@api/kamu.graphql.interface";
+import { DatasetFlowConfigService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-config.service";
+import { DatasetSettingsIngestConfigurationTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.component";
+import { FlowRetryPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/flow-retry-policy-form/flow-retry-policy-form.component";
+import { FlowRetryPolicyFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/flow-retry-policy-form/flow-retry-policy-form.harness";
+import { IngestConfigurationRuleFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/ingest-configuration-rule-form/ingest-configuration-rule-form.harness";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-
-import { DatasetFlowConfigService } from "../../services/dataset-flow-config.service";
-import { DatasetSettingsIngestConfigurationTabComponent } from "./dataset-settings-ingest-configuration-tab.component";
-import { FlowRetryPolicyFormComponent } from "./flow-retry-policy-form/flow-retry-policy-form.component";
-import { FlowRetryPolicyFormHarness } from "./flow-retry-policy-form/flow-retry-policy-form.harness";
-import { IngestConfigurationRuleFormHarness } from "./ingest-configuration-rule-form/ingest-configuration-rule-form.harness";
 
 describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     let component: DatasetSettingsIngestConfigurationTabComponent;

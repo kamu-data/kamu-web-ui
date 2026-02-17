@@ -25,11 +25,10 @@ import { LinkPropertyComponent } from "src/app/dataset-block/metadata-block/comp
 import { OrderPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/order-property/order-property.component";
 import { StepTypePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/step-type-property/step-type-property.component";
 import { TopicsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/topics-property/topics-property.component";
+import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { SourceEventCommonDataComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/common/source-event-common-data/source-event-common-data.component";
 import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { MetadataTabData } from "../../metadata.constants";
-import { SourceEventCommonDataComponent } from "../common/source-event-common-data/source-event-common-data.component";
 
 @Component({
     selector: "app-metadata-polling-source-tab",

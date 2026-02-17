@@ -17,16 +17,21 @@ import { BaseComponent } from "@common/components/base.component";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
+import {
+    BatchingRuleType,
+    FlowTriggerStopPolicyType,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
+import { FlowStopPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.component";
+import { FlowStopPolicyFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.types";
+import { DatasetSettingsTransformOptionsTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.data";
+import {
+    TransformSettingsFormType,
+    TransformSettingsFormValue,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.types";
+import { TransformTriggerFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.component";
+import { TransformTriggerFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.types";
 import { MaybeNull } from "src/app/interface/app.types";
-
-import { BatchingRuleType, FlowTriggerStopPolicyType } from "../../dataset-settings.model";
-import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
-import { FlowStopPolicyFormComponent } from "../shared/flow-stop-policy-form/flow-stop-policy-form.component";
-import { FlowStopPolicyFormValue } from "../shared/flow-stop-policy-form/flow-stop-policy-form.types";
-import { DatasetSettingsTransformOptionsTabData } from "./dataset-settings-transform-options-tab.data";
-import { TransformSettingsFormType, TransformSettingsFormValue } from "./dataset-settings-transform-options-tab.types";
-import { TransformTriggerFormComponent } from "./transform-trigger-form/transform-trigger-form.component";
-import { TransformTriggerFormValue } from "./transform-trigger-form/transform-trigger-form.types";
 
 @Component({
     selector: "app-dataset-settings-transform-options-tab",

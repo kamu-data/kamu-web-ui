@@ -16,11 +16,10 @@ import { TimeDeltaFormValue } from "@common/components/time-delta-form/time-delt
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-
-import { BatchingRuleType } from "../../../dataset-settings.model";
-import { TransformTriggerFormComponent } from "./transform-trigger-form.component";
-import { TransformTriggerFormHarness } from "./transform-trigger-form.harness";
-import { TransformTriggerFormValue } from "./transform-trigger-form.types";
+import { BatchingRuleType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { TransformTriggerFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.component";
+import { TransformTriggerFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.harness";
+import { TransformTriggerFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.types";
 
 @Component({
     imports: [

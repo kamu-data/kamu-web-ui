@@ -9,11 +9,6 @@ import { inject, Injectable } from "@angular/core";
 
 import { first, map, Observable } from "rxjs";
 
-import { ApolloLink, ObservableQuery } from "@apollo/client/core";
-import { onlyCompleteData } from "apollo-angular";
-import { MaybeNull } from "src/app/interface/app.types";
-
-import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 import {
     CancelFlowRunGQL,
     CancelFlowRunMutation,
@@ -59,7 +54,11 @@ import {
     SetDatasetFlowTriggerMutation,
     SetIngestFlowConfigGQL,
     SetIngestFlowConfigMutation,
-} from "./kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
+import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
+import { onlyCompleteData } from "apollo-angular";
+import { MaybeNull } from "src/app/interface/app.types";
 
 @Injectable({ providedIn: "root" })
 export class DatasetFlowApi {

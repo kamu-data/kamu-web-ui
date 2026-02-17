@@ -11,6 +11,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
+import { mockAccountDetails, mockAccountDetailsWithEmail } from "@api/mock/auth.mock";
 import {
     findElementByDataTestId,
     getElementByDataTestId,
@@ -19,12 +20,10 @@ import {
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
+import { AccountSettingsComponent } from "src/app/account/settings/account-settings.component";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
-
-import { mockAccountDetails, mockAccountDetailsWithEmail } from "../../api/mock/auth.mock";
-import { LoggedUserService } from "../../auth/logged-user.service";
-import { LoginService } from "../../auth/login/login.service";
-import { AccountSettingsComponent } from "./account-settings.component";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { LoginService } from "src/app/auth/login/login.service";
 
 describe("AccountSettingsComponent", () => {
     let component: AccountSettingsComponent;

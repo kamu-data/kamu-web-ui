@@ -12,9 +12,8 @@ import {
     CronExpressionFormValue,
 } from "@common/components/cron-expression-form/cron-expression-form.value";
 import { TimeDeltaFormType, TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
+import { ScheduleType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { MaybeNull } from "src/app/interface/app.types";
-
-import { ScheduleType } from "../../../dataset-settings.model";
 
 export interface IngestTriggerFormType {
     __typename: FormControl<MaybeNull<ScheduleType>>;

@@ -11,14 +11,13 @@ import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
 
 import { AccountBasicsFragment, AccountProvider, MetadataBlockFragment } from "@api/kamu.graphql.interface";
+import { DisplayHashComponent } from "@common/components/display-hash/display-hash.component";
+import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
 import { DataHelpers } from "@common/helpers/data.helpers";
 import AppValues from "@common/values/app.values";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { MaybeUndefined } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";
-
-import { DisplayHashComponent } from "../../../../../common/components/display-hash/display-hash.component";
-import { DisplayTimeComponent } from "../../../../../common/components/display-time/display-time.component";
 
 @Component({
     selector: "app-overview-history-summary-header",

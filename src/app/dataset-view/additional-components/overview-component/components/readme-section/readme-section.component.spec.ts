@@ -22,11 +22,10 @@ import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { MarkdownModule } from "ngx-markdown";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { ReadmeSectionComponent } from "src/app/dataset-view/additional-components/overview-component/components/readme-section/readme-section.component";
+import { EditMode } from "src/app/dataset-view/additional-components/overview-component/components/readme-section/readme-section.types";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
-
-import { DatasetCommitService } from "../../services/dataset-commit.service";
-import { ReadmeSectionComponent } from "./readme-section.component";
-import { EditMode } from "./readme-section.types";
 
 describe("ReadmeSectionComponent", () => {
     let component: ReadmeSectionComponent;

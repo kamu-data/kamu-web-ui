@@ -18,20 +18,19 @@ import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 
 import { AccessTokenConnection, CreatedAccessToken, PageBasedInfo, ViewAccessToken } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
+import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
 import { ModalService } from "@common/components/modal/modal.service";
+import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
+import { AccountSettingsTabs, TokenCreateStep } from "src/app/account/settings/account-settings.constants";
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
+import { CreateTokenFormType } from "src/app/account/settings/tabs/access-tokens-tab/access-tokens-tab.types";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { MaybeNull } from "src/app/interface/app.types";
-
-import { CopyToClipboardComponent } from "../../../../common/components/copy-to-clipboard/copy-to-clipboard.component";
-import { PaginationComponent } from "../../../../common/components/pagination-component/pagination.component";
-import { FormValidationErrorsDirective } from "../../../../common/directives/form-validation-errors.directive";
-import { NavigationService } from "../../../../services/navigation.service";
-import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
-import { CreateTokenFormType } from "./access-tokens-tab.types";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-access-tokens-tab",

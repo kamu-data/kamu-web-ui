@@ -6,15 +6,17 @@
  */
 
 import {
+    DynamicTableColumnClassEnum,
+    DynamicTableDataRow,
+} from "@common/components/dynamic-table/dynamic-table.interface";
+import { removeAllLineBreaks } from "@common/helpers/app.helpers";
+import {
     DataSchemaField,
     DataSchemaTypeField,
     DatasetSchema,
     OdfExtraAttributes,
     OdfTypes,
 } from "src/app/interface/dataset-schema.interface";
-
-import { DynamicTableColumnClassEnum, DynamicTableDataRow } from "../components/dynamic-table/dynamic-table.interface";
-import { removeAllLineBreaks } from "./app.helpers";
 
 export function parseSchemaFromJson(schemaContent: string): DatasetSchema {
     return JSON.parse(removeAllLineBreaks(schemaContent)) as DatasetSchema;

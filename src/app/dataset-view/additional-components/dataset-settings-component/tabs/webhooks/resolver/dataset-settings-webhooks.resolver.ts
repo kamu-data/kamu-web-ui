@@ -12,15 +12,14 @@ import { combineLatest, map, switchMap } from "rxjs";
 
 import { DatasetMetadata, WebhookSubscription } from "@api/kamu.graphql.interface";
 import { AppConfigService } from "src/app/app-config.service";
+import { isSettingsTabAccessibleHelper } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.helpers";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { DatasetSettingsWebhookTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
+import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { isSettingsTabAccessibleHelper } from "../../../dataset-settings.helpers";
-import { SettingsTabsEnum } from "../../../dataset-settings.model";
-import { DatasetSettingsWebhookTabData } from "../dataset-settings-webhooks-tab.component.types";
-import { DatasetWebhooksService } from "../service/dataset-webhooks.service";
 
 export const datasetSettingsWebhooksResolverFn: ResolveFn<DatasetSettingsWebhookTabData | null> = (
     route: ActivatedRouteSnapshot,

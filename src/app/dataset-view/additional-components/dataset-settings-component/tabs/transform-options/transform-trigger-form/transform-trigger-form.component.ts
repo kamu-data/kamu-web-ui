@@ -13,18 +13,17 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 import { FlowTriggerBreakingChangeRule, FlowTriggerRuleInput } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
-import { MaybeNull } from "src/app/interface/app.types";
-
-import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
-import { BatchingRuleType } from "../../../dataset-settings.model";
-import { BufferingBatchingRuleFormComponent } from "../buffering-batching-rule-form/buffering-batching-rule-form.component";
-import { BufferingBatchingRuleFormType } from "../buffering-batching-rule-form/buffering-batching-rule-form.types";
+import { BatchingRuleType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { BufferingBatchingRuleFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/buffering-batching-rule-form/buffering-batching-rule-form.component";
+import { BufferingBatchingRuleFormType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/buffering-batching-rule-form/buffering-batching-rule-form.types";
 import {
     BatchingRuleFormType,
     TransformTriggerFormType,
     TransformTriggerFormValue,
-} from "./transform-trigger-form.types";
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.types";
+import { MaybeNull } from "src/app/interface/app.types";
 
 @Component({
     selector: "app-transform-trigger-form",

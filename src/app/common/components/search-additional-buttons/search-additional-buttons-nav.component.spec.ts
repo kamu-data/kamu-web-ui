@@ -10,11 +10,10 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { SearchAdditionalButtonsNavComponent } from "@common/components/search-additional-buttons/search-additional-buttons-nav.component";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 import { SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS } from "src/app/dataset-view/dataset-view-header/dataset-view-header.model";
-
-import { SharedTestModule } from "../../modules/shared-test.module";
-import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons-nav.component";
 
 describe("SearchAdditionalButtonsNavComponent", () => {
     let component: SearchAdditionalButtonsNavComponent;

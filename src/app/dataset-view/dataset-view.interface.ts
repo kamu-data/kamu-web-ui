@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
-import { OverviewUpdate } from "./dataset.subscriptions.interface";
+import { DatasetBasicsFragment, DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
+import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 
 export enum DatasetViewTypeEnum {
     Overview = "overview",

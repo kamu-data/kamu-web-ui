@@ -15,14 +15,7 @@ import {
 import { TEST_AVATAR_URL } from "@api/mock/auth.mock";
 import { DynamicTableColumnClassEnum } from "@common/components/dynamic-table/dynamic-table.interface";
 import { Node } from "@swimlane/ngx-graph";
-import { OdfTypes } from "src/app/interface/dataset-schema.interface";
-import {
-    mockDatasetBasicsDerivedFragment,
-    mockMetadataCurrentLicense,
-    mockOwnerFieldsWithAvatar,
-    mockPublicDatasetVisibility,
-} from "src/app/search/mock.data";
-
+import { LineageNodeAccess } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 import {
     DatasetHistoryUpdate,
     DataSqlErrorUpdate,
@@ -30,8 +23,14 @@ import {
     LineageUpdate,
     MetadataSchemaUpdate,
     OverviewUpdate,
-} from "../dataset.subscriptions.interface";
-import { LineageNodeAccess } from "./lineage-component/lineage-model";
+} from "src/app/dataset-view/dataset.subscriptions.interface";
+import { OdfTypes } from "src/app/interface/dataset-schema.interface";
+import {
+    mockDatasetBasicsDerivedFragment,
+    mockMetadataCurrentLicense,
+    mockOwnerFieldsWithAvatar,
+    mockPublicDatasetVisibility,
+} from "src/app/search/mock.data";
 
 export const mockDataUpdate: DataUpdate = {
     schema: {

@@ -14,13 +14,12 @@ import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import { AddWebhookComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/add-webhook/add-webhook.component";
+import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
+import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 import { WebhooksService } from "src/app/services/webhooks.service";
-
-import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
-import { WebhookFormComponent } from "../common/webhook-form/webhook-form.component";
-import { AddWebhookComponent } from "./add-webhook.component";
 
 describe("AddWebhookComponent", () => {
     let component: AddWebhookComponent;

@@ -10,11 +10,11 @@ import { FormControl, FormGroup } from "@angular/forms";
 import {
     FlowStopPolicyFormType,
     FlowStopPolicyFormValue,
-} from "../shared/flow-stop-policy-form/flow-stop-policy-form.types";
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.types";
 import {
     TransformTriggerFormType,
     TransformTriggerFormValue,
-} from "./transform-trigger-form/transform-trigger-form.types";
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.types";
 
 export interface TransformSettingsFormType {
     updatesEnabled: FormControl<boolean>;

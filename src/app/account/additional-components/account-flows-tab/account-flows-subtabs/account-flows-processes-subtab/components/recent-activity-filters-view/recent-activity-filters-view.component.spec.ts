@@ -8,9 +8,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
-
-import { RangeLastAttempt } from "../../../../account-flows-tab.types";
-import { RecentActivityFiltersViewComponent } from "./recent-activity-filters-view.component";
+import { RecentActivityFiltersViewComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/components/recent-activity-filters-view/recent-activity-filters-view.component";
+import { RangeLastAttempt } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 
 describe("RecentActivityFiltersViewComponent", () => {
     let component: RecentActivityFiltersViewComponent;

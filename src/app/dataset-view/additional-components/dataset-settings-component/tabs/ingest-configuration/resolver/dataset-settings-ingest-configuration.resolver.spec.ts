@@ -20,6 +20,10 @@ import { mockIngestGetDatasetFlowConfigsSuccess } from "@api/mock/dataset-flow.m
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { DatasetFlowConfigService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-config.service";
+import { DatasetSettingsIngestConfigurationTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.data";
+import { datasetSettingsIngestConfigurationResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/resolver/dataset-settings-ingest-configuration.resolver";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
@@ -28,11 +32,6 @@ import {
     mockReadonlyDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { SettingsTabsEnum } from "../../../dataset-settings.model";
-import { DatasetFlowConfigService } from "../../../services/dataset-flow-config.service";
-import { DatasetSettingsIngestConfigurationTabData } from "../dataset-settings-ingest-configuration-tab.data";
-import { datasetSettingsIngestConfigurationResolverFn } from "./dataset-settings-ingest-configuration.resolver";
 
 describe("datasetSettingsIngestConfigurationResolverFn", () => {
     const mockActivatedRouteSnapshot = new ActivatedRouteSnapshot();

@@ -31,14 +31,13 @@ import {
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { AppConfigService } from "src/app/app-config.service";
+import { LoginMethodsService } from "src/app/auth/login-methods.service";
+import { LoginComponent } from "src/app/auth/login/login.component";
+import { LoginPageQueryParams } from "src/app/auth/login/login.component.model";
+import { LoginService } from "src/app/auth/login/login.service";
 import ProjectLinks from "src/app/project-links";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { LoginMethodsService } from "../login-methods.service";
-import { LoginComponent } from "./login.component";
-import { LoginPageQueryParams } from "./login.component.model";
-import { LoginService } from "./login.service";
 
 describe("LoginComponent", () => {
     let component: LoginComponent;

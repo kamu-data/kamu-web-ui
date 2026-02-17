@@ -8,7 +8,7 @@
 import { NgClass } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import { TooltipIconComponent } from "../tooltip-icon/tooltip-icon.component";
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 
 @Component({
     selector: "app-block-row-data",

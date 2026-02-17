@@ -14,9 +14,8 @@ import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-
-import { mockAddData } from "../../mock.events";
-import { AddDataEventComponent } from "./add-data-event.component";
+import { AddDataEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/add-data-event/add-data-event.component";
+import { mockAddData } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
 describe("AddDataEventComponent", () => {
     let component: AddDataEventComponent;

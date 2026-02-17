@@ -14,19 +14,18 @@ import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/ba
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
+import {
+    mockMetadataDerivedUpdate,
+    mockOverviewDataUpdate,
+    mockOverviewDataUpdateNullable,
+} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { MetadataLicenseTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-license-tab/metadata-license-tab.component";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import {
     mockDatasetBasicsDerivedFragment,
     mockFullPowerDatasetPermissionsFragment,
     mockMetadataCurrentLicense,
 } from "src/app/search/mock.data";
-
-import {
-    mockMetadataDerivedUpdate,
-    mockOverviewDataUpdate,
-    mockOverviewDataUpdateNullable,
-} from "../../../data-tabs.mock";
-import { MetadataLicenseTabComponent } from "./metadata-license-tab.component";
 
 describe("MetadataLicenseTabComponent", () => {
     let component: MetadataLicenseTabComponent;

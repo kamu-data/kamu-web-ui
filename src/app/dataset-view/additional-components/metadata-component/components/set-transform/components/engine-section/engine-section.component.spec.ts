@@ -15,10 +15,9 @@ import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { Apollo } from "apollo-angular";
 import { mockSetPollingSourceEvent } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
+import { EngineSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine-section.component";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
-
-import { mockEngines } from "../../mock.data";
-import { EngineSectionComponent } from "./engine-section.component";
+import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 
 describe("EngineSectionComponent", () => {
     let component: EngineSectionComponent;

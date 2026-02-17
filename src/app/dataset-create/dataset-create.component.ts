@@ -16,17 +16,20 @@ import { Observable } from "rxjs";
 
 import { AccountProvider, DatasetKind, DatasetVisibility } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import AppValues from "@common/values/app.values";
 import { NgSelectModule } from "@ng-select/ng-select";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { LoginMethodsService } from "src/app/auth/login-methods.service";
+import { DatasetCreateService } from "src/app/dataset-create/dataset-create.service";
+import {
+    CreateDatasetFormType,
+    SelectStorageItemType,
+    STORAGE_LIST,
+} from "src/app/dataset-create/dataset-create.types";
+import { YamlEditorComponent } from "src/app/editor/components/yaml-editor/yaml-editor.component";
+import { EditorModule } from "src/app/editor/editor.module";
 import { MaybeNull } from "src/app/interface/app.types";
-
-import { LoggedUserService } from "../auth/logged-user.service";
-import { LoginMethodsService } from "../auth/login-methods.service";
-import { FormValidationErrorsDirective } from "../common/directives/form-validation-errors.directive";
-import AppValues from "../common/values/app.values";
-import { YamlEditorComponent } from "../editor/components/yaml-editor/yaml-editor.component";
-import { EditorModule } from "../editor/editor.module";
-import { DatasetCreateService } from "./dataset-create.service";
-import { CreateDatasetFormType, SelectStorageItemType, STORAGE_LIST } from "./dataset-create.types";
 
 @Component({
     selector: "app-dataset-create",

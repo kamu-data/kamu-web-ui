@@ -21,11 +21,10 @@ import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-ta
 import { isEqual } from "@common/helpers/app.helpers";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
-
-import { DatasetCommitService } from "../../services/dataset-commit.service";
 
 @Component({
     selector: "app-details-modal",

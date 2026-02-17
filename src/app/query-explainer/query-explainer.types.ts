@@ -8,9 +8,8 @@
 import { HttpHeaders } from "@angular/common/http";
 
 import { DataSchemaFormat, QueryDialect } from "@api/kamu.graphql.interface";
+import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
 import { UploadPrepareResponse } from "src/app/interface/ingest-via-file-upload.types";
-
-import { DynamicTableDataRow } from "../common/components/dynamic-table/dynamic-table.interface";
 
 export enum QueryExplainerDataFormat {
     JsonAoS = "JsonAoS",

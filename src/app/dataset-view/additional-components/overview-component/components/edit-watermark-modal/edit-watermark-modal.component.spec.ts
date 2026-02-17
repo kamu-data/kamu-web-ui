@@ -21,11 +21,10 @@ import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { EditWatermarkModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import timekeeper from "timekeeper";
-
-import { DatasetCommitService } from "../../services/dataset-commit.service";
-import { EditWatermarkModalComponent } from "./edit-watermark-modal.component";
 
 describe("EditWatermarkModalComponent", () => {
     let component: EditWatermarkModalComponent;

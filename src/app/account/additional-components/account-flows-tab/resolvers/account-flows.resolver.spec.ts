@@ -9,10 +9,15 @@ import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
 import { FlowStatus } from "@api/kamu.graphql.interface";
+import {
+    AccountFlowsNav,
+    ProcessCardFilterMode,
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import {
+    accountFlowsResolverFn,
+    AccountFlowsType,
+} from "src/app/account/additional-components/account-flows-tab/resolvers/account-flows.resolver";
 import ProjectLinks from "src/app/project-links";
-
-import { AccountFlowsNav, ProcessCardFilterMode } from "../account-flows-tab.types";
-import { accountFlowsResolverFn, AccountFlowsType } from "./account-flows.resolver";
 
 describe("accountFlowsResolverFn", () => {
     const executeResolver: ResolveFn<AccountFlowsType> = (...resolverParameters) =>

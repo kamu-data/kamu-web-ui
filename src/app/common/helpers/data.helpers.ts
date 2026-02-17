@@ -8,19 +8,21 @@
 import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { ActivatedRouteSnapshot } from "@angular/router";
 
+import { DataQueryResultSuccessViewFragment, MetadataBlockFragment, TimeUnit } from "@api/kamu.graphql.interface";
 import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
+import {
+    DynamicTableColumnClassEnum,
+    DynamicTableDataRow,
+} from "@common/components/dynamic-table/dynamic-table.interface";
+import { convertSecondsToHumanReadableFormat } from "@common/helpers/app.helpers";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { differenceInSeconds } from "date-fns";
 import { Network } from "ethers";
+import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
+import { SliceUnit } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 import { SubscribedEventType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
+import { JsonFormValidators } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { MaybeUndefined } from "src/app/interface/app.types";
-
-import { DataQueryResultSuccessViewFragment, MetadataBlockFragment, TimeUnit } from "../../api/kamu.graphql.interface";
-import { EventPropertyLogo } from "../../dataset-block/metadata-block/components/event-details/supported.events";
-import { SliceUnit } from "../../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
-import { JsonFormValidators } from "../../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
-import { DynamicTableColumnClassEnum, DynamicTableDataRow } from "../components/dynamic-table/dynamic-table.interface";
-import { convertSecondsToHumanReadableFormat } from "./app.helpers";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";

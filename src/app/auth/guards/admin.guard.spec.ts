@@ -8,9 +8,8 @@
 import { TestBed } from "@angular/core/testing";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
-
-import { LoggedUserService } from "../logged-user.service";
-import { AdminGuard } from "./admin.guard";
+import { AdminGuard } from "src/app/auth/guards/admin.guard";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 describe("AdminGuard", () => {
     let guard: AdminGuard;

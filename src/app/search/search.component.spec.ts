@@ -9,16 +9,15 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 
 import { of } from "rxjs";
 
+import { mockSearchOverviewResponse } from "@api/mock/search.mock";
+import { SearchApi } from "@api/search.api";
+import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
-
-import { mockSearchOverviewResponse } from "../api/mock/search.mock";
-import { SearchApi } from "../api/search.api";
-import { findElementByDataTestId } from "../common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "../common/modules/shared-test.module";
-import { NavigationService } from "../services/navigation.service";
-import { mockDatasetSearchResult } from "./mock.data";
-import { SearchComponent } from "./search.component";
-import { SearchService } from "./search.service";
+import { mockDatasetSearchResult } from "src/app/search/mock.data";
+import { SearchComponent } from "src/app/search/search.component";
+import { SearchService } from "src/app/search/search.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("SearchComponent", () => {
     let component: SearchComponent;

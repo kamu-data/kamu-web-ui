@@ -16,11 +16,10 @@ import {
     OrderingDirection,
 } from "@api/kamu.graphql.interface";
 import { stripSecondsFromDateToISOString } from "@common/helpers/data.helpers";
-
 import {
     DashboardFiltersOptions,
     ProcessCardFilterMode,
-} from "../additional-components/account-flows-tab/account-flows-tab.types";
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 
 @Injectable({
     providedIn: "root",

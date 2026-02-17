@@ -15,21 +15,20 @@ import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import {
-    mockDatasetBasicsDerivedFragment,
-    mockDatasetBasicsRootFragment,
-    mockFullPowerDatasetPermissionsFragment,
-} from "src/app/search/mock.data";
-
-import { OverviewUpdate } from "../../dataset.subscriptions.interface";
-import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import {
     mockMetadataDerivedUpdate,
     mockMetadataRootUpdate,
     mockOverviewDataUpdate,
     mockOverviewDataUpdateNullable,
-} from "../data-tabs.mock";
-import { MetadataComponent } from "./metadata.component";
-import { MetadataTabs } from "./metadata.constants";
+} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { MetadataComponent } from "src/app/dataset-view/additional-components/metadata-component/metadata.component";
+import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import {
+    mockDatasetBasicsDerivedFragment,
+    mockDatasetBasicsRootFragment,
+    mockFullPowerDatasetPermissionsFragment,
+} from "src/app/search/mock.data";
 
 describe("MetadataComponent", () => {
     let component: MetadataComponent;

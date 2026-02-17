@@ -12,9 +12,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 
 import { LinkProtocolDesc } from "@api/kamu.graphql.interface";
-
-import { CopyToClipboardComponent } from "../../../../common/components/copy-to-clipboard/copy-to-clipboard.component";
-import { FeatureFlagDirective } from "../../../../common/directives/feature-flag.directive";
+import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 
 @Component({
     selector: "app-data-access-link-tab",

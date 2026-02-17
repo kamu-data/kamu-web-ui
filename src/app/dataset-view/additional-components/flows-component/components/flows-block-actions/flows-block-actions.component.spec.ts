@@ -15,10 +15,9 @@ import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { FlowsBlockActionsComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-block-actions/flows-block-actions.component";
 import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-
-import { SettingsTabsEnum } from "../../../dataset-settings-component/dataset-settings.model";
-import { FlowsBlockActionsComponent } from "./flows-block-actions.component";
 
 describe("FlowsBlockActionsComponent", () => {
     let component: FlowsBlockActionsComponent;

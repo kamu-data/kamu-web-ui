@@ -18,6 +18,10 @@ import {
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
+import { DatasetSettingsTransformOptionsTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.data";
+import { datasetSettingsTransformTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/resolver/dataset-settings-transform-tab.resolver";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
@@ -26,11 +30,6 @@ import {
     mockReadonlyDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { SettingsTabsEnum } from "../../../dataset-settings.model";
-import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
-import { DatasetSettingsTransformOptionsTabData } from "../dataset-settings-transform-options-tab.data";
-import { datasetSettingsTransformTabResolverFn } from "./dataset-settings-transform-tab.resolver";
 
 describe("datasetSettingsTransformOptionsTabResolverFn", () => {
     const mockActivatedRouteSnapshot = new ActivatedRouteSnapshot();

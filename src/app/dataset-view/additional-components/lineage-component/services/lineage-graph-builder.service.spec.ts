@@ -7,16 +7,19 @@
 
 import { TestBed } from "@angular/core/testing";
 
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { MaybeNull } from "src/app/interface/app.types";
-
 import {
     mockBuildGraphNodesResult,
     mockLineageGraphUpdate,
     mockLineageGraphUpdateWithMqttSource,
-} from "../../data-tabs.mock";
-import { LineageGraphNodeData, LineageGraphNodeKind, LineageGraphUpdate } from "../lineage-model";
-import { LineageGraphBuilderService } from "./lineage-graph-builder.service";
+} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import {
+    LineageGraphNodeData,
+    LineageGraphNodeKind,
+    LineageGraphUpdate,
+} from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
+import { LineageGraphBuilderService } from "src/app/dataset-view/additional-components/lineage-component/services/lineage-graph-builder.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import { MaybeNull } from "src/app/interface/app.types";
 
 describe("LineageGraphBuilderService", () => {
     let service: LineageGraphBuilderService;

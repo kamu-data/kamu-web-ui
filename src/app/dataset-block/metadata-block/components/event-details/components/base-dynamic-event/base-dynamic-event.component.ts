@@ -21,10 +21,12 @@ import {
 import { MatIconModule } from "@angular/material/icon";
 
 import { BaseComponent } from "@common/components/base.component";
-
-import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
-import { EventRow, EventSection } from "../../dynamic-events/dynamic-events.model";
-import { BasePropertyComponent } from "../common/base-property/base-property.component";
+import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
+import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+import {
+    EventRow,
+    EventSection,
+} from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
 
 @Component({
     selector: "app-dynamic-base-event",

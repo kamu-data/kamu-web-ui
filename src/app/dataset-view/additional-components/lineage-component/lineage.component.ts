@@ -12,18 +12,21 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 import { Observable, switchMap } from "rxjs";
 
 import { BaseComponent } from "@common/components/base.component";
+import { LineageGraphComponent } from "@common/components/lineage-graph/lineage-graph.component";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { Node } from "@swimlane/ngx-graph";
 import { ToastrService } from "ngx-toastr";
+import {
+    LineageGraphNodeData,
+    LineageGraphNodeKind,
+    LineageGraphUpdate,
+} from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
+import { LineageGraphBuilderService } from "src/app/dataset-view/additional-components/lineage-component/services/lineage-graph-builder.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { LineageGraphComponent } from "../../../common/components/lineage-graph/lineage-graph.component";
-import { DatasetViewTypeEnum } from "../../dataset-view.interface";
-import { DatasetService } from "../../dataset.service";
-import { LineageGraphNodeData, LineageGraphNodeKind, LineageGraphUpdate } from "./lineage-model";
-import { LineageGraphBuilderService } from "./services/lineage-graph-builder.service";
 
 @Component({
     selector: "app-lineage",

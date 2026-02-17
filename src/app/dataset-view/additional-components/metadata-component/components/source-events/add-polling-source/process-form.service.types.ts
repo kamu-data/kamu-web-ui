@@ -5,9 +5,13 @@
  * included in the LICENSE file.
  */
 
-import { SchemaType } from "../../form-components/schema-field/schema-field.component";
-import { AddPushSourceSection } from "../add-push-source/add-push-source-form.types";
-import { EventTimeSourceKind, FetchKind, SetPollingSourceSection } from "./add-polling-source-form.types";
+import { SchemaType } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.component";
+import {
+    EventTimeSourceKind,
+    FetchKind,
+    SetPollingSourceSection,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { AddPushSourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 
 export enum SourceOrder {
     NONE = "NONE",

@@ -9,20 +9,22 @@ import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { TimeDelta, TimeUnit } from "@api/kamu.graphql.interface";
 import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
-import { TimeDelta, TimeUnit } from "@api/kamu.graphql.interface";
+import {
+    FlowTriggerStopPolicyType,
+    ScheduleType,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
+import { DatasetSettingsSchedulingTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.component";
+import { IngestTriggerFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger-form.harness";
+import { FlowStopPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.component";
+import { FlowStopPolicyFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.harness";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-
-import { FlowTriggerStopPolicyType, ScheduleType } from "../../dataset-settings.model";
-import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
-import { FlowStopPolicyFormComponent } from "../shared/flow-stop-policy-form/flow-stop-policy-form.component";
-import { FlowStopPolicyFormHarness } from "../shared/flow-stop-policy-form/flow-stop-policy-form.harness";
-import { DatasetSettingsSchedulingTabComponent } from "./dataset-settings-scheduling-tab.component";
-import { IngestTriggerFormHarness } from "./ingest-trigger-form/ingest-trigger-form.harness";
 
 describe("DatasetSettingsSchedulingTabComponent", () => {
     let component: DatasetSettingsSchedulingTabComponent;

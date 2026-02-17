@@ -9,17 +9,16 @@ import { inject, Injectable } from "@angular/core";
 
 import { map, Observable } from "rxjs";
 
-import { ToastrService } from "ngx-toastr";
-import { MaybeNull } from "src/app/interface/app.types";
-
-import { AccessTokenApi } from "../../../../api/access-token.api";
+import { AccessTokenApi } from "@api/access-token.api";
 import {
     AccessTokenConnection,
     CreateAccessTokenMutation,
     CreatedAccessToken,
     ListAccessTokensQuery,
     RevokeAccessTokenMutation,
-} from "../../../../api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
+import { ToastrService } from "ngx-toastr";
+import { MaybeNull } from "src/app/interface/app.types";
 
 @Injectable({
     providedIn: "root",

@@ -11,12 +11,11 @@ import { TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
+import { mockWebhookEventTypesQuery } from "@api/mock/webhooks.mock";
+import { WebhooksApi } from "@api/webhooks.api";
 import { Apollo } from "apollo-angular";
-
-import { mockWebhookEventTypesQuery } from "../api/mock/webhooks.mock";
-import { SubscribedEventType } from "../dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
-import { WebhooksApi } from "./../api/webhooks.api";
-import { WebhooksService } from "./webhooks.service";
+import { SubscribedEventType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
+import { WebhooksService } from "src/app/services/webhooks.service";
 
 describe("WebhooksService", () => {
     let service: WebhooksService;

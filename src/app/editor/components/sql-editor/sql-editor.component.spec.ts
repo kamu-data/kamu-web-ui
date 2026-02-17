@@ -7,13 +7,13 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { EditorModule } from "../../editor.module";
-import { MonacoService } from "../../services/monaco.service";
 import {
     BaseEditorComponentTestEnvironment,
     sharedBasedEditorComponentTest,
-} from "../base-editor/base-editor.component.spec";
-import { SqlEditorComponent } from "./sql-editor.component";
+} from "src/app/editor/components/base-editor/base-editor.component.spec";
+import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
+import { EditorModule } from "src/app/editor/editor.module";
+import { MonacoService } from "src/app/editor/services/monaco.service";
 
 describe("SqlEditorComponent", () => {
     let fixture: ComponentFixture<SqlEditorComponent>;

@@ -8,7 +8,8 @@
 import { Injectable } from "@angular/core";
 
 import { MaybeUndefined } from "src/app/interface/app.types";
-import { environment } from "src/environments/environment";
+
+import { environment } from "@env/environment";
 
 import {
     AppLoginInstructions,

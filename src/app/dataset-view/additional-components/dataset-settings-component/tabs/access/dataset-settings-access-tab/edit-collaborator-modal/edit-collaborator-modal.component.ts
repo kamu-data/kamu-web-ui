@@ -12,8 +12,10 @@ import { MatDividerModule } from "@angular/material/divider";
 
 import { AccountWithRole, DatasetAccessRole } from "@api/kamu.graphql.interface";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-
-import { CollaboratorModalResultType, ROLE_OPTIONS } from "../add-people-modal/add-people-modal.model";
+import {
+    CollaboratorModalResultType,
+    ROLE_OPTIONS,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.model";
 
 @Component({
     selector: "app-edit-collaborator-modal",

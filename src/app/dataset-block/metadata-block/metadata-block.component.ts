@@ -14,19 +14,18 @@ import { Observable } from "rxjs";
 
 import { BaseDatasetDataComponent } from "@common/components/base-dataset-data.component";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { BlockHeaderComponent } from "src/app/dataset-block/metadata-block/components/block-header/block-header.component";
+import { BlockNavigationComponent } from "src/app/dataset-block/metadata-block/components/block-navigation/block-navigation.component";
+import { EventDetailsComponent } from "src/app/dataset-block/metadata-block/components/event-details/event-details.component";
+import { YamlViewSectionComponent } from "src/app/dataset-block/metadata-block/components/yaml-view-section/yaml-view-section.component";
+import { BlockView, MetadataBlockInfo } from "src/app/dataset-block/metadata-block/metadata-block.types";
+import { DatasetViewHeaderComponent } from "src/app/dataset-view/dataset-view-header/dataset-view-header.component";
+import { DatasetViewMenuComponent } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu.component";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
-
-import { DatasetViewHeaderComponent } from "../../dataset-view/dataset-view-header/dataset-view-header.component";
-import { DatasetViewMenuComponent } from "../../dataset-view/dataset-view-menu/dataset-view-menu.component";
-import { DatasetViewTypeEnum } from "../../dataset-view/dataset-view.interface";
-import { DatasetHistoryUpdate } from "../../dataset-view/dataset.subscriptions.interface";
-import { BlockHeaderComponent } from "./components/block-header/block-header.component";
-import { BlockNavigationComponent } from "./components/block-navigation/block-navigation.component";
-import { EventDetailsComponent } from "./components/event-details/event-details.component";
-import { YamlViewSectionComponent } from "./components/yaml-view-section/yaml-view-section.component";
-import { BlockView, MetadataBlockInfo } from "./metadata-block.types";
 
 @Component({
     selector: "app-metadata-block",

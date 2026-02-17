@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AppUIConfig, AppUIConfigFeatureFlags } from "../../app-config.model";
+import { AppUIConfig, AppUIConfigFeatureFlags } from "src/app/app-config.model";
 
 export default class AppValues {
     public static readonly APP_LOGO = "assets/icons/kamu_logo_icon.svg";

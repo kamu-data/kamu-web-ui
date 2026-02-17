@@ -7,10 +7,9 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { YamlEventViewerComponent } from "@common/components/yaml-event-viewer/yaml-event-viewer.component";
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-
-import { HIGHLIGHT_OPTIONS_PROVIDER } from "../../helpers/app.helpers";
-import { YamlEventViewerComponent } from "./yaml-event-viewer.component";
 
 describe("YamlEventViewerComponent with SetTransform", () => {
     let component: YamlEventViewerComponent;

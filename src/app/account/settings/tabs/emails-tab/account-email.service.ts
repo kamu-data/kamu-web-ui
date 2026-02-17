@@ -9,14 +9,13 @@ import { inject, Injectable } from "@angular/core";
 
 import { map, Observable, Subject } from "rxjs";
 
-import { ToastrService } from "ngx-toastr";
-
-import { AccountApi } from "../../../../api/account.api";
+import { AccountApi } from "@api/account.api";
 import {
     AccountChangeEmailMutation,
     AccountWithEmailFragment,
     AccountWithEmailQuery,
-} from "../../../../api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
+import { ToastrService } from "ngx-toastr";
 
 @Injectable({
     providedIn: "root",

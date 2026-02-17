@@ -15,6 +15,10 @@ import { mockCronSchedule, mockGetDatasetFlowTriggerCronQuery } from "@api/mock/
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
+import { DatasetSettingsSchedulingTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.data";
+import { datasetSettingsSchedulingTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/resolver/dataset-settings-scheduling-tab.resolver";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
@@ -23,11 +27,6 @@ import {
     mockReadonlyDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { SettingsTabsEnum } from "../../../dataset-settings.model";
-import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
-import { DatasetSettingsSchedulingTabData } from "../dataset-settings-scheduling-tab.data";
-import { datasetSettingsSchedulingTabResolverFn } from "./dataset-settings-scheduling-tab.resolver";
 
 describe("datasetSettingsSchedulingTabResolverFn", () => {
     const mockActivatedRouteSnapshot = new ActivatedRouteSnapshot();

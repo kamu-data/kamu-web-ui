@@ -8,7 +8,18 @@
 import { inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 
+import { FlowStatus } from "@api/kamu.graphql.interface";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { AccountTabs } from "src/app/account/account.constants";
+import {
+    AccountFlowsNav,
+    ProcessCardFilterMode,
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { AccountSettingsTabs } from "src/app/account/settings/account-settings.constants";
+import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import {
     DatasetInfo,
     DatasetNavigationParams,
@@ -16,19 +27,7 @@ import {
     MetadataBlockNavigationParams,
     WebhooksNavigationParams,
 } from "src/app/interface/navigation.interface";
-
-import { AccountTabs } from "../account/account.constants";
-import { AccountSettingsTabs } from "../account/settings/account-settings.constants";
-import { FlowStatus } from "../api/kamu.graphql.interface";
-import { FlowDetailsTabs } from "../dataset-flow/dataset-flow-details/dataset-flow-details.types";
-import { SettingsTabsEnum } from "../dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
-import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
-import ProjectLinks from "../project-links";
-import {
-    AccountFlowsNav,
-    ProcessCardFilterMode,
-} from "./../account/additional-components/account-flows-tab/account-flows-tab.types";
-import { MetadataTabs } from "./../dataset-view/additional-components/metadata-component/metadata.constants";
+import ProjectLinks from "src/app/project-links";
 
 @Injectable({ providedIn: "root" })
 export class NavigationService {

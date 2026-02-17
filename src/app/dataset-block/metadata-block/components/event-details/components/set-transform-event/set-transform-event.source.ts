@@ -6,12 +6,11 @@
  */
 
 import { SetTransformTooltipsTexts } from "@common/tooltips/set-transform.text";
-
-import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
-import { getSourcesDescriptors } from "../common-sources/sources-event.source";
-import { DatasetNameByIdPropertyComponent } from "../common/dataset-name-by-id-property/dataset-name-by-id-property.component";
-import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
-import { TemporalTablesPropertyComponent } from "../common/temporal-tables-property/temporal-tables-property.component";
+import { getSourcesDescriptors } from "src/app/dataset-block/metadata-block/components/event-details/components/common-sources/sources-event.source";
+import { DatasetNameByIdPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/dataset-name-by-id-property/dataset-name-by-id-property.component";
+import { SimplePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/simple-property/simple-property.component";
+import { TemporalTablesPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/temporal-tables-property/temporal-tables-property.component";
+import { EventRowDescriptorsByField } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
 
 export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetTransform.TransformSql.engine": getSourcesDescriptors("SetTransform.TransformSql.engine"),

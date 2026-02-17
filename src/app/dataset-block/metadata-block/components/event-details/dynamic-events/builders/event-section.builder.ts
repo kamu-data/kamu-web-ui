@@ -5,14 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { UnsupportedPropertyComponent } from "../../components/common/unsupported-property/unsupported-property.component";
+import { UnsupportedPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/unsupported-property/unsupported-property.component";
 import {
     DynamicEventTypesScalar,
     EventRow,
     EventRowDescriptor,
     EventRowDescriptorsByField,
     EventSection,
-} from "../dynamic-events.model";
+} from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
 
 export interface GenericDynamicEventType extends Record<string, unknown> {
     __typename?: DynamicEventTypesScalar;

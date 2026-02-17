@@ -12,11 +12,10 @@ import { map, Observable, of, switchMap } from "rxjs";
 
 import { DatasetFlowType, FlowConfigRuleIngest, GetDatasetFlowConfigsQuery } from "@api/kamu.graphql.interface";
 import { isNil } from "@common/helpers/app.helpers";
+import { DatasetFlowConfigService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-config.service";
+import { datasetSettingsGeneralTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/resolver/dataset-settings-general-tab.resolver";
+import { DatasetSettingsIngestConfigurationTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.data";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
-
-import { DatasetFlowConfigService } from "../../../services/dataset-flow-config.service";
-import { datasetSettingsGeneralTabResolverFn } from "../../general/resolver/dataset-settings-general-tab.resolver";
-import { DatasetSettingsIngestConfigurationTabData } from "../dataset-settings-ingest-configuration-tab.data";
 
 export const datasetSettingsIngestConfigurationResolverFn: ResolveFn<
     DatasetSettingsIngestConfigurationTabData | null

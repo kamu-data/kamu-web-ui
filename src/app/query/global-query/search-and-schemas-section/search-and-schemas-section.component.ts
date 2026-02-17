@@ -36,6 +36,7 @@ import {
 import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "@api/kamu.graphql.interface";
 import { SearchApi } from "@api/search.api";
 import { BaseComponent } from "@common/components/base.component";
+import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
 import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { parseCurrentSchema } from "@common/helpers/app.helpers";
@@ -46,11 +47,9 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DataSchemaField, DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
+import { GlobalQuerySearchItem, SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
+import { SavedQueriesSectionComponent } from "src/app/query/shared/saved-queries-section/saved-queries-section.component";
 import { SqlQueryService } from "src/app/services/sql-query.service";
-
-import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";
-import { SavedQueriesSectionComponent } from "../../shared/saved-queries-section/saved-queries-section.component";
-import { GlobalQuerySearchItem, SqlQueryBasicResponse } from "../global-query.model";
 
 @Component({
     selector: "app-search-and-schemas-section",

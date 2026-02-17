@@ -11,12 +11,11 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from "@angular/forms";
 
 import { TimeUnit } from "@api/kamu.graphql.interface";
+import { BaseComponent } from "@common/components/base.component";
+import { TimeDeltaFormType } from "@common/components/time-delta-form/time-delta-form.value";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { everyTimeMapperValidators } from "@common/helpers/data.helpers";
 import { MaybeNull } from "src/app/interface/app.types";
-
-import { FormValidationErrorsDirective } from "../../directives/form-validation-errors.directive";
-import { BaseComponent } from "../base.component";
-import { TimeDeltaFormType } from "./time-delta-form.value";
 
 @Component({
     selector: "app-time-delta-form",

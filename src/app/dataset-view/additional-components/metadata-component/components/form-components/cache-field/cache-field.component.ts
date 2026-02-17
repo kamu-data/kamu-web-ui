@@ -8,10 +8,9 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
-
-import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
-import { BaseField } from "../base-field";
+import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 
 @Component({
     selector: "app-cache-field",

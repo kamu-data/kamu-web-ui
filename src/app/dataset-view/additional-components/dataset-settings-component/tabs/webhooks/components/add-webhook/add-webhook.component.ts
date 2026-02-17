@@ -18,17 +18,16 @@ import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/c
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { NgSelectModule } from "@ng-select/ng-select";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import { NavigationService } from "src/app/services/navigation.service";
-import { WebhooksService } from "src/app/services/webhooks.service";
-
+import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
 import {
     CreateWebhookSubscriptionSuccess,
     SubscribedEventType,
     WebhookSubscriptionFormType,
-} from "../../dataset-settings-webhooks-tab.component.types";
-import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
-import { WebhookFormComponent } from "../common/webhook-form/webhook-form.component";
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
+import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
+import { NavigationService } from "src/app/services/navigation.service";
+import { WebhooksService } from "src/app/services/webhooks.service";
 
 @Component({
     selector: "app-add-webhook",

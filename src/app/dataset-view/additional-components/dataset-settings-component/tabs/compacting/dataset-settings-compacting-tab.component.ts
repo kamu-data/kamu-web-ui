@@ -13,17 +13,19 @@ import { MatDividerModule } from "@angular/material/divider";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { CompactionTooltipsTexts } from "@common/tooltips/compacting.text";
 import AppValues from "@common/values/app.values";
+import {
+    sliceSizeMapper,
+    SliceUnit,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-
-import { TooltipIconComponent } from "../../../../../common/components/tooltip-icon/tooltip-icon.component";
-import { FormValidationErrorsDirective } from "../../../../../common/directives/form-validation-errors.directive";
-import { DatasetFlowsService } from "../../../flows-component/services/dataset-flows.service";
-import { NavigationService } from "./../../../../../services/navigation.service";
-import { sliceSizeMapper, SliceUnit } from "./dataset-settings-compacting-tab.types";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-dataset-settings-compacting-tab",

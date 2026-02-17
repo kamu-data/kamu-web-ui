@@ -7,14 +7,16 @@
 
 import AppValues from "@common/values/app.values";
 import {
+    datasetMetadataDerivativeDataset,
+    datasetMetadataRootDataset,
+} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { isSettingsTabAccessibleHelper } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.helpers";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
-
-import { datasetMetadataDerivativeDataset, datasetMetadataRootDataset } from "../data-tabs.mock";
-import { isSettingsTabAccessibleHelper } from "./dataset-settings.helpers";
-import { SettingsTabsEnum } from "./dataset-settings.model";
 
 describe("DatasetSettingsHelpers", () => {
     it(`should check available ${SettingsTabsEnum.GENERAL} tab with canRename permission`, () => {

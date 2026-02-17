@@ -10,14 +10,9 @@ import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { of } from "rxjs";
 import { first } from "rxjs/operators";
 
-import { Apollo } from "apollo-angular";
-import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
-import { provideToastr } from "ngx-toastr";
-import { MaybeNull } from "src/app/interface/app.types";
-
-import { AuthApi } from "../api/auth.api";
-import { GithubLoginCredentials, PasswordLoginCredentials } from "../api/auth.api.model";
-import { AccountFragment, FetchAccountDetailsDocument, LoginDocument } from "../api/kamu.graphql.interface";
+import { AuthApi } from "@api/auth.api";
+import { GithubLoginCredentials, PasswordLoginCredentials } from "@api/auth.api.model";
+import { AccountFragment, FetchAccountDetailsDocument, LoginDocument } from "@api/kamu.graphql.interface";
 import {
     mockAccountDetails,
     mockGithubLoginResponse,
@@ -26,11 +21,15 @@ import {
     TEST_GITHUB_CODE,
     TEST_LOGIN,
     TEST_PASSWORD,
-} from "../api/mock/auth.mock";
-import { LocalStorageService } from "../services/local-storage.service";
-import { NavigationService } from "../services/navigation.service";
-import { LoggedUserService } from "./logged-user.service";
-import { LoginService } from "./login/login.service";
+} from "@api/mock/auth.mock";
+import { Apollo } from "apollo-angular";
+import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
+import { provideToastr } from "ngx-toastr";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { LoginService } from "src/app/auth/login/login.service";
+import { MaybeNull } from "src/app/interface/app.types";
+import { LocalStorageService } from "src/app/services/local-storage.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("LoggedUserService", () => {
     let service: LoggedUserService;

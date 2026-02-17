@@ -5,16 +5,15 @@
  * included in the LICENSE file.
  */
 
+import { DataSchema } from "@api/kamu.graphql.interface";
+import { JwtPayload } from "@common/guards/access-token-expired.types";
+import AppValues from "@common/values/app.values";
 import cronParser from "cron-parser";
 import { format, isSameDay, subDays } from "date-fns";
 import { jwtDecode } from "jwt-decode";
 import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { MaybeNull, MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
-
-import { DataSchema } from "../../api/kamu.graphql.interface";
-import { JwtPayload } from "../guards/access-token-expired.types";
-import AppValues from "../values/app.values";
 
 export function requireValue<T>(input: MaybeNull<T>, errorMessage?: string): T {
     if (input === null) throw Error(errorMessage || "value is required!");

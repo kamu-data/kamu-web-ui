@@ -10,11 +10,10 @@ import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot } from "@ang
 
 import { AccountProvider } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
+import { accountPasswordProviderGuard } from "@common/guards/account-password-provider.guard";
+import { RedirectUrlTestModule } from "@common/modules/redirect-url-test.module";
 import { Apollo } from "apollo-angular";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-
-import { RedirectUrlTestModule } from "../modules/redirect-url-test.module";
-import { accountPasswordProviderGuard } from "./account-password-provider.guard";
 
 describe("accountPasswordProviderGuard", () => {
     let loggedUserService: LoggedUserService;

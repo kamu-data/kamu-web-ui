@@ -8,6 +8,7 @@
 import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
+import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
 import {
     DynamicTableColumnDescriptor,
     DynamicTableDataRow,
@@ -15,9 +16,7 @@ import {
 import { extractSchemaFieldsFromData } from "@common/helpers/data-schema.helpers";
 import { parseDataFromJsonAoSFormat } from "@common/helpers/data.helpers";
 import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
-
-import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";
-import { QueryExplainerOutputType } from "../../query-explainer.types";
+import { QueryExplainerOutputType } from "src/app/query-explainer/query-explainer.types";
 
 @Component({
     selector: "app-reproduced-result-section",

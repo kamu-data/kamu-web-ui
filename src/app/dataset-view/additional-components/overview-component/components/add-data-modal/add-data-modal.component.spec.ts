@@ -15,12 +15,11 @@ import { ModalService } from "@common/components/modal/modal.service";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
+import { AddDataModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/add-data-modal/add-data-modal.component";
+import { FileFromUrlModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/file-from-url-modal/file-from-url-modal.component";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { FileUploadService } from "src/app/services/file-upload.service";
-
-import { FileFromUrlModalComponent } from "../file-from-url-modal/file-from-url-modal.component";
-import { AddDataModalComponent } from "./add-data-modal.component";
 
 describe("AddDataModalComponent", () => {
     let component: AddDataModalComponent;

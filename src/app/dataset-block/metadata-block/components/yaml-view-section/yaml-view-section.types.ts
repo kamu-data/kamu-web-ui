@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { SupportedEvents } from "../event-details/supported.events";
+import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 
 export const eventsWithYamlView: SupportedEvents[] = [
     SupportedEvents.SetPollingSource,

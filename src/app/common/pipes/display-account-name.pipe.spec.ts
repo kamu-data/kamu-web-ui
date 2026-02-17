@@ -6,9 +6,8 @@
  */
 
 import { AccountProvider } from "@api/kamu.graphql.interface";
-
-import AppValues from "../values/app.values";
-import { DisplayAccountNamePipe } from "./display-account-name.pipe";
+import { DisplayAccountNamePipe } from "@common/pipes/display-account-name.pipe";
+import AppValues from "@common/values/app.values";
 
 describe("DisplayAccountNamePipe", () => {
     const pipe = new DisplayAccountNamePipe();

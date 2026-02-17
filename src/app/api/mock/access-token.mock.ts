@@ -11,7 +11,7 @@ import {
     CreateAccessTokenMutation,
     ListAccessTokensQuery,
     RevokeAccessTokenMutation,
-} from "../kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
 
 export const PAGE = 1;
 export const PER_PAGE = 15;

@@ -9,15 +9,13 @@ import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
-import { OffsetInterval } from "@api/kamu.graphql.interface";
+import { DatasetByIdQuery, OffsetInterval } from "@api/kamu.graphql.interface";
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-
-import { DatasetByIdQuery } from "../../../../../../../api/kamu.graphql.interface";
-import { NavigationService } from "../../../../../../../services/navigation.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-interval-property",

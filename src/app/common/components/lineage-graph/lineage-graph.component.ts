@@ -22,6 +22,11 @@ import {
 import { MatIconModule } from "@angular/material/icon";
 
 import { DatasetKind, DatasetLineageBasicsFragment } from "@api/kamu.graphql.interface";
+import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
+import { LINEAGE_CONFIG, LineageGraphConfig } from "@common/components/lineage-graph/ligeage-graph.settings";
+import { WidgetHeightService } from "@common/components/lineage-graph/widget-height.service";
+import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
+import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 import AppValues from "@common/values/app.values";
 import { GraphModule, Node } from "@swimlane/ngx-graph";
 import {
@@ -31,12 +36,6 @@ import {
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 import { MaybeUndefined } from "src/app/interface/app.types";
 import { SessionStorageService } from "src/app/services/session-storage.service";
-
-import { DisplayDatasetIdPipe } from "../../pipes/display-dataset-id.pipe";
-import { DisplaySizePipe } from "../../pipes/display-size.pipe";
-import { DisplayTimeComponent } from "../display-time/display-time.component";
-import { LINEAGE_CONFIG, LineageGraphConfig } from "./ligeage-graph.settings";
-import { WidgetHeightService } from "./widget-height.service";
 
 @Component({
     selector: "app-lineage-graph",

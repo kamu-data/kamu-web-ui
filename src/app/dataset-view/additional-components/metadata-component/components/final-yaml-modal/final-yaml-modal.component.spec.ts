@@ -9,16 +9,15 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
+import { mockAccountDetails } from "@api/mock/auth.mock";
 import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
-import { mockAccountDetails } from "@api/mock/auth.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-
-import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
-import { FinalYamlModalComponent } from "./final-yaml-modal.component";
 
 const testDatasetInfo: DatasetInfo = {
     accountName: "testAccountName",

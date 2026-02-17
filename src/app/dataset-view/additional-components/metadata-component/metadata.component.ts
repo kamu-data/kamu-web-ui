@@ -11,27 +11,31 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink, RouterOutlet } from "@angular/router";
 
-import { DatasetMetadataSummaryFragment, PageBasedInfo } from "@api/kamu.graphql.interface";
-import { BaseComponent } from "@common/components/base.component";
-import { momentConvertDateToLocalWithFormat } from "@common/helpers/app.helpers";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "src/app/interface/app.types";
-import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
-import ProjectLinks from "src/app/project-links";
-
 import {
     AddPushSourceEventFragment,
     DatasetKind,
+    DatasetMetadataSummaryFragment,
     DatasetTransformFragment,
+    PageBasedInfo,
     SetPollingSourceEventFragment,
-} from "../../../api/kamu.graphql.interface";
-import { FeatureFlagDirective } from "../../../common/directives/feature-flag.directive";
-import AppValues from "../../../common/values/app.values";
-import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
-import { MetadataSchemaUpdate } from "../../dataset.subscriptions.interface";
-import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import { CommitNavigatorComponent } from "./components/commit-navigator/commit-navigator.component";
-import { METADATA_TAB_MENU_ITEMS, MetadataMenuItem, MetadataTabs } from "./metadata.constants";
+} from "@api/kamu.graphql.interface";
+import { BaseComponent } from "@common/components/base.component";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { momentConvertDateToLocalWithFormat } from "@common/helpers/app.helpers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
+import { CommitNavigatorComponent } from "src/app/dataset-view/additional-components/metadata-component/components/commit-navigator/commit-navigator.component";
+import {
+    METADATA_TAB_MENU_ITEMS,
+    MetadataMenuItem,
+    MetadataTabs,
+} from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { MetadataSchemaUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "src/app/interface/app.types";
+import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
+import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-metadata",

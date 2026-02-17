@@ -15,10 +15,13 @@ import { emitClickOnElementByDataTestId, getElementByDataTestId } from "@common/
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
-
-import { mockDatasetBasicsDerivedFragment } from "../../../../../search/mock.data";
-import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewWithSetInfo } from "../../../data-tabs.mock";
-import { EditDetailsModalComponent } from "./edit-details-modal.component";
+import {
+    mockMetadataDerivedUpdate,
+    mockOverviewDataUpdate,
+    mockOverviewWithSetInfo,
+} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { EditDetailsModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-details-modal/edit-details-modal.component";
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 
 describe("EditDetailsModalComponent", () => {
     let component: EditDetailsModalComponent;

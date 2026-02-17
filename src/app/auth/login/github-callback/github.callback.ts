@@ -9,10 +9,9 @@ import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angu
 
 import { GithubLoginCredentials } from "@api/auth.api.model";
 import { BaseComponent } from "@common/components/base.component";
+import { LoginService } from "src/app/auth/login/login.service";
 import ProjectLinks from "src/app/project-links";
-
-import { NavigationService } from "../../../services/navigation.service";
-import { LoginService } from "../login.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-github-callback",

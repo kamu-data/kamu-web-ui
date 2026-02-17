@@ -17,9 +17,8 @@ import {
 } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import AppValues from "@common/values/app.values";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-
-import { SettingsTabsEnum } from "../../../dataset-settings-component/dataset-settings.model";
 
 @Component({
     selector: "app-flows-block-actions",

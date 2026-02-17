@@ -19,10 +19,9 @@ import AppValues from "@common/values/app.values";
 import { NgbActiveModal, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import { AddPeopleModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.component";
+import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-
-import { DatasetCollaborationsService } from "../dataset-collaborations.service";
-import { AddPeopleModalComponent } from "./add-people-modal.component";
 
 describe("AddPeopleModalComponent", () => {
     let component: AddPeopleModalComponent;

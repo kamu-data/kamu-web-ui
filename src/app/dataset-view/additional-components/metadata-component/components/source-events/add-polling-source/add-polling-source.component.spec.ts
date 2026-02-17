@@ -12,11 +12,21 @@ import { ActivatedRoute } from "@angular/router";
 
 import { from, of } from "rxjs";
 
+import { mockAccountDetails } from "@api/mock/auth.mock";
 import { OdfDefaultValues } from "@common/values/app-odf-default.values";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { mockAccountDetails } from "@api/mock/auth.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
+import {
+    EventTimeSourceKind,
+    FetchKind,
+    MergeKind,
+    ReadKind,
+    SetPollingSourceSection,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { AddPollingSourceComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source.component";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
@@ -28,17 +38,6 @@ import {
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { DatasetCommitService } from "../../../../overview-component/services/dataset-commit.service";
-import { FinalYamlModalComponent } from "../../final-yaml-modal/final-yaml-modal.component";
-import {
-    EventTimeSourceKind,
-    FetchKind,
-    MergeKind,
-    ReadKind,
-    SetPollingSourceSection,
-} from "./add-polling-source-form.types";
-import { AddPollingSourceComponent } from "./add-polling-source.component";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;

@@ -15,6 +15,8 @@ import {
     mockMetadataDerivedUpdate,
     mockMetadataRootUpdate,
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { metadataPollingSourceTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-polling-source-tab/resolvers/metadata-polling-source-tab.resolver";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { MaybeNull } from "src/app/interface/app.types";
@@ -24,9 +26,6 @@ import {
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { MetadataTabData } from "../../../metadata.constants";
-import { metadataPollingSourceTabResolverFn } from "./metadata-polling-source-tab.resolver";
 
 describe("metadataPollingSourceTabResolver", () => {
     let datasetService: DatasetService;

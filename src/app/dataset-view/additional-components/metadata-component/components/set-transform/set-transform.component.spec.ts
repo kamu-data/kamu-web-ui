@@ -11,11 +11,19 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
+import { mockAccountDetails } from "@api/mock/auth.mock";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
-import { mockAccountDetails } from "@api/mock/auth.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import {
+    mockGetDatasetSchemaQuery,
+    mockParseSetTransformYamlType,
+    mockSetTransformEventYaml,
+} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { SetTransformComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.component";
+import { DatasetNode } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
@@ -27,11 +35,6 @@ import {
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
-import { mockGetDatasetSchemaQuery, mockParseSetTransformYamlType, mockSetTransformEventYaml } from "./mock.data";
-import { SetTransformComponent } from "./set-transform.component";
-import { DatasetNode } from "./set-transform.types";
 
 describe("SetTransformComponent", () => {
     let component: SetTransformComponent;

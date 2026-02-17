@@ -15,19 +15,18 @@ import { switchMap } from "rxjs/operators";
 
 import { AccountProvider, AccountWithEmailFragment } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
-import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
-import { MaybeNull } from "src/app/interface/app.types";
-import ProjectLinks from "src/app/project-links";
-
-import { LoggedUserService } from "../../auth/logged-user.service";
-import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";
 import {
     ACCOUNT_SETTINGS_MENU_ITEMS,
     AccountSettingsMenuItem,
     AccountSettingsTabs,
-} from "./account-settings.constants";
+} from "src/app/account/settings/account-settings.constants";
+import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { MaybeNull } from "src/app/interface/app.types";
+import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-settings",

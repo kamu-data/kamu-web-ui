@@ -17,6 +17,8 @@ import {
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetGQL,
     CreateEmptyDatasetMutation,
+    DatasetBlocksByEventTypeGQL,
+    DatasetBlocksByEventTypeQuery,
     DatasetByAccountAndDatasetNameGQL,
     DatasetByAccountAndDatasetNameQuery,
     DatasetByIdGQL,
@@ -24,10 +26,18 @@ import {
     DatasetHeadBlockHashGQL,
     DatasetHeadBlockHashQuery,
     DatasetKind,
+    DatasetListDownstreamsGQL,
+    DatasetListDownstreamsQuery,
     DatasetPushSyncStatusesGQL,
     DatasetPushSyncStatusesQuery,
     DatasetsByAccountNameGQL,
     DatasetsByAccountNameQuery,
+    DatasetsTotalCountByAccountNameGQL,
+    DatasetsTotalCountByAccountNameQuery,
+    DatasetSystemTimeBlockByHashGQL,
+    DatasetSystemTimeBlockByHashQuery,
+    DatasetVisibility,
+    DatasetVisibilityInput,
     DeleteDatasetGQL,
     DeleteDatasetMutation,
     GetDatasetBasicsWithPermissionsGQL,
@@ -44,37 +54,24 @@ import {
     GetDatasetSchemaQuery,
     GetMetadataBlockGQL,
     GetMetadataBlockQuery,
+    MetadataEventType,
+    MetadataManifestFormat,
     RenameDatasetGQL,
     RenameDatasetMutation,
     SetVisibilityDatasetGQL,
+    SetVisibilityDatasetMutation,
     UpdateReadmeGQL,
     UpdateReadmeMutation,
+    UpdateWatermarkGQL,
     UpdateWatermarkMutation,
 } from "@api/kamu.graphql.interface";
 import { StoreObject } from "@apollo/client/cache";
 import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { resetCacheHelper, updateCacheHelper } from "@common/helpers/apollo-cache.helper";
+import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import AppValues from "@common/values/app.values";
 import { onlyCompleteData } from "apollo-angular";
-
-import { resetCacheHelper, updateCacheHelper } from "../common/helpers/apollo-cache.helper";
-import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
-import { DatasetRequestBySql } from "../interface/dataset.interface";
-import {
-    DatasetBlocksByEventTypeGQL,
-    DatasetBlocksByEventTypeQuery,
-    DatasetListDownstreamsGQL,
-    DatasetListDownstreamsQuery,
-    DatasetsTotalCountByAccountNameGQL,
-    DatasetsTotalCountByAccountNameQuery,
-    DatasetSystemTimeBlockByHashGQL,
-    DatasetSystemTimeBlockByHashQuery,
-    DatasetVisibility,
-    DatasetVisibilityInput,
-    MetadataEventType,
-    MetadataManifestFormat,
-    SetVisibilityDatasetMutation,
-    UpdateWatermarkGQL,
-} from "./kamu.graphql.interface";
+import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {

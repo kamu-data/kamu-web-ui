@@ -11,10 +11,9 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 import { AccountProvider } from "@api/kamu.graphql.interface";
 import { RedirectUrlTestModule } from "@common/modules/redirect-url-test.module";
 import { ApolloTestingModule } from "apollo-angular/testing";
+import { LoginGuard } from "src/app/auth/guards/login.guard";
+import { LoginMethodsService } from "src/app/auth/login-methods.service";
 import ProjectLinks from "src/app/project-links";
-
-import { LoginMethodsService } from "../login-methods.service";
-import { LoginGuard } from "./login.guard";
 
 describe("LoginGuard", () => {
     let guard: LoginGuard;

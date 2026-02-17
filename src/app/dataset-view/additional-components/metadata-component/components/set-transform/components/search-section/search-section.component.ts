@@ -20,11 +20,13 @@ import { debounceTime, distinctUntilChanged, map, switchMap } from "rxjs/operato
 import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "@api/kamu.graphql.interface";
 import { SearchApi } from "@api/search.api";
 import { BaseComponent } from "@common/components/base.component";
+import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
 import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
 import { parseCurrentSchema } from "@common/helpers/app.helpers";
 import { odfType2String, schemaAsDataRows } from "@common/helpers/data-schema.helpers";
 import AppValues from "@common/values/app.values";
 import { NgbHighlight, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
+import { DatasetNode } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { MaybeNull } from "src/app/interface/app.types";
 import {
@@ -35,9 +37,6 @@ import {
 } from "src/app/interface/dataset-schema.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
-
-import { DatasetNode } from "../../set-transform.types";
-import { DynamicTableComponent } from "./../../../../../../../common/components/dynamic-table/dynamic-table.component";
 
 @Component({
     selector: "app-search-section",

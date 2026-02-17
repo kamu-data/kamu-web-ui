@@ -9,8 +9,8 @@ import { inject, Injectable } from "@angular/core";
 
 import { Observable } from "rxjs";
 
-import { EngineApi } from "../../../../../../../api/engine.api";
-import { EnginesQuery } from "../../../../../../../api/kamu.graphql.interface";
+import { EngineApi } from "@api/engine.api";
+import { EnginesQuery } from "@api/kamu.graphql.interface";
 
 @Injectable({
     providedIn: "root",

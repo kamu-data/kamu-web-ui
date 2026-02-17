@@ -11,8 +11,7 @@ import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 
 import { SqlQueryStep } from "@api/kamu.graphql.interface";
-
-import { SqlEditorComponent } from "../../../../../../../editor/components/sql-editor/sql-editor.component";
+import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
 
 @Component({
     selector: "app-queries-section",

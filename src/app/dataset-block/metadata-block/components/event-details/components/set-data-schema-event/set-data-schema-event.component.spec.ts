@@ -9,9 +9,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { provideToastr } from "ngx-toastr";
-
-import { mockSetDataSchema } from "../../mock.events";
-import { SetDataSchemaEventComponent } from "./set-data-schema-event.component";
+import { SetDataSchemaEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/set-data-schema-event/set-data-schema-event.component";
+import { mockSetDataSchema } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
 describe("SetDataSchemaEventComponent", () => {
     let component: SetDataSchemaEventComponent;

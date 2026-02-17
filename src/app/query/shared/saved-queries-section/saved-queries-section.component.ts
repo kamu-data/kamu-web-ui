@@ -11,7 +11,7 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 
-import DataTabValues from "../../../dataset-view/additional-components/data-component/mock.data";
+import DataTabValues from "src/app/dataset-view/additional-components/data-component/mock.data";
 
 @Component({
     selector: "app-saved-queries-section",

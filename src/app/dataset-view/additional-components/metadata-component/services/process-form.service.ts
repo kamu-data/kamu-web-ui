@@ -10,8 +10,7 @@ import { FormGroup } from "@angular/forms";
 
 import { AddPushSource, SetPollingSource } from "@api/kamu.graphql.interface";
 import AppValues from "@common/values/app.values";
-
-import { SchemaType } from "../components/form-components/schema-field/schema-field.component";
+import { SchemaType } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.component";
 import {
     AddPollingSourceEditFormType,
     EventTimeSourceKind,
@@ -19,13 +18,13 @@ import {
     PrepareKind,
     SetPollingSourceSection,
     TopicsType,
-} from "../components/source-events/add-polling-source/add-polling-source-form.types";
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import {
     OrderControlType,
     SchemaControlType,
     SourceOrder,
-} from "../components/source-events/add-polling-source/process-form.service.types";
-import { AddPushSourceSection } from "../components/source-events/add-push-source/add-push-source-form.types";
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
+import { AddPushSourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 
 @Injectable({
     providedIn: "root",

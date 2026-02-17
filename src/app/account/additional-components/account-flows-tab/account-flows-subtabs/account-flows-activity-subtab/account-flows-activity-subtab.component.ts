@@ -44,7 +44,8 @@ import {
 } from "src/app/dataset-flow/flows-table/flows-table.types";
 import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import { environment } from "src/environments/environment";
+
+import { environment } from "@env/environment";
 
 @Component({
     selector: "app-account-flows-activity-subtab",

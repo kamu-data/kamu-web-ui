@@ -15,24 +15,23 @@ import { finalize, map, Observable } from "rxjs";
 
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
+import { DatasetVisibilityComponent } from "@common/components/dataset-visibility/dataset-visibility.component";
 import { ModalService } from "@common/components/modal/modal.service";
-import { promiseWithCatch } from "@common/helpers/app.helpers";
-import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
-import { NavigationService } from "src/app/services/navigation.service";
-
-import { DatasetVisibilityComponent } from "../../common/components/dataset-visibility/dataset-visibility.component";
-import { SearchAdditionalButtonsComponent } from "../../common/components/search-additional-buttons/search-additional-buttons.component";
+import { SearchAdditionalButtonsComponent } from "@common/components/search-additional-buttons/search-additional-buttons.component";
 import {
     MenuActionData,
     SearchAdditionalHeaderButtonInterface,
     SearchAdditionalHeaderButtonMenuAction,
-} from "../../common/components/search-additional-buttons/search-additional-buttons.interface";
-import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";
-import { DatasetViewTypeEnum } from "../dataset-view.interface";
-import { DatasetService } from "../dataset.service";
-import { SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS } from "./dataset-view-header.model";
+} from "@common/components/search-additional-buttons/search-additional-buttons.interface";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
+import { SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS } from "src/app/dataset-view/dataset-view-header/dataset-view-header.model";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-dataset-view-header",

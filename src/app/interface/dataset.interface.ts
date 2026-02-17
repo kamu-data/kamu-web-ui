@@ -10,7 +10,7 @@ import {
     DatasetSearchOverviewFragment,
     DependencyDatasetResultNotAccessible,
     PageBasedInfo,
-} from "../api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
 
 export interface DatasetLineageNode {
     basics: DatasetLineageBasicsFragment | DependencyDatasetResultNotAccessible;

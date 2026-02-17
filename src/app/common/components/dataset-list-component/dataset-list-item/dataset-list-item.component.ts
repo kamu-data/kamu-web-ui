@@ -13,16 +13,15 @@ import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
 
 import { DatasetKind, DatasetSearchOverviewFragment } from "@api/kamu.graphql.interface";
+import { DatasetKindComponent } from "@common/components/dataset-kind/dataset-kind.component";
+import { DatasetVisibilityComponent } from "@common/components/dataset-visibility/dataset-visibility.component";
+import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
+import { ModalService } from "@common/components/modal/modal.service";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import AppValues from "@common/values/app.values";
 import { NgbPopover, NgbRating } from "@ng-bootstrap/ng-bootstrap";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { FeatureFlagDirective } from "../../../directives/feature-flag.directive";
-import { DatasetKindComponent } from "../../dataset-kind/dataset-kind.component";
-import { DatasetVisibilityComponent } from "../../dataset-visibility/dataset-visibility.component";
-import { DisplayTimeComponent } from "../../display-time/display-time.component";
-import { ModalService } from "../../modal/modal.service";
 
 @Component({
     selector: "app-dataset-list-item",

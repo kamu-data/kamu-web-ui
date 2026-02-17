@@ -36,19 +36,10 @@ import { InfiniteScrollDirective } from "ngx-infinite-scroll";
 import { ToastrService } from "ngx-toastr";
 import { AccountTabs } from "src/app/account/account.constants";
 import { AccountService } from "src/app/account/account.service";
-import { AccountFlowsFiltersService } from "src/app/account/services/account-flows-filters.service";
-import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
-import {
-    rollupAvailabilityMapper,
-    RollupFiltersOptions,
-} from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.component";
-import { NavigationService } from "src/app/services/navigation.service";
-import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
-import { environment } from "src/environments/environment";
-
-import { WebhookFlowProcessCardComponent } from "../../../../../flow-cards/webhook-flow-process-card/webhook-flow-process-card.component";
+import { CustomFiltersViewComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/components/custom-filters-view/custom-filters-view.component";
+import { RecentActivityFiltersViewComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/components/recent-activity-filters-view/recent-activity-filters-view.component";
+import { TriageFiltersViewComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/components/triage-filters-view/triage-filters-view.component";
+import { UpcomingScheduledFiltersViewComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/components/upcoming-scheduled-filters-view/upcoming-scheduled-filters-view.component";
 import {
     AccountFlowsNav,
     CARD_FILTERS_MODE_OPTIONS,
@@ -58,12 +49,21 @@ import {
     FlowProcessCardListing,
     ProcessCardFilterMode,
     ProcessCardGroup,
-} from "../../account-flows-tab.types";
-import { AccountFlowsType } from "../../resolvers/account-flows.resolver";
-import { CustomFiltersViewComponent } from "./components/custom-filters-view/custom-filters-view.component";
-import { RecentActivityFiltersViewComponent } from "./components/recent-activity-filters-view/recent-activity-filters-view.component";
-import { TriageFiltersViewComponent } from "./components/triage-filters-view/triage-filters-view.component";
-import { UpcomingScheduledFiltersViewComponent } from "./components/upcoming-scheduled-filters-view/upcoming-scheduled-filters-view.component";
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { AccountFlowsType } from "src/app/account/additional-components/account-flows-tab/resolvers/account-flows.resolver";
+import { AccountFlowsFiltersService } from "src/app/account/services/account-flows-filters.service";
+import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
+import {
+    rollupAvailabilityMapper,
+    RollupFiltersOptions,
+} from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.component";
+import { WebhookFlowProcessCardComponent } from "src/app/flow-cards/webhook-flow-process-card/webhook-flow-process-card.component";
+import { NavigationService } from "src/app/services/navigation.service";
+import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
+
+import { environment } from "@env/environment";
 
 @Component({
     selector: "app-account-flows-processes-subtab",

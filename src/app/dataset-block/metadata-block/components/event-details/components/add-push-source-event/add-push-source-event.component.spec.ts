@@ -11,9 +11,8 @@ import { ReadStepCsv } from "@api/kamu.graphql.interface";
 import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { provideToastr } from "ngx-toastr";
-
-import { mockAddPushSource } from "../../mock.events";
-import { AddPushSourceEventComponent } from "./add-push-source-event.component";
+import { AddPushSourceEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/add-push-source-event/add-push-source-event.component";
+import { mockAddPushSource } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
 describe("AddPushSourceEventComponent", () => {
     let component: AddPushSourceEventComponent;

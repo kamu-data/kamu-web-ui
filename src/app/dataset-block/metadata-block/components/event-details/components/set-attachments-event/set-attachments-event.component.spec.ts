@@ -9,9 +9,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { MarkdownModule } from "ngx-markdown";
-
-import { mockSetAttachments } from "../../mock.events";
-import { SetAttachmentsEventComponent } from "./set-attachments-event.component";
+import { SetAttachmentsEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/set-attachments-event/set-attachments-event.component";
+import { mockSetAttachments } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
 describe("SetAttachmentsEventComponent", () => {
     let component: SetAttachmentsEventComponent;

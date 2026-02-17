@@ -5,22 +5,21 @@
  * included in the LICENSE file.
  */
 
+import { YamlEventViewerComponent } from "@common/components/yaml-event-viewer/yaml-event-viewer.component";
 import { SetPollingSourceTooltipsTexts } from "@common/tooltips/set-polling-source-tooltips.text";
 import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
-
-import { YamlEventViewerComponent } from "../../../../../../common/components/yaml-event-viewer/yaml-event-viewer.component";
-import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
-import { getSourcesDescriptors } from "../common-sources/sources-event.source";
-import { CachePropertyComponent } from "../common/cache-property/cache-property.component";
-import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
-import { CommandPropertyComponent } from "../common/command-property/command-property.component";
-import { EnvVariablesPropertyComponent } from "../common/env-variables-property/env-variables-property.component";
-import { EventTimePropertyComponent } from "../common/event-time-property/event-time-property.component";
-import { LinkPropertyComponent } from "../common/link-property/link-property.component";
-import { OrderPropertyComponent } from "../common/order-property/order-property.component";
-import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
-import { StepTypePropertyComponent } from "../common/step-type-property/step-type-property.component";
-import { TopicsPropertyComponent } from "../common/topics-property/topics-property.component";
+import { getSourcesDescriptors } from "src/app/dataset-block/metadata-block/components/event-details/components/common-sources/sources-event.source";
+import { CachePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cache-property/cache-property.component";
+import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
+import { CommandPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/command-property/command-property.component";
+import { EnvVariablesPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/env-variables-property/env-variables-property.component";
+import { EventTimePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/event-time-property/event-time-property.component";
+import { LinkPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/link-property/link-property.component";
+import { OrderPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/order-property/order-property.component";
+import { SimplePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/simple-property/simple-property.component";
+import { StepTypePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/step-type-property/step-type-property.component";
+import { TopicsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/topics-property/topics-property.component";
+import { EventRowDescriptorsByField } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
 
 export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepUrl.__typename": {

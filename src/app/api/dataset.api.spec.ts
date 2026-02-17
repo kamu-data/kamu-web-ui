@@ -9,29 +9,7 @@ import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
 import { first, Observable } from "rxjs";
 
-import { CombinedGraphQLErrors } from "@apollo/client/errors";
-import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
-import { DocumentNode } from "graphql";
-
-import AppValues from "../common/values/app.values";
-import { mockGetDatasetSchemaQuery } from "../dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-import {
-    MOCK_NEW_DATASET_NAME,
-    mockCommitEventResponse,
-    mockCreateDatasetFromSnapshotResponse,
-    mockCreateEmptyDatasetResponse,
-    mockDataset403OperationError,
-    mockDatasetHeadBlockHashQuery,
-    mockDatasetHistoryResponse,
-    mockDatasetLineageResponse,
-    mockDatasetMainDataResponse,
-    mockDeleteSuccessResponse,
-    mockFullPowerDatasetPermissionsFragment,
-    mockRenameSuccessResponse,
-    mockUpdateReadmeSuccessResponse,
-    mockUpdateWatermarkSuccessResponse,
-} from "../search/mock.data";
-import { DatasetApi } from "./dataset.api";
+import { DatasetApi } from "@api/dataset.api";
 import {
     CommitEventToDatasetDocument,
     CommitEventToDatasetMutation,
@@ -76,8 +54,8 @@ import {
     UpdateReadmeMutation,
     UpdateWatermarkDocument,
     UpdateWatermarkMutation,
-} from "./kamu.graphql.interface";
-import { TEST_ACCOUNT_ID, TEST_LOGIN } from "./mock/auth.mock";
+} from "@api/kamu.graphql.interface";
+import { TEST_ACCOUNT_ID, TEST_LOGIN } from "@api/mock/auth.mock";
 import {
     mockDatasetBasicsWithPermissionQuery,
     mockDatasetByAccountAndDatasetNameQuery,
@@ -93,7 +71,28 @@ import {
     TEST_DATASET_NAME,
     TEST_LOGIN_RESULT,
     TEST_WATERMARK,
-} from "./mock/dataset.mock";
+} from "@api/mock/dataset.mock";
+import { CombinedGraphQLErrors } from "@apollo/client/errors";
+import AppValues from "@common/values/app.values";
+import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
+import { DocumentNode } from "graphql";
+import { mockGetDatasetSchemaQuery } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import {
+    MOCK_NEW_DATASET_NAME,
+    mockCommitEventResponse,
+    mockCreateDatasetFromSnapshotResponse,
+    mockCreateEmptyDatasetResponse,
+    mockDataset403OperationError,
+    mockDatasetHeadBlockHashQuery,
+    mockDatasetHistoryResponse,
+    mockDatasetLineageResponse,
+    mockDatasetMainDataResponse,
+    mockDeleteSuccessResponse,
+    mockFullPowerDatasetPermissionsFragment,
+    mockRenameSuccessResponse,
+    mockUpdateReadmeSuccessResponse,
+    mockUpdateWatermarkSuccessResponse,
+} from "src/app/search/mock.data";
 
 describe("DatasetApi", () => {
     let service: DatasetApi;

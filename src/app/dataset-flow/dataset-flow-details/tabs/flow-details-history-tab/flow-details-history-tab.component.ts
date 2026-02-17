@@ -12,11 +12,10 @@ import { MatIconModule } from "@angular/material/icon";
 
 import { FlowHistoryDataFragment, FlowStatus, FlowSummaryDataFragment, TaskStatus } from "@api/kamu.graphql.interface";
 import { DataHelpers } from "@common/helpers/data.helpers";
+import { SafeHtmlPipe } from "@common/pipes/safe-html.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-
-import { SafeHtmlPipe } from "../../../../common/pipes/safe-html.pipe";
-import { DatasetFlowByIdResponse } from "../../dataset-flow-details.types";
-import { DatasetFlowDetailsHelpers } from "./flow-details-history-tab.helpers";
+import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
 
 @Component({
     selector: "app-flow-details-history-tab",

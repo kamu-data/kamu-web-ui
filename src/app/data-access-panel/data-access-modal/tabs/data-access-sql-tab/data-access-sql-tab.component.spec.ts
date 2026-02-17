@@ -10,9 +10,8 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-
-import { mockDatasetEndPoints } from "../../../data-access-panel-mock.data";
-import { DataAccessSqlTabComponent } from "./data-access-sql-tab.component";
+import { DataAccessSqlTabComponent } from "src/app/data-access-panel/data-access-modal/tabs/data-access-sql-tab/data-access-sql-tab.component";
+import { mockDatasetEndPoints } from "src/app/data-access-panel/data-access-panel-mock.data";
 
 describe("DataAccessSqlTabComponent", () => {
     let component: DataAccessSqlTabComponent;

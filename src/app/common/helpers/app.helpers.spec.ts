@@ -7,10 +7,6 @@
 
 import { fakeAsync, flush, tick } from "@angular/core/testing";
 
-import { subDays } from "date-fns";
-import { MaybeNullOrUndefined } from "src/app/interface/app.types";
-
-import AppValues from "../values/app.values";
 import {
     isEqual,
     isNil,
@@ -18,7 +14,10 @@ import {
     momentConvertDateToLocalWithFormat,
     promiseWithCatch,
     requireValue,
-} from "./app.helpers";
+} from "@common/helpers/app.helpers";
+import AppValues from "@common/values/app.values";
+import { subDays } from "date-fns";
+import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 
 describe("AppHelpers", () => {
     it("should check non-null requireValue", () => {

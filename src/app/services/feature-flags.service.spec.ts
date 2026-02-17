@@ -9,9 +9,9 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 
-import { AppConfigService } from "../app-config.service";
-import { Feature, FeatureDevelopmentState, FeatureShowMode } from "../interface/feature-flags.interface";
-import { FeatureFlagsService } from "./feature-flags.service";
+import { AppConfigService } from "src/app/app-config.service";
+import { Feature, FeatureDevelopmentState, FeatureShowMode } from "src/app/interface/feature-flags.interface";
+import { FeatureFlagsService } from "src/app/services/feature-flags.service";
 
 describe("FeatureFlagsService", () => {
     let service: FeatureFlagsService;

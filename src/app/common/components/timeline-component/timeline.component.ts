@@ -11,14 +11,13 @@ import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
 
 import { MetadataBlockFragment, PageBasedInfo } from "@api/kamu.graphql.interface";
+import { DisplayHashComponent } from "@common/components/display-hash/display-hash.component";
+import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { DataHelpers } from "@common/helpers/data.helpers";
 import AppValues from "@common/values/app.values";
 import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
 import ProjectLinks from "src/app/project-links";
-
-import { FeatureFlagDirective } from "../../directives/feature-flag.directive";
-import { DisplayHashComponent } from "../display-hash/display-hash.component";
-import { DisplayTimeComponent } from "../display-time/display-time.component";
 
 @Component({
     selector: "app-timeline",

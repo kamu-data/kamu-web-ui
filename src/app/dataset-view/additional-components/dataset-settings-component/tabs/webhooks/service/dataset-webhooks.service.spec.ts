@@ -32,9 +32,8 @@ import {
 import { WebhooksApi } from "@api/webhooks.api";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
-
-import { CreateWebhookSubscriptionSuccess } from "../dataset-settings-webhooks-tab.component.types";
-import { DatasetWebhooksService } from "./dataset-webhooks.service";
+import { CreateWebhookSubscriptionSuccess } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
+import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 
 describe("DatasetWebhooksService", () => {
     let service: DatasetWebhooksService;

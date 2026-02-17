@@ -10,18 +10,17 @@ import { provideAnimations } from "@angular/platform-browser/animations";
 
 import { of } from "rxjs";
 
-import { Apollo } from "apollo-angular";
-import { provideToastr, ToastrService } from "ngx-toastr";
-
-import { AccountApi } from "../../../../api/account.api";
+import { AccountApi } from "@api/account.api";
 import {
     mockAccountChangeEmailMutationError,
     mockAccountChangeEmailMutationSuccess,
     mockAccountWithEmailQuery,
-} from "../../../../api/mock/account.mock";
-import { TEST_ACCOUNT_EMAIL } from "../../../../api/mock/auth.mock";
-import { TEST_ACCOUNT_NAME } from "../../../../api/mock/dataset.mock";
-import { AccountEmailService } from "./account-email.service";
+} from "@api/mock/account.mock";
+import { TEST_ACCOUNT_EMAIL } from "@api/mock/auth.mock";
+import { TEST_ACCOUNT_NAME } from "@api/mock/dataset.mock";
+import { Apollo } from "apollo-angular";
+import { provideToastr, ToastrService } from "ngx-toastr";
+import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 
 describe("AccountEmailService", () => {
     let service: AccountEmailService;

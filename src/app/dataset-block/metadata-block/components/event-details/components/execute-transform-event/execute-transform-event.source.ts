@@ -5,14 +5,13 @@
  * included in the LICENSE file.
  */
 
+import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
 import { ExecuteTransformTooltipsTexts } from "@common/tooltips/execute-transform.text";
-
-import { DisplayTimeComponent } from "../../../../../../common/components/display-time/display-time.component";
-import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
-import { HashPropertyComponent } from "../common/hash-property/hash-property.component";
-import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
-import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
-import { SizePropertyComponent } from "../common/size-property/size-property.component";
+import { HashPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/hash-property/hash-property.component";
+import { OffsetIntervalPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/offset-interval-property/offset-interval-property.component";
+import { SimplePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/simple-property/simple-property.component";
+import { SizePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/size-property/size-property.component";
+import { EventRowDescriptorsByField } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
 
 export const EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "ExecuteTransform.DataSlice.logicalHash": {

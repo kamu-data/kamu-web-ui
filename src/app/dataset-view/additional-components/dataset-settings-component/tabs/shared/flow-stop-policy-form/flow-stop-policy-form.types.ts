@@ -7,9 +7,8 @@
 
 import { FormControl } from "@angular/forms";
 
+import { FlowTriggerStopPolicyType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { MaybeNull } from "src/app/interface/app.types";
-
-import { FlowTriggerStopPolicyType } from "../../../dataset-settings.model";
 
 export interface FlowStopPolicyFormType {
     stopPolicyType: FormControl<MaybeNull<FlowTriggerStopPolicyType>>;

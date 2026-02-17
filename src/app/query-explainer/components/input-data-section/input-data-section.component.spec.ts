@@ -18,15 +18,14 @@ import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
 import { MarkdownModule } from "ngx-markdown";
 import { provideToastr } from "ngx-toastr";
 import ProjectLinks from "src/app/project-links";
-import { mockDatasetInfo } from "src/app/search/mock.data";
-
+import { InputDataSectionComponent } from "src/app/query-explainer/components/input-data-section/input-data-section.component";
 import {
     mockDatasetBlockNotFoundError,
     mockDatasetNotFoundError,
     mockQueryExplainerResponse,
     mockVerifyQueryResponseSuccess,
-} from "../../query-explainer.mocks";
-import { InputDataSectionComponent } from "./input-data-section.component";
+} from "src/app/query-explainer/query-explainer.mocks";
+import { mockDatasetInfo } from "src/app/search/mock.data";
 
 describe("InputDataSectionComponent", () => {
     let component: InputDataSectionComponent;

@@ -17,13 +17,12 @@ import { EditorModule } from "src/app/editor/editor.module";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
 import ProjectLinks from "src/app/project-links";
+import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
+import { SearchAndSchemasSectionComponent } from "src/app/query/global-query/search-and-schemas-section/search-and-schemas-section.component";
+import { QueryAndResultSectionsComponent } from "src/app/query/shared/query-and-result-sections/query-and-result-sections.component";
 import { CancelRequestService } from "src/app/services/cancel-request.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { SqlQueryService } from "src/app/services/sql-query.service";
-
-import { QueryAndResultSectionsComponent } from "../shared/query-and-result-sections/query-and-result-sections.component";
-import { SqlQueryBasicResponse } from "./global-query.model";
-import { SearchAndSchemasSectionComponent } from "./search-and-schemas-section/search-and-schemas-section.component";
 
 @Component({
     selector: "app-global-query",

@@ -10,25 +10,24 @@ import { inject, Injectable } from "@angular/core";
 
 import { catchError, EMPTY, map, Observable, ReplaySubject, Subject } from "rxjs";
 
+import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
+import { extractSchemaFieldsFromData } from "@common/helpers/data-schema.helpers";
+import { parseDataFromJsonAoSFormat } from "@common/helpers/data.helpers";
+import AppValues from "@common/values/app.values";
 import { ToastrService } from "ngx-toastr";
+import { AppConfigService } from "src/app/app-config.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DataSqlErrorUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
 import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
-
-import { AppConfigService } from "../app-config.service";
-import { LoggedUserService } from "../auth/logged-user.service";
-import { DynamicTableDataRow } from "../common/components/dynamic-table/dynamic-table.interface";
-import { extractSchemaFieldsFromData } from "../common/helpers/data-schema.helpers";
-import { parseDataFromJsonAoSFormat } from "../common/helpers/data.helpers";
-import AppValues from "../common/values/app.values";
-import { DataSqlErrorUpdate } from "../dataset-view/dataset.subscriptions.interface";
 import {
     QueryExplainerCommitmentType,
     QueryExplainerInputType,
     SqlQueryExplanationResponse,
-} from "../query-explainer/query-explainer.types";
-import { SqlQueryBasicResponse } from "../query/global-query/global-query.model";
-import { LocalStorageService } from "./local-storage.service";
+} from "src/app/query-explainer/query-explainer.types";
+import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
+import { LocalStorageService } from "src/app/services/local-storage.service";
 
 @Injectable({
     providedIn: "root",

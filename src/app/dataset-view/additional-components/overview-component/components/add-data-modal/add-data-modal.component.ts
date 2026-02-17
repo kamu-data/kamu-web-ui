@@ -12,14 +12,13 @@ import { MatIconModule } from "@angular/material/icon";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { AppConfigService } from "src/app/app-config.service";
+import { FileFromUrlModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/file-from-url-modal/file-from-url-modal.component";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { FileUploadService } from "src/app/services/file-upload.service";
-
-import { FeatureFlagDirective } from "../../../../../common/directives/feature-flag.directive";
-import { FileFromUrlModalComponent } from "../file-from-url-modal/file-from-url-modal.component";
 
 @Component({
     selector: "app-add-data-modal",

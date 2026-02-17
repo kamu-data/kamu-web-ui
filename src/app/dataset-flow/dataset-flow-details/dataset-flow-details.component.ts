@@ -15,17 +15,20 @@ import { combineLatest, map, Observable, shareReplay, skip, Subscription, takeWh
 
 import { FlowStatus, FlowSummaryDataFragment } from "@api/kamu.graphql.interface";
 import { BaseDatasetDataComponent } from "@common/components/base-dataset-data.component";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import {
+    DatasetFlowByIdResponse,
+    FlowDetailsTabs,
+    ViewMenuData,
+} from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
+import { DatasetViewHeaderComponent } from "src/app/dataset-view/dataset-view-header/dataset-view-header.component";
+import { DatasetViewMenuComponent } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { MaybeUndefined } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
-
-import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";
-import { DatasetViewHeaderComponent } from "../../dataset-view/dataset-view-header/dataset-view-header.component";
-import { DatasetViewMenuComponent } from "../../dataset-view/dataset-view-menu/dataset-view-menu.component";
-import { DatasetFlowByIdResponse, FlowDetailsTabs, ViewMenuData } from "./dataset-flow-details.types";
 
 @Component({
     selector: "app-dataset-flow-details",

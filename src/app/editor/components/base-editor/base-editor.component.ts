@@ -8,11 +8,10 @@
 import { Directive, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
 
 import * as monaco from "monaco-editor";
+import { getDefaultError } from "src/app/editor/helpers/editor-error-formatter";
+import { EditorError } from "src/app/editor/models/error.model";
+import { MonacoService } from "src/app/editor/services/monaco.service";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-
-import { getDefaultError } from "../../helpers/editor-error-formatter";
-import { EditorError } from "../../models/error.model";
-import { MonacoService } from "../../services/monaco.service";
 
 @Directive()
 export abstract class BaseEditorComponent implements OnChanges {

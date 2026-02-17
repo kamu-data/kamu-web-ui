@@ -8,13 +8,12 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { ErrorSets } from "@common/directives/form-validation-errors.types";
 import { matchFieldsValidator } from "@common/helpers/data.helpers";
 import { AccountService } from "src/app/account/account.service";
+import { ChangeAdminAccountPasswordFormType } from "src/app/account/settings/tabs/password-and-authentication-tab/password-and-authentication-tab.component.types";
 import { AppConfigService } from "src/app/app-config.service";
-
-import { FormValidationErrorsDirective } from "../../../../../../common/directives/form-validation-errors.directive";
-import { ChangeAdminAccountPasswordFormType } from "../../password-and-authentication-tab.component.types";
 
 @Component({
     selector: "app-admin-change-password",

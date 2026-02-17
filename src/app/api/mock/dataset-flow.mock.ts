@@ -5,31 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
-import {
-    mockFlowPollingSourceFragmentFetchUrl,
-    mockFlowSetTransformFragment,
-} from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
-import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
-import {
-    mockDatasetMainDataId,
-    mockOwnerFieldsWithAvatar,
-    mockPublicDatasetVisibility,
-} from "src/app/search/mock.data";
-
-import {
-    DatasetFlowsProcessesQuery,
-    DatasetKind,
-    GetDatasetFlowConfigsQuery,
-    TimeDeltaInput,
-    TimeUnit,
-} from "../kamu.graphql.interface";
 import {
     AccountProvider,
     AccountType,
     CancelFlowRunMutation,
     DatasetFlowsInitiatorsQuery,
+    DatasetFlowsProcessesQuery,
     DatasetFlowType,
+    DatasetKind,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
     DatasetTriggerCompactionFlowMutation,
@@ -51,6 +34,7 @@ import {
     FlowTriggerBreakingChangeRule,
     FlowTriggerReactiveRule,
     FlowTriggerScheduleRule,
+    GetDatasetFlowConfigsQuery,
     GetDatasetFlowTriggerQuery,
     GetDatasetListFlowsQuery,
     GetFlowByIdQuery,
@@ -59,7 +43,20 @@ import {
     SetDatasetFlowTriggerMutation,
     SetIngestFlowConfigMutation,
     TaskStatus,
-} from "./../kamu.graphql.interface";
+    TimeDeltaInput,
+    TimeUnit,
+} from "@api/kamu.graphql.interface";
+import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import {
+    mockFlowPollingSourceFragmentFetchUrl,
+    mockFlowSetTransformFragment,
+} from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
+import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
+import {
+    mockDatasetMainDataId,
+    mockOwnerFieldsWithAvatar,
+    mockPublicDatasetVisibility,
+} from "src/app/search/mock.data";
 
 export const mockTimeDeltaInput: TimeDeltaInput = {
     every: 10,

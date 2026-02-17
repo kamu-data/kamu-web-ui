@@ -9,12 +9,11 @@ import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
-
-import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
-import { BaseField } from "../base-field";
+import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 
 @Component({
     selector: "app-input-field",

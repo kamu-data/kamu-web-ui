@@ -9,20 +9,20 @@
 
 import { Routes } from "@angular/router";
 
-import { AuthenticatedGuard } from "../auth/guards/authenticated.guard";
-import { datasetInfoResolverFn } from "../common/resolvers/dataset-info.resolver";
-import RoutingResolvers from "../common/resolvers/routing-resolvers";
-import ProjectLinks from "../project-links";
-import { DataComponent } from "./additional-components/data-component/data.component";
-import { datasetDataTabResolverFn } from "./additional-components/data-component/resolver/dataset-data-tab.resolver";
-import { FlowsComponent } from "./additional-components/flows-component/flows.component";
-import { datasetFlowsTabResolverFn } from "./additional-components/flows-component/resolver/dataset-flows-tab.resolver";
-import { OverviewComponent } from "./additional-components/overview-component/overview.component";
-import { datasetOverviewTabResolverFn } from "./additional-components/overview-component/resolver/dataset-overview-tab.resolver";
-import { DatasetViewComponent } from "./dataset-view.component";
-import { DatasetViewTypeEnum } from "./dataset-view.interface";
-import { datasetViewActiveTabResolverFn } from "./resolvers/dataset-view-active-tab.resolver";
-import { datasetViewResolverFn } from "./resolvers/dataset-view.resolver";
+import { datasetInfoResolverFn } from "@common/resolvers/dataset-info.resolver";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { AuthenticatedGuard } from "src/app/auth/guards/authenticated.guard";
+import { DataComponent } from "src/app/dataset-view/additional-components/data-component/data.component";
+import { datasetDataTabResolverFn } from "src/app/dataset-view/additional-components/data-component/resolver/dataset-data-tab.resolver";
+import { FlowsComponent } from "src/app/dataset-view/additional-components/flows-component/flows.component";
+import { datasetFlowsTabResolverFn } from "src/app/dataset-view/additional-components/flows-component/resolver/dataset-flows-tab.resolver";
+import { OverviewComponent } from "src/app/dataset-view/additional-components/overview-component/overview.component";
+import { datasetOverviewTabResolverFn } from "src/app/dataset-view/additional-components/overview-component/resolver/dataset-overview-tab.resolver";
+import { DatasetViewComponent } from "src/app/dataset-view/dataset-view.component";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { datasetViewActiveTabResolverFn } from "src/app/dataset-view/resolvers/dataset-view-active-tab.resolver";
+import { datasetViewResolverFn } from "src/app/dataset-view/resolvers/dataset-view.resolver";
+import ProjectLinks from "src/app/project-links";
 
 export const DATASET_VIEW_ROUTES: Routes = [
     {

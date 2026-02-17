@@ -21,13 +21,12 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
+import { DatasetSettingsSecretsManagerTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-settings-secrets-manager-tab.component";
+import { MOCK_DATASET_INFO } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { MOCK_DATASET_INFO } from "../../../metadata-component/components/set-transform/mock.data";
-import { DatasetSettingsSecretsManagerTabComponent } from "./dataset-settings-secrets-manager-tab.component";
 
 describe("DatasetSettingsSecretsManagerTabComponent", () => {
     let component: DatasetSettingsSecretsManagerTabComponent;

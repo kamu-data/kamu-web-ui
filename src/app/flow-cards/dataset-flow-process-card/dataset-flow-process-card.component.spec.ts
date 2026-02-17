@@ -11,11 +11,10 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { FlowProcessEffectiveState, FlowProcessSummary } from "@api/kamu.graphql.interface";
 import { mockAccountFlowsAsCardsQuery } from "@api/mock/account.mock";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.component";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-
-import { registerMatSvgIcons } from "../../common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "../../common/modules/shared-test.module";
-import { DatasetFlowProcessCardComponent } from "./dataset-flow-process-card.component";
 
 describe("DatasetFlowProcessCardComponent", () => {
     let component: DatasetFlowProcessCardComponent;

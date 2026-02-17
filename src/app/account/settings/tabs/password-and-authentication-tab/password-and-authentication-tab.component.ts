@@ -11,15 +11,14 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { MatDividerModule } from "@angular/material/divider";
 
 import { AccountFragment } from "@api/kamu.graphql.interface";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { ErrorSets } from "@common/directives/form-validation-errors.types";
 import { matchFieldsValidator } from "@common/helpers/data.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { AccountService } from "src/app/account/account.service";
+import { AdminChangePasswordComponent } from "src/app/account/settings/tabs/password-and-authentication-tab/components/admin-change-password/admin-change-password.component";
+import { ChangeUserAccountPasswordFormType } from "src/app/account/settings/tabs/password-and-authentication-tab/password-and-authentication-tab.component.types";
 import { AppConfigService } from "src/app/app-config.service";
-
-import { FormValidationErrorsDirective } from "../../../../common/directives/form-validation-errors.directive";
-import { AdminChangePasswordComponent } from "./components/admin-change-password/admin-change-password.component";
-import { ChangeUserAccountPasswordFormType } from "./password-and-authentication-tab.component.types";
 
 @Component({
     selector: "app-password-and-authentication-tab",

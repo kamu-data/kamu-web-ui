@@ -17,26 +17,25 @@ import AppValues from "@common/values/app.values";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import ProjectLinks from "src/app/project-links";
-import { NavigationService } from "src/app/services/navigation.service";
-import { SessionStorageService } from "src/app/services/session-storage.service";
-import { SqlQueryService } from "src/app/services/sql-query.service";
-
-import {
-    mockDatasetBasicsDerivedFragment,
-    mockDatasetBasicsRootFragment,
-    mockFullPowerDatasetPermissionsFragment,
-} from "../../../search/mock.data";
-import { OverviewUpdate } from "../../dataset.subscriptions.interface";
+import { DataComponent } from "src/app/dataset-view/additional-components/data-component/data.component";
 import {
     mockMetadataDerivedUpdate,
     mockMetadataRootUpdate,
     mockOverviewDataUpdate,
     mockOverviewDataUpdateNullable,
-} from "../data-tabs.mock";
-import { EngineService } from "../metadata-component/components/set-transform/components/engine-section/engine.service";
-import { mockEngines } from "../metadata-component/components/set-transform/mock.data";
-import { DataComponent } from "./data.component";
+} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
+import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import ProjectLinks from "src/app/project-links";
+import {
+    mockDatasetBasicsDerivedFragment,
+    mockDatasetBasicsRootFragment,
+    mockFullPowerDatasetPermissionsFragment,
+} from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
+import { SessionStorageService } from "src/app/services/session-storage.service";
+import { SqlQueryService } from "src/app/services/sql-query.service";
 
 describe("DataComponent", () => {
     let component: DataComponent;

@@ -22,6 +22,13 @@ import AppValues from "@common/values/app.values";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { mockDatasets } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
+import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
+import { FlowsComponent } from "src/app/dataset-view/additional-components/flows-component/flows.component";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { FlowsSelectionStateService } from "src/app/dataset-view/additional-components/flows-component/services/flows-selection-state.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import {
     mockDatasetBasicsDerivedFragment,
@@ -31,14 +38,6 @@ import {
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
-
-import { DatasetViewTypeEnum } from "../../dataset-view.interface";
-import { mockOverviewUpdate } from "../data-tabs.mock";
-import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
-import { DatasetWebhooksService } from "../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
-import { FlowsComponent } from "./flows.component";
-import { DatasetFlowsService } from "./services/dataset-flows.service";
-import { FlowsSelectionStateService } from "./services/flows-selection-state.service";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;

@@ -11,17 +11,16 @@ import { MatIconModule } from "@angular/material/icon";
 
 import { catchError, from, of, take } from "rxjs";
 
+import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
 import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
+import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { EditWatermarkModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { EditWatermarkModalComponent } from "../../../overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
-import { MetadataTabs } from "../../metadata.constants";
 
 @Component({
     selector: "app-metadata-watermark-tab",

@@ -18,10 +18,12 @@ import { DatasetAccessRole, DatasetBasicsFragment, NameLookupResult } from "@api
 import { BaseComponent } from "@common/components/base.component";
 import AppValues from "@common/values/app.values";
 import { NgbActiveModal, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
+import {
+    CollaboratorModalResultType,
+    ROLE_OPTIONS,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.model";
+import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 import { MaybeNull } from "src/app/interface/app.types";
-
-import { DatasetCollaborationsService } from "../dataset-collaborations.service";
-import { CollaboratorModalResultType, ROLE_OPTIONS } from "./add-people-modal.model";
 
 @Component({
     selector: "app-add-people-modal",

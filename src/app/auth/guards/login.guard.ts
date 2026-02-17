@@ -8,11 +8,10 @@
 import { inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { LoginMethodsService } from "src/app/auth/login-methods.service";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { LoggedUserService } from "../logged-user.service";
-import { LoginMethodsService } from "../login-methods.service";
 
 @Injectable({
     providedIn: "root",

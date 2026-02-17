@@ -13,13 +13,12 @@ import { MatDividerModule } from "@angular/material/divider";
 import { Observable } from "rxjs";
 
 import { AccountWithEmailFragment } from "@api/kamu.graphql.interface";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { AccountSettingsTabs } from "src/app/account/settings/account-settings.constants";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
+import { ChangeEmailFormType } from "src/app/account/settings/tabs/emails-tab/email-tabs.types";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { FormValidationErrorsDirective } from "../../../../common/directives/form-validation-errors.directive";
-import { AccountSettingsTabs } from "../../account-settings.constants";
-import { ChangeEmailFormType } from "./email-tabs.types";
 
 @Component({
     selector: "app-emails-tab",

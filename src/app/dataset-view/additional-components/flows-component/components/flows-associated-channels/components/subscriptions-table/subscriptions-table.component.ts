@@ -17,9 +17,8 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTableModule } from "@angular/material/table";
 
 import { DatasetBasicsFragment, FlowProcessEffectiveState, WebhookFlowSubProcess } from "@api/kamu.graphql.interface";
-
-import { webhooksStateMapper } from "../../../../flows.helpers";
-import { SubprocessStatusFilterPipe } from "../../../../pipes/subprocess-status-filter.pipe";
+import { webhooksStateMapper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
+import { SubprocessStatusFilterPipe } from "src/app/dataset-view/additional-components/flows-component/pipes/subprocess-status-filter.pipe";
 
 @Component({
     selector: "app-subscriptions-table",

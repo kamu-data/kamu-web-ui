@@ -14,13 +14,12 @@ import { FlowProcessEffectiveState, OrderingDirection } from "@api/kamu.graphql.
 import { OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { NgSelectModule } from "@ng-select/ng-select";
-import { nextTimeRangeHelper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
-
 import {
     DashboardFiltersOptions,
     RANGE_NEXT_ATTEMPT_LIST,
     RangeLastAttemptOption,
-} from "../../../../account-flows-tab.types";
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { nextTimeRangeHelper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 
 @Component({
     selector: "app-upcoming-scheduled-filters-view",

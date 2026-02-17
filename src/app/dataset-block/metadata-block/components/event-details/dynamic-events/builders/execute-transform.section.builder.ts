@@ -6,10 +6,12 @@
  */
 
 import { DataSlice, ExecuteTransform, ExecuteTransformInput } from "@api/kamu.graphql.interface";
-
-import { EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS } from "../../components/execute-transform-event/execute-transform-event.source";
-import { EventRow, EventSection } from "../dynamic-events.model";
-import { EventSectionBuilder } from "./event-section.builder";
+import { EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS } from "src/app/dataset-block/metadata-block/components/event-details/components/execute-transform-event/execute-transform-event.source";
+import { EventSectionBuilder } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/builders/event-section.builder";
+import {
+    EventRow,
+    EventSection,
+} from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
 
 export enum ExecuteTransformSection {
     QUERY_INPUTS = "queryInputs",

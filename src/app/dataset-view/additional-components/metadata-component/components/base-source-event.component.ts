@@ -11,30 +11,29 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 
 import { catchError, from, of, take } from "rxjs";
 
-import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetKind } from "@api/kamu.graphql.interface";
+import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import {
     SourcesEvents,
     SupportedEvents,
 } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-
-import { ProcessFormService } from "../services/process-form.service";
-import { FinalYamlModalComponent } from "./final-yaml-modal/final-yaml-modal.component";
+import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
 import {
     AddPollingSourceEditFormType,
     MergeKind,
     PreprocessStepValue,
     ReadKind,
-} from "./source-events/add-polling-source/add-polling-source-form.types";
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import {
     MERGE_STEP_RADIO_CONTROLS,
     READ_STEP_RADIO_CONTROLS,
-} from "./source-events/add-polling-source/form-control.source";
-import { AddPushSourceEditFormType } from "./source-events/add-push-source/add-push-source-form.types";
-import { BaseMainEventComponent } from "./source-events/base-main-event.component";
-import { MERGE_FORM_DATA } from "./source-events/steps/data/merge-form-data";
-import { READ_FORM_DATA } from "./source-events/steps/data/read-form-data";
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/form-control.source";
+import { AddPushSourceEditFormType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
+import { BaseMainEventComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/base-main-event.component";
+import { MERGE_FORM_DATA } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/data/merge-form-data";
+import { READ_FORM_DATA } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/data/read-form-data";
+import { ProcessFormService } from "src/app/dataset-view/additional-components/metadata-component/services/process-form.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 @Injectable()
 export abstract class BaseSourceEventComponent extends BaseMainEventComponent implements OnInit {

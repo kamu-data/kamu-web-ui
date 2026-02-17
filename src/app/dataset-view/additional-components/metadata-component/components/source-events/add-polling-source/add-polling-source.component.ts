@@ -14,19 +14,21 @@ import { RouterLink } from "@angular/router";
 
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
+import { BaseSourceEventComponent } from "src/app/dataset-view/additional-components/metadata-component/components/base-source-event.component";
+import {
+    FetchKind,
+    SetPollingSourceSection,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { FETCH_STEP_RADIO_CONTROLS } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/form-control.source";
+import { SourcesSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
+import { BaseStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/base-step/base-step.component";
+import { FETCH_FORM_DATA } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/data/fetch-form-data";
+import { PrepareStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/prepare-step/prepare-step.component";
+import { PreprocessStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/preprocess-step/preprocess-step.component";
+import { StepperNavigationComponent } from "src/app/dataset-view/additional-components/metadata-component/components/stepper-navigation/stepper-navigation.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { EditorModule } from "src/app/editor/editor.module";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-
-import { BaseSourceEventComponent } from "../../base-source-event.component";
-import { StepperNavigationComponent } from "../../stepper-navigation/stepper-navigation.component";
-import { BaseStepComponent } from "../steps/base-step/base-step.component";
-import { FETCH_FORM_DATA } from "../steps/data/fetch-form-data";
-import { PrepareStepComponent } from "../steps/prepare-step/prepare-step.component";
-import { PreprocessStepComponent } from "../steps/preprocess-step/preprocess-step.component";
-import { FetchKind, SetPollingSourceSection } from "./add-polling-source-form.types";
-import { FETCH_STEP_RADIO_CONTROLS } from "./form-control.source";
-import { SourcesSection } from "./process-form.service.types";
 
 @Component({
     selector: "app-add-polling-source",

@@ -11,19 +11,18 @@ import { Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 
 import { DatasetApi } from "@api/dataset.api";
-import { MaybeNull } from "src/app/interface/app.types";
-
 import {
     AccountFragment,
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetMutation,
     DatasetKind,
     DatasetVisibility,
-} from "../api/kamu.graphql.interface";
-import { LoggedUserService } from "../auth/logged-user.service";
-import { DatasetOperationError } from "../common/values/errors";
-import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
-import { NavigationService } from "../services/navigation.service";
+} from "@api/kamu.graphql.interface";
+import { DatasetOperationError } from "@common/values/errors";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { MaybeNull } from "src/app/interface/app.types";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Injectable({ providedIn: "root" })
 export class DatasetCreateService {

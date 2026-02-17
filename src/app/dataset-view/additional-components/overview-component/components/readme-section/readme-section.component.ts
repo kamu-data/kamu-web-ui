@@ -26,13 +26,12 @@ import { BaseComponent } from "@common/components/base.component";
 import { addMarkdownRunButton } from "@common/helpers/app.helpers";
 import { MarkdownModule } from "ngx-markdown";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { EditMode } from "src/app/dataset-view/additional-components/overview-component/components/readme-section/readme-section.types";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";
-
-import { DatasetCommitService } from "../../services/dataset-commit.service";
-import { NavigationService } from "./../../../../../services/navigation.service";
-import { EditMode } from "./readme-section.types";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-readme-section",

@@ -22,9 +22,8 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { format, isAfter } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { MaybeNullOrUndefined } from "src/app/interface/app.types";
-
-import { DatasetCommitService } from "../../services/dataset-commit.service";
 
 @Component({
     selector: "app-edit-watermark-modal",

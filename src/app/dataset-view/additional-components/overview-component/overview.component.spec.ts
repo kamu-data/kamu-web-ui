@@ -33,19 +33,21 @@ import { MarkdownModule } from "ngx-markdown";
 import { provideToastr } from "ngx-toastr";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockSetLicense } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
-import { NavigationService } from "src/app/services/navigation.service";
-
+import {
+    mockMetadataDerivedUpdate,
+    mockOverviewDataUpdate,
+} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { OverviewComponent } from "src/app/dataset-view/additional-components/overview-component/overview.component";
+import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
     mockDatasetBasicsDerivedFragment,
     mockFullPowerDatasetPermissionsFragment,
     mockPublicDatasetVisibility,
-} from "../../../search/mock.data";
-import { OverviewUpdate } from "../../dataset.subscriptions.interface";
-import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import { mockMetadataDerivedUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
-import { DatasetCollaborationsService } from "../dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
-import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
-import { OverviewComponent } from "./overview.component";
+} from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("OverviewComponent", () => {
     let component: OverviewComponent;

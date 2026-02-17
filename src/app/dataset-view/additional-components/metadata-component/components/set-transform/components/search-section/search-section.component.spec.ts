@@ -16,12 +16,11 @@ import AppValues from "@common/values/app.values";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import { SearchSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/search-section/search-section.component";
+import { mockGetDatasetSchemaQuery } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { mockDatasetBasicsDerivedFragment, mockDatasetInfo } from "src/app/search/mock.data";
-
-import { mockGetDatasetSchemaQuery } from "../../mock.data";
-import { SearchSectionComponent } from "./search-section.component";
 
 describe("SearchSectionComponent", () => {
     let component: SearchSectionComponent;

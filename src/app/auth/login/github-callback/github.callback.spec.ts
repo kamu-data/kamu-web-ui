@@ -13,10 +13,9 @@ import { AuthApi } from "@api/auth.api";
 import { GithubLoginCredentials } from "@api/auth.api.model";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
+import { GithubCallbackComponent } from "src/app/auth/login/github-callback/github.callback";
+import { LoginService } from "src/app/auth/login/login.service";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { LoginService } from "../login.service";
-import { GithubCallbackComponent } from "./github.callback";
 
 describe("GithubCallbackComponent", () => {
     let component: GithubCallbackComponent;

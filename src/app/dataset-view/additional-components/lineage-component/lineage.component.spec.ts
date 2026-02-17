@@ -14,14 +14,13 @@ import { Node } from "@swimlane/ngx-graph";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 import { AccountService } from "src/app/account/account.service";
+import { LineageGraphNodeData } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
+import { LineageComponent } from "src/app/dataset-view/additional-components/lineage-component/lineage.component";
+import { MOCK_DATASET_INFO } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { mockNode, mockNodesWithEqualNames } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { mockNode, mockNodesWithEqualNames } from "../../../search/mock.data";
-import { DatasetViewTypeEnum } from "../../dataset-view.interface";
-import { DatasetService } from "../../dataset.service";
-import { MOCK_DATASET_INFO } from "../metadata-component/components/set-transform/mock.data";
-import { LineageGraphNodeData } from "./lineage-model";
-import { LineageComponent } from "./lineage.component";
 
 describe("LineageComponent", () => {
     let component: LineageComponent;

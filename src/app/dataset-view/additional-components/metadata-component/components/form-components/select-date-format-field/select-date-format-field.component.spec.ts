@@ -10,9 +10,8 @@ import { FormControl, FormGroup } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 
 import { SetPollingSourceTooltipsTexts } from "@common/tooltips/set-polling-source-tooltips.text";
-
-import { EventTimeSourceKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
-import { SelectDateFormatFieldComponent } from "./select-date-format-field.component";
+import { SelectDateFormatFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/select-date-format-field/select-date-format-field.component";
+import { EventTimeSourceKind } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 
 describe("SelectDateFormatFieldComponent", () => {
     let component: SelectDateFormatFieldComponent;

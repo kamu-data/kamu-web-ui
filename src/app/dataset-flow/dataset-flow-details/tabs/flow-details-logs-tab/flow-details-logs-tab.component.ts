@@ -12,9 +12,8 @@ import { MatIconModule } from "@angular/material/icon";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-
-import { GrafanaLogsService } from "../../../../services/grafana-logs.service";
-import { DatasetFlowByIdResponse } from "../../dataset-flow-details.types";
+import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { GrafanaLogsService } from "src/app/services/grafana-logs.service";
 
 @Component({
     selector: "app-flow-details-logs-tab",

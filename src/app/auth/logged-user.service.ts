@@ -11,18 +11,17 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { EMPTY, Observable, ReplaySubject, Subject } from "rxjs";
 import { catchError, first } from "rxjs/operators";
 
+import { AccountFragment } from "@api/kamu.graphql.interface";
+import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ondestroy.adapter";
+import { isNull, promiseWithCatch } from "@common/helpers/app.helpers";
 import { Apollo } from "apollo-angular";
+import { AppLoginInstructions } from "src/app/app-config.model";
+import { AppConfigService } from "src/app/app-config.service";
+import { LoginService } from "src/app/auth/login/login.service";
 import { MaybeNull } from "src/app/interface/app.types";
+import { LocalStorageService } from "src/app/services/local-storage.service";
+import { NavigationService } from "src/app/services/navigation.service";
 import { SessionStorageService } from "src/app/services/session-storage.service";
-
-import { AccountFragment } from "../api/kamu.graphql.interface";
-import { AppLoginInstructions } from "../app-config.model";
-import { AppConfigService } from "../app-config.service";
-import { UnsubscribeDestroyRefAdapter } from "../common/components/unsubscribe.ondestroy.adapter";
-import { isNull, promiseWithCatch } from "../common/helpers/app.helpers";
-import { LocalStorageService } from "../services/local-storage.service";
-import { NavigationService } from "../services/navigation.service";
-import { LoginService } from "./login/login.service";
 
 @Injectable({
     providedIn: "root",

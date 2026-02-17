@@ -11,26 +11,25 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
-import { Apollo } from "apollo-angular";
-import { provideToastr, ToastrService } from "ngx-toastr";
-
-import { mockDatasetByIdQuery } from "../api/mock/dataset.mock";
-import { HIGHLIGHT_OPTIONS_PROVIDER } from "../common/helpers/app.helpers";
+import { mockDatasetByIdQuery } from "@api/mock/dataset.mock";
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
 import {
     checkButtonDisabled,
     emitClickOnElementByDataTestId,
     registerMatSvgIcons,
     setFieldValue,
-} from "../common/helpers/base-test.helpers.spec";
-import { DatasetService } from "../dataset-view/dataset.service";
-import { SharedTestModule } from "./../common/modules/shared-test.module";
-import { QueryExplainerComponent } from "./query-explainer.component";
+} from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { Apollo } from "apollo-angular";
+import { provideToastr, ToastrService } from "ngx-toastr";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { QueryExplainerComponent } from "src/app/query-explainer/query-explainer.component";
 import {
     mockQueryExplainerResponse,
     mockTextareaCommitment,
     mockVerifyQueryResponseSuccess,
-} from "./query-explainer.mocks";
-import { QueryExplainerService } from "./query-explainer.service";
+} from "src/app/query-explainer/query-explainer.mocks";
+import { QueryExplainerService } from "src/app/query-explainer/query-explainer.service";
 
 describe("QueryExplainerComponent", () => {
     let component: QueryExplainerComponent;

@@ -19,8 +19,6 @@ import { RouterLink } from "@angular/router";
 
 import { combineLatest, map, Observable, of, switchMap, take, tap, timer } from "rxjs";
 
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import AppValues from "@common/values/app.values";
 import {
     AccountFragment,
     DatasetBasicsFragment,
@@ -33,31 +31,33 @@ import {
     InitiatorFilterInput,
     WebhookFlowSubProcess,
 } from "@api/kamu.graphql.interface";
+import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
 import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table/components/flow-table-panel-filters/flow-table-panel-filters.component";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
+import { FlowsTableComponent } from "src/app/dataset-flow/flows-table/flows-table.component";
 import { FilterStatusType, FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
-import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.component";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import ProjectLinks from "src/app/project-links";
-import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
-import { environment } from "src/environments/environment";
-
-import { PaginationComponent } from "../../../common/components/pagination-component/pagination.component";
-import { FlowsTableComponent } from "../../../dataset-flow/flows-table/flows-table.component";
-import { TileBaseWidgetComponent } from "../../../dataset-flow/tile-base-widget/tile-base-widget.component";
-import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
-import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
-import { DatasetWebhooksService } from "../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
-import { FlowsAssociatedChannelsComponent } from "./components/flows-associated-channels/flows-associated-channels.component";
-import { FlowsBlockActionsComponent } from "./components/flows-block-actions/flows-block-actions.component";
+import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
+import { FlowsAssociatedChannelsComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-associated-channels/flows-associated-channels.component";
+import { FlowsBlockActionsComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-block-actions/flows-block-actions.component";
 import {
     DatasetFlowsTabState,
     FlowsCategoryUnion,
     FlowsSelectedCategory,
     FlowsSelectionState,
     WebhooksSelectedCategory,
-} from "./flows.helpers";
-import { FlowsSelectionStateService } from "./services/flows-selection-state.service";
+} from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
+import { FlowsSelectionStateService } from "src/app/dataset-view/additional-components/flows-component/services/flows-selection-state.service";
+import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.component";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
+import ProjectLinks from "src/app/project-links";
+import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
+
+import { environment } from "@env/environment";
 
 @Component({
     selector: "app-flows",

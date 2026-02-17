@@ -9,12 +9,11 @@ import { NgFor } from "@angular/common";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
-
-import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
-import { SourceOrder } from "../../source-events/add-polling-source/process-form.service.types";
-import { BaseField } from "../base-field";
-import { ORDER_RADIO_CONTROL } from "./order-field.types";
+import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
+import { ORDER_RADIO_CONTROL } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/order-field/order-field.types";
+import { SourceOrder } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
 
 @Component({
     selector: "app-order-field",

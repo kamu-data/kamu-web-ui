@@ -22,8 +22,7 @@ import AppValues from "@common/values/app.values";
 import { ToastrService } from "ngx-toastr";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-
-import { NavigationService } from "../../../../services/navigation.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Injectable({
     providedIn: "root",

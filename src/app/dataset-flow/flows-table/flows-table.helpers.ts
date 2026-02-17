@@ -11,13 +11,12 @@ import {
     FlowSummaryDataFragment,
     FlowTimingRecords,
 } from "@api/kamu.graphql.interface";
+import { excludeAgoWord, isNil, pluralize } from "@common/helpers/app.helpers";
 import { DataHelpers } from "@common/helpers/data.helpers";
 import AppValues from "@common/values/app.values";
 import { formatDistanceToNowStrict } from "date-fns";
 import { format } from "date-fns/format";
 import { MaybeNull } from "src/app/interface/app.types";
-
-import { excludeAgoWord, isNil, pluralize } from "../../common/helpers/app.helpers";
 
 export class FlowTableHelpers {
     public static flowTypeDescription(flow: FlowSummaryDataFragment): string {

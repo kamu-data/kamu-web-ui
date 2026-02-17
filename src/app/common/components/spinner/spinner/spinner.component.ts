@@ -9,7 +9,7 @@ import { AsyncPipe, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 
-import { SpinnerService } from "../spinner.service";
+import { SpinnerService } from "@common/components/spinner/spinner.service";
 
 @Component({
     selector: "app-spinner",

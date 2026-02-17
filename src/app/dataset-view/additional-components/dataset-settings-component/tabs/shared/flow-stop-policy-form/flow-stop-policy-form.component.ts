@@ -16,10 +16,12 @@ import { BaseComponent } from "@common/components/base.component";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
+import { FlowTriggerStopPolicyType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import {
+    FlowStopPolicyFormType,
+    FlowStopPolicyFormValue,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.types";
 import { MaybeNull } from "src/app/interface/app.types";
-
-import { FlowTriggerStopPolicyType } from "../../../dataset-settings.model";
-import { FlowStopPolicyFormType, FlowStopPolicyFormValue } from "./flow-stop-policy-form.types";
 
 @Component({
     selector: "app-flow-stop-policy-form",

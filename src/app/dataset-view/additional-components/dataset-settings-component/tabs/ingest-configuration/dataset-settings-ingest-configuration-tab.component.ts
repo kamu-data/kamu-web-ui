@@ -14,15 +14,14 @@ import { MatDividerModule } from "@angular/material/divider";
 import { DatasetBasicsFragment, DatasetKind } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-
-import { DatasetFlowConfigService } from "../../services/dataset-flow-config.service";
-import { DatasetSettingsIngestConfigurationTabData } from "./dataset-settings-ingest-configuration-tab.data";
+import { DatasetFlowConfigService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-config.service";
+import { DatasetSettingsIngestConfigurationTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.data";
 import {
     IngestConfigurationFormType,
     IngestConfigurationFormValue,
-} from "./dataset-settings-ingest-configuration-tab.types";
-import { FlowRetryPolicyFormComponent } from "./flow-retry-policy-form/flow-retry-policy-form.component";
-import { IngestConfigurationRuleFormComponent } from "./ingest-configuration-rule-form/ingest-configuration-rule-form.component";
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.types";
+import { FlowRetryPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/flow-retry-policy-form/flow-retry-policy-form.component";
+import { IngestConfigurationRuleFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/ingest-configuration-rule-form/ingest-configuration-rule-form.component";
 
 @Component({
     selector: "app-dataset-settings-ingest-configuration-tab",

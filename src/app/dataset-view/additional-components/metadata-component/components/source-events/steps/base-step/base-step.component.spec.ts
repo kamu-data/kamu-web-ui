@@ -8,18 +8,17 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormArray, FormBuilder, FormControl, FormGroupDirective } from "@angular/forms";
 
-import { Apollo } from "apollo-angular";
 import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-
+import { Apollo } from "apollo-angular";
 import {
     EventTimeSourceKind,
     FetchKind,
     SetPollingSourceSection,
-} from "../../add-polling-source/add-polling-source-form.types";
-import { FETCH_STEP_RADIO_CONTROLS } from "../../add-polling-source/form-control.source";
-import { FETCH_FORM_DATA } from "../data/fetch-form-data";
-import { BaseStepComponent } from "./base-step.component";
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { FETCH_STEP_RADIO_CONTROLS } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/form-control.source";
+import { BaseStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/base-step/base-step.component";
+import { FETCH_FORM_DATA } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/data/fetch-form-data";
 
 const fb = new FormBuilder();
 export const formGroupDirective = new FormGroupDirective([], []);

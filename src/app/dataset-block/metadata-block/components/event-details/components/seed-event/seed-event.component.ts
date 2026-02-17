@@ -12,9 +12,8 @@ import { MatIconModule } from "@angular/material/icon";
 
 import { Seed } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
+import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
 import { ToastrService } from "ngx-toastr";
-
-import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
 
 @Component({
     selector: "app-seed-event",

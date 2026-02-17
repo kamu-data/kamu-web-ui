@@ -9,11 +9,6 @@ import { inject, Injectable } from "@angular/core";
 
 import { first, map, Observable } from "rxjs";
 
-import { ApolloLink, ObservableQuery } from "@apollo/client/core";
-import { onlyCompleteData } from "apollo-angular";
-
-import { updateCacheHelper } from "../common/helpers/apollo-cache.helper";
-import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 import {
     DeleteEnvVariableGQL,
     DeleteEnvVariableMutation,
@@ -23,7 +18,11 @@ import {
     ListEnvVariablesQuery,
     UpsertEnvVariableGQL,
     UpsertEnvVariableMutation,
-} from "./kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
+import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { updateCacheHelper } from "@common/helpers/apollo-cache.helper";
+import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
+import { onlyCompleteData } from "apollo-angular";
 
 @Injectable({
     providedIn: "root",

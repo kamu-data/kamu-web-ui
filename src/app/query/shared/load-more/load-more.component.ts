@@ -12,7 +12,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatIconModule } from "@angular/material/icon";
 
-import AppValues from "../../../common/values/app.values";
+import AppValues from "@common/values/app.values";
 
 @Component({
     selector: "app-load-more",

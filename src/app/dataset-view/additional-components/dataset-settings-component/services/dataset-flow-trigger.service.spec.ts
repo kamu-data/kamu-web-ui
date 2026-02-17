@@ -29,10 +29,9 @@ import AppValues from "@common/values/app.values";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr, ToastrService } from "ngx-toastr";
+import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
 import { mockDatasetInfo } from "src/app/search/mock.data";
-
-import { NavigationService } from "../../../../services/navigation.service";
-import { DatasetFlowTriggerService } from "./dataset-flow-trigger.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("DatasetFlowTriggerService", () => {
     let service: DatasetFlowTriggerService;

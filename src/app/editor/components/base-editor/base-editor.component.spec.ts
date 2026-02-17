@@ -8,9 +8,9 @@
 import { SimpleChange } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { editorMock, editorModelMock } from "../../mock/editor.mock";
-import { MonacoService } from "../../services/monaco.service";
-import { BaseEditorComponent } from "./base-editor.component";
+import { BaseEditorComponent } from "src/app/editor/components/base-editor/base-editor.component";
+import { editorMock, editorModelMock } from "src/app/editor/mock/editor.mock";
+import { MonacoService } from "src/app/editor/services/monaco.service";
 
 export interface BaseEditorComponentTestEnvironment {
     fixture: ComponentFixture<BaseEditorComponent>;

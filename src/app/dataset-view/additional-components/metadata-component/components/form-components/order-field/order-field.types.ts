@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { SourceOrder } from "../../source-events/add-polling-source/process-form.service.types";
+import { SourceOrder } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
 
 export interface OrderControlType {
     label: string;

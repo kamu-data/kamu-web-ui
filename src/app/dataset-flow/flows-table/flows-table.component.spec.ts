@@ -18,15 +18,17 @@ import { of } from "rxjs";
 import { Account } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowSummaryDataFragments } from "@api/mock/dataset-flow.mock";
 import { ModalService } from "@common/components/modal/modal.service";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
+import { FlowsTableComponent } from "src/app/dataset-flow/flows-table/flows-table.component";
+import {
+    mockDatasets,
+    mockFlowSummaryDataFragmentShowForceLink,
+} from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
-
-import { registerMatSvgIcons } from "../../common/helpers/base-test.helpers.spec";
-import { FlowsTableComponent } from "./flows-table.component";
-import { mockDatasets, mockFlowSummaryDataFragmentShowForceLink } from "./flows-table.helpers.mock";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;

@@ -5,10 +5,9 @@
  * included in the LICENSE file.
  */
 
+import { DatasetKind, SearchDatasetsAutocompleteQuery, SearchDatasetsOverviewQuery } from "@api/kamu.graphql.interface";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
-
-import { DatasetKind, SearchDatasetsAutocompleteQuery, SearchDatasetsOverviewQuery } from "../kamu.graphql.interface";
 
 export const TEST_ACCOUNT_ID = "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f";
 

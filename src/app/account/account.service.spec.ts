@@ -9,13 +9,8 @@ import { TestBed } from "@angular/core/testing";
 
 import { first, of } from "rxjs";
 
+import { AccountApi } from "@api/account.api";
 import { DatasetApi } from "@api/dataset.api";
-import { Apollo } from "apollo-angular";
-import { provideToastr, ToastrService } from "ngx-toastr";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
-
-import { AccountApi } from "../api/account.api";
 import {
     AccountFlowFilters,
     AccountFlowProcessCardConnectionDataFragment,
@@ -23,7 +18,7 @@ import {
     Dataset,
     FlowProcessOrderField,
     OrderingDirection,
-} from "../api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
 import {
     mockAccountDatasetFlowsPausedQuery,
     mockAccountFlowsAsCardsQuery,
@@ -42,13 +37,17 @@ import {
     mockChangeUserPasswordMutation,
     mockChangeUserPasswordMutationError,
     mockDeleteAccountByNameMutation,
-} from "../api/mock/account.mock";
-import { mockAccountDetails, TEST_LOGIN, TEST_PAGE_NUMBER } from "../api/mock/auth.mock";
-import { mockDatasetsByAccountNameQuery } from "../api/mock/dataset.mock";
-import { FlowsTableData } from "../dataset-flow/flows-table/flows-table.types";
-import { AccountService } from "./account.service";
-import { CardsStrategyResult } from "./additional-components/account-flows-tab/account-flows-tab.types";
-import { ChangeAccountUsernameResult } from "./settings/account-settings.constants";
+} from "@api/mock/account.mock";
+import { mockAccountDetails, TEST_LOGIN, TEST_PAGE_NUMBER } from "@api/mock/auth.mock";
+import { mockDatasetsByAccountNameQuery } from "@api/mock/dataset.mock";
+import { Apollo } from "apollo-angular";
+import { provideToastr, ToastrService } from "ngx-toastr";
+import { AccountService } from "src/app/account/account.service";
+import { CardsStrategyResult } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { ChangeAccountUsernameResult } from "src/app/account/settings/account-settings.constants";
+import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
+import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
 
 describe("AccountService", () => {
     let service: AccountService;

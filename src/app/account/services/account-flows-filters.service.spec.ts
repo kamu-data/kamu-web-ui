@@ -8,9 +8,8 @@
 import { TestBed } from "@angular/core/testing";
 
 import { FlowProcessEffectiveState, OrderingDirection } from "@api/kamu.graphql.interface";
-
-import { ProcessCardFilterMode } from "../additional-components/account-flows-tab/account-flows-tab.types";
-import { AccountFlowsFiltersService } from "./account-flows-filters.service";
+import { ProcessCardFilterMode } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { AccountFlowsFiltersService } from "src/app/account/services/account-flows-filters.service";
 
 describe("AccountFlowsFiltersService", () => {
     let service: AccountFlowsFiltersService;

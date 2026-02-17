@@ -12,9 +12,9 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ReactiveFormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 
-import { FormValidationErrorsDirective } from "../../directives/form-validation-errors.directive";
-import { CronExpressionFormComponent } from "./cron-expression-form.component";
-import { CronExpressionFormHarness } from "./cron-expression-form.harness";
+import { CronExpressionFormComponent } from "@common/components/cron-expression-form/cron-expression-form.component";
+import { CronExpressionFormHarness } from "@common/components/cron-expression-form/cron-expression-form.harness";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 
 @Component({
     imports: [CronExpressionFormComponent, ReactiveFormsModule],

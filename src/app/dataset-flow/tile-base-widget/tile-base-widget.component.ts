@@ -12,10 +12,9 @@ import { Dataset, DatasetBasicsFragment, FlowItemWidgetDataFragment, FlowStatus 
 import AppValues from "@common/values/app.values";
 import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
+import { TileBaseWidgetHelpers } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.helpers";
 import ProjectLinks from "src/app/project-links";
-
-import { FlowTableHelpers } from "../flows-table/flows-table.helpers";
-import { TileBaseWidgetHelpers } from "./tile-base-widget.helpers";
 
 @Component({
     selector: "app-tile-base-widget",

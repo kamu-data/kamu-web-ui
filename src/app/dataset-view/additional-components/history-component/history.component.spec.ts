@@ -16,15 +16,14 @@ import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import { mockHistoryUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { HistoryComponent } from "src/app/dataset-view/additional-components/history-component/history.component";
+import { MOCK_DATASET_INFO } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { DatasetViewTypeEnum } from "../../dataset-view.interface";
-import { DatasetService } from "../../dataset.service";
-import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import { mockHistoryUpdate } from "../data-tabs.mock";
-import { MOCK_DATASET_INFO } from "../metadata-component/components/set-transform/mock.data";
-import { HistoryComponent } from "./history.component";
 
 describe("HistoryComponent", () => {
     let component: HistoryComponent;

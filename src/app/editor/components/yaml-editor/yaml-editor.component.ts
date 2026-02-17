@@ -11,8 +11,7 @@ import { FormsModule } from "@angular/forms";
 
 import * as monaco from "monaco-editor";
 import { MonacoEditorModule } from "ngx-monaco-editor-v2";
-
-import { BaseEditorComponent } from "../base-editor/base-editor.component";
+import { BaseEditorComponent } from "src/app/editor/components/base-editor/base-editor.component";
 
 const YAML_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
     theme: "vs",

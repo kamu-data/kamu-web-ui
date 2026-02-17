@@ -18,10 +18,13 @@ import {
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
+import {
+    mockMetadataDerivedUpdate,
+    mockOverviewDataUpdate,
+    mockOverviewWithSetLicense,
+} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { EditLicenseModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
-
-import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewWithSetLicense } from "../../../data-tabs.mock";
-import { EditLicenseModalComponent } from "./edit-license-modal.component";
 
 describe("EditLicenseModalComponent", () => {
     let component: EditLicenseModalComponent;

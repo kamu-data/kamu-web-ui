@@ -15,14 +15,13 @@ import { WebhookSubscription } from "@api/kamu.graphql.interface";
 import { mockDatasetWebhookByIdQuery } from "@api/mock/webhooks.mock";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import { EditWebhooksType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/edit-webhooks.types";
+import { editWebhookResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/resolvers/edit-webhook.resolver";
+import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { DatasetWebhooksService } from "../../../service/dataset-webhooks.service";
-import { EditWebhooksType } from "../edit-webhooks.types";
-import { editWebhookResolverFn } from "./edit-webhook.resolver";
 
 describe("editWebhookResolver", () => {
     let datasetService: DatasetService;

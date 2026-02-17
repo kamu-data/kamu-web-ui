@@ -9,7 +9,7 @@ import { Clipboard } from "@angular/cdk/clipboard";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
-import { changeCopyIcon } from "../../helpers/app.helpers";
+import { changeCopyIcon } from "@common/helpers/app.helpers";
 
 @Component({
     selector: "app-copy-to-clipboard",

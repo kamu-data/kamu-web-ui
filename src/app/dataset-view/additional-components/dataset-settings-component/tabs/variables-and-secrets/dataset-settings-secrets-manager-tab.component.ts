@@ -25,18 +25,17 @@ import {
 } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
+import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
 import { promiseWithCatch, requireValue } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { EditKeyValueModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.component";
+import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
 import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { PaginationComponent } from "../../../../../common/components/pagination-component/pagination.component";
-import { SettingsTabsEnum } from "../../dataset-settings.model";
-import { EditKeyValueModalComponent } from "./components/edit-key-value-modal/edit-key-value-modal.component";
-import { DatasetEnvironmentVariablesService } from "./dataset-environment-variables.service";
 
 export interface EnvVariableElement {
     key: string;

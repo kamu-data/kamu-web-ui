@@ -18,17 +18,16 @@ import {
 import { isNil } from "@common/helpers/app.helpers";
 import { chainNameFromId } from "@common/helpers/data.helpers";
 import { Edge, Node } from "@swimlane/ngx-graph";
-import { LineageUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { MaybeNull } from "src/app/interface/app.types";
-
 import {
     LineageGraph,
     LineageGraphNodeData,
     LineageGraphNodeKind,
     LineageGraphUpdate,
     LineageNodeAccess,
-} from "../lineage-model";
+} from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
+import { LineageUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import { MaybeNull } from "src/app/interface/app.types";
 
 @Injectable({
     providedIn: "root",

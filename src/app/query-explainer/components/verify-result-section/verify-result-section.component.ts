@@ -10,13 +10,12 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-
 import {
     VerifyQueryError,
     VerifyQueryKindError,
     VerifyQueryOutputMismatchError,
     VerifyQueryResponse,
-} from "../../query-explainer.types";
+} from "src/app/query-explainer/query-explainer.types";
 
 @Component({
     selector: "app-verify-result-section",

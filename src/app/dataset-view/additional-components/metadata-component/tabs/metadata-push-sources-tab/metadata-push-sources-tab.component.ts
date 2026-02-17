@@ -14,11 +14,10 @@ import { ModalService } from "@common/components/modal/modal.service";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { SourceEventCommonDataComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/common/source-event-common-data/source-event-common-data.component";
 import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { MetadataTabData } from "../../metadata.constants";
-import { SourceEventCommonDataComponent } from "../common/source-event-common-data/source-event-common-data.component";
 
 @Component({
     selector: "app-metadata-push-sources-tab",

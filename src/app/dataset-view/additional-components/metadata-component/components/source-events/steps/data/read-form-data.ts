@@ -7,8 +7,11 @@
 
 import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
 import { OdfDefaultValues } from "@common/values/app-odf-default.values";
-
-import { ControlType, JsonFormData, ReadKind } from "../../add-polling-source/add-polling-source-form.types";
+import {
+    ControlType,
+    JsonFormData,
+    ReadKind,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 
 export const READ_FORM_DATA: JsonFormData = {
     Csv: {

@@ -14,16 +14,15 @@ import { DatasetApi } from "@api/dataset.api";
 import {
     AddPushSource,
     GetMetadataBlockQuery,
+    MetadataBlockExtended,
     MetadataBlockFragment,
     MetadataEventType,
     MetadataManifestFormat,
 } from "@api/kamu.graphql.interface";
+import { MetadataBlockInfo } from "src/app/dataset-block/metadata-block/metadata-block.types";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { MetadataBlockExtended } from "./../../api/kamu.graphql.interface";
-import { MetadataBlockInfo } from "./metadata-block.types";
 
 @Injectable({
     providedIn: "root",

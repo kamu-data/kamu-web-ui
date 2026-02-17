@@ -15,12 +15,11 @@ import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helper
 import AppValues from "@common/values/app.values";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import { DatasetSettingsCompactingTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.component";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { DatasetFlowsService } from "../../../flows-component/services/dataset-flows.service";
-import { DatasetSettingsCompactingTabComponent } from "./dataset-settings-compacting-tab.component";
 
 describe("DatasetSettingsCompactingTabComponent", () => {
     let component: DatasetSettingsCompactingTabComponent;

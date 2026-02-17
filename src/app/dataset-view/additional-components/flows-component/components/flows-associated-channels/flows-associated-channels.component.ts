@@ -21,10 +21,13 @@ import {
     WebhookFlowSubProcess,
     WebhookFlowSubProcessGroup,
 } from "@api/kamu.graphql.interface";
+import { SubscriptionsTableComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-associated-channels/components/subscriptions-table/subscriptions-table.component";
+import {
+    FlowsSelectionState,
+    RollupFiltersOptions,
+    WebhooksSelectedCategory,
+} from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import { MaybeUndefined } from "src/app/interface/app.types";
-
-import { FlowsSelectionState, RollupFiltersOptions, WebhooksSelectedCategory } from "../../flows.helpers";
-import { SubscriptionsTableComponent } from "./components/subscriptions-table/subscriptions-table.component";
 
 @Component({
     selector: "app-flows-associated-channels",

@@ -11,15 +11,14 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { provideToastr } from "ngx-toastr";
-import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-
 import {
     mockMetadataDerivedUpdate,
     mockOverviewDataUpdate,
     mockOverviewDataUpdateNullable,
-} from "../../../data-tabs.mock";
-import { MetadataSchemaTabComponent } from "./metadata-schema-tab.component";
+} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { MetadataSchemaTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-schema-tab/metadata-schema-tab.component";
+import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
 describe("MetadataSchemaTabComponent", () => {
     let component: MetadataSchemaTabComponent;

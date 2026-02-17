@@ -23,13 +23,12 @@ import { MatTable, MatTableModule } from "@angular/material/table";
 import { merge, Observable, OperatorFunction, Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged, map } from "rxjs/operators";
 
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import AppValues from "@common/values/app.values";
 import { NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
 import { RxReactiveFormsModule, RxwebValidators } from "@rxweb/reactive-form-validators";
+import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 import { MaybeNull } from "src/app/interface/app.types";
-
-import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
-import { BaseField } from "../base-field";
 
 export interface SchemaType {
     name: string;

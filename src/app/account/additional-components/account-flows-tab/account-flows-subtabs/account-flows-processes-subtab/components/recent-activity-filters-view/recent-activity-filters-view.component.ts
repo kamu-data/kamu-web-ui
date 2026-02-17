@@ -15,13 +15,12 @@ import { MY_MOMENT_FORMATS } from "@common/helpers/data.helpers";
 import { DateTimeAdapter, OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { NgSelectModule } from "@ng-select/ng-select";
-import { lastTimeRangeHelper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
-
 import {
     DashboardFiltersOptions,
     RANGE_LAST_ATTEMPT_LIST,
     RangeLastAttemptOption,
-} from "../../../../account-flows-tab.types";
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { lastTimeRangeHelper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 
 @Component({
     selector: "app-recent-activity-filters-view",

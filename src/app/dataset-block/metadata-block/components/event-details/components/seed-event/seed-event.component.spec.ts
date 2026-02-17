@@ -16,9 +16,8 @@ import {
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { provideToastr, ToastrService } from "ngx-toastr";
-
-import { mockSeed } from "../../mock.events";
-import { SeedEventComponent } from "./seed-event.component";
+import { SeedEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/seed-event/seed-event.component";
+import { mockSeed } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
 describe("SeedEventComponent", () => {
     let component: SeedEventComponent;

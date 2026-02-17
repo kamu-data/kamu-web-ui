@@ -7,7 +7,7 @@
 
 import { Injectable } from "@angular/core";
 
-import { DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
+import { DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
 
 @Injectable({ providedIn: "root" })
 export class DatasetPermissionsService {

@@ -7,17 +7,16 @@
 
 import { Injectable } from "@angular/core";
 
-import { MaybeNull } from "src/app/interface/app.types";
-import { stringify } from "yaml";
-
-import { SetLicense, SetTransform } from "../api/kamu.graphql.interface";
+import { SetLicense, SetTransform } from "@api/kamu.graphql.interface";
 import {
     AddPollingSourceEditFormType,
     PreprocessKind,
     PreprocessStepValue,
     ReadKind,
-} from "../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
-import { AddPushSourceEditFormType } from "../dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { AddPushSourceEditFormType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
+import { MaybeNull } from "src/app/interface/app.types";
+import { stringify } from "yaml";
 
 @Injectable({
     providedIn: "root",

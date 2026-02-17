@@ -13,12 +13,11 @@ import { WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
+import { EditWebhookComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/edit-webhook.component";
+import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
-import { WebhookFormComponent } from "../common/webhook-form/webhook-form.component";
-import { EditWebhookComponent } from "./edit-webhook.component";
 
 describe("EditWebhookComponent", () => {
     let component: EditWebhookComponent;

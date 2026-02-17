@@ -11,10 +11,10 @@ import { inject } from "@angular/core";
 import { Observable } from "rxjs";
 import { finalize } from "rxjs/operators";
 
+import { SpinnerService } from "@common/components/spinner/spinner.service";
 import AppValues from "@common/values/app.values";
 
-import { environment } from "../../../../environments/environment";
-import { SpinnerService } from "./spinner.service";
+import { environment } from "@env/environment";
 
 export class SpinnerInterceptor implements HttpInterceptor {
     private spinnerService = inject(SpinnerService);

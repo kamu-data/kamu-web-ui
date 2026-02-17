@@ -12,15 +12,14 @@ import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
-import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
-
-import { FeatureFlagDirective } from "../../directives/feature-flag.directive";
-import { BaseComponent } from "../base.component";
+import { BaseComponent } from "@common/components/base.component";
 import {
     MenuActionData,
     SearchAdditionalHeaderButtonInterface,
     SearchAdditionalHeaderButtonMenuAction,
-} from "./search-additional-buttons.interface";
+} from "@common/components/search-additional-buttons/search-additional-buttons.interface";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
 
 @Component({
     selector: "app-search-additional-buttons-nav",

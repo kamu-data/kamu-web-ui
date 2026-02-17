@@ -14,14 +14,13 @@ import { FlowProcessEffectiveState, OrderingDirection } from "@api/kamu.graphql.
 import { OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { NgSelectModule } from "@ng-select/ng-select";
-import { lastTimeRangeHelper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
-
 import {
     DashboardFiltersOptions,
     ORDER_BY_FIELD_LIST_TRIAGE,
     RANGE_LAST_ATTEMPT_LIST,
     RangeLastAttemptOption,
-} from "../../../../account-flows-tab.types";
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { lastTimeRangeHelper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 
 @Component({
     selector: "app-triage-filters-view",

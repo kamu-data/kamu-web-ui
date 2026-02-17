@@ -11,7 +11,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 
-import { BaseComponent } from "src/app/common/components/base.component";
+import { BaseComponent } from "@common/components/base.component";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 
 import { MetadataBlockFragment } from "../../../../api/kamu.graphql.interface";

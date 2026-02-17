@@ -12,8 +12,8 @@ import { NavigationEnd, Router } from "@angular/router";
 
 import { filter, Observable } from "rxjs";
 
-import { BaseComponent } from "src/app/common/components/base.component";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { BaseComponent } from "@common/components/base.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";

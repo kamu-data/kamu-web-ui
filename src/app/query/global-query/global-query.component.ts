@@ -11,7 +11,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
 
-import { BaseComponent } from "src/app/common/components/base.component";
+import { BaseComponent } from "@common/components/base.component";
 import { DataSqlErrorUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { EditorModule } from "src/app/editor/editor.module";
 import { MaybeNull } from "src/app/interface/app.types";

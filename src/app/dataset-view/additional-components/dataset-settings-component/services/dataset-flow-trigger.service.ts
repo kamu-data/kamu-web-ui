@@ -9,6 +9,7 @@ import { inject, Injectable } from "@angular/core";
 
 import { map, Observable, take } from "rxjs";
 
+import AppValues from "@common/values/app.values";
 import { ToastrService } from "ngx-toastr";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
@@ -19,7 +20,6 @@ import {
     PauseDatasetFlowTriggerMutation,
     SetDatasetFlowTriggerMutation,
 } from "src/app/api/kamu.graphql.interface";
-import AppValues from "src/app/common/values/app.values";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 

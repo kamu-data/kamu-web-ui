@@ -8,9 +8,9 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
 
+import { RedirectUrlTestModule } from "@common/modules/redirect-url-test.module";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { AccountProvider } from "src/app/api/kamu.graphql.interface";
-import { RedirectUrlTestModule } from "src/app/common/modules/redirect-url-test.module";
 import ProjectLinks from "src/app/project-links";
 
 import { LoginMethodsService } from "../login-methods.service";

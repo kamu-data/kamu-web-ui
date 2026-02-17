@@ -8,8 +8,8 @@
 import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
+import { BaseComponent } from "@common/components/base.component";
 import { SetInfo } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
 
 import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";

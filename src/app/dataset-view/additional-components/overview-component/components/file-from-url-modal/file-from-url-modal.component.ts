@@ -9,8 +9,8 @@ import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 
+import { BaseComponent } from "@common/components/base.component";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { BaseComponent } from "src/app/common/components/base.component";
 
 import { FileUrlFormType } from "./file-from-url-modal.types";
 

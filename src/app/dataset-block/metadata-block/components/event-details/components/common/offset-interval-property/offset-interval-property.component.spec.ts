@@ -11,8 +11,8 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockDatasetMainDataResponse } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";

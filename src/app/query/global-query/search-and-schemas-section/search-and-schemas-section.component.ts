@@ -33,15 +33,15 @@ import {
     switchMap,
 } from "rxjs";
 
+import { BaseComponent } from "@common/components/base.component";
+import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { parseCurrentSchema } from "@common/helpers/app.helpers";
+import { schemaAsDataRows } from "@common/helpers/data-schema.helpers";
+import AppValues from "@common/values/app.values";
 import { NgbHighlight, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "src/app/api/kamu.graphql.interface";
 import { SearchApi } from "src/app/api/search.api";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
-import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
-import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
-import { schemaAsDataRows } from "src/app/common/helpers/data-schema.helpers";
-import AppValues from "src/app/common/values/app.values";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DataSchemaField, DatasetSchema } from "src/app/interface/dataset-schema.interface";

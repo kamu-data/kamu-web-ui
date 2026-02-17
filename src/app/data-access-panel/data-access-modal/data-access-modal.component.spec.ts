@@ -11,11 +11,11 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { ProtocolsService } from "src/app/services/protocols.service";
 

@@ -9,8 +9,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormArray, FormBuilder, FormControl, FormGroupDirective } from "@angular/forms";
 
 import { Apollo } from "apollo-angular";
-import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import {
     EventTimeSourceKind,

@@ -9,12 +9,12 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 
 import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";

@@ -10,15 +10,15 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 import { MatIconModule } from "@angular/material/icon";
 import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
 
+import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
+import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
+import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
+import { ModalService } from "@common/components/modal/modal.service";
+import { isNil, promiseWithCatch } from "@common/helpers/app.helpers";
+import { schemaAsDataRows } from "@common/helpers/data-schema.helpers";
+import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { MarkdownModule } from "ngx-markdown";
-import { BlockRowDataComponent } from "src/app/common/components/block-row-data/block-row-data.component";
-import { DynamicTableComponent } from "src/app/common/components/dynamic-table/dynamic-table.component";
-import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { isNil, promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import { schemaAsDataRows } from "src/app/common/helpers/data-schema.helpers";
-import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DataSchemaField, DatasetSchema } from "src/app/interface/dataset-schema.interface";

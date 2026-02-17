@@ -10,7 +10,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, O
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 
-import { cronExpressionNextTime } from "src/app/common/helpers/app.helpers";
+import { cronExpressionNextTime } from "@common/helpers/app.helpers";
 
 import { FormValidationErrorsDirective } from "../../directives/form-validation-errors.directive";
 import { cronValidator } from "../../helpers/cron-expression-validator.helper";

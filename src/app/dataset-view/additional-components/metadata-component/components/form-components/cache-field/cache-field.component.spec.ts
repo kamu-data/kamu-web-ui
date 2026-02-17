@@ -8,8 +8,8 @@
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
 
-import { findElement } from "src/app/common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { findElement } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { CacheFieldComponent } from "./cache-field.component";
 

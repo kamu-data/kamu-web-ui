@@ -13,9 +13,9 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
 
 import { combineLatest, map, Observable, shareReplay, skip, Subscription, takeWhile, tap, timer } from "rxjs";
 
+import { BaseDatasetDataComponent } from "@common/components/base-dataset-data.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
-import { BaseDatasetDataComponent } from "src/app/common/components/base-dataset-data.component";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { MaybeUndefined } from "src/app/interface/app.types";

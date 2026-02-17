@@ -10,7 +10,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 import { ModalCommandInterface } from "src/app/interface/modal.interface";
 
 import { ModalComponent } from "./modal.component";

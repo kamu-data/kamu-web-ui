@@ -9,11 +9,11 @@ import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
+import { WidgetHeightService } from "@common/components/lineage-graph/widget-height.service";
+import { emitClickOnElementByDataTestId, findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import AppValues from "@common/values/app.values";
 import { MOCK_LINKS, MOCK_NODES } from "src/app/api/mock/dataset.mock";
-import { WidgetHeightService } from "src/app/common/components/lineage-graph/widget-height.service";
-import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import AppValues from "src/app/common/values/app.values";
 import { mockGraphNode } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import timekeeper from "timekeeper";
 

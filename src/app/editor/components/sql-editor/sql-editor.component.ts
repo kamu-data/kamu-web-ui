@@ -22,9 +22,9 @@ import { FormsModule } from "@angular/forms";
 
 import { filter, fromEvent, Subscription, take, takeWhile } from "rxjs";
 
+import AppValues from "@common/values/app.values";
 import * as monaco from "monaco-editor";
 import { EditorComponent, MonacoEditorModule } from "ngx-monaco-editor-v2";
-import AppValues from "src/app/common/values/app.values";
 import { MaybeNull } from "src/app/interface/app.types";
 
 import { getSqlError } from "../../helpers/editor-error-formatter";

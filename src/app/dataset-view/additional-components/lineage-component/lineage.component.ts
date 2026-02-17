@@ -11,10 +11,10 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 
 import { Observable, switchMap } from "rxjs";
 
+import { BaseComponent } from "@common/components/base.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { Node } from "@swimlane/ngx-graph";
 import { ToastrService } from "ngx-toastr";
-import { BaseComponent } from "src/app/common/components/base.component";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { NavigationService } from "src/app/services/navigation.service";

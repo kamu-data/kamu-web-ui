@@ -9,10 +9,10 @@ import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 
-import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
-import { dispatchInputEvent, getInputElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import AppValues from "src/app/common/values/app.values";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { dispatchInputEvent, getInputElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import AppValues from "@common/values/app.values";
 
 import { InputFieldComponent } from "./input-field.component";
 

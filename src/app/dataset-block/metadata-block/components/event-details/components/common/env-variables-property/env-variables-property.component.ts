@@ -12,7 +12,7 @@ import {
     DynamicTableColumnClassEnum,
     DynamicTableColumnDescriptor,
     DynamicTableDataRow,
-} from "src/app/common/components/dynamic-table/dynamic-table.interface";
+} from "@common/components/dynamic-table/dynamic-table.interface";
 import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
 
 import { DynamicTableComponent } from "../../../../../../../common/components/dynamic-table/dynamic-table.component";

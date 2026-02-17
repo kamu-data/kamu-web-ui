@@ -8,7 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormArray, FormGroup } from "@angular/forms";
 
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { TopicsFieldComponent } from "./topics-field.component";
 

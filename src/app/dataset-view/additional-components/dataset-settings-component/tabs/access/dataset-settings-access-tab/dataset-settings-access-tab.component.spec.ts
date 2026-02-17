@@ -11,6 +11,8 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
+import { ModalService } from "@common/components/modal/modal.service";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
@@ -21,8 +23,6 @@ import {
     mockDatasetListCollaboratorsQuery,
 } from "src/app/api/mock/dataset-collaborations.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";

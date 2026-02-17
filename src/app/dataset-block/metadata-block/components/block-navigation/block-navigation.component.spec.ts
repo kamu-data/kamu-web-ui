@@ -9,13 +9,13 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { provideToastr } from "ngx-toastr";
 import {
     dispatchInputEvent,
     getElementByDataTestId,
     registerMatSvgIcons,
-} from "src/app/common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+} from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { provideToastr } from "ngx-toastr";
 import { mockHistoryUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MOCK_DATASET_INFO } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 

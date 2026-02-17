@@ -12,24 +12,23 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 
 import { of } from "rxjs";
 
-import { Apollo } from "apollo-angular";
-import { MarkdownModule } from "ngx-markdown";
-import { provideToastr, ToastrService } from "ngx-toastr";
-import { mockUploadPrepareResponse } from "src/app/api/mock/upload-file.mock";
 import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
     getElementByDataTestId,
-} from "src/app/common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+} from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { Apollo } from "apollo-angular";
+import { MarkdownModule } from "ngx-markdown";
+import { provideToastr, ToastrService } from "ngx-toastr";
+import { mockUploadPrepareResponse } from "src/app/api/mock/upload-file.mock";
+import { mockSqlErrorUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import { EditorModule } from "src/app/editor/editor.module";
 import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
+import { QueryAndResultSectionsComponent } from "src/app/query/shared/query-and-result-sections/query-and-result-sections.component";
 import { FileUploadService } from "src/app/services/file-upload.service";
-
-import { mockSqlErrorUpdate } from "../../../dataset-view/additional-components/data-tabs.mock";
-import { QueryAndResultSectionsComponent } from "./query-and-result-sections.component";
 
 describe("QueryAndResultSectionsComponent", () => {
     let component: QueryAndResultSectionsComponent;

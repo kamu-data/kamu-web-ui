@@ -12,8 +12,8 @@ import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/sl
 
 import { Observable } from "rxjs";
 
-import { BaseDatasetDataComponent } from "src/app/common/components/base-dataset-data.component";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { BaseDatasetDataComponent } from "@common/components/base-dataset-data.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";

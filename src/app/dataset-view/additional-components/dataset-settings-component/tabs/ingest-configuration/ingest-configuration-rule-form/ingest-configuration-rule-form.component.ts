@@ -9,8 +9,8 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 
+import { BaseComponent } from "@common/components/base.component";
 import { FlowConfigRuleIngest } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
 import { MaybeNull } from "src/app/interface/app.types";
 
 import {

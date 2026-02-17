@@ -5,9 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { SetPollingSourceTooltipsTexts } from "src/app/common/tooltips/set-polling-source-tooltips.text";
-import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
-import AppValues from "src/app/common/values/app.values";
+import { SetPollingSourceTooltipsTexts } from "@common/tooltips/set-polling-source-tooltips.text";
+import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
+import AppValues from "@common/values/app.values";
 
 import { ControlType, JsonFormData } from "../../add-polling-source/add-polling-source-form.types";
 

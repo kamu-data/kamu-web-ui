@@ -8,6 +8,7 @@
 import { DatePipe, NgClass, NgFor, NgIf, SlicePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
+import AppValues from "@common/values/app.values";
 import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
 import {
     Dataset,
@@ -15,7 +16,6 @@ import {
     FlowItemWidgetDataFragment,
     FlowStatus,
 } from "src/app/api/kamu.graphql.interface";
-import AppValues from "src/app/common/values/app.values";
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import ProjectLinks from "src/app/project-links";
 

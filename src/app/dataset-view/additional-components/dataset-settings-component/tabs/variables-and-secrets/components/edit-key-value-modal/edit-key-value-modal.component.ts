@@ -15,8 +15,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetBasicsFragment, ViewDatasetEnvVar } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { noWhitespaceValidator } from "src/app/common/helpers/data.helpers";
+import { BaseComponent } from "@common/components/base.component";
+import { noWhitespaceValidator } from "@common/helpers/data.helpers";
 import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
 import { MaybeNull } from "src/app/interface/app.types";
 

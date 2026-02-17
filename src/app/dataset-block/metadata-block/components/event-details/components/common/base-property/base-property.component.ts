@@ -7,7 +7,7 @@
 
 import { Injectable, Input } from "@angular/core";
 
-import { BaseComponent } from "src/app/common/components/base.component";
+import { BaseComponent } from "@common/components/base.component";
 
 @Injectable()
 export abstract class BasePropertyComponent extends BaseComponent {

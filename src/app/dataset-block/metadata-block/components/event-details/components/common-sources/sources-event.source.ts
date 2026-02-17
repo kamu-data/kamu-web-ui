@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
+import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
 
 import { EventRowDescriptor, EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";

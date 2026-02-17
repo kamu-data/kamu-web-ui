@@ -20,7 +20,7 @@ import {
 } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
-import { BaseComponent } from "src/app/common/components/base.component";
+import { BaseComponent } from "@common/components/base.component";
 
 import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
 import { EventRow, EventSection } from "../../dynamic-events/dynamic-events.model";

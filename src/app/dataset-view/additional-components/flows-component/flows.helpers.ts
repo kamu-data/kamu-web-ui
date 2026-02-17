@@ -7,6 +7,7 @@
 
 import { DatePipe } from "@angular/common";
 
+import AppValues from "@common/values/app.values";
 import {
     ProcessCardFilterMode,
     RangeLastAttempt,
@@ -20,7 +21,6 @@ import {
     FlowProcessSummaryDataFragment,
     FlowTriggerStopPolicyAfterConsecutiveFailures,
 } from "src/app/api/kamu.graphql.interface";
-import AppValues from "src/app/common/values/app.values";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 
 export type FlowsSelectedCategory = "all" | "updates";

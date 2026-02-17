@@ -9,10 +9,10 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { AuthApi } from "src/app/api/auth.api";
 import { GithubLoginCredentials } from "src/app/api/auth.api.model";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { NavigationService } from "src/app/services/navigation.service";
 
 import { LoginService } from "../login.service";

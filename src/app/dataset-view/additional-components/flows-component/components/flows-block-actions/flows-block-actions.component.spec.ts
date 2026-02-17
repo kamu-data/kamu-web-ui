@@ -9,12 +9,12 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { DatasetFlowProcess } from "src/app/api/kamu.graphql.interface";
 import { mockDatasetFlowsProcessesQuery } from "src/app/api/mock/dataset-flow.mock";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 
 import { SettingsTabsEnum } from "../../../dataset-settings-component/dataset-settings.model";

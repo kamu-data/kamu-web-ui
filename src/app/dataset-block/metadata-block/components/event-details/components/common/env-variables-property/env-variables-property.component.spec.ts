@@ -8,7 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { provideToastr } from "ngx-toastr";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { EnvVariablesPropertyComponent } from "./env-variables-property.component";
 

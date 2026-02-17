@@ -21,7 +21,7 @@ import {
 } from "@angular/core";
 
 import { EngineDesc } from "src/app/api/kamu.graphql.interface";
-import { DataHelpers } from "src/app/common/helpers/data.helpers";
+import { DataHelpers } from "@common/helpers/data.helpers";
 import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 
 @Component({

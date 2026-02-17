@@ -8,8 +8,8 @@
 import { NgFor } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
+import { BaseComponent } from "@common/components/base.component";
 import { MarkdownModule } from "ngx-markdown";
-import { BaseComponent } from "src/app/common/components/base.component";
 
 import { SetAttachments } from "../../../../../../api/kamu.graphql.interface";
 import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";

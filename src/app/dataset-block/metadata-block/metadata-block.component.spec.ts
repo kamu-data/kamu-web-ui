@@ -16,11 +16,11 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 
 import { MetadataBlockComponent } from "./metadata-block.component";
 

@@ -11,6 +11,8 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterOutlet } from "@angular/router";
 
+import { BaseComponent } from "@common/components/base.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import {
     DatasetBasicsFragment,
     DatasetMetadata,
@@ -18,8 +20,6 @@ import {
     DatasetPermissionsFragment,
 } from "src/app/api/kamu.graphql.interface";
 import { AppConfigService } from "src/app/app-config.service";
-import { BaseComponent } from "src/app/common/components/base.component";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { MaybeNull } from "src/app/interface/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
 

@@ -9,8 +9,8 @@ import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
+import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
-import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
 
 import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
 import { ReadFormatControlType, ReadKind } from "../../source-events/add-polling-source/add-polling-source-form.types";

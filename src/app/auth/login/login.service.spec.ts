@@ -11,6 +11,9 @@ import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
 import { first, of, Subscription, throwError } from "rxjs";
 
+import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { RedirectUrlTestModule } from "@common/modules/redirect-url-test.module";
+import { AuthenticationError } from "@common/values/errors";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { AuthApi } from "src/app/api/auth.api";
@@ -24,9 +27,6 @@ import {
     TEST_PASSWORD,
 } from "src/app/api/mock/auth.mock";
 import { AppConfigService } from "src/app/app-config.service";
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import { RedirectUrlTestModule } from "src/app/common/modules/redirect-url-test.module";
-import { AuthenticationError } from "src/app/common/values/errors";
 import { MaybeUndefined } from "src/app/interface/app.types";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { NavigationService } from "src/app/services/navigation.service";

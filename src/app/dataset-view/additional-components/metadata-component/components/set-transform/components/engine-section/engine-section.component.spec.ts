@@ -11,9 +11,9 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { EngineDesc } from "src/app/api/kamu.graphql.interface";
-import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import AppValues from "src/app/common/values/app.values";
+import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import AppValues from "@common/values/app.values";
 import { mockSetPollingSourceEvent } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 

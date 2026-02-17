@@ -21,11 +21,11 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 
+import { BaseComponent } from "@common/components/base.component";
+import { addMarkdownRunButton } from "@common/helpers/app.helpers";
 import { MarkdownModule } from "ngx-markdown";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { addMarkdownRunButton } from "src/app/common/helpers/app.helpers";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";

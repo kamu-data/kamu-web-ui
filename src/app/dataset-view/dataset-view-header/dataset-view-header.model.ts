@@ -8,7 +8,7 @@
 import {
     SearchAdditionalHeaderButtonInterface,
     SearchAdditionalHeaderButtonMenuAction,
-} from "src/app/common/components/search-additional-buttons/search-additional-buttons.interface";
+} from "@common/components/search-additional-buttons/search-additional-buttons.interface";
 import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
 
 export const SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS: SearchAdditionalHeaderButtonInterface[] = [

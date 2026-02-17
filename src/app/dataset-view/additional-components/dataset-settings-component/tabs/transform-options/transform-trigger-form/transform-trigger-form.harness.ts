@@ -10,8 +10,8 @@
 import { ComponentHarness } from "@angular/cdk/testing";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 
+import { TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
 import { FlowTriggerBreakingChangeRule } from "src/app/api/kamu.graphql.interface";
-import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
 
 import { BatchingRuleType } from "../../../dataset-settings.model";
 import { BufferingBatchingRuleFormHarness } from "../buffering-batching-rule-form/buffering-batching-rule-form.harness";

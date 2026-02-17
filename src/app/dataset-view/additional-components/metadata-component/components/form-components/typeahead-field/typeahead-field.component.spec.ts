@@ -12,8 +12,8 @@ import { ActivatedRoute } from "@angular/router";
 import { interval } from "rxjs";
 import { map, take } from "rxjs/operators";
 
-import { getInputElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import AppValues from "src/app/common/values/app.values";
+import { getInputElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import AppValues from "@common/values/app.values";
 
 import { TypeaheadFieldComponent } from "./typeahead-field.component";
 

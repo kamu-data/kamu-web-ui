@@ -10,9 +10,9 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { finalize } from "rxjs";
 
+import { BaseComponent } from "@common/components/base.component";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { BaseComponent } from "src/app/common/components/base.component";
 import { EditorModule } from "src/app/editor/editor.module";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 

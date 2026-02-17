@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 
 import { mockVerifyQueryOutputMismatchError, mockVerifyQueryResponseSuccess } from "../../query-explainer.mocks";
 import { VerifyResultSectionComponent } from "./verify-result-section.component";

@@ -21,8 +21,8 @@ import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 
 import { EngineDesc, EnginesQuery, TransformSql } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
-import AppValues from "src/app/common/values/app.values";
+import { BaseComponent } from "@common/components/base.component";
+import AppValues from "@common/values/app.values";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { MaybeNull, MaybeNullOrUndefined } from "src/app/interface/app.types";
 

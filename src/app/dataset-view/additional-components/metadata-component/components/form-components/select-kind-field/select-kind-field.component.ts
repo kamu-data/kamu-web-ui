@@ -10,9 +10,9 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 
+import AppValues from "@common/values/app.values";
 import { NgbTooltip, NgbTooltipConfig } from "@ng-bootstrap/ng-bootstrap";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
-import AppValues from "src/app/common/values/app.values";
 
 import { RadioControlType } from "../../source-events/add-polling-source/form-control.source";
 

@@ -13,6 +13,9 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 import { BehaviorSubject, combineLatest, map, Observable, of, startWith, Subject, switchMap, tap, timer } from "rxjs";
 
+import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+import { requireValue } from "@common/helpers/app.helpers";
+import AppValues from "@common/values/app.values";
 import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 import { AccountTabs } from "src/app/account/account.constants";
 import { AccountService } from "src/app/account/account.service";
@@ -25,9 +28,6 @@ import {
     InitiatorFilterInput,
 } from "src/app/api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
-import { requireValue } from "src/app/common/helpers/app.helpers";
-import AppValues from "src/app/common/values/app.values";
 import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table/components/flow-table-panel-filters/flow-table-panel-filters.component";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
 import { FlowsTableComponent } from "src/app/dataset-flow/flows-table/flows-table.component";

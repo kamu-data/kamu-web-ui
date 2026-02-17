@@ -8,7 +8,7 @@
 import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import { DataHelpers } from "src/app/common/helpers/data.helpers";
+import { DataHelpers } from "@common/helpers/data.helpers";
 
 import { EventPropertyLogo } from "../../../supported.events";
 import { BasePropertyComponent } from "../base-property/base-property.component";

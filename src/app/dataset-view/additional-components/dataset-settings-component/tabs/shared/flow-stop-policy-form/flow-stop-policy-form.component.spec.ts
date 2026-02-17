@@ -11,9 +11,9 @@ import { Component, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
+import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 import { FlowTriggerStopPolicyType } from "../../../dataset-settings.model";
 import { FlowStopPolicyFormComponent } from "./flow-stop-policy-form.component";

@@ -9,11 +9,11 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
+import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Node } from "@swimlane/ngx-graph";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 import { AccountService } from "src/app/account/account.service";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { NavigationService } from "src/app/services/navigation.service";
 
 import { mockNode, mockNodesWithEqualNames } from "../../../search/mock.data";

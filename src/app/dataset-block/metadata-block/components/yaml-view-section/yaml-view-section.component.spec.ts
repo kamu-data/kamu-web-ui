@@ -8,11 +8,11 @@
 import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { metadataBlockSetVocab } from "@common/helpers/data.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
 import { MarkdownModule } from "ngx-markdown";
-import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { metadataBlockSetVocab } from "src/app/common/helpers/data.helpers.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
 
 import { YamlViewSectionComponent } from "./yaml-view-section.component";
 

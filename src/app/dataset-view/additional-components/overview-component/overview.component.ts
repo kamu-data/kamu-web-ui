@@ -14,14 +14,14 @@ import { RouterLink } from "@angular/router";
 
 import { catchError, from, Observable, of, take } from "rxjs";
 
+import { BaseDatasetDataComponent } from "@common/components/base-dataset-data.component";
+import { DynamicTableColumnDescriptor } from "@common/components/dynamic-table/dynamic-table.interface";
+import { isNil, promiseWithCatch } from "@common/helpers/app.helpers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
 import { NgbModal, NgbModalRef, NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { BaseDatasetDataComponent } from "src/app/common/components/base-dataset-data.component";
-import { DynamicTableColumnDescriptor } from "src/app/common/components/dynamic-table/dynamic-table.interface";
-import { isNil, promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import AppValues from "src/app/common/values/app.values";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
 import ProjectLinks from "src/app/project-links";

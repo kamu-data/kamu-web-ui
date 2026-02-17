@@ -11,9 +11,9 @@ import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModu
 import { MatRadioModule } from "@angular/material/radio";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
+import { BaseComponent } from "@common/components/base.component";
+import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
 import { FlowTriggerBreakingChangeRule, FlowTriggerRuleInput } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { FlowTooltipsTexts } from "src/app/common/tooltips/flow-tooltips.text";
 import { MaybeNull } from "src/app/interface/app.types";
 
 import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";

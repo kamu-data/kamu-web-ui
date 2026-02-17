@@ -7,8 +7,8 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { SharedTestModule } from "@common/modules/shared-test.module";
 import { MarkdownModule } from "ngx-markdown";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 import { mockSetAttachments } from "../../mock.events";
 import { SetAttachmentsEventComponent } from "./set-attachments-event.component";

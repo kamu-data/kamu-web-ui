@@ -11,6 +11,8 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
+import { ModalService } from "@common/components/modal/modal.service";
+import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
@@ -18,8 +20,6 @@ import { AccessTokenConnection, CreateAccessTokenResultSuccess } from "src/app/a
 import { mockCreateAccessTokenMutation, mockListAccessTokensQuery, TOKEN_ID } from "src/app/api/mock/access-token.mock";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 

@@ -12,11 +12,11 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
+import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
 import { MarkdownModule } from "ngx-markdown";
 import { provideToastr } from "ngx-toastr";
-import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
-import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
 import ProjectLinks from "src/app/project-links";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 

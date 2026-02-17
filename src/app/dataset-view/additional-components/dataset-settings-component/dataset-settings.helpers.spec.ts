@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import AppValues from "src/app/common/values/app.values";
+import AppValues from "@common/values/app.values";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,

@@ -13,13 +13,13 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
+import { ModalService } from "@common/components/modal/modal.service";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 import { ViewDatasetEnvVarConnection } from "src/app/api/kamu.graphql.interface";
 import { MOCK_ENV_VAR_ID, mockListEnvVariablesQuery } from "src/app/api/mock/environment-variables-and-secrets.mock";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import ProjectLinks from "src/app/project-links";

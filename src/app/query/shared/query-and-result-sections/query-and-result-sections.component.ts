@@ -29,19 +29,19 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 import { map, Observable, switchMap, tap } from "rxjs";
 
+import { BaseComponent } from "@common/components/base.component";
+import {
+    DynamicTableColumnDescriptor,
+    DynamicTableDataRow,
+} from "@common/components/dynamic-table/dynamic-table.interface";
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
+import AppValues from "@common/values/app.values";
 import { MarkdownModule } from "ngx-markdown";
 import { ToastrService } from "ngx-toastr";
 import { EngineDesc } from "src/app/api/kamu.graphql.interface";
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { BaseComponent } from "src/app/common/components/base.component";
-import {
-    DynamicTableColumnDescriptor,
-    DynamicTableDataRow,
-} from "src/app/common/components/dynamic-table/dynamic-table.interface";
-import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
-import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
-import AppValues from "src/app/common/values/app.values";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { DataSchemaField } from "src/app/interface/dataset-schema.interface";

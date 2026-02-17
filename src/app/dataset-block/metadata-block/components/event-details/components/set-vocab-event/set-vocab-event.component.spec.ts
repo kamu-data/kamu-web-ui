@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { mockSetVocab } from "../../mock.events";
 import { SetVocabEventComponent } from "./set-vocab-event.component";

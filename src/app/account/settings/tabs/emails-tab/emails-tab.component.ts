@@ -12,9 +12,9 @@ import { MatDividerModule } from "@angular/material/divider";
 
 import { Observable } from "rxjs";
 
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { NavigationService } from "src/app/services/navigation.service";
 
 import { FormValidationErrorsDirective } from "../../../../common/directives/form-validation-errors.directive";

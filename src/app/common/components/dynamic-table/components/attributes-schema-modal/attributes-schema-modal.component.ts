@@ -7,8 +7,8 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
+import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
 import { MarkdownModule } from "ngx-markdown";
-import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
 import * as YAML from "yaml";
 
 @Component({

@@ -10,10 +10,10 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { combineLatest } from "rxjs";
 
+import { BaseComponent } from "@common/components/base.component";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetBasicsFragment, DatasetKind, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { BaseComponent } from "src/app/common/components/base.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";

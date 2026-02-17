@@ -12,7 +12,7 @@ import { FormArray, FormGroup, FormsModule, ReactiveFormsModule } from "@angular
 import { MatStepperModule } from "@angular/material/stepper";
 import { RouterLink } from "@angular/router";
 
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { EditorModule } from "src/app/editor/editor.module";

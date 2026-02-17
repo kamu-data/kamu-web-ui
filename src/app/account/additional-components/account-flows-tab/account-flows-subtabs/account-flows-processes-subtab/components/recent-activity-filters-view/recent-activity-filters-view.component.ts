@@ -14,7 +14,7 @@ import { DateTimeAdapter, OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@dani
 import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { FlowProcessEffectiveState, OrderingDirection } from "src/app/api/kamu.graphql.interface";
-import { MY_MOMENT_FORMATS } from "src/app/common/helpers/data.helpers";
+import { MY_MOMENT_FORMATS } from "@common/helpers/data.helpers";
 import { lastTimeRangeHelper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 
 import {

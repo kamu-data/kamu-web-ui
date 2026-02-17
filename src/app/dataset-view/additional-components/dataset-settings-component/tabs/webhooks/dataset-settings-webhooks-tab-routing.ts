@@ -7,7 +7,7 @@
 
 import { Routes } from "@angular/router";
 
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import ProjectLinks from "src/app/project-links";
 
 import { AddWebhookComponent } from "./components/add-webhook/add-webhook.component";

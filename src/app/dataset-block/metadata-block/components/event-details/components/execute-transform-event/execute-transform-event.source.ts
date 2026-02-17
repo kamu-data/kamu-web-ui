@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ExecuteTransformTooltipsTexts } from "src/app/common/tooltips/execute-transform.text";
+import { ExecuteTransformTooltipsTexts } from "@common/tooltips/execute-transform.text";
 
 import { DisplayTimeComponent } from "../../../../../../common/components/display-time/display-time.component";
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";

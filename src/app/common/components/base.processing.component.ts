@@ -7,7 +7,7 @@
 
 import { inject } from "@angular/core";
 
-import { ModalService } from "src/app/common/components/modal/modal.service";
+import { ModalService } from "@common/components/modal/modal.service";
 import { NavigationService } from "src/app/services/navigation.service";
 
 import { BaseComponent } from "./base.component";

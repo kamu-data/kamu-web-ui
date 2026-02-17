@@ -11,9 +11,9 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import {
     DynamicTableColumnDescriptor,
     DynamicTableDataRow,
-} from "src/app/common/components/dynamic-table/dynamic-table.interface";
-import { extractSchemaFieldsFromData } from "src/app/common/helpers/data-schema.helpers";
-import { parseDataFromJsonAoSFormat } from "src/app/common/helpers/data.helpers";
+} from "@common/components/dynamic-table/dynamic-table.interface";
+import { extractSchemaFieldsFromData } from "@common/helpers/data-schema.helpers";
+import { parseDataFromJsonAoSFormat } from "@common/helpers/data.helpers";
 import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
 
 import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";

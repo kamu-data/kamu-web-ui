@@ -12,11 +12,11 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import AppValues from "@common/values/app.values";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import AppValues from "src/app/common/values/app.values";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 import { SessionStorageService } from "src/app/services/session-storage.service";

@@ -15,7 +15,7 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { ViewDatasetEnvVar } from "src/app/api/kamu.graphql.interface";
 import { mockListEnvVariablesQuery } from "src/app/api/mock/environment-variables-and-secrets.mock";
-import { findElementByDataTestId, setFieldValue } from "src/app/common/helpers/base-test.helpers.spec";
+import { findElementByDataTestId, setFieldValue } from "@common/helpers/base-test.helpers.spec";
 import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 

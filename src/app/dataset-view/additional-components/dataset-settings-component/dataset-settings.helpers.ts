@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { isNil } from "@common/helpers/app.helpers";
 import {
     DatasetBasicsFragment,
     DatasetKind,
@@ -12,7 +13,6 @@ import {
     DatasetPermissionsFragment,
 } from "src/app/api/kamu.graphql.interface";
 import { AppUIConfigFeatureFlags } from "src/app/app-config.model";
-import { isNil } from "src/app/common/helpers/app.helpers";
 
 import { SettingsTabsEnum } from "./dataset-settings.model";
 

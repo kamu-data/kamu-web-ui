@@ -15,12 +15,12 @@ import { MatTableHarness } from "@angular/material/table/testing";
 
 import { of } from "rxjs";
 
+import { ModalService } from "@common/components/modal/modal.service";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 import { Account } from "src/app/api/kamu.graphql.interface";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 

@@ -8,7 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
 
-import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 
 import { FetchKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
 import { FETCH_STEP_RADIO_CONTROLS } from "../../source-events/add-polling-source/form-control.source";

@@ -9,7 +9,7 @@ import { inject, Injectable } from "@angular/core";
 
 import { Observable, of, take } from "rxjs";
 
-import { ModalService } from "src/app/common/components/modal/modal.service";
+import { ModalService } from "@common/components/modal/modal.service";
 
 import { DatasetBasicsFragment, DatasetKind, FlowProcessEffectiveState } from "../api/kamu.graphql.interface";
 import { promiseWithCatch } from "../common/helpers/app.helpers";

@@ -11,10 +11,10 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular
 
 import { Observable, of } from "rxjs";
 
+import AppValues from "@common/values/app.values";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { AppConfigService } from "src/app/app-config.service";
-import AppValues from "src/app/common/values/app.values";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";

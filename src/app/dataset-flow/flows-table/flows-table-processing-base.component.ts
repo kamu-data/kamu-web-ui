@@ -10,10 +10,10 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { Observable } from "rxjs";
 
+import { BaseComponent } from "@common/components/base.component";
+import { requireValue } from "@common/helpers/app.helpers";
+import AppValues from "@common/values/app.values";
 import { AccountFragment, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { requireValue } from "src/app/common/helpers/app.helpers";
-import AppValues from "src/app/common/values/app.values";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";

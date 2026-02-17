@@ -12,11 +12,11 @@ import { ActivatedRoute } from "@angular/router";
 
 import { from, of } from "rxjs";
 
+import { OdfDefaultValues } from "@common/values/app-odf-default.values";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { OdfDefaultValues } from "src/app/common/values/app-odf-default.values";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";

@@ -18,7 +18,7 @@ import {
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
-import { BaseComponent } from "src/app/common/components/base.component";
+import { BaseComponent } from "@common/components/base.component";
 import { MaybeUndefined } from "src/app/interface/app.types";
 import { ModalCommandInterface, ModalComponentType, ModalMappingsComponent } from "src/app/interface/modal.interface";
 

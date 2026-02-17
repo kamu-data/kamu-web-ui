@@ -9,12 +9,12 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 
+import { BaseComponent } from "@common/components/base.component";
+import { ModalService } from "@common/components/modal/modal.service";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { AppConfigService } from "src/app/app-config.service";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { FileUploadService } from "src/app/services/file-upload.service";
 

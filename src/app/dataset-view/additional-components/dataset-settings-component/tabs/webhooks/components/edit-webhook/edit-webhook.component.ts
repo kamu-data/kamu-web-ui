@@ -13,10 +13,10 @@ import { RouterOutlet } from "@angular/router";
 
 import { NgSelectModule } from "@ng-select/ng-select";
 import { WebhookSubscriptionInput } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { eventTypesMapper } from "src/app/common/helpers/data.helpers";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import AppValues from "src/app/common/values/app.values";
+import { BaseComponent } from "@common/components/base.component";
+import { eventTypesMapper } from "@common/helpers/data.helpers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
 import { NavigationService } from "src/app/services/navigation.service";
 
 import { SubscribedEventType, WebhookSubscriptionFormType } from "../../dataset-settings-webhooks-tab.component.types";

@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";
-import { AddDataTooltipsTexts } from "src/app/common/tooltips/add-data.text";
+import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
+import { AddDataTooltipsTexts } from "@common/tooltips/add-data.text";
 
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { HashPropertyComponent } from "../common/hash-property/hash-property.component";

@@ -11,10 +11,10 @@ import { MatIconModule } from "@angular/material/icon";
 
 import { catchError, from, of, take } from "rxjs";
 
+import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetBasicsFragment, LicenseFragment } from "src/app/api/kamu.graphql.interface";
-import { BlockRowDataComponent } from "src/app/common/components/block-row-data/block-row-data.component";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { LinkPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/link-property/link-property.component";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { MaybeNullOrUndefined } from "src/app/interface/app.types";

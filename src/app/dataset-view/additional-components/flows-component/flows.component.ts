@@ -19,6 +19,8 @@ import { RouterLink } from "@angular/router";
 
 import { combineLatest, map, Observable, of, switchMap, take, tap, timer } from "rxjs";
 
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
 import {
     AccountFragment,
     DatasetBasicsFragment,
@@ -31,8 +33,6 @@ import {
     InitiatorFilterInput,
     WebhookFlowSubProcess,
 } from "src/app/api/kamu.graphql.interface";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import AppValues from "src/app/common/values/app.values";
 import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table/components/flow-table-panel-filters/flow-table-panel-filters.component";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
 import { FilterStatusType, FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";

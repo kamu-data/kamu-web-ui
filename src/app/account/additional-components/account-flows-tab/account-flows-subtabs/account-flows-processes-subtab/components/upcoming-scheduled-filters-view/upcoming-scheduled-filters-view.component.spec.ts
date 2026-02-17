@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import timekeeper from "timekeeper";
 
 import { RangeLastAttempt } from "../../../../account-flows-tab.types";

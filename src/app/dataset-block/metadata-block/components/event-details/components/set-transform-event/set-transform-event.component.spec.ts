@@ -7,9 +7,9 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 import { mockSetTransform } from "../../mock.events";
 import { SetTransformEventComponent } from "./set-transform-event.component";

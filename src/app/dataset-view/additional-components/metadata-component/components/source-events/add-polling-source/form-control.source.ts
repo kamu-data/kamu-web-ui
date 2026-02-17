@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { SetPollingSourceTooltipsTexts } from "src/app/common/tooltips/set-polling-source-tooltips.text";
-import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
+import { SetPollingSourceTooltipsTexts } from "@common/tooltips/set-polling-source-tooltips.text";
+import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
 
 import { FetchKind, MergeKind, ReadKind } from "./add-polling-source-form.types";
 

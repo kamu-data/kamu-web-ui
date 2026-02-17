@@ -10,14 +10,14 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 
+import { DataHelpers } from "@common/helpers/data.helpers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import {
     FlowHistoryDataFragment,
     FlowStatus,
     FlowSummaryDataFragment,
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
-import { DataHelpers } from "src/app/common/helpers/data.helpers";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 
 import { SafeHtmlPipe } from "../../../../common/pipes/safe-html.pipe";
 import { DatasetFlowByIdResponse } from "../../dataset-flow-details.types";

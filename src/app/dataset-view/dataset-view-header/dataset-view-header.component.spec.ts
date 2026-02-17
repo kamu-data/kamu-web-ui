@@ -11,10 +11,10 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
+import { ModalService } from "@common/components/modal/modal.service";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { mockDatasetBasicsRootFragment, mockDatasetInfo } from "src/app/search/mock.data";
 import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";

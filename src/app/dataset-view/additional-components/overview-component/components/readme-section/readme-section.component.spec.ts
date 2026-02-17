@@ -12,16 +12,16 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 
 import { of } from "rxjs";
 
-import { Apollo } from "apollo-angular";
-import { MarkdownModule } from "ngx-markdown";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
 import {
     emitClickOnElementByDataTestId,
     findNativeElement,
     registerMatSvgIcons,
-} from "src/app/common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+} from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { Apollo } from "apollo-angular";
+import { MarkdownModule } from "ngx-markdown";
+import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 
 import { DatasetCommitService } from "../../services/dataset-commit.service";

@@ -20,7 +20,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { filter, fromEvent } from "rxjs";
 
-import { BaseComponent } from "src/app/common/components/base.component";
+import { BaseComponent } from "@common/components/base.component";
 import { CancelRequestService } from "src/app/services/cancel-request.service";
 
 @Component({

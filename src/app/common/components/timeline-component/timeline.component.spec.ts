@@ -9,11 +9,11 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import AppValues from "@common/values/app.values";
 import { provideToastr } from "ngx-toastr";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery, TEST_DATASET_NAME } from "src/app/api/mock/dataset.mock";
-import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import AppValues from "src/app/common/values/app.values";
 import { mockPageBasedInfo } from "src/app/search/mock.data";
 
 import { SharedTestModule } from "../../modules/shared-test.module";

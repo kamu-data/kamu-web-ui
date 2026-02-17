@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 
 import { mockEngines } from "../../../../mock.data";
 import { Engine } from "../../engine-section.types";

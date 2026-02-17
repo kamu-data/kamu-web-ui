@@ -7,8 +7,8 @@
 
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
-import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { RequestTimerComponent } from "./request-timer.component";
 

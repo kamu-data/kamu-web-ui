@@ -12,9 +12,9 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { merge, Observable, OperatorFunction, Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged, filter, map } from "rxjs/operators";
 
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
-import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
 
 import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
 import { BaseField } from "../base-field";

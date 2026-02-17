@@ -22,9 +22,9 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatSidenav } from "@angular/material/sidenav";
 import { RouterLink } from "@angular/router";
 
+import { isMobileView, promiseWithCatch } from "@common/helpers/app.helpers";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
 import { AppConfigService } from "src/app/app-config.service";
-import { isMobileView, promiseWithCatch } from "src/app/common/helpers/app.helpers";
 
 import { WidgetHeightService } from "../../common/components/lineage-graph/widget-height.service";
 import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";

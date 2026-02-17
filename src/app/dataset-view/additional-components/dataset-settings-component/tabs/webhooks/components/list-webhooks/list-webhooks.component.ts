@@ -18,10 +18,10 @@ import {
     WebhookSubscription,
     WebhookSubscriptionStatus,
 } from "src/app/api/kamu.graphql.interface";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { ModalService } from "@common/components/modal/modal.service";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";

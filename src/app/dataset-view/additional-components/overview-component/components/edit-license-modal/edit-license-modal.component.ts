@@ -12,6 +12,10 @@ import { MatDividerModule } from "@angular/material/divider";
 
 import { finalize } from "rxjs";
 
+import { BaseComponent } from "@common/components/base.component";
+import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import AppValues from "@common/values/app.values";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import {
     DatasetBasicsFragment,
@@ -20,10 +24,6 @@ import {
     SetLicense,
 } from "src/app/api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
-import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
-import AppValues from "src/app/common/values/app.values";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";

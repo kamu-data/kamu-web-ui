@@ -8,7 +8,7 @@
 import { inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
 import {
     DatasetInfo,
     DatasetNavigationParams,

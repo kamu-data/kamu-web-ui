@@ -11,6 +11,12 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
+import { BaseComponent } from "@common/components/base.component";
+import { TimeDeltaFormComponent } from "@common/components/time-delta-form/time-delta-form.component";
+import { TimeDeltaFormType } from "@common/components/time-delta-form/time-delta-form.value";
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
 import {
     FlowRetryBackoffType,
     FlowRetryPolicy,
@@ -18,12 +24,6 @@ import {
     TimeDelta,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { TimeDeltaFormComponent } from "src/app/common/components/time-delta-form/time-delta-form.component";
-import { TimeDeltaFormType } from "src/app/common/components/time-delta-form/time-delta-form.value";
-import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
-import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
-import { FlowTooltipsTexts } from "src/app/common/tooltips/flow-tooltips.text";
 import { MaybeNull } from "src/app/interface/app.types";
 
 import { FlowRetryPolicyFormType, FlowRetryPolicyFormValue } from "./flow-retry-policy-form.types";

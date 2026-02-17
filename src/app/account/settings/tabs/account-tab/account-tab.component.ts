@@ -12,16 +12,16 @@ import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModu
 import { MatDividerModule } from "@angular/material/divider";
 import { ParamMap, Router } from "@angular/router";
 
+import { BaseComponent } from "@common/components/base.component";
+import { ModalService } from "@common/components/modal/modal.service";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
 import { ToastrService } from "ngx-toastr";
 import { AccountTabs } from "src/app/account/account.constants";
 import { AccountService } from "src/app/account/account.service";
 import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import AppValues from "src/app/common/values/app.values";
 import { MaybeNullOrUndefined, MaybeUndefined } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";

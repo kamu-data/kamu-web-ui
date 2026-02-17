@@ -10,7 +10,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit
 import { FormsModule } from "@angular/forms";
 
 import { NGX_MONACO_EDITOR_CONFIG } from "ngx-monaco-editor-v2";
-import { BaseComponent } from "src/app/common/components/base.component";
+import { BaseComponent } from "@common/components/base.component";
 import { MaybeNull } from "src/app/interface/app.types";
 
 import { EngineSectionComponent } from "../../../set-transform/components/engine-section/engine-section.component";

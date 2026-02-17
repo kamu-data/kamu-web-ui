@@ -28,14 +28,14 @@ import { ActivatedRoute, NavigationEnd, Params, Router, RouterEvent, RouterLink 
 import { Observable, OperatorFunction } from "rxjs";
 import { debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, take, tap } from "rxjs/operators";
 
+import { BaseComponent } from "@common/components/base.component";
+import AppValues from "@common/values/app.values";
 import { NgbHighlight, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { AccountTabs } from "src/app/account/account.constants";
 import { AccountSettingsTabs } from "src/app/account/settings/account-settings.constants";
 import { AccountFragment, AccountProvider } from "src/app/api/kamu.graphql.interface";
 import { SearchApi } from "src/app/api/search.api";
 import { AppUIConfigFeatureFlags } from "src/app/app-config.model";
-import { BaseComponent } from "src/app/common/components/base.component";
-import AppValues from "src/app/common/values/app.values";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import ProjectLinks from "src/app/project-links";

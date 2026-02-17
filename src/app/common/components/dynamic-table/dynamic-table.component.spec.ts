@@ -8,10 +8,10 @@
 import { SimpleChanges } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { findElementByDataTestId, getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { MarkdownModule } from "ngx-markdown";
 import { provideToastr, ToastrService } from "ngx-toastr";
-import { findElementByDataTestId, getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 
 import { DynamicTableComponent } from "./dynamic-table.component";
 import { MOCK_DATA_ROWS, MOCK_DATA_ROWS_SHOW_MORE_BADGE } from "./dynamic-table.mock";

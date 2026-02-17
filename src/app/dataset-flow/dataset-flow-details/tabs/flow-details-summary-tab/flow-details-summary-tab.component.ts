@@ -8,9 +8,9 @@
 import { DatePipe, NgIf, TitleCasePipe, UpperCasePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
 import { FlowOutcomeDataFragment, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import AppValues from "src/app/common/values/app.values";
 import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
 
 import { DatasetFlowByIdResponse } from "../../dataset-flow-details.types";

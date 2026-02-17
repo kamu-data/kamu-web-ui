@@ -10,10 +10,10 @@ import { ActivatedRoute } from "@angular/router";
 
 import { BehaviorSubject, of } from "rxjs";
 
+import AppValues from "@common/values/app.values";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { AccountService } from "src/app/account/account.service";
-import AppValues from "src/app/common/values/app.values";
 import ProjectLinks from "src/app/project-links";
 
 import { mockAccountDetails, TEST_AVATAR_URL, TEST_LOGIN } from "../api/mock/auth.mock";

@@ -8,7 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { NonNullableFormBuilder, Validators } from "@angular/forms";
 
-import AppValues from "src/app/common/values/app.values";
+import AppValues from "@common/values/app.values";
 
 import { WebhookFormComponent } from "./webhook-form.component";
 

@@ -23,10 +23,10 @@ import { MatRadioModule } from "@angular/material/radio";
 
 import { Observable, shareReplay } from "rxjs";
 
-import { BaseComponent } from "src/app/common/components/base.component";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text";
-import AppValues from "src/app/common/values/app.values";
+import { BaseComponent } from "@common/components/base.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { CompactionTooltipsTexts } from "@common/tooltips/compacting.text";
+import AppValues from "@common/values/app.values";
 import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 

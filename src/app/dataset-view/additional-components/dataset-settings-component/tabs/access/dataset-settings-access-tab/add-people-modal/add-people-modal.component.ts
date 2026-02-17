@@ -16,8 +16,8 @@ import { debounceTime, distinctUntilChanged, finalize, Observable, OperatorFunct
 
 import { NgbActiveModal, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetAccessRole, DatasetBasicsFragment, NameLookupResult } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
-import AppValues from "src/app/common/values/app.values";
+import { BaseComponent } from "@common/components/base.component";
+import AppValues from "@common/values/app.values";
 import { MaybeNull } from "src/app/interface/app.types";
 
 import { DatasetCollaborationsService } from "../dataset-collaborations.service";

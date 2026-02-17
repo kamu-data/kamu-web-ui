@@ -21,9 +21,9 @@ import {
 } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
+import AppValues from "@common/values/app.values";
 import { GraphModule, Node } from "@swimlane/ngx-graph";
 import { DatasetKind, DatasetLineageBasicsFragment } from "src/app/api/kamu.graphql.interface";
-import AppValues from "src/app/common/values/app.values";
 import {
     LineageGraph,
     LineageGraphNodeKind,

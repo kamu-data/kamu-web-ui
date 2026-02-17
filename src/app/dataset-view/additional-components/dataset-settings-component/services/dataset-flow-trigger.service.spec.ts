@@ -10,6 +10,7 @@ import { provideAnimations } from "@angular/platform-browser/animations";
 
 import { of } from "rxjs";
 
+import AppValues from "@common/values/app.values";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr, ToastrService } from "ngx-toastr";
@@ -28,7 +29,6 @@ import {
     mockSetDatasetFlowTriggerError,
     mockSetDatasetFlowTriggerSuccess,
 } from "src/app/api/mock/dataset-flow.mock";
-import AppValues from "src/app/common/values/app.values";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 
 import { NavigationService } from "../../../../services/navigation.service";

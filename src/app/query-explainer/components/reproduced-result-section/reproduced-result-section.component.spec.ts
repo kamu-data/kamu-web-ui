@@ -7,8 +7,8 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { provideToastr } from "ngx-toastr";
-import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 
 import { mockQueryExplainerEmptyOutput, mockQueryExplainerOutput } from "../../query-explainer.mocks";
 import { ReproducedResultSectionComponent } from "./reproduced-result-section.component";

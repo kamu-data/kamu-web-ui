@@ -9,14 +9,14 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 
+import { BaseComponent } from "@common/components/base.component";
+import AppValues from "@common/values/app.values";
 import {
     DatasetBasicsFragment,
     DatasetFlowProcess,
     DatasetKind,
     FlowProcessEffectiveState,
 } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
-import AppValues from "src/app/common/values/app.values";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 import { SettingsTabsEnum } from "../../../dataset-settings-component/dataset-settings.model";

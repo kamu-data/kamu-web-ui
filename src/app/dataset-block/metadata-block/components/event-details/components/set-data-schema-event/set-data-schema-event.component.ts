@@ -8,11 +8,11 @@
 import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
+import { BaseComponent } from "@common/components/base.component";
+import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
+import { parseCurrentSchema } from "@common/helpers/app.helpers";
+import { schemaAsDataRows } from "@common/helpers/data-schema.helpers";
 import { SetDataSchema } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
-import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
-import { schemaAsDataRows } from "src/app/common/helpers/data-schema.helpers";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DataSchemaField, DatasetSchema } from "src/app/interface/dataset-schema.interface";
 

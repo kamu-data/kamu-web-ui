@@ -11,10 +11,10 @@ import { FormsModule } from "@angular/forms";
 
 import { combineLatest, map, Observable, of, switchMap, tap } from "rxjs";
 
+import { BaseComponent } from "@common/components/base.component";
+import AppValues from "@common/values/app.values";
 import { ToastrService } from "ngx-toastr";
 import { DatasetByIdQuery } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
-import AppValues from "src/app/common/values/app.values";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { MaybeNull } from "src/app/interface/app.types";

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AddPushSourceTooltipsTexts } from "src/app/common/tooltips/add-push-source.text";
+import { AddPushSourceTooltipsTexts } from "@common/tooltips/add-push-source.text";
 
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { getSourcesDescriptors } from "../common-sources/sources-event.source";

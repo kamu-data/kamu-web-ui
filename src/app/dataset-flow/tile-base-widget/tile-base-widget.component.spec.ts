@@ -7,9 +7,9 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { FlowItemWidgetDataFragment } from "src/app/api/kamu.graphql.interface";
 import { mockFlowItemWidgetDataFragments } from "src/app/api/mock/dataset-flow.mock";
-import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 
 import { mockDatasets } from "../flows-table/flows-table.helpers.mock";
 import { TileBaseWidgetComponent } from "./tile-base-widget.component";

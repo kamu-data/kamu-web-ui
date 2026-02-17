@@ -10,7 +10,7 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS } from "src/app/dataset-view/dataset-view-header/dataset-view-header.model";
 
 import { SharedTestModule } from "../../modules/shared-test.module";

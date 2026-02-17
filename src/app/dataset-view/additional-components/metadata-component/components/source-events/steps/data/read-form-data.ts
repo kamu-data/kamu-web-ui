@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
-import { OdfDefaultValues } from "src/app/common/values/app-odf-default.values";
+import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
+import { OdfDefaultValues } from "@common/values/app-odf-default.values";
 
 import { ControlType, JsonFormData, ReadKind } from "../../add-polling-source/add-polling-source-form.types";
 

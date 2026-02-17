@@ -13,9 +13,9 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
+import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 

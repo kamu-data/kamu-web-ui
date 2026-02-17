@@ -10,11 +10,11 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
+import { ModalService } from "@common/components/modal/modal.service";
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import AppValues from "@common/values/app.values";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import AppValues from "src/app/common/values/app.values";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";

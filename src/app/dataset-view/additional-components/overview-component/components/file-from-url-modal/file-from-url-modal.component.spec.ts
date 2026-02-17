@@ -7,8 +7,8 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { SharedTestModule } from "@common/modules/shared-test.module";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 
 import { FileFromUrlModalComponent } from "./file-from-url-modal.component";
 

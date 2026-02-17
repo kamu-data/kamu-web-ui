@@ -9,8 +9,8 @@ import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import AppValues from "@common/values/app.values";
 import { mockDatasetFlowByIdResponse } from "src/app/api/mock/dataset-flow.mock";
-import AppValues from "src/app/common/values/app.values";
 
 import { FlowDetailsSummaryTabComponent } from "./flow-details-summary-tab.component";
 import { FlowDetailsSummaryTabHarness } from "./flow-details-summary-tab.component.harness";

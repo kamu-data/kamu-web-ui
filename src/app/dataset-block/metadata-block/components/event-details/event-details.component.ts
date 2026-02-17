@@ -19,8 +19,8 @@ import {
     ViewContainerRef,
 } from "@angular/core";
 
+import { BaseComponent } from "@common/components/base.component";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 

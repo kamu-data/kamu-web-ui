@@ -8,8 +8,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormGroup } from "@angular/forms";
 
-import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { SourceOrder } from "../../source-events/add-polling-source/process-form.service.types";
 import { OrderFieldComponent } from "./order-field.component";

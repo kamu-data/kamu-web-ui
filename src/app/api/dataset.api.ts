@@ -12,6 +12,7 @@ import { first, map } from "rxjs/operators";
 
 import { StoreObject } from "@apollo/client/cache";
 import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import AppValues from "@common/values/app.values";
 import { onlyCompleteData } from "apollo-angular";
 import {
     CommitEventToDatasetGQL,
@@ -54,7 +55,6 @@ import {
     UpdateReadmeMutation,
     UpdateWatermarkMutation,
 } from "src/app/api/kamu.graphql.interface";
-import AppValues from "src/app/common/values/app.values";
 
 import { resetCacheHelper, updateCacheHelper } from "../common/helpers/apollo-cache.helper";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";

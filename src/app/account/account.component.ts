@@ -15,11 +15,11 @@ import { RouterLink, RouterOutlet } from "@angular/router";
 import { Observable } from "rxjs";
 import { map, shareReplay } from "rxjs/operators";
 
+import { promiseWithCatch } from "@common/helpers/app.helpers";
+import AppValues from "@common/values/app.values";
+import { AccountNotFoundError } from "@common/values/errors";
 import { AccountService } from "src/app/account/account.service";
 import { AccountFragment } from "src/app/api/kamu.graphql.interface";
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import AppValues from "src/app/common/values/app.values";
-import { AccountNotFoundError } from "src/app/common/values/errors";
 import { MaybeNull } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";
 

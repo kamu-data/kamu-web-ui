@@ -7,8 +7,8 @@
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 
+import { BaseComponent } from "@common/components/base.component";
 import { GithubLoginCredentials } from "src/app/api/auth.api.model";
-import { BaseComponent } from "src/app/common/components/base.component";
 import ProjectLinks from "src/app/project-links";
 
 import { NavigationService } from "../../../services/navigation.service";

@@ -19,8 +19,8 @@ import {
 } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 
-import { BaseComponent } from "src/app/common/components/base.component";
-import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
+import { BaseComponent } from "@common/components/base.component";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { MaybeNull } from "src/app/interface/app.types";
 
 import {

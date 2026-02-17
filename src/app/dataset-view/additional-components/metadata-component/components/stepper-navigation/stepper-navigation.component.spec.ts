@@ -9,7 +9,7 @@ import { CdkStepper } from "@angular/cdk/stepper";
 import { ChangeDetectorRef, ElementRef } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 
 import { SetPollingSourceSection } from "../source-events/add-polling-source/add-polling-source-form.types";
 import { StepperNavigationComponent } from "./stepper-navigation.component";

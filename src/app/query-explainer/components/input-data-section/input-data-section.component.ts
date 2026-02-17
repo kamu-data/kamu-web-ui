@@ -11,10 +11,10 @@ import { RouterLink } from "@angular/router";
 
 import { Observable } from "rxjs";
 
+import { addMarkdownRunButton } from "@common/helpers/app.helpers";
+import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
+import AppValues from "@common/values/app.values";
 import { MarkdownModule } from "ngx-markdown";
-import { addMarkdownRunButton } from "src/app/common/helpers/app.helpers";
-import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
-import AppValues from "src/app/common/values/app.values";
 import { MaybeUndefined } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";

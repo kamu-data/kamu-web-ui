@@ -10,7 +10,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { of } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockDatasetMainDataResponse } from "src/app/search/mock.data";
 

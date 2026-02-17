@@ -8,8 +8,8 @@
 import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 
-import { isNil } from "src/app/common/helpers/app.helpers";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { isNil } from "@common/helpers/app.helpers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { DatasetsAccountResolverResponse } from "src/app/interface/dataset.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 

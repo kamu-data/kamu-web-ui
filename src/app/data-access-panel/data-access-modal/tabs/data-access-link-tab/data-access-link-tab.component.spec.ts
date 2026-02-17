@@ -13,8 +13,8 @@ import {
     emitClickOnElementByDataTestId,
     getElementByDataTestId,
     registerMatSvgIcons,
-} from "src/app/common/helpers/base-test.helpers.spec";
-import AppValues from "src/app/common/values/app.values";
+} from "@common/helpers/base-test.helpers.spec";
+import AppValues from "@common/values/app.values";
 
 import { mockDatasetEndPoints } from "../../../data-access-panel-mock.data";
 import { DataAccessLinkTabComponent } from "./data-access-link-tab.component";

@@ -5,6 +5,9 @@
  * included in the LICENSE file.
  */
 
+import { pluralize } from "@common/helpers/app.helpers";
+import { DataHelpers } from "@common/helpers/data.helpers";
+import AppValues from "@common/values/app.values";
 import { format } from "date-fns/format";
 import {
     FlowActivationCause,
@@ -21,9 +24,6 @@ import {
     FlowSummaryDataFragment,
     TaskStatus,
 } from "src/app/api/kamu.graphql.interface";
-import { pluralize } from "src/app/common/helpers/app.helpers";
-import { DataHelpers } from "src/app/common/helpers/data.helpers";
-import AppValues from "src/app/common/values/app.values";
 import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
 import ProjectLinks from "src/app/project-links";
 

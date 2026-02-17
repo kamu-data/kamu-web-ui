@@ -9,8 +9,8 @@ import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
-import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
 
 import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
 import { BaseField } from "../base-field";

@@ -8,12 +8,12 @@
 import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import { DynamicTableComponent } from "src/app/common/components/dynamic-table/dynamic-table.component";
+import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
 import {
     DynamicTableColumnClassEnum,
     DynamicTableDataRow,
-} from "src/app/common/components/dynamic-table/dynamic-table.interface";
-import { extractSchemaFieldsFromData } from "src/app/common/helpers/data-schema.helpers";
+} from "@common/components/dynamic-table/dynamic-table.interface";
+import { extractSchemaFieldsFromData } from "@common/helpers/data-schema.helpers";
 import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
 
 import { BasePropertyComponent } from "../base-property/base-property.component";

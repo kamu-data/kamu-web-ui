@@ -11,10 +11,10 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
 
+import { BaseComponent } from "@common/components/base.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { BaseComponent } from "src/app/common/components/base.component";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import AppValues from "src/app/common/values/app.values";
 import { DataSqlErrorUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { EditorModule } from "src/app/editor/editor.module";
 import { MaybeNull } from "src/app/interface/app.types";

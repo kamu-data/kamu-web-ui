@@ -11,7 +11,7 @@ import { Component, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { IngestConfigurationRuleFormComponent } from "./ingest-configuration-rule-form.component";
 import { IngestConfigurationRuleFormHarness } from "./ingest-configuration-rule-form.harness";

@@ -9,8 +9,8 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { provideToastr } from "ngx-toastr";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 

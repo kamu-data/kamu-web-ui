@@ -9,7 +9,7 @@
 
 import { Routes } from "@angular/router";
 
-import { datasetInfoResolverFn } from "src/app/common/resolvers/dataset-info.resolver";
+import { datasetInfoResolverFn } from "@common/resolvers/dataset-info.resolver";
 
 import RoutingResolvers from "../../common/resolvers/routing-resolvers";
 import ProjectLinks from "../../project-links";

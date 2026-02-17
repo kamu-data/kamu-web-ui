@@ -17,8 +17,8 @@ import {
     ReactiveFormsModule,
 } from "@angular/forms";
 
-import { BaseComponent } from "src/app/common/components/base.component";
-import { getValidators } from "src/app/common/helpers/data.helpers";
+import { BaseComponent } from "@common/components/base.component";
+import { getValidators } from "@common/helpers/data.helpers";
 import { MaybeNull } from "src/app/interface/app.types";
 
 import { ArrayKeysFieldComponent } from "../../../form-components/array-keys-field/array-keys-field.component";

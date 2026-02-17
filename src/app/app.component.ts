@@ -22,7 +22,7 @@ import { NavigationEnd, Router, RouterEvent, RouterOutlet } from "@angular/route
 import { filter, map } from "rxjs/operators";
 
 import { loadErrorMessages } from "@apollo/client/dev";
-import { BaseComponent } from "src/app/common/components/base.component";
+import { BaseComponent } from "@common/components/base.component";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 

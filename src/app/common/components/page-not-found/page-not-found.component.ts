@@ -8,8 +8,8 @@
 import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 
+import AppValues from "@common/values/app.values";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import AppValues from "src/app/common/values/app.values";
 import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({

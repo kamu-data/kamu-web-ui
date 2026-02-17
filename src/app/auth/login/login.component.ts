@@ -14,10 +14,10 @@ import { ActivatedRoute, Params } from "@angular/router";
 
 import { Observable, shareReplay } from "rxjs";
 
+import { BaseComponent } from "@common/components/base.component";
+import AppValues from "@common/values/app.values";
 import { PasswordLoginCredentials } from "src/app/api/auth.api.model";
 import { AppConfigService } from "src/app/app-config.service";
-import { BaseComponent } from "src/app/common/components/base.component";
-import AppValues from "src/app/common/values/app.values";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";
 import { LocalStorageService } from "src/app/services/local-storage.service";

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { SetTransformTooltipsTexts } from "src/app/common/tooltips/set-transform.text";
+import { SetTransformTooltipsTexts } from "@common/tooltips/set-transform.text";
 
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { getSourcesDescriptors } from "../common-sources/sources-event.source";

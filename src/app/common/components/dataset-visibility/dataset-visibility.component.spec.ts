@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { mockPrivateDatasetVisibility, mockPublicDatasetVisibility } from "src/app/search/mock.data";
 
 import { DatasetVisibilityComponent } from "./dataset-visibility.component";

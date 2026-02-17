@@ -11,8 +11,8 @@ import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatStepperModule } from "@angular/material/stepper";
 import { RouterLink } from "@angular/router";
 
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";

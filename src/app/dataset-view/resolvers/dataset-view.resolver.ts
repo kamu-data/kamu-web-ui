@@ -7,12 +7,14 @@
 
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
+
 import { catchError, combineLatest, EMPTY, map, switchMap } from "rxjs";
+
+import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 
 export const datasetViewResolverFn: ResolveFn<DatasetViewData> = (route: ActivatedRouteSnapshot) => {
     const datasetService = inject(DatasetService);

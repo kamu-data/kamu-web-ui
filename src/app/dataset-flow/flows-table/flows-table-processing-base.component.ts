@@ -5,18 +5,21 @@
  * included in the LICENSE file.
  */
 
-import { Observable } from "rxjs";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { CancelFlowArgs, FlowsTableData, FlowsTableFiltersOptions } from "./flows-table.types";
-import { AccountFragment, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
 import { ChangeDetectorRef, Directive, inject } from "@angular/core";
-import { NavigationService } from "src/app/services/navigation.service";
-import { requireValue } from "src/app/common/helpers/app.helpers";
-import ProjectLinks from "src/app/project-links";
-import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+
+import { Observable } from "rxjs";
+
+import { AccountFragment, FlowStatus, InitiatorFilterInput } from "src/app/api/kamu.graphql.interface";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { requireValue } from "src/app/common/helpers/app.helpers";
 import AppValues from "src/app/common/values/app.values";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
+import ProjectLinks from "src/app/project-links";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { CancelFlowArgs, FlowsTableData, FlowsTableFiltersOptions } from "./flows-table.types";
 
 @Directive()
 export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {

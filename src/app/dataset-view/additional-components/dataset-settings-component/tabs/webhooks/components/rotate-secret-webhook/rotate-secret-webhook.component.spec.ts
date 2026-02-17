@@ -5,18 +5,21 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { RotateSecretWebhookComponent } from "./rotate-secret-webhook.component";
+
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
-import { of } from "rxjs";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { NavigationService } from "src/app/services/navigation.service";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+
+import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
+import { RotateSecretWebhookComponent } from "./rotate-secret-webhook.component";
 
 describe("RotateSecretWebhookComponent", () => {
     let component: RotateSecretWebhookComponent;

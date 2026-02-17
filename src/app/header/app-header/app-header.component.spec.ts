@@ -5,32 +5,35 @@
  * included in the LICENSE file.
  */
 
-import { AccountFragment, AccountProvider, AccountType } from "src/app/api/kamu.graphql.interface";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { ActivatedRoute, NavigationEnd } from "@angular/router";
+
+import { of } from "rxjs";
+import { first } from "rxjs/operators";
+
 import { Apollo } from "apollo-angular";
+import { AccountFragment, AccountProvider, AccountType } from "src/app/api/kamu.graphql.interface";
+import { SearchApi } from "src/app/api/search.api";
 import {
     dispatchInputEvent,
-    getElementByDataTestId,
-    findNativeElement,
-    routerMockEventSubject,
-    findElementByDataTestId,
     emitClickOnElementByDataTestId,
+    findElementByDataTestId,
+    findNativeElement,
+    getElementByDataTestId,
     registerMatSvgIcons,
+    routerMockEventSubject,
 } from "src/app/common/helpers/base-test.helpers.spec";
-import { AppHeaderComponent } from "./app-header.component";
-import { SearchApi } from "src/app/api/search.api";
-import { of } from "rxjs";
-import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
-import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
-import { first } from "rxjs/operators";
 import AppValues from "src/app/common/values/app.values";
-import { ActivatedRoute, NavigationEnd } from "@angular/router";
+import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import ProjectLinks from "src/app/project-links";
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+
+import { AppHeaderComponent } from "./app-header.component";
 
 describe("AppHeaderComponent", () => {
     let component: AppHeaderComponent;

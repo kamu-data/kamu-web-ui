@@ -5,27 +5,30 @@
  * included in the LICENSE file.
  */
 
-import { Injectable, inject } from "@angular/core";
-import { Observable, map } from "rxjs";
+import { inject, Injectable } from "@angular/core";
+
+import { map, Observable } from "rxjs";
+
+import { Edge, Node } from "@swimlane/ngx-graph";
 import {
-    DatasetLineageBasicsFragment,
     DatasetKind,
-    FetchStep,
+    DatasetLineageBasicsFragment,
     DependencyDatasetResultNotAccessible,
+    FetchStep,
 } from "src/app/api/kamu.graphql.interface";
-import { LineageUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import {
-    LineageGraphNodeKind,
-    LineageGraphNodeData,
-    LineageNodeAccess,
-    LineageGraph,
-    LineageGraphUpdate,
-} from "../lineage-model";
-import { Node, Edge } from "@swimlane/ngx-graph";
-import { MaybeNull } from "src/app/interface/app.types";
 import { isNil } from "src/app/common/helpers/app.helpers";
 import { chainNameFromId } from "src/app/common/helpers/data.helpers";
+import { LineageUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import { MaybeNull } from "src/app/interface/app.types";
+
+import {
+    LineageGraph,
+    LineageGraphNodeData,
+    LineageGraphNodeKind,
+    LineageGraphUpdate,
+    LineageNodeAccess,
+} from "../lineage-model";
 
 @Injectable({
     providedIn: "root",

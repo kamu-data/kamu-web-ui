@@ -7,6 +7,7 @@
 
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
+
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
 import { AccessTokenConnection } from "src/app/api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";

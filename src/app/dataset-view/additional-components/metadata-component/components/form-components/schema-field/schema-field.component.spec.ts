@@ -6,11 +6,13 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { SchemaFieldComponent, SchemaType } from "./schema-field.component";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
+
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { dispatchInputEvent, emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { SchemaFieldComponent, SchemaType } from "./schema-field.component";
 
 describe("SchemaFieldComponent", () => {
     let component: SchemaFieldComponent;

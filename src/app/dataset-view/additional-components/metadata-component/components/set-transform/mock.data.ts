@@ -12,12 +12,13 @@ import {
     GetDatasetSchemaQuery,
     QueryDialect,
 } from "src/app/api/kamu.graphql.interface";
-import { SetTransformYamlType } from "./set-transform.types";
+import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.mock";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
+
 import { PreprocessStepValue } from "../source-events/add-polling-source/add-polling-source-form.types";
 import { Engine } from "./components/engine-section/engine-section.types";
-import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.mock";
+import { SetTransformYamlType } from "./set-transform.types";
 
 export const MOCK_DATASET_INFO: DatasetInfo = {
     accountName: TEST_ACCOUNT_NAME,

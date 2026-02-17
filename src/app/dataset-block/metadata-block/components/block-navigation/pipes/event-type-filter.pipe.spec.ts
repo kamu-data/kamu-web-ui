@@ -8,6 +8,7 @@
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
 import { mockHistoryUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+
 import { EventTypeFilterPipe } from "./event-type-filter.pipe";
 
 describe("EventTypeFilterPipe", () => {

@@ -6,8 +6,13 @@
  */
 
 import { inject, Injectable } from "@angular/core";
-import { Observable, first, map } from "rxjs";
+
+import { first, map, Observable } from "rxjs";
+
+import { ApolloLink, ObservableQuery } from "@apollo/client/core";
 import { onlyCompleteData } from "apollo-angular";
+
+import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 import {
     CreateAccessTokenGQL,
     CreateAccessTokenMutation,
@@ -16,8 +21,6 @@ import {
     RevokeAccessTokenGQL,
     RevokeAccessTokenMutation,
 } from "./kamu.graphql.interface";
-import { ApolloLink, ObservableQuery } from "@apollo/client/core";
-import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 
 @Injectable({
     providedIn: "root",

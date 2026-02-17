@@ -7,7 +7,9 @@
 
 import { inject } from "@angular/core";
 import { CanActivateFn } from "@angular/router";
+
 import { NavigationService } from "src/app/services/navigation.service";
+
 import { AccountTabs } from "../account.constants";
 
 export const accountGuard: CanActivateFn = (route, state) => {

@@ -5,11 +5,15 @@
  * included in the LICENSE file.
  */
 
+import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { AbstractControl, FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { MatDividerModule } from "@angular/material/divider";
 import { ParamMap, Router } from "@angular/router";
+
 import { ToastrService } from "ngx-toastr";
+import { AccountTabs } from "src/app/account/account.constants";
 import { AccountService } from "src/app/account/account.service";
 import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -17,17 +21,15 @@ import { BaseComponent } from "src/app/common/components/base.component";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import AppValues from "src/app/common/values/app.values";
 import { MaybeNullOrUndefined, MaybeUndefined } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
-import { ChangeUsernameFormType } from "./account-tab.types";
-import { ChangeAccountUsernameResult } from "../../account-settings.constants";
-import { AccountTabs } from "src/app/account/account.constants";
-import AppValues from "src/app/common/values/app.values";
-import { AdminChangePasswordComponent } from "../password-and-authentication-tab/components/admin-change-password/admin-change-password.component";
-import { NgIf } from "@angular/common";
+
 import { FormValidationErrorsDirective } from "../../../../common/directives/form-validation-errors.directive";
-import { MatDividerModule } from "@angular/material/divider";
+import { ChangeAccountUsernameResult } from "../../account-settings.constants";
+import { AdminChangePasswordComponent } from "../password-and-authentication-tab/components/admin-change-password/admin-change-password.component";
+import { ChangeUsernameFormType } from "./account-tab.types";
 
 @Component({
     selector: "app-account-tab",

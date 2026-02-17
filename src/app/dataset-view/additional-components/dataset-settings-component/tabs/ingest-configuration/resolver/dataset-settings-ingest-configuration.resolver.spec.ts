@@ -6,31 +6,33 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ResolveFn } from "@angular/router";
-import { datasetSettingsIngestConfigurationResolverFn } from "./dataset-settings-ingest-configuration.resolver";
-import { DatasetSettingsIngestConfigurationTabData } from "../dataset-settings-ingest-configuration-tab.data";
-import { DatasetFlowConfigService } from "../../../services/dataset-flow-config.service";
-import { of, Observable, first } from "rxjs";
-import {
-    DatasetFlowType,
-    GetDatasetFlowConfigsQuery,
-    FlowRetryBackoffType,
-    TimeUnit,
-} from "src/app/api/kamu.graphql.interface";
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+
+import { first, Observable, of } from "rxjs";
+
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
-import { SettingsTabsEnum } from "../../../dataset-settings.model";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import {
+    DatasetFlowType,
+    FlowRetryBackoffType,
+    GetDatasetFlowConfigsQuery,
+    TimeUnit,
+} from "src/app/api/kamu.graphql.interface";
+import { mockIngestGetDatasetFlowConfigsSuccess } from "src/app/api/mock/dataset-flow.mock";
+import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
     mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
     mockReadonlyDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
-import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { NavigationService } from "src/app/services/navigation.service";
-import { mockIngestGetDatasetFlowConfigsSuccess } from "src/app/api/mock/dataset-flow.mock";
+
+import { SettingsTabsEnum } from "../../../dataset-settings.model";
+import { DatasetFlowConfigService } from "../../../services/dataset-flow-config.service";
+import { DatasetSettingsIngestConfigurationTabData } from "../dataset-settings-ingest-configuration-tab.data";
+import { datasetSettingsIngestConfigurationResolverFn } from "./dataset-settings-ingest-configuration.resolver";
 
 describe("datasetSettingsIngestConfigurationResolverFn", () => {
     const mockActivatedRouteSnapshot = new ActivatedRouteSnapshot();

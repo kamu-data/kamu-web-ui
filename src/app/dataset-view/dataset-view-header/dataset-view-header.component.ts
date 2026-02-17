@@ -5,31 +5,34 @@
  * included in the LICENSE file.
  */
 
+import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterLink } from "@angular/router";
+
+import { finalize, map, Observable } from "rxjs";
+
+import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
+import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { ModalService } from "src/app/common/components/modal/modal.service";
+import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { DatasetVisibilityComponent } from "../../common/components/dataset-visibility/dataset-visibility.component";
+import { SearchAdditionalButtonsComponent } from "../../common/components/search-additional-buttons/search-additional-buttons.component";
 import {
     MenuActionData,
     SearchAdditionalHeaderButtonInterface,
     SearchAdditionalHeaderButtonMenuAction,
 } from "../../common/components/search-additional-buttons/search-additional-buttons.interface";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
-import { SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS } from "./dataset-view-header.model";
-import { DatasetService } from "../dataset.service";
-import { finalize, map, Observable } from "rxjs";
-import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetViewTypeEnum } from "../dataset-view.interface";
-import { AsyncPipe } from "@angular/common";
-import { SearchAdditionalButtonsComponent } from "../../common/components/search-additional-buttons/search-additional-buttons.component";
-import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
 import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";
-import { DatasetVisibilityComponent } from "../../common/components/dataset-visibility/dataset-visibility.component";
-import { RouterLink } from "@angular/router";
-import { MatIconModule } from "@angular/material/icon";
+import { DatasetViewTypeEnum } from "../dataset-view.interface";
+import { DatasetService } from "../dataset.service";
+import { SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS } from "./dataset-view-header.model";
 
 @Component({
     selector: "app-dataset-view-header",

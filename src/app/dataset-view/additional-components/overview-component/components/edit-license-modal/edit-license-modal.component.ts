@@ -5,10 +5,13 @@
  * included in the LICENSE file.
  */
 
-import { BaseComponent } from "src/app/common/components/base.component";
-import AppValues from "src/app/common/values/app.values";
 import { Component, inject, Input, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { MatDividerModule } from "@angular/material/divider";
+
+import { finalize } from "rxjs";
+
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import {
     DatasetBasicsFragment,
@@ -16,17 +19,17 @@ import {
     DatasetOverviewFragment,
     SetLicense,
 } from "src/app/api/kamu.graphql.interface";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
+import AppValues from "src/app/common/values/app.values";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
+
 import { DatasetCommitService } from "../../services/dataset-commit.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { finalize } from "rxjs";
 import { LicenseFormType } from "./edit-license-modal.types";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { MatDividerModule } from "@angular/material/divider";
-import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
-import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 @Component({
     selector: "app-edit-license-modal",

@@ -6,6 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component } from "@angular/core";
+
 import { AccountTabComponent } from "../../settings/tabs/account-tab/account-tab.component";
 
 @Component({

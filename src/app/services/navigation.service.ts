@@ -5,27 +5,30 @@
  * included in the LICENSE file.
  */
 
-import {
-    DatasetInfo,
-    FlowDetailsNavigationParams,
-    WebhooksNavigationParams,
-} from "src/app/interface/navigation.interface";
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import { inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { DatasetNavigationParams, MetadataBlockNavigationParams } from "src/app/interface/navigation.interface";
-import ProjectLinks from "../project-links";
-import { FlowDetailsTabs } from "../dataset-flow/dataset-flow-details/dataset-flow-details.types";
-import { AccountSettingsTabs } from "../account/settings/account-settings.constants";
-import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
-import { MetadataTabs } from "./../dataset-view/additional-components/metadata-component/metadata.constants";
-import { SettingsTabsEnum } from "../dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+
+import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import {
+    DatasetInfo,
+    DatasetNavigationParams,
+    FlowDetailsNavigationParams,
+    MetadataBlockNavigationParams,
+    WebhooksNavigationParams,
+} from "src/app/interface/navigation.interface";
+
 import { AccountTabs } from "../account/account.constants";
+import { AccountSettingsTabs } from "../account/settings/account-settings.constants";
+import { FlowStatus } from "../api/kamu.graphql.interface";
+import { FlowDetailsTabs } from "../dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { SettingsTabsEnum } from "../dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
+import ProjectLinks from "../project-links";
 import {
     AccountFlowsNav,
     ProcessCardFilterMode,
 } from "./../account/additional-components/account-flows-tab/account-flows-tab.types";
-import { FlowStatus } from "../api/kamu.graphql.interface";
+import { MetadataTabs } from "./../dataset-view/additional-components/metadata-component/metadata.constants";
 
 @Injectable({ providedIn: "root" })
 export class NavigationService {

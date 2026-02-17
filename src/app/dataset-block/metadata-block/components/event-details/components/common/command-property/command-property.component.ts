@@ -6,6 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+
 import { BasePropertyComponent } from "../base-property/base-property.component";
 
 @Component({

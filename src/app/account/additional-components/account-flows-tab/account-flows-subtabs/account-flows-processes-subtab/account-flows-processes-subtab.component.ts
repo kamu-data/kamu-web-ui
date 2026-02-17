@@ -5,10 +5,26 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase } from "@angular/common";
-import { AccountService } from "src/app/account/account.service";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { MatButtonToggleChange, MatButtonToggleModule } from "@angular/material/button-toggle";
+import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
+import { MatIconModule } from "@angular/material/icon";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+
 import { BehaviorSubject, debounceTime, map, Observable, startWith, Subject, switchMap, take, tap, timer } from "rxjs";
+
+import { DateTimeAdapter, OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
+import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
+import { NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgSelectModule } from "@ng-select/ng-select";
+import { InfiniteScrollDirective } from "ngx-infinite-scroll";
+import { ToastrService } from "ngx-toastr";
+import { AccountTabs } from "src/app/account/account.constants";
+import { AccountService } from "src/app/account/account.service";
+import { AccountFlowsFiltersService } from "src/app/account/services/account-flows-filters.service";
 import {
     AccountFlowProcessCard,
     Dataset,
@@ -18,49 +34,36 @@ import {
     FlowProcessGroupRollupDataFragment,
     FlowProcessOrderField,
 } from "src/app/api/kamu.graphql.interface";
-import { environment } from "src/environments/environment";
-import { MatIconModule } from "@angular/material/icon";
-import { NavigationService } from "src/app/services/navigation.service";
-import { AccountTabs } from "src/app/account/account.constants";
-import { AccountFlowsType } from "../../resolvers/account-flows.resolver";
 import { BaseComponent } from "src/app/common/components/base.component";
-import AppValues from "src/app/common/values/app.values";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
-import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.component";
-import { WebhookFlowProcessCardComponent } from "../../../../../flow-cards/webhook-flow-process-card/webhook-flow-process-card.component";
-import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
-import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
-import { MatButtonToggleChange, MatButtonToggleModule } from "@angular/material/button-toggle";
-import { FormsModule } from "@angular/forms";
-import {
-    AccountFlowsNav,
-    CARD_FILTERS_MODE_OPTIONS,
-    CardFilterDescriptor,
-    DashboardFiltersOptions,
-    ProcessCardFilterMode,
-    FlowProcessCardListing,
-    ProcessCardGroup,
-    CardsStrategyResult,
-} from "../../account-flows-tab.types";
-import { NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
-import { DateTimeAdapter, OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
-import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { MY_MOMENT_FORMATS } from "src/app/common/helpers/data.helpers";
-import { NgSelectModule } from "@ng-select/ng-select";
-import { ToastrService } from "ngx-toastr";
-import { InfiniteScrollDirective } from "ngx-infinite-scroll";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { RecentActivityFiltersViewComponent } from "./components/recent-activity-filters-view/recent-activity-filters-view.component";
-import { TriageFiltersViewComponent } from "./components/triage-filters-view/triage-filters-view.component";
-import { UpcomingScheduledFiltersViewComponent } from "./components/upcoming-scheduled-filters-view/upcoming-scheduled-filters-view.component";
-import { CustomFiltersViewComponent } from "./components/custom-filters-view/custom-filters-view.component";
-import { AccountFlowsFiltersService } from "src/app/account/services/account-flows-filters.service";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
+import AppValues from "src/app/common/values/app.values";
+import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import {
     rollupAvailabilityMapper,
     RollupFiltersOptions,
 } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.component";
+import { NavigationService } from "src/app/services/navigation.service";
+import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
+import { environment } from "src/environments/environment";
+
+import { WebhookFlowProcessCardComponent } from "../../../../../flow-cards/webhook-flow-process-card/webhook-flow-process-card.component";
+import {
+    AccountFlowsNav,
+    CARD_FILTERS_MODE_OPTIONS,
+    CardFilterDescriptor,
+    CardsStrategyResult,
+    DashboardFiltersOptions,
+    FlowProcessCardListing,
+    ProcessCardFilterMode,
+    ProcessCardGroup,
+} from "../../account-flows-tab.types";
+import { AccountFlowsType } from "../../resolvers/account-flows.resolver";
+import { CustomFiltersViewComponent } from "./components/custom-filters-view/custom-filters-view.component";
+import { RecentActivityFiltersViewComponent } from "./components/recent-activity-filters-view/recent-activity-filters-view.component";
+import { TriageFiltersViewComponent } from "./components/triage-filters-view/triage-filters-view.component";
+import { UpcomingScheduledFiltersViewComponent } from "./components/upcoming-scheduled-filters-view/upcoming-scheduled-filters-view.component";
 
 @Component({
     selector: "app-account-flows-processes-subtab",

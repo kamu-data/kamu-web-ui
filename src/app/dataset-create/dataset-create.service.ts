@@ -5,22 +5,25 @@
  * included in the LICENSE file.
  */
 
+import { inject, Injectable } from "@angular/core";
+
+import { Observable, Subject } from "rxjs";
+import { map } from "rxjs/operators";
+
+import { DatasetApi } from "src/app/api/dataset.api";
+import { MaybeNull } from "src/app/interface/app.types";
+
 import {
     AccountFragment,
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetMutation,
+    DatasetKind,
     DatasetVisibility,
 } from "../api/kamu.graphql.interface";
-import { Observable, Subject } from "rxjs";
-import { DatasetApi } from "src/app/api/dataset.api";
-import { inject, Injectable } from "@angular/core";
-import { DatasetKind } from "../api/kamu.graphql.interface";
-import { map } from "rxjs/operators";
-import { NavigationService } from "../services/navigation.service";
-import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
-import { MaybeNull } from "src/app/interface/app.types";
 import { LoggedUserService } from "../auth/logged-user.service";
 import { DatasetOperationError } from "../common/values/errors";
+import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
+import { NavigationService } from "../services/navigation.service";
 
 @Injectable({ providedIn: "root" })
 export class DatasetCreateService {

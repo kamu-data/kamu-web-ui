@@ -5,27 +5,30 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { AsyncPipe, NgClass, NgIf } from "@angular/common";
-import { BehaviorSubject, Observable, take } from "rxjs";
-import {
-    WebhookSubscriptionStatus,
-    WebhookSubscription,
-    DatasetBasicsFragment,
-} from "src/app/api/kamu.graphql.interface";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { DatasetSettingsWebhookTabData } from "../../dataset-settings-webhooks-tab.component.types";
-import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
-import { WebhooksHelpers } from "../../webhooks.helpers";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from "@angular/material/table";
+
+import { BehaviorSubject, Observable, take } from "rxjs";
+
+import {
+    DatasetBasicsFragment,
+    WebhookSubscription,
+    WebhookSubscriptionStatus,
+} from "src/app/api/kamu.graphql.interface";
+import { ModalService } from "src/app/common/components/modal/modal.service";
 import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
-import { NavigationService } from "src/app/services/navigation.service";
-import ProjectLinks from "src/app/project-links";
+import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import ProjectLinks from "src/app/project-links";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { DatasetSettingsWebhookTabData } from "../../dataset-settings-webhooks-tab.component.types";
+import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
+import { WebhooksHelpers } from "../../webhooks.helpers";
 
 @Component({
     selector: "app-list-webhooks",

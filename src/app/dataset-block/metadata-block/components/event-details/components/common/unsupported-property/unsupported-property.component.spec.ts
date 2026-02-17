@@ -6,8 +6,10 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { UnsupportedPropertyComponent } from "./unsupported-property.component";
+
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { UnsupportedPropertyComponent } from "./unsupported-property.component";
 
 describe("UnsupportedPropertyComponent", () => {
     let component: UnsupportedPropertyComponent;

@@ -5,13 +5,20 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { importProvidersFrom } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { DatasetSettingsService } from "./dataset-settings.service";
+import { provideAnimations } from "@angular/platform-browser/animations";
+
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
+import { provideToastr } from "ngx-toastr";
 import { DatasetApi } from "src/app/api/dataset.api";
-import { NavigationService } from "src/app/services/navigation.service";
-import { of } from "rxjs";
+import { DeleteDatasetMutation, RenameDatasetMutation } from "src/app/api/kamu.graphql.interface";
+import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/values/errors";
 import {
@@ -21,13 +28,9 @@ import {
     mockRenameResultNoChanges,
     mockRenameSuccessResponse,
 } from "src/app/search/mock.data";
-import { DeleteDatasetMutation, RenameDatasetMutation } from "src/app/api/kamu.graphql.interface";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
-import { provideToastr } from "ngx-toastr";
-import { provideAnimations } from "@angular/platform-browser/animations";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { importProvidersFrom } from "@angular/core";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { DatasetSettingsService } from "./dataset-settings.service";
 
 describe("DatasetSettingsService", () => {
     let service: DatasetSettingsService;

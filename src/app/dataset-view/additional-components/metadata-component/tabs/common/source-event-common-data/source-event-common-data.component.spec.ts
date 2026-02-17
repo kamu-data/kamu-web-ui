@@ -6,12 +6,14 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { SourceEventCommonDataComponent } from "./source-event-common-data.component";
-import { mockOverviewDataUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
-import { SetPollingSourceEventFragment } from "src/app/api/kamu.graphql.interface";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
+
 import { provideToastr } from "ngx-toastr";
+import { SetPollingSourceEventFragment } from "src/app/api/kamu.graphql.interface";
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { mockOverviewDataUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+
+import { SourceEventCommonDataComponent } from "./source-event-common-data.component";
 
 describe("SourceEventCommonDataComponent", () => {
     let component: SourceEventCommonDataComponent;

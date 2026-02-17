@@ -5,37 +5,40 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, tick } from "@angular/core/testing";
-import { FlowsComponent } from "./flows.component";
-import { Apollo } from "apollo-angular";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+import { MatChipListboxChange } from "@angular/material/chips";
 import { ActivatedRoute } from "@angular/router";
+
+import { delay, of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
+import { DatasetFlowProcesses, FlowProcessEffectiveState, FlowStatus } from "src/app/api/kamu.graphql.interface";
+import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { mockDatasetFlowsProcessesQuery, mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
+import { ModalService } from "src/app/common/components/modal/modal.service";
+import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import AppValues from "src/app/common/values/app.values";
+import { mockDatasets } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
+import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import {
+    mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
     mockDatasetMainDataId,
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
-import { provideToastr } from "ngx-toastr";
-import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { DatasetFlowsService } from "./services/dataset-flows.service";
-import { delay, of } from "rxjs";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { NavigationService } from "src/app/services/navigation.service";
+import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
+
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { mockOverviewUpdate } from "../data-tabs.mock";
-import { mockDatasetFlowsProcessesQuery, mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
 import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
-import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
-import { DatasetFlowProcesses, FlowProcessEffectiveState, FlowStatus } from "src/app/api/kamu.graphql.interface";
-import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { FlowsSelectionStateService } from "./services/flows-selection-state.service";
 import { DatasetWebhooksService } from "../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
-import AppValues from "src/app/common/values/app.values";
-import { MatChipListboxChange } from "@angular/material/chips";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { mockDatasets } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
-import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { FlowsComponent } from "./flows.component";
+import { DatasetFlowsService } from "./services/dataset-flows.service";
+import { FlowsSelectionStateService } from "./services/flows-selection-state.service";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;

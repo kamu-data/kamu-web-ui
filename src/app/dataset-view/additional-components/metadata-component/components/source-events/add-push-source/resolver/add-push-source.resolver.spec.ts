@@ -7,13 +7,16 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
-import { addPushSourceResolverFn } from "./add-push-source.resolver";
-import { EditAddPushSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/edit-add-push-source.service";
-import { Apollo } from "apollo-angular";
+
 import { of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.mock";
-import ProjectLinks from "src/app/project-links";
+import { EditAddPushSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/edit-add-push-source.service";
 import { MaybeNull } from "src/app/interface/app.types";
+import ProjectLinks from "src/app/project-links";
+
+import { addPushSourceResolverFn } from "./add-push-source.resolver";
 
 describe("addPushSourceResolverFn", () => {
     let editService: EditAddPushSourceService;

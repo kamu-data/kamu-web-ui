@@ -6,9 +6,11 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { TopicsFieldComponent } from "./topics-field.component";
 import { FormArray, FormGroup } from "@angular/forms";
+
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { TopicsFieldComponent } from "./topics-field.component";
 
 describe("TopicsFieldComponent", () => {
     let component: TopicsFieldComponent;

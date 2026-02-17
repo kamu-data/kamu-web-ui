@@ -5,10 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { NavigationService } from "src/app/services/navigation.service";
 import { inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
+
 import ProjectLinks from "src/app/project-links";
+import { NavigationService } from "src/app/services/navigation.service";
+
 import { LoggedUserService } from "../logged-user.service";
 import { LoginMethodsService } from "../login-methods.service";
 

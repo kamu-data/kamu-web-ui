@@ -6,18 +6,20 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { FlowStopPolicyFormType, FlowStopPolicyFormValue } from "./flow-stop-policy-form.types";
-import { MaybeNull } from "src/app/interface/app.types";
-import { FlowTriggerStopPolicyType } from "../../../dataset-settings.model";
+
 import { FlowTriggerStopPolicyInput } from "src/app/api/kamu.graphql.interface";
-import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
+import { BaseComponent } from "src/app/common/components/base.component";
 import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
+import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
 import { FlowTooltipsTexts } from "src/app/common/tooltips/flow-tooltips.text";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { MaybeNull } from "src/app/interface/app.types";
+
+import { FlowTriggerStopPolicyType } from "../../../dataset-settings.model";
+import { FlowStopPolicyFormType, FlowStopPolicyFormValue } from "./flow-stop-policy-form.types";
 
 @Component({
     selector: "app-flow-stop-policy-form",

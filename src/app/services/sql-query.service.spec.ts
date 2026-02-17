@@ -5,14 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { TestBed } from "@angular/core/testing";
-import { SqlQueryService } from "./sql-query.service";
-import { mockSqlQueryRestResponse } from "../search/mock.data";
-import { Apollo } from "apollo-angular";
-import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
-import { LoggedUserService } from "../auth/logged-user.service";
-import { provideToastr } from "ngx-toastr";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
+import { TestBed } from "@angular/core/testing";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
+
+import { LoggedUserService } from "../auth/logged-user.service";
+import { mockSqlQueryRestResponse } from "../search/mock.data";
+import { SqlQueryService } from "./sql-query.service";
 
 describe("SqlQueryService", () => {
     let service: SqlQueryService;

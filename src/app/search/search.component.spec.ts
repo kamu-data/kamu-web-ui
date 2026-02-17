@@ -5,17 +5,20 @@
  * included in the LICENSE file.
  */
 
-import { SearchApi } from "../api/search.api";
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
-import { SearchComponent } from "./search.component";
-import { NavigationService } from "../services/navigation.service";
-import { SearchService } from "./search.service";
-import { mockSearchOverviewResponse } from "../api/mock/search.mock";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+
 import { of } from "rxjs";
-import { findElementByDataTestId } from "../common/helpers/base-test.helpers.spec";
-import { mockDatasetSearchResult } from "./mock.data";
-import { SharedTestModule } from "../common/modules/shared-test.module";
+
 import { Apollo } from "apollo-angular";
+
+import { mockSearchOverviewResponse } from "../api/mock/search.mock";
+import { SearchApi } from "../api/search.api";
+import { findElementByDataTestId } from "../common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "../common/modules/shared-test.module";
+import { NavigationService } from "../services/navigation.service";
+import { mockDatasetSearchResult } from "./mock.data";
+import { SearchComponent } from "./search.component";
+import { SearchService } from "./search.service";
 
 describe("SearchComponent", () => {
     let component: SearchComponent;

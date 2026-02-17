@@ -5,10 +5,11 @@
  * included in the LICENSE file.
  */
 
-import AppValues from "src/app/common/values/app.values";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
 import { MatIconModule } from "@angular/material/icon";
+
+import { NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
+import AppValues from "src/app/common/values/app.values";
 
 @Component({
     selector: "app-tooltip-icon",

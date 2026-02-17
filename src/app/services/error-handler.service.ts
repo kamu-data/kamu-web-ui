@@ -5,11 +5,13 @@
  * included in the LICENSE file.
  */
 
-import { KamuError, KamuErrorHandler } from "../common/values/errors";
-import { NavigationService } from "src/app/services/navigation.service";
 import { ErrorHandler, Inject, Injectable, Injector, NgZone } from "@angular/core";
-import { logError } from "../common/helpers/app.helpers";
+
+import { NavigationService } from "src/app/services/navigation.service";
+
 import { LoggedUserService } from "../auth/logged-user.service";
+import { logError } from "../common/helpers/app.helpers";
+import { KamuError, KamuErrorHandler } from "../common/values/errors";
 
 @Injectable({
     providedIn: "root",

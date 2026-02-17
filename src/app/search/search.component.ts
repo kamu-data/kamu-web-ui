@@ -5,17 +5,19 @@
  * included in the LICENSE file.
  */
 
-import { DatasetSearchResult, SearchFilters } from "src/app/interface/search.interface";
+import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, numberAttribute, OnInit } from "@angular/core";
-import { NavigationService } from "../services/navigation.service";
-import ProjectLinks from "../project-links";
-import RoutingResolvers from "../common/resolvers/routing-resolvers";
-import { PaginationComponent } from "../common/components/pagination-component/pagination.component";
-import { DatasetListComponent } from "../common/components/dataset-list-component/dataset-list.component";
 import { FormsModule } from "@angular/forms";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { NgFor, NgIf } from "@angular/common";
+
+import { DatasetSearchResult, SearchFilters } from "src/app/interface/search.interface";
+
+import { DatasetListComponent } from "../common/components/dataset-list-component/dataset-list.component";
+import { PaginationComponent } from "../common/components/pagination-component/pagination.component";
 import { FeatureFlagDirective } from "../common/directives/feature-flag.directive";
+import RoutingResolvers from "../common/resolvers/routing-resolvers";
+import ProjectLinks from "../project-links";
+import { NavigationService } from "../services/navigation.service";
 
 @Component({
     selector: "app-search",

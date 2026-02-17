@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { NavigationService } from "./../../../../../services/navigation.service";
+import { NgIf } from "@angular/common";
 import {
     AfterViewChecked,
     ChangeDetectionStrategy,
@@ -17,20 +17,22 @@ import {
     Output,
     SimpleChanges,
 } from "@angular/core";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/interface/app.types";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { EditMode } from "./readme-section.types";
-import { DatasetCommitService } from "../../services/dataset-commit.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import ProjectLinks from "src/app/project-links";
-import { addMarkdownRunButton } from "src/app/common/helpers/app.helpers";
-import { MarkdownModule } from "ngx-markdown";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
-import { NgIf } from "@angular/common";
+
+import { MarkdownModule } from "ngx-markdown";
+import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { addMarkdownRunButton } from "src/app/common/helpers/app.helpers";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { MaybeNull } from "src/app/interface/app.types";
+import ProjectLinks from "src/app/project-links";
+
+import { DatasetCommitService } from "../../services/dataset-commit.service";
+import { NavigationService } from "./../../../../../services/navigation.service";
+import { EditMode } from "./readme-section.types";
 
 @Component({
     selector: "app-readme-section",

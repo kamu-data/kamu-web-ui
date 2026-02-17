@@ -9,9 +9,11 @@
 
 import { ComponentHarness } from "@angular/cdk/testing";
 import { MatSlideToggleHarness } from "@angular/material/slide-toggle/testing";
-import { TimeDeltaFormHarness } from "src/app/common/components/time-delta-form/time-delta-form.harness";
+
 import { FlowRetryBackoffType, TimeUnit } from "src/app/api/kamu.graphql.interface";
+import { TimeDeltaFormHarness } from "src/app/common/components/time-delta-form/time-delta-form.harness";
 import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
+
 import { FlowRetryPolicyFormValue } from "./flow-retry-policy-form.types";
 
 export class FlowRetryPolicyFormHarness extends ComponentHarness {

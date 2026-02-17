@@ -7,8 +7,14 @@
 
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
+
 import { catchError, EMPTY, map, Observable, of, ReplaySubject, Subject, tap } from "rxjs";
+
+import { ToastrService } from "ngx-toastr";
 import { AppConfigService } from "src/app/app-config.service";
+
+import { LoggedUserService } from "../auth/logged-user.service";
+import { LocalStorageService } from "../services/local-storage.service";
 import {
     QueryExplainerDataJsonAosResponse,
     QueryExplainerInputType,
@@ -16,9 +22,6 @@ import {
     QueryExplainerResponse,
     VerifyQueryResponse,
 } from "./query-explainer.types";
-import { ToastrService } from "ngx-toastr";
-import { LoggedUserService } from "../auth/logged-user.service";
-import { LocalStorageService } from "../services/local-storage.service";
 
 @Injectable({
     providedIn: "root",

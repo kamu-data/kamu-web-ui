@@ -5,42 +5,49 @@
  * included in the LICENSE file.
  */
 
-import { EditLicenseModalComponent } from "./components/edit-license-modal/edit-license-modal.component";
-import { DatasetAccessRole, DatasetCurrentInfoFragment, DatasetKind } from "../../../api/kamu.graphql.interface";
+import { AsyncPipe, DecimalPipe, NgFor, NgIf, TitleCasePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { MetadataBlockFragment } from "../../../api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/interface/app.types";
-import { NgbModal, NgbModalRef, NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
-import { EditDetailsModalComponent } from "./components/edit-details-modal/edit-details-modal.component";
-import { EditWatermarkModalComponent } from "./components/edit-watermark-modal/edit-watermark-modal.component";
-import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
-import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
-import { AddDataModalComponent } from "./components/add-data-modal/add-data-modal.component";
-import { catchError, from, Observable, of, take } from "rxjs";
-import { AppConfigService } from "src/app/app-config.service";
-import { isNil, promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import AppValues from "src/app/common/values/app.values";
-import { FileUploadService } from "src/app/services/file-upload.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import ProjectLinks from "src/app/project-links";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DatasetCollaborationsService } from "../dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
-import { BaseDatasetDataComponent } from "src/app/common/components/base-dataset-data.component";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { DisplaySizePipe } from "../../../common/pipes/display-size.pipe";
-import { DisplayTimeComponent } from "../../../common/components/display-time/display-time.component";
-import { DisplayHashComponent } from "../../../common/components/display-hash/display-hash.component";
-import { ReadmeSectionComponent } from "./components/readme-section/readme-section.component";
-import { DragAndDropDirective } from "../../../common/directives/drag-and-drop.directive";
-import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";
-import { OverviewHistorySummaryHeaderComponent } from "./components/overview-history-summary-header/overview-history-summary-header.component";
-import { RouterLink } from "@angular/router";
-import { MatIconModule } from "@angular/material/icon";
-import { FeatureFlagDirective } from "../../../common/directives/feature-flag.directive";
 import { MatChipsModule } from "@angular/material/chips";
-import { NgIf, NgFor, AsyncPipe, DecimalPipe, TitleCasePipe } from "@angular/common";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterLink } from "@angular/router";
+
+import { catchError, from, Observable, of, take } from "rxjs";
+
+import { NgbModal, NgbModalRef, NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
+import { AppConfigService } from "src/app/app-config.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { BaseDatasetDataComponent } from "src/app/common/components/base-dataset-data.component";
 import { DynamicTableColumnDescriptor } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { isNil, promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import AppValues from "src/app/common/values/app.values";
+import { MaybeNull } from "src/app/interface/app.types";
 import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
+import ProjectLinks from "src/app/project-links";
+import { FileUploadService } from "src/app/services/file-upload.service";
+
+import {
+    DatasetAccessRole,
+    DatasetCurrentInfoFragment,
+    DatasetKind,
+    MetadataBlockFragment,
+} from "../../../api/kamu.graphql.interface";
+import { DisplayHashComponent } from "../../../common/components/display-hash/display-hash.component";
+import { DisplayTimeComponent } from "../../../common/components/display-time/display-time.component";
+import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";
+import { DragAndDropDirective } from "../../../common/directives/drag-and-drop.directive";
+import { FeatureFlagDirective } from "../../../common/directives/feature-flag.directive";
+import { DisplaySizePipe } from "../../../common/pipes/display-size.pipe";
+import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { DatasetCollaborationsService } from "../dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
+import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
+import { AddDataModalComponent } from "./components/add-data-modal/add-data-modal.component";
+import { EditDetailsModalComponent } from "./components/edit-details-modal/edit-details-modal.component";
+import { EditLicenseModalComponent } from "./components/edit-license-modal/edit-license-modal.component";
+import { EditWatermarkModalComponent } from "./components/edit-watermark-modal/edit-watermark-modal.component";
+import { OverviewHistorySummaryHeaderComponent } from "./components/overview-history-summary-header/overview-history-summary-header.component";
+import { ReadmeSectionComponent } from "./components/readme-section/readme-section.component";
 
 @Component({
     selector: "app-overview",

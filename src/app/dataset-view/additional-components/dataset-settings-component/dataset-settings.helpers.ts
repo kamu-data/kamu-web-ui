@@ -7,13 +7,14 @@
 
 import {
     DatasetBasicsFragment,
-    DatasetPermissionsFragment,
-    DatasetMetadata,
     DatasetKind,
+    DatasetMetadata,
+    DatasetPermissionsFragment,
 } from "src/app/api/kamu.graphql.interface";
 import { AppUIConfigFeatureFlags } from "src/app/app-config.model";
-import { SettingsTabsEnum } from "./dataset-settings.model";
 import { isNil } from "src/app/common/helpers/app.helpers";
+
+import { SettingsTabsEnum } from "./dataset-settings.model";
 
 export function isSettingsTabAccessibleHelper(
     tab: SettingsTabsEnum,

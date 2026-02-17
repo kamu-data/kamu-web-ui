@@ -5,6 +5,8 @@
  * included in the LICENSE file.
  */
 
+import { CdkAccordionModule } from "@angular/cdk/accordion";
+import { NgFor, NgIf } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -15,9 +17,11 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
-import { GlobalQuerySearchItem, SqlQueryBasicResponse } from "../global-query.model";
-import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { FormsModule } from "@angular/forms";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+
 import {
     combineLatest,
     debounceTime,
@@ -28,26 +32,25 @@ import {
     OperatorFunction,
     switchMap,
 } from "rxjs";
+
+import { NgbHighlight, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "src/app/api/kamu.graphql.interface";
+import { SearchApi } from "src/app/api/search.api";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
 import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
-import { NgbTypeaheadSelectItemEvent, NgbTypeahead, NgbHighlight } from "@ng-bootstrap/ng-bootstrap";
+import { schemaAsDataRows } from "src/app/common/helpers/data-schema.helpers";
+import AppValues from "src/app/common/values/app.values";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DataSchemaField, DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
-import { SearchApi } from "src/app/api/search.api";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import AppValues from "src/app/common/values/app.values";
 import { SqlQueryService } from "src/app/services/sql-query.service";
-import { SavedQueriesSectionComponent } from "../../shared/saved-queries-section/saved-queries-section.component";
+
 import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";
-import { CdkAccordionModule } from "@angular/cdk/accordion";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatIconModule } from "@angular/material/icon";
-import { FormsModule } from "@angular/forms";
-import { NgIf, NgFor } from "@angular/common";
-import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
-import { schemaAsDataRows } from "src/app/common/helpers/data-schema.helpers";
-import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { SavedQueriesSectionComponent } from "../../shared/saved-queries-section/saved-queries-section.component";
+import { GlobalQuerySearchItem, SqlQueryBasicResponse } from "../global-query.model";
 
 @Component({
     selector: "app-search-and-schemas-section",

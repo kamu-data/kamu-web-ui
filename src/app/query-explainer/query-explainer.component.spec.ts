@@ -5,29 +5,32 @@
  * included in the LICENSE file.
  */
 
-import { SharedTestModule } from "./../common/modules/shared-test.module";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { QueryExplainerComponent } from "./query-explainer.component";
-import { of } from "rxjs";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { provideToastr, ToastrService } from "ngx-toastr";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
-import { QueryExplainerService } from "./query-explainer.service";
-import {
-    mockQueryExplainerResponse,
-    mockTextareaCommitment,
-    mockVerifyQueryResponseSuccess,
-} from "./query-explainer.mocks";
-import { DatasetService } from "../dataset-view/dataset.service";
+import { provideToastr, ToastrService } from "ngx-toastr";
+
 import { mockDatasetByIdQuery } from "../api/mock/dataset.mock";
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "../common/helpers/app.helpers";
 import {
     checkButtonDisabled,
     emitClickOnElementByDataTestId,
     registerMatSvgIcons,
     setFieldValue,
 } from "../common/helpers/base-test.helpers.spec";
-import { HIGHLIGHT_OPTIONS_PROVIDER } from "../common/helpers/app.helpers";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { DatasetService } from "../dataset-view/dataset.service";
+import { SharedTestModule } from "./../common/modules/shared-test.module";
+import { QueryExplainerComponent } from "./query-explainer.component";
+import {
+    mockQueryExplainerResponse,
+    mockTextareaCommitment,
+    mockVerifyQueryResponseSuccess,
+} from "./query-explainer.mocks";
+import { QueryExplainerService } from "./query-explainer.service";
 
 describe("QueryExplainerComponent", () => {
     let component: QueryExplainerComponent;

@@ -14,8 +14,10 @@ import {
     FlowTriggerBreakingChangeRule,
     TimeUnit,
 } from "src/app/api/kamu.graphql.interface";
-import { FlowTableHelpers } from "./flows-table.helpers";
 import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
+import timekeeper from "timekeeper";
+
+import { FlowTableHelpers } from "./flows-table.helpers";
 import {
     durationBlockTextResults,
     expectationsDescriptionEndOfMessage,
@@ -30,7 +32,6 @@ import {
     mockTableFlowSummaryDataFragments,
     tooltipTextResults,
 } from "./flows-table.helpers.mock";
-import timekeeper from "timekeeper";
 
 describe("FlowTableHelpers", () => {
     beforeAll(() => {

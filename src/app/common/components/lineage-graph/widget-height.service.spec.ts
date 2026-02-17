@@ -6,6 +6,7 @@
  */
 
 import { TestBed } from "@angular/core/testing";
+
 import { WidgetHeightService } from "./widget-height.service";
 
 describe("WidgetHeightService", () => {

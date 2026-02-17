@@ -5,24 +5,26 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { NgIf } from "@angular/common";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DataSchemaField, DatasetSchema } from "src/app/interface/dataset-schema.interface";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
+import { MatIconModule } from "@angular/material/icon";
+import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
+
+import { MarkdownModule } from "ngx-markdown";
 import { BlockRowDataComponent } from "src/app/common/components/block-row-data/block-row-data.component";
 import { DynamicTableComponent } from "src/app/common/components/dynamic-table/dynamic-table.component";
-import { MatIconModule } from "@angular/material/icon";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
-import { isNil, promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { MarkdownModule } from "ngx-markdown";
-import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
-import * as YAML from "yaml";
-import { SchemaViewMode } from "./metadata-schema-tab.component.types";
-import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { schemaAsDataRows } from "src/app/common/helpers/data-schema.helpers";
 import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { ModalService } from "src/app/common/components/modal/modal.service";
+import { isNil, promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import { schemaAsDataRows } from "src/app/common/helpers/data-schema.helpers";
+import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
+import { MaybeNull } from "src/app/interface/app.types";
+import { DataSchemaField, DatasetSchema } from "src/app/interface/dataset-schema.interface";
+import * as YAML from "yaml";
+
+import { SchemaViewMode } from "./metadata-schema-tab.component.types";
 
 @Component({
     selector: "app-metadata-schema-tab",

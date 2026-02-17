@@ -6,12 +6,14 @@
  */
 
 import { Routes } from "@angular/router";
-import { MetadataComponent } from "./metadata.component";
+
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import ProjectLinks from "src/app/project-links";
+
+import { MetadataComponent } from "./metadata.component";
+import { MetadataTabs } from "./metadata.constants";
 import { datasetMetadataTabResolverFn } from "./resolver/dataset-metadata-tab.resolver";
 import { metadataActiveTabResolverFn } from "./resolver/metadata-active-tab.resolver";
-import ProjectLinks from "src/app/project-links";
-import { MetadataTabs } from "./metadata.constants";
 import { MetadataLicenseTabComponent } from "./tabs/metadata-license-tab/metadata-license-tab.component";
 import { metadataLicenseTabResolverFn } from "./tabs/metadata-license-tab/resolvers/metadata-license-tab.resolver";
 import { MetadataPollingSourceTabComponent } from "./tabs/metadata-polling-source-tab/metadata-polling-source-tab.component";

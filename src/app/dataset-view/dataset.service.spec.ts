@@ -5,20 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { mockDatasetHeadBlockHashQuery } from "./../search/mock.data";
-import {
-    mockDatasetHistoryResponse,
-    mockDatasetMainDataResponse,
-    mockDatasetResponseNotFound,
-    mockDatasetInfo,
-    mockFullPowerDatasetPermissionsFragment,
-    mockDatasetLineageResponse,
-} from "../search/mock.data";
 import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+
+import { of } from "rxjs";
+import { first } from "rxjs/operators";
+
+import { ApolloLink, InMemoryCache } from "@apollo/client/core";
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
+import { MaybeNull } from "src/app/interface/app.types";
+
 import { DatasetApi } from "../api/dataset.api";
-import { DatasetService } from "./dataset.service";
-import { DatasetSubscriptionsService } from "./dataset.subscriptions.service";
 import {
     DataQueryResultErrorKind,
     DatasetBasicsFragment,
@@ -27,11 +23,6 @@ import {
     DatasetPermissionsFragment,
     MetadataBlockFragment,
 } from "../api/kamu.graphql.interface";
-import { of } from "rxjs";
-import { ApolloLink, InMemoryCache } from "@apollo/client/core";
-import { DatasetNotFoundError, SqlExecutionError } from "../common/values/errors";
-import { DatasetHistoryUpdate, LineageUpdate, OverviewUpdate } from "./dataset.subscriptions.interface";
-import { first } from "rxjs/operators";
 import {
     mockDatasetBasicsWithPermissionQuery,
     mockDatasetListDownstreamsQuery,
@@ -42,7 +33,19 @@ import {
     TEST_DATASET_ID,
     TEST_DATASET_NAME,
 } from "../api/mock/dataset.mock";
-import { MaybeNull } from "src/app/interface/app.types";
+import { DatasetNotFoundError, SqlExecutionError } from "../common/values/errors";
+import {
+    mockDatasetHistoryResponse,
+    mockDatasetInfo,
+    mockDatasetLineageResponse,
+    mockDatasetMainDataResponse,
+    mockDatasetResponseNotFound,
+    mockFullPowerDatasetPermissionsFragment,
+} from "../search/mock.data";
+import { mockDatasetHeadBlockHashQuery } from "./../search/mock.data";
+import { DatasetService } from "./dataset.service";
+import { DatasetHistoryUpdate, LineageUpdate, OverviewUpdate } from "./dataset.subscriptions.interface";
+import { DatasetSubscriptionsService } from "./dataset.subscriptions.service";
 
 describe("AppDatasetService", () => {
     let service: DatasetService;

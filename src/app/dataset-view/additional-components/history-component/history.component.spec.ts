@@ -5,23 +5,26 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { mockHistoryUpdate } from "../data-tabs.mock";
-import { HistoryComponent } from "./history.component";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ActivatedRoute } from "@angular/router";
+
+import { of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { MOCK_DATASET_INFO } from "../metadata-component/components/set-transform/mock.data";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
+
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { DatasetService } from "../../dataset.service";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import { of } from "rxjs";
-import { Apollo } from "apollo-angular";
-import { ActivatedRoute } from "@angular/router";
-import ProjectLinks from "src/app/project-links";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { mockHistoryUpdate } from "../data-tabs.mock";
+import { MOCK_DATASET_INFO } from "../metadata-component/components/set-transform/mock.data";
+import { HistoryComponent } from "./history.component";
 
 describe("HistoryComponent", () => {
     let component: HistoryComponent;

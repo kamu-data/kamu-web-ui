@@ -6,8 +6,9 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { TriageFiltersViewComponent } from "./triage-filters-view.component";
+
 import { RangeLastAttempt } from "../../../../account-flows-tab.types";
+import { TriageFiltersViewComponent } from "./triage-filters-view.component";
 
 describe("TriageFiltersViewComponent", () => {
     let component: TriageFiltersViewComponent;

@@ -6,9 +6,11 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ProcessDatasetCardInteractionService } from "./process-dataset-card-interaction.service";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+
+import { ProcessDatasetCardInteractionService } from "./process-dataset-card-interaction.service";
 
 describe("ProcessDatasetCardInteractionService", () => {
     let service: ProcessDatasetCardInteractionService;

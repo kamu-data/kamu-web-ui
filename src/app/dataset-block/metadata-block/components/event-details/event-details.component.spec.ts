@@ -5,16 +5,18 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+
 import { Apollo } from "apollo-angular";
-import { EventDetailsComponent } from "./event-details.component";
+import { ToastrModule } from "ngx-toastr";
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { ToastrModule } from "ngx-toastr";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { EventDetailsComponent } from "./event-details.component";
 
 describe("EventDetailsComponent", () => {
     let component: EventDetailsComponent;

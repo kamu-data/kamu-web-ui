@@ -5,26 +5,29 @@
  * included in the LICENSE file.
  */
 
-import ProjectLinks from "src/app/project-links";
-import { AccountProvider, AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
-import {
-    AccountSettingsMenuItem,
-    ACCOUNT_SETTINGS_MENU_ITEMS,
-    AccountSettingsTabs,
-} from "./account-settings.constants";
+import { AsyncPipe, NgClass, NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
+
+import { EMPTY, Observable } from "rxjs";
 import { switchMap } from "rxjs/operators";
+
+import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
+import { AccountProvider, AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import AppValues from "src/app/common/values/app.values";
 import { MaybeNull } from "src/app/interface/app.types";
-import { EMPTY, Observable } from "rxjs";
-import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
+import ProjectLinks from "src/app/project-links";
+
 import { LoggedUserService } from "../../auth/logged-user.service";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { MatIconModule } from "@angular/material/icon";
 import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";
-import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
-import { NgIf, NgFor, NgClass, AsyncPipe } from "@angular/common";
+import {
+    ACCOUNT_SETTINGS_MENU_ITEMS,
+    AccountSettingsMenuItem,
+    AccountSettingsTabs,
+} from "./account-settings.constants";
 
 @Component({
     selector: "app-settings",

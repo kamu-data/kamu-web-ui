@@ -6,26 +6,29 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { AccessTokenService } from "./access-token.service";
+import { provideAnimations } from "@angular/platform-browser/animations";
+
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
+import { MaybeNull } from "src/app/interface/app.types";
+
 import { AccessTokenApi } from "../../../../api/access-token.api";
+import { AccessTokenConnection, CreatedAccessToken } from "../../../../api/kamu.graphql.interface";
 import {
-    PAGE,
-    PER_PAGE,
-    TOKEN_ID,
-    TOKEN_NAME,
     mockCreateAccessTokenMutation,
     mockCreateAccessTokenMutationError,
     mockListAccessTokensQuery,
     mockRevokeAccessTokenMutation,
     mockRevokeAccessTokenMutationError,
+    PAGE,
+    PER_PAGE,
+    TOKEN_ID,
+    TOKEN_NAME,
 } from "../../../../api/mock/access-token.mock";
-import { of } from "rxjs";
-import { AccessTokenConnection, CreatedAccessToken } from "../../../../api/kamu.graphql.interface";
 import { TEST_ACCOUNT_ID } from "../../../../search/mock.data";
-import { MaybeNull } from "src/app/interface/app.types";
-import { provideAnimations } from "@angular/platform-browser/animations";
+import { AccessTokenService } from "./access-token.service";
 
 describe("AccessTokenService", () => {
     let service: AccessTokenService;

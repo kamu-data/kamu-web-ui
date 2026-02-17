@@ -6,8 +6,10 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { TemporalTablesPropertyComponent } from "./temporal-tables-property.component";
+
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { TemporalTablesPropertyComponent } from "./temporal-tables-property.component";
 
 describe("TemporalTablesPropertyComponent", () => {
     let component: TemporalTablesPropertyComponent;

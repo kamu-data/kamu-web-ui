@@ -6,8 +6,10 @@
  */
 
 import { Injectable } from "@angular/core";
+
 import * as monaco from "monaco-editor";
 import { MaybeUndefined } from "src/app/interface/app.types";
+
 import { EditorError } from "../models/error.model";
 
 export function getMonacoNamespace(): MaybeUndefined<typeof monaco> {

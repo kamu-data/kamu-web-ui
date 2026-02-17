@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { NgClass, NgFor, NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatButtonToggleChange, MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
@@ -14,15 +14,18 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTableModule } from "@angular/material/table";
-import { FlowsSelectionState, RollupFiltersOptions, WebhooksSelectedCategory } from "../../flows.helpers";
+
 import {
+    DatasetBasicsFragment,
     FlowProcessEffectiveState,
     WebhookFlowSubProcess,
     WebhookFlowSubProcessGroup,
 } from "src/app/api/kamu.graphql.interface";
-import { SubscriptionsTableComponent } from "./components/subscriptions-table/subscriptions-table.component";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeUndefined } from "src/app/interface/app.types";
+
+import { FlowsSelectionState, RollupFiltersOptions, WebhooksSelectedCategory } from "../../flows.helpers";
+import { SubscriptionsTableComponent } from "./components/subscriptions-table/subscriptions-table.component";
+
 @Component({
     selector: "app-flows-associated-channels",
     imports: [

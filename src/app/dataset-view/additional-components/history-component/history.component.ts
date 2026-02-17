@@ -5,23 +5,26 @@
  * included in the LICENSE file.
  */
 
+import { AsyncPipe, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { NavigationEnd, Router } from "@angular/router";
+
+import { filter, Observable } from "rxjs";
+
 import { BaseComponent } from "src/app/common/components/base.component";
-import { DatasetHistoryUpdate } from "../../dataset.subscriptions.interface";
-import { MaybeNull } from "src/app/interface/app.types";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
-import { DatasetService } from "../../dataset.service";
-import { filter, Observable } from "rxjs";
-import { NavigationEnd, Router } from "@angular/router";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
+import { NavigationService } from "src/app/services/navigation.service";
+
 import { PaginationComponent } from "../../../common/components/pagination-component/pagination.component";
 import { TimelineComponent } from "../../../common/components/timeline-component/timeline.component";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { DatasetViewTypeEnum } from "../../dataset-view.interface";
+import { DatasetService } from "../../dataset.service";
+import { DatasetHistoryUpdate } from "../../dataset.subscriptions.interface";
+import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 
 @Component({
     selector: "app-history",

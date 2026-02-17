@@ -7,6 +7,7 @@
 
 import { inject } from "@angular/core";
 import { ResolveFn } from "@angular/router";
+
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";

@@ -5,30 +5,33 @@
  * included in the LICENSE file.
  */
 
-import { ToastrService } from "ngx-toastr";
+import { AsyncPipe, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import AppValues from "src/app/common/values/app.values";
-import { QueryExplainerService } from "./query-explainer.service";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { MaybeNull } from "src/app/interface/app.types";
-import ProjectLinks from "src/app/project-links";
+import { FormsModule } from "@angular/forms";
+
 import { combineLatest, map, Observable, of, switchMap, tap } from "rxjs";
+
+import { ToastrService } from "ngx-toastr";
+import { DatasetByIdQuery } from "src/app/api/kamu.graphql.interface";
+import { BaseComponent } from "src/app/common/components/base.component";
+import AppValues from "src/app/common/values/app.values";
+import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { MaybeNull } from "src/app/interface/app.types";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
+import ProjectLinks from "src/app/project-links";
+
+import { CommitmentDataSectionComponent } from "./components/commitment-data-section/commitment-data-section.component";
+import { InputDataSectionComponent } from "./components/input-data-section/input-data-section.component";
+import { ReproducedResultSectionComponent } from "./components/reproduced-result-section/reproduced-result-section.component";
+import { VerifyResultSectionComponent } from "./components/verify-result-section/verify-result-section.component";
+import { QueryExplainerService } from "./query-explainer.service";
 import {
     QueryExplainerDatasetsType,
     QueryExplainerResponse,
     VerifyQueryKindError,
     VerifyQueryResponse,
 } from "./query-explainer.types";
-import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { DatasetByIdQuery } from "src/app/api/kamu.graphql.interface";
-import { FormsModule } from "@angular/forms";
-import { ReproducedResultSectionComponent } from "./components/reproduced-result-section/reproduced-result-section.component";
-import { CommitmentDataSectionComponent } from "./components/commitment-data-section/commitment-data-section.component";
-import { InputDataSectionComponent } from "./components/input-data-section/input-data-section.component";
-import { VerifyResultSectionComponent } from "./components/verify-result-section/verify-result-section.component";
-import { NgIf, AsyncPipe } from "@angular/common";
 
 export interface QueryExplainerComponentData {
     sqlQueryExplainerResponse: QueryExplainerResponse;

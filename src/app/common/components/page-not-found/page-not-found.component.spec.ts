@@ -5,12 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { NavigationService } from "src/app/services/navigation.service";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { PageNotFoundComponent } from "./page-not-found.component";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { emitClickOnElementByDataTestId } from "../../helpers/base-test.helpers.spec";
+
 import { Apollo } from "apollo-angular";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { emitClickOnElementByDataTestId } from "../../helpers/base-test.helpers.spec";
+import { PageNotFoundComponent } from "./page-not-found.component";
 
 describe("PageNotFoundComponent", () => {
     let component: PageNotFoundComponent;

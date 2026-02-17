@@ -6,11 +6,14 @@
  */
 
 import { Directive, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from "@angular/core";
-import { FormGroup, AbstractControl, ValidationErrors, FormArray } from "@angular/forms";
+import { AbstractControl, FormArray, FormGroup, ValidationErrors } from "@angular/forms";
+
 import { Subscription, tap } from "rxjs";
+
+import { NgSelectComponent } from "@ng-select/ng-select";
+
 import AppValues from "../values/app.values";
 import { ValidationError, ValidationErrorTuple } from "./form-validation-errors.types";
-import { NgSelectComponent } from "@ng-select/ng-select";
 
 @Directive({
     selector: "[appFieldError]",

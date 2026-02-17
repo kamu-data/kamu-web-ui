@@ -6,11 +6,14 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { AdminChangePasswordComponent } from "./admin-change-password.component";
+
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { AccountService } from "src/app/account/account.service";
-import { of } from "rxjs";
+
+import { AdminChangePasswordComponent } from "./admin-change-password.component";
 
 describe("AdminChangePasswordComponent", () => {
     let component: AdminChangePasswordComponent;

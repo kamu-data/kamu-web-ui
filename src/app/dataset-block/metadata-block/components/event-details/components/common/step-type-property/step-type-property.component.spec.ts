@@ -6,8 +6,10 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { StepTypePropertyComponent } from "./step-type-property.component";
+
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { StepTypePropertyComponent } from "./step-type-property.component";
 
 describe("StepTypePropertyComponent", () => {
     let component: StepTypePropertyComponent;

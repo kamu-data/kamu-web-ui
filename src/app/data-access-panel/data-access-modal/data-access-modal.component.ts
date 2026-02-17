@@ -5,30 +5,33 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { Observable } from "rxjs";
-import { DatasetBasicsFragment, DatasetEndpoints, DatasetKind } from "src/app/api/kamu.graphql.interface";
-import { MaybeUndefined } from "src/app/interface/app.types";
 import { Clipboard } from "@angular/cdk/clipboard";
-import { DataAccessMenuItem, dataAccessMenuOptions, DataAccessTabsEnum } from "./data-access-modal.model";
+import { AsyncPipe, NgFor, NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterLink } from "@angular/router";
+
+import { Observable } from "rxjs";
+
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { DatasetBasicsFragment, DatasetEndpoints, DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { MaybeUndefined } from "src/app/interface/app.types";
 import { ProtocolsService } from "src/app/services/protocols.service";
-import { DataAccessExportTabComponent } from "./tabs/data-access-export-tab/data-access-export-tab.component";
-import { DataAccessOdataTabComponent } from "./tabs/data-access-odata-tab/data-access-odata-tab.component";
+
+import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";
+import { DataAccessMenuItem, dataAccessMenuOptions, DataAccessTabsEnum } from "./data-access-modal.model";
 import { DataAccessCodeTabComponent } from "./tabs/data-access-code-tab/data-access-code-tab.component";
-import { DataAccessStreamTabComponent } from "./tabs/data-access-stream-tab/data-access-stream-tab.component";
-import { DataAccessSqlTabComponent } from "./tabs/data-access-sql-tab/data-access-sql-tab.component";
-import { DataAccessRestTabComponent } from "./tabs/data-access-rest-tab/data-access-rest-tab.component";
+import { DataAccessExportTabComponent } from "./tabs/data-access-export-tab/data-access-export-tab.component";
 import { DataAccessKamuCliTabComponent } from "./tabs/data-access-kamu-cli-tab/data-access-kamu-cli-tab.component";
 import { DataAccessLinkTabComponent } from "./tabs/data-access-link-tab/data-access-link-tab.component";
-import { MatIconModule } from "@angular/material/icon";
-import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";
-import { RouterLink } from "@angular/router";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { DataAccessOdataTabComponent } from "./tabs/data-access-odata-tab/data-access-odata-tab.component";
+import { DataAccessRestTabComponent } from "./tabs/data-access-rest-tab/data-access-rest-tab.component";
+import { DataAccessSqlTabComponent } from "./tabs/data-access-sql-tab/data-access-sql-tab.component";
+import { DataAccessStreamTabComponent } from "./tabs/data-access-stream-tab/data-access-stream-tab.component";
 
 @Component({
     selector: "app-data-access-modal",

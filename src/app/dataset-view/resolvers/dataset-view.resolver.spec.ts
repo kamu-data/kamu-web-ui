@@ -7,15 +7,18 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { datasetViewResolverFn } from "./dataset-view.resolver";
-import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { NavigationService } from "src/app/services/navigation.service";
+
+import { Observable, of, Subject, throwError } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.mock";
+import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
 import ProjectLinks from "src/app/project-links";
-import { Observable, of, Subject, throwError } from "rxjs";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { datasetViewResolverFn } from "./dataset-view.resolver";
 
 describe("datasetViewResolverFn", () => {
     let datasetService: DatasetService;

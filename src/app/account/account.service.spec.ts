@@ -5,13 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { DatasetApi } from "src/app/api/dataset.api";
 import { TestBed } from "@angular/core/testing";
-import { AccountService } from "./account.service";
-import { AccountApi } from "../api/account.api";
-import { TEST_LOGIN, TEST_PAGE_NUMBER, mockAccountDetails } from "../api/mock/auth.mock";
+
 import { first, of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr, ToastrService } from "ngx-toastr";
+import { DatasetApi } from "src/app/api/dataset.api";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
+import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
+
+import { AccountApi } from "../api/account.api";
 import {
     AccountFlowFilters,
     AccountFlowProcessCardConnectionDataFragment,
@@ -20,9 +24,6 @@ import {
     FlowProcessOrderField,
     OrderingDirection,
 } from "../api/kamu.graphql.interface";
-import { mockDatasetsByAccountNameQuery } from "../api/mock/dataset.mock";
-import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
-import { provideToastr, ToastrService } from "ngx-toastr";
 import {
     mockAccountDatasetFlowsPausedQuery,
     mockAccountFlowsAsCardsQuery,
@@ -42,10 +43,12 @@ import {
     mockChangeUserPasswordMutationError,
     mockDeleteAccountByNameMutation,
 } from "../api/mock/account.mock";
+import { mockAccountDetails, TEST_LOGIN, TEST_PAGE_NUMBER } from "../api/mock/auth.mock";
+import { mockDatasetsByAccountNameQuery } from "../api/mock/dataset.mock";
 import { FlowsTableData } from "../dataset-flow/flows-table/flows-table.types";
-import { ChangeAccountUsernameResult } from "./settings/account-settings.constants";
+import { AccountService } from "./account.service";
 import { CardsStrategyResult } from "./additional-components/account-flows-tab/account-flows-tab.types";
-import { Apollo } from "apollo-angular";
+import { ChangeAccountUsernameResult } from "./settings/account-settings.constants";
 
 describe("AccountService", () => {
     let service: AccountService;

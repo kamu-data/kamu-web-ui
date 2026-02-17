@@ -6,9 +6,20 @@
  */
 
 import { TestBed } from "@angular/core/testing";
+
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
+
 import { EnvironmentVariablesApi } from "../../../../../api/environment-variables.api";
+import { ViewDatasetEnvVar, ViewDatasetEnvVarConnection } from "../../../../../api/kamu.graphql.interface";
+import {
+    TEST_ACCOUNT_ID,
+    TEST_ACCOUNT_NAME,
+    TEST_DATASET_ID,
+    TEST_DATASET_NAME,
+} from "../../../../../api/mock/dataset.mock";
 import {
     MOCK_ENV_VAR_ID,
     MOCK_IS_SECRET,
@@ -22,14 +33,6 @@ import {
     mockListEnvVariablesQuery,
     mockUpsertEnvVariableMutationCreated,
 } from "../../../../../api/mock/environment-variables-and-secrets.mock";
-import { of } from "rxjs";
-import {
-    TEST_ACCOUNT_ID,
-    TEST_ACCOUNT_NAME,
-    TEST_DATASET_ID,
-    TEST_DATASET_NAME,
-} from "../../../../../api/mock/dataset.mock";
-import { ViewDatasetEnvVar, ViewDatasetEnvVarConnection } from "../../../../../api/kamu.graphql.interface";
 import { DatasetEvnironmentVariablesService } from "./dataset-evnironment-variables.service";
 
 describe("EvnironmentVariablesService", () => {

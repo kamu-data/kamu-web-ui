@@ -6,9 +6,11 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { VerifyResultSectionComponent } from "./verify-result-section.component";
-import { mockVerifyQueryOutputMismatchError, mockVerifyQueryResponseSuccess } from "../../query-explainer.mocks";
+
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+
+import { mockVerifyQueryOutputMismatchError, mockVerifyQueryResponseSuccess } from "../../query-explainer.mocks";
+import { VerifyResultSectionComponent } from "./verify-result-section.component";
 
 describe("VerifyResultSectionComponent", () => {
     let component: VerifyResultSectionComponent;

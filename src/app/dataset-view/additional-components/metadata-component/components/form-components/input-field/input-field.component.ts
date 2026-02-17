@@ -5,14 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { BaseField } from "../base-field";
-import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 import { NgIf } from "@angular/common";
-import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
-import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+
+import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
+import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
+
+import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { BaseField } from "../base-field";
 
 @Component({
     selector: "app-input-field",

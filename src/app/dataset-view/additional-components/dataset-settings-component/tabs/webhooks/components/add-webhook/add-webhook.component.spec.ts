@@ -6,18 +6,21 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { AddWebhookComponent } from "./add-webhook.component";
-import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { WebhooksService } from "src/app/services/webhooks.service";
-import { of } from "rxjs";
-import { WebhookFormComponent } from "../common/webhook-form/webhook-form.component";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
 import { mockCreateWebhookSubscriptionSuccess } from "src/app/api/mock/webhooks.mock";
-import { NavigationService } from "src/app/services/navigation.service";
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
+import { WebhooksService } from "src/app/services/webhooks.service";
+
+import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
+import { WebhookFormComponent } from "../common/webhook-form/webhook-form.component";
+import { AddWebhookComponent } from "./add-webhook.component";
 
 describe("AddWebhookComponent", () => {
     let component: AddWebhookComponent;

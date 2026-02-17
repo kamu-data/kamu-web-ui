@@ -5,19 +5,21 @@
  * included in the LICENSE file.
  */
 
-import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, Router } from "@angular/router";
-import { accountSettingsAccessTokensResolverFn } from "./account-settings-access-tokens.resolver";
-import { AccessTokenConnection } from "src/app/api/kamu.graphql.interface";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { TestBed } from "@angular/core/testing";
+import { provideAnimations } from "@angular/platform-browser/animations";
+import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, Router } from "@angular/router";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { AccessTokenConnection } from "src/app/api/kamu.graphql.interface";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 import ProjectLinks from "src/app/project-links";
-import { provideAnimations } from "@angular/platform-browser/animations";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+
+import { accountSettingsAccessTokensResolverFn } from "./account-settings-access-tokens.resolver";
 
 describe("accountSettingsAccessTokensResolverFn", () => {
     let router: Router;

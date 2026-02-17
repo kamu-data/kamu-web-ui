@@ -6,18 +6,19 @@
  */
 
 import { DatePipe } from "@angular/common";
+
 import {
     ProcessCardFilterMode,
     RangeLastAttempt,
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 import {
-    FlowProcessEffectiveState,
-    FlowProcessSummary,
-    FlowProcessAutoStopReason,
-    FlowTriggerStopPolicyAfterConsecutiveFailures,
     AccountFragment,
     DatasetFlowProcesses,
+    FlowProcessAutoStopReason,
+    FlowProcessEffectiveState,
+    FlowProcessSummary,
     FlowProcessSummaryDataFragment,
+    FlowTriggerStopPolicyAfterConsecutiveFailures,
 } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";

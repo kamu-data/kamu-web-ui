@@ -7,11 +7,13 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot } from "@angular/router";
-import { forbidAnonymousAccessGuardFn } from "./forbid-anonymous-access.guard";
+
+import { Apollo } from "apollo-angular";
+import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { NavigationService } from "src/app/services/navigation.service";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { Apollo } from "apollo-angular";
+
+import { forbidAnonymousAccessGuardFn } from "./forbid-anonymous-access.guard";
 
 describe("forbidAnonymousAccessGuardFn", () => {
     let loggedUserService: LoggedUserService;

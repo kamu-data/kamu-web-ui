@@ -6,14 +6,15 @@
  */
 
 import AppValues from "src/app/common/values/app.values";
-import { isSettingsTabAccessibleHelper } from "./dataset-settings.helpers";
-import { SettingsTabsEnum } from "./dataset-settings.model";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
+
 import { datasetMetadataDerivativeDataset, datasetMetadataRootDataset } from "../data-tabs.mock";
+import { isSettingsTabAccessibleHelper } from "./dataset-settings.helpers";
+import { SettingsTabsEnum } from "./dataset-settings.model";
 
 describe("DatasetSettingsHelpers", () => {
     it(`should check available ${SettingsTabsEnum.GENERAL} tab with canRename permission`, () => {

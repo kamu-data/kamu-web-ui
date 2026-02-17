@@ -5,8 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { ControlType, JsonFormData, MergeKind } from "../../add-polling-source/add-polling-source-form.types";
 import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
+
+import { ControlType, JsonFormData, MergeKind } from "../../add-polling-source/add-polling-source-form.types";
 
 export const MERGE_FORM_DATA: JsonFormData = {
     [MergeKind.APPEND]: {

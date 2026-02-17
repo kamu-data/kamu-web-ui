@@ -7,10 +7,12 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { accountFlowsResolverFn, AccountFlowsType } from "./account-flows.resolver";
-import ProjectLinks from "src/app/project-links";
-import { AccountFlowsNav, ProcessCardFilterMode } from "../account-flows-tab.types";
+
 import { FlowStatus } from "src/app/api/kamu.graphql.interface";
+import ProjectLinks from "src/app/project-links";
+
+import { AccountFlowsNav, ProcessCardFilterMode } from "../account-flows-tab.types";
+import { accountFlowsResolverFn, AccountFlowsType } from "./account-flows.resolver";
 
 describe("accountFlowsResolverFn", () => {
     const executeResolver: ResolveFn<AccountFlowsType> = (...resolverParameters) =>

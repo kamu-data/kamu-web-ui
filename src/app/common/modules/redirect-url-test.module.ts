@@ -6,6 +6,7 @@
  */
 
 import { NgModule } from "@angular/core";
+
 import { snapshotRedirectUrlMock } from "../helpers/base-test.helpers.spec";
 
 @NgModule({

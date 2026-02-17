@@ -2,6 +2,25 @@
   "semi": true,
   "trailingComma": "all",
   "printWidth": 120,
+   "plugins": ["@ianvs/prettier-plugin-sort-imports"],
+  "importOrder": [
+    "<BUILTIN_MODULES>",
+    "",
+    "^@angular/(.*)$",
+    "",
+    "^rxjs/?(.*)$",
+    "^@angular/material/(.*)$",
+    "",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "^@env/(.*)$",
+    "^@app/(.*)$",
+    "^@shared/(.*)$",
+    "",
+    "^[./]"
+  ],
+  "importOrderParserPlugins": ["typescript", "decorators-legacy"],
+  "importOrderTypeScriptVersion": "5.0.0",
   "overrides": [
     {
       "files": [

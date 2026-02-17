@@ -5,18 +5,20 @@
  * included in the LICENSE file.
  */
 
+import { NgFor } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterLink } from "@angular/router";
+
+import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
 import { MetadataBlockFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
 import AppValues from "src/app/common/values/app.values";
 import ProjectLinks from "src/app/project-links";
-import { DisplayHashComponent } from "../display-hash/display-hash.component";
-import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
+
 import { FeatureFlagDirective } from "../../directives/feature-flag.directive";
+import { DisplayHashComponent } from "../display-hash/display-hash.component";
 import { DisplayTimeComponent } from "../display-time/display-time.component";
-import { RouterLink } from "@angular/router";
-import { MatIconModule } from "@angular/material/icon";
-import { NgFor } from "@angular/common";
 
 @Component({
     selector: "app-timeline",

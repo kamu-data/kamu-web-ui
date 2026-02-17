@@ -6,18 +6,21 @@
  */
 
 import { Injectable } from "@angular/core";
-import {
-    DashboardFiltersOptions,
-    ProcessCardFilterMode,
-} from "../additional-components/account-flows-tab/account-flows-tab.types";
+
+import { BehaviorSubject } from "rxjs";
+
 import {
     FlowProcessEffectiveState,
     FlowProcessFilters,
     FlowProcessOrderField,
     OrderingDirection,
 } from "src/app/api/kamu.graphql.interface";
-import { BehaviorSubject } from "rxjs";
 import { stripSecondsFromDateToISOString } from "src/app/common/helpers/data.helpers";
+
+import {
+    DashboardFiltersOptions,
+    ProcessCardFilterMode,
+} from "../additional-components/account-flows-tab/account-flows-tab.types";
 
 @Injectable({
     providedIn: "root",

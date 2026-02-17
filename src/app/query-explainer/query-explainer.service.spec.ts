@@ -5,16 +5,18 @@
  * included in the LICENSE file.
  */
 
-import { TestBed } from "@angular/core/testing";
-import { QueryExplainerService } from "./query-explainer.service";
-import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
-import { provideToastr, ToastrService } from "ngx-toastr";
-import { mockQueryExplainerResponse, mockVerifyQueryResponseSuccess } from "./query-explainer.mocks";
-import { QueryExplainerResponse } from "./query-explainer.types";
-import { AppConfigService } from "src/app/app-config.service";
 import { HttpErrorResponse, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { Apollo } from "apollo-angular";
+import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
+import { TestBed } from "@angular/core/testing";
 import { provideAnimations } from "@angular/platform-browser/animations";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr, ToastrService } from "ngx-toastr";
+import { AppConfigService } from "src/app/app-config.service";
+
+import { mockQueryExplainerResponse, mockVerifyQueryResponseSuccess } from "./query-explainer.mocks";
+import { QueryExplainerService } from "./query-explainer.service";
+import { QueryExplainerResponse } from "./query-explainer.types";
 
 describe("QueryExplainerService", () => {
     let service: QueryExplainerService;

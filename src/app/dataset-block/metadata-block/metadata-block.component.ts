@@ -5,25 +5,28 @@
  * included in the LICENSE file.
  */
 
-import { DatasetHistoryUpdate } from "../../dataset-view/dataset.subscriptions.interface";
-import { Observable } from "rxjs";
-import { DatasetViewTypeEnum } from "../../dataset-view/dataset-view.interface";
+import { AsyncPipe, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { MaybeNull } from "src/app/interface/app.types";
-import { BaseDatasetDataComponent } from "src/app/common/components/base-dataset-data.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import ProjectLinks from "src/app/project-links";
-import { BlockView, MetadataBlockInfo } from "./metadata-block.types";
+import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
+
+import { Observable } from "rxjs";
+
+import { BaseDatasetDataComponent } from "src/app/common/components/base-dataset-data.component";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { YamlViewSectionComponent } from "./components/yaml-view-section/yaml-view-section.component";
+import { MaybeNull } from "src/app/interface/app.types";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
+import ProjectLinks from "src/app/project-links";
+
+import { DatasetViewHeaderComponent } from "../../dataset-view/dataset-view-header/dataset-view-header.component";
+import { DatasetViewMenuComponent } from "../../dataset-view/dataset-view-menu/dataset-view-menu.component";
+import { DatasetViewTypeEnum } from "../../dataset-view/dataset-view.interface";
+import { DatasetHistoryUpdate } from "../../dataset-view/dataset.subscriptions.interface";
+import { BlockHeaderComponent } from "./components/block-header/block-header.component";
 import { BlockNavigationComponent } from "./components/block-navigation/block-navigation.component";
 import { EventDetailsComponent } from "./components/event-details/event-details.component";
-import { BlockHeaderComponent } from "./components/block-header/block-header.component";
-import { DatasetViewMenuComponent } from "../../dataset-view/dataset-view-menu/dataset-view-menu.component";
-import { DatasetViewHeaderComponent } from "../../dataset-view/dataset-view-header/dataset-view-header.component";
-import { NgIf, AsyncPipe } from "@angular/common";
-import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { YamlViewSectionComponent } from "./components/yaml-view-section/yaml-view-section.component";
+import { BlockView, MetadataBlockInfo } from "./metadata-block.types";
 
 @Component({
     selector: "app-metadata-block",

@@ -5,10 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { NavigationService } from "../../../../services/navigation.service";
 import { inject, Injectable } from "@angular/core";
+
+import { map, Observable, take } from "rxjs";
+
 import { ToastrService } from "ngx-toastr";
-import { Observable, map, take } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
     DatasetFlowType,
@@ -21,6 +22,8 @@ import {
 import AppValues from "src/app/common/values/app.values";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
+
+import { NavigationService } from "../../../../services/navigation.service";
 
 @Injectable({
     providedIn: "root",

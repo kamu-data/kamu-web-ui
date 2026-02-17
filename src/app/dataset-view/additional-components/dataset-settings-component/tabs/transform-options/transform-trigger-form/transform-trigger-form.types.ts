@@ -6,9 +6,11 @@
  */
 
 import { FormControl, FormGroup } from "@angular/forms";
-import { MaybeNull } from "src/app/interface/app.types";
-import { BatchingRuleType } from "../../../dataset-settings.model";
+
 import { FlowTriggerBreakingChangeRule } from "src/app/api/kamu.graphql.interface";
+import { MaybeNull } from "src/app/interface/app.types";
+
+import { BatchingRuleType } from "../../../dataset-settings.model";
 import {
     BufferingBatchingRuleFormType,
     BufferingBatchingRuleFormValue,

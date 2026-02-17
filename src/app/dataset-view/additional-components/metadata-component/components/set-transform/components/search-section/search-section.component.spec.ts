@@ -5,20 +5,23 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
-import { SearchSectionComponent } from "./search-section.component";
-import { Apollo } from "apollo-angular";
-import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+
 import { of } from "rxjs";
-import AppValues from "src/app/common/values/app.values";
+
+import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
+import { SearchApi } from "src/app/api/search.api";
 import { dispatchInputEvent, emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import AppValues from "src/app/common/values/app.values";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import { mockDatasetBasicsDerivedFragment, mockDatasetInfo } from "src/app/search/mock.data";
-import { SearchApi } from "src/app/api/search.api";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
+
 import { mockGetDatasetSchemaQuery } from "../../mock.data";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { provideToastr } from "ngx-toastr";
+import { SearchSectionComponent } from "./search-section.component";
 
 describe("SearchSectionComponent", () => {
     let component: SearchSectionComponent;

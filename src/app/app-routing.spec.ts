@@ -5,44 +5,47 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { Location } from "@angular/common";
-import { Router, ROUTES } from "@angular/router";
-import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "./app-routing";
-import ProjectLinks from "./project-links";
-import { promiseWithCatch } from "./common/helpers/app.helpers";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { NO_ERRORS_SCHEMA } from "@angular/core";
-import { LoggedUserService } from "./auth/logged-user.service";
-import { PageNotFoundComponent } from "./common/components/page-not-found/page-not-found.component";
-import { LoginComponent } from "./auth/login/login.component";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { accountSettingsAccessTokensResolverFn } from "./account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
-import { provideToastr } from "ngx-toastr";
-import { mockAccountDetails } from "./api/mock/auth.mock";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+import { provideAnimations } from "@angular/platform-browser/animations";
+import { Router, ROUTES } from "@angular/router";
+
 import { of } from "rxjs";
+
+import { NgxGraphModule } from "@swimlane/ngx-graph";
+import { Apollo } from "apollo-angular";
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { provideToastr } from "ngx-toastr";
+
+import { accountSettingsAccessTokensResolverFn } from "./account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
 import { AccessTokenConnection, AccountProvider } from "./api/kamu.graphql.interface";
 import { mockListAccessTokensQuery } from "./api/mock/access-token.mock";
-import { searchResolverFn } from "./search/resolver/search.resolver";
-import {
-    mockDatasetBasicsDerivedFragment,
-    mockDatasetSearchResult,
-    mockFullPowerDatasetPermissionsFragment,
-} from "./search/mock.data";
-import { datasetViewResolverFn } from "./dataset-view/resolvers/dataset-view.resolver";
-import { datasetOverviewTabResolverFn } from "./dataset-view/additional-components/overview-component/resolver/dataset-overview-tab.resolver";
+import { mockAccountDetails } from "./api/mock/auth.mock";
+import { AppConfigService } from "./app-config.service";
+import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "./app-routing";
+import { LoggedUserService } from "./auth/logged-user.service";
+import { LoginMethodsService } from "./auth/login-methods.service";
+import { LoginComponent } from "./auth/login/login.component";
+import { PageNotFoundComponent } from "./common/components/page-not-found/page-not-found.component";
+import { promiseWithCatch } from "./common/helpers/app.helpers";
 import {
     mockMetadataDerivedUpdate,
     mockOverviewDataUpdate,
     mockOverviewDataUpdateNullable,
 } from "./dataset-view/additional-components/data-tabs.mock";
+import { datasetOverviewTabResolverFn } from "./dataset-view/additional-components/overview-component/resolver/dataset-overview-tab.resolver";
 import { OverviewUpdate } from "./dataset-view/dataset.subscriptions.interface";
-import { NgxGraphModule } from "@swimlane/ngx-graph";
-import { provideAnimations } from "@angular/platform-browser/animations";
-import { AppConfigService } from "./app-config.service";
-import { LoginMethodsService } from "./auth/login-methods.service";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { Apollo } from "apollo-angular";
+import { datasetViewResolverFn } from "./dataset-view/resolvers/dataset-view.resolver";
+import ProjectLinks from "./project-links";
+import {
+    mockDatasetBasicsDerivedFragment,
+    mockDatasetSearchResult,
+    mockFullPowerDatasetPermissionsFragment,
+} from "./search/mock.data";
+import { searchResolverFn } from "./search/resolver/search.resolver";
 
 describe("Router", () => {
     let router: Router;

@@ -5,24 +5,25 @@
  * included in the LICENSE file.
  */
 
-import { ObservableQuery } from "@apollo/client/core";
 import { inject, Injectable } from "@angular/core";
 
-import { map, first, catchError } from "rxjs/operators";
 import { EMPTY, Observable, of } from "rxjs";
-import { onlyCompleteData } from "apollo-angular";
-import { DatasetAutocompleteItem, TypeNames } from "../interface/search.interface";
+import { catchError, first, map } from "rxjs/operators";
 
+import { ObservableQuery } from "@apollo/client/core";
+import { onlyCompleteData } from "apollo-angular";
+
+import { DatasetAutocompleteItem, TypeNames } from "../interface/search.interface";
 import {
+    AccountProvider,
+    DatasetBasicsFragment,
+    DatasetKind,
     SearchDatasetsAutocompleteGQL,
+    SearchDatasetsAutocompleteQuery,
     SearchDatasetsOverviewGQL,
     SearchDatasetsOverviewQuery,
-    SearchDatasetsAutocompleteQuery,
-    DatasetKind,
-    DatasetBasicsFragment,
     SemanticSearchDatasetsOverviewGQL,
     SemanticSearchDatasetsOverviewQuery,
-    AccountProvider,
 } from "./kamu.graphql.interface";
 
 export const SEARCH_RESULTS_PER_PAGE = 10;

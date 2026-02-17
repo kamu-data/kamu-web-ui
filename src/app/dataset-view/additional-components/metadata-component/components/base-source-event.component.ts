@@ -5,33 +5,36 @@
  * included in the LICENSE file.
  */
 
-import { Injectable, OnInit, inject } from "@angular/core";
-import {
-    ReadKind,
-    MergeKind,
-    PreprocessStepValue,
-    AddPollingSourceEditFormType,
-} from "./source-events/add-polling-source/add-polling-source-form.types";
-import {
-    READ_STEP_RADIO_CONTROLS,
-    MERGE_STEP_RADIO_CONTROLS,
-} from "./source-events/add-polling-source/form-control.source";
-import { MERGE_FORM_DATA } from "./source-events/steps/data/merge-form-data";
-import { READ_FORM_DATA } from "./source-events/steps/data/read-form-data";
-import { BaseMainEventComponent } from "./source-events/base-main-event.component";
+import { inject, Injectable, OnInit } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { ProcessFormService } from "../services/process-form.service";
-import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+
 import { catchError, from, of, take } from "rxjs";
-import { FinalYamlModalComponent } from "./final-yaml-modal/final-yaml-modal.component";
+
+import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
-import { AddPushSourceEditFormType } from "./source-events/add-push-source/add-push-source-form.types";
 import {
     SourcesEvents,
     SupportedEvents,
 } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+
+import { ProcessFormService } from "../services/process-form.service";
+import { FinalYamlModalComponent } from "./final-yaml-modal/final-yaml-modal.component";
+import {
+    AddPollingSourceEditFormType,
+    MergeKind,
+    PreprocessStepValue,
+    ReadKind,
+} from "./source-events/add-polling-source/add-polling-source-form.types";
+import {
+    MERGE_STEP_RADIO_CONTROLS,
+    READ_STEP_RADIO_CONTROLS,
+} from "./source-events/add-polling-source/form-control.source";
+import { AddPushSourceEditFormType } from "./source-events/add-push-source/add-push-source-form.types";
+import { BaseMainEventComponent } from "./source-events/base-main-event.component";
+import { MERGE_FORM_DATA } from "./source-events/steps/data/merge-form-data";
+import { READ_FORM_DATA } from "./source-events/steps/data/read-form-data";
 
 @Injectable()
 export abstract class BaseSourceEventComponent extends BaseMainEventComponent implements OnInit {

@@ -6,9 +6,11 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { AccountFlowsFiltersService } from "./account-flows-filters.service";
-import { ProcessCardFilterMode } from "../additional-components/account-flows-tab/account-flows-tab.types";
+
 import { FlowProcessEffectiveState, OrderingDirection } from "src/app/api/kamu.graphql.interface";
+
+import { ProcessCardFilterMode } from "../additional-components/account-flows-tab/account-flows-tab.types";
+import { AccountFlowsFiltersService } from "./account-flows-filters.service";
 
 describe("AccountFlowsFiltersService", () => {
     let service: AccountFlowsFiltersService;

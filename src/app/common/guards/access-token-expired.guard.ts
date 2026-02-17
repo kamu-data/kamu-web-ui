@@ -7,9 +7,11 @@
 
 import { inject } from "@angular/core";
 import { CanActivateFn } from "@angular/router";
+
 import { LocalStorageService } from "src/app/services/local-storage.service";
-import { isAccessTokenExpired } from "../helpers/app.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { isAccessTokenExpired } from "../helpers/app.helpers";
 
 export const accessTokenExpiredGuardFn: CanActivateFn = (_, state) => {
     const localStorageService = inject(LocalStorageService);

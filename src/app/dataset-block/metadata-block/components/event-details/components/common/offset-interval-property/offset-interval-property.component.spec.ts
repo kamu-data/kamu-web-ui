@@ -6,15 +6,18 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { OffsetIntervalPropertyComponent } from "./offset-interval-property.component";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { NavigationService } from "src/app/services/navigation.service";
+
 import { of } from "rxjs";
-import { mockDatasetMainDataResponse } from "src/app/search/mock.data";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
+import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { mockDatasetMainDataResponse } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { OffsetIntervalPropertyComponent } from "./offset-interval-property.component";
 
 describe("OffsetIntervalPropertyComponent", () => {
     let component: OffsetIntervalPropertyComponent;

@@ -6,7 +6,9 @@
  */
 
 import { TestBed } from "@angular/core/testing";
+
 import { first } from "rxjs/operators";
+
 import { SpinnerService } from "./spinner.service";
 
 describe("SpinnerService", () => {

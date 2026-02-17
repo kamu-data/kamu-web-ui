@@ -7,13 +7,16 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
-import { setTransformResolverFn } from "./set-transform.resolver";
-import { Apollo } from "apollo-angular";
-import { EditSetTransformService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/edit-set-transform..service";
+
 import { of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.mock";
-import ProjectLinks from "src/app/project-links";
+import { EditSetTransformService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/edit-set-transform..service";
 import { MaybeNull } from "src/app/interface/app.types";
+import ProjectLinks from "src/app/project-links";
+
+import { setTransformResolverFn } from "./set-transform.resolver";
 
 describe("setTransformResolverFn", () => {
     let editService: EditSetTransformService;

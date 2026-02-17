@@ -5,17 +5,24 @@
  * included in the LICENSE file.
  */
 
-import { ApolloLink } from "@apollo/client/core";
 import { inject, Injectable } from "@angular/core";
+
+import { first, map, Observable } from "rxjs";
+
+import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { onlyCompleteData } from "apollo-angular";
+import { MaybeNull } from "src/app/interface/app.types";
+
+import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 import {
     CancelFlowRunGQL,
     CancelFlowRunMutation,
     DatasetFlowFilters,
-    DatasetFlowType,
     DatasetFlowsInitiatorsGQL,
     DatasetFlowsInitiatorsQuery,
     DatasetFlowsProcessesGQL,
     DatasetFlowsProcessesQuery,
+    DatasetFlowType,
     DatasetPauseFlowsGQL,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsGQL,
@@ -53,11 +60,6 @@ import {
     SetIngestFlowConfigGQL,
     SetIngestFlowConfigMutation,
 } from "./kamu.graphql.interface";
-import { Observable, first, map } from "rxjs";
-import { ObservableQuery } from "@apollo/client/core";
-import { onlyCompleteData } from "apollo-angular";
-import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
-import { MaybeNull } from "src/app/interface/app.types";
 
 @Injectable({ providedIn: "root" })
 export class DatasetFlowApi {

@@ -6,8 +6,10 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { KafkaProtocolDesc, WebSocketProtocolDesc } from "src/app/api/kamu.graphql.interface";
 import { MatIconModule } from "@angular/material/icon";
+
+import { KafkaProtocolDesc, WebSocketProtocolDesc } from "src/app/api/kamu.graphql.interface";
+
 import { CopyToClipboardComponent } from "../../../../common/components/copy-to-clipboard/copy-to-clipboard.component";
 
 @Component({

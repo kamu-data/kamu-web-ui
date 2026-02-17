@@ -8,8 +8,8 @@
 import { DataSchemaFormat, DatasetKind, MetadataBlockFragment } from "../../api/kamu.graphql.interface";
 import { SliceUnit } from "../../dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "../../search/mock.data";
-import { DataHelpers, sliceSizeMapperReverse, operationColumnMapper, setOperationColumnClass } from "./data.helpers";
 import { DynamicTableColumnClassEnum } from "../components/dynamic-table/dynamic-table.interface";
+import { DataHelpers, operationColumnMapper, setOperationColumnClass, sliceSizeMapperReverse } from "./data.helpers";
 
 export const metadataBlockSetVocab: MetadataBlockFragment = {
     __typename: "MetadataBlockExtended",

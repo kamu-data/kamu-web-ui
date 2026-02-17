@@ -5,23 +5,26 @@
  * included in the LICENSE file.
  */
 
-import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { AccessTokensTabComponent } from "./access-tokens-tab.component";
+import { ActivatedRoute } from "@angular/router";
+
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { ActivatedRoute } from "@angular/router";
-import { NavigationService } from "src/app/services/navigation.service";
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
-import { TOKEN_ID, mockCreateAccessTokenMutation, mockListAccessTokensQuery } from "src/app/api/mock/access-token.mock";
-import { of } from "rxjs";
 import { AccessTokenConnection, CreateAccessTokenResultSuccess } from "src/app/api/kamu.graphql.interface";
-import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+import { mockCreateAccessTokenMutation, mockListAccessTokensQuery, TOKEN_ID } from "src/app/api/mock/access-token.mock";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { ModalService } from "src/app/common/components/modal/modal.service";
+import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
+import { AccessTokensTabComponent } from "./access-tokens-tab.component";
 
 describe("AccessTokensTabComponent", () => {
     let component: AccessTokensTabComponent;

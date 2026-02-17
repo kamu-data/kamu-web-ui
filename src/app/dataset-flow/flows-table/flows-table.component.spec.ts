@@ -5,25 +5,28 @@
  * included in the LICENSE file.
  */
 
-import { Apollo } from "apollo-angular";
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
-import { FlowsTableComponent } from "./flows-table.component";
-import { mockDatasetFlowsInitiatorsQuery, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
-import { Account } from "src/app/api/kamu.graphql.interface";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { MatTableHarness } from "@angular/material/table/testing";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { SimpleChanges } from "@angular/core";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { mockDatasets, mockFlowSummaryDataFragmentShowForceLink } from "./flows-table.helpers.mock";
-import { provideToastr, ToastrService } from "ngx-toastr";
-import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
-import { of } from "rxjs";
-import { registerMatSvgIcons } from "../../common/helpers/base-test.helpers.spec";
-import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { SimpleChanges } from "@angular/core";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+import { MatTableHarness } from "@angular/material/table/testing";
+
+import { of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr, ToastrService } from "ngx-toastr";
+import { Account } from "src/app/api/kamu.graphql.interface";
+import { mockDatasetFlowsInitiatorsQuery, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
+import { ModalService } from "src/app/common/components/modal/modal.service";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+
+import { registerMatSvgIcons } from "../../common/helpers/base-test.helpers.spec";
+import { FlowsTableComponent } from "./flows-table.component";
+import { mockDatasets, mockFlowSummaryDataFragmentShowForceLink } from "./flows-table.helpers.mock";
 
 describe("FlowsTableComponent", () => {
     let component: FlowsTableComponent;

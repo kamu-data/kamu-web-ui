@@ -6,9 +6,11 @@
  */
 
 import { inject, Injectable } from "@angular/core";
-import { AccountProvider } from "../api/kamu.graphql.interface";
+
 import { map, Observable } from "rxjs";
+
 import { AuthApi } from "../api/auth.api";
+import { AccountProvider } from "../api/kamu.graphql.interface";
 
 @Injectable({
     providedIn: "root",

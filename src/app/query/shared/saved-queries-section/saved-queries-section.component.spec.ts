@@ -6,6 +6,7 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+
 import { SavedQueriesSectionComponent } from "./saved-queries-section.component";
 
 describe("SavedQueriesSectionComponent", () => {

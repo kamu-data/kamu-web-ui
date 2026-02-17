@@ -5,16 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { DatasetBasicsFragment, DatasetByIdQuery } from "src/app/api/kamu.graphql.interface";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { RouterLink } from "@angular/router";
-import AppValues from "src/app/common/values/app.values";
+
+import { DatasetBasicsFragment, DatasetByIdQuery } from "src/app/api/kamu.graphql.interface";
 import { DatasetKindComponent } from "src/app/common/components/dataset-kind/dataset-kind.component";
 import { DatasetVisibilityComponent } from "src/app/common/components/dataset-visibility/dataset-visibility.component";
-import { NgIf } from "@angular/common";
+import AppValues from "src/app/common/values/app.values";
+import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
 
 @Component({
     selector: "app-dataset-id-and-name-property",

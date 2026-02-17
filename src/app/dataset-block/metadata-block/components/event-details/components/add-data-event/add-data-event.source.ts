@@ -6,12 +6,13 @@
  */
 
 import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";
+import { AddDataTooltipsTexts } from "src/app/common/tooltips/add-data.text";
+
 import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { HashPropertyComponent } from "../common/hash-property/hash-property.component";
 import { OffsetIntervalPropertyComponent } from "../common/offset-interval-property/offset-interval-property.component";
-import { SizePropertyComponent } from "../common/size-property/size-property.component";
-import { AddDataTooltipsTexts } from "src/app/common/tooltips/add-data.text";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
+import { SizePropertyComponent } from "../common/size-property/size-property.component";
 
 export const ADD_DATA_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "AddData.string.newWatermark": {

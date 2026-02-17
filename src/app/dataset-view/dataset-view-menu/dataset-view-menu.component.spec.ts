@@ -5,15 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { DatasetViewMenuComponent } from "./dataset-view-menu.component";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { Apollo } from "apollo-angular";
-import { DatasetViewTypeEnum } from "../dataset-view.interface";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { Apollo } from "apollo-angular";
+import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+
+import { DatasetViewTypeEnum } from "../dataset-view.interface";
+import { DatasetViewMenuComponent } from "./dataset-view-menu.component";
 
 describe("DatasetViewMenuComponent", () => {
     let component: DatasetViewMenuComponent;

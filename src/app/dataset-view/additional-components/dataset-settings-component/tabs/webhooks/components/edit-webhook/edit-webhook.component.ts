@@ -5,22 +5,24 @@
  * included in the LICENSE file.
  */
 
+import { Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { NonNullableFormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { MatDividerModule } from "@angular/material/divider";
+import { RouterOutlet } from "@angular/router";
+
+import { NgSelectModule } from "@ng-select/ng-select";
 import { WebhookSubscriptionInput } from "src/app/api/kamu.graphql.interface";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { eventTypesMapper } from "src/app/common/helpers/data.helpers";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import AppValues from "src/app/common/values/app.values";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
-import { MatDividerModule } from "@angular/material/divider";
-import { NgSelectModule } from "@ng-select/ng-select";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { EditWebhooksType } from "./edit-webhooks.types";
-import { eventTypesMapper } from "src/app/common/helpers/data.helpers";
+
 import { SubscribedEventType, WebhookSubscriptionFormType } from "../../dataset-settings-webhooks-tab.component.types";
+import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
 import { WebhookFormComponent } from "../common/webhook-form/webhook-form.component";
-import { Location } from "@angular/common";
-import { RouterOutlet } from "@angular/router";
+import { EditWebhooksType } from "./edit-webhooks.types";
 
 @Component({
     selector: "app-edit-webhook",

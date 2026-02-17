@@ -5,15 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MetadataPushSourcesTabComponent } from "./metadata-push-sources-tab.component";
-import { mockFullPowerDatasetPermissionsFragment, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-import { mockMetadataRootUpdate } from "../../../data-tabs.mock";
-import { NavigationService } from "src/app/services/navigation.service";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { mockMetadataRootUpdate } from "../../../data-tabs.mock";
+import { MetadataPushSourcesTabComponent } from "./metadata-push-sources-tab.component";
 
 describe("MetadataPushSourcesTabComponent", () => {
     let component: MetadataPushSourcesTabComponent;

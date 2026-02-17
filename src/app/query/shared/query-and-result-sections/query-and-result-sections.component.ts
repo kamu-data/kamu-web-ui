@@ -5,6 +5,8 @@
  * included in the LICENSE file.
  */
 
+import { Clipboard } from "@angular/cdk/clipboard";
+import { AsyncPipe, NgIf } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -18,43 +20,43 @@ import {
     SimpleChanges,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { ToastrService } from "ngx-toastr";
-import { switchMap, tap } from "rxjs";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import AppValues from "src/app/common/values/app.values";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { UploadPrepareResponse, UploadPrepareData } from "src/app/interface/ingest-via-file-upload.types";
-import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
-import ProjectLinks from "src/app/project-links";
-import { FileUploadService } from "src/app/services/file-upload.service";
-import { NavigationService } from "src/app/services/navigation.service";
-import { Clipboard } from "@angular/cdk/clipboard";
-import { AppConfigService } from "src/app/app-config.service";
-import { SqlQueryResponseState, SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
-import { EngineDesc } from "src/app/api/kamu.graphql.interface";
-import { map, Observable } from "rxjs";
-import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
-import { LoadMoreComponent } from "../load-more/load-more.component";
-import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";
-import { RequestTimerComponent } from "../request-timer/request-timer.component";
-import { SqlEditorComponent } from "../../../editor/components/sql-editor/sql-editor.component";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatMenuModule } from "@angular/material/menu";
-import { MatIconModule } from "@angular/material/icon";
-import { EngineSelectComponent } from "../../../dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
-import { NgIf, AsyncPipe } from "@angular/common";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { FormsModule } from "@angular/forms";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+
+import { map, Observable, switchMap, tap } from "rxjs";
+
 import { MarkdownModule } from "ngx-markdown";
-import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
-import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
+import { ToastrService } from "ngx-toastr";
+import { EngineDesc } from "src/app/api/kamu.graphql.interface";
+import { AppConfigService } from "src/app/app-config.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { BaseComponent } from "src/app/common/components/base.component";
 import {
     DynamicTableColumnDescriptor,
     DynamicTableDataRow,
 } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
+import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
+import AppValues from "src/app/common/values/app.values";
+import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
+import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
 import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
+import { UploadPrepareData, UploadPrepareResponse } from "src/app/interface/ingest-via-file-upload.types";
+import ProjectLinks from "src/app/project-links";
+import { SqlQueryBasicResponse, SqlQueryResponseState } from "src/app/query/global-query/global-query.model";
+import { FileUploadService } from "src/app/services/file-upload.service";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";
+import { EngineSelectComponent } from "../../../dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
+import { SqlEditorComponent } from "../../../editor/components/sql-editor/sql-editor.component";
+import { LoadMoreComponent } from "../load-more/load-more.component";
+import { RequestTimerComponent } from "../request-timer/request-timer.component";
 
 @Component({
     selector: "app-query-and-result-sections",

@@ -5,25 +5,28 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { InputDataSectionComponent } from "./input-data-section.component";
+import { ActivatedRoute } from "@angular/router";
+
+import { of } from "rxjs";
+
+import { MarkdownModule } from "ngx-markdown";
+import { provideToastr } from "ngx-toastr";
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
+import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
+import ProjectLinks from "src/app/project-links";
+import { mockDatasetInfo } from "src/app/search/mock.data";
+
 import {
-    mockDatasetNotFoundError,
     mockDatasetBlockNotFoundError,
+    mockDatasetNotFoundError,
     mockQueryExplainerResponse,
     mockVerifyQueryResponseSuccess,
 } from "../../query-explainer.mocks";
-import { provideToastr } from "ngx-toastr";
-import { ActivatedRoute } from "@angular/router";
-import { of } from "rxjs";
-import { mockDatasetInfo } from "src/app/search/mock.data";
-import ProjectLinks from "src/app/project-links";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { MarkdownModule } from "ngx-markdown";
-import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
-import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { InputDataSectionComponent } from "./input-data-section.component";
 
 describe("InputDataSectionComponent", () => {
     let component: InputDataSectionComponent;

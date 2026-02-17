@@ -6,6 +6,7 @@
  */
 
 import { FormControl, ValidationErrors } from "@angular/forms";
+
 import { cronValidator } from "./cron-expression-validator.helper";
 
 describe("Cron expression validator", () => {

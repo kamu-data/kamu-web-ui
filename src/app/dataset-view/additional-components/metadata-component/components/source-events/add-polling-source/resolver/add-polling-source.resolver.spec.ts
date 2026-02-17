@@ -7,13 +7,16 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
-import { addPollingSourceResolverFn } from "./add-polling-source.resolver";
-import { Apollo } from "apollo-angular";
-import { EditPollingSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/edit-polling-source.service";
-import ProjectLinks from "src/app/project-links";
+
 import { of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.mock";
+import { EditPollingSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/edit-polling-source.service";
 import { MaybeNull } from "src/app/interface/app.types";
+import ProjectLinks from "src/app/project-links";
+
+import { addPollingSourceResolverFn } from "./add-polling-source.resolver";
 
 describe("addPollingSourceResolverFn", () => {
     let editService: EditPollingSourceService;

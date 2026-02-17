@@ -8,15 +8,16 @@
 /* istanbul ignore file */
 
 import { Routes } from "@angular/router";
+
 import { datasetInfoResolverFn } from "../../../../../common/resolvers/dataset-info.resolver";
 import RoutingResolvers from "../../../../../common/resolvers/routing-resolvers";
+import ProjectLinks from "../../../../../project-links";
 import { setTransformResolverFn } from "../set-transform/resolver/set-transform.resolver";
 import { SetTransformComponent } from "../set-transform/set-transform.component";
 import { AddPollingSourceComponent } from "./add-polling-source/add-polling-source.component";
 import { addPollingSourceResolverFn } from "./add-polling-source/resolver/add-polling-source.resolver";
 import { AddPushSourceComponent } from "./add-push-source/add-push-source.component";
 import { addPushSourceResolverFn } from "./add-push-source/resolver/add-push-source.resolver";
-import ProjectLinks from "../../../../../project-links";
 
 export const SOURCE_EVENTS_ROUTES: Routes = [
     {

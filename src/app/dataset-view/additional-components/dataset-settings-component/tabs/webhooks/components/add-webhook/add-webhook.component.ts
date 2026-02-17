@@ -5,27 +5,30 @@
  * included in the LICENSE file.
  */
 
+import { AsyncPipe, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { DatasetBasicsFragment, WebhookSubscriptionInput } from "src/app/api/kamu.graphql.interface";
-import { WebhooksService } from "src/app/services/webhooks.service";
 import { MatDividerModule } from "@angular/material/divider";
+
+import { BehaviorSubject, map, Observable } from "rxjs";
+
 import { NgSelectModule } from "@ng-select/ng-select";
-import AppValues from "src/app/common/values/app.values";
+import { DatasetBasicsFragment, WebhookSubscriptionInput } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { NavigationService } from "src/app/services/navigation.service";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import { AsyncPipe, NgIf } from "@angular/common";
 import { CopyToClipboardComponent } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.component";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import AppValues from "src/app/common/values/app.values";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
+import { NavigationService } from "src/app/services/navigation.service";
+import { WebhooksService } from "src/app/services/webhooks.service";
+
 import {
+    CreateWebhookSubscriptionSuccess,
     SubscribedEventType,
     WebhookSubscriptionFormType,
-    CreateWebhookSubscriptionSuccess,
 } from "../../dataset-settings-webhooks-tab.component.types";
+import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
 import { WebhookFormComponent } from "../common/webhook-form/webhook-form.component";
-import { BehaviorSubject, map, Observable } from "rxjs";
 
 @Component({
     selector: "app-add-webhook",

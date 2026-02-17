@@ -5,30 +5,32 @@
  * included in the LICENSE file.
  */
 
-import { MaybeNull } from "src/app/interface/app.types";
+import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterOutlet } from "@angular/router";
+
 import {
     DatasetBasicsFragment,
     DatasetMetadata,
     DatasetOverviewFragment,
     DatasetPermissionsFragment,
 } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
-import {
-    DatasetSettingsSidePanelItem,
-    SettingsTabsEnum,
-    DATASET_SETTINGS_SIDE_PANEL_DATA,
-} from "./dataset-settings.model";
 import { AppConfigService } from "src/app/app-config.service";
+import { BaseComponent } from "src/app/common/components/base.component";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { MaybeNull } from "src/app/interface/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { FeatureFlagDirective } from "../../../common/directives/feature-flag.directive";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { isSettingsTabAccessibleHelper } from "./dataset-settings.helpers";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { RouterOutlet } from "@angular/router";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatIconModule } from "@angular/material/icon";
-import { FeatureFlagDirective } from "../../../common/directives/feature-flag.directive";
-import { NgFor, NgIf } from "@angular/common";
+import {
+    DATASET_SETTINGS_SIDE_PANEL_DATA,
+    DatasetSettingsSidePanelItem,
+    SettingsTabsEnum,
+} from "./dataset-settings.model";
 
 @Component({
     selector: "app-dataset-settings",

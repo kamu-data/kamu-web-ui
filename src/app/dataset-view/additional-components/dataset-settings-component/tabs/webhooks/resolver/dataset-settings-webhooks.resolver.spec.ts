@@ -6,23 +6,26 @@
  */
 
 import { TestBed } from "@angular/core/testing";
+import { provideAnimations } from "@angular/platform-browser/animations";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { datasetSettingsWebhooksResolverFn } from "./dataset-settings-webhooks.resolver";
+
+import { Observable, of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
 import { AppConfigService } from "src/app/app-config.service";
+import AppValues from "src/app/common/values/app.values";
+import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { NavigationService } from "src/app/services/navigation.service";
-import { Apollo } from "apollo-angular";
-import AppValues from "src/app/common/values/app.values";
-import { of, Observable } from "rxjs";
-import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
+
 import { SettingsTabsEnum } from "../../../dataset-settings.model";
-import { DatasetWebhooksService } from "../service/dataset-webhooks.service";
 import { DatasetSettingsWebhookTabData } from "../dataset-settings-webhooks-tab.component.types";
-import { provideToastr } from "ngx-toastr";
-import { provideAnimations } from "@angular/platform-browser/animations";
+import { DatasetWebhooksService } from "../service/dataset-webhooks.service";
+import { datasetSettingsWebhooksResolverFn } from "./dataset-settings-webhooks.resolver";
 
 describe("datasetSettingsWebhooksResolver", () => {
     let datasetService: DatasetService;

@@ -5,17 +5,19 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { LineageGraphComponent } from "./lineage-graph.component";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MOCK_LINKS, MOCK_NODES } from "src/app/api/mock/dataset.mock";
 import { ChangeDetectionStrategy } from "@angular/core";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+
+import { MOCK_LINKS, MOCK_NODES } from "src/app/api/mock/dataset.mock";
+import { WidgetHeightService } from "src/app/common/components/lineage-graph/widget-height.service";
 import { emitClickOnElementByDataTestId, findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import AppValues from "src/app/common/values/app.values";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import AppValues from "src/app/common/values/app.values";
 import { mockGraphNode } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import timekeeper from "timekeeper";
-import { WidgetHeightService } from "src/app/common/components/lineage-graph/widget-height.service";
+
+import { LineageGraphComponent } from "./lineage-graph.component";
 
 describe("LineageGraphComponent", () => {
     let component: LineageGraphComponent;

@@ -5,13 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+
 import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 
 import { SqlEditorComponent } from "./components/sql-editor/sql-editor.component";
 import { YamlEditorComponent } from "./components/yaml-editor/yaml-editor.component";
-import { FormsModule } from "@angular/forms";
 
 @NgModule({
     imports: [CommonModule, FormsModule, MonacoEditorModule.forRoot(), SqlEditorComponent, YamlEditorComponent],

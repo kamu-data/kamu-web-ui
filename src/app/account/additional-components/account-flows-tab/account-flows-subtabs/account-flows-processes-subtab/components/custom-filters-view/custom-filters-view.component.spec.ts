@@ -6,9 +6,11 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { CustomFiltersViewComponent } from "./custom-filters-view.component";
-import { RangeLastAttempt } from "../../../../account-flows-tab.types";
+
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+
+import { RangeLastAttempt } from "../../../../account-flows-tab.types";
+import { CustomFiltersViewComponent } from "./custom-filters-view.component";
 
 describe("CustomFiltersViewComponent", () => {
     let component: CustomFiltersViewComponent;

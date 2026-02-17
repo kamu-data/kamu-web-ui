@@ -6,12 +6,14 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ActivatedRoute, convertToParamMap } from "@angular/router";
+
 import { mockDatasetsAccountResponse, TEST_ACCOUNT_NAME } from "src/app/api/mock/dataset.mock";
+import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
+
 import { AccountTabs } from "../../account.constants";
 import { DatasetsTabComponent } from "./datasets-tab.component";
-import { ActivatedRoute, convertToParamMap } from "@angular/router";
-import ProjectLinks from "src/app/project-links";
 
 describe("DatasetsTabComponent", () => {
     let component: DatasetsTabComponent;

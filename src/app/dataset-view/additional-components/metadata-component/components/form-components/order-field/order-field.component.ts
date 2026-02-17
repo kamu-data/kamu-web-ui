@@ -5,14 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import { BaseField } from "../base-field";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ORDER_RADIO_CONTROL } from "./order-field.types";
-import { SourceOrder } from "../../source-events/add-polling-source/process-form.service.types";
 import { NgFor } from "@angular/common";
-import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
+
+import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { SourceOrder } from "../../source-events/add-polling-source/process-form.service.types";
+import { BaseField } from "../base-field";
+import { ORDER_RADIO_CONTROL } from "./order-field.types";
 
 @Component({
     selector: "app-order-field",

@@ -5,11 +5,13 @@
  * included in the LICENSE file.
  */
 
-import { mockSetAttachments } from "../../mock.events";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { SetAttachmentsEventComponent } from "./set-attachments-event.component";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
 import { MarkdownModule } from "ngx-markdown";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { mockSetAttachments } from "../../mock.events";
+import { SetAttachmentsEventComponent } from "./set-attachments-event.component";
 
 describe("SetAttachmentsEventComponent", () => {
     let component: SetAttachmentsEventComponent;

@@ -5,13 +5,15 @@
  * included in the LICENSE file.
  */
 
+import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+
 import { DatasetSearchOverviewFragment } from "src/app/api/kamu.graphql.interface";
 import { SearchMode } from "src/app/interface/search.interface";
-import { DatasetListItemComponent } from "./dataset-list-item/dataset-list-item.component";
-import { FormsModule } from "@angular/forms";
+
 import { FeatureFlagDirective } from "../../directives/feature-flag.directive";
-import { NgIf, NgFor } from "@angular/common";
+import { DatasetListItemComponent } from "./dataset-list-item/dataset-list-item.component";
 
 @Component({
     selector: "app-dataset-list",

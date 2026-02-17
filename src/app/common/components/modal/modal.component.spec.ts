@@ -5,13 +5,16 @@
  * included in the LICENSE file.
  */
 
+import { Location } from "@angular/common";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ModalComponent } from "./modal.component";
-import { ModalService } from "./modal.service";
+
 import { of } from "rxjs";
+
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { ModalCommandInterface } from "src/app/interface/modal.interface";
-import { Location } from "@angular/common";
+
+import { ModalComponent } from "./modal.component";
+import { ModalService } from "./modal.service";
 
 describe("ModalComponent", () => {
     let component: ModalComponent;

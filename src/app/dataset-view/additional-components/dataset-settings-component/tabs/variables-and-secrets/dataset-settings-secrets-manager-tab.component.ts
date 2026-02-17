@@ -5,13 +5,18 @@
  * included in the LICENSE file.
  */
 
+import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit, ViewChild } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { FormsModule } from "@angular/forms";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
 import { MatSort, MatSortModule } from "@angular/material/sort";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { EditKeyValueModalComponent } from "./components/edit-key-value-modal/edit-key-value-modal.component";
+
+import { catchError, from, of, take } from "rxjs";
+
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { promiseWithCatch, requireValue } from "src/app/common/helpers/app.helpers";
 import {
     DatasetBasicsFragment,
     DatasetPermissionsFragment,
@@ -20,20 +25,18 @@ import {
     ViewDatasetEnvVarConnection,
 } from "src/app/api/kamu.graphql.interface";
 import { BaseComponent } from "src/app/common/components/base.component";
-import { catchError, from, of, take } from "rxjs";
-import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { SettingsTabsEnum } from "../../dataset-settings.model";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { ModalService } from "src/app/common/components/modal/modal.service";
+import { promiseWithCatch, requireValue } from "src/app/common/helpers/app.helpers";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { DatasetEnvironmentVariablesService } from "./dataset-environment-variables.service";
 import ProjectLinks from "src/app/project-links";
+import { NavigationService } from "src/app/services/navigation.service";
+
 import { PaginationComponent } from "../../../../../common/components/pagination-component/pagination.component";
-import { NgIf } from "@angular/common";
-import { FormsModule } from "@angular/forms";
-import { MatIconModule } from "@angular/material/icon";
-import { MatDividerModule } from "@angular/material/divider";
+import { SettingsTabsEnum } from "../../dataset-settings.model";
+import { EditKeyValueModalComponent } from "./components/edit-key-value-modal/edit-key-value-modal.component";
+import { DatasetEnvironmentVariablesService } from "./dataset-environment-variables.service";
 
 export interface EnvVariableElement {
     key: string;

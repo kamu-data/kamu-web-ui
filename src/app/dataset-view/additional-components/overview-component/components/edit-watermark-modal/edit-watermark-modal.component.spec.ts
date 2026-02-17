@@ -5,24 +5,27 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { EditWatermarkModalComponent } from "./edit-watermark-modal.component";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { Apollo } from "apollo-angular";
-import timekeeper from "timekeeper";
-import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
-import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { of } from "rxjs";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { DatasetCommitService } from "../../services/dataset-commit.service";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angular-datetime-picker";
-import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+
+import { of } from "rxjs";
+
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angular-datetime-picker";
+import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { Apollo } from "apollo-angular";
+import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
+import timekeeper from "timekeeper";
+
+import { DatasetCommitService } from "../../services/dataset-commit.service";
+import { EditWatermarkModalComponent } from "./edit-watermark-modal.component";
 
 describe("EditWatermarkModalComponent", () => {
     let component: EditWatermarkModalComponent;

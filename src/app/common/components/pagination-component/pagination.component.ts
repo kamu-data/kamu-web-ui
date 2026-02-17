@@ -6,8 +6,9 @@
  */
 
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+
+import { NgbPagination, NgbPaginationNext, NgbPaginationPrevious } from "@ng-bootstrap/ng-bootstrap";
 import { PageBasedInfo } from "src/app/api/kamu.graphql.interface";
-import { NgbPagination, NgbPaginationPrevious, NgbPaginationNext } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: "app-pagination",

@@ -5,26 +5,28 @@
  * included in the LICENSE file.
  */
 
-import { SupportedEvents } from "../../../../../../dataset-block/metadata-block/components/event-details/supported.events";
-import ProjectLinks from "src/app/project-links";
+import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { RxwebValidators } from "@rxweb/reactive-form-validators";
-import { SourcesSection } from "../add-polling-source/process-form.service.types";
-import { EditAddPushSourceService } from "./edit-add-push-source.service";
-import { BaseSourceEventComponent } from "../../base-source-event.component";
-import { AddPushSourceSection } from "./add-push-source-form.types";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { PreprocessStepComponent } from "../steps/preprocess-step/preprocess-step.component";
-import { BaseStepComponent } from "../steps/base-step/base-step.component";
-import { StepperNavigationComponent } from "../../stepper-navigation/stepper-navigation.component";
-import { SourceNameStepComponent } from "../steps/source-name-step/source-name-step.component";
 import { MatStepperModule } from "@angular/material/stepper";
-import { NgIf } from "@angular/common";
 import { RouterLink } from "@angular/router";
+
+import { RxwebValidators } from "@rxweb/reactive-form-validators";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
+import ProjectLinks from "src/app/project-links";
+
+import { SupportedEvents } from "../../../../../../dataset-block/metadata-block/components/event-details/supported.events";
+import { BaseSourceEventComponent } from "../../base-source-event.component";
+import { StepperNavigationComponent } from "../../stepper-navigation/stepper-navigation.component";
+import { SourcesSection } from "../add-polling-source/process-form.service.types";
+import { BaseStepComponent } from "../steps/base-step/base-step.component";
+import { PreprocessStepComponent } from "../steps/preprocess-step/preprocess-step.component";
+import { SourceNameStepComponent } from "../steps/source-name-step/source-name-step.component";
+import { AddPushSourceSection } from "./add-push-source-form.types";
+import { EditAddPushSourceService } from "./edit-add-push-source.service";
 
 @Component({
     selector: "app-add-push-source",

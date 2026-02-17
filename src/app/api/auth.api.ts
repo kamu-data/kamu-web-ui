@@ -6,9 +6,19 @@
  */
 
 import { inject, Injectable } from "@angular/core";
-import { catchError, first, map } from "rxjs/operators";
-import { onlyCompleteData } from "apollo-angular";
+
 import { Observable, of } from "rxjs";
+import { catchError, first, map } from "rxjs/operators";
+
+import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { onlyCompleteData } from "apollo-angular";
+
+import {
+    GithubLoginCredentials,
+    LoginResponseType,
+    PasswordLoginCredentials,
+    Web3WalletOwnershipVerificationRequest,
+} from "./auth.api.model";
 import {
     AccountFragment,
     AccountProvider,
@@ -21,13 +31,6 @@ import {
     LoginWeb3WalletGQL,
     LoginWeb3WalletMutation,
 } from "./kamu.graphql.interface";
-import { ApolloLink, ObservableQuery } from "@apollo/client/core";
-import {
-    GithubLoginCredentials,
-    LoginResponseType,
-    PasswordLoginCredentials,
-    Web3WalletOwnershipVerificationRequest,
-} from "./auth.api.model";
 
 @Injectable({
     providedIn: "root",

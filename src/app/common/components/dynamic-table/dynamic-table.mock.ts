@@ -6,6 +6,7 @@
  */
 
 import { OdfTypes } from "src/app/interface/dataset-schema.interface";
+
 import { DynamicTableDataRow } from "./dynamic-table.interface";
 
 export const MOCK_DATA_ROWS: DynamicTableDataRow[] = [

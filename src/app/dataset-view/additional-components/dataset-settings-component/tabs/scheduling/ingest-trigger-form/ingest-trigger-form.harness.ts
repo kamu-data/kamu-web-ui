@@ -8,11 +8,13 @@
 /* istanbul ignore file */
 
 import { ComponentHarness } from "@angular/cdk/testing";
-import { ScheduleType } from "../../../dataset-settings.model";
-import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
+import { MatRadioButtonHarness } from "@angular/material/radio/testing";
+
 import { CronExpressionFormHarness } from "src/app/common/components/cron-expression-form/cron-expression-form.harness";
 import { TimeDeltaFormHarness } from "src/app/common/components/time-delta-form/time-delta-form.harness";
-import { MatRadioButtonHarness } from "@angular/material/radio/testing";
+import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
+
+import { ScheduleType } from "../../../dataset-settings.model";
 import { IngestTriggerFormValue } from "./ingest-trigger-form.types";
 
 export class IngestTriggerFormHarness extends ComponentHarness {

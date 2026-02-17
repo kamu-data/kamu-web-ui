@@ -7,16 +7,19 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { datasetFlowsTabResolverFn } from "./dataset-flows-tab.resolver";
+
 import { Observable } from "rxjs";
-import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { TEST_ACCOUNT_NAME } from "src/app/api/mock/dataset.mock";
-import ProjectLinks from "src/app/project-links";
+
 import { Apollo } from "apollo-angular";
+import { TEST_ACCOUNT_NAME } from "src/app/api/mock/dataset.mock";
+import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+
+import { datasetFlowsTabResolverFn } from "./dataset-flows-tab.resolver";
 
 describe("datasetFlowsTabResolverFn", () => {
     let datasetService: DatasetService;

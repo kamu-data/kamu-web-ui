@@ -5,16 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, inject, Input } from "@angular/core";
-import { Component } from "@angular/core";
-import { AccountTabs } from "../../account.constants";
-import { NavigationService } from "src/app/services/navigation.service";
+import { NgFor, NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
+
 import { isNil } from "src/app/common/helpers/app.helpers";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetsAccountResolverResponse } from "src/app/interface/dataset.interface";
-import { PaginationComponent } from "../../../common/components/pagination-component/pagination.component";
+import { NavigationService } from "src/app/services/navigation.service";
+
 import { DatasetListItemComponent } from "../../../common/components/dataset-list-component/dataset-list-item/dataset-list-item.component";
-import { NgIf, NgFor } from "@angular/common";
+import { PaginationComponent } from "../../../common/components/pagination-component/pagination.component";
+import { AccountTabs } from "../../account.constants";
 
 @Component({
     selector: "app-datasets-tab",

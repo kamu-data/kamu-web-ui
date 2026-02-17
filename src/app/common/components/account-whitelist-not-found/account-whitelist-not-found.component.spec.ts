@@ -6,6 +6,7 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+
 import { AccountWhitelistNotFoundComponent } from "./account-whitelist-not-found.component";
 
 describe("AccountWhitelistNotFoundComponent", () => {

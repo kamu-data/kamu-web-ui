@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { catchError, EMPTY } from "rxjs";
 /**
  * Copyright Kamu Data, Inc. and contributors. All rights reserved.
  *
@@ -15,7 +14,9 @@ import { catchError, EMPTY } from "rxjs";
 
 import { inject } from "@angular/core";
 import { ResolveFn } from "@angular/router";
-import { combineLatest, map } from "rxjs";
+
+import { catchError, combineLatest, EMPTY, map } from "rxjs";
+
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";

@@ -5,9 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { TooltipIconComponent } from "../tooltip-icon/tooltip-icon.component";
 import { NgClass } from "@angular/common";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+
+import { TooltipIconComponent } from "../tooltip-icon/tooltip-icon.component";
 
 @Component({
     selector: "app-block-row-data",

@@ -5,22 +5,24 @@
  * included in the LICENSE file.
  */
 
+import { NgIf } from "@angular/common";
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
-import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { DatasetBasicsFragment, DatasetKind } from "src/app/api/kamu.graphql.interface";
-import { DatasetFlowConfigService } from "../../services/dataset-flow-config.service";
-import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DatasetSettingsIngestConfigurationTabData } from "./dataset-settings-ingest-configuration-tab.data";
+import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
-import { IngestConfigurationRuleFormComponent } from "./ingest-configuration-rule-form/ingest-configuration-rule-form.component";
-import { FlowRetryPolicyFormComponent } from "./flow-retry-policy-form/flow-retry-policy-form.component";
+
+import { DatasetBasicsFragment, DatasetKind } from "src/app/api/kamu.graphql.interface";
+import { BaseComponent } from "src/app/common/components/base.component";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+
+import { DatasetFlowConfigService } from "../../services/dataset-flow-config.service";
+import { DatasetSettingsIngestConfigurationTabData } from "./dataset-settings-ingest-configuration-tab.data";
 import {
     IngestConfigurationFormType,
     IngestConfigurationFormValue,
 } from "./dataset-settings-ingest-configuration-tab.types";
-import { NgIf } from "@angular/common";
+import { FlowRetryPolicyFormComponent } from "./flow-retry-policy-form/flow-retry-policy-form.component";
+import { IngestConfigurationRuleFormComponent } from "./ingest-configuration-rule-form/ingest-configuration-rule-form.component";
 
 @Component({
     selector: "app-dataset-settings-ingest-configuration-tab",

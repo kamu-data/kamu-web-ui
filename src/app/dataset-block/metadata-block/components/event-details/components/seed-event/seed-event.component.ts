@@ -5,13 +5,15 @@
  * included in the LICENSE file.
  */
 
-import { ToastrService } from "ngx-toastr";
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { Seed } from "src/app/api/kamu.graphql.interface";
 import { Clipboard } from "@angular/cdk/clipboard";
-import { BaseComponent } from "src/app/common/components/base.component";
 import { TitleCasePipe } from "@angular/common";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
+
+import { ToastrService } from "ngx-toastr";
+import { Seed } from "src/app/api/kamu.graphql.interface";
+import { BaseComponent } from "src/app/common/components/base.component";
+
 import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
 
 @Component({

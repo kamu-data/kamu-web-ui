@@ -5,9 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
+import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 
 @Component({
     selector: "app-step-type-property",

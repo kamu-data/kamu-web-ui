@@ -6,18 +6,20 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { PrepareStepComponent } from "./prepare-step.component";
 import { FormGroupDirective } from "@angular/forms";
+
 import { Apollo } from "apollo-angular";
-import { formGroupDirective } from "../base-step/base-step.component.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { mockSetPollingSourceEventYaml } from "../../../set-transform/mock.data";
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { mockSetPollingSourceEventYaml } from "../../../set-transform/mock.data";
 import {
     DecompressFormat,
     PrepareKind,
     SetPollingSourceSection,
 } from "../../add-polling-source/add-polling-source-form.types";
+import { formGroupDirective } from "../base-step/base-step.component.spec";
+import { PrepareStepComponent } from "./prepare-step.component";
 
 describe("PrepareStepComponent", () => {
     let component: PrepareStepComponent;

@@ -5,21 +5,23 @@
  * included in the LICENSE file.
  */
 
+import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { AbstractControl, FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetBasicsFragment, ViewDatasetEnvVar } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/interface/app.types";
 import { BaseComponent } from "src/app/common/components/base.component";
 import { noWhitespaceValidator } from "src/app/common/helpers/data.helpers";
 import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
-import { EnvAndSecretsFormType } from "./edit-key-value-modal.types";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { NgIf } from "@angular/common";
+import { MaybeNull } from "src/app/interface/app.types";
+
 import { FormValidationErrorsDirective } from "../../../../../../../common/directives/form-validation-errors.directive";
-import { MatTooltipModule } from "@angular/material/tooltip";
-import { MatIconModule } from "@angular/material/icon";
-import { MatDividerModule } from "@angular/material/divider";
+import { EnvAndSecretsFormType } from "./edit-key-value-modal.types";
 
 @Component({
     selector: "app-edit-key-value-modal",

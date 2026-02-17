@@ -5,10 +5,11 @@
  * included in the LICENSE file.
  */
 
+import { NgClass, NgFor, NgIf } from "@angular/common";
 import { Component } from "@angular/core";
-import { DynamicComponent } from "./dynamic.component";
 import { MatDividerModule } from "@angular/material/divider";
-import { NgClass, NgIf, NgFor } from "@angular/common";
+
+import { DynamicComponent } from "./dynamic.component";
 
 @Component({
     selector: "modal-dialog",

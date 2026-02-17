@@ -5,9 +5,15 @@
  * included in the LICENSE file.
  */
 
-import { EMPTY, Observable, catchError, first, map } from "rxjs";
 import { inject, Injectable } from "@angular/core";
+
+import { catchError, EMPTY, first, map, Observable } from "rxjs";
+
+import { ApolloLink, ObservableQuery } from "@apollo/client/core";
 import { onlyCompleteData } from "apollo-angular";
+
+import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
+import { MaybeNull } from "../interface/app.types";
 import {
     AccountByNameGQL,
     AccountByNameQuery,
@@ -16,6 +22,8 @@ import {
     AccountDatasetFlowsPausedGQL,
     AccountDatasetFlowsPausedQuery,
     AccountFlowFilters,
+    AccountFlowsAsCardsGQL,
+    AccountFlowsAsCardsQuery,
     AccountFragment,
     AccountListDatasetsWithFlowsGQL,
     AccountListDatasetsWithFlowsQuery,
@@ -23,30 +31,25 @@ import {
     AccountListFlowsQuery,
     AccountPauseFlowsGQL,
     AccountPauseFlowsMutation,
+    AccountPrimaryCardsGQL,
+    AccountPrimaryCardsQuery,
     AccountResumeFlowsGQL,
     AccountResumeFlowsMutation,
+    AccountWebhookCardsGQL,
+    AccountWebhookCardsQuery,
     AccountWithEmailGQL,
     AccountWithEmailQuery,
     ChangeAccountUsernameGQL,
     ChangeAccountUsernameMutation,
+    ChangeAdminPasswordGQL,
+    ChangeAdminPasswordMutation,
+    ChangeUserPasswordGQL,
+    ChangeUserPasswordMutation,
     DeleteAccountByNameGQL,
     DeleteAccountByNameMutation,
-    ChangeUserPasswordGQL,
-    ChangeAdminPasswordGQL,
-    ChangeUserPasswordMutation,
-    ChangeAdminPasswordMutation,
     FlowProcessFilters,
     FlowProcessOrdering,
-    AccountFlowsAsCardsGQL,
-    AccountFlowsAsCardsQuery,
-    AccountPrimaryCardsGQL,
-    AccountPrimaryCardsQuery,
-    AccountWebhookCardsGQL,
-    AccountWebhookCardsQuery,
 } from "./kamu.graphql.interface";
-import { MaybeNull } from "../interface/app.types";
-import { ApolloLink, ObservableQuery } from "@apollo/client/core";
-import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 
 @Injectable({ providedIn: "root" })
 export class AccountApi {

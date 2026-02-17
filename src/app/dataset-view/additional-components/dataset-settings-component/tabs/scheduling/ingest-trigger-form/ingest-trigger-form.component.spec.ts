@@ -5,18 +5,20 @@
  * included in the LICENSE file.
  */
 
+import { HarnessLoader } from "@angular/cdk/testing";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { Component, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { IngestTriggerFormComponent } from "./ingest-trigger-form.component";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { ScheduleType } from "../../../dataset-settings.model";
-import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { HarnessLoader } from "@angular/cdk/testing";
-import { Component, ViewChild } from "@angular/core";
-import { IngestTriggerFormHarness } from "./ingest-trigger-form.harness";
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TimeUnit } from "src/app/api/kamu.graphql.interface";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { ScheduleType } from "../../../dataset-settings.model";
+import { IngestTriggerFormComponent } from "./ingest-trigger-form.component";
+import { IngestTriggerFormHarness } from "./ingest-trigger-form.harness";
 
 @Component({
     imports: [

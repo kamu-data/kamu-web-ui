@@ -8,8 +8,9 @@
 /* istanbul ignore file */
 
 import { ComponentHarness } from "@angular/cdk/testing";
-import { FlowTriggerStopPolicyType } from "../../../dataset-settings.model";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
+
+import { FlowTriggerStopPolicyType } from "../../../dataset-settings.model";
 import { FlowStopPolicyFormValue } from "./flow-stop-policy-form.types";
 
 export class FlowStopPolicyFormHarness extends ComponentHarness {

@@ -6,6 +6,9 @@
  */
 
 import { GraphQLError } from "graphql";
+import { AppLoginInstructions } from "src/app/app-config.model";
+
+import { PasswordLoginCredentials } from "../auth.api.model";
 import {
     AccountFragment,
     AccountProvider,
@@ -14,8 +17,6 @@ import {
     FetchAccountDetailsMutation,
     LoginMutation,
 } from "../kamu.graphql.interface";
-import { AppLoginInstructions } from "src/app/app-config.model";
-import { PasswordLoginCredentials } from "../auth.api.model";
 
 export const TEST_GITHUB_CODE = "12345";
 export const TEST_ACCESS_TOKEN_GITHUB = "someTokenViaGithub";

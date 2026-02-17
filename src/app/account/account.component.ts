@@ -5,27 +5,30 @@
  * included in the LICENSE file.
  */
 
-import ProjectLinks from "src/app/project-links";
+import { AsyncPipe, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { AccountFragment } from "src/app/api/kamu.graphql.interface";
-import { AccountTabs } from "./account.constants";
-import AppValues from "src/app/common/values/app.values";
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import { AccountService } from "src/app/account/account.service";
-import { map, shareReplay } from "rxjs/operators";
-import { Observable } from "rxjs";
-import { MaybeNull } from "src/app/interface/app.types";
-import { AccountNotFoundError } from "src/app/common/values/errors";
-import { ModalService } from "../common/components/modal/modal.service";
-import { LoggedUserService } from "../auth/logged-user.service";
-import RoutingResolvers from "../common/resolvers/routing-resolvers";
-import { DisplayAccountNamePipe } from "../common/pipes/display-account-name.pipe";
-import { RouterLink, RouterOutlet } from "@angular/router";
-import { MatIconModule } from "@angular/material/icon";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterLink, RouterOutlet } from "@angular/router";
+
+import { Observable } from "rxjs";
+import { map, shareReplay } from "rxjs/operators";
+
+import { AccountService } from "src/app/account/account.service";
+import { AccountFragment } from "src/app/api/kamu.graphql.interface";
+import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import AppValues from "src/app/common/values/app.values";
+import { AccountNotFoundError } from "src/app/common/values/errors";
+import { MaybeNull } from "src/app/interface/app.types";
+import ProjectLinks from "src/app/project-links";
+
+import { LoggedUserService } from "../auth/logged-user.service";
+import { ModalService } from "../common/components/modal/modal.service";
 import { FeatureFlagDirective } from "../common/directives/feature-flag.directive";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { DisplayAccountNamePipe } from "../common/pipes/display-account-name.pipe";
+import RoutingResolvers from "../common/resolvers/routing-resolvers";
+import { AccountTabs } from "./account.constants";
 
 @Component({
     selector: "app-account",

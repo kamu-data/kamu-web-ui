@@ -5,10 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { SpinnerService } from "../spinner.service";
+import { AsyncPipe, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { NgIf, AsyncPipe } from "@angular/common";
+
+import { SpinnerService } from "../spinner.service";
 
 @Component({
     selector: "app-spinner",

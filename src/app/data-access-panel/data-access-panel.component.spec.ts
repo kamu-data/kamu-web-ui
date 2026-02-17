@@ -6,11 +6,13 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { DataAccessPanelComponent } from "./data-access-panel.component";
-import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
-import { Apollo } from "apollo-angular";
+
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { Apollo } from "apollo-angular";
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
+
 import { SharedTestModule } from "../common/modules/shared-test.module";
+import { DataAccessPanelComponent } from "./data-access-panel.component";
 
 describe("DataAccessPanelComponent", () => {
     let component: DataAccessPanelComponent;

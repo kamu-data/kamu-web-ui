@@ -5,15 +5,16 @@
  * included in the LICENSE file.
  */
 
+import { SetTransform, TransformInput } from "src/app/api/kamu.graphql.interface";
+
 import {
     Dataset,
     TransformInputDatasetAccessible,
     TransformInputDatasetNotAccessible,
 } from "../../../../../../api/kamu.graphql.interface";
-import { SetTransform, TransformInput } from "src/app/api/kamu.graphql.interface";
-import { EventSectionBuilder } from "./event-section.builder";
 import { SET_TRANSFORM_SOURCE_DESCRIPTORS } from "../../components/set-transform-event/set-transform-event.source";
 import { EventRow, EventSection } from "../dynamic-events.model";
+import { EventSectionBuilder } from "./event-section.builder";
 
 enum SetTransformSection {
     INPUTS = "inputs",

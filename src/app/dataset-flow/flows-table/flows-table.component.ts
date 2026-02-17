@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { NgClass, NgIf } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -18,20 +19,38 @@ import {
     SimpleChanges,
     ViewChild,
 } from "@angular/core";
-import {
-    FlowStatus,
-    FlowStartCondition,
-    Dataset,
-    AccountFragment,
-    DatasetBasicsFragment,
-    FlowSummaryDataWithTriggerFragment,
-    FlowSummaryDataFragment,
-} from "src/app/api/kamu.graphql.interface";
-import AppValues from "src/app/common/values/app.values";
-import { MatTable, MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import { FlowTableHelpers } from "./flows-table.helpers";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { FormsModule } from "@angular/forms";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
+import { MatTable, MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { RouterLink } from "@angular/router";
+
+import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
+import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
+import { ToastrService } from "ngx-toastr";
+import {
+    AccountFragment,
+    Dataset,
+    DatasetBasicsFragment,
+    FlowStartCondition,
+    FlowStatus,
+    FlowSummaryDataFragment,
+    FlowSummaryDataWithTriggerFragment,
+} from "src/app/api/kamu.graphql.interface";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { ModalService } from "src/app/common/components/modal/modal.service";
+import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import AppValues from "src/app/common/values/app.values";
+import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { MaybeNull } from "src/app/interface/app.types";
+import ProjectLinks from "src/app/project-links";
+
+import { SafeHtmlPipe } from "../../common/pipes/safe-html.pipe";
+import { FlowTableHelpers } from "./flows-table.helpers";
 import {
     CancelFlowArgs,
     DROPDOWN_DATASET_SETTINGS,
@@ -39,23 +58,6 @@ import {
     FlowsTableFiltersOptions,
     FlowsTableOptions,
 } from "./flows-table.types";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
-import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { ToastrService } from "ngx-toastr";
-import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
-import ProjectLinks from "src/app/project-links";
-import { SafeHtmlPipe } from "../../common/pipes/safe-html.pipe";
-import { MatDividerModule } from "@angular/material/divider";
-import { RouterLink } from "@angular/router";
-import { MatIconModule } from "@angular/material/icon";
-import { NgIf, NgClass } from "@angular/common";
-import { FormsModule } from "@angular/forms";
-import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 
 @Component({
     selector: "app-flows-table",

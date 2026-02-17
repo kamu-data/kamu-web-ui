@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { NgIf } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -16,15 +17,16 @@ import {
     Output,
     ViewChild,
 } from "@angular/core";
-import { MenuActionData, SearchAdditionalHeaderButtonInterface } from "./search-additional-buttons.interface";
-import { isMobileView } from "src/app/common/helpers/app.helpers";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
-import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
-import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons-nav.component";
+import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
-import { MatButtonModule } from "@angular/material/button";
-import { NgIf } from "@angular/common";
+
+import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
+import { isMobileView } from "src/app/common/helpers/app.helpers";
+import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
+
+import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons-nav.component";
+import { MenuActionData, SearchAdditionalHeaderButtonInterface } from "./search-additional-buttons.interface";
 
 @Component({
     selector: "app-search-additional-buttons",

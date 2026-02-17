@@ -6,6 +6,7 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+
 import { BlockRowDataComponent } from "./block-row-data.component";
 
 describe("BlockRowDataComponent", () => {

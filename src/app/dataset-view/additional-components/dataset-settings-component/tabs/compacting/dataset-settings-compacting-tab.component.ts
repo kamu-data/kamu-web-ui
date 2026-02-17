@@ -5,23 +5,25 @@
  * included in the LICENSE file.
  */
 
-import { NavigationService } from "./../../../../../services/navigation.service";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
-import { AbstractControl, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { SliceUnit, sliceSizeMapper } from "./dataset-settings-compacting-tab.types";
-import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import AppValues from "src/app/common/values/app.values";
-import { BaseComponent } from "src/app/common/components/base.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { FormValidationErrorsDirective } from "../../../../../common/directives/form-validation-errors.directive";
-import { TooltipIconComponent } from "../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
+
+import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { ModalService } from "src/app/common/components/modal/modal.service";
+import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text";
+import AppValues from "src/app/common/values/app.values";
+import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+
+import { TooltipIconComponent } from "../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { FormValidationErrorsDirective } from "../../../../../common/directives/form-validation-errors.directive";
 import { DatasetFlowsService } from "../../../flows-component/services/dataset-flows.service";
+import { NavigationService } from "./../../../../../services/navigation.service";
+import { sliceSizeMapper, SliceUnit } from "./dataset-settings-compacting-tab.types";
 
 @Component({
     selector: "app-dataset-settings-compacting-tab",

@@ -6,19 +6,21 @@
  */
 
 import { inject, Injectable } from "@angular/core";
-import { ToastrService } from "ngx-toastr";
+
 import { map, Observable } from "rxjs";
+
+import { ToastrService } from "ngx-toastr";
 import { DatasetCollaborationApi } from "src/app/api/dataset-collaboration.api";
 import {
     AccountWithRoleConnection,
     DatasetAccessRole,
     DatasetListCollaboratorsQuery,
-    SearchCollaboratorQuery,
+    DatasetUserRoleQuery,
     LookupFilters,
     NameLookupResult,
+    SearchCollaboratorQuery,
     SetRoleCollaboratorMutation,
     UnsetRoleCollaboratorMutation,
-    DatasetUserRoleQuery,
 } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 

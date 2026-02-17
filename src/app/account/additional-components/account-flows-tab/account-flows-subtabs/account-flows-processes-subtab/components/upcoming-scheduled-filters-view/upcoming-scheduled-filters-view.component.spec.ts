@@ -6,10 +6,12 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { UpcomingScheduledFiltersViewComponent } from "./upcoming-scheduled-filters-view.component";
+
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { RangeLastAttempt } from "../../../../account-flows-tab.types";
 import timekeeper from "timekeeper";
+
+import { RangeLastAttempt } from "../../../../account-flows-tab.types";
+import { UpcomingScheduledFiltersViewComponent } from "./upcoming-scheduled-filters-view.component";
 
 describe("UpcomingScheduledFiltersViewComponent", () => {
     let component: UpcomingScheduledFiltersViewComponent;

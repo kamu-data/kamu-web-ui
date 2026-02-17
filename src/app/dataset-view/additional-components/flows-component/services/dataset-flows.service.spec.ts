@@ -5,12 +5,17 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
-import { DatasetFlowsService } from "./dataset-flows.service";
+import { provideAnimations } from "@angular/platform-browser/animations";
+
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
-import { of } from "rxjs";
+import { AccountFragment, DatasetFlowProcesses } from "src/app/api/kamu.graphql.interface";
 import {
     mockCancelFlowRunMutationError,
     mockCancelFlowRunMutationSuccess,
@@ -34,12 +39,10 @@ import {
     mockGetFlowByIdQueryError,
     mockGetFlowByIdQuerySuccess,
 } from "src/app/api/mock/dataset-flow.mock";
-import { MaybeUndefined } from "src/app/interface/app.types";
-import { AccountFragment, DatasetFlowProcesses } from "src/app/api/kamu.graphql.interface";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { provideAnimations } from "@angular/platform-browser/animations";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { MaybeUndefined } from "src/app/interface/app.types";
+
+import { DatasetFlowsService } from "./dataset-flows.service";
 
 describe("DatasetFlowsService", () => {
     let service: DatasetFlowsService;

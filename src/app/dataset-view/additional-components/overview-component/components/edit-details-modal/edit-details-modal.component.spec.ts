@@ -5,18 +5,20 @@
  * included in the LICENSE file.
  */
 
-import { emitClickOnElementByDataTestId, getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { MatChipInputEvent } from "@angular/material/chips";
-import { mockDatasetBasicsDerivedFragment } from "../../../../../search/mock.data";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { Apollo } from "apollo-angular";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { EditDetailsModalComponent } from "./edit-details-modal.component";
-import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewWithSetInfo } from "../../../data-tabs.mock";
-import { DatasetDataSizeFragment, DatasetOverviewFragment } from "src/app/api/kamu.graphql.interface";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { MatChipInputEvent } from "@angular/material/chips";
+
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { Apollo } from "apollo-angular";
+import { DatasetDataSizeFragment, DatasetOverviewFragment } from "src/app/api/kamu.graphql.interface";
+import { emitClickOnElementByDataTestId, getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { mockDatasetBasicsDerivedFragment } from "../../../../../search/mock.data";
+import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewWithSetInfo } from "../../../data-tabs.mock";
+import { EditDetailsModalComponent } from "./edit-details-modal.component";
 
 describe("EditDetailsModalComponent", () => {
     let component: EditDetailsModalComponent;

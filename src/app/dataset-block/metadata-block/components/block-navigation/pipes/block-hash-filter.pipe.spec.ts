@@ -7,6 +7,7 @@
 
 import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
+
 import { BlockHashFilterPipe } from "./block-hash-filter.pipe";
 
 describe("BlockHashFilterPipe", () => {

@@ -5,36 +5,39 @@
  * included in the LICENSE file.
  */
 
+import { CdkAccordionModule } from "@angular/cdk/accordion";
+import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
-import { NgbTypeaheadSelectItemEvent, NgbTypeahead, NgbHighlight } from "@ng-bootstrap/ng-bootstrap";
-import { OperatorFunction, Observable } from "rxjs";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { FormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterLink } from "@angular/router";
+
+import { Observable, OperatorFunction } from "rxjs";
 import { debounceTime, distinctUntilChanged, map, switchMap } from "rxjs/operators";
+
+import { NgbHighlight, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "src/app/api/kamu.graphql.interface";
 import { SearchApi } from "src/app/api/search.api";
-import { MaybeNull } from "src/app/interface/app.types";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
+import { odfType2String, schemaAsDataRows } from "src/app/common/helpers/data-schema.helpers";
 import AppValues from "src/app/common/values/app.values";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
-import { DatasetNode } from "../../set-transform.types";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { RouterLink } from "@angular/router";
-import { MatButtonModule } from "@angular/material/button";
-import { NgFor, NgIf } from "@angular/common";
-import { FormsModule } from "@angular/forms";
-import { MatIconModule } from "@angular/material/icon";
-import { CdkAccordionModule } from "@angular/cdk/accordion";
-import { DynamicTableComponent } from "./../../../../../../../common/components/dynamic-table/dynamic-table.component";
+import { MaybeNull } from "src/app/interface/app.types";
 import {
+    DataSchemaField,
+    DataSchemaTypeField,
     DatasetSchema,
     OdfTypes,
-    DataSchemaTypeField,
-    DataSchemaField,
 } from "src/app/interface/dataset-schema.interface";
-import { odfType2String, schemaAsDataRows } from "src/app/common/helpers/data-schema.helpers";
-import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
+
+import { DatasetNode } from "../../set-transform.types";
+import { DynamicTableComponent } from "./../../../../../../../common/components/dynamic-table/dynamic-table.component";
 
 @Component({
     selector: "app-search-section",

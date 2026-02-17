@@ -6,8 +6,9 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { TemplatesYamlEventsService } from "./templates-yaml-events.service";
+
 import { mockPreprocessStepValue, mockSetPollingSourceEditFormWithReadNdJsonFormat } from "../search/mock.data";
+import { TemplatesYamlEventsService } from "./templates-yaml-events.service";
 
 describe("TemplatesYamlEventsService", () => {
     let service: TemplatesYamlEventsService;

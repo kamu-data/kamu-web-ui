@@ -5,26 +5,28 @@
  * included in the LICENSE file.
  */
 
-import { FetchKind, SetPollingSourceSection } from "./add-polling-source-form.types";
+import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
+import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { FormArray, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { FETCH_STEP_RADIO_CONTROLS } from "./form-control.source";
-import { FETCH_FORM_DATA } from "../steps/data/fetch-form-data";
-import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
-import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
-import { SourcesSection } from "./process-form.service.types";
-import { BaseSourceEventComponent } from "../../base-source-event.component";
+import { MatStepperModule } from "@angular/material/stepper";
+import { RouterLink } from "@angular/router";
+
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { PreprocessStepComponent } from "../steps/preprocess-step/preprocess-step.component";
-import { PrepareStepComponent } from "../steps/prepare-step/prepare-step.component";
+import { EditorModule } from "src/app/editor/editor.module";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
+
+import { BaseSourceEventComponent } from "../../base-source-event.component";
 import { StepperNavigationComponent } from "../../stepper-navigation/stepper-navigation.component";
 import { BaseStepComponent } from "../steps/base-step/base-step.component";
-import { MatStepperModule } from "@angular/material/stepper";
-import { NgIf } from "@angular/common";
-import { RouterLink } from "@angular/router";
-import { EditorModule } from "src/app/editor/editor.module";
+import { FETCH_FORM_DATA } from "../steps/data/fetch-form-data";
+import { PrepareStepComponent } from "../steps/prepare-step/prepare-step.component";
+import { PreprocessStepComponent } from "../steps/preprocess-step/preprocess-step.component";
+import { FetchKind, SetPollingSourceSection } from "./add-polling-source-form.types";
+import { FETCH_STEP_RADIO_CONTROLS } from "./form-control.source";
+import { SourcesSection } from "./process-form.service.types";
 
 @Component({
     selector: "app-add-polling-source",

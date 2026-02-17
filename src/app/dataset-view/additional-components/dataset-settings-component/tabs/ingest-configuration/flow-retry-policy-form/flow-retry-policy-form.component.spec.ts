@@ -5,15 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FlowRetryPolicyFormComponent } from "./flow-retry-policy-form.component";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { HarnessLoader } from "@angular/cdk/testing";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { Component, ViewChild } from "@angular/core";
-import { FlowRetryPolicyFormHarness } from "./flow-retry-policy-form.harness";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+
 import { FlowRetryBackoffType, TimeUnit } from "src/app/api/kamu.graphql.interface";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { FlowRetryPolicyFormComponent } from "./flow-retry-policy-form.component";
+import { FlowRetryPolicyFormHarness } from "./flow-retry-policy-form.harness";
 
 @Component({
     imports: [

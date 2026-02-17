@@ -5,14 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { Apollo } from "apollo-angular";
-import { SearchApi } from "../api/search.api";
 import { TestBed } from "@angular/core/testing";
-import { SearchService } from "./search.service";
-import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode } from "src/app/interface/search.interface";
-import { mockAutocompleteItems, mockSearchDatasetOverviewQuery } from "./mock.data";
+
 import { of, throwError } from "rxjs";
 import { first } from "rxjs/operators";
+
+import { Apollo } from "apollo-angular";
+import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode } from "src/app/interface/search.interface";
+
+import { SearchApi } from "../api/search.api";
+import { mockAutocompleteItems, mockSearchDatasetOverviewQuery } from "./mock.data";
+import { SearchService } from "./search.service";
 
 describe("SearchService", () => {
     let service: SearchService;

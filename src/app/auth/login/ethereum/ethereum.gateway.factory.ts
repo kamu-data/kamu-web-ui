@@ -6,6 +6,7 @@
  */
 
 import { inject, Injectable, Injector } from "@angular/core";
+
 import { EthereumGateway } from "./ethereum.gateway";
 
 @Injectable({ providedIn: "root" })

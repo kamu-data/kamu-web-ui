@@ -5,14 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { YamlViewSectionComponent } from "./yaml-view-section.component";
 import { ChangeDetectionStrategy } from "@angular/core";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { MarkdownModule } from "ngx-markdown";
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { metadataBlockSetVocab } from "src/app/common/helpers/data.helpers.spec";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { MarkdownModule } from "ngx-markdown";
 import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
+
+import { YamlViewSectionComponent } from "./yaml-view-section.component";
 
 describe("YamlViewSectionComponent", () => {
     let component: YamlViewSectionComponent;

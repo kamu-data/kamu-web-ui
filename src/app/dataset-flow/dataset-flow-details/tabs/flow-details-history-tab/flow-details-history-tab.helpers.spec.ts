@@ -5,7 +5,15 @@
  * included in the LICENSE file.
  */
 
+import { FlowHistoryDataFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
+import {
+    mockDatasetExecuteTransformFlowDescriptionUpdateResultUnknown,
+    mockDatasetExecuteTransformFlowSummaryData,
+    mockDatasetPollingIngestFlowDescriptionUpdateResultUnknown,
+} from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
+import timekeeper from "timekeeper";
+
 import { DatasetFlowDetailsHelpers } from "./flow-details-history-tab.helpers";
 import {
     eventFlowDescriptionsResultHistoryTab,
@@ -20,13 +28,6 @@ import {
     mockHistoryFragmentWithFinishedStatus,
     mockHistoryFragmentWithQueuedStatus,
 } from "./flow-details-history-tab.helpers.mock";
-import { FlowHistoryDataFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
-import {
-    mockDatasetExecuteTransformFlowDescriptionUpdateResultUnknown,
-    mockDatasetExecuteTransformFlowSummaryData,
-    mockDatasetPollingIngestFlowDescriptionUpdateResultUnknown,
-} from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
-import timekeeper from "timekeeper";
 
 describe("DatasetFlowDetailsHelpers", () => {
     beforeAll(() => {

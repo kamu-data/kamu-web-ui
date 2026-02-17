@@ -6,8 +6,12 @@
  */
 
 import { inject, Injectable } from "@angular/core";
-import { EnvironmentVariablesApi } from "../../../../../api/environment-variables.api";
+
 import { map, Observable } from "rxjs";
+
+import { ToastrService } from "ngx-toastr";
+
+import { EnvironmentVariablesApi } from "../../../../../api/environment-variables.api";
 import {
     DeleteEnvVariableMutation,
     ExposedEnvVariableValueQuery,
@@ -15,7 +19,6 @@ import {
     UpsertEnvVariableMutation,
     ViewDatasetEnvVarConnection,
 } from "../../../../../api/kamu.graphql.interface";
-import { ToastrService } from "ngx-toastr";
 
 @Injectable({
     providedIn: "root",

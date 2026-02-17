@@ -5,16 +5,18 @@
  * included in the LICENSE file.
  */
 
-import { provideToastr } from "ngx-toastr";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
 import { mockAddData } from "../../mock.events";
 import { AddDataEventComponent } from "./add-data-event.component";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { Apollo } from "apollo-angular";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("AddDataEventComponent", () => {
     let component: AddDataEventComponent;

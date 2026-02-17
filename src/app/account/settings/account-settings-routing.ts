@@ -8,7 +8,13 @@
 /* istanbul ignore file */
 
 import { Routes } from "@angular/router";
+
+import { accountPasswordProviderGuard } from "../../common/guards/account-password-provider.guard";
+import RoutingResolvers from "../../common/resolvers/routing-resolvers";
+import ProjectLinks from "../../project-links";
+import { AccountSettingsComponent } from "./account-settings.component";
 import { AccountSettingsTabs } from "./account-settings.constants";
+import { accountSettingsActiveTabResolverFn } from "./resolver/account-settings-active-tab.resolver";
 import { AccessTokensTabComponent } from "./tabs/access-tokens-tab/access-tokens-tab.component";
 import { accountSettingsAccessTokensResolverFn } from "./tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
 import { AccountTabComponent } from "./tabs/account-tab/account-tab.component";
@@ -17,11 +23,6 @@ import { EmailsTabComponent } from "./tabs/emails-tab/emails-tab.component";
 import { accountSettingsEmailResolverFn } from "./tabs/emails-tab/resolver/account-settings-email.resolver";
 import { PasswordAndAuthenticationTabComponent } from "./tabs/password-and-authentication-tab/password-and-authentication-tab.component";
 import { accountSettingsPasswordAndAuthenticationResolverFn } from "./tabs/password-and-authentication-tab/resolver/account-settings-password-and-authentication.resolver";
-import { accountPasswordProviderGuard } from "../../common/guards/account-password-provider.guard";
-import RoutingResolvers from "../../common/resolvers/routing-resolvers";
-import ProjectLinks from "../../project-links";
-import { AccountSettingsComponent } from "./account-settings.component";
-import { accountSettingsActiveTabResolverFn } from "./resolver/account-settings-active-tab.resolver";
 
 export const ACCOUNT_SETTINGS_ROUTES: Routes = [
     {

@@ -5,13 +5,15 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { SearchAdditionalButtonsComponent } from "./search-additional-buttons.component";
+
 import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+
 import { SharedTestModule } from "../../modules/shared-test.module";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { SearchAdditionalButtonsComponent } from "./search-additional-buttons.component";
 
 describe("SearchAdditionalButtonsComponent", () => {
     let component: SearchAdditionalButtonsComponent;

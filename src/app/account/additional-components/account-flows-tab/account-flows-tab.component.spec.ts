@@ -5,21 +5,24 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, tick } from "@angular/core/testing";
-import { AccountFlowsTabComponent } from "./account-flows-tab.component";
-import { provideToastr } from "ngx-toastr";
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
+
 import { of } from "rxjs";
-import { NavigationService } from "src/app/services/navigation.service";
+
+import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
 import { AccountService } from "src/app/account/account.service";
-import { mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
-import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { FlowStatus } from "src/app/api/kamu.graphql.interface";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { Apollo } from "apollo-angular";
+import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { AccountFlowsTabComponent } from "./account-flows-tab.component";
 import { AccountFlowsNav, ProcessCardFilterMode } from "./account-flows-tab.types";
-import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
 
 describe("AccountFlowsTabComponent", () => {
     let component: AccountFlowsTabComponent;

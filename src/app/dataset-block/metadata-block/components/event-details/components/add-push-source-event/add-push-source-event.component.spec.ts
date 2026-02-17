@@ -6,12 +6,14 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { AddPushSourceEventComponent } from "./add-push-source-event.component";
-import { mockAddPushSource } from "../../mock.events";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { ReadStepCsv } from "src/app/api/kamu.graphql.interface";
+
 import { provideToastr } from "ngx-toastr";
+import { ReadStepCsv } from "src/app/api/kamu.graphql.interface";
+import { getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { mockAddPushSource } from "../../mock.events";
+import { AddPushSourceEventComponent } from "./add-push-source-event.component";
 
 describe("AddPushSourceEventComponent", () => {
     let component: AddPushSourceEventComponent;

@@ -6,16 +6,18 @@
  */
 
 import { Routes } from "@angular/router";
-import { ListWebhooksComponent } from "./components/list-webhooks/list-webhooks.component";
+
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { datasetSettingsWebhooksResolverFn } from "./resolver/dataset-settings-webhooks.resolver";
-import { EditWebhookComponent } from "./components/edit-webhook/edit-webhook.component";
-import { addWebhookResolverFn } from "./components/add-webhook/resolvers/add-webhook.resolver";
-import { editWebhookResolverFn } from "./components/edit-webhook/resolvers/edit-webhook.resolver";
 import ProjectLinks from "src/app/project-links";
+
 import { AddWebhookComponent } from "./components/add-webhook/add-webhook.component";
-import { RotateSecretWebhookComponent } from "./components/rotate-secret-webhook/rotate-secret-webhook.component";
+import { addWebhookResolverFn } from "./components/add-webhook/resolvers/add-webhook.resolver";
+import { EditWebhookComponent } from "./components/edit-webhook/edit-webhook.component";
+import { editWebhookResolverFn } from "./components/edit-webhook/resolvers/edit-webhook.resolver";
+import { ListWebhooksComponent } from "./components/list-webhooks/list-webhooks.component";
 import { rotateSecretWebhookResolverFn } from "./components/rotate-secret-webhook/resolvers/rotate-secret-webhook.resolver";
+import { RotateSecretWebhookComponent } from "./components/rotate-secret-webhook/rotate-secret-webhook.component";
+import { datasetSettingsWebhooksResolverFn } from "./resolver/dataset-settings-webhooks.resolver";
 
 export const WEBHOOKS_TAB_ROUTING: Routes = [
     {

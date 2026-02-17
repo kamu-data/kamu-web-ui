@@ -5,19 +5,21 @@
  * included in the LICENSE file.
  */
 
-import { MetadataPollingSourceTabComponent } from "./metadata-polling-source-tab.component";
-import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { mockMetadataRootUpdate } from "../../../data-tabs.mock";
-import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { MatIconModule } from "@angular/material/icon";
-import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
-import { NavigationService } from "src/app/services/navigation.service";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FetchStepUrl } from "src/app/api/kamu.graphql.interface";
-import { provideToastr } from "ngx-toastr";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { MatIconModule } from "@angular/material/icon";
+
+import { provideToastr } from "ngx-toastr";
+import { FetchStepUrl } from "src/app/api/kamu.graphql.interface";
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
+import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { mockMetadataRootUpdate } from "../../../data-tabs.mock";
+import { MetadataPollingSourceTabComponent } from "./metadata-polling-source-tab.component";
 
 describe("MetadataPollingSourceTabComponent", () => {
     let component: MetadataPollingSourceTabComponent;

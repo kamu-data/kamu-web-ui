@@ -5,15 +5,18 @@
  * included in the LICENSE file.
  */
 
-import { MaybeUndefined } from "src/app/interface/app.types";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { DatasetBasicsFragment, DatasetEndpoints } from "src/app/api/kamu.graphql.interface";
-import { Observable } from "rxjs";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { DataAccessModalComponent } from "./data-access-modal/data-access-modal.component";
-import { BaseComponent } from "../common/components/base.component";
 import { MatIconModule } from "@angular/material/icon";
+
+import { Observable } from "rxjs";
+
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { DatasetBasicsFragment, DatasetEndpoints } from "src/app/api/kamu.graphql.interface";
+import { MaybeUndefined } from "src/app/interface/app.types";
+
+import { BaseComponent } from "../common/components/base.component";
 import { FeatureFlagDirective } from "../common/directives/feature-flag.directive";
+import { DataAccessModalComponent } from "./data-access-modal/data-access-modal.component";
 
 @Component({
     selector: "app-data-access-panel",

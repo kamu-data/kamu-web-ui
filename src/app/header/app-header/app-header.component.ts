@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ActivatedRoute, NavigationEnd, Params, Router, RouterEvent, RouterLink } from "@angular/router";
+import { NgIf } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -18,30 +18,33 @@ import {
     Output,
     ViewChild,
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { FormsModule } from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { ActivatedRoute, NavigationEnd, Params, Router, RouterEvent, RouterLink } from "@angular/router";
+
 import { Observable, OperatorFunction } from "rxjs";
-import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap, take, finalize } from "rxjs/operators";
-import { BaseComponent } from "src/app/common/components/base.component";
+import { debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, take, tap } from "rxjs/operators";
+
+import { NgbHighlight, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
+import { AccountTabs } from "src/app/account/account.constants";
+import { AccountSettingsTabs } from "src/app/account/settings/account-settings.constants";
 import { AccountFragment, AccountProvider } from "src/app/api/kamu.graphql.interface";
-import { NgbTypeaheadSelectItemEvent, NgbTypeahead, NgbHighlight } from "@ng-bootstrap/ng-bootstrap";
+import { SearchApi } from "src/app/api/search.api";
+import { AppUIConfigFeatureFlags } from "src/app/app-config.model";
+import { BaseComponent } from "src/app/common/components/base.component";
+import AppValues from "src/app/common/values/app.values";
+import { MaybeNull } from "src/app/interface/app.types";
+import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
-import { AppUIConfigFeatureFlags } from "src/app/app-config.model";
-import { AccountSettingsTabs } from "src/app/account/settings/account-settings.constants";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { SearchApi } from "src/app/api/search.api";
-import AppValues from "src/app/common/values/app.values";
-import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
-import { AccountTabs } from "src/app/account/account.constants";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DisplayAccountNamePipe } from "../../common/pipes/display-account-name.pipe";
-import { MatMenuModule } from "@angular/material/menu";
-import { NotificationIndicatorComponent } from "../notification-indicator/notification-indicator.component";
-import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";
-import { MatIconModule } from "@angular/material/icon";
-import { FormsModule } from "@angular/forms";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { NgIf } from "@angular/common";
 import { SessionStorageService } from "src/app/services/session-storage.service";
+
+import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";
+import { DisplayAccountNamePipe } from "../../common/pipes/display-account-name.pipe";
+import { NotificationIndicatorComponent } from "../notification-indicator/notification-indicator.component";
 
 @Component({
     selector: "app-header",

@@ -5,14 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
-import { TypeaheadFieldComponent } from "./typeahead-field.component";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
-import { getInputElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { ActivatedRoute } from "@angular/router";
+
 import { interval } from "rxjs";
 import { map, take } from "rxjs/operators";
+
+import { getInputElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import AppValues from "src/app/common/values/app.values";
-import { ActivatedRoute } from "@angular/router";
+
+import { TypeaheadFieldComponent } from "./typeahead-field.component";
 
 describe("TypeaheadFieldComponent", () => {
     let component: TypeaheadFieldComponent;

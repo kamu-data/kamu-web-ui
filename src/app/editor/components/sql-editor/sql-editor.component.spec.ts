@@ -6,13 +6,14 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { SqlEditorComponent } from "./sql-editor.component";
-import { MonacoService } from "../../services/monaco.service";
+
 import { EditorModule } from "../../editor.module";
+import { MonacoService } from "../../services/monaco.service";
 import {
     BaseEditorComponentTestEnvironment,
     sharedBasedEditorComponentTest,
 } from "../base-editor/base-editor.component.spec";
+import { SqlEditorComponent } from "./sql-editor.component";
 
 describe("SqlEditorComponent", () => {
     let fixture: ComponentFixture<SqlEditorComponent>;

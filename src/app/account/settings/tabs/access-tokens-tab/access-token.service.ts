@@ -5,10 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { MaybeNull } from "src/app/interface/app.types";
 import { inject, Injectable } from "@angular/core";
+
+import { map, Observable } from "rxjs";
+
+import { ToastrService } from "ngx-toastr";
+import { MaybeNull } from "src/app/interface/app.types";
+
 import { AccessTokenApi } from "../../../../api/access-token.api";
-import { Observable, map } from "rxjs";
 import {
     AccessTokenConnection,
     CreateAccessTokenMutation,
@@ -16,7 +20,6 @@ import {
     ListAccessTokensQuery,
     RevokeAccessTokenMutation,
 } from "../../../../api/kamu.graphql.interface";
-import { ToastrService } from "ngx-toastr";
 
 @Injectable({
     providedIn: "root",

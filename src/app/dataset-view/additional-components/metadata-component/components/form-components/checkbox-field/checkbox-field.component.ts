@@ -6,10 +6,12 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { BaseField } from "../base-field";
-import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
-import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+
+import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
+
+import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { BaseField } from "../base-field";
 
 @Component({
     selector: "app-checkbox-field",

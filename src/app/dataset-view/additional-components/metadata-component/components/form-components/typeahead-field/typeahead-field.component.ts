@@ -5,16 +5,20 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from "@angular/core";
-import { BaseField } from "../base-field";
-import { NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
-import { Observable, OperatorFunction, Subject, merge } from "rxjs";
-import { debounceTime, distinctUntilChanged, map, filter } from "rxjs/operators";
 import { NgIf } from "@angular/common";
-import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
-import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
+import { ChangeDetectionStrategy, Component, Input, ViewChild } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+
+import { merge, Observable, OperatorFunction, Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged, filter, map } from "rxjs/operators";
+
+import { NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
+import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
+
+import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { BaseField } from "../base-field";
+
 @Component({
     selector: "app-typeahead-field",
     templateUrl: "./typeahead-field.component.html",

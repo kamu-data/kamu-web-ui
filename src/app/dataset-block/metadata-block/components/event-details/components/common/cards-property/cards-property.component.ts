@@ -5,9 +5,10 @@
  * included in the LICENSE file.
  */
 
+import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+
 import { BasePropertyComponent } from "../base-property/base-property.component";
-import { NgIf, NgFor } from "@angular/common";
 
 @Component({
     selector: "app-cards-property",

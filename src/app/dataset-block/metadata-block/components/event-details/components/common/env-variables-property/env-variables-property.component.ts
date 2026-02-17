@@ -5,17 +5,19 @@
  * included in the LICENSE file.
  */
 
-import { extractSchemaFieldsFromData } from "../../../../../../../common/helpers/data-schema.helpers";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+
 import { EnvVar } from "src/app/api/kamu.graphql.interface";
-import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
-import { BasePropertyComponent } from "../base-property/base-property.component";
-import { DynamicTableComponent } from "../../../../../../../common/components/dynamic-table/dynamic-table.component";
 import {
     DynamicTableColumnClassEnum,
     DynamicTableColumnDescriptor,
     DynamicTableDataRow,
 } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
+
+import { DynamicTableComponent } from "../../../../../../../common/components/dynamic-table/dynamic-table.component";
+import { extractSchemaFieldsFromData } from "../../../../../../../common/helpers/data-schema.helpers";
+import { BasePropertyComponent } from "../base-property/base-property.component";
 
 @Component({
     selector: "app-env-variables-property",

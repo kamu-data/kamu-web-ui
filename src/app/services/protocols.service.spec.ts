@@ -6,14 +6,17 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ProtocolsService } from "./protocols.service";
-import { Apollo } from "apollo-angular";
-import { ProtocolsApi } from "../api/protocols.api";
+
 import { of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+import { MaybeUndefined } from "src/app/interface/app.types";
+
+import { DatasetEndpoints } from "../api/kamu.graphql.interface";
+import { ProtocolsApi } from "../api/protocols.api";
 import { mockDatasetEndPoints, mockDatasetProtocolsQuery } from "../data-access-panel/data-access-panel-mock.data";
 import { mockDatasetInfo } from "../search/mock.data";
-import { DatasetEndpoints } from "../api/kamu.graphql.interface";
-import { MaybeUndefined } from "src/app/interface/app.types";
+import { ProtocolsService } from "./protocols.service";
 
 describe("ProtocolsService", () => {
     let service: ProtocolsService;

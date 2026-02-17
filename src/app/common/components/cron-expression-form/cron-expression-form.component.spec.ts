@@ -5,15 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ActivatedRoute } from "@angular/router";
-import { CronExpressionFormComponent } from "./cron-expression-form.component";
-import { Component, ViewChild } from "@angular/core";
-import { CronExpressionFormHarness } from "./cron-expression-form.harness";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { Component, ViewChild } from "@angular/core";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ReactiveFormsModule } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
+
 import { FormValidationErrorsDirective } from "../../directives/form-validation-errors.directive";
+import { CronExpressionFormComponent } from "./cron-expression-form.component";
+import { CronExpressionFormHarness } from "./cron-expression-form.harness";
 
 @Component({
     imports: [CronExpressionFormComponent, ReactiveFormsModule],

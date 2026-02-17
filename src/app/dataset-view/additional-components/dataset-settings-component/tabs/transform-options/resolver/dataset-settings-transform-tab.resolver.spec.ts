@@ -6,27 +6,29 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ResolveFn } from "@angular/router";
-import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
-import { of, Observable, first } from "rxjs";
-import { DatasetFlowType } from "src/app/api/kamu.graphql.interface";
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+
+import { first, Observable, of } from "rxjs";
+
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
-import { SettingsTabsEnum } from "../../../dataset-settings.model";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import { DatasetFlowType } from "src/app/api/kamu.graphql.interface";
+import {
+    mockBufferingBatchingReactiveRule,
+    mockGetDatasetFlowTriggersBatchingQuery,
+} from "src/app/api/mock/dataset-flow.mock";
+import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
     mockDatasetBasicsDerivedFragment,
     mockFullPowerDatasetPermissionsFragment,
     mockReadonlyDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
-import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { NavigationService } from "src/app/services/navigation.service";
-import {
-    mockBufferingBatchingReactiveRule,
-    mockGetDatasetFlowTriggersBatchingQuery,
-} from "src/app/api/mock/dataset-flow.mock";
+
+import { SettingsTabsEnum } from "../../../dataset-settings.model";
+import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
 import { DatasetSettingsTransformOptionsTabData } from "../dataset-settings-transform-options-tab.data";
 import { datasetSettingsTransformTabResolverFn } from "./dataset-settings-transform-tab.resolver";
 

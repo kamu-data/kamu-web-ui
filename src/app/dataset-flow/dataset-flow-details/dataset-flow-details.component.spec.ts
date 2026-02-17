@@ -5,27 +5,30 @@
  * included in the LICENSE file.
  */
 
-import { Apollo } from "apollo-angular";
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
-import { DatasetFlowDetailsComponent } from "./dataset-flow-details.component";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { importProvidersFrom } from "@angular/core";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
+
+import { of, shareReplay } from "rxjs";
+
+import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
-import { of, shareReplay } from "rxjs";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { mockDatasetFlowByIdResponse, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
     mockDatasetBasicsRootFragment,
     mockDatasetInfo,
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { FlowDetailsTabs } from "./dataset-flow-details.types";
-import { mockDatasetFlowByIdResponse, mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { NavigationService } from "src/app/services/navigation.service";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { importProvidersFrom } from "@angular/core";
+
+import { DatasetFlowDetailsComponent } from "./dataset-flow-details.component";
+import { FlowDetailsTabs } from "./dataset-flow-details.types";
 
 describe("DatasetFlowDetailsComponent", () => {
     let component: DatasetFlowDetailsComponent;

@@ -6,8 +6,10 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { EngineService } from "./engine.service";
+
 import { Apollo } from "apollo-angular";
+
+import { EngineService } from "./engine.service";
 
 describe("EngineService", () => {
     let service: EngineService;

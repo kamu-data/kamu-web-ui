@@ -5,12 +5,13 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
-
-import { CacheFieldComponent } from "./cache-field.component";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
+
 import { findElement } from "src/app/common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { CacheFieldComponent } from "./cache-field.component";
 
 describe("CacheFieldComponent", () => {
     let component: CacheFieldComponent;

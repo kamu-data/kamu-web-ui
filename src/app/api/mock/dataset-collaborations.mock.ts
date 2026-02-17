@@ -6,6 +6,7 @@
  */
 
 import { mockOwnerFieldsWithAvatar } from "src/app/search/mock.data";
+
 import {
     Account,
     AccountProvider,

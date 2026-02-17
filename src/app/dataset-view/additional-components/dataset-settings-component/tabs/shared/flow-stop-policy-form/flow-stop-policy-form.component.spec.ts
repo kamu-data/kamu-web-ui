@@ -5,17 +5,19 @@
  * included in the LICENSE file.
  */
 
+import { HarnessLoader } from "@angular/cdk/testing";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { Component, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { HarnessLoader } from "@angular/cdk/testing";
-import { Component, ViewChild } from "@angular/core";
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { FlowTriggerStopPolicyType } from "../../../dataset-settings.model";
 import { FlowStopPolicyFormComponent } from "./flow-stop-policy-form.component";
 import { FlowStopPolicyFormHarness } from "./flow-stop-policy-form.harness";
-import { FlowTriggerStopPolicyType } from "../../../dataset-settings.model";
 
 @Component({
     imports: [

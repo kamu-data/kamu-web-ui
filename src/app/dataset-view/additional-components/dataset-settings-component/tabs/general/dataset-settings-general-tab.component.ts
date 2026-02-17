@@ -5,20 +5,31 @@
  * included in the LICENSE file.
  */
 
-import { DatasetFlowsService } from "./../../../flows-component/services/dataset-flows.service";
+import { AsyncPipe, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
     AbstractControl,
     FormBuilder,
     FormControl,
     FormGroup,
-    Validators,
     FormsModule,
     ReactiveFormsModule,
+    Validators,
 } from "@angular/forms";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatRadioModule } from "@angular/material/radio";
+
+import { Observable, shareReplay } from "rxjs";
+
 import { BaseComponent } from "src/app/common/components/base.component";
-import { promiseWithCatch } from "../../../../../common/helpers/app.helpers";
-import { ModalService } from "../../../../../common/components/modal/modal.service";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text";
+import AppValues from "src/app/common/values/app.values";
+import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { NavigationService } from "src/app/services/navigation.service";
+
 import {
     DatasetBasicsFragment,
     DatasetKind,
@@ -26,24 +37,16 @@ import {
     DatasetVisibilityInput,
     DatasetVisibilityOutput,
 } from "../../../../../api/kamu.graphql.interface";
-import { DatasetSettingsService } from "../../services/dataset-settings.service";
-import { Observable, shareReplay } from "rxjs";
-import { CompactionTooltipsTexts } from "src/app/common/tooltips/compacting.text";
-import { DatasetResetMode, RenameDatasetFormType, ResetDatasetFormType } from "./dataset-settings-general-tab.types";
-import { NavigationService } from "src/app/services/navigation.service";
-import AppValues from "src/app/common/values/app.values";
-import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DatasetService } from "../../../../dataset.service";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetVisibilityComponent } from "../../../../../common/components/dataset-visibility/dataset-visibility.component";
-import { MatCheckboxModule } from "@angular/material/checkbox";
+import { ModalService } from "../../../../../common/components/modal/modal.service";
 import { TooltipIconComponent } from "../../../../../common/components/tooltip-icon/tooltip-icon.component";
-import { MatRadioModule } from "@angular/material/radio";
-import { NgIf, AsyncPipe } from "@angular/common";
-import { FormValidationErrorsDirective } from "../../../../../common/directives/form-validation-errors.directive";
 import { FeatureFlagDirective } from "../../../../../common/directives/feature-flag.directive";
-import { MatDividerModule } from "@angular/material/divider";
+import { FormValidationErrorsDirective } from "../../../../../common/directives/form-validation-errors.directive";
+import { promiseWithCatch } from "../../../../../common/helpers/app.helpers";
+import { DatasetService } from "../../../../dataset.service";
+import { DatasetSettingsService } from "../../services/dataset-settings.service";
+import { DatasetFlowsService } from "./../../../flows-component/services/dataset-flows.service";
+import { DatasetResetMode, RenameDatasetFormType, ResetDatasetFormType } from "./dataset-settings-general-tab.types";
 
 @Component({
     selector: "app-dataset-settings-general-tab",

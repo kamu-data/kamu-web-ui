@@ -5,19 +5,22 @@
  * included in the LICENSE file.
  */
 
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { Apollo } from "apollo-angular";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { AddDataModalComponent } from "./add-data-modal.component";
-import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-import { FileFromUrlModalComponent } from "../file-from-url-modal/file-from-url-modal.component";
-import { FileUploadService } from "src/app/services/file-upload.service";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { of } from "rxjs";
+
+import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { Apollo } from "apollo-angular";
 import { mockFile } from "src/app/api/mock/upload-file.mock";
 import { ModalService } from "src/app/common/components/modal/modal.service";
-import { of } from "rxjs";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { FileUploadService } from "src/app/services/file-upload.service";
+
+import { FileFromUrlModalComponent } from "../file-from-url-modal/file-from-url-modal.component";
+import { AddDataModalComponent } from "./add-data-modal.component";
 
 describe("AddDataModalComponent", () => {
     let component: AddDataModalComponent;

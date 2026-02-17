@@ -5,12 +5,13 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
-import { FeatureFlagsService } from "./feature-flags.service";
+
 import { AppConfigService } from "../app-config.service";
 import { Feature, FeatureDevelopmentState, FeatureShowMode } from "../interface/feature-flags.interface";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { FeatureFlagsService } from "./feature-flags.service";
 
 describe("FeatureFlagsService", () => {
     let service: FeatureFlagsService;

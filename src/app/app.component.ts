@@ -5,33 +5,43 @@
  * included in the LICENSE file.
  */
 
-import { NavigationService } from "./services/navigation.service";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, inject, OnInit } from "@angular/core";
-import AppValues from "./common/values/app.values";
-import { filter, map } from "rxjs/operators";
-import { NavigationEnd, Router, RouterEvent, RouterOutlet } from "@angular/router";
-import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
-import { ModalService } from "./common/components/modal/modal.service";
-import { BaseComponent } from "src/app/common/components/base.component";
-import ProjectLinks from "./project-links";
-import { AccountFragment, AccountProvider, AccountType } from "./api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/interface/app.types";
-import { isMobileView, promiseWithCatch } from "./common/helpers/app.helpers";
-import { AppConfigService } from "./app-config.service";
-import { AppUIConfigFeatureFlags } from "./app-config.model";
-import { loadErrorMessages } from "@apollo/client/dev";
-import { isDevMode } from "@angular/core";
-import { LoggedUserService } from "./auth/logged-user.service";
-import packageFile from "../../package.json";
-import { LocalStorageService } from "./services/local-storage.service";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    HostListener,
+    inject,
+    isDevMode,
+    OnInit,
+} from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
-import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
-import { ModalComponent } from "./common/components/modal/modal.component";
-import { SpinnerComponent } from "./common/components/spinner/spinner/spinner.component";
-import { AppHeaderComponent } from "./header/app-header/app-header.component";
+import { NavigationEnd, Router, RouterEvent, RouterOutlet } from "@angular/router";
+
+import { filter, map } from "rxjs/operators";
+
+import { loadErrorMessages } from "@apollo/client/dev";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { MaybeNull } from "src/app/interface/app.types";
+import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
+
+import packageFile from "../../package.json";
+import { AccountFragment, AccountProvider, AccountType } from "./api/kamu.graphql.interface";
+import { AppUIConfigFeatureFlags } from "./app-config.model";
+import { AppConfigService } from "./app-config.service";
+import { LoggedUserService } from "./auth/logged-user.service";
 import { LoginMethodsService } from "./auth/login-methods.service";
+import { ModalComponent } from "./common/components/modal/modal.component";
+import { ModalService } from "./common/components/modal/modal.service";
+import { SpinnerComponent } from "./common/components/spinner/spinner/spinner.component";
+import { isMobileView, promiseWithCatch } from "./common/helpers/app.helpers";
+import AppValues from "./common/values/app.values";
+import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
+import { AppHeaderComponent } from "./header/app-header/app-header.component";
+import ProjectLinks from "./project-links";
+import { LocalStorageService } from "./services/local-storage.service";
+import { NavigationService } from "./services/navigation.service";
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [
     ProjectLinks.URL_LOGIN,

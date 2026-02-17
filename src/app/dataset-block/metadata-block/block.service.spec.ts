@@ -5,14 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { mockGetMetadataBlockQuery, TEST_BLOCK_HASH } from "../../api/mock/dataset.mock";
-import { Apollo } from "apollo-angular";
 import { TestBed } from "@angular/core/testing";
-import { BlockService } from "./block.service";
-import { DatasetApi } from "src/app/api/dataset.api";
+
 import { of } from "rxjs";
-import { mockDatasetInfo } from "src/app/search/mock.data";
+
+import { Apollo } from "apollo-angular";
+import { DatasetApi } from "src/app/api/dataset.api";
 import { MaybeUndefined } from "src/app/interface/app.types";
+import { mockDatasetInfo } from "src/app/search/mock.data";
+
+import { mockGetMetadataBlockQuery, TEST_BLOCK_HASH } from "../../api/mock/dataset.mock";
+import { BlockService } from "./block.service";
 import { MetadataBlockInfo } from "./metadata-block.types";
 
 describe("BlockService", () => {

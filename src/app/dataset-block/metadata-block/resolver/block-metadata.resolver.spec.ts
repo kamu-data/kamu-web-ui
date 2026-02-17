@@ -7,13 +7,16 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
-import { blockMetadataResolverFn } from "./block-metadata.resolver";
-import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
-import { Apollo } from "apollo-angular";
-import ProjectLinks from "src/app/project-links";
-import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.mock";
+
 import { of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.mock";
+import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { MetadataBlockInfo } from "src/app/dataset-block/metadata-block/metadata-block.types";
+import ProjectLinks from "src/app/project-links";
+
+import { blockMetadataResolverFn } from "./block-metadata.resolver";
 
 describe("blockMetadataResolverFn", () => {
     let routeSnapshot: ActivatedRouteSnapshot;

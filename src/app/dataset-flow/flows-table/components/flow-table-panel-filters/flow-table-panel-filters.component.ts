@@ -5,12 +5,16 @@
  * included in the LICENSE file.
  */
 
+import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
+
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
 import { AccountFragment, DatasetBasicsFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
+import { MaybeNull } from "src/app/interface/app.types";
+
 import {
     DROPDOWN_ACCOUNT_SETTINGS,
     DROPDOWN_DATASET_SETTINGS,
@@ -18,8 +22,6 @@ import {
     FilterStatusType,
     FlowsTableFiltersOptions,
 } from "../../flows-table.types";
-import { NgIf } from "@angular/common";
-import { MaybeNull } from "src/app/interface/app.types";
 
 @Component({
     selector: "app-flow-table-panel-filters",

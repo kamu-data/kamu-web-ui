@@ -5,7 +5,13 @@
  * included in the LICENSE file.
  */
 
-import { ErrorTexts } from "../common/values/errors.text";
+import { TestBed } from "@angular/core/testing";
+import { provideAnimations } from "@angular/platform-browser/animations";
+
+import { provideToastr, ToastrService } from "ngx-toastr";
+
+import { LoggedUserService } from "../auth/logged-user.service";
+import { ModalService } from "../common/components/modal/modal.service";
 import {
     AccountNotFoundError,
     AuthenticationError,
@@ -14,13 +20,9 @@ import {
     InvalidSqlError,
     SqlExecutionError,
 } from "../common/values/errors";
-import { ModalService } from "../common/components/modal/modal.service";
-import { TestBed } from "@angular/core/testing";
+import { ErrorTexts } from "../common/values/errors.text";
 import { ErrorHandlerService } from "./error-handler.service";
 import { NavigationService } from "./navigation.service";
-import { LoggedUserService } from "../auth/logged-user.service";
-import { provideToastr, ToastrService } from "ngx-toastr";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 describe("ErrorHandlerService", () => {
     let service: ErrorHandlerService;

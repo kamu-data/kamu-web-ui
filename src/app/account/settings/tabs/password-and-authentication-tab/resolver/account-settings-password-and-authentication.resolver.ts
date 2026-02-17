@@ -5,9 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { ResolveFn } from "@angular/router";
-import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { inject } from "@angular/core";
+import { ResolveFn } from "@angular/router";
+
+import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 export const accountSettingsPasswordAndAuthenticationResolverFn: ResolveFn<AccountFragment> = () => {

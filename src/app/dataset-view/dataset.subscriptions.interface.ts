@@ -5,15 +5,18 @@
  * included in the LICENSE file.
  */
 
-import { DatasetLineageBasicsFragment, DatasetPageInfoFragment, SetVocab } from "../api/kamu.graphql.interface";
+import { MaybeNull } from "src/app/interface/app.types";
+import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
+
 import {
     DatasetDataSizeFragment,
+    DatasetLineageBasicsFragment,
     DatasetMetadataSummaryFragment,
     DatasetOverviewFragment,
+    DatasetPageInfoFragment,
     MetadataBlockFragment,
+    SetVocab,
 } from "../api/kamu.graphql.interface";
-import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
-import { MaybeNull } from "src/app/interface/app.types";
 import { DynamicTableDataRow } from "../common/components/dynamic-table/dynamic-table.interface";
 
 export interface OverviewUpdate {

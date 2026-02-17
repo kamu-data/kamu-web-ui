@@ -6,11 +6,14 @@
  */
 
 import { inject, Injectable } from "@angular/core";
-import { EnginesGQL, EnginesQuery } from "./kamu.graphql.interface";
-import { ObservableQuery } from "@apollo/client/core";
+
 import { Observable } from "rxjs";
 import { first, map } from "rxjs/operators";
+
+import { ObservableQuery } from "@apollo/client/core";
 import { onlyCompleteData } from "apollo-angular";
+
+import { EnginesGQL, EnginesQuery } from "./kamu.graphql.interface";
 
 @Injectable({
     providedIn: "root",

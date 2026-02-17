@@ -7,23 +7,26 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { metadataPollingSourceTabResolverFn } from "./metadata-polling-source-tab.resolver";
-import { MaybeNull } from "src/app/interface/app.types";
+
+import { Observable } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+import {
+    mockMetadataDerivedUpdate,
+    mockMetadataRootUpdate,
+} from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { NavigationService } from "src/app/services/navigation.service";
-import { Apollo } from "apollo-angular";
+import { MaybeNull } from "src/app/interface/app.types";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
-import { Observable } from "rxjs";
-import {
-    mockMetadataDerivedUpdate,
-    mockMetadataRootUpdate,
-} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { NavigationService } from "src/app/services/navigation.service";
+
 import { MetadataTabData } from "../../../metadata.constants";
+import { metadataPollingSourceTabResolverFn } from "./metadata-polling-source-tab.resolver";
 
 describe("metadataPollingSourceTabResolver", () => {
     let datasetService: DatasetService;

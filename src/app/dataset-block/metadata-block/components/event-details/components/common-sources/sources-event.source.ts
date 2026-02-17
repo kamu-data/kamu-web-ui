@@ -6,15 +6,16 @@
  */
 
 import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
+
 import { EventRowDescriptor, EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
-import { StepTypePropertyComponent } from "../common/step-type-property/step-type-property.component";
+import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
+import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
+import { MergeStrategyPropertyComponent } from "../common/merge-strategy-property/merge-strategy-property.component";
 import { SchemaPropertyComponent } from "../common/schema-property/schema-property.component";
 import { SeparatorPropertyComponent } from "../common/separator-property/separator-property.component";
 import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
-import { MergeStrategyPropertyComponent } from "../common/merge-strategy-property/merge-strategy-property.component";
-import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
 import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
-import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
+import { StepTypePropertyComponent } from "../common/step-type-property/step-type-property.component";
 
 export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
     "ReadStepCsv.__typename": {

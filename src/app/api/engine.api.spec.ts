@@ -5,11 +5,13 @@
  * included in the LICENSE file.
  */
 
-import { TestBed } from "@angular/core/testing";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { EngineApi } from "./engine.api";
-import { Apollo } from "apollo-angular";
 import { importProvidersFrom } from "@angular/core";
+import { TestBed } from "@angular/core/testing";
+
+import { Apollo } from "apollo-angular";
+import { ApolloTestingModule } from "apollo-angular/testing";
+
+import { EngineApi } from "./engine.api";
 
 describe("EngineApi", () => {
     let service: EngineApi;

@@ -6,8 +6,10 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { LinkPropertyComponent } from "./link-property.component";
+
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { LinkPropertyComponent } from "./link-property.component";
 
 describe("LinkPropertyComponent", () => {
     let component: LinkPropertyComponent;

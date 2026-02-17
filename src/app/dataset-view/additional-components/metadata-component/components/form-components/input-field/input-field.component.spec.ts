@@ -5,14 +5,16 @@
  * included in the LICENSE file.
  */
 
+import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { InputFieldComponent } from "./input-field.component";
-import { dispatchInputEvent, getInputElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { ChangeDetectionStrategy } from "@angular/core";
-import AppValues from "src/app/common/values/app.values";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
 import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
+import { dispatchInputEvent, getInputElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import AppValues from "src/app/common/values/app.values";
+
+import { InputFieldComponent } from "./input-field.component";
 
 describe("InputFieldComponent", () => {
     let component: InputFieldComponent;

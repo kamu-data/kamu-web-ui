@@ -6,9 +6,11 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { QueriesSectionComponent } from "./queries-section.component";
+
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { EditorModule } from "src/app/editor/editor.module";
+
+import { QueriesSectionComponent } from "./queries-section.component";
 
 describe("QueriesSectionComponent", () => {
     let component: QueriesSectionComponent;

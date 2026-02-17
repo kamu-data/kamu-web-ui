@@ -7,20 +7,23 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { metadataTransformationTabResolverFn } from "./metadata-transformation-tab.resolver";
-import { MaybeNullOrUndefined } from "src/app/interface/app.types";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
-import { NavigationService } from "src/app/services/navigation.service";
-import { Apollo } from "apollo-angular";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
+
 import { Observable } from "rxjs";
+
+import { Apollo } from "apollo-angular";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { metadataTransformationTabResolverFn } from "./metadata-transformation-tab.resolver";
 
 describe("metadataTransformationTabResolver", () => {
     let datasetService: DatasetService;

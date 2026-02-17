@@ -5,12 +5,13 @@
  * included in the LICENSE file.
  */
 
-import { TemporalTablesPropertyComponent } from "../common/temporal-tables-property/temporal-tables-property.component";
-import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
-import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
-import { DatasetNameByIdPropertyComponent } from "../common/dataset-name-by-id-property/dataset-name-by-id-property.component";
 import { SetTransformTooltipsTexts } from "src/app/common/tooltips/set-transform.text";
+
+import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
 import { getSourcesDescriptors } from "../common-sources/sources-event.source";
+import { DatasetNameByIdPropertyComponent } from "../common/dataset-name-by-id-property/dataset-name-by-id-property.component";
+import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
+import { TemporalTablesPropertyComponent } from "../common/temporal-tables-property/temporal-tables-property.component";
 
 export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetTransform.TransformSql.engine": getSourcesDescriptors("SetTransform.TransformSql.engine"),

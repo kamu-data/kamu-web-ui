@@ -7,9 +7,11 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { metadataPushSourcesTabResolverFn } from "./metadata-push-sources-tab.resolver";
-import { NavigationService } from "src/app/services/navigation.service";
+
+import { Observable } from "rxjs";
+
 import { Apollo } from "apollo-angular";
+import { mockMetadataRootUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
@@ -17,9 +19,10 @@ import {
     mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
-import { Observable } from "rxjs";
-import { mockMetadataRootUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { NavigationService } from "src/app/services/navigation.service";
+
 import { MetadataTabData } from "../../../metadata.constants";
+import { metadataPushSourcesTabResolverFn } from "./metadata-push-sources-tab.resolver";
 
 describe("metadataPushSourcesTabComponentResolver", () => {
     let datasetService: DatasetService;

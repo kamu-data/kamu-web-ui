@@ -5,29 +5,32 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { DatasetSettingsAccessTabComponent } from "./dataset-settings-access-tab.component";
+import { ActivatedRoute } from "@angular/router";
+
+import { of } from "rxjs";
+
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { ActivatedRoute } from "@angular/router";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { DatasetCollaborationsService } from "./dataset-collaborations.service";
-import { of } from "rxjs";
+import { AccountWithRoleConnection, DatasetAccessRole } from "src/app/api/kamu.graphql.interface";
+import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import {
     MOCK_ACCOUNT_WITH_ROLE,
     mockDatasetListCollaboratorsQuery,
 } from "src/app/api/mock/dataset-collaborations.mock";
-import { AccountWithRoleConnection, DatasetAccessRole } from "src/app/api/kamu.graphql.interface";
-import { NavigationService } from "src/app/services/navigation.service";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
-import { AddPeopleModalComponent } from "./add-people-modal/add-people-modal.component";
-import { EditCollaboratorModalComponent } from "./edit-collaborator-modal/edit-collaborator-modal.component";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { ModalService } from "src/app/common/components/modal/modal.service";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { AddPeopleModalComponent } from "./add-people-modal/add-people-modal.component";
+import { DatasetCollaborationsService } from "./dataset-collaborations.service";
+import { DatasetSettingsAccessTabComponent } from "./dataset-settings-access-tab.component";
+import { EditCollaboratorModalComponent } from "./edit-collaborator-modal/edit-collaborator-modal.component";
 
 describe("DatasetSettingsAccessTabComponent", () => {
     let component: DatasetSettingsAccessTabComponent;

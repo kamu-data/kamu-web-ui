@@ -5,15 +5,18 @@
  * included in the LICENSE file.
  */
 
+import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+
+import { map, Observable, of, switchMap } from "rxjs";
+
+import { DatasetFlowType, FlowTriggerStopPolicy, GetDatasetFlowTriggerQuery } from "src/app/api/kamu.graphql.interface";
+import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
+import { MaybeNull } from "src/app/interface/app.types";
+
+import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
 import { datasetSettingsGeneralTabResolverFn } from "../../general/resolver/dataset-settings-general-tab.resolver";
 import { DatasetSettingsTransformOptionsTabData } from "../dataset-settings-transform-options-tab.data";
-import { map, Observable, of, switchMap } from "rxjs";
-import { inject } from "@angular/core";
-import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
-import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetFlowType, FlowTriggerStopPolicy, GetDatasetFlowTriggerQuery } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/interface/app.types";
 
 export const datasetSettingsTransformTabResolverFn: ResolveFn<DatasetSettingsTransformOptionsTabData | null> = (
     route: ActivatedRouteSnapshot,

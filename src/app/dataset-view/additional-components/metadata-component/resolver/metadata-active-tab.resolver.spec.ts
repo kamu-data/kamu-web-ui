@@ -7,9 +7,11 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { metadataActiveTabResolverFn } from "./metadata-active-tab.resolver";
-import { MetadataTabs } from "../metadata.constants";
+
 import ProjectLinks from "src/app/project-links";
+
+import { MetadataTabs } from "../metadata.constants";
+import { metadataActiveTabResolverFn } from "./metadata-active-tab.resolver";
 
 describe("metadataActiveTabResolver", () => {
     const executeResolver: ResolveFn<MetadataTabs> = (...resolverParameters) =>

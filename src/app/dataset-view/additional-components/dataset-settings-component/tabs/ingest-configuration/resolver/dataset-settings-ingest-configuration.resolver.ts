@@ -5,15 +5,18 @@
  * included in the LICENSE file.
  */
 
-import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
-import { datasetSettingsGeneralTabResolverFn } from "../../general/resolver/dataset-settings-general-tab.resolver";
-import { DatasetSettingsIngestConfigurationTabData } from "../dataset-settings-ingest-configuration-tab.data";
-import { map, Observable, of, switchMap } from "rxjs";
-import { DatasetFlowConfigService } from "../../../services/dataset-flow-config.service";
 import { inject } from "@angular/core";
+import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+
+import { map, Observable, of, switchMap } from "rxjs";
+
 import { DatasetFlowType, FlowConfigRuleIngest, GetDatasetFlowConfigsQuery } from "src/app/api/kamu.graphql.interface";
 import { isNil } from "src/app/common/helpers/app.helpers";
+import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
+
+import { DatasetFlowConfigService } from "../../../services/dataset-flow-config.service";
+import { datasetSettingsGeneralTabResolverFn } from "../../general/resolver/dataset-settings-general-tab.resolver";
+import { DatasetSettingsIngestConfigurationTabData } from "../dataset-settings-ingest-configuration-tab.data";
 
 export const datasetSettingsIngestConfigurationResolverFn: ResolveFn<
     DatasetSettingsIngestConfigurationTabData | null

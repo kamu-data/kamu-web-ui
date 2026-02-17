@@ -6,8 +6,9 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { DatasetPermissionsService } from "./dataset.permissions.service";
+
 import { mockFullPowerDatasetPermissionsFragment } from "../search/mock.data";
+import { DatasetPermissionsService } from "./dataset.permissions.service";
 
 describe("DatasetPermissionsService", () => {
     let service: DatasetPermissionsService;

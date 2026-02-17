@@ -5,15 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { BaseField } from "../base-field";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ReadFormatControlType, ReadKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
-import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
-import { InputFieldComponent } from "../input-field/input-field.component";
 import { NgFor, NgIf } from "@angular/common";
-import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
+import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
+
+import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { ReadFormatControlType, ReadKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
+import { BaseField } from "../base-field";
+import { InputFieldComponent } from "../input-field/input-field.component";
 
 @Component({
     selector: "app-json-kind-field",

@@ -6,8 +6,10 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { CommandPropertyComponent } from "./command-property.component";
+
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { CommandPropertyComponent } from "./command-property.component";
 
 describe("CommandPropertyComponent", () => {
     let component: CommandPropertyComponent;

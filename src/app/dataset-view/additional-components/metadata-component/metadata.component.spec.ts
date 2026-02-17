@@ -5,7 +5,22 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { RouterModule } from "@angular/router";
+
+import { DatasetKind } from "src/app/api/kamu.graphql.interface";
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import {
+    mockDatasetBasicsDerivedFragment,
+    mockDatasetBasicsRootFragment,
+    mockFullPowerDatasetPermissionsFragment,
+} from "src/app/search/mock.data";
+
+import { OverviewUpdate } from "../../dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
 import {
     mockMetadataDerivedUpdate,
@@ -14,20 +29,7 @@ import {
     mockOverviewDataUpdateNullable,
 } from "../data-tabs.mock";
 import { MetadataComponent } from "./metadata.component";
-import {
-    mockDatasetBasicsDerivedFragment,
-    mockDatasetBasicsRootFragment,
-    mockFullPowerDatasetPermissionsFragment,
-} from "src/app/search/mock.data";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { DatasetKind } from "src/app/api/kamu.graphql.interface";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { OverviewUpdate } from "../../dataset.subscriptions.interface";
-import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
 import { MetadataTabs } from "./metadata.constants";
-import { RouterModule } from "@angular/router";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("MetadataComponent", () => {
     let component: MetadataComponent;

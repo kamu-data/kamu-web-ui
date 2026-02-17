@@ -6,9 +6,9 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ActivatedRoute } from "@angular/router";
 
 import { CardsPropertyComponent } from "./cards-property.component";
-import { ActivatedRoute } from "@angular/router";
 
 describe("CardsPropertyComponent", () => {
     let component: CardsPropertyComponent;

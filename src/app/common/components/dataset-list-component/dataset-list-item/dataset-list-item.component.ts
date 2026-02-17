@@ -5,22 +5,24 @@
  * included in the LICENSE file.
  */
 
-import { ModalService } from "../../modal/modal.service";
+import { NgFor, NgIf } from "@angular/common";
 import { Component, inject, Input } from "@angular/core";
+import { MatChipsModule } from "@angular/material/chips";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterLink } from "@angular/router";
+
+import { NgbPopover, NgbRating } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetKind, DatasetSearchOverviewFragment } from "src/app/api/kamu.graphql.interface";
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import { NavigationService } from "src/app/services/navigation.service";
-import { MatDividerModule } from "@angular/material/divider";
-import { DisplayTimeComponent } from "../../display-time/display-time.component";
-import { MatChipsModule } from "@angular/material/chips";
-import { NgbPopover, NgbRating } from "@ng-bootstrap/ng-bootstrap";
-import { FeatureFlagDirective } from "../../../directives/feature-flag.directive";
-import { DatasetVisibilityComponent } from "../../dataset-visibility/dataset-visibility.component";
-import { RouterLink } from "@angular/router";
-import { MatIconModule } from "@angular/material/icon";
-import { NgIf, NgFor } from "@angular/common";
 import AppValues from "src/app/common/values/app.values";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { FeatureFlagDirective } from "../../../directives/feature-flag.directive";
 import { DatasetKindComponent } from "../../dataset-kind/dataset-kind.component";
+import { DatasetVisibilityComponent } from "../../dataset-visibility/dataset-visibility.component";
+import { DisplayTimeComponent } from "../../display-time/display-time.component";
+import { ModalService } from "../../modal/modal.service";
 
 @Component({
     selector: "app-dataset-list-item",

@@ -1,49 +1,51 @@
 import {
+    HTTP_INTERCEPTORS,
+    HttpClient,
+    HttpHeaders,
+    provideHttpClient,
+    withInterceptorsFromDi,
+} from "@angular/common/http";
+import {
     enableProdMode,
     ErrorHandler,
-    Injector,
-    SecurityContext,
     importProvidersFrom,
     inject,
+    Injector,
     provideAppInitializer,
+    SecurityContext,
 } from "@angular/core";
-import { environment } from "./environments/environment";
-import { AppComponent } from "./app/app.component";
-import { MarkdownModule } from "ngx-markdown";
-import { provideAnimations } from "@angular/platform-browser/animations";
-import { bootstrapApplication } from "@angular/platform-browser";
 import { MAT_RIPPLE_GLOBAL_OPTIONS } from "@angular/material/core";
-import { HIGHLIGHT_OPTIONS_PROVIDER, isAccessTokenExpired, logError } from "./app/common/helpers/app.helpers";
-import { firstValueFrom } from "rxjs";
-import { apolloCache } from "./app/common/helpers/apollo-cache.helper";
-import { ErrorTexts } from "./app/common/values/errors.text";
-import { ToastrService } from "ngx-toastr";
-import { onError } from "@apollo/client/link/error";
-import { CombinedGraphQLErrors } from "@apollo/client/errors";
-import { ApolloLink } from "@apollo/client/core";
-import { LocalStorageService } from "./app/services/local-storage.service";
-import { AppConfigService } from "./app/app-config.service";
-import { ErrorHandlerService } from "./app/services/error-handler.service";
-import { SpinnerService } from "./app/common/components/spinner/spinner.service";
-import { SpinnerInterceptor } from "./app/common/components/spinner/spinner.interceptor";
-import {
-    HTTP_INTERCEPTORS,
-    HttpHeaders,
-    withInterceptorsFromDi,
-    provideHttpClient,
-    HttpClient,
-} from "@angular/common/http";
-import { LoggedUserService } from "./app/auth/logged-user.service";
-import { HttpLink } from "apollo-angular/http";
-import { Apollo, provideApollo } from "apollo-angular";
-import AppValues from "./app/common/values/app.values";
+import { bootstrapApplication } from "@angular/platform-browser";
+import { provideAnimations } from "@angular/platform-browser/animations";
 import { provideRouter, withComponentInputBinding, withRouterConfig } from "@angular/router";
-import { provideToastr } from "ngx-toastr";
+
+import { firstValueFrom } from "rxjs";
+
+import { ApolloLink } from "@apollo/client/core";
+import { CombinedGraphQLErrors } from "@apollo/client/errors";
+import { onError } from "@apollo/client/link/error";
+import { Apollo, provideApollo } from "apollo-angular";
+import { HttpLink } from "apollo-angular/http";
+import { MarkdownModule } from "ngx-markdown";
+import { provideToastr, ToastrService } from "ngx-toastr";
 import { NavigationService } from "src/app/services/navigation.service";
-import ProjectLinks from "./app/project-links";
+
+import { AppConfigService } from "./app/app-config.service";
 import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "./app/app-routing";
+import { AppComponent } from "./app/app.component";
+import { LoggedUserService } from "./app/auth/logged-user.service";
 import { LoginMethodsService } from "./app/auth/login-methods.service";
+import { SpinnerInterceptor } from "./app/common/components/spinner/spinner.interceptor";
+import { SpinnerService } from "./app/common/components/spinner/spinner.service";
+import { apolloCache } from "./app/common/helpers/apollo-cache.helper";
+import { HIGHLIGHT_OPTIONS_PROVIDER, isAccessTokenExpired, logError } from "./app/common/helpers/app.helpers";
 import { AuthInterceptor } from "./app/common/interceptors/auth.interceptor";
+import AppValues from "./app/common/values/app.values";
+import { ErrorTexts } from "./app/common/values/errors.text";
+import ProjectLinks from "./app/project-links";
+import { ErrorHandlerService } from "./app/services/error-handler.service";
+import { LocalStorageService } from "./app/services/local-storage.service";
+import { environment } from "./environments/environment";
 
 const Services = [
     Apollo,

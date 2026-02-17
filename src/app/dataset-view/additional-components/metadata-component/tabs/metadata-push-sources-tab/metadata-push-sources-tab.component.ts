@@ -5,9 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { NgIf, NgFor } from "@angular/common";
+import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
+
 import { AddPushSourceEventFragment, DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { ModalService } from "src/app/common/components/modal/modal.service";
 import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
@@ -15,8 +16,9 @@ import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
-import { SourceEventCommonDataComponent } from "../common/source-event-common-data/source-event-common-data.component";
+
 import { MetadataTabData } from "../../metadata.constants";
+import { SourceEventCommonDataComponent } from "../common/source-event-common-data/source-event-common-data.component";
 
 @Component({
     selector: "app-metadata-push-sources-tab",

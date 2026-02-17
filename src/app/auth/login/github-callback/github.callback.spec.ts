@@ -5,16 +5,18 @@
  * included in the LICENSE file.
  */
 
-import { NavigationService } from "src/app/services/navigation.service";
-import { Apollo } from "apollo-angular";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { AuthApi } from "src/app/api/auth.api";
-import { GithubCallbackComponent } from "./github.callback";
-import { GithubLoginCredentials } from "src/app/api/auth.api.model";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { LoginService } from "../login.service";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { Apollo } from "apollo-angular";
+import { AuthApi } from "src/app/api/auth.api";
+import { GithubLoginCredentials } from "src/app/api/auth.api.model";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { LoginService } from "../login.service";
+import { GithubCallbackComponent } from "./github.callback";
 
 describe("GithubCallbackComponent", () => {
     let component: GithubCallbackComponent;

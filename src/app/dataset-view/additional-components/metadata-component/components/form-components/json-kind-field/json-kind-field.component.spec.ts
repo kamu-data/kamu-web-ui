@@ -6,10 +6,12 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { JsonKindFieldComponent } from "./json-kind-field.component";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { FormControl, FormGroup } from "@angular/forms";
+
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
 import { ReadKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
+import { JsonKindFieldComponent } from "./json-kind-field.component";
 
 describe("JsonKindFieldComponent", () => {
     let component: JsonKindFieldComponent;

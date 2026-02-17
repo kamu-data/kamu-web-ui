@@ -5,10 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { BasePropertyComponent } from "../base-property/base-property.component";
-import { EventTimeSource } from "src/app/api/kamu.graphql.interface";
 import { NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+
+import { EventTimeSource } from "src/app/api/kamu.graphql.interface";
+
+import { BasePropertyComponent } from "../base-property/base-property.component";
 
 @Component({
     selector: "app-event-time-property",

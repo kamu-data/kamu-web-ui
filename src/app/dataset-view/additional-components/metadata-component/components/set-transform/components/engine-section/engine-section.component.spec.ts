@@ -5,17 +5,20 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
-import { EngineSectionComponent } from "./engine-section.component";
-import { Apollo } from "apollo-angular";
-import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+
 import { of } from "rxjs";
-import { mockEngines } from "../../mock.data";
-import { mockSetPollingSourceEvent } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { Apollo } from "apollo-angular";
 import { EngineDesc } from "src/app/api/kamu.graphql.interface";
 import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import AppValues from "src/app/common/values/app.values";
+import { mockSetPollingSourceEvent } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
+import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
+
+import { mockEngines } from "../../mock.data";
+import { EngineSectionComponent } from "./engine-section.component";
 
 describe("EngineSectionComponent", () => {
     let component: EngineSectionComponent;

@@ -5,15 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { RxwebValidators, RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
+import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { FormBuilder, FormArray, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BaseField } from "../base-field";
-import { MqttQos } from "src/app/api/kamu.graphql.interface";
-import { KeyValueFormType } from "./topics-field.types";
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+
+import { RxReactiveFormsModule, RxwebValidators } from "@rxweb/reactive-form-validators";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
-import { NgIf, NgFor } from "@angular/common";
+import { MqttQos } from "src/app/api/kamu.graphql.interface";
+
 import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { BaseField } from "../base-field";
+import { KeyValueFormType } from "./topics-field.types";
 
 @Component({
     selector: "app-topics-field",

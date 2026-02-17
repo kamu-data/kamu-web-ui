@@ -7,13 +7,11 @@
 
 import { Injectable } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { SchemaType } from "../components/form-components/schema-field/schema-field.component";
-import {
-    SchemaControlType,
-    OrderControlType,
-    SourceOrder,
-} from "../components/source-events/add-polling-source/process-form.service.types";
+
 import { AddPushSource, SetPollingSource } from "src/app/api/kamu.graphql.interface";
+import AppValues from "src/app/common/values/app.values";
+
+import { SchemaType } from "../components/form-components/schema-field/schema-field.component";
 import {
     AddPollingSourceEditFormType,
     EventTimeSourceKind,
@@ -22,7 +20,11 @@ import {
     SetPollingSourceSection,
     TopicsType,
 } from "../components/source-events/add-polling-source/add-polling-source-form.types";
-import AppValues from "src/app/common/values/app.values";
+import {
+    OrderControlType,
+    SchemaControlType,
+    SourceOrder,
+} from "../components/source-events/add-polling-source/process-form.service.types";
 import { AddPushSourceSection } from "../components/source-events/add-push-source/add-push-source-form.types";
 
 @Injectable({

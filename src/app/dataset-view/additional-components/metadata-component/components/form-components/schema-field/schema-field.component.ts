@@ -5,28 +5,31 @@
  * included in the LICENSE file.
  */
 
-import { MaybeNull } from "src/app/interface/app.types";
+import { NgIf } from "@angular/common";
 import { AfterViewInit, ChangeDetectionStrategy, Component, QueryList, ViewChild, ViewChildren } from "@angular/core";
-import { BaseField } from "../base-field";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
     AbstractControl,
     FormArray,
     FormControl,
     FormGroup,
-    Validators,
     FormsModule,
     ReactiveFormsModule,
+    Validators,
 } from "@angular/forms";
-import { MatTable, MatTableModule } from "@angular/material/table";
-import { Observable, OperatorFunction, Subject, merge } from "rxjs";
-import { NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
-import { debounceTime, distinctUntilChanged, map } from "rxjs/operators";
-import { RxwebValidators, RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
-import AppValues from "src/app/common/values/app.values";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatIconModule } from "@angular/material/icon";
-import { NgIf } from "@angular/common";
+import { MatTable, MatTableModule } from "@angular/material/table";
+
+import { merge, Observable, OperatorFunction, Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged, map } from "rxjs/operators";
+
+import { NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
+import { RxReactiveFormsModule, RxwebValidators } from "@rxweb/reactive-form-validators";
+import AppValues from "src/app/common/values/app.values";
+import { MaybeNull } from "src/app/interface/app.types";
+
 import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { BaseField } from "../base-field";
 
 export interface SchemaType {
     name: string;

@@ -6,8 +6,10 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { CommitNavigatorComponent } from "./commit-navigator.component";
+
 import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+
+import { CommitNavigatorComponent } from "./commit-navigator.component";
 
 describe("CommitNavigatorComponent", () => {
     let component: CommitNavigatorComponent;

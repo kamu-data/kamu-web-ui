@@ -6,9 +6,11 @@
  */
 
 import { TestBed } from "@angular/core/testing";
+
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { AuthenticatedGuard } from "./authenticated.guard";
+
 import { LoggedUserService } from "../logged-user.service";
+import { AuthenticatedGuard } from "./authenticated.guard";
 
 describe("AuthenticatedGuard", () => {
     let guard: AuthenticatedGuard;

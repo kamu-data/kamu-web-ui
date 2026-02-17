@@ -7,13 +7,16 @@
 
 import { inject } from "@angular/core";
 import { ResolveFn } from "@angular/router";
+
 import { combineLatest, map } from "rxjs";
+
 import { DatasetKind } from "src/app/api/kamu.graphql.interface";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { NavigationService } from "src/app/services/navigation.service";
-import { MetadataTabData } from "../../../metadata.constants";
 import { MetadataSchemaUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { MetadataTabData } from "../../../metadata.constants";
 
 export const metadataPollingSourceTabResolverFn: ResolveFn<MetadataTabData | null> = () => {
     const datasetService = inject(DatasetService);

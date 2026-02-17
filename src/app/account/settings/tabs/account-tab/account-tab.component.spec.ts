@@ -6,17 +6,20 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { AccountTabComponent } from "./account-tab.component";
-import { provideToastr } from "ngx-toastr";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { Apollo } from "apollo-angular";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { AccountService } from "src/app/account/account.service";
+
 import { of } from "rxjs";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
+import { AccountService } from "src/app/account/account.service";
 import { mockAccountDetails, TEST_LOGIN } from "src/app/api/mock/auth.mock";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { ModalService } from "src/app/common/components/modal/modal.service";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { AccountTabComponent } from "./account-tab.component";
 
 describe("AccountTabComponent", () => {
     let component: AccountTabComponent;

@@ -5,10 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { DisplayHashComponent } from "../../../../../../../common/components/display-hash/display-hash.component";
 import { NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+
+import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+
+import { DisplayHashComponent } from "../../../../../../../common/components/display-hash/display-hash.component";
 
 @Component({
     selector: "app-hash-property",

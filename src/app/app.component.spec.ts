@@ -5,23 +5,26 @@
  * included in the LICENSE file.
  */
 
-import { mockAutocompleteItems } from "./search/mock.data";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ALL_URLS_WITHOUT_HEADER, AppComponent } from "./app.component";
-import { isMobileView } from "./common/helpers/app.helpers";
-import { NavigationService } from "./services/navigation.service";
-import { of } from "rxjs";
-import ProjectLinks from "./project-links";
-import { registerMatSvgIcons, routerMock, routerMockEventSubject } from "./common/helpers/base-test.helpers.spec";
 import { ActivatedRoute, NavigationEnd } from "@angular/router";
-import { mockAccountFromAccessToken } from "./api/mock/auth.mock";
+
+import { of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+
 import { FetchAccountDetailsGQL } from "./api/kamu.graphql.interface";
+import { mockAccountFromAccessToken } from "./api/mock/auth.mock";
+import { ALL_URLS_WITHOUT_HEADER, AppComponent } from "./app.component";
 import { LoggedUserService } from "./auth/logged-user.service";
 import { LoginService } from "./auth/login/login.service";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { isMobileView } from "./common/helpers/app.helpers";
+import { registerMatSvgIcons, routerMock, routerMockEventSubject } from "./common/helpers/base-test.helpers.spec";
 import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { Apollo } from "apollo-angular";
+import ProjectLinks from "./project-links";
+import { mockAutocompleteItems } from "./search/mock.data";
+import { NavigationService } from "./services/navigation.service";
 
 describe("AppComponent", () => {
     let component: AppComponent;

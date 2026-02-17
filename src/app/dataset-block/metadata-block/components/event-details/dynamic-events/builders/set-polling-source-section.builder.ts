@@ -6,10 +6,11 @@
  */
 
 import { SetPollingSource } from "src/app/api/kamu.graphql.interface";
-import { EventSectionBuilder } from "./event-section.builder";
+import { SetPollingSourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+
 import { SET_POLLING_SOURCE_DESCRIPTORS } from "../../components/set-polling-source-event/set-polling-source-event.source";
 import { EventRow, EventSection } from "../dynamic-events.model";
-import { SetPollingSourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { EventSectionBuilder } from "./event-section.builder";
 
 export class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSource> {
     public buildEventSections(event: SetPollingSource): EventSection[] {

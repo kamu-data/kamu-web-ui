@@ -6,12 +6,14 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FlowDetailsLogsTabComponent } from "./flow-details-logs-tab.component";
+
 import { Apollo } from "apollo-angular";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { mockDatasetFlowByIdResponse } from "src/app/api/mock/dataset-flow.mock";
 import { AppConfigService } from "src/app/app-config.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+
+import { FlowDetailsLogsTabComponent } from "./flow-details-logs-tab.component";
 
 describe("FlowDetailsLogsTabComponent", () => {
     let component: FlowDetailsLogsTabComponent;

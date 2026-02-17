@@ -5,23 +5,24 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { NgFor, NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterLink } from "@angular/router";
+
 import { DatasetKind, DatasetTransformFragment } from "src/app/api/kamu.graphql.interface";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { BlockRowDataComponent } from "src/app/common/components/block-row-data/block-row-data.component";
+import { DatasetKindComponent } from "src/app/common/components/dataset-kind/dataset-kind.component";
+import { DatasetVisibilityComponent } from "src/app/common/components/dataset-visibility/dataset-visibility.component";
+import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
+import { isNil } from "src/app/common/helpers/app.helpers";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
+import AppValues from "src/app/common/values/app.values";
 import { EnginePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/engine-property/engine-property.component";
 import { SqlQueryViewerComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/sql-query-viewer/sql-query-viewer.component";
-import { MatIconModule } from "@angular/material/icon";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
-import { isNil } from "src/app/common/helpers/app.helpers";
+import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
-import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
-import { RouterLink } from "@angular/router";
-import AppValues from "src/app/common/values/app.values";
-import { DatasetVisibilityComponent } from "src/app/common/components/dataset-visibility/dataset-visibility.component";
-import { DatasetKindComponent } from "src/app/common/components/dataset-kind/dataset-kind.component";
 
 @Component({
     selector: "app-metadata-transformation-tab",

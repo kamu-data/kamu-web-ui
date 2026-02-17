@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatChipsModule } from "@angular/material/chips";
@@ -15,13 +15,15 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTableModule } from "@angular/material/table";
-import { SubprocessStatusFilterPipe } from "../../../../pipes/subprocess-status-filter.pipe";
-import { webhooksStateMapper } from "../../../../flows.helpers";
+
 import {
     DatasetBasicsFragment,
     FlowProcessEffectiveState,
     WebhookFlowSubProcess,
 } from "src/app/api/kamu.graphql.interface";
+
+import { webhooksStateMapper } from "../../../../flows.helpers";
+import { SubprocessStatusFilterPipe } from "../../../../pipes/subprocess-status-filter.pipe";
 
 @Component({
     selector: "app-subscriptions-table",

@@ -5,23 +5,26 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ListWebhooksComponent } from "./list-webhooks.component";
-import { Apollo } from "apollo-angular";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { provideToastr } from "ngx-toastr";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { NavigationService } from "src/app/services/navigation.service";
-import ProjectLinks from "src/app/project-links";
-import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
-import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
 import { of } from "rxjs";
-import { ModalService } from "src/app/common/components/modal/modal.service";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
 import { WebhookSubscription, WebhookSubscriptionStatus } from "src/app/api/kamu.graphql.interface";
 import { mockDatasetWebhookByIdQuery } from "src/app/api/mock/webhooks.mock";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { ModalService } from "src/app/common/components/modal/modal.service";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+import ProjectLinks from "src/app/project-links";
+import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
+import { ListWebhooksComponent } from "./list-webhooks.component";
 
 describe("ListWebhooksComponent", () => {
     let component: ListWebhooksComponent;

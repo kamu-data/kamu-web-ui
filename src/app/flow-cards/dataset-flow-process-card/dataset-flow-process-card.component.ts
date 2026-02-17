@@ -5,27 +5,26 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input, Output } from "@angular/core";
-import { NgClass } from "@angular/common";
+import { NgClass, NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterLink } from "@angular/router";
+
 import {
     DatasetBasicsFragment,
     DatasetKind,
     FlowProcessEffectiveState,
     FlowProcessSummary,
 } from "src/app/api/kamu.graphql.interface";
-import { MatIconModule } from "@angular/material/icon";
-import { RouterLink } from "@angular/router";
+import { DataHelpers } from "src/app/common/helpers/data.helpers";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import {
-    DatasetFlowsBadgeStyle,
     DatasetFlowBadgeHelpers,
+    DatasetFlowsBadgeStyle,
     DatasetFlowsBadgeTexts,
     webhooksStateMapper,
 } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { EventEmitter } from "@angular/core";
-import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
-import { NgIf } from "@angular/common";
-import { DataHelpers } from "src/app/common/helpers/data.helpers";
 
 @Component({
     selector: "app-dataset-flow-process-card",

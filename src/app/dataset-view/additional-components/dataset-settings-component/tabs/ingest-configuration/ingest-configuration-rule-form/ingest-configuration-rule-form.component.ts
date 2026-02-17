@@ -7,14 +7,16 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { FlowConfigRuleIngest } from "src/app/api/kamu.graphql.interface";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+
+import { FlowConfigRuleIngest } from "src/app/api/kamu.graphql.interface";
+import { BaseComponent } from "src/app/common/components/base.component";
+import { MaybeNull } from "src/app/interface/app.types";
+
 import {
     IngestConfigurationRuleFormType,
     IngestConfigurationRuleFormValue,
 } from "./ingest-configuration-rule-form.types";
-import { MaybeNull } from "src/app/interface/app.types";
 
 @Component({
     selector: "app-ingest-configuration-rule-form",

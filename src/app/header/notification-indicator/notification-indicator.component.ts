@@ -6,10 +6,12 @@
  */
 
 import { Component, inject } from "@angular/core";
-import { ModalService } from "../../common/components/modal/modal.service";
+import { MatIconModule } from "@angular/material/icon";
+
 import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
 import AppValues from "src/app/common/values/app.values";
-import { MatIconModule } from "@angular/material/icon";
+
+import { ModalService } from "../../common/components/modal/modal.service";
 
 @Component({
     selector: "app-notification-indicator",

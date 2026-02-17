@@ -7,12 +7,14 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot } from "@angular/router";
-import { accountPasswordProviderGuard } from "./account-password-provider.guard";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+
 import { Apollo } from "apollo-angular";
 import { AccountProvider } from "src/app/api/kamu.graphql.interface";
+import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+
 import { RedirectUrlTestModule } from "../modules/redirect-url-test.module";
+import { accountPasswordProviderGuard } from "./account-password-provider.guard";
 
 describe("accountPasswordProviderGuard", () => {
     let loggedUserService: LoggedUserService;

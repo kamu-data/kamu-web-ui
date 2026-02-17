@@ -5,32 +5,33 @@
  * included in the LICENSE file.
  */
 
+import { Node } from "@swimlane/ngx-graph";
 import {
     CurrentSourceFetchUrlFragment,
-    DatasetKind,
     DataSchemaFormat,
+    DatasetKind,
     DatasetLineageBasicsFragment,
     DatasetMetadata,
 } from "src/app/api/kamu.graphql.interface";
-import {
-    DataUpdate,
-    DataSqlErrorUpdate,
-    DatasetHistoryUpdate,
-    LineageUpdate,
-    MetadataSchemaUpdate,
-    OverviewUpdate,
-} from "../dataset.subscriptions.interface";
+import { TEST_AVATAR_URL } from "src/app/api/mock/auth.mock";
+import { DynamicTableColumnClassEnum } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { OdfTypes } from "src/app/interface/dataset-schema.interface";
 import {
     mockDatasetBasicsDerivedFragment,
     mockMetadataCurrentLicense,
     mockOwnerFieldsWithAvatar,
     mockPublicDatasetVisibility,
 } from "src/app/search/mock.data";
-import { Node } from "@swimlane/ngx-graph";
+
+import {
+    DatasetHistoryUpdate,
+    DataSqlErrorUpdate,
+    DataUpdate,
+    LineageUpdate,
+    MetadataSchemaUpdate,
+    OverviewUpdate,
+} from "../dataset.subscriptions.interface";
 import { LineageNodeAccess } from "./lineage-component/lineage-model";
-import { OdfTypes } from "src/app/interface/dataset-schema.interface";
-import { TEST_AVATAR_URL } from "src/app/api/mock/auth.mock";
-import { DynamicTableColumnClassEnum } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 export const mockDataUpdate: DataUpdate = {
     schema: {

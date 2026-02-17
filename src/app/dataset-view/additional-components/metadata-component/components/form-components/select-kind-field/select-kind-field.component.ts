@@ -5,14 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { RadioControlType } from "../../source-events/add-polling-source/form-control.source";
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { NgbTooltipConfig, NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
-import AppValues from "src/app/common/values/app.values";
-import { MatIconModule } from "@angular/material/icon";
 import { NgFor } from "@angular/common";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
+
+import { NgbTooltip, NgbTooltipConfig } from "@ng-bootstrap/ng-bootstrap";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
+import AppValues from "src/app/common/values/app.values";
+
+import { RadioControlType } from "../../source-events/add-polling-source/form-control.source";
 
 @Component({
     selector: "app-select-kind-field",

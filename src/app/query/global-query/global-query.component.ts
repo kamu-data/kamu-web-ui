@@ -5,22 +5,25 @@
  * included in the LICENSE file.
  */
 
+import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+
 import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
-import { MaybeNull } from "src/app/interface/app.types";
+
 import { BaseComponent } from "src/app/common/components/base.component";
 import { DataSqlErrorUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { EditorModule } from "src/app/editor/editor.module";
+import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
 import ProjectLinks from "src/app/project-links";
-import { SqlQueryService } from "src/app/services/sql-query.service";
-import { SqlQueryBasicResponse } from "./global-query.model";
-import { NavigationService } from "src/app/services/navigation.service";
 import { CancelRequestService } from "src/app/services/cancel-request.service";
-import { AsyncPipe } from "@angular/common";
+import { NavigationService } from "src/app/services/navigation.service";
+import { SqlQueryService } from "src/app/services/sql-query.service";
+
 import { QueryAndResultSectionsComponent } from "../shared/query-and-result-sections/query-and-result-sections.component";
+import { SqlQueryBasicResponse } from "./global-query.model";
 import { SearchAndSchemasSectionComponent } from "./search-and-schemas-section/search-and-schemas-section.component";
-import { EditorModule } from "src/app/editor/editor.module";
 
 @Component({
     selector: "app-global-query",

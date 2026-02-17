@@ -5,12 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { MaybeNull } from "src/app/interface/app.types";
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
-import { SourcesSection } from "../source-events/add-polling-source/process-form.service.types";
-import { MatButtonModule } from "@angular/material/button";
 import { NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { MatButtonModule } from "@angular/material/button";
 import { MatStepperModule } from "@angular/material/stepper";
+
+import { MaybeNull } from "src/app/interface/app.types";
+
+import { SourcesSection } from "../source-events/add-polling-source/process-form.service.types";
 
 @Component({
     selector: "app-stepper-navigation",

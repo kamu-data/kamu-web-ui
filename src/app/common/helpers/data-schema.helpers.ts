@@ -12,6 +12,7 @@ import {
     OdfExtraAttributes,
     OdfTypes,
 } from "src/app/interface/dataset-schema.interface";
+
 import { DynamicTableColumnClassEnum, DynamicTableDataRow } from "../components/dynamic-table/dynamic-table.interface";
 import { removeAllLineBreaks } from "./app.helpers";
 

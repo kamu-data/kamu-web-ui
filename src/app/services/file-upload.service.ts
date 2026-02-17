@@ -5,24 +5,27 @@
  * included in the LICENSE file.
  */
 
-import { AppConfigService } from "src/app/app-config.service";
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { Observable, Subject, catchError, finalize, first, of, switchMap, tap } from "rxjs";
+
+import { catchError, finalize, first, Observable, of, Subject, switchMap, tap } from "rxjs";
+
+import { AppConfigService } from "src/app/app-config.service";
 import { MaybeUndefined } from "src/app/interface/app.types";
-import { LocalStorageService } from "./local-storage.service";
+import {
+    UploadAvailableMethod,
+    UploadPrepareData,
+    UploadPrepareResponse,
+} from "src/app/interface/ingest-via-file-upload.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
+
 import { DatasetBasicsFragment, DatasetEndpoints } from "../api/kamu.graphql.interface";
+import { UnsubscribeDestroyRefAdapter } from "../common/components/unsubscribe.ondestroy.adapter";
+import { FileUploadError } from "../common/values/errors";
 import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
+import { LocalStorageService } from "./local-storage.service";
 import { NavigationService } from "./navigation.service";
 import { ProtocolsService } from "./protocols.service";
-import {
-    UploadPrepareResponse,
-    UploadPrepareData,
-    UploadAvailableMethod,
-} from "src/app/interface/ingest-via-file-upload.types";
-import { FileUploadError } from "../common/values/errors";
-import { UnsubscribeDestroyRefAdapter } from "../common/components/unsubscribe.ondestroy.adapter";
 
 @Injectable({
     providedIn: "root",

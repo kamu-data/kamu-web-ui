@@ -5,26 +5,29 @@
  * included in the LICENSE file.
  */
 
-import { Injectable, inject } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
+import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
+
+import { Observable } from "rxjs";
+
+import { RxwebValidators } from "@rxweb/reactive-form-validators";
+import { MetadataManifestFormat } from "src/app/api/kamu.graphql.interface";
+import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
+import { MaybeNull } from "src/app/interface/app.types";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { parse } from "yaml";
+
 import {
-    EditFormParseType,
     AddPollingSourceEditFormType,
+    EditFormParseType,
     FetchKind,
     MergeKind,
     NameValue,
     ReadKind,
-    TopicsType,
     SetPollingSourceSection,
+    TopicsType,
 } from "./add-polling-source-form.types";
-import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
-import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { SourcesSection } from "./process-form.service.types";
-import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
-import { Observable } from "rxjs";
-import { MetadataManifestFormat } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
 
 @Injectable({
     providedIn: "root",

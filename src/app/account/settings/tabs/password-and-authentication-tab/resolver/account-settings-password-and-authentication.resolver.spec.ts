@@ -5,15 +5,17 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { accountSettingsPasswordAndAuthenticationResolverFn } from "./account-settings-password-and-authentication.resolver";
-import { AccountFragment } from "src/app/api/kamu.graphql.interface";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
+
 import { Apollo } from "apollo-angular";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+
+import { accountSettingsPasswordAndAuthenticationResolverFn } from "./account-settings-password-and-authentication.resolver";
 
 describe("accountSettingsPasswordAndAuthenticationResolver", () => {
     let loggedUserService: LoggedUserService;

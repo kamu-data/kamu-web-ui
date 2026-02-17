@@ -8,17 +8,18 @@
 /* istanbul ignore file */
 
 import { Routes } from "@angular/router";
-import { AccountTabs } from "../account.constants";
-import { AccountFlowsTabComponent } from "./account-flows-tab/account-flows-tab.component";
-import { DatasetsTabComponent } from "./datasets-tab/datasets-tab.component";
-import { accountDatasetsResolverFn } from "./datasets-tab/resolver/account-datasets.resolver";
-import { SettingsTabComponent } from "./settings-tab/settings-tab.component";
+
 import { AuthenticatedGuard } from "../../auth/guards/authenticated.guard";
 import RoutingResolvers from "../../common/resolvers/routing-resolvers";
 import ProjectLinks from "../../project-links";
 import { AccountComponent } from "../account.component";
+import { AccountTabs } from "../account.constants";
 import { accountActiveTabResolverFn } from "../resolver/account-active-tab.resolver";
+import { AccountFlowsTabComponent } from "./account-flows-tab/account-flows-tab.component";
 import { accountFlowsResolverFn } from "./account-flows-tab/resolvers/account-flows.resolver";
+import { DatasetsTabComponent } from "./datasets-tab/datasets-tab.component";
+import { accountDatasetsResolverFn } from "./datasets-tab/resolver/account-datasets.resolver";
+import { SettingsTabComponent } from "./settings-tab/settings-tab.component";
 
 export const ACCOUNT_SELECT_ROUTES: Routes = [
     {

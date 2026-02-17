@@ -5,19 +5,21 @@
  * included in the LICENSE file.
  */
 
-import { MatIconModule } from "@angular/material/icon";
-import { MatChipsModule } from "@angular/material/chips";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { DatasetListItemComponent } from "./dataset-list-item.component";
-import { NgbModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
+import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterModule } from "@angular/router";
+
+import { NgbModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
 import { mockDatasetListItem } from "src/app/api/mock/dataset.mock";
 import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { RouterModule } from "@angular/router";
 import { NavigationService } from "src/app/services/navigation.service";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+
+import { DatasetListItemComponent } from "./dataset-list-item.component";
 
 describe("DatasetListItemComponent", () => {
     let component: DatasetListItemComponent;

@@ -9,17 +9,19 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+
 import { OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { NgSelectModule } from "@ng-select/ng-select";
+import { FlowProcessEffectiveState, OrderingDirection } from "src/app/api/kamu.graphql.interface";
+import { lastTimeRangeHelper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
+
 import {
     DashboardFiltersOptions,
     ORDER_BY_FIELD_LIST_TRIAGE,
     RANGE_LAST_ATTEMPT_LIST,
     RangeLastAttemptOption,
 } from "../../../../account-flows-tab.types";
-import { lastTimeRangeHelper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
-import { FlowProcessEffectiveState, OrderingDirection } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-triage-filters-view",

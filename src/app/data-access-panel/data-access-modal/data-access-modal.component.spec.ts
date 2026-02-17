@@ -5,20 +5,23 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { DataAccessModalComponent } from "./data-access-modal.component";
-import { Apollo } from "apollo-angular";
-import { of } from "rxjs";
-import { mockDatasetEndPoints } from "../data-access-panel-mock.data";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { DataAccessTabsEnum } from "./data-access-modal.model";
-import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { AppConfigService } from "src/app/app-config.service";
-import { ProtocolsService } from "src/app/services/protocols.service";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { of } from "rxjs";
+
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { Apollo } from "apollo-angular";
+import { AppConfigService } from "src/app/app-config.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { ProtocolsService } from "src/app/services/protocols.service";
+
+import { mockDatasetEndPoints } from "../data-access-panel-mock.data";
+import { DataAccessModalComponent } from "./data-access-modal.component";
+import { DataAccessTabsEnum } from "./data-access-modal.model";
 
 describe("DataAccessModalComponent", () => {
     let component: DataAccessModalComponent;

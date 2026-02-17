@@ -5,18 +5,20 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MetadataTransformationTabComponent } from "./metadata-transformation-tab.component";
-import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+
+import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+
 import {
     mockMetadataDerivedUpdate,
     mockOverviewDataUpdate,
     mockOverviewDataUpdateNullable,
 } from "../../../data-tabs.mock";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { MetadataTransformationTabComponent } from "./metadata-transformation-tab.component";
 
 describe("MetadataTransformationTabComponent", () => {
     let component: MetadataTransformationTabComponent;

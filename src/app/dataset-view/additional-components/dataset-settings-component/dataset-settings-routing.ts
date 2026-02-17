@@ -8,9 +8,14 @@
 /* istanbul ignore file */
 
 import { Routes } from "@angular/router";
+
 import { datasetInfoResolverFn } from "../../../common/resolvers/dataset-info.resolver";
 import RoutingResolvers from "../../../common/resolvers/routing-resolvers";
+import ProjectLinks from "../../../project-links";
+import { DatasetSettingsComponent } from "./dataset-settings.component";
 import { SettingsTabsEnum } from "./dataset-settings.model";
+import { datasetSettingsActiveSectionResolverFn } from "./resolvers/dataset-settings-active-section.resolver";
+import { datasetSettingsTabResolverFn } from "./resolvers/dataset-settings-tab.resolver";
 import { DatasetSettingsAccessTabComponent } from "./tabs/access/dataset-settings-access-tab/dataset-settings-access-tab.component";
 import { datasetSettingsAccessTabResolverFn } from "./tabs/access/dataset-settings-access-tab/resolver/dataset-settings-access-tab.resolver";
 import { DatasetSettingsCompactingTabComponent } from "./tabs/compacting/dataset-settings-compacting-tab.component";
@@ -26,10 +31,6 @@ import { datasetSettingsTransformTabResolverFn } from "./tabs/transform-options/
 import { DatasetSettingsSecretsManagerTabComponent } from "./tabs/variables-and-secrets/dataset-settings-secrets-manager-tab.component";
 import { datasetSettingsVarAndSecretsResolverFn } from "./tabs/variables-and-secrets/resolver/dataset-settings-var-and-secrets.resolver";
 import { DatasetSettingsWebhooksTabComponent } from "./tabs/webhooks/dataset-settings-webhooks-tab.component";
-import ProjectLinks from "../../../project-links";
-import { DatasetSettingsComponent } from "./dataset-settings.component";
-import { datasetSettingsTabResolverFn } from "./resolvers/dataset-settings-tab.resolver";
-import { datasetSettingsActiveSectionResolverFn } from "./resolvers/dataset-settings-active-section.resolver";
 
 export const DATASET_SETTINGS_ROUTES: Routes = [
     {

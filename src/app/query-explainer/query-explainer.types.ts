@@ -6,8 +6,10 @@
  */
 
 import { HttpHeaders } from "@angular/common/http";
+
 import { DataSchemaFormat, QueryDialect } from "src/app/api/kamu.graphql.interface";
 import { UploadPrepareResponse } from "src/app/interface/ingest-via-file-upload.types";
+
 import { DynamicTableDataRow } from "../common/components/dynamic-table/dynamic-table.interface";
 
 export enum QueryExplainerDataFormat {

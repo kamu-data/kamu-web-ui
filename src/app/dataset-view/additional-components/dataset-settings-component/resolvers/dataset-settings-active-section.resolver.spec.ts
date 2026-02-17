@@ -7,9 +7,11 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { datasetSettingsActiveSectionResolverFn } from "./dataset-settings-active-section.resolver";
+
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import ProjectLinks from "src/app/project-links";
+
+import { datasetSettingsActiveSectionResolverFn } from "./dataset-settings-active-section.resolver";
 
 describe("datasetSettingsActiveSectionResolverFn", () => {
     const executeResolver: ResolveFn<SettingsTabsEnum> = (...resolverParameters) =>

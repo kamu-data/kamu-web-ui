@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { WidgetHeightService } from "./widget-height.service";
+import { DecimalPipe, NgIf, TitleCasePipe } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -19,7 +19,9 @@ import {
     Output,
     ViewChild,
 } from "@angular/core";
-import { Node, GraphModule } from "@swimlane/ngx-graph";
+import { MatIconModule } from "@angular/material/icon";
+
+import { GraphModule, Node } from "@swimlane/ngx-graph";
 import { DatasetKind, DatasetLineageBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import AppValues from "src/app/common/values/app.values";
 import {
@@ -27,14 +29,14 @@ import {
     LineageGraphNodeKind,
     LineageNodeAccess,
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
-import { LineageGraphConfig, LINEAGE_CONFIG } from "./ligeage-graph.settings";
-import { SessionStorageService } from "src/app/services/session-storage.service";
 import { MaybeUndefined } from "src/app/interface/app.types";
-import { DisplaySizePipe } from "../../pipes/display-size.pipe";
+import { SessionStorageService } from "src/app/services/session-storage.service";
+
 import { DisplayDatasetIdPipe } from "../../pipes/display-dataset-id.pipe";
+import { DisplaySizePipe } from "../../pipes/display-size.pipe";
 import { DisplayTimeComponent } from "../display-time/display-time.component";
-import { MatIconModule } from "@angular/material/icon";
-import { NgIf, DecimalPipe, TitleCasePipe } from "@angular/common";
+import { LINEAGE_CONFIG, LineageGraphConfig } from "./ligeage-graph.settings";
+import { WidgetHeightService } from "./widget-height.service";
 
 @Component({
     selector: "app-lineage-graph",

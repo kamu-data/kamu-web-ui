@@ -6,12 +6,13 @@
  */
 
 import { Directive, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 
 import * as monaco from "monaco-editor";
+import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
+
 import { getDefaultError } from "../../helpers/editor-error-formatter";
-import { MonacoService } from "../../services/monaco.service";
 import { EditorError } from "../../models/error.model";
+import { MonacoService } from "../../services/monaco.service";
 
 @Directive()
 export abstract class BaseEditorComponent implements OnChanges {

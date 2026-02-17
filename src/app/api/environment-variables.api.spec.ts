@@ -5,11 +5,13 @@
  * included in the LICENSE file.
  */
 
-import { TEST_DATASET_ID } from "src/app/api/mock/dataset.mock";
 import { TestBed } from "@angular/core/testing";
-import { EnvironmentVariablesApi } from "./environment-variables.api";
+
 import { Apollo } from "apollo-angular";
-import { ApolloTestingModule, ApolloTestingController } from "apollo-angular/testing";
+import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
+import { TEST_DATASET_ID } from "src/app/api/mock/dataset.mock";
+
+import { EnvironmentVariablesApi } from "./environment-variables.api";
 import {
     DeleteEnvVariableDocument,
     DeleteEnvVariableMutation,
@@ -20,6 +22,7 @@ import {
     UpsertEnvVariableDocument,
     UpsertEnvVariableMutation,
 } from "./kamu.graphql.interface";
+import { TEST_ACCOUNT_ID } from "./mock/auth.mock";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "./mock/dataset.mock";
 import {
     MOCK_ENV_VAR_ID,
@@ -35,7 +38,6 @@ import {
     mockUpsertEnvVariableMutationUpdated,
     mockUpsertEnvVariableMutationUpToDate,
 } from "./mock/environment-variables-and-secrets.mock";
-import { TEST_ACCOUNT_ID } from "./mock/auth.mock";
 
 describe("EnvironmentVariablesApi", () => {
     let service: EnvironmentVariablesApi;

@@ -5,12 +5,25 @@
  * included in the LICENSE file.
  */
 
-import { MaybeUndefined } from "src/app/interface/app.types";
-import { TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
-import { DatasetCommitService } from "./dataset-commit.service";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+
+import { Observable, of, Subscription } from "rxjs";
+import { first } from "rxjs/operators";
+
 import { Apollo } from "apollo-angular";
 import { DatasetApi } from "src/app/api/dataset.api";
-import { Observable, Subscription, of } from "rxjs";
+import {
+    CommitEventToDatasetMutation,
+    DatasetByAccountAndDatasetNameQuery,
+    UpdateReadmeMutation,
+} from "src/app/api/kamu.graphql.interface";
+import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/values/errors";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { MaybeUndefined } from "src/app/interface/app.types";
 import {
     mockCommitEventToDataseMetadataManifestMalformedError,
     mockCommitEventToDataseMetadataManifestUnsupportedVersionError,
@@ -22,19 +35,9 @@ import {
     mockUpdateReadmeErrorMessage,
     mockUpdateReadmeSuccessResponse,
 } from "src/app/search/mock.data";
-import {
-    CommitEventToDatasetMutation,
-    DatasetByAccountAndDatasetNameQuery,
-    UpdateReadmeMutation,
-} from "src/app/api/kamu.graphql.interface";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { first } from "rxjs/operators";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/values/errors";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+
+import { DatasetCommitService } from "./dataset-commit.service";
 
 describe("DatasetCommitService", () => {
     let commitService: DatasetCommitService;

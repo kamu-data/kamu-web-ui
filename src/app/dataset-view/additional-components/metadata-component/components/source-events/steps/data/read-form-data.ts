@@ -5,9 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { OdfDefaultValues } from "src/app/common/values/app-odf-default.values";
-import { ControlType, JsonFormData, ReadKind } from "../../add-polling-source/add-polling-source-form.types";
 import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
+import { OdfDefaultValues } from "src/app/common/values/app-odf-default.values";
+
+import { ControlType, JsonFormData, ReadKind } from "../../add-polling-source/add-polling-source-form.types";
 
 export const READ_FORM_DATA: JsonFormData = {
     Csv: {

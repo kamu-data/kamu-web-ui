@@ -5,12 +5,14 @@
  * included in the LICENSE file.
  */
 
-import ProjectLinks from "src/app/project-links";
-import { NavigationService } from "../../../services/navigation.service";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { LoginService } from "../login.service";
+
 import { GithubLoginCredentials } from "src/app/api/auth.api.model";
+import { BaseComponent } from "src/app/common/components/base.component";
+import ProjectLinks from "src/app/project-links";
+
+import { NavigationService } from "../../../services/navigation.service";
+import { LoginService } from "../login.service";
 
 @Component({
     selector: "app-github-callback",

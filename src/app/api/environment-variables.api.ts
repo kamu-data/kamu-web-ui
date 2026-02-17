@@ -5,7 +5,15 @@
  * included in the LICENSE file.
  */
 
+import { inject, Injectable } from "@angular/core";
+
 import { first, map, Observable } from "rxjs";
+
+import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { onlyCompleteData } from "apollo-angular";
+
+import { updateCacheHelper } from "../common/helpers/apollo-cache.helper";
+import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
 import {
     DeleteEnvVariableGQL,
     DeleteEnvVariableMutation,
@@ -16,11 +24,6 @@ import {
     UpsertEnvVariableGQL,
     UpsertEnvVariableMutation,
 } from "./kamu.graphql.interface";
-import { inject, Injectable } from "@angular/core";
-import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
-import { ApolloLink, ObservableQuery } from "@apollo/client/core";
-import { onlyCompleteData } from "apollo-angular";
-import { updateCacheHelper } from "../common/helpers/apollo-cache.helper";
 
 @Injectable({
     providedIn: "root",

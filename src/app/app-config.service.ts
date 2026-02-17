@@ -6,16 +6,18 @@
  */
 
 import { Injectable } from "@angular/core";
-import {
-    AppRuntimeConfig,
-    AppUIConfigFeatureFlags,
-    AppLoginInstructions,
-    GrafanaLogsConfiguration,
-    AppUIConfig,
-    FeaturesRuntimeConfig,
-} from "./app-config.model";
-import { environment } from "src/environments/environment";
+
 import { MaybeUndefined } from "src/app/interface/app.types";
+import { environment } from "src/environments/environment";
+
+import {
+    AppLoginInstructions,
+    AppRuntimeConfig,
+    AppUIConfig,
+    AppUIConfigFeatureFlags,
+    FeaturesRuntimeConfig,
+    GrafanaLogsConfiguration,
+} from "./app-config.model";
 import AppValues from "./common/values/app.values";
 
 @Injectable({

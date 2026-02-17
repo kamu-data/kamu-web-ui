@@ -6,10 +6,12 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { EditAddPushSourceService } from "./edit-add-push-source.service";
+
 import { Apollo } from "apollo-angular";
 import { mockParseAddPushSourceEventFromYamlToObject } from "src/app/search/mock.data";
+
 import { AddPushSourceEditFormType } from "./add-push-source-form.types";
+import { EditAddPushSourceService } from "./edit-add-push-source.service";
 
 describe("EditAddPushSourceService", () => {
     let service: EditAddPushSourceService;

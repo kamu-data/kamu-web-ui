@@ -6,16 +6,19 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { EditWebhookComponent } from "./edit-webhook.component";
+
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { WebhookFormComponent } from "../common/webhook-form/webhook-form.component";
-import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { WebhookSubscriptionStatus } from "src/app/api/kamu.graphql.interface";
-import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
-import { of } from "rxjs";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
+import { WebhookFormComponent } from "../common/webhook-form/webhook-form.component";
+import { EditWebhookComponent } from "./edit-webhook.component";
 
 describe("EditWebhookComponent", () => {
     let component: EditWebhookComponent;

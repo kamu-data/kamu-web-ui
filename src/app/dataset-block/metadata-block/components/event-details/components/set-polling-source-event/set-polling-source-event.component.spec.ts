@@ -5,14 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { FetchStepMqtt, FetchStepUrl, PrepStepDecompress } from "../../../../../../api/kamu.graphql.interface";
-import { getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { provideToastr } from "ngx-toastr";
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
+import { getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { FetchStepMqtt, FetchStepUrl, PrepStepDecompress } from "../../../../../../api/kamu.graphql.interface";
 import { mockSetPollingSourceEvent, mockSetPollingSourceEventWithFetchStepMqtt } from "../../mock.events";
 import { SetPollingSourceEventComponent } from "./set-polling-source-event.component";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
-import { provideToastr } from "ngx-toastr";
 
 describe("SetPollingSourceEventComponent", () => {
     let component: SetPollingSourceEventComponent;

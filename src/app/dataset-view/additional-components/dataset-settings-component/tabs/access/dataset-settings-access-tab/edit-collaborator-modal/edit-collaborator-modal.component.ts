@@ -5,13 +5,15 @@
  * included in the LICENSE file.
  */
 
+import { NgFor } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { MatDividerModule } from "@angular/material/divider";
+
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { AccountWithRole, DatasetAccessRole } from "src/app/api/kamu.graphql.interface";
+
 import { CollaboratorModalResultType, ROLE_OPTIONS } from "../add-people-modal/add-people-modal.model";
-import { FormsModule } from "@angular/forms";
-import { NgFor } from "@angular/common";
-import { MatDividerModule } from "@angular/material/divider";
 
 @Component({
     selector: "app-edit-collaborator-modal",

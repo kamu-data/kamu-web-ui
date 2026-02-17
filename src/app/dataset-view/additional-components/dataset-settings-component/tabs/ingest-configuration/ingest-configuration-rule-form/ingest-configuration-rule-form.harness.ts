@@ -9,6 +9,7 @@
 
 import { ComponentHarness } from "@angular/cdk/testing";
 import { MatCheckboxHarness } from "@angular/material/checkbox/testing";
+
 import { IngestConfigurationRuleFormValue } from "./ingest-configuration-rule-form.types";
 
 export class IngestConfigurationRuleFormHarness extends ComponentHarness {

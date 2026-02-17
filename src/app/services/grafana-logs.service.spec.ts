@@ -6,8 +6,10 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { GrafanaLogsService } from "./grafana-logs.service";
+
 import { mockDatasetFlowByIdResponse } from "src/app/api/mock/dataset-flow.mock";
+
+import { GrafanaLogsService } from "./grafana-logs.service";
 
 describe("GrafanaLogsService", () => {
     let service: GrafanaLogsService;

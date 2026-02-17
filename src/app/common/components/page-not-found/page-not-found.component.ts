@@ -5,11 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { NavigationService } from "src/app/services/navigation.service";
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import AppValues from "src/app/common/values/app.values";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import AppValues from "src/app/common/values/app.values";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-page-not-found",

@@ -6,8 +6,10 @@
  */
 
 import { inject, Injectable } from "@angular/core";
+
+import { map, Observable } from "rxjs";
+
 import { ToastrService } from "ngx-toastr";
-import { Observable, map } from "rxjs";
 import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
 import {
     DatasetFlowType,

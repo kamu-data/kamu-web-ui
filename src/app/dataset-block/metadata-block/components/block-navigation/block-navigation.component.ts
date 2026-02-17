@@ -5,20 +5,22 @@
  * included in the LICENSE file.
  */
 
+import { NgFor, NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterLink } from "@angular/router";
+
+import { NgSelectModule } from "@ng-select/ng-select";
+import { MaybeNull } from "src/app/interface/app.types";
+import { DatasetInfo } from "src/app/interface/navigation.interface";
+import ProjectLinks from "src/app/project-links";
+
+import { PaginationComponent } from "../../../../common/components/pagination-component/pagination.component";
 import { DatasetHistoryUpdate } from "../../../../dataset-view/dataset.subscriptions.interface";
 import { SupportedEvents } from "../event-details/supported.events";
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { MaybeNull } from "src/app/interface/app.types";
-import { EventTypeFilterPipe } from "./pipes/event-type-filter.pipe";
 import { BlockHashFilterPipe } from "./pipes/block-hash-filter.pipe";
-import { PaginationComponent } from "../../../../common/components/pagination-component/pagination.component";
-import { NgSelectModule } from "@ng-select/ng-select";
-import { NgIf, NgFor } from "@angular/common";
-import { MatIconModule } from "@angular/material/icon";
-import { FormsModule } from "@angular/forms";
-import { RouterLink } from "@angular/router";
-import ProjectLinks from "src/app/project-links";
+import { EventTypeFilterPipe } from "./pipes/event-type-filter.pipe";
 
 @Component({
     selector: "app-block-navigation",

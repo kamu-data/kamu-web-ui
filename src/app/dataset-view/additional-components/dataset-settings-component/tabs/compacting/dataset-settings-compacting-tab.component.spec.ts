@@ -5,19 +5,22 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
-import { DatasetSettingsCompactingTabComponent } from "./dataset-settings-compacting-tab.component";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+import { ActivatedRoute } from "@angular/router";
+
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { ModalService } from "src/app/common/components/modal/modal.service";
-import { of } from "rxjs";
-import { NavigationService } from "src/app/services/navigation.service";
+import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import AppValues from "src/app/common/values/app.values";
-import { ActivatedRoute } from "@angular/router";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
+
 import { DatasetFlowsService } from "../../../flows-component/services/dataset-flows.service";
+import { DatasetSettingsCompactingTabComponent } from "./dataset-settings-compacting-tab.component";
 
 describe("DatasetSettingsCompactingTabComponent", () => {
     let component: DatasetSettingsCompactingTabComponent;

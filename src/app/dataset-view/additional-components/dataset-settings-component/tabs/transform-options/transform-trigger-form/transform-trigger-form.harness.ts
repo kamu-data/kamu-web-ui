@@ -8,13 +8,15 @@
 /* istanbul ignore file */
 
 import { ComponentHarness } from "@angular/cdk/testing";
-import { BufferingBatchingRuleFormHarness } from "../buffering-batching-rule-form/buffering-batching-rule-form.harness";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
-import { BatchingRuleType } from "../../../dataset-settings.model";
+
 import { FlowTriggerBreakingChangeRule } from "src/app/api/kamu.graphql.interface";
-import { TransformTriggerFormValue } from "./transform-trigger-form.types";
 import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
+
+import { BatchingRuleType } from "../../../dataset-settings.model";
+import { BufferingBatchingRuleFormHarness } from "../buffering-batching-rule-form/buffering-batching-rule-form.harness";
 import { BufferingBatchingRuleFormValue } from "../buffering-batching-rule-form/buffering-batching-rule-form.types";
+import { TransformTriggerFormValue } from "./transform-trigger-form.types";
 
 export class TransformTriggerFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-transform-trigger-form";

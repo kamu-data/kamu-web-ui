@@ -7,8 +7,10 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ResolveFn } from "@angular/router";
-import { accountSettingsAccountResolverFn } from "./account-settings-account.resolver";
+
 import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
+
+import { accountSettingsAccountResolverFn } from "./account-settings-account.resolver";
 
 describe("accountSettingsAccountResolver", () => {
     const executeResolver: ResolveFn<AccountWithEmailFragment> = (...resolverParameters) =>

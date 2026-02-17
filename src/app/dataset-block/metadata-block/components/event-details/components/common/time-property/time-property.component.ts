@@ -6,8 +6,9 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { BasePropertyComponent } from "../base-property/base-property.component";
+
 import { DisplayTimeComponent } from "../../../../../../../common/components/display-time/display-time.component";
+import { BasePropertyComponent } from "../base-property/base-property.component";
 
 @Component({
     selector: "app-time-property",

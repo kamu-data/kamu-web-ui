@@ -5,20 +5,23 @@
  * included in the LICENSE file.
  */
 
-import { mockNode, mockNodesWithEqualNames } from "../../../search/mock.data";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { LineageComponent } from "./lineage.component";
-import { Node } from "@swimlane/ngx-graph";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { AccountService } from "src/app/account/account.service";
+
 import { of } from "rxjs";
+
+import { Node } from "@swimlane/ngx-graph";
+import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
-import { MOCK_DATASET_INFO } from "../metadata-component/components/set-transform/mock.data";
-import { LineageGraphNodeData } from "./lineage-model";
+import { AccountService } from "src/app/account/account.service";
+import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { mockNode, mockNodesWithEqualNames } from "../../../search/mock.data";
 import { DatasetViewTypeEnum } from "../../dataset-view.interface";
 import { DatasetService } from "../../dataset.service";
-import { Apollo } from "apollo-angular";
+import { MOCK_DATASET_INFO } from "../metadata-component/components/set-transform/mock.data";
+import { LineageGraphNodeData } from "./lineage-model";
+import { LineageComponent } from "./lineage.component";
 
 describe("LineageComponent", () => {
     let component: LineageComponent;

@@ -5,10 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { SetLicense, SetTransform } from "../api/kamu.graphql.interface";
 import { Injectable } from "@angular/core";
+
 import { MaybeNull } from "src/app/interface/app.types";
 import { stringify } from "yaml";
+
+import { SetLicense, SetTransform } from "../api/kamu.graphql.interface";
 import {
     AddPollingSourceEditFormType,
     PreprocessKind,

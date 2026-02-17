@@ -5,18 +5,19 @@
  * included in the LICENSE file.
  */
 
+import { formatDistanceToNowStrict } from "date-fns";
+import { format } from "date-fns/format";
 import {
     FlowStartCondition,
     FlowStatus,
     FlowSummaryDataFragment,
     FlowTimingRecords,
 } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/interface/app.types";
-import AppValues from "src/app/common/values/app.values";
 import { DataHelpers } from "src/app/common/helpers/data.helpers";
+import AppValues from "src/app/common/values/app.values";
+import { MaybeNull } from "src/app/interface/app.types";
+
 import { excludeAgoWord, isNil, pluralize } from "../../common/helpers/app.helpers";
-import { format } from "date-fns/format";
-import { formatDistanceToNowStrict } from "date-fns";
 
 export class FlowTableHelpers {
     public static flowTypeDescription(flow: FlowSummaryDataFragment): string {

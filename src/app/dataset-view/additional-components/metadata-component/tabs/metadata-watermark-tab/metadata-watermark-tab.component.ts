@@ -5,20 +5,23 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { NgIf } from "@angular/common";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { MaybeNullOrUndefined } from "src/app/interface/app.types";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
+import { MatIconModule } from "@angular/material/icon";
+
+import { catchError, from, of, take } from "rxjs";
+
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { BlockRowDataComponent } from "src/app/common/components/block-row-data/block-row-data.component";
 import { DisplayTimeComponent } from "src/app/common/components/display-time/display-time.component";
-import { MatIconModule } from "@angular/material/icon";
+import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { EditWatermarkModalComponent } from "../../../overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
-import { catchError, from, of, take } from "rxjs";
-import { MetadataTabs } from "../../metadata.constants";
+import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
+
+import { EditWatermarkModalComponent } from "../../../overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
+import { MetadataTabs } from "../../metadata.constants";
 
 @Component({
     selector: "app-metadata-watermark-tab",

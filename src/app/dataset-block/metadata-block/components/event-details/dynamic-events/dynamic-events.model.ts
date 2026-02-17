@@ -6,6 +6,7 @@
  */
 
 import { Type } from "@angular/core";
+
 import { BasePropertyComponent } from "../components/common/base-property/base-property.component";
 
 export enum DynamicEventTypes {

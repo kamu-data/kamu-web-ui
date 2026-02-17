@@ -6,6 +6,7 @@
  */
 
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
+
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
 

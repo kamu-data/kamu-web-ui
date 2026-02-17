@@ -14,7 +14,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTableModule } from "@angular/material/table";
-import { FlowsSelectionState, WebhooksFiltersOptions, WebhooksSelectedCategory } from "../../flows.helpers";
+import { FlowsSelectionState, RollupFiltersOptions, WebhooksSelectedCategory } from "../../flows.helpers";
 import {
     FlowProcessEffectiveState,
     WebhookFlowSubProcess,
@@ -61,7 +61,7 @@ export class FlowsAssociatedChannelsComponent {
     >();
     @Output() public removeSelectedWebhookClicked: EventEmitter<string> = new EventEmitter<string>();
 
-    public readonly WEBHOOKS_FILTERS_OPTIONS = WebhooksFiltersOptions;
+    public readonly WEBHOOKS_FILTERS_OPTIONS = RollupFiltersOptions;
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
 
     public get showSubprocessesTable(): boolean {

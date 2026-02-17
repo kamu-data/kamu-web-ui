@@ -6,16 +6,16 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet } from "@angular/common";
+import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase } from "@angular/common";
 import { AccountService } from "src/app/account/account.service";
-import { BehaviorSubject, combineLatest, map, Observable, startWith, Subject, switchMap, take, timer } from "rxjs";
+import { BehaviorSubject, debounceTime, map, Observable, startWith, Subject, switchMap, take, tap, timer } from "rxjs";
 import {
     AccountFlowProcessCard,
-    AccountFlowProcessCardConnectionDataFragment,
     Dataset,
     DatasetBasicsFragment,
     FlowProcessEffectiveState,
     FlowProcessFilters,
+    FlowProcessGroupRollupDataFragment,
     FlowProcessOrderField,
 } from "src/app/api/kamu.graphql.interface";
 import { environment } from "src/environments/environment";
@@ -30,7 +30,7 @@ import { DatasetWebhooksService } from "src/app/dataset-view/additional-componen
 import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.component";
 import { WebhookFlowProcessCardComponent } from "../../../../../flow-cards/webhook-flow-process-card/webhook-flow-process-card.component";
 import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
-import { MatChipsModule } from "@angular/material/chips";
+import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
 import { MatButtonToggleChange, MatButtonToggleModule } from "@angular/material/button-toggle";
 import { FormsModule } from "@angular/forms";
 import {
@@ -40,6 +40,8 @@ import {
     DashboardFiltersOptions,
     ProcessCardFilterMode,
     FlowProcessCardListing,
+    ProcessCardGroup,
+    CardsStrategyResult,
 } from "../../account-flows-tab.types";
 import { NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 import { DateTimeAdapter, OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
@@ -55,9 +57,14 @@ import { UpcomingScheduledFiltersViewComponent } from "./components/upcoming-sch
 import { CustomFiltersViewComponent } from "./components/custom-filters-view/custom-filters-view.component";
 import { AccountFlowsFiltersService } from "src/app/account/services/account-flows-filters.service";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
+import {
+    rollupAvailabilityMapper,
+    RollupFiltersOptions,
+} from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 
 @Component({
-    selector: "app-account-flows-datasets-subtab",
+    selector: "app-account-flows-processes-subtab",
+
     providers: [
         { provide: DateTimeAdapter, useClass: MomentDateTimeAdapter },
         { provide: OWL_DATE_TIME_FORMATS, useValue: MY_MOMENT_FORMATS },
@@ -70,7 +77,6 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
         NgFor,
         NgSwitch,
         NgSwitchCase,
-        NgTemplateOutlet,
         //-----//
         MatIconModule,
         MatButtonToggleModule,
@@ -90,11 +96,11 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
         UpcomingScheduledFiltersViewComponent,
         WebhookFlowProcessCardComponent,
     ],
-    templateUrl: "./account-flows-datasets-subtab.component.html",
-    styleUrls: ["./account-flows-datasets-subtab.component.scss"],
+    templateUrl: "./account-flows-processes-subtab.component.html",
+    styleUrls: ["./account-flows-processes-subtab.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implements OnInit {
+export class AccountFlowsProcessesSubtabComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public accountName: string;
     @Input({ required: true }) public accountFlowsData: AccountFlowsType;
 
@@ -109,9 +115,12 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
     public hasNextPage = false;
     public processesCards: AccountFlowProcessCard[] = [];
     public processesPerPage: number = AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE;
+    public flowsMode: ProcessCardGroup = ProcessCardGroup.ALL;
+    public activeRollup: FlowProcessGroupRollupDataFragment;
     private readonly loadingCardsSubject$ = new BehaviorSubject<boolean>(false);
     private readonly toggleCardStateSubject$ = new BehaviorSubject<boolean>(false);
-    private readonly fetchTrigger$ = new Subject<void>();
+    public readonly fetchTrigger$ = new Subject<void>();
+    public readonly ROLLUP_OPTIONS = RollupFiltersOptions;
 
     public readonly CARD_FILTERS_MODE_OPTIONS: CardFilterDescriptor[] = CARD_FILTERS_MODE_OPTIONS;
 
@@ -121,6 +130,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
 
     public readonly ProcessCardFilterMode: typeof ProcessCardFilterMode = ProcessCardFilterMode;
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
+    public readonly ProcessCardGroup: typeof ProcessCardGroup = ProcessCardGroup;
 
     public ngOnInit(): void {
         this.loadingCardsSubject$.next(true);
@@ -137,39 +147,24 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
 
     public fetchCardsData(): void {
         const polling$ = timer(0, environment.delay_polling_ms);
-        const triggerWithInitial$ = this.fetchTrigger$.pipe(startWith(undefined));
+        const triggerWithInitial$ = this.fetchTrigger$.pipe(debounceTime(300), startWith(undefined));
 
-        this.accountFlowsCardsData$ = combineLatest([polling$, triggerWithInitial$]).pipe(
-            switchMap(() =>
-                this.accountService.getAccountFlowsAsCards({
-                    accountName: this.accountName,
-                    page: this.toggleCardStateSubject$.getValue()
-                        ? 0
-                        : Math.ceil(this.processesCards.length / AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE),
-                    perPage: this.processesPerPage,
-                    filters: this.setFlowProcessFilters(this.accountFlowsData.datasetsFiltersMode),
-                    ordering: {
-                        field: this.dashboardFiltersState.selectedOrderField ?? FlowProcessOrderField.LastAttemptAt,
-                        direction: this.accountFlowsFiltersService.orderDirection,
-                    },
-                }),
-            ),
+        this.accountFlowsCardsData$ = triggerWithInitial$.pipe(
+            switchMap(() => polling$),
+            switchMap(() => this.setCardsStrategy(this.flowsMode)),
 
-            map((result: AccountFlowProcessCardConnectionDataFragment) => {
-                const newChunkCards = result.nodes as AccountFlowProcessCard[];
-                this.hasNextPage = result.pageInfo.hasNextPage;
+            tap((data: CardsStrategyResult) => {
+                this.activeRollup = data.rollup;
+                const newChunkCards = data.cards.nodes as AccountFlowProcessCard[];
+                this.hasNextPage = data.cards.pageInfo.hasNextPage;
+                this.processesCards = [...newChunkCards];
 
-                if (this.loadingCardsSubject$.getValue()) {
-                    this.processesCards = [...this.processesCards, ...newChunkCards];
-                }
-                if (this.toggleCardStateSubject$.getValue()) {
-                    this.processesCards = newChunkCards;
-                }
                 this.loadingCardsSubject$.next(false);
                 this.toggleCardStateSubject$.next(false);
-
+            }),
+            map((data: CardsStrategyResult) => {
                 return {
-                    totalCount: result.totalCount,
+                    totalCount: data.cards.totalCount,
                     nodes: this.processesCards,
                 };
             }),
@@ -180,7 +175,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         if (this.loadingCardsSubject$.getValue() || !this.hasNextPage) {
             return;
         }
-        this.processesPerPage = AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE;
+        this.processesPerPage = this.processesCards.length + AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE;
         this.refreshNow();
     }
 
@@ -190,6 +185,27 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
 
     public itemToBasics(value: Dataset): DatasetBasicsFragment {
         return value as DatasetBasicsFragment;
+    }
+
+    public rollupAvailabilityMapper(mode: ProcessCardFilterMode, state: FlowProcessEffectiveState): boolean {
+        return rollupAvailabilityMapper(mode, state);
+    }
+
+    public totalProcessesCountByMode(mode: ProcessCardFilterMode, rollup: FlowProcessGroupRollupDataFragment): number {
+        switch (mode) {
+            case ProcessCardFilterMode.RECENT_ACTIVITY:
+                return rollup.active + rollup.failing + rollup.paused + rollup.stopped;
+            case ProcessCardFilterMode.TRIAGE:
+                return rollup.failing + rollup.stopped;
+            case ProcessCardFilterMode.PAUSED:
+                return rollup.paused;
+            case ProcessCardFilterMode.UPCOMING_SCHEDULED:
+                return rollup.active + rollup.failing;
+            case ProcessCardFilterMode.CUSTOM:
+                return rollup.active + rollup.failing + rollup.paused + rollup.stopped;
+            default:
+                throw new Error("Unsupported process card view mode");
+        }
     }
 
     public resetFilters(): void {
@@ -203,6 +219,10 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
         this.datasetCardService.handleTrigger(datasetBasics, () => {
             this.toastrService.success("Flow scheduled");
         });
+    }
+
+    public onToggleRollup(): void {
+        this.applyFilters();
     }
 
     public toggleStateDatasetCard(params: {
@@ -272,7 +292,7 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
             this.accountName,
             AccountTabs.FLOWS,
             undefined,
-            AccountFlowsNav.DATASETS,
+            AccountFlowsNav.PROCESSES,
             undefined,
             nextNav,
         );
@@ -284,6 +304,37 @@ export class AccountFlowsDatasetsSubtabComponent extends BaseComponent implement
             return item.dataset.id;
         } else {
             return item.id;
+        }
+    }
+
+    public onFlowsModeChange(event: MatChipListboxChange): void {
+        this.flowsMode = event.value as ProcessCardGroup;
+        this.processesPerPage = AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE;
+        this.processesCards = [];
+        this.refreshNow();
+    }
+
+    private setCardsStrategy(group: ProcessCardGroup): Observable<CardsStrategyResult> {
+        const params = {
+            accountName: this.accountName,
+            page: 0,
+            perPage: this.processesPerPage,
+            filters: this.setFlowProcessFilters(this.accountFlowsData.datasetsFiltersMode),
+            ordering: {
+                field: this.dashboardFiltersState.selectedOrderField ?? FlowProcessOrderField.LastAttemptAt,
+                direction: this.accountFlowsFiltersService.orderDirection,
+            },
+        };
+        switch (group) {
+            case ProcessCardGroup.ALL:
+                return this.accountService.getAccountAllCards(params);
+            case ProcessCardGroup.DATASETS:
+                return this.accountService.getAccountPrimaryCards(params);
+            case ProcessCardGroup.WEBHOOKS:
+                return this.accountService.getAccountWebhookCards(params);
+            /* istanbul ignore next */
+            default:
+                throw new Error("Unsupported flow process group");
         }
     }
 }

@@ -66,7 +66,7 @@ describe("AccountFlowsActivitySubtabComponent", () => {
         component = fixture.componentInstance;
         component.accountName = MOCK_ACCOUNT_NAME;
         component.accountFlowsData = {
-            activeNav: AccountFlowsNav.DATASETS,
+            activeNav: AccountFlowsNav.PROCESSES,
             flowGroup: [FlowStatus.Finished],
             datasetsFiltersMode: ProcessCardFilterMode.RECENT_ACTIVITY,
         };
@@ -233,7 +233,7 @@ describe("AccountFlowsActivitySubtabComponent", () => {
     it("should check to change navigation", () => {
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
         const event = {
-            nextId: AccountFlowsNav.DATASETS,
+            nextId: AccountFlowsNav.PROCESSES,
         } as NgbNavChangeEvent;
         component.onNavChange(event);
         expect(navigateToOwnerViewSpy).toHaveBeenCalledTimes(1);

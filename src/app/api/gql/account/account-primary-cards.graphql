@@ -1,4 +1,4 @@
-query accountFlowsAsCards(
+query accountPrimaryCards(
   $name: AccountName!
   $page: Int
   $perPage: Int
@@ -9,10 +9,10 @@ query accountFlowsAsCards(
     byName(name: $name) {
       flows {
         processes {
-          allCards(filters: $filters, page: $page, perPage: $perPage, ordering: $ordering) {
-            ...AccountFlowProcessCardConnectionData
+          primaryCards(filters: $filters, page: $page, perPage: $perPage, ordering: $ordering) {
+            ...DatasetFlowProcessConnectionData
           }
-          fullRollup(filters: $filters) {
+          primaryRollup(filters: $filters) {
             ...FlowProcessGroupRollupData
           }
         }

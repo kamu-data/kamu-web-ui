@@ -17,6 +17,7 @@ import {
     OrderingDirection,
 } from "src/app/api/kamu.graphql.interface";
 import { BehaviorSubject } from "rxjs";
+import { stripSecondsFromDateToISOString } from "src/app/common/helpers/data.helpers";
 
 @Injectable({
     providedIn: "root",
@@ -36,7 +37,6 @@ export class AccountFlowsFiltersService {
         selectedFlowProcessStates: [],
         minConsecutiveFailures: 0,
         isFirstInitialization: false,
-        applyFilters: false,
     };
 
     private filtersSubject$ = new BehaviorSubject<DashboardFiltersOptions>(this.initialFilters);
@@ -80,9 +80,9 @@ export class AccountFlowsFiltersService {
                         this.currentFiltersSnapshot.toFilterDate && this.currentFiltersSnapshot.fromFilterDate
                             ? {
                                   start: this.currentFiltersSnapshot.fromFilterDate
-                                      ? this.currentFiltersSnapshot.fromFilterDate.toISOString()
-                                      : sixHoursAgoDate.toISOString(),
-                                  end: this.currentFiltersSnapshot.toFilterDate.toISOString(),
+                                      ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.fromFilterDate)
+                                      : stripSecondsFromDateToISOString(sixHoursAgoDate),
+                                  end: stripSecondsFromDateToISOString(this.currentFiltersSnapshot.toFilterDate),
                               }
                             : undefined,
                 };
@@ -101,7 +101,9 @@ export class AccountFlowsFiltersService {
                     effectiveStateIn: this.currentFiltersSnapshot.selectedFlowProcessStates.length
                         ? this.currentFiltersSnapshot.selectedFlowProcessStates
                         : [FlowProcessEffectiveState.StoppedAuto, FlowProcessEffectiveState.Failing],
-                    lastFailureSince: this.currentFiltersSnapshot.lastFailureDate?.toISOString() ?? undefined,
+                    lastFailureSince: this.currentFiltersSnapshot.lastFailureDate
+                        ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.lastFailureDate)
+                        : undefined,
                     minConsecutiveFailures: this.currentFiltersSnapshot.minConsecutiveFailures,
                 };
             }
@@ -116,15 +118,18 @@ export class AccountFlowsFiltersService {
                         ? this.currentFiltersSnapshot.selectedFlowProcessStates
                         : [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing],
                     nextPlannedBefore: this.currentFiltersSnapshot.nextPlannedBeforeDate
-                        ? this.currentFiltersSnapshot.nextPlannedBeforeDate.toISOString()
+                        ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.nextPlannedBeforeDate)
                         : undefined,
                     nextPlannedAfter: this.currentFiltersSnapshot.nextPlannedAfterDate
-                        ? this.currentFiltersSnapshot.nextPlannedAfterDate.toISOString()
-                        : new Date().toISOString(),
+                        ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.nextPlannedAfterDate)
+                        : stripSecondsFromDateToISOString(new Date()),
                 };
             }
             case ProcessCardFilterMode.PAUSED: {
-                this.updateFilters({ selectedOrderDirection: true });
+                this.updateFilters({
+                    selectedOrderDirection: true,
+                    selectedFlowProcessStates: [FlowProcessEffectiveState.PausedManual],
+                });
                 return {
                     effectiveStateIn: [FlowProcessEffectiveState.PausedManual],
                 };
@@ -137,14 +142,20 @@ export class AccountFlowsFiltersService {
                     lastAttemptBetween:
                         this.currentFiltersSnapshot.fromFilterDate && this.currentFiltersSnapshot.toFilterDate
                             ? {
-                                  start: this.currentFiltersSnapshot.fromFilterDate.toISOString(),
-                                  end: this.currentFiltersSnapshot.toFilterDate.toISOString(),
+                                  start: stripSecondsFromDateToISOString(this.currentFiltersSnapshot.fromFilterDate),
+                                  end: stripSecondsFromDateToISOString(this.currentFiltersSnapshot.toFilterDate),
                               }
                             : undefined,
                     minConsecutiveFailures: this.currentFiltersSnapshot.minConsecutiveFailures,
-                    lastFailureSince: this.currentFiltersSnapshot.lastFailureDate?.toISOString() ?? undefined,
-                    nextPlannedBefore: this.currentFiltersSnapshot.nextPlannedBeforeDate?.toISOString() ?? undefined,
-                    nextPlannedAfter: this.currentFiltersSnapshot.nextPlannedAfterDate?.toISOString() ?? undefined,
+                    lastFailureSince: this.currentFiltersSnapshot.lastFailureDate
+                        ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.lastFailureDate)
+                        : undefined,
+                    nextPlannedBefore: this.currentFiltersSnapshot.nextPlannedBeforeDate
+                        ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.nextPlannedBeforeDate)
+                        : undefined,
+                    nextPlannedAfter: this.currentFiltersSnapshot.nextPlannedAfterDate
+                        ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.nextPlannedAfterDate)
+                        : undefined,
                 };
             }
             /* istanbul ignore next */
@@ -155,10 +166,19 @@ export class AccountFlowsFiltersService {
 
     public resetFilters(mode: ProcessCardFilterMode): void {
         this.updateFilters({
-            ...this.initialFilters,
-            minConsecutiveFailures: mode === ProcessCardFilterMode.TRIAGE ? 1 : 0,
+            fromFilterDate: undefined,
+            toFilterDate: undefined,
+            lastFailureDate: undefined,
+            nextPlannedBeforeDate: undefined,
+            nextPlannedAfterDate: undefined,
+            selectedOrderDirection: true,
+            selectedOrderField: undefined,
+            selectedQuickRangeLastAttempt: undefined,
+            selectedQuickRangeLastFailure: undefined,
+            selectedQuickRangeNextAttempt: undefined,
             selectedFlowProcessStates: [],
-            applyFilters: true,
+            minConsecutiveFailures: mode === ProcessCardFilterMode.TRIAGE ? 1 : 0,
+            isFirstInitialization: false,
         });
     }
 

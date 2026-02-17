@@ -1,4 +1,10 @@
-<div class="d-flex justify-content-end my-4 mb-2">
+<div class="d-flex justify-content-between align-items-center mb-4 mt-50px">
+    <mat-chip-listbox [(ngModel)]="flowsMode" (change)="onFlowsModeChange($event)">
+        <mat-chip-option [value]="ProcessCardGroup.ALL">All flows</mat-chip-option>
+        <mat-chip-option [value]="ProcessCardGroup.DATASETS">Datasets</mat-chip-option>
+        <mat-chip-option [value]="ProcessCardGroup.WEBHOOKS">Webhooks</mat-chip-option>
+    </mat-chip-listbox>
+
     <button
         (click)="refreshPage()"
         class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
@@ -7,8 +13,9 @@
         <span class="fs-12 me-2 d-block"> Refresh now</span>
     </button>
 </div>
+
 <div class="my-4 d-flex flex-row align-items-center">
-    <span class="fw-500 me-4 n">Filters:</span>
+    <span class="fw-500 me-4">View:</span>
     <mat-button-toggle-group [(ngModel)]="accountFlowsData.datasetsFiltersMode" (change)="onChangeFiltersMode($event)">
         <mat-button-toggle *ngFor="let item of CARD_FILTERS_MODE_OPTIONS" [value]="item.value">
             <mat-icon aria-hidden="true" class="fs-4 mr-2px">{{ item.iconName }}</mat-icon
@@ -17,26 +24,57 @@
     </mat-button-toggle-group>
 </div>
 
+<div class="my-4 d-flex flex-row align-items-center ml-55px" *ngIf="activeRollup">
+    <mat-button-toggle-group
+        [(ngModel)]="dashboardFiltersState.selectedFlowProcessStates"
+        (change)="onToggleRollup()"
+        multiple
+        class="me-4"
+    >
+        <ng-container *ngFor="let item of ROLLUP_OPTIONS; let i = index">
+            <mat-button-toggle
+                [value]="item.state"
+                *ngIf="rollupAvailabilityMapper(accountFlowsData.datasetsFiltersMode, item.state)"
+            >
+                <mat-icon aria-hidden="true" [class]="'fs-4 mr-2px mt-2px ' + item.iconClass">{{
+                    item.iconName
+                }}</mat-icon
+                >{{ item.label }} {{ activeRollup[item.valueKey] }}</mat-button-toggle
+            >
+        </ng-container>
+    </mat-button-toggle-group>
+    <span *ngIf="accountFlowsData.datasetsFiltersMode !== ProcessCardFilterMode.PAUSED" class="fw-500 me-4"
+        >Total: {{ totalProcessesCountByMode(accountFlowsData.datasetsFiltersMode, activeRollup) }}</span
+    >
+</div>
+
 <div class="my-4" [ngSwitch]="accountFlowsData.datasetsFiltersMode">
     <app-recent-activity-filters-view
         *ngSwitchCase="ProcessCardFilterMode.RECENT_ACTIVITY"
         [dashboardFilters]="dashboardFiltersState"
+        (applyFilterEmitter)="applyFilters()"
     >
-        <ng-container [ngTemplateOutlet]="applyFiltersTemplate"> </ng-container>
     </app-recent-activity-filters-view>
 
-    <app-triage-filters-view *ngSwitchCase="ProcessCardFilterMode.TRIAGE" [dashboardFilters]="dashboardFiltersState">
-        <ng-container [ngTemplateOutlet]="applyFiltersTemplate"> </ng-container>
+    <app-triage-filters-view
+        *ngSwitchCase="ProcessCardFilterMode.TRIAGE"
+        [dashboardFilters]="dashboardFiltersState"
+        (applyFilterEmitter)="applyFilters()"
+    >
     </app-triage-filters-view>
 
     <app-upcoming-scheduled-filters-view
         *ngSwitchCase="ProcessCardFilterMode.UPCOMING_SCHEDULED"
         [dashboardFilters]="dashboardFiltersState"
+        (applyFilterEmitter)="applyFilters()"
     >
-        <ng-container [ngTemplateOutlet]="applyFiltersTemplate"> </ng-container>
     </app-upcoming-scheduled-filters-view>
 
-    <app-custom-filters-view *ngSwitchCase="ProcessCardFilterMode.CUSTOM" [dashboardFilters]="dashboardFiltersState">
+    <app-custom-filters-view
+        *ngSwitchCase="ProcessCardFilterMode.CUSTOM"
+        [dashboardFilters]="dashboardFiltersState"
+        (applyFilterEmitter)="applyFilters()"
+    >
         <div class="d-flex justify-content-end mt-4 mb-2">
             <button
                 (click)="resetFilters()"
@@ -44,13 +82,6 @@
             >
                 <mat-icon class="text-muted fs-4 d-block">restart_alt</mat-icon>
                 <span class="fs-12 me-2 d-block"> Reset filters</span>
-            </button>
-            <button
-                (click)="applyFilters()"
-                class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
-            >
-                <mat-icon class="text-muted fs-4 d-block">filter_alt</mat-icon>
-                <span class="fs-12 me-2 d-block"> Apply filters</span>
             </button>
         </div>
     </app-custom-filters-view>
@@ -100,15 +131,3 @@
         <div class="mt-4" data-test-id="empty-cards-block"><span class="fw-bold fs-16">Result: </span>No Matches</div>
     </ng-template>
 </ng-container>
-
-<ng-template #applyFiltersTemplate>
-    <div class="d-flex justify-content-end mt-4 mb-2">
-        <button
-            (click)="applyFilters()"
-            class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
-        >
-            <mat-icon class="text-muted fs-4 d-block">filter_alt</mat-icon>
-            <span class="fs-12 me-2 d-block"> Apply filters</span>
-        </button>
-    </div>
-</ng-template>

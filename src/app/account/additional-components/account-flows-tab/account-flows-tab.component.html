@@ -12,10 +12,10 @@
                 <app-account-flows-activity-subtab [accountFlowsData]="accountFlowsData" [accountName]="accountName" />
             </ng-template>
         </li>
-        <li [ngbNavItem]="AccountFlowsNav.DATASETS">
-            <button ngbNavLink>Datasets</button>
+        <li [ngbNavItem]="AccountFlowsNav.PROCESSES">
+            <button ngbNavLink>Processes</button>
             <ng-template ngbNavContent>
-                <app-account-flows-datasets-subtab [accountFlowsData]="accountFlowsData" [accountName]="accountName" />
+                <app-account-flows-processes-subtab [accountFlowsData]="accountFlowsData" [accountName]="accountName" />
             </ng-template>
         </li>
     </ul>

@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.63.0] - 2026-02-17
+### Added
+- Added rollup section to the flow system status dashboards
+- Synchronization of rollup filters and card list
+- Animation for the active process card
+
 ## [0.62.1] - 2026-02-16
 ### Fixed
 - Hotfix: proper bundler output configuration to keep `dist/kamu-platform` the valid path
@@ -16,7 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.61.2] - 2026-01-30
 ### Added
-- Lazy loading of cards when scrolling for account filters.
+- Lazy loading of cards when scrolling for account filters
+- The ability to copy a cell from the data table
 - "Run Selection" context menu action in SQL query editor
 - Support for displaying column annotations
 ### Fixed
@@ -35,7 +42,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.61.0] - 2025-12-09
 ### Added
 - Added dashboard filters for account flows
-- The ability to copy a cell from the data table
 
 ## [0.60.1] - 2025-11-26
 ### Fixed

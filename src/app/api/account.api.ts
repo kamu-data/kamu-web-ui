@@ -39,6 +39,10 @@ import {
     FlowProcessOrdering,
     AccountFlowsAsCardsGQL,
     AccountFlowsAsCardsQuery,
+    AccountPrimaryCardsGQL,
+    AccountPrimaryCardsQuery,
+    AccountWebhookCardsGQL,
+    AccountWebhookCardsQuery,
 } from "./kamu.graphql.interface";
 import { MaybeNull } from "../interface/app.types";
 import { ApolloLink, ObservableQuery } from "@apollo/client/core";
@@ -59,6 +63,8 @@ export class AccountApi {
     private changeAdminPasswordGQL = inject(ChangeAdminPasswordGQL);
     private changeUserPasswordGQL = inject(ChangeUserPasswordGQL);
     private accountFlowsAsCardsGQL = inject(AccountFlowsAsCardsGQL);
+    private accountPrimaryCardsGQL = inject(AccountPrimaryCardsGQL);
+    private accountWebhookCardsGQL = inject(AccountWebhookCardsGQL);
 
     public changeAccountUsername(params: {
         accountName: string;
@@ -205,6 +211,66 @@ export class AccountApi {
             );
     }
 
+    public fetchAccountPrimaryCards(params: {
+        accountName: string;
+        page: number;
+        perPage: number;
+        filters: FlowProcessFilters;
+        ordering: FlowProcessOrdering;
+    }): Observable<AccountPrimaryCardsQuery> {
+        return this.accountPrimaryCardsGQL
+            .watch({
+                variables: {
+                    name: params.accountName,
+                    page: params.page,
+                    perPage: params.perPage,
+                    filters: params.filters,
+                    ordering: params.ordering,
+                },
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .valueChanges.pipe(
+                onlyCompleteData(),
+                first(),
+                map((result: ObservableQuery.Result<AccountPrimaryCardsQuery>) => {
+                    return result.data as AccountPrimaryCardsQuery;
+                }),
+            );
+    }
+
+    public fetchAccountWebhookCards(params: {
+        accountName: string;
+        page: number;
+        perPage: number;
+        filters: FlowProcessFilters;
+        ordering: FlowProcessOrdering;
+    }): Observable<AccountWebhookCardsQuery> {
+        return this.accountWebhookCardsGQL
+            .watch({
+                variables: {
+                    name: params.accountName,
+                    page: params.page,
+                    perPage: params.perPage,
+                    filters: params.filters,
+                    ordering: params.ordering,
+                },
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .valueChanges.pipe(
+                onlyCompleteData(),
+                first(),
+                map((result: ObservableQuery.Result<AccountWebhookCardsQuery>) => {
+                    return result.data as AccountWebhookCardsQuery;
+                }),
+            );
+    }
+
     public accountDatasetsWithFlows(accountName: string): Observable<AccountListDatasetsWithFlowsQuery> {
         return this.accountListDatasetsWithFlowsGql
             .watch({
@@ -224,7 +290,13 @@ export class AccountApi {
 
     public accountFlowsPaused(accountName: string): Observable<AccountDatasetFlowsPausedQuery> {
         return this.accountDatasetFlowsPausedGql
-            .watch({ variables: { accountName }, ...noCacheFetchPolicy })
+            .watch({
+                variables: { accountName },
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
+                },
+            })
             .valueChanges.pipe(
                 onlyCompleteData(),
                 map((result: ObservableQuery.Result<AccountDatasetFlowsPausedQuery>) => {

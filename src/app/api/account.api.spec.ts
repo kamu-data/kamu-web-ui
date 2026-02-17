@@ -26,8 +26,12 @@ import {
     AccountListFlowsQuery,
     AccountPauseFlowsDocument,
     AccountPauseFlowsMutation,
+    AccountPrimaryCardsDocument,
+    AccountPrimaryCardsQuery,
     AccountResumeFlowsDocument,
     AccountResumeFlowsMutation,
+    AccountWebhookCardsDocument,
+    AccountWebhookCardsQuery,
     AccountWithEmailDocument,
     AccountWithEmailQuery,
     ChangeAccountUsernameDocument,
@@ -54,6 +58,8 @@ import {
     mockAccountChangeEmailMutationSuccess,
     mockAccountDatasetFlowsPausedQuery,
     mockAccountFlowsAsCardsQuery,
+    mockAccountFlowsPrimaryCardsQuery,
+    mockAccountFlowsWebhookCardsQuery,
     mockAccountListDatasetsWithFlowsQuery,
     mockAccountListFlowsQuery,
     mockAccountPauseFlowsMutationSuccess,
@@ -325,7 +331,7 @@ describe("AccountApi", () => {
         });
     });
 
-    it("should check account flows cards", () => {
+    it("should check account flows all cards", () => {
         service
             .fetchAccountFlowsAsCards({
                 accountName: ACCOUNT_NAME,
@@ -347,6 +353,53 @@ describe("AccountApi", () => {
 
         op.flush({
             data: mockAccountFlowsAsCardsQuery,
+        });
+    });
+
+    it("should check account flows primary cards", () => {
+        service
+            .fetchAccountPrimaryCards({
+                accountName: ACCOUNT_NAME,
+                page: PAGE,
+                perPage: PER_PAGE,
+                filters: { effectiveStateIn: [] },
+                ordering: { direction: OrderingDirection.Asc, field: FlowProcessOrderField.EffectiveState },
+            })
+            .subscribe((result: AccountPrimaryCardsQuery) => {
+                expect(result.accounts.byName?.flows.processes.primaryCards.nodes.length).toEqual(
+                    mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes.primaryCards.nodes.length,
+                );
+                expect(
+                    (result.accounts.byName?.flows.processes.primaryCards.nodes[0] as DatasetFlowProcess).flowType,
+                ).toEqual(DatasetFlowType.Ingest);
+            });
+        const op = controller.expectOne(AccountPrimaryCardsDocument);
+        expect(op.operation.variables.name).toEqual(ACCOUNT_NAME);
+
+        op.flush({
+            data: mockAccountFlowsPrimaryCardsQuery,
+        });
+    });
+
+    it("should check account flows webhook cards", () => {
+        service
+            .fetchAccountWebhookCards({
+                accountName: ACCOUNT_NAME,
+                page: PAGE,
+                perPage: PER_PAGE,
+                filters: { effectiveStateIn: [] },
+                ordering: { direction: OrderingDirection.Asc, field: FlowProcessOrderField.EffectiveState },
+            })
+            .subscribe((result: AccountWebhookCardsQuery) => {
+                expect(result.accounts.byName?.flows.processes.webhookCards.nodes.length).toEqual(
+                    mockAccountFlowsWebhookCardsQuery.accounts.byName?.flows.processes.webhookCards.nodes.length,
+                );
+            });
+        const op = controller.expectOne(AccountWebhookCardsDocument);
+        expect(op.operation.variables.name).toEqual(ACCOUNT_NAME);
+
+        op.flush({
+            data: mockAccountFlowsWebhookCardsQuery,
         });
     });
 });

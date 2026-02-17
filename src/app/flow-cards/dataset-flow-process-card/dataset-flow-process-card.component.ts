@@ -25,6 +25,8 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 import { EventEmitter } from "@angular/core";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { NgIf } from "@angular/common";
+import { DataHelpers } from "src/app/common/helpers/data.helpers";
+
 @Component({
     selector: "app-dataset-flow-process-card",
     imports: [
@@ -76,6 +78,10 @@ export class DatasetFlowProcessCardComponent {
 
     public updateNow(datasetBasics: DatasetBasicsFragment): void {
         this.updateNowEmitter.emit(datasetBasics);
+    }
+
+    public durationProcessRunning(startProcessTime: string): string {
+        return DataHelpers.durationTask(startProcessTime, new Date().toISOString());
     }
 
     public toggleStateDatasetCard(state: FlowProcessEffectiveState, datasetBasics: DatasetBasicsFragment): void {

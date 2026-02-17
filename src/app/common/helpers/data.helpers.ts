@@ -273,10 +273,10 @@ export const getValidators = (validators: JsonFormValidators): ValidatorFn[] => 
 };
 
 export const MY_MOMENT_FORMATS = {
-    parseInput: "DD/MM/YY HH:mm:ss",
-    fullPickerInput: "DD/MM/YYYY HH:mm A z",
-    datePickerInput: "DD/MM/YYYY",
-    timePickerInput: "HH:mm:ss",
+    parseInput: "YYYY-MM-DD, h:mm:ss A",
+    fullPickerInput: "YYYY-MM-DD, h:mm A",
+    datePickerInput: "YYYY-MM-DD",
+    timePickerInput: "h:mm:ss A",
     monthYearLabel: "MMM YYYY",
     dateA11yLabel: "LL",
     monthYearA11yLabel: "MMMM YYYY",
@@ -439,4 +439,10 @@ export function chainNameFromId(chainId: number): string {
     } catch {
         return "unknown";
     }
+}
+
+export function stripSecondsFromDateToISOString(date: Date): string {
+    const modifiedDate = new Date(date);
+    modifiedDate.setSeconds(0, 0);
+    return modifiedDate.toISOString();
 }

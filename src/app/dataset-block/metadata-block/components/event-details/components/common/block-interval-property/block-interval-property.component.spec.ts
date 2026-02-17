@@ -11,13 +11,14 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 import { BlockIntervalPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/block-interval-property/block-interval-property.component";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockDatasetMainDataResponse } from "src/app/search/mock.data";
+
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("BlockIntervalPropertyComponent", () => {
     let component: BlockIntervalPropertyComponent;

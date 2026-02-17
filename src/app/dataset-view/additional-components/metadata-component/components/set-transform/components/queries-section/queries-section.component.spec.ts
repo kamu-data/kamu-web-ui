@@ -7,10 +7,10 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { QueriesSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/queries-section/queries-section.component";
 import { EditorModule } from "src/app/editor/editor.module";
 
-import { QueriesSectionComponent } from "./queries-section.component";
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 
 describe("QueriesSectionComponent", () => {
     let component: QueriesSectionComponent;

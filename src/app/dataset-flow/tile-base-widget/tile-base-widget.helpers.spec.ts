@@ -5,10 +5,10 @@
  * included in the LICENSE file.
  */
 
+import { TileBaseWidgetHelpers } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.helpers";
+
 import { FlowItemWidgetDataFragment } from "@api/kamu.graphql.interface";
 import { mockFlowItemWidgetDataFragments } from "@api/mock/dataset-flow.mock";
-
-import { TileBaseWidgetHelpers } from "./tile-base-widget.helpers";
 
 describe("TileBaseWidgetHelpers", () => {
     const EXPECTED_CLASS_NAMES = [

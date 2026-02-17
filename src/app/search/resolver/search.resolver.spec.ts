@@ -16,12 +16,12 @@ import { Observable, of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { AppConfigService } from "src/app/app-config.service";
-import { DatasetSearchResult } from "src/app/interface/search.interface";
 import ProjectLinks from "src/app/project-links";
 import { mockDatasetSearchResult } from "src/app/search/mock.data";
+import { searchResolverFn } from "src/app/search/resolver/search.resolver";
 import { SearchService } from "src/app/search/search.service";
 
-import { searchResolverFn } from "./search.resolver";
+import { DatasetSearchResult } from "@interface/search.interface";
 
 describe("searchResolverFn", () => {
     let routeSnapshot: ActivatedRouteSnapshot;

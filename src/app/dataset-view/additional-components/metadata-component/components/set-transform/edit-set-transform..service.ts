@@ -9,13 +9,16 @@ import { inject, Injectable } from "@angular/core";
 
 import { Observable } from "rxjs";
 
-import { MetadataManifestFormat, SetTransform, SqlQueryStep, TransformInput } from "@api/kamu.graphql.interface";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
+import {
+    EditSetTransformParseType,
+    SetTransformYamlType,
+} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
 import { parse } from "yaml";
 
-import { EditSetTransformParseType, SetTransformYamlType } from "./set-transform.types";
+import { MetadataManifestFormat, SetTransform, SqlQueryStep, TransformInput } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 @Injectable({
     providedIn: "root",

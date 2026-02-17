@@ -9,13 +9,14 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { AuthApi } from "@api/auth.api";
-import { GithubLoginCredentials } from "@api/auth.api.model";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { GithubCallbackComponent } from "src/app/auth/login/github-callback/github.callback";
 import { LoginService } from "src/app/auth/login/login.service";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { AuthApi } from "@api/auth.api";
+import { GithubLoginCredentials } from "@api/auth.api.model";
 
 describe("GithubCallbackComponent", () => {
     let component: GithubCallbackComponent;

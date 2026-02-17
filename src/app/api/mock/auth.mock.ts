@@ -5,6 +5,9 @@
  * included in the LICENSE file.
  */
 
+import { GraphQLError } from "graphql";
+import { AppLoginInstructions } from "src/app/app-config.model";
+
 import { PasswordLoginCredentials } from "@api/auth.api.model";
 import {
     AccountFragment,
@@ -14,8 +17,6 @@ import {
     FetchAccountDetailsMutation,
     LoginMutation,
 } from "@api/kamu.graphql.interface";
-import { GraphQLError } from "graphql";
-import { AppLoginInstructions } from "src/app/app-config.model";
 
 export const TEST_GITHUB_CODE = "12345";
 export const TEST_ACCESS_TOKEN_GITHUB = "someTokenViaGithub";

@@ -10,7 +10,16 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
-import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
+import { DatasetSettingsService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-settings.service";
+import { DatasetSettingsGeneralTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.component";
+import { DatasetResetMode } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.types";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
+
 import { ModalService } from "@common/components/modal/modal.service";
 import {
     checkVisible,
@@ -20,16 +29,8 @@ import {
     getInputElementByDataTestId,
 } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
-import { Apollo } from "apollo-angular";
-import { provideToastr } from "ngx-toastr";
-import { DatasetSettingsService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-settings.service";
-import { DatasetSettingsGeneralTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.component";
-import { DatasetResetMode } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.types";
-import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
-import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
+import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
+import { ModalArgumentsInterface } from "@interface/modal.interface";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
     let component: DatasetSettingsGeneralTabComponent;

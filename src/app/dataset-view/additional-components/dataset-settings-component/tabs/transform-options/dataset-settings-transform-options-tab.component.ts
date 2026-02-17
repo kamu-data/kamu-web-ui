@@ -12,11 +12,6 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angul
 import { MatDividerModule } from "@angular/material/divider";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
-import { DatasetBasicsFragment, DatasetFlowType, DatasetKind, TimeUnit } from "@api/kamu.graphql.interface";
-import { BaseComponent } from "@common/components/base.component";
-import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
 import {
     BatchingRuleType,
     FlowTriggerStopPolicyType,
@@ -31,7 +26,13 @@ import {
 } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.types";
 import { TransformTriggerFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.component";
 import { TransformTriggerFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.types";
-import { MaybeNull } from "src/app/interface/app.types";
+
+import { BaseComponent } from "@common/components/base.component";
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
+import { DatasetBasicsFragment, DatasetFlowType, DatasetKind, TimeUnit } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 @Component({
     selector: "app-dataset-settings-transform-options-tab",

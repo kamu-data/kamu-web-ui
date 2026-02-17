@@ -10,9 +10,8 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
 import { MonacoEditorModule } from "ngx-monaco-editor-v2";
-
-import { SqlEditorComponent } from "./components/sql-editor/sql-editor.component";
-import { YamlEditorComponent } from "./components/yaml-editor/yaml-editor.component";
+import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
+import { YamlEditorComponent } from "src/app/editor/components/yaml-editor/yaml-editor.component";
 
 @NgModule({
     imports: [CommonModule, FormsModule, MonacoEditorModule.forRoot(), SqlEditorComponent, YamlEditorComponent],

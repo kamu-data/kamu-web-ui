@@ -19,13 +19,14 @@ import { MetadataTabData } from "src/app/dataset-view/additional-components/meta
 import { metadataPollingSourceTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-polling-source-tab/resolvers/metadata-polling-source-tab.resolver";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { MaybeNull } from "src/app/interface/app.types";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { MaybeNull } from "@interface/app.types";
 
 describe("metadataPollingSourceTabResolver", () => {
     let datasetService: DatasetService;

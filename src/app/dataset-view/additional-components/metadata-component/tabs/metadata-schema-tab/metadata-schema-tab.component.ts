@@ -10,6 +10,11 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 import { MatIconModule } from "@angular/material/icon";
 import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
 
+import { MarkdownModule } from "ngx-markdown";
+import { SchemaViewMode } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-schema-tab/metadata-schema-tab.component.types";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
+import * as YAML from "yaml";
+
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
 import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
 import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
@@ -18,13 +23,8 @@ import { isNil, promiseWithCatch } from "@common/helpers/app.helpers";
 import { schemaAsDataRows } from "@common/helpers/data-schema.helpers";
 import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { MarkdownModule } from "ngx-markdown";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DataSchemaField, DatasetSchema } from "src/app/interface/dataset-schema.interface";
-import * as YAML from "yaml";
-
-import { SchemaViewMode } from "./metadata-schema-tab.component.types";
+import { MaybeNull } from "@interface/app.types";
+import { DataSchemaField, DatasetSchema } from "@interface/dataset-schema.interface";
 
 @Component({
     selector: "app-metadata-schema-tab",

@@ -7,9 +7,9 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { SharedTestModule } from "@common/modules/shared-test.module";
+import { SqlQueryViewerComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/sql-query-viewer/sql-query-viewer.component";
 
-import { SqlQueryViewerComponent } from "./sql-query-viewer.component";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("SqlQueryViewerComponent", () => {
     let component: SqlQueryViewerComponent;

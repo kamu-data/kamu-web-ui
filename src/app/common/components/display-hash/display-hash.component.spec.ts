@@ -9,17 +9,17 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { TEST_BLOCK_HASH } from "@api/mock/dataset.mock";
+import { provideToastr, ToastrService } from "ngx-toastr";
+import { mockDatasetInfo } from "src/app/search/mock.data";
+
+import { DisplayHashComponent } from "@common/components/display-hash/display-hash.component";
 import {
     emitClickOnElementByDataTestId,
     getElementByDataTestId,
     registerMatSvgIcons,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { provideToastr, ToastrService } from "ngx-toastr";
-import { mockDatasetInfo } from "src/app/search/mock.data";
-
-import { DisplayHashComponent } from "./display-hash.component";
+import { TEST_BLOCK_HASH } from "@api/mock/dataset.mock";
 
 describe("DisplayHashComponent", () => {
     let component: DisplayHashComponent;

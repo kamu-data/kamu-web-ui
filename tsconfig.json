@@ -5,7 +5,8 @@
     "paths": {
       "@common/*": ["src/app/common/*"],
       "@api/*": ["src/app/api/*"],
-      "@env/*": ["src/environments/*"]
+      "@env/*": ["src/environments/*"],
+      "@interface/*": ["src/app/interface/*"]
     },
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,

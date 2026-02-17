@@ -9,9 +9,10 @@ import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
 import { EditSetTransformService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/edit-set-transform..service";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
+
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 export const setTransformResolverFn: ResolveFn<MaybeNull<string>> = (route: ActivatedRouteSnapshot) => {
     const editService = inject(EditSetTransformService);

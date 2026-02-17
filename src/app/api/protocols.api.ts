@@ -9,10 +9,11 @@ import { inject, Injectable } from "@angular/core";
 
 import { first, map, Observable } from "rxjs";
 
-import { DatasetProtocolsGQL, DatasetProtocolsQuery } from "@api/kamu.graphql.interface";
 import { ObservableQuery } from "@apollo/client/core";
 import { onlyCompleteData } from "apollo-angular";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
+
+import { DatasetProtocolsGQL, DatasetProtocolsQuery } from "@api/kamu.graphql.interface";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 @Injectable({
     providedIn: "root",

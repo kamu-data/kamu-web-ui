@@ -23,23 +23,6 @@ import { MatRadioModule } from "@angular/material/radio";
 
 import { Observable, shareReplay } from "rxjs";
 
-import {
-    DatasetBasicsFragment,
-    DatasetKind,
-    DatasetPermissionsFragment,
-    DatasetVisibilityInput,
-    DatasetVisibilityOutput,
-} from "@api/kamu.graphql.interface";
-import { BaseComponent } from "@common/components/base.component";
-import { DatasetVisibilityComponent } from "@common/components/dataset-visibility/dataset-visibility.component";
-import { ModalService } from "@common/components/modal/modal.service";
-import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
-import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
-import { promiseWithCatch } from "@common/helpers/app.helpers";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { CompactionTooltipsTexts } from "@common/tooltips/compacting.text";
-import AppValues from "@common/values/app.values";
 import { DatasetSettingsService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-settings.service";
 import {
     DatasetResetMode,
@@ -50,6 +33,24 @@ import { DatasetFlowsService } from "src/app/dataset-view/additional-components/
 import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { BaseComponent } from "@common/components/base.component";
+import { DatasetVisibilityComponent } from "@common/components/dataset-visibility/dataset-visibility.component";
+import { ModalService } from "@common/components/modal/modal.service";
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { CompactionTooltipsTexts } from "@common/tooltips/compacting.text";
+import AppValues from "@common/values/app.values";
+import {
+    DatasetBasicsFragment,
+    DatasetKind,
+    DatasetPermissionsFragment,
+    DatasetVisibilityInput,
+    DatasetVisibilityOutput,
+} from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-dataset-settings-general-tab",

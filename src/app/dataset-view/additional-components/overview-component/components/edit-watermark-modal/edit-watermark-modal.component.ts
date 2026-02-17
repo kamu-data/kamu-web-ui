@@ -13,9 +13,6 @@ import { MatIconModule } from "@angular/material/icon";
 
 import { finalize } from "rxjs";
 
-import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
-import { BaseComponent } from "@common/components/base.component";
-import { MY_MOMENT_FORMATS } from "@common/helpers/data.helpers";
 import { DateTimeAdapter, OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
@@ -23,7 +20,11 @@ import { format, isAfter } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
-import { MaybeNullOrUndefined } from "src/app/interface/app.types";
+
+import { BaseComponent } from "@common/components/base.component";
+import { MY_MOMENT_FORMATS } from "@common/helpers/data.helpers";
+import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
+import { MaybeNullOrUndefined } from "@interface/app.types";
 
 @Component({
     selector: "app-edit-watermark-modal",

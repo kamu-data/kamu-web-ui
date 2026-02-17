@@ -7,11 +7,11 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { MOCK_ACCOUNT_WITH_ROLE } from "@api/mock/dataset-collaborations.mock";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
+import { EditCollaboratorModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/edit-collaborator-modal/edit-collaborator-modal.component";
 
-import { EditCollaboratorModalComponent } from "./edit-collaborator-modal.component";
+import { MOCK_ACCOUNT_WITH_ROLE } from "@api/mock/dataset-collaborations.mock";
 
 describe("EditCollaboratorModalComponent", () => {
     let component: EditCollaboratorModalComponent;

@@ -7,9 +7,9 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { SharedTestModule } from "@common/modules/shared-test.module";
+import { UnsupportedEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/unsupported-event/unsupported-event.component";
 
-import { UnsupportedEventComponent } from "./unsupported-event.component";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("UnsupportedEventComponent", () => {
     let component: UnsupportedEventComponent;

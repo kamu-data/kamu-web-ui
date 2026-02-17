@@ -10,10 +10,6 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { RouterModule } from "@angular/router";
 
-import { DatasetKind } from "@api/kamu.graphql.interface";
-import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import {
     mockMetadataDerivedUpdate,
     mockMetadataRootUpdate,
@@ -29,6 +25,11 @@ import {
     mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
+
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { DatasetKind } from "@api/kamu.graphql.interface";
 
 describe("MetadataComponent", () => {
     let component: MetadataComponent;

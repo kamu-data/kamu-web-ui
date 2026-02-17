@@ -10,7 +10,7 @@ import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 
-import { DatasetFlowApi } from "./dataset-flow.api";
+import { DatasetFlowApi } from "@api/dataset-flow.api";
 import {
     CancelFlowRunDocument,
     CancelFlowRunMutation,
@@ -41,7 +41,7 @@ import {
     SetCompactionFlowConfigDocument,
     SetDatasetFlowTriggerDocument,
     SetIngestFlowConfigDocument,
-} from "./kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
 import {
     mockCancelFlowRunMutationSuccess,
     mockCompactingGetDatasetFlowConfigsSuccess,
@@ -63,8 +63,8 @@ import {
     mockSetDatasetFlowTriggerSuccess,
     mockSetIngestFlowConfigMutation,
     mockTimeDeltaInput,
-} from "./mock/dataset-flow.mock";
-import { TEST_DATASET_ID } from "./mock/dataset.mock";
+} from "@api/mock/dataset-flow.mock";
+import { TEST_DATASET_ID } from "@api/mock/dataset.mock";
 
 describe("DatasetFlowApi", () => {
     let service: DatasetFlowApi;

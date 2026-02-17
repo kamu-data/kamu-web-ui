@@ -10,13 +10,14 @@ import { ResolveFn } from "@angular/router";
 
 import { combineLatest, map } from "rxjs";
 
-import { DatasetKind } from "@api/kamu.graphql.interface";
 import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { MetadataSchemaUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { MaybeNull } from "src/app/interface/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { DatasetKind } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 export const metadataPushSourcesTabResolverFn: ResolveFn<MaybeNull<MetadataTabData>> = () => {
     const datasetService = inject(DatasetService);

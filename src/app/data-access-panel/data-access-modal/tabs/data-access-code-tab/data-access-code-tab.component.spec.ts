@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { DataAccessCodeTabComponent } from "./data-access-code-tab.component";
+import { DataAccessCodeTabComponent } from "src/app/data-access-panel/data-access-modal/tabs/data-access-code-tab/data-access-code-tab.component";
 
 describe("DataAccessCodeTabComponent", () => {
     let component: DataAccessCodeTabComponent;

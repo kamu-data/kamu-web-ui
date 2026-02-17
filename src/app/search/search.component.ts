@@ -10,13 +10,14 @@ import { ChangeDetectionStrategy, Component, inject, Input, numberAttribute, OnI
 import { FormsModule } from "@angular/forms";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 
+import ProjectLinks from "src/app/project-links";
+import { NavigationService } from "src/app/services/navigation.service";
+
 import { DatasetListComponent } from "@common/components/dataset-list-component/dataset-list.component";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { DatasetSearchResult, SearchFilters } from "src/app/interface/search.interface";
-import ProjectLinks from "src/app/project-links";
-import { NavigationService } from "src/app/services/navigation.service";
+import { DatasetSearchResult, SearchFilters } from "@interface/search.interface";
 
 @Component({
     selector: "app-search",

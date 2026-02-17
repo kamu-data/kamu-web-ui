@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { DatasetKindComponent } from "./dataset-kind.component";
+import { DatasetKindComponent } from "@common/components/dataset-kind/dataset-kind.component";
 
 describe("DatasetKindComponent", () => {
     let component: DatasetKindComponent;

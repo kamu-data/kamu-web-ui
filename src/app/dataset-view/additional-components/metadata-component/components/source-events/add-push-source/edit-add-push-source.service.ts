@@ -9,13 +9,16 @@ import { inject, Injectable } from "@angular/core";
 
 import { Observable } from "rxjs";
 
-import { MetadataManifestFormat } from "@api/kamu.graphql.interface";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
+import {
+    AddPushSourceEditFormType,
+    EditAddPushSourceParseType,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 import { parse } from "yaml";
 
-import { AddPushSourceEditFormType, EditAddPushSourceParseType } from "./add-push-source-form.types";
+import { MetadataManifestFormat } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 @Injectable({
     providedIn: "root",

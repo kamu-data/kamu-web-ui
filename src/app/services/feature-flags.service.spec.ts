@@ -10,8 +10,9 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 
 import { AppConfigService } from "src/app/app-config.service";
-import { Feature, FeatureDevelopmentState, FeatureShowMode } from "src/app/interface/feature-flags.interface";
 import { FeatureFlagsService } from "src/app/services/feature-flags.service";
+
+import { Feature, FeatureDevelopmentState, FeatureShowMode } from "@interface/feature-flags.interface";
 
 describe("FeatureFlagsService", () => {
     let service: FeatureFlagsService;

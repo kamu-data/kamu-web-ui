@@ -5,9 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { FlowTriggerScheduleRule, FlowTriggerStopPolicy } from "@api/kamu.graphql.interface";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
-import { MaybeNull } from "src/app/interface/app.types";
+
+import { FlowTriggerScheduleRule, FlowTriggerStopPolicy } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 export interface DatasetSettingsSchedulingTabData extends DatasetViewData {
     schedule: MaybeNull<FlowTriggerScheduleRule>;

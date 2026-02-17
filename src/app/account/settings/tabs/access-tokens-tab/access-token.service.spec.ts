@@ -10,6 +10,10 @@ import { provideAnimations } from "@angular/platform-browser/animations";
 
 import { of } from "rxjs";
 
+import { Apollo } from "apollo-angular";
+import { provideToastr, ToastrService } from "ngx-toastr";
+import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
+
 import { AccessTokenApi } from "@api/access-token.api";
 import { AccessTokenConnection, CreatedAccessToken } from "@api/kamu.graphql.interface";
 import {
@@ -24,10 +28,7 @@ import {
     TOKEN_NAME,
 } from "@api/mock/access-token.mock";
 import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
-import { Apollo } from "apollo-angular";
-import { provideToastr, ToastrService } from "ngx-toastr";
-import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
-import { MaybeNull } from "src/app/interface/app.types";
+import { MaybeNull } from "@interface/app.types";
 
 describe("AccessTokenService", () => {
     let service: AccessTokenService;

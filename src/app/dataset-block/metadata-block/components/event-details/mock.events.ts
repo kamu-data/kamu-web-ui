@@ -5,6 +5,8 @@
  * included in the LICENSE file.
  */
 
+import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
+
 import {
     AddDataEventFragment,
     AddPushSource,
@@ -22,7 +24,6 @@ import {
     SetPollingSource,
     SetVocab,
 } from "@api/kamu.graphql.interface";
-import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
 
 export const mockAddData: AddDataEventFragment = {
     __typename: "AddData",

@@ -10,6 +10,13 @@ import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { first, map } from "rxjs/operators";
 
+import { StoreObject } from "@apollo/client/cache";
+import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { onlyCompleteData } from "apollo-angular";
+
+import { resetCacheHelper, updateCacheHelper } from "@common/helpers/apollo-cache.helper";
+import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
+import AppValues from "@common/values/app.values";
 import {
     CommitEventToDatasetGQL,
     CommitEventToDatasetMutation,
@@ -65,13 +72,7 @@ import {
     UpdateWatermarkGQL,
     UpdateWatermarkMutation,
 } from "@api/kamu.graphql.interface";
-import { StoreObject } from "@apollo/client/cache";
-import { ApolloLink, ObservableQuery } from "@apollo/client/core";
-import { resetCacheHelper, updateCacheHelper } from "@common/helpers/apollo-cache.helper";
-import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
-import AppValues from "@common/values/app.values";
-import { onlyCompleteData } from "apollo-angular";
-import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
+import { DatasetRequestBySql } from "@interface/dataset.interface";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {

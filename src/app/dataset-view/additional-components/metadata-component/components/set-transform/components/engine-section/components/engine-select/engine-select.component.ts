@@ -20,9 +20,10 @@ import {
     ViewChild,
 } from "@angular/core";
 
-import { EngineDesc } from "@api/kamu.graphql.interface";
-import { DataHelpers } from "@common/helpers/data.helpers";
 import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
+
+import { DataHelpers } from "@common/helpers/data.helpers";
+import { EngineDesc } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-engine-select",

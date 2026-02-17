@@ -19,33 +19,33 @@ import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
-
-import { accountSettingsAccessTokensResolverFn } from "./account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
-import { AccessTokenConnection, AccountProvider } from "./api/kamu.graphql.interface";
-import { mockListAccessTokensQuery } from "./api/mock/access-token.mock";
-import { mockAccountDetails } from "./api/mock/auth.mock";
-import { AppConfigService } from "./app-config.service";
-import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "./app-routing";
-import { LoggedUserService } from "./auth/logged-user.service";
-import { LoginMethodsService } from "./auth/login-methods.service";
-import { LoginComponent } from "./auth/login/login.component";
-import { PageNotFoundComponent } from "./common/components/page-not-found/page-not-found.component";
-import { promiseWithCatch } from "./common/helpers/app.helpers";
+import { accountSettingsAccessTokensResolverFn } from "src/app/account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
+import { AppConfigService } from "src/app/app-config.service";
+import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "src/app/app-routing";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { LoginMethodsService } from "src/app/auth/login-methods.service";
+import { LoginComponent } from "src/app/auth/login/login.component";
 import {
     mockMetadataDerivedUpdate,
     mockOverviewDataUpdate,
     mockOverviewDataUpdateNullable,
-} from "./dataset-view/additional-components/data-tabs.mock";
-import { datasetOverviewTabResolverFn } from "./dataset-view/additional-components/overview-component/resolver/dataset-overview-tab.resolver";
-import { OverviewUpdate } from "./dataset-view/dataset.subscriptions.interface";
-import { datasetViewResolverFn } from "./dataset-view/resolvers/dataset-view.resolver";
-import ProjectLinks from "./project-links";
+} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { datasetOverviewTabResolverFn } from "src/app/dataset-view/additional-components/overview-component/resolver/dataset-overview-tab.resolver";
+import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { datasetViewResolverFn } from "src/app/dataset-view/resolvers/dataset-view.resolver";
+import ProjectLinks from "src/app/project-links";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetSearchResult,
     mockFullPowerDatasetPermissionsFragment,
-} from "./search/mock.data";
-import { searchResolverFn } from "./search/resolver/search.resolver";
+} from "src/app/search/mock.data";
+import { searchResolverFn } from "src/app/search/resolver/search.resolver";
+
+import { PageNotFoundComponent } from "@common/components/page-not-found/page-not-found.component";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { AccessTokenConnection, AccountProvider } from "@api/kamu.graphql.interface";
+import { mockListAccessTokensQuery } from "@api/mock/access-token.mock";
+import { mockAccountDetails } from "@api/mock/auth.mock";
 
 describe("Router", () => {
     let router: Router;

@@ -7,9 +7,10 @@
 
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
-import { getAllRouteParams } from "@common/helpers/data.helpers";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
+
+import { getAllRouteParams } from "@common/helpers/data.helpers";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 export const datasetInfoResolverFn: ResolveFn<DatasetInfo> = (route: ActivatedRouteSnapshot) => {
     const params = getAllRouteParams(route);

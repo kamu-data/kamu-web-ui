@@ -5,7 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { DataSchemaFormat, DatasetKind, MetadataBlockFragment } from "@api/kamu.graphql.interface";
+import { SliceUnit } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
+import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
+
 import { DynamicTableColumnClassEnum } from "@common/components/dynamic-table/dynamic-table.interface";
 import {
     DataHelpers,
@@ -13,8 +15,7 @@ import {
     setOperationColumnClass,
     sliceSizeMapperReverse,
 } from "@common/helpers/data.helpers";
-import { SliceUnit } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
-import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
+import { DataSchemaFormat, DatasetKind, MetadataBlockFragment } from "@api/kamu.graphql.interface";
 
 export const metadataBlockSetVocab: MetadataBlockFragment = {
     __typename: "MetadataBlockExtended",

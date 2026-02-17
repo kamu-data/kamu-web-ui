@@ -15,19 +15,20 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTableModule } from "@angular/material/table";
 
-import {
-    DatasetBasicsFragment,
-    FlowProcessEffectiveState,
-    WebhookFlowSubProcess,
-    WebhookFlowSubProcessGroup,
-} from "@api/kamu.graphql.interface";
 import { SubscriptionsTableComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-associated-channels/components/subscriptions-table/subscriptions-table.component";
 import {
     FlowsSelectionState,
     RollupFiltersOptions,
     WebhooksSelectedCategory,
 } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
-import { MaybeUndefined } from "src/app/interface/app.types";
+
+import {
+    DatasetBasicsFragment,
+    FlowProcessEffectiveState,
+    WebhookFlowSubProcess,
+    WebhookFlowSubProcessGroup,
+} from "@api/kamu.graphql.interface";
+import { MaybeUndefined } from "@interface/app.types";
 
 @Component({
     selector: "app-flows-associated-channels",

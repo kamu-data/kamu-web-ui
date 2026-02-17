@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { FlowTablePanelFiltersComponent } from "./flow-table-panel-filters.component";
+import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table/components/flow-table-panel-filters/flow-table-panel-filters.component";
 
 describe("FlowTablePanelFiltersComponent", () => {
     let component: FlowTablePanelFiltersComponent;

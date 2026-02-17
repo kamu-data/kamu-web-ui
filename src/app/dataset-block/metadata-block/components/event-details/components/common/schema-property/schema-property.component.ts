@@ -8,14 +8,15 @@
 import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
+import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+
 import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
 import {
     DynamicTableColumnClassEnum,
     DynamicTableDataRow,
 } from "@common/components/dynamic-table/dynamic-table.interface";
 import { extractSchemaFieldsFromData } from "@common/helpers/data-schema.helpers";
-import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
-import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 @Component({
     selector: "app-schema-property",

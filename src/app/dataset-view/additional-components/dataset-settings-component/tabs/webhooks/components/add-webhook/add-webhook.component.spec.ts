@@ -9,9 +9,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
-import { mockCreateWebhookSubscriptionSuccess } from "@api/mock/webhooks.mock";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { AddWebhookComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/add-webhook/add-webhook.component";
@@ -20,6 +17,10 @@ import { DatasetWebhooksService } from "src/app/dataset-view/additional-componen
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 import { WebhooksService } from "src/app/services/webhooks.service";
+
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { mockCreateWebhookSubscriptionSuccess } from "@api/mock/webhooks.mock";
 
 describe("AddWebhookComponent", () => {
     let component: AddWebhookComponent;

@@ -10,11 +10,10 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
+import { ModalComponent } from "@common/components/modal/modal.component";
+import { ModalService } from "@common/components/modal/modal.service";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { ModalCommandInterface } from "src/app/interface/modal.interface";
-
-import { ModalComponent } from "./modal.component";
-import { ModalService } from "./modal.service";
+import { ModalCommandInterface } from "@interface/modal.interface";
 
 describe("ModalComponent", () => {
     let component: ModalComponent;

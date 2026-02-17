@@ -9,6 +9,13 @@ import { TestBed } from "@angular/core/testing";
 
 import { first, of } from "rxjs";
 
+import { Apollo } from "apollo-angular";
+import { provideToastr, ToastrService } from "ngx-toastr";
+import { AccountService } from "src/app/account/account.service";
+import { CardsStrategyResult } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { ChangeAccountUsernameResult } from "src/app/account/settings/account-settings.constants";
+import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
+
 import { AccountApi } from "@api/account.api";
 import { DatasetApi } from "@api/dataset.api";
 import {
@@ -40,14 +47,8 @@ import {
 } from "@api/mock/account.mock";
 import { mockAccountDetails, TEST_LOGIN, TEST_PAGE_NUMBER } from "@api/mock/auth.mock";
 import { mockDatasetsByAccountNameQuery } from "@api/mock/dataset.mock";
-import { Apollo } from "apollo-angular";
-import { provideToastr, ToastrService } from "ngx-toastr";
-import { AccountService } from "src/app/account/account.service";
-import { CardsStrategyResult } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
-import { ChangeAccountUsernameResult } from "src/app/account/settings/account-settings.constants";
-import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { DatasetsAccountResponse } from "@interface/dataset.interface";
 
 describe("AccountService", () => {
     let service: AccountService;

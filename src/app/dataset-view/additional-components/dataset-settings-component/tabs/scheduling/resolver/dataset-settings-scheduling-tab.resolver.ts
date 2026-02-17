@@ -10,11 +10,12 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular
 
 import { map, Observable, of, switchMap } from "rxjs";
 
-import { DatasetFlowType, GetDatasetFlowTriggerQuery } from "@api/kamu.graphql.interface";
 import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
 import { datasetSettingsGeneralTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/resolver/dataset-settings-general-tab.resolver";
 import { DatasetSettingsSchedulingTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.data";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
+
+import { DatasetFlowType, GetDatasetFlowTriggerQuery } from "@api/kamu.graphql.interface";
 
 export const datasetSettingsSchedulingTabResolverFn: ResolveFn<DatasetSettingsSchedulingTabData | null> = (
     route: ActivatedRouteSnapshot,

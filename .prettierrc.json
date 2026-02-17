@@ -2,7 +2,7 @@
   "semi": true,
   "trailingComma": "all",
   "printWidth": 120,
-   "plugins": ["@ianvs/prettier-plugin-sort-imports"],
+  "plugins": ["@ianvs/prettier-plugin-sort-imports"],
   "importOrder": [
     "<BUILTIN_MODULES>",
     "",
@@ -14,8 +14,9 @@
     "<THIRD_PARTY_MODULES>",
     "",
     "^@env/(.*)$",
-    "^@app/(.*)$",
-    "^@shared/(.*)$",
+    "^@common/(.*)$",
+    "^@api/(.*)$",
+    "^@interface/(.*)$",
     "",
     "^[./]"
   ],
@@ -23,11 +24,7 @@
   "importOrderTypeScriptVersion": "5.0.0",
   "overrides": [
     {
-      "files": [
-        "*.html",
-        "*.ts",
-        "*.scss"
-      ],
+      "files": ["*.html", "*.ts", "*.scss"],
       "options": {
         "tabWidth": 4
       }

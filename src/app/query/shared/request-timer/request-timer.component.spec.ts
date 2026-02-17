@@ -7,10 +7,10 @@
 
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
+import { RequestTimerComponent } from "src/app/query/shared/request-timer/request-timer.component";
+
 import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-
-import { RequestTimerComponent } from "./request-timer.component";
 
 describe("RequestTimerComponent", () => {
     let component: RequestTimerComponent;

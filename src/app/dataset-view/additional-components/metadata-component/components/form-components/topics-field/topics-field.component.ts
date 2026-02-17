@@ -9,12 +9,13 @@ import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
-import { MqttQos } from "@api/kamu.graphql.interface";
-import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { RxReactiveFormsModule, RxwebValidators } from "@rxweb/reactive-form-validators";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 import { KeyValueFormType } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/topics-field/topics-field.types";
+
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import { MqttQos } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-topics-field",

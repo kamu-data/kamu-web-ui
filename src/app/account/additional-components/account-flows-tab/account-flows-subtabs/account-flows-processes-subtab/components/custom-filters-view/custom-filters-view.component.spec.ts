@@ -7,9 +7,10 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { CustomFiltersViewComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/components/custom-filters-view/custom-filters-view.component";
 import { RangeLastAttempt } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 
 describe("CustomFiltersViewComponent", () => {
     let component: CustomFiltersViewComponent;

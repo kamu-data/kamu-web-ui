@@ -9,13 +9,6 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
-import {
-    emitClickOnElementByDataTestId,
-    getElementByDataTestId,
-    getInputElementByDataTestId,
-} from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import {
@@ -25,6 +18,14 @@ import {
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { EditLicenseModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
+
+import {
+    emitClickOnElementByDataTestId,
+    getElementByDataTestId,
+    getInputElementByDataTestId,
+} from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
 
 describe("EditLicenseModalComponent", () => {
     let component: EditLicenseModalComponent;

@@ -11,9 +11,8 @@ import { first } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
-import { MaybeNull } from "src/app/interface/app.types";
 
-import { AccountApi } from "./account.api";
+import { AccountApi } from "@api/account.api";
 import {
     AccountByNameDocument,
     AccountByNameQuery,
@@ -53,7 +52,7 @@ import {
     FlowProcessOrderField,
     ModifyPasswordSuccess,
     OrderingDirection,
-} from "./kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
 import {
     mockAccountByNameNotFoundResponse,
     mockAccountByNameResponse,
@@ -71,8 +70,9 @@ import {
     mockChangeAdminPasswordMutation,
     mockChangeUserPasswordMutation,
     mockDeleteAccountByNameMutation,
-} from "./mock/account.mock";
-import { mockAccountDetails, TEST_ACCOUNT_EMAIL, TEST_LOGIN } from "./mock/auth.mock";
+} from "@api/mock/account.mock";
+import { mockAccountDetails, TEST_ACCOUNT_EMAIL, TEST_LOGIN } from "@api/mock/auth.mock";
+import { MaybeNull } from "@interface/app.types";
 
 describe("AccountApi", () => {
     let service: AccountApi;

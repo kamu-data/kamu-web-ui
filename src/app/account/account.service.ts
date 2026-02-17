@@ -11,11 +11,12 @@ import { combineLatest, forkJoin, Observable } from "rxjs";
 import { map } from "rxjs/operators";
 
 import { ToastrService } from "ngx-toastr";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
+import { CardsStrategyResult } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { ChangeAccountUsernameResult } from "src/app/account/settings/account-settings.constants";
+import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 
-import { AccountApi } from "../api/account.api";
-import { DatasetApi } from "../api/dataset.api";
+import { AccountApi } from "@api/account.api";
+import { DatasetApi } from "@api/dataset.api";
 import {
     AccountDatasetFlowsPausedQuery,
     AccountFlowFilters,
@@ -40,10 +41,9 @@ import {
     FlowProcessFilters,
     FlowProcessGroupRollupDataFragment,
     FlowProcessOrdering,
-} from "../api/kamu.graphql.interface";
-import { FlowsTableData } from "../dataset-flow/flows-table/flows-table.types";
-import { CardsStrategyResult } from "./additional-components/account-flows-tab/account-flows-tab.types";
-import { ChangeAccountUsernameResult } from "./settings/account-settings.constants";
+} from "@api/kamu.graphql.interface";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { DatasetsAccountResponse } from "@interface/dataset.interface";
 
 @Injectable({
     providedIn: "root",

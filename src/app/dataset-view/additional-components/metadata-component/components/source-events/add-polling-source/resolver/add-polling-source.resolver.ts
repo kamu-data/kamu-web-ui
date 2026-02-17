@@ -9,9 +9,10 @@ import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
 import { EditPollingSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/edit-polling-source.service";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
+
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 export const addPollingSourceResolverFn: ResolveFn<MaybeNull<string>> = (route: ActivatedRouteSnapshot) => {
     const editService = inject(EditPollingSourceService);

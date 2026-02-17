@@ -9,8 +9,7 @@ import { TestBed } from "@angular/core/testing";
 import { ResolveFn } from "@angular/router";
 
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-
-import { datasetViewActiveTabResolverFn } from "./dataset-view-active-tab.resolver";
+import { datasetViewActiveTabResolverFn } from "src/app/dataset-view/resolvers/dataset-view-active-tab.resolver";
 
 describe("datasetViewActiveTabResolverFn", () => {
     const executeResolver: ResolveFn<DatasetViewTypeEnum> = (...resolverParameters) =>

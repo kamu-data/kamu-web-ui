@@ -10,12 +10,13 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { AddDataEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/add-data-event/add-data-event.component";
 import { mockAddData } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
+
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("AddDataEventComponent", () => {
     let component: AddDataEventComponent;

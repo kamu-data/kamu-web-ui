@@ -8,8 +8,9 @@
 import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import { EventTimeSource } from "@api/kamu.graphql.interface";
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+
+import { EventTimeSource } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-event-time-property",

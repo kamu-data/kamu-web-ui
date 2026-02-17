@@ -11,10 +11,6 @@ import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModu
 import { MatRadioModule } from "@angular/material/radio";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
-import { FlowTriggerBreakingChangeRule, FlowTriggerRuleInput } from "@api/kamu.graphql.interface";
-import { BaseComponent } from "@common/components/base.component";
-import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
-import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
 import { BatchingRuleType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { BufferingBatchingRuleFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/buffering-batching-rule-form/buffering-batching-rule-form.component";
 import { BufferingBatchingRuleFormType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/buffering-batching-rule-form/buffering-batching-rule-form.types";
@@ -23,7 +19,12 @@ import {
     TransformTriggerFormType,
     TransformTriggerFormValue,
 } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.types";
-import { MaybeNull } from "src/app/interface/app.types";
+
+import { BaseComponent } from "@common/components/base.component";
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
+import { FlowTriggerBreakingChangeRule, FlowTriggerRuleInput } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 @Component({
     selector: "app-transform-trigger-form",

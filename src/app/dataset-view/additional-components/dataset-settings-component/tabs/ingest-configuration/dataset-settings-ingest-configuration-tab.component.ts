@@ -11,9 +11,6 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 
-import { DatasetBasicsFragment, DatasetKind } from "@api/kamu.graphql.interface";
-import { BaseComponent } from "@common/components/base.component";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { DatasetFlowConfigService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-config.service";
 import { DatasetSettingsIngestConfigurationTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.data";
 import {
@@ -22,6 +19,10 @@ import {
 } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.types";
 import { FlowRetryPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/flow-retry-policy-form/flow-retry-policy-form.component";
 import { IngestConfigurationRuleFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/ingest-configuration-rule-form/ingest-configuration-rule-form.component";
+
+import { BaseComponent } from "@common/components/base.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { DatasetBasicsFragment, DatasetKind } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-dataset-settings-ingest-configuration-tab",

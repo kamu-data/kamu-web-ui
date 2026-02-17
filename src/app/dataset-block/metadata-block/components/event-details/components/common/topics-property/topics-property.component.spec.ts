@@ -7,11 +7,11 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { MqttQos } from "@api/kamu.graphql.interface";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { provideToastr } from "ngx-toastr";
+import { TopicsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/topics-property/topics-property.component";
 
-import { TopicsPropertyComponent } from "./topics-property.component";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { MqttQos } from "@api/kamu.graphql.interface";
 
 describe("TopicsPropertyComponent", () => {
     let component: TopicsPropertyComponent;

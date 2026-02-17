@@ -30,8 +30,8 @@ import {
     DatasetWebhookUpdateSubscriptionMutation,
     WebhookEventTypesDocument,
     WebhookEventTypesQuery,
-} from "./kamu.graphql.interface";
-import { TEST_DATASET_ID } from "./mock/dataset.mock";
+} from "@api/kamu.graphql.interface";
+import { TEST_DATASET_ID } from "@api/mock/dataset.mock";
 import {
     mockDatasetWebhookByIdQuery,
     mockDatasetWebhookCreateSubscriptionMutation,
@@ -44,8 +44,8 @@ import {
     mockDatasetWebhookUpdateSubscriptionMutation,
     mockWebhookEventTypesQuery,
     mockWebhookSubscriptionInput,
-} from "./mock/webhooks.mock";
-import { WebhooksApi } from "./webhooks.api";
+} from "@api/mock/webhooks.mock";
+import { WebhooksApi } from "@api/webhooks.api";
 
 describe("WebhooksApi", () => {
     let service: WebhooksApi;

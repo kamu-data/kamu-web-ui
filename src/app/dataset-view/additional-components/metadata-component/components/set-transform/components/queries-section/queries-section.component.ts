@@ -10,8 +10,9 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 
-import { SqlQueryStep } from "@api/kamu.graphql.interface";
 import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
+
+import { SqlQueryStep } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-queries-section",

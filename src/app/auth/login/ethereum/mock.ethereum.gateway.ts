@@ -5,10 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { Web3WalletOwnershipVerificationRequest } from "@api/auth.api.model";
-import { MaybeNull } from "src/app/interface/app.types";
+import { EthereumGateway } from "src/app/auth/login/ethereum/ethereum.gateway";
 
-import { EthereumGateway } from "./ethereum.gateway";
+import { Web3WalletOwnershipVerificationRequest } from "@api/auth.api.model";
+import { MaybeNull } from "@interface/app.types";
 
 export class MockEthereumGateway implements EthereumGateway {
     public static readonly WALLET_ADDRESS = "0xMockWalletAddress";

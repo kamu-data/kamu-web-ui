@@ -8,24 +8,25 @@
 import { Provider } from "@angular/core";
 import { ROUTES, Routes } from "@angular/router";
 
-import { accountGuard } from "./account/guards/account.guard";
-import { AdminDashboardComponent } from "./admin-view/admin-dashboard/admin-dashboard.component";
-import { AppConfigService } from "./app-config.service";
-import { AdminGuard } from "./auth/guards/admin.guard";
-import { AuthenticatedGuard } from "./auth/guards/authenticated.guard";
-import { LoginGuard } from "./auth/guards/login.guard";
-import { GithubCallbackComponent } from "./auth/login/github-callback/github.callback";
-import { LoginComponent } from "./auth/login/login.component";
-import { ReturnToCliComponent } from "./auth/login/return-to-cli/return-to-cli.component";
-import { AccountWhitelistNotFoundComponent } from "./common/components/account-whitelist-not-found/account-whitelist-not-found.component";
-import { PageNotFoundComponent } from "./common/components/page-not-found/page-not-found.component";
-import { accessTokenExpiredGuardFn } from "./common/guards/access-token-expired.guard";
-import { forbidAnonymousAccessGuardFn } from "./common/guards/forbid-anonymous-access.guard";
-import RoutingResolvers from "./common/resolvers/routing-resolvers";
-import { blockMetadataResolverFn } from "./dataset-block/metadata-block/resolver/block-metadata.resolver";
-import ProjectLinks from "./project-links";
-import { searchResolverFn } from "./search/resolver/search.resolver";
-import { SearchComponent } from "./search/search.component";
+import { accountGuard } from "src/app/account/guards/account.guard";
+import { AdminDashboardComponent } from "src/app/admin-view/admin-dashboard/admin-dashboard.component";
+import { AppConfigService } from "src/app/app-config.service";
+import { AdminGuard } from "src/app/auth/guards/admin.guard";
+import { AuthenticatedGuard } from "src/app/auth/guards/authenticated.guard";
+import { LoginGuard } from "src/app/auth/guards/login.guard";
+import { GithubCallbackComponent } from "src/app/auth/login/github-callback/github.callback";
+import { LoginComponent } from "src/app/auth/login/login.component";
+import { ReturnToCliComponent } from "src/app/auth/login/return-to-cli/return-to-cli.component";
+import { blockMetadataResolverFn } from "src/app/dataset-block/metadata-block/resolver/block-metadata.resolver";
+import ProjectLinks from "src/app/project-links";
+import { searchResolverFn } from "src/app/search/resolver/search.resolver";
+import { SearchComponent } from "src/app/search/search.component";
+
+import { AccountWhitelistNotFoundComponent } from "@common/components/account-whitelist-not-found/account-whitelist-not-found.component";
+import { PageNotFoundComponent } from "@common/components/page-not-found/page-not-found.component";
+import { accessTokenExpiredGuardFn } from "@common/guards/access-token-expired.guard";
+import { forbidAnonymousAccessGuardFn } from "@common/guards/forbid-anonymous-access.guard";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 export const PUBLIC_ROUTES: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },

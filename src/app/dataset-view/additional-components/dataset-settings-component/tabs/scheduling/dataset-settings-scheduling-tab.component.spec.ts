@@ -9,9 +9,6 @@ import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { TimeDelta, TimeUnit } from "@api/kamu.graphql.interface";
-import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
@@ -25,6 +22,10 @@ import { IngestTriggerFormHarness } from "src/app/dataset-view/additional-compon
 import { FlowStopPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.component";
 import { FlowStopPolicyFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.harness";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+
+import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { TimeDelta, TimeUnit } from "@api/kamu.graphql.interface";
 
 describe("DatasetSettingsSchedulingTabComponent", () => {
     let component: DatasetSettingsSchedulingTabComponent;

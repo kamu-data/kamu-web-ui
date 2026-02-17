@@ -12,14 +12,14 @@ import { Observable, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { metadataSchemaTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-schema-tab/resolvers/metadata-schema-tab.resolver";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { MaybeNull } from "src/app/interface/app.types";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 
-import { metadataSchemaTabResolverFn } from "./metadata-schema-tab.resolver";
+import { MaybeNull } from "@interface/app.types";
 
 describe("metadataSchemaTabResolver", () => {
     let datasetService: DatasetService;

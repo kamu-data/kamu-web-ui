@@ -21,25 +21,26 @@ import { NavigationEnd, Router, RouterEvent, RouterOutlet } from "@angular/route
 
 import { filter, map } from "rxjs/operators";
 
-import { AccountFragment, AccountProvider, AccountType } from "@api/kamu.graphql.interface";
 import { loadErrorMessages } from "@apollo/client/dev";
-import { BaseComponent } from "@common/components/base.component";
-import { ModalComponent } from "@common/components/modal/modal.component";
-import { ModalService } from "@common/components/modal/modal.service";
-import { SpinnerComponent } from "@common/components/spinner/spinner/spinner.component";
-import { isMobileView, promiseWithCatch } from "@common/helpers/app.helpers";
-import AppValues from "@common/values/app.values";
 import { AppUIConfigFeatureFlags } from "src/app/app-config.model";
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { LoginMethodsService } from "src/app/auth/login-methods.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { AppHeaderComponent } from "src/app/header/app-header/app-header.component";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
 import ProjectLinks from "src/app/project-links";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { BaseComponent } from "@common/components/base.component";
+import { ModalComponent } from "@common/components/modal/modal.component";
+import { ModalService } from "@common/components/modal/modal.service";
+import { SpinnerComponent } from "@common/components/spinner/spinner/spinner.component";
+import { isMobileView, promiseWithCatch } from "@common/helpers/app.helpers";
+import AppValues from "@common/values/app.values";
+import { AccountFragment, AccountProvider, AccountType } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface";
 
 import packageFile from "../../package.json";
 

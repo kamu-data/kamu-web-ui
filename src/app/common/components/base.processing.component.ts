@@ -7,10 +7,10 @@
 
 import { inject } from "@angular/core";
 
-import { ModalService } from "@common/components/modal/modal.service";
 import { NavigationService } from "src/app/services/navigation.service";
 
-import { BaseComponent } from "./base.component";
+import { BaseComponent } from "@common/components/base.component";
+import { ModalService } from "@common/components/modal/modal.service";
 
 export abstract class BaseProcessingComponent extends BaseComponent {
     protected navigationService = inject(NavigationService);

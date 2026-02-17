@@ -5,11 +5,12 @@
  * included in the LICENSE file.
  */
 
+import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
+
 import {
     SearchAdditionalHeaderButtonInterface,
     SearchAdditionalHeaderButtonMenuAction,
 } from "@common/components/search-additional-buttons/search-additional-buttons.interface";
-import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
 
 export const SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS: SearchAdditionalHeaderButtonInterface[] = [
     {

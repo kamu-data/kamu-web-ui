@@ -13,12 +13,6 @@ import { ActivatedRoute } from "@angular/router";
 
 import { delay, of } from "rxjs";
 
-import { DatasetFlowProcesses, FlowProcessEffectiveState, FlowStatus } from "@api/kamu.graphql.interface";
-import { mockAccountDetails } from "@api/mock/auth.mock";
-import { mockDatasetFlowsProcessesQuery, mockFlowsTableData } from "@api/mock/dataset-flow.mock";
-import { ModalService } from "@common/components/modal/modal.service";
-import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import AppValues from "@common/values/app.values";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { mockDatasets } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
@@ -29,7 +23,6 @@ import { FlowsComponent } from "src/app/dataset-view/additional-components/flows
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { FlowsSelectionStateService } from "src/app/dataset-view/additional-components/flows-component/services/flows-selection-state.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
@@ -38,6 +31,14 @@ import {
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
+
+import { ModalService } from "@common/components/modal/modal.service";
+import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import AppValues from "@common/values/app.values";
+import { DatasetFlowProcesses, FlowProcessEffectiveState, FlowStatus } from "@api/kamu.graphql.interface";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+import { mockDatasetFlowsProcessesQuery, mockFlowsTableData } from "@api/mock/dataset-flow.mock";
+import { ModalArgumentsInterface } from "@interface/modal.interface";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;

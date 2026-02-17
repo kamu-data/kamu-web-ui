@@ -9,14 +9,14 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { FlowProcessEffectiveState, FlowProcessSummary } from "@api/kamu.graphql.interface";
-import { mockAccountFlowsAsCardsQuery } from "@api/mock/account.mock";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
+import { WebhookFlowProcessCardComponent } from "src/app/flow-cards/webhook-flow-process-card/webhook-flow-process-card.component";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 
-import { WebhookFlowProcessCardComponent } from "./webhook-flow-process-card.component";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { FlowProcessEffectiveState, FlowProcessSummary } from "@api/kamu.graphql.interface";
+import { mockAccountFlowsAsCardsQuery } from "@api/mock/account.mock";
 
 describe("WebhookFlowProcessCardComponent", () => {
     let component: WebhookFlowProcessCardComponent;

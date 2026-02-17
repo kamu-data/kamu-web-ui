@@ -10,6 +10,11 @@ import { inject, Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { DatasetOperationError } from "@common/values/errors";
 import { DatasetApi } from "@api/dataset.api";
 import {
     AccountFragment,
@@ -18,11 +23,7 @@ import {
     DatasetKind,
     DatasetVisibility,
 } from "@api/kamu.graphql.interface";
-import { DatasetOperationError } from "@common/values/errors";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { MaybeNull } from "src/app/interface/app.types";
-import { NavigationService } from "src/app/services/navigation.service";
+import { MaybeNull } from "@interface/app.types";
 
 @Injectable({ providedIn: "root" })
 export class DatasetCreateService {

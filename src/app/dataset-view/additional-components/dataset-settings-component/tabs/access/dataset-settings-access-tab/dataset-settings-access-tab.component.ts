@@ -17,13 +17,6 @@ import { NavigationEnd, Router, RouterLink } from "@angular/router";
 
 import { catchError, filter, firstValueFrom, from, map, of, switchMap, take } from "rxjs";
 
-import { AccountWithRole, DatasetAccessRole, DatasetBasicsFragment, PageBasedInfo } from "@api/kamu.graphql.interface";
-import { BaseComponent } from "@common/components/base.component";
-import { ModalService } from "@common/components/modal/modal.service";
-import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
-import { promiseWithCatch, requireValue } from "@common/helpers/app.helpers";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import AppValues from "@common/values/app.values";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -34,6 +27,14 @@ import { EditCollaboratorModalComponent } from "src/app/dataset-view/additional-
 import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { BaseComponent } from "@common/components/base.component";
+import { ModalService } from "@common/components/modal/modal.service";
+import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+import { promiseWithCatch, requireValue } from "@common/helpers/app.helpers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
+import { AccountWithRole, DatasetAccessRole, DatasetBasicsFragment, PageBasedInfo } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-dataset-settings-access-tab",

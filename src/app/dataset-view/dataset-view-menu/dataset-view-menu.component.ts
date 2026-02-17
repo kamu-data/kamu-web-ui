@@ -22,15 +22,16 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatSidenav } from "@angular/material/sidenav";
 import { RouterLink } from "@angular/router";
 
-import { DatasetBasicsFragment, DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
-import { WidgetHeightService } from "@common/components/lineage-graph/widget-height.service";
-import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
-import { isMobileView, promiseWithCatch } from "@common/helpers/app.helpers";
-import { SideNavHelper } from "@common/helpers/sidenav.helper";
 import { AppConfigService } from "src/app/app-config.service";
 import { DataAccessPanelComponent } from "src/app/data-access-panel/data-access-panel.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetPermissionsService } from "src/app/dataset-view/dataset.permissions.service";
+
+import { WidgetHeightService } from "@common/components/lineage-graph/widget-height.service";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { isMobileView, promiseWithCatch } from "@common/helpers/app.helpers";
+import { SideNavHelper } from "@common/helpers/sidenav.helper";
+import { DatasetBasicsFragment, DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-dataset-view-menu",

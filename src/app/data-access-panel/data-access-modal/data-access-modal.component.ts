@@ -13,8 +13,6 @@ import { RouterLink } from "@angular/router";
 
 import { Observable } from "rxjs";
 
-import { DatasetBasicsFragment, DatasetEndpoints, DatasetKind } from "@api/kamu.graphql.interface";
-import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -33,8 +31,11 @@ import { DataAccessSqlTabComponent } from "src/app/data-access-panel/data-access
 import { DataAccessStreamTabComponent } from "src/app/data-access-panel/data-access-modal/tabs/data-access-stream-tab/data-access-stream-tab.component";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { MaybeUndefined } from "src/app/interface/app.types";
 import { ProtocolsService } from "src/app/services/protocols.service";
+
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { DatasetBasicsFragment, DatasetEndpoints, DatasetKind } from "@api/kamu.graphql.interface";
+import { MaybeUndefined } from "@interface/app.types";
 
 @Component({
     selector: "app-data-access-modal",

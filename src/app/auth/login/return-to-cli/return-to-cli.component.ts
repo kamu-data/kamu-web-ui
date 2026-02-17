@@ -7,8 +7,9 @@
 
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 
-import AppValues from "@common/values/app.values";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+
+import AppValues from "@common/values/app.values";
 
 @Component({
     selector: "app-return-to-cli",

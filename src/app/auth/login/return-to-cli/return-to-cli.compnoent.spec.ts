@@ -8,8 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
-
-import { ReturnToCliComponent } from "./return-to-cli.component";
+import { ReturnToCliComponent } from "src/app/auth/login/return-to-cli/return-to-cli.component";
 
 describe("ReturnToCliComponent", () => {
     let component: ReturnToCliComponent;

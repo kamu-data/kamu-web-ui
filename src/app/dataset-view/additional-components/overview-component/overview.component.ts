@@ -14,23 +14,6 @@ import { RouterLink } from "@angular/router";
 
 import { catchError, from, Observable, of, take } from "rxjs";
 
-import {
-    DatasetAccessRole,
-    DatasetCurrentInfoFragment,
-    DatasetKind,
-    MetadataBlockFragment,
-} from "@api/kamu.graphql.interface";
-import { BaseDatasetDataComponent } from "@common/components/base-dataset-data.component";
-import { DisplayHashComponent } from "@common/components/display-hash/display-hash.component";
-import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
-import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
-import { DynamicTableColumnDescriptor } from "@common/components/dynamic-table/dynamic-table.interface";
-import { DragAndDropDirective } from "@common/directives/drag-and-drop.directive";
-import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
-import { isNil, promiseWithCatch } from "@common/helpers/app.helpers";
-import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import AppValues from "@common/values/app.values";
 import { NgbModal, NgbModalRef, NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -43,10 +26,28 @@ import { EditWatermarkModalComponent } from "src/app/dataset-view/additional-com
 import { OverviewHistorySummaryHeaderComponent } from "src/app/dataset-view/additional-components/overview-component/components/overview-history-summary-header/overview-history-summary-header.component";
 import { ReadmeSectionComponent } from "src/app/dataset-view/additional-components/overview-component/components/readme-section/readme-section.component";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
 import ProjectLinks from "src/app/project-links";
 import { FileUploadService } from "src/app/services/file-upload.service";
+
+import { BaseDatasetDataComponent } from "@common/components/base-dataset-data.component";
+import { DisplayHashComponent } from "@common/components/display-hash/display-hash.component";
+import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
+import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
+import { DynamicTableColumnDescriptor } from "@common/components/dynamic-table/dynamic-table.interface";
+import { DragAndDropDirective } from "@common/directives/drag-and-drop.directive";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { isNil, promiseWithCatch } from "@common/helpers/app.helpers";
+import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
+import {
+    DatasetAccessRole,
+    DatasetCurrentInfoFragment,
+    DatasetKind,
+    MetadataBlockFragment,
+} from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 @Component({
     selector: "app-overview",

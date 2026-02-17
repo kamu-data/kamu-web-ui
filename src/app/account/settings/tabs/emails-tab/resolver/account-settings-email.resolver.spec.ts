@@ -11,14 +11,14 @@ import { TestBed } from "@angular/core/testing";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
 
-import { AccountWithEmailFragment } from "@api/kamu.graphql.interface";
-import { mockAccountDetails } from "@api/mock/auth.mock";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
+import { accountSettingsEmailResolverFn } from "src/app/account/settings/tabs/emails-tab/resolver/account-settings-email.resolver";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 
-import { accountSettingsEmailResolverFn } from "./account-settings-email.resolver";
+import { AccountWithEmailFragment } from "@api/kamu.graphql.interface";
+import { mockAccountDetails } from "@api/mock/auth.mock";
 
 describe("accountSettingsEmailResolverFn", () => {
     let accountEmailService: AccountEmailService;

@@ -11,12 +11,12 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular
 
 import { Observable, of } from "rxjs";
 
-import AppValues from "@common/values/app.values";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { AppConfigService } from "src/app/app-config.service";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { datasetSettingsVarAndSecretsResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/resolver/dataset-settings-var-and-secrets.resolver";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
@@ -24,7 +24,7 @@ import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 
-import { datasetSettingsVarAndSecretsResolverFn } from "./dataset-settings-var-and-secrets.resolver";
+import AppValues from "@common/values/app.values";
 
 describe("datasetSettingsVarAndSecretsResolverFn", () => {
     let datasetService: DatasetService;

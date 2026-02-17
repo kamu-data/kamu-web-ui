@@ -9,9 +9,10 @@ import { CdkStepper } from "@angular/cdk/stepper";
 import { ChangeDetectorRef, ElementRef } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { SetPollingSourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { StepperNavigationComponent } from "src/app/dataset-view/additional-components/metadata-component/components/stepper-navigation/stepper-navigation.component";
+
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 
 describe("StepperNavigationComponent", () => {
     let component: StepperNavigationComponent;

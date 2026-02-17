@@ -12,10 +12,10 @@ import { Observable } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { metadataWatermarkTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-watermark-tab/resolvers/metadata-watermark-tab.resolver";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
@@ -23,7 +23,7 @@ import {
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 
-import { metadataWatermarkTabResolverFn } from "./metadata-watermark-tab.resolver";
+import { MaybeNullOrUndefined } from "@interface/app.types";
 
 describe("metadataWatermarkTabResolver", () => {
     let datasetService: DatasetService;

@@ -9,18 +9,18 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatButtonToggleChange } from "@angular/material/button-toggle";
 import { MatChipListboxChange } from "@angular/material/chips";
 
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
+import { SubscriptionsTableComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-associated-channels/components/subscriptions-table/subscriptions-table.component";
+import { FlowsAssociatedChannelsComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-associated-channels/flows-associated-channels.component";
+import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+
 import {
     FlowProcessEffectiveState,
     WebhookFlowSubProcess,
     WebhookFlowSubProcessGroup,
 } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowsProcessesQuery } from "@api/mock/dataset-flow.mock";
-import { Apollo } from "apollo-angular";
-import { provideToastr } from "ngx-toastr";
-import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-
-import { SubscriptionsTableComponent } from "./components/subscriptions-table/subscriptions-table.component";
-import { FlowsAssociatedChannelsComponent } from "./flows-associated-channels.component";
 
 describe("FlowsAssociatedChannelsComponent", () => {
     let component: FlowsAssociatedChannelsComponent;

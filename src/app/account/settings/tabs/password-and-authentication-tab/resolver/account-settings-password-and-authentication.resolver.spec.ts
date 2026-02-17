@@ -10,12 +10,12 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
-import { AccountFragment } from "@api/kamu.graphql.interface";
-import { mockAccountDetails } from "@api/mock/auth.mock";
 import { Apollo } from "apollo-angular";
+import { accountSettingsPasswordAndAuthenticationResolverFn } from "src/app/account/settings/tabs/password-and-authentication-tab/resolver/account-settings-password-and-authentication.resolver";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 
-import { accountSettingsPasswordAndAuthenticationResolverFn } from "./account-settings-password-and-authentication.resolver";
+import { AccountFragment } from "@api/kamu.graphql.interface";
+import { mockAccountDetails } from "@api/mock/auth.mock";
 
 describe("accountSettingsPasswordAndAuthenticationResolver", () => {
     let loggedUserService: LoggedUserService;

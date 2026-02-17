@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { MarkdownFormatPipe, MarkdownSupportedFormats } from "./markdown-format.pipe";
+import { MarkdownFormatPipe, MarkdownSupportedFormats } from "@common/pipes/markdown-format.pipe";
 
 describe("MarkdownFormatPipe", () => {
     const pipe = new MarkdownFormatPipe();

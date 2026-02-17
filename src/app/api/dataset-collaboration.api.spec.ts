@@ -10,7 +10,7 @@ import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 
-import { DatasetCollaborationApi } from "./dataset-collaboration.api";
+import { DatasetCollaborationApi } from "@api/dataset-collaboration.api";
 import {
     DatasetAccessRole,
     DatasetListCollaboratorsDocument,
@@ -23,16 +23,16 @@ import {
     SetRoleCollaboratorMutation,
     UnsetRoleCollaboratorDocument,
     UnsetRoleCollaboratorMutation,
-} from "./kamu.graphql.interface";
-import { TEST_ACCOUNT_ID } from "./mock/auth.mock";
+} from "@api/kamu.graphql.interface";
+import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
 import {
     mockDatasetListCollaboratorsQuery,
     mockDatasetSearchCollaboratorQuery,
     mockDatasetUserRoleQuery,
     mockSetRoleCollaboratorMutation,
     mockUnsetRoleCollaboratorMutation,
-} from "./mock/dataset-collaborations.mock";
-import { TEST_DATASET_ID } from "./mock/dataset.mock";
+} from "@api/mock/dataset-collaborations.mock";
+import { TEST_DATASET_ID } from "@api/mock/dataset.mock";
 
 describe("DatasetCollaborationApi", () => {
     let service: DatasetCollaborationApi;

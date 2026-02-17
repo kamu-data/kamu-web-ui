@@ -9,6 +9,11 @@ import { TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
+import { Apollo } from "apollo-angular";
+import { provideToastr, ToastrService } from "ngx-toastr";
+import { CreateWebhookSubscriptionSuccess } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
+import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
+
 import { WebhookSubscription } from "@api/kamu.graphql.interface";
 import { TEST_DATASET_ID } from "@api/mock/dataset.mock";
 import {
@@ -30,10 +35,6 @@ import {
     mockWebhookSubscriptionInput,
 } from "@api/mock/webhooks.mock";
 import { WebhooksApi } from "@api/webhooks.api";
-import { Apollo } from "apollo-angular";
-import { provideToastr, ToastrService } from "ngx-toastr";
-import { CreateWebhookSubscriptionSuccess } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
-import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 
 describe("DatasetWebhooksService", () => {
     let service: DatasetWebhooksService;

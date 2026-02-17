@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { TooltipIconComponent } from "./tooltip-icon.component";
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 
 describe("TooltipIconComponent", () => {
     let component: TooltipIconComponent;

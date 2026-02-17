@@ -11,23 +11,23 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
-import { AccountWithRoleConnection, DatasetAccessRole } from "@api/kamu.graphql.interface";
-import { mockAccountDetails } from "@api/mock/auth.mock";
-import { MOCK_ACCOUNT_WITH_ROLE, mockDatasetListCollaboratorsQuery } from "@api/mock/dataset-collaborations.mock";
-import { ModalService } from "@common/components/modal/modal.service";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
+import { AddPeopleModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.component";
+import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
+import { DatasetSettingsAccessTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-settings-access-tab.component";
+import { EditCollaboratorModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/edit-collaborator-modal/edit-collaborator-modal.component";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 
-import { AddPeopleModalComponent } from "./add-people-modal/add-people-modal.component";
-import { DatasetCollaborationsService } from "./dataset-collaborations.service";
-import { DatasetSettingsAccessTabComponent } from "./dataset-settings-access-tab.component";
-import { EditCollaboratorModalComponent } from "./edit-collaborator-modal/edit-collaborator-modal.component";
+import { ModalService } from "@common/components/modal/modal.service";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { AccountWithRoleConnection, DatasetAccessRole } from "@api/kamu.graphql.interface";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+import { MOCK_ACCOUNT_WITH_ROLE, mockDatasetListCollaboratorsQuery } from "@api/mock/dataset-collaborations.mock";
+import { ModalArgumentsInterface } from "@interface/modal.interface";
 
 describe("DatasetSettingsAccessTabComponent", () => {
     let component: DatasetSettingsAccessTabComponent;

@@ -9,17 +9,17 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { provideToastr } from "ngx-toastr";
+import { BlockNavigationComponent } from "src/app/dataset-block/metadata-block/components/block-navigation/block-navigation.component";
+import { mockHistoryUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { MOCK_DATASET_INFO } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+
 import {
     dispatchInputEvent,
     getElementByDataTestId,
     registerMatSvgIcons,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { provideToastr } from "ngx-toastr";
-import { mockHistoryUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
-import { MOCK_DATASET_INFO } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-
-import { BlockNavigationComponent } from "./block-navigation.component";
 
 describe("BlockNavigationComponent", () => {
     let component: BlockNavigationComponent;

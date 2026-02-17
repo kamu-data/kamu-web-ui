@@ -12,8 +12,6 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { mockHistoryUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
@@ -24,6 +22,9 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("HistoryComponent", () => {
     let component: HistoryComponent;

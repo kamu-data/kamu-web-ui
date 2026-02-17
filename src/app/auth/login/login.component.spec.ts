@@ -14,20 +14,6 @@ import { ActivatedRoute } from "@angular/router";
 
 import { BehaviorSubject, of } from "rxjs";
 
-import { AuthApi } from "@api/auth.api";
-import { PasswordLoginCredentials } from "@api/auth.api.model";
-import { AccountProvider } from "@api/kamu.graphql.interface";
-import { mockPasswordLoginResponse, TEST_LOGIN, TEST_PASSWORD } from "@api/mock/auth.mock";
-import { SpinnerComponent } from "@common/components/spinner/spinner/spinner.component";
-import {
-    checkInputDisabled,
-    checkVisible,
-    emitClickOnElementByDataTestId,
-    findElementByDataTestId,
-    getElementByDataTestId,
-    registerMatSvgIcons,
-    setFieldValue,
-} from "@common/helpers/base-test.helpers.spec";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { AppConfigService } from "src/app/app-config.service";
@@ -38,6 +24,21 @@ import { LoginService } from "src/app/auth/login/login.service";
 import ProjectLinks from "src/app/project-links";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { SpinnerComponent } from "@common/components/spinner/spinner/spinner.component";
+import {
+    checkInputDisabled,
+    checkVisible,
+    emitClickOnElementByDataTestId,
+    findElementByDataTestId,
+    getElementByDataTestId,
+    registerMatSvgIcons,
+    setFieldValue,
+} from "@common/helpers/base-test.helpers.spec";
+import { AuthApi } from "@api/auth.api";
+import { PasswordLoginCredentials } from "@api/auth.api.model";
+import { AccountProvider } from "@api/kamu.graphql.interface";
+import { mockPasswordLoginResponse, TEST_LOGIN, TEST_PASSWORD } from "@api/mock/auth.mock";
 
 describe("LoginComponent", () => {
     let component: LoginComponent;

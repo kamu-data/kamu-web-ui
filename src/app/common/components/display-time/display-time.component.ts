@@ -7,9 +7,10 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import AppValues from "@common/values/app.values";
 import { format, formatDistanceStrict } from "date-fns";
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+
+import AppValues from "@common/values/app.values";
 
 @Component({
     selector: "app-display-time",

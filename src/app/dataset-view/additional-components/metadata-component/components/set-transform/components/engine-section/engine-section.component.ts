@@ -20,13 +20,13 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 
-import { EngineDesc, EnginesQuery, TransformSql } from "@api/kamu.graphql.interface";
+import { EngineSelectComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
+import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
+
 import { BaseComponent } from "@common/components/base.component";
 import AppValues from "@common/values/app.values";
-import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
-import { MaybeNull, MaybeNullOrUndefined } from "src/app/interface/app.types";
-
-import { EngineSelectComponent } from "./components/engine-select/engine-select.component";
+import { EngineDesc, EnginesQuery, TransformSql } from "@api/kamu.graphql.interface";
+import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
 
 @Component({
     selector: "app-engine-section",

@@ -10,10 +10,11 @@ import { TitleCasePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
-import { Seed } from "@api/kamu.graphql.interface";
+import { ToastrService } from "ngx-toastr";
+
 import { BaseComponent } from "@common/components/base.component";
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
-import { ToastrService } from "ngx-toastr";
+import { Seed } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-seed-event",

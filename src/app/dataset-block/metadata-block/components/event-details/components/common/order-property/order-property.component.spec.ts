@@ -7,9 +7,9 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { SharedTestModule } from "@common/modules/shared-test.module";
+import { OrderPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/order-property/order-property.component";
 
-import { OrderPropertyComponent } from "./order-property.component";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("OrderPropertyComponent", () => {
     let component: OrderPropertyComponent;

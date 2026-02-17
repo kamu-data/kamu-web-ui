@@ -9,15 +9,15 @@ import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { FlowDetailsHistoryTabComponent } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.component";
+import { FlowDetailsHistoryTabHarness } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.component.harness";
+
 import { FlowStatus, TaskStatus } from "@api/kamu.graphql.interface";
 import {
     mockDatasetFlowByIdResponse,
     mockFlowHistoryDataFragment,
     mockFlowSummaryDataFragments,
 } from "@api/mock/dataset-flow.mock";
-
-import { FlowDetailsHistoryTabComponent } from "./flow-details-history-tab.component";
-import { FlowDetailsHistoryTabHarness } from "./flow-details-history-tab.component.harness";
 
 describe("FlowDetailsHistoryTabComponent", () => {
     let component: FlowDetailsHistoryTabComponent;

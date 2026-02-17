@@ -8,6 +8,11 @@
 import { TestBed } from "@angular/core/testing";
 import { provideAnimations } from "@angular/platform-browser/animations";
 
+import { provideToastr, ToastrService } from "ngx-toastr";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { ErrorHandlerService } from "src/app/services/error-handler.service";
+import { NavigationService } from "src/app/services/navigation.service";
+
 import { ModalService } from "@common/components/modal/modal.service";
 import {
     AccountNotFoundError,
@@ -18,10 +23,6 @@ import {
     SqlExecutionError,
 } from "@common/values/errors";
 import { ErrorTexts } from "@common/values/errors.text";
-import { provideToastr, ToastrService } from "ngx-toastr";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { ErrorHandlerService } from "src/app/services/error-handler.service";
-import { NavigationService } from "src/app/services/navigation.service";
 
 describe("ErrorHandlerService", () => {
     let service: ErrorHandlerService;

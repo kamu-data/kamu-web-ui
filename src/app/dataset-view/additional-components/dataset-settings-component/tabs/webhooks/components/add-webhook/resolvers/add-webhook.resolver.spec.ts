@@ -11,13 +11,13 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular
 
 import { Observable, of } from "rxjs";
 
-import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import { addWebhookResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/add-webhook/resolvers/add-webhook.resolver";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 
-import { addWebhookResolverFn } from "./add-webhook.resolver";
+import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 
 describe("addWebhookResolver", () => {
     let datasetService: DatasetService;

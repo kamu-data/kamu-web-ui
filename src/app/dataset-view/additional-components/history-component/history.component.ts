@@ -12,18 +12,19 @@ import { NavigationEnd, Router } from "@angular/router";
 
 import { filter, Observable } from "rxjs";
 
-import { BaseComponent } from "@common/components/base.component";
-import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
-import { TimelineComponent } from "@common/components/timeline-component/timeline.component";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { BaseComponent } from "@common/components/base.component";
+import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+import { TimelineComponent } from "@common/components/timeline-component/timeline.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 @Component({
     selector: "app-history",

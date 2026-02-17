@@ -9,8 +9,8 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 
-import { RestProtocolDesc } from "@api/kamu.graphql.interface";
 import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
+import { RestProtocolDesc } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-data-access-rest-tab",

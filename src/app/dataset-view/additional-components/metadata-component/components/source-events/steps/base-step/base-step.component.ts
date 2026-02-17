@@ -17,8 +17,6 @@ import {
     ReactiveFormsModule,
 } from "@angular/forms";
 
-import { BaseComponent } from "@common/components/base.component";
-import { getValidators } from "@common/helpers/data.helpers";
 import { ArrayKeysFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/array-keys-field/array-keys-field.component";
 import { CacheFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/cache-field/cache-field.component";
 import { CheckboxFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/checkbox-field/checkbox-field.component";
@@ -42,7 +40,10 @@ import {
 import { EditPollingSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/edit-polling-source.service";
 import { RadioControlType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/form-control.source";
 import { SourcesSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
-import { MaybeNull } from "src/app/interface/app.types";
+
+import { BaseComponent } from "@common/components/base.component";
+import { getValidators } from "@common/helpers/data.helpers";
+import { MaybeNull } from "@interface/app.types";
 
 @Component({
     selector: "app-base-step",

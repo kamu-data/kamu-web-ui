@@ -10,9 +10,6 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
-import { Account, FlowStatus } from "@api/kamu.graphql.interface";
-import { mockAccountDetails } from "@api/mock/auth.mock";
-import { mockDatasetFlowsInitiatorsQuery, mockFlowsTableData } from "@api/mock/dataset-flow.mock";
 import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
@@ -29,6 +26,10 @@ import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { mockDatasetMainDataId } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { Account, FlowStatus } from "@api/kamu.graphql.interface";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+import { mockDatasetFlowsInitiatorsQuery, mockFlowsTableData } from "@api/mock/dataset-flow.mock";
 
 describe("AccountFlowsActivitySubtabComponent", () => {
     let component: AccountFlowsActivitySubtabComponent;

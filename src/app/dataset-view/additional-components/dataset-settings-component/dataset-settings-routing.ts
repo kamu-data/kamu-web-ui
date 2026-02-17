@@ -9,8 +9,6 @@
 
 import { Routes } from "@angular/router";
 
-import { datasetInfoResolverFn } from "@common/resolvers/dataset-info.resolver";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { DatasetSettingsComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.component";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { datasetSettingsActiveSectionResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/resolvers/dataset-settings-active-section.resolver";
@@ -31,6 +29,9 @@ import { DatasetSettingsSecretsManagerTabComponent } from "src/app/dataset-view/
 import { datasetSettingsVarAndSecretsResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/resolver/dataset-settings-var-and-secrets.resolver";
 import { DatasetSettingsWebhooksTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component";
 import ProjectLinks from "src/app/project-links";
+
+import { datasetInfoResolverFn } from "@common/resolvers/dataset-info.resolver";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 export const DATASET_SETTINGS_ROUTES: Routes = [
     {

@@ -9,14 +9,15 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
-import { mockGetMetadataBlockQuery, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
+import { provideToastr } from "ngx-toastr";
+import { mockPageBasedInfo } from "src/app/search/mock.data";
+
 import { TimelineComponent } from "@common/components/timeline-component/timeline.component";
 import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
-import { provideToastr } from "ngx-toastr";
-import { mockPageBasedInfo } from "src/app/search/mock.data";
+import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
+import { mockGetMetadataBlockQuery, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 
 describe("TimelineComponent", () => {
     let component: TimelineComponent;

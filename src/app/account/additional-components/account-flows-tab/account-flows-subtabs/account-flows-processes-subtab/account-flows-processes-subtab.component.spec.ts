@@ -13,22 +13,6 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
-import {
-    AccountFlowProcessCardConnectionDataFragment,
-    FlowProcessEffectiveState,
-    FlowProcessGroupRollupDataFragment,
-    FlowStatus,
-} from "@api/kamu.graphql.interface";
-import {
-    mockAccountFlowsAsCardsQuery,
-    mockAccountFlowsAsCardsQueryEmpty,
-    mockAccountFlowsAsCardsQueryWithWebhook,
-    mockAccountFlowsPrimaryCardsQuery,
-    mockAccountFlowsWebhookCardsQuery,
-} from "@api/mock/account.mock";
-import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
-import AppValues from "@common/values/app.values";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 import { AccountService } from "src/app/account/account.service";
@@ -44,6 +28,23 @@ import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow
 import { WebhookFlowProcessCardComponent } from "src/app/flow-cards/webhook-flow-process-card/webhook-flow-process-card.component";
 import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import AppValues from "@common/values/app.values";
+import {
+    AccountFlowProcessCardConnectionDataFragment,
+    FlowProcessEffectiveState,
+    FlowProcessGroupRollupDataFragment,
+    FlowStatus,
+} from "@api/kamu.graphql.interface";
+import {
+    mockAccountFlowsAsCardsQuery,
+    mockAccountFlowsAsCardsQueryEmpty,
+    mockAccountFlowsAsCardsQueryWithWebhook,
+    mockAccountFlowsPrimaryCardsQuery,
+    mockAccountFlowsWebhookCardsQuery,
+} from "@api/mock/account.mock";
 
 describe("AccountFlowsProcessesSubtabComponent", () => {
     let component: AccountFlowsProcessesSubtabComponent;

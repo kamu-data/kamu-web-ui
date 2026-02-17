@@ -8,9 +8,9 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { provideToastr } from "ngx-toastr";
-import { SharedTestModule } from "@common/modules/shared-test.module";
+import { SchemaPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/schema-property/schema-property.component";
 
-import { SchemaPropertyComponent } from "./schema-property.component";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("SchemaPropertyComponent", () => {
     let component: SchemaPropertyComponent;

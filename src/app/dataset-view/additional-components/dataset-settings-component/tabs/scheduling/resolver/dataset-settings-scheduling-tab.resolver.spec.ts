@@ -10,8 +10,6 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular
 
 import { first, Observable, of } from "rxjs";
 
-import { DatasetFlowType } from "@api/kamu.graphql.interface";
-import { mockCronSchedule, mockGetDatasetFlowTriggerCronQuery } from "@api/mock/dataset-flow.mock";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
@@ -27,6 +25,9 @@ import {
     mockReadonlyDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { DatasetFlowType } from "@api/kamu.graphql.interface";
+import { mockCronSchedule, mockGetDatasetFlowTriggerCronQuery } from "@api/mock/dataset-flow.mock";
 
 describe("datasetSettingsSchedulingTabResolverFn", () => {
     const mockActivatedRouteSnapshot = new ActivatedRouteSnapshot();

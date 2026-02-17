@@ -12,19 +12,6 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 
 import { of } from "rxjs";
 
-import {
-    AccountProvider,
-    DatasetCurrentInfoFragment,
-    DatasetKind,
-    DatasetOverviewFragment,
-} from "@api/kamu.graphql.interface";
-import {
-    emitClickOnElementByDataTestId,
-    findElementByDataTestId,
-    registerMatSvgIcons,
-} from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
-import AppValues from "@common/values/app.values";
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
@@ -48,6 +35,20 @@ import {
     mockPublicDatasetVisibility,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import {
+    emitClickOnElementByDataTestId,
+    findElementByDataTestId,
+    registerMatSvgIcons,
+} from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import AppValues from "@common/values/app.values";
+import {
+    AccountProvider,
+    DatasetCurrentInfoFragment,
+    DatasetKind,
+    DatasetOverviewFragment,
+} from "@api/kamu.graphql.interface";
 
 describe("OverviewComponent", () => {
     let component: OverviewComponent;

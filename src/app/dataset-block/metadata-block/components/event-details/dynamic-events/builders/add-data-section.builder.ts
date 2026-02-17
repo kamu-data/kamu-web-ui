@@ -5,13 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { AddData, DataSlice } from "@api/kamu.graphql.interface";
 import { ADD_DATA_SOURCE_DESCRIPTORS } from "src/app/dataset-block/metadata-block/components/event-details/components/add-data-event/add-data-event.source";
 import { EventSectionBuilder } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/builders/event-section.builder";
 import {
     EventRow,
     EventSection,
 } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
+
+import { AddData, DataSlice } from "@api/kamu.graphql.interface";
 
 export enum AddDataSection {
     PREV_CHECKPOINT = "prevCheckpoint",

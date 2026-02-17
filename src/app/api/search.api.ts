@@ -10,6 +10,9 @@ import { inject, Injectable } from "@angular/core";
 import { EMPTY, Observable, of } from "rxjs";
 import { catchError, first, map } from "rxjs/operators";
 
+import { ObservableQuery } from "@apollo/client/core";
+import { onlyCompleteData } from "apollo-angular";
+
 import {
     AccountProvider,
     DatasetBasicsFragment,
@@ -21,9 +24,7 @@ import {
     SemanticSearchDatasetsOverviewGQL,
     SemanticSearchDatasetsOverviewQuery,
 } from "@api/kamu.graphql.interface";
-import { ObservableQuery } from "@apollo/client/core";
-import { onlyCompleteData } from "apollo-angular";
-import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
+import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface";
 
 export const SEARCH_RESULTS_PER_PAGE = 10;
 

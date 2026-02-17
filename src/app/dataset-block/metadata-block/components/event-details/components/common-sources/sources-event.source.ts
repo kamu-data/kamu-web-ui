@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
 import { EnginePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/engine-property/engine-property.component";
 import { MergeStrategyPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";
@@ -18,6 +17,8 @@ import {
     EventRowDescriptor,
     EventRowDescriptorsByField,
 } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
+
+import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
 
 export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
     "ReadStepCsv.__typename": {

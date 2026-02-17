@@ -13,14 +13,15 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 
-import { DatasetBasicsFragment, ViewDatasetEnvVar } from "@api/kamu.graphql.interface";
-import { BaseComponent } from "@common/components/base.component";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
-import { noWhitespaceValidator } from "@common/helpers/data.helpers";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { EnvAndSecretsFormType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.types";
 import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
-import { MaybeNull } from "src/app/interface/app.types";
+
+import { BaseComponent } from "@common/components/base.component";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { noWhitespaceValidator } from "@common/helpers/data.helpers";
+import { DatasetBasicsFragment, ViewDatasetEnvVar } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 @Component({
     selector: "app-edit-key-value-modal",

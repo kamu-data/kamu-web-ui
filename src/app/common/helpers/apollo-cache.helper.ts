@@ -5,8 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { DatasetApi } from "@api/dataset.api";
 import { ApolloCache, InMemoryCache } from "@apollo/client/core";
+
+import { DatasetApi } from "@api/dataset.api";
 
 export function apolloCache(): InMemoryCache {
     return new InMemoryCache({

@@ -7,13 +7,14 @@
 
 import { Directive, ElementRef, inject, Input, Renderer2 } from "@angular/core";
 
+import { FeatureFlagsService } from "src/app/services/feature-flags.service";
+
 import {
     Feature,
     FeatureDevelopmentState,
     FeatureShowMode,
     FeatureVisibility,
-} from "src/app/interface/feature-flags.interface";
-import { FeatureFlagsService } from "src/app/services/feature-flags.service";
+} from "@interface/feature-flags.interface";
 
 @Directive({
     selector: "[appFeatureFlag]",

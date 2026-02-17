@@ -10,21 +10,22 @@ import { inject, Injectable } from "@angular/core";
 
 import { catchError, finalize, first, Observable, of, Subject, switchMap, tap } from "rxjs";
 
-import { DatasetBasicsFragment, DatasetEndpoints } from "@api/kamu.graphql.interface";
-import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ondestroy.adapter";
-import { FileUploadError } from "@common/values/errors";
 import { AppConfigService } from "src/app/app-config.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { MaybeUndefined } from "src/app/interface/app.types";
+import { LocalStorageService } from "src/app/services/local-storage.service";
+import { NavigationService } from "src/app/services/navigation.service";
+import { ProtocolsService } from "src/app/services/protocols.service";
+
+import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ondestroy.adapter";
+import { FileUploadError } from "@common/values/errors";
+import { DatasetBasicsFragment, DatasetEndpoints } from "@api/kamu.graphql.interface";
+import { MaybeUndefined } from "@interface/app.types";
 import {
     UploadAvailableMethod,
     UploadPrepareData,
     UploadPrepareResponse,
-} from "src/app/interface/ingest-via-file-upload.types";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { LocalStorageService } from "src/app/services/local-storage.service";
-import { NavigationService } from "src/app/services/navigation.service";
-import { ProtocolsService } from "src/app/services/protocols.service";
+} from "@interface/ingest-via-file-upload.types";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 @Injectable({
     providedIn: "root",

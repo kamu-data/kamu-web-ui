@@ -7,9 +7,9 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { SharedTestModule } from "@common/modules/shared-test.module";
+import { EventTimePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/event-time-property/event-time-property.component";
 
-import { EventTimePropertyComponent } from "./event-time-property.component";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("EventTimePropertyComponent", () => {
     let component: EventTimePropertyComponent;

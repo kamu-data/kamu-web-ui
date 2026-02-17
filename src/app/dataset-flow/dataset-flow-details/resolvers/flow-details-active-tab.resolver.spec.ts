@@ -9,9 +9,8 @@ import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, Data, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { flowDetailsActiveTabResolverFn } from "src/app/dataset-flow/dataset-flow-details/resolvers/flow-details-active-tab.resolver";
 import ProjectLinks from "src/app/project-links";
-
-import { flowDetailsActiveTabResolverFn } from "./flow-details-active-tab.resolver";
 
 describe("flowDetailsActiveTabResolverFn", () => {
     const mockState = {} as RouterStateSnapshot;

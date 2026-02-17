@@ -8,8 +8,9 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
-import AppValues from "@common/values/app.values";
 import { NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
+
+import AppValues from "@common/values/app.values";
 
 @Component({
     selector: "app-tooltip-icon",

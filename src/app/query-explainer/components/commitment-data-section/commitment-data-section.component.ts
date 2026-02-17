@@ -8,10 +8,11 @@
 import { Clipboard } from "@angular/cdk/clipboard";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 
-import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
-import { MaybeUndefined } from "src/app/interface/app.types";
 import { QueryExplainerComponentData } from "src/app/query-explainer/query-explainer.component";
 import { VerifyQueryError, VerifyQueryKindError } from "src/app/query-explainer/query-explainer.types";
+
+import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
+import { MaybeUndefined } from "@interface/app.types";
 
 @Component({
     selector: "app-commitment-data-section",

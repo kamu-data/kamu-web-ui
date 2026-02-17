@@ -5,6 +5,14 @@
  * included in the LICENSE file.
  */
 
+import { format } from "date-fns/format";
+import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
+import ProjectLinks from "src/app/project-links";
+
+import { pluralize } from "@common/helpers/app.helpers";
+import { DataHelpers } from "@common/helpers/data.helpers";
+import AppValues from "@common/values/app.values";
 import {
     FlowActivationCause,
     FlowConfigSnapshotModified,
@@ -20,13 +28,6 @@ import {
     FlowSummaryDataFragment,
     TaskStatus,
 } from "@api/kamu.graphql.interface";
-import { pluralize } from "@common/helpers/app.helpers";
-import { DataHelpers } from "@common/helpers/data.helpers";
-import AppValues from "@common/values/app.values";
-import { format } from "date-fns/format";
-import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
-import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
-import ProjectLinks from "src/app/project-links";
 
 export class DatasetFlowDetailsHelpers {
     public static flowEventDescription(

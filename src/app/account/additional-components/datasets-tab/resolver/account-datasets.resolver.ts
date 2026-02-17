@@ -11,8 +11,9 @@ import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 import { map } from "rxjs";
 
 import { AccountService } from "src/app/account/account.service";
-import { DatasetsAccountResolverResponse, DatasetsAccountResponse } from "src/app/interface/dataset.interface";
 import ProjectLinks from "src/app/project-links";
+
+import { DatasetsAccountResolverResponse, DatasetsAccountResponse } from "@interface/dataset.interface";
 
 export const accountDatasetsResolverFn: ResolveFn<DatasetsAccountResolverResponse> = (
     route: ActivatedRouteSnapshot,

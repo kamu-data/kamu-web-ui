@@ -11,11 +11,11 @@ import { Component, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
-import { FlowRetryBackoffType, TimeUnit } from "@api/kamu.graphql.interface";
-import { SharedTestModule } from "@common/modules/shared-test.module";
+import { FlowRetryPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/flow-retry-policy-form/flow-retry-policy-form.component";
+import { FlowRetryPolicyFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/flow-retry-policy-form/flow-retry-policy-form.harness";
 
-import { FlowRetryPolicyFormComponent } from "./flow-retry-policy-form.component";
-import { FlowRetryPolicyFormHarness } from "./flow-retry-policy-form.harness";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { FlowRetryBackoffType, TimeUnit } from "@api/kamu.graphql.interface";
 
 @Component({
     imports: [

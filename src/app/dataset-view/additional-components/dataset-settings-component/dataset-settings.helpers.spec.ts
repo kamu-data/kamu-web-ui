@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import AppValues from "@common/values/app.values";
 import {
     datasetMetadataDerivativeDataset,
     datasetMetadataRootDataset,
@@ -17,6 +16,8 @@ import {
     mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
+
+import AppValues from "@common/values/app.values";
 
 describe("DatasetSettingsHelpers", () => {
     it(`should check available ${SettingsTabsEnum.GENERAL} tab with canRename permission`, () => {

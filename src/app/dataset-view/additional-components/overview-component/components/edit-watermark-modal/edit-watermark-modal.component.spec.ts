@@ -13,9 +13,6 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { of } from "rxjs";
 
-import { mockAccountDetails } from "@api/mock/auth.mock";
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
@@ -25,6 +22,10 @@ import { EditWatermarkModalComponent } from "src/app/dataset-view/additional-com
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import timekeeper from "timekeeper";
+
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { mockAccountDetails } from "@api/mock/auth.mock";
 
 describe("EditWatermarkModalComponent", () => {
     let component: EditWatermarkModalComponent;

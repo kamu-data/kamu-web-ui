@@ -10,20 +10,20 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 
 import { of } from "rxjs";
 
-import { dispatchInputEvent, emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
-import AppValues from "@common/values/app.values";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { SearchApi } from "@api/search.api";
 import { mockGetDatasetSchemaQuery } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
+import { SearchAndSchemasSectionComponent } from "src/app/query/global-query/search-and-schemas-section/search-and-schemas-section.component";
 import { mockDatasetBasicsDerivedFragment, mockSqlQueryResponseState } from "src/app/search/mock.data";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 
-import { SearchAndSchemasSectionComponent } from "./search-and-schemas-section.component";
+import { dispatchInputEvent, emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import AppValues from "@common/values/app.values";
+import { SearchApi } from "@api/search.api";
+import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface";
 
 describe("SearchAndSchemasSectionComponent", () => {
     let component: SearchAndSchemasSectionComponent;

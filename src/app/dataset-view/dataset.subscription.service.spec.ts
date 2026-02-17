@@ -7,7 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 
-import { DatasetSubscriptionsService } from "./dataset.subscriptions.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 
 describe("DatasetSubscriptionsService", () => {
     let service: DatasetSubscriptionsService;

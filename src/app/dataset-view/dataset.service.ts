@@ -10,6 +10,19 @@ import { inject, Injectable, Injector } from "@angular/core";
 import { combineLatest, Observable, of, ReplaySubject, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 
+import { APOLLO_OPTIONS } from "apollo-angular";
+import {
+    DatasetHistoryUpdate,
+    MetadataSchemaUpdate,
+    OverviewUpdate,
+} from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+
+import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
+import { resetCacheHelper } from "@common/helpers/apollo-cache.helper";
+import { parseCurrentSchema } from "@common/helpers/app.helpers";
+import { parseDataRows } from "@common/helpers/data.helpers";
+import { DatasetNotFoundError, SqlExecutionError } from "@common/values/errors";
 import { DatasetApi } from "@api/dataset.api";
 import {
     BlockRef,
@@ -35,22 +48,10 @@ import {
     GetDatasetSchemaQuery,
     MetadataBlockFragment,
 } from "@api/kamu.graphql.interface";
-import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
-import { resetCacheHelper } from "@common/helpers/apollo-cache.helper";
-import { parseCurrentSchema } from "@common/helpers/app.helpers";
-import { parseDataRows } from "@common/helpers/data.helpers";
-import { DatasetNotFoundError, SqlExecutionError } from "@common/values/errors";
-import { APOLLO_OPTIONS } from "apollo-angular";
-import {
-    DatasetHistoryUpdate,
-    MetadataSchemaUpdate,
-    OverviewUpdate,
-} from "src/app/dataset-view/dataset.subscriptions.interface";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
-import { DatasetLineageNode } from "src/app/interface/dataset.interface";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetSchema } from "@interface/dataset-schema.interface";
+import { DatasetLineageNode } from "@interface/dataset.interface";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 @Injectable({ providedIn: "root" })
 export class DatasetService {

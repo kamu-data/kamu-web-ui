@@ -12,13 +12,6 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 
 import { of } from "rxjs";
 
-import { mockAccountDetails } from "@api/mock/auth.mock";
-import {
-    emitClickOnElementByDataTestId,
-    findNativeElement,
-    registerMatSvgIcons,
-} from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { MarkdownModule } from "ngx-markdown";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -26,6 +19,14 @@ import { ReadmeSectionComponent } from "src/app/dataset-view/additional-componen
 import { EditMode } from "src/app/dataset-view/additional-components/overview-component/components/readme-section/readme-section.types";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
+
+import {
+    emitClickOnElementByDataTestId,
+    findNativeElement,
+    registerMatSvgIcons,
+} from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { mockAccountDetails } from "@api/mock/auth.mock";
 
 describe("ReadmeSectionComponent", () => {
     let component: ReadmeSectionComponent;

@@ -11,7 +11,6 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
-import { mockAccountDetails } from "@api/mock/auth.mock";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
@@ -27,7 +26,6 @@ import { DatasetCommitService } from "src/app/dataset-view/additional-components
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { DatasetNavigationParams } from "src/app/interface/navigation.interface";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
@@ -35,6 +33,9 @@ import {
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { mockAccountDetails } from "@api/mock/auth.mock";
+import { DatasetNavigationParams } from "@interface/navigation.interface";
 
 describe("SetTransformComponent", () => {
     let component: SetTransformComponent;

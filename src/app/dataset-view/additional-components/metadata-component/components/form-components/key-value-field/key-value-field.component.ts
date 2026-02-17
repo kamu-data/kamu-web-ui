@@ -9,11 +9,12 @@ import { NgFor } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
-import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 import { KeyValueForm } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/key-value-field/key-value-field.types";
+
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 
 @Component({
     selector: "app-key-value-field",

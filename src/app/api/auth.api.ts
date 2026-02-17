@@ -18,7 +18,7 @@ import {
     LoginResponseType,
     PasswordLoginCredentials,
     Web3WalletOwnershipVerificationRequest,
-} from "./auth.api.model";
+} from "@api/auth.api.model";
 import {
     AccountFragment,
     AccountProvider,
@@ -30,7 +30,7 @@ import {
     LoginMutation,
     LoginWeb3WalletGQL,
     LoginWeb3WalletMutation,
-} from "./kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
 
 @Injectable({
     providedIn: "root",

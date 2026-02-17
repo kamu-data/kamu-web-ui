@@ -11,7 +11,7 @@ import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 
-import { EngineApi } from "./engine.api";
+import { EngineApi } from "@api/engine.api";
 
 describe("EngineApi", () => {
     let service: EngineApi;

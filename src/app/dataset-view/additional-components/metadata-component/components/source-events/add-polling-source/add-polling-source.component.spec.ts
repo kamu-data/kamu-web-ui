@@ -12,8 +12,6 @@ import { ActivatedRoute } from "@angular/router";
 
 import { from, of } from "rxjs";
 
-import { mockAccountDetails } from "@api/mock/auth.mock";
-import { OdfDefaultValues } from "@common/values/app-odf-default.values";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -30,7 +28,6 @@ import { DatasetCommitService } from "src/app/dataset-view/additional-components
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { DatasetNavigationParams } from "src/app/interface/navigation.interface";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
@@ -38,6 +35,10 @@ import {
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { OdfDefaultValues } from "@common/values/app-odf-default.values";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+import { DatasetNavigationParams } from "@interface/navigation.interface";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;

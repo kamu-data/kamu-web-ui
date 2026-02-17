@@ -7,13 +7,13 @@
 
 import { Injector } from "@angular/core";
 
-import { Web3WalletOwnershipVerificationRequest } from "@api/auth.api.model";
 import { BrowserProvider, Eip1193Provider } from "ethers";
 import { ToastrService } from "ngx-toastr";
 import { SiweMessage } from "siwe";
-import { MaybeNull } from "src/app/interface/app.types";
+import { EthereumGateway } from "src/app/auth/login/ethereum/ethereum.gateway";
 
-import { EthereumGateway } from "./ethereum.gateway";
+import { Web3WalletOwnershipVerificationRequest } from "@api/auth.api.model";
+import { MaybeNull } from "@interface/app.types";
 
 /* istanbul ignore file */
 

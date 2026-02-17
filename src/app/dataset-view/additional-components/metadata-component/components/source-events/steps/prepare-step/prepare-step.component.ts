@@ -19,8 +19,6 @@ import {
 } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 
-import { BaseComponent } from "@common/components/base.component";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import {
     AddPollingSourceEditFormType,
     DecompressFormat,
@@ -28,7 +26,10 @@ import {
     SetPollingSourceSection,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { EditPollingSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/edit-polling-source.service";
-import { MaybeNull } from "src/app/interface/app.types";
+
+import { BaseComponent } from "@common/components/base.component";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { MaybeNull } from "@interface/app.types";
 
 @Component({
     selector: "app-prepare-step",

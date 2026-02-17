@@ -14,10 +14,13 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ToastrModule, ToastrService } from "ngx-toastr";
-import { MaybeUndefined } from "src/app/interface/app.types";
 
-import { AttributesSchemaModalComponent } from "./components/attributes-schema-modal/attributes-schema-modal.component";
-import { DynamicTableColumnDescriptor, DynamicTableDataRow } from "./dynamic-table.interface";
+import { AttributesSchemaModalComponent } from "@common/components/dynamic-table/components/attributes-schema-modal/attributes-schema-modal.component";
+import {
+    DynamicTableColumnDescriptor,
+    DynamicTableDataRow,
+} from "@common/components/dynamic-table/dynamic-table.interface";
+import { MaybeUndefined } from "@interface/app.types";
 
 @Component({
     selector: "app-dynamic-table",

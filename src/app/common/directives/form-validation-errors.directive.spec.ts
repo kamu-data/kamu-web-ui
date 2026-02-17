@@ -10,7 +10,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 
-import { FormValidationErrorsDirective } from "./form-validation-errors.directive";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 
 @Component({
     template: `

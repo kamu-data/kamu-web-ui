@@ -13,7 +13,13 @@ import { RouterLink } from "@angular/router";
 
 import { finalize, map, Observable } from "rxjs";
 
-import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
+import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
+import { SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS } from "src/app/dataset-view/dataset-view-header/dataset-view-header.model";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
+import { NavigationService } from "src/app/services/navigation.service";
+
 import { BaseComponent } from "@common/components/base.component";
 import { DatasetVisibilityComponent } from "@common/components/dataset-visibility/dataset-visibility.component";
 import { ModalService } from "@common/components/modal/modal.service";
@@ -25,13 +31,8 @@ import {
 } from "@common/components/search-additional-buttons/search-additional-buttons.interface";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
-import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
-import { SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS } from "src/app/dataset-view/dataset-view-header/dataset-view-header.model";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
-import { NavigationService } from "src/app/services/navigation.service";
+import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 @Component({
     selector: "app-dataset-view-header",

@@ -5,6 +5,8 @@
  * included in the LICENSE file.
  */
 
+import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
+
 import {
     DatasetKind,
     DeleteEnvVariableMutation,
@@ -12,7 +14,6 @@ import {
     ListEnvVariablesQuery,
     UpsertEnvVariableMutation,
 } from "@api/kamu.graphql.interface";
-import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
 
 export const MOCK_PER_PAGE = 5;
 export const MOCK_PAGE = 1;

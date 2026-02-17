@@ -12,7 +12,7 @@ import { TestBed } from "@angular/core/testing";
 import { AppConfigService } from "src/app/app-config.service";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 
-import { AuthInterceptor } from "./auth.interceptor";
+import { AuthInterceptor } from "@common/interceptors/auth.interceptor";
 
 describe("AuthInterceptor", () => {
     let http: HttpClient;

@@ -5,6 +5,8 @@
  * included in the LICENSE file.
  */
 
+import { mockOwnerFieldsWithAvatar } from "src/app/search/mock.data";
+
 import {
     Account,
     AccountProvider,
@@ -18,7 +20,6 @@ import {
     SetRoleCollaboratorMutation,
     UnsetRoleCollaboratorMutation,
 } from "@api/kamu.graphql.interface";
-import { mockOwnerFieldsWithAvatar } from "src/app/search/mock.data";
 
 export const MOCK_ACCOUNT_WITH_ROLE: AccountWithRole = {
     account: {

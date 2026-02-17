@@ -10,7 +10,6 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 
-import { AccountFragment, DatasetBasicsFragment, FlowStatus } from "@api/kamu.graphql.interface";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
 import {
@@ -20,7 +19,9 @@ import {
     FilterStatusType,
     FlowsTableFiltersOptions,
 } from "src/app/dataset-flow/flows-table/flows-table.types";
-import { MaybeNull } from "src/app/interface/app.types";
+
+import { AccountFragment, DatasetBasicsFragment, FlowStatus } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 @Component({
     selector: "app-flow-table-panel-filters",

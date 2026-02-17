@@ -8,10 +8,10 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormArray, FormGroup } from "@angular/forms";
 
+import { KeyValueFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/key-value-field/key-value-field.component";
+
 import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-
-import { KeyValueFieldComponent } from "./key-value-field.component";
 
 describe("KeyValueFieldComponent", () => {
     let component: KeyValueFieldComponent;

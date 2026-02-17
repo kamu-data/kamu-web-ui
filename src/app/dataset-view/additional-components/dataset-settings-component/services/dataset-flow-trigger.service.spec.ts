@@ -10,6 +10,14 @@ import { provideAnimations } from "@angular/platform-browser/animations";
 
 import { of } from "rxjs";
 
+import { Apollo } from "apollo-angular";
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { provideToastr, ToastrService } from "ngx-toastr";
+import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
+import { mockDatasetInfo } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import AppValues from "@common/values/app.values";
 import { DatasetFlowApi } from "@api/dataset-flow.api";
 import {
     DatasetFlowType,
@@ -25,13 +33,6 @@ import {
     mockSetDatasetFlowTriggerError,
     mockSetDatasetFlowTriggerSuccess,
 } from "@api/mock/dataset-flow.mock";
-import AppValues from "@common/values/app.values";
-import { Apollo } from "apollo-angular";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { provideToastr, ToastrService } from "ngx-toastr";
-import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
-import { mockDatasetInfo } from "src/app/search/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
 
 describe("DatasetFlowTriggerService", () => {
     let service: DatasetFlowTriggerService;

@@ -12,19 +12,19 @@ import { first } from "rxjs/operators";
 import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 
-import { AuthApi } from "./auth.api";
+import { AuthApi } from "@api/auth.api";
 import {
     GithubLoginCredentials,
     PasswordLoginCredentials,
     Web3WalletOwnershipVerificationRequest,
-} from "./auth.api.model";
+} from "@api/auth.api.model";
 import {
     AccountProvider,
     FetchAccountDetailsDocument,
     GetEnabledLoginMethodsDocument,
     GetEnabledLoginMethodsQuery,
     LoginDocument,
-} from "./kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
 import {
     mockAccountFromAccessToken,
     mockGithubLoginResponse,
@@ -35,7 +35,7 @@ import {
     TEST_GITHUB_CODE,
     TEST_LOGIN,
     TEST_PASSWORD,
-} from "./mock/auth.mock";
+} from "@api/mock/auth.mock";
 
 describe("AuthApi", () => {
     let service: AuthApi;

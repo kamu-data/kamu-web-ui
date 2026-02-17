@@ -13,8 +13,9 @@ import { ActivatedRoute, RouterEvent } from "@angular/router";
 
 import { ReplaySubject } from "rxjs";
 
-import { MaybeNull } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";
+
+import { MaybeNull } from "@interface/app.types";
 
 export function findElement<T>(fixture: ComponentFixture<T>, selector: string): DebugElement {
     return fixture.debugElement.query(By.css(selector));

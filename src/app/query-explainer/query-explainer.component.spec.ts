@@ -11,15 +11,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
-import { mockDatasetByIdQuery } from "@api/mock/dataset.mock";
-import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
-import {
-    checkButtonDisabled,
-    emitClickOnElementByDataTestId,
-    registerMatSvgIcons,
-    setFieldValue,
-} from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -30,6 +21,16 @@ import {
     mockVerifyQueryResponseSuccess,
 } from "src/app/query-explainer/query-explainer.mocks";
 import { QueryExplainerService } from "src/app/query-explainer/query-explainer.service";
+
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
+import {
+    checkButtonDisabled,
+    emitClickOnElementByDataTestId,
+    registerMatSvgIcons,
+    setFieldValue,
+} from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { mockDatasetByIdQuery } from "@api/mock/dataset.mock";
 
 describe("QueryExplainerComponent", () => {
     let component: QueryExplainerComponent;

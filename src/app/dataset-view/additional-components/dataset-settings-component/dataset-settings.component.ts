@@ -11,15 +11,6 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterOutlet } from "@angular/router";
 
-import {
-    DatasetBasicsFragment,
-    DatasetMetadata,
-    DatasetOverviewFragment,
-    DatasetPermissionsFragment,
-} from "@api/kamu.graphql.interface";
-import { BaseComponent } from "@common/components/base.component";
-import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { AppConfigService } from "src/app/app-config.service";
 import { isSettingsTabAccessibleHelper } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.helpers";
 import {
@@ -28,8 +19,18 @@ import {
     SettingsTabsEnum,
 } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { MaybeNull } from "src/app/interface/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { BaseComponent } from "@common/components/base.component";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import {
+    DatasetBasicsFragment,
+    DatasetMetadata,
+    DatasetOverviewFragment,
+    DatasetPermissionsFragment,
+} from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 @Component({
     selector: "app-dataset-settings",

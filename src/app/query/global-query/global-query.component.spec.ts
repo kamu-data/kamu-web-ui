@@ -11,15 +11,15 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { GlobalQueryComponent } from "src/app/query/global-query/global-query.component";
 import { NavigationService } from "src/app/services/navigation.service";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 
-import { GlobalQueryComponent } from "./global-query.component";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("GlobalQueryComponent", () => {
     let component: GlobalQueryComponent;

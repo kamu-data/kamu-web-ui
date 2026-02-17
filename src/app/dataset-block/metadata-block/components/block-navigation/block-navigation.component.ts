@@ -11,15 +11,16 @@ import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
 
-import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { BlockHashFilterPipe } from "src/app/dataset-block/metadata-block/components/block-navigation/pipes/block-hash-filter.pipe";
 import { EventTypeFilterPipe } from "src/app/dataset-block/metadata-block/components/block-navigation/pipes/event-type-filter.pipe";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
+
+import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 @Component({
     selector: "app-block-navigation",

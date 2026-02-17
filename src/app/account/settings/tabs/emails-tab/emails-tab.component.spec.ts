@@ -9,13 +9,13 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 
 import { of } from "rxjs";
 
-import { mockAccountDetailsWithEmail } from "@api/mock/auth.mock";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
+import { EmailsTabComponent } from "src/app/account/settings/tabs/emails-tab/emails-tab.component";
 import { NavigationService } from "src/app/services/navigation.service";
 
-import { EmailsTabComponent } from "./emails-tab.component";
+import { mockAccountDetailsWithEmail } from "@api/mock/auth.mock";
 
 describe("EmailsTabComponent", () => {
     let component: EmailsTabComponent;

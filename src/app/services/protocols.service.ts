@@ -11,8 +11,8 @@ import { map, Observable } from "rxjs";
 
 import { DatasetEndpoints, DatasetProtocolsQuery } from "@api/kamu.graphql.interface";
 import { ProtocolsApi } from "@api/protocols.api";
-import { MaybeUndefined } from "src/app/interface/app.types";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { MaybeUndefined } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 @Injectable({
     providedIn: "root",

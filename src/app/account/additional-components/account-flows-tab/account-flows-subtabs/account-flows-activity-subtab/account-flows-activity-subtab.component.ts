@@ -13,17 +13,6 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 import { BehaviorSubject, combineLatest, map, Observable, of, startWith, Subject, switchMap, tap, timer } from "rxjs";
 
-import {
-    AccountFlowFilters,
-    AccountFragment,
-    DatasetBasicsFragment,
-    FlowStatus,
-    FlowSummaryDataFragment,
-    InitiatorFilterInput,
-} from "@api/kamu.graphql.interface";
-import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
-import { requireValue } from "@common/helpers/app.helpers";
-import AppValues from "@common/values/app.values";
 import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 import { AccountTabs } from "src/app/account/account.constants";
 import { AccountService } from "src/app/account/account.service";
@@ -43,9 +32,20 @@ import {
     FlowsTableFiltersOptions,
 } from "src/app/dataset-flow/flows-table/flows-table.types";
 import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 
 import { environment } from "@env/environment";
+import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+import { requireValue } from "@common/helpers/app.helpers";
+import AppValues from "@common/values/app.values";
+import {
+    AccountFlowFilters,
+    AccountFragment,
+    DatasetBasicsFragment,
+    FlowStatus,
+    FlowSummaryDataFragment,
+    InitiatorFilterInput,
+} from "@api/kamu.graphql.interface";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 @Component({
     selector: "app-account-flows-activity-subtab",

@@ -11,15 +11,16 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
-import { ModalService } from "@common/components/modal/modal.service";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { DatasetViewHeaderComponent } from "src/app/dataset-view/dataset-view-header/dataset-view-header.component";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { mockDatasetBasicsRootFragment, mockDatasetInfo } from "src/app/search/mock.data";
 import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
+
+import { ModalService } from "@common/components/modal/modal.service";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { ModalArgumentsInterface } from "@interface/modal.interface";
 
 describe("DatasetViewHeaderComponent", () => {
     let component: DatasetViewHeaderComponent;

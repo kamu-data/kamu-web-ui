@@ -7,9 +7,9 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { SharedTestModule } from "@common/modules/shared-test.module";
+import { SizePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/size-property/size-property.component";
 
-import { SizePropertyComponent } from "./size-property.component";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("SizePropertyComponent", () => {
     let component: SizePropertyComponent;

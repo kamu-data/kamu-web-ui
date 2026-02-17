@@ -13,7 +13,7 @@ import { first, map } from "rxjs/operators";
 import { ObservableQuery } from "@apollo/client/core";
 import { onlyCompleteData } from "apollo-angular";
 
-import { EnginesGQL, EnginesQuery } from "./kamu.graphql.interface";
+import { EnginesGQL, EnginesQuery } from "@api/kamu.graphql.interface";
 
 @Injectable({
     providedIn: "root",

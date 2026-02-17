@@ -8,10 +8,9 @@
 import { TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
+import { AddPushSourceEditFormType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
+import { EditAddPushSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/edit-add-push-source.service";
 import { mockParseAddPushSourceEventFromYamlToObject } from "src/app/search/mock.data";
-
-import { AddPushSourceEditFormType } from "./add-push-source-form.types";
-import { EditAddPushSourceService } from "./edit-add-push-source.service";
 
 describe("EditAddPushSourceService", () => {
     let service: EditAddPushSourceService;

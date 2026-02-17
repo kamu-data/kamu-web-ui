@@ -9,13 +9,14 @@ import { Injectable } from "@angular/core";
 
 import { BehaviorSubject } from "rxjs";
 
-import { DatasetFlowProcesses, FlowProcessEffectiveState } from "@api/kamu.graphql.interface";
 import {
     FlowsSelectedCategory,
     FlowsSelectionState,
     WebhooksSelectedCategory,
 } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
-import { MaybeUndefined } from "src/app/interface/app.types";
+
+import { DatasetFlowProcesses, FlowProcessEffectiveState } from "@api/kamu.graphql.interface";
+import { MaybeUndefined } from "@interface/app.types";
 
 @Injectable({ providedIn: "root" })
 export class FlowsSelectionStateService {

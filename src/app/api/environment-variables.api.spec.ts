@@ -7,11 +7,10 @@
 
 import { TestBed } from "@angular/core/testing";
 
-import { TEST_DATASET_ID } from "@api/mock/dataset.mock";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 
-import { EnvironmentVariablesApi } from "./environment-variables.api";
+import { EnvironmentVariablesApi } from "@api/environment-variables.api";
 import {
     DeleteEnvVariableDocument,
     DeleteEnvVariableMutation,
@@ -21,9 +20,8 @@ import {
     ListEnvVariablesQuery,
     UpsertEnvVariableDocument,
     UpsertEnvVariableMutation,
-} from "./kamu.graphql.interface";
-import { TEST_ACCOUNT_ID } from "./mock/auth.mock";
-import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "./mock/dataset.mock";
+} from "@api/kamu.graphql.interface";
+import { TEST_ACCOUNT_ID, TEST_ACCOUNT_NAME, TEST_DATASET_ID, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 import {
     MOCK_ENV_VAR_ID,
     MOCK_IS_SECRET,
@@ -37,7 +35,7 @@ import {
     mockUpsertEnvVariableMutationCreated,
     mockUpsertEnvVariableMutationUpdated,
     mockUpsertEnvVariableMutationUpToDate,
-} from "./mock/environment-variables-and-secrets.mock";
+} from "@api/mock/environment-variables-and-secrets.mock";
 
 describe("EnvironmentVariablesApi", () => {
     let service: EnvironmentVariablesApi;

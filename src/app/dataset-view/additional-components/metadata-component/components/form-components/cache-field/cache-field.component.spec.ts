@@ -8,10 +8,10 @@
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
 
+import { CacheFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/cache-field/cache-field.component";
+
 import { findElement } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-
-import { CacheFieldComponent } from "./cache-field.component";
 
 describe("CacheFieldComponent", () => {
     let component: CacheFieldComponent;

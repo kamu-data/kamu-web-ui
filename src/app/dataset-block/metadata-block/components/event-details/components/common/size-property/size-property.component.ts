@@ -7,8 +7,9 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+
+import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 
 @Component({
     selector: "app-size-property",

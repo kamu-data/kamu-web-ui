@@ -7,13 +7,14 @@
 
 import { ComponentFixture, fakeAsync, TestBed } from "@angular/core/testing";
 
+import { LoadMoreComponent } from "src/app/query/shared/load-more/load-more.component";
+
 import {
     dispatchInputEvent,
     emitClickOnElement,
     emitClickOnElementByDataTestId,
 } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
-import { LoadMoreComponent } from "src/app/query/shared/load-more/load-more.component";
 
 describe("LoadMoreComponent", () => {
     let component: LoadMoreComponent;

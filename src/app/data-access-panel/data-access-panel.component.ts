@@ -10,12 +10,13 @@ import { MatIconModule } from "@angular/material/icon";
 
 import { Observable } from "rxjs";
 
-import { DatasetBasicsFragment, DatasetEndpoints } from "@api/kamu.graphql.interface";
-import { BaseComponent } from "@common/components/base.component";
-import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { DataAccessModalComponent } from "src/app/data-access-panel/data-access-modal/data-access-modal.component";
-import { MaybeUndefined } from "src/app/interface/app.types";
+
+import { BaseComponent } from "@common/components/base.component";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { DatasetBasicsFragment, DatasetEndpoints } from "@api/kamu.graphql.interface";
+import { MaybeUndefined } from "@interface/app.types";
 
 @Component({
     selector: "app-data-access-panel",

@@ -11,7 +11,6 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular
 
 import { Observable, of } from "rxjs";
 
-import AppValues from "@common/values/app.values";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { AppConfigService } from "src/app/app-config.service";
@@ -25,6 +24,8 @@ import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscr
 import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import AppValues from "@common/values/app.values";
 
 describe("datasetSettingsWebhooksResolver", () => {
     let datasetService: DatasetService;

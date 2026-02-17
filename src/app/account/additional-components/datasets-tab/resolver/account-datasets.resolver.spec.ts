@@ -11,14 +11,14 @@ import { ActivatedRoute, ActivatedRouteSnapshot, convertToParamMap, ResolveFn, R
 
 import { of } from "rxjs";
 
-import { TEST_ACCOUNT_NAME } from "@api/mock/dataset.mock";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { AccountService } from "src/app/account/account.service";
-import { DatasetsAccountResolverResponse } from "src/app/interface/dataset.interface";
+import { accountDatasetsResolverFn } from "src/app/account/additional-components/datasets-tab/resolver/account-datasets.resolver";
 import ProjectLinks from "src/app/project-links";
 
-import { accountDatasetsResolverFn } from "./account-datasets.resolver";
+import { TEST_ACCOUNT_NAME } from "@api/mock/dataset.mock";
+import { DatasetsAccountResolverResponse } from "@interface/dataset.interface";
 
 describe("accountDatasetsResolverFn", () => {
     let router: Router;

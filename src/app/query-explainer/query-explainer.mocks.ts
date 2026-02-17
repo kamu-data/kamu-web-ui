@@ -13,7 +13,7 @@ import {
     VerifyQueryKindError,
     VerifyQueryOutputMismatchError,
     VerifyQueryResponse,
-} from "./query-explainer.types";
+} from "src/app/query-explainer/query-explainer.types";
 
 export const mockTextareaCommitment: string = `
 {

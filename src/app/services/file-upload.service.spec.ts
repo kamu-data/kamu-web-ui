@@ -12,8 +12,6 @@ import { RouterTestingModule } from "@angular/router/testing";
 
 import { first, of } from "rxjs";
 
-import { mockFile, mockUploadPrepareResponse } from "@api/mock/upload-file.mock";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { AppConfigService } from "src/app/app-config.service";
 import { mockDatasetEndPoints } from "src/app/data-access-panel/data-access-panel-mock.data";
@@ -22,6 +20,9 @@ import { mockDatasetBasicsRootFragment, mockDatasetInfo } from "src/app/search/m
 import { FileUploadService } from "src/app/services/file-upload.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ProtocolsService } from "src/app/services/protocols.service";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { mockFile, mockUploadPrepareResponse } from "@api/mock/upload-file.mock";
 
 describe("FileUploadService", () => {
     let service: FileUploadService;

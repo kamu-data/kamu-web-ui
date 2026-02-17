@@ -19,7 +19,8 @@ import {
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 import { LineageGraphBuilderService } from "src/app/dataset-view/additional-components/lineage-component/services/lineage-graph-builder.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { MaybeNull } from "src/app/interface/app.types";
+
+import { MaybeNull } from "@interface/app.types";
 
 describe("LineageGraphBuilderService", () => {
     let service: LineageGraphBuilderService;

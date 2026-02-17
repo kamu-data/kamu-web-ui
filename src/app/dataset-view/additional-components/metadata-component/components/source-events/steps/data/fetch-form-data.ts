@@ -5,13 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { SetPollingSourceTooltipsTexts } from "@common/tooltips/set-polling-source-tooltips.text";
-import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
-import AppValues from "@common/values/app.values";
 import {
     ControlType,
     JsonFormData,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+
+import { SetPollingSourceTooltipsTexts } from "@common/tooltips/set-polling-source-tooltips.text";
+import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
+import AppValues from "@common/values/app.values";
 
 export const FETCH_FORM_DATA: JsonFormData = {
     Url: {

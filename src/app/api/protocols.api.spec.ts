@@ -7,11 +7,12 @@
 
 import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
-import { DatasetProtocolsDocument, DatasetProtocolsQuery } from "@api/kamu.graphql.interface";
-import { ProtocolsApi } from "@api/protocols.api";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 import { mockDatasetProtocolsQuery } from "src/app/data-access-panel/data-access-panel-mock.data";
 import { mockDatasetInfo } from "src/app/search/mock.data";
+
+import { DatasetProtocolsDocument, DatasetProtocolsQuery } from "@api/kamu.graphql.interface";
+import { ProtocolsApi } from "@api/protocols.api";
 
 describe("ProtocolsApi", () => {
     let service: ProtocolsApi;

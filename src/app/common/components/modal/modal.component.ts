@@ -19,14 +19,13 @@ import {
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { BaseComponent } from "@common/components/base.component";
-import { MaybeUndefined } from "src/app/interface/app.types";
-import { ModalCommandInterface, ModalComponentType, ModalMappingsComponent } from "src/app/interface/modal.interface";
-
-import { DynamicComponent } from "./dynamic.component";
-import { ModalDialogComponent } from "./modal-dialog.component";
-import { ModalImageComponent } from "./modal-image.component";
-import { ModalSpinnerComponent } from "./modal-spinner.component";
-import { ModalService } from "./modal.service";
+import { DynamicComponent } from "@common/components/modal/dynamic.component";
+import { ModalDialogComponent } from "@common/components/modal/modal-dialog.component";
+import { ModalImageComponent } from "@common/components/modal/modal-image.component";
+import { ModalSpinnerComponent } from "@common/components/modal/modal-spinner.component";
+import { ModalService } from "@common/components/modal/modal.service";
+import { MaybeUndefined } from "@interface/app.types";
+import { ModalCommandInterface, ModalComponentType, ModalMappingsComponent } from "@interface/modal.interface";
 
 @Component({
     selector: "modal",

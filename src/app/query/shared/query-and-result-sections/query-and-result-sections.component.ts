@@ -29,7 +29,20 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 import { map, Observable, switchMap, tap } from "rxjs";
 
-import { EngineDesc } from "@api/kamu.graphql.interface";
+import { MarkdownModule } from "ngx-markdown";
+import { ToastrService } from "ngx-toastr";
+import { AppConfigService } from "src/app/app-config.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { EngineSelectComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
+import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
+import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
+import ProjectLinks from "src/app/project-links";
+import { SqlQueryBasicResponse, SqlQueryResponseState } from "src/app/query/global-query/global-query.model";
+import { LoadMoreComponent } from "src/app/query/shared/load-more/load-more.component";
+import { RequestTimerComponent } from "src/app/query/shared/request-timer/request-timer.component";
+import { FileUploadService } from "src/app/services/file-upload.service";
+import { NavigationService } from "src/app/services/navigation.service";
+
 import { BaseComponent } from "@common/components/base.component";
 import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
 import {
@@ -39,23 +52,11 @@ import {
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
 import AppValues from "@common/values/app.values";
-import { MarkdownModule } from "ngx-markdown";
-import { ToastrService } from "ngx-toastr";
-import { AppConfigService } from "src/app/app-config.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { EngineSelectComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
-import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
-import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
-import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
-import { UploadPrepareData, UploadPrepareResponse } from "src/app/interface/ingest-via-file-upload.types";
-import ProjectLinks from "src/app/project-links";
-import { SqlQueryBasicResponse, SqlQueryResponseState } from "src/app/query/global-query/global-query.model";
-import { LoadMoreComponent } from "src/app/query/shared/load-more/load-more.component";
-import { RequestTimerComponent } from "src/app/query/shared/request-timer/request-timer.component";
-import { FileUploadService } from "src/app/services/file-upload.service";
-import { NavigationService } from "src/app/services/navigation.service";
+import { EngineDesc } from "@api/kamu.graphql.interface";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
+import { DatasetRequestBySql } from "@interface/dataset.interface";
+import { UploadPrepareData, UploadPrepareResponse } from "@interface/ingest-via-file-upload.types";
 
 @Component({
     selector: "app-query-and-result-sections",

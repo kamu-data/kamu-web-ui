@@ -10,6 +10,13 @@ import { inject, Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 
+import { ToastrService } from "ngx-toastr";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { DatasetNotFoundError, DatasetOperationError } from "@common/values/errors";
 import { DatasetApi } from "@api/dataset.api";
 import {
     DatasetVisibilityInput,
@@ -17,12 +24,6 @@ import {
     RenameDatasetMutation,
     SetVisibilityDatasetMutation,
 } from "@api/kamu.graphql.interface";
-import { DatasetNotFoundError, DatasetOperationError } from "@common/values/errors";
-import { ToastrService } from "ngx-toastr";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { NavigationService } from "src/app/services/navigation.service";
 
 @Injectable({
     providedIn: "root",

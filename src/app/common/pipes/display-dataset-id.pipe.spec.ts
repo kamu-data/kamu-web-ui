@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DisplayDatasetIdPipe } from "./display-dataset-id.pipe";
+import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
 
 describe("DisplayDatasetIdPipe", () => {
     const MOCK_DATASET_ID = "did:odf:fed0100d72fc7a0d7ced1ff2d47e3bfeb844390f18a7fa7e24ced6563aa7357dfa2e9";

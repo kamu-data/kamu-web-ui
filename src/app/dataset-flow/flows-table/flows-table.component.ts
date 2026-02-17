@@ -27,20 +27,6 @@ import { MatMenuModule } from "@angular/material/menu";
 import { MatTable, MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { RouterLink } from "@angular/router";
 
-import {
-    AccountFragment,
-    Dataset,
-    DatasetBasicsFragment,
-    FlowStartCondition,
-    FlowStatus,
-    FlowSummaryDataFragment,
-    FlowSummaryDataWithTriggerFragment,
-} from "@api/kamu.graphql.interface";
-import { BaseComponent } from "@common/components/base.component";
-import { ModalService } from "@common/components/modal/modal.service";
-import { promiseWithCatch } from "@common/helpers/app.helpers";
-import { SafeHtmlPipe } from "@common/pipes/safe-html.pipe";
-import AppValues from "@common/values/app.values";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
 import { ToastrService } from "ngx-toastr";
@@ -55,8 +41,23 @@ import {
     FlowsTableOptions,
 } from "src/app/dataset-flow/flows-table/flows-table.types";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
-import { MaybeNull } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";
+
+import { BaseComponent } from "@common/components/base.component";
+import { ModalService } from "@common/components/modal/modal.service";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { SafeHtmlPipe } from "@common/pipes/safe-html.pipe";
+import AppValues from "@common/values/app.values";
+import {
+    AccountFragment,
+    Dataset,
+    DatasetBasicsFragment,
+    FlowStartCondition,
+    FlowStatus,
+    FlowSummaryDataFragment,
+    FlowSummaryDataWithTriggerFragment,
+} from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 @Component({
     selector: "app-flows-table",

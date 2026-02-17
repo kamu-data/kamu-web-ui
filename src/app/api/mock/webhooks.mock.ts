@@ -5,6 +5,8 @@
  * included in the LICENSE file.
  */
 
+import { CreateWebhookSubscriptionSuccess } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
+
 import {
     DatasetWebhookByIdQuery,
     DatasetWebhookCreateSubscriptionMutation,
@@ -19,7 +21,6 @@ import {
     WebhookSubscriptionInput,
     WebhookSubscriptionStatus,
 } from "@api/kamu.graphql.interface";
-import { CreateWebhookSubscriptionSuccess } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
 
 export const mockWebhookEventTypesQuery: WebhookEventTypesQuery = {
     webhooks: {

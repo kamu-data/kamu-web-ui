@@ -11,7 +11,8 @@ import * as monaco from "monaco-editor";
 import { getDefaultError } from "src/app/editor/helpers/editor-error-formatter";
 import { EditorError } from "src/app/editor/models/error.model";
 import { MonacoService } from "src/app/editor/services/monaco.service";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
+
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 @Directive()
 export abstract class BaseEditorComponent implements OnChanges {

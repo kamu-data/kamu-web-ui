@@ -16,18 +16,6 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 import { BehaviorSubject, debounceTime, map, Observable, startWith, Subject, switchMap, take, tap, timer } from "rxjs";
 
-import {
-    AccountFlowProcessCard,
-    Dataset,
-    DatasetBasicsFragment,
-    FlowProcessEffectiveState,
-    FlowProcessFilters,
-    FlowProcessGroupRollupDataFragment,
-    FlowProcessOrderField,
-} from "@api/kamu.graphql.interface";
-import { BaseComponent } from "@common/components/base.component";
-import { MY_MOMENT_FORMATS } from "@common/helpers/data.helpers";
-import AppValues from "@common/values/app.values";
 import { DateTimeAdapter, OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
@@ -64,6 +52,18 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
 
 import { environment } from "@env/environment";
+import { BaseComponent } from "@common/components/base.component";
+import { MY_MOMENT_FORMATS } from "@common/helpers/data.helpers";
+import AppValues from "@common/values/app.values";
+import {
+    AccountFlowProcessCard,
+    Dataset,
+    DatasetBasicsFragment,
+    FlowProcessEffectiveState,
+    FlowProcessFilters,
+    FlowProcessGroupRollupDataFragment,
+    FlowProcessOrderField,
+} from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-account-flows-processes-subtab",

@@ -10,6 +10,11 @@ import { inject, Injectable } from "@angular/core";
 import { Observable, of, Subject } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { DatasetNotFoundError, DatasetOperationError } from "@common/values/errors";
 import { DatasetApi } from "@api/dataset.api";
 import {
     CommitEventToDatasetMutation,
@@ -17,12 +22,8 @@ import {
     UpdateReadmeMutation,
     UpdateWatermarkMutation,
 } from "@api/kamu.graphql.interface";
-import { DatasetNotFoundError, DatasetOperationError } from "@common/values/errors";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { MaybeUndefined } from "src/app/interface/app.types";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { NavigationService } from "src/app/services/navigation.service";
+import { MaybeUndefined } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 @Injectable({
     providedIn: "root",

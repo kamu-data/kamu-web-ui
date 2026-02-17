@@ -13,13 +13,13 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterModule } from "@angular/router";
 
-import { mockDatasetListItem } from "@api/mock/dataset.mock";
-import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { NgbModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
 import { NavigationService } from "src/app/services/navigation.service";
 
-import { DatasetListItemComponent } from "./dataset-list-item.component";
+import { DatasetListItemComponent } from "@common/components/dataset-list-component/dataset-list-item/dataset-list-item.component";
+import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { mockDatasetListItem } from "@api/mock/dataset.mock";
 
 describe("DatasetListItemComponent", () => {
     let component: DatasetListItemComponent;

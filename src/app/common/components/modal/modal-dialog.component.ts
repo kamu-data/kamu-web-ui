@@ -9,7 +9,7 @@ import { NgClass, NgFor, NgIf } from "@angular/common";
 import { Component } from "@angular/core";
 import { MatDividerModule } from "@angular/material/divider";
 
-import { DynamicComponent } from "./dynamic.component";
+import { DynamicComponent } from "@common/components/modal/dynamic.component";
 
 @Component({
     selector: "modal-dialog",

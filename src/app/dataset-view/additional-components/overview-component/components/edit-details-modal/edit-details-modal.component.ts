@@ -15,16 +15,17 @@ import { MatIconModule } from "@angular/material/icon";
 
 import { finalize } from "rxjs";
 
-import { DatasetBasicsFragment, DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
-import { BaseComponent } from "@common/components/base.component";
-import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
-import { isEqual } from "@common/helpers/app.helpers";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
+
+import { BaseComponent } from "@common/components/base.component";
+import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
+import { isEqual } from "@common/helpers/app.helpers";
+import { DatasetBasicsFragment, DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetSchema } from "@interface/dataset-schema.interface";
 
 @Component({
     selector: "app-details-modal",

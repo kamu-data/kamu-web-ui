@@ -10,9 +10,10 @@ import { AbstractControl, FormArray, FormGroup, ValidationErrors } from "@angula
 
 import { Subscription, tap } from "rxjs";
 
+import { NgSelectComponent } from "@ng-select/ng-select";
+
 import { ValidationError, ValidationErrorTuple } from "@common/directives/form-validation-errors.types";
 import AppValues from "@common/values/app.values";
-import { NgSelectComponent } from "@ng-select/ng-select";
 
 @Directive({
     selector: "[appFieldError]",

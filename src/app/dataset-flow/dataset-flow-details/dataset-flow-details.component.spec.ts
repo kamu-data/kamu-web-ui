@@ -13,11 +13,11 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of, shareReplay } from "rxjs";
 
-import { mockDatasetFlowByIdResponse, mockFlowSummaryDataFragments } from "@api/mock/dataset-flow.mock";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
+import { DatasetFlowDetailsComponent } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.component";
+import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
@@ -27,8 +27,8 @@ import {
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 
-import { DatasetFlowDetailsComponent } from "./dataset-flow-details.component";
-import { FlowDetailsTabs } from "./dataset-flow-details.types";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { mockDatasetFlowByIdResponse, mockFlowSummaryDataFragments } from "@api/mock/dataset-flow.mock";
 
 describe("DatasetFlowDetailsComponent", () => {
     let component: DatasetFlowDetailsComponent;

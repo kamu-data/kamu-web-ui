@@ -9,9 +9,6 @@ import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { FlowRetryBackoffType, TimeUnit } from "@api/kamu.graphql.interface";
-import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
@@ -21,6 +18,10 @@ import { FlowRetryPolicyFormComponent } from "src/app/dataset-view/additional-co
 import { FlowRetryPolicyFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/flow-retry-policy-form/flow-retry-policy-form.harness";
 import { IngestConfigurationRuleFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/ingest-configuration-rule-form/ingest-configuration-rule-form.harness";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+
+import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { FlowRetryBackoffType, TimeUnit } from "@api/kamu.graphql.interface";
 
 describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     let component: DatasetSettingsIngestConfigurationTabComponent;

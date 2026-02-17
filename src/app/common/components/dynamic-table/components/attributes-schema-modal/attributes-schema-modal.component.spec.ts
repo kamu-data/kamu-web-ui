@@ -8,9 +8,9 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { MarkdownModule } from "ngx-markdown";
-import { OdfTypes } from "src/app/interface/dataset-schema.interface";
 
-import { AttributesSchemaModalComponent } from "./attributes-schema-modal.component";
+import { AttributesSchemaModalComponent } from "@common/components/dynamic-table/components/attributes-schema-modal/attributes-schema-modal.component";
+import { OdfTypes } from "@interface/dataset-schema.interface";
 
 describe("AttributesSchemaModalComponent", () => {
     let component: AttributesSchemaModalComponent;

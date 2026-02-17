@@ -8,10 +8,11 @@
 import { NgFor } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import { SetAttachments } from "@api/kamu.graphql.interface";
+import { MarkdownModule } from "ngx-markdown";
+
 import { BaseComponent } from "@common/components/base.component";
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
-import { MarkdownModule } from "ngx-markdown";
+import { SetAttachments } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-set-attachments-event",

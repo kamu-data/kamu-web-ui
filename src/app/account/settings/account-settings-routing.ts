@@ -9,8 +9,6 @@
 
 import { Routes } from "@angular/router";
 
-import { accountPasswordProviderGuard } from "@common/guards/account-password-provider.guard";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { AccountSettingsComponent } from "src/app/account/settings/account-settings.component";
 import { AccountSettingsTabs } from "src/app/account/settings/account-settings.constants";
 import { accountSettingsActiveTabResolverFn } from "src/app/account/settings/resolver/account-settings-active-tab.resolver";
@@ -23,6 +21,9 @@ import { accountSettingsEmailResolverFn } from "src/app/account/settings/tabs/em
 import { PasswordAndAuthenticationTabComponent } from "src/app/account/settings/tabs/password-and-authentication-tab/password-and-authentication-tab.component";
 import { accountSettingsPasswordAndAuthenticationResolverFn } from "src/app/account/settings/tabs/password-and-authentication-tab/resolver/account-settings-password-and-authentication.resolver";
 import ProjectLinks from "src/app/project-links";
+
+import { accountPasswordProviderGuard } from "@common/guards/account-password-provider.guard";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 export const ACCOUNT_SETTINGS_ROUTES: Routes = [
     {

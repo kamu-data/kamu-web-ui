@@ -9,7 +9,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Node } from "@swimlane/ngx-graph";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
@@ -21,6 +20,8 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockNode, mockNodesWithEqualNames } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("LineageComponent", () => {
     let component: LineageComponent;

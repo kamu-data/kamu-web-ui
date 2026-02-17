@@ -5,11 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { AddPushSource } from "@api/kamu.graphql.interface";
 import { ADD_PUSH_SOURCE_DESCRIPTORS } from "src/app/dataset-block/metadata-block/components/event-details/components/add-push-source-event/add-push-source-event.source";
 import { EventSectionBuilder } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/builders/event-section.builder";
 import { EventSection } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
 import { AddPushSourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
+
+import { AddPushSource } from "@api/kamu.graphql.interface";
 
 export class AddPushSourceSectionBuilder extends EventSectionBuilder<AddPushSource> {
     private sectionTitleMapper: Record<string, string> = {

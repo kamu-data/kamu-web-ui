@@ -8,15 +8,15 @@
 import { TestBed } from "@angular/core/testing";
 
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
-import { DatasetAutocompleteItem } from "src/app/interface/search.interface";
 
 import {
     SearchDatasetsAutocompleteDocument,
     SearchDatasetsOverviewDocument,
     SearchDatasetsOverviewQuery,
-} from "./kamu.graphql.interface";
-import { mockAutoCompleteResponse, mockSearchOverviewResponse } from "./mock/search.mock";
-import { SEARCH_RESULTS_PER_PAGE, SearchApi } from "./search.api";
+} from "@api/kamu.graphql.interface";
+import { mockAutoCompleteResponse, mockSearchOverviewResponse } from "@api/mock/search.mock";
+import { SEARCH_RESULTS_PER_PAGE, SearchApi } from "@api/search.api";
+import { DatasetAutocompleteItem } from "@interface/search.interface";
 
 describe("SearchApi", () => {
     let service: SearchApi;

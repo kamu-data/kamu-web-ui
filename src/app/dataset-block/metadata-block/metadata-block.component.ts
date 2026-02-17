@@ -12,8 +12,6 @@ import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/sl
 
 import { Observable } from "rxjs";
 
-import { BaseDatasetDataComponent } from "@common/components/base-dataset-data.component";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { BlockHeaderComponent } from "src/app/dataset-block/metadata-block/components/block-header/block-header.component";
 import { BlockNavigationComponent } from "src/app/dataset-block/metadata-block/components/block-navigation/block-navigation.component";
 import { EventDetailsComponent } from "src/app/dataset-block/metadata-block/components/event-details/event-details.component";
@@ -23,9 +21,12 @@ import { DatasetViewHeaderComponent } from "src/app/dataset-view/dataset-view-he
 import { DatasetViewMenuComponent } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
+
+import { BaseDatasetDataComponent } from "@common/components/base-dataset-data.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 @Component({
     selector: "app-metadata-block",

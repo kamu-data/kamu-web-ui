@@ -5,9 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { FeatureShowMode } from "src/app/interface/feature-flags.interface";
-
-import { AccountProvider } from "./api/kamu.graphql.interface";
+import { AccountProvider } from "@api/kamu.graphql.interface";
+import { FeatureShowMode } from "@interface/feature-flags.interface";
 
 export interface AppRuntimeConfig {
     apiServerGqlUrl: string;

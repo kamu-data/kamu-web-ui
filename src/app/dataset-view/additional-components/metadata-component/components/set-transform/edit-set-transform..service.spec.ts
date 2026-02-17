@@ -8,11 +8,14 @@
 import { TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
-import { SqlQueryStep, TransformInput } from "@api/kamu.graphql.interface";
+import { Engine } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine-section.types";
+import { EditSetTransformService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/edit-set-transform..service";
+import {
+    mockParseSetTransformYamlType,
+    mockSetTransformEventYaml,
+} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 
-import { Engine } from "./components/engine-section/engine-section.types";
-import { EditSetTransformService } from "./edit-set-transform..service";
-import { mockParseSetTransformYamlType, mockSetTransformEventYaml } from "./mock.data";
+import { SqlQueryStep, TransformInput } from "@api/kamu.graphql.interface";
 
 describe("EditSetTransformService", () => {
     let service: EditSetTransformService;

@@ -9,10 +9,10 @@ import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
-import { DatasetSearchOverviewFragment } from "@api/kamu.graphql.interface";
 import { DatasetListItemComponent } from "@common/components/dataset-list-component/dataset-list-item/dataset-list-item.component";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
-import { SearchMode } from "src/app/interface/search.interface";
+import { DatasetSearchOverviewFragment } from "@api/kamu.graphql.interface";
+import { SearchMode } from "@interface/search.interface";
 
 @Component({
     selector: "app-dataset-list",

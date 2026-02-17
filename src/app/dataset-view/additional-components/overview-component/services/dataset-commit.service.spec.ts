@@ -12,18 +12,10 @@ import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { Observable, of, Subscription } from "rxjs";
 import { first } from "rxjs/operators";
 
-import { DatasetApi } from "@api/dataset.api";
-import {
-    CommitEventToDatasetMutation,
-    DatasetByAccountAndDatasetNameQuery,
-    UpdateReadmeMutation,
-} from "@api/kamu.graphql.interface";
-import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
-import { DatasetNotFoundError, DatasetOperationError } from "@common/values/errors";
 import { Apollo } from "apollo-angular";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { MaybeUndefined } from "src/app/interface/app.types";
 import {
     mockCommitEventToDataseMetadataManifestMalformedError,
     mockCommitEventToDataseMetadataManifestUnsupportedVersionError,
@@ -37,7 +29,15 @@ import {
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 
-import { DatasetCommitService } from "./dataset-commit.service";
+import { DatasetNotFoundError, DatasetOperationError } from "@common/values/errors";
+import { DatasetApi } from "@api/dataset.api";
+import {
+    CommitEventToDatasetMutation,
+    DatasetByAccountAndDatasetNameQuery,
+    UpdateReadmeMutation,
+} from "@api/kamu.graphql.interface";
+import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
+import { MaybeUndefined } from "@interface/app.types";
 
 describe("DatasetCommitService", () => {
     let commitService: DatasetCommitService;

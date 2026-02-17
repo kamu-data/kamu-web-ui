@@ -11,9 +11,6 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 
 import { Observable, switchMap } from "rxjs";
 
-import { BaseComponent } from "@common/components/base.component";
-import { LineageGraphComponent } from "@common/components/lineage-graph/lineage-graph.component";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { Node } from "@swimlane/ngx-graph";
 import { ToastrService } from "ngx-toastr";
 import {
@@ -24,9 +21,13 @@ import {
 import { LineageGraphBuilderService } from "src/app/dataset-view/additional-components/lineage-component/services/lineage-graph-builder.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { BaseComponent } from "@common/components/base.component";
+import { LineageGraphComponent } from "@common/components/lineage-graph/lineage-graph.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 @Component({
     selector: "app-lineage",

@@ -9,8 +9,6 @@
 
 import { Routes } from "@angular/router";
 
-import { datasetInfoResolverFn } from "@common/resolvers/dataset-info.resolver";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { DatasetFlowDetailsComponent } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.component";
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { flowDetailsActiveTabResolverFn } from "src/app/dataset-flow/dataset-flow-details/resolvers/flow-details-active-tab.resolver";
@@ -22,6 +20,9 @@ import { FlowDetailsSummaryTabComponent } from "src/app/dataset-flow/dataset-flo
 import { flowDetailsSummaryResolverFn } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-summary-tab/resolver/flow-details-summary.resolver";
 import { FlowDetailsUsageTabComponent } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-usage-tab/flow-details-usage-tab.component";
 import ProjectLinks from "src/app/project-links";
+
+import { datasetInfoResolverFn } from "@common/resolvers/dataset-info.resolver";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 export const FLOW_DETAILS_ROUTES: Routes = [
     {

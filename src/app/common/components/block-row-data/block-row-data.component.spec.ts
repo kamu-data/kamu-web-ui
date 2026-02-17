@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { BlockRowDataComponent } from "./block-row-data.component";
+import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
 
 describe("BlockRowDataComponent", () => {
     let component: BlockRowDataComponent;

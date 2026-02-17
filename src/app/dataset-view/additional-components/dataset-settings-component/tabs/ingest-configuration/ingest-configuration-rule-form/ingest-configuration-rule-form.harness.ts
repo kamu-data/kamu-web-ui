@@ -10,7 +10,7 @@
 import { ComponentHarness } from "@angular/cdk/testing";
 import { MatCheckboxHarness } from "@angular/material/checkbox/testing";
 
-import { IngestConfigurationRuleFormValue } from "./ingest-configuration-rule-form.types";
+import { IngestConfigurationRuleFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/ingest-configuration-rule-form/ingest-configuration-rule-form.types";
 
 export class IngestConfigurationRuleFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-ingest-configuration-rule-form";

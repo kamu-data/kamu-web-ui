@@ -12,8 +12,9 @@ import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
 
 import { ToastrService } from "ngx-toastr";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
+
+import { DatasetInfo } from "@interface/navigation.interface";
 
 @Component({
     selector: "app-display-hash",

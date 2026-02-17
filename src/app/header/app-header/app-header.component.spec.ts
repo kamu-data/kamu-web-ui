@@ -15,8 +15,12 @@ import { ActivatedRoute, NavigationEnd } from "@angular/router";
 import { of } from "rxjs";
 import { first } from "rxjs/operators";
 
-import { AccountFragment, AccountProvider, AccountType } from "@api/kamu.graphql.interface";
-import { SearchApi } from "@api/search.api";
+import { Apollo } from "apollo-angular";
+import { AppHeaderComponent } from "src/app/header/app-header/app-header.component";
+import ProjectLinks from "src/app/project-links";
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
+
 import {
     dispatchInputEvent,
     emitClickOnElementByDataTestId,
@@ -27,13 +31,9 @@ import {
     routerMockEventSubject,
 } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
-import { Apollo } from "apollo-angular";
-import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
-import ProjectLinks from "src/app/project-links";
-import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
-
-import { AppHeaderComponent } from "./app-header.component";
+import { AccountFragment, AccountProvider, AccountType } from "@api/kamu.graphql.interface";
+import { SearchApi } from "@api/search.api";
+import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface";
 
 describe("AppHeaderComponent", () => {
     let component: AppHeaderComponent;

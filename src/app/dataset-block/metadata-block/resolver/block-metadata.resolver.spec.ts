@@ -10,13 +10,13 @@ import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from "@angu
 
 import { of } from "rxjs";
 
-import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 import { Apollo } from "apollo-angular";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { MetadataBlockInfo } from "src/app/dataset-block/metadata-block/metadata-block.types";
+import { blockMetadataResolverFn } from "src/app/dataset-block/metadata-block/resolver/block-metadata.resolver";
 import ProjectLinks from "src/app/project-links";
 
-import { blockMetadataResolverFn } from "./block-metadata.resolver";
+import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 
 describe("blockMetadataResolverFn", () => {
     let routeSnapshot: ActivatedRouteSnapshot;

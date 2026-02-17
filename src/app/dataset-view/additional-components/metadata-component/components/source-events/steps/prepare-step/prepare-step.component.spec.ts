@@ -8,8 +8,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormGroupDirective } from "@angular/forms";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { mockSetPollingSourceEventYaml } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import {
@@ -19,6 +17,9 @@ import {
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { formGroupDirective } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/base-step/base-step.component.spec";
 import { PrepareStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/prepare-step/prepare-step.component";
+
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("PrepareStepComponent", () => {
     let component: PrepareStepComponent;

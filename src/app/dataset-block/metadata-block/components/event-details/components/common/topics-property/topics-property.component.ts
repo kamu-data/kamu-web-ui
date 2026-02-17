@@ -7,7 +7,8 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import { MqttTopicSubscription } from "@api/kamu.graphql.interface";
+import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+
 import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
 import {
     DynamicTableColumnClassEnum,
@@ -15,8 +16,8 @@ import {
     DynamicTableDataRow,
 } from "@common/components/dynamic-table/dynamic-table.interface";
 import { extractSchemaFieldsFromData } from "@common/helpers/data-schema.helpers";
-import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
-import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
+import { MqttTopicSubscription } from "@api/kamu.graphql.interface";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 @Component({
     selector: "app-topics-property",

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AccountFragment } from "./kamu.graphql.interface";
+import { AccountFragment } from "@api/kamu.graphql.interface";
 
 export interface PasswordLoginCredentials {
     login: string;

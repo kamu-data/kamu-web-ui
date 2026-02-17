@@ -7,10 +7,10 @@
 
 import { TestBed } from "@angular/core/testing";
 
+import { FlowsSelectionStateService } from "src/app/dataset-view/additional-components/flows-component/services/flows-selection-state.service";
+
 import { DatasetFlowProcesses, FlowProcessEffectiveState } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowsProcessesQuery } from "@api/mock/dataset-flow.mock";
-
-import { FlowsSelectionStateService } from "./flows-selection-state.service";
 
 describe("FlowsSelectionStateService", () => {
     let service: FlowsSelectionStateService;

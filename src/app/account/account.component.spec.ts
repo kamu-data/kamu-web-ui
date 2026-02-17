@@ -10,9 +10,6 @@ import { ActivatedRoute } from "@angular/router";
 
 import { BehaviorSubject, of } from "rxjs";
 
-import { mockAccountDetails, TEST_AVATAR_URL, TEST_LOGIN } from "@api/mock/auth.mock";
-import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
-import AppValues from "@common/values/app.values";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { AccountComponent } from "src/app/account/account.component";
@@ -21,6 +18,10 @@ import { AccountTabs } from "src/app/account/account.constants";
 import { AccountService } from "src/app/account/account.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import ProjectLinks from "src/app/project-links";
+
+import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import AppValues from "@common/values/app.values";
+import { mockAccountDetails, TEST_AVATAR_URL, TEST_LOGIN } from "@api/mock/auth.mock";
 
 describe("AccountComponent", () => {
     let component: AccountComponent;

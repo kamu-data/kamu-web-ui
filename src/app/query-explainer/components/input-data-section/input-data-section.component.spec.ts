@@ -12,9 +12,6 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
-import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
-import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
 import { MarkdownModule } from "ngx-markdown";
 import { provideToastr } from "ngx-toastr";
 import ProjectLinks from "src/app/project-links";
@@ -26,6 +23,10 @@ import {
     mockVerifyQueryResponseSuccess,
 } from "src/app/query-explainer/query-explainer.mocks";
 import { mockDatasetInfo } from "src/app/search/mock.data";
+
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
+import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
 
 describe("InputDataSectionComponent", () => {
     let component: InputDataSectionComponent;

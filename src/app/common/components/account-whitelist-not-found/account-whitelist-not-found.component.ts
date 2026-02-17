@@ -8,8 +8,9 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
-import AppValues from "@common/values/app.values";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import AppValues from "@common/values/app.values";
 
 @Component({
     selector: "app-account-whitelist-not-found",

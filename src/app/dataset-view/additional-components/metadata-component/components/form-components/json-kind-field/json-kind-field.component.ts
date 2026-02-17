@@ -9,8 +9,6 @@ import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
-import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
-import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 import { InputFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/input-field/input-field.component";
@@ -18,6 +16,9 @@ import {
     ReadFormatControlType,
     ReadKind,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
 
 @Component({
     selector: "app-json-kind-field",

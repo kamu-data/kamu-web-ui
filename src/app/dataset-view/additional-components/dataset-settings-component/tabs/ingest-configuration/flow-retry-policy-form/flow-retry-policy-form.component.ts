@@ -12,21 +12,24 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angula
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 import {
-    FlowRetryBackoffType,
-    FlowRetryPolicy,
-    FlowRetryPolicyInput,
-    TimeDelta,
-    TimeUnit,
-} from "@api/kamu.graphql.interface";
+    FlowRetryPolicyFormType,
+    FlowRetryPolicyFormValue,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/flow-retry-policy-form/flow-retry-policy-form.types";
+
 import { BaseComponent } from "@common/components/base.component";
 import { TimeDeltaFormComponent } from "@common/components/time-delta-form/time-delta-form.component";
 import { TimeDeltaFormType } from "@common/components/time-delta-form/time-delta-form.value";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
-import { MaybeNull } from "src/app/interface/app.types";
-
-import { FlowRetryPolicyFormType, FlowRetryPolicyFormValue } from "./flow-retry-policy-form.types";
+import {
+    FlowRetryBackoffType,
+    FlowRetryPolicy,
+    FlowRetryPolicyInput,
+    TimeDelta,
+    TimeUnit,
+} from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 @Component({
     selector: "app-flow-retry-policy-form",

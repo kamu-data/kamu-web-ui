@@ -13,14 +13,11 @@ import { provideAnimations } from "@angular/platform-browser/animations";
 
 import { of } from "rxjs";
 
-import { DatasetApi } from "@api/dataset.api";
-import { DeleteDatasetMutation, RenameDatasetMutation } from "@api/kamu.graphql.interface";
-import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
-import { DatasetNotFoundError, DatasetOperationError } from "@common/values/errors";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DatasetSettingsService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-settings.service";
 import {
     mockDeleteDanglingReferenceError,
     mockDeleteSuccessResponse,
@@ -30,7 +27,10 @@ import {
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 
-import { DatasetSettingsService } from "./dataset-settings.service";
+import { DatasetNotFoundError, DatasetOperationError } from "@common/values/errors";
+import { DatasetApi } from "@api/dataset.api";
+import { DeleteDatasetMutation, RenameDatasetMutation } from "@api/kamu.graphql.interface";
+import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
 
 describe("DatasetSettingsService", () => {
     let service: DatasetSettingsService;

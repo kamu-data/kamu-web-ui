@@ -11,27 +11,27 @@ import { FormsModule } from "@angular/forms";
 
 import { combineLatest, map, Observable, of, switchMap, tap } from "rxjs";
 
-import { DatasetByIdQuery } from "@api/kamu.graphql.interface";
-import { BaseComponent } from "@common/components/base.component";
-import AppValues from "@common/values/app.values";
 import { ToastrService } from "ngx-toastr";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
-
-import { CommitmentDataSectionComponent } from "./components/commitment-data-section/commitment-data-section.component";
-import { InputDataSectionComponent } from "./components/input-data-section/input-data-section.component";
-import { ReproducedResultSectionComponent } from "./components/reproduced-result-section/reproduced-result-section.component";
-import { VerifyResultSectionComponent } from "./components/verify-result-section/verify-result-section.component";
-import { QueryExplainerService } from "./query-explainer.service";
+import { CommitmentDataSectionComponent } from "src/app/query-explainer/components/commitment-data-section/commitment-data-section.component";
+import { InputDataSectionComponent } from "src/app/query-explainer/components/input-data-section/input-data-section.component";
+import { ReproducedResultSectionComponent } from "src/app/query-explainer/components/reproduced-result-section/reproduced-result-section.component";
+import { VerifyResultSectionComponent } from "src/app/query-explainer/components/verify-result-section/verify-result-section.component";
+import { QueryExplainerService } from "src/app/query-explainer/query-explainer.service";
 import {
     QueryExplainerDatasetsType,
     QueryExplainerResponse,
     VerifyQueryKindError,
     VerifyQueryResponse,
-} from "./query-explainer.types";
+} from "src/app/query-explainer/query-explainer.types";
+
+import { BaseComponent } from "@common/components/base.component";
+import AppValues from "@common/values/app.values";
+import { DatasetByIdQuery } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 export interface QueryExplainerComponentData {
     sqlQueryExplainerResponse: QueryExplainerResponse;

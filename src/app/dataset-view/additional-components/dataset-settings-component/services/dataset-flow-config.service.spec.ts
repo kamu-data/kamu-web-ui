@@ -9,6 +9,11 @@ import { TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
+import { Apollo } from "apollo-angular";
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { ToastrModule, ToastrService } from "ngx-toastr";
+import { DatasetFlowConfigService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-config.service";
+
 import { DatasetFlowApi } from "@api/dataset-flow.api";
 import {
     DatasetFlowType,
@@ -25,11 +30,6 @@ import {
     mockSetIngestFlowConfigMutation,
     mockSetIngestFlowConfigMutationError,
 } from "@api/mock/dataset-flow.mock";
-import { Apollo } from "apollo-angular";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { ToastrModule, ToastrService } from "ngx-toastr";
-
-import { DatasetFlowConfigService } from "./dataset-flow-config.service";
 
 describe("DatasetFlowConfigService", () => {
     let service: DatasetFlowConfigService;

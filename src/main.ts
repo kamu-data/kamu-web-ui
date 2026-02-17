@@ -28,24 +28,24 @@ import { Apollo, provideApollo } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
 import { MarkdownModule } from "ngx-markdown";
 import { provideToastr, ToastrService } from "ngx-toastr";
+import { AppConfigService } from "src/app/app-config.service";
+import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "src/app/app-routing";
+import { AppComponent } from "src/app/app.component";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { LoginMethodsService } from "src/app/auth/login-methods.service";
+import ProjectLinks from "src/app/project-links";
+import { ErrorHandlerService } from "src/app/services/error-handler.service";
+import { LocalStorageService } from "src/app/services/local-storage.service";
 import { NavigationService } from "src/app/services/navigation.service";
 
-import { AppConfigService } from "./app/app-config.service";
-import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "./app/app-routing";
-import { AppComponent } from "./app/app.component";
-import { LoggedUserService } from "./app/auth/logged-user.service";
-import { LoginMethodsService } from "./app/auth/login-methods.service";
-import { SpinnerInterceptor } from "./app/common/components/spinner/spinner.interceptor";
-import { SpinnerService } from "./app/common/components/spinner/spinner.service";
-import { apolloCache } from "./app/common/helpers/apollo-cache.helper";
-import { HIGHLIGHT_OPTIONS_PROVIDER, isAccessTokenExpired, logError } from "./app/common/helpers/app.helpers";
-import { AuthInterceptor } from "./app/common/interceptors/auth.interceptor";
-import AppValues from "./app/common/values/app.values";
-import { ErrorTexts } from "./app/common/values/errors.text";
-import ProjectLinks from "./app/project-links";
-import { ErrorHandlerService } from "./app/services/error-handler.service";
-import { LocalStorageService } from "./app/services/local-storage.service";
-import { environment } from "./environments/environment";
+import { environment } from "@env/environment";
+import { SpinnerInterceptor } from "@common/components/spinner/spinner.interceptor";
+import { SpinnerService } from "@common/components/spinner/spinner.service";
+import { apolloCache } from "@common/helpers/apollo-cache.helper";
+import { HIGHLIGHT_OPTIONS_PROVIDER, isAccessTokenExpired, logError } from "@common/helpers/app.helpers";
+import { AuthInterceptor } from "@common/interceptors/auth.interceptor";
+import AppValues from "@common/values/app.values";
+import { ErrorTexts } from "@common/values/errors.text";
 
 const Services = [
     Apollo,

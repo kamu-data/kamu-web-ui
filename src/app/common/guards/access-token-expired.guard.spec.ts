@@ -12,7 +12,7 @@ import { Apollo } from "apollo-angular";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { NavigationService } from "src/app/services/navigation.service";
 
-import { accessTokenExpiredGuardFn } from "./access-token-expired.guard";
+import { accessTokenExpiredGuardFn } from "@common/guards/access-token-expired.guard";
 
 describe("accessTokenExpiredGuard", () => {
     let localStorageService: LocalStorageService;

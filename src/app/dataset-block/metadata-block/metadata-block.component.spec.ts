@@ -16,13 +16,13 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
-import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
-import { mockGetMetadataBlockQuery } from "@api/mock/dataset.mock";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
+import { MetadataBlockComponent } from "src/app/dataset-block/metadata-block/metadata-block.component";
 
-import { MetadataBlockComponent } from "./metadata-block.component";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
+import { mockGetMetadataBlockQuery } from "@api/mock/dataset.mock";
 
 describe("MetadataBlockComponent", () => {
     let component: MetadataBlockComponent;

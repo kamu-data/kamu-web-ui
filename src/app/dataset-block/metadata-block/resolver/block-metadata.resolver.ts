@@ -13,9 +13,10 @@ import { catchError, EMPTY, map } from "rxjs";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { MetadataBlockInfo } from "src/app/dataset-block/metadata-block/metadata-block.types";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { DatasetInfo } from "@interface/navigation.interface";
 
 export const blockMetadataResolverFn: ResolveFn<MetadataBlockInfo> = (route: ActivatedRouteSnapshot) => {
     const blockService = inject(BlockService);

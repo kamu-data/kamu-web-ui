@@ -8,9 +8,9 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { NonNullableFormBuilder, Validators } from "@angular/forms";
 
-import AppValues from "@common/values/app.values";
+import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
 
-import { WebhookFormComponent } from "./webhook-form.component";
+import AppValues from "@common/values/app.values";
 
 describe("WebhookFormComponent", () => {
     let component: WebhookFormComponent;

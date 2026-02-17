@@ -9,15 +9,16 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { provideToastr, ToastrService } from "ngx-toastr";
+import { SeedEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/seed-event/seed-event.component";
+import { mockSeed } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
+
 import {
     emitClickOnElementByDataTestId,
     getElementByDataTestId,
     registerMatSvgIcons,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { provideToastr, ToastrService } from "ngx-toastr";
-import { SeedEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/seed-event/seed-event.component";
-import { mockSeed } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
 describe("SeedEventComponent", () => {
     let component: SeedEventComponent;

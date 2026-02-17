@@ -8,7 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
-import { CardsPropertyComponent } from "./cards-property.component";
+import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
 
 describe("CardsPropertyComponent", () => {
     let component: CardsPropertyComponent;

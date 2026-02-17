@@ -9,8 +9,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
-import { WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
@@ -18,6 +16,9 @@ import { EditWebhookComponent } from "src/app/dataset-view/additional-components
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
 
 describe("EditWebhookComponent", () => {
     let component: EditWebhookComponent;

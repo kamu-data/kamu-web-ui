@@ -7,7 +7,7 @@
 
 import { FormControl } from "@angular/forms";
 
-import { MaybeNull } from "src/app/interface/app.types";
+import { MaybeNull } from "@interface/app.types";
 
 export interface KeyValueForm {
     name: FormControl<MaybeNull<string>>;

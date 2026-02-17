@@ -9,7 +9,7 @@ import { ChangeDetectorRef, Directive, EventEmitter, inject, Input, OnInit, Outp
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AbstractControl, ControlValueAccessor, FormGroup, ValidationErrors, Validator } from "@angular/forms";
 
-import { BaseComponent } from "./base.component";
+import { BaseComponent } from "@common/components/base.component";
 
 /**
  * Abstract base class for form components that implement ControlValueAccessor.

@@ -7,9 +7,9 @@
 
 import { FormControl, FormGroup } from "@angular/forms";
 
-import { FlowRetryBackoffType, TimeDelta } from "@api/kamu.graphql.interface";
 import { TimeDeltaFormType } from "@common/components/time-delta-form/time-delta-form.value";
-import { MaybeNull } from "src/app/interface/app.types";
+import { FlowRetryBackoffType, TimeDelta } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 export interface FlowRetryPolicyFormValue {
     retriesEnabled: boolean;

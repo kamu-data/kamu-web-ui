@@ -13,10 +13,12 @@ import { provideAnimations } from "@angular/platform-browser/animations";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 import { AppConfigService } from "src/app/app-config.service";
-
-import { mockQueryExplainerResponse, mockVerifyQueryResponseSuccess } from "./query-explainer.mocks";
-import { QueryExplainerService } from "./query-explainer.service";
-import { QueryExplainerResponse } from "./query-explainer.types";
+import {
+    mockQueryExplainerResponse,
+    mockVerifyQueryResponseSuccess,
+} from "src/app/query-explainer/query-explainer.mocks";
+import { QueryExplainerService } from "src/app/query-explainer/query-explainer.service";
+import { QueryExplainerResponse } from "src/app/query-explainer/query-explainer.types";
 
 describe("QueryExplainerService", () => {
     let service: QueryExplainerService;

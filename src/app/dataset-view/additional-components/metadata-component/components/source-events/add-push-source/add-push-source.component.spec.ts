@@ -12,7 +12,6 @@ import { ActivatedRoute } from "@angular/router";
 
 import { from, of } from "rxjs";
 
-import { mockAccountDetails } from "@api/mock/auth.mock";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -26,6 +25,8 @@ import { AddPushSourceSection } from "src/app/dataset-view/additional-components
 import { AddPushSourceComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { mockDatasetInfo } from "src/app/search/mock.data";
+
+import { mockAccountDetails } from "@api/mock/auth.mock";
 
 const providersSection = (name: string) => {
     return [

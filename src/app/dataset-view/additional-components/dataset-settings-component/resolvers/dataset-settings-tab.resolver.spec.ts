@@ -8,9 +8,8 @@
 import { TestBed } from "@angular/core/testing";
 import { ResolveFn } from "@angular/router";
 
+import { datasetSettingsTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/resolvers/dataset-settings-tab.resolver";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
-
-import { datasetSettingsTabResolverFn } from "./dataset-settings-tab.resolver";
 
 describe("datasetSettingsTabResolverFn", () => {
     const executeResolver: ResolveFn<DatasetOverviewTabData> = (...resolverParameters) =>

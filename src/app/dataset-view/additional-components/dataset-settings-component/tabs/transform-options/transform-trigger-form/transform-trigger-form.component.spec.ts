@@ -11,15 +11,16 @@ import { Component, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
-import { FlowTriggerBreakingChangeRule, TimeDelta, TimeUnit } from "@api/kamu.graphql.interface";
-import { TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { BatchingRuleType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { TransformTriggerFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.component";
 import { TransformTriggerFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.harness";
 import { TransformTriggerFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.types";
+
+import { TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { FlowTriggerBreakingChangeRule, TimeDelta, TimeUnit } from "@api/kamu.graphql.interface";
 
 @Component({
     imports: [

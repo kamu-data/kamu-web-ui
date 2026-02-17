@@ -7,10 +7,11 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { EngineSelectComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
 import { Engine } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine-section.types";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 
 describe("EngineSelectComponent", () => {
     let component: EngineSelectComponent;

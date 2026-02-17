@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { FlowDetailsUsageTabComponent } from "./flow-details-usage-tab.component";
+import { FlowDetailsUsageTabComponent } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-usage-tab/flow-details-usage-tab.component";
 
 describe("FlowDetailsUsageTabComponent", () => {
     let component: FlowDetailsUsageTabComponent;

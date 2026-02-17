@@ -10,6 +10,26 @@ import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { of } from "rxjs";
 import { first } from "rxjs/operators";
 
+import { ApolloLink, InMemoryCache } from "@apollo/client/core";
+import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import {
+    DatasetHistoryUpdate,
+    LineageUpdate,
+    OverviewUpdate,
+} from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import {
+    mockDatasetHeadBlockHashQuery,
+    mockDatasetHistoryResponse,
+    mockDatasetInfo,
+    mockDatasetLineageResponse,
+    mockDatasetMainDataResponse,
+    mockDatasetResponseNotFound,
+    mockFullPowerDatasetPermissionsFragment,
+} from "src/app/search/mock.data";
+
+import { DatasetNotFoundError, SqlExecutionError } from "@common/values/errors";
 import { DatasetApi } from "@api/dataset.api";
 import {
     DataQueryResultErrorKind,
@@ -29,26 +49,7 @@ import {
     TEST_DATASET_ID,
     TEST_DATASET_NAME,
 } from "@api/mock/dataset.mock";
-import { ApolloLink, InMemoryCache } from "@apollo/client/core";
-import { DatasetNotFoundError, SqlExecutionError } from "@common/values/errors";
-import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import {
-    DatasetHistoryUpdate,
-    LineageUpdate,
-    OverviewUpdate,
-} from "src/app/dataset-view/dataset.subscriptions.interface";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { MaybeNull } from "src/app/interface/app.types";
-import {
-    mockDatasetHeadBlockHashQuery,
-    mockDatasetHistoryResponse,
-    mockDatasetInfo,
-    mockDatasetLineageResponse,
-    mockDatasetMainDataResponse,
-    mockDatasetResponseNotFound,
-    mockFullPowerDatasetPermissionsFragment,
-} from "src/app/search/mock.data";
+import { MaybeNull } from "@interface/app.types";
 
 describe("AppDatasetService", () => {
     let service: DatasetService;

@@ -16,7 +16,7 @@ import {
     DatasetSchema,
     OdfExtraAttributes,
     OdfTypes,
-} from "src/app/interface/dataset-schema.interface";
+} from "@interface/dataset-schema.interface";
 
 export function parseSchemaFromJson(schemaContent: string): DatasetSchema {
     return JSON.parse(removeAllLineBreaks(schemaContent)) as DatasetSchema;

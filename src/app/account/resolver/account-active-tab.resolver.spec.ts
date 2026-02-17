@@ -9,9 +9,8 @@ import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
 import { AccountTabs } from "src/app/account/account.constants";
+import { accountActiveTabResolverFn } from "src/app/account/resolver/account-active-tab.resolver";
 import ProjectLinks from "src/app/project-links";
-
-import { accountActiveTabResolverFn } from "./account-active-tab.resolver";
 
 describe("accountActiveTabResolverFn", () => {
     const executeResolver: ResolveFn<AccountTabs> = (...resolverParameters) =>

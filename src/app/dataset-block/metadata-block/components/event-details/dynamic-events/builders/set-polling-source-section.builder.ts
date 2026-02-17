@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { SetPollingSource } from "@api/kamu.graphql.interface";
 import { SET_POLLING_SOURCE_DESCRIPTORS } from "src/app/dataset-block/metadata-block/components/event-details/components/set-polling-source-event/set-polling-source-event.source";
 import { EventSectionBuilder } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/builders/event-section.builder";
 import {
@@ -13,6 +12,8 @@ import {
     EventSection,
 } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
 import { SetPollingSourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+
+import { SetPollingSource } from "@api/kamu.graphql.interface";
 
 export class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPollingSource> {
     public buildEventSections(event: SetPollingSource): EventSection[] {

@@ -8,10 +8,10 @@
 import { Injectable } from "@angular/core";
 
 import { AppConfigService } from "src/app/app-config.service";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import { Feature, FeatureShowMode } from "src/app/interface/feature-flags.interface";
 
 import { environment } from "@env/environment";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { Feature, FeatureShowMode } from "@interface/feature-flags.interface";
 
 @Injectable({
     providedIn: "root",

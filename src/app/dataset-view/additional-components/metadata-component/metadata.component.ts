@@ -11,19 +11,6 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink, RouterOutlet } from "@angular/router";
 
-import {
-    AddPushSourceEventFragment,
-    DatasetKind,
-    DatasetMetadataSummaryFragment,
-    DatasetTransformFragment,
-    PageBasedInfo,
-    SetPollingSourceEventFragment,
-} from "@api/kamu.graphql.interface";
-import { BaseComponent } from "@common/components/base.component";
-import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
-import { momentConvertDateToLocalWithFormat } from "@common/helpers/app.helpers";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import AppValues from "@common/values/app.values";
 import { CommitNavigatorComponent } from "src/app/dataset-view/additional-components/metadata-component/components/commit-navigator/commit-navigator.component";
 import {
     METADATA_TAB_MENU_ITEMS,
@@ -33,9 +20,23 @@ import {
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { MetadataSchemaUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "src/app/interface/app.types";
-import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import ProjectLinks from "src/app/project-links";
+
+import { BaseComponent } from "@common/components/base.component";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { momentConvertDateToLocalWithFormat } from "@common/helpers/app.helpers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
+import {
+    AddPushSourceEventFragment,
+    DatasetKind,
+    DatasetMetadataSummaryFragment,
+    DatasetTransformFragment,
+    PageBasedInfo,
+    SetPollingSourceEventFragment,
+} from "@api/kamu.graphql.interface";
+import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
+import { DatasetSchema } from "@interface/dataset-schema.interface";
 
 @Component({
     selector: "app-metadata",

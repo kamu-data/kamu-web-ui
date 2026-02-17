@@ -15,7 +15,7 @@ import {
     InitiatorFilterInput,
     OrderingDirection,
 } from "@api/kamu.graphql.interface";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 export enum AccountFlowsNav {
     ACTIVITY = "activity",

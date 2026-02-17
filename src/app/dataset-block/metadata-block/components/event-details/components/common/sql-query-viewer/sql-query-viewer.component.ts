@@ -8,9 +8,10 @@
 import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import { SqlQueryStep } from "@api/kamu.graphql.interface";
 import { Highlight } from "ngx-highlightjs";
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+
+import { SqlQueryStep } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-sql-query-viewer",

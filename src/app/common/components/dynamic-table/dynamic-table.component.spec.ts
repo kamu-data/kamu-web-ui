@@ -8,13 +8,13 @@
 import { SimpleChanges } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { findElementByDataTestId, getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { MarkdownModule } from "ngx-markdown";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
-import { DynamicTableComponent } from "./dynamic-table.component";
-import { MOCK_DATA_ROWS, MOCK_DATA_ROWS_SHOW_MORE_BADGE } from "./dynamic-table.mock";
+import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
+import { MOCK_DATA_ROWS, MOCK_DATA_ROWS_SHOW_MORE_BADGE } from "@common/components/dynamic-table/dynamic-table.mock";
+import { findElementByDataTestId, getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 
 describe("DynamicTableComponent", () => {
     let component: DynamicTableComponent;

@@ -22,13 +22,14 @@ import { FormsModule } from "@angular/forms";
 
 import { filter, fromEvent, Subscription, take, takeWhile } from "rxjs";
 
-import AppValues from "@common/values/app.values";
 import * as monaco from "monaco-editor";
 import { EditorComponent, MonacoEditorModule } from "ngx-monaco-editor-v2";
 import { BaseEditorComponent } from "src/app/editor/components/base-editor/base-editor.component";
 import { getSqlError } from "src/app/editor/helpers/editor-error-formatter";
 import { getMonacoNamespace } from "src/app/editor/services/monaco.service";
-import { MaybeNull } from "src/app/interface/app.types";
+
+import AppValues from "@common/values/app.values";
+import { MaybeNull } from "@interface/app.types";
 
 const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
     theme: "vs",

@@ -9,8 +9,6 @@
 
 import { Routes } from "@angular/router";
 
-import { datasetInfoResolverFn } from "@common/resolvers/dataset-info.resolver";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { AuthenticatedGuard } from "src/app/auth/guards/authenticated.guard";
 import { DataComponent } from "src/app/dataset-view/additional-components/data-component/data.component";
 import { datasetDataTabResolverFn } from "src/app/dataset-view/additional-components/data-component/resolver/dataset-data-tab.resolver";
@@ -23,6 +21,9 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 import { datasetViewActiveTabResolverFn } from "src/app/dataset-view/resolvers/dataset-view-active-tab.resolver";
 import { datasetViewResolverFn } from "src/app/dataset-view/resolvers/dataset-view.resolver";
 import ProjectLinks from "src/app/project-links";
+
+import { datasetInfoResolverFn } from "@common/resolvers/dataset-info.resolver";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 export const DATASET_VIEW_ROUTES: Routes = [
     {

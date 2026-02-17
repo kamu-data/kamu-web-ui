@@ -5,9 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
+import { WebhooksHelpers } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/webhooks.helpers";
 
-import { WebhooksHelpers } from "./webhooks.helpers";
+import { WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
 
 interface TestCase {
     webhookSubscriptionStatus: WebhookSubscriptionStatus;

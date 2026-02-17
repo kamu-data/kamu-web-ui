@@ -14,7 +14,7 @@ import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
-import { TimeDelta, TimeUnit } from "src/app/api/kamu.graphql.interface";
+import { TimeDelta, TimeUnit } from "@api/kamu.graphql.interface";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
 import { FlowTriggerStopPolicyType, ScheduleType } from "../../dataset-settings.model";

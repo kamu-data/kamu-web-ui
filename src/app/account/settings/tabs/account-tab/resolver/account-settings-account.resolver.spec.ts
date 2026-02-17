@@ -8,7 +8,7 @@
 import { TestBed } from "@angular/core/testing";
 import { ResolveFn } from "@angular/router";
 
-import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
+import { AccountWithEmailFragment } from "@api/kamu.graphql.interface";
 
 import { accountSettingsAccountResolverFn } from "./account-settings-account.resolver";
 

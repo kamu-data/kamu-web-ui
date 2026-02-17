@@ -10,7 +10,7 @@ import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
 import { combineLatest, map, switchMap } from "rxjs";
 
-import { DatasetMetadata, WebhookSubscription } from "src/app/api/kamu.graphql.interface";
+import { DatasetMetadata, WebhookSubscription } from "@api/kamu.graphql.interface";
 import { AppConfigService } from "src/app/app-config.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";

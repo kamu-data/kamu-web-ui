@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DatasetAccessRole } from "src/app/api/kamu.graphql.interface";
+import { DatasetAccessRole } from "@api/kamu.graphql.interface";
 
 export interface SelectRoleType {
     label: string;

@@ -9,7 +9,7 @@
 
 import { ComponentHarness } from "@angular/cdk/testing";
 
-import { TimeUnit } from "src/app/api/kamu.graphql.interface";
+import { TimeUnit } from "@api/kamu.graphql.interface";
 
 export class TimeDeltaFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-time-delta-form";

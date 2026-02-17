@@ -7,9 +7,9 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { provideToastr } from "ngx-toastr";
-import { MqttQos } from "src/app/api/kamu.graphql.interface";
+import { MqttQos } from "@api/kamu.graphql.interface";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import { provideToastr } from "ngx-toastr";
 
 import { TopicsPropertyComponent } from "./topics-property.component";
 

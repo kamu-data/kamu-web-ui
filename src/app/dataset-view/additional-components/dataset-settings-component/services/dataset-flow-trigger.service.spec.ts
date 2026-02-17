@@ -10,11 +10,7 @@ import { provideAnimations } from "@angular/platform-browser/animations";
 
 import { of } from "rxjs";
 
-import AppValues from "@common/values/app.values";
-import { Apollo } from "apollo-angular";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { provideToastr, ToastrService } from "ngx-toastr";
-import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
+import { DatasetFlowApi } from "@api/dataset-flow.api";
 import {
     DatasetFlowType,
     FlowTriggerBreakingChangeRule,
@@ -22,13 +18,17 @@ import {
     FlowTriggerStopPolicyInput,
     GetDatasetFlowTriggerQuery,
     TimeUnit,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
 import {
     mockGetDatasetFlowTriggerCronQuery,
     mockPauseDatasetFlowTriggerSuccess,
     mockSetDatasetFlowTriggerError,
     mockSetDatasetFlowTriggerSuccess,
-} from "src/app/api/mock/dataset-flow.mock";
+} from "@api/mock/dataset-flow.mock";
+import AppValues from "@common/values/app.values";
+import { Apollo } from "apollo-angular";
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { provideToastr, ToastrService } from "ngx-toastr";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 
 import { NavigationService } from "../../../../services/navigation.service";

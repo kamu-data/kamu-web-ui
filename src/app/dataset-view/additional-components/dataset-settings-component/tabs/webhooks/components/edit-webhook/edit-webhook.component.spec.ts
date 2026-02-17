@@ -9,10 +9,10 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
+import { WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { WebhookSubscriptionStatus } from "src/app/api/kamu.graphql.interface";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 

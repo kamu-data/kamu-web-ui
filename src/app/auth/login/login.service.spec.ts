@@ -11,13 +11,8 @@ import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
 import { first, of, Subscription, throwError } from "rxjs";
 
-import { promiseWithCatch } from "@common/helpers/app.helpers";
-import { RedirectUrlTestModule } from "@common/modules/redirect-url-test.module";
-import { AuthenticationError } from "@common/values/errors";
-import { Apollo } from "apollo-angular";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { AuthApi } from "src/app/api/auth.api";
-import { GithubLoginCredentials, LoginResponseType, PasswordLoginCredentials } from "src/app/api/auth.api.model";
+import { AuthApi } from "@api/auth.api";
+import { GithubLoginCredentials, LoginResponseType, PasswordLoginCredentials } from "@api/auth.api.model";
 import {
     mockAccountDetails,
     mockGithubLoginResponse,
@@ -25,7 +20,12 @@ import {
     TEST_GITHUB_CODE,
     TEST_LOGIN,
     TEST_PASSWORD,
-} from "src/app/api/mock/auth.mock";
+} from "@api/mock/auth.mock";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { RedirectUrlTestModule } from "@common/modules/redirect-url-test.module";
+import { AuthenticationError } from "@common/values/errors";
+import { Apollo } from "apollo-angular";
+import { ApolloTestingModule } from "apollo-angular/testing";
 import { AppConfigService } from "src/app/app-config.service";
 import { MaybeUndefined } from "src/app/interface/app.types";
 import { LocalStorageService } from "src/app/services/local-storage.service";

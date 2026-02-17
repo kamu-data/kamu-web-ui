@@ -13,11 +13,11 @@ import { RouterLink } from "@angular/router";
 
 import { catchError, forkJoin, from, map, of, take } from "rxjs";
 
+import { GetDatasetSchemaQuery, SqlQueryStep } from "@api/kamu.graphql.interface";
 import { parseCurrentSchema } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { GetDatasetSchemaQuery, SqlQueryStep } from "src/app/api/kamu.graphql.interface";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { EditorModule } from "src/app/editor/editor.module";
 import { MaybeNull } from "src/app/interface/app.types";

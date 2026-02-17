@@ -11,9 +11,9 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 
+import { DatasetBasicsFragment, DatasetKind } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { DatasetBasicsFragment, DatasetKind } from "src/app/api/kamu.graphql.interface";
 
 import { DatasetFlowConfigService } from "../../services/dataset-flow-config.service";
 import { DatasetSettingsIngestConfigurationTabData } from "./dataset-settings-ingest-configuration-tab.data";

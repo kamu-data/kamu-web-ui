@@ -12,11 +12,11 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angul
 import { MatDividerModule } from "@angular/material/divider";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
+import { DatasetBasicsFragment, DatasetFlowType, DatasetKind, TimeUnit } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
-import { DatasetBasicsFragment, DatasetFlowType, DatasetKind, TimeUnit } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 
 import { BatchingRuleType, FlowTriggerStopPolicyType } from "../../dataset-settings.model";

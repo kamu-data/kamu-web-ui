@@ -9,7 +9,7 @@ import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
-import { DatasetSearchOverviewFragment } from "src/app/api/kamu.graphql.interface";
+import { DatasetSearchOverviewFragment } from "@api/kamu.graphql.interface";
 import { SearchMode } from "src/app/interface/search.interface";
 
 import { FeatureFlagDirective } from "../../directives/feature-flag.directive";

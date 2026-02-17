@@ -12,7 +12,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { catchError, from, of, take } from "rxjs";
 
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { DatasetKind } from "src/app/api/kamu.graphql.interface";
+import { DatasetKind } from "@api/kamu.graphql.interface";
 import {
     SourcesEvents,
     SupportedEvents,

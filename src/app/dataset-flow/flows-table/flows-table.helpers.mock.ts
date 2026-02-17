@@ -13,7 +13,7 @@ import {
     FlowStatus,
     FlowSummaryDataFragment,
     TimeUnit,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
 import {
     mockDatasetMainDataId,
     mockOwnerFieldsWithAvatar,

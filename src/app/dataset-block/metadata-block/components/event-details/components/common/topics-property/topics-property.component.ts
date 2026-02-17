@@ -7,7 +7,7 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import { MqttTopicSubscription } from "src/app/api/kamu.graphql.interface";
+import { MqttTopicSubscription } from "@api/kamu.graphql.interface";
 import {
     DynamicTableColumnClassEnum,
     DynamicTableColumnDescriptor,

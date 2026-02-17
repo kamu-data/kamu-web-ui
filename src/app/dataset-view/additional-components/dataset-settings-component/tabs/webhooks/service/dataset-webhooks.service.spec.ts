@@ -9,10 +9,8 @@ import { TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
-import { Apollo } from "apollo-angular";
-import { provideToastr, ToastrService } from "ngx-toastr";
-import { WebhookSubscription } from "src/app/api/kamu.graphql.interface";
-import { TEST_DATASET_ID } from "src/app/api/mock/dataset.mock";
+import { WebhookSubscription } from "@api/kamu.graphql.interface";
+import { TEST_DATASET_ID } from "@api/mock/dataset.mock";
 import {
     mockDatasetWebhookByIdQuery,
     mockDatasetWebhookCreateSubscriptionMutation,
@@ -30,8 +28,10 @@ import {
     mockDatasetWebhookUpdateSubscriptionMutation,
     mockDatasetWebhookUpdateSubscriptionMutationError,
     mockWebhookSubscriptionInput,
-} from "src/app/api/mock/webhooks.mock";
-import { WebhooksApi } from "src/app/api/webhooks.api";
+} from "@api/mock/webhooks.mock";
+import { WebhooksApi } from "@api/webhooks.api";
+import { Apollo } from "apollo-angular";
+import { provideToastr, ToastrService } from "ngx-toastr";
 
 import { CreateWebhookSubscriptionSuccess } from "../dataset-settings-webhooks-tab.component.types";
 import { DatasetWebhooksService } from "./dataset-webhooks.service";

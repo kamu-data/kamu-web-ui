@@ -10,6 +10,7 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
 
+import { DatasetKind, DatasetTransformFragment } from "@api/kamu.graphql.interface";
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
 import { DatasetKindComponent } from "@common/components/dataset-kind/dataset-kind.component";
 import { DatasetVisibilityComponent } from "@common/components/dataset-visibility/dataset-visibility.component";
@@ -17,7 +18,6 @@ import { FeatureFlagDirective } from "@common/directives/feature-flag.directive"
 import { isNil } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
-import { DatasetKind, DatasetTransformFragment } from "src/app/api/kamu.graphql.interface";
 import { EnginePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/engine-property/engine-property.component";
 import { SqlQueryViewerComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/sql-query-viewer/sql-query-viewer.component";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";

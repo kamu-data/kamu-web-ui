@@ -20,7 +20,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 
-import { EngineDesc, EnginesQuery, TransformSql } from "src/app/api/kamu.graphql.interface";
+import { EngineDesc, EnginesQuery, TransformSql } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import AppValues from "@common/values/app.values";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";

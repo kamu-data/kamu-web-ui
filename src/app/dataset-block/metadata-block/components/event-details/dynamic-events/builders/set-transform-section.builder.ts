@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { SetTransform, TransformInput } from "src/app/api/kamu.graphql.interface";
+import { SetTransform, TransformInput } from "@api/kamu.graphql.interface";
 
 import {
     Dataset,

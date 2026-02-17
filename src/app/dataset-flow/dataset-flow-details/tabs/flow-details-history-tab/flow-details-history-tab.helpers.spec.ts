@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { FlowHistoryDataFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
-import { mockFlowSummaryDataFragments } from "src/app/api/mock/dataset-flow.mock";
+import { FlowHistoryDataFragment, FlowStatus } from "@api/kamu.graphql.interface";
+import { mockFlowSummaryDataFragments } from "@api/mock/dataset-flow.mock";
 import {
     mockDatasetExecuteTransformFlowDescriptionUpdateResultUnknown,
     mockDatasetExecuteTransformFlowSummaryData,

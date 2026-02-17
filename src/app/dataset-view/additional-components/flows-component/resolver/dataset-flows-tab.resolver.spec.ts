@@ -10,8 +10,8 @@ import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapsh
 
 import { Observable } from "rxjs";
 
+import { TEST_ACCOUNT_NAME } from "@api/mock/dataset.mock";
 import { Apollo } from "apollo-angular";
-import { TEST_ACCOUNT_NAME } from "src/app/api/mock/dataset.mock";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";

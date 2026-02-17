@@ -21,8 +21,8 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 
+import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { isMobileView } from "@common/helpers/app.helpers";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
 
 import { SearchAdditionalButtonsNavComponent } from "./search-additional-buttons-nav.component";

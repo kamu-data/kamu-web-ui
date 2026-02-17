@@ -20,7 +20,7 @@ import {
     FlowProcessSummary,
     FlowProcessSummaryDataFragment,
     FlowTriggerStopPolicyAfterConsecutiveFailures,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 
 export type FlowsSelectedCategory = "all" | "updates";

@@ -15,7 +15,7 @@ import { BlockRowDataComponent } from "@common/components/block-row-data/block-r
 import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { NavigationService } from "src/app/services/navigation.service";

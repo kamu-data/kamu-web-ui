@@ -14,7 +14,7 @@ import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
-import { FlowRetryBackoffType, TimeUnit } from "src/app/api/kamu.graphql.interface";
+import { FlowRetryBackoffType, TimeUnit } from "@api/kamu.graphql.interface";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
 import { DatasetFlowConfigService } from "../../services/dataset-flow-config.service";

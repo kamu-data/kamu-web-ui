@@ -12,9 +12,9 @@ import { ActivatedRoute } from "@angular/router";
 
 import { from, of } from "rxjs";
 
+import { mockAccountDetails } from "@api/mock/auth.mock";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 

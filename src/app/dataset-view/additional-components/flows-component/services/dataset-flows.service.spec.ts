@@ -12,10 +12,8 @@ import { provideAnimations } from "@angular/platform-browser/animations";
 
 import { of } from "rxjs";
 
-import { Apollo } from "apollo-angular";
-import { provideToastr, ToastrService } from "ngx-toastr";
-import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
-import { AccountFragment, DatasetFlowProcesses } from "src/app/api/kamu.graphql.interface";
+import { DatasetFlowApi } from "@api/dataset-flow.api";
+import { AccountFragment, DatasetFlowProcesses } from "@api/kamu.graphql.interface";
 import {
     mockCancelFlowRunMutationError,
     mockCancelFlowRunMutationSuccess,
@@ -38,7 +36,9 @@ import {
     mockGetDatasetListFlowsQuery,
     mockGetFlowByIdQueryError,
     mockGetFlowByIdQuerySuccess,
-} from "src/app/api/mock/dataset-flow.mock";
+} from "@api/mock/dataset-flow.mock";
+import { Apollo } from "apollo-angular";
+import { provideToastr, ToastrService } from "ngx-toastr";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 import { MaybeUndefined } from "src/app/interface/app.types";
 

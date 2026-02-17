@@ -22,16 +22,15 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatSidenav } from "@angular/material/sidenav";
 import { RouterLink } from "@angular/router";
 
+import { DatasetBasicsFragment, DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
+import { WidgetHeightService } from "@common/components/lineage-graph/widget-height.service";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { isMobileView, promiseWithCatch } from "@common/helpers/app.helpers";
-import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
+import { SideNavHelper } from "@common/helpers/sidenav.helper";
 import { AppConfigService } from "src/app/app-config.service";
-
-import { WidgetHeightService } from "../../common/components/lineage-graph/widget-height.service";
-import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";
-import { SideNavHelper } from "../../common/helpers/sidenav.helper";
-import { DataAccessPanelComponent } from "../../data-access-panel/data-access-panel.component";
-import { DatasetViewTypeEnum } from "../dataset-view.interface";
-import { DatasetPermissionsService } from "../dataset.permissions.service";
+import { DataAccessPanelComponent } from "src/app/data-access-panel/data-access-panel.component";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetPermissionsService } from "src/app/dataset-view/dataset.permissions.service";
 
 @Component({
     selector: "app-dataset-view-menu",

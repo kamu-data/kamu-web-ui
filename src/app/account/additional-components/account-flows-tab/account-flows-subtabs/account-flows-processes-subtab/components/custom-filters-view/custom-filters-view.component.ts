@@ -10,10 +10,10 @@ import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
+import { FlowProcessEffectiveState, OrderingDirection } from "@api/kamu.graphql.interface";
 import { OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { NgSelectModule } from "@ng-select/ng-select";
-import { FlowProcessEffectiveState, OrderingDirection } from "src/app/api/kamu.graphql.interface";
 import {
     lastTimeRangeHelper,
     nextTimeRangeHelper,

@@ -8,7 +8,7 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, CanActivateFn, convertToParamMap, RouterStateSnapshot } from "@angular/router";
 
-import { TEST_ACCOUNT_NAME } from "src/app/api/mock/dataset.mock";
+import { TEST_ACCOUNT_NAME } from "@api/mock/dataset.mock";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 

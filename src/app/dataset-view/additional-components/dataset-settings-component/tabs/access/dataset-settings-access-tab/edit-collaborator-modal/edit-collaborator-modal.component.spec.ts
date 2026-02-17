@@ -7,9 +7,9 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { MOCK_ACCOUNT_WITH_ROLE } from "@api/mock/dataset-collaborations.mock";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
-import { MOCK_ACCOUNT_WITH_ROLE } from "src/app/api/mock/dataset-collaborations.mock";
 
 import { EditCollaboratorModalComponent } from "./edit-collaborator-modal.component";
 

@@ -10,11 +10,11 @@ import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angu
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 
+import { AccountFragment } from "@api/kamu.graphql.interface";
 import { ErrorSets } from "@common/directives/form-validation-errors.types";
 import { matchFieldsValidator } from "@common/helpers/data.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { AccountService } from "src/app/account/account.service";
-import { AccountFragment } from "src/app/api/kamu.graphql.interface";
 import { AppConfigService } from "src/app/app-config.service";
 
 import { FormValidationErrorsDirective } from "../../../../common/directives/form-validation-errors.directive";

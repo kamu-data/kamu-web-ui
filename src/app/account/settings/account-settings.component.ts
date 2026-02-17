@@ -13,11 +13,11 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
 import { EMPTY, Observable } from "rxjs";
 import { switchMap } from "rxjs/operators";
 
+import { AccountProvider, AccountWithEmailFragment } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
-import { AccountProvider, AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";
 

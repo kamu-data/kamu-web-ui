@@ -13,14 +13,14 @@ import { ActivatedRoute } from "@angular/router";
 
 import { delay, of } from "rxjs";
 
+import { DatasetFlowProcesses, FlowProcessEffectiveState, FlowStatus } from "@api/kamu.graphql.interface";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+import { mockDatasetFlowsProcessesQuery, mockFlowsTableData } from "@api/mock/dataset-flow.mock";
 import { ModalService } from "@common/components/modal/modal.service";
 import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { DatasetFlowProcesses, FlowProcessEffectiveState, FlowStatus } from "src/app/api/kamu.graphql.interface";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { mockDatasetFlowsProcessesQuery, mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
 import { mockDatasets } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import {

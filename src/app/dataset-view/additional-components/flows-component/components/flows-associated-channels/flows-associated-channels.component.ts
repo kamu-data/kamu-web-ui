@@ -20,7 +20,7 @@ import {
     FlowProcessEffectiveState,
     WebhookFlowSubProcess,
     WebhookFlowSubProcessGroup,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "src/app/interface/app.types";
 
 import { FlowsSelectionState, RollupFiltersOptions, WebhooksSelectedCategory } from "../../flows.helpers";

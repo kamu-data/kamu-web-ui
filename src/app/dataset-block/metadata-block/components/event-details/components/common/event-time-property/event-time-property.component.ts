@@ -8,7 +8,7 @@
 import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import { EventTimeSource } from "src/app/api/kamu.graphql.interface";
+import { EventTimeSource } from "@api/kamu.graphql.interface";
 
 import { BasePropertyComponent } from "../base-property/base-property.component";
 

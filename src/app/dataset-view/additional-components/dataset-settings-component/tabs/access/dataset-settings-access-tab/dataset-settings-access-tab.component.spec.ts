@@ -11,17 +11,14 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
+import { AccountWithRoleConnection, DatasetAccessRole } from "@api/kamu.graphql.interface";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+import { MOCK_ACCOUNT_WITH_ROLE, mockDatasetListCollaboratorsQuery } from "@api/mock/dataset-collaborations.mock";
 import { ModalService } from "@common/components/modal/modal.service";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { AccountWithRoleConnection, DatasetAccessRole } from "src/app/api/kamu.graphql.interface";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import {
-    MOCK_ACCOUNT_WITH_ROLE,
-    mockDatasetListCollaboratorsQuery,
-} from "src/app/api/mock/dataset-collaborations.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";

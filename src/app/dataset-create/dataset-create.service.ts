@@ -10,7 +10,7 @@ import { inject, Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 
-import { DatasetApi } from "src/app/api/dataset.api";
+import { DatasetApi } from "@api/dataset.api";
 import { MaybeNull } from "src/app/interface/app.types";
 
 import {

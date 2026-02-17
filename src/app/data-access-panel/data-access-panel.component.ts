@@ -10,8 +10,8 @@ import { MatIconModule } from "@angular/material/icon";
 
 import { Observable } from "rxjs";
 
+import { DatasetBasicsFragment, DatasetEndpoints } from "@api/kamu.graphql.interface";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { DatasetBasicsFragment, DatasetEndpoints } from "src/app/api/kamu.graphql.interface";
 import { MaybeUndefined } from "src/app/interface/app.types";
 
 import { BaseComponent } from "../common/components/base.component";

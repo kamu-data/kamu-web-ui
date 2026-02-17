@@ -12,7 +12,7 @@ import { combineLatest } from "rxjs";
 
 import { BaseComponent } from "@common/components/base.component";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { DatasetBasicsFragment, DatasetKind, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment, DatasetKind, DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";

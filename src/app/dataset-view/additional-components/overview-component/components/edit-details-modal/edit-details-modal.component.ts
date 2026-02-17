@@ -15,15 +15,11 @@ import { MatIconModule } from "@angular/material/icon";
 
 import { finalize } from "rxjs";
 
+import { DatasetBasicsFragment, DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
 import { isEqual } from "@common/helpers/app.helpers";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import {
-    DatasetBasicsFragment,
-    DatasetDataSizeFragment,
-    DatasetOverviewFragment,
-} from "src/app/api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetSchema } from "src/app/interface/dataset-schema.interface";

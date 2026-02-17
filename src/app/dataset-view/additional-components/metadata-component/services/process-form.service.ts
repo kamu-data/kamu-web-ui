@@ -8,8 +8,8 @@
 import { Injectable } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 
+import { AddPushSource, SetPollingSource } from "@api/kamu.graphql.interface";
 import AppValues from "@common/values/app.values";
-import { AddPushSource, SetPollingSource } from "src/app/api/kamu.graphql.interface";
 
 import { SchemaType } from "../components/form-components/schema-field/schema-field.component";
 import {

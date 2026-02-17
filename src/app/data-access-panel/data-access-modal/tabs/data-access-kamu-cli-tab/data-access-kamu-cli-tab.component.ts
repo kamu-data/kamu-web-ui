@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 
-import { CliProtocolDesc } from "src/app/api/kamu.graphql.interface";
+import { CliProtocolDesc } from "@api/kamu.graphql.interface";
 
 import { CopyToClipboardComponent } from "../../../../common/components/copy-to-clipboard/copy-to-clipboard.component";
 

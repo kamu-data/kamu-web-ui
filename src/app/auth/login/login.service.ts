@@ -9,14 +9,14 @@ import { inject, Injectable } from "@angular/core";
 
 import { BehaviorSubject, firstValueFrom, map, Observable, ReplaySubject, Subject } from "rxjs";
 
-import { AuthApi } from "src/app/api/auth.api";
+import { AuthApi } from "@api/auth.api";
 import {
     GithubLoginCredentials,
     LoginResponseType,
     PasswordLoginCredentials,
     Web3WalletOwnershipVerificationRequest,
-} from "src/app/api/auth.api.model";
-import { AccountFragment, AccountProvider } from "src/app/api/kamu.graphql.interface";
+} from "@api/auth.api.model";
+import { AccountFragment, AccountProvider } from "@api/kamu.graphql.interface";
 import { AppConfigService } from "src/app/app-config.service";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";

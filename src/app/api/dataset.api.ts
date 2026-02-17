@@ -10,10 +10,6 @@ import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { first, map } from "rxjs/operators";
 
-import { StoreObject } from "@apollo/client/cache";
-import { ApolloLink, ObservableQuery } from "@apollo/client/core";
-import AppValues from "@common/values/app.values";
-import { onlyCompleteData } from "apollo-angular";
 import {
     CommitEventToDatasetGQL,
     CommitEventToDatasetMutation,
@@ -54,7 +50,11 @@ import {
     UpdateReadmeGQL,
     UpdateReadmeMutation,
     UpdateWatermarkMutation,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
+import { StoreObject } from "@apollo/client/cache";
+import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import AppValues from "@common/values/app.values";
+import { onlyCompleteData } from "apollo-angular";
 
 import { resetCacheHelper, updateCacheHelper } from "../common/helpers/apollo-cache.helper";
 import { noCacheFetchPolicy } from "../common/helpers/data.helpers";

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { WebhookSubscriptionStatus } from "src/app/api/kamu.graphql.interface";
+import { WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
 
 export class WebhooksHelpers {
     public static webhookStatusBadgeOptions(status: WebhookSubscriptionStatus): {

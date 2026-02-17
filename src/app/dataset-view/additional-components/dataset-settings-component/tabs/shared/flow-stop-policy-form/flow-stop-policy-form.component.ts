@@ -11,11 +11,11 @@ import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModu
 import { MatRadioModule } from "@angular/material/radio";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
+import { FlowTriggerStopPolicyInput } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
-import { FlowTriggerStopPolicyInput } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 
 import { FlowTriggerStopPolicyType } from "../../../dataset-settings.model";

@@ -10,11 +10,11 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
+import { mockFile } from "@api/mock/upload-file.mock";
 import { ModalService } from "@common/components/modal/modal.service";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
-import { mockFile } from "src/app/api/mock/upload-file.mock";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { FileUploadService } from "src/app/services/file-upload.service";

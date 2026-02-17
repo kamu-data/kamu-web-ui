@@ -13,8 +13,8 @@ import { RouterLink } from "@angular/router";
 
 import { Observable } from "rxjs";
 
+import { DatasetBasicsFragment, DatasetEndpoints, DatasetKind } from "@api/kamu.graphql.interface";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { DatasetBasicsFragment, DatasetEndpoints, DatasetKind } from "src/app/api/kamu.graphql.interface";
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";

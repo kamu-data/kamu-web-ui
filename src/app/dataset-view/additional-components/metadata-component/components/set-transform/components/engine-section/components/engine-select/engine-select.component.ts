@@ -20,7 +20,7 @@ import {
     ViewChild,
 } from "@angular/core";
 
-import { EngineDesc } from "src/app/api/kamu.graphql.interface";
+import { EngineDesc } from "@api/kamu.graphql.interface";
 import { DataHelpers } from "@common/helpers/data.helpers";
 import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 

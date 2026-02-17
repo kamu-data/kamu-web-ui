@@ -14,10 +14,10 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 import { debounceTime, distinctUntilChanged, finalize, Observable, OperatorFunction, switchMap, tap } from "rxjs";
 
-import { NgbActiveModal, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
-import { DatasetAccessRole, DatasetBasicsFragment, NameLookupResult } from "src/app/api/kamu.graphql.interface";
+import { DatasetAccessRole, DatasetBasicsFragment, NameLookupResult } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import AppValues from "@common/values/app.values";
+import { NgbActiveModal, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { MaybeNull } from "src/app/interface/app.types";
 
 import { DatasetCollaborationsService } from "../dataset-collaborations.service";

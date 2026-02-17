@@ -14,9 +14,9 @@ import { ActivatedRoute, Params } from "@angular/router";
 
 import { Observable, shareReplay } from "rxjs";
 
+import { PasswordLoginCredentials } from "@api/auth.api.model";
 import { BaseComponent } from "@common/components/base.component";
 import AppValues from "@common/values/app.values";
-import { PasswordLoginCredentials } from "src/app/api/auth.api.model";
 import { AppConfigService } from "src/app/app-config.service";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import ProjectLinks from "src/app/project-links";

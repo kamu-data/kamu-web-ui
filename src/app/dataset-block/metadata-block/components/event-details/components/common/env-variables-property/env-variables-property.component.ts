@@ -7,7 +7,7 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import { EnvVar } from "src/app/api/kamu.graphql.interface";
+import { EnvVar } from "@api/kamu.graphql.interface";
 import {
     DynamicTableColumnClassEnum,
     DynamicTableColumnDescriptor,

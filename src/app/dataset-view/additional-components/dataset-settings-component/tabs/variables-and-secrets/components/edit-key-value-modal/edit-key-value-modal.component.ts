@@ -13,10 +13,10 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { DatasetBasicsFragment, ViewDatasetEnvVar } from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment, ViewDatasetEnvVar } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import { noWhitespaceValidator } from "@common/helpers/data.helpers";
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
 import { MaybeNull } from "src/app/interface/app.types";
 

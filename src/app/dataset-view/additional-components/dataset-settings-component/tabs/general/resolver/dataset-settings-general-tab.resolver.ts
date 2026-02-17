@@ -10,7 +10,7 @@ import { ResolveFn } from "@angular/router";
 
 import { combineLatest, map } from "rxjs";
 
-import { DatasetMetadata } from "src/app/api/kamu.graphql.interface";
+import { DatasetMetadata } from "@api/kamu.graphql.interface";
 import { AppConfigService } from "src/app/app-config.service";
 import { isSettingsTabAccessibleHelper } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.helpers";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";

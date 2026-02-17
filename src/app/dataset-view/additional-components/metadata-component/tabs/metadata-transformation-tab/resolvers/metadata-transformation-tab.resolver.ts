@@ -10,7 +10,7 @@ import { ResolveFn } from "@angular/router";
 
 import { combineLatest, map } from "rxjs";
 
-import { DatasetKind } from "src/app/api/kamu.graphql.interface";
+import { DatasetKind } from "@api/kamu.graphql.interface";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";

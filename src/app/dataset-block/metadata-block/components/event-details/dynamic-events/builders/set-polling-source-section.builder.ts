@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { SetPollingSource } from "src/app/api/kamu.graphql.interface";
+import { SetPollingSource } from "@api/kamu.graphql.interface";
 import { SetPollingSourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 
 import { SET_POLLING_SOURCE_DESCRIPTORS } from "../../components/set-polling-source-event/set-polling-source-event.source";

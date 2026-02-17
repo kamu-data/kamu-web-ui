@@ -14,7 +14,7 @@ import {
     FlowStatus,
     InitiatorFilterInput,
     OrderingDirection,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 
 export enum AccountFlowsNav {

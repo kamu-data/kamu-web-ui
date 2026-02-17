@@ -10,11 +10,11 @@ import {
     FlowProcessAutoStopReason,
     FlowProcessEffectiveState,
     FlowProcessSummaryDataFragment,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
 import {
     mockFlowProcessSummaryDataFragment,
     mockFlowProcessSummaryDataFragmentNoPolicy,
-} from "src/app/api/mock/dataset-flow.mock";
+} from "@api/mock/dataset-flow.mock";
 import timekeeper from "timekeeper";
 
 import {

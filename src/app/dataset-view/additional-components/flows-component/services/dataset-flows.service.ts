@@ -9,8 +9,7 @@ import { inject, Injectable } from "@angular/core";
 
 import { map, Observable } from "rxjs";
 
-import { ToastrService } from "ngx-toastr";
-import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
+import { DatasetFlowApi } from "@api/dataset-flow.api";
 import {
     AccountFragment,
     CancelFlowRunMutation,
@@ -33,7 +32,8 @@ import {
     FlowConnectionWidgetDataFragment,
     GetDatasetListFlowsQuery,
     GetFlowByIdQuery,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
+import { ToastrService } from "ngx-toastr";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 import { MaybeUndefined } from "src/app/interface/app.types";

@@ -11,7 +11,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
 
 import { FeatureFlagDirective } from "../../directives/feature-flag.directive";

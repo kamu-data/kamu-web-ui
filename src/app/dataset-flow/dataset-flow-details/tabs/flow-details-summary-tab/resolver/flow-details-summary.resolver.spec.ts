@@ -9,9 +9,9 @@ import { TestBed } from "@angular/core/testing";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { ActivatedRouteSnapshot, Data, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
+import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { mockDatasetFlowByIdResponse } from "src/app/api/mock/dataset-flow.mock";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 
 import RoutingResolvers from "../../../../../common/resolvers/routing-resolvers";

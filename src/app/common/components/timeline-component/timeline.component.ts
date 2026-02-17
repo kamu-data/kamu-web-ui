@@ -10,10 +10,10 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
 
+import { MetadataBlockFragment, PageBasedInfo } from "@api/kamu.graphql.interface";
 import { DataHelpers } from "@common/helpers/data.helpers";
 import AppValues from "@common/values/app.values";
 import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
-import { MetadataBlockFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 import ProjectLinks from "src/app/project-links";
 
 import { FeatureFlagDirective } from "../../directives/feature-flag.directive";

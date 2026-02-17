@@ -11,14 +11,14 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 
 import { of } from "rxjs";
 
-import { NgbActiveModal, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
-import { Apollo } from "apollo-angular";
-import { provideToastr } from "ngx-toastr";
-import { DatasetAccessRole, NameLookupResult } from "src/app/api/kamu.graphql.interface";
-import { mockDatasetSearchCollaboratorQuery } from "src/app/api/mock/dataset-collaborations.mock";
+import { DatasetAccessRole, NameLookupResult } from "@api/kamu.graphql.interface";
+import { mockDatasetSearchCollaboratorQuery } from "@api/mock/dataset-collaborations.mock";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
+import { NgbActiveModal, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 
 import { DatasetCollaborationsService } from "../dataset-collaborations.service";

@@ -7,8 +7,8 @@
 
 import { Injectable } from "@angular/core";
 
+import { FlowEventTaskChanged } from "@api/kamu.graphql.interface";
 import { addSeconds, subSeconds } from "date-fns";
-import { FlowEventTaskChanged } from "src/app/api/kamu.graphql.interface";
 
 import {
     DatasetFlowByIdResponse,

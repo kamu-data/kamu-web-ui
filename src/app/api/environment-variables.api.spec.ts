@@ -7,9 +7,9 @@
 
 import { TestBed } from "@angular/core/testing";
 
+import { TEST_DATASET_ID } from "@api/mock/dataset.mock";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
-import { TEST_DATASET_ID } from "src/app/api/mock/dataset.mock";
 
 import { EnvironmentVariablesApi } from "./environment-variables.api";
 import {

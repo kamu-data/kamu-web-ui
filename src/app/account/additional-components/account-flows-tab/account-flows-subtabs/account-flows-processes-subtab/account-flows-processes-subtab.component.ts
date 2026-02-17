@@ -16,6 +16,15 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 import { BehaviorSubject, debounceTime, map, Observable, startWith, Subject, switchMap, take, tap, timer } from "rxjs";
 
+import {
+    AccountFlowProcessCard,
+    Dataset,
+    DatasetBasicsFragment,
+    FlowProcessEffectiveState,
+    FlowProcessFilters,
+    FlowProcessGroupRollupDataFragment,
+    FlowProcessOrderField,
+} from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import { MY_MOMENT_FORMATS } from "@common/helpers/data.helpers";
 import AppValues from "@common/values/app.values";
@@ -28,15 +37,6 @@ import { ToastrService } from "ngx-toastr";
 import { AccountTabs } from "src/app/account/account.constants";
 import { AccountService } from "src/app/account/account.service";
 import { AccountFlowsFiltersService } from "src/app/account/services/account-flows-filters.service";
-import {
-    AccountFlowProcessCard,
-    Dataset,
-    DatasetBasicsFragment,
-    FlowProcessEffectiveState,
-    FlowProcessFilters,
-    FlowProcessGroupRollupDataFragment,
-    FlowProcessOrderField,
-} from "src/app/api/kamu.graphql.interface";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import {
     rollupAvailabilityMapper,

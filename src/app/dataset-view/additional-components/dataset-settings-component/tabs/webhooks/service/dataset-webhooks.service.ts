@@ -9,7 +9,6 @@ import { inject, Injectable } from "@angular/core";
 
 import { map, Observable } from "rxjs";
 
-import { ToastrService } from "ngx-toastr";
 import {
     DatasetWebhookByIdQuery,
     DatasetWebhookCreateSubscriptionMutation,
@@ -22,8 +21,9 @@ import {
     DatasetWebhookUpdateSubscriptionMutation,
     WebhookSubscription,
     WebhookSubscriptionInput,
-} from "src/app/api/kamu.graphql.interface";
-import { WebhooksApi } from "src/app/api/webhooks.api";
+} from "@api/kamu.graphql.interface";
+import { WebhooksApi } from "@api/webhooks.api";
+import { ToastrService } from "ngx-toastr";
 
 import { CreateWebhookSubscriptionSuccess } from "../dataset-settings-webhooks-tab.component.types";
 

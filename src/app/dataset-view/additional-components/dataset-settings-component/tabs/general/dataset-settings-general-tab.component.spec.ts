@@ -10,10 +10,10 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
+import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
 import AppValues from "@common/values/app.values";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { TEST_ACCOUNT_ID } from "src/app/api/mock/auth.mock";
 import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
 
 import { ModalService } from "../../../../../common/components/modal/modal.service";

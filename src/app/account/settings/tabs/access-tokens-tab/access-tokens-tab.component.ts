@@ -16,18 +16,13 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 
+import { AccessTokenConnection, CreatedAccessToken, PageBasedInfo, ViewAccessToken } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
-import {
-    AccessTokenConnection,
-    CreatedAccessToken,
-    PageBasedInfo,
-    ViewAccessToken,
-} from "src/app/api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { MaybeNull } from "src/app/interface/app.types";
 

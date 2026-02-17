@@ -13,10 +13,10 @@ import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapsh
 
 import { first, Observable, of, throwError } from "rxjs";
 
+import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
+import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { mockDatasetFlowByIdResponse } from "src/app/api/mock/dataset-flow.mock";
-import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.mock";
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";

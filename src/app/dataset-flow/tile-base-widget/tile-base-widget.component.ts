@@ -8,14 +8,9 @@
 import { DatePipe, NgClass, NgFor, NgIf, SlicePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
+import { Dataset, DatasetBasicsFragment, FlowItemWidgetDataFragment, FlowStatus } from "@api/kamu.graphql.interface";
 import AppValues from "@common/values/app.values";
 import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
-import {
-    Dataset,
-    DatasetBasicsFragment,
-    FlowItemWidgetDataFragment,
-    FlowStatus,
-} from "src/app/api/kamu.graphql.interface";
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import ProjectLinks from "src/app/project-links";
 

@@ -10,10 +10,10 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatRadioModule } from "@angular/material/radio";
 
+import { FlowTriggerRuleInput } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import { CronExpressionFormComponent } from "@common/components/cron-expression-form/cron-expression-form.component";
 import { TimeDeltaFormComponent } from "@common/components/time-delta-form/time-delta-form.component";
-import { FlowTriggerRuleInput } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 
 import { ScheduleType } from "../../../dataset-settings.model";

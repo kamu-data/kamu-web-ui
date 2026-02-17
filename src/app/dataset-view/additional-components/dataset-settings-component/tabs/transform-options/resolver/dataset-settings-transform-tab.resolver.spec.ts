@@ -10,13 +10,13 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular
 
 import { first, Observable, of } from "rxjs";
 
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { provideToastr } from "ngx-toastr";
-import { DatasetFlowType } from "src/app/api/kamu.graphql.interface";
+import { DatasetFlowType } from "@api/kamu.graphql.interface";
 import {
     mockBufferingBatchingReactiveRule,
     mockGetDatasetFlowTriggersBatchingQuery,
-} from "src/app/api/mock/dataset-flow.mock";
+} from "@api/mock/dataset-flow.mock";
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { provideToastr } from "ngx-toastr";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";

@@ -8,9 +8,9 @@
 import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
+import { AddPushSourceEventFragment, SetPollingSourceEventFragment } from "@api/kamu.graphql.interface";
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
 import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
-import { AddPushSourceEventFragment, SetPollingSourceEventFragment } from "src/app/api/kamu.graphql.interface";
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
 import { EnginePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/engine-property/engine-property.component";
 import { MergeStrategyPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";

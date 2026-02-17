@@ -10,8 +10,8 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
 
 import { Observable } from "rxjs";
 
+import { MetadataManifestFormat } from "@api/kamu.graphql.interface";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
-import { MetadataManifestFormat } from "src/app/api/kamu.graphql.interface";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { MaybeNull } from "src/app/interface/app.types";
 import { DatasetInfo } from "src/app/interface/navigation.interface";

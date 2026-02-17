@@ -9,6 +9,7 @@ import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
+import { DatasetKind, EnvVar, FetchStepUrl, SetPollingSourceEventFragment } from "@api/kamu.graphql.interface";
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
 import { ModalService } from "@common/components/modal/modal.service";
 import { YamlEventViewerComponent } from "@common/components/yaml-event-viewer/yaml-event-viewer.component";
@@ -17,7 +18,6 @@ import { isNil, promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { SetPollingSourceTooltipsTexts } from "@common/tooltips/set-polling-source-tooltips.text";
 import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
-import { DatasetKind, EnvVar, FetchStepUrl, SetPollingSourceEventFragment } from "src/app/api/kamu.graphql.interface";
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
 import { EnvVariablesPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/env-variables-property/env-variables-property.component";
 import { EventTimePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/event-time-property/event-time-property.component";

@@ -8,7 +8,7 @@
 import { TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
-import { SqlQueryStep, TransformInput } from "src/app/api/kamu.graphql.interface";
+import { SqlQueryStep, TransformInput } from "@api/kamu.graphql.interface";
 
 import { Engine } from "./components/engine-section/engine-section.types";
 import { EditSetTransformService } from "./edit-set-transform..service";

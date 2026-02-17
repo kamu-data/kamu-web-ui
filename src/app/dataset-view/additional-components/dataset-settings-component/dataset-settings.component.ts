@@ -18,7 +18,7 @@ import {
     DatasetMetadata,
     DatasetOverviewFragment,
     DatasetPermissionsFragment,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
 import { AppConfigService } from "src/app/app-config.service";
 import { MaybeNull } from "src/app/interface/app.types";
 import { NavigationService } from "src/app/services/navigation.service";

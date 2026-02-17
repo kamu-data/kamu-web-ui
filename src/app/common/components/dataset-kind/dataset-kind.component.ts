@@ -8,7 +8,7 @@
 import { NgClass } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import { DatasetKind } from "src/app/api/kamu.graphql.interface";
+import { DatasetKind } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-dataset-kind",

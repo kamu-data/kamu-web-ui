@@ -13,13 +13,13 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { of } from "rxjs";
 
+import { mockAccountDetails } from "@api/mock/auth.mock";
 import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import timekeeper from "timekeeper";

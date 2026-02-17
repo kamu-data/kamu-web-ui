@@ -16,7 +16,7 @@ import AppValues from "@common/values/app.values";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { SearchApi } from "src/app/api/search.api";
+import { SearchApi } from "@api/search.api";
 import { mockGetDatasetSchemaQuery } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { FlowItemWidgetDataFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
+import { FlowItemWidgetDataFragment, FlowStatus } from "@api/kamu.graphql.interface";
 
 export class TileBaseWidgetHelpers {
     public static tileWidgetClass(node: FlowItemWidgetDataFragment): string {

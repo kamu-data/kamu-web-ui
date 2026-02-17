@@ -9,6 +9,7 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { TEST_BLOCK_HASH } from "@api/mock/dataset.mock";
 import {
     emitClickOnElementByDataTestId,
     getElementByDataTestId,
@@ -16,7 +17,6 @@ import {
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { provideToastr, ToastrService } from "ngx-toastr";
-import { TEST_BLOCK_HASH } from "src/app/api/mock/dataset.mock";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 
 import { DisplayHashComponent } from "./display-hash.component";

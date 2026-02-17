@@ -13,10 +13,10 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterModule } from "@angular/router";
 
+import { mockDatasetListItem } from "@api/mock/dataset.mock";
 import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { NgbModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
-import { mockDatasetListItem } from "src/app/api/mock/dataset.mock";
 import { NavigationService } from "src/app/services/navigation.service";
 
 import { DatasetListItemComponent } from "./dataset-list-item.component";

@@ -14,7 +14,7 @@ import { of } from "rxjs";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { mockAccountDetails } from "@api/mock/auth.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";

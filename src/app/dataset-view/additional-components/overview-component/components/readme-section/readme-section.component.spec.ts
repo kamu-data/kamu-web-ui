@@ -12,6 +12,7 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 
 import { of } from "rxjs";
 
+import { mockAccountDetails } from "@api/mock/auth.mock";
 import {
     emitClickOnElementByDataTestId,
     findNativeElement,
@@ -20,7 +21,6 @@ import {
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { MarkdownModule } from "ngx-markdown";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 

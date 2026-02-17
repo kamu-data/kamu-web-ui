@@ -10,7 +10,7 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular
 
 import { map, Observable, of, switchMap } from "rxjs";
 
-import { DatasetFlowType, GetDatasetFlowTriggerQuery } from "src/app/api/kamu.graphql.interface";
+import { DatasetFlowType, GetDatasetFlowTriggerQuery } from "@api/kamu.graphql.interface";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
 import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";

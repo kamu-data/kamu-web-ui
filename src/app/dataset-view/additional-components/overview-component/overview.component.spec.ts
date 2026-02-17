@@ -13,6 +13,12 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 import { of } from "rxjs";
 
 import {
+    AccountProvider,
+    DatasetCurrentInfoFragment,
+    DatasetKind,
+    DatasetOverviewFragment,
+} from "@api/kamu.graphql.interface";
+import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
     registerMatSvgIcons,
@@ -25,12 +31,6 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { MarkdownModule } from "ngx-markdown";
 import { provideToastr } from "ngx-toastr";
-import {
-    AccountProvider,
-    DatasetCurrentInfoFragment,
-    DatasetKind,
-    DatasetOverviewFragment,
-} from "src/app/api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockSetLicense } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 import { NavigationService } from "src/app/services/navigation.service";

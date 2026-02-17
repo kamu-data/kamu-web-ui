@@ -11,7 +11,7 @@ import {
     DatasetKind,
     DatasetMetadata,
     DatasetPermissionsFragment,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
 import { AppUIConfigFeatureFlags } from "src/app/app-config.model";
 
 import { SettingsTabsEnum } from "./dataset-settings.model";

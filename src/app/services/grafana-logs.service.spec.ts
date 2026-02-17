@@ -7,7 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 
-import { mockDatasetFlowByIdResponse } from "src/app/api/mock/dataset-flow.mock";
+import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
 
 import { GrafanaLogsService } from "./grafana-logs.service";
 

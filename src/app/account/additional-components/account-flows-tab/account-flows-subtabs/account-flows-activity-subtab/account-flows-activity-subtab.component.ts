@@ -13,12 +13,6 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 import { BehaviorSubject, combineLatest, map, Observable, of, startWith, Subject, switchMap, tap, timer } from "rxjs";
 
-import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
-import { requireValue } from "@common/helpers/app.helpers";
-import AppValues from "@common/values/app.values";
-import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
-import { AccountTabs } from "src/app/account/account.constants";
-import { AccountService } from "src/app/account/account.service";
 import {
     AccountFlowFilters,
     AccountFragment,
@@ -26,7 +20,18 @@ import {
     FlowStatus,
     FlowSummaryDataFragment,
     InitiatorFilterInput,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
+import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+import { requireValue } from "@common/helpers/app.helpers";
+import AppValues from "@common/values/app.values";
+import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
+import { AccountTabs } from "src/app/account/account.constants";
+import { AccountService } from "src/app/account/account.service";
+import {
+    AccountFiltersParams,
+    AccountFlowsNav,
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { AccountFlowsType } from "src/app/account/additional-components/account-flows-tab/resolvers/account-flows.resolver";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table/components/flow-table-panel-filters/flow-table-panel-filters.component";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
@@ -40,9 +45,6 @@ import {
 import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { environment } from "src/environments/environment";
-
-import { AccountFiltersParams, AccountFlowsNav } from "../../account-flows-tab.types";
-import { AccountFlowsType } from "../../resolvers/account-flows.resolver";
 
 @Component({
     selector: "app-account-flows-activity-subtab",

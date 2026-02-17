@@ -9,7 +9,7 @@ import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
-import { AddPushSource } from "src/app/api/kamu.graphql.interface";
+import { AddPushSource } from "@api/kamu.graphql.interface";
 
 import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
 import { SECTION_BUILDERS_BY_EVENT_TYPE } from "../../dynamic-events/builders/event-section.builders";

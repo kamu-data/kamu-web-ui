@@ -7,10 +7,10 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { WebhookFlowSubProcess } from "@api/kamu.graphql.interface";
+import { mockDatasetFlowsProcessesQuery } from "@api/mock/dataset-flow.mock";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { WebhookFlowSubProcess } from "src/app/api/kamu.graphql.interface";
-import { mockDatasetFlowsProcessesQuery } from "src/app/api/mock/dataset-flow.mock";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 
 import { SubscriptionsTableComponent } from "./subscriptions-table.component";

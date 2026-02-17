@@ -12,10 +12,10 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
 
+import { DatasetKind, DatasetSearchOverviewFragment } from "@api/kamu.graphql.interface";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import AppValues from "@common/values/app.values";
 import { NgbPopover, NgbRating } from "@ng-bootstrap/ng-bootstrap";
-import { DatasetKind, DatasetSearchOverviewFragment } from "src/app/api/kamu.graphql.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 
 import { FeatureFlagDirective } from "../../../directives/feature-flag.directive";

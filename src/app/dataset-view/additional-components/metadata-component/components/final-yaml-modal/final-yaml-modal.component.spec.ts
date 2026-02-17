@@ -13,7 +13,7 @@ import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helper
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { mockAccountDetails } from "@api/mock/auth.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 

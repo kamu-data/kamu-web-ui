@@ -12,7 +12,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ReactiveFormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 
-import { TimeUnit } from "src/app/api/kamu.graphql.interface";
+import { TimeUnit } from "@api/kamu.graphql.interface";
 
 import { TimeDeltaFormComponent } from "./time-delta-form.component";
 import { TimeDeltaFormHarness } from "./time-delta-form.harness";

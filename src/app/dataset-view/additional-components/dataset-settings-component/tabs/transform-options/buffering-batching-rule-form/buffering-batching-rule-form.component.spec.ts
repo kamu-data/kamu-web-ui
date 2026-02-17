@@ -11,8 +11,8 @@ import { Component, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ReactiveFormsModule } from "@angular/forms";
 
+import { TimeUnit } from "@api/kamu.graphql.interface";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { TimeUnit } from "src/app/api/kamu.graphql.interface";
 
 import { BufferingBatchingRuleFormComponent } from "./buffering-batching-rule-form.component";
 import { BufferingBatchingRuleFormHarness } from "./buffering-batching-rule-form.harness";

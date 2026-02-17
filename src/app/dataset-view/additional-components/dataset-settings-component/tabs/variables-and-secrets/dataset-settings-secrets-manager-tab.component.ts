@@ -16,18 +16,18 @@ import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 
 import { catchError, from, of, take } from "rxjs";
 
-import { BaseComponent } from "@common/components/base.component";
-import { ModalService } from "@common/components/modal/modal.service";
-import { promiseWithCatch, requireValue } from "@common/helpers/app.helpers";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import {
     DatasetBasicsFragment,
     DatasetPermissionsFragment,
     PageBasedInfo,
     ViewDatasetEnvVar,
     ViewDatasetEnvVarConnection,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
+import { BaseComponent } from "@common/components/base.component";
+import { ModalService } from "@common/components/modal/modal.service";
+import { promiseWithCatch, requireValue } from "@common/helpers/app.helpers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import ProjectLinks from "src/app/project-links";

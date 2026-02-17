@@ -7,11 +7,7 @@
 
 import { FormControl } from "@angular/forms";
 
-import {
-    WebhookSubscription,
-    WebhookSubscriptionInput,
-    WebhookSubscriptionStatus,
-} from "src/app/api/kamu.graphql.interface";
+import { WebhookSubscription, WebhookSubscriptionInput, WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
 export interface DatasetSettingsWebhookTabData extends DatasetViewData {

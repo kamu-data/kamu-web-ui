@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AccountProvider } from "src/app/api/kamu.graphql.interface";
+import { AccountProvider } from "@api/kamu.graphql.interface";
 
 import AppValues from "../values/app.values";
 import { DisplayAccountNamePipe } from "./display-account-name.pipe";

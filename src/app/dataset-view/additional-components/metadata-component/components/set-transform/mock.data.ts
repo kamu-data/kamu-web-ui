@@ -11,8 +11,8 @@ import {
     EnginesQuery,
     GetDatasetSchemaQuery,
     QueryDialect,
-} from "src/app/api/kamu.graphql.interface";
-import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "src/app/api/mock/dataset.mock";
+} from "@api/kamu.graphql.interface";
+import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
 

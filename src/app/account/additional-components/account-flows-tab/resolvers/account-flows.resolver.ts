@@ -7,7 +7,7 @@
 
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
-import { FlowStatus } from "src/app/api/kamu.graphql.interface";
+import { FlowStatus } from "@api/kamu.graphql.interface";
 import ProjectLinks from "src/app/project-links";
 
 import { AccountFlowsNav, ProcessCardFilterMode } from "../account-flows-tab.types";

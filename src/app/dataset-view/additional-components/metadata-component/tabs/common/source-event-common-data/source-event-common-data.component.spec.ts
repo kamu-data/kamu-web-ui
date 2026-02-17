@@ -7,10 +7,10 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { SetPollingSourceEventFragment } from "@api/kamu.graphql.interface";
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { provideToastr } from "ngx-toastr";
-import { SetPollingSourceEventFragment } from "src/app/api/kamu.graphql.interface";
 import { mockOverviewDataUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 
 import { SourceEventCommonDataComponent } from "./source-event-common-data.component";

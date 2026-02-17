@@ -9,8 +9,8 @@ import { TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
+import { DatasetApi } from "@api/dataset.api";
 import { Apollo } from "apollo-angular";
-import { DatasetApi } from "src/app/api/dataset.api";
 import { MaybeUndefined } from "src/app/interface/app.types";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 

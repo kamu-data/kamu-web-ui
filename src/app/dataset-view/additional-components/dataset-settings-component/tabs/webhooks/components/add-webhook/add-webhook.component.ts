@@ -12,12 +12,12 @@ import { MatDividerModule } from "@angular/material/divider";
 
 import { BehaviorSubject, map, Observable } from "rxjs";
 
-import { NgSelectModule } from "@ng-select/ng-select";
-import { DatasetBasicsFragment, WebhookSubscriptionInput } from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment, WebhookSubscriptionInput } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
+import { NgSelectModule } from "@ng-select/ng-select";
 import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
 import { NavigationService } from "src/app/services/navigation.service";
 import { WebhooksService } from "src/app/services/webhooks.service";

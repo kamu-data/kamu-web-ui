@@ -11,7 +11,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 
-import { LinkProtocolDesc } from "src/app/api/kamu.graphql.interface";
+import { LinkProtocolDesc } from "@api/kamu.graphql.interface";
 
 import { CopyToClipboardComponent } from "../../../../common/components/copy-to-clipboard/copy-to-clipboard.component";
 import { FeatureFlagDirective } from "../../../../common/directives/feature-flag.directive";

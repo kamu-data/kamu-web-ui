@@ -10,13 +10,13 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
 
-import { DataHelpers } from "@common/helpers/data.helpers";
 import {
     DatasetBasicsFragment,
     DatasetKind,
     FlowProcessEffectiveState,
     FlowProcessSummary,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
+import { DataHelpers } from "@common/helpers/data.helpers";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import {
     DatasetFlowBadgeHelpers,

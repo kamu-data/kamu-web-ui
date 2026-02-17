@@ -11,10 +11,10 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink, RouterOutlet } from "@angular/router";
 
+import { DatasetMetadataSummaryFragment, PageBasedInfo } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import { momentConvertDateToLocalWithFormat } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { DatasetMetadataSummaryFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
 import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "src/app/interface/app.types";
 import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
 import ProjectLinks from "src/app/project-links";

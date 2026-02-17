@@ -13,11 +13,7 @@ import { MatTableModule } from "@angular/material/table";
 
 import { BehaviorSubject, Observable, take } from "rxjs";
 
-import {
-    DatasetBasicsFragment,
-    WebhookSubscription,
-    WebhookSubscriptionStatus,
-} from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment, WebhookSubscription, WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
 import { ModalService } from "@common/components/modal/modal.service";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { promiseWithCatch } from "@common/helpers/app.helpers";

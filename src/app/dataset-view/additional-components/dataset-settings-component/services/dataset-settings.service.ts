@@ -10,15 +10,15 @@ import { inject, Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 
-import { DatasetNotFoundError, DatasetOperationError } from "@common/values/errors";
-import { ToastrService } from "ngx-toastr";
-import { DatasetApi } from "src/app/api/dataset.api";
+import { DatasetApi } from "@api/dataset.api";
 import {
     DatasetVisibilityInput,
     DeleteDatasetMutation,
     RenameDatasetMutation,
     SetVisibilityDatasetMutation,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
+import { DatasetNotFoundError, DatasetOperationError } from "@common/values/errors";
+import { ToastrService } from "ngx-toastr";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";

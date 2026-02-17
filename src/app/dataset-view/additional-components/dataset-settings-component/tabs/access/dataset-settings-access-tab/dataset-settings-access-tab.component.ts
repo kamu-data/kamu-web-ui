@@ -17,18 +17,13 @@ import { NavigationEnd, Router, RouterLink } from "@angular/router";
 
 import { catchError, filter, firstValueFrom, from, map, of, switchMap, take } from "rxjs";
 
+import { AccountWithRole, DatasetAccessRole, DatasetBasicsFragment, PageBasedInfo } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
 import { promiseWithCatch, requireValue } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import {
-    AccountWithRole,
-    DatasetAccessRole,
-    DatasetBasicsFragment,
-    PageBasedInfo,
-} from "src/app/api/kamu.graphql.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";

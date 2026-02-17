@@ -9,14 +9,14 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatButtonToggleChange } from "@angular/material/button-toggle";
 import { MatChipListboxChange } from "@angular/material/chips";
 
-import { Apollo } from "apollo-angular";
-import { provideToastr } from "ngx-toastr";
 import {
     FlowProcessEffectiveState,
     WebhookFlowSubProcess,
     WebhookFlowSubProcessGroup,
-} from "src/app/api/kamu.graphql.interface";
-import { mockDatasetFlowsProcessesQuery } from "src/app/api/mock/dataset-flow.mock";
+} from "@api/kamu.graphql.interface";
+import { mockDatasetFlowsProcessesQuery } from "@api/mock/dataset-flow.mock";
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 
 import { SubscriptionsTableComponent } from "./components/subscriptions-table/subscriptions-table.component";

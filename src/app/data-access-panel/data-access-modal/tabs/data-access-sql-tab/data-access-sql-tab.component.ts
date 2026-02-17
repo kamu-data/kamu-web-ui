@@ -8,7 +8,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
-import { FlightSqlDesc, JdbcDesc, PostgreSqlDesl } from "src/app/api/kamu.graphql.interface";
+import { FlightSqlDesc, JdbcDesc, PostgreSqlDesl } from "@api/kamu.graphql.interface";
 
 import { CopyToClipboardComponent } from "../../../../common/components/copy-to-clipboard/copy-to-clipboard.component";
 

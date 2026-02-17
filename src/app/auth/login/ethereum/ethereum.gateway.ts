@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { Web3WalletOwnershipVerificationRequest } from "src/app/api/auth.api.model";
+import { Web3WalletOwnershipVerificationRequest } from "@api/auth.api.model";
 import { MaybeNull } from "src/app/interface/app.types";
 
 export interface EthereumGateway {

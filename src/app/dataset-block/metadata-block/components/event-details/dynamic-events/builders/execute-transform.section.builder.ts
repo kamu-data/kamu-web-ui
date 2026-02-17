@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DataSlice, ExecuteTransform, ExecuteTransformInput } from "src/app/api/kamu.graphql.interface";
+import { DataSlice, ExecuteTransform, ExecuteTransformInput } from "@api/kamu.graphql.interface";
 
 import { EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS } from "../../components/execute-transform-event/execute-transform-event.source";
 import { EventRow, EventSection } from "../dynamic-events.model";

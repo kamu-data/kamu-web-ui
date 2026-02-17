@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DatasetBasicsFragment, WebhookSubscription } from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment, WebhookSubscription } from "@api/kamu.graphql.interface";
 
 export interface EditWebhooksType {
     datasetBasics: DatasetBasicsFragment;

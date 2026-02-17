@@ -14,7 +14,7 @@ import {
     FlowSummaryDataFragment,
     TaskStatus,
     TimeUnit,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 
 export const mockHistoryFragmentWithFinishedStatus: FlowHistoryDataFragment = {

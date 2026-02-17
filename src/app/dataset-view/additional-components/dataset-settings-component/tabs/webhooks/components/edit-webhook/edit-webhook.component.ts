@@ -11,12 +11,12 @@ import { FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Va
 import { MatDividerModule } from "@angular/material/divider";
 import { RouterOutlet } from "@angular/router";
 
-import { NgSelectModule } from "@ng-select/ng-select";
-import { WebhookSubscriptionInput } from "src/app/api/kamu.graphql.interface";
+import { WebhookSubscriptionInput } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import { eventTypesMapper } from "@common/helpers/data.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
+import { NgSelectModule } from "@ng-select/ng-select";
 import { NavigationService } from "src/app/services/navigation.service";
 
 import { SubscribedEventType, WebhookSubscriptionFormType } from "../../dataset-settings-webhooks-tab.component.types";

@@ -10,8 +10,8 @@ import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angu
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 
+import { AccountWithRole, DatasetAccessRole } from "@api/kamu.graphql.interface";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { AccountWithRole, DatasetAccessRole } from "src/app/api/kamu.graphql.interface";
 
 import { CollaboratorModalResultType, ROLE_OPTIONS } from "../add-people-modal/add-people-modal.model";
 

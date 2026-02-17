@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
+import { DatasetKind, DatasetLineageBasicsFragment } from "@api/kamu.graphql.interface";
 import { Edge, Node } from "@swimlane/ngx-graph";
-import { DatasetKind, DatasetLineageBasicsFragment } from "src/app/api/kamu.graphql.interface";
 
 export interface LineageGraphNodeData {
     kind: LineageGraphNodeKind;

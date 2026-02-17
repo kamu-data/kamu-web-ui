@@ -11,11 +11,11 @@ import { Component, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
+import { FlowTriggerBreakingChangeRule, TimeDelta, TimeUnit } from "@api/kamu.graphql.interface";
 import { TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { FlowTriggerBreakingChangeRule, TimeDelta, TimeUnit } from "src/app/api/kamu.graphql.interface";
 
 import { BatchingRuleType } from "../../../dataset-settings.model";
 import { TransformTriggerFormComponent } from "./transform-trigger-form.component";

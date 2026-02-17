@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { FlowTriggerScheduleRule, FlowTriggerStopPolicy } from "src/app/api/kamu.graphql.interface";
+import { FlowTriggerScheduleRule, FlowTriggerStopPolicy } from "@api/kamu.graphql.interface";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import { MaybeNull } from "src/app/interface/app.types";
 

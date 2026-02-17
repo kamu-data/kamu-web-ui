@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AddDataEventFragment, DatasetKind, Seed } from "src/app/api/kamu.graphql.interface";
+import { AddDataEventFragment, DatasetKind, Seed } from "@api/kamu.graphql.interface";
 import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
 
 import {

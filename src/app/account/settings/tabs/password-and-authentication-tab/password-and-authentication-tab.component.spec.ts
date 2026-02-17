@@ -9,10 +9,10 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
+import { mockAccountDetails } from "@api/mock/auth.mock";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { AccountService } from "src/app/account/account.service";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
 
 import { PasswordAndAuthenticationTabComponent } from "./password-and-authentication-tab.component";
 

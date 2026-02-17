@@ -27,13 +27,6 @@ import { MatMenuModule } from "@angular/material/menu";
 import { MatTable, MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { RouterLink } from "@angular/router";
 
-import { BaseComponent } from "@common/components/base.component";
-import { ModalService } from "@common/components/modal/modal.service";
-import { promiseWithCatch } from "@common/helpers/app.helpers";
-import AppValues from "@common/values/app.values";
-import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
-import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
-import { ToastrService } from "ngx-toastr";
 import {
     AccountFragment,
     Dataset,
@@ -42,7 +35,14 @@ import {
     FlowStatus,
     FlowSummaryDataFragment,
     FlowSummaryDataWithTriggerFragment,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
+import { BaseComponent } from "@common/components/base.component";
+import { ModalService } from "@common/components/modal/modal.service";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
+import AppValues from "@common/values/app.values";
+import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
+import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
+import { ToastrService } from "ngx-toastr";
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";

@@ -5,16 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { DynamicTableColumnClassEnum } from "@common/components/dynamic-table/dynamic-table.interface";
-import { Node } from "@swimlane/ngx-graph";
 import {
     CurrentSourceFetchUrlFragment,
     DataSchemaFormat,
     DatasetKind,
     DatasetLineageBasicsFragment,
     DatasetMetadata,
-} from "src/app/api/kamu.graphql.interface";
-import { TEST_AVATAR_URL } from "src/app/api/mock/auth.mock";
+} from "@api/kamu.graphql.interface";
+import { TEST_AVATAR_URL } from "@api/mock/auth.mock";
+import { DynamicTableColumnClassEnum } from "@common/components/dynamic-table/dynamic-table.interface";
+import { Node } from "@swimlane/ngx-graph";
 import { OdfTypes } from "src/app/interface/dataset-schema.interface";
 import {
     mockDatasetBasicsDerivedFragment,

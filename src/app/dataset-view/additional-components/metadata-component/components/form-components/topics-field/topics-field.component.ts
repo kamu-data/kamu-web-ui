@@ -9,9 +9,9 @@ import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
+import { MqttQos } from "@api/kamu.graphql.interface";
 import { RxReactiveFormsModule, RxwebValidators } from "@rxweb/reactive-form-validators";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
-import { MqttQos } from "src/app/api/kamu.graphql.interface";
 
 import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
 import { BaseField } from "../base-field";

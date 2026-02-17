@@ -13,11 +13,11 @@ import { RouterLink } from "@angular/router";
 
 import { finalize, map, Observable } from "rxjs";
 
+import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { DatasetInfo } from "src/app/interface/navigation.interface";
 import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
 import { NavigationService } from "src/app/services/navigation.service";

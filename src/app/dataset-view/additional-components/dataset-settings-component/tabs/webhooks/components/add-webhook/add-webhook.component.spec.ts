@@ -9,11 +9,11 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
-import { Apollo } from "apollo-angular";
-import { provideToastr } from "ngx-toastr";
-import { mockCreateWebhookSubscriptionSuccess } from "src/app/api/mock/webhooks.mock";
+import { mockCreateWebhookSubscriptionSuccess } from "@api/mock/webhooks.mock";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 import { WebhooksService } from "src/app/services/webhooks.service";

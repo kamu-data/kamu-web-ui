@@ -10,7 +10,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, O
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { RouterLink } from "@angular/router";
 
-import { DatasetBasicsFragment, DatasetByIdQuery } from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment, DatasetByIdQuery } from "@api/kamu.graphql.interface";
 import { DatasetKindComponent } from "@common/components/dataset-kind/dataset-kind.component";
 import { DatasetVisibilityComponent } from "@common/components/dataset-visibility/dataset-visibility.component";
 import AppValues from "@common/values/app.values";

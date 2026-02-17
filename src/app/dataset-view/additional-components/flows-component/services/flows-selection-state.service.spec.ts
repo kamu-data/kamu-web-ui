@@ -7,8 +7,8 @@
 
 import { TestBed } from "@angular/core/testing";
 
-import { DatasetFlowProcesses, FlowProcessEffectiveState } from "src/app/api/kamu.graphql.interface";
-import { mockDatasetFlowsProcessesQuery } from "src/app/api/mock/dataset-flow.mock";
+import { DatasetFlowProcesses, FlowProcessEffectiveState } from "@api/kamu.graphql.interface";
+import { mockDatasetFlowsProcessesQuery } from "@api/mock/dataset-flow.mock";
 
 import { FlowsSelectionStateService } from "./flows-selection-state.service";
 

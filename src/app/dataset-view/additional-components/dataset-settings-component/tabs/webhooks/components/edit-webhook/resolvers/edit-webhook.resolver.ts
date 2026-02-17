@@ -10,7 +10,7 @@ import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
 import { catchError, EMPTY, map, switchMap } from "rxjs";
 
-import { DatasetBasicsFragment, WebhookSubscription } from "src/app/api/kamu.graphql.interface";
+import { DatasetBasicsFragment, WebhookSubscription } from "@api/kamu.graphql.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";

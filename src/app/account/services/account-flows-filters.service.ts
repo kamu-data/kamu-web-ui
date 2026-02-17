@@ -9,13 +9,13 @@ import { Injectable } from "@angular/core";
 
 import { BehaviorSubject } from "rxjs";
 
-import { stripSecondsFromDateToISOString } from "@common/helpers/data.helpers";
 import {
     FlowProcessEffectiveState,
     FlowProcessFilters,
     FlowProcessOrderField,
     OrderingDirection,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
+import { stripSecondsFromDateToISOString } from "@common/helpers/data.helpers";
 
 import {
     DashboardFiltersOptions,

@@ -4,7 +4,7 @@
     "baseUrl": "./",
     "paths": {
       "@common/*": ["src/app/common/*"],
-      "@api/*": ["src/api/*"],
+      "@api/*": ["src/app/api/*"],
       "@env/*": ["src/environments/*"]
     },
     "outDir": "./dist/out-tsc",

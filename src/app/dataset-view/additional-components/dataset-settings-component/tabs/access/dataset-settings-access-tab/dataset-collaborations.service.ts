@@ -9,8 +9,7 @@ import { inject, Injectable } from "@angular/core";
 
 import { map, Observable } from "rxjs";
 
-import { ToastrService } from "ngx-toastr";
-import { DatasetCollaborationApi } from "src/app/api/dataset-collaboration.api";
+import { DatasetCollaborationApi } from "@api/dataset-collaboration.api";
 import {
     AccountWithRoleConnection,
     DatasetAccessRole,
@@ -21,7 +20,8 @@ import {
     SearchCollaboratorQuery,
     SetRoleCollaboratorMutation,
     UnsetRoleCollaboratorMutation,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
+import { ToastrService } from "ngx-toastr";
 import { MaybeNull } from "src/app/interface/app.types";
 
 @Injectable({

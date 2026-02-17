@@ -9,11 +9,11 @@ import { inject } from "@angular/core";
 
 import { Observable } from "rxjs";
 
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-
 import { BaseProcessingComponent } from "@common/components/base.processing.component";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
+
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 
 export abstract class BaseDatasetDataComponent extends BaseProcessingComponent {
     protected datasetService = inject(DatasetService);

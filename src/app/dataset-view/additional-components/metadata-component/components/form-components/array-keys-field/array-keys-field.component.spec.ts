@@ -8,10 +8,10 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormArray, FormGroup } from "@angular/forms";
 
-import { ArrayKeysFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/array-keys-field/array-keys-field.component";
-
 import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { ArrayKeysFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/array-keys-field/array-keys-field.component";
 
 describe("ArrayKeysFieldComponent", () => {
     let component: ArrayKeysFieldComponent;

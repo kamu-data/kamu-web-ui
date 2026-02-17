@@ -13,13 +13,14 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import { GlobalQueryComponent } from "src/app/query/global-query/global-query.component";
 import { NavigationService } from "src/app/services/navigation.service";
 import { SqlQueryService } from "src/app/services/sql-query.service";
-
-import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("GlobalQueryComponent", () => {
     let component: GlobalQueryComponent;

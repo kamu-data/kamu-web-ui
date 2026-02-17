@@ -5,10 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { SubprocessStatusFilterPipe } from "src/app/dataset-view/additional-components/flows-component/pipes/subprocess-status-filter.pipe";
-
 import { FlowProcessEffectiveState, WebhookFlowSubProcess } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowsProcessesQuery } from "@api/mock/dataset-flow.mock";
+
+import { SubprocessStatusFilterPipe } from "src/app/dataset-view/additional-components/flows-component/pipes/subprocess-status-filter.pipe";
 
 describe("SubprocessStatusFilterPipe", () => {
     const subprocesses = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.webhooks

@@ -5,10 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { BlockHashFilterPipe } from "src/app/dataset-block/metadata-block/components/block-navigation/pipes/block-hash-filter.pipe";
-
 import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "@api/mock/dataset.mock";
+
+import { BlockHashFilterPipe } from "src/app/dataset-block/metadata-block/components/block-navigation/pipes/block-hash-filter.pipe";
 
 describe("BlockHashFilterPipe", () => {
     const pipe = new BlockHashFilterPipe();

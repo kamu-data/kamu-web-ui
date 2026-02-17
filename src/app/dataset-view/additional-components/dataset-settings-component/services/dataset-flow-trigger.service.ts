@@ -10,8 +10,6 @@ import { inject, Injectable } from "@angular/core";
 import { map, Observable, take } from "rxjs";
 
 import { ToastrService } from "ngx-toastr";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { NavigationService } from "src/app/services/navigation.service";
 
 import AppValues from "@common/values/app.values";
 import { DatasetFlowApi } from "@api/dataset-flow.api";
@@ -24,6 +22,9 @@ import {
     SetDatasetFlowTriggerMutation,
 } from "@api/kamu.graphql.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
+
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Injectable({
     providedIn: "root",

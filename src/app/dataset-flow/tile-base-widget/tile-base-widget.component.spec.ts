@@ -7,12 +7,12 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { mockDatasets } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
-import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
-
 import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { FlowItemWidgetDataFragment } from "@api/kamu.graphql.interface";
 import { mockFlowItemWidgetDataFragments } from "@api/mock/dataset-flow.mock";
+
+import { mockDatasets } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
+import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
 
 describe("TileBaseWidgetComponent", () => {
     let component: TileBaseWidgetComponent;

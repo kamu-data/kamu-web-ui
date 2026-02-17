@@ -5,14 +5,14 @@
  * included in the LICENSE file.
  */
 
+import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
+import { AddDataTooltipsTexts } from "@common/tooltips/add-data.text";
+
 import { HashPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/hash-property/hash-property.component";
 import { OffsetIntervalPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/offset-interval-property/offset-interval-property.component";
 import { SimplePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/simple-property/simple-property.component";
 import { SizePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/size-property/size-property.component";
 import { EventRowDescriptorsByField } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
-
-import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
-import { AddDataTooltipsTexts } from "@common/tooltips/add-data.text";
 
 export const ADD_DATA_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "AddData.string.newWatermark": {

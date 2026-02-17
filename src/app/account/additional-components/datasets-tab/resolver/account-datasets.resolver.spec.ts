@@ -13,12 +13,13 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { AccountService } from "src/app/account/account.service";
-import { accountDatasetsResolverFn } from "src/app/account/additional-components/datasets-tab/resolver/account-datasets.resolver";
-import ProjectLinks from "src/app/project-links";
 
 import { TEST_ACCOUNT_NAME } from "@api/mock/dataset.mock";
 import { DatasetsAccountResolverResponse } from "@interface/dataset.interface";
+
+import { AccountService } from "src/app/account/account.service";
+import { accountDatasetsResolverFn } from "src/app/account/additional-components/datasets-tab/resolver/account-datasets.resolver";
+import ProjectLinks from "src/app/project-links";
 
 describe("accountDatasetsResolverFn", () => {
     let router: Router;

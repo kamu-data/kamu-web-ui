@@ -8,14 +8,14 @@
 import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 
-import { AccountTabs } from "src/app/account/account.constants";
-import { NavigationService } from "src/app/services/navigation.service";
-
 import { DatasetListItemComponent } from "@common/components/dataset-list-component/dataset-list-item/dataset-list-item.component";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
 import { isNil } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { DatasetsAccountResolverResponse } from "@interface/dataset.interface";
+
+import { AccountTabs } from "src/app/account/account.constants";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-datasets-tab",

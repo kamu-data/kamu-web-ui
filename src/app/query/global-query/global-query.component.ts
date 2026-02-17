@@ -11,6 +11,10 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
 
+import { BaseComponent } from "@common/components/base.component";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetRequestBySql } from "@interface/dataset.interface";
+
 import { DataSqlErrorUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { EditorModule } from "src/app/editor/editor.module";
 import ProjectLinks from "src/app/project-links";
@@ -20,10 +24,6 @@ import { QueryAndResultSectionsComponent } from "src/app/query/shared/query-and-
 import { CancelRequestService } from "src/app/services/cancel-request.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { SqlQueryService } from "src/app/services/sql-query.service";
-
-import { BaseComponent } from "@common/components/base.component";
-import { MaybeNull } from "@interface/app.types";
-import { DatasetRequestBySql } from "@interface/dataset.interface";
 
 @Component({
     selector: "app-global-query",

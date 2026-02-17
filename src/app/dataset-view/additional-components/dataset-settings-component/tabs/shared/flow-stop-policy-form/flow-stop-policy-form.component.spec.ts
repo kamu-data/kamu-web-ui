@@ -13,11 +13,12 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angul
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
 import { FlowTriggerStopPolicyType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { FlowStopPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.component";
 import { FlowStopPolicyFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.harness";
-
-import { SharedTestModule } from "@common/modules/shared-test.module";
 
 @Component({
     imports: [

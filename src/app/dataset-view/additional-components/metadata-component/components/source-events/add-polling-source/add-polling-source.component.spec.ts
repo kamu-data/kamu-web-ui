@@ -14,6 +14,11 @@ import { from, of } from "rxjs";
 
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { ApolloTestingModule } from "apollo-angular/testing";
+
+import { OdfDefaultValues } from "@common/values/app-odf-default.values";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+import { DatasetNavigationParams } from "@interface/navigation.interface";
+
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
 import {
@@ -35,10 +40,6 @@ import {
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { OdfDefaultValues } from "@common/values/app-odf-default.values";
-import { mockAccountDetails } from "@api/mock/auth.mock";
-import { DatasetNavigationParams } from "@interface/navigation.interface";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;

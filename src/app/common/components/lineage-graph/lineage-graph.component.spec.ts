@@ -9,7 +9,6 @@ import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
-import { mockGraphNode } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import timekeeper from "timekeeper";
 
 import { LineageGraphComponent } from "@common/components/lineage-graph/lineage-graph.component";
@@ -18,6 +17,8 @@ import { emitClickOnElementByDataTestId, findElementByDataTestId } from "@common
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { MOCK_LINKS, MOCK_NODES } from "@api/mock/dataset.mock";
+
+import { mockGraphNode } from "src/app/dataset-view/additional-components/data-tabs.mock";
 
 describe("LineageGraphComponent", () => {
     let component: LineageGraphComponent;

@@ -12,6 +12,13 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angul
 import { MatDividerModule } from "@angular/material/divider";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
+import { BaseComponent } from "@common/components/base.component";
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
+import { DatasetBasicsFragment, DatasetFlowType, DatasetKind } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
 import {
     FlowTriggerStopPolicyType,
     ScheduleType,
@@ -26,13 +33,6 @@ import { IngestTriggerFormComponent } from "src/app/dataset-view/additional-comp
 import { IngestTriggerFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger-form.types";
 import { FlowStopPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.component";
 import { FlowStopPolicyFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.types";
-
-import { BaseComponent } from "@common/components/base.component";
-import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
-import { DatasetBasicsFragment, DatasetFlowType, DatasetKind } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
 
 @Component({
     selector: "app-dataset-settings-scheduling-tab",

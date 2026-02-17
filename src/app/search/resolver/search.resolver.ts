@@ -10,11 +10,11 @@ import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
 import { Observable, of, switchMap } from "rxjs";
 
+import { DatasetSearchResult } from "@interface/search.interface";
+
 import { AppConfigService } from "src/app/app-config.service";
 import ProjectLinks from "src/app/project-links";
 import { SearchService } from "src/app/search/search.service";
-
-import { DatasetSearchResult } from "@interface/search.interface";
 
 export const searchResolverFn: ResolveFn<Observable<DatasetSearchResult>> = (route: ActivatedRouteSnapshot) => {
     const searchService = inject(SearchService);

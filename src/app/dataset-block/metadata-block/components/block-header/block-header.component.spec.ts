@@ -11,12 +11,13 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
 import { ToastrModule } from "ngx-toastr";
-import { BlockHeaderComponent } from "src/app/dataset-block/metadata-block/components/block-header/block-header.component";
 
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "@api/mock/dataset.mock";
+
+import { BlockHeaderComponent } from "src/app/dataset-block/metadata-block/components/block-header/block-header.component";
 
 describe("BlockHeaderComponent", () => {
     let component: BlockHeaderComponent;

@@ -19,6 +19,13 @@ import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
+
+import { PageNotFoundComponent } from "@common/components/page-not-found/page-not-found.component";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { AccessTokenConnection, AccountProvider } from "@api/kamu.graphql.interface";
+import { mockListAccessTokensQuery } from "@api/mock/access-token.mock";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+
 import { accountSettingsAccessTokensResolverFn } from "src/app/account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
 import { AppConfigService } from "src/app/app-config.service";
 import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "src/app/app-routing";
@@ -40,12 +47,6 @@ import {
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { searchResolverFn } from "src/app/search/resolver/search.resolver";
-
-import { PageNotFoundComponent } from "@common/components/page-not-found/page-not-found.component";
-import { promiseWithCatch } from "@common/helpers/app.helpers";
-import { AccessTokenConnection, AccountProvider } from "@api/kamu.graphql.interface";
-import { mockListAccessTokensQuery } from "@api/mock/access-token.mock";
-import { mockAccountDetails } from "@api/mock/auth.mock";
 
 describe("Router", () => {
     let router: Router;

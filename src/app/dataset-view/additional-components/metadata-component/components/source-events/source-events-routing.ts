@@ -9,6 +9,9 @@
 
 import { Routes } from "@angular/router";
 
+import { datasetInfoResolverFn } from "@common/resolvers/dataset-info.resolver";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+
 import { setTransformResolverFn } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/resolver/set-transform.resolver";
 import { SetTransformComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.component";
 import { AddPollingSourceComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source.component";
@@ -16,9 +19,6 @@ import { addPollingSourceResolverFn } from "src/app/dataset-view/additional-comp
 import { AddPushSourceComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
 import { addPushSourceResolverFn } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/resolver/add-push-source.resolver";
 import ProjectLinks from "src/app/project-links";
-
-import { datasetInfoResolverFn } from "@common/resolvers/dataset-info.resolver";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 export const SOURCE_EVENTS_ROUTES: Routes = [
     {

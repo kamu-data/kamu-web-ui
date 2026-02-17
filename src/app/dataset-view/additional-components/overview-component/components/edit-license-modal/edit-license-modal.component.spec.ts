@@ -11,13 +11,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
-import {
-    mockMetadataDerivedUpdate,
-    mockOverviewDataUpdate,
-    mockOverviewWithSetLicense,
-} from "src/app/dataset-view/additional-components/data-tabs.mock";
-import { EditLicenseModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
-import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 
 import {
     emitClickOnElementByDataTestId,
@@ -26,6 +19,14 @@ import {
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
+
+import {
+    mockMetadataDerivedUpdate,
+    mockOverviewDataUpdate,
+    mockOverviewWithSetLicense,
+} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { EditLicenseModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 
 describe("EditLicenseModalComponent", () => {
     let component: EditLicenseModalComponent;

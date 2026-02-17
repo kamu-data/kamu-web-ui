@@ -18,8 +18,6 @@ import { Observable, OperatorFunction } from "rxjs";
 import { debounceTime, distinctUntilChanged, map, switchMap } from "rxjs/operators";
 
 import { NgbHighlight, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
-import { DatasetNode } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
 
 import { BaseComponent } from "@common/components/base.component";
 import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
@@ -33,6 +31,9 @@ import { MaybeNull } from "@interface/app.types";
 import { DataSchemaField, DataSchemaTypeField, DatasetSchema, OdfTypes } from "@interface/dataset-schema.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
 import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface";
+
+import { DatasetNode } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
 
 @Component({
     selector: "app-search-section",

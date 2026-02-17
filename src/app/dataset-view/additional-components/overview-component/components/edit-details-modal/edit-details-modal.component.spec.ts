@@ -12,6 +12,11 @@ import { MatChipInputEvent } from "@angular/material/chips";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
+
+import { emitClickOnElementByDataTestId, getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
+
 import {
     mockMetadataDerivedUpdate,
     mockOverviewDataUpdate,
@@ -19,10 +24,6 @@ import {
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { EditDetailsModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-details-modal/edit-details-modal.component";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
-
-import { emitClickOnElementByDataTestId, getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
-import { DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
 
 describe("EditDetailsModalComponent", () => {
     let component: EditDetailsModalComponent;

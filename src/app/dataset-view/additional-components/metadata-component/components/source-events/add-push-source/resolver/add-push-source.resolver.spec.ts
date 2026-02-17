@@ -11,12 +11,13 @@ import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from "@angu
 import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
-import { EditAddPushSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/edit-add-push-source.service";
-import { addPushSourceResolverFn } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/resolver/add-push-source.resolver";
-import ProjectLinks from "src/app/project-links";
 
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 import { MaybeNull } from "@interface/app.types";
+
+import { EditAddPushSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/edit-add-push-source.service";
+import { addPushSourceResolverFn } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/resolver/add-push-source.resolver";
+import ProjectLinks from "src/app/project-links";
 
 describe("addPushSourceResolverFn", () => {
     let editService: EditAddPushSourceService;

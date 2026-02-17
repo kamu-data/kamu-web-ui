@@ -5,6 +5,19 @@
  * included in the LICENSE file.
  */
 
+import timekeeper from "timekeeper";
+
+import {
+    FetchStepContainer,
+    FetchStepFilesGlob,
+    FetchStepUrl,
+    FlowStatus,
+    FlowSummaryDataFragment,
+    FlowTriggerBreakingChangeRule,
+    TimeUnit,
+} from "@api/kamu.graphql.interface";
+import { mockFlowSummaryDataFragments } from "@api/mock/dataset-flow.mock";
+
 import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
 import {
     durationBlockTextResults,
@@ -20,18 +33,6 @@ import {
     mockTableFlowSummaryDataFragments,
     tooltipTextResults,
 } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
-import timekeeper from "timekeeper";
-
-import {
-    FetchStepContainer,
-    FetchStepFilesGlob,
-    FetchStepUrl,
-    FlowStatus,
-    FlowSummaryDataFragment,
-    FlowTriggerBreakingChangeRule,
-    TimeUnit,
-} from "@api/kamu.graphql.interface";
-import { mockFlowSummaryDataFragments } from "@api/mock/dataset-flow.mock";
 
 describe("FlowTableHelpers", () => {
     beforeAll(() => {

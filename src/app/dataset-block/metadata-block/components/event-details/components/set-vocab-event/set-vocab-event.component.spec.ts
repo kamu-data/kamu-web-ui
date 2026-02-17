@@ -7,10 +7,10 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
 import { SetVocabEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/set-vocab-event/set-vocab-event.component";
 import { mockSetVocab } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
-
-import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("SetVocabEventComponent", () => {
     let component: SetVocabEventComponent;

@@ -7,11 +7,11 @@
 
 import { ErrorHandler, Inject, Injectable, Injector, NgZone } from "@angular/core";
 
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { NavigationService } from "src/app/services/navigation.service";
-
 import { logError } from "@common/helpers/app.helpers";
 import { KamuError, KamuErrorHandler } from "@common/values/errors";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Injectable({
     providedIn: "root",

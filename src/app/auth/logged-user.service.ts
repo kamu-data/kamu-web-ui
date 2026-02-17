@@ -12,17 +12,18 @@ import { EMPTY, Observable, ReplaySubject, Subject } from "rxjs";
 import { catchError, first } from "rxjs/operators";
 
 import { Apollo } from "apollo-angular";
+
+import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ondestroy.adapter";
+import { isNull, promiseWithCatch } from "@common/helpers/app.helpers";
+import { AccountFragment } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
 import { AppLoginInstructions } from "src/app/app-config.model";
 import { AppConfigService } from "src/app/app-config.service";
 import { LoginService } from "src/app/auth/login/login.service";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { SessionStorageService } from "src/app/services/session-storage.service";
-
-import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ondestroy.adapter";
-import { isNull, promiseWithCatch } from "@common/helpers/app.helpers";
-import { AccountFragment } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
 
 @Injectable({
     providedIn: "root",

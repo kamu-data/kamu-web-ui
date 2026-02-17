@@ -17,12 +17,6 @@ import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { catchError, from, of, take } from "rxjs";
 
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
-import { EditKeyValueModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.component";
-import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
-import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import ProjectLinks from "src/app/project-links";
-import { NavigationService } from "src/app/services/navigation.service";
 
 import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
@@ -37,6 +31,13 @@ import {
     ViewDatasetEnvVarConnection,
 } from "@api/kamu.graphql.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
+
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { EditKeyValueModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.component";
+import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
+import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import ProjectLinks from "src/app/project-links";
+import { NavigationService } from "src/app/services/navigation.service";
 
 export interface EnvVariableElement {
     key: string;

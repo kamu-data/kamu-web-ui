@@ -7,9 +7,9 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { DatasetNamePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/dataset-name-property/dataset-name-property.component";
-
 import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { DatasetNamePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/dataset-name-property/dataset-name-property.component";
 
 describe("DatasetNamePropertyComponent", () => {
     let component: DatasetNamePropertyComponent;

@@ -10,13 +10,13 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, O
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { RouterLink } from "@angular/router";
 
-import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-
 import { DatasetKindComponent } from "@common/components/dataset-kind/dataset-kind.component";
 import { DatasetVisibilityComponent } from "@common/components/dataset-visibility/dataset-visibility.component";
 import AppValues from "@common/values/app.values";
 import { DatasetBasicsFragment, DatasetByIdQuery } from "@api/kamu.graphql.interface";
+
+import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
 
 @Component({
     selector: "app-dataset-id-and-name-property",

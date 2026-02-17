@@ -9,14 +9,14 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 
+import { BaseComponent } from "@common/components/base.component";
+import { FlowConfigRuleIngest } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
 import {
     IngestConfigurationRuleFormType,
     IngestConfigurationRuleFormValue,
 } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/ingest-configuration-rule-form/ingest-configuration-rule-form.types";
-
-import { BaseComponent } from "@common/components/base.component";
-import { FlowConfigRuleIngest } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
 
 @Component({
     selector: "app-ingest-configuration-rule-form",

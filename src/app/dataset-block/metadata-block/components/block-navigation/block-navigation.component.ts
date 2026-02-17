@@ -12,15 +12,16 @@ import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
 
 import { NgSelectModule } from "@ng-select/ng-select";
+
+import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
+
 import { BlockHashFilterPipe } from "src/app/dataset-block/metadata-block/components/block-navigation/pipes/block-hash-filter.pipe";
 import { EventTypeFilterPipe } from "src/app/dataset-block/metadata-block/components/block-navigation/pipes/event-type-filter.pipe";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import ProjectLinks from "src/app/project-links";
-
-import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
-import { MaybeNull } from "@interface/app.types";
-import { DatasetInfo } from "@interface/navigation.interface";
 
 @Component({
     selector: "app-block-navigation",

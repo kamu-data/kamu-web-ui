@@ -15,16 +15,17 @@ import { first, Observable, of, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+
+import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
+import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
+import { MaybeNull } from "@interface/app.types";
+
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { flowDetailsResolverFn } from "src/app/dataset-flow/dataset-flow-details/resolvers/flow-details.resolver";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-
-import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
-import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
-import { MaybeNull } from "@interface/app.types";
 
 describe("flowDetailsResolverFn", () => {
     const mockRouterStateSnapshot = {} as RouterStateSnapshot;

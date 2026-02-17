@@ -11,6 +11,15 @@ import { inject, Injectable } from "@angular/core";
 import { catchError, EMPTY, map, Observable, ReplaySubject, Subject } from "rxjs";
 
 import { ToastrService } from "ngx-toastr";
+
+import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
+import { extractSchemaFieldsFromData } from "@common/helpers/data-schema.helpers";
+import { parseDataFromJsonAoSFormat } from "@common/helpers/data.helpers";
+import AppValues from "@common/values/app.values";
+import { MaybeNull } from "@interface/app.types";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
+import { DatasetRequestBySql } from "@interface/dataset.interface";
+
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DataSqlErrorUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
@@ -21,14 +30,6 @@ import {
 } from "src/app/query-explainer/query-explainer.types";
 import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
 import { LocalStorageService } from "src/app/services/local-storage.service";
-
-import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
-import { extractSchemaFieldsFromData } from "@common/helpers/data-schema.helpers";
-import { parseDataFromJsonAoSFormat } from "@common/helpers/data.helpers";
-import AppValues from "@common/values/app.values";
-import { MaybeNull } from "@interface/app.types";
-import { DataSchemaField } from "@interface/dataset-schema.interface";
-import { DatasetRequestBySql } from "@interface/dataset.interface";
 
 @Injectable({
     providedIn: "root",

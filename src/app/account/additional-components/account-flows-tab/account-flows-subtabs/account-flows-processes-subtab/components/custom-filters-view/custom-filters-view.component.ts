@@ -13,6 +13,9 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { NgSelectModule } from "@ng-select/ng-select";
+
+import { FlowProcessEffectiveState, OrderingDirection } from "@api/kamu.graphql.interface";
+
 import {
     DashboardFiltersOptions,
     FLOW_PROCESS_STATE_LIST,
@@ -27,8 +30,6 @@ import {
     lastTimeRangeHelper,
     nextTimeRangeHelper,
 } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
-
-import { FlowProcessEffectiveState, OrderingDirection } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-custom-filters-view",

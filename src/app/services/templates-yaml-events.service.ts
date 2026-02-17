@@ -7,6 +7,11 @@
 
 import { Injectable } from "@angular/core";
 
+import { stringify } from "yaml";
+
+import { SetLicense, SetTransform } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
 import {
     AddPollingSourceEditFormType,
     PreprocessKind,
@@ -14,10 +19,6 @@ import {
     ReadKind,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { AddPushSourceEditFormType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
-import { stringify } from "yaml";
-
-import { SetLicense, SetTransform } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
 
 @Injectable({
     providedIn: "root",

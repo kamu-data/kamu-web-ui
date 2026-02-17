@@ -12,6 +12,14 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
 
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+
+import { BaseComponent } from "@common/components/base.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
+import { DatasetKind, OffsetInterval } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetRequestBySql } from "@interface/dataset.interface";
+
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { AddDataModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/add-data-modal/add-data-modal.component";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -25,13 +33,6 @@ import { CancelRequestService } from "src/app/services/cancel-request.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { SessionStorageService } from "src/app/services/session-storage.service";
 import { SqlQueryService } from "src/app/services/sql-query.service";
-
-import { BaseComponent } from "@common/components/base.component";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import AppValues from "@common/values/app.values";
-import { DatasetKind, OffsetInterval } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
-import { DatasetRequestBySql } from "@interface/dataset.interface";
 
 @Component({
     selector: "app-data",

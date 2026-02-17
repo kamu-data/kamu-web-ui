@@ -14,6 +14,14 @@ import { RouterLink } from "@angular/router";
 import { catchError, forkJoin, from, map, of, take } from "rxjs";
 
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+
+import { parseCurrentSchema } from "@common/helpers/app.helpers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
+import { DatasetKind, GetDatasetSchemaQuery, SqlQueryStep } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
+
 import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
 import { EngineSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine-section.component";
 import { QueriesSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/queries-section/queries-section.component";
@@ -27,13 +35,6 @@ import { BaseMainEventComponent } from "src/app/dataset-view/additional-componen
 import { StepperNavigationComponent } from "src/app/dataset-view/additional-components/metadata-component/components/stepper-navigation/stepper-navigation.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { EditorModule } from "src/app/editor/editor.module";
-
-import { parseCurrentSchema } from "@common/helpers/app.helpers";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import AppValues from "@common/values/app.values";
-import { DatasetKind, GetDatasetSchemaQuery, SqlQueryStep } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
-import { DatasetInfo } from "@interface/navigation.interface";
 
 @Component({
     selector: "app-set-transform",

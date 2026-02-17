@@ -13,14 +13,6 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { QueryExplainerComponent } from "src/app/query-explainer/query-explainer.component";
-import {
-    mockQueryExplainerResponse,
-    mockTextareaCommitment,
-    mockVerifyQueryResponseSuccess,
-} from "src/app/query-explainer/query-explainer.mocks";
-import { QueryExplainerService } from "src/app/query-explainer/query-explainer.service";
 
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
 import {
@@ -31,6 +23,15 @@ import {
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockDatasetByIdQuery } from "@api/mock/dataset.mock";
+
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { QueryExplainerComponent } from "src/app/query-explainer/query-explainer.component";
+import {
+    mockQueryExplainerResponse,
+    mockTextareaCommitment,
+    mockVerifyQueryResponseSuccess,
+} from "src/app/query-explainer/query-explainer.mocks";
+import { QueryExplainerService } from "src/app/query-explainer/query-explainer.service";
 
 describe("QueryExplainerComponent", () => {
     let component: QueryExplainerComponent;

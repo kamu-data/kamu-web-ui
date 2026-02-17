@@ -8,12 +8,12 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, CanActivateFn, convertToParamMap, RouterStateSnapshot } from "@angular/router";
 
+import { TEST_ACCOUNT_NAME } from "@api/mock/dataset.mock";
+
 import { AccountTabs } from "src/app/account/account.constants";
 import { accountGuard } from "src/app/account/guards/account.guard";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { TEST_ACCOUNT_NAME } from "@api/mock/dataset.mock";
 
 describe("accountGuard", () => {
     let navigationService: NavigationService;

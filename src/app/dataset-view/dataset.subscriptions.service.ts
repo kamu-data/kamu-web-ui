@@ -9,15 +9,15 @@ import { Injectable } from "@angular/core";
 
 import { Observable, ReplaySubject, Subject } from "rxjs";
 
+import { DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
 import {
     DatasetHistoryUpdate,
     LineageUpdate,
     MetadataSchemaUpdate,
     OverviewUpdate,
 } from "src/app/dataset-view/dataset.subscriptions.interface";
-
-import { DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
 
 @Injectable({ providedIn: "root" })
 export class DatasetSubscriptionsService {

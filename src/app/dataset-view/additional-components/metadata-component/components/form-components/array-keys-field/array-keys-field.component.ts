@@ -11,9 +11,10 @@ import { FormArray, FormBuilder, FormsModule, ReactiveFormsModule, Validators } 
 
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
-import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+
+import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 
 @Component({
     selector: "app-array-keys-field",

@@ -22,17 +22,18 @@ import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 
 import { MarkdownModule } from "ngx-markdown";
+
+import { BaseComponent } from "@common/components/base.component";
+import { addMarkdownRunButton } from "@common/helpers/app.helpers";
+import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { EditMode } from "src/app/dataset-view/additional-components/overview-component/components/readme-section/readme-section.types";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { BaseComponent } from "@common/components/base.component";
-import { addMarkdownRunButton } from "@common/helpers/app.helpers";
-import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
 
 @Component({
     selector: "app-readme-section",

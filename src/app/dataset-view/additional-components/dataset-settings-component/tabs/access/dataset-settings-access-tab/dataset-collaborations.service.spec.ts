@@ -11,7 +11,6 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
-import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 
 import { DatasetCollaborationApi } from "@api/dataset-collaboration.api";
 import { AccountWithRoleConnection, DatasetAccessRole, NameLookupResult } from "@api/kamu.graphql.interface";
@@ -23,6 +22,8 @@ import {
     mockUnsetRoleCollaboratorMutation,
 } from "@api/mock/dataset-collaborations.mock";
 import { TEST_ACCOUNT_ID, TEST_DATASET_ID } from "@api/mock/dataset.mock";
+
+import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 
 describe("DatasetCollaborationsService", () => {
     let service: DatasetCollaborationsService;

@@ -12,16 +12,17 @@ import { of } from "rxjs";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { SearchSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/search-section/search-section.component";
-import { mockGetDatasetSchemaQuery } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { mockDatasetBasicsDerivedFragment, mockDatasetInfo } from "src/app/search/mock.data";
 
 import { dispatchInputEvent, emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { SearchApi } from "@api/search.api";
 import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface";
+
+import { SearchSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/search-section/search-section.component";
+import { mockGetDatasetSchemaQuery } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { mockDatasetBasicsDerivedFragment, mockDatasetInfo } from "src/app/search/mock.data";
 
 describe("SearchSectionComponent", () => {
     let component: SearchSectionComponent;

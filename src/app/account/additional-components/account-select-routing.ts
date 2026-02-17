@@ -9,6 +9,8 @@
 
 import { Routes } from "@angular/router";
 
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+
 import { AccountComponent } from "src/app/account/account.component";
 import { AccountTabs } from "src/app/account/account.constants";
 import { AccountFlowsTabComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.component";
@@ -19,8 +21,6 @@ import { SettingsTabComponent } from "src/app/account/additional-components/sett
 import { accountActiveTabResolverFn } from "src/app/account/resolver/account-active-tab.resolver";
 import { AuthenticatedGuard } from "src/app/auth/guards/authenticated.guard";
 import ProjectLinks from "src/app/project-links";
-
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 export const ACCOUNT_SELECT_ROUTES: Routes = [
     {

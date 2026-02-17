@@ -15,19 +15,6 @@ import { RouterLink } from "@angular/router";
 import { catchError, from, Observable, of, take } from "rxjs";
 
 import { NgbModal, NgbModalRef, NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
-import { AppConfigService } from "src/app/app-config.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
-import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
-import { AddDataModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/add-data-modal/add-data-modal.component";
-import { EditDetailsModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-details-modal/edit-details-modal.component";
-import { EditLicenseModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
-import { EditWatermarkModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
-import { OverviewHistorySummaryHeaderComponent } from "src/app/dataset-view/additional-components/overview-component/components/overview-history-summary-header/overview-history-summary-header.component";
-import { ReadmeSectionComponent } from "src/app/dataset-view/additional-components/overview-component/components/readme-section/readme-section.component";
-import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import ProjectLinks from "src/app/project-links";
-import { FileUploadService } from "src/app/services/file-upload.service";
 
 import { BaseDatasetDataComponent } from "@common/components/base-dataset-data.component";
 import { DisplayHashComponent } from "@common/components/display-hash/display-hash.component";
@@ -48,6 +35,20 @@ import {
 } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
+
+import { AppConfigService } from "src/app/app-config.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { AddDataModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/add-data-modal/add-data-modal.component";
+import { EditDetailsModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-details-modal/edit-details-modal.component";
+import { EditLicenseModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
+import { EditWatermarkModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
+import { OverviewHistorySummaryHeaderComponent } from "src/app/dataset-view/additional-components/overview-component/components/overview-history-summary-header/overview-history-summary-header.component";
+import { ReadmeSectionComponent } from "src/app/dataset-view/additional-components/overview-component/components/readme-section/readme-section.component";
+import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import ProjectLinks from "src/app/project-links";
+import { FileUploadService } from "src/app/services/file-upload.service";
 
 @Component({
     selector: "app-overview",

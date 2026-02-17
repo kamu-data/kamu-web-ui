@@ -12,6 +12,13 @@ import { FormsModule } from "@angular/forms";
 import { combineLatest, map, Observable, of, switchMap, tap } from "rxjs";
 
 import { ToastrService } from "ngx-toastr";
+
+import { BaseComponent } from "@common/components/base.component";
+import AppValues from "@common/values/app.values";
+import { DatasetByIdQuery } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
+
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import ProjectLinks from "src/app/project-links";
@@ -26,12 +33,6 @@ import {
     VerifyQueryKindError,
     VerifyQueryResponse,
 } from "src/app/query-explainer/query-explainer.types";
-
-import { BaseComponent } from "@common/components/base.component";
-import AppValues from "@common/values/app.values";
-import { DatasetByIdQuery } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
-import { DatasetInfo } from "@interface/navigation.interface";
 
 export interface QueryExplainerComponentData {
     sqlQueryExplainerResponse: QueryExplainerResponse;

@@ -11,8 +11,6 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 import { MarkdownModule } from "ngx-markdown";
-import { SchemaViewMode } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-schema-tab/metadata-schema-tab.component.types";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import * as YAML from "yaml";
 
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
@@ -25,6 +23,9 @@ import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { MaybeNull } from "@interface/app.types";
 import { DataSchemaField, DatasetSchema } from "@interface/dataset-schema.interface";
+
+import { SchemaViewMode } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-schema-tab/metadata-schema-tab.component.types";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-metadata-schema-tab",

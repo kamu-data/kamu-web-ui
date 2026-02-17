@@ -13,6 +13,12 @@ import { ActivatedRoute, NavigationEnd } from "@angular/router";
 import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
+
+import { isMobileView } from "@common/helpers/app.helpers";
+import { registerMatSvgIcons, routerMock, routerMockEventSubject } from "@common/helpers/base-test.helpers.spec";
+import { FetchAccountDetailsGQL } from "@api/kamu.graphql.interface";
+import { mockAccountFromAccessToken } from "@api/mock/auth.mock";
+
 import { ALL_URLS_WITHOUT_HEADER, AppComponent } from "src/app/app.component";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { LoginService } from "src/app/auth/login/login.service";
@@ -20,11 +26,6 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 import ProjectLinks from "src/app/project-links";
 import { mockAutocompleteItems } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { isMobileView } from "@common/helpers/app.helpers";
-import { registerMatSvgIcons, routerMock, routerMockEventSubject } from "@common/helpers/base-test.helpers.spec";
-import { FetchAccountDetailsGQL } from "@api/kamu.graphql.interface";
-import { mockAccountFromAccessToken } from "@api/mock/auth.mock";
 
 describe("AppComponent", () => {
     let component: AppComponent;

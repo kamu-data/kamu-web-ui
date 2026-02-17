@@ -7,6 +7,8 @@
 
 import { Routes } from "@angular/router";
 
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+
 import { AddWebhookComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/add-webhook/add-webhook.component";
 import { addWebhookResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/add-webhook/resolvers/add-webhook.resolver";
 import { EditWebhookComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/edit-webhook.component";
@@ -16,8 +18,6 @@ import { rotateSecretWebhookResolverFn } from "src/app/dataset-view/additional-c
 import { RotateSecretWebhookComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/rotate-secret-webhook/rotate-secret-webhook.component";
 import { datasetSettingsWebhooksResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/resolver/dataset-settings-webhooks.resolver";
 import ProjectLinks from "src/app/project-links";
-
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 export const WEBHOOKS_TAB_ROUTING: Routes = [
     {

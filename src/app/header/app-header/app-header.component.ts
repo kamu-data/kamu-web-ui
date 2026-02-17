@@ -29,13 +29,6 @@ import { Observable, OperatorFunction } from "rxjs";
 import { debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, take, tap } from "rxjs/operators";
 
 import { NgbHighlight, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
-import { AccountTabs } from "src/app/account/account.constants";
-import { AccountSettingsTabs } from "src/app/account/settings/account-settings.constants";
-import { AppUIConfigFeatureFlags } from "src/app/app-config.model";
-import { NotificationIndicatorComponent } from "src/app/header/notification-indicator/notification-indicator.component";
-import ProjectLinks from "src/app/project-links";
-import { NavigationService } from "src/app/services/navigation.service";
-import { SessionStorageService } from "src/app/services/session-storage.service";
 
 import { BaseComponent } from "@common/components/base.component";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
@@ -45,6 +38,14 @@ import { AccountFragment, AccountProvider } from "@api/kamu.graphql.interface";
 import { SearchApi } from "@api/search.api";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface";
+
+import { AccountTabs } from "src/app/account/account.constants";
+import { AccountSettingsTabs } from "src/app/account/settings/account-settings.constants";
+import { AppUIConfigFeatureFlags } from "src/app/app-config.model";
+import { NotificationIndicatorComponent } from "src/app/header/notification-indicator/notification-indicator.component";
+import ProjectLinks from "src/app/project-links";
+import { NavigationService } from "src/app/services/navigation.service";
+import { SessionStorageService } from "src/app/services/session-storage.service";
 
 @Component({
     selector: "app-header",

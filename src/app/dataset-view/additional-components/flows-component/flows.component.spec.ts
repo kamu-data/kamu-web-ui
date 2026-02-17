@@ -15,6 +15,15 @@ import { delay, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+
+import { ModalService } from "@common/components/modal/modal.service";
+import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import AppValues from "@common/values/app.values";
+import { DatasetFlowProcesses, FlowProcessEffectiveState, FlowStatus } from "@api/kamu.graphql.interface";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+import { mockDatasetFlowsProcessesQuery, mockFlowsTableData } from "@api/mock/dataset-flow.mock";
+import { ModalArgumentsInterface } from "@interface/modal.interface";
+
 import { mockDatasets } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -31,14 +40,6 @@ import {
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
-
-import { ModalService } from "@common/components/modal/modal.service";
-import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import AppValues from "@common/values/app.values";
-import { DatasetFlowProcesses, FlowProcessEffectiveState, FlowStatus } from "@api/kamu.graphql.interface";
-import { mockAccountDetails } from "@api/mock/auth.mock";
-import { mockDatasetFlowsProcessesQuery, mockFlowsTableData } from "@api/mock/dataset-flow.mock";
-import { ModalArgumentsInterface } from "@interface/modal.interface";
 
 describe("FlowsComponent", () => {
     let component: FlowsComponent;

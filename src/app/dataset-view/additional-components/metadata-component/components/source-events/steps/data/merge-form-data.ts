@@ -5,13 +5,13 @@
  * included in the LICENSE file.
  */
 
+import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
+
 import {
     ControlType,
     JsonFormData,
     MergeKind,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
-
-import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
 
 export const MERGE_FORM_DATA: JsonFormData = {
     [MergeKind.APPEND]: {

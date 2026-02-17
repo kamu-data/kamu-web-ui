@@ -11,12 +11,13 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { ExecuteTransformEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/execute-transform-event/execute-transform-event.component";
-import { mockExecuteTransform } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { ExecuteTransform } from "@api/kamu.graphql.interface";
+
+import { ExecuteTransformEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/execute-transform-event/execute-transform-event.component";
+import { mockExecuteTransform } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
 describe("ExecuteTransformEventComponent", () => {
     let component: ExecuteTransformEventComponent;

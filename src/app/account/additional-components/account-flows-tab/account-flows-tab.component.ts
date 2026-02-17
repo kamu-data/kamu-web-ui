@@ -11,6 +11,12 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 
 import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
+
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
+import { DatasetBasicsFragment, FlowStatus } from "@api/kamu.graphql.interface";
+import { MaybeUndefined } from "@interface/app.types";
+
 import { AccountTabs } from "src/app/account/account.constants";
 import { AccountFlowsActivitySubtabComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-activity-subtab/account-flows-activity-subtab.component";
 import { AccountFlowsProcessesSubtabComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/account-flows-processes-subtab.component";
@@ -21,11 +27,6 @@ import {
 import { AccountFlowsType } from "src/app/account/additional-components/account-flows-tab/resolvers/account-flows.resolver";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import AppValues from "@common/values/app.values";
-import { DatasetBasicsFragment, FlowStatus } from "@api/kamu.graphql.interface";
-import { MaybeUndefined } from "@interface/app.types";
 
 @Component({
     selector: "app-account-flows-tab",

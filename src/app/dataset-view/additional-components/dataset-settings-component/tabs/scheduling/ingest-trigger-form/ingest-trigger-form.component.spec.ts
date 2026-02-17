@@ -13,12 +13,13 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angul
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { ScheduleType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
-import { IngestTriggerFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger-form.component";
-import { IngestTriggerFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger-form.harness";
 
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { TimeUnit } from "@api/kamu.graphql.interface";
+
+import { ScheduleType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { IngestTriggerFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger-form.component";
+import { IngestTriggerFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger-form.harness";
 
 @Component({
     imports: [

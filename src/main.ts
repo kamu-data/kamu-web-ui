@@ -28,15 +28,6 @@ import { Apollo, provideApollo } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
 import { MarkdownModule } from "ngx-markdown";
 import { provideToastr, ToastrService } from "ngx-toastr";
-import { AppConfigService } from "src/app/app-config.service";
-import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "src/app/app-routing";
-import { AppComponent } from "src/app/app.component";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { LoginMethodsService } from "src/app/auth/login-methods.service";
-import ProjectLinks from "src/app/project-links";
-import { ErrorHandlerService } from "src/app/services/error-handler.service";
-import { LocalStorageService } from "src/app/services/local-storage.service";
-import { NavigationService } from "src/app/services/navigation.service";
 
 import { environment } from "@env/environment";
 import { SpinnerInterceptor } from "@common/components/spinner/spinner.interceptor";
@@ -46,6 +37,16 @@ import { HIGHLIGHT_OPTIONS_PROVIDER, isAccessTokenExpired, logError } from "@com
 import { AuthInterceptor } from "@common/interceptors/auth.interceptor";
 import AppValues from "@common/values/app.values";
 import { ErrorTexts } from "@common/values/errors.text";
+
+import { AppConfigService } from "src/app/app-config.service";
+import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "src/app/app-routing";
+import { AppComponent } from "src/app/app.component";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { LoginMethodsService } from "src/app/auth/login-methods.service";
+import ProjectLinks from "src/app/project-links";
+import { ErrorHandlerService } from "src/app/services/error-handler.service";
+import { LocalStorageService } from "src/app/services/local-storage.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 const Services = [
     Apollo,

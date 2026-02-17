@@ -10,9 +10,10 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { MatDividerModule } from "@angular/material/divider";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { FileUrlFormType } from "src/app/dataset-view/additional-components/overview-component/components/file-from-url-modal/file-from-url-modal.types";
 
 import { BaseComponent } from "@common/components/base.component";
+
+import { FileUrlFormType } from "src/app/dataset-view/additional-components/overview-component/components/file-from-url-modal/file-from-url-modal.types";
 
 @Component({
     selector: "app-file-from-url-modal",

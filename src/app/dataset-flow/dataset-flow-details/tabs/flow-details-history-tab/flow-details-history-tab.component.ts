@@ -10,13 +10,13 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 
-import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
-import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
-
 import { DataHelpers } from "@common/helpers/data.helpers";
 import { SafeHtmlPipe } from "@common/pipes/safe-html.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { FlowHistoryDataFragment, FlowStatus, FlowSummaryDataFragment, TaskStatus } from "@api/kamu.graphql.interface";
+
+import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
 
 @Component({
     selector: "app-flow-details-history-tab",

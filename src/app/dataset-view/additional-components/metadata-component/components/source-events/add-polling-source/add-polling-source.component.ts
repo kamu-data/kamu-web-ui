@@ -12,6 +12,9 @@ import { FormArray, FormGroup, FormsModule, ReactiveFormsModule } from "@angular
 import { MatStepperModule } from "@angular/material/stepper";
 import { RouterLink } from "@angular/router";
 
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { DatasetInfo } from "@interface/navigation.interface";
+
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { BaseSourceEventComponent } from "src/app/dataset-view/additional-components/metadata-component/components/base-source-event.component";
 import {
@@ -27,9 +30,6 @@ import { PreprocessStepComponent } from "src/app/dataset-view/additional-compone
 import { StepperNavigationComponent } from "src/app/dataset-view/additional-components/metadata-component/components/stepper-navigation/stepper-navigation.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { EditorModule } from "src/app/editor/editor.module";
-
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { DatasetInfo } from "@interface/navigation.interface";
 
 @Component({
     selector: "app-add-polling-source",

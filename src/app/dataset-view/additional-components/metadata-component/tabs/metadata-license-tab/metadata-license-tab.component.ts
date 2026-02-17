@@ -12,16 +12,17 @@ import { MatIconModule } from "@angular/material/icon";
 import { catchError, from, of, take } from "rxjs";
 
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { LinkPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/link-property/link-property.component";
-import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
-import { EditLicenseModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
-import { NavigationService } from "src/app/services/navigation.service";
 
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { DatasetBasicsFragment, LicenseFragment } from "@api/kamu.graphql.interface";
 import { MaybeNullOrUndefined } from "@interface/app.types";
+
+import { LinkPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/link-property/link-property.component";
+import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { EditLicenseModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-metadata-license-tab",

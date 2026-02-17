@@ -14,8 +14,6 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
-import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
-import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 
 import { DatasetFlowApi } from "@api/dataset-flow.api";
 import { AccountFragment, DatasetFlowProcesses } from "@api/kamu.graphql.interface";
@@ -43,6 +41,9 @@ import {
     mockGetFlowByIdQuerySuccess,
 } from "@api/mock/dataset-flow.mock";
 import { MaybeUndefined } from "@interface/app.types";
+
+import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 
 describe("DatasetFlowsService", () => {
     let service: DatasetFlowsService;

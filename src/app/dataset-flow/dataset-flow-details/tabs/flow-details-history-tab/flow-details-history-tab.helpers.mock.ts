@@ -5,8 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
-
 import {
     AccountProvider,
     AccountType,
@@ -17,6 +15,8 @@ import {
     TaskStatus,
     TimeUnit,
 } from "@api/kamu.graphql.interface";
+
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 
 export const mockHistoryFragmentWithFinishedStatus: FlowHistoryDataFragment = {
     __typename: "FlowEventTaskChanged",

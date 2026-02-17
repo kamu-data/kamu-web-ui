@@ -15,16 +15,17 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { debounceTime, distinctUntilChanged, finalize, Observable, OperatorFunction, switchMap, tap } from "rxjs";
 
 import { NgbActiveModal, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
-import {
-    CollaboratorModalResultType,
-    ROLE_OPTIONS,
-} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.model";
-import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 
 import { BaseComponent } from "@common/components/base.component";
 import AppValues from "@common/values/app.values";
 import { DatasetAccessRole, DatasetBasicsFragment, NameLookupResult } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
+
+import {
+    CollaboratorModalResultType,
+    ROLE_OPTIONS,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.model";
+import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 
 @Component({
     selector: "app-add-people-modal",

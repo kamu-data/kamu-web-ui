@@ -10,15 +10,16 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
-import { mockSetPollingSourceEvent } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
-import { EngineSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine-section.component";
-import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
-import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 
 import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { EngineDesc } from "@api/kamu.graphql.interface";
+
+import { mockSetPollingSourceEvent } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
+import { EngineSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine-section.component";
+import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
+import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 
 describe("EngineSectionComponent", () => {
     let component: EngineSectionComponent;

@@ -8,6 +8,12 @@
 import { Provider } from "@angular/core";
 import { ROUTES, Routes } from "@angular/router";
 
+import { AccountWhitelistNotFoundComponent } from "@common/components/account-whitelist-not-found/account-whitelist-not-found.component";
+import { PageNotFoundComponent } from "@common/components/page-not-found/page-not-found.component";
+import { accessTokenExpiredGuardFn } from "@common/guards/access-token-expired.guard";
+import { forbidAnonymousAccessGuardFn } from "@common/guards/forbid-anonymous-access.guard";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+
 import { accountGuard } from "src/app/account/guards/account.guard";
 import { AdminDashboardComponent } from "src/app/admin-view/admin-dashboard/admin-dashboard.component";
 import { AppConfigService } from "src/app/app-config.service";
@@ -21,12 +27,6 @@ import { blockMetadataResolverFn } from "src/app/dataset-block/metadata-block/re
 import ProjectLinks from "src/app/project-links";
 import { searchResolverFn } from "src/app/search/resolver/search.resolver";
 import { SearchComponent } from "src/app/search/search.component";
-
-import { AccountWhitelistNotFoundComponent } from "@common/components/account-whitelist-not-found/account-whitelist-not-found.component";
-import { PageNotFoundComponent } from "@common/components/page-not-found/page-not-found.component";
-import { accessTokenExpiredGuardFn } from "@common/guards/access-token-expired.guard";
-import { forbidAnonymousAccessGuardFn } from "@common/guards/forbid-anonymous-access.guard";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 export const PUBLIC_ROUTES: Routes = [
     { path: "", redirectTo: ProjectLinks.DEFAULT_URL, pathMatch: "full" },

@@ -23,17 +23,6 @@ import { MatRadioModule } from "@angular/material/radio";
 
 import { Observable, shareReplay } from "rxjs";
 
-import { DatasetSettingsService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-settings.service";
-import {
-    DatasetResetMode,
-    RenameDatasetFormType,
-    ResetDatasetFormType,
-} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.types";
-import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
-import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { NavigationService } from "src/app/services/navigation.service";
-
 import { BaseComponent } from "@common/components/base.component";
 import { DatasetVisibilityComponent } from "@common/components/dataset-visibility/dataset-visibility.component";
 import { ModalService } from "@common/components/modal/modal.service";
@@ -51,6 +40,17 @@ import {
     DatasetVisibilityInput,
     DatasetVisibilityOutput,
 } from "@api/kamu.graphql.interface";
+
+import { DatasetSettingsService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-settings.service";
+import {
+    DatasetResetMode,
+    RenameDatasetFormType,
+    ResetDatasetFormType,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.types";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-dataset-settings-general-tab",

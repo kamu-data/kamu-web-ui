@@ -15,6 +15,9 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+
+import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+
 import {
     mockMetadataRootUpdate,
     mockOverviewDataUpdate,
@@ -24,8 +27,6 @@ import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dat
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 
 describe("DatasetSettingsComponent", () => {
     let component: DatasetSettingsComponent;

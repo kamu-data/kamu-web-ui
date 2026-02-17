@@ -11,6 +11,7 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular
 import { Observable, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
+
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { metadataLicenseTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-license-tab/resolvers/metadata-license-tab.resolver";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";

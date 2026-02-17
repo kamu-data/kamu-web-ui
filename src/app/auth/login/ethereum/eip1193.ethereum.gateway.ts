@@ -10,10 +10,11 @@ import { Injector } from "@angular/core";
 import { BrowserProvider, Eip1193Provider } from "ethers";
 import { ToastrService } from "ngx-toastr";
 import { SiweMessage } from "siwe";
-import { EthereumGateway } from "src/app/auth/login/ethereum/ethereum.gateway";
 
 import { Web3WalletOwnershipVerificationRequest } from "@api/auth.api.model";
 import { MaybeNull } from "@interface/app.types";
+
+import { EthereumGateway } from "src/app/auth/login/ethereum/ethereum.gateway";
 
 /* istanbul ignore file */
 

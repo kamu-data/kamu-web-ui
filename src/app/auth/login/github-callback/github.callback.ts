@@ -7,12 +7,12 @@
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 
+import { BaseComponent } from "@common/components/base.component";
+import { GithubLoginCredentials } from "@api/auth.api.model";
+
 import { LoginService } from "src/app/auth/login/login.service";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { BaseComponent } from "@common/components/base.component";
-import { GithubLoginCredentials } from "@api/auth.api.model";
 
 @Component({
     selector: "app-github-callback",

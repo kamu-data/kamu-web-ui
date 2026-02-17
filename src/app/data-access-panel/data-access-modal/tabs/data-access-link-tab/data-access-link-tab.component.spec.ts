@@ -9,15 +9,15 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
-import { DataAccessLinkTabComponent } from "src/app/data-access-panel/data-access-modal/tabs/data-access-link-tab/data-access-link-tab.component";
-import { mockDatasetEndPoints } from "src/app/data-access-panel/data-access-panel-mock.data";
-
 import {
     emitClickOnElementByDataTestId,
     getElementByDataTestId,
     registerMatSvgIcons,
 } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
+
+import { DataAccessLinkTabComponent } from "src/app/data-access-panel/data-access-modal/tabs/data-access-link-tab/data-access-link-tab.component";
+import { mockDatasetEndPoints } from "src/app/data-access-panel/data-access-panel-mock.data";
 
 describe("DataAccessLinkTabComponent", () => {
     let component: DataAccessLinkTabComponent;

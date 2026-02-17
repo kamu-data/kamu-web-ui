@@ -13,11 +13,12 @@ import { Observable, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+
+import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
+
 import { rotateSecretWebhookResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/rotate-secret-webhook/resolvers/rotate-secret-webhook.resolver";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-
-import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 
 describe("rotateSecretWebhookResolverFn", () => {
     let datasetService: DatasetService;

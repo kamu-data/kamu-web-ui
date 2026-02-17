@@ -11,15 +11,16 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { AccountService } from "src/app/account/account.service";
-import { AccountTabComponent } from "src/app/account/settings/tabs/account-tab/account-tab.component";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { NavigationService } from "src/app/services/navigation.service";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockAccountDetails, TEST_LOGIN } from "@api/mock/auth.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
+
+import { AccountService } from "src/app/account/account.service";
+import { AccountTabComponent } from "src/app/account/settings/tabs/account-tab/account-tab.component";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("AccountTabComponent", () => {
     let component: AccountTabComponent;

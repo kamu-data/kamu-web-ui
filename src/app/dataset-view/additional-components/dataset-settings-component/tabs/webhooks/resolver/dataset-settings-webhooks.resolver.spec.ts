@@ -13,6 +13,9 @@ import { Observable, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+
+import AppValues from "@common/values/app.values";
+
 import { AppConfigService } from "src/app/app-config.service";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -24,8 +27,6 @@ import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscr
 import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import AppValues from "@common/values/app.values";
 
 describe("datasetSettingsWebhooksResolver", () => {
     let datasetService: DatasetService;

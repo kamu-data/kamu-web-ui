@@ -8,9 +8,9 @@
 import { inject } from "@angular/core";
 import { ResolveFn } from "@angular/router";
 
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-
 import { AccountFragment } from "@api/kamu.graphql.interface";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 export const accountSettingsPasswordAndAuthenticationResolverFn: ResolveFn<AccountFragment> = () => {
     const loggedUserService = inject(LoggedUserService);

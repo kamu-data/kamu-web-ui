@@ -13,15 +13,16 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { DateTimeAdapter, OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { NgSelectModule } from "@ng-select/ng-select";
+
+import { MY_MOMENT_FORMATS } from "@common/helpers/data.helpers";
+import { FlowProcessEffectiveState, OrderingDirection } from "@api/kamu.graphql.interface";
+
 import {
     DashboardFiltersOptions,
     RANGE_LAST_ATTEMPT_LIST,
     RangeLastAttemptOption,
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 import { lastTimeRangeHelper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
-
-import { MY_MOMENT_FORMATS } from "@common/helpers/data.helpers";
-import { FlowProcessEffectiveState, OrderingDirection } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-recent-activity-filters-view",

@@ -12,6 +12,7 @@ import { provideAnimations } from "@angular/platform-browser/animations";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
+
 import { AppConfigService } from "src/app/app-config.service";
 import {
     mockQueryExplainerResponse,

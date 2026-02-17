@@ -14,6 +14,9 @@ import { from, of } from "rxjs";
 
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
+
+import { mockAccountDetails } from "@api/mock/auth.mock";
+
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
 import { mockAddPushSourceYaml } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
@@ -25,8 +28,6 @@ import { AddPushSourceSection } from "src/app/dataset-view/additional-components
 import { AddPushSourceComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { mockDatasetInfo } from "src/app/search/mock.data";
-
-import { mockAccountDetails } from "@api/mock/auth.mock";
 
 const providersSection = (name: string) => {
     return [

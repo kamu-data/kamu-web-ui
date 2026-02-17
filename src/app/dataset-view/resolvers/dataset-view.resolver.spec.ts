@@ -11,14 +11,15 @@ import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapsh
 import { Observable, of, Subject, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
+
+import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
+
 import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { datasetViewResolverFn } from "src/app/dataset-view/resolvers/dataset-view.resolver";
 import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 
 describe("datasetViewResolverFn", () => {
     let datasetService: DatasetService;

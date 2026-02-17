@@ -24,12 +24,13 @@ import { filter, fromEvent, Subscription, take, takeWhile } from "rxjs";
 
 import * as monaco from "monaco-editor";
 import { EditorComponent, MonacoEditorModule } from "ngx-monaco-editor-v2";
-import { BaseEditorComponent } from "src/app/editor/components/base-editor/base-editor.component";
-import { getSqlError } from "src/app/editor/helpers/editor-error-formatter";
-import { getMonacoNamespace } from "src/app/editor/services/monaco.service";
 
 import AppValues from "@common/values/app.values";
 import { MaybeNull } from "@interface/app.types";
+
+import { BaseEditorComponent } from "src/app/editor/components/base-editor/base-editor.component";
+import { getSqlError } from "src/app/editor/helpers/editor-error-formatter";
+import { getMonacoNamespace } from "src/app/editor/services/monaco.service";
 
 const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
     theme: "vs",

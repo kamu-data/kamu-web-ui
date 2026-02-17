@@ -8,9 +8,10 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { provideToastr } from "ngx-toastr";
-import { EnvVariablesPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/env-variables-property/env-variables-property.component";
 
 import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { EnvVariablesPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/env-variables-property/env-variables-property.component";
 
 describe("EnvVariablesPropertyComponent", () => {
     let component: EnvVariablesPropertyComponent;

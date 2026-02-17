@@ -16,18 +16,19 @@ import { of } from "rxjs";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
-import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
-import { DatasetSettingsSecretsManagerTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-settings-secrets-manager-tab.component";
-import { MOCK_DATASET_INFO } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-import ProjectLinks from "src/app/project-links";
-import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { ViewDatasetEnvVarConnection } from "@api/kamu.graphql.interface";
 import { MOCK_ENV_VAR_ID, mockListEnvVariablesQuery } from "@api/mock/environment-variables-and-secrets.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
+
+import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
+import { DatasetSettingsSecretsManagerTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-settings-secrets-manager-tab.component";
+import { MOCK_DATASET_INFO } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import ProjectLinks from "src/app/project-links";
+import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("DatasetSettingsSecretsManagerTabComponent", () => {
     let component: DatasetSettingsSecretsManagerTabComponent;

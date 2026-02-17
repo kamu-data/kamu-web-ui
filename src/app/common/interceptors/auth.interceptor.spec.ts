@@ -9,10 +9,10 @@ import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromD
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 
+import { AuthInterceptor } from "@common/interceptors/auth.interceptor";
+
 import { AppConfigService } from "src/app/app-config.service";
 import { LocalStorageService } from "src/app/services/local-storage.service";
-
-import { AuthInterceptor } from "@common/interceptors/auth.interceptor";
 
 describe("AuthInterceptor", () => {
     let http: HttpClient;

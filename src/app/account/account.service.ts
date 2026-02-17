@@ -11,9 +11,6 @@ import { combineLatest, forkJoin, Observable } from "rxjs";
 import { map } from "rxjs/operators";
 
 import { ToastrService } from "ngx-toastr";
-import { CardsStrategyResult } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
-import { ChangeAccountUsernameResult } from "src/app/account/settings/account-settings.constants";
-import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 
 import { AccountApi } from "@api/account.api";
 import { DatasetApi } from "@api/dataset.api";
@@ -44,6 +41,10 @@ import {
 } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 import { DatasetsAccountResponse } from "@interface/dataset.interface";
+
+import { CardsStrategyResult } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { ChangeAccountUsernameResult } from "src/app/account/settings/account-settings.constants";
+import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 
 @Injectable({
     providedIn: "root",

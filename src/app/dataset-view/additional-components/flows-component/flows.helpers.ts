@@ -7,12 +7,6 @@
 
 import { DatePipe } from "@angular/common";
 
-import {
-    ProcessCardFilterMode,
-    RangeLastAttempt,
-} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
-import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
-
 import AppValues from "@common/values/app.values";
 import {
     AccountFragment,
@@ -23,6 +17,12 @@ import {
     FlowProcessSummaryDataFragment,
     FlowTriggerStopPolicyAfterConsecutiveFailures,
 } from "@api/kamu.graphql.interface";
+
+import {
+    ProcessCardFilterMode,
+    RangeLastAttempt,
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 
 export type FlowsSelectedCategory = "all" | "updates";
 export type WebhooksSelectedCategory = "webhooks";

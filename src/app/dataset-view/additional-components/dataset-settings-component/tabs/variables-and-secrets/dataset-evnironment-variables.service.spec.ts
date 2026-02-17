@@ -11,7 +11,6 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
-import { DatasetEvnironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-evnironment-variables.service";
 
 import { EnvironmentVariablesApi } from "@api/environment-variables.api";
 import { ViewDatasetEnvVar, ViewDatasetEnvVarConnection } from "@api/kamu.graphql.interface";
@@ -30,6 +29,8 @@ import {
     mockListEnvVariablesQuery,
     mockUpsertEnvVariableMutationCreated,
 } from "@api/mock/environment-variables-and-secrets.mock";
+
+import { DatasetEvnironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-evnironment-variables.service";
 
 describe("EvnironmentVariablesService", () => {
     let service: DatasetEvnironmentVariablesService;

@@ -9,11 +9,11 @@ import { inject, Injectable } from "@angular/core";
 
 import { map, Observable, shareReplay } from "rxjs";
 
-import { SubscribedEventType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
-
 import { eventTypesMapper } from "@common/helpers/data.helpers";
 import { WebhookEventTypesQuery } from "@api/kamu.graphql.interface";
 import { WebhooksApi } from "@api/webhooks.api";
+
+import { SubscribedEventType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
 
 @Injectable({
     providedIn: "root",

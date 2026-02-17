@@ -15,6 +15,9 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+
 import { MOCK_DATASET_INFO } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import { DatasetViewComponent } from "src/app/dataset-view/dataset-view.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -22,8 +25,6 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 
 describe("DatasetViewComponent", () => {
     let component: DatasetViewComponent;

@@ -11,9 +11,10 @@ import { TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { LoginMethodsService } from "src/app/auth/login-methods.service";
 
 import { AuthApi } from "@api/auth.api";
+
+import { LoginMethodsService } from "src/app/auth/login-methods.service";
 
 describe("LoginMethodsService", () => {
     let service: LoginMethodsService;

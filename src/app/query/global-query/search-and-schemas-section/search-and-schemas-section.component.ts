@@ -34,10 +34,6 @@ import {
 } from "rxjs";
 
 import { NgbHighlight, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { GlobalQuerySearchItem, SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
-import { SavedQueriesSectionComponent } from "src/app/query/shared/saved-queries-section/saved-queries-section.component";
-import { SqlQueryService } from "src/app/services/sql-query.service";
 
 import { BaseComponent } from "@common/components/base.component";
 import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
@@ -51,6 +47,11 @@ import { SearchApi } from "@api/search.api";
 import { MaybeNull } from "@interface/app.types";
 import { DataSchemaField, DatasetSchema } from "@interface/dataset-schema.interface";
 import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface";
+
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { GlobalQuerySearchItem, SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
+import { SavedQueriesSectionComponent } from "src/app/query/shared/saved-queries-section/saved-queries-section.component";
+import { SqlQueryService } from "src/app/services/sql-query.service";
 
 @Component({
     selector: "app-search-and-schemas-section",

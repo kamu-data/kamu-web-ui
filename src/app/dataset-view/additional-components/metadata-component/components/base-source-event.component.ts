@@ -12,6 +12,9 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { catchError, from, of, take } from "rxjs";
 
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+
+import { DatasetKind } from "@api/kamu.graphql.interface";
+
 import {
     SourcesEvents,
     SupportedEvents,
@@ -33,8 +36,6 @@ import { MERGE_FORM_DATA } from "src/app/dataset-view/additional-components/meta
 import { READ_FORM_DATA } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/data/read-form-data";
 import { ProcessFormService } from "src/app/dataset-view/additional-components/metadata-component/services/process-form.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-
-import { DatasetKind } from "@api/kamu.graphql.interface";
 
 @Injectable()
 export abstract class BaseSourceEventComponent extends BaseMainEventComponent implements OnInit {

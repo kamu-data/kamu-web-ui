@@ -8,9 +8,9 @@
 import { inject } from "@angular/core";
 import { ResolveFn } from "@angular/router";
 
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
+
+import { DatasetService } from "src/app/dataset-view/dataset.service";
 
 export const rotateSecretWebhookResolverFn: ResolveFn<DatasetBasicsFragment> = () => {
     const datasetService = inject(DatasetService);

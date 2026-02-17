@@ -9,6 +9,7 @@ import { TestBed } from "@angular/core/testing";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
 
 import { Apollo } from "apollo-angular";
+
 import {
     AddPollingSourceEditFormType,
     FetchKind,

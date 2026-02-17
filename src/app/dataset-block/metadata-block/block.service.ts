@@ -10,9 +10,6 @@ import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 
-import { MetadataBlockInfo } from "src/app/dataset-block/metadata-block/metadata-block.types";
-import { NavigationService } from "src/app/services/navigation.service";
-
 import { DatasetApi } from "@api/dataset.api";
 import {
     AddPushSource,
@@ -24,6 +21,9 @@ import {
 } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
+
+import { MetadataBlockInfo } from "src/app/dataset-block/metadata-block/metadata-block.types";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Injectable({
     providedIn: "root",

@@ -11,6 +11,7 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular
 import { Observable } from "rxjs";
 
 import { Apollo } from "apollo-angular";
+
 import { mockMetadataRootUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
 import { metadataPushSourcesTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-push-sources-tab/resolvers/metadata-push-sources-tab.resolver";

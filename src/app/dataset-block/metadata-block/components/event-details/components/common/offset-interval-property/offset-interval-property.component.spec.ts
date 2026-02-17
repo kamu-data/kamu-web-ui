@@ -11,13 +11,14 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
+
+import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
 import { OffsetIntervalPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/offset-interval-property/offset-interval-property.component";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockDatasetMainDataResponse } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("OffsetIntervalPropertyComponent", () => {
     let component: OffsetIntervalPropertyComponent;

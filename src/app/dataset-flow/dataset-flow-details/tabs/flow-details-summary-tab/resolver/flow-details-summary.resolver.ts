@@ -7,9 +7,9 @@
 
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
-import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
-
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
+
+import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 
 export const flowDetailsSummaryResolverFn: ResolveFn<DatasetFlowByIdResponse | null> = (
     route: ActivatedRouteSnapshot,

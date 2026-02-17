@@ -10,6 +10,12 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { Observable } from "rxjs";
 
+import { BaseComponent } from "@common/components/base.component";
+import { requireValue } from "@common/helpers/app.helpers";
+import AppValues from "@common/values/app.values";
+import { AccountFragment, FlowStatus, InitiatorFilterInput } from "@api/kamu.graphql.interface";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+
 import {
     CancelFlowArgs,
     FlowsTableData,
@@ -18,12 +24,6 @@ import {
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { BaseComponent } from "@common/components/base.component";
-import { requireValue } from "@common/helpers/app.helpers";
-import AppValues from "@common/values/app.values";
-import { AccountFragment, FlowStatus, InitiatorFilterInput } from "@api/kamu.graphql.interface";
-import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 @Directive()
 export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {

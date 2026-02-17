@@ -12,7 +12,6 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ToastrModule, ToastrService } from "ngx-toastr";
-import { DatasetFlowConfigService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-config.service";
 
 import { DatasetFlowApi } from "@api/dataset-flow.api";
 import {
@@ -30,6 +29,8 @@ import {
     mockSetIngestFlowConfigMutation,
     mockSetIngestFlowConfigMutationError,
 } from "@api/mock/dataset-flow.mock";
+
+import { DatasetFlowConfigService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-config.service";
 
 describe("DatasetFlowConfigService", () => {
     let service: DatasetFlowConfigService;

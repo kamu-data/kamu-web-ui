@@ -13,6 +13,13 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
 
 import { combineLatest, map, Observable, shareReplay, skip, Subscription, takeWhile, tap, timer } from "rxjs";
 
+import { BaseDatasetDataComponent } from "@common/components/base-dataset-data.component";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { FlowStatus, FlowSummaryDataFragment } from "@api/kamu.graphql.interface";
+import { MaybeUndefined } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
+
 import {
     DatasetFlowByIdResponse,
     FlowDetailsTabs,
@@ -23,13 +30,6 @@ import { DatasetViewHeaderComponent } from "src/app/dataset-view/dataset-view-he
 import { DatasetViewMenuComponent } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
-
-import { BaseDatasetDataComponent } from "@common/components/base-dataset-data.component";
-import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { FlowStatus, FlowSummaryDataFragment } from "@api/kamu.graphql.interface";
-import { MaybeUndefined } from "@interface/app.types";
-import { DatasetInfo } from "@interface/navigation.interface";
 
 @Component({
     selector: "app-dataset-flow-details",

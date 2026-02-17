@@ -11,12 +11,13 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { RxReactiveFormsModule, RxwebValidators } from "@rxweb/reactive-form-validators";
+
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 import { InputFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/input-field/input-field.component";
 import { TypeaheadFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/typeahead-field/typeahead-field.component";
 import { EventTimeSourceKind } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
-
-import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 
 @Component({
     selector: "app-select-date-format-field",

@@ -5,9 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { AppUIConfigFeatureFlags } from "src/app/app-config.model";
-import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
-
 import { isNil } from "@common/helpers/app.helpers";
 import {
     DatasetBasicsFragment,
@@ -15,6 +12,9 @@ import {
     DatasetMetadata,
     DatasetPermissionsFragment,
 } from "@api/kamu.graphql.interface";
+
+import { AppUIConfigFeatureFlags } from "src/app/app-config.model";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 
 export function isSettingsTabAccessibleHelper(
     tab: SettingsTabsEnum,

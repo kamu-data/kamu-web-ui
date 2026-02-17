@@ -16,10 +16,6 @@ import { of } from "rxjs";
 import { first } from "rxjs/operators";
 
 import { Apollo } from "apollo-angular";
-import { AppHeaderComponent } from "src/app/header/app-header/app-header.component";
-import ProjectLinks from "src/app/project-links";
-import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
 
 import {
     dispatchInputEvent,
@@ -34,6 +30,11 @@ import AppValues from "@common/values/app.values";
 import { AccountFragment, AccountProvider, AccountType } from "@api/kamu.graphql.interface";
 import { SearchApi } from "@api/search.api";
 import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface";
+
+import { AppHeaderComponent } from "src/app/header/app-header/app-header.component";
+import ProjectLinks from "src/app/project-links";
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("AppHeaderComponent", () => {
     let component: AppHeaderComponent;

@@ -11,12 +11,13 @@ import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from "@angu
 import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
-import { EditPollingSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/edit-polling-source.service";
-import { addPollingSourceResolverFn } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/resolver/add-polling-source.resolver";
-import ProjectLinks from "src/app/project-links";
 
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 import { MaybeNull } from "@interface/app.types";
+
+import { EditPollingSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/edit-polling-source.service";
+import { addPollingSourceResolverFn } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/resolver/add-polling-source.resolver";
+import ProjectLinks from "src/app/project-links";
 
 describe("addPollingSourceResolverFn", () => {
     let editService: EditPollingSourceService;

@@ -9,10 +9,11 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { DatasetSettingsWebhooksTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component";
 
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { DatasetSettingsWebhooksTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component";
 
 describe("DatasetSettingsWebhooksTabComponent", () => {
     let component: DatasetSettingsWebhooksTabComponent;

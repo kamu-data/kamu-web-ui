@@ -13,10 +13,6 @@ import { MatDividerModule } from "@angular/material/divider";
 import { finalize } from "rxjs";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { LicenseFormType } from "src/app/dataset-view/additional-components/overview-component/components/edit-license-modal/edit-license-modal.types";
-import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
-import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 
 import { BaseComponent } from "@common/components/base.component";
 import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
@@ -30,6 +26,11 @@ import {
 } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetSchema } from "@interface/dataset-schema.interface";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { LicenseFormType } from "src/app/dataset-view/additional-components/overview-component/components/edit-license-modal/edit-license-modal.types";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
+import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 
 @Component({
     selector: "app-edit-license-modal",

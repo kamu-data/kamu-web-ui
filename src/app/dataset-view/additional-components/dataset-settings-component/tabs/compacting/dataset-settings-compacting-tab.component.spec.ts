@@ -12,15 +12,16 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { DatasetSettingsCompactingTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.component";
-import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
-import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
+
+import { DatasetSettingsCompactingTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.component";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("DatasetSettingsCompactingTabComponent", () => {
     let component: DatasetSettingsCompactingTabComponent;

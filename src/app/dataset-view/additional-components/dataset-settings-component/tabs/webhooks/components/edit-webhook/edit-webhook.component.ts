@@ -12,6 +12,13 @@ import { MatDividerModule } from "@angular/material/divider";
 import { RouterOutlet } from "@angular/router";
 
 import { NgSelectModule } from "@ng-select/ng-select";
+
+import { BaseComponent } from "@common/components/base.component";
+import { eventTypesMapper } from "@common/helpers/data.helpers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
+import { WebhookSubscriptionInput } from "@api/kamu.graphql.interface";
+
 import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
 import { EditWebhooksType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/edit-webhooks.types";
 import {
@@ -20,12 +27,6 @@ import {
 } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { BaseComponent } from "@common/components/base.component";
-import { eventTypesMapper } from "@common/helpers/data.helpers";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import AppValues from "@common/values/app.values";
-import { WebhookSubscriptionInput } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-edit-webhook",

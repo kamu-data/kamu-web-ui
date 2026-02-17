@@ -9,9 +9,6 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 
-import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-
 import { BaseComponent } from "@common/components/base.component";
 import AppValues from "@common/values/app.values";
 import {
@@ -20,6 +17,9 @@ import {
     DatasetKind,
     FlowProcessEffectiveState,
 } from "@api/kamu.graphql.interface";
+
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-flows-block-actions",

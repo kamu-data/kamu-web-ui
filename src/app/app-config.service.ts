@@ -7,6 +7,10 @@
 
 import { Injectable } from "@angular/core";
 
+import { environment } from "@env/environment";
+import AppValues from "@common/values/app.values";
+import { MaybeUndefined } from "@interface/app.types";
+
 import {
     AppLoginInstructions,
     AppRuntimeConfig,
@@ -15,10 +19,6 @@ import {
     FeaturesRuntimeConfig,
     GrafanaLogsConfiguration,
 } from "src/app/app-config.model";
-
-import { environment } from "@env/environment";
-import AppValues from "@common/values/app.values";
-import { MaybeUndefined } from "@interface/app.types";
 
 @Injectable({
     providedIn: "root",

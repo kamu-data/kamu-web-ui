@@ -25,11 +25,12 @@ import { debounceTime, distinctUntilChanged, map } from "rxjs/operators";
 
 import { NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
 import { RxReactiveFormsModule, RxwebValidators } from "@rxweb/reactive-form-validators";
-import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import AppValues from "@common/values/app.values";
 import { MaybeNull } from "@interface/app.types";
+
+import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 
 export interface SchemaType {
     name: string;

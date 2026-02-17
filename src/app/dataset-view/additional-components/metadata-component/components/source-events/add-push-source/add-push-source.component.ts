@@ -12,6 +12,10 @@ import { MatStepperModule } from "@angular/material/stepper";
 import { RouterLink } from "@angular/router";
 
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
+
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { DatasetInfo } from "@interface/navigation.interface";
+
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { BaseSourceEventComponent } from "src/app/dataset-view/additional-components/metadata-component/components/base-source-event.component";
@@ -24,9 +28,6 @@ import { SourceNameStepComponent } from "src/app/dataset-view/additional-compone
 import { StepperNavigationComponent } from "src/app/dataset-view/additional-components/metadata-component/components/stepper-navigation/stepper-navigation.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
-
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { DatasetInfo } from "@interface/navigation.interface";
 
 @Component({
     selector: "app-add-push-source",

@@ -11,6 +11,12 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { Observable } from "rxjs";
 
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
+import { parse } from "yaml";
+
+import { MetadataManifestFormat } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
+
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import {
     AddPollingSourceEditFormType,
@@ -23,11 +29,6 @@ import {
     TopicsType,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { SourcesSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
-import { parse } from "yaml";
-
-import { MetadataManifestFormat } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
-import { DatasetInfo } from "@interface/navigation.interface";
 
 @Injectable({
     providedIn: "root",

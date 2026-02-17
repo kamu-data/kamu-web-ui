@@ -20,9 +20,9 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { filter, fromEvent } from "rxjs";
 
-import { CancelRequestService } from "src/app/services/cancel-request.service";
-
 import { BaseComponent } from "@common/components/base.component";
+
+import { CancelRequestService } from "src/app/services/cancel-request.service";
 
 @Component({
     selector: "app-request-timer",

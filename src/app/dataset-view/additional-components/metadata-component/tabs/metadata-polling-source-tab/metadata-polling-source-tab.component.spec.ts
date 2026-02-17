@@ -11,15 +11,16 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatIconModule } from "@angular/material/icon";
 
 import { provideToastr } from "ngx-toastr";
-import { mockMetadataRootUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
-import { MetadataPollingSourceTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-polling-source-tab/metadata-polling-source-tab.component";
-import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
 
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
 import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { FetchStepUrl } from "@api/kamu.graphql.interface";
+
+import { mockMetadataRootUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { MetadataPollingSourceTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-polling-source-tab/metadata-polling-source-tab.component";
+import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("MetadataPollingSourceTabComponent", () => {
     let component: MetadataPollingSourceTabComponent;

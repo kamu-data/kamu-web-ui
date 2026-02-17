@@ -8,9 +8,10 @@
 import { Injectable } from "@angular/core";
 
 import * as monaco from "monaco-editor";
-import { EditorError } from "src/app/editor/models/error.model";
 
 import { MaybeUndefined } from "@interface/app.types";
+
+import { EditorError } from "src/app/editor/models/error.model";
 
 export function getMonacoNamespace(): MaybeUndefined<typeof monaco> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any

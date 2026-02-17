@@ -11,6 +11,12 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { combineLatest } from "rxjs";
 
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+
+import { BaseComponent } from "@common/components/base.component";
+import { DatasetBasicsFragment, DatasetKind, DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
+
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -18,11 +24,6 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
-
-import { BaseComponent } from "@common/components/base.component";
-import { DatasetBasicsFragment, DatasetKind, DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
-import { DatasetInfo } from "@interface/navigation.interface";
 
 export abstract class BaseMainEventComponent extends BaseComponent {
     protected modalService = inject(NgbModal);

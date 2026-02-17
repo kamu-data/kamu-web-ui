@@ -9,13 +9,13 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+
 import { CommitmentDataSectionComponent } from "src/app/query-explainer/components/commitment-data-section/commitment-data-section.component";
 import {
     mockQueryExplainerResponse,
     mockVerifyQueryResponseSuccess,
 } from "src/app/query-explainer/query-explainer.mocks";
-
-import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 
 describe("CommitmentDataSectionComponent", () => {
     let component: CommitmentDataSectionComponent;

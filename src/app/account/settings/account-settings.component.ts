@@ -13,6 +13,13 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
 import { EMPTY, Observable } from "rxjs";
 import { switchMap } from "rxjs/operators";
 
+import { BaseComponent } from "@common/components/base.component";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
+import { AccountProvider, AccountWithEmailFragment } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
 import {
     ACCOUNT_SETTINGS_MENU_ITEMS,
     AccountSettingsMenuItem,
@@ -21,13 +28,6 @@ import {
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import ProjectLinks from "src/app/project-links";
-
-import { BaseComponent } from "@common/components/base.component";
-import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import AppValues from "@common/values/app.values";
-import { AccountProvider, AccountWithEmailFragment } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
 
 @Component({
     selector: "app-settings",

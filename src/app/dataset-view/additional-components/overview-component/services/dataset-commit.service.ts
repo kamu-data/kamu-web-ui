@@ -10,10 +10,6 @@ import { inject, Injectable } from "@angular/core";
 import { Observable, of, Subject } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { NavigationService } from "src/app/services/navigation.service";
-
 import { DatasetNotFoundError, DatasetOperationError } from "@common/values/errors";
 import { DatasetApi } from "@api/dataset.api";
 import {
@@ -24,6 +20,10 @@ import {
 } from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Injectable({
     providedIn: "root",

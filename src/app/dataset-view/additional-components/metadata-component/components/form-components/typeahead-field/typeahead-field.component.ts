@@ -14,10 +14,11 @@ import { debounceTime, distinctUntilChanged, filter, map } from "rxjs/operators"
 
 import { NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
-import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+
+import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 
 @Component({
     selector: "app-typeahead-field",

@@ -13,6 +13,13 @@ import { Observable, switchMap } from "rxjs";
 
 import { Node } from "@swimlane/ngx-graph";
 import { ToastrService } from "ngx-toastr";
+
+import { BaseComponent } from "@common/components/base.component";
+import { LineageGraphComponent } from "@common/components/lineage-graph/lineage-graph.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
+
 import {
     LineageGraphNodeData,
     LineageGraphNodeKind,
@@ -22,12 +29,6 @@ import { LineageGraphBuilderService } from "src/app/dataset-view/additional-comp
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { BaseComponent } from "@common/components/base.component";
-import { LineageGraphComponent } from "@common/components/lineage-graph/lineage-graph.component";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { MaybeNull } from "@interface/app.types";
-import { DatasetInfo } from "@interface/navigation.interface";
 
 @Component({
     selector: "app-lineage",

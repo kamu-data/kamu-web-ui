@@ -11,11 +11,12 @@ import { of, throwError } from "rxjs";
 import { first } from "rxjs/operators";
 
 import { Apollo } from "apollo-angular";
-import { mockAutocompleteItems, mockSearchDatasetOverviewQuery } from "src/app/search/mock.data";
-import { SearchService } from "src/app/search/search.service";
 
 import { SearchApi } from "@api/search.api";
 import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode } from "@interface/search.interface";
+
+import { mockAutocompleteItems, mockSearchDatasetOverviewQuery } from "src/app/search/mock.data";
+import { SearchService } from "src/app/search/search.service";
 
 describe("SearchService", () => {
     let service: SearchService;

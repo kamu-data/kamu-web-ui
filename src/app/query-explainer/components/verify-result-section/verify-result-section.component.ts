@@ -9,14 +9,14 @@ import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+
 import {
     VerifyQueryError,
     VerifyQueryKindError,
     VerifyQueryOutputMismatchError,
     VerifyQueryResponse,
 } from "src/app/query-explainer/query-explainer.types";
-
-import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 @Component({
     selector: "app-verify-result-section",

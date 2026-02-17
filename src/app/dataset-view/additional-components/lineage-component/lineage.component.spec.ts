@@ -12,6 +12,9 @@ import { of } from "rxjs";
 import { Node } from "@swimlane/ngx-graph";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
 import { AccountService } from "src/app/account/account.service";
 import { LineageGraphNodeData } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 import { LineageComponent } from "src/app/dataset-view/additional-components/lineage-component/lineage.component";
@@ -20,8 +23,6 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockNode, mockNodesWithEqualNames } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("LineageComponent", () => {
     let component: LineageComponent;

@@ -11,10 +11,11 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { AccountService } from "src/app/account/account.service";
-import { PasswordAndAuthenticationTabComponent } from "src/app/account/settings/tabs/password-and-authentication-tab/password-and-authentication-tab.component";
 
 import { mockAccountDetails } from "@api/mock/auth.mock";
+
+import { AccountService } from "src/app/account/account.service";
+import { PasswordAndAuthenticationTabComponent } from "src/app/account/settings/tabs/password-and-authentication-tab/password-and-authentication-tab.component";
 
 describe("PasswordAndAuthenticationTabComponent", () => {
     let component: PasswordAndAuthenticationTabComponent;

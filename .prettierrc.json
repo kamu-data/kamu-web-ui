@@ -18,6 +18,8 @@
     "^@api/(.*)$",
     "^@interface/(.*)$",
     "",
+    "^src/(.*)$",
+    "",
     "^[./]"
   ],
   "importOrderParserPlugins": ["typescript", "decorators-legacy"],

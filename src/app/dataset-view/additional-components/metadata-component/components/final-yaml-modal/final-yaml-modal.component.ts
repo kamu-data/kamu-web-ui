@@ -11,13 +11,14 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { finalize } from "rxjs";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+
+import { BaseComponent } from "@common/components/base.component";
+import { DatasetInfo } from "@interface/navigation.interface";
+
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { YamlEditorComponent } from "src/app/editor/components/yaml-editor/yaml-editor.component";
 import { EditorModule } from "src/app/editor/editor.module";
-
-import { BaseComponent } from "@common/components/base.component";
-import { DatasetInfo } from "@interface/navigation.interface";
 
 @Component({
     selector: "app-final-yaml-modal",

@@ -13,13 +13,14 @@ import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, Router } from "@a
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+
+import { AccessTokenConnection } from "@api/kamu.graphql.interface";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
 import { accountSettingsAccessTokensResolverFn } from "src/app/account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import ProjectLinks from "src/app/project-links";
-
-import { AccessTokenConnection } from "@api/kamu.graphql.interface";
-import { mockAccountDetails } from "@api/mock/auth.mock";
 
 describe("accountSettingsAccessTokensResolverFn", () => {
     let router: Router;

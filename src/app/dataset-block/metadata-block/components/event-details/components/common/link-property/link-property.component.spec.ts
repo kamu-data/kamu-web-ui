@@ -7,9 +7,9 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { LinkPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/link-property/link-property.component";
-
 import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { LinkPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/link-property/link-property.component";
 
 describe("LinkPropertyComponent", () => {
     let component: LinkPropertyComponent;

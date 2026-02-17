@@ -12,6 +12,13 @@ import { first, Observable, of } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
+
+import { DatasetFlowType } from "@api/kamu.graphql.interface";
+import {
+    mockBufferingBatchingReactiveRule,
+    mockGetDatasetFlowTriggersBatchingQuery,
+} from "@api/mock/dataset-flow.mock";
+
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
@@ -25,12 +32,6 @@ import {
     mockReadonlyDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { DatasetFlowType } from "@api/kamu.graphql.interface";
-import {
-    mockBufferingBatchingReactiveRule,
-    mockGetDatasetFlowTriggersBatchingQuery,
-} from "@api/mock/dataset-flow.mock";
 
 describe("datasetSettingsTransformOptionsTabResolverFn", () => {
     const mockActivatedRouteSnapshot = new ActivatedRouteSnapshot();

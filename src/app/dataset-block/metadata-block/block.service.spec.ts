@@ -10,13 +10,14 @@ import { TestBed } from "@angular/core/testing";
 import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
-import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
-import { MetadataBlockInfo } from "src/app/dataset-block/metadata-block/metadata-block.types";
-import { mockDatasetInfo } from "src/app/search/mock.data";
 
 import { DatasetApi } from "@api/dataset.api";
 import { mockGetMetadataBlockQuery, TEST_BLOCK_HASH } from "@api/mock/dataset.mock";
 import { MaybeUndefined } from "@interface/app.types";
+
+import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
+import { MetadataBlockInfo } from "src/app/dataset-block/metadata-block/metadata-block.types";
+import { mockDatasetInfo } from "src/app/search/mock.data";
 
 describe("BlockService", () => {
     let service: BlockService;

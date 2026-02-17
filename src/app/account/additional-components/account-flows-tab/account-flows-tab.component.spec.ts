@@ -13,6 +13,12 @@ import { of } from "rxjs";
 import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+
+import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { FlowStatus } from "@api/kamu.graphql.interface";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+import { mockFlowsTableData } from "@api/mock/dataset-flow.mock";
+
 import { AccountService } from "src/app/account/account.service";
 import { AccountFlowsTabComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.component";
 import {
@@ -21,11 +27,6 @@ import {
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
-import { FlowStatus } from "@api/kamu.graphql.interface";
-import { mockAccountDetails } from "@api/mock/auth.mock";
-import { mockFlowsTableData } from "@api/mock/dataset-flow.mock";
 
 describe("AccountFlowsTabComponent", () => {
     let component: AccountFlowsTabComponent;

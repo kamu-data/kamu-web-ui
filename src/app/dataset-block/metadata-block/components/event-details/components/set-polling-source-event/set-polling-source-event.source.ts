@@ -5,6 +5,10 @@
  * included in the LICENSE file.
  */
 
+import { YamlEventViewerComponent } from "@common/components/yaml-event-viewer/yaml-event-viewer.component";
+import { SetPollingSourceTooltipsTexts } from "@common/tooltips/set-polling-source-tooltips.text";
+import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
+
 import { getSourcesDescriptors } from "src/app/dataset-block/metadata-block/components/event-details/components/common-sources/sources-event.source";
 import { CachePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cache-property/cache-property.component";
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
@@ -17,10 +21,6 @@ import { SimplePropertyComponent } from "src/app/dataset-block/metadata-block/co
 import { StepTypePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/step-type-property/step-type-property.component";
 import { TopicsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/topics-property/topics-property.component";
 import { EventRowDescriptorsByField } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
-
-import { YamlEventViewerComponent } from "@common/components/yaml-event-viewer/yaml-event-viewer.component";
-import { SetPollingSourceTooltipsTexts } from "@common/tooltips/set-polling-source-tooltips.text";
-import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
 
 export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.FetchStepUrl.__typename": {

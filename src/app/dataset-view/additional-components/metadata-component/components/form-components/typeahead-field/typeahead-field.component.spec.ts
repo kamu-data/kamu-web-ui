@@ -12,10 +12,10 @@ import { ActivatedRoute } from "@angular/router";
 import { interval } from "rxjs";
 import { map, take } from "rxjs/operators";
 
-import { TypeaheadFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/typeahead-field/typeahead-field.component";
-
 import { getInputElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
+
+import { TypeaheadFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/typeahead-field/typeahead-field.component";
 
 describe("TypeaheadFieldComponent", () => {
     let component: TypeaheadFieldComponent;

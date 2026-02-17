@@ -8,13 +8,13 @@
 import { DatePipe, NgIf, TitleCasePipe, UpperCasePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
-import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
-import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
-
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { FlowOutcomeDataFragment, FlowSummaryDataFragment } from "@api/kamu.graphql.interface";
+
+import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
+import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
 
 @Component({
     selector: "app-flow-details-summary-tab",

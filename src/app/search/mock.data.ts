@@ -7,24 +7,6 @@
 
 import { Node } from "@swimlane/ngx-graph";
 import { GraphQLError } from "graphql";
-import {
-    LineageGraphDatasetNodeObject,
-    LineageGraphNodeKind,
-    LineageNodeAccess,
-} from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
-import {
-    AddPollingSourceEditFormType,
-    EventTimeSourceKind,
-    FetchKind,
-    MergeKind,
-    PrepareKind,
-    PreprocessStepValue,
-    ReadKind,
-} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
-import { AddPushSourceEditFormType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
-import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import { SqlQueryExplanationResponse } from "src/app/query-explainer/query-explainer.types";
-import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
 
 import { DynamicTableColumnClassEnum } from "@common/components/dynamic-table/dynamic-table.interface";
 import { OdfDefaultValues } from "@common/values/app-odf-default.values";
@@ -60,6 +42,25 @@ import { TEST_AVATAR_URL } from "@api/mock/auth.mock";
 import { OdfTypes } from "@interface/dataset-schema.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
 import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode, TypeNames } from "@interface/search.interface";
+
+import {
+    LineageGraphDatasetNodeObject,
+    LineageGraphNodeKind,
+    LineageNodeAccess,
+} from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
+import {
+    AddPollingSourceEditFormType,
+    EventTimeSourceKind,
+    FetchKind,
+    MergeKind,
+    PrepareKind,
+    PreprocessStepValue,
+    ReadKind,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { AddPushSourceEditFormType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
+import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { SqlQueryExplanationResponse } from "src/app/query-explainer/query-explainer.types";
+import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
 
 export const mockPageBasedInfo: PageBasedInfo = {
     currentPage: 1,

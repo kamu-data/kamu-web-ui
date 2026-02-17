@@ -10,12 +10,6 @@ import { inject, Injectable } from "@angular/core";
 
 import { catchError, finalize, first, Observable, of, Subject, switchMap, tap } from "rxjs";
 
-import { AppConfigService } from "src/app/app-config.service";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { LocalStorageService } from "src/app/services/local-storage.service";
-import { NavigationService } from "src/app/services/navigation.service";
-import { ProtocolsService } from "src/app/services/protocols.service";
-
 import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ondestroy.adapter";
 import { FileUploadError } from "@common/values/errors";
 import { DatasetBasicsFragment, DatasetEndpoints } from "@api/kamu.graphql.interface";
@@ -26,6 +20,12 @@ import {
     UploadPrepareResponse,
 } from "@interface/ingest-via-file-upload.types";
 import { DatasetInfo } from "@interface/navigation.interface";
+
+import { AppConfigService } from "src/app/app-config.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { LocalStorageService } from "src/app/services/local-storage.service";
+import { NavigationService } from "src/app/services/navigation.service";
+import { ProtocolsService } from "src/app/services/protocols.service";
 
 @Injectable({
     providedIn: "root",

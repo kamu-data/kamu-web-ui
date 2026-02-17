@@ -8,9 +8,9 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
 
-import { NumberFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/number-field/number-field.component";
-
 import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { NumberFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/number-field/number-field.component";
 
 describe("NumberFieldComponent", () => {
     let component: NumberFieldComponent;

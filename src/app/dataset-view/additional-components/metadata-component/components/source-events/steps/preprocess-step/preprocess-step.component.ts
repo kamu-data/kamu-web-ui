@@ -10,6 +10,10 @@ import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit
 import { FormsModule } from "@angular/forms";
 
 import { NGX_MONACO_EDITOR_CONFIG } from "ngx-monaco-editor-v2";
+
+import { BaseComponent } from "@common/components/base.component";
+import { MaybeNull } from "@interface/app.types";
+
 import { EngineSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine-section.component";
 import { QueriesSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/queries-section/queries-section.component";
 import {
@@ -17,9 +21,6 @@ import {
     PreprocessStepValue,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { EditPollingSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/edit-polling-source.service";
-
-import { BaseComponent } from "@common/components/base.component";
-import { MaybeNull } from "@interface/app.types";
 
 @Component({
     selector: "app-preprocess-step",

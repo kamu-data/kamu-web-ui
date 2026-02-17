@@ -13,13 +13,6 @@ import { first, of, Subscription, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { AppConfigService } from "src/app/app-config.service";
-import { EthereumGatewayFactory } from "src/app/auth/login/ethereum/ethereum.gateway.factory";
-import { MockEthereumGateway, MockEthereumGatewayFactory } from "src/app/auth/login/ethereum/mock.ethereum.gateway";
-import { LoginService } from "src/app/auth/login/login.service";
-import { LocalStorageService } from "src/app/services/local-storage.service";
-import { NavigationService } from "src/app/services/navigation.service";
-import { SessionStorageService } from "src/app/services/session-storage.service";
 
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { RedirectUrlTestModule } from "@common/modules/redirect-url-test.module";
@@ -35,6 +28,14 @@ import {
     TEST_PASSWORD,
 } from "@api/mock/auth.mock";
 import { MaybeUndefined } from "@interface/app.types";
+
+import { AppConfigService } from "src/app/app-config.service";
+import { EthereumGatewayFactory } from "src/app/auth/login/ethereum/ethereum.gateway.factory";
+import { MockEthereumGateway, MockEthereumGatewayFactory } from "src/app/auth/login/ethereum/mock.ethereum.gateway";
+import { LoginService } from "src/app/auth/login/login.service";
+import { LocalStorageService } from "src/app/services/local-storage.service";
+import { NavigationService } from "src/app/services/navigation.service";
+import { SessionStorageService } from "src/app/services/session-storage.service";
 
 describe("LoginService", () => {
     let service: LoginService;

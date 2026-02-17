@@ -15,11 +15,6 @@ import { RouterLink, RouterOutlet } from "@angular/router";
 import { Observable } from "rxjs";
 import { map, shareReplay } from "rxjs/operators";
 
-import { AccountTabs } from "src/app/account/account.constants";
-import { AccountService } from "src/app/account/account.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import ProjectLinks from "src/app/project-links";
-
 import { ModalService } from "@common/components/modal/modal.service";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
@@ -29,6 +24,11 @@ import AppValues from "@common/values/app.values";
 import { AccountNotFoundError } from "@common/values/errors";
 import { AccountFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
+
+import { AccountTabs } from "src/app/account/account.constants";
+import { AccountService } from "src/app/account/account.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-account",

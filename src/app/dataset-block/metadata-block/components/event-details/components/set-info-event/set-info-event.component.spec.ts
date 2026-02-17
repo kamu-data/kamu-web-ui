@@ -7,10 +7,10 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
 import { SetInfoEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/set-info-event/set-info-event.component";
 import { mockSetInfo } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
-
-import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("SetInfoEventComponent", () => {
     let component: SetInfoEventComponent;

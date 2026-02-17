@@ -12,16 +12,17 @@ import { MatIconModule } from "@angular/material/icon";
 import { catchError, from, of, take } from "rxjs";
 
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
-import { EditWatermarkModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
-import { NavigationService } from "src/app/services/navigation.service";
 
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
 import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNullOrUndefined } from "@interface/app.types";
+
+import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { EditWatermarkModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-metadata-watermark-tab",

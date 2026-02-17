@@ -22,12 +22,6 @@ import {
 import { MatIconModule } from "@angular/material/icon";
 
 import { GraphModule, Node } from "@swimlane/ngx-graph";
-import {
-    LineageGraph,
-    LineageGraphNodeKind,
-    LineageNodeAccess,
-} from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
-import { SessionStorageService } from "src/app/services/session-storage.service";
 
 import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
 import { LINEAGE_CONFIG, LineageGraphConfig } from "@common/components/lineage-graph/ligeage-graph.settings";
@@ -37,6 +31,13 @@ import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 import AppValues from "@common/values/app.values";
 import { DatasetKind, DatasetLineageBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "@interface/app.types";
+
+import {
+    LineageGraph,
+    LineageGraphNodeKind,
+    LineageNodeAccess,
+} from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
+import { SessionStorageService } from "src/app/services/session-storage.service";
 
 @Component({
     selector: "app-lineage-graph",

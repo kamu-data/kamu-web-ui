@@ -12,10 +12,6 @@ import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { differenceInSeconds } from "date-fns";
 import { Network } from "ethers";
-import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
-import { SliceUnit } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
-import { SubscribedEventType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
-import { JsonFormValidators } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 
 import {
     DynamicTableColumnClassEnum,
@@ -24,6 +20,11 @@ import {
 import { convertSecondsToHumanReadableFormat } from "@common/helpers/app.helpers";
 import { DataQueryResultSuccessViewFragment, MetadataBlockFragment, TimeUnit } from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "@interface/app.types";
+
+import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
+import { SliceUnit } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
+import { SubscribedEventType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
+import { JsonFormValidators } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";

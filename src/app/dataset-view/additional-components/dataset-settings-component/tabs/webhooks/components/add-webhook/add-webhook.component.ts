@@ -13,6 +13,14 @@ import { MatDividerModule } from "@angular/material/divider";
 import { BehaviorSubject, map, Observable } from "rxjs";
 
 import { NgSelectModule } from "@ng-select/ng-select";
+
+import { BaseComponent } from "@common/components/base.component";
+import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
+import { DatasetBasicsFragment, WebhookSubscriptionInput } from "@api/kamu.graphql.interface";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+
 import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
 import {
     CreateWebhookSubscriptionSuccess,
@@ -22,13 +30,6 @@ import {
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { WebhooksService } from "src/app/services/webhooks.service";
-
-import { BaseComponent } from "@common/components/base.component";
-import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import AppValues from "@common/values/app.values";
-import { DatasetBasicsFragment, WebhookSubscriptionInput } from "@api/kamu.graphql.interface";
-import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 @Component({
     selector: "app-add-webhook",

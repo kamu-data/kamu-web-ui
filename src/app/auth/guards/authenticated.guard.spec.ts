@@ -8,6 +8,7 @@
 import { TestBed } from "@angular/core/testing";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
+
 import { AuthenticatedGuard } from "src/app/auth/guards/authenticated.guard";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 

@@ -11,10 +11,6 @@ import { first, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
-import { AccountService } from "src/app/account/account.service";
-import { CardsStrategyResult } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
-import { ChangeAccountUsernameResult } from "src/app/account/settings/account-settings.constants";
-import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 
 import { AccountApi } from "@api/account.api";
 import { DatasetApi } from "@api/dataset.api";
@@ -49,6 +45,11 @@ import { mockAccountDetails, TEST_LOGIN, TEST_PAGE_NUMBER } from "@api/mock/auth
 import { mockDatasetsByAccountNameQuery } from "@api/mock/dataset.mock";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 import { DatasetsAccountResponse } from "@interface/dataset.interface";
+
+import { AccountService } from "src/app/account/account.service";
+import { CardsStrategyResult } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { ChangeAccountUsernameResult } from "src/app/account/settings/account-settings.constants";
+import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 
 describe("AccountService", () => {
     let service: AccountService;

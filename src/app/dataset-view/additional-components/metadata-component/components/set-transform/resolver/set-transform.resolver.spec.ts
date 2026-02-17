@@ -11,12 +11,13 @@ import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from "@angu
 import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
-import { EditSetTransformService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/edit-set-transform..service";
-import { setTransformResolverFn } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/resolver/set-transform.resolver";
-import ProjectLinks from "src/app/project-links";
 
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 import { MaybeNull } from "@interface/app.types";
+
+import { EditSetTransformService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/edit-set-transform..service";
+import { setTransformResolverFn } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/resolver/set-transform.resolver";
+import ProjectLinks from "src/app/project-links";
 
 describe("setTransformResolverFn", () => {
     let editService: EditSetTransformService;

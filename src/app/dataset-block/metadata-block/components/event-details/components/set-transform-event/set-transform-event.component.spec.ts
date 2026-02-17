@@ -8,11 +8,12 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { SetTransformEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/set-transform-event/set-transform-event.component";
-import { mockSetTransform } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { SetTransformEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/set-transform-event/set-transform-event.component";
+import { mockSetTransform } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
 describe("SetTransformEventComponent", () => {
     let component: SetTransformEventComponent;

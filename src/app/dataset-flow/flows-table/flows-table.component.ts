@@ -30,18 +30,6 @@ import { RouterLink } from "@angular/router";
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
 import { ToastrService } from "ngx-toastr";
-import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
-import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
-import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
-import {
-    CancelFlowArgs,
-    DROPDOWN_DATASET_SETTINGS,
-    DROPDOWN_STATUS_SETTINGS,
-    FlowsTableFiltersOptions,
-    FlowsTableOptions,
-} from "src/app/dataset-flow/flows-table/flows-table.types";
-import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
-import ProjectLinks from "src/app/project-links";
 
 import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
@@ -58,6 +46,19 @@ import {
     FlowSummaryDataWithTriggerFragment,
 } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
+
+import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
+import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
+import {
+    CancelFlowArgs,
+    DROPDOWN_DATASET_SETTINGS,
+    DROPDOWN_STATUS_SETTINGS,
+    FlowsTableFiltersOptions,
+    FlowsTableOptions,
+} from "src/app/dataset-flow/flows-table/flows-table.types";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-flows-table",

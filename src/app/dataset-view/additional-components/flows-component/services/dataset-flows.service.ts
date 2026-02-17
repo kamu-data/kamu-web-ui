@@ -10,8 +10,6 @@ import { inject, Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
 
 import { ToastrService } from "ngx-toastr";
-import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
-import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 
 import { DatasetFlowApi } from "@api/dataset-flow.api";
 import {
@@ -38,6 +36,9 @@ import {
     GetFlowByIdQuery,
 } from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "@interface/app.types";
+
+import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 
 @Injectable({
     providedIn: "root",

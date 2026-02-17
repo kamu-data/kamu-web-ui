@@ -16,12 +16,6 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 
-import { AccountSettingsTabs, TokenCreateStep } from "src/app/account/settings/account-settings.constants";
-import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
-import { CreateTokenFormType } from "src/app/account/settings/tabs/access-tokens-tab/access-tokens-tab.types";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { NavigationService } from "src/app/services/navigation.service";
-
 import { BaseComponent } from "@common/components/base.component";
 import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
 import { ModalService } from "@common/components/modal/modal.service";
@@ -32,6 +26,12 @@ import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { AccessTokenConnection, CreatedAccessToken, PageBasedInfo, ViewAccessToken } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
+
+import { AccountSettingsTabs, TokenCreateStep } from "src/app/account/settings/account-settings.constants";
+import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
+import { CreateTokenFormType } from "src/app/account/settings/tabs/access-tokens-tab/access-tokens-tab.types";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-access-tokens-tab",

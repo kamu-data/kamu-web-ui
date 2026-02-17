@@ -8,10 +8,10 @@
 import { inject } from "@angular/core";
 import { CanActivateFn } from "@angular/router";
 
+import { AccountProvider } from "@api/kamu.graphql.interface";
+
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { AccountProvider } from "@api/kamu.graphql.interface";
 
 export const accountPasswordProviderGuard: CanActivateFn = () => {
     const loggedUserService = inject(LoggedUserService);

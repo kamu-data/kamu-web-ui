@@ -7,6 +7,8 @@
 
 import { Routes } from "@angular/router";
 
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+
 import { MetadataComponent } from "src/app/dataset-view/additional-components/metadata-component/metadata.component";
 import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
 import { datasetMetadataTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/resolver/dataset-metadata-tab.resolver";
@@ -24,8 +26,6 @@ import { metadataTransformationTabResolverFn } from "src/app/dataset-view/additi
 import { MetadataWatermarkTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-watermark-tab/metadata-watermark-tab.component";
 import { metadataWatermarkTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-watermark-tab/resolvers/metadata-watermark-tab.resolver";
 import ProjectLinks from "src/app/project-links";
-
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 export const METADATA_ROUTES: Routes = [
     {

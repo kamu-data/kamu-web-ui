@@ -18,6 +18,21 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { MarkdownModule } from "ngx-markdown";
 import { provideToastr } from "ngx-toastr";
+
+import {
+    emitClickOnElementByDataTestId,
+    findElementByDataTestId,
+    registerMatSvgIcons,
+} from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import AppValues from "@common/values/app.values";
+import {
+    AccountProvider,
+    DatasetCurrentInfoFragment,
+    DatasetKind,
+    DatasetOverviewFragment,
+} from "@api/kamu.graphql.interface";
+
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockSetLicense } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 import {
@@ -35,20 +50,6 @@ import {
     mockPublicDatasetVisibility,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import {
-    emitClickOnElementByDataTestId,
-    findElementByDataTestId,
-    registerMatSvgIcons,
-} from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
-import AppValues from "@common/values/app.values";
-import {
-    AccountProvider,
-    DatasetCurrentInfoFragment,
-    DatasetKind,
-    DatasetOverviewFragment,
-} from "@api/kamu.graphql.interface";
 
 describe("OverviewComponent", () => {
     let component: OverviewComponent;

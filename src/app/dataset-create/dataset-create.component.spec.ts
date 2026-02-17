@@ -13,13 +13,14 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 import { of } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { DatasetCreateComponent } from "src/app/dataset-create/dataset-create.component";
-import { DatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 
 import { getInputElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockAccountDetails } from "@api/mock/auth.mock";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DatasetCreateComponent } from "src/app/dataset-create/dataset-create.component";
+import { DatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 
 describe("DatasetCreateComponent", () => {
     let component: DatasetCreateComponent;

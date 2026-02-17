@@ -10,13 +10,13 @@ import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
 import { combineLatest, map, switchMap } from "rxjs";
 
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
+
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import ProjectLinks from "src/app/project-links";
-
-import { MaybeNull } from "@interface/app.types";
-import { DatasetInfo } from "@interface/navigation.interface";
 
 export const flowDetailsResolverFn: ResolveFn<MaybeNull<DatasetFlowByIdResponse>> = (route: ActivatedRouteSnapshot) => {
     const datasetService = inject(DatasetService);

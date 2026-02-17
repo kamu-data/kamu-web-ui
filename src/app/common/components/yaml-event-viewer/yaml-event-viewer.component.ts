@@ -8,6 +8,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { Highlight } from "ngx-highlightjs";
+
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 
 @Component({

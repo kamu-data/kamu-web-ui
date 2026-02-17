@@ -20,14 +20,14 @@ import {
 } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
+import { BaseComponent } from "@common/components/base.component";
+import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
+
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 import {
     EventRow,
     EventSection,
 } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
-
-import { BaseComponent } from "@common/components/base.component";
-import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
 
 @Component({
     selector: "app-dynamic-base-event",

@@ -9,8 +9,6 @@ import { inject, Injectable } from "@angular/core";
 
 import { map, Observable, Subject } from "rxjs";
 
-import { AppConfigService } from "src/app/app-config.service";
-
 import {
     DatasetSearchOverviewFragment,
     SearchDatasetsOverviewQuery,
@@ -18,6 +16,8 @@ import {
 } from "@api/kamu.graphql.interface";
 import { SearchApi } from "@api/search.api";
 import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode } from "@interface/search.interface";
+
+import { AppConfigService } from "src/app/app-config.service";
 
 @Injectable({ providedIn: "root" })
 export class SearchService {

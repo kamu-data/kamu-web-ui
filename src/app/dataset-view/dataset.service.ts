@@ -11,12 +11,6 @@ import { combineLatest, Observable, of, ReplaySubject, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 
 import { APOLLO_OPTIONS } from "apollo-angular";
-import {
-    DatasetHistoryUpdate,
-    MetadataSchemaUpdate,
-    OverviewUpdate,
-} from "src/app/dataset-view/dataset.subscriptions.interface";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 
 import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
 import { resetCacheHelper } from "@common/helpers/apollo-cache.helper";
@@ -52,6 +46,13 @@ import { MaybeNull } from "@interface/app.types";
 import { DatasetSchema } from "@interface/dataset-schema.interface";
 import { DatasetLineageNode } from "@interface/dataset.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
+
+import {
+    DatasetHistoryUpdate,
+    MetadataSchemaUpdate,
+    OverviewUpdate,
+} from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 
 @Injectable({ providedIn: "root" })
 export class DatasetService {

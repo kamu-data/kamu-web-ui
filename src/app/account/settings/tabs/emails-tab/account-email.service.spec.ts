@@ -12,7 +12,6 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
-import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 
 import { AccountApi } from "@api/account.api";
 import {
@@ -22,6 +21,8 @@ import {
 } from "@api/mock/account.mock";
 import { TEST_ACCOUNT_EMAIL } from "@api/mock/auth.mock";
 import { TEST_ACCOUNT_NAME } from "@api/mock/dataset.mock";
+
+import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 
 describe("AccountEmailService", () => {
     let service: AccountEmailService;

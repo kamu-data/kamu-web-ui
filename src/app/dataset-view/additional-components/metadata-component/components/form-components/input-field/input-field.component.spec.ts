@@ -9,12 +9,12 @@ import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 
-import { InputFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/input-field/input-field.component";
-
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { dispatchInputEvent, getInputElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
+
+import { InputFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/input-field/input-field.component";
 
 describe("InputFieldComponent", () => {
     let component: InputFieldComponent;

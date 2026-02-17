@@ -13,14 +13,6 @@ import { MatDividerModule } from "@angular/material/divider";
 import { ParamMap, Router } from "@angular/router";
 
 import { ToastrService } from "ngx-toastr";
-import { AccountTabs } from "src/app/account/account.constants";
-import { AccountService } from "src/app/account/account.service";
-import { ChangeAccountUsernameResult } from "src/app/account/settings/account-settings.constants";
-import { ChangeUsernameFormType } from "src/app/account/settings/tabs/account-tab/account-tab.types";
-import { AdminChangePasswordComponent } from "src/app/account/settings/tabs/password-and-authentication-tab/components/admin-change-password/admin-change-password.component";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import ProjectLinks from "src/app/project-links";
-import { NavigationService } from "src/app/services/navigation.service";
 
 import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
@@ -30,6 +22,15 @@ import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { AccountWithEmailFragment } from "@api/kamu.graphql.interface";
 import { MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
+
+import { AccountTabs } from "src/app/account/account.constants";
+import { AccountService } from "src/app/account/account.service";
+import { ChangeAccountUsernameResult } from "src/app/account/settings/account-settings.constants";
+import { ChangeUsernameFormType } from "src/app/account/settings/tabs/account-tab/account-tab.types";
+import { AdminChangePasswordComponent } from "src/app/account/settings/tabs/password-and-authentication-tab/components/admin-change-password/admin-change-password.component";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import ProjectLinks from "src/app/project-links";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-account-tab",

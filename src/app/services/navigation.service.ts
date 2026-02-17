@@ -8,6 +8,16 @@
 import { inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 
+import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { FlowStatus } from "@api/kamu.graphql.interface";
+import {
+    DatasetInfo,
+    DatasetNavigationParams,
+    FlowDetailsNavigationParams,
+    MetadataBlockNavigationParams,
+    WebhooksNavigationParams,
+} from "@interface/navigation.interface";
+
 import { AccountTabs } from "src/app/account/account.constants";
 import {
     AccountFlowsNav,
@@ -19,16 +29,6 @@ import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dat
 import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
-
-import { promiseWithCatch } from "@common/helpers/app.helpers";
-import { FlowStatus } from "@api/kamu.graphql.interface";
-import {
-    DatasetInfo,
-    DatasetNavigationParams,
-    FlowDetailsNavigationParams,
-    MetadataBlockNavigationParams,
-    WebhooksNavigationParams,
-} from "@interface/navigation.interface";
 
 @Injectable({ providedIn: "root" })
 export class NavigationService {

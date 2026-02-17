@@ -13,6 +13,9 @@ import { of } from "rxjs";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
+
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DataAccessModalComponent } from "src/app/data-access-panel/data-access-modal/data-access-modal.component";
@@ -20,8 +23,6 @@ import { DataAccessTabsEnum } from "src/app/data-access-panel/data-access-modal/
 import { mockDatasetEndPoints } from "src/app/data-access-panel/data-access-panel-mock.data";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { ProtocolsService } from "src/app/services/protocols.service";
-
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 
 describe("DataAccessModalComponent", () => {
     let component: DataAccessModalComponent;

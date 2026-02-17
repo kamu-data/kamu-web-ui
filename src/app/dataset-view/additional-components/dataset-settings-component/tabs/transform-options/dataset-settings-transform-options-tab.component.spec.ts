@@ -12,6 +12,11 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
+
+import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { FlowTriggerBreakingChangeRule, TimeUnit } from "@api/kamu.graphql.interface";
+
 import {
     BatchingRuleType,
     FlowTriggerStopPolicyType,
@@ -23,10 +28,6 @@ import { DatasetSettingsTransformOptionsTabComponent } from "src/app/dataset-vie
 import { DatasetSettingsTransformOptionsTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.data";
 import { TransformTriggerFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.harness";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-
-import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
-import { FlowTriggerBreakingChangeRule, TimeUnit } from "@api/kamu.graphql.interface";
 
 describe("DatasetSettingsTransformOptionsTabComponent", () => {
     let component: DatasetSettingsTransformOptionsTabComponent;

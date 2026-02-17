@@ -10,13 +10,14 @@ import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 
 import { NgSelectModule } from "@ng-select/ng-select";
+
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { ErrorSets } from "@common/directives/form-validation-errors.types";
+
 import {
     SubscribedEventType,
     WebhookSubscriptionFormType,
 } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
-
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
-import { ErrorSets } from "@common/directives/form-validation-errors.types";
 
 @Component({
     selector: "app-webhook-form",

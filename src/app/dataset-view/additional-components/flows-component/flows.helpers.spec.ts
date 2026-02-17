@@ -5,14 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { RangeLastAttempt } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
-import {
-    DatasetFlowBadgeHelpers,
-    DatasetFlowsBadgeStyle,
-    DatasetFlowsBadgeTexts,
-    lastTimeRangeHelper,
-    nextTimeRangeHelper,
-} from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import timekeeper from "timekeeper";
 
 import {
@@ -24,6 +16,15 @@ import {
     mockFlowProcessSummaryDataFragment,
     mockFlowProcessSummaryDataFragmentNoPolicy,
 } from "@api/mock/dataset-flow.mock";
+
+import { RangeLastAttempt } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import {
+    DatasetFlowBadgeHelpers,
+    DatasetFlowsBadgeStyle,
+    DatasetFlowsBadgeTexts,
+    lastTimeRangeHelper,
+    nextTimeRangeHelper,
+} from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 
 describe("Flows badge styles helper", () => {
     [

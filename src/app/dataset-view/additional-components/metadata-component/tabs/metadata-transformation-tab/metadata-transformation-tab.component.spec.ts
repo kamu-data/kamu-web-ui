@@ -9,6 +9,8 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+
 import {
     mockMetadataDerivedUpdate,
     mockOverviewDataUpdate,
@@ -17,8 +19,6 @@ import {
 import { MetadataTransformationTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-transformation-tab/metadata-transformation-tab.component";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 
 describe("MetadataTransformationTabComponent", () => {
     let component: MetadataTransformationTabComponent;

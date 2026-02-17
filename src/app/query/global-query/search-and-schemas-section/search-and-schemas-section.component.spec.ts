@@ -13,17 +13,18 @@ import { of } from "rxjs";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { mockGetDatasetSchemaQuery } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { SearchAndSchemasSectionComponent } from "src/app/query/global-query/search-and-schemas-section/search-and-schemas-section.component";
-import { mockDatasetBasicsDerivedFragment, mockSqlQueryResponseState } from "src/app/search/mock.data";
-import { SqlQueryService } from "src/app/services/sql-query.service";
 
 import { dispatchInputEvent, emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { SearchApi } from "@api/search.api";
 import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface";
+
+import { mockGetDatasetSchemaQuery } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { SearchAndSchemasSectionComponent } from "src/app/query/global-query/search-and-schemas-section/search-and-schemas-section.component";
+import { mockDatasetBasicsDerivedFragment, mockSqlQueryResponseState } from "src/app/search/mock.data";
+import { SqlQueryService } from "src/app/services/sql-query.service";
 
 describe("SearchAndSchemasSectionComponent", () => {
     let component: SearchAndSchemasSectionComponent;

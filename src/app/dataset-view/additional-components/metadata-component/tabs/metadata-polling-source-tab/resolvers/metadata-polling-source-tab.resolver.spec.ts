@@ -11,6 +11,9 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular
 import { Observable } from "rxjs";
 
 import { Apollo } from "apollo-angular";
+
+import { MaybeNull } from "@interface/app.types";
+
 import {
     mockMetadataDerivedUpdate,
     mockMetadataRootUpdate,
@@ -25,8 +28,6 @@ import {
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { MaybeNull } from "@interface/app.types";
 
 describe("metadataPollingSourceTabResolver", () => {
     let datasetService: DatasetService;

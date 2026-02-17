@@ -10,15 +10,6 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
 
-import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
-import {
-    DatasetFlowBadgeHelpers,
-    DatasetFlowsBadgeStyle,
-    DatasetFlowsBadgeTexts,
-    webhooksStateMapper,
-} from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-
 import { DataHelpers } from "@common/helpers/data.helpers";
 import AppValues from "@common/values/app.values";
 import {
@@ -27,6 +18,15 @@ import {
     FlowProcessEffectiveState,
     FlowProcessSummary,
 } from "@api/kamu.graphql.interface";
+
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import {
+    DatasetFlowBadgeHelpers,
+    DatasetFlowsBadgeStyle,
+    DatasetFlowsBadgeTexts,
+    webhooksStateMapper,
+} from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-webhook-flow-process-card",

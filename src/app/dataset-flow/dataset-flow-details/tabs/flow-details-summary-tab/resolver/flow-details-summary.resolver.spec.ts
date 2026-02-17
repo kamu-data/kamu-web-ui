@@ -11,11 +11,12 @@ import { ActivatedRouteSnapshot, Data, ResolveFn, RouterStateSnapshot } from "@a
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
-import { flowDetailsSummaryResolverFn } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-summary-tab/resolver/flow-details-summary.resolver";
 
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
+
+import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { flowDetailsSummaryResolverFn } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-summary-tab/resolver/flow-details-summary.resolver";
 
 describe("flowDetailsSummaryResolverFn", () => {
     const mockState = {} as RouterStateSnapshot;

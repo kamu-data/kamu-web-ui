@@ -12,7 +12,6 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
-import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
 
 import { AccessTokenApi } from "@api/access-token.api";
 import { AccessTokenConnection, CreatedAccessToken } from "@api/kamu.graphql.interface";
@@ -29,6 +28,8 @@ import {
 } from "@api/mock/access-token.mock";
 import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
 import { MaybeNull } from "@interface/app.types";
+
+import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
 
 describe("AccessTokenService", () => {
     let service: AccessTokenService;

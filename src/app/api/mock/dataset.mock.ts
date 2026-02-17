@@ -6,17 +6,6 @@
  */
 
 import { Node } from "@swimlane/ngx-graph";
-import {
-    LineageGraphDatasetNodeObject,
-    LineageGraphNodeData,
-    LineageGraphNodeKind,
-    LineageNodeAccess,
-} from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
-import {
-    mockFullPowerDatasetPermissionsFragment,
-    mockOwnerFieldsWithAvatar,
-    mockPublicDatasetVisibility,
-} from "src/app/search/mock.data";
 
 import {
     CompareChainsStatus,
@@ -35,6 +24,18 @@ import {
 } from "@api/kamu.graphql.interface";
 import { TEST_LOGIN } from "@api/mock/auth.mock";
 import { DatasetsAccountResponse } from "@interface/dataset.interface";
+
+import {
+    LineageGraphDatasetNodeObject,
+    LineageGraphNodeData,
+    LineageGraphNodeKind,
+    LineageNodeAccess,
+} from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
+import {
+    mockFullPowerDatasetPermissionsFragment,
+    mockOwnerFieldsWithAvatar,
+    mockPublicDatasetVisibility,
+} from "src/app/search/mock.data";
 
 export const TEST_DATASET_ID = "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7";
 export const TEST_DATASET_NAME = "test-dataset";

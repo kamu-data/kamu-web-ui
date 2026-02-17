@@ -9,6 +9,13 @@ import { TestBed } from "@angular/core/testing";
 import { Router } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
 
+import { FlowStatus } from "@api/kamu.graphql.interface";
+import {
+    DatasetNavigationParams,
+    FlowDetailsNavigationParams,
+    MetadataBlockNavigationParams,
+} from "@interface/navigation.interface";
+
 import { AccountTabs } from "src/app/account/account.constants";
 import {
     AccountFlowsNav,
@@ -19,13 +26,6 @@ import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/datas
 import ProjectLinks from "src/app/project-links";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { FlowStatus } from "@api/kamu.graphql.interface";
-import {
-    DatasetNavigationParams,
-    FlowDetailsNavigationParams,
-    MetadataBlockNavigationParams,
-} from "@interface/navigation.interface";
 
 describe("NavigationService", () => {
     let service: NavigationService;

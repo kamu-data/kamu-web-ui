@@ -11,6 +11,9 @@ import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapsh
 import { Observable } from "rxjs";
 
 import { Apollo } from "apollo-angular";
+
+import { TEST_ACCOUNT_NAME } from "@api/mock/dataset.mock";
+
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { datasetFlowsTabResolverFn } from "src/app/dataset-view/additional-components/flows-component/resolver/dataset-flows-tab.resolver";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -18,8 +21,6 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-
-import { TEST_ACCOUNT_NAME } from "@api/mock/dataset.mock";
 
 describe("datasetFlowsTabResolverFn", () => {
     let datasetService: DatasetService;

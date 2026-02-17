@@ -10,9 +10,9 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { MatButtonModule } from "@angular/material/button";
 import { MatStepperModule } from "@angular/material/stepper";
 
-import { SourcesSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
-
 import { MaybeNull } from "@interface/app.types";
+
+import { SourcesSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
 
 @Component({
     selector: "app-stepper-navigation",

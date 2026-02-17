@@ -17,15 +17,16 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angul
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { EditWatermarkModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
-import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
-import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import timekeeper from "timekeeper";
 
 import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockAccountDetails } from "@api/mock/auth.mock";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { EditWatermarkModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 
 describe("EditWatermarkModalComponent", () => {
     let component: EditWatermarkModalComponent;

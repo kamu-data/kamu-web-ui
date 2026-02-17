@@ -7,9 +7,9 @@
 
 import { ResolveFn } from "@angular/router";
 
-import { accountSettingsEmailResolverFn } from "src/app/account/settings/tabs/emails-tab/resolver/account-settings-email.resolver";
-
 import { AccountWithEmailFragment } from "@api/kamu.graphql.interface";
+
+import { accountSettingsEmailResolverFn } from "src/app/account/settings/tabs/emails-tab/resolver/account-settings-email.resolver";
 
 export const accountSettingsAccountResolverFn: ResolveFn<AccountWithEmailFragment> = (state, route) => {
     return accountSettingsEmailResolverFn(state, route);

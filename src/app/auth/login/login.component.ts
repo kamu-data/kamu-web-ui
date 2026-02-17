@@ -14,14 +14,6 @@ import { ActivatedRoute, Params } from "@angular/router";
 
 import { Observable, shareReplay } from "rxjs";
 
-import { AppConfigService } from "src/app/app-config.service";
-import { LoginMethodsService } from "src/app/auth/login-methods.service";
-import { LoginFormType } from "src/app/auth/login/login.component.model";
-import { LoginService } from "src/app/auth/login/login.service";
-import ProjectLinks from "src/app/project-links";
-import { LocalStorageService } from "src/app/services/local-storage.service";
-import { NavigationService } from "src/app/services/navigation.service";
-
 import { BaseComponent } from "@common/components/base.component";
 import { SpinnerComponent } from "@common/components/spinner/spinner/spinner.component";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
@@ -29,6 +21,14 @@ import AppValues from "@common/values/app.values";
 import { PasswordLoginCredentials } from "@api/auth.api.model";
 import { AccountProvider } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+
+import { AppConfigService } from "src/app/app-config.service";
+import { LoginMethodsService } from "src/app/auth/login-methods.service";
+import { LoginFormType } from "src/app/auth/login/login.component.model";
+import { LoginService } from "src/app/auth/login/login.service";
+import ProjectLinks from "src/app/project-links";
+import { LocalStorageService } from "src/app/services/local-storage.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-login",

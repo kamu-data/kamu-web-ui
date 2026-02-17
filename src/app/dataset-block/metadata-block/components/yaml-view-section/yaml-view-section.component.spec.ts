@@ -9,12 +9,13 @@ import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { MarkdownModule } from "ngx-markdown";
-import { YamlViewSectionComponent } from "src/app/dataset-block/metadata-block/components/yaml-view-section/yaml-view-section.component";
 
 import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { metadataBlockSetVocab } from "@common/helpers/data.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
+
+import { YamlViewSectionComponent } from "src/app/dataset-block/metadata-block/components/yaml-view-section/yaml-view-section.component";
 
 describe("YamlViewSectionComponent", () => {
     let component: YamlViewSectionComponent;

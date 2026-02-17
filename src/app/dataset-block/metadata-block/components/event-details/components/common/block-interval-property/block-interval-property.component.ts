@@ -8,12 +8,12 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
-import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-
 import { DisplayHashComponent } from "@common/components/display-hash/display-hash.component";
 import { DatasetByIdQuery } from "@api/kamu.graphql.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
+
+import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
 
 @Component({
     selector: "app-block-interval-property",

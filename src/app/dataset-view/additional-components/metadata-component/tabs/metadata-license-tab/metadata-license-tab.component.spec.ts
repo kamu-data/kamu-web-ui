@@ -12,6 +12,10 @@ import { MatIconModule } from "@angular/material/icon";
 
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
+
+import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
 import {
     mockMetadataDerivedUpdate,
     mockOverviewDataUpdate,
@@ -24,9 +28,6 @@ import {
     mockFullPowerDatasetPermissionsFragment,
     mockMetadataCurrentLicense,
 } from "src/app/search/mock.data";
-
-import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("MetadataLicenseTabComponent", () => {
     let component: MetadataLicenseTabComponent;

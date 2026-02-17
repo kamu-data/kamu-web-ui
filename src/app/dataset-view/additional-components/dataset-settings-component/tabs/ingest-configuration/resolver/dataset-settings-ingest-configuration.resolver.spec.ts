@@ -12,6 +12,15 @@ import { first, Observable, of } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
+
+import {
+    DatasetFlowType,
+    FlowRetryBackoffType,
+    GetDatasetFlowConfigsQuery,
+    TimeUnit,
+} from "@api/kamu.graphql.interface";
+import { mockIngestGetDatasetFlowConfigsSuccess } from "@api/mock/dataset-flow.mock";
+
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { DatasetFlowConfigService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-config.service";
@@ -25,14 +34,6 @@ import {
     mockReadonlyDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import {
-    DatasetFlowType,
-    FlowRetryBackoffType,
-    GetDatasetFlowConfigsQuery,
-    TimeUnit,
-} from "@api/kamu.graphql.interface";
-import { mockIngestGetDatasetFlowConfigsSuccess } from "@api/mock/dataset-flow.mock";
 
 describe("datasetSettingsIngestConfigurationResolverFn", () => {
     const mockActivatedRouteSnapshot = new ActivatedRouteSnapshot();

@@ -10,11 +10,12 @@ import { Injector } from "@angular/core";
 import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import { GraphQLFormattedError } from "graphql";
 import { ToastrService } from "ngx-toastr";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { NavigationService } from "src/app/services/navigation.service";
 
 import { logError } from "@common/helpers/app.helpers";
 import { ErrorTexts } from "@common/values/errors.text";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 export abstract class KamuError extends Error {
     public abstract accept(visitor: KamuErrorVisitor): void;

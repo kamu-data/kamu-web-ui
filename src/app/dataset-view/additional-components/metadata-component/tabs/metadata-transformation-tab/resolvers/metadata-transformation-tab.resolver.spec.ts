@@ -11,6 +11,9 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular
 import { Observable } from "rxjs";
 
 import { Apollo } from "apollo-angular";
+
+import { MaybeNullOrUndefined } from "@interface/app.types";
+
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { metadataTransformationTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-transformation-tab/resolvers/metadata-transformation-tab.resolver";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
@@ -22,8 +25,6 @@ import {
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-
-import { MaybeNullOrUndefined } from "@interface/app.types";
 
 describe("metadataTransformationTabResolver", () => {
     let datasetService: DatasetService;

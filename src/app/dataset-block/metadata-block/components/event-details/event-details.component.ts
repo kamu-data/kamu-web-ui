@@ -19,6 +19,11 @@ import {
     ViewContainerRef,
 } from "@angular/core";
 
+import { BaseComponent } from "@common/components/base.component";
+import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
+
 import { AddDataEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/add-data-event/add-data-event.component";
 import { AddPushSourceEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/add-push-source-event/add-push-source-event.component";
 import { ExecuteTransformEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/execute-transform-event/execute-transform-event.component";
@@ -32,11 +37,6 @@ import { SetTransformEventComponent } from "src/app/dataset-block/metadata-block
 import { SetVocabEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/set-vocab-event/set-vocab-event.component";
 import { UnsupportedEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/unsupported-event/unsupported-event.component";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
-
-import { BaseComponent } from "@common/components/base.component";
-import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
-import { MaybeNull, MaybeUndefined } from "@interface/app.types";
-import { DatasetInfo } from "@interface/navigation.interface";
 
 @Component({
     selector: "app-event-details",

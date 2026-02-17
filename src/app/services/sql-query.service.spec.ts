@@ -11,6 +11,7 @@ import { TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockSqlQueryRestResponse } from "src/app/search/mock.data";
 import { SqlQueryService } from "src/app/services/sql-query.service";

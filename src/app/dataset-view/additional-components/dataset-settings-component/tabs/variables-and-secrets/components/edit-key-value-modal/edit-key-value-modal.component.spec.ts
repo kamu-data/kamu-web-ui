@@ -13,13 +13,14 @@ import { of } from "rxjs";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { EditKeyValueModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.component";
-import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
-import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 
 import { findElementByDataTestId, setFieldValue } from "@common/helpers/base-test.helpers.spec";
 import { ViewDatasetEnvVar } from "@api/kamu.graphql.interface";
 import { mockListEnvVariablesQuery } from "@api/mock/environment-variables-and-secrets.mock";
+
+import { EditKeyValueModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.component";
+import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
+import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 
 describe("EditKeyValueModalComponent", () => {
     let component: EditKeyValueModalComponent;

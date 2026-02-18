@@ -20,6 +20,7 @@ import {
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 
+import { DataAccessPanelComponent } from "src/app/data-access-panel/data-access-panel.component";
 import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
 
 @Component({
@@ -36,6 +37,7 @@ import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
         MatMenuModule,
         MatProgressSpinnerModule,
         //-----//
+        DataAccessPanelComponent,
         FeatureFlagDirective,
     ],
 })

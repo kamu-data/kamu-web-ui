@@ -6,7 +6,7 @@
  */
 
 import { AsyncPipe, Location, NgIf } from "@angular/common";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, NgZone, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
@@ -16,7 +16,7 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { BaseComponent } from "@common/components/base.component";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
-import { DatasetKind, OffsetInterval } from "@api/kamu.graphql.interface";
+import { DatasetBasicsFragment, DatasetKind, OffsetInterval } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetRequestBySql } from "@interface/dataset.interface";
 
@@ -30,6 +30,7 @@ import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.m
 import { SearchAndSchemasSectionComponent } from "src/app/query/global-query/search-and-schemas-section/search-and-schemas-section.component";
 import { QueryAndResultSectionsComponent } from "src/app/query/shared/query-and-result-sections/query-and-result-sections.component";
 import { CancelRequestService } from "src/app/services/cancel-request.service";
+import { DatasetEntry, MapQueryTrackerService } from "src/app/services/map-query-tracker.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { SessionStorageService } from "src/app/services/session-storage.service";
 import { SqlQueryService } from "src/app/services/sql-query.service";
@@ -69,29 +70,35 @@ export class DataComponent extends BaseComponent implements OnInit {
     private sessionStorageService = inject(SessionStorageService);
     private cdr = inject(ChangeDetectorRef);
     private cancelRequestService = inject(CancelRequestService);
-    private ngZone = inject(NgZone);
+    private mapQueryTrackerService = inject(MapQueryTrackerService);
 
-    public ngOnInit(): void {
+    public async ngOnInit(): Promise<void> {
         this.sqlErrorMarker$ = this.sqlQueryService.sqlErrorOccurrences.pipe(
             map((data: DataSqlErrorUpdate) => data.error),
         );
         this.sqlQueryResponse$ = this.sqlQueryService.sqlQueryResponseChanges;
-        this.buildSqlRequestCode();
-        this.runSQLRequest({ query: this.sqlRequestCode });
+        await this.buildSqlRequestCode();
+        await this.runSQLRequest({ query: this.sqlRequestCode });
     }
 
-    public runSQLRequest(params: DatasetRequestBySql): void {
-        this.sessionStorageService.setDatasetSqlCode(params.query);
+    public get datasetBasics(): DatasetBasicsFragment {
+        return this.dataTabData.datasetBasics;
+    }
+
+    public async runSQLRequest(params: DatasetRequestBySql): Promise<void> {
+        await this.mapQueryTrackerService.saveQuery(this.datasetBasics.alias, params.query);
         this.onRunSQLRequest(params);
     }
 
-    private buildSqlRequestCode(): void {
+    private async buildSqlRequestCode(): Promise<void> {
         const sqlQueryFromUrl = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_SQL_QUERY);
         if (sqlQueryFromUrl) {
             this.sqlRequestCode = sqlQueryFromUrl;
         } else {
-            if (this.sessionStorageService.datasetSqlCode) {
-                this.sqlRequestCode = this.sessionStorageService.datasetSqlCode;
+            if (await this.mapQueryTrackerService.hasQuery(this.datasetBasics.alias)) {
+                this.sqlRequestCode = (
+                    (await this.mapQueryTrackerService.getQuery(this.datasetBasics.alias)) as DatasetEntry
+                ).query;
             } else {
                 this.sqlRequestCode += `'${this.dataTabData.datasetBasics.alias}'`;
                 const offset = this.location.getState() as MaybeNull<Partial<OffsetInterval>>;

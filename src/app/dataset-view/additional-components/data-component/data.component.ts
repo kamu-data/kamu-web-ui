@@ -14,6 +14,7 @@ import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 
 import { BaseComponent } from "@common/components/base.component";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { DatasetBasicsFragment, DatasetKind, OffsetInterval } from "@api/kamu.graphql.interface";
@@ -32,7 +33,6 @@ import { QueryAndResultSectionsComponent } from "src/app/query/shared/query-and-
 import { CancelRequestService } from "src/app/services/cancel-request.service";
 import { DatasetEntry, MapQueryTrackerService } from "src/app/services/map-query-tracker.service";
 import { NavigationService } from "src/app/services/navigation.service";
-import { SessionStorageService } from "src/app/services/session-storage.service";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 
 @Component({
@@ -67,7 +67,6 @@ export class DataComponent extends BaseComponent implements OnInit {
     private datasetFlowsService = inject(DatasetFlowsService);
     private navigationService = inject(NavigationService);
     private sqlQueryService = inject(SqlQueryService);
-    private sessionStorageService = inject(SessionStorageService);
     private cdr = inject(ChangeDetectorRef);
     private cancelRequestService = inject(CancelRequestService);
     private mapQueryTrackerService = inject(MapQueryTrackerService);
@@ -78,16 +77,16 @@ export class DataComponent extends BaseComponent implements OnInit {
         );
         this.sqlQueryResponse$ = this.sqlQueryService.sqlQueryResponseChanges;
         await this.buildSqlRequestCode();
-        await this.runSQLRequest({ query: this.sqlRequestCode });
+        this.runSQLRequest({ query: this.sqlRequestCode });
     }
 
     public get datasetBasics(): DatasetBasicsFragment {
         return this.dataTabData.datasetBasics;
     }
 
-    public async runSQLRequest(params: DatasetRequestBySql): Promise<void> {
-        await this.mapQueryTrackerService.saveQuery(this.datasetBasics.alias, params.query);
+    public runSQLRequest(params: DatasetRequestBySql): void {
         this.onRunSQLRequest(params);
+        promiseWithCatch(this.mapQueryTrackerService.saveQuery(this.datasetBasics.alias, params.query).then());
     }
 
     private async buildSqlRequestCode(): Promise<void> {

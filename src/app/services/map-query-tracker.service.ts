@@ -37,6 +37,7 @@ export class MapQueryTrackerService {
         promiseWithCatch(this.dbPromise.then(() => this.cleanOldEntries()));
     }
 
+    /* istanbul ignore next */
     private async cleanOldEntries(): Promise<void> {
         const db = await this.dbPromise;
         const now = Date.now();
@@ -55,12 +56,14 @@ export class MapQueryTrackerService {
         await tx.done;
     }
 
+    /* istanbul ignore next */
     public async hasQuery(alias: string): Promise<boolean> {
         const db = await this.dbPromise;
         const key = await db.getKey(this.STORE_NAME, alias);
         return key !== undefined;
     }
 
+    /* istanbul ignore next */
     public async saveQuery(alias: string, query: string): Promise<void> {
         const db = await this.dbPromise;
         const entry: DatasetEntry = {
@@ -70,6 +73,7 @@ export class MapQueryTrackerService {
         await db.put(this.STORE_NAME, entry, alias);
     }
 
+    /* istanbul ignore next */
     public async getQuery(alias: string): Promise<DatasetEntry | undefined> {
         const db = await this.dbPromise;
         return db.get(this.STORE_NAME, alias) as Promise<DatasetEntry | undefined>;

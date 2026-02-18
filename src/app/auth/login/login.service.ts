@@ -7,7 +7,7 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { BehaviorSubject, firstValueFrom, map, Observable, ReplaySubject, Subject } from "rxjs";
+import { BehaviorSubject, EMPTY, firstValueFrom, map, Observable, ReplaySubject, Subject } from "rxjs";
 
 import { AuthApi } from "@api/auth.api";
 import {
@@ -107,6 +107,9 @@ export class LoginService {
         const deviceCode: MaybeNull<string> = this.localStorageService.loginDeviceCode;
         this.authApi.fetchAccountAndTokenFromPasswordLogin(credentials, deviceCode ?? undefined).subscribe({
             next: this.loginCallback,
+            error: () => {
+                return EMPTY;
+            },
         });
     }
 

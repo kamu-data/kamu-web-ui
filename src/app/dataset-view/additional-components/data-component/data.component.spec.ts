@@ -35,8 +35,8 @@ import {
     mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
+import { MapQueryTrackerService } from "src/app/services/map-query-tracker.service";
 import { NavigationService } from "src/app/services/navigation.service";
-import { SessionStorageService } from "src/app/services/session-storage.service";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 
 describe("DataComponent", () => {
@@ -44,11 +44,11 @@ describe("DataComponent", () => {
     let fixture: ComponentFixture<DataComponent>;
     let location: Location;
     let ngbModalService: NgbModal;
-    let sessionStorageService: SessionStorageService;
     let navigationService: NavigationService;
     let sqlQueryService: SqlQueryService;
     let requestDataSqlRunSpy: jasmine.Spy;
     let engineService: EngineService;
+    let mapQueryTrackerService: MapQueryTrackerService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -87,10 +87,10 @@ describe("DataComponent", () => {
         fixture = TestBed.createComponent(DataComponent);
         location = TestBed.inject(Location);
         ngbModalService = TestBed.inject(NgbModal);
-        sessionStorageService = TestBed.inject(SessionStorageService);
         navigationService = TestBed.inject(NavigationService);
         sqlQueryService = TestBed.inject(SqlQueryService);
         engineService = TestBed.inject(EngineService);
+        mapQueryTrackerService = TestBed.inject(MapQueryTrackerService);
         spyOn(engineService, "engines").and.returnValue(of(mockEngines));
         spyOn(navigationService, "navigateToDatasetView");
         spyOn(navigationService, "navigateWithSqlQuery");
@@ -117,14 +117,20 @@ describe("DataComponent", () => {
     });
 
     it("should check run sql button", fakeAsync(() => {
-        const setDatasetSqlCodeSpy = spyOn(sessionStorageService, "setDatasetSqlCode");
+        const getQuerySpy = spyOn(mapQueryTrackerService, "getQuery").and.resolveTo({
+            query: "select * from test.table",
+            timestamp: 121223224,
+        });
+        const hasQuerySpy = spyOn(mapQueryTrackerService, "hasQuery").and.resolveTo(true);
         tick();
         fixture.detectChanges();
 
         emitClickOnElementByDataTestId(fixture, "runSqlQueryButton");
 
-        expect(setDatasetSqlCodeSpy).toHaveBeenCalledTimes(2);
         flush();
+        expect(hasQuerySpy).toHaveBeenCalledTimes(1);
+        expect(getQuerySpy).toHaveBeenCalledTimes(1);
+        expect(component.sqlRequestCode).toEqual("select * from test.table");
     }));
 
     it("should check add data", () => {
@@ -139,12 +145,20 @@ describe("DataComponent", () => {
         expect(ngbModalServiceSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check set query from session storage", () => {
-        const query = "select * from 'accounts.portfolio.usd'";
-        sessionStorageService.setDatasetSqlCode(query);
-        component.ngOnInit();
+    it("should check set query from microDB", async () => {
+        const mockQuery = "select * from 'kamu/mockNameRoot'";
+        const mockEntry = {
+            query: mockQuery,
+            timestamp: Date.now(),
+        };
 
-        expect(component.sqlRequestCode).toEqual(query);
+        spyOn(mapQueryTrackerService, "getQuery").and.resolveTo(mockEntry);
+        spyOn(mapQueryTrackerService, "hasQuery").and.resolveTo(true);
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(component.sqlRequestCode).toEqual(mockQuery);
     });
 
     it("should check run SQL request", () => {

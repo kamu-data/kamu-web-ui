@@ -1,9 +1,4 @@
 <ul class="nav search-additional-buttons__nav">
-    <li class="nav-item mr-2 pt-2">
-        <div class="btn-group-parent nav">
-            <app-data-access-panel [datasetBasics]="datasetBasics" />
-        </div>
-    </li>
     <ng-container *ngFor="let searchAdditionalData of searchAdditionalButtonsData">
         <li class="nav-item mr-2 pt-2" [appFeatureFlag]="searchAdditionalData.id">
             <div class="btn-group-parent nav">

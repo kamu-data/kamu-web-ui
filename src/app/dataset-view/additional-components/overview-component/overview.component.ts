@@ -29,6 +29,7 @@ import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import {
     DatasetAccessRole,
+    DatasetBasicsFragment,
     DatasetCurrentInfoFragment,
     DatasetKind,
     MetadataBlockFragment,
@@ -38,6 +39,7 @@ import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DataAccessPanelComponent } from "src/app/data-access-panel/data-access-panel.component";
 import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { AddDataModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/add-data-modal/add-data-modal.component";
@@ -71,6 +73,7 @@ import { FileUploadService } from "src/app/services/file-upload.service";
         FeatureFlagDirective,
         OverviewHistorySummaryHeaderComponent,
         DynamicTableComponent,
+        DataAccessPanelComponent,
         DragAndDropDirective,
         ReadmeSectionComponent,
         DisplayHashComponent,
@@ -107,6 +110,10 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
 
     public get metadataFragmentBlock(): MetadataBlockFragment {
         return this.datasetOverviewTabData.overviewUpdate.overview.metadata.chain.blocks.nodes[0];
+    }
+
+    public get datasetBasics(): DatasetBasicsFragment {
+        return this.datasetOverviewTabData.datasetBasics;
     }
 
     public get canEditDatasetInfo(): boolean {

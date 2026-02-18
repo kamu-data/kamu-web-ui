@@ -40,18 +40,18 @@
                 name="run sql button"
                 [title]="'Run SQL query'"
                 (click)="runSQLRequest({ query: sqlRequestCode }, true)"
-                class="sql-run-button border border-1 rounded-left-2 border-right-0 btn-group-item btn justify-content-center align-items-center"
+                class="sql-run-button border fs-4 border-1 rounded-left-2 border-right-0 btn-group-item btn justify-content-center align-items-center"
             >
                 <span>Run</span><mat-icon>play_arrow</mat-icon>
             </button>
             <button
                 [disabled]="!sqlRequestCode || !isUserAuthenticated"
-                class="starred rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center"
+                class="starred bg-green rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center"
                 [matMenuTriggerFor]="menu"
                 aria-label="Example icon-button with a menu"
                 data-test-id="searchAdditionalButtons"
             >
-                <mat-icon>arrow_drop_down</mat-icon>
+                <mat-icon class="color-white"> arrow_drop_down</mat-icon>
             </button>
         </div>
         <mat-menu #menu="matMenu">

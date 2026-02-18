@@ -5,14 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { IngestConfigurationRuleFormComponent } from "./ingest-configuration-rule-form.component";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { HarnessLoader } from "@angular/cdk/testing";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { Component, ViewChild } from "@angular/core";
-import { IngestConfigurationRuleFormHarness } from "./ingest-configuration-rule-form.harness";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { IngestConfigurationRuleFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/ingest-configuration-rule-form/ingest-configuration-rule-form.component";
+import { IngestConfigurationRuleFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/ingest-configuration-rule-form/ingest-configuration-rule-form.harness";
 
 @Component({
     imports: [

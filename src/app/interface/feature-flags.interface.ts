@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { MaybeUndefined } from "./app.types";
+import { MaybeUndefined } from "@interface/app.types";
 
 export interface Feature {
     id: string;

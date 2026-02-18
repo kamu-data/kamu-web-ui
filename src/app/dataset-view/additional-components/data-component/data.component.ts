@@ -5,30 +5,34 @@
  * included in the LICENSE file.
  */
 
+import { AsyncPipe, Location, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, NgZone, OnInit } from "@angular/core";
-import { Location, NgIf, AsyncPipe } from "@angular/common";
-import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
-import AppValues from "src/app/common/values/app.values";
-import { DatasetKind, OffsetInterval } from "../../../api/kamu.graphql.interface";
-import { DataSqlErrorUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { MaybeNull } from "src/app/interface/app.types";
-import ProjectLinks from "src/app/project-links";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { AddDataModalComponent } from "../overview-component/components/add-data-modal/add-data-modal.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
-import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
-import { NavigationService } from "src/app/services/navigation.service";
-import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
-import { SqlQueryService } from "src/app/services/sql-query.service";
-import { SessionStorageService } from "src/app/services/session-storage.service";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { CancelRequestService } from "src/app/services/cancel-request.service";
-import { QueryAndResultSectionsComponent } from "../../../query/shared/query-and-result-sections/query-and-result-sections.component";
-import { SearchAndSchemasSectionComponent } from "../../../query/global-query/search-and-schemas-section/search-and-schemas-section.component";
+
+import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
+
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+
+import { BaseComponent } from "@common/components/base.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
+import { DatasetKind, OffsetInterval } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetRequestBySql } from "@interface/dataset.interface";
+
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { AddDataModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/add-data-modal/add-data-modal.component";
+import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DataSqlErrorUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { EditorModule } from "src/app/editor/editor.module";
+import ProjectLinks from "src/app/project-links";
+import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
+import { SearchAndSchemasSectionComponent } from "src/app/query/global-query/search-and-schemas-section/search-and-schemas-section.component";
+import { QueryAndResultSectionsComponent } from "src/app/query/shared/query-and-result-sections/query-and-result-sections.component";
+import { CancelRequestService } from "src/app/services/cancel-request.service";
+import { NavigationService } from "src/app/services/navigation.service";
+import { SessionStorageService } from "src/app/services/session-storage.service";
+import { SqlQueryService } from "src/app/services/sql-query.service";
 
 @Component({
     selector: "app-data",

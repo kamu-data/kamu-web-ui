@@ -6,19 +6,22 @@
  */
 
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+
+import { OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
+import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
+import { NgSelectModule } from "@ng-select/ng-select";
+
+import { FlowProcessEffectiveState, OrderingDirection } from "@api/kamu.graphql.interface";
+
 import {
     DashboardFiltersOptions,
     RANGE_NEXT_ATTEMPT_LIST,
     RangeLastAttemptOption,
-} from "../../../../account-flows-tab.types";
-import { FormsModule } from "@angular/forms";
-import { MatIconModule } from "@angular/material/icon";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
-import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
-import { NgSelectModule } from "@ng-select/ng-select";
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 import { nextTimeRangeHelper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
-import { FlowProcessEffectiveState, OrderingDirection } from "src/app/api/kamu.graphql.interface";
 
 @Component({
     selector: "app-upcoming-scheduled-filters-view",

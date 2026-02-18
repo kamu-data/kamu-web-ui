@@ -6,9 +6,10 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { BasePropertyComponent } from "../base-property/base-property.component";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { RouterLink } from "@angular/router";
+
+import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-dataset-name-property",

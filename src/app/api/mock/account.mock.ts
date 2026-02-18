@@ -5,8 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
-import { mockDatasetMainDataId } from "src/app/search/mock.data";
 import {
     AccountByNameQuery,
     AccountChangeEmailMutation,
@@ -30,9 +28,15 @@ import {
     FlowProcessAutoStopReason,
     FlowProcessEffectiveState,
     FlowStatus,
-} from "../kamu.graphql.interface";
-import { mockAccountDetails } from "./auth.mock";
+} from "@api/kamu.graphql.interface";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+
 import { mockFlowPollingSourceFragmentFetchUrl } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
+import {
+    mockDatasetMainDataId,
+    mockOwnerFieldsWithAvatar,
+    mockPublicDatasetVisibility,
+} from "src/app/search/mock.data";
 
 export const mockAccountByNameResponse: AccountByNameQuery = {
     __typename: "Query",

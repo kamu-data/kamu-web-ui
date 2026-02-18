@@ -5,36 +5,35 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
-import { NgbTypeaheadSelectItemEvent, NgbTypeahead, NgbHighlight } from "@ng-bootstrap/ng-bootstrap";
-import { OperatorFunction, Observable } from "rxjs";
-import { debounceTime, distinctUntilChanged, map, switchMap } from "rxjs/operators";
-import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "src/app/api/kamu.graphql.interface";
-import { SearchApi } from "src/app/api/search.api";
-import { MaybeNull } from "src/app/interface/app.types";
-import AppValues from "src/app/common/values/app.values";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { DatasetAutocompleteItem, TypeNames } from "src/app/interface/search.interface";
-import { DatasetNode } from "../../set-transform.types";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { RouterLink } from "@angular/router";
-import { MatButtonModule } from "@angular/material/button";
-import { NgFor, NgIf } from "@angular/common";
-import { FormsModule } from "@angular/forms";
-import { MatIconModule } from "@angular/material/icon";
 import { CdkAccordionModule } from "@angular/cdk/accordion";
-import { DynamicTableComponent } from "./../../../../../../../common/components/dynamic-table/dynamic-table.component";
-import {
-    DatasetSchema,
-    OdfTypes,
-    DataSchemaTypeField,
-    DataSchemaField,
-} from "src/app/interface/dataset-schema.interface";
-import { odfType2String, schemaAsDataRows } from "src/app/common/helpers/data-schema.helpers";
-import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { NgFor, NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { FormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterLink } from "@angular/router";
+
+import { Observable, OperatorFunction } from "rxjs";
+import { debounceTime, distinctUntilChanged, map, switchMap } from "rxjs/operators";
+
+import { NgbHighlight, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
+
+import { BaseComponent } from "@common/components/base.component";
+import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
+import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
+import { parseCurrentSchema } from "@common/helpers/app.helpers";
+import { odfType2String, schemaAsDataRows } from "@common/helpers/data-schema.helpers";
+import AppValues from "@common/values/app.values";
+import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "@api/kamu.graphql.interface";
+import { SearchApi } from "@api/search.api";
+import { MaybeNull } from "@interface/app.types";
+import { DataSchemaField, DataSchemaTypeField, DatasetSchema, OdfTypes } from "@interface/dataset-schema.interface";
+import { DatasetInfo } from "@interface/navigation.interface";
+import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface";
+
+import { DatasetNode } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
 
 @Component({
     selector: "app-search-section",

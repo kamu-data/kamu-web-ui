@@ -5,11 +5,13 @@
  * included in the LICENSE file.
  */
 
-import { FormArray, FormGroup } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { KeyValueFieldComponent } from "./key-value-field.component";
-import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { FormArray, FormGroup } from "@angular/forms";
+
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { KeyValueFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/key-value-field/key-value-field.component";
 
 describe("KeyValueFieldComponent", () => {
     let component: KeyValueFieldComponent;

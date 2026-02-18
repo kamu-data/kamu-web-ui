@@ -6,7 +6,8 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { CancelRequestService } from "./cancel-request.service";
+
+import { CancelRequestService } from "src/app/services/cancel-request.service";
 
 describe("CancelRequestService", () => {
     let service: CancelRequestService;

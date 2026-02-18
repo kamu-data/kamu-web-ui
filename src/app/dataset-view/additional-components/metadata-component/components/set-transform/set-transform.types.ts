@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { SetTransform, TransformInput } from "src/app/api/kamu.graphql.interface";
-import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
+import { SetTransform, TransformInput } from "@api/kamu.graphql.interface";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 export type TransformSelectedInput = Omit<TransformInput, "__typename" | "dataset">;
 

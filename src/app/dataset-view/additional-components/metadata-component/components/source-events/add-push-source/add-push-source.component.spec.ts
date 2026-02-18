@@ -6,21 +6,28 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { AddPushSourceComponent } from "./add-push-source.component";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
-import { DatasetCommitService } from "../../../../overview-component/services/dataset-commit.service";
-import { from, of } from "rxjs";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { FinalYamlModalComponent } from "../../final-yaml-modal/final-yaml-modal.component";
-import { ActivatedRoute } from "@angular/router";
-import { mockDatasetInfo } from "src/app/search/mock.data";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MergeKind, ReadKind } from "../add-polling-source/add-polling-source-form.types";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { AddPushSourceSection } from "./add-push-source-form.types";
-import { mockAddPushSourceYaml } from "../../set-transform/mock.data";
+import { ActivatedRoute } from "@angular/router";
+
+import { from, of } from "rxjs";
+
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
+
+import { mockAccountDetails } from "@api/mock/auth.mock";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
+import { mockAddPushSourceYaml } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import {
+    MergeKind,
+    ReadKind,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { AddPushSourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
+import { AddPushSourceComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
+import { mockDatasetInfo } from "src/app/search/mock.data";
 
 const providersSection = (name: string) => {
     return [

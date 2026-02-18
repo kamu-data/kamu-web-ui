@@ -5,11 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { CopyToClipboardComponent } from "./copy-to-clipboard.component";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 
 describe("CopyToClipboardComponent", () => {
     let component: CopyToClipboardComponent;

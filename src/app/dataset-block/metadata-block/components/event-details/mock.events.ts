@@ -5,22 +5,26 @@
  * included in the LICENSE file.
  */
 
-import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
 import {
+    AddDataEventFragment,
     AddPushSource,
     CompressionFormat,
     DataSchemaFormat,
+    DatasetKind,
     DatasetTransformFragment,
     ExecuteTransformEventFragment,
     MqttQos,
+    Seed,
     SetAttachments,
     SetDataSchema,
     SetInfo,
     SetLicense,
     SetPollingSource,
     SetVocab,
-} from "../../../../api/kamu.graphql.interface";
-import { AddDataEventFragment, DatasetKind, Seed } from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
+
+import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
+
 export const mockAddData: AddDataEventFragment = {
     __typename: "AddData",
     newWatermark: "2022-08-01T00:00:00+00:00",

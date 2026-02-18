@@ -7,7 +7,9 @@
 
 import { inject } from "@angular/core";
 import { CanActivateFn } from "@angular/router";
-import { AccountProvider } from "src/app/api/kamu.graphql.interface";
+
+import { AccountProvider } from "@api/kamu.graphql.interface";
+
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { NavigationService } from "src/app/services/navigation.service";
 

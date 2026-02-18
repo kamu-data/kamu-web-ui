@@ -6,13 +6,17 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { rotateSecretWebhookResolverFn } from "./rotate-secret-webhook.resolver";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
 import { provideAnimations } from "@angular/platform-browser/animations";
+import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+
+import { Observable, of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { of, Observable } from "rxjs";
+
+import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
+
+import { rotateSecretWebhookResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/rotate-secret-webhook/resolvers/rotate-secret-webhook.resolver";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 

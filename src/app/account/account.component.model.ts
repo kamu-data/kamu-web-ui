@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AccountTabs } from "./account.constants";
+import { AccountTabs } from "src/app/account/account.constants";
 
 export interface AccountPageQueryParams {
     tab?: AccountTabs;

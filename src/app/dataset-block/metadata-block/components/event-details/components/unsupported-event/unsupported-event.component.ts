@@ -6,8 +6,9 @@
  */
 
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { BaseComponent } from "src/app/common/components/base.component";
 import { MatIconModule } from "@angular/material/icon";
+
+import { BaseComponent } from "@common/components/base.component";
 
 @Component({
     selector: "app-unsupported-event",

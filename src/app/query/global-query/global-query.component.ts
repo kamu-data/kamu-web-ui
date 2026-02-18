@@ -5,22 +5,25 @@
  * included in the LICENSE file.
  */
 
+import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+
 import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
-import { MaybeNull } from "src/app/interface/app.types";
-import { BaseComponent } from "src/app/common/components/base.component";
+
+import { BaseComponent } from "@common/components/base.component";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetRequestBySql } from "@interface/dataset.interface";
+
 import { DataSqlErrorUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
-import ProjectLinks from "src/app/project-links";
-import { SqlQueryService } from "src/app/services/sql-query.service";
-import { SqlQueryBasicResponse } from "./global-query.model";
-import { NavigationService } from "src/app/services/navigation.service";
-import { CancelRequestService } from "src/app/services/cancel-request.service";
-import { AsyncPipe } from "@angular/common";
-import { QueryAndResultSectionsComponent } from "../shared/query-and-result-sections/query-and-result-sections.component";
-import { SearchAndSchemasSectionComponent } from "./search-and-schemas-section/search-and-schemas-section.component";
 import { EditorModule } from "src/app/editor/editor.module";
+import ProjectLinks from "src/app/project-links";
+import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
+import { SearchAndSchemasSectionComponent } from "src/app/query/global-query/search-and-schemas-section/search-and-schemas-section.component";
+import { QueryAndResultSectionsComponent } from "src/app/query/shared/query-and-result-sections/query-and-result-sections.component";
+import { CancelRequestService } from "src/app/services/cancel-request.service";
+import { NavigationService } from "src/app/services/navigation.service";
+import { SqlQueryService } from "src/app/services/sql-query.service";
 
 @Component({
     selector: "app-global-query",

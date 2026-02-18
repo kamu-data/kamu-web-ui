@@ -6,16 +6,18 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { EditPollingSourceService } from "./edit-polling-source.service";
-import { Apollo } from "apollo-angular";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
+
+import { Apollo } from "apollo-angular";
+
 import {
     AddPollingSourceEditFormType,
     FetchKind,
     MergeKind,
     ReadKind,
     SetPollingSourceSection,
-} from "./add-polling-source-form.types";
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { EditPollingSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/edit-polling-source.service";
 import { mockParseSetPollingSourceEventFromYamlToObject } from "src/app/search/mock.data";
 
 describe("EditPollingSourceService", () => {

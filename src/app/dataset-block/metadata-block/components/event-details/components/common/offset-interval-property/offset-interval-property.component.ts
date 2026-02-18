@@ -5,17 +5,18 @@
  * included in the LICENSE file.
  */
 
-import { DatasetByIdQuery } from "../../../../../../../api/kamu.graphql.interface";
-import { NavigationService } from "../../../../../../../services/navigation.service";
-import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { OffsetInterval } from "src/app/api/kamu.graphql.interface";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+
+import { DatasetByIdQuery, OffsetInterval } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
+
+import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { MaybeNull } from "src/app/interface/app.types";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { NgIf } from "@angular/common";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-interval-property",

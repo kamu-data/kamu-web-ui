@@ -6,8 +6,10 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { SeparatorPropertyComponent } from "./separator-property.component";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { SeparatorPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/separator-property/separator-property.component";
 
 describe("SeparatorPropertyComponent", () => {
     let component: SeparatorPropertyComponent;

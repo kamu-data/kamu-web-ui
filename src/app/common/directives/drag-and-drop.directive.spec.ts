@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DragAndDropDirective } from "./drag-and-drop.directive";
+import { DragAndDropDirective } from "@common/directives/drag-and-drop.directive";
 
 describe("DragAndDropDirective", () => {
     it("should create an instance", () => {

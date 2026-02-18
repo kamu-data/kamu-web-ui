@@ -5,48 +5,54 @@
  * included in the LICENSE file.
  */
 
+import { inject, Injectable, Injector } from "@angular/core";
+
+import { combineLatest, Observable, of, ReplaySubject, Subject } from "rxjs";
+import { map } from "rxjs/operators";
+
+import { APOLLO_OPTIONS } from "apollo-angular";
+
+import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
+import { resetCacheHelper } from "@common/helpers/apollo-cache.helper";
+import { parseCurrentSchema } from "@common/helpers/app.helpers";
+import { parseDataRows } from "@common/helpers/data.helpers";
+import { DatasetNotFoundError, SqlExecutionError } from "@common/values/errors";
+import { DatasetApi } from "@api/dataset.api";
 import {
     BlockRef,
     CompareChainsResultStatus,
     CompareChainsStatus,
     DataQueryResultSuccessViewFragment,
+    DatasetBasicsFragment,
     DatasetByIdQuery,
+    DatasetDataSizeFragment,
     DatasetHeadBlockHashQuery,
     DatasetLineageBasicsFragment,
     DatasetLineageFragment,
-    DatasetPageInfoFragment,
-    DatasetPermissionsFragment,
-    DependencyDatasetResultNotAccessible,
-    DatasetPushSyncStatusesQuery,
-    GetDatasetBasicsWithPermissionsQuery,
-    GetDatasetLineageQuery,
-    GetDatasetSchemaQuery,
-} from "../api/kamu.graphql.interface";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { inject, Injectable, Injector } from "@angular/core";
-import { combineLatest, Observable, of, ReplaySubject, Subject } from "rxjs";
-import { DatasetLineageNode } from "src/app/interface/dataset.interface";
-import {
-    DatasetBasicsFragment,
-    DatasetDataSizeFragment,
     DatasetMetadataSummaryFragment,
     DatasetOverviewFragment,
+    DatasetPageInfoFragment,
+    DatasetPermissionsFragment,
+    DatasetPushSyncStatusesQuery,
+    DependencyDatasetResultNotAccessible,
+    GetDatasetBasicsWithPermissionsQuery,
     GetDatasetHistoryQuery,
+    GetDatasetLineageQuery,
     GetDatasetMainDataQuery,
+    GetDatasetSchemaQuery,
     MetadataBlockFragment,
-} from "../api/kamu.graphql.interface";
-import { DatasetSubscriptionsService } from "./dataset.subscriptions.service";
-import { DatasetHistoryUpdate, MetadataSchemaUpdate, OverviewUpdate } from "./dataset.subscriptions.interface";
-import { DatasetApi } from "../api/dataset.api";
-import { DatasetNotFoundError, SqlExecutionError } from "../common/values/errors";
-import { map } from "rxjs/operators";
-import { MaybeNull } from "src/app/interface/app.types";
-import { parseCurrentSchema } from "../common/helpers/app.helpers";
-import { APOLLO_OPTIONS } from "apollo-angular";
-import { resetCacheHelper } from "../common/helpers/apollo-cache.helper";
-import { parseDataRows } from "../common/helpers/data.helpers";
-import { DynamicTableDataRow } from "../common/components/dynamic-table/dynamic-table.interface";
-import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
+} from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetSchema } from "@interface/dataset-schema.interface";
+import { DatasetLineageNode } from "@interface/dataset.interface";
+import { DatasetInfo } from "@interface/navigation.interface";
+
+import {
+    DatasetHistoryUpdate,
+    MetadataSchemaUpdate,
+    OverviewUpdate,
+} from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 
 @Injectable({ providedIn: "root" })
 export class DatasetService {

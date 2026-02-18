@@ -6,7 +6,8 @@
  */
 
 import { Pipe, PipeTransform } from "@angular/core";
-import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
+
+import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
 
 @Pipe({
     name: "eventTypeFilter",

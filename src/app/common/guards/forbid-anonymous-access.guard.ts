@@ -7,6 +7,7 @@
 
 import { inject } from "@angular/core";
 import { CanActivateFn } from "@angular/router";
+
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { NavigationService } from "src/app/services/navigation.service";
 

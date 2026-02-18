@@ -6,9 +6,11 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { RecentActivityFiltersViewComponent } from "./recent-activity-filters-view.component";
-import { RangeLastAttempt } from "../../../../account-flows-tab.types";
-import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+
+import { RecentActivityFiltersViewComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/components/recent-activity-filters-view/recent-activity-filters-view.component";
+import { RangeLastAttempt } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 
 describe("RecentActivityFiltersViewComponent", () => {
     let component: RecentActivityFiltersViewComponent;

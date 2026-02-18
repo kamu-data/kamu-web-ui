@@ -5,9 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { BaseComponent } from "./base.component";
 import { inject } from "@angular/core";
-import { ModalService } from "src/app/common/components/modal/modal.service";
+
+import { BaseComponent } from "@common/components/base.component";
+import { ModalService } from "@common/components/modal/modal.service";
+
 import { NavigationService } from "src/app/services/navigation.service";
 
 export abstract class BaseProcessingComponent extends BaseComponent {

@@ -5,16 +5,19 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { WebhookFlowProcessCardComponent } from "./webhook-flow-process-card.component";
-import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-import { FlowProcessEffectiveState, FlowProcessSummary } from "src/app/api/kamu.graphql.interface";
-import { mockAccountFlowsAsCardsQuery } from "src/app/api/mock/account.mock";
-import { Apollo } from "apollo-angular";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { Apollo } from "apollo-angular";
+
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { FlowProcessEffectiveState, FlowProcessSummary } from "@api/kamu.graphql.interface";
+import { mockAccountFlowsAsCardsQuery } from "@api/mock/account.mock";
+
+import { WebhookFlowProcessCardComponent } from "src/app/flow-cards/webhook-flow-process-card/webhook-flow-process-card.component";
+import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 
 describe("WebhookFlowProcessCardComponent", () => {
     let component: WebhookFlowProcessCardComponent;

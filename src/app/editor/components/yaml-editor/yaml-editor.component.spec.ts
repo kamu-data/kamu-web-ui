@@ -6,13 +6,14 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MonacoService } from "../../services/monaco.service";
-import { EditorModule } from "../../editor.module";
-import { YamlEditorComponent } from "./yaml-editor.component";
+
 import {
     BaseEditorComponentTestEnvironment,
     sharedBasedEditorComponentTest,
-} from "../base-editor/base-editor.component.spec";
+} from "src/app/editor/components/base-editor/base-editor.component.spec";
+import { YamlEditorComponent } from "src/app/editor/components/yaml-editor/yaml-editor.component";
+import { EditorModule } from "src/app/editor/editor.module";
+import { MonacoService } from "src/app/editor/services/monaco.service";
 
 describe("YamlEditorComponent", () => {
     let fixture: ComponentFixture<YamlEditorComponent>;

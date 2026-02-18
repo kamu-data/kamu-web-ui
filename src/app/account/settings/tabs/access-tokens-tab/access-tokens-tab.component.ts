@@ -5,36 +5,33 @@
  * included in the LICENSE file.
  */
 
-import { NavigationService } from "../../../../services/navigation.service";
-import { MaybeNull } from "src/app/interface/app.types";
-import {
-    AccessTokenConnection,
-    CreatedAccessToken,
-    PageBasedInfo,
-    ViewAccessToken,
-} from "src/app/api/kamu.graphql.interface";
+import { Clipboard } from "@angular/cdk/clipboard";
+import { DatePipe, NgIf, NgTemplateOutlet } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, ViewChild } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
-import { AbstractControl, FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import { Clipboard } from "@angular/cdk/clipboard";
-import AppValues from "src/app/common/values/app.values";
+
+import { BaseComponent } from "@common/components/base.component";
+import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
+import { ModalService } from "@common/components/modal/modal.service";
+import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
+import { AccessTokenConnection, CreatedAccessToken, PageBasedInfo, ViewAccessToken } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
+import { AccountSettingsTabs, TokenCreateStep } from "src/app/account/settings/account-settings.constants";
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { CreateTokenFormType } from "./access-tokens-tab.types";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { CreateTokenFormType } from "src/app/account/settings/tabs/access-tokens-tab/access-tokens-tab.types";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { PaginationComponent } from "../../../../common/components/pagination-component/pagination.component";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { MatIconModule } from "@angular/material/icon";
-import { CopyToClipboardComponent } from "../../../../common/components/copy-to-clipboard/copy-to-clipboard.component";
-import { FormValidationErrorsDirective } from "../../../../common/directives/form-validation-errors.directive";
-import { MatDividerModule } from "@angular/material/divider";
-import { NgIf, NgTemplateOutlet, DatePipe } from "@angular/common";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-access-tokens-tab",

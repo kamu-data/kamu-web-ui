@@ -5,22 +5,26 @@
  * included in the LICENSE file.
  */
 
-import { Observable, Subject } from "rxjs";
-import { NavigationService } from "src/app/services/navigation.service";
 import { inject, Injectable } from "@angular/core";
-import { DatasetApi } from "src/app/api/dataset.api";
+
+import { Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
+
+import { ToastrService } from "ngx-toastr";
+
+import { DatasetNotFoundError, DatasetOperationError } from "@common/values/errors";
+import { DatasetApi } from "@api/dataset.api";
 import {
     DatasetVisibilityInput,
     DeleteDatasetMutation,
     RenameDatasetMutation,
     SetVisibilityDatasetMutation,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { DatasetNotFoundError, DatasetOperationError } from "src/app/common/values/errors";
-import { ToastrService } from "ngx-toastr";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Injectable({
     providedIn: "root",

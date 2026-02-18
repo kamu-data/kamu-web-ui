@@ -5,12 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { MaybeUndefined } from "src/app/interface/app.types";
 import { inject, Injectable } from "@angular/core";
-import { ProtocolsApi } from "../api/protocols.api";
-import { Observable, map } from "rxjs";
-import { DatasetEndpoints, DatasetProtocolsQuery } from "../api/kamu.graphql.interface";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
+
+import { map, Observable } from "rxjs";
+
+import { DatasetEndpoints, DatasetProtocolsQuery } from "@api/kamu.graphql.interface";
+import { ProtocolsApi } from "@api/protocols.api";
+import { MaybeUndefined } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 @Injectable({
     providedIn: "root",

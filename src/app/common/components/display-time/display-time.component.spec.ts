@@ -6,9 +6,11 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+
 import timekeeper from "timekeeper";
-import { DisplayTimeComponent } from "./display-time.component";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("DisplayTimeComponent", () => {
     let component: DisplayTimeComponent;

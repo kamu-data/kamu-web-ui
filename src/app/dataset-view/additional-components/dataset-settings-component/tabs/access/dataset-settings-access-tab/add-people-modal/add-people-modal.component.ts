@@ -5,20 +5,27 @@
  * included in the LICENSE file.
  */
 
+import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
-import { NgbActiveModal, NgbTypeaheadSelectItemEvent, NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
-import { OperatorFunction, Observable, debounceTime, distinctUntilChanged, tap, finalize, switchMap } from "rxjs";
-import { DatasetAccessRole, DatasetBasicsFragment, NameLookupResult } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
-import AppValues from "src/app/common/values/app.values";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetCollaborationsService } from "../dataset-collaborations.service";
-import { CollaboratorModalResultType, ROLE_OPTIONS } from "./add-people-modal.model";
-import { MatIconModule } from "@angular/material/icon";
 import { FormsModule } from "@angular/forms";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { NgIf, NgFor } from "@angular/common";
 import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+
+import { debounceTime, distinctUntilChanged, finalize, Observable, OperatorFunction, switchMap, tap } from "rxjs";
+
+import { NgbActiveModal, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
+
+import { BaseComponent } from "@common/components/base.component";
+import AppValues from "@common/values/app.values";
+import { DatasetAccessRole, DatasetBasicsFragment, NameLookupResult } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
+import {
+    CollaboratorModalResultType,
+    ROLE_OPTIONS,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.model";
+import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 
 @Component({
     selector: "app-add-people-modal",

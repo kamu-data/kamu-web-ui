@@ -7,8 +7,9 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, Params, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { datasetInfoResolverFn } from "./dataset-info.resolver";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
+
+import { datasetInfoResolverFn } from "@common/resolvers/dataset-info.resolver";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 describe("datasetInfoResolverFn", () => {
     const executeResolver: ResolveFn<DatasetInfo> = (...resolverParameters) =>

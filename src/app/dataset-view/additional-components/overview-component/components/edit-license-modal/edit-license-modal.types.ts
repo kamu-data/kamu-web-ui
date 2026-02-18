@@ -5,8 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { MaybeNull } from "src/app/interface/app.types";
 import { FormControl } from "@angular/forms";
+
+import { MaybeNull } from "@interface/app.types";
 
 export interface LicenseFormType {
     name: FormControl<MaybeNull<string>>;

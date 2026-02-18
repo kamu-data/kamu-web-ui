@@ -5,24 +5,31 @@
  * included in the LICENSE file.
  */
 
+import { AsyncPipe, NgClass, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { DatasetFlowByIdResponse, FlowDetailsTabs, ViewMenuData } from "./dataset-flow-details.types";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { Observable, Subscription, combineLatest, map, shareReplay, skip, takeWhile, tap, timer } from "rxjs";
-import { FlowStatus, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { MaybeUndefined } from "src/app/interface/app.types";
-import ProjectLinks from "src/app/project-links";
-import { BaseDatasetDataComponent } from "src/app/common/components/base-dataset-data.component";
-import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { RouterLinkActive, RouterLink, RouterOutlet } from "@angular/router";
-import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";
 import { MatIconModule } from "@angular/material/icon";
-import { DatasetViewMenuComponent } from "../../dataset-view/dataset-view-menu/dataset-view-menu.component";
-import { DatasetViewHeaderComponent } from "../../dataset-view/dataset-view-header/dataset-view-header.component";
-import { NgIf, NgClass, AsyncPipe } from "@angular/common";
+import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
+
+import { combineLatest, map, Observable, shareReplay, skip, Subscription, takeWhile, tap, timer } from "rxjs";
+
+import { BaseDatasetDataComponent } from "@common/components/base-dataset-data.component";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { FlowStatus, FlowSummaryDataFragment } from "@api/kamu.graphql.interface";
+import { MaybeUndefined } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
+
+import {
+    DatasetFlowByIdResponse,
+    FlowDetailsTabs,
+    ViewMenuData,
+} from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
+import { DatasetViewHeaderComponent } from "src/app/dataset-view/dataset-view-header/dataset-view-header.component";
+import { DatasetViewMenuComponent } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu.component";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-dataset-flow-details",

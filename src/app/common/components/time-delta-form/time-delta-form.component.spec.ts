@@ -5,16 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ActivatedRoute } from "@angular/router";
-import { TimeDeltaFormComponent } from "./time-delta-form.component";
-import { TimeUnit } from "src/app/api/kamu.graphql.interface";
-import { Component, ViewChild } from "@angular/core";
-import { TimeDeltaFormHarness } from "./time-delta-form.harness";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-
+import { Component, ViewChild } from "@angular/core";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ReactiveFormsModule } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
+
+import { TimeDeltaFormComponent } from "@common/components/time-delta-form/time-delta-form.component";
+import { TimeDeltaFormHarness } from "@common/components/time-delta-form/time-delta-form.harness";
+import { TimeUnit } from "@api/kamu.graphql.interface";
 
 @Component({
     imports: [TimeDeltaFormComponent, ReactiveFormsModule],

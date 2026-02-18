@@ -5,14 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { provideToastr, ToastrService } from "ngx-toastr";
 import { SimpleChanges } from "@angular/core";
-import { findElementByDataTestId, getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { DynamicTableComponent } from "./dynamic-table.component";
-import { MOCK_DATA_ROWS, MOCK_DATA_ROWS_SHOW_MORE_BADGE } from "./dynamic-table.mock";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { MarkdownModule } from "ngx-markdown";
+import { provideToastr, ToastrService } from "ngx-toastr";
+
+import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
+import { MOCK_DATA_ROWS, MOCK_DATA_ROWS_SHOW_MORE_BADGE } from "@common/components/dynamic-table/dynamic-table.mock";
+import { findElementByDataTestId, getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 
 describe("DynamicTableComponent", () => {
     let component: DynamicTableComponent;

@@ -9,9 +9,13 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+
 import { OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { NgSelectModule } from "@ng-select/ng-select";
+
+import { FlowProcessEffectiveState, OrderingDirection } from "@api/kamu.graphql.interface";
+
 import {
     DashboardFiltersOptions,
     FLOW_PROCESS_STATE_LIST,
@@ -21,8 +25,7 @@ import {
     RANGE_LAST_ATTEMPT_LIST,
     RANGE_NEXT_ATTEMPT_LIST,
     RangeLastAttemptOption,
-} from "../../../../account-flows-tab.types";
-import { FlowProcessEffectiveState, OrderingDirection } from "src/app/api/kamu.graphql.interface";
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 import {
     lastTimeRangeHelper,
     nextTimeRangeHelper,

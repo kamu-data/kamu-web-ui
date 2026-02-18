@@ -7,33 +7,35 @@
 
 import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
-import { AuthApi } from "./auth.api";
+import { first } from "rxjs/operators";
+
+import { CombinedGraphQLErrors } from "@apollo/client/errors";
+import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
+
+import { AuthApi } from "@api/auth.api";
+import {
+    GithubLoginCredentials,
+    PasswordLoginCredentials,
+    Web3WalletOwnershipVerificationRequest,
+} from "@api/auth.api.model";
 import {
     AccountProvider,
     FetchAccountDetailsDocument,
     GetEnabledLoginMethodsDocument,
     GetEnabledLoginMethodsQuery,
     LoginDocument,
-} from "./kamu.graphql.interface";
-import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
+} from "@api/kamu.graphql.interface";
 import {
+    mockAccountFromAccessToken,
     mockGithubLoginResponse,
     mockLogin401Error,
     mockPasswordLoginResponse,
-    mockAccountFromAccessToken,
+    mockWeb3WalletLoginResponse,
     TEST_ACCESS_TOKEN_GITHUB,
     TEST_GITHUB_CODE,
     TEST_LOGIN,
     TEST_PASSWORD,
-    mockWeb3WalletLoginResponse,
-} from "./mock/auth.mock";
-import { first } from "rxjs/operators";
-import {
-    GithubLoginCredentials,
-    PasswordLoginCredentials,
-    Web3WalletOwnershipVerificationRequest,
-} from "./auth.api.model";
-import { CombinedGraphQLErrors } from "@apollo/client/errors";
+} from "@api/mock/auth.mock";
 
 describe("AuthApi", () => {
     let service: AuthApi;

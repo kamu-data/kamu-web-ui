@@ -5,23 +5,27 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ListWebhooksComponent } from "./list-webhooks.component";
-import { Apollo } from "apollo-angular";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { provideToastr } from "ngx-toastr";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { NavigationService } from "src/app/services/navigation.service";
-import ProjectLinks from "src/app/project-links";
-import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
-import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
-import { of } from "rxjs";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { WebhookSubscription, WebhookSubscriptionStatus } from "src/app/api/kamu.graphql.interface";
-import { mockDatasetWebhookByIdQuery } from "src/app/api/mock/webhooks.mock";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
+
+import { ModalService } from "@common/components/modal/modal.service";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { WebhookSubscription, WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
+import { mockDatasetWebhookByIdQuery } from "@api/mock/webhooks.mock";
+import { ModalArgumentsInterface } from "@interface/modal.interface";
+
+import { ListWebhooksComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/list-webhooks/list-webhooks.component";
+import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
+import ProjectLinks from "src/app/project-links";
+import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("ListWebhooksComponent", () => {
     let component: ListWebhooksComponent;

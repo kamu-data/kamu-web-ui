@@ -5,26 +5,29 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MetadataLicenseTabComponent } from "./metadata-license-tab.component";
+import { MatIconModule } from "@angular/material/icon";
+
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { Apollo } from "apollo-angular";
+
+import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import {
+    mockMetadataDerivedUpdate,
+    mockOverviewDataUpdate,
+    mockOverviewDataUpdateNullable,
+} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { MetadataLicenseTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-license-tab/metadata-license-tab.component";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import {
     mockDatasetBasicsDerivedFragment,
     mockFullPowerDatasetPermissionsFragment,
     mockMetadataCurrentLicense,
 } from "src/app/search/mock.data";
-import {
-    mockMetadataDerivedUpdate,
-    mockOverviewDataUpdate,
-    mockOverviewDataUpdateNullable,
-} from "../../../data-tabs.mock";
-import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { MatIconModule } from "@angular/material/icon";
-import { Apollo } from "apollo-angular";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("MetadataLicenseTabComponent", () => {
     let component: MetadataLicenseTabComponent;

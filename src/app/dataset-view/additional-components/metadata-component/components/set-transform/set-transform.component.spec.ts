@@ -6,29 +6,37 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { SetTransformComponent } from "./set-transform.component";
-import { ActivatedRoute } from "@angular/router";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { of } from "rxjs";
-import { mockGetDatasetSchemaQuery, mockParseSetTransformYamlType, mockSetTransformEventYaml } from "./mock.data";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
-import { DatasetNode } from "./set-transform.types";
-import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
+import { ActivatedRoute } from "@angular/router";
+
+import { of } from "rxjs";
+
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetNavigationParams } from "src/app/interface/navigation.interface";
-import {
-    mockDatasetBasicsRootFragment,
-    mockFullPowerDatasetPermissionsFragment,
-    mockDatasetBasicsDerivedFragment,
-    mockDatasetInfo,
-} from "src/app/search/mock.data";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
+
+import { mockAccountDetails } from "@api/mock/auth.mock";
+import { DatasetNavigationParams } from "@interface/navigation.interface";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import {
+    mockGetDatasetSchemaQuery,
+    mockParseSetTransformYamlType,
+    mockSetTransformEventYaml,
+} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { SetTransformComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.component";
+import { DatasetNode } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import {
+    mockDatasetBasicsDerivedFragment,
+    mockDatasetBasicsRootFragment,
+    mockDatasetInfo,
+    mockFullPowerDatasetPermissionsFragment,
+} from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("SetTransformComponent", () => {
     let component: SetTransformComponent;

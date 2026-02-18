@@ -5,73 +5,74 @@
  * included in the LICENSE file.
  */
 
-import {
-    DatasetVisibility,
-    DatasetVisibilityInput,
-    SetVisibilityDatasetMutation,
-    DatasetSystemTimeBlockByHashGQL,
-    DatasetSystemTimeBlockByHashQuery,
-    UpdateWatermarkGQL,
-    DatasetsTotalCountByAccountNameGQL,
-    DatasetsTotalCountByAccountNameQuery,
-    DatasetListDownstreamsGQL,
-    DatasetListDownstreamsQuery,
-    DatasetBlocksByEventTypeGQL,
-    MetadataEventType,
-    DatasetBlocksByEventTypeQuery,
-    MetadataManifestFormat,
-} from "./kamu.graphql.interface";
+import { inject, Injectable } from "@angular/core";
+
+import { Observable } from "rxjs";
+import { first, map } from "rxjs/operators";
+
+import { StoreObject } from "@apollo/client/cache";
+import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { onlyCompleteData } from "apollo-angular";
+
+import { resetCacheHelper, updateCacheHelper } from "@common/helpers/apollo-cache.helper";
+import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
+import AppValues from "@common/values/app.values";
 import {
     CommitEventToDatasetGQL,
     CommitEventToDatasetMutation,
     CreateDatasetFromSnapshotGQL,
     CreateDatasetFromSnapshotMutation,
+    CreateEmptyDatasetGQL,
     CreateEmptyDatasetMutation,
+    DatasetBlocksByEventTypeGQL,
+    DatasetBlocksByEventTypeQuery,
     DatasetByAccountAndDatasetNameGQL,
     DatasetByAccountAndDatasetNameQuery,
+    DatasetByIdGQL,
+    DatasetByIdQuery,
+    DatasetHeadBlockHashGQL,
+    DatasetHeadBlockHashQuery,
     DatasetKind,
+    DatasetListDownstreamsGQL,
+    DatasetListDownstreamsQuery,
+    DatasetPushSyncStatusesGQL,
+    DatasetPushSyncStatusesQuery,
+    DatasetsByAccountNameGQL,
+    DatasetsByAccountNameQuery,
+    DatasetsTotalCountByAccountNameGQL,
+    DatasetsTotalCountByAccountNameQuery,
+    DatasetSystemTimeBlockByHashGQL,
+    DatasetSystemTimeBlockByHashQuery,
+    DatasetVisibility,
+    DatasetVisibilityInput,
     DeleteDatasetGQL,
     DeleteDatasetMutation,
     GetDatasetBasicsWithPermissionsGQL,
-    GetDatasetSchemaGQL,
-    GetDatasetSchemaQuery,
-    RenameDatasetGQL,
-    RenameDatasetMutation,
-    UpdateReadmeGQL,
-    UpdateReadmeMutation,
-    GetDatasetMainDataGQL,
-    GetDatasetMainDataQuery,
-    GetDatasetHistoryGQL,
-    GetDatasetHistoryQuery,
+    GetDatasetBasicsWithPermissionsQuery,
     GetDatasetDataSqlRunGQL,
     GetDatasetDataSqlRunQuery,
-    DatasetsByAccountNameGQL,
-    DatasetsByAccountNameQuery,
+    GetDatasetHistoryGQL,
+    GetDatasetHistoryQuery,
+    GetDatasetLineageGQL,
+    GetDatasetLineageQuery,
+    GetDatasetMainDataGQL,
+    GetDatasetMainDataQuery,
+    GetDatasetSchemaGQL,
+    GetDatasetSchemaQuery,
     GetMetadataBlockGQL,
     GetMetadataBlockQuery,
-    DatasetByIdQuery,
-    DatasetByIdGQL,
-    CreateEmptyDatasetGQL,
-    GetDatasetBasicsWithPermissionsQuery,
-    GetDatasetLineageQuery,
-    GetDatasetLineageGQL,
-    UpdateWatermarkMutation,
+    MetadataEventType,
+    MetadataManifestFormat,
+    RenameDatasetGQL,
+    RenameDatasetMutation,
     SetVisibilityDatasetGQL,
-    DatasetHeadBlockHashGQL,
-    DatasetHeadBlockHashQuery,
-    DatasetPushSyncStatusesGQL,
-    DatasetPushSyncStatusesQuery,
-} from "src/app/api/kamu.graphql.interface";
-import AppValues from "src/app/common/values/app.values";
-import { ApolloLink, ObservableQuery } from "@apollo/client/core";
-import { inject, Injectable } from "@angular/core";
-import { map, first } from "rxjs/operators";
-import { Observable } from "rxjs";
-import { onlyCompleteData } from "apollo-angular";
-import { DatasetRequestBySql } from "../interface/dataset.interface";
-import { StoreObject } from "@apollo/client/cache";
-import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
-import { resetCacheHelper, updateCacheHelper } from "../common/helpers/apollo-cache.helper";
+    SetVisibilityDatasetMutation,
+    UpdateReadmeGQL,
+    UpdateReadmeMutation,
+    UpdateWatermarkGQL,
+    UpdateWatermarkMutation,
+} from "@api/kamu.graphql.interface";
+import { DatasetRequestBySql } from "@interface/dataset.interface";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {

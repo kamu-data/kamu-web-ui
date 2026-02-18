@@ -6,6 +6,7 @@
  */
 
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
+
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import ProjectLinks from "src/app/project-links";
 

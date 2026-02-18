@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { UploadPrepareResponse } from "src/app/interface/ingest-via-file-upload.types";
+import { UploadPrepareResponse } from "@interface/ingest-via-file-upload.types";
 
 export const mockUploadPrepareResponse: UploadPrepareResponse = {
     fields: [["1", "2"]],

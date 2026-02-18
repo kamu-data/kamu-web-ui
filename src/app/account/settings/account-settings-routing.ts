@@ -8,20 +8,22 @@
 /* istanbul ignore file */
 
 import { Routes } from "@angular/router";
-import { AccountSettingsTabs } from "./account-settings.constants";
-import { AccessTokensTabComponent } from "./tabs/access-tokens-tab/access-tokens-tab.component";
-import { accountSettingsAccessTokensResolverFn } from "./tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
-import { AccountTabComponent } from "./tabs/account-tab/account-tab.component";
-import { accountSettingsAccountResolverFn } from "./tabs/account-tab/resolver/account-settings-account.resolver";
-import { EmailsTabComponent } from "./tabs/emails-tab/emails-tab.component";
-import { accountSettingsEmailResolverFn } from "./tabs/emails-tab/resolver/account-settings-email.resolver";
-import { PasswordAndAuthenticationTabComponent } from "./tabs/password-and-authentication-tab/password-and-authentication-tab.component";
-import { accountSettingsPasswordAndAuthenticationResolverFn } from "./tabs/password-and-authentication-tab/resolver/account-settings-password-and-authentication.resolver";
-import { accountPasswordProviderGuard } from "../../common/guards/account-password-provider.guard";
-import RoutingResolvers from "../../common/resolvers/routing-resolvers";
-import ProjectLinks from "../../project-links";
-import { AccountSettingsComponent } from "./account-settings.component";
-import { accountSettingsActiveTabResolverFn } from "./resolver/account-settings-active-tab.resolver";
+
+import { accountPasswordProviderGuard } from "@common/guards/account-password-provider.guard";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+
+import { AccountSettingsComponent } from "src/app/account/settings/account-settings.component";
+import { AccountSettingsTabs } from "src/app/account/settings/account-settings.constants";
+import { accountSettingsActiveTabResolverFn } from "src/app/account/settings/resolver/account-settings-active-tab.resolver";
+import { AccessTokensTabComponent } from "src/app/account/settings/tabs/access-tokens-tab/access-tokens-tab.component";
+import { accountSettingsAccessTokensResolverFn } from "src/app/account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
+import { AccountTabComponent } from "src/app/account/settings/tabs/account-tab/account-tab.component";
+import { accountSettingsAccountResolverFn } from "src/app/account/settings/tabs/account-tab/resolver/account-settings-account.resolver";
+import { EmailsTabComponent } from "src/app/account/settings/tabs/emails-tab/emails-tab.component";
+import { accountSettingsEmailResolverFn } from "src/app/account/settings/tabs/emails-tab/resolver/account-settings-email.resolver";
+import { PasswordAndAuthenticationTabComponent } from "src/app/account/settings/tabs/password-and-authentication-tab/password-and-authentication-tab.component";
+import { accountSettingsPasswordAndAuthenticationResolverFn } from "src/app/account/settings/tabs/password-and-authentication-tab/resolver/account-settings-password-and-authentication.resolver";
+import ProjectLinks from "src/app/project-links";
 
 export const ACCOUNT_SETTINGS_ROUTES: Routes = [
     {

@@ -6,9 +6,11 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
+
 import { MarkdownModule } from "ngx-markdown";
-import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
+
+import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
+import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-yaml-view-section",

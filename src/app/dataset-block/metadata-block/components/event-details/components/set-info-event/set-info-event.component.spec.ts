@@ -5,10 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { mockSetInfo } from "../../mock.events";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { SetInfoEventComponent } from "./set-info-event.component";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { SetInfoEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/set-info-event/set-info-event.component";
+import { mockSetInfo } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
 describe("SetInfoEventComponent", () => {
     let component: SetInfoEventComponent;

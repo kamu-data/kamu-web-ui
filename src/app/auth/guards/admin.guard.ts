@@ -6,8 +6,9 @@
  */
 
 import { inject, Injectable } from "@angular/core";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { NavigationService } from "src/app/services/navigation.service";
-import { LoggedUserService } from "../logged-user.service";
 
 @Injectable({
     providedIn: "root",

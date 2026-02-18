@@ -5,29 +5,31 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { NgIf } from "@angular/common";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { DatasetKind, EnvVar, FetchStepUrl, SetPollingSourceEventFragment } from "src/app/api/kamu.graphql.interface";
-import { MaybeNullOrUndefined } from "src/app/interface/app.types";
-import { BlockRowDataComponent } from "src/app/common/components/block-row-data/block-row-data.component";
-import { LinkPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/link-property/link-property.component";
-import { YamlEventViewerComponent } from "src/app/common/components/yaml-event-viewer/yaml-event-viewer.component";
-import { SourceEventCommonDataComponent } from "../common/source-event-common-data/source-event-common-data.component";
-import { isNil, promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import { ModalService } from "src/app/common/components/modal/modal.service";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
-import { NavigationService } from "src/app/services/navigation.service";
-import { FeatureFlagDirective } from "src/app/common/directives/feature-flag.directive";
-import { StepTypePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/step-type-property/step-type-property.component";
-import { EventTimePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/event-time-property/event-time-property.component";
-import { MetadataTabData } from "../../metadata.constants";
-import { EnvVariablesPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/env-variables-property/env-variables-property.component";
-import { OrderPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/order-property/order-property.component";
-import { SetPollingSourceTooltipsTexts } from "src/app/common/tooltips/set-polling-source-tooltips.text";
-import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
+
+import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
+import { ModalService } from "@common/components/modal/modal.service";
+import { YamlEventViewerComponent } from "@common/components/yaml-event-viewer/yaml-event-viewer.component";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { isNil, promiseWithCatch } from "@common/helpers/app.helpers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { SetPollingSourceTooltipsTexts } from "@common/tooltips/set-polling-source-tooltips.text";
+import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
+import { DatasetKind, EnvVar, FetchStepUrl, SetPollingSourceEventFragment } from "@api/kamu.graphql.interface";
+import { MaybeNullOrUndefined } from "@interface/app.types";
+
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
+import { EnvVariablesPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/env-variables-property/env-variables-property.component";
+import { EventTimePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/event-time-property/event-time-property.component";
+import { LinkPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/link-property/link-property.component";
+import { OrderPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/order-property/order-property.component";
+import { StepTypePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/step-type-property/step-type-property.component";
 import { TopicsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/topics-property/topics-property.component";
+import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { SourceEventCommonDataComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/common/source-event-common-data/source-event-common-data.component";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-metadata-polling-source-tab",

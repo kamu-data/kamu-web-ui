@@ -6,13 +6,14 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { LinkProtocolDesc } from "src/app/api/kamu.graphql.interface";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatTooltipModule } from "@angular/material/tooltip";
-import { MatIconModule } from "@angular/material/icon";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { FeatureFlagDirective } from "../../../../common/directives/feature-flag.directive";
-import { CopyToClipboardComponent } from "../../../../common/components/copy-to-clipboard/copy-to-clipboard.component";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+
+import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { LinkProtocolDesc } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-data-access-link-tab",

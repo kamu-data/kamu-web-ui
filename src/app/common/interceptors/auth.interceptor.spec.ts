@@ -5,12 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { TestBed } from "@angular/core/testing";
-import { AuthInterceptor } from "./auth.interceptor";
 import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
-import { LocalStorageService } from "src/app/services/local-storage.service";
+import { TestBed } from "@angular/core/testing";
+
+import { AuthInterceptor } from "@common/interceptors/auth.interceptor";
+
 import { AppConfigService } from "src/app/app-config.service";
+import { LocalStorageService } from "src/app/services/local-storage.service";
 
 describe("AuthInterceptor", () => {
     let http: HttpClient;

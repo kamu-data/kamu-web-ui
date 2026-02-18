@@ -5,27 +5,31 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, OnInit, inject } from "@angular/core";
-import ProjectLinks from "src/app/project-links";
-import AppValues from "src/app/common/values/app.values";
-import { LoginService } from "./login.service";
-import { AbstractControl, FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { PasswordLoginCredentials } from "src/app/api/auth.api.model";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import { Observable, shareReplay } from "rxjs";
-import { ActivatedRoute, Params } from "@angular/router";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { LocalStorageService } from "src/app/services/local-storage.service";
-import { LoginFormType } from "./login.component.model";
+import { AsyncPipe, NgIf, NgTemplateOutlet } from "@angular/common";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { AppConfigService } from "src/app/app-config.service";
-import { NavigationService } from "src/app/services/navigation.service";
-import { AccountProvider } from "./../../api/kamu.graphql.interface";
-import { FormValidationErrorsDirective } from "../../common/directives/form-validation-errors.directive";
-import { SpinnerComponent } from "../../common/components/spinner/spinner/spinner.component";
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
-import { NgIf, NgTemplateOutlet, AsyncPipe } from "@angular/common";
-import { LoginMethodsService } from "../login-methods.service";
+import { ActivatedRoute, Params } from "@angular/router";
+
+import { Observable, shareReplay } from "rxjs";
+
+import { BaseComponent } from "@common/components/base.component";
+import { SpinnerComponent } from "@common/components/spinner/spinner/spinner.component";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import AppValues from "@common/values/app.values";
+import { PasswordLoginCredentials } from "@api/auth.api.model";
+import { AccountProvider } from "@api/kamu.graphql.interface";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+
+import { AppConfigService } from "src/app/app-config.service";
+import { LoginMethodsService } from "src/app/auth/login-methods.service";
+import { LoginFormType } from "src/app/auth/login/login.component.model";
+import { LoginService } from "src/app/auth/login/login.service";
+import ProjectLinks from "src/app/project-links";
+import { LocalStorageService } from "src/app/services/local-storage.service";
+import { NavigationService } from "src/app/services/navigation.service";
+
 @Component({
     selector: "app-login",
     templateUrl: "./login.component.html",

@@ -5,13 +5,15 @@
  * included in the LICENSE file.
  */
 
-import { DatasetApi } from "src/app/api/dataset.api";
 import { TestBed } from "@angular/core/testing";
-import { AccountService } from "./account.service";
-import { AccountApi } from "../api/account.api";
-import { TEST_LOGIN, TEST_PAGE_NUMBER, mockAccountDetails } from "../api/mock/auth.mock";
+
 import { first, of } from "rxjs";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr, ToastrService } from "ngx-toastr";
+
+import { AccountApi } from "@api/account.api";
+import { DatasetApi } from "@api/dataset.api";
 import {
     AccountFlowFilters,
     AccountFlowProcessCardConnectionDataFragment,
@@ -19,10 +21,7 @@ import {
     Dataset,
     FlowProcessOrderField,
     OrderingDirection,
-} from "../api/kamu.graphql.interface";
-import { mockDatasetsByAccountNameQuery } from "../api/mock/dataset.mock";
-import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
-import { provideToastr, ToastrService } from "ngx-toastr";
+} from "@api/kamu.graphql.interface";
 import {
     mockAccountDatasetFlowsPausedQuery,
     mockAccountFlowsAsCardsQuery,
@@ -41,11 +40,16 @@ import {
     mockChangeUserPasswordMutation,
     mockChangeUserPasswordMutationError,
     mockDeleteAccountByNameMutation,
-} from "../api/mock/account.mock";
-import { FlowsTableData } from "../dataset-flow/flows-table/flows-table.types";
-import { ChangeAccountUsernameResult } from "./settings/account-settings.constants";
-import { CardsStrategyResult } from "./additional-components/account-flows-tab/account-flows-tab.types";
-import { Apollo } from "apollo-angular";
+} from "@api/mock/account.mock";
+import { mockAccountDetails, TEST_LOGIN, TEST_PAGE_NUMBER } from "@api/mock/auth.mock";
+import { mockDatasetsByAccountNameQuery } from "@api/mock/dataset.mock";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { DatasetsAccountResponse } from "@interface/dataset.interface";
+
+import { AccountService } from "src/app/account/account.service";
+import { CardsStrategyResult } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { ChangeAccountUsernameResult } from "src/app/account/settings/account-settings.constants";
+import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 
 describe("AccountService", () => {
     let service: AccountService;

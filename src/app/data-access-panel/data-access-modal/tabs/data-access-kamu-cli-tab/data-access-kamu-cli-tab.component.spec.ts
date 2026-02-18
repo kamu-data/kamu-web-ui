@@ -5,12 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { DataAccessKamuCliTabComponent } from "./data-access-kamu-cli-tab.component";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { mockDatasetEndPoints } from "../../../data-access-panel-mock.data";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+
+import { DataAccessKamuCliTabComponent } from "src/app/data-access-panel/data-access-modal/tabs/data-access-kamu-cli-tab/data-access-kamu-cli-tab.component";
+import { mockDatasetEndPoints } from "src/app/data-access-panel/data-access-panel-mock.data";
 
 describe("DataAccessKamuCliTabComponent", () => {
     let component: DataAccessKamuCliTabComponent;

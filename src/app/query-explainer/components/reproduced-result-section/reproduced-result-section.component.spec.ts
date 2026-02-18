@@ -6,10 +6,13 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ReproducedResultSectionComponent } from "./reproduced-result-section.component";
-import { mockQueryExplainerEmptyOutput, mockQueryExplainerOutput } from "../../query-explainer.mocks";
-import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+
 import { provideToastr } from "ngx-toastr";
+
+import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+
+import { ReproducedResultSectionComponent } from "src/app/query-explainer/components/reproduced-result-section/reproduced-result-section.component";
+import { mockQueryExplainerEmptyOutput, mockQueryExplainerOutput } from "src/app/query-explainer/query-explainer.mocks";
 
 describe("ReproducedResultSectionComponent", () => {
     let component: ReproducedResultSectionComponent;

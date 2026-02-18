@@ -5,15 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { Component, ViewChild } from "@angular/core";
-import { BufferingBatchingRuleFormComponent } from "./buffering-batching-rule-form.component";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { HarnessLoader } from "@angular/cdk/testing";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { Component, ViewChild } from "@angular/core";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ReactiveFormsModule } from "@angular/forms";
-import { BufferingBatchingRuleFormHarness } from "./buffering-batching-rule-form.harness";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { TimeUnit } from "src/app/api/kamu.graphql.interface";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { TimeUnit } from "@api/kamu.graphql.interface";
+
+import { BufferingBatchingRuleFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/buffering-batching-rule-form/buffering-batching-rule-form.component";
+import { BufferingBatchingRuleFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/buffering-batching-rule-form/buffering-batching-rule-form.harness";
 
 @Component({
     imports: [BufferingBatchingRuleFormComponent, ReactiveFormsModule],

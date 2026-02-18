@@ -5,12 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import * as monaco from "monaco-editor";
-import { BaseEditorComponent } from "../base-editor/base-editor.component";
 import { NgStyle } from "@angular/common";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+
+import * as monaco from "monaco-editor";
 import { MonacoEditorModule } from "ngx-monaco-editor-v2";
+
+import { BaseEditorComponent } from "src/app/editor/components/base-editor/base-editor.component";
 
 const YAML_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
     theme: "vs",

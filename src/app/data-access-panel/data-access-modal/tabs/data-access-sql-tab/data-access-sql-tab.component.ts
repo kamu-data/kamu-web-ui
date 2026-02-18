@@ -6,9 +6,10 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { FlightSqlDesc, JdbcDesc, PostgreSqlDesl } from "src/app/api/kamu.graphql.interface";
 import { MatIconModule } from "@angular/material/icon";
-import { CopyToClipboardComponent } from "../../../../common/components/copy-to-clipboard/copy-to-clipboard.component";
+
+import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
+import { FlightSqlDesc, JdbcDesc, PostgreSqlDesl } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-data-access-sql-tab",

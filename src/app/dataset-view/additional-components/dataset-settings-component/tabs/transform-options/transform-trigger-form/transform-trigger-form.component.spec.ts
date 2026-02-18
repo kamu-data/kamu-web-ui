@@ -5,20 +5,23 @@
  * included in the LICENSE file.
  */
 
+import { HarnessLoader } from "@angular/cdk/testing";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { Component, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { TransformTriggerFormComponent } from "./transform-trigger-form.component";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { Component, ViewChild } from "@angular/core";
-import { HarnessLoader } from "@angular/cdk/testing";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { TransformTriggerFormHarness } from "./transform-trigger-form.harness";
-import { BatchingRuleType } from "../../../dataset-settings.model";
-import { FlowTriggerBreakingChangeRule, TimeDelta, TimeUnit } from "src/app/api/kamu.graphql.interface";
-import { TransformTriggerFormValue } from "./transform-trigger-form.types";
-import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
+
+import { TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { FlowTriggerBreakingChangeRule, TimeDelta, TimeUnit } from "@api/kamu.graphql.interface";
+
+import { BatchingRuleType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { TransformTriggerFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.component";
+import { TransformTriggerFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.harness";
+import { TransformTriggerFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.types";
 
 @Component({
     imports: [

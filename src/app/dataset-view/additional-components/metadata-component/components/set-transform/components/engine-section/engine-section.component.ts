@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import AppValues from "src/app/common/values/app.values";
+import { NgIf } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -17,14 +17,16 @@ import {
     Output,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { EngineDesc, EnginesQuery, TransformSql } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull, MaybeNullOrUndefined } from "src/app/interface/app.types";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { FormsModule } from "@angular/forms";
-import { EngineSelectComponent } from "./components/engine-select/engine-select.component";
 import { MatDividerModule } from "@angular/material/divider";
-import { NgIf } from "@angular/common";
+
+import { BaseComponent } from "@common/components/base.component";
+import AppValues from "@common/values/app.values";
+import { EngineDesc, EnginesQuery, TransformSql } from "@api/kamu.graphql.interface";
+import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
+
+import { EngineSelectComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
+import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 
 @Component({
     selector: "app-engine-section",

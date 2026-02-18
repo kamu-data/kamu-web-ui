@@ -5,12 +5,13 @@
  * included in the LICENSE file.
  */
 
+import { CdkAccordionModule } from "@angular/cdk/accordion";
+import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import DataTabValues from "../../../dataset-view/additional-components/data-component/mock.data";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
-import { NgFor, NgIf } from "@angular/common";
-import { CdkAccordionModule } from "@angular/cdk/accordion";
+
+import DataTabValues from "src/app/dataset-view/additional-components/data-component/mock.data";
 
 @Component({
     selector: "app-saved-queries-section",

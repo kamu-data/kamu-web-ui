@@ -6,20 +6,26 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { MaybeUndefined } from "src/app/interface/app.types";
-import { DatasetBasicsFragment, FlowStatus } from "src/app/api/kamu.graphql.interface";
-import { AccountTabs } from "../../account.constants";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatIconModule } from "@angular/material/icon";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { ActivatedRoute, ParamMap } from "@angular/router";
-import ProjectLinks from "src/app/project-links";
+
 import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
-import { AccountFlowsNav, ProcessCardFilterMode } from "./account-flows-tab.types";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { AccountFlowsType } from "./resolvers/account-flows.resolver";
-import AppValues from "src/app/common/values/app.values";
-import { AccountFlowsActivitySubtabComponent } from "./account-flows-subtabs/account-flows-activity-subtab/account-flows-activity-subtab.component";
-import { AccountFlowsProcessesSubtabComponent } from "./account-flows-subtabs/account-flows-processes-subtab/account-flows-processes-subtab.component";
+
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
+import { DatasetBasicsFragment, FlowStatus } from "@api/kamu.graphql.interface";
+import { MaybeUndefined } from "@interface/app.types";
+
+import { AccountTabs } from "src/app/account/account.constants";
+import { AccountFlowsActivitySubtabComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-activity-subtab/account-flows-activity-subtab.component";
+import { AccountFlowsProcessesSubtabComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/account-flows-processes-subtab.component";
+import {
+    AccountFlowsNav,
+    ProcessCardFilterMode,
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { AccountFlowsType } from "src/app/account/additional-components/account-flows-tab/resolvers/account-flows.resolver";
+import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({

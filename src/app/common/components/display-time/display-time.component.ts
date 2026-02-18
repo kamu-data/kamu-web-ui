@@ -5,10 +5,13 @@
  * included in the LICENSE file.
  */
 
-import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import AppValues from "src/app/common/values/app.values";
+
 import { format, formatDistanceStrict } from "date-fns";
+
+import AppValues from "@common/values/app.values";
+
+import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 
 @Component({
     selector: "app-display-time",

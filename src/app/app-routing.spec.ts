@@ -5,44 +5,48 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
 import { Location } from "@angular/common";
-import { Router, ROUTES } from "@angular/router";
-import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "./app-routing";
-import ProjectLinks from "./project-links";
-import { promiseWithCatch } from "./common/helpers/app.helpers";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { NO_ERRORS_SCHEMA } from "@angular/core";
-import { LoggedUserService } from "./auth/logged-user.service";
-import { PageNotFoundComponent } from "./common/components/page-not-found/page-not-found.component";
-import { LoginComponent } from "./auth/login/login.component";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { accountSettingsAccessTokensResolverFn } from "./account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
-import { provideToastr } from "ngx-toastr";
-import { mockAccountDetails } from "./api/mock/auth.mock";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+import { provideAnimations } from "@angular/platform-browser/animations";
+import { Router, ROUTES } from "@angular/router";
+
 import { of } from "rxjs";
-import { AccessTokenConnection, AccountProvider } from "./api/kamu.graphql.interface";
-import { mockListAccessTokensQuery } from "./api/mock/access-token.mock";
-import { searchResolverFn } from "./search/resolver/search.resolver";
-import {
-    mockDatasetBasicsDerivedFragment,
-    mockDatasetSearchResult,
-    mockFullPowerDatasetPermissionsFragment,
-} from "./search/mock.data";
-import { datasetViewResolverFn } from "./dataset-view/resolvers/dataset-view.resolver";
-import { datasetOverviewTabResolverFn } from "./dataset-view/additional-components/overview-component/resolver/dataset-overview-tab.resolver";
+
+import { NgxGraphModule } from "@swimlane/ngx-graph";
+import { Apollo } from "apollo-angular";
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { provideToastr } from "ngx-toastr";
+
+import { PageNotFoundComponent } from "@common/components/page-not-found/page-not-found.component";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { AccessTokenConnection, AccountProvider } from "@api/kamu.graphql.interface";
+import { mockListAccessTokensQuery } from "@api/mock/access-token.mock";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+
+import { accountSettingsAccessTokensResolverFn } from "src/app/account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
+import { AppConfigService } from "src/app/app-config.service";
+import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "src/app/app-routing";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { LoginMethodsService } from "src/app/auth/login-methods.service";
+import { LoginComponent } from "src/app/auth/login/login.component";
 import {
     mockMetadataDerivedUpdate,
     mockOverviewDataUpdate,
     mockOverviewDataUpdateNullable,
-} from "./dataset-view/additional-components/data-tabs.mock";
-import { OverviewUpdate } from "./dataset-view/dataset.subscriptions.interface";
-import { NgxGraphModule } from "@swimlane/ngx-graph";
-import { provideAnimations } from "@angular/platform-browser/animations";
-import { AppConfigService } from "./app-config.service";
-import { LoginMethodsService } from "./auth/login-methods.service";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { Apollo } from "apollo-angular";
+} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { datasetOverviewTabResolverFn } from "src/app/dataset-view/additional-components/overview-component/resolver/dataset-overview-tab.resolver";
+import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { datasetViewResolverFn } from "src/app/dataset-view/resolvers/dataset-view.resolver";
+import ProjectLinks from "src/app/project-links";
+import {
+    mockDatasetBasicsDerivedFragment,
+    mockDatasetSearchResult,
+    mockFullPowerDatasetPermissionsFragment,
+} from "src/app/search/mock.data";
+import { searchResolverFn } from "src/app/search/resolver/search.resolver";
 
 describe("Router", () => {
     let router: Router;

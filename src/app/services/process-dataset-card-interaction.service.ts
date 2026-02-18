@@ -6,12 +6,15 @@
  */
 
 import { inject, Injectable } from "@angular/core";
-import { DatasetFlowsService } from "../dataset-view/additional-components/flows-component/services/dataset-flows.service";
+
 import { Observable, of, take } from "rxjs";
-import { DatasetBasicsFragment, DatasetKind, FlowProcessEffectiveState } from "../api/kamu.graphql.interface";
-import AppValues from "../common/values/app.values";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { promiseWithCatch } from "../common/helpers/app.helpers";
+
+import { ModalService } from "@common/components/modal/modal.service";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
+import AppValues from "@common/values/app.values";
+import { DatasetBasicsFragment, DatasetKind, FlowProcessEffectiveState } from "@api/kamu.graphql.interface";
+
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 
 @Injectable({
     providedIn: "root",

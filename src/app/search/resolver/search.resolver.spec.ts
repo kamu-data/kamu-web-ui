@@ -5,20 +5,24 @@
  * included in the LICENSE file.
  */
 
-import { TestBed } from "@angular/core/testing";
-import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
-import { searchResolverFn } from "./search.resolver";
-import ProjectLinks from "src/app/project-links";
-import { SearchService } from "src/app/search/search.service";
-import { Apollo } from "apollo-angular";
-import { Observable, of } from "rxjs";
-import { DatasetSearchResult } from "src/app/interface/search.interface";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { mockDatasetSearchResult } from "src/app/search/mock.data";
-import { provideToastr } from "ngx-toastr";
-import { AppConfigService } from "src/app/app-config.service";
-import { provideAnimations } from "@angular/platform-browser/animations";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { TestBed } from "@angular/core/testing";
+import { provideAnimations } from "@angular/platform-browser/animations";
+import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
+
+import { Observable, of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
+
+import { DatasetSearchResult } from "@interface/search.interface";
+
+import { AppConfigService } from "src/app/app-config.service";
+import ProjectLinks from "src/app/project-links";
+import { mockDatasetSearchResult } from "src/app/search/mock.data";
+import { searchResolverFn } from "src/app/search/resolver/search.resolver";
+import { SearchService } from "src/app/search/search.service";
 
 describe("searchResolverFn", () => {
     let routeSnapshot: ActivatedRouteSnapshot;

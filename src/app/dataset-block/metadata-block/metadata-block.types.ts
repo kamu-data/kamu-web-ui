@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
+import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
 
 export interface MetadataBlockInfo {
     block: MetadataBlockFragment;

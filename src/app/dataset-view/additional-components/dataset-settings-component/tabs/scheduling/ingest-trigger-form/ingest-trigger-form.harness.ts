@@ -8,12 +8,14 @@
 /* istanbul ignore file */
 
 import { ComponentHarness } from "@angular/cdk/testing";
-import { ScheduleType } from "../../../dataset-settings.model";
-import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
-import { CronExpressionFormHarness } from "src/app/common/components/cron-expression-form/cron-expression-form.harness";
-import { TimeDeltaFormHarness } from "src/app/common/components/time-delta-form/time-delta-form.harness";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
-import { IngestTriggerFormValue } from "./ingest-trigger-form.types";
+
+import { CronExpressionFormHarness } from "@common/components/cron-expression-form/cron-expression-form.harness";
+import { TimeDeltaFormHarness } from "@common/components/time-delta-form/time-delta-form.harness";
+import { TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
+
+import { ScheduleType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { IngestTriggerFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger-form.types";
 
 export class IngestTriggerFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-ingest-trigger-form";

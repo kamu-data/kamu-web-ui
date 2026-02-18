@@ -6,16 +6,17 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ProcessFormService } from "./process-form.service";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
-import { SchemaControlType } from "../components/source-events/add-polling-source/process-form.service.types";
+
 import {
     EventTimeSourceKind,
     FetchKind,
     MergeKind,
     PrepareKind,
     ReadKind,
-} from "../components/source-events/add-polling-source/add-polling-source-form.types";
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { SchemaControlType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
+import { ProcessFormService } from "src/app/dataset-view/additional-components/metadata-component/services/process-form.service";
 
 describe("ProcessFormService", () => {
     let service: ProcessFormService;

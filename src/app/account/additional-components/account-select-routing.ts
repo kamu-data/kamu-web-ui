@@ -8,17 +8,19 @@
 /* istanbul ignore file */
 
 import { Routes } from "@angular/router";
-import { AccountTabs } from "../account.constants";
-import { AccountFlowsTabComponent } from "./account-flows-tab/account-flows-tab.component";
-import { DatasetsTabComponent } from "./datasets-tab/datasets-tab.component";
-import { accountDatasetsResolverFn } from "./datasets-tab/resolver/account-datasets.resolver";
-import { SettingsTabComponent } from "./settings-tab/settings-tab.component";
-import { AuthenticatedGuard } from "../../auth/guards/authenticated.guard";
-import RoutingResolvers from "../../common/resolvers/routing-resolvers";
-import ProjectLinks from "../../project-links";
-import { AccountComponent } from "../account.component";
-import { accountActiveTabResolverFn } from "../resolver/account-active-tab.resolver";
-import { accountFlowsResolverFn } from "./account-flows-tab/resolvers/account-flows.resolver";
+
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+
+import { AccountComponent } from "src/app/account/account.component";
+import { AccountTabs } from "src/app/account/account.constants";
+import { AccountFlowsTabComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.component";
+import { accountFlowsResolverFn } from "src/app/account/additional-components/account-flows-tab/resolvers/account-flows.resolver";
+import { DatasetsTabComponent } from "src/app/account/additional-components/datasets-tab/datasets-tab.component";
+import { accountDatasetsResolverFn } from "src/app/account/additional-components/datasets-tab/resolver/account-datasets.resolver";
+import { SettingsTabComponent } from "src/app/account/additional-components/settings-tab/settings-tab.component";
+import { accountActiveTabResolverFn } from "src/app/account/resolver/account-active-tab.resolver";
+import { AuthenticatedGuard } from "src/app/auth/guards/authenticated.guard";
+import ProjectLinks from "src/app/project-links";
 
 export const ACCOUNT_SELECT_ROUTES: Routes = [
     {

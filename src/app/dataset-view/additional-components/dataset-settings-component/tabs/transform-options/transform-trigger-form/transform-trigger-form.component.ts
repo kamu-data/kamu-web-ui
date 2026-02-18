@@ -6,23 +6,25 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { FlowTriggerBreakingChangeRule, FlowTriggerRuleInput } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { FormGroup, FormControl, AbstractControl, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { MaybeNull } from "src/app/interface/app.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { MatRadioModule } from "@angular/material/radio";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+
+import { BaseComponent } from "@common/components/base.component";
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
+import { FlowTriggerBreakingChangeRule, FlowTriggerRuleInput } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
+import { BatchingRuleType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { BufferingBatchingRuleFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/buffering-batching-rule-form/buffering-batching-rule-form.component";
+import { BufferingBatchingRuleFormType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/buffering-batching-rule-form/buffering-batching-rule-form.types";
 import {
     BatchingRuleFormType,
     TransformTriggerFormType,
     TransformTriggerFormValue,
-} from "./transform-trigger-form.types";
-import { BatchingRuleType } from "../../../dataset-settings.model";
-import { FlowTooltipsTexts } from "src/app/common/tooltips/flow-tooltips.text";
-import { MatRadioModule } from "@angular/material/radio";
-import { BufferingBatchingRuleFormComponent } from "../buffering-batching-rule-form/buffering-batching-rule-form.component";
-import { BufferingBatchingRuleFormType } from "../buffering-batching-rule-form/buffering-batching-rule-form.types";
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.types";
 
 @Component({
     selector: "app-transform-trigger-form",

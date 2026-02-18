@@ -6,10 +6,13 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { SettingsTabComponent } from "./settings-tab.component";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { SettingsTabComponent } from "src/app/account/additional-components/settings-tab/settings-tab.component";
 
 describe("SettingsTabComponent", () => {
     let component: SettingsTabComponent;

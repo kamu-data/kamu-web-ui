@@ -7,13 +7,16 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { datasetOverviewTabResolverFn } from "./dataset-overview-tab.resolver";
+
 import { Observable, throwError } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+
+import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { datasetOverviewTabResolverFn } from "src/app/dataset-view/additional-components/overview-component/resolver/dataset-overview-tab.resolver";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { Apollo } from "apollo-angular";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 

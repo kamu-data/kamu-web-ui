@@ -6,10 +6,13 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { HashPropertyComponent } from "./hash-property.component";
+
 import { provideToastr } from "ngx-toastr";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { HashPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/hash-property/hash-property.component";
 
 describe("HashPropertyComponent", () => {
     let component: HashPropertyComponent;

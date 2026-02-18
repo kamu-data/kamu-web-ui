@@ -9,7 +9,7 @@ import {
     DatasetBasicsFragment,
     DatasetMetadataSummaryFragment,
     DatasetPermissionsFragment,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
 
 export enum MetadataTabs {
     Schema = "schema",

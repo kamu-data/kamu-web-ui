@@ -5,13 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { By, DomSanitizer } from "@angular/platform-browser";
 import { DebugElement } from "@angular/core";
-import { ReplaySubject } from "rxjs";
-import { ActivatedRoute, RouterEvent } from "@angular/router";
-import { MaybeNull } from "src/app/interface/app.types";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatIconRegistry } from "@angular/material/icon";
+import { By, DomSanitizer } from "@angular/platform-browser";
+import { ActivatedRoute, RouterEvent } from "@angular/router";
+
+import { ReplaySubject } from "rxjs";
+
+import { MaybeNull } from "@interface/app.types";
+
 import ProjectLinks from "src/app/project-links";
 
 export function findElement<T>(fixture: ComponentFixture<T>, selector: string): DebugElement {

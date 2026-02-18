@@ -8,28 +8,30 @@
 /* istanbul ignore file */
 
 import { Routes } from "@angular/router";
-import { datasetInfoResolverFn } from "../../../common/resolvers/dataset-info.resolver";
-import RoutingResolvers from "../../../common/resolvers/routing-resolvers";
-import { SettingsTabsEnum } from "./dataset-settings.model";
-import { DatasetSettingsAccessTabComponent } from "./tabs/access/dataset-settings-access-tab/dataset-settings-access-tab.component";
-import { datasetSettingsAccessTabResolverFn } from "./tabs/access/dataset-settings-access-tab/resolver/dataset-settings-access-tab.resolver";
-import { DatasetSettingsCompactingTabComponent } from "./tabs/compacting/dataset-settings-compacting-tab.component";
-import { datasetSettingsCompactionTabResolverFn } from "./tabs/compacting/resolver/dataset-settings-compaction-tab.resolver";
-import { DatasetSettingsGeneralTabComponent } from "./tabs/general/dataset-settings-general-tab.component";
-import { datasetSettingsGeneralTabResolverFn } from "./tabs/general/resolver/dataset-settings-general-tab.resolver";
-import { DatasetSettingsIngestConfigurationTabComponent } from "./tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.component";
-import { datasetSettingsIngestConfigurationResolverFn } from "./tabs/ingest-configuration/resolver/dataset-settings-ingest-configuration.resolver";
-import { DatasetSettingsSchedulingTabComponent } from "./tabs/scheduling/dataset-settings-scheduling-tab.component";
-import { datasetSettingsSchedulingTabResolverFn } from "./tabs/scheduling/resolver/dataset-settings-scheduling-tab.resolver";
-import { DatasetSettingsTransformOptionsTabComponent } from "./tabs/transform-options/dataset-settings-transform-options-tab.component";
-import { datasetSettingsTransformTabResolverFn } from "./tabs/transform-options/resolver/dataset-settings-transform-tab.resolver";
-import { DatasetSettingsSecretsManagerTabComponent } from "./tabs/variables-and-secrets/dataset-settings-secrets-manager-tab.component";
-import { datasetSettingsVarAndSecretsResolverFn } from "./tabs/variables-and-secrets/resolver/dataset-settings-var-and-secrets.resolver";
-import { DatasetSettingsWebhooksTabComponent } from "./tabs/webhooks/dataset-settings-webhooks-tab.component";
-import ProjectLinks from "../../../project-links";
-import { DatasetSettingsComponent } from "./dataset-settings.component";
-import { datasetSettingsTabResolverFn } from "./resolvers/dataset-settings-tab.resolver";
-import { datasetSettingsActiveSectionResolverFn } from "./resolvers/dataset-settings-active-section.resolver";
+
+import { datasetInfoResolverFn } from "@common/resolvers/dataset-info.resolver";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+
+import { DatasetSettingsComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.component";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { datasetSettingsActiveSectionResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/resolvers/dataset-settings-active-section.resolver";
+import { datasetSettingsTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/resolvers/dataset-settings-tab.resolver";
+import { DatasetSettingsAccessTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-settings-access-tab.component";
+import { datasetSettingsAccessTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/resolver/dataset-settings-access-tab.resolver";
+import { DatasetSettingsCompactingTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.component";
+import { datasetSettingsCompactionTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/resolver/dataset-settings-compaction-tab.resolver";
+import { DatasetSettingsGeneralTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.component";
+import { datasetSettingsGeneralTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/resolver/dataset-settings-general-tab.resolver";
+import { DatasetSettingsIngestConfigurationTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.component";
+import { datasetSettingsIngestConfigurationResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/resolver/dataset-settings-ingest-configuration.resolver";
+import { DatasetSettingsSchedulingTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.component";
+import { datasetSettingsSchedulingTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/resolver/dataset-settings-scheduling-tab.resolver";
+import { DatasetSettingsTransformOptionsTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.component";
+import { datasetSettingsTransformTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/resolver/dataset-settings-transform-tab.resolver";
+import { DatasetSettingsSecretsManagerTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-settings-secrets-manager-tab.component";
+import { datasetSettingsVarAndSecretsResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/resolver/dataset-settings-var-and-secrets.resolver";
+import { DatasetSettingsWebhooksTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component";
+import ProjectLinks from "src/app/project-links";
 
 export const DATASET_SETTINGS_ROUTES: Routes = [
     {

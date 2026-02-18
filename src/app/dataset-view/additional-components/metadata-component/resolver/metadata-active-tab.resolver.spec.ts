@@ -7,8 +7,9 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { metadataActiveTabResolverFn } from "./metadata-active-tab.resolver";
-import { MetadataTabs } from "../metadata.constants";
+
+import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { metadataActiveTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/resolver/metadata-active-tab.resolver";
 import ProjectLinks from "src/app/project-links";
 
 describe("metadataActiveTabResolver", () => {

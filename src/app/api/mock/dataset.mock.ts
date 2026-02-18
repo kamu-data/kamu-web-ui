@@ -5,9 +5,12 @@
  * included in the LICENSE file.
  */
 
+import { Node } from "@swimlane/ngx-graph";
+
 import {
     CompareChainsStatus,
     DataBatchFormat,
+    DataSchemaFormat,
     DatasetByAccountAndDatasetNameQuery,
     DatasetByIdQuery,
     DatasetKind,
@@ -18,22 +21,21 @@ import {
     GetDatasetBasicsWithPermissionsQuery,
     GetDatasetDataSqlRunQuery,
     GetMetadataBlockQuery,
-} from "../kamu.graphql.interface";
-import { DataSchemaFormat } from "../kamu.graphql.interface";
-import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
-import { TEST_LOGIN } from "./auth.mock";
-import {
-    mockFullPowerDatasetPermissionsFragment,
-    mockOwnerFieldsWithAvatar,
-    mockPublicDatasetVisibility,
-} from "src/app/search/mock.data";
+} from "@api/kamu.graphql.interface";
+import { TEST_LOGIN } from "@api/mock/auth.mock";
+import { DatasetsAccountResponse } from "@interface/dataset.interface";
+
 import {
     LineageGraphDatasetNodeObject,
     LineageGraphNodeData,
     LineageGraphNodeKind,
     LineageNodeAccess,
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
-import { Node } from "@swimlane/ngx-graph";
+import {
+    mockFullPowerDatasetPermissionsFragment,
+    mockOwnerFieldsWithAvatar,
+    mockPublicDatasetVisibility,
+} from "src/app/search/mock.data";
 
 export const TEST_DATASET_ID = "did:odf:z4k88e8kmp7wTEePmNDSprhY2TqwDxSiFwHiau8fnUk4V4Cpgu7";
 export const TEST_DATASET_NAME = "test-dataset";

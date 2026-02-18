@@ -5,8 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { MaybeNullOrUndefined } from "src/app/interface/app.types";
 import { fakeAsync, flush, tick } from "@angular/core/testing";
+
+import { subDays } from "date-fns";
+
 import {
     isEqual,
     isNil,
@@ -14,9 +16,9 @@ import {
     momentConvertDateToLocalWithFormat,
     promiseWithCatch,
     requireValue,
-} from "./app.helpers";
-import AppValues from "../values/app.values";
-import { subDays } from "date-fns";
+} from "@common/helpers/app.helpers";
+import AppValues from "@common/values/app.values";
+import { MaybeNullOrUndefined } from "@interface/app.types";
 
 describe("AppHelpers", () => {
     it("should check non-null requireValue", () => {

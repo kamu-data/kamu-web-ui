@@ -7,14 +7,17 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatDividerModule } from "@angular/material/divider";
+
+import { NgSelectModule } from "@ng-select/ng-select";
+
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { ErrorSets } from "@common/directives/form-validation-errors.types";
+
 import {
     SubscribedEventType,
     WebhookSubscriptionFormType,
-} from "../../../dataset-settings-webhooks-tab.component.types";
-import { MatDividerModule } from "@angular/material/divider";
-import { NgSelectModule } from "@ng-select/ng-select";
-import { ErrorSets } from "src/app/common/directives/form-validation-errors.types";
-import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
 
 @Component({
     selector: "app-webhook-form",

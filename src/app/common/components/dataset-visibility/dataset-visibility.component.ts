@@ -5,9 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { DatasetVisibilityOutput } from "src/app/api/kamu.graphql.interface";
 import { NgClass } from "@angular/common";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+
+import { DatasetVisibilityOutput } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-dataset-visibility",

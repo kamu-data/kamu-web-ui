@@ -5,12 +5,15 @@
  * included in the LICENSE file.
  */
 
-import { Observable } from "rxjs";
-import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../../api/kamu.graphql.interface";
 import { inject } from "@angular/core";
-import { DatasetService } from "../../dataset-view/dataset.service";
-import { DatasetSubscriptionsService } from "../../dataset-view/dataset.subscriptions.service";
-import { BaseProcessingComponent } from "./base.processing.component";
+
+import { Observable } from "rxjs";
+
+import { BaseProcessingComponent } from "@common/components/base.processing.component";
+import { DatasetBasicsFragment, DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
+
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 
 export abstract class BaseDatasetDataComponent extends BaseProcessingComponent {
     protected datasetService = inject(DatasetService);

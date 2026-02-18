@@ -6,11 +6,15 @@
  */
 
 import { FormControl, FormGroup } from "@angular/forms";
-import { IngestTriggerFormType, IngestTriggerFormValue } from "./ingest-trigger-form/ingest-trigger-form.types";
+
+import {
+    IngestTriggerFormType,
+    IngestTriggerFormValue,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger-form.types";
 import {
     FlowStopPolicyFormType,
     FlowStopPolicyFormValue,
-} from "../shared/flow-stop-policy-form/flow-stop-policy-form.types";
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.types";
 
 export interface SchedulingSettingsFormType {
     updatesEnabled: FormControl<boolean>;

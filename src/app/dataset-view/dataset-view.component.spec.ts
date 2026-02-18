@@ -5,22 +5,26 @@
  * included in the LICENSE file.
  */
 
-import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "../search/mock.data";
-import { DatasetService } from "./dataset.service";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ActivatedRoute } from "@angular/router";
-import { Apollo } from "apollo-angular";
-import { DatasetViewComponent } from "./dataset-view.component";
-import { NavigationService } from "../services/navigation.service";
-import { DatasetViewTypeEnum } from "./dataset-view.interface";
-import { of } from "rxjs";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ChangeDetectionStrategy } from "@angular/core";
-import { DatasetSubscriptionsService } from "./dataset.subscriptions.service";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ActivatedRoute } from "@angular/router";
+
+import { of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { registerMatSvgIcons } from "../common/helpers/base-test.helpers.spec";
-import { MOCK_DATASET_INFO } from "./additional-components/metadata-component/components/set-transform/mock.data";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+
+import { MOCK_DATASET_INFO } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { DatasetViewComponent } from "src/app/dataset-view/dataset-view.component";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("DatasetViewComponent", () => {
     let component: DatasetViewComponent;

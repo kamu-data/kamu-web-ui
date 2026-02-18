@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { NgIf, NgStyle } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -17,16 +18,19 @@ import {
     Output,
     ViewChild,
 } from "@angular/core";
-import * as monaco from "monaco-editor";
-import { getMonacoNamespace } from "../../services/monaco.service";
-import { BaseEditorComponent } from "../base-editor/base-editor.component";
-import { getSqlError } from "../../helpers/editor-error-formatter";
-import { fromEvent, filter, take, Subscription, takeWhile } from "rxjs";
-import { EditorComponent, MonacoEditorModule } from "ngx-monaco-editor-v2";
-import AppValues from "src/app/common/values/app.values";
 import { FormsModule } from "@angular/forms";
-import { NgStyle, NgIf } from "@angular/common";
-import { MaybeNull } from "src/app/interface/app.types";
+
+import { filter, fromEvent, Subscription, take, takeWhile } from "rxjs";
+
+import * as monaco from "monaco-editor";
+import { EditorComponent, MonacoEditorModule } from "ngx-monaco-editor-v2";
+
+import AppValues from "@common/values/app.values";
+import { MaybeNull } from "@interface/app.types";
+
+import { BaseEditorComponent } from "src/app/editor/components/base-editor/base-editor.component";
+import { getSqlError } from "src/app/editor/helpers/editor-error-formatter";
+import { getMonacoNamespace } from "src/app/editor/services/monaco.service";
 
 const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
     theme: "vs",

@@ -6,6 +6,7 @@
  */
 
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
+
 import { AccountSettingsTabs } from "src/app/account/settings/account-settings.constants";
 import ProjectLinks from "src/app/project-links";
 

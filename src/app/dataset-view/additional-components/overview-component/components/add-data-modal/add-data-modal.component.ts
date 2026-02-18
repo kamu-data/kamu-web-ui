@@ -6,18 +6,21 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { FileFromUrlModalComponent } from "../file-from-url-modal/file-from-url-modal.component";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
-import { FileUploadService } from "src/app/services/file-upload.service";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { AppConfigService } from "src/app/app-config.service";
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import { MatIconModule } from "@angular/material/icon";
-import { FeatureFlagDirective } from "../../../../../common/directives/feature-flag.directive";
 import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+
+import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
+
+import { BaseComponent } from "@common/components/base.component";
+import { ModalService } from "@common/components/modal/modal.service";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
+
+import { AppConfigService } from "src/app/app-config.service";
+import { FileFromUrlModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/file-from-url-modal/file-from-url-modal.component";
+import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { FileUploadService } from "src/app/services/file-upload.service";
 
 @Component({
     selector: "app-add-data-modal",

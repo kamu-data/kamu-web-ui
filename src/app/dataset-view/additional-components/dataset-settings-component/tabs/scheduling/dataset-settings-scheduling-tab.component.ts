@@ -5,26 +5,34 @@
  * included in the LICENSE file.
  */
 
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { ScheduleType, FlowTriggerStopPolicyType } from "../../dataset-settings.model";
-import { DatasetBasicsFragment, DatasetFlowType, DatasetKind } from "src/app/api/kamu.graphql.interface";
-import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { IngestTriggerFormComponent } from "./ingest-trigger-form/ingest-trigger-form.component";
 import { NgIf } from "@angular/common";
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
-import { MaybeNull } from "src/app/interface/app.types";
-import { IngestTriggerFormValue } from "./ingest-trigger-form/ingest-trigger-form.types";
-import { DatasetSettingsSchedulingTabData } from "./dataset-settings-scheduling-tab.data";
-import { SchedulingSettingsFormType, SchedulingSettingsFormValue } from "./dataset-settings-scheduling-tab.types";
-import { FlowStopPolicyFormComponent } from "../shared/flow-stop-policy-form/flow-stop-policy-form.component";
-import { FlowStopPolicyFormValue } from "../shared/flow-stop-policy-form/flow-stop-policy-form.types";
-import { FlowTooltipsTexts } from "src/app/common/tooltips/flow-tooltips.text";
-import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+
+import { BaseComponent } from "@common/components/base.component";
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
+import { DatasetBasicsFragment, DatasetFlowType, DatasetKind } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
+import {
+    FlowTriggerStopPolicyType,
+    ScheduleType,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
+import { DatasetSettingsSchedulingTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.data";
+import {
+    SchedulingSettingsFormType,
+    SchedulingSettingsFormValue,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.types";
+import { IngestTriggerFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger-form.component";
+import { IngestTriggerFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger-form.types";
+import { FlowStopPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.component";
+import { FlowStopPolicyFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.types";
 
 @Component({
     selector: "app-dataset-settings-scheduling-tab",

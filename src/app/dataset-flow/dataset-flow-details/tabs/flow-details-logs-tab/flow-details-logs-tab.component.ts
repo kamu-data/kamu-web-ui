@@ -5,14 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { GrafanaLogsService } from "../../../../services/grafana-logs.service";
-import { DatasetFlowByIdResponse } from "../../dataset-flow-details.types";
-import { AppConfigService } from "src/app/app-config.service";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { MatIconModule } from "@angular/material/icon";
 import { NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
+import { MatIconModule } from "@angular/material/icon";
+
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+
+import { AppConfigService } from "src/app/app-config.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { GrafanaLogsService } from "src/app/services/grafana-logs.service";
 
 @Component({
     selector: "app-flow-details-logs-tab",

@@ -6,7 +6,8 @@
  */
 
 import { ThemePalette } from "@angular/material/core";
-import { DatasetBasicsFragment, DatasetSearchOverviewFragment, PageBasedInfo } from "../api/kamu.graphql.interface";
+
+import { DatasetBasicsFragment, DatasetSearchOverviewFragment, PageBasedInfo } from "@api/kamu.graphql.interface";
 
 export interface DatasetSearchResult {
     datasets: DatasetSearchOverviewFragment[];

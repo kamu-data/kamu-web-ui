@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DisplaySizePipe } from "./display-size.pipe";
+import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 
 describe("DisplaySizePipe", () => {
     const pipe = new DisplaySizePipe();

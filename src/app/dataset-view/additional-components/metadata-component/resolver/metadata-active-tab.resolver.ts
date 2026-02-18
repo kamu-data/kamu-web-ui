@@ -6,7 +6,8 @@
  */
 
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
-import { MetadataTabs } from "../metadata.constants";
+
+import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
 import ProjectLinks from "src/app/project-links";
 
 export const metadataActiveTabResolverFn: ResolveFn<MetadataTabs> = (route: ActivatedRouteSnapshot) => {

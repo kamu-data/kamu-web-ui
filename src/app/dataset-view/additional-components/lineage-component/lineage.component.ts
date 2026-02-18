@@ -5,22 +5,30 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input, inject } from "@angular/core";
-import { Node } from "@swimlane/ngx-graph";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { LineageGraphNodeData, LineageGraphNodeKind, LineageGraphUpdate } from "./lineage-model";
-import { MaybeNull } from "src/app/interface/app.types";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { ToastrService } from "ngx-toastr";
 import { Clipboard } from "@angular/cdk/clipboard";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { DatasetViewTypeEnum } from "../../dataset-view.interface";
-import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetService } from "../../dataset.service";
-import { LineageGraphBuilderService } from "./services/lineage-graph-builder.service";
+import { AsyncPipe, NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
+
 import { Observable, switchMap } from "rxjs";
-import { LineageGraphComponent } from "../../../common/components/lineage-graph/lineage-graph.component";
-import { NgIf, AsyncPipe } from "@angular/common";
+
+import { Node } from "@swimlane/ngx-graph";
+import { ToastrService } from "ngx-toastr";
+
+import { BaseComponent } from "@common/components/base.component";
+import { LineageGraphComponent } from "@common/components/lineage-graph/lineage-graph.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
+
+import {
+    LineageGraphNodeData,
+    LineageGraphNodeKind,
+    LineageGraphUpdate,
+} from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
+import { LineageGraphBuilderService } from "src/app/dataset-view/additional-components/lineage-component/services/lineage-graph-builder.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-lineage",

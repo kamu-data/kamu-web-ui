@@ -5,26 +5,29 @@
  * included in the LICENSE file.
  */
 
-import ProjectLinks from "src/app/project-links";
-import { AccountProvider, AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
-import {
-    AccountSettingsMenuItem,
-    ACCOUNT_SETTINGS_MENU_ITEMS,
-    AccountSettingsTabs,
-} from "./account-settings.constants";
+import { AsyncPipe, NgClass, NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { switchMap } from "rxjs/operators";
-import { BaseComponent } from "src/app/common/components/base.component";
-import AppValues from "src/app/common/values/app.values";
-import { MaybeNull } from "src/app/interface/app.types";
-import { EMPTY, Observable } from "rxjs";
-import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
-import { LoggedUserService } from "../../auth/logged-user.service";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
 import { MatIconModule } from "@angular/material/icon";
-import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";
 import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
-import { NgIf, NgFor, NgClass, AsyncPipe } from "@angular/common";
+
+import { EMPTY, Observable } from "rxjs";
+import { switchMap } from "rxjs/operators";
+
+import { BaseComponent } from "@common/components/base.component";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
+import { AccountProvider, AccountWithEmailFragment } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
+import {
+    ACCOUNT_SETTINGS_MENU_ITEMS,
+    AccountSettingsMenuItem,
+    AccountSettingsTabs,
+} from "src/app/account/settings/account-settings.constants";
+import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-settings",

@@ -6,10 +6,14 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { DatasetWebhooksService } from "./dataset-webhooks.service";
+
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
-import { WebhooksApi } from "src/app/api/webhooks.api";
+
+import { WebhookSubscription } from "@api/kamu.graphql.interface";
+import { TEST_DATASET_ID } from "@api/mock/dataset.mock";
 import {
     mockDatasetWebhookByIdQuery,
     mockDatasetWebhookCreateSubscriptionMutation,
@@ -27,11 +31,11 @@ import {
     mockDatasetWebhookUpdateSubscriptionMutation,
     mockDatasetWebhookUpdateSubscriptionMutationError,
     mockWebhookSubscriptionInput,
-} from "src/app/api/mock/webhooks.mock";
-import { of } from "rxjs";
-import { TEST_DATASET_ID } from "src/app/api/mock/dataset.mock";
-import { WebhookSubscription } from "src/app/api/kamu.graphql.interface";
-import { CreateWebhookSubscriptionSuccess } from "../dataset-settings-webhooks-tab.component.types";
+} from "@api/mock/webhooks.mock";
+import { WebhooksApi } from "@api/webhooks.api";
+
+import { CreateWebhookSubscriptionSuccess } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
+import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 
 describe("DatasetWebhooksService", () => {
     let service: DatasetWebhooksService;

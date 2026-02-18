@@ -6,9 +6,11 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { SourceNameStepComponent } from "./source-name-step.component";
 import { FormControl, FormGroup } from "@angular/forms";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { SourceNameStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/source-name-step/source-name-step.component";
 
 describe("SourceNameStepComponent", () => {
     let component: SourceNameStepComponent;

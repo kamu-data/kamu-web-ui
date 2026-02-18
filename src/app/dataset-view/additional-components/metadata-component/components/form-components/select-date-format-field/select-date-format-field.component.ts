@@ -5,16 +5,19 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { BaseField } from "../base-field";
-import { EventTimeSourceKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { RxwebValidators, RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { TypeaheadFieldComponent } from "../typeahead-field/typeahead-field.component";
-import { InputFieldComponent } from "../input-field/input-field.component";
 import { NgIf } from "@angular/common";
-import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+
+import { RxReactiveFormsModule, RxwebValidators } from "@rxweb/reactive-form-validators";
+
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+
+import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
+import { InputFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/input-field/input-field.component";
+import { TypeaheadFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/typeahead-field/typeahead-field.component";
+import { EventTimeSourceKind } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 
 @Component({
     selector: "app-select-date-format-field",

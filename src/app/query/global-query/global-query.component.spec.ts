@@ -5,18 +5,22 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { GlobalQueryComponent } from "./global-query.component";
-import { Apollo } from "apollo-angular";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { provideToastr } from "ngx-toastr";
-import { SqlQueryService } from "src/app/services/sql-query.service";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
 import { of } from "rxjs";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { NavigationService } from "src/app/services/navigation.service";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { GlobalQueryComponent } from "src/app/query/global-query/global-query.component";
+import { NavigationService } from "src/app/services/navigation.service";
+import { SqlQueryService } from "src/app/services/sql-query.service";
 
 describe("GlobalQueryComponent", () => {
     let component: GlobalQueryComponent;

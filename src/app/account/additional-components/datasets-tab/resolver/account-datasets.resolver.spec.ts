@@ -6,16 +6,20 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRoute, ActivatedRouteSnapshot, convertToParamMap, ResolveFn, Router } from "@angular/router";
-import { accountDatasetsResolverFn } from "./account-datasets.resolver";
-import { DatasetsAccountResolverResponse } from "src/app/interface/dataset.interface";
-import { Apollo } from "apollo-angular";
-import { AccountService } from "src/app/account/account.service";
-import ProjectLinks from "src/app/project-links";
-import { TEST_ACCOUNT_NAME } from "src/app/api/mock/dataset.mock";
-import { provideToastr } from "ngx-toastr";
-import { of } from "rxjs";
 import { provideAnimations } from "@angular/platform-browser/animations";
+import { ActivatedRoute, ActivatedRouteSnapshot, convertToParamMap, ResolveFn, Router } from "@angular/router";
+
+import { of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
+
+import { TEST_ACCOUNT_NAME } from "@api/mock/dataset.mock";
+import { DatasetsAccountResolverResponse } from "@interface/dataset.interface";
+
+import { AccountService } from "src/app/account/account.service";
+import { accountDatasetsResolverFn } from "src/app/account/additional-components/datasets-tab/resolver/account-datasets.resolver";
+import ProjectLinks from "src/app/project-links";
 
 describe("accountDatasetsResolverFn", () => {
     let router: Router;

@@ -6,7 +6,8 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { MonacoService } from "./monaco.service";
+
+import { MonacoService } from "src/app/editor/services/monaco.service";
 
 describe("MonacoService", () => {
     let service: MonacoService;

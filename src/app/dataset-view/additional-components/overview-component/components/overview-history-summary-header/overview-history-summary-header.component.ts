@@ -5,18 +5,20 @@
  * included in the LICENSE file.
  */
 
-import { MaybeUndefined } from "src/app/interface/app.types";
+import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { AccountBasicsFragment, AccountProvider, MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
-import AppValues from "src/app/common/values/app.values";
-import { DataHelpers } from "src/app/common/helpers/data.helpers";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterLink } from "@angular/router";
+
+import { DisplayHashComponent } from "@common/components/display-hash/display-hash.component";
+import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
+import { DataHelpers } from "@common/helpers/data.helpers";
+import AppValues from "@common/values/app.values";
+import { AccountBasicsFragment, AccountProvider, MetadataBlockFragment } from "@api/kamu.graphql.interface";
+import { MaybeUndefined } from "@interface/app.types";
+
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
-import { MatIconModule } from "@angular/material/icon";
-import { DisplayTimeComponent } from "../../../../../common/components/display-time/display-time.component";
-import { DisplayHashComponent } from "../../../../../common/components/display-hash/display-hash.component";
-import { RouterLink } from "@angular/router";
-import { NgIf } from "@angular/common";
 
 @Component({
     selector: "app-overview-history-summary-header",

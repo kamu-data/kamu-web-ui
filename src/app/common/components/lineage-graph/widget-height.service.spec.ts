@@ -6,7 +6,8 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { WidgetHeightService } from "./widget-height.service";
+
+import { WidgetHeightService } from "@common/components/lineage-graph/widget-height.service";
 
 describe("WidgetHeightService", () => {
     let service: WidgetHeightService;

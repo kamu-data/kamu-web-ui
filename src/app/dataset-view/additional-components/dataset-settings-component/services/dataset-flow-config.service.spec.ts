@@ -6,11 +6,21 @@
  */
 
 import { TestBed } from "@angular/core/testing";
+
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { ToastrModule, ToastrService } from "ngx-toastr";
-import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
-import { of } from "rxjs";
+
+import { DatasetFlowApi } from "@api/dataset-flow.api";
+import {
+    DatasetFlowType,
+    FlowConfigCompactionInput,
+    FlowConfigIngestInput,
+    FlowConfigRuleIngest,
+    GetDatasetFlowConfigsQuery,
+} from "@api/kamu.graphql.interface";
 import {
     mockIngestGetDatasetFlowConfigsSuccess,
     mockRetryPolicyInput,
@@ -18,15 +28,9 @@ import {
     mockSetCompactionFlowConfigMutationError,
     mockSetIngestFlowConfigMutation,
     mockSetIngestFlowConfigMutationError,
-} from "src/app/api/mock/dataset-flow.mock";
-import {
-    FlowConfigCompactionInput,
-    GetDatasetFlowConfigsQuery,
-    FlowConfigRuleIngest,
-    DatasetFlowType,
-    FlowConfigIngestInput,
-} from "src/app/api/kamu.graphql.interface";
-import { DatasetFlowConfigService } from "./dataset-flow-config.service";
+} from "@api/mock/dataset-flow.mock";
+
+import { DatasetFlowConfigService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-config.service";
 
 describe("DatasetFlowConfigService", () => {
     let service: DatasetFlowConfigService;

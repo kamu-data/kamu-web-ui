@@ -5,16 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input, OnInit, OnChanges, ChangeDetectorRef, inject } from "@angular/core";
-import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from "@angular/forms";
 import { NgFor } from "@angular/common";
-import { TimeUnit } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "../base.component";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnChanges, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { everyTimeMapperValidators } from "src/app/common/helpers/data.helpers";
-import { MaybeNull } from "src/app/interface/app.types";
-import { TimeDeltaFormType } from "./time-delta-form.value";
-import { FormValidationErrorsDirective } from "../../directives/form-validation-errors.directive";
+import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from "@angular/forms";
+
+import { BaseComponent } from "@common/components/base.component";
+import { TimeDeltaFormType } from "@common/components/time-delta-form/time-delta-form.value";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { everyTimeMapperValidators } from "@common/helpers/data.helpers";
+import { TimeUnit } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 @Component({
     selector: "app-time-delta-form",

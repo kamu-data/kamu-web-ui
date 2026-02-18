@@ -6,7 +6,8 @@
  */
 
 import { Component } from "@angular/core";
-import { DynamicComponent } from "./dynamic.component";
+
+import { DynamicComponent } from "@common/components/modal/dynamic.component";
 
 @Component({
     selector: "modal-spinner",

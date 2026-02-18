@@ -6,13 +6,15 @@
  */
 
 import { FormControl, FormGroup } from "@angular/forms";
-import { MaybeNull } from "src/app/interface/app.types";
-import { BatchingRuleType } from "../../../dataset-settings.model";
-import { FlowTriggerBreakingChangeRule } from "src/app/api/kamu.graphql.interface";
+
+import { FlowTriggerBreakingChangeRule } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
+import { BatchingRuleType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import {
     BufferingBatchingRuleFormType,
     BufferingBatchingRuleFormValue,
-} from "../buffering-batching-rule-form/buffering-batching-rule-form.types";
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/buffering-batching-rule-form/buffering-batching-rule-form.types";
 
 export interface TransformTriggerFormType {
     forNewData: FormGroup<BatchingRuleFormType>;

@@ -5,21 +5,25 @@
  * included in the LICENSE file.
  */
 
-import { TestBed } from "@angular/core/testing";
-import { FileUploadService } from "./file-upload.service";
-import { Apollo } from "apollo-angular";
-import { mockDatasetBasicsRootFragment, mockDatasetInfo } from "../search/mock.data";
-import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { HttpHeaders, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { first, of } from "rxjs";
-import { ProtocolsService } from "./protocols.service";
-import { mockDatasetEndPoints } from "../data-access-panel/data-access-panel-mock.data";
-import { AppConfigService } from "../app-config.service";
-import { mockFile, mockUploadPrepareResponse } from "../api/mock/upload-file.mock";
-import { SharedTestModule } from "../common/modules/shared-test.module";
+import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
+import { TestBed } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
-import { DatasetViewComponent } from "../dataset-view/dataset-view.component";
-import { NavigationService } from "./navigation.service";
+
+import { first, of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { mockFile, mockUploadPrepareResponse } from "@api/mock/upload-file.mock";
+
+import { AppConfigService } from "src/app/app-config.service";
+import { mockDatasetEndPoints } from "src/app/data-access-panel/data-access-panel-mock.data";
+import { DatasetViewComponent } from "src/app/dataset-view/dataset-view.component";
+import { mockDatasetBasicsRootFragment, mockDatasetInfo } from "src/app/search/mock.data";
+import { FileUploadService } from "src/app/services/file-upload.service";
+import { NavigationService } from "src/app/services/navigation.service";
+import { ProtocolsService } from "src/app/services/protocols.service";
 
 describe("FileUploadService", () => {
     let service: FileUploadService;

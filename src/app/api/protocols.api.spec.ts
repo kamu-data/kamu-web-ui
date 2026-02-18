@@ -5,12 +5,15 @@
  * included in the LICENSE file.
  */
 
-import { TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
+import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
-import { ProtocolsApi } from "./protocols.api";
-import { mockDatasetInfo } from "../search/mock.data";
-import { DatasetProtocolsDocument, DatasetProtocolsQuery } from "./kamu.graphql.interface";
-import { mockDatasetProtocolsQuery } from "../data-access-panel/data-access-panel-mock.data";
+
+import { DatasetProtocolsDocument, DatasetProtocolsQuery } from "@api/kamu.graphql.interface";
+import { ProtocolsApi } from "@api/protocols.api";
+
+import { mockDatasetProtocolsQuery } from "src/app/data-access-panel/data-access-panel-mock.data";
+import { mockDatasetInfo } from "src/app/search/mock.data";
 
 describe("ProtocolsApi", () => {
     let service: ProtocolsApi;

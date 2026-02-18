@@ -5,24 +5,33 @@
  * included in the LICENSE file.
  */
 
-import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
-import { WebhooksApi } from "./webhooks.api";
 import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+
+import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
+
 import {
     DatasetWebhookByIdDocument,
     DatasetWebhookByIdQuery,
+    DatasetWebhookCreateSubscriptionDocument,
+    DatasetWebhookCreateSubscriptionMutation,
+    DatasetWebhookPauseSubscriptionDocument,
+    DatasetWebhookPauseSubscriptionMutation,
     DatasetWebhookReactivateSubscriptionDocument,
     DatasetWebhookReactivateSubscriptionMutation,
+    DatasetWebhookRemoveSubscriptionDocument,
+    DatasetWebhookRemoveSubscriptionMutation,
     DatasetWebhookResumeSubscriptionDocument,
     DatasetWebhookResumeSubscriptionMutation,
     DatasetWebhookRotateSecretDocument,
     DatasetWebhookRotateSecretMutation,
+    DatasetWebhookSubscriptionsDocument,
     DatasetWebhookSubscriptionsQuery,
     DatasetWebhookUpdateSubscriptionDocument,
     DatasetWebhookUpdateSubscriptionMutation,
     WebhookEventTypesDocument,
     WebhookEventTypesQuery,
-} from "./kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
+import { TEST_DATASET_ID } from "@api/mock/dataset.mock";
 import {
     mockDatasetWebhookByIdQuery,
     mockDatasetWebhookCreateSubscriptionMutation,
@@ -35,17 +44,8 @@ import {
     mockDatasetWebhookUpdateSubscriptionMutation,
     mockWebhookEventTypesQuery,
     mockWebhookSubscriptionInput,
-} from "./mock/webhooks.mock";
-import { TEST_DATASET_ID } from "./mock/dataset.mock";
-import {
-    DatasetWebhookCreateSubscriptionDocument,
-    DatasetWebhookCreateSubscriptionMutation,
-    DatasetWebhookPauseSubscriptionDocument,
-    DatasetWebhookPauseSubscriptionMutation,
-    DatasetWebhookRemoveSubscriptionDocument,
-    DatasetWebhookRemoveSubscriptionMutation,
-    DatasetWebhookSubscriptionsDocument,
-} from "./kamu.graphql.interface";
+} from "@api/mock/webhooks.mock";
+import { WebhooksApi } from "@api/webhooks.api";
 
 describe("WebhooksApi", () => {
     let service: WebhooksApi;

@@ -6,19 +6,23 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { editWebhookResolverFn } from "./edit-webhook.resolver";
-import { EditWebhooksType } from "../edit-webhooks.types";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { DatasetWebhooksService } from "../../../service/dataset-webhooks.service";
-import { Observable, of, throwError } from "rxjs";
-import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-import { mockDatasetWebhookByIdQuery } from "src/app/api/mock/webhooks.mock";
-import { WebhookSubscription } from "src/app/api/kamu.graphql.interface";
-import ProjectLinks from "src/app/project-links";
 import { provideAnimations } from "@angular/platform-browser/animations";
+import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapshot } from "@angular/router";
+
+import { Observable, of, throwError } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+
+import { WebhookSubscription } from "@api/kamu.graphql.interface";
+import { mockDatasetWebhookByIdQuery } from "@api/mock/webhooks.mock";
+
+import { EditWebhooksType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/edit-webhooks.types";
+import { editWebhookResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/resolvers/edit-webhook.resolver";
+import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import ProjectLinks from "src/app/project-links";
+import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 
 describe("editWebhookResolver", () => {

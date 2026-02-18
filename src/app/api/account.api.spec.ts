@@ -5,10 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
-import { AccountApi } from "./account.api";
-import { TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
+import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+
+import { first } from "rxjs";
+
 import { Apollo } from "apollo-angular";
+import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
+
+import { AccountApi } from "@api/account.api";
 import {
     AccountByNameDocument,
     AccountByNameQuery,
@@ -48,10 +52,7 @@ import {
     FlowProcessOrderField,
     ModifyPasswordSuccess,
     OrderingDirection,
-} from "./kamu.graphql.interface";
-import { TEST_ACCOUNT_EMAIL, TEST_LOGIN, mockAccountDetails } from "./mock/auth.mock";
-import { first } from "rxjs";
-import { MaybeNull } from "src/app/interface/app.types";
+} from "@api/kamu.graphql.interface";
 import {
     mockAccountByNameNotFoundResponse,
     mockAccountByNameResponse,
@@ -69,7 +70,9 @@ import {
     mockChangeAdminPasswordMutation,
     mockChangeUserPasswordMutation,
     mockDeleteAccountByNameMutation,
-} from "./mock/account.mock";
+} from "@api/mock/account.mock";
+import { mockAccountDetails, TEST_ACCOUNT_EMAIL, TEST_LOGIN } from "@api/mock/auth.mock";
+import { MaybeNull } from "@interface/app.types";
 
 describe("AccountApi", () => {
     let service: AccountApi;

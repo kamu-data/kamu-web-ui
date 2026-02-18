@@ -6,7 +6,8 @@
  */
 
 import { ResolveFn } from "@angular/router";
-import { datasetMetadataTabResolverFn } from "../../../resolver/dataset-metadata-tab.resolver";
+
+import { datasetMetadataTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/resolver/dataset-metadata-tab.resolver";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 
 export const metadataSchemaTabResolverFn: ResolveFn<DatasetOverviewTabData> = (route, state) => {

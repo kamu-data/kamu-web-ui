@@ -5,19 +5,22 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { provideToastr, ToastrService } from "ngx-toastr";
+
+import { DisplayHashComponent } from "@common/components/display-hash/display-hash.component";
 import {
     emitClickOnElementByDataTestId,
     getElementByDataTestId,
     registerMatSvgIcons,
-} from "src/app/common/helpers/base-test.helpers.spec";
+} from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { TEST_BLOCK_HASH } from "@api/mock/dataset.mock";
+
 import { mockDatasetInfo } from "src/app/search/mock.data";
-import { DisplayHashComponent } from "./display-hash.component";
-import { provideToastr, ToastrService } from "ngx-toastr";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { TEST_BLOCK_HASH } from "src/app/api/mock/dataset.mock";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("DisplayHashComponent", () => {
     let component: DisplayHashComponent;

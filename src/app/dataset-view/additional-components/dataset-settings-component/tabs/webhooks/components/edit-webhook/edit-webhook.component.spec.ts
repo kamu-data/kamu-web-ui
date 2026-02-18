@@ -6,15 +6,19 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { EditWebhookComponent } from "./edit-webhook.component";
+
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { WebhookFormComponent } from "../common/webhook-form/webhook-form.component";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
+
+import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
+import { EditWebhookComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/edit-webhook.component";
+import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-import { WebhookSubscriptionStatus } from "src/app/api/kamu.graphql.interface";
-import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
-import { of } from "rxjs";
 import { NavigationService } from "src/app/services/navigation.service";
 
 describe("EditWebhookComponent", () => {

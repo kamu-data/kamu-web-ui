@@ -6,8 +6,10 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { SimplePropertyComponent } from "./simple-property.component";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { SimplePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/simple-property/simple-property.component";
 
 describe("SimplePropertyComponent", () => {
     let component: SimplePropertyComponent;

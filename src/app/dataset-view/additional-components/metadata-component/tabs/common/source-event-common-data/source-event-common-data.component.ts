@@ -5,17 +5,19 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { NgIf } from "@angular/common";
-import { AddPushSourceEventFragment, SetPollingSourceEventFragment } from "src/app/api/kamu.graphql.interface";
-import { BlockRowDataComponent } from "src/app/common/components/block-row-data/block-row-data.component";
-import { SchemaPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/schema-property/schema-property.component";
-import { EnginePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/engine-property/engine-property.component";
-import { SqlQueryViewerComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/sql-query-viewer/sql-query-viewer.component";
-import { MergeStrategyPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+
+import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
+import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
+import { AddPushSourceEventFragment, SetPollingSourceEventFragment } from "@api/kamu.graphql.interface";
+
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
-import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
+import { EnginePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/engine-property/engine-property.component";
+import { MergeStrategyPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";
+import { SchemaPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/schema-property/schema-property.component";
 import { SeparatorPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/separator-property/separator-property.component";
+import { SqlQueryViewerComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/sql-query-viewer/sql-query-viewer.component";
 
 @Component({
     selector: "app-source-event-common-data",

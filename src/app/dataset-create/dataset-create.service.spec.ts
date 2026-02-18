@@ -5,25 +5,29 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { TestBed } from "@angular/core/testing";
+
+import { of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+
+import { DatasetOperationError } from "@common/values/errors";
+import { DatasetApi } from "@api/dataset.api";
 import {
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetMutation,
+    DatasetKind,
     DatasetVisibility,
-} from "../api/kamu.graphql.interface";
-import { mockDatasetBasicsDerivedFragment } from "../search/mock.data";
-import { TestBed } from "@angular/core/testing";
-import { Apollo } from "apollo-angular";
-import { of } from "rxjs";
-import { DatasetApi } from "../api/dataset.api";
-import { DatasetKind } from "../api/kamu.graphql.interface";
-import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
-import { NavigationService } from "../services/navigation.service";
-import { DatasetCreateService } from "./dataset-create.service";
-import { LoggedUserService } from "../auth/logged-user.service";
-import { mockAccountDetails } from "../api/mock/auth.mock";
-import { DatasetOperationError } from "../common/values/errors";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+} from "@api/kamu.graphql.interface";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DatasetCreateService } from "src/app/dataset-create/dataset-create.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("DatasetCreateService", () => {
     let service: DatasetCreateService;

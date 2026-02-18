@@ -5,10 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
-import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
+import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
+import { mockGetMetadataBlockQuery } from "@api/mock/dataset.mock";
+
+import { EventTypeFilterPipe } from "src/app/dataset-block/metadata-block/components/block-navigation/pipes/event-type-filter.pipe";
 import { mockHistoryUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
-import { EventTypeFilterPipe } from "./event-type-filter.pipe";
 
 describe("EventTypeFilterPipe", () => {
     const pipe = new EventTypeFilterPipe();

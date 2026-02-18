@@ -5,21 +5,28 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
-import { DatasetOverviewFragment, DatasetDataSizeFragment } from "src/app/api/kamu.graphql.interface";
+
 import {
     emitClickOnElementByDataTestId,
     getElementByDataTestId,
     getInputElementByDataTestId,
-} from "src/app/common/helpers/base-test.helpers.spec";
+} from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
+
+import {
+    mockMetadataDerivedUpdate,
+    mockOverviewDataUpdate,
+    mockOverviewWithSetLicense,
+} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { EditLicenseModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
-import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewWithSetLicense } from "../../../data-tabs.mock";
-import { EditLicenseModalComponent } from "./edit-license-modal.component";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("EditLicenseModalComponent", () => {
     let component: EditLicenseModalComponent;

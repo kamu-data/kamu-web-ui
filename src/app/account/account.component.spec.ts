@@ -5,20 +5,24 @@
  * included in the LICENSE file.
  */
 
-import { AccountTabs } from "./account.constants";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
-import { AccountComponent } from "./account.component";
+
 import { BehaviorSubject, of } from "rxjs";
-import { AccountService } from "src/app/account/account.service";
-import ProjectLinks from "src/app/project-links";
-import { AccountPageQueryParams } from "./account.component.model";
-import AppValues from "src/app/common/values/app.values";
-import { provideToastr } from "ngx-toastr";
-import { LoggedUserService } from "../auth/logged-user.service";
-import { mockAccountDetails, TEST_AVATAR_URL, TEST_LOGIN } from "../api/mock/auth.mock";
-import { findElementByDataTestId } from "../common/helpers/base-test.helpers.spec";
+
 import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
+
+import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import AppValues from "@common/values/app.values";
+import { mockAccountDetails, TEST_AVATAR_URL, TEST_LOGIN } from "@api/mock/auth.mock";
+
+import { AccountComponent } from "src/app/account/account.component";
+import { AccountPageQueryParams } from "src/app/account/account.component.model";
+import { AccountTabs } from "src/app/account/account.constants";
+import { AccountService } from "src/app/account/account.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import ProjectLinks from "src/app/project-links";
 
 describe("AccountComponent", () => {
     let component: AccountComponent;

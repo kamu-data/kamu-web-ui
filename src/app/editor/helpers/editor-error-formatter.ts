@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { EditorError } from "../models/error.model";
-import { getMonacoNamespace } from "../services/monaco.service";
+import { EditorError } from "src/app/editor/models/error.model";
+import { getMonacoNamespace } from "src/app/editor/services/monaco.service";
 
 const monacoNamespace = getMonacoNamespace();
 const defaultSeverity = 8;

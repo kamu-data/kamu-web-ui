@@ -10,7 +10,7 @@ import {
     DatasetPermissionsFragment,
     FlowHistoryDataFragment,
     FlowSummaryDataFragment,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
 
 export enum FlowDetailsTabs {
     SUMMARY = "summary",

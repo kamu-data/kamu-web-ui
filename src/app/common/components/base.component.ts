@@ -7,11 +7,14 @@
 
 import { inject } from "@angular/core";
 import { ActivatedRoute, ParamMap, Params } from "@angular/router";
-import { Observable, map } from "rxjs";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
+
+import { map, Observable } from "rxjs";
+
+import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ondestroy.adapter";
+import { requireValue } from "@common/helpers/app.helpers";
+import { DatasetInfo } from "@interface/navigation.interface";
+
 import ProjectLinks from "src/app/project-links";
-import { requireValue } from "../helpers/app.helpers";
-import { UnsubscribeDestroyRefAdapter } from "./unsubscribe.ondestroy.adapter";
 
 export abstract class BaseComponent extends UnsubscribeDestroyRefAdapter {
     protected activatedRoute = inject(ActivatedRoute);

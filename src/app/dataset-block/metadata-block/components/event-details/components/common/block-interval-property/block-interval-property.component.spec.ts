@@ -5,17 +5,21 @@
  * included in the LICENSE file.
  */
 
-import { mockDatasetMainDataResponse } from "../../../../../../../search/mock.data";
-import { DatasetService } from "../../../../../../../dataset-view/dataset.service";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { BlockIntervalPropertyComponent } from "./block-interval-property.component";
-import { of } from "rxjs";
-import { provideToastr } from "ngx-toastr";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { of } from "rxjs";
+
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { provideToastr } from "ngx-toastr";
+
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { BlockIntervalPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/block-interval-property/block-interval-property.component";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { mockDatasetMainDataResponse } from "src/app/search/mock.data";
 
 describe("BlockIntervalPropertyComponent", () => {
     let component: BlockIntervalPropertyComponent;

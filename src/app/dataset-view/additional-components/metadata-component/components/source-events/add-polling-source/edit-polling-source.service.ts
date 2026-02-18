@@ -5,26 +5,30 @@
  * included in the LICENSE file.
  */
 
-import { Injectable, inject } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
+import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
+
+import { Observable } from "rxjs";
+
+import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { parse } from "yaml";
+
+import { MetadataManifestFormat } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
+
+import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import {
-    EditFormParseType,
     AddPollingSourceEditFormType,
+    EditFormParseType,
     FetchKind,
     MergeKind,
     NameValue,
     ReadKind,
-    TopicsType,
     SetPollingSourceSection,
-} from "./add-polling-source-form.types";
-import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
-import { RxwebValidators } from "@rxweb/reactive-form-validators";
-import { SourcesSection } from "./process-form.service.types";
-import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
-import { Observable } from "rxjs";
-import { MetadataManifestFormat } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
+    TopicsType,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { SourcesSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
 
 @Injectable({
     providedIn: "root",

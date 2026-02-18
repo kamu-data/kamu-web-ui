@@ -6,19 +6,22 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { PreprocessStepComponent } from "./preprocess-step.component";
-import {
-    mockPreprocessStepValue,
-    mockPreprocessStepValueWithoutQueries,
-    mockSetPollingSourceEventYaml,
-    mockSetPollingSourceEventYamlWithQuery,
-    mockSetPollingSourceEventYamlWithoutPreprocess,
-} from "../../../set-transform/mock.data";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { EditorModule } from "src/app/editor/editor.module";
+
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
+
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import {
+    mockPreprocessStepValueWithoutQueries,
+    mockSetPollingSourceEventYaml,
+    mockSetPollingSourceEventYamlWithoutPreprocess,
+    mockSetPollingSourceEventYamlWithQuery,
+} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { PreprocessStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/preprocess-step/preprocess-step.component";
+import { EditorModule } from "src/app/editor/editor.module";
+import { mockPreprocessStepValue } from "src/app/search/mock.data";
 
 describe("PreprocessStepComponent", () => {
     let component: PreprocessStepComponent;

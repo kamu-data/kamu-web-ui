@@ -5,31 +5,38 @@
  * included in the LICENSE file.
  */
 
+import { NgClass, NgFor, NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterLink, RouterOutlet } from "@angular/router";
+
+import { BaseComponent } from "@common/components/base.component";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { momentConvertDateToLocalWithFormat } from "@common/helpers/app.helpers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
 import {
     AddPushSourceEventFragment,
     DatasetKind,
+    DatasetMetadataSummaryFragment,
     DatasetTransformFragment,
+    PageBasedInfo,
     SetPollingSourceEventFragment,
-} from "../../../api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, inject } from "@angular/core";
-import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
-import AppValues from "../../../common/values/app.values";
-import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import { MetadataSchemaUpdate } from "../../dataset.subscriptions.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { DatasetMetadataSummaryFragment, PageBasedInfo } from "src/app/api/kamu.graphql.interface";
-import { momentConvertDateToLocalWithFormat } from "src/app/common/helpers/app.helpers";
-import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "src/app/interface/app.types";
+} from "@api/kamu.graphql.interface";
+import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
+import { DatasetSchema } from "@interface/dataset-schema.interface";
+
+import { CommitNavigatorComponent } from "src/app/dataset-view/additional-components/metadata-component/components/commit-navigator/commit-navigator.component";
+import {
+    METADATA_TAB_MENU_ITEMS,
+    MetadataMenuItem,
+    MetadataTabs,
+} from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { MetadataSchemaUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import ProjectLinks from "src/app/project-links";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
-import { RouterLink, RouterOutlet } from "@angular/router";
-import { MatIconModule } from "@angular/material/icon";
-import { CommitNavigatorComponent } from "./components/commit-navigator/commit-navigator.component";
-import { FeatureFlagDirective } from "../../../common/directives/feature-flag.directive";
-import { NgIf, NgFor, NgClass } from "@angular/common";
-import { METADATA_TAB_MENU_ITEMS, MetadataMenuItem, MetadataTabs } from "./metadata.constants";
 
 @Component({
     selector: "app-metadata",

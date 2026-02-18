@@ -6,14 +6,15 @@
  */
 
 import { FormGroup } from "@angular/forms";
+
 import {
     FlowRetryPolicyFormType,
     FlowRetryPolicyFormValue,
-} from "./flow-retry-policy-form/flow-retry-policy-form.types";
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/flow-retry-policy-form/flow-retry-policy-form.types";
 import {
     IngestConfigurationRuleFormType,
     IngestConfigurationRuleFormValue,
-} from "./ingest-configuration-rule-form/ingest-configuration-rule-form.types";
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/ingest-configuration-rule-form/ingest-configuration-rule-form.types";
 
 export interface IngestConfigurationFormType {
     ingestConfig: FormGroup<IngestConfigurationRuleFormType>;

@@ -5,12 +5,14 @@
  * included in the LICENSE file.
  */
 
+import { KeyValuePipe, NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { SetVocab } from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
-import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
-import { NgIf, NgFor, KeyValuePipe } from "@angular/common";
+
+import { BaseComponent } from "@common/components/base.component";
+import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
+import { SetVocab } from "@api/kamu.graphql.interface";
+
+import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
 
 @Component({
     selector: "app-set-vocab-event",

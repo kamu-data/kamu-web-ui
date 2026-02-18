@@ -5,24 +5,26 @@
  * included in the LICENSE file.
  */
 
+import timekeeper from "timekeeper";
+
 import {
     FlowProcessAutoStopReason,
     FlowProcessEffectiveState,
     FlowProcessSummaryDataFragment,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
+import {
+    mockFlowProcessSummaryDataFragment,
+    mockFlowProcessSummaryDataFragmentNoPolicy,
+} from "@api/mock/dataset-flow.mock";
+
+import { RangeLastAttempt } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 import {
     DatasetFlowBadgeHelpers,
     DatasetFlowsBadgeStyle,
     DatasetFlowsBadgeTexts,
     lastTimeRangeHelper,
     nextTimeRangeHelper,
-} from "./flows.helpers";
-import {
-    mockFlowProcessSummaryDataFragment,
-    mockFlowProcessSummaryDataFragmentNoPolicy,
-} from "src/app/api/mock/dataset-flow.mock";
-import { RangeLastAttempt } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
-import timekeeper from "timekeeper";
+} from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 
 describe("Flows badge styles helper", () => {
     [

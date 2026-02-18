@@ -5,30 +5,32 @@
  * included in the LICENSE file.
  */
 
-import { MaybeNull } from "src/app/interface/app.types";
+import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterOutlet } from "@angular/router";
+
+import { BaseComponent } from "@common/components/base.component";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import {
     DatasetBasicsFragment,
     DatasetMetadata,
     DatasetOverviewFragment,
     DatasetPermissionsFragment,
-} from "src/app/api/kamu.graphql.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
+} from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
+import { AppConfigService } from "src/app/app-config.service";
+import { isSettingsTabAccessibleHelper } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.helpers";
 import {
+    DATASET_SETTINGS_SIDE_PANEL_DATA,
     DatasetSettingsSidePanelItem,
     SettingsTabsEnum,
-    DATASET_SETTINGS_SIDE_PANEL_DATA,
-} from "./dataset-settings.model";
-import { AppConfigService } from "src/app/app-config.service";
+} from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
-import { isSettingsTabAccessibleHelper } from "./dataset-settings.helpers";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { RouterOutlet } from "@angular/router";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatIconModule } from "@angular/material/icon";
-import { FeatureFlagDirective } from "../../../common/directives/feature-flag.directive";
-import { NgFor, NgIf } from "@angular/common";
 
 @Component({
     selector: "app-dataset-settings",

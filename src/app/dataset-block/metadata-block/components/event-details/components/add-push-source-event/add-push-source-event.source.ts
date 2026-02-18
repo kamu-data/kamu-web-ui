@@ -5,10 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
-import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
-import { AddPushSourceTooltipsTexts } from "src/app/common/tooltips/add-push-source.text";
-import { getSourcesDescriptors } from "../common-sources/sources-event.source";
+import { AddPushSourceTooltipsTexts } from "@common/tooltips/add-push-source.text";
+
+import { getSourcesDescriptors } from "src/app/dataset-block/metadata-block/components/event-details/components/common-sources/sources-event.source";
+import { SimplePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/simple-property/simple-property.component";
+import { EventRowDescriptorsByField } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
 
 export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "AddPushSource.string.sourceName": {

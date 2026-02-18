@@ -5,13 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { mockDatasetEndPoints } from "../../../data-access-panel-mock.data";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { DataAccessOdataTabComponent } from "./data-access-odata-tab.component";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+
+import { DataAccessOdataTabComponent } from "src/app/data-access-panel/data-access-modal/tabs/data-access-odata-tab/data-access-odata-tab.component";
+import { mockDatasetEndPoints } from "src/app/data-access-panel/data-access-panel-mock.data";
 
 describe("DataAccessOdataTabComponent", () => {
     let component: DataAccessOdataTabComponent;

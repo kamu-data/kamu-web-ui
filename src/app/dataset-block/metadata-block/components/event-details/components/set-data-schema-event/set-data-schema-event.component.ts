@@ -5,17 +5,18 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { SetDataSchema } from "src/app/api/kamu.graphql.interface";
-import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
-import { MaybeNull } from "src/app/interface/app.types";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { DataSchemaField, DatasetSchema } from "src/app/interface/dataset-schema.interface";
-import { DynamicTableComponent } from "../../../../../../common/components/dynamic-table/dynamic-table.component";
 import { NgIf } from "@angular/common";
-import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
-import { schemaAsDataRows } from "src/app/common/helpers/data-schema.helpers";
-import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+
+import { BaseComponent } from "@common/components/base.component";
+import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
+import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
+import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
+import { parseCurrentSchema } from "@common/helpers/app.helpers";
+import { schemaAsDataRows } from "@common/helpers/data-schema.helpers";
+import { SetDataSchema } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DataSchemaField, DatasetSchema } from "@interface/dataset-schema.interface";
 
 @Component({
     selector: "app-set-data-schema-event",

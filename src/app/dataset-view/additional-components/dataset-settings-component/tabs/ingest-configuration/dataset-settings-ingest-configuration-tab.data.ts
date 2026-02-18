@@ -5,7 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { FlowConfigRuleIngest, FlowRetryPolicy } from "src/app/api/kamu.graphql.interface";
+import { FlowConfigRuleIngest, FlowRetryPolicy } from "@api/kamu.graphql.interface";
+
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
 export interface DatasetSettingsIngestConfigurationTabData extends DatasetViewData {

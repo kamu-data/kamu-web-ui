@@ -6,13 +6,15 @@
  */
 
 import { FormControl, FormGroup } from "@angular/forms";
-import { MaybeNull } from "src/app/interface/app.types";
-import { TimeDeltaFormType, TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
+
 import {
     CronExpressionFormType,
     CronExpressionFormValue,
-} from "src/app/common/components/cron-expression-form/cron-expression-form.value";
-import { ScheduleType } from "../../../dataset-settings.model";
+} from "@common/components/cron-expression-form/cron-expression-form.value";
+import { TimeDeltaFormType, TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
+import { MaybeNull } from "@interface/app.types";
+
+import { ScheduleType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 
 export interface IngestTriggerFormType {
     __typename: FormControl<MaybeNull<ScheduleType>>;

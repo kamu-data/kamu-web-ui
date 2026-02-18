@@ -7,9 +7,12 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot } from "@angular/router";
-import { accessTokenExpiredGuardFn } from "./access-token-expired.guard";
-import { LocalStorageService } from "src/app/services/local-storage.service";
+
 import { Apollo } from "apollo-angular";
+
+import { accessTokenExpiredGuardFn } from "@common/guards/access-token-expired.guard";
+
+import { LocalStorageService } from "src/app/services/local-storage.service";
 import { NavigationService } from "src/app/services/navigation.service";
 
 describe("accessTokenExpiredGuard", () => {

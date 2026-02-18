@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { DataSchemaTypeField, OdfTypes } from "src/app/interface/dataset-schema.interface";
-import { odfType2String } from "./data-schema.helpers";
+import { odfType2String } from "@common/helpers/data-schema.helpers";
+import { DataSchemaTypeField, OdfTypes } from "@interface/dataset-schema.interface";
 
 describe("odfType2String", () => {
     it("should map simple types correctly", () => {

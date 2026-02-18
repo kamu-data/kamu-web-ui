@@ -5,18 +5,21 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import {
-    getElementByDataTestId,
-    emitClickOnElementByDataTestId,
-    registerMatSvgIcons,
-} from "src/app/common/helpers/base-test.helpers.spec";
-import { mockSeed } from "../../mock.events";
-import { SeedEventComponent } from "./seed-event.component";
-import { provideToastr, ToastrService } from "ngx-toastr";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { provideToastr, ToastrService } from "ngx-toastr";
+
+import {
+    emitClickOnElementByDataTestId,
+    getElementByDataTestId,
+    registerMatSvgIcons,
+} from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { SeedEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/seed-event/seed-event.component";
+import { mockSeed } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
 describe("SeedEventComponent", () => {
     let component: SeedEventComponent;

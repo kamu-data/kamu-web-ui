@@ -6,16 +6,20 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { FinalYamlModalComponent } from "./final-yaml-modal.component";
-import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
+
 import { of } from "rxjs";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
+
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+import { DatasetInfo } from "@interface/navigation.interface";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 
 const testDatasetInfo: DatasetInfo = {
     accountName: "testAccountName",

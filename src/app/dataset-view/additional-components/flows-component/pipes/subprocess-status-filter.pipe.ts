@@ -6,7 +6,8 @@
  */
 
 import { Pipe, PipeTransform } from "@angular/core";
-import { FlowProcessEffectiveState, WebhookFlowSubProcess } from "src/app/api/kamu.graphql.interface";
+
+import { FlowProcessEffectiveState, WebhookFlowSubProcess } from "@api/kamu.graphql.interface";
 
 @Pipe({
     name: "subprocessStatusFilter",

@@ -5,18 +5,21 @@
  * included in the LICENSE file.
  */
 
-import { SessionStorageService } from "src/app/services/session-storage.service";
-import { ChangeDetectionStrategy, Component, inject, Input, OnDestroy } from "@angular/core";
-import { DatasetViewData, DatasetViewTypeEnum } from "./dataset-view.interface";
-import { DatasetBasicsFragment, DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
-import { BaseDatasetDataComponent } from "../common/components/base-dataset-data.component";
-import RoutingResolvers from "../common/resolvers/routing-resolvers";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { map } from "rxjs";
-import { Router, RouterOutlet } from "@angular/router";
-import { DatasetViewMenuComponent } from "./dataset-view-menu/dataset-view-menu.component";
-import { DatasetViewHeaderComponent } from "./dataset-view-header/dataset-view-header.component";
 import { NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, inject, Input, OnDestroy } from "@angular/core";
+import { Router, RouterOutlet } from "@angular/router";
+
+import { map } from "rxjs";
+
+import { BaseDatasetDataComponent } from "@common/components/base-dataset-data.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { DatasetBasicsFragment, DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
+import { DatasetInfo } from "@interface/navigation.interface";
+
+import { DatasetViewHeaderComponent } from "src/app/dataset-view/dataset-view-header/dataset-view-header.component";
+import { DatasetViewMenuComponent } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu.component";
+import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { SessionStorageService } from "src/app/services/session-storage.service";
 
 @Component({
     selector: "app-dataset",

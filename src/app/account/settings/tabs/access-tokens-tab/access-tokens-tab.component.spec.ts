@@ -5,23 +5,27 @@
  * included in the LICENSE file.
  */
 
-import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { AccessTokensTabComponent } from "./access-tokens-tab.component";
+import { ActivatedRoute } from "@angular/router";
+
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { ActivatedRoute } from "@angular/router";
-import { NavigationService } from "src/app/services/navigation.service";
+
+import { ModalService } from "@common/components/modal/modal.service";
+import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { AccessTokenConnection, CreateAccessTokenResultSuccess } from "@api/kamu.graphql.interface";
+import { mockCreateAccessTokenMutation, mockListAccessTokensQuery, TOKEN_ID } from "@api/mock/access-token.mock";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+import { ModalArgumentsInterface } from "@interface/modal.interface";
+
+import { AccountSettingsTabs, TokenCreateStep } from "src/app/account/settings/account-settings.constants";
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
-import { TOKEN_ID, mockCreateAccessTokenMutation, mockListAccessTokensQuery } from "src/app/api/mock/access-token.mock";
-import { of } from "rxjs";
-import { AccessTokenConnection, CreateAccessTokenResultSuccess } from "src/app/api/kamu.graphql.interface";
-import { AccountSettingsTabs, TokenCreateStep } from "../../account-settings.constants";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+import { AccessTokensTabComponent } from "src/app/account/settings/tabs/access-tokens-tab/access-tokens-tab.component";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("AccessTokensTabComponent", () => {
     let component: AccessTokensTabComponent;

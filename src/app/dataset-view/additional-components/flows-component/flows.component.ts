@@ -5,7 +5,24 @@
  * included in the LICENSE file.
  */
 
+import { AsyncPipe, NgClass, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { MatTableModule } from "@angular/material/table";
+import { RouterLink } from "@angular/router";
+
+import { combineLatest, map, Observable, of, switchMap, take, tap, timer } from "rxjs";
+
+import { environment } from "@env/environment";
+import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
 import {
     AccountFragment,
     DatasetBasicsFragment,
@@ -17,44 +34,31 @@ import {
     FlowStatus,
     InitiatorFilterInput,
     WebhookFlowSubProcess,
-} from "src/app/api/kamu.graphql.interface";
-import { combineLatest, map, Observable, of, switchMap, take, tap, timer } from "rxjs";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import { DatasetOverviewTabData, DatasetViewTypeEnum } from "../../dataset-view.interface";
-import { SettingsTabsEnum } from "../dataset-settings-component/dataset-settings.model";
-import { environment } from "src/environments/environment";
+} from "@api/kamu.graphql.interface";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+
+import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table/components/flow-table-panel-filters/flow-table-panel-filters.component";
 import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
+import { FlowsTableComponent } from "src/app/dataset-flow/flows-table/flows-table.component";
 import { FilterStatusType, FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
-import ProjectLinks from "src/app/project-links";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { PaginationComponent } from "../../../common/components/pagination-component/pagination.component";
-import { FlowsTableComponent } from "../../../dataset-flow/flows-table/flows-table.component";
-import { TileBaseWidgetComponent } from "../../../dataset-flow/tile-base-widget/tile-base-widget.component";
-import { RouterLink } from "@angular/router";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatIconModule } from "@angular/material/icon";
-import { MatMenuModule } from "@angular/material/menu";
-import { NgIf, AsyncPipe, NgClass } from "@angular/common";
-import AppValues from "src/app/common/values/app.values";
-import { MatTableModule } from "@angular/material/table";
-import { MatButtonToggleModule } from "@angular/material/button-toggle";
-import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
-import { FormsModule } from "@angular/forms";
+import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
+import { FlowsAssociatedChannelsComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-associated-channels/flows-associated-channels.component";
+import { FlowsBlockActionsComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-block-actions/flows-block-actions.component";
 import {
+    DatasetFlowsTabState,
     FlowsCategoryUnion,
     FlowsSelectedCategory,
-    WebhooksSelectedCategory,
     FlowsSelectionState,
-    DatasetFlowsTabState,
-} from "./flows.helpers";
-import { FlowsBlockActionsComponent } from "./components/flows-block-actions/flows-block-actions.component";
-import { FlowsAssociatedChannelsComponent } from "./components/flows-associated-channels/flows-associated-channels.component";
-import { DatasetWebhooksService } from "../dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
-import { FlowsSelectionStateService } from "./services/flows-selection-state.service";
-import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table/components/flow-table-panel-filters/flow-table-panel-filters.component";
+    WebhooksSelectedCategory,
+} from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
+import { FlowsSelectionStateService } from "src/app/dataset-view/additional-components/flows-component/services/flows-selection-state.service";
+import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.component";
+import ProjectLinks from "src/app/project-links";
 import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
+
 @Component({
     selector: "app-flows",
     templateUrl: "./flows.component.html",

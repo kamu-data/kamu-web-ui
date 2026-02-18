@@ -5,18 +5,21 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
+import { provideAnimations } from "@angular/platform-browser/animations";
 import { ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
-import { accountSettingsEmailResolverFn } from "./account-settings-email.resolver";
-import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
-import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { provideAnimations } from "@angular/platform-browser/animations";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+
+import { AccountWithEmailFragment } from "@api/kamu.graphql.interface";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+
+import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
+import { accountSettingsEmailResolverFn } from "src/app/account/settings/tabs/emails-tab/resolver/account-settings-email.resolver";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 describe("accountSettingsEmailResolverFn", () => {
     let accountEmailService: AccountEmailService;

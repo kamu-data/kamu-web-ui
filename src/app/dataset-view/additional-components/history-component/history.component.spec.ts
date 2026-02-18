@@ -5,23 +5,27 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { mockHistoryUpdate } from "../data-tabs.mock";
-import { HistoryComponent } from "./history.component";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { provideToastr } from "ngx-toastr";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { MOCK_DATASET_INFO } from "../metadata-component/components/set-transform/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetViewTypeEnum } from "../../dataset-view.interface";
-import { DatasetService } from "../../dataset.service";
-import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import { of } from "rxjs";
-import { Apollo } from "apollo-angular";
-import { ActivatedRoute } from "@angular/router";
-import ProjectLinks from "src/app/project-links";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ActivatedRoute } from "@angular/router";
+
+import { of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
+
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { mockHistoryUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { HistoryComponent } from "src/app/dataset-view/additional-components/history-component/history.component";
+import { MOCK_DATASET_INFO } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import ProjectLinks from "src/app/project-links";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("HistoryComponent", () => {
     let component: HistoryComponent;

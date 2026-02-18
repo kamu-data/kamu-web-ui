@@ -7,20 +7,24 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { metadataWatermarkTabResolverFn } from "./metadata-watermark-tab.resolver";
-import { MaybeNullOrUndefined } from "src/app/interface/app.types";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { Apollo } from "apollo-angular";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { NavigationService } from "src/app/services/navigation.service";
+
 import { Observable } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+
+import { MaybeNullOrUndefined } from "@interface/app.types";
+
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { metadataWatermarkTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-watermark-tab/resolvers/metadata-watermark-tab.resolver";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("metadataWatermarkTabResolver", () => {
     let datasetService: DatasetService;

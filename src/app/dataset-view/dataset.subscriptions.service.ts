@@ -5,16 +5,19 @@
  * included in the LICENSE file.
  */
 
-import { Observable, ReplaySubject, Subject } from "rxjs";
 import { Injectable } from "@angular/core";
+
+import { Observable, ReplaySubject, Subject } from "rxjs";
+
+import { DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
 import {
     DatasetHistoryUpdate,
     LineageUpdate,
     MetadataSchemaUpdate,
     OverviewUpdate,
-} from "./dataset.subscriptions.interface";
-import { DatasetPermissionsFragment } from "../api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/interface/app.types";
+} from "src/app/dataset-view/dataset.subscriptions.interface";
 
 @Injectable({ providedIn: "root" })
 export class DatasetSubscriptionsService {

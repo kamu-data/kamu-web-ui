@@ -7,8 +7,9 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { accountSettingsActiveTabResolverFn } from "./account-settings-active-tab.resolver";
+
 import { AccountSettingsTabs } from "src/app/account/settings/account-settings.constants";
+import { accountSettingsActiveTabResolverFn } from "src/app/account/settings/resolver/account-settings-active-tab.resolver";
 import ProjectLinks from "src/app/project-links";
 
 describe("accountSettingsActiveTabResolverFn", () => {

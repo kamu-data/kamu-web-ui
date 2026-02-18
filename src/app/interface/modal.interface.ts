@@ -5,10 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { MaybeNull } from "./app.types";
-import { ModalDialogComponent } from "../common/components/modal/modal-dialog.component";
-import { ModalImageComponent } from "../common/components/modal/modal-image.component";
-import { ModalSpinnerComponent } from "../common/components/modal/modal-spinner.component";
+import { ModalDialogComponent } from "@common/components/modal/modal-dialog.component";
+import { ModalImageComponent } from "@common/components/modal/modal-image.component";
+import { ModalSpinnerComponent } from "@common/components/modal/modal-spinner.component";
+import { MaybeNull } from "@interface/app.types";
 
 export interface ModalCommandInterface {
     type: ModalComponentType;

@@ -5,17 +5,22 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
-import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { NgFor, NgClass, NgIf } from "@angular/common";
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import { ToastrModule, ToastrService } from "ngx-toastr";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { NgClass, NgFor, NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { DynamicTableColumnDescriptor, DynamicTableDataRow } from "./dynamic-table.interface";
-import { AttributesSchemaModalComponent } from "./components/attributes-schema-modal/attributes-schema-modal.component";
-import { MaybeUndefined } from "src/app/interface/app.types";
+
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { ToastrModule, ToastrService } from "ngx-toastr";
+
+import { AttributesSchemaModalComponent } from "@common/components/dynamic-table/components/attributes-schema-modal/attributes-schema-modal.component";
+import {
+    DynamicTableColumnDescriptor,
+    DynamicTableDataRow,
+} from "@common/components/dynamic-table/dynamic-table.interface";
+import { MaybeUndefined } from "@interface/app.types";
 
 @Component({
     selector: "app-dynamic-table",

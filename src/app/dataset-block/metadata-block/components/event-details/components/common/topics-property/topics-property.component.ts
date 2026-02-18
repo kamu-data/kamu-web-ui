@@ -6,16 +6,18 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { MqttTopicSubscription } from "src/app/api/kamu.graphql.interface";
-import { BasePropertyComponent } from "../base-property/base-property.component";
-import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
-import { extractSchemaFieldsFromData } from "src/app/common/helpers/data-schema.helpers";
-import { DynamicTableComponent } from "../../../../../../../common/components/dynamic-table/dynamic-table.component";
+
+import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
 import {
     DynamicTableColumnClassEnum,
     DynamicTableColumnDescriptor,
     DynamicTableDataRow,
-} from "src/app/common/components/dynamic-table/dynamic-table.interface";
+} from "@common/components/dynamic-table/dynamic-table.interface";
+import { extractSchemaFieldsFromData } from "@common/helpers/data-schema.helpers";
+import { MqttTopicSubscription } from "@api/kamu.graphql.interface";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
+
+import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 
 @Component({
     selector: "app-topics-property",

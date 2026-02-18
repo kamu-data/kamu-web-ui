@@ -5,10 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { mockSetVocab } from "../../mock.events";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { SetVocabEventComponent } from "./set-vocab-event.component";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { SetVocabEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/set-vocab-event/set-vocab-event.component";
+import { mockSetVocab } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
 describe("SetVocabEventComponent", () => {
     let component: SetVocabEventComponent;

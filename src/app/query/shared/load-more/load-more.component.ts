@@ -5,13 +5,14 @@
  * included in the LICENSE file.
  */
 
+import { NgFor, NgIf } from "@angular/common";
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import AppValues from "../../../common/values/app.values";
 import { FormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatIconModule } from "@angular/material/icon";
-import { NgIf, NgFor } from "@angular/common";
-import { MatButtonModule } from "@angular/material/button";
+
+import AppValues from "@common/values/app.values";
 
 @Component({
     selector: "app-load-more",

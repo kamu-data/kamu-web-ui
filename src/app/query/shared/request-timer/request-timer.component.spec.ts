@@ -5,10 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
-import { RequestTimerComponent } from "./request-timer.component";
-import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+
+import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { RequestTimerComponent } from "src/app/query/shared/request-timer/request-timer.component";
 
 describe("RequestTimerComponent", () => {
     let component: RequestTimerComponent;

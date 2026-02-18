@@ -5,17 +5,19 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
-import { DataAccessLinkTabComponent } from "./data-access-link-tab.component";
-import { mockDatasetEndPoints } from "../../../data-access-panel-mock.data";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import AppValues from "src/app/common/values/app.values";
-import {
-    getElementByDataTestId,
-    emitClickOnElementByDataTestId,
-    registerMatSvgIcons,
-} from "src/app/common/helpers/base-test.helpers.spec";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+
+import {
+    emitClickOnElementByDataTestId,
+    getElementByDataTestId,
+    registerMatSvgIcons,
+} from "@common/helpers/base-test.helpers.spec";
+import AppValues from "@common/values/app.values";
+
+import { DataAccessLinkTabComponent } from "src/app/data-access-panel/data-access-modal/tabs/data-access-link-tab/data-access-link-tab.component";
+import { mockDatasetEndPoints } from "src/app/data-access-panel/data-access-panel-mock.data";
 
 describe("DataAccessLinkTabComponent", () => {
     let component: DataAccessLinkTabComponent;

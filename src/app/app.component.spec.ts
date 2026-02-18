@@ -5,23 +5,27 @@
  * included in the LICENSE file.
  */
 
-import { mockAutocompleteItems } from "./search/mock.data";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ALL_URLS_WITHOUT_HEADER, AppComponent } from "./app.component";
-import { isMobileView } from "./common/helpers/app.helpers";
-import { NavigationService } from "./services/navigation.service";
-import { of } from "rxjs";
-import ProjectLinks from "./project-links";
-import { registerMatSvgIcons, routerMock, routerMockEventSubject } from "./common/helpers/base-test.helpers.spec";
-import { ActivatedRoute, NavigationEnd } from "@angular/router";
-import { mockAccountFromAccessToken } from "./api/mock/auth.mock";
-import { FetchAccountDetailsGQL } from "./api/kamu.graphql.interface";
-import { LoggedUserService } from "./auth/logged-user.service";
-import { LoginService } from "./auth/login/login.service";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { DatasetViewTypeEnum } from "./dataset-view/dataset-view.interface";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ActivatedRoute, NavigationEnd } from "@angular/router";
+
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
+
+import { isMobileView } from "@common/helpers/app.helpers";
+import { registerMatSvgIcons, routerMock, routerMockEventSubject } from "@common/helpers/base-test.helpers.spec";
+import { FetchAccountDetailsGQL } from "@api/kamu.graphql.interface";
+import { mockAccountFromAccessToken } from "@api/mock/auth.mock";
+
+import { ALL_URLS_WITHOUT_HEADER, AppComponent } from "src/app/app.component";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { LoginService } from "src/app/auth/login/login.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import ProjectLinks from "src/app/project-links";
+import { mockAutocompleteItems } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("AppComponent", () => {
     let component: AppComponent;

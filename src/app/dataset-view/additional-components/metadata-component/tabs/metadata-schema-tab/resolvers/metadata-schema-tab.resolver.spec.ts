@@ -7,16 +7,20 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { metadataSchemaTabResolverFn } from "./metadata-schema-tab.resolver";
-import { MaybeNull } from "src/app/interface/app.types";
+
+import { Observable, throwError } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+
+import { MaybeNull } from "@interface/app.types";
+
+import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { metadataSchemaTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-schema-tab/resolvers/metadata-schema-tab.resolver";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { NavigationService } from "src/app/services/navigation.service";
-import { Apollo } from "apollo-angular";
-import { Observable, throwError } from "rxjs";
-import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("metadataSchemaTabResolver", () => {
     let datasetService: DatasetService;

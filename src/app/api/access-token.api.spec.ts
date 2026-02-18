@@ -6,10 +6,15 @@
  */
 
 import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+
+import { first } from "rxjs";
+
+import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import { Apollo } from "apollo-angular";
-import { ApolloTestingModule, ApolloTestingController } from "apollo-angular/testing";
-import { AccessTokenApi } from "./access-token.api";
-import { AccountApi } from "./account.api";
+import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
+
+import { AccessTokenApi } from "@api/access-token.api";
+import { AccountApi } from "@api/account.api";
 import {
     CreateAccessTokenDocument,
     CreateAccessTokenMutation,
@@ -17,19 +22,17 @@ import {
     ListAccessTokensQuery,
     RevokeAccessTokenDocument,
     RevokeAccessTokenMutation,
-} from "./kamu.graphql.interface";
-import { mockLogin401Error, TEST_ACCOUNT_ID } from "./mock/auth.mock";
+} from "@api/kamu.graphql.interface";
 import {
+    mockCreateAccessTokenMutation,
+    mockListAccessTokensQuery,
+    mockRevokeAccessTokenMutation,
     PAGE,
     PER_PAGE,
     TOKEN_ID,
     TOKEN_NAME,
-    mockCreateAccessTokenMutation,
-    mockListAccessTokensQuery,
-    mockRevokeAccessTokenMutation,
-} from "./mock/access-token.mock";
-import { first } from "rxjs";
-import { CombinedGraphQLErrors } from "@apollo/client/errors";
+} from "@api/mock/access-token.mock";
+import { mockLogin401Error, TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
 
 describe("AccessTokenApi", () => {
     let service: AccessTokenApi;

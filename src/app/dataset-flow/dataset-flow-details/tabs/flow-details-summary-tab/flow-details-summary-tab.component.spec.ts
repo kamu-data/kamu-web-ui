@@ -5,13 +5,15 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { FlowDetailsSummaryTabComponent } from "./flow-details-summary-tab.component";
-import { FlowDetailsSummaryTabHarness } from "./flow-details-summary-tab.component.harness";
-import AppValues from "src/app/common/values/app.values";
-import { mockDatasetFlowByIdResponse } from "src/app/api/mock/dataset-flow.mock";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import AppValues from "@common/values/app.values";
+import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
+
+import { FlowDetailsSummaryTabComponent } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-summary-tab/flow-details-summary-tab.component";
+import { FlowDetailsSummaryTabHarness } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-summary-tab/flow-details-summary-tab.component.harness";
 
 describe("FlowDetailsSummaryTabComponent", () => {
     let component: FlowDetailsSummaryTabComponent;

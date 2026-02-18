@@ -5,19 +5,23 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
-import { DatasetSettingsCompactingTabComponent } from "./dataset-settings-compacting-tab.component";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+import { ActivatedRoute } from "@angular/router";
+
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
+
+import { ModalService } from "@common/components/modal/modal.service";
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import AppValues from "@common/values/app.values";
+import { ModalArgumentsInterface } from "@interface/modal.interface";
+
+import { DatasetSettingsCompactingTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.component";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { of } from "rxjs";
 import { NavigationService } from "src/app/services/navigation.service";
-import AppValues from "src/app/common/values/app.values";
-import { ActivatedRoute } from "@angular/router";
-import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
-import { DatasetFlowsService } from "../../../flows-component/services/dataset-flows.service";
 
 describe("DatasetSettingsCompactingTabComponent", () => {
     let component: DatasetSettingsCompactingTabComponent;

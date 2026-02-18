@@ -5,11 +5,13 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { DataHelpers } from "src/app/common/helpers/data.helpers";
-import { EventPropertyLogo } from "../../../supported.events";
-import { BasePropertyComponent } from "../base-property/base-property.component";
 import { NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+
+import { DataHelpers } from "@common/helpers/data.helpers";
+
+import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 
 @Component({
     selector: "app-merge-strategy-property",

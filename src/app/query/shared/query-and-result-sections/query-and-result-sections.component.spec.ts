@@ -5,28 +5,32 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
-import { QueryAndResultSectionsComponent } from "./query-and-result-sections.component";
-import { Apollo } from "apollo-angular";
+import { Clipboard } from "@angular/cdk/clipboard";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+
+import { of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+import { MarkdownModule } from "ngx-markdown";
 import { provideToastr, ToastrService } from "ngx-toastr";
-import { EditorModule } from "src/app/editor/editor.module";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
 import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
     getElementByDataTestId,
-} from "src/app/common/helpers/base-test.helpers.spec";
-import { mockSqlErrorUpdate } from "../../../dataset-view/additional-components/data-tabs.mock";
-import { Clipboard } from "@angular/cdk/clipboard";
-import { of } from "rxjs";
-import { mockUploadPrepareResponse } from "src/app/api/mock/upload-file.mock";
-import { FileUploadService } from "src/app/services/file-upload.service";
-import { DatasetRequestBySql } from "src/app/interface/dataset.interface";
+} from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { mockUploadPrepareResponse } from "@api/mock/upload-file.mock";
+import { DatasetRequestBySql } from "@interface/dataset.interface";
+
+import { mockSqlErrorUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-import { MarkdownModule } from "ngx-markdown";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { EditorModule } from "src/app/editor/editor.module";
+import { QueryAndResultSectionsComponent } from "src/app/query/shared/query-and-result-sections/query-and-result-sections.component";
+import { FileUploadService } from "src/app/services/file-upload.service";
 
 describe("QueryAndResultSectionsComponent", () => {
     let component: QueryAndResultSectionsComponent;

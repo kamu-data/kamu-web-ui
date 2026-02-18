@@ -5,23 +5,29 @@
  * included in the LICENSE file.
  */
 
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { DatasetSettingsTransformOptionsTabComponent } from "./dataset-settings-transform-options-tab.component";
-import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { Apollo } from "apollo-angular";
-import { provideToastr } from "ngx-toastr";
-import { DatasetSettingsTransformOptionsTabData } from "./dataset-settings-transform-options-tab.data";
-import { DatasetFlowTriggerService } from "../../services/dataset-flow-trigger.service";
 import { HarnessLoader } from "@angular/cdk/testing";
-import { TransformTriggerFormHarness } from "./transform-trigger-form/transform-trigger-form.harness";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { FlowTriggerBreakingChangeRule, TimeUnit } from "src/app/api/kamu.graphql.interface";
-import { BatchingRuleType, FlowTriggerStopPolicyType } from "../../dataset-settings.model";
-import { FlowStopPolicyFormComponent } from "../shared/flow-stop-policy-form/flow-stop-policy-form.component";
-import { FlowStopPolicyFormHarness } from "../shared/flow-stop-policy-form/flow-stop-policy-form.harness";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { Apollo } from "apollo-angular";
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { provideToastr } from "ngx-toastr";
+
+import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { FlowTriggerBreakingChangeRule, TimeUnit } from "@api/kamu.graphql.interface";
+
+import {
+    BatchingRuleType,
+    FlowTriggerStopPolicyType,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
+import { FlowStopPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.component";
+import { FlowStopPolicyFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.harness";
+import { DatasetSettingsTransformOptionsTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.component";
+import { DatasetSettingsTransformOptionsTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.data";
+import { TransformTriggerFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.harness";
+import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
 describe("DatasetSettingsTransformOptionsTabComponent", () => {
     let component: DatasetSettingsTransformOptionsTabComponent;

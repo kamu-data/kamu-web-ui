@@ -7,12 +7,14 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { CopyToClipboardComponent } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.component";
-import { DatasetBasicsFragment } from "src/app/api/kamu.graphql.interface";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
+
+import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
+
+import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import ProjectLinks from "src/app/project-links";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-rotate-secret-webhook",

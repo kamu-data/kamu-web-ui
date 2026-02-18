@@ -5,11 +5,13 @@
  * included in the LICENSE file.
  */
 
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from "@angular/common/http";
+
 import { Observable } from "rxjs";
-import { LocalStorageService } from "src/app/services/local-storage.service";
+
 import { AppConfigService } from "src/app/app-config.service";
+import { LocalStorageService } from "src/app/services/local-storage.service";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

@@ -5,12 +5,15 @@
  * included in the LICENSE file.
  */
 
-import { BaseComponent } from "src/app/common/components/base.component";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { FileUrlFormType } from "./file-from-url-modal.types";
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
+
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+
+import { BaseComponent } from "@common/components/base.component";
+
+import { FileUrlFormType } from "src/app/dataset-view/additional-components/overview-component/components/file-from-url-modal/file-from-url-modal.types";
 
 @Component({
     selector: "app-file-from-url-modal",

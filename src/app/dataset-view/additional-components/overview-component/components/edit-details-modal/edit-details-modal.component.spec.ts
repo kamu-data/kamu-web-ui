@@ -5,18 +5,25 @@
  * included in the LICENSE file.
  */
 
-import { emitClickOnElementByDataTestId, getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { MatChipInputEvent } from "@angular/material/chips";
-import { mockDatasetBasicsDerivedFragment } from "../../../../../search/mock.data";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { Apollo } from "apollo-angular";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { EditDetailsModalComponent } from "./edit-details-modal.component";
-import { mockMetadataDerivedUpdate, mockOverviewDataUpdate, mockOverviewWithSetInfo } from "../../../data-tabs.mock";
-import { DatasetDataSizeFragment, DatasetOverviewFragment } from "src/app/api/kamu.graphql.interface";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { MatChipInputEvent } from "@angular/material/chips";
+
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { Apollo } from "apollo-angular";
+
+import { emitClickOnElementByDataTestId, getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
+
+import {
+    mockMetadataDerivedUpdate,
+    mockOverviewDataUpdate,
+    mockOverviewWithSetInfo,
+} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { EditDetailsModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-details-modal/edit-details-modal.component";
+import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 
 describe("EditDetailsModalComponent", () => {
     let component: EditDetailsModalComponent;

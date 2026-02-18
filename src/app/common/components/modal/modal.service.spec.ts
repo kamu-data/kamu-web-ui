@@ -5,10 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { ModalCommandInterface } from "src/app/interface/modal.interface";
 import { TestBed } from "@angular/core/testing";
-import { ModalService } from "./modal.service";
+
 import { first } from "rxjs/operators";
+
+import { ModalService } from "@common/components/modal/modal.service";
+import { ModalCommandInterface } from "@interface/modal.interface";
 
 describe("ModalService", () => {
     let service: ModalService;

@@ -5,11 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { NavigationService } from "../../../../services/navigation.service";
 import { inject, Injectable } from "@angular/core";
+
+import { map, Observable, take } from "rxjs";
+
 import { ToastrService } from "ngx-toastr";
-import { Observable, map, take } from "rxjs";
-import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
+
+import AppValues from "@common/values/app.values";
+import { DatasetFlowApi } from "@api/dataset-flow.api";
 import {
     DatasetFlowType,
     FlowTriggerRuleInput,
@@ -17,10 +20,11 @@ import {
     GetDatasetFlowTriggerQuery,
     PauseDatasetFlowTriggerMutation,
     SetDatasetFlowTriggerMutation,
-} from "src/app/api/kamu.graphql.interface";
-import AppValues from "src/app/common/values/app.values";
+} from "@api/kamu.graphql.interface";
+import { DatasetInfo } from "@interface/navigation.interface";
+
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Injectable({
     providedIn: "root",

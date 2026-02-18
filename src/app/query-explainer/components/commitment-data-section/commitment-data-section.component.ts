@@ -5,12 +5,15 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { VerifyQueryError, VerifyQueryKindError } from "../../query-explainer.types";
 import { Clipboard } from "@angular/cdk/clipboard";
-import { MaybeUndefined } from "src/app/interface/app.types";
-import { QueryExplainerComponentData } from "../../query-explainer.component";
-import { CopyToClipboardComponent } from "../../../common/components/copy-to-clipboard/copy-to-clipboard.component";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
+
+import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
+import { MaybeUndefined } from "@interface/app.types";
+
+import { QueryExplainerComponentData } from "src/app/query-explainer/query-explainer.component";
+import { VerifyQueryError, VerifyQueryKindError } from "src/app/query-explainer/query-explainer.types";
+
 @Component({
     selector: "app-commitment-data-section",
     templateUrl: "./commitment-data-section.component.html",

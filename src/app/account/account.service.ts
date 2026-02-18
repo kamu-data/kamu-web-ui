@@ -5,11 +5,21 @@
  * included in the LICENSE file.
  */
 
-import { MaybeUndefined } from "src/app/interface/app.types";
+import { inject, Injectable } from "@angular/core";
+
+import { combineLatest, forkJoin, Observable } from "rxjs";
+import { map } from "rxjs/operators";
+
+import { ToastrService } from "ngx-toastr";
+
+import { AccountApi } from "@api/account.api";
+import { DatasetApi } from "@api/dataset.api";
 import {
     AccountDatasetFlowsPausedQuery,
+    AccountFlowFilters,
     AccountFlowProcessCardConnectionDataFragment,
     AccountFlowsAsCardsQuery,
+    AccountFragment,
     AccountListDatasetsWithFlowsQuery,
     AccountPauseFlowsMutation,
     AccountPrimaryCardsQuery,
@@ -20,26 +30,21 @@ import {
     ChangeUserPasswordMutation,
     Dataset,
     DatasetBasicsFragment,
+    DatasetsByAccountNameQuery,
     DatasetsTotalCountByAccountNameQuery,
     DeleteAccountByNameMutation,
+    FlowConnectionDataFragment,
     FlowConnectionWidgetDataFragment,
     FlowProcessFilters,
     FlowProcessGroupRollupDataFragment,
     FlowProcessOrdering,
-} from "../api/kamu.graphql.interface";
-import { AccountFlowFilters, AccountFragment, FlowConnectionDataFragment } from "../api/kamu.graphql.interface";
-import { AccountApi } from "../api/account.api";
-import { Observable, combineLatest, forkJoin } from "rxjs";
-import { DatasetApi } from "../api/dataset.api";
-import { inject, Injectable } from "@angular/core";
-import { DatasetsByAccountNameQuery } from "../api/kamu.graphql.interface";
-import { DatasetsAccountResponse } from "src/app/interface/dataset.interface";
-import { map } from "rxjs/operators";
-import { MaybeNull } from "src/app/interface/app.types";
-import { ToastrService } from "ngx-toastr";
-import { FlowsTableData } from "../dataset-flow/flows-table/flows-table.types";
-import { ChangeAccountUsernameResult } from "./settings/account-settings.constants";
-import { CardsStrategyResult } from "./additional-components/account-flows-tab/account-flows-tab.types";
+} from "@api/kamu.graphql.interface";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { DatasetsAccountResponse } from "@interface/dataset.interface";
+
+import { CardsStrategyResult } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { ChangeAccountUsernameResult } from "src/app/account/settings/account-settings.constants";
+import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 
 @Injectable({
     providedIn: "root",

@@ -6,8 +6,9 @@
  */
 
 import { FormControl, FormGroup } from "@angular/forms";
-import { TimeDeltaFormType, TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
-import { MaybeNull } from "src/app/interface/app.types";
+
+import { TimeDeltaFormType, TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
+import { MaybeNull } from "@interface/app.types";
 
 export interface BufferingBatchingRuleFormType {
     minRecordsToAwait: FormControl<MaybeNull<number>>;

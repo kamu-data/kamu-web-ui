@@ -6,14 +6,17 @@
  */
 
 import { TestBed } from "@angular/core/testing";
+import { provideAnimations } from "@angular/platform-browser/animations";
 import { ActivatedRouteSnapshot, Data, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { flowDetailsSummaryResolverFn } from "./flow-details-summary.resolver";
-import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import RoutingResolvers from "../../../../../common/resolvers/routing-resolvers";
-import { mockDatasetFlowByIdResponse } from "src/app/api/mock/dataset-flow.mock";
-import { provideAnimations } from "@angular/platform-browser/animations";
+
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
+
+import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { flowDetailsSummaryResolverFn } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-summary-tab/resolver/flow-details-summary.resolver";
 
 describe("flowDetailsSummaryResolverFn", () => {
     const mockState = {} as RouterStateSnapshot;

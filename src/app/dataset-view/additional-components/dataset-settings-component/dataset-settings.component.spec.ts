@@ -5,21 +5,28 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { DatasetSettingsComponent } from "./dataset-settings.component";
-import { Apollo } from "apollo-angular";
-import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { ActivatedRoute } from "@angular/router";
-import { provideToastr } from "ngx-toastr";
-import { SettingsTabsEnum } from "./dataset-settings.model";
-import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { ChangeDetectionStrategy } from "@angular/core";
-import { NavigationService } from "src/app/services/navigation.service";
-import { OverviewUpdate } from "../../dataset.subscriptions.interface";
-import { mockMetadataRootUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
-import { of } from "rxjs";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ChangeDetectionStrategy } from "@angular/core";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ActivatedRoute } from "@angular/router";
+
+import { of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
+
+import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+
+import {
+    mockMetadataRootUpdate,
+    mockOverviewDataUpdate,
+} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { DatasetSettingsComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.component";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("DatasetSettingsComponent", () => {
     let component: DatasetSettingsComponent;

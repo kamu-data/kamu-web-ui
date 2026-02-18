@@ -5,25 +5,29 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { InputDataSectionComponent } from "./input-data-section.component";
+import { ActivatedRoute } from "@angular/router";
+
+import { of } from "rxjs";
+
+import { MarkdownModule } from "ngx-markdown";
+import { provideToastr } from "ngx-toastr";
+
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
+import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
+
+import ProjectLinks from "src/app/project-links";
+import { InputDataSectionComponent } from "src/app/query-explainer/components/input-data-section/input-data-section.component";
 import {
-    mockDatasetNotFoundError,
     mockDatasetBlockNotFoundError,
+    mockDatasetNotFoundError,
     mockQueryExplainerResponse,
     mockVerifyQueryResponseSuccess,
-} from "../../query-explainer.mocks";
-import { provideToastr } from "ngx-toastr";
-import { ActivatedRoute } from "@angular/router";
-import { of } from "rxjs";
+} from "src/app/query-explainer/query-explainer.mocks";
 import { mockDatasetInfo } from "src/app/search/mock.data";
-import ProjectLinks from "src/app/project-links";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { MarkdownModule } from "ngx-markdown";
-import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
-import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("InputDataSectionComponent", () => {
     let component: InputDataSectionComponent;

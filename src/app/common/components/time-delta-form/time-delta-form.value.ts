@@ -6,8 +6,9 @@
  */
 
 import { FormControl } from "@angular/forms";
-import { TimeUnit } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/interface/app.types";
+
+import { TimeUnit } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 export interface TimeDeltaFormValue {
     every: number | null;

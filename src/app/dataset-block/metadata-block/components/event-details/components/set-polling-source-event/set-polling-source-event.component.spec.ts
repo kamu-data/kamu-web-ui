@@ -5,14 +5,20 @@
  * included in the LICENSE file.
  */
 
-import { FetchStepMqtt, FetchStepUrl, PrepStepDecompress } from "../../../../../../api/kamu.graphql.interface";
-import { getElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { mockSetPollingSourceEvent, mockSetPollingSourceEventWithFetchStepMqtt } from "../../mock.events";
-import { SetPollingSourceEventComponent } from "./set-polling-source-event.component";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { HIGHLIGHT_OPTIONS_PROVIDER } from "src/app/common/helpers/app.helpers";
+
 import { provideToastr } from "ngx-toastr";
+
+import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
+import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { FetchStepMqtt, FetchStepUrl, PrepStepDecompress } from "@api/kamu.graphql.interface";
+
+import { SetPollingSourceEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/set-polling-source-event/set-polling-source-event.component";
+import {
+    mockSetPollingSourceEvent,
+    mockSetPollingSourceEventWithFetchStepMqtt,
+} from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
 describe("SetPollingSourceEventComponent", () => {
     let component: SetPollingSourceEventComponent;

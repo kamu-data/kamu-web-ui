@@ -5,28 +5,27 @@
  * included in the LICENSE file.
  */
 
+import { Location, NgClass } from "@angular/common";
 import {
+    ChangeDetectorRef,
     Component,
+    ComponentFactoryResolver,
+    ComponentRef,
+    inject,
     OnInit,
     ViewChild,
     ViewContainerRef,
-    ComponentFactoryResolver,
-    ComponentRef,
-    ChangeDetectorRef,
-    inject,
 } from "@angular/core";
-
-import { DynamicComponent } from "./dynamic.component";
-import { ModalCommandInterface, ModalComponentType } from "src/app/interface/modal.interface";
-import { ModalDialogComponent } from "./modal-dialog.component";
-import { ModalImageComponent } from "./modal-image.component";
-import { ModalService } from "./modal.service";
-import { ModalSpinnerComponent } from "./modal-spinner.component";
-import { Location, NgClass } from "@angular/common";
-import { ModalMappingsComponent } from "src/app/interface/modal.interface";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { MaybeUndefined } from "src/app/interface/app.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+
+import { BaseComponent } from "@common/components/base.component";
+import { DynamicComponent } from "@common/components/modal/dynamic.component";
+import { ModalDialogComponent } from "@common/components/modal/modal-dialog.component";
+import { ModalImageComponent } from "@common/components/modal/modal-image.component";
+import { ModalSpinnerComponent } from "@common/components/modal/modal-spinner.component";
+import { ModalService } from "@common/components/modal/modal.service";
+import { MaybeUndefined } from "@interface/app.types";
+import { ModalCommandInterface, ModalComponentType, ModalMappingsComponent } from "@interface/modal.interface";
 
 @Component({
     selector: "modal",

@@ -6,15 +6,15 @@
  */
 
 import cronParser from "cron-parser";
-
-import { MaybeNull, MaybeNullOrUndefined } from "src/app/interface/app.types";
-import { DataSchema } from "../../api/kamu.graphql.interface";
-import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
-import AppValues from "../values/app.values";
 import { format, isSameDay, subDays } from "date-fns";
-import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 import { jwtDecode } from "jwt-decode";
-import { JwtPayload } from "../guards/access-token-expired.types";
+import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
+
+import { JwtPayload } from "@common/guards/access-token-expired.types";
+import AppValues from "@common/values/app.values";
+import { DataSchema } from "@api/kamu.graphql.interface";
+import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
+import { DatasetSchema } from "@interface/dataset-schema.interface";
 
 export function requireValue<T>(input: MaybeNull<T>, errorMessage?: string): T {
     if (input === null) throw Error(errorMessage || "value is required!");

@@ -6,10 +6,11 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { CliProtocolDesc } from "src/app/api/kamu.graphql.interface";
-import { MatIconModule } from "@angular/material/icon";
 import { MatDividerModule } from "@angular/material/divider";
-import { CopyToClipboardComponent } from "../../../../common/components/copy-to-clipboard/copy-to-clipboard.component";
+import { MatIconModule } from "@angular/material/icon";
+
+import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
+import { CliProtocolDesc } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-data-access-kamu-cli-tab",

@@ -5,28 +5,28 @@
  * included in the LICENSE file.
  */
 
-import { Component, inject, Input, OnInit } from "@angular/core";
-import { MatChipInputEvent, MatChipsModule } from "@angular/material/chips";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import {
-    DatasetOverviewFragment,
-    DatasetDataSizeFragment,
-    DatasetBasicsFragment,
-} from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/interface/app.types";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { DatasetSchema } from "src/app/interface/dataset-schema.interface";
-import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
-import { DatasetCommitService } from "../../services/dataset-commit.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { finalize } from "rxjs";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { isEqual } from "src/app/common/helpers/app.helpers";
-import { MatIconModule } from "@angular/material/icon";
 import { NgFor } from "@angular/common";
+import { Component, inject, Input, OnInit } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
+import { MatChipInputEvent, MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
-import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
+import { MatIconModule } from "@angular/material/icon";
+
+import { finalize } from "rxjs";
+
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+
+import { BaseComponent } from "@common/components/base.component";
+import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
+import { isEqual } from "@common/helpers/app.helpers";
+import { DatasetBasicsFragment, DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetSchema } from "@interface/dataset-schema.interface";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
+import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 
 @Component({
     selector: "app-details-modal",

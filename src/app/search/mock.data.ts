@@ -5,67 +5,62 @@
  * included in the LICENSE file.
  */
 
+import { Node } from "@swimlane/ngx-graph";
+import { GraphQLError } from "graphql";
+
+import { DynamicTableColumnClassEnum } from "@common/components/dynamic-table/dynamic-table.interface";
+import { OdfDefaultValues } from "@common/values/app-odf-default.values";
 import {
     AccountBasicsFragment,
     AccountProvider,
     CommitEventToDatasetMutation,
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetMutation,
-    DatasetHeadBlockHashQuery,
-    DatasetPermissionsFragment,
-    DeleteDatasetMutation,
-    GetDatasetLineageQuery,
-    PageBasedInfo,
-    PrivateDatasetVisibility,
-    PublicDatasetVisibility,
-    RenameDatasetMutation,
-    UpdateReadmeMutation,
-    UpdateWatermarkMutation,
-} from "../api/kamu.graphql.interface";
-import {
     DataBatchFormat,
     DataQueryResultErrorKind,
     DataSchemaFormat,
     DatasetBasicsFragment,
     DatasetCurrentInfoFragment,
+    DatasetHeadBlockHashQuery,
     DatasetKind,
+    DatasetPermissionsFragment,
+    DeleteDatasetMutation,
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
+    GetDatasetLineageQuery,
     GetDatasetMainDataQuery,
     LicenseFragment,
+    PageBasedInfo,
+    PrivateDatasetVisibility,
+    PublicDatasetVisibility,
+    RenameDatasetMutation,
     SearchDatasetsOverviewQuery,
-} from "../api/kamu.graphql.interface";
-import { Node } from "@swimlane/ngx-graph";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import {
-    DatasetAutocompleteItem,
-    DatasetSearchResult,
-    SearchMode,
-    TypeNames,
-} from "src/app/interface/search.interface";
-import {
-    FetchKind,
-    ReadKind,
-    MergeKind,
-    AddPollingSourceEditFormType,
-    PrepareKind,
-    PreprocessStepValue,
-    EventTimeSourceKind,
-} from "../dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
-import { DatasetHistoryUpdate } from "../dataset-view/dataset.subscriptions.interface";
+    UpdateReadmeMutation,
+    UpdateWatermarkMutation,
+} from "@api/kamu.graphql.interface";
+import { TEST_AVATAR_URL } from "@api/mock/auth.mock";
+import { OdfTypes } from "@interface/dataset-schema.interface";
+import { DatasetInfo } from "@interface/navigation.interface";
+import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode, TypeNames } from "@interface/search.interface";
+
 import {
     LineageGraphDatasetNodeObject,
     LineageGraphNodeKind,
     LineageNodeAccess,
-} from "../dataset-view/additional-components/lineage-component/lineage-model";
-import { GraphQLError } from "graphql";
-import { TEST_AVATAR_URL } from "../api/mock/auth.mock";
-import { AddPushSourceEditFormType } from "../dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
-import { OdfDefaultValues } from "../common/values/app-odf-default.values";
-import { SqlQueryBasicResponse } from "../query/global-query/global-query.model";
-import { OdfTypes } from "src/app/interface/dataset-schema.interface";
-import { SqlQueryExplanationResponse } from "../query-explainer/query-explainer.types";
-import { DynamicTableColumnClassEnum } from "../common/components/dynamic-table/dynamic-table.interface";
+} from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
+import {
+    AddPollingSourceEditFormType,
+    EventTimeSourceKind,
+    FetchKind,
+    MergeKind,
+    PrepareKind,
+    PreprocessStepValue,
+    ReadKind,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { AddPushSourceEditFormType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
+import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { SqlQueryExplanationResponse } from "src/app/query-explainer/query-explainer.types";
+import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
 
 export const mockPageBasedInfo: PageBasedInfo = {
     currentPage: 1,

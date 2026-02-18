@@ -5,14 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
-import { datasetSettingsGeneralTabResolverFn } from "../../general/resolver/dataset-settings-general-tab.resolver";
-import { DatasetFlowTriggerService } from "../../../services/dataset-flow-trigger.service";
 import { inject } from "@angular/core";
+import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+
 import { map, Observable, of, switchMap } from "rxjs";
-import { DatasetFlowType, GetDatasetFlowTriggerQuery } from "src/app/api/kamu.graphql.interface";
-import { DatasetSettingsSchedulingTabData } from "../dataset-settings-scheduling-tab.data";
+
+import { DatasetFlowType, GetDatasetFlowTriggerQuery } from "@api/kamu.graphql.interface";
+
+import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
+import { datasetSettingsGeneralTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/resolver/dataset-settings-general-tab.resolver";
+import { DatasetSettingsSchedulingTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.data";
+import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
 export const datasetSettingsSchedulingTabResolverFn: ResolveFn<DatasetSettingsSchedulingTabData | null> = (
     route: ActivatedRouteSnapshot,

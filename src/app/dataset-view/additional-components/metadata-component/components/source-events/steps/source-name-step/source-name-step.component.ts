@@ -7,7 +7,8 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { InputFieldComponent } from "../../../form-components/input-field/input-field.component";
+
+import { InputFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/input-field/input-field.component";
 
 @Component({
     selector: "app-source-name-step",

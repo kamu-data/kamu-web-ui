@@ -5,27 +5,31 @@
  * included in the LICENSE file.
  */
 
+import { AsyncPipe, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { DatasetBasicsFragment, WebhookSubscriptionInput } from "src/app/api/kamu.graphql.interface";
-import { WebhooksService } from "src/app/services/webhooks.service";
 import { MatDividerModule } from "@angular/material/divider";
+
+import { BehaviorSubject, map, Observable } from "rxjs";
+
 import { NgSelectModule } from "@ng-select/ng-select";
-import AppValues from "src/app/common/values/app.values";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { DatasetWebhooksService } from "../../service/dataset-webhooks.service";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { NavigationService } from "src/app/services/navigation.service";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import { AsyncPipe, NgIf } from "@angular/common";
-import { CopyToClipboardComponent } from "src/app/common/components/copy-to-clipboard/copy-to-clipboard.component";
+
+import { BaseComponent } from "@common/components/base.component";
+import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
+import { DatasetBasicsFragment, WebhookSubscriptionInput } from "@api/kamu.graphql.interface";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+
+import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
 import {
+    CreateWebhookSubscriptionSuccess,
     SubscribedEventType,
     WebhookSubscriptionFormType,
-    CreateWebhookSubscriptionSuccess,
-} from "../../dataset-settings-webhooks-tab.component.types";
-import { WebhookFormComponent } from "../common/webhook-form/webhook-form.component";
-import { BehaviorSubject, map, Observable } from "rxjs";
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
+import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
+import { NavigationService } from "src/app/services/navigation.service";
+import { WebhooksService } from "src/app/services/webhooks.service";
 
 @Component({
     selector: "app-add-webhook",

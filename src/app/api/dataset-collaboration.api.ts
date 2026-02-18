@@ -6,24 +6,27 @@
  */
 
 import { inject, Injectable } from "@angular/core";
+
+import { first, map, Observable } from "rxjs";
+
+import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { onlyCompleteData } from "apollo-angular";
+
+import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import {
     DatasetAccessRole,
     DatasetListCollaboratorsGQL,
     DatasetListCollaboratorsQuery,
+    DatasetUserRoleGQL,
+    DatasetUserRoleQuery,
+    LookupFilters,
     SearchCollaboratorGQL,
     SearchCollaboratorQuery,
-    LookupFilters,
     SetRoleCollaboratorGQL,
     SetRoleCollaboratorMutation,
     UnsetRoleCollaboratorGQL,
     UnsetRoleCollaboratorMutation,
-    DatasetUserRoleGQL,
-    DatasetUserRoleQuery,
-} from "./kamu.graphql.interface";
-import { first, map, Observable } from "rxjs";
-import { ApolloLink, ObservableQuery } from "@apollo/client/core";
-import { onlyCompleteData } from "apollo-angular";
-import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
+} from "@api/kamu.graphql.interface";
 
 @Injectable({ providedIn: "root" })
 export class DatasetCollaborationApi {

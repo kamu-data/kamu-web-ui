@@ -5,26 +5,30 @@
  * included in the LICENSE file.
  */
 
-import { provideToastr } from "ngx-toastr";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { DatasetSettingsSecretsManagerTabComponent } from "./dataset-settings-secrets-manager-tab.component";
+import { provideAnimations } from "@angular/platform-browser/animations";
+import { ActivatedRoute } from "@angular/router";
+
+import { of } from "rxjs";
+
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { provideToastr } from "ngx-toastr";
+
+import { ModalService } from "@common/components/modal/modal.service";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { ViewDatasetEnvVarConnection } from "@api/kamu.graphql.interface";
+import { MOCK_ENV_VAR_ID, mockListEnvVariablesQuery } from "@api/mock/environment-variables-and-secrets.mock";
+import { ModalArgumentsInterface } from "@interface/modal.interface";
+
+import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
+import { DatasetSettingsSecretsManagerTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-settings-secrets-manager-tab.component";
+import { MOCK_DATASET_INFO } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
-import { MOCK_ENV_VAR_ID, mockListEnvVariablesQuery } from "src/app/api/mock/environment-variables-and-secrets.mock";
-import { ViewDatasetEnvVarConnection } from "src/app/api/kamu.graphql.interface";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { ModalService } from "src/app/common/components/modal/modal.service";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { ModalArgumentsInterface } from "src/app/interface/modal.interface";
-import { MOCK_DATASET_INFO } from "../../../metadata-component/components/set-transform/mock.data";
-import ProjectLinks from "src/app/project-links";
-import { ActivatedRoute } from "@angular/router";
-import { of } from "rxjs";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { provideAnimations } from "@angular/platform-browser/animations";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("DatasetSettingsSecretsManagerTabComponent", () => {
     let component: DatasetSettingsSecretsManagerTabComponent;

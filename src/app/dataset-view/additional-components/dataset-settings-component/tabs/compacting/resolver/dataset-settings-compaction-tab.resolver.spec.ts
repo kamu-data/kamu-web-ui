@@ -7,7 +7,8 @@
 
 import { TestBed } from "@angular/core/testing";
 import { ResolveFn } from "@angular/router";
-import { datasetSettingsCompactionTabResolverFn } from "./dataset-settings-compaction-tab.resolver";
+
+import { datasetSettingsCompactionTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/resolver/dataset-settings-compaction-tab.resolver";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
 describe("datasetSettingsCompactionTabResolverFn", () => {

@@ -5,25 +5,30 @@
  * included in the LICENSE file.
  */
 
-import { FetchKind, SetPollingSourceSection } from "./add-polling-source-form.types";
+import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
+import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { FormArray, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { FETCH_STEP_RADIO_CONTROLS } from "./form-control.source";
-import { FETCH_FORM_DATA } from "../steps/data/fetch-form-data";
-import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
-import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
-import { SourcesSection } from "./process-form.service.types";
-import { BaseSourceEventComponent } from "../../base-source-event.component";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { PreprocessStepComponent } from "../steps/preprocess-step/preprocess-step.component";
-import { PrepareStepComponent } from "../steps/prepare-step/prepare-step.component";
-import { StepperNavigationComponent } from "../../stepper-navigation/stepper-navigation.component";
-import { BaseStepComponent } from "../steps/base-step/base-step.component";
 import { MatStepperModule } from "@angular/material/stepper";
-import { NgIf } from "@angular/common";
 import { RouterLink } from "@angular/router";
+
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { DatasetInfo } from "@interface/navigation.interface";
+
+import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
+import { BaseSourceEventComponent } from "src/app/dataset-view/additional-components/metadata-component/components/base-source-event.component";
+import {
+    FetchKind,
+    SetPollingSourceSection,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { FETCH_STEP_RADIO_CONTROLS } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/form-control.source";
+import { SourcesSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
+import { BaseStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/base-step/base-step.component";
+import { FETCH_FORM_DATA } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/data/fetch-form-data";
+import { PrepareStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/prepare-step/prepare-step.component";
+import { PreprocessStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/preprocess-step/preprocess-step.component";
+import { StepperNavigationComponent } from "src/app/dataset-view/additional-components/metadata-component/components/stepper-navigation/stepper-navigation.component";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { EditorModule } from "src/app/editor/editor.module";
 
 @Component({

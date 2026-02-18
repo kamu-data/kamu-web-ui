@@ -6,7 +6,9 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { PaginationComponent } from "./pagination.component";
+
+import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+
 import { mockPageBasedInfo } from "src/app/search/mock.data";
 
 describe("PaginationComponent", () => {

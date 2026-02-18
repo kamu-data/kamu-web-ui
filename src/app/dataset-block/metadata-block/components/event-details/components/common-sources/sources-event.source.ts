@@ -5,16 +5,20 @@
  * included in the LICENSE file.
  */
 
-import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
-import { EventRowDescriptor, EventRowDescriptorsByField } from "../../dynamic-events/dynamic-events.model";
-import { StepTypePropertyComponent } from "../common/step-type-property/step-type-property.component";
-import { SchemaPropertyComponent } from "../common/schema-property/schema-property.component";
-import { SeparatorPropertyComponent } from "../common/separator-property/separator-property.component";
-import { SimplePropertyComponent } from "../common/simple-property/simple-property.component";
-import { MergeStrategyPropertyComponent } from "../common/merge-strategy-property/merge-strategy-property.component";
-import { EnginePropertyComponent } from "../common/engine-property/engine-property.component";
-import { SqlQueryViewerComponent } from "../common/sql-query-viewer/sql-query-viewer.component";
-import { CardsPropertyComponent } from "../common/cards-property/cards-property.component";
+import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
+
+import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
+import { EnginePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/engine-property/engine-property.component";
+import { MergeStrategyPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";
+import { SchemaPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/schema-property/schema-property.component";
+import { SeparatorPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/separator-property/separator-property.component";
+import { SimplePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/simple-property/simple-property.component";
+import { SqlQueryViewerComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/sql-query-viewer/sql-query-viewer.component";
+import { StepTypePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/step-type-property/step-type-property.component";
+import {
+    EventRowDescriptor,
+    EventRowDescriptorsByField,
+} from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
 
 export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
     "ReadStepCsv.__typename": {

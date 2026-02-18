@@ -5,26 +5,31 @@
  * included in the LICENSE file.
  */
 
+import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+
+import { BaseComponent } from "@common/components/base.component";
+import { TimeDeltaFormComponent } from "@common/components/time-delta-form/time-delta-form.component";
+import { TimeDeltaFormType } from "@common/components/time-delta-form/time-delta-form.value";
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
 import {
     FlowRetryBackoffType,
     FlowRetryPolicy,
     FlowRetryPolicyInput,
     TimeDelta,
     TimeUnit,
-} from "src/app/api/kamu.graphql.interface";
-import { FlowRetryPolicyFormType, FlowRetryPolicyFormValue } from "./flow-retry-policy-form.types";
-import { TimeDeltaFormType } from "src/app/common/components/time-delta-form/time-delta-form.value";
-import { MaybeNull } from "src/app/interface/app.types";
-import { FlowTooltipsTexts } from "src/app/common/tooltips/flow-tooltips.text";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { NgIf } from "@angular/common";
-import { FormValidationErrorsDirective } from "src/app/common/directives/form-validation-errors.directive";
-import { TimeDeltaFormComponent } from "src/app/common/components/time-delta-form/time-delta-form.component";
-import { TooltipIconComponent } from "src/app/common/components/tooltip-icon/tooltip-icon.component";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+} from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
+import {
+    FlowRetryPolicyFormType,
+    FlowRetryPolicyFormValue,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/flow-retry-policy-form/flow-retry-policy-form.types";
 
 @Component({
     selector: "app-flow-retry-policy-form",

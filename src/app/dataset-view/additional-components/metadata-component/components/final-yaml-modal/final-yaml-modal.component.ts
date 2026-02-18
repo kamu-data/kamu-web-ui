@@ -5,15 +5,19 @@
  * included in the LICENSE file.
  */
 
-import { BaseComponent } from "src/app/common/components/base.component";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { DatasetCommitService } from "../../../overview-component/services/dataset-commit.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+
 import { finalize } from "rxjs";
-import { YamlEditorComponent } from "../../../../../editor/components/yaml-editor/yaml-editor.component";
+
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+
+import { BaseComponent } from "@common/components/base.component";
+import { DatasetInfo } from "@interface/navigation.interface";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
+import { YamlEditorComponent } from "src/app/editor/components/yaml-editor/yaml-editor.component";
 import { EditorModule } from "src/app/editor/editor.module";
 
 @Component({

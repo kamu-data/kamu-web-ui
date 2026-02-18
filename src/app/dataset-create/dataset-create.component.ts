@@ -5,25 +5,33 @@
  * included in the LICENSE file.
  */
 
-import { BaseComponent } from "src/app/common/components/base.component";
-import { AccountProvider, DatasetKind, DatasetVisibility } from "src/app/api/kamu.graphql.interface";
-import { MaybeNull } from "src/app/interface/app.types";
+import { AsyncPipe, NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { DatasetCreateService } from "./dataset-create.service";
-import { Observable } from "rxjs";
-import { LoggedUserService } from "../auth/logged-user.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { CreateDatasetFormType, SelectStorageItemType, STORAGE_LIST } from "./dataset-create.types";
-import AppValues from "../common/values/app.values";
-import { YamlEditorComponent } from "../editor/components/yaml-editor/yaml-editor.component";
-import { NgSelectModule } from "@ng-select/ng-select";
-import { MatIconModule } from "@angular/material/icon";
-import { FormValidationErrorsDirective } from "../common/directives/form-validation-errors.directive";
-import { NgFor, NgIf, AsyncPipe } from "@angular/common";
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
-import { EditorModule } from "../editor/editor.module";
-import { LoginMethodsService } from "../auth/login-methods.service";
+import { MatIconModule } from "@angular/material/icon";
+
+import { Observable } from "rxjs";
+
+import { NgSelectModule } from "@ng-select/ng-select";
+
+import { BaseComponent } from "@common/components/base.component";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import AppValues from "@common/values/app.values";
+import { AccountProvider, DatasetKind, DatasetVisibility } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { LoginMethodsService } from "src/app/auth/login-methods.service";
+import { DatasetCreateService } from "src/app/dataset-create/dataset-create.service";
+import {
+    CreateDatasetFormType,
+    SelectStorageItemType,
+    STORAGE_LIST,
+} from "src/app/dataset-create/dataset-create.types";
+import { YamlEditorComponent } from "src/app/editor/components/yaml-editor/yaml-editor.component";
+import { EditorModule } from "src/app/editor/editor.module";
 
 @Component({
     selector: "app-dataset-create",

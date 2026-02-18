@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { NgFor, NgIf } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -18,10 +19,11 @@ import {
     Renderer2,
     ViewChild,
 } from "@angular/core";
-import { EngineDesc } from "src/app/api/kamu.graphql.interface";
-import { DataHelpers } from "src/app/common/helpers/data.helpers";
+
+import { DataHelpers } from "@common/helpers/data.helpers";
+import { EngineDesc } from "@api/kamu.graphql.interface";
+
 import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
-import { NgIf, NgFor } from "@angular/common";
 
 @Component({
     selector: "app-engine-select",

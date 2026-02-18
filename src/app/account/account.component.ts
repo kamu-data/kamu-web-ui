@@ -5,27 +5,30 @@
  * included in the LICENSE file.
  */
 
-import ProjectLinks from "src/app/project-links";
+import { AsyncPipe, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { AccountFragment } from "src/app/api/kamu.graphql.interface";
-import { AccountTabs } from "./account.constants";
-import AppValues from "src/app/common/values/app.values";
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import { AccountService } from "src/app/account/account.service";
-import { map, shareReplay } from "rxjs/operators";
-import { Observable } from "rxjs";
-import { MaybeNull } from "src/app/interface/app.types";
-import { AccountNotFoundError } from "src/app/common/values/errors";
-import { ModalService } from "../common/components/modal/modal.service";
-import { LoggedUserService } from "../auth/logged-user.service";
-import RoutingResolvers from "../common/resolvers/routing-resolvers";
-import { DisplayAccountNamePipe } from "../common/pipes/display-account-name.pipe";
-import { RouterLink, RouterOutlet } from "@angular/router";
-import { MatIconModule } from "@angular/material/icon";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatDividerModule } from "@angular/material/divider";
-import { FeatureFlagDirective } from "../common/directives/feature-flag.directive";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { MatIconModule } from "@angular/material/icon";
+import { RouterLink, RouterOutlet } from "@angular/router";
+
+import { Observable } from "rxjs";
+import { map, shareReplay } from "rxjs/operators";
+
+import { ModalService } from "@common/components/modal/modal.service";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { DisplayAccountNamePipe } from "@common/pipes/display-account-name.pipe";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
+import { AccountNotFoundError } from "@common/values/errors";
+import { AccountFragment } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
+import { AccountTabs } from "src/app/account/account.constants";
+import { AccountService } from "src/app/account/account.service";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-account",

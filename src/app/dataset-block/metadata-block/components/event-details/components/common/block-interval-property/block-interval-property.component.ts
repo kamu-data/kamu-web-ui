@@ -5,13 +5,15 @@
  * included in the LICENSE file.
  */
 
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { DatasetByIdQuery } from "../../../../../../../api/kamu.graphql.interface";
-import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DisplayHashComponent } from "../../../../../../../common/components/display-hash/display-hash.component";
+
+import { DisplayHashComponent } from "@common/components/display-hash/display-hash.component";
+import { DatasetByIdQuery } from "@api/kamu.graphql.interface";
+import { DatasetInfo } from "@interface/navigation.interface";
+
+import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
 
 @Component({
     selector: "app-block-interval-property",

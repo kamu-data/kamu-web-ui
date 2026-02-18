@@ -5,9 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { SetPollingSourceTooltipsTexts } from "src/app/common/tooltips/set-polling-source-tooltips.text";
-import { FetchKind, MergeKind, ReadKind } from "./add-polling-source-form.types";
-import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
+import { SetPollingSourceTooltipsTexts } from "@common/tooltips/set-polling-source-tooltips.text";
+import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
+
+import {
+    FetchKind,
+    MergeKind,
+    ReadKind,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 
 export interface RadioControlType {
     id: string;

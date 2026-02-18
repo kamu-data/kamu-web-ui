@@ -6,24 +6,31 @@
  */
 
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
-import { AccountFlowsActivitySubtabComponent } from "./account-flows-activity-subtab.component";
-import { Account, FlowStatus } from "src/app/api/kamu.graphql.interface";
-import { AccountFlowsNav, ProcessCardFilterMode } from "../../account-flows-tab.types";
+import { ActivatedRoute } from "@angular/router";
+
+import { of } from "rxjs";
+
+import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { ActivatedRoute } from "@angular/router";
-import { NavigationService } from "src/app/services/navigation.service";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
+
+import { Account, FlowStatus } from "@api/kamu.graphql.interface";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+import { mockDatasetFlowsInitiatorsQuery, mockFlowsTableData } from "@api/mock/dataset-flow.mock";
+
 import { AccountTabs } from "src/app/account/account.constants";
-import { of } from "rxjs";
-import { mockDatasetMainDataId } from "src/app/search/mock.data";
-import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { AccountService } from "src/app/account/account.service";
-import { mockDatasetFlowsInitiatorsQuery, mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
+import { AccountFlowsActivitySubtabComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-activity-subtab/account-flows-activity-subtab.component";
+import {
+    AccountFlowsNav,
+    ProcessCardFilterMode,
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockDatasets } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
-import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { mockDatasetMainDataId } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("AccountFlowsActivitySubtabComponent", () => {
     let component: AccountFlowsActivitySubtabComponent;

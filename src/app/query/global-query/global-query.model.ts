@@ -5,10 +5,11 @@
  * included in the LICENSE file.
  */
 
+import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DataSchemaField, DatasetSchema } from "@interface/dataset-schema.interface";
+
 import { QueryExplainerProofResponse } from "src/app/query-explainer/query-explainer.types";
-import { MaybeNull } from "src/app/interface/app.types";
-import { DataSchemaField, DatasetSchema } from "src/app/interface/dataset-schema.interface";
-import { DynamicTableDataRow } from "src/app/common/components/dynamic-table/dynamic-table.interface";
 
 export interface GlobalQuerySearchItem {
     datasetAlias: string;

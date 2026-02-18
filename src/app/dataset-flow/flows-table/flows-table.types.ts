@@ -5,15 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { MaybeNull } from "src/app/interface/app.types";
 import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
+
 import {
     AccountFragment,
     DatasetBasicsFragment,
     FlowConnectionDataFragment,
     FlowConnectionWidgetDataFragment,
     FlowStatus,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 export interface FlowsTableData {
     connectionDataForTable: FlowConnectionDataFragment;

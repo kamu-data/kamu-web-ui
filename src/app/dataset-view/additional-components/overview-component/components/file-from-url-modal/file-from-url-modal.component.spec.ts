@@ -6,9 +6,12 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FileFromUrlModalComponent } from "./file-from-url-modal.component";
+
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { FileFromUrlModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/file-from-url-modal/file-from-url-modal.component";
 
 describe("FileFromUrlModalComponent", () => {
     let component: FileFromUrlModalComponent;

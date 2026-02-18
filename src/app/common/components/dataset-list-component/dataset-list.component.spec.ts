@@ -6,7 +6,8 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { DatasetListComponent } from "./dataset-list.component";
+
+import { DatasetListComponent } from "@common/components/dataset-list-component/dataset-list.component";
 
 describe("DatasetListComponent", () => {
     let component: DatasetListComponent;

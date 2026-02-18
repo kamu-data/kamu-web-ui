@@ -5,17 +5,19 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { QueryExplainerOutputType } from "../../query-explainer.types";
-import { extractSchemaFieldsFromData } from "src/app/common/helpers/data-schema.helpers";
-import { DataSchemaField } from "src/app/interface/dataset-schema.interface";
-import { parseDataFromJsonAoSFormat } from "src/app/common/helpers/data.helpers";
-import { DynamicTableComponent } from "../../../common/components/dynamic-table/dynamic-table.component";
 import { NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+
+import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
 import {
     DynamicTableColumnDescriptor,
     DynamicTableDataRow,
-} from "src/app/common/components/dynamic-table/dynamic-table.interface";
+} from "@common/components/dynamic-table/dynamic-table.interface";
+import { extractSchemaFieldsFromData } from "@common/helpers/data-schema.helpers";
+import { parseDataFromJsonAoSFormat } from "@common/helpers/data.helpers";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
+
+import { QueryExplainerOutputType } from "src/app/query-explainer/query-explainer.types";
 
 @Component({
     selector: "app-reproduced-result-section",

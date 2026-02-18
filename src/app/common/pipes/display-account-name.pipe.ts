@@ -6,7 +6,8 @@
  */
 
 import { Pipe, PipeTransform } from "@angular/core";
-import { AccountProvider } from "src/app/api/kamu.graphql.interface";
+
+import { AccountProvider } from "@api/kamu.graphql.interface";
 
 @Pipe({
     name: "displayAccountName",

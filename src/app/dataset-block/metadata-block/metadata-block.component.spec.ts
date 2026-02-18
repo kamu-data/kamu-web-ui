@@ -5,21 +5,25 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ActivatedRoute } from "@angular/router";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { of } from "rxjs";
-import { MetadataBlockComponent } from "./metadata-block.component";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { MetadataBlockFragment } from "src/app/api/kamu.graphql.interface";
-import { mockGetMetadataBlockQuery } from "src/app/api/mock/dataset.mock";
-import { provideToastr } from "ngx-toastr";
 import { HarnessLoader } from "@angular/cdk/testing";
-import { MatSlideToggleHarness } from "@angular/material/slide-toggle/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatSlideToggleHarness } from "@angular/material/slide-toggle/testing";
+import { ActivatedRoute } from "@angular/router";
+
+import { of } from "rxjs";
+
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { provideToastr } from "ngx-toastr";
+
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
+import { mockGetMetadataBlockQuery } from "@api/mock/dataset.mock";
+
+import { MetadataBlockComponent } from "src/app/dataset-block/metadata-block/metadata-block.component";
 
 describe("MetadataBlockComponent", () => {
     let component: MetadataBlockComponent;

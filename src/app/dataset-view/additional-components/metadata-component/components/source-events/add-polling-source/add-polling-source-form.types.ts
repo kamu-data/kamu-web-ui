@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { SqlQueryStep, Transform } from "src/app/api/kamu.graphql.interface";
+import { SqlQueryStep, Transform } from "@api/kamu.graphql.interface";
 
 export enum SetPollingSourceSection {
     READ = "read",

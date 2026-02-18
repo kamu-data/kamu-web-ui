@@ -5,38 +5,37 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
-import {
-    AccountWithRole,
-    DatasetAccessRole,
-    DatasetBasicsFragment,
-    PageBasedInfo,
-} from "src/app/api/kamu.graphql.interface";
-import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { SettingsTabsEnum } from "../../../dataset-settings.model";
-import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { BaseComponent } from "src/app/common/components/base.component";
-import { promiseWithCatch, requireValue } from "src/app/common/helpers/app.helpers";
-import ProjectLinks from "src/app/project-links";
-import { NavigationService } from "src/app/services/navigation.service";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { AddPeopleModalComponent } from "./add-people-modal/add-people-modal.component";
-import { ModalService } from "src/app/common/components/modal/modal.service";
 import { SelectionModel } from "@angular/cdk/collections";
-import { DatasetCollaborationsService } from "./dataset-collaborations.service";
+import { NgIf, TitleCasePipe } from "@angular/common";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { catchError, filter, firstValueFrom, from, map, of, switchMap, take } from "rxjs";
-import { NavigationEnd, Router, RouterLink } from "@angular/router";
-import AppValues from "src/app/common/values/app.values";
-import { EditCollaboratorModalComponent } from "./edit-collaborator-modal/edit-collaborator-modal.component";
-import { CollaboratorModalResultType } from "./add-people-modal/add-people-modal.model";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { PaginationComponent } from "../../../../../../common/components/pagination-component/pagination.component";
 import { FormsModule } from "@angular/forms";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { NgIf, TitleCasePipe } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { NavigationEnd, Router, RouterLink } from "@angular/router";
+
+import { catchError, filter, firstValueFrom, from, map, of, switchMap, take } from "rxjs";
+
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+
+import { BaseComponent } from "@common/components/base.component";
+import { ModalService } from "@common/components/modal/modal.service";
+import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+import { promiseWithCatch, requireValue } from "@common/helpers/app.helpers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
+import { AccountWithRole, DatasetAccessRole, DatasetBasicsFragment, PageBasedInfo } from "@api/kamu.graphql.interface";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { AddPeopleModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.component";
+import { CollaboratorModalResultType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.model";
+import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
+import { EditCollaboratorModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/edit-collaborator-modal/edit-collaborator-modal.component";
+import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import ProjectLinks from "src/app/project-links";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-dataset-settings-access-tab",

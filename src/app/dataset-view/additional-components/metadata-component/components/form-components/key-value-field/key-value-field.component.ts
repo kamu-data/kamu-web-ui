@@ -5,14 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { BaseField } from "../base-field";
-import { KeyValueForm } from "./key-value-field.types";
-import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 import { NgFor } from "@angular/common";
-import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
+import { NgxTrimDirectiveModule } from "ngx-trim-directive";
+
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+
+import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
+import { KeyValueForm } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/key-value-field/key-value-field.types";
 
 @Component({
     selector: "app-key-value-field",

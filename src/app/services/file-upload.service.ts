@@ -5,24 +5,27 @@
  * included in the LICENSE file.
  */
 
-import { AppConfigService } from "src/app/app-config.service";
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { Observable, Subject, catchError, finalize, first, of, switchMap, tap } from "rxjs";
-import { MaybeUndefined } from "src/app/interface/app.types";
-import { LocalStorageService } from "./local-storage.service";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { DatasetBasicsFragment, DatasetEndpoints } from "../api/kamu.graphql.interface";
-import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
-import { NavigationService } from "./navigation.service";
-import { ProtocolsService } from "./protocols.service";
+
+import { catchError, finalize, first, Observable, of, Subject, switchMap, tap } from "rxjs";
+
+import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ondestroy.adapter";
+import { FileUploadError } from "@common/values/errors";
+import { DatasetBasicsFragment, DatasetEndpoints } from "@api/kamu.graphql.interface";
+import { MaybeUndefined } from "@interface/app.types";
 import {
-    UploadPrepareResponse,
-    UploadPrepareData,
     UploadAvailableMethod,
-} from "src/app/interface/ingest-via-file-upload.types";
-import { FileUploadError } from "../common/values/errors";
-import { UnsubscribeDestroyRefAdapter } from "../common/components/unsubscribe.ondestroy.adapter";
+    UploadPrepareData,
+    UploadPrepareResponse,
+} from "@interface/ingest-via-file-upload.types";
+import { DatasetInfo } from "@interface/navigation.interface";
+
+import { AppConfigService } from "src/app/app-config.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { LocalStorageService } from "src/app/services/local-storage.service";
+import { NavigationService } from "src/app/services/navigation.service";
+import { ProtocolsService } from "src/app/services/protocols.service";
 
 @Injectable({
     providedIn: "root",

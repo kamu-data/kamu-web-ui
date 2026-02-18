@@ -5,15 +5,21 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { BaseField } from "../base-field";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ReadFormatControlType, ReadKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
-import { SourcesTooltipsTexts } from "src/app/common/tooltips/sources.text";
-import { InputFieldComponent } from "../input-field/input-field.component";
 import { NgFor, NgIf } from "@angular/common";
-import { TooltipIconComponent } from "../../../../../../common/components/tooltip-icon/tooltip-icon.component";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
+
+import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
+
+import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
+import { InputFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/input-field/input-field.component";
+import {
+    ReadFormatControlType,
+    ReadKind,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 
 @Component({
     selector: "app-json-kind-field",

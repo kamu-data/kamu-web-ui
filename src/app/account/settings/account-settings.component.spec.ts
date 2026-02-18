@@ -5,23 +5,27 @@
  * included in the LICENSE file.
  */
 
-import { mockAccountDetails, mockAccountDetailsWithEmail } from "../../api/mock/auth.mock";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { AccountSettingsComponent } from "./account-settings.component";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { LoggedUserService } from "../../auth/logged-user.service";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { of } from "rxjs";
+
+import { ApolloTestingModule } from "apollo-angular/testing";
+import { provideToastr } from "ngx-toastr";
+
 import {
     findElementByDataTestId,
     getElementByDataTestId,
     registerMatSvgIcons,
-} from "src/app/common/helpers/base-test.helpers.spec";
-import { of } from "rxjs";
-import { LoginService } from "../../auth/login/login.service";
-import { provideToastr } from "ngx-toastr";
+} from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { mockAccountDetails, mockAccountDetailsWithEmail } from "@api/mock/auth.mock";
+
+import { AccountSettingsComponent } from "src/app/account/settings/account-settings.component";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { LoginService } from "src/app/auth/login/login.service";
 
 describe("AccountSettingsComponent", () => {
     let component: AccountSettingsComponent;

@@ -5,14 +5,16 @@
  * included in the LICENSE file.
  */
 
+import { DatePipe, NgIf, TitleCasePipe, UpperCasePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { FlowOutcomeDataFragment, FlowSummaryDataFragment } from "src/app/api/kamu.graphql.interface";
-import AppValues from "src/app/common/values/app.values";
-import { DatasetFlowDetailsHelpers } from "../flow-details-history-tab/flow-details-history-tab.helpers";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { DatasetFlowByIdResponse } from "../../dataset-flow-details.types";
+
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
+import { FlowOutcomeDataFragment, FlowSummaryDataFragment } from "@api/kamu.graphql.interface";
+
+import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
 import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
-import { NgIf, UpperCasePipe, TitleCasePipe, DatePipe } from "@angular/common";
 
 @Component({
     selector: "app-flow-details-summary-tab",

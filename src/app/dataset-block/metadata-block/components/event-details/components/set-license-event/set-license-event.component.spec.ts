@@ -6,9 +6,11 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { mockSetLicense } from "../../mock.events";
-import { SetLicenseEventComponent } from "./set-license-event.component";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { SetLicenseEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/set-license-event/set-license-event.component";
+import { mockSetLicense } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
 describe("SetLicenseEventComponent", () => {
     let component: SetLicenseEventComponent;

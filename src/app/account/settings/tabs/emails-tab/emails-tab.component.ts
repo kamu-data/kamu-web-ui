@@ -5,19 +5,21 @@
  * included in the LICENSE file.
  */
 
-import { inject, Input, OnInit } from "@angular/core";
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { ChangeEmailFormType } from "./email-tabs.types";
-import { FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
-import { AccountWithEmailFragment } from "src/app/api/kamu.graphql.interface";
-import { Observable } from "rxjs";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { NavigationService } from "src/app/services/navigation.service";
-import { AccountSettingsTabs } from "../../account-settings.constants";
-import { NgIf, AsyncPipe } from "@angular/common";
-import { FormValidationErrorsDirective } from "../../../../common/directives/form-validation-errors.directive";
+import { AsyncPipe, NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
+
+import { Observable } from "rxjs";
+
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { AccountWithEmailFragment } from "@api/kamu.graphql.interface";
+
+import { AccountSettingsTabs } from "src/app/account/settings/account-settings.constants";
+import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
+import { ChangeEmailFormType } from "src/app/account/settings/tabs/emails-tab/email-tabs.types";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-emails-tab",

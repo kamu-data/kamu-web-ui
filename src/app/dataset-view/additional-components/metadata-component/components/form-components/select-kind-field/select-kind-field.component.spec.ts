@@ -7,10 +7,12 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
-import { SelectKindFieldComponent } from "./select-kind-field.component";
-import { FetchKind } from "../../source-events/add-polling-source/add-polling-source-form.types";
-import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { FETCH_STEP_RADIO_CONTROLS } from "../../source-events/add-polling-source/form-control.source";
+
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+
+import { SelectKindFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/select-kind-field/select-kind-field.component";
+import { FetchKind } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { FETCH_STEP_RADIO_CONTROLS } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/form-control.source";
 
 describe("SelectKindFieldComponent", () => {
     let component: SelectKindFieldComponent;

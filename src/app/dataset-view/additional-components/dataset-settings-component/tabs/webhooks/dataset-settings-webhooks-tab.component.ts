@@ -6,9 +6,9 @@
  */
 
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { MatTableModule } from "@angular/material/table";
-import { MatIconModule } from "@angular/material/icon";
 import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTableModule } from "@angular/material/table";
 import { RouterOutlet } from "@angular/router";
 
 @Component({

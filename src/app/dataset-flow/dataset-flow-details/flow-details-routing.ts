@@ -8,19 +8,21 @@
 /* istanbul ignore file */
 
 import { Routes } from "@angular/router";
-import RoutingResolvers from "../../common/resolvers/routing-resolvers";
-import { FlowDetailsTabs } from "./dataset-flow-details.types";
-import { FlowDetailsAdminTabComponent } from "./tabs/flow-details-admin-tab/flow-details-admin-tab.component";
-import { FlowDetailsHistoryTabComponent } from "./tabs/flow-details-history-tab/flow-details-history-tab.component";
-import { FlowDetailsLogsTabComponent } from "./tabs/flow-details-logs-tab/flow-details-logs-tab.component";
-import { FlowDetailsSummaryTabComponent } from "./tabs/flow-details-summary-tab/flow-details-summary-tab.component";
-import { flowDetailsSummaryResolverFn } from "./tabs/flow-details-summary-tab/resolver/flow-details-summary.resolver";
-import { FlowDetailsUsageTabComponent } from "./tabs/flow-details-usage-tab/flow-details-usage-tab.component";
-import ProjectLinks from "../../project-links";
-import { DatasetFlowDetailsComponent } from "./dataset-flow-details.component";
-import { flowDetailsResolverFn } from "./resolvers/flow-details.resolver";
-import { flowDetailsActiveTabResolverFn } from "./resolvers/flow-details-active-tab.resolver";
-import { datasetInfoResolverFn } from "src/app/common/resolvers/dataset-info.resolver";
+
+import { datasetInfoResolverFn } from "@common/resolvers/dataset-info.resolver";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+
+import { DatasetFlowDetailsComponent } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.component";
+import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { flowDetailsActiveTabResolverFn } from "src/app/dataset-flow/dataset-flow-details/resolvers/flow-details-active-tab.resolver";
+import { flowDetailsResolverFn } from "src/app/dataset-flow/dataset-flow-details/resolvers/flow-details.resolver";
+import { FlowDetailsAdminTabComponent } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-admin-tab/flow-details-admin-tab.component";
+import { FlowDetailsHistoryTabComponent } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.component";
+import { FlowDetailsLogsTabComponent } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-logs-tab/flow-details-logs-tab.component";
+import { FlowDetailsSummaryTabComponent } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-summary-tab/flow-details-summary-tab.component";
+import { flowDetailsSummaryResolverFn } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-summary-tab/resolver/flow-details-summary.resolver";
+import { FlowDetailsUsageTabComponent } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-usage-tab/flow-details-usage-tab.component";
+import ProjectLinks from "src/app/project-links";
 
 export const FLOW_DETAILS_ROUTES: Routes = [
     {

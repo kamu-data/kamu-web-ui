@@ -5,44 +5,51 @@
  * included in the LICENSE file.
  */
 
-import { Apollo } from "apollo-angular";
-import {
-    mockDatasetBasicsDerivedFragment,
-    mockFullPowerDatasetPermissionsFragment,
-    mockPublicDatasetVisibility,
-} from "../../../search/mock.data";
-import { mockMetadataDerivedUpdate, mockOverviewDataUpdate } from "../data-tabs.mock";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
-import { DatasetSubscriptionsService } from "../../dataset.subscriptions.service";
-import { OverviewComponent } from "./overview.component";
-import { OverviewUpdate } from "../../dataset.subscriptions.interface";
+
+import { of } from "rxjs";
+
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angular-datetime-picker";
+import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { Apollo } from "apollo-angular";
+import { MarkdownModule } from "ngx-markdown";
+import { provideToastr } from "ngx-toastr";
+
+import {
+    emitClickOnElementByDataTestId,
+    findElementByDataTestId,
+    registerMatSvgIcons,
+} from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import AppValues from "@common/values/app.values";
 import {
     AccountProvider,
     DatasetCurrentInfoFragment,
     DatasetKind,
     DatasetOverviewFragment,
-} from "src/app/api/kamu.graphql.interface";
-import { NavigationService } from "src/app/services/navigation.service";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { provideToastr } from "ngx-toastr";
-import { mockSetLicense } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
-import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angular-datetime-picker";
-import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
-import { ChangeDetectionStrategy } from "@angular/core";
-import { MarkdownModule } from "ngx-markdown";
-import { DatasetFlowsService } from "../flows-component/services/dataset-flows.service";
-import { of } from "rxjs";
-import {
-    emitClickOnElementByDataTestId,
-    findElementByDataTestId,
-    registerMatSvgIcons,
-} from "src/app/common/helpers/base-test.helpers.spec";
+} from "@api/kamu.graphql.interface";
+
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import AppValues from "src/app/common/values/app.values";
-import { DatasetCollaborationsService } from "../dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { mockSetLicense } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
+import {
+    mockMetadataDerivedUpdate,
+    mockOverviewDataUpdate,
+} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
+import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { OverviewComponent } from "src/app/dataset-view/additional-components/overview-component/overview.component";
+import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import {
+    mockDatasetBasicsDerivedFragment,
+    mockFullPowerDatasetPermissionsFragment,
+    mockPublicDatasetVisibility,
+} from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("OverviewComponent", () => {
     let component: OverviewComponent;

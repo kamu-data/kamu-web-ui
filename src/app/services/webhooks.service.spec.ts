@@ -5,15 +5,19 @@
  * included in the LICENSE file.
  */
 
-import { TestBed } from "@angular/core/testing";
-import { WebhooksService } from "./webhooks.service";
-import { Apollo } from "apollo-angular";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { of } from "rxjs";
-import { mockWebhookEventTypesQuery } from "../api/mock/webhooks.mock";
-import { WebhooksApi } from "./../api/webhooks.api";
-import { SubscribedEventType } from "../dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { TestBed } from "@angular/core/testing";
+
+import { of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+
+import { mockWebhookEventTypesQuery } from "@api/mock/webhooks.mock";
+import { WebhooksApi } from "@api/webhooks.api";
+
+import { SubscribedEventType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
+import { WebhooksService } from "src/app/services/webhooks.service";
 
 describe("WebhooksService", () => {
     let service: WebhooksService;

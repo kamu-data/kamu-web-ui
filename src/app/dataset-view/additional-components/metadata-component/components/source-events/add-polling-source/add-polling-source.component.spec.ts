@@ -5,37 +5,41 @@
  * included in the LICENSE file.
  */
 
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { AddPollingSourceComponent } from "./add-polling-source.component";
+import { FormArray, FormControl, FormGroup } from "@angular/forms";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { ActivatedRoute } from "@angular/router";
+
+import { from, of } from "rxjs";
+
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { FinalYamlModalComponent } from "../../final-yaml-modal/final-yaml-modal.component";
-import { of, from } from "rxjs";
-import {
-    mockDatasetBasicsDerivedFragment,
-    mockDatasetBasicsRootFragment,
-    mockDatasetInfo,
-    mockFullPowerDatasetPermissionsFragment,
-} from "src/app/search/mock.data";
-import { DatasetCommitService } from "../../../../overview-component/services/dataset-commit.service";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetNavigationParams } from "src/app/interface/navigation.interface";
+import { ApolloTestingModule } from "apollo-angular/testing";
+
+import { OdfDefaultValues } from "@common/values/app-odf-default.values";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+import { DatasetNavigationParams } from "@interface/navigation.interface";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
 import {
     EventTimeSourceKind,
     FetchKind,
     MergeKind,
     ReadKind,
     SetPollingSourceSection,
-} from "./add-polling-source-form.types";
-import { OdfDefaultValues } from "src/app/common/values/app-odf-default.values";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { ActivatedRoute } from "@angular/router";
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { AddPollingSourceComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source.component";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import {
+    mockDatasetBasicsDerivedFragment,
+    mockDatasetBasicsRootFragment,
+    mockDatasetInfo,
+    mockFullPowerDatasetPermissionsFragment,
+} from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;

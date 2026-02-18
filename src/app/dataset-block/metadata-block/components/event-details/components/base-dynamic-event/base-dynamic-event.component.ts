@@ -5,24 +5,29 @@
  * included in the LICENSE file.
  */
 
+import { NgFor, NgIf } from "@angular/common";
 import {
-    Component,
+    AfterViewChecked,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ComponentRef,
+    inject,
     Input,
+    QueryList,
     ViewChildren,
     ViewContainerRef,
-    QueryList,
-    ChangeDetectorRef,
-    ComponentRef,
-    AfterViewChecked,
-    inject,
 } from "@angular/core";
-import { EventRow, EventSection } from "../../dynamic-events/dynamic-events.model";
-import { BasePropertyComponent } from "../common/base-property/base-property.component";
-import { BaseComponent } from "src/app/common/components/base.component";
 import { MatIconModule } from "@angular/material/icon";
-import { BlockRowDataComponent } from "../../../../../../common/components/block-row-data/block-row-data.component";
-import { NgFor, NgIf } from "@angular/common";
+
+import { BaseComponent } from "@common/components/base.component";
+import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
+
+import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+import {
+    EventRow,
+    EventSection,
+} from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
 
 @Component({
     selector: "app-dynamic-base-event",

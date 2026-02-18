@@ -5,12 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input, inject } from "@angular/core";
-import { SqlQueryStep } from "src/app/api/kamu.graphql.interface";
-import { ViewportScroller, NgIf, NgFor } from "@angular/common";
-import { SqlEditorComponent } from "../../../../../../../editor/components/sql-editor/sql-editor.component";
+import { NgFor, NgIf, ViewportScroller } from "@angular/common";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
+
+import { SqlQueryStep } from "@api/kamu.graphql.interface";
+
+import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
 
 @Component({
     selector: "app-queries-section",

@@ -9,22 +9,24 @@ import { DatePipe, NgClass, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
+
+import { DataHelpers } from "@common/helpers/data.helpers";
+import AppValues from "@common/values/app.values";
 import {
     DatasetBasicsFragment,
     DatasetKind,
     FlowProcessEffectiveState,
     FlowProcessSummary,
-} from "src/app/api/kamu.graphql.interface";
-import AppValues from "src/app/common/values/app.values";
+} from "@api/kamu.graphql.interface";
+
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import {
-    DatasetFlowsBadgeStyle,
     DatasetFlowBadgeHelpers,
+    DatasetFlowsBadgeStyle,
     DatasetFlowsBadgeTexts,
     webhooksStateMapper,
 } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { DataHelpers } from "src/app/common/helpers/data.helpers";
 
 @Component({
     selector: "app-webhook-flow-process-card",

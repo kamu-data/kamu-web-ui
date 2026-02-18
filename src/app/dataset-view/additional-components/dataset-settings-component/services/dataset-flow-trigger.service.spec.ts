@@ -5,31 +5,35 @@
  * included in the LICENSE file.
  */
 
-import AppValues from "src/app/common/values/app.values";
-import { NavigationService } from "../../../../services/navigation.service";
-import { TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
-import { DatasetFlowTriggerService } from "./dataset-flow-trigger.service";
+import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+import { provideAnimations } from "@angular/platform-browser/animations";
+
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr, ToastrService } from "ngx-toastr";
-import { DatasetFlowApi } from "src/app/api/dataset-flow.api";
-import { of } from "rxjs";
+
+import AppValues from "@common/values/app.values";
+import { DatasetFlowApi } from "@api/dataset-flow.api";
+import {
+    DatasetFlowType,
+    FlowTriggerBreakingChangeRule,
+    FlowTriggerRuleInput,
+    FlowTriggerStopPolicyInput,
+    GetDatasetFlowTriggerQuery,
+    TimeUnit,
+} from "@api/kamu.graphql.interface";
 import {
     mockGetDatasetFlowTriggerCronQuery,
     mockPauseDatasetFlowTriggerSuccess,
     mockSetDatasetFlowTriggerError,
     mockSetDatasetFlowTriggerSuccess,
-} from "src/app/api/mock/dataset-flow.mock";
-import {
-    FlowTriggerBreakingChangeRule,
-    DatasetFlowType,
-    FlowTriggerRuleInput,
-    GetDatasetFlowTriggerQuery,
-    TimeUnit,
-    FlowTriggerStopPolicyInput,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/mock/dataset-flow.mock";
+
+import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
 import { mockDatasetInfo } from "src/app/search/mock.data";
-import { provideAnimations } from "@angular/platform-browser/animations";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("DatasetFlowTriggerService", () => {
     let service: DatasetFlowTriggerService;

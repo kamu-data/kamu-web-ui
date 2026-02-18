@@ -5,13 +5,15 @@
  * included in the LICENSE file.
  */
 
-import { SpinnerService } from "./spinner.service";
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
+import { inject } from "@angular/core";
+
 import { Observable } from "rxjs";
 import { finalize } from "rxjs/operators";
-import { environment } from "../../../../environments/environment";
-import AppValues from "src/app/common/values/app.values";
-import { inject } from "@angular/core";
+
+import { environment } from "@env/environment";
+import { SpinnerService } from "@common/components/spinner/spinner.service";
+import AppValues from "@common/values/app.values";
 
 export class SpinnerInterceptor implements HttpInterceptor {
     private spinnerService = inject(SpinnerService);

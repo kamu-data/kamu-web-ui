@@ -5,29 +5,35 @@
  * included in the LICENSE file.
  */
 
-import { DatasetKind } from "../../../../../api/kamu.graphql.interface";
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { MatTreeNestedDataSource } from "@angular/material/tree";
-import { MaybeNull } from "src/app/interface/app.types";
-import { GetDatasetSchemaQuery, SqlQueryStep } from "src/app/api/kamu.graphql.interface";
-import { EditSetTransformService } from "./edit-set-transform..service";
-import { parseCurrentSchema } from "src/app/common/helpers/app.helpers";
-import { DatasetNode, SetTransformYamlType } from "./set-transform.types";
-import { FinalYamlModalComponent } from "../final-yaml-modal/final-yaml-modal.component";
-import { catchError, forkJoin, from, map, of, take } from "rxjs";
-import { BaseMainEventComponent } from "../source-events/base-main-event.component";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import AppValues from "src/app/common/values/app.values";
-import RoutingResolvers from "src/app/common/resolvers/routing-resolvers";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { StepperNavigationComponent } from "../stepper-navigation/stepper-navigation.component";
-import { QueriesSectionComponent } from "./components/queries-section/queries-section.component";
-import { EngineSectionComponent } from "./components/engine-section/engine-section.component";
-import { SearchSectionComponent } from "./components/search-section/search-section.component";
-import { RouterLink } from "@angular/router";
 import { NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { MatTreeNestedDataSource } from "@angular/material/tree";
+import { RouterLink } from "@angular/router";
+
+import { catchError, forkJoin, from, map, of, take } from "rxjs";
+
+import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+
+import { parseCurrentSchema } from "@common/helpers/app.helpers";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import AppValues from "@common/values/app.values";
+import { DatasetKind, GetDatasetSchemaQuery, SqlQueryStep } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
+
+import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
+import { EngineSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine-section.component";
+import { QueriesSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/queries-section/queries-section.component";
+import { SearchSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/search-section/search-section.component";
+import { EditSetTransformService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/edit-set-transform..service";
+import {
+    DatasetNode,
+    SetTransformYamlType,
+} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
+import { BaseMainEventComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/base-main-event.component";
+import { StepperNavigationComponent } from "src/app/dataset-view/additional-components/metadata-component/components/stepper-navigation/stepper-navigation.component";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { EditorModule } from "src/app/editor/editor.module";
 
 @Component({

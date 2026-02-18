@@ -6,13 +6,16 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ApolloTestingModule } from "apollo-angular/testing";
-import { LoginGuard } from "./login.guard";
-import ProjectLinks from "src/app/project-links";
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
-import { AccountProvider } from "src/app/api/kamu.graphql.interface";
-import { LoginMethodsService } from "../login-methods.service";
-import { RedirectUrlTestModule } from "src/app/common/modules/redirect-url-test.module";
+
+import { ApolloTestingModule } from "apollo-angular/testing";
+
+import { RedirectUrlTestModule } from "@common/modules/redirect-url-test.module";
+import { AccountProvider } from "@api/kamu.graphql.interface";
+
+import { LoginGuard } from "src/app/auth/guards/login.guard";
+import { LoginMethodsService } from "src/app/auth/login-methods.service";
+import ProjectLinks from "src/app/project-links";
 
 describe("LoginGuard", () => {
     let guard: LoginGuard;

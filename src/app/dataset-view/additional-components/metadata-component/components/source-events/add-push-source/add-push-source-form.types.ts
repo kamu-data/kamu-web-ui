@@ -6,7 +6,12 @@
  */
 
 import { Transform } from "stream";
-import { ReadKind, MergeKind, PreprocessKind } from "../add-polling-source/add-polling-source-form.types";
+
+import {
+    MergeKind,
+    PreprocessKind,
+    ReadKind,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 
 export enum AddPushSourceSection {
     SOURCE_NAME = "sourceName",

@@ -5,10 +5,20 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, NgZone, OnInit } from "@angular/core";
 import { AsyncPipe, NgIf } from "@angular/common";
-import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
-import { timer, switchMap, combineLatest, of, map, Observable, tap, Subject, startWith, BehaviorSubject } from "rxjs";
+import { ChangeDetectionStrategy, Component, inject, Input, NgZone, OnInit } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { MatIconModule } from "@angular/material/icon";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+
+import { BehaviorSubject, combineLatest, map, Observable, of, startWith, Subject, switchMap, tap, timer } from "rxjs";
+
+import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
+
+import { environment } from "@env/environment";
+import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+import { requireValue } from "@common/helpers/app.helpers";
+import AppValues from "@common/values/app.values";
 import {
     AccountFlowFilters,
     AccountFragment,
@@ -16,30 +26,27 @@ import {
     FlowStatus,
     FlowSummaryDataFragment,
     InitiatorFilterInput,
-} from "src/app/api/kamu.graphql.interface";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import { environment } from "src/environments/environment";
-import { AccountFlowsType } from "../../resolvers/account-flows.resolver";
+} from "@api/kamu.graphql.interface";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+
+import { AccountTabs } from "src/app/account/account.constants";
+import { AccountService } from "src/app/account/account.service";
+import {
+    AccountFiltersParams,
+    AccountFlowsNav,
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { AccountFlowsType } from "src/app/account/additional-components/account-flows-tab/resolvers/account-flows.resolver";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table/components/flow-table-panel-filters/flow-table-panel-filters.component";
+import { FlowsTableProcessingBaseComponent } from "src/app/dataset-flow/flows-table/flows-table-processing-base.component";
+import { FlowsTableComponent } from "src/app/dataset-flow/flows-table/flows-table.component";
 import {
     CancelFlowArgs,
     FilterStatusType,
     FlowsTableData,
     FlowsTableFiltersOptions,
 } from "src/app/dataset-flow/flows-table/flows-table.types";
-import { AccountService } from "src/app/account/account.service";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { PaginationComponent } from "src/app/common/components/pagination-component/pagination.component";
-import { FlowsTableComponent } from "src/app/dataset-flow/flows-table/flows-table.component";
 import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.component";
-import { MatIconModule } from "@angular/material/icon";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
-import AppValues from "src/app/common/values/app.values";
-import { AccountFiltersParams, AccountFlowsNav } from "../../account-flows-tab.types";
-import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
-import { AccountTabs } from "src/app/account/account.constants";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { requireValue } from "src/app/common/helpers/app.helpers";
-import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table/components/flow-table-panel-filters/flow-table-panel-filters.component";
 
 @Component({
     selector: "app-account-flows-activity-subtab",

@@ -6,7 +6,8 @@
  */
 
 import { Type } from "@angular/core";
-import { BasePropertyComponent } from "../components/common/base-property/base-property.component";
+
+import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 
 export enum DynamicEventTypes {
     SetPollingSource = "SetPollingSource",

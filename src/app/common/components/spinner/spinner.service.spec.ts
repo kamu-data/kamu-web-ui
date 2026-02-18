@@ -6,8 +6,10 @@
  */
 
 import { TestBed } from "@angular/core/testing";
+
 import { first } from "rxjs/operators";
-import { SpinnerService } from "./spinner.service";
+
+import { SpinnerService } from "@common/components/spinner/spinner.service";
 
 describe("SpinnerService", () => {
     let service: SpinnerService;

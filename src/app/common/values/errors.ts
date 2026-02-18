@@ -5,14 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { NavigationService } from "../../services/navigation.service";
-import { CombinedGraphQLErrors } from "@apollo/client/errors";
-import { ErrorTexts } from "./errors.text";
-import { logError } from "../helpers/app.helpers";
-import { LoggedUserService } from "../../auth/logged-user.service";
 import { Injector } from "@angular/core";
-import { ToastrService } from "ngx-toastr";
+
+import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import { GraphQLFormattedError } from "graphql";
+import { ToastrService } from "ngx-toastr";
+
+import { logError } from "@common/helpers/app.helpers";
+import { ErrorTexts } from "@common/values/errors.text";
+
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 export abstract class KamuError extends Error {
     public abstract accept(visitor: KamuErrorVisitor): void;

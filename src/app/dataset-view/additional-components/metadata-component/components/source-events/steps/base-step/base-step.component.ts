@@ -5,38 +5,45 @@
  * included in the LICENSE file.
  */
 
-import { BaseComponent } from "src/app/common/components/base.component";
-import {
-    ControlType,
-    AddPollingSourceEditFormType,
-    EventTimeSourceKind,
-    JsonFormData,
-} from "../../add-polling-source/add-polling-source-form.types";
-import { RadioControlType } from "../../add-polling-source/form-control.source";
-import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ControlContainer, FormGroupDirective } from "@angular/forms";
+import { NgFor, NgIf, TitleCasePipe } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
-import { FormGroup } from "@angular/forms";
-import { JsonFormControl } from "../../add-polling-source/add-polling-source-form.types";
-import { getValidators } from "src/app/common/helpers/data.helpers";
-import { EditPollingSourceService } from "../../add-polling-source/edit-polling-source.service";
-import { MaybeNull } from "src/app/interface/app.types";
-import { SourcesSection } from "../../add-polling-source/process-form.service.types";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { TopicsFieldComponent } from "../../../form-components/topics-field/topics-field.component";
-import { NumberFieldComponent } from "../../../form-components/number-field/number-field.component";
-import { JsonKindFieldComponent } from "../../../form-components/json-kind-field/json-kind-field.component";
-import { TypeaheadFieldComponent } from "../../../form-components/typeahead-field/typeahead-field.component";
-import { OrderFieldComponent } from "../../../form-components/order-field/order-field.component";
-import { CacheFieldComponent } from "../../../form-components/cache-field/cache-field.component";
-import { SelectDateFormatFieldComponent } from "../../../form-components/select-date-format-field/select-date-format-field.component";
-import { SchemaFieldComponent } from "../../../form-components/schema-field/schema-field.component";
-import { CheckboxFieldComponent } from "../../../form-components/checkbox-field/checkbox-field.component";
-import { ArrayKeysFieldComponent } from "../../../form-components/array-keys-field/array-keys-field.component";
-import { KeyValueFieldComponent } from "../../../form-components/key-value-field/key-value-field.component";
-import { InputFieldComponent } from "../../../form-components/input-field/input-field.component";
-import { SelectKindFieldComponent } from "../../../form-components/select-kind-field/select-kind-field.component";
-import { NgIf, NgFor, TitleCasePipe } from "@angular/common";
+import {
+    ControlContainer,
+    FormBuilder,
+    FormGroup,
+    FormGroupDirective,
+    FormsModule,
+    ReactiveFormsModule,
+} from "@angular/forms";
+
+import { BaseComponent } from "@common/components/base.component";
+import { getValidators } from "@common/helpers/data.helpers";
+import { MaybeNull } from "@interface/app.types";
+
+import { ArrayKeysFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/array-keys-field/array-keys-field.component";
+import { CacheFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/cache-field/cache-field.component";
+import { CheckboxFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/checkbox-field/checkbox-field.component";
+import { InputFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/input-field/input-field.component";
+import { JsonKindFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/json-kind-field/json-kind-field.component";
+import { KeyValueFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/key-value-field/key-value-field.component";
+import { NumberFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/number-field/number-field.component";
+import { OrderFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/order-field/order-field.component";
+import { SchemaFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.component";
+import { SelectDateFormatFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/select-date-format-field/select-date-format-field.component";
+import { SelectKindFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/select-kind-field/select-kind-field.component";
+import { TopicsFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/topics-field/topics-field.component";
+import { TypeaheadFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/typeahead-field/typeahead-field.component";
+import {
+    AddPollingSourceEditFormType,
+    ControlType,
+    EventTimeSourceKind,
+    JsonFormControl,
+    JsonFormData,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { EditPollingSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/edit-polling-source.service";
+import { RadioControlType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/form-control.source";
+import { SourcesSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
 
 @Component({
     selector: "app-base-step",

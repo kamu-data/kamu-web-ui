@@ -6,12 +6,15 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { SubscriptionsTableComponent } from "./subscriptions-table.component";
+
 import { Apollo } from "apollo-angular";
-import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-import { mockDatasetFlowsProcessesQuery } from "src/app/api/mock/dataset-flow.mock";
-import { WebhookFlowSubProcess } from "src/app/api/kamu.graphql.interface";
 import { provideToastr } from "ngx-toastr";
+
+import { WebhookFlowSubProcess } from "@api/kamu.graphql.interface";
+import { mockDatasetFlowsProcessesQuery } from "@api/mock/dataset-flow.mock";
+
+import { SubscriptionsTableComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-associated-channels/components/subscriptions-table/subscriptions-table.component";
+import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 
 describe("SubscriptionsTableComponent", () => {
     let component: SubscriptionsTableComponent;

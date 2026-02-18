@@ -5,34 +5,37 @@
  * included in the LICENSE file.
  */
 
-import { TestBed, fakeAsync, flush, tick } from "@angular/core/testing";
-import { AuthApi } from "src/app/api/auth.api";
-import { NavigationService } from "src/app/services/navigation.service";
-import { LoginService } from "./login.service";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+
+import { first, of, Subscription, throwError } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { Subscription, first, of, throwError } from "rxjs";
+
+import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { RedirectUrlTestModule } from "@common/modules/redirect-url-test.module";
+import { AuthenticationError } from "@common/values/errors";
+import { AuthApi } from "@api/auth.api";
+import { GithubLoginCredentials, LoginResponseType, PasswordLoginCredentials } from "@api/auth.api.model";
 import {
-    TEST_GITHUB_CODE,
-    TEST_LOGIN,
-    TEST_PASSWORD,
     mockAccountDetails,
     mockGithubLoginResponse,
     mockPasswordLoginResponse,
-} from "src/app/api/mock/auth.mock";
-import { GithubLoginCredentials, LoginResponseType, PasswordLoginCredentials } from "src/app/api/auth.api.model";
-import { AuthenticationError } from "src/app/common/values/errors";
-import { MaybeUndefined } from "src/app/interface/app.types";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { LocalStorageService } from "src/app/services/local-storage.service";
-import { AppConfigService } from "src/app/app-config.service";
-import { SessionStorageService } from "src/app/services/session-storage.service";
-import { EthereumGatewayFactory } from "./ethereum/ethereum.gateway.factory";
-import { MockEthereumGatewayFactory, MockEthereumGateway } from "./ethereum/mock.ethereum.gateway";
-import { promiseWithCatch } from "src/app/common/helpers/app.helpers";
+    TEST_GITHUB_CODE,
+    TEST_LOGIN,
+    TEST_PASSWORD,
+} from "@api/mock/auth.mock";
+import { MaybeUndefined } from "@interface/app.types";
 
-import { RedirectUrlTestModule } from "src/app/common/modules/redirect-url-test.module";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { AppConfigService } from "src/app/app-config.service";
+import { EthereumGatewayFactory } from "src/app/auth/login/ethereum/ethereum.gateway.factory";
+import { MockEthereumGateway, MockEthereumGatewayFactory } from "src/app/auth/login/ethereum/mock.ethereum.gateway";
+import { LoginService } from "src/app/auth/login/login.service";
+import { LocalStorageService } from "src/app/services/local-storage.service";
+import { NavigationService } from "src/app/services/navigation.service";
+import { SessionStorageService } from "src/app/services/session-storage.service";
 
 describe("LoginService", () => {
     let service: LoginService;

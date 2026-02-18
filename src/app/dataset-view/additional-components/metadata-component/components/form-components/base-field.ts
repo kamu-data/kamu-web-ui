@@ -7,7 +7,8 @@
 
 import { Directive, Input } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { BaseComponent } from "src/app/common/components/base.component";
+
+import { BaseComponent } from "@common/components/base.component";
 
 @Directive()
 export abstract class BaseField extends BaseComponent {

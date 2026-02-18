@@ -10,55 +10,54 @@ import {
     AccountType,
     CancelFlowRunMutation,
     DatasetFlowsInitiatorsQuery,
+    DatasetFlowsProcessesQuery,
+    DatasetFlowType,
+    DatasetKind,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsMutation,
+    DatasetTriggerCompactionFlowMutation,
     DatasetTriggerIngestFlowMutation,
     DatasetTriggerResetFlowMutation,
+    DatasetTriggerResetToMetadataFlowMutation,
+    DatasetTriggerTransformFlowMutation,
     FlowConnectionDataFragment,
     FlowConnectionWidgetDataFragment,
     FlowHistoryDataFragment,
+    FlowItemWidgetDataFragment,
+    FlowProcessAutoStopReason,
+    FlowProcessEffectiveState,
+    FlowProcessSummaryDataFragment,
     FlowRetryBackoffType,
     FlowRetryPolicyInput,
     FlowStatus,
     FlowSummaryDataFragment,
-    FlowItemWidgetDataFragment,
+    FlowTriggerBreakingChangeRule,
+    FlowTriggerReactiveRule,
+    FlowTriggerScheduleRule,
+    GetDatasetFlowConfigsQuery,
+    GetDatasetFlowTriggerQuery,
     GetDatasetListFlowsQuery,
     GetFlowByIdQuery,
+    PauseDatasetFlowTriggerMutation,
     SetCompactionFlowConfigMutation,
     SetDatasetFlowTriggerMutation,
     SetIngestFlowConfigMutation,
     TaskStatus,
-    DatasetTriggerTransformFlowMutation,
-    DatasetTriggerCompactionFlowMutation,
-    FlowTriggerScheduleRule,
-    DatasetTriggerResetToMetadataFlowMutation,
-    FlowTriggerBreakingChangeRule,
-    FlowTriggerReactiveRule,
-    GetDatasetFlowTriggerQuery,
-    PauseDatasetFlowTriggerMutation,
-    FlowProcessEffectiveState,
-    DatasetFlowType,
-    FlowProcessAutoStopReason,
-    FlowProcessSummaryDataFragment,
-} from "./../kamu.graphql.interface";
-import {
-    GetDatasetFlowConfigsQuery,
-    DatasetKind,
-    TimeUnit,
     TimeDeltaInput,
-    DatasetFlowsProcessesQuery,
-} from "../kamu.graphql.interface";
+    TimeUnit,
+} from "@api/kamu.graphql.interface";
+
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import {
+    mockFlowPollingSourceFragmentFetchUrl,
+    mockFlowSetTransformFragment,
+} from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
+import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 import {
     mockDatasetMainDataId,
     mockOwnerFieldsWithAvatar,
     mockPublicDatasetVisibility,
 } from "src/app/search/mock.data";
-import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
-import {
-    mockFlowPollingSourceFragmentFetchUrl,
-    mockFlowSetTransformFragment,
-} from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 
 export const mockTimeDeltaInput: TimeDeltaInput = {
     every: 10,

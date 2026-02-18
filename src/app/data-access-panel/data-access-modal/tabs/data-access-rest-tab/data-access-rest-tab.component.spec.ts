@@ -5,12 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { mockDatasetEndPoints } from "../../../data-access-panel-mock.data";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { DataAccessRestTabComponent } from "./data-access-rest-tab.component";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+
+import { DataAccessRestTabComponent } from "src/app/data-access-panel/data-access-modal/tabs/data-access-rest-tab/data-access-rest-tab.component";
+import { mockDatasetEndPoints } from "src/app/data-access-panel/data-access-panel-mock.data";
 
 describe("DataAccessRestTabComponent", () => {
     let component: DataAccessRestTabComponent;

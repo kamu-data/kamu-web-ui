@@ -13,13 +13,14 @@ import {
     FlowStatus,
     FlowSummaryDataFragment,
     TimeUnit,
-} from "src/app/api/kamu.graphql.interface";
+} from "@api/kamu.graphql.interface";
+
+import { flowEventSubMessageResults } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers.mock";
 import {
     mockDatasetMainDataId,
     mockOwnerFieldsWithAvatar,
     mockPublicDatasetVisibility,
 } from "src/app/search/mock.data";
-import { flowEventSubMessageResults } from "../dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers.mock";
 
 export const expectationsDesriptionColumnOptions = [
     {

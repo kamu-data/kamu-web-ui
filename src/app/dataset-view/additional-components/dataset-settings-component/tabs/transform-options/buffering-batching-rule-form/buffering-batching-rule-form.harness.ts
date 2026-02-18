@@ -8,9 +8,11 @@
 /* istanbul ignore file */
 
 import { ComponentHarness } from "@angular/cdk/testing";
-import { TimeDeltaFormHarness } from "src/app/common/components/time-delta-form/time-delta-form.harness";
-import { TimeDeltaFormValue } from "src/app/common/components/time-delta-form/time-delta-form.value";
-import { BufferingBatchingRuleFormValue } from "./buffering-batching-rule-form.types";
+
+import { TimeDeltaFormHarness } from "@common/components/time-delta-form/time-delta-form.harness";
+import { TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
+
+import { BufferingBatchingRuleFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/buffering-batching-rule-form/buffering-batching-rule-form.types";
 
 export class BufferingBatchingRuleFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-buffering-batching-rule-form";

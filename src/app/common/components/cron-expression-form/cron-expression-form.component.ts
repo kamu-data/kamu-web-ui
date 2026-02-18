@@ -5,15 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { BaseComponent } from "../base.component";
-import { cronExpressionNextTime } from "src/app/common/helpers/app.helpers";
-import { CronExpressionFormType } from "./cron-expression-form.value";
 import { NgIf } from "@angular/common";
-import { FormValidationErrorsDirective } from "../../directives/form-validation-errors.directive";
-import { cronValidator } from "../../helpers/cron-expression-validator.helper";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+
+import { BaseComponent } from "@common/components/base.component";
+import { CronExpressionFormType } from "@common/components/cron-expression-form/cron-expression-form.value";
+import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { cronExpressionNextTime } from "@common/helpers/app.helpers";
+import { cronValidator } from "@common/helpers/cron-expression-validator.helper";
 
 @Component({
     selector: "app-cron-expression-form",

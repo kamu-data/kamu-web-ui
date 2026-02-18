@@ -6,16 +6,21 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { FlowTriggerRuleInput } from "src/app/api/kamu.graphql.interface";
-import { ScheduleType } from "../../../dataset-settings.model";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { MaybeNull } from "src/app/interface/app.types";
+import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatRadioModule } from "@angular/material/radio";
-import { TimeDeltaFormComponent } from "src/app/common/components/time-delta-form/time-delta-form.component";
-import { CronExpressionFormComponent } from "src/app/common/components/cron-expression-form/cron-expression-form.component";
-import { IngestTriggerFormType, IngestTriggerFormValue } from "./ingest-trigger-form.types";
-import { BaseComponent } from "src/app/common/components/base.component";
+
+import { BaseComponent } from "@common/components/base.component";
+import { CronExpressionFormComponent } from "@common/components/cron-expression-form/cron-expression-form.component";
+import { TimeDeltaFormComponent } from "@common/components/time-delta-form/time-delta-form.component";
+import { FlowTriggerRuleInput } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
+import { ScheduleType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import {
+    IngestTriggerFormType,
+    IngestTriggerFormValue,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger-form.types";
 
 @Component({
     selector: "app-ingest-trigger-form",

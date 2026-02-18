@@ -5,15 +5,19 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { LoginComponent } from "./login.component";
 import { ReactiveFormsModule } from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
+import { ActivatedRoute } from "@angular/router";
+
+import { BehaviorSubject, of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { AppConfigService } from "src/app/app-config.service";
-import { SpinnerComponent } from "src/app/common/components/spinner/spinner/spinner.component";
-import { LoginService } from "./login.service";
+
+import { SpinnerComponent } from "@common/components/spinner/spinner/spinner.component";
 import {
     checkInputDisabled,
     checkVisible,
@@ -22,20 +26,20 @@ import {
     getElementByDataTestId,
     registerMatSvgIcons,
     setFieldValue,
-} from "src/app/common/helpers/base-test.helpers.spec";
-import { TEST_LOGIN, TEST_PASSWORD, mockPasswordLoginResponse } from "src/app/api/mock/auth.mock";
-import { PasswordLoginCredentials } from "src/app/api/auth.api.model";
-import { BehaviorSubject, of } from "rxjs";
-import { LoginPageQueryParams } from "./login.component.model";
-import { ActivatedRoute } from "@angular/router";
-import { AuthApi } from "src/app/api/auth.api";
-import { NavigationService } from "src/app/services/navigation.service";
-import { LocalStorageService } from "src/app/services/local-storage.service";
-import { MatIconModule } from "@angular/material/icon";
+} from "@common/helpers/base-test.helpers.spec";
+import { AuthApi } from "@api/auth.api";
+import { PasswordLoginCredentials } from "@api/auth.api.model";
+import { AccountProvider } from "@api/kamu.graphql.interface";
+import { mockPasswordLoginResponse, TEST_LOGIN, TEST_PASSWORD } from "@api/mock/auth.mock";
+
+import { AppConfigService } from "src/app/app-config.service";
+import { LoginMethodsService } from "src/app/auth/login-methods.service";
+import { LoginComponent } from "src/app/auth/login/login.component";
+import { LoginPageQueryParams } from "src/app/auth/login/login.component.model";
+import { LoginService } from "src/app/auth/login/login.service";
 import ProjectLinks from "src/app/project-links";
-import { AccountProvider } from "src/app/api/kamu.graphql.interface";
-import { LoginMethodsService } from "../login-methods.service";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { LocalStorageService } from "src/app/services/local-storage.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("LoginComponent", () => {
     let component: LoginComponent;

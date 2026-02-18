@@ -6,21 +6,24 @@
  */
 
 import { inject, Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, ReplaySubject, Subject, firstValueFrom, map } from "rxjs";
-import { AuthApi } from "src/app/api/auth.api";
+
+import { BehaviorSubject, firstValueFrom, map, Observable, ReplaySubject, Subject } from "rxjs";
+
+import { AuthApi } from "@api/auth.api";
 import {
     GithubLoginCredentials,
     LoginResponseType,
     PasswordLoginCredentials,
     Web3WalletOwnershipVerificationRequest,
-} from "src/app/api/auth.api.model";
-import { AccountFragment, AccountProvider } from "src/app/api/kamu.graphql.interface";
-import { NavigationService } from "src/app/services/navigation.service";
+} from "@api/auth.api.model";
+import { AccountFragment, AccountProvider } from "@api/kamu.graphql.interface";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+
 import { AppConfigService } from "src/app/app-config.service";
-import { MaybeNull, MaybeUndefined } from "src/app/interface/app.types";
-import { LocalStorageService } from "src/app/services/local-storage.service";
-import { EthereumGatewayFactory } from "./ethereum/ethereum.gateway.factory";
+import { EthereumGatewayFactory } from "src/app/auth/login/ethereum/ethereum.gateway.factory";
 import ProjectLinks from "src/app/project-links";
+import { LocalStorageService } from "src/app/services/local-storage.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Injectable({
     providedIn: "root",

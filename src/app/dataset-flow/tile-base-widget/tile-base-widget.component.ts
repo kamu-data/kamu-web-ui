@@ -5,20 +5,18 @@
  * included in the LICENSE file.
  */
 
+import { DatePipe, NgClass, NgFor, NgIf, SlicePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import {
-    Dataset,
-    DatasetBasicsFragment,
-    FlowItemWidgetDataFragment,
-    FlowStatus,
-} from "src/app/api/kamu.graphql.interface";
-import { TileBaseWidgetHelpers } from "./tile-base-widget.helpers";
-import AppValues from "src/app/common/values/app.values";
-import ProjectLinks from "src/app/project-links";
-import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
-import { FlowTableHelpers } from "../flows-table/flows-table.helpers";
+
 import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
-import { NgFor, NgClass, NgIf, SlicePipe, DatePipe } from "@angular/common";
+
+import AppValues from "@common/values/app.values";
+import { Dataset, DatasetBasicsFragment, FlowItemWidgetDataFragment, FlowStatus } from "@api/kamu.graphql.interface";
+
+import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
+import { TileBaseWidgetHelpers } from "src/app/dataset-flow/tile-base-widget/tile-base-widget.helpers";
+import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-tile-base-widget",

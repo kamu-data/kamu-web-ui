@@ -6,6 +6,13 @@
  */
 
 import { inject, Injectable } from "@angular/core";
+
+import { first, map, Observable } from "rxjs";
+
+import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { onlyCompleteData } from "apollo-angular";
+
+import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import {
     DatasetWebhookByIdGQL,
     DatasetWebhookByIdQuery,
@@ -20,6 +27,7 @@ import {
     DatasetWebhookResumeSubscriptionGQL,
     DatasetWebhookResumeSubscriptionMutation,
     DatasetWebhookRotateSecretGQL,
+    DatasetWebhookRotateSecretMutation,
     DatasetWebhookSubscriptionsGQL,
     DatasetWebhookSubscriptionsQuery,
     DatasetWebhookUpdateSubscriptionGQL,
@@ -27,12 +35,7 @@ import {
     WebhookEventTypesGQL,
     WebhookEventTypesQuery,
     WebhookSubscriptionInput,
-} from "./kamu.graphql.interface";
-import { first, map, Observable } from "rxjs";
-import { ApolloLink, ObservableQuery } from "@apollo/client/core";
-import { noCacheFetchPolicy } from "../common/helpers/data.helpers";
-import { DatasetWebhookRotateSecretMutation } from "./kamu.graphql.interface";
-import { onlyCompleteData } from "apollo-angular";
+} from "@api/kamu.graphql.interface";
 
 @Injectable({ providedIn: "root" })
 export class WebhooksApi {

@@ -5,21 +5,28 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, tick } from "@angular/core/testing";
-import { AccountFlowsTabComponent } from "./account-flows-tab.component";
-import { provideToastr } from "ngx-toastr";
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
+
 import { of } from "rxjs";
-import { NavigationService } from "src/app/services/navigation.service";
-import { AccountService } from "src/app/account/account.service";
-import { mockFlowsTableData } from "src/app/api/mock/dataset-flow.mock";
-import { findElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { FlowStatus } from "src/app/api/kamu.graphql.interface";
-import { mockAccountDetails } from "src/app/api/mock/auth.mock";
-import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { Apollo } from "apollo-angular";
-import { AccountFlowsNav, ProcessCardFilterMode } from "./account-flows-tab.types";
+
 import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
+
+import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { FlowStatus } from "@api/kamu.graphql.interface";
+import { mockAccountDetails } from "@api/mock/auth.mock";
+import { mockFlowsTableData } from "@api/mock/dataset-flow.mock";
+
+import { AccountService } from "src/app/account/account.service";
+import { AccountFlowsTabComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.component";
+import {
+    AccountFlowsNav,
+    ProcessCardFilterMode,
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("AccountFlowsTabComponent", () => {
     let component: AccountFlowsTabComponent;

@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { OdfTypes } from "src/app/interface/dataset-schema.interface";
-import { DynamicTableDataRow } from "./dynamic-table.interface";
+import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
+import { OdfTypes } from "@interface/dataset-schema.interface";
 
 export const MOCK_DATA_ROWS: DynamicTableDataRow[] = [
     {

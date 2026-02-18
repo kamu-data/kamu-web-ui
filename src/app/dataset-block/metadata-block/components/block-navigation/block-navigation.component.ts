@@ -5,19 +5,22 @@
  * included in the LICENSE file.
  */
 
-import { DatasetHistoryUpdate } from "../../../../dataset-view/dataset.subscriptions.interface";
-import { SupportedEvents } from "../event-details/supported.events";
+import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { MaybeNull } from "src/app/interface/app.types";
-import { EventTypeFilterPipe } from "./pipes/event-type-filter.pipe";
-import { BlockHashFilterPipe } from "./pipes/block-hash-filter.pipe";
-import { PaginationComponent } from "../../../../common/components/pagination-component/pagination.component";
-import { NgSelectModule } from "@ng-select/ng-select";
-import { NgIf, NgFor } from "@angular/common";
-import { MatIconModule } from "@angular/material/icon";
 import { FormsModule } from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
+
+import { NgSelectModule } from "@ng-select/ng-select";
+
+import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+import { MaybeNull } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
+
+import { BlockHashFilterPipe } from "src/app/dataset-block/metadata-block/components/block-navigation/pipes/block-hash-filter.pipe";
+import { EventTypeFilterPipe } from "src/app/dataset-block/metadata-block/components/block-navigation/pipes/event-type-filter.pipe";
+import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
+import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import ProjectLinks from "src/app/project-links";
 
 @Component({

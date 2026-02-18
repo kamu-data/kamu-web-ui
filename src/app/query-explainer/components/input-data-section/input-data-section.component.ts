@@ -5,25 +5,29 @@
  * included in the LICENSE file.
  */
 
+import { AsyncPipe, DatePipe, NgFor, NgIf } from "@angular/common";
 import { AfterViewChecked, ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
+import { RouterLink } from "@angular/router";
+
 import { Observable } from "rxjs";
+
+import { MarkdownModule } from "ngx-markdown";
+
+import { DisplayHashComponent } from "@common/components/display-hash/display-hash.component";
+import { addMarkdownRunButton } from "@common/helpers/app.helpers";
+import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
+import AppValues from "@common/values/app.values";
+import { MaybeUndefined } from "@interface/app.types";
+import { DatasetInfo } from "@interface/navigation.interface";
+
+import ProjectLinks from "src/app/project-links";
+import { QueryExplainerComponentData } from "src/app/query-explainer/query-explainer.component";
 import {
     VerifyQueryDatasetBlockNotFoundError,
     VerifyQueryDatasetNotFoundError,
     VerifyQueryError,
     VerifyQueryKindError,
-} from "../../query-explainer.types";
-import { DatasetInfo } from "src/app/interface/navigation.interface";
-import { MaybeUndefined } from "src/app/interface/app.types";
-import AppValues from "src/app/common/values/app.values";
-import { QueryExplainerComponentData } from "../../query-explainer.component";
-import ProjectLinks from "src/app/project-links";
-import { addMarkdownRunButton } from "src/app/common/helpers/app.helpers";
-import { DisplayHashComponent } from "../../../common/components/display-hash/display-hash.component";
-import { RouterLink } from "@angular/router";
-import { NgIf, NgFor, AsyncPipe, DatePipe } from "@angular/common";
-import { MarkdownModule } from "ngx-markdown";
-import { MarkdownFormatPipe } from "src/app/common/pipes/markdown-format.pipe";
+} from "src/app/query-explainer/query-explainer.types";
 
 @Component({
     selector: "app-input-data-section",

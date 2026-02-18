@@ -5,39 +5,47 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
-import { AccountFlowsProcessesSubtabComponent } from "./account-flows-processes-subtab.component";
-import { AccountFlowsNav, ProcessCardFilterMode, ProcessCardGroup } from "../../account-flows-tab.types";
+import { MatButtonToggleChange } from "@angular/material/button-toggle";
+import { ActivatedRoute } from "@angular/router";
+
+import { of } from "rxjs";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr, ToastrService } from "ngx-toastr";
+
+import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import AppValues from "@common/values/app.values";
 import {
     AccountFlowProcessCardConnectionDataFragment,
     FlowProcessEffectiveState,
     FlowProcessGroupRollupDataFragment,
     FlowStatus,
-} from "src/app/api/kamu.graphql.interface";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { Apollo } from "apollo-angular";
-import { provideToastr, ToastrService } from "ngx-toastr";
-import { AccountService } from "src/app/account/account.service";
-import { ActivatedRoute } from "@angular/router";
-import { NavigationService } from "src/app/services/navigation.service";
-import { of } from "rxjs";
+} from "@api/kamu.graphql.interface";
 import {
     mockAccountFlowsAsCardsQuery,
     mockAccountFlowsAsCardsQueryEmpty,
     mockAccountFlowsAsCardsQueryWithWebhook,
     mockAccountFlowsPrimaryCardsQuery,
     mockAccountFlowsWebhookCardsQuery,
-} from "src/app/api/mock/account.mock";
-import { findElementByDataTestId, registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+} from "@api/mock/account.mock";
+
+import { AccountService } from "src/app/account/account.service";
+import { AccountFlowsProcessesSubtabComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/account-flows-processes-subtab.component";
+import {
+    AccountFlowsNav,
+    ProcessCardFilterMode,
+    ProcessCardGroup,
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
-import { WebhookFlowProcessCardComponent } from "../../../../../flow-cards/webhook-flow-process-card/webhook-flow-process-card.component";
 import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.component";
-import { MatButtonToggleChange } from "@angular/material/button-toggle";
-import AppValues from "src/app/common/values/app.values";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { WebhookFlowProcessCardComponent } from "src/app/flow-cards/webhook-flow-process-card/webhook-flow-process-card.component";
+import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("AccountFlowsProcessesSubtabComponent", () => {
     let component: AccountFlowsProcessesSubtabComponent;

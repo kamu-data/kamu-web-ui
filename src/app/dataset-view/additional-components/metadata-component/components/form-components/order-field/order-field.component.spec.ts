@@ -6,11 +6,13 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { OrderFieldComponent } from "./order-field.component";
 import { FormGroup } from "@angular/forms";
-import { emitClickOnElementByDataTestId } from "src/app/common/helpers/base-test.helpers.spec";
-import { SourceOrder } from "../../source-events/add-polling-source/process-form.service.types";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
+
+import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { OrderFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/order-field/order-field.component";
+import { SourceOrder } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
 
 describe("OrderFieldComponent", () => {
     let component: OrderFieldComponent;

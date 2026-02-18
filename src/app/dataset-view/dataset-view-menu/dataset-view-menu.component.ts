@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { WidgetHeightService } from "../../common/components/lineage-graph/widget-height.service";
+import { NgIf } from "@angular/common";
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -17,19 +17,21 @@ import {
     OnInit,
     ViewChild,
 } from "@angular/core";
-import { MatSidenav } from "@angular/material/sidenav";
-import { DatasetViewTypeEnum } from "../dataset-view.interface";
-import { SideNavHelper } from "../../common/helpers/sidenav.helper";
-import { isMobileView, promiseWithCatch } from "src/app/common/helpers/app.helpers";
-import { DatasetBasicsFragment, DatasetPermissionsFragment } from "src/app/api/kamu.graphql.interface";
-import { DatasetPermissionsService } from "../dataset.permissions.service";
-import { AppConfigService } from "src/app/app-config.service";
-import { DataAccessPanelComponent } from "../../data-access-panel/data-access-panel.component";
-import { NgIf } from "@angular/common";
-import { MatIconModule } from "@angular/material/icon";
-import { RouterLink } from "@angular/router";
-import { FeatureFlagDirective } from "../../common/directives/feature-flag.directive";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { MatIconModule } from "@angular/material/icon";
+import { MatSidenav } from "@angular/material/sidenav";
+import { RouterLink } from "@angular/router";
+
+import { WidgetHeightService } from "@common/components/lineage-graph/widget-height.service";
+import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { isMobileView, promiseWithCatch } from "@common/helpers/app.helpers";
+import { SideNavHelper } from "@common/helpers/sidenav.helper";
+import { DatasetBasicsFragment, DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
+
+import { AppConfigService } from "src/app/app-config.service";
+import { DataAccessPanelComponent } from "src/app/data-access-panel/data-access-panel.component";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetPermissionsService } from "src/app/dataset-view/dataset.permissions.service";
 
 @Component({
     selector: "app-dataset-view-menu",

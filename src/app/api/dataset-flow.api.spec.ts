@@ -6,18 +6,30 @@
  */
 
 import { TestBed } from "@angular/core/testing";
+
 import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
+
+import { DatasetFlowApi } from "@api/dataset-flow.api";
 import {
-    DatasetFlowType,
+    CancelFlowRunDocument,
+    CancelFlowRunMutation,
     DatasetFlowsInitiatorsDocument,
     DatasetFlowsInitiatorsQuery,
+    DatasetFlowType,
     DatasetPauseFlowsDocument,
     DatasetPauseFlowsMutation,
     DatasetResumeFlowsDocument,
     DatasetResumeFlowsMutation,
+    DatasetTriggerCompactionFlowDocument,
     DatasetTriggerIngestFlowDocument,
+    DatasetTriggerResetFlowDocument,
+    DatasetTriggerResetToMetadataFlowDocument,
+    DatasetTriggerTransformFlowDocument,
+    FlowConfigRuleCompaction,
+    FlowConfigRuleIngest,
     FlowConnectionDataFragment,
+    FlowTriggerBreakingChangeRule,
     GetDatasetFlowConfigsDocument,
     GetDatasetFlowConfigsQuery,
     GetDatasetFlowTriggerDocument,
@@ -26,43 +38,33 @@ import {
     GetDatasetListFlowsQuery,
     GetFlowByIdDocument,
     GetFlowByIdQuery,
-    SetIngestFlowConfigDocument,
-    SetDatasetFlowTriggerDocument,
-    FlowConfigRuleIngest,
-    FlowConfigRuleCompaction,
     SetCompactionFlowConfigDocument,
-    DatasetTriggerTransformFlowDocument,
-    DatasetTriggerCompactionFlowDocument,
-    DatasetTriggerResetFlowDocument,
-    DatasetTriggerResetToMetadataFlowDocument,
-    FlowTriggerBreakingChangeRule,
-    CancelFlowRunMutation,
-    CancelFlowRunDocument,
-} from "./kamu.graphql.interface";
-import { TEST_DATASET_ID } from "./mock/dataset.mock";
-import { DatasetFlowApi } from "./dataset-flow.api";
+    SetDatasetFlowTriggerDocument,
+    SetIngestFlowConfigDocument,
+} from "@api/kamu.graphql.interface";
 import {
-    mockIngestGetDatasetFlowConfigsSuccess,
-    mockTimeDeltaInput,
-    mockDatasetTriggerIngestFlowMutation,
     mockCancelFlowRunMutationSuccess,
-    mockGetDatasetListFlowsQuery,
-    mockGetFlowByIdQuerySuccess,
+    mockCompactingGetDatasetFlowConfigsSuccess,
     mockDatasetFlowsInitiatorsQuery,
-    mockSetIngestFlowConfigMutation,
-    mockSetDatasetFlowTriggerSuccess,
-    mockGetDatasetFlowTriggerCronQuery,
     mockDatasetPauseFlowsMutationSuccess,
     mockDatasetResumeFlowsMutationSuccess,
-    mockRetryPolicyInput,
-    mockCompactingGetDatasetFlowConfigsSuccess,
-    mockSetCompactionFlowConfigMutation,
-    mockSetCompactionFlowConfigMutationError,
-    mockDatasetTriggerTransformFlowMutation,
     mockDatasetTriggerCompactionFlowMutation,
+    mockDatasetTriggerIngestFlowMutation,
     mockDatasetTriggerResetFlowMutation,
     mockDatasetTriggerResetToMetadataFlowMutation,
-} from "./mock/dataset-flow.mock";
+    mockDatasetTriggerTransformFlowMutation,
+    mockGetDatasetFlowTriggerCronQuery,
+    mockGetDatasetListFlowsQuery,
+    mockGetFlowByIdQuerySuccess,
+    mockIngestGetDatasetFlowConfigsSuccess,
+    mockRetryPolicyInput,
+    mockSetCompactionFlowConfigMutation,
+    mockSetCompactionFlowConfigMutationError,
+    mockSetDatasetFlowTriggerSuccess,
+    mockSetIngestFlowConfigMutation,
+    mockTimeDeltaInput,
+} from "@api/mock/dataset-flow.mock";
+import { TEST_DATASET_ID } from "@api/mock/dataset.mock";
 
 describe("DatasetFlowApi", () => {
     let service: DatasetFlowApi;

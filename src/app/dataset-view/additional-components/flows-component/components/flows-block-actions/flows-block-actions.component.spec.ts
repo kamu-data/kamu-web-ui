@@ -5,18 +5,21 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FlowsBlockActionsComponent } from "./flows-block-actions.component";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import { DatasetFlowProcess } from "src/app/api/kamu.graphql.interface";
-import { mockDatasetFlowsProcessesQuery } from "src/app/api/mock/dataset-flow.mock";
+
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { DatasetFlowProcess } from "@api/kamu.graphql.interface";
+import { mockDatasetFlowsProcessesQuery } from "@api/mock/dataset-flow.mock";
+
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { FlowsBlockActionsComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-block-actions/flows-block-actions.component";
 import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-import { SharedTestModule } from "src/app/common/modules/shared-test.module";
-import { registerMatSvgIcons } from "src/app/common/helpers/base-test.helpers.spec";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { SettingsTabsEnum } from "../../../dataset-settings-component/dataset-settings.model";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("FlowsBlockActionsComponent", () => {
     let component: FlowsBlockActionsComponent;

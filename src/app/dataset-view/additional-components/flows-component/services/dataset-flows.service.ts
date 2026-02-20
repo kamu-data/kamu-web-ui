@@ -187,9 +187,11 @@ export class DatasetFlowsService {
         return this.datasetFlowApi.datasetPauseFlows(params).pipe(
             map((data: DatasetPauseFlowsMutation) => {
                 const result = data.datasets.byId?.flows.triggers.pauseFlows;
-                result
-                    ? this.toastrService.success("Flows paused")
-                    : this.toastrService.error("Error, flows not paused");
+                if (result) {
+                    this.toastrService.success("Flows paused");
+                } else {
+                    this.toastrService.error("Error, flows not paused");
+                }
             }),
         );
     }
@@ -198,9 +200,11 @@ export class DatasetFlowsService {
         return this.datasetFlowApi.datasetResumeFlows(params).pipe(
             map((data: DatasetResumeFlowsMutation) => {
                 const result = data.datasets.byId?.flows.triggers.resumeFlows;
-                result
-                    ? this.toastrService.success("Flows resumed")
-                    : this.toastrService.error("Error, flows not resumed");
+                if (result) {
+                    this.toastrService.success("Flows resumed");
+                } else {
+                    this.toastrService.error("Error, flows not resumed");
+                }
             }),
         );
     }

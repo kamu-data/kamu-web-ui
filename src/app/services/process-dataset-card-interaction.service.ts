@@ -72,7 +72,9 @@ export class ProcessDatasetCardInteractionService {
                     yesButtonText: "Ok",
                     noButtonText: "Cancel",
                     handler: (ok) => {
-                        ok && executeToggle();
+                        if (ok) {
+                            executeToggle();
+                        }
                     },
                 }),
             );

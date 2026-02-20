@@ -104,9 +104,11 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         }
     }
     @Input(ProjectLinks.URL_QUERY_PARAM_FLOWS_CATEGORY) public set setFlowsCategory(value: FlowsCategoryUnion) {
-        value === "webhooks"
-            ? this.flowsSelectionStateService.setWebhooksCategory(value)
-            : this.flowsSelectionStateService.setFlowsCategory(value);
+        if (value === "webhooks") {
+            this.flowsSelectionStateService.setWebhooksCategory(value);
+        } else {
+            this.flowsSelectionStateService.setFlowsCategory(value);
+        }
     }
 
     public selectedDatasetItems: DatasetBasicsFragment[] = [];

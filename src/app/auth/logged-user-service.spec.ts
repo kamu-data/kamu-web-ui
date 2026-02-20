@@ -128,7 +128,11 @@ describe("LoggedUserService", () => {
             const userChanges$ = service.loggedInUserChanges
                 .pipe(first())
                 .subscribe((user: MaybeNull<AccountFragment>) => {
-                    user ? checkUserIsLogged(user) : fail("User must not be null");
+                    if (user) {
+                        checkUserIsLogged(user);
+                    } else {
+                        fail("User must not be null");
+                    }
                 });
             expect(userChanges$.closed).toBeTrue();
             flush();
@@ -143,7 +147,11 @@ describe("LoggedUserService", () => {
             const userChanges$ = service.loggedInUserChanges
                 .pipe(first())
                 .subscribe((user: MaybeNull<AccountFragment>) => {
-                    user ? checkUserIsLogged(user) : fail("User must not be null");
+                    if (user) {
+                        checkUserIsLogged(user);
+                    } else {
+                        fail("User must not be null");
+                    }
                 });
 
             expect(accessTokenSetSpy).toHaveBeenCalledWith(mockGithubLoginResponse.auth.login.accessToken);
@@ -161,7 +169,11 @@ describe("LoggedUserService", () => {
             const userChanges$ = service.loggedInUserChanges
                 .pipe(first())
                 .subscribe((user: MaybeNull<AccountFragment>) => {
-                    user ? checkUserIsLogged(user) : fail("User must not be null");
+                    if (user) {
+                        checkUserIsLogged(user);
+                    } else {
+                        fail("User must not be null");
+                    }
                 });
 
             expect(accessTokenSetSpy).toHaveBeenCalledWith(mockPasswordLoginResponse.auth.login.accessToken);

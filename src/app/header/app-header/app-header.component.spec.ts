@@ -131,9 +131,11 @@ describe("AppHeaderComponent", () => {
             component.isCollapsedAppHeaderMenu = isExpectation;
             const headerMenu = findNativeElement(fixture, "#app-header");
             emitClickOnElementByDataTestId(fixture, "appHeaderMenuButton");
-            isExpectation
-                ? expect(headerMenu.classList.contains("details--on")).toBeFalse()
-                : expect(headerMenu.classList.contains("details--on")).toBeTrue();
+            if (isExpectation) {
+                expect(headerMenu.classList.contains("details--on")).toBeFalse();
+            } else {
+                expect(headerMenu.classList.contains("details--on")).toBeTrue();
+            }
         });
     });
 

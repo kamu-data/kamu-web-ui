@@ -47,13 +47,6 @@ export default [
 
       // // TypeScript custom rules
       "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
-      "@typescript-eslint/no-unused-expressions": [
-        "error",
-        {
-          allowTernary: true, // allow a ? b() : c()
-          allowShortCircuit: true, // allow a && b()
-        },
-      ],
       "@typescript-eslint/no-extraneous-class": "off",
       "@typescript-eslint/no-empty-object-type": "off",
       "@typescript-eslint/unbound-method": [

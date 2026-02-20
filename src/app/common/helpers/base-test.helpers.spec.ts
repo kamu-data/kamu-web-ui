@@ -53,7 +53,12 @@ export function getElementByDataTestId<T>(fixture: ComponentFixture<T>, id: stri
 
 export function checkVisible<T>(fixture: ComponentFixture<T>, dataTestId: string, visible: boolean): void {
     const element: HTMLElement | undefined = findElementByDataTestId(fixture, dataTestId);
-    visible ? expect(element).toBeTruthy() : expect(element).toBeUndefined();
+    if (visible) {
+        expect(element).toBeTruthy();
+    }
+    {
+        expect(element).toBeUndefined();
+    }
 }
 
 type SupportedInputElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;

@@ -28,7 +28,11 @@ describe("SpinnerService", () => {
             const subscription$ = service.isLoadingChanges
                 .pipe(first())
                 .subscribe((loading: boolean) => expect(loading).toEqual(expectation));
-            expectation ? service.show() : service.hide();
+            if (expectation) {
+                service.show();
+            } else {
+                service.hide();
+            }
             expect(subscription$.closed).toBeTrue();
         });
     });

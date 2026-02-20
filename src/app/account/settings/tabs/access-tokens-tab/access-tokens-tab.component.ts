@@ -184,9 +184,11 @@ export class AccessTokensTabComponent extends BaseComponent {
     }
 
     private updateTable(page: number): void {
-        page > 1
-            ? this.navigationService.navigateToSettings(AccountSettingsTabs.ACCESS_TOKENS, page)
-            : this.navigationService.navigateToSettings(AccountSettingsTabs.ACCESS_TOKENS);
+        if (page > 1) {
+            this.navigationService.navigateToSettings(AccountSettingsTabs.ACCESS_TOKENS, page);
+        } else {
+            this.navigationService.navigateToSettings(AccountSettingsTabs.ACCESS_TOKENS);
+        }
     }
 
     public onPageChange(page: number): void {

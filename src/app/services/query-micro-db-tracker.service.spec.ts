@@ -7,14 +7,14 @@
 
 import { TestBed } from "@angular/core/testing";
 
-import { MapQueryTrackerService } from "./map-query-tracker.service";
+import { QueryMicroDbTrackerService } from "./query-micro-db-tracker.service";
 
-describe("MapQueryTrackerService", () => {
-    let service: MapQueryTrackerService;
+describe("QueryMicriDbTrackerService", () => {
+    let service: QueryMicroDbTrackerService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
-        service = TestBed.inject(MapQueryTrackerService);
+        service = TestBed.inject(QueryMicroDbTrackerService);
     });
 
     it("should be created", () => {

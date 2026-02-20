@@ -19,7 +19,7 @@ export interface DatasetEntry {
 @Injectable({
     providedIn: "root",
 })
-export class MapQueryTrackerService {
+export class QueryMicroDbTrackerService {
     private dbPromise: Promise<IDBPDatabase>;
     private readonly DB_NAME = "DatasetMicroDB";
     private readonly STORE_NAME = "queries";
@@ -54,13 +54,6 @@ export class MapQueryTrackerService {
         }
 
         await tx.done;
-    }
-
-    /* istanbul ignore next */
-    public async hasQuery(alias: string): Promise<boolean> {
-        const db = await this.dbPromise;
-        const key = await db.getKey(this.STORE_NAME, alias);
-        return key !== undefined;
     }
 
     /* istanbul ignore next */

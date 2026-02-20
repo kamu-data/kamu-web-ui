@@ -31,8 +31,8 @@ import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.m
 import { SearchAndSchemasSectionComponent } from "src/app/query/global-query/search-and-schemas-section/search-and-schemas-section.component";
 import { QueryAndResultSectionsComponent } from "src/app/query/shared/query-and-result-sections/query-and-result-sections.component";
 import { CancelRequestService } from "src/app/services/cancel-request.service";
-import { DatasetEntry, MapQueryTrackerService } from "src/app/services/map-query-tracker.service";
 import { NavigationService } from "src/app/services/navigation.service";
+import { DatasetEntry, QueryMicroDbTrackerService } from "src/app/services/query-micro-db-tracker.service";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 
 @Component({
@@ -69,7 +69,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     private sqlQueryService = inject(SqlQueryService);
     private cdr = inject(ChangeDetectorRef);
     private cancelRequestService = inject(CancelRequestService);
-    private mapQueryTrackerService = inject(MapQueryTrackerService);
+    private queryMicriDbTrackerService = inject(QueryMicroDbTrackerService);
 
     public async ngOnInit(): Promise<void> {
         this.sqlErrorMarker$ = this.sqlQueryService.sqlErrorOccurrences.pipe(
@@ -86,7 +86,7 @@ export class DataComponent extends BaseComponent implements OnInit {
 
     public runSQLRequest(params: DatasetRequestBySql): void {
         this.onRunSQLRequest(params);
-        promiseWithCatch(this.mapQueryTrackerService.saveQuery(this.datasetBasics.alias, params.query).then());
+        promiseWithCatch(this.queryMicriDbTrackerService.saveQuery(this.datasetBasics.alias, params.query).then());
     }
 
     private async buildSqlRequestCode(): Promise<void> {
@@ -94,16 +94,21 @@ export class DataComponent extends BaseComponent implements OnInit {
         if (sqlQueryFromUrl) {
             this.sqlRequestCode = sqlQueryFromUrl;
         } else {
-            if (await this.mapQueryTrackerService.hasQuery(this.datasetBasics.alias)) {
-                this.sqlRequestCode = (
-                    (await this.mapQueryTrackerService.getQuery(this.datasetBasics.alias)) as DatasetEntry
-                ).query;
-            } else {
-                this.sqlRequestCode += `'${this.dataTabData.datasetBasics.alias}'`;
-                const offset = this.location.getState() as MaybeNull<Partial<OffsetInterval>>;
-                if (offset && typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
-                    this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
-                }
+            this.sqlRequestCode += `'${this.dataTabData.datasetBasics.alias}'`;
+            const offset = this.location.getState() as MaybeNull<Partial<OffsetInterval>>;
+            if (offset && typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
+                this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
+                return;
+            }
+            try {
+                const entry = (await this.queryMicriDbTrackerService.getQuery(
+                    this.datasetBasics.alias,
+                )) as DatasetEntry;
+                this.sqlRequestCode = entry.query;
+            } catch (error) {
+                promiseWithCatch(
+                    this.queryMicriDbTrackerService.saveQuery(this.datasetBasics.alias, this.sqlRequestCode).then(),
+                );
             }
         }
     }

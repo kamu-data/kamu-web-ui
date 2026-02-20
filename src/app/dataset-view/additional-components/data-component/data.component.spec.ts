@@ -35,8 +35,8 @@ import {
     mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
-import { MapQueryTrackerService } from "src/app/services/map-query-tracker.service";
 import { NavigationService } from "src/app/services/navigation.service";
+import { QueryMicroDbTrackerService } from "src/app/services/query-micro-db-tracker.service";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 
 describe("DataComponent", () => {
@@ -48,7 +48,7 @@ describe("DataComponent", () => {
     let sqlQueryService: SqlQueryService;
     let requestDataSqlRunSpy: jasmine.Spy;
     let engineService: EngineService;
-    let mapQueryTrackerService: MapQueryTrackerService;
+    let queryMicriDbTrackerService: QueryMicroDbTrackerService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -90,7 +90,7 @@ describe("DataComponent", () => {
         navigationService = TestBed.inject(NavigationService);
         sqlQueryService = TestBed.inject(SqlQueryService);
         engineService = TestBed.inject(EngineService);
-        mapQueryTrackerService = TestBed.inject(MapQueryTrackerService);
+        queryMicriDbTrackerService = TestBed.inject(QueryMicroDbTrackerService);
         spyOn(engineService, "engines").and.returnValue(of(mockEngines));
         spyOn(navigationService, "navigateToDatasetView");
         spyOn(navigationService, "navigateWithSqlQuery");
@@ -107,8 +107,6 @@ describe("DataComponent", () => {
             } as OverviewUpdate,
         };
         component.sqlLoading = false;
-        component.sqlRequestCode = "";
-        spyOn(location, "getState").and.returnValue({ start: 0, end: 100 });
         requestDataSqlRunSpy = spyOn(sqlQueryService, "requestDataSqlRun").and.returnValue(of().pipe());
     });
 
@@ -117,20 +115,20 @@ describe("DataComponent", () => {
     });
 
     it("should check run sql button", fakeAsync(() => {
-        const getQuerySpy = spyOn(mapQueryTrackerService, "getQuery").and.resolveTo({
-            query: "select * from test.table",
+        const getQuerySpy = spyOn(queryMicriDbTrackerService, "getQuery").and.resolveTo({
+            query: "select * from 'test.table'",
             timestamp: 121223224,
         });
-        const hasQuerySpy = spyOn(mapQueryTrackerService, "hasQuery").and.resolveTo(true);
+
         tick();
         fixture.detectChanges();
 
         emitClickOnElementByDataTestId(fixture, "runSqlQueryButton");
 
         flush();
-        expect(hasQuerySpy).toHaveBeenCalledTimes(1);
+
         expect(getQuerySpy).toHaveBeenCalledTimes(1);
-        expect(component.sqlRequestCode).toEqual("select * from test.table");
+        expect(component.sqlRequestCode).toEqual("select * from 'test.table'");
     }));
 
     it("should check add data", () => {
@@ -151,14 +149,32 @@ describe("DataComponent", () => {
             query: mockQuery,
             timestamp: Date.now(),
         };
+        await queryMicriDbTrackerService.saveQuery("kamu/mockNameRoot", mockQuery);
 
-        spyOn(mapQueryTrackerService, "getQuery").and.resolveTo(mockEntry);
-        spyOn(mapQueryTrackerService, "hasQuery").and.resolveTo(true);
+        spyOn(queryMicriDbTrackerService, "getQuery").and.resolveTo(mockEntry);
 
         fixture.detectChanges();
         await fixture.whenStable();
 
         expect(component.sqlRequestCode).toEqual(mockQuery);
+    });
+
+    it("should check set query with offset", async () => {
+        spyOn(location, "getState").and.returnValue({ start: 0, end: 100 });
+        const mockQuery = "select * from 'kamu/mockNameRoot'";
+        const mockEntry = {
+            query: mockQuery,
+            timestamp: Date.now(),
+        };
+
+        spyOn(queryMicriDbTrackerService, "getQuery").and.resolveTo(mockEntry);
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(component.sqlRequestCode).toEqual(
+            "select\n  *\nfrom 'kamu/mockNameRoot'" + "\nwhere offset>=0 and offset<=100\norder by offset desc",
+        );
     });
 
     it("should check run SQL request", () => {

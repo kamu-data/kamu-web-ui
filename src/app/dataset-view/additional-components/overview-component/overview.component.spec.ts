@@ -144,7 +144,6 @@ describe("OverviewComponent", () => {
 
     it("should check #ngOninit", () => {
         expect(component.metadataFragmentBlock).toBeDefined();
-        component.datasetOverviewTabData.overviewUpdate.overview;
     });
 
     it("should check open website", () => {

@@ -36,7 +36,6 @@ export function emitClickOnElementByDataTestId<T>(fixture: ComponentFixture<T>, 
 
 export function findElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): HTMLElement | undefined {
     const debugElement: MaybeNull<DebugElement> = fixture.debugElement.query(By.css(`[data-test-id="${id}"]`));
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (debugElement) {
         return debugElement.nativeElement as HTMLElement;
     } else {

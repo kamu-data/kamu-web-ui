@@ -89,7 +89,7 @@ describe("AppHelpers", () => {
         { testCase: undefined, expectation: true },
         { testCase: { a: 1 }, expectation: false },
     ].forEach((item: { testCase: MaybeNullOrUndefined<object>; expectation: boolean }) => {
-        it(`should check isNil method with ${item.testCase?.toString()} `, () => {
+        it(`should check isNil method with ${JSON.stringify(item.testCase)} `, () => {
             expect(isNil(item.testCase)).toEqual(item.expectation);
         });
     });
@@ -99,7 +99,7 @@ describe("AppHelpers", () => {
         { testCase: undefined, expectation: false },
         { testCase: { a: 1 }, expectation: false },
     ].forEach((item: { testCase: MaybeNullOrUndefined<object>; expectation: boolean }) => {
-        it(`should check isNull method with ${item.testCase?.toString()} `, () => {
+        it(`should check isNull method with ${JSON.stringify(item.testCase)} `, () => {
             expect(isNull(item.testCase)).toEqual(item.expectation);
         });
     });

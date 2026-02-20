@@ -77,6 +77,8 @@ export default [
       // Jasmine custom overrides
       "jasmine/new-line-before-expect": 0,
       "jasmine/no-unsafe-spy": "off",
+      "jasmine/no-focused-tests": "error",
+      "jasmine/no-disabled-tests": "error",
     },
   },
   // License header plugin for specific files

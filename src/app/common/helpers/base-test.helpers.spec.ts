@@ -55,8 +55,7 @@ export function checkVisible<T>(fixture: ComponentFixture<T>, dataTestId: string
     const element: HTMLElement | undefined = findElementByDataTestId(fixture, dataTestId);
     if (visible) {
         expect(element).toBeTruthy();
-    }
-    {
+    } else {
         expect(element).toBeUndefined();
     }
 }

@@ -78,6 +78,7 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
     },
     {
         path: ProjectLinks.URL_QUERY,
+        runGuardsAndResolvers: "always",
         loadComponent: () =>
             import(/* webpackChunkName: "global-query" */ "./query/global-query/global-query.component").then(
                 (m) => m.GlobalQueryComponent,

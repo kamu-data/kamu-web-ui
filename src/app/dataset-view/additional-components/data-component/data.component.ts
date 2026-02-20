@@ -69,7 +69,7 @@ export class DataComponent extends BaseComponent implements OnInit {
     private sqlQueryService = inject(SqlQueryService);
     private cdr = inject(ChangeDetectorRef);
     private cancelRequestService = inject(CancelRequestService);
-    private queryMicriDbTrackerService = inject(QueryMicroDbTrackerService);
+    private queryMicroDbTrackerService = inject(QueryMicroDbTrackerService);
 
     public async ngOnInit(): Promise<void> {
         this.sqlErrorMarker$ = this.sqlQueryService.sqlErrorOccurrences.pipe(
@@ -86,7 +86,7 @@ export class DataComponent extends BaseComponent implements OnInit {
 
     public runSQLRequest(params: DatasetRequestBySql): void {
         this.onRunSQLRequest(params);
-        promiseWithCatch(this.queryMicriDbTrackerService.saveQuery(this.datasetBasics.alias, params.query).then());
+        promiseWithCatch(this.queryMicroDbTrackerService.saveQuery(this.datasetBasics.alias, params.query).then());
     }
 
     private async buildSqlRequestCode(): Promise<void> {
@@ -101,13 +101,13 @@ export class DataComponent extends BaseComponent implements OnInit {
                 return;
             }
             try {
-                const entry = (await this.queryMicriDbTrackerService.getQuery(
+                const entry = (await this.queryMicroDbTrackerService.getQuery(
                     this.datasetBasics.alias,
                 )) as DatasetEntry;
                 this.sqlRequestCode = entry.query;
             } catch (error) {
                 promiseWithCatch(
-                    this.queryMicriDbTrackerService.saveQuery(this.datasetBasics.alias, this.sqlRequestCode).then(),
+                    this.queryMicroDbTrackerService.saveQuery(this.datasetBasics.alias, this.sqlRequestCode).then(),
                 );
             }
         }

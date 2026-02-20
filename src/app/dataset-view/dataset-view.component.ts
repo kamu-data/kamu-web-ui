@@ -6,7 +6,7 @@
  */
 
 import { NgIf } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject, Input, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { Router, RouterOutlet } from "@angular/router";
 
 import { map } from "rxjs";
@@ -19,7 +19,6 @@ import { DatasetInfo } from "@interface/navigation.interface";
 import { DatasetViewHeaderComponent } from "src/app/dataset-view/dataset-view-header/dataset-view-header.component";
 import { DatasetViewMenuComponent } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu.component";
 import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { SessionStorageService } from "src/app/services/session-storage.service";
 
 @Component({
     selector: "app-dataset",
@@ -34,7 +33,7 @@ import { SessionStorageService } from "src/app/services/session-storage.service"
         DatasetViewMenuComponent,
     ],
 })
-export class DatasetViewComponent extends BaseDatasetDataComponent implements OnDestroy {
+export class DatasetViewComponent extends BaseDatasetDataComponent {
     @Input(RoutingResolvers.DATASET_VIEW_ACTIVE_TAB_KEY) public datasetViewType: DatasetViewTypeEnum;
     @Input(RoutingResolvers.DATASET_INFO_KEY) public datasetInfo: DatasetInfo;
     @Input(RoutingResolvers.DATASET_VIEW_KEY) public set datasetViewState(value: DatasetViewData) {
@@ -43,7 +42,6 @@ export class DatasetViewComponent extends BaseDatasetDataComponent implements On
     }
 
     public readonly DatasetViewTypeEnum = DatasetViewTypeEnum;
-    private sessionStorageService = inject(SessionStorageService);
     private router = inject(Router);
 
     public datasetViewData: DatasetViewData;
@@ -76,9 +74,5 @@ export class DatasetViewComponent extends BaseDatasetDataComponent implements On
                 )
                 .subscribe();
         }
-    }
-
-    public ngOnDestroy(): void {
-        this.sessionStorageService.removeDatasetSqlCode();
     }
 }

@@ -12,6 +12,8 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
 
 import { BaseComponent } from "@common/components/base.component";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
+import AppValues from "@common/values/app.values";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetRequestBySql } from "@interface/dataset.interface";
 
@@ -23,6 +25,7 @@ import { SearchAndSchemasSectionComponent } from "src/app/query/global-query/sea
 import { QueryAndResultSectionsComponent } from "src/app/query/shared/query-and-result-sections/query-and-result-sections.component";
 import { CancelRequestService } from "src/app/services/cancel-request.service";
 import { NavigationService } from "src/app/services/navigation.service";
+import { DatasetEntry, QueryMicroDbTrackerService } from "src/app/services/query-micro-db-tracker.service";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 
 @Component({
@@ -54,18 +57,35 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
     private navigationService = inject(NavigationService);
     private cancelRequestService = inject(CancelRequestService);
     private cdr = inject(ChangeDetectorRef);
+    private queryMicroDbTrackerService = inject(QueryMicroDbTrackerService);
 
-    public ngOnInit(): void {
+    public async ngOnInit(): Promise<void> {
         this.sqlQueryService.resetSqlError();
         this.sqlQueryService.emitSqlQueryResponseChanged(null);
         this.sqlErrorMarker$ = this.sqlQueryService.sqlErrorOccurrences.pipe(
             map((data: DataSqlErrorUpdate) => data.error),
         );
         this.sqlQueryResponse$ = this.sqlQueryService.sqlQueryResponseChanges;
+        await this.buildSqlRequestCode();
     }
 
     public setDefaultQuery(sqlRequestCode: string): void {
         this.sqlRequestCode = sqlRequestCode;
+    }
+
+    private async buildSqlRequestCode(): Promise<void> {
+        try {
+            const entry = (await this.queryMicroDbTrackerService.getQuery(
+                AppValues.MICRO_DB_GLOBAL_QUERY_SQL,
+            )) as DatasetEntry;
+            this.sqlRequestCode = entry.query;
+        } catch (error) {
+            promiseWithCatch(
+                this.queryMicroDbTrackerService
+                    .saveQuery(AppValues.MICRO_DB_GLOBAL_QUERY_SQL, this.sqlRequestCode)
+                    .then(),
+            );
+        }
     }
 
     public runSQLRequest(params: DatasetRequestBySql): void {
@@ -82,7 +102,7 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(() => {
-                this.navigationService.navigateWithSqlQuery(this.sqlRequestCode);
+                this.navigationService.navigateWithSqlQuery(params.query);
             });
     }
 }

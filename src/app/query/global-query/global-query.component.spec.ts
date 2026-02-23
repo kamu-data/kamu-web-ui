@@ -55,8 +55,8 @@ describe("GlobalQueryComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check init sql request code ", async () => {
-        await component.ngOnInit();
+    it("should check init sql request code ", () => {
+        component.ngOnInit();
         expect(component.sqlRequestCode).toEqual(SQL_QUERY);
     });
 

@@ -112,7 +112,7 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
             const parsedCommitment = (await JSON.parse(this.commitment)) as QueryExplainerResponse;
             this.commitmentUploadToken = "simulated-token";
             this.componentData$ = this.combineQueryExplainerResponse(parsedCommitment);
-        } catch (e) {
+        } catch {
             this.toastrService.error("Impossible to parse the commitment");
         }
     }

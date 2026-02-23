@@ -43,7 +43,7 @@ export class Eip1193EthereumGateway implements EthereumGateway {
             } else {
                 this.toastrService.error("No accounts returned.");
             }
-        } catch (error) {
+        } catch {
             this.toastrService.error("Error connecting wallet: need create a new wallet", "", {
                 disableTimeOut: "timeOut",
             });
@@ -96,7 +96,7 @@ export class Eip1193EthereumGateway implements EthereumGateway {
             );
             const signature = await signer.signMessage(message);
             return { message, signature };
-        } catch (error) {
+        } catch {
             return null;
         }
     }

@@ -106,7 +106,7 @@ export class AppConfigService {
             request.send(null);
             const data: AppUIConfig = JSON.parse(request.responseText) as AppUIConfig;
             return data;
-        } catch (error) {
+        } catch {
             return AppValues.DEFAULT_UI_CONFIGURATION;
         }
     }

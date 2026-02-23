@@ -82,7 +82,7 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnIn
             case "range":
                 return `${errorDetails.message}`;
             case "invalidCronExpression":
-                return `${String(errorDetails)}`;
+                return `${errorDetails as unknown as string}`;
             case "noneOf":
                 return `${label} already exists`;
 

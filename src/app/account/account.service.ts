@@ -195,9 +195,11 @@ export class AccountService {
         return this.accountApi.accountPauseFlows(accountName).pipe(
             map((data: AccountPauseFlowsMutation) => {
                 const result = data.accounts.byName?.flows.triggers.pauseAccountDatasetFlows;
-                result
-                    ? this.toastrService.success("Flows paused")
-                    : this.toastrService.error("Error, flows not paused");
+                if (result) {
+                    this.toastrService.success("Flows paused");
+                } else {
+                    this.toastrService.error("Error, flows not paused");
+                }
             }),
         );
     }
@@ -206,9 +208,11 @@ export class AccountService {
         return this.accountApi.accountResumeFlows(accountName).pipe(
             map((data: AccountResumeFlowsMutation) => {
                 const result = data.accounts.byName?.flows.triggers.resumeAccountDatasetFlows;
-                result
-                    ? this.toastrService.success("Flows resumed")
-                    : this.toastrService.error("Error, flows not resumed");
+                if (result) {
+                    this.toastrService.success("Flows resumed");
+                } else {
+                    this.toastrService.error("Error, flows not resumed");
+                }
             }),
         );
     }

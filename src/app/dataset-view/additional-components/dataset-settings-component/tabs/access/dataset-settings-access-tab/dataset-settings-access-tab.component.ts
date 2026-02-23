@@ -255,9 +255,11 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     }
 
     public masterToggle() {
-        this.isAllSelected()
-            ? this.selection.clear()
-            : this.dataSource.data.forEach((row) => this.selection.select(row as AccountWithRole));
+        if (this.isAllSelected()) {
+            this.selection.clear();
+        } else {
+            this.dataSource.data.forEach((row) => this.selection.select(row as AccountWithRole));
+        }
     }
 
     public setRoleIcon(row: AccountWithRole): string {

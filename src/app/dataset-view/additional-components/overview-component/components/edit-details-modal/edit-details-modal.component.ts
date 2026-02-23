@@ -82,9 +82,11 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
             this.keywordsSet.clear();
         }
 
-        this.currentState?.overview.metadata.currentInfo.description
-            ? (this.description = this.initialDescription = this.currentState.overview.metadata.currentInfo.description)
-            : (this.description = "");
+        if (this.currentState?.overview.metadata.currentInfo.description) {
+            this.description = this.initialDescription = this.currentState.overview.metadata.currentInfo.description;
+        } else {
+            this.description = "";
+        }
     }
 
     public commitSetInfoEvent(): void {

@@ -12,7 +12,6 @@ export const editorMock: monaco.editor.IStandaloneCodeEditor = {
         return {} as monaco.editor.ITextModel;
     },
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     addAction(_: monaco.editor.IActionDescriptor): monaco.IDisposable {
         return {
             dispose() {
@@ -21,7 +20,6 @@ export const editorMock: monaco.editor.IStandaloneCodeEditor = {
         };
     },
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     createContextKey(key: string, defaultValue: boolean): monaco.editor.IContextKey<boolean> {
         return {
             set: (_: boolean) => {},
@@ -36,8 +34,7 @@ export const editorMock: monaco.editor.IStandaloneCodeEditor = {
         } as monaco.Selection;
     },
 
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-    onDidChangeCursorSelection(listener: (e: monaco.editor.ICursorSelectionChangedEvent) => void): monaco.IDisposable {
+    onDidChangeCursorSelection(_: (e: monaco.editor.ICursorSelectionChangedEvent) => void): monaco.IDisposable {
         return {
             dispose() {},
         };

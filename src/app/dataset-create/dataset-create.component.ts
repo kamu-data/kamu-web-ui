@@ -108,7 +108,11 @@ export class DatasetCreateComponent extends BaseComponent {
     }
 
     public onCreateDataset(): void {
-        this.showMonacoEditor ? this.createDatasetFromSnapshot() : this.createDatasetFromForm();
+        if (this.showMonacoEditor) {
+            this.createDatasetFromSnapshot();
+        } else {
+            this.createDatasetFromForm();
+        }
     }
 
     public onFileSelected(event: Event): Promise<MaybeNull<string>> {

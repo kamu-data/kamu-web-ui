@@ -23,7 +23,7 @@ import { FormsModule } from "@angular/forms";
 import { filter, fromEvent, Subscription, take, takeWhile } from "rxjs";
 
 import * as monaco from "monaco-editor";
-import { EditorComponent, MonacoEditorModule } from "ngx-monaco-editor-v2";
+import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 
 import AppValues from "@common/values/app.values";
 import { MaybeNull } from "@interface/app.types";
@@ -68,7 +68,7 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnInit, O
     public getErrorDetails = getSqlError;
     @Output() public onRunSql = new EventEmitter<MaybeNull<string>>();
     @Input() public placeholder = AppValues.DEFAULT_MONACO_EDITOR_PLACEHOLDER;
-    @ViewChild("monacoEditor") private monaco: EditorComponent;
+    @ViewChild("monacoEditor") private monaco: monaco.editor.IStandaloneCodeEditor;
 
     private cdr = inject(ChangeDetectorRef);
     private readonly INITIAL_EDITOR_HEIGHT = 200;
@@ -136,7 +136,11 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnInit, O
             const model = editor.getModel();
             if (model && selection) {
                 this.selectedText = model.getValueInRange(selection);
-                this.selectedText ? this.onRunSql.emit(this.selectedText) : this.onRunSql.emit();
+                if (this.selectedText) {
+                    this.onRunSql.emit(this.selectedText);
+                } else {
+                    this.onRunSql.emit();
+                }
             }
         };
 
@@ -186,8 +190,7 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnInit, O
     }
 
     public clickPlaceholder(): void {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-        this.monaco["_editor"].focus();
+        this.monaco.focus();
     }
 
     public ngOnDestroy() {

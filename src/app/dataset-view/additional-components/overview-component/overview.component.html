@@ -134,6 +134,9 @@
                     <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>
                     <span class="fs-12 me-2 d-block"> Update now</span>
                 </button>
+                <div class="ms-2" *ngIf="visibleUpdateButton">
+                    <app-data-access-panel [datasetBasics]="datasetBasics" />
+                </div>
             </div>
 
             <app-overview-history-summary-header

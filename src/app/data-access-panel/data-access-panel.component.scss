@@ -2,16 +2,26 @@
 
 .btn-group-parent {
     .get-data-button {
-        padding: 0 12px;
+        background: #2c974b;
+        border-color: rgb(27 31 36 / 15%);
+        color: #fff;
+        position: relative;
+        display: inline-block;
+        padding: 14px;
+        white-space: nowrap;
+        vertical-align: middle;
+        cursor: pointer;
+        border-radius: 6px;
+        height: 33px;
 
         &:hover {
-            background-color: transparent;
+            background: #34b358;
         }
 
         .get-data-text {
-            color: #1a7f37;
-            font-weight: 700;
-            font-size: 17px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
         }
     }
 }

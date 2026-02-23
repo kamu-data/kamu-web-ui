@@ -177,7 +177,6 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     public onSelectItem(event: NgbTypeaheadSelectItemEvent): void {
         this.isSearchActive = false;
         if (event.item) {
-            this.sessionStorageService.removeDatasetSqlCode();
             this.onSelectedDataset.emit(event.item as DatasetAutocompleteItem);
             setTimeout(() => {
                 const typeaheadInput: MaybeNull<HTMLElement> = document.getElementById("typeahead-http");
@@ -213,7 +212,6 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
 
     public onSearch(event: Event): void {
         this.isSearchActive = false;
-        this.sessionStorageService.removeDatasetSqlCode();
         setTimeout(() => {
             if (this.isMobileView) {
                 this.triggerMenuClick();

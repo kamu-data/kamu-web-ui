@@ -29,7 +29,6 @@ import { SideNavHelper } from "@common/helpers/sidenav.helper";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
 
 import { AppConfigService } from "src/app/app-config.service";
-import { DataAccessPanelComponent } from "src/app/data-access-panel/data-access-panel.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetPermissionsService } from "src/app/dataset-view/dataset.permissions.service";
 
@@ -46,7 +45,6 @@ import { DatasetPermissionsService } from "src/app/dataset-view/dataset.permissi
         MatButtonToggleModule,
         MatIconModule,
         //-----//
-        DataAccessPanelComponent,
         FeatureFlagDirective,
     ],
 })
@@ -129,7 +127,7 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
     }
 
     @HostListener("window:resize")
-    private checkWindowSize(): void {
+    public checkWindowSize(): void {
         this.isMinimizeSearchAdditionalButtons = isMobileView();
         if (this.sidenav) {
             if (isMobileView()) {

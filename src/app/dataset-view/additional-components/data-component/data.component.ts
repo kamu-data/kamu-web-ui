@@ -6,7 +6,7 @@
  */
 
 import { AsyncPipe, Location, NgIf } from "@angular/common";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, NgZone, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
@@ -14,9 +14,10 @@ import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 
 import { BaseComponent } from "@common/components/base.component";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
-import { DatasetKind, OffsetInterval } from "@api/kamu.graphql.interface";
+import { DatasetBasicsFragment, DatasetKind, OffsetInterval } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetRequestBySql } from "@interface/dataset.interface";
 
@@ -31,7 +32,7 @@ import { SearchAndSchemasSectionComponent } from "src/app/query/global-query/sea
 import { QueryAndResultSectionsComponent } from "src/app/query/shared/query-and-result-sections/query-and-result-sections.component";
 import { CancelRequestService } from "src/app/services/cancel-request.service";
 import { NavigationService } from "src/app/services/navigation.service";
-import { SessionStorageService } from "src/app/services/session-storage.service";
+import { DatasetEntry, QueryMicroDbTrackerService } from "src/app/services/query-micro-db-tracker.service";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 
 @Component({
@@ -66,38 +67,48 @@ export class DataComponent extends BaseComponent implements OnInit {
     private datasetFlowsService = inject(DatasetFlowsService);
     private navigationService = inject(NavigationService);
     private sqlQueryService = inject(SqlQueryService);
-    private sessionStorageService = inject(SessionStorageService);
     private cdr = inject(ChangeDetectorRef);
     private cancelRequestService = inject(CancelRequestService);
-    private ngZone = inject(NgZone);
+    private queryMicroDbTrackerService = inject(QueryMicroDbTrackerService);
 
-    public ngOnInit(): void {
+    public async ngOnInit(): Promise<void> {
         this.sqlErrorMarker$ = this.sqlQueryService.sqlErrorOccurrences.pipe(
             map((data: DataSqlErrorUpdate) => data.error),
         );
         this.sqlQueryResponse$ = this.sqlQueryService.sqlQueryResponseChanges;
-        this.buildSqlRequestCode();
+        await this.buildSqlRequestCode();
         this.runSQLRequest({ query: this.sqlRequestCode });
     }
 
-    public runSQLRequest(params: DatasetRequestBySql): void {
-        this.sessionStorageService.setDatasetSqlCode(params.query);
-        this.onRunSQLRequest(params);
+    public get datasetBasics(): DatasetBasicsFragment {
+        return this.dataTabData.datasetBasics;
     }
 
-    private buildSqlRequestCode(): void {
+    public runSQLRequest(params: DatasetRequestBySql): void {
+        this.onRunSQLRequest(params);
+        promiseWithCatch(this.queryMicroDbTrackerService.saveQuery(this.datasetBasics.alias, params.query).then());
+    }
+
+    private async buildSqlRequestCode(): Promise<void> {
         const sqlQueryFromUrl = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_SQL_QUERY);
         if (sqlQueryFromUrl) {
             this.sqlRequestCode = sqlQueryFromUrl;
         } else {
-            if (this.sessionStorageService.datasetSqlCode) {
-                this.sqlRequestCode = this.sessionStorageService.datasetSqlCode;
-            } else {
-                this.sqlRequestCode += `'${this.dataTabData.datasetBasics.alias}'`;
-                const offset = this.location.getState() as MaybeNull<Partial<OffsetInterval>>;
-                if (offset && typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
-                    this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
-                }
+            this.sqlRequestCode += `'${this.dataTabData.datasetBasics.alias}'`;
+            const offset = this.location.getState() as MaybeNull<Partial<OffsetInterval>>;
+            if (offset && typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
+                this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
+                return;
+            }
+            try {
+                const entry = (await this.queryMicroDbTrackerService.getQuery(
+                    this.datasetBasics.alias,
+                )) as DatasetEntry;
+                this.sqlRequestCode = entry.query;
+            } catch (error) {
+                promiseWithCatch(
+                    this.queryMicroDbTrackerService.saveQuery(this.datasetBasics.alias, this.sqlRequestCode).then(),
+                );
             }
         }
     }

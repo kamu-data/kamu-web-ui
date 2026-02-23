@@ -3,7 +3,7 @@
     id="container-dataset-tabs"
     #datasetViewMenu
 >
-    <div class="dataset-view-type-toggle-group">
+    <div class="dataset-view-type-toggle-group d-flex justify-content-between align-items-end">
         <mat-button-toggle-group name="datasetViewType" class="mat-button-toggle-group" aria-label="Dataset View Type">
             <mat-button-toggle
                 appFeatureFlag="dataset.panel.overview"
@@ -110,8 +110,5 @@
                 </a>
             </mat-button-toggle>
         </mat-button-toggle-group>
-    </div>
-    <div class="mb-3 me-3">
-        <app-data-access-panel [datasetBasics]="datasetBasics" />
     </div>
 </div>

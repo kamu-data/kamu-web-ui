@@ -104,11 +104,4 @@ describe("DatasetViewComponent", () => {
         component.showOwnerPage(mockDatasetBasicsDerivedFragment.owner.accountName);
         expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(mockDatasetBasicsDerivedFragment.owner.accountName);
     });
-
-    it(`should check remove daaset sql code`, () => {
-        const removeDatasetSqlCodeSpy = spyOn(sessionStorage, "removeItem");
-
-        component.ngOnDestroy();
-        expect(removeDatasetSqlCodeSpy).toHaveBeenCalledTimes(1);
-    });
 });

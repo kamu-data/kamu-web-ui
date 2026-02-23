@@ -11,7 +11,6 @@ import { SessionStorageService } from "src/app/services/session-storage.service"
 
 describe("SessionStorageService", () => {
     let service: SessionStorageService;
-    const MOCK_SQL_CODE = "select * from 'accounts.tokens.portfolio.usd'";
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
@@ -31,17 +30,5 @@ describe("SessionStorageService", () => {
 
         service.setSidePanelVisible(false);
         expect(service.isSidePanelVisible).toBeFalse();
-    });
-
-    it("should be check set state for dataset sql code", () => {
-        service.setDatasetSqlCode(MOCK_SQL_CODE);
-        expect(service.datasetSqlCode).toEqual(MOCK_SQL_CODE);
-    });
-
-    it("should be check state after removing for dataset sql code", () => {
-        service.setDatasetSqlCode(MOCK_SQL_CODE);
-        expect(service.datasetSqlCode).toEqual(MOCK_SQL_CODE);
-        service.removeDatasetSqlCode();
-        expect(service.datasetSqlCode).toEqual("");
     });
 });

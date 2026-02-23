@@ -16,7 +16,7 @@ export default class AppValues {
     public static readonly LOCAL_STORAGE_LOGIN_REDIRECT_URL = "login_redirect_url";
     public static readonly LOCAL_STORAGE_ACCOUNT_ID = "account_id";
     public static readonly SESSION_STORAGE_SIDE_PANEL_VISIBLE = "side_panel_visible";
-    public static readonly SESSION_STORAGE_SQL_CODE = "sql_code";
+    public static readonly MICRO_DB_GLOBAL_QUERY_SQL = "global_sql_code";
     public static readonly DEFAULT_USER_DISPLAY_NAME = "anonymous";
     public static readonly DEFAULT_AVATAR_URL = "https://avatars.githubusercontent.com/u/11951648?v=4";
     public static readonly URL_PATTERN = /^(http:\/\/)|(https:\/\/)/i;

@@ -12,3 +12,4 @@ generates:
     config:
       inlineFragmentTypes: combine
       defaultScalarType: string
+      gqlImport: "@apollo/client/core#gql"

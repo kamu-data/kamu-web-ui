@@ -1,64 +1,68 @@
 // THIS FILE IS GENERATED, DO NOT EDIT!
-import { gql } from "@apollo/client/core";
 import { Injectable } from "@angular/core";
+
+import { gql } from "@apollo/client/core";
 import * as Apollo from "apollo-angular";
+
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-    ID: string;
-    String: string;
-    Boolean: boolean;
-    Int: number;
-    Float: number;
-    AccessTokenID: string;
-    AccountDisplayName: string;
-    AccountID: string;
-    AccountName: string;
-    AccountPassword: string;
+    ID: { input: string; output: string };
+    String: { input: string; output: string };
+    Boolean: { input: boolean; output: boolean };
+    Int: { input: number; output: number };
+    Float: { input: number; output: number };
+    AccessTokenID: { input: string; output: string };
+    AccountDisplayName: { input: string; output: string };
+    AccountID: { input: string; output: string };
+    AccountName: { input: string; output: string };
+    AccountPassword: { input: string; output: string };
     /** Base64-encoded binary data (url-safe, no padding) */
-    Base64Usnp: string;
+    Base64Usnp: { input: string; output: string };
     /** Collection entry paths are similar to HTTP path components. They are rooted (start with `/`), separated by forward slashes, with elements URL-encoded (e.g. `/foo%20bar/baz`) */
-    CollectionPath: string;
-    DatasetAlias: string;
-    DatasetEnvVarID: string;
-    DatasetID: string;
-    DatasetName: string;
-    DatasetRef: string;
-    DatasetRefRemote: string;
+    CollectionPath: { input: string; output: string };
+    DatasetAlias: { input: string; output: string };
+    DatasetEnvVarID: { input: string; output: string };
+    DatasetID: { input: string; output: string };
+    DatasetName: { input: string; output: string };
+    DatasetRef: { input: string; output: string };
+    DatasetRefRemote: { input: string; output: string };
     /**
      * Implement the DateTime<Utc> scalar
      *
      * The input/output is a string in RFC3339 format.
      */
-    DateTime: string;
-    DeviceCode: string;
+    DateTime: { input: string; output: string };
+    DeviceCode: { input: string; output: string };
     /**
      * Wallet address in did:pkh format.
      *
      * Example: did:pkh:eip155:1:0xb9c5714089478a327f09197987f16f9e5d936e8a
      */
-    DidPkh: string;
-    Eip4361AuthNonce: string;
-    Email: string;
-    EventID: string;
-    EvmWalletAddress: string;
-    ExtraAttributes: string;
-    ExtraData: string;
-    FlowID: string;
+    DidPkh: { input: string; output: string };
+    Eip4361AuthNonce: { input: string; output: string };
+    Email: { input: string; output: string };
+    EventID: { input: string; output: string };
+    EvmWalletAddress: { input: string; output: string };
+    ExtraAttributes: { input: string; output: string };
+    ExtraData: { input: string; output: string };
+    FlowID: { input: string; output: string };
     /** A scalar that can represent any JSON value. */
-    JSON: string;
-    Multihash: string;
-    TaskID: string;
-    URL: string;
+    JSON: { input: string; output: string };
+    Multihash: { input: string; output: string };
+    TaskID: { input: string; output: string };
+    URL: { input: string; output: string };
     /** URL is a String implementing the [URL Standard](http://url.spec.whatwg.org/) */
-    Url: string;
-    WebhookEventType: string;
-    WebhookSubscriptionID: string;
-    WebhookSubscriptionLabel: string;
+    Url: { input: string; output: string };
+    WebhookEventType: { input: string; output: string };
+    WebhookSubscriptionID: { input: string; output: string };
+    WebhookSubscriptionLabel: { input: string; output: string };
 };
 
 export type AccessTokenConnection = {
@@ -69,7 +73,7 @@ export type AccessTokenConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount: Scalars["Int"];
+    totalCount: Scalars["Int"]["output"];
 };
 
 export type AccessTokenEdge = {
@@ -82,23 +86,23 @@ export type Account = {
     /** Access to the access token management */
     accessTokens: AccountAccessTokens;
     /** Symbolic account name */
-    accountName: Scalars["AccountName"];
+    accountName: Scalars["AccountName"]["output"];
     /** Account provider */
     accountProvider: AccountProvider;
     /** Account type */
     accountType: AccountType;
     /** Avatar URL */
-    avatarUrl?: Maybe<Scalars["String"]>;
+    avatarUrl?: Maybe<Scalars["String"]["output"]>;
     /** Account name to display */
-    displayName: Scalars["AccountDisplayName"];
+    displayName: Scalars["AccountDisplayName"]["output"];
     /** Email address */
-    email: Scalars["String"];
+    email: Scalars["String"]["output"];
     /** Access to the flow configurations of this account */
     flows: AccountFlows;
     /** Unique and stable identifier of this account */
-    id: Scalars["AccountID"];
+    id: Scalars["AccountID"]["output"];
     /** Indicates the administrator status */
-    isAdmin: Scalars["Boolean"];
+    isAdmin: Scalars["Boolean"]["output"];
     /** Returns datasets belonging to this account */
     ownedDatasets: DatasetConnection;
     /** Access to account usage statistic */
@@ -106,8 +110,8 @@ export type Account = {
 };
 
 export type AccountOwnedDatasetsArgs = {
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type AccountAccessTokens = {
@@ -116,8 +120,8 @@ export type AccountAccessTokens = {
 };
 
 export type AccountAccessTokensListAccessTokensArgs = {
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type AccountAccessTokensMut = {
@@ -127,11 +131,11 @@ export type AccountAccessTokensMut = {
 };
 
 export type AccountAccessTokensMutCreateAccessTokenArgs = {
-    tokenName: Scalars["String"];
+    tokenName: Scalars["String"]["input"];
 };
 
 export type AccountAccessTokensMutRevokeAccessTokenArgs = {
-    tokenId: Scalars["AccessTokenID"];
+    tokenId: Scalars["AccessTokenID"]["input"];
 };
 
 export type AccountConnection = {
@@ -142,12 +146,12 @@ export type AccountConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount: Scalars["Int"];
+    totalCount: Scalars["Int"]["output"];
 };
 
 export type AccountDatasetRelationOperation = {
-    accountId: Scalars["AccountID"];
-    datasetId: Scalars["DatasetID"];
+    accountId: Scalars["AccountID"]["input"];
+    datasetId: Scalars["DatasetID"]["input"];
     operation: DatasetRoleOperation;
 };
 
@@ -158,12 +162,12 @@ export type AccountEdge = {
 
 export type AccountFieldNonUnique = CreateAccountResult & {
     __typename?: "AccountFieldNonUnique";
-    field: Scalars["String"];
-    message: Scalars["String"];
+    field: Scalars["String"]["output"];
+    message: Scalars["String"]["output"];
 };
 
 export type AccountFlowFilters = {
-    byDatasetIds: Array<Scalars["DatasetID"]>;
+    byDatasetIds: Array<Scalars["DatasetID"]["input"]>;
     byInitiator?: InputMaybe<InitiatorFilterInput>;
     byProcessType?: InputMaybe<FlowProcessTypeFilterInput>;
     byStatus?: InputMaybe<Array<FlowStatus>>;
@@ -179,7 +183,7 @@ export type AccountFlowProcessCardConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount: Scalars["Int"];
+    totalCount: Scalars["Int"]["output"];
 };
 
 export type AccountFlowProcessCardEdge = {
@@ -200,8 +204,8 @@ export type AccountFlowProcesses = {
 export type AccountFlowProcessesAllCardsArgs = {
     filters?: InputMaybe<FlowProcessFilters>;
     ordering?: InputMaybe<FlowProcessOrdering>;
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type AccountFlowProcessesFullRollupArgs = {
@@ -211,8 +215,8 @@ export type AccountFlowProcessesFullRollupArgs = {
 export type AccountFlowProcessesPrimaryCardsArgs = {
     filters?: InputMaybe<FlowProcessFilters>;
     ordering?: InputMaybe<FlowProcessOrdering>;
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type AccountFlowProcessesPrimaryRollupArgs = {
@@ -222,8 +226,8 @@ export type AccountFlowProcessesPrimaryRollupArgs = {
 export type AccountFlowProcessesWebhookCardsArgs = {
     filters?: InputMaybe<FlowProcessFilters>;
     ordering?: InputMaybe<FlowProcessOrdering>;
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type AccountFlowProcessesWebhookRollupArgs = {
@@ -238,20 +242,20 @@ export type AccountFlowRuns = {
 
 export type AccountFlowRunsListFlowsArgs = {
     filters?: InputMaybe<AccountFlowFilters>;
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type AccountFlowTriggers = {
     __typename?: "AccountFlowTriggers";
     /** Checks if all triggers of all datasets in account are disabled */
-    allPaused: Scalars["Boolean"];
+    allPaused: Scalars["Boolean"]["output"];
 };
 
 export type AccountFlowTriggersMut = {
     __typename?: "AccountFlowTriggersMut";
-    pauseAccountDatasetFlows: Scalars["Boolean"];
-    resumeAccountDatasetFlows: Scalars["Boolean"];
+    pauseAccountDatasetFlows: Scalars["Boolean"]["output"];
+    resumeAccountDatasetFlows: Scalars["Boolean"]["output"];
 };
 
 export type AccountFlows = {
@@ -270,7 +274,7 @@ export type AccountFlowsMut = {
 };
 
 export type AccountLookupFilter = {
-    excludeAccountsByIds: Array<Scalars["AccountID"]>;
+    excludeAccountsByIds: Array<Scalars["AccountID"]["input"]>;
 };
 
 export type AccountMut = {
@@ -294,20 +298,20 @@ export type AccountMut = {
 };
 
 export type AccountMutModifyPasswordArgs = {
-    password: Scalars["AccountPassword"];
+    password: Scalars["AccountPassword"]["input"];
 };
 
 export type AccountMutModifyPasswordWithConfirmationArgs = {
-    newPassword: Scalars["AccountPassword"];
-    oldPassword: Scalars["AccountPassword"];
+    newPassword: Scalars["AccountPassword"]["input"];
+    oldPassword: Scalars["AccountPassword"]["input"];
 };
 
 export type AccountMutRenameArgs = {
-    newName: Scalars["AccountName"];
+    newName: Scalars["AccountName"]["input"];
 };
 
 export type AccountMutUpdateEmailArgs = {
-    newEmail: Scalars["Email"];
+    newEmail: Scalars["Email"]["input"];
 };
 
 export enum AccountProvider {
@@ -340,7 +344,7 @@ export type AccountWithRoleConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount: Scalars["Int"];
+    totalCount: Scalars["Int"]["output"];
 };
 
 export type AccountWithRoleEdge = {
@@ -368,21 +372,21 @@ export type Accounts = {
 };
 
 export type AccountsByIdArgs = {
-    accountId: Scalars["AccountID"];
+    accountId: Scalars["AccountID"]["input"];
 };
 
 export type AccountsByIdsArgs = {
-    accountIds: Array<Scalars["AccountID"]>;
-    skipMissing: Scalars["Boolean"];
+    accountIds: Array<Scalars["AccountID"]["input"]>;
+    skipMissing: Scalars["Boolean"]["input"];
 };
 
 export type AccountsByNameArgs = {
-    name: Scalars["AccountName"];
+    name: Scalars["AccountName"]["input"];
 };
 
 export type AccountsByNamesArgs = {
-    accountNames: Array<Scalars["AccountName"]>;
-    skipMissing: Scalars["Boolean"];
+    accountNames: Array<Scalars["AccountName"]["input"]>;
+    skipMissing: Scalars["Boolean"]["input"];
 };
 
 export type AccountsMut = {
@@ -409,30 +413,30 @@ export type AccountsMut = {
 };
 
 export type AccountsMutByIdArgs = {
-    accountId: Scalars["AccountID"];
+    accountId: Scalars["AccountID"]["input"];
 };
 
 export type AccountsMutByIdsArgs = {
-    accountIds: Array<Scalars["AccountID"]>;
-    skipMissing: Scalars["Boolean"];
+    accountIds: Array<Scalars["AccountID"]["input"]>;
+    skipMissing: Scalars["Boolean"]["input"];
 };
 
 export type AccountsMutByNameArgs = {
-    accountName: Scalars["AccountName"];
+    accountName: Scalars["AccountName"]["input"];
 };
 
 export type AccountsMutByNamesArgs = {
-    accountNames: Array<Scalars["AccountName"]>;
-    skipMissing: Scalars["Boolean"];
+    accountNames: Array<Scalars["AccountName"]["input"]>;
+    skipMissing: Scalars["Boolean"]["input"];
 };
 
 export type AccountsMutCreateAccountArgs = {
-    accountName: Scalars["AccountName"];
-    email?: InputMaybe<Scalars["Email"]>;
+    accountName: Scalars["AccountName"]["input"];
+    email?: InputMaybe<Scalars["Email"]["input"]>;
 };
 
 export type AccountsMutCreateWalletAccountsArgs = {
-    walletAddresses: Array<Scalars["DidPkh"]>;
+    walletAddresses: Array<Scalars["DidPkh"]["input"]>;
 };
 
 /**
@@ -443,7 +447,7 @@ export type AccountsMutCreateWalletAccountsArgs = {
 export type AddData = {
     __typename?: "AddData";
     /** ODF extensions. */
-    extra?: Maybe<Scalars["ExtraAttributes"]>;
+    extra?: Maybe<Scalars["ExtraAttributes"]["output"]>;
     /**
      * Describes checkpoint written during this transaction, if any. If an
      * engine operation resulted in no updates to the checkpoint, but
@@ -466,14 +470,14 @@ export type AddData = {
      * should either carry the same watermark or specify a new (greater) one.
      * Thus, watermarks are monotonically non-decreasing.
      */
-    newWatermark?: Maybe<Scalars["DateTime"]>;
+    newWatermark?: Maybe<Scalars["DateTime"]["output"]>;
     /** Hash of the checkpoint file used to restore ingestion state, if any. */
-    prevCheckpoint?: Maybe<Scalars["Multihash"]>;
+    prevCheckpoint?: Maybe<Scalars["Multihash"]["output"]>;
     /**
      * Last offset of the previous data slice, if any. Must be equal to the
      * last non-empty `newData.offsetInterval.end`.
      */
-    prevOffset?: Maybe<Scalars["Int"]>;
+    prevOffset?: Maybe<Scalars["Int"]["output"]>;
 };
 
 /**
@@ -494,12 +498,12 @@ export type AddPushSource = {
     /** Defines how data is read into structured format. */
     read: ReadStep;
     /** Identifies the source within this dataset. */
-    sourceName: Scalars["String"];
+    sourceName: Scalars["String"]["output"];
 };
 
 export type Admin = {
     __typename?: "Admin";
-    selfTest: Scalars["String"];
+    selfTest: Scalars["String"]["output"];
 };
 
 export type AdminMut = {
@@ -509,12 +513,12 @@ export type AdminMut = {
 
 export type AdminSearchMut = {
     __typename?: "AdminSearchMut";
-    resetSearchIndices: Scalars["String"];
+    resetSearchIndices: Scalars["String"]["output"];
 };
 
 export type ApplyRolesMatrixResult = {
     __typename?: "ApplyRolesMatrixResult";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 /**
@@ -525,9 +529,9 @@ export type ApplyRolesMatrixResult = {
 export type AttachmentEmbedded = {
     __typename?: "AttachmentEmbedded";
     /** Content of the attachment. */
-    content: Scalars["String"];
+    content: Scalars["String"]["output"];
     /** Path to an attachment if it was materialized into a file. */
-    path: Scalars["String"];
+    path: Scalars["String"]["output"];
 };
 
 /**
@@ -555,9 +559,9 @@ export type Auth = {
 };
 
 export type AuthRelationsArgs = {
-    accountIds: Array<Scalars["AccountID"]>;
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    accountIds: Array<Scalars["AccountID"]["input"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type AuthMut = {
@@ -569,12 +573,12 @@ export type AuthMut = {
 };
 
 export type AuthMutAccountDetailsArgs = {
-    accessToken: Scalars["String"];
+    accessToken: Scalars["String"]["input"];
 };
 
 export type AuthMutLoginArgs = {
-    deviceCode?: InputMaybe<Scalars["DeviceCode"]>;
-    loginCredentialsJson: Scalars["String"];
+    deviceCode?: InputMaybe<Scalars["DeviceCode"]["input"]>;
+    loginCredentialsJson: Scalars["String"]["input"];
     loginMethod: AccountProvider;
 };
 
@@ -593,7 +597,7 @@ export type AuthRelationConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount: Scalars["Int"];
+    totalCount: Scalars["Int"]["output"];
 };
 
 export type AuthRelationEdge = {
@@ -607,40 +611,40 @@ export type AuthWeb3Mut = {
 };
 
 export type AuthWeb3MutEip4361AuthNonceArgs = {
-    account: Scalars["EvmWalletAddress"];
+    account: Scalars["EvmWalletAddress"]["input"];
 };
 
 export type BlockRef = {
     __typename?: "BlockRef";
-    blockHash: Scalars["Multihash"];
-    name: Scalars["String"];
+    blockHash: Scalars["Multihash"]["output"];
+    name: Scalars["String"]["output"];
 };
 
 export type BuildInfo = {
     __typename?: "BuildInfo";
-    appVersion: Scalars["String"];
-    buildTimestamp?: Maybe<Scalars["String"]>;
-    cargoFeatures?: Maybe<Scalars["String"]>;
-    cargoOptLevel?: Maybe<Scalars["String"]>;
-    cargoTargetTriple?: Maybe<Scalars["String"]>;
-    gitBranch?: Maybe<Scalars["String"]>;
-    gitCommitDate?: Maybe<Scalars["String"]>;
-    gitDescribe?: Maybe<Scalars["String"]>;
-    gitSha?: Maybe<Scalars["String"]>;
-    rustcChannel?: Maybe<Scalars["String"]>;
-    rustcCommitSha?: Maybe<Scalars["String"]>;
-    rustcHostTriple?: Maybe<Scalars["String"]>;
-    rustcSemver?: Maybe<Scalars["String"]>;
+    appVersion: Scalars["String"]["output"];
+    buildTimestamp?: Maybe<Scalars["String"]["output"]>;
+    cargoFeatures?: Maybe<Scalars["String"]["output"]>;
+    cargoOptLevel?: Maybe<Scalars["String"]["output"]>;
+    cargoTargetTriple?: Maybe<Scalars["String"]["output"]>;
+    gitBranch?: Maybe<Scalars["String"]["output"]>;
+    gitCommitDate?: Maybe<Scalars["String"]["output"]>;
+    gitDescribe?: Maybe<Scalars["String"]["output"]>;
+    gitSha?: Maybe<Scalars["String"]["output"]>;
+    rustcChannel?: Maybe<Scalars["String"]["output"]>;
+    rustcCommitSha?: Maybe<Scalars["String"]["output"]>;
+    rustcHostTriple?: Maybe<Scalars["String"]["output"]>;
+    rustcSemver?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type CancelFlowRunResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type CancelFlowRunSuccess = CancelFlowRunResult & {
     __typename?: "CancelFlowRunSuccess";
     flow: Flow;
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 /**
@@ -651,15 +655,15 @@ export type CancelFlowRunSuccess = CancelFlowRunResult & {
 export type Checkpoint = {
     __typename?: "Checkpoint";
     /** Hash sum of the checkpoint file. */
-    physicalHash: Scalars["Multihash"];
+    physicalHash: Scalars["Multihash"]["output"];
     /** Size of checkpoint file in bytes. */
-    size: Scalars["Int"];
+    size: Scalars["Int"]["output"];
 };
 
 export type CliProtocolDesc = {
     __typename?: "CliProtocolDesc";
-    pullCommand: Scalars["String"];
-    pushCommand: Scalars["String"];
+    pullCommand: Scalars["String"]["output"];
+    pushCommand: Scalars["String"]["output"];
 };
 
 export type CollaborationMut = {
@@ -684,7 +688,7 @@ export type Collection = {
 };
 
 export type CollectionAsOfArgs = {
-    blockHash: Scalars["Multihash"];
+    blockHash: Scalars["Multihash"]["input"];
 };
 
 export type CollectionEntry = {
@@ -692,19 +696,19 @@ export type CollectionEntry = {
     /** Resolves the reference to linked dataset */
     asDataset?: Maybe<Dataset>;
     /** Time when this version was created */
-    eventTime: Scalars["DateTime"];
+    eventTime: Scalars["DateTime"]["output"];
     /** Extra data associated with this entry */
-    extraData: Scalars["ExtraData"];
+    extraData: Scalars["ExtraData"]["output"];
     /**
      * File system-like path
      * Rooted, separated by forward slashes, with elements URL-encoded
      * (e.g. `/foo%20bar/baz`)
      */
-    path: Scalars["CollectionPath"];
+    path: Scalars["CollectionPath"]["output"];
     /** DID of the linked dataset */
-    ref: Scalars["DatasetID"];
+    ref: Scalars["DatasetID"]["output"];
     /** Time when this version was created */
-    systemTime: Scalars["DateTime"];
+    systemTime: Scalars["DateTime"]["output"];
 };
 
 export type CollectionEntryConnection = {
@@ -715,7 +719,7 @@ export type CollectionEntryConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount: Scalars["Int"];
+    totalCount: Scalars["Int"]["output"];
 };
 
 export type CollectionEntryEdge = {
@@ -725,11 +729,11 @@ export type CollectionEntryEdge = {
 
 export type CollectionEntryInput = {
     /** Json object containing extra column values */
-    extraData?: InputMaybe<Scalars["ExtraData"]>;
+    extraData?: InputMaybe<Scalars["ExtraData"]["input"]>;
     /** Entry path */
-    path: Scalars["CollectionPath"];
+    path: Scalars["CollectionPath"]["input"];
     /** DID of the linked dataset */
-    ref: Scalars["DatasetID"];
+    ref: Scalars["DatasetID"]["input"];
 };
 
 export type CollectionMut = {
@@ -746,23 +750,23 @@ export type CollectionMut = {
 
 export type CollectionMutAddEntryArgs = {
     entry: CollectionEntryInput;
-    expectedHead?: InputMaybe<Scalars["Multihash"]>;
+    expectedHead?: InputMaybe<Scalars["Multihash"]["input"]>;
 };
 
 export type CollectionMutMoveEntryArgs = {
-    expectedHead?: InputMaybe<Scalars["Multihash"]>;
-    extraData?: InputMaybe<Scalars["ExtraData"]>;
-    pathFrom: Scalars["CollectionPath"];
-    pathTo: Scalars["CollectionPath"];
+    expectedHead?: InputMaybe<Scalars["Multihash"]["input"]>;
+    extraData?: InputMaybe<Scalars["ExtraData"]["input"]>;
+    pathFrom: Scalars["CollectionPath"]["input"];
+    pathTo: Scalars["CollectionPath"]["input"];
 };
 
 export type CollectionMutRemoveEntryArgs = {
-    expectedHead?: InputMaybe<Scalars["Multihash"]>;
-    path: Scalars["CollectionPath"];
+    expectedHead?: InputMaybe<Scalars["Multihash"]["input"]>;
+    path: Scalars["CollectionPath"]["input"];
 };
 
 export type CollectionMutUpdateEntriesArgs = {
-    expectedHead?: InputMaybe<Scalars["Multihash"]>;
+    expectedHead?: InputMaybe<Scalars["Multihash"]["input"]>;
     operations: Array<CollectionUpdateInput>;
 };
 
@@ -780,33 +784,33 @@ export type CollectionProjection = {
 };
 
 export type CollectionProjectionEntriesArgs = {
-    maxDepth?: InputMaybe<Scalars["Int"]>;
-    page?: InputMaybe<Scalars["Int"]>;
-    pathPrefix?: InputMaybe<Scalars["CollectionPath"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    maxDepth?: InputMaybe<Scalars["Int"]["input"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    pathPrefix?: InputMaybe<Scalars["CollectionPath"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type CollectionProjectionEntriesByRefArgs = {
-    refs: Array<Scalars["DatasetID"]>;
+    refs: Array<Scalars["DatasetID"]["input"]>;
 };
 
 export type CollectionProjectionEntryArgs = {
-    path: Scalars["CollectionPath"];
+    path: Scalars["CollectionPath"]["input"];
 };
 
 export type CollectionUpdateErrorCasFailed = CollectionUpdateResult & {
     __typename?: "CollectionUpdateErrorCasFailed";
-    actualHead?: Maybe<Scalars["Multihash"]>;
-    expectedHead: Scalars["Multihash"];
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
+    actualHead?: Maybe<Scalars["Multihash"]["output"]>;
+    expectedHead: Scalars["Multihash"]["output"];
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
 };
 
 export type CollectionUpdateErrorNotFound = CollectionUpdateResult & {
     __typename?: "CollectionUpdateErrorNotFound";
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
-    path: Scalars["CollectionPath"];
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
+    path: Scalars["CollectionPath"]["output"];
 };
 
 export type CollectionUpdateInput = {
@@ -832,61 +836,61 @@ export type CollectionUpdateInputAdd = {
 
 export type CollectionUpdateInputMove = {
     /** Optionally update the extra data */
-    extraData?: InputMaybe<Scalars["ExtraData"]>;
-    pathFrom: Scalars["CollectionPath"];
-    pathTo: Scalars["CollectionPath"];
+    extraData?: InputMaybe<Scalars["ExtraData"]["input"]>;
+    pathFrom: Scalars["CollectionPath"]["input"];
+    pathTo: Scalars["CollectionPath"]["input"];
 };
 
 export type CollectionUpdateInputRemove = {
-    path: Scalars["CollectionPath"];
+    path: Scalars["CollectionPath"]["input"];
 };
 
 export type CollectionUpdateResult = {
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
 };
 
 export type CollectionUpdateSuccess = CollectionUpdateResult & {
     __typename?: "CollectionUpdateSuccess";
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
-    newHead: Scalars["Multihash"];
-    oldHead: Scalars["Multihash"];
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
+    newHead: Scalars["Multihash"]["output"];
+    oldHead: Scalars["Multihash"]["output"];
 };
 
 export type CollectionUpdateUpToDate = CollectionUpdateResult & {
     __typename?: "CollectionUpdateUpToDate";
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
 };
 
 /** Defines a dataset column */
 export type ColumnInput = {
     /** Column name */
-    name: Scalars["String"];
+    name: Scalars["String"]["input"];
     /** Column data type */
     type: DataTypeInput;
 };
 
 export type CommitResult = {
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
 };
 
 export type CommitResultAppendError = CommitResult &
     UpdateReadmeResult & {
         __typename?: "CommitResultAppendError";
-        isSuccess: Scalars["Boolean"];
-        message: Scalars["String"];
+        isSuccess: Scalars["Boolean"]["output"];
+        message: Scalars["String"]["output"];
     };
 
 export type CommitResultSuccess = CommitResult &
     UpdateReadmeResult & {
         __typename?: "CommitResultSuccess";
-        isSuccess: Scalars["Boolean"];
-        message: Scalars["String"];
-        newHead: Scalars["Multihash"];
-        oldHead?: Maybe<Scalars["Multihash"]>;
+        isSuccess: Scalars["Boolean"]["output"];
+        message: Scalars["String"]["output"];
+        newHead: Scalars["Multihash"]["output"];
+        oldHead?: Maybe<Scalars["Multihash"]["output"]>;
     };
 
 export type CompareChainsResult = CompareChainsResultError | CompareChainsResultStatus;
@@ -898,7 +902,7 @@ export type CompareChainsResultError = {
 
 export type CompareChainsResultReason = {
     __typename?: "CompareChainsResultReason";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type CompareChainsResultStatus = {
@@ -925,89 +929,89 @@ export enum CompressionFormat {
 
 export type CreateAccessTokenResultDuplicate = CreateTokenResult & {
     __typename?: "CreateAccessTokenResultDuplicate";
-    message: Scalars["String"];
-    tokenName: Scalars["String"];
+    message: Scalars["String"]["output"];
+    tokenName: Scalars["String"]["output"];
 };
 
 export type CreateAccessTokenResultSuccess = CreateTokenResult & {
     __typename?: "CreateAccessTokenResultSuccess";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
     token: CreatedAccessToken;
 };
 
 export type CreateAccountResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type CreateAccountSuccess = CreateAccountResult & {
     __typename?: "CreateAccountSuccess";
     account: Account;
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type CreateDatasetFromSnapshotResult = {
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
 };
 
 export type CreateDatasetResult = {
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
 };
 
 export type CreateDatasetResultInvalidSnapshot = CreateDatasetFromSnapshotResult & {
     __typename?: "CreateDatasetResultInvalidSnapshot";
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
 };
 
 export type CreateDatasetResultMissingInputs = CreateDatasetFromSnapshotResult & {
     __typename?: "CreateDatasetResultMissingInputs";
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
-    missingInputs: Array<Scalars["String"]>;
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
+    missingInputs: Array<Scalars["String"]["output"]>;
 };
 
 export type CreateDatasetResultNameCollision = CreateDatasetFromSnapshotResult &
     CreateDatasetResult & {
         __typename?: "CreateDatasetResultNameCollision";
-        accountName?: Maybe<Scalars["AccountName"]>;
-        datasetName: Scalars["DatasetName"];
-        isSuccess: Scalars["Boolean"];
-        message: Scalars["String"];
+        accountName?: Maybe<Scalars["AccountName"]["output"]>;
+        datasetName: Scalars["DatasetName"]["output"];
+        isSuccess: Scalars["Boolean"]["output"];
+        message: Scalars["String"]["output"];
     };
 
 export type CreateDatasetResultSuccess = CreateDatasetFromSnapshotResult &
     CreateDatasetResult & {
         __typename?: "CreateDatasetResultSuccess";
         dataset: Dataset;
-        isSuccess: Scalars["Boolean"];
-        message: Scalars["String"];
+        isSuccess: Scalars["Boolean"]["output"];
+        message: Scalars["String"]["output"];
     };
 
 export type CreateTokenResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type CreateWalletAccountsResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type CreateWalletAccountsSuccess = CreateWalletAccountsResult & {
     __typename?: "CreateWalletAccountsSuccess";
     accounts: Array<Account>;
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type CreateWebhookSubscriptionResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type CreateWebhookSubscriptionResultSuccess = CreateWebhookSubscriptionResult & {
     __typename?: "CreateWebhookSubscriptionResultSuccess";
-    message: Scalars["String"];
-    secret: Scalars["String"];
-    subscriptionId: Scalars["String"];
+    message: Scalars["String"]["output"];
+    secret: Scalars["String"]["output"];
+    subscriptionId: Scalars["String"]["output"];
 };
 
 export type CreatedAccessToken = {
@@ -1015,23 +1019,23 @@ export type CreatedAccessToken = {
     /** Access token account owner */
     account: Account;
     /** Composed original token */
-    composed: Scalars["String"];
+    composed: Scalars["String"]["output"];
     /** Unique identifier of the access token */
-    id: Scalars["AccessTokenID"];
+    id: Scalars["AccessTokenID"]["output"];
     /** Name of the access token */
-    name: Scalars["String"];
+    name: Scalars["String"]["output"];
 };
 
 export type Cron5ComponentExpression = {
     __typename?: "Cron5ComponentExpression";
-    cron5ComponentExpression: Scalars["String"];
+    cron5ComponentExpression: Scalars["String"]["output"];
 };
 
 export type DataBatch = {
     __typename?: "DataBatch";
-    content: Scalars["String"];
+    content: Scalars["String"]["output"];
     format: DataBatchFormat;
-    numRecords: Scalars["Int"];
+    numRecords: Scalars["Int"]["output"];
 };
 
 export enum DataBatchFormat {
@@ -1059,11 +1063,11 @@ export type DataQueries = {
 
 export type DataQueriesQueryArgs = {
     dataFormat?: InputMaybe<DataBatchFormat>;
-    limit?: InputMaybe<Scalars["Int"]>;
-    query: Scalars["String"];
+    limit?: InputMaybe<Scalars["Int"]["input"]>;
+    query: Scalars["String"]["input"];
     queryDialect: QueryDialect;
     schemaFormat?: InputMaybe<DataSchemaFormat>;
-    skip?: InputMaybe<Scalars["Int"]>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type DataQueryResult = DataQueryResultError | DataQueryResultSuccess;
@@ -1071,7 +1075,7 @@ export type DataQueryResult = DataQueryResultError | DataQueryResultSuccess;
 export type DataQueryResultError = {
     __typename?: "DataQueryResultError";
     errorKind: DataQueryResultErrorKind;
-    errorMessage: Scalars["String"];
+    errorMessage: Scalars["String"]["output"];
 };
 
 export enum DataQueryResultErrorKind {
@@ -1082,13 +1086,13 @@ export type DataQueryResultSuccess = {
     __typename?: "DataQueryResultSuccess";
     data: DataBatch;
     datasets: Array<DatasetState>;
-    limit: Scalars["Int"];
+    limit: Scalars["Int"]["output"];
     schema: DataSchema;
 };
 
 export type DataSchema = {
     __typename?: "DataSchema";
-    content: Scalars["String"];
+    content: Scalars["String"]["output"];
     format: DataSchemaFormat;
 };
 
@@ -1108,24 +1112,24 @@ export enum DataSchemaFormat {
 export type DataSlice = {
     __typename?: "DataSlice";
     /** Logical hash sum of the data in this slice. */
-    logicalHash: Scalars["Multihash"];
+    logicalHash: Scalars["Multihash"]["output"];
     /** Data slice produced by the transaction. */
     offsetInterval: OffsetInterval;
     /** Hash sum of the data part file. */
-    physicalHash: Scalars["Multihash"];
+    physicalHash: Scalars["Multihash"]["output"];
     /** Size of data file in bytes. */
-    size: Scalars["Int"];
+    size: Scalars["Int"]["output"];
 };
 
 export type DataTypeInput = {
     /** Defines type using DDL syntax */
-    ddl: Scalars["String"];
+    ddl: Scalars["String"]["input"];
 };
 
 export type Dataset = {
     __typename?: "Dataset";
     /** Returns dataset alias (user + name) */
-    alias: Scalars["DatasetAlias"];
+    alias: Scalars["DatasetAlias"]["output"];
     /** Downcast a dataset to a collection interface */
     asCollection?: Maybe<Collection>;
     /** Downcast a dataset to a versioned file interface */
@@ -1133,7 +1137,7 @@ export type Dataset = {
     /** Access to the dataset collaboration data */
     collaboration: DatasetCollaboration;
     /** Creation time of the first metadata block in the chain */
-    createdAt: Scalars["DateTime"];
+    createdAt: Scalars["DateTime"]["output"];
     /** Access to the data of the dataset */
     data: DatasetData;
     /** Various endpoints for interacting with data */
@@ -1143,13 +1147,13 @@ export type Dataset = {
     /** Access to the flow configurations of this dataset */
     flows: DatasetFlows;
     /** Quick access to `head` block hash */
-    head: Scalars["Multihash"];
+    head: Scalars["Multihash"]["output"];
     /** Unique identifier of the dataset */
-    id: Scalars["DatasetID"];
+    id: Scalars["DatasetID"]["output"];
     /** Returns the kind of dataset (Root or Derivative) */
     kind: DatasetKind;
     /** Creation time of the most recent metadata block in the chain */
-    lastUpdatedAt: Scalars["DateTime"];
+    lastUpdatedAt: Scalars["DateTime"]["output"];
     /** Access to the metadata of the dataset */
     metadata: DatasetMetadata;
     /**
@@ -1157,7 +1161,7 @@ export type Dataset = {
      * Name can change over the dataset's lifetime. For unique identifier use
      * `id()`.
      */
-    name: Scalars["DatasetName"];
+    name: Scalars["DatasetName"]["output"];
     /** Returns the user or organization that owns this dataset */
     owner: Account;
     /** Permissions of the current user */
@@ -1191,8 +1195,8 @@ export type DatasetCollaboration = {
 };
 
 export type DatasetCollaborationAccountRolesArgs = {
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type DatasetCollaborationMut = {
@@ -1204,18 +1208,18 @@ export type DatasetCollaborationMut = {
 };
 
 export type DatasetCollaborationMutSetRoleArgs = {
-    accountId: Scalars["AccountID"];
+    accountId: Scalars["AccountID"]["input"];
     role: DatasetAccessRole;
 };
 
 export type DatasetCollaborationMutUnsetRolesArgs = {
-    accountIds: Array<Scalars["AccountID"]>;
+    accountIds: Array<Scalars["AccountID"]["input"]>;
 };
 
 export type DatasetCollaborationPermissions = {
     __typename?: "DatasetCollaborationPermissions";
-    canUpdate: Scalars["Boolean"];
-    canView: Scalars["Boolean"];
+    canUpdate: Scalars["Boolean"]["output"];
+    canView: Scalars["Boolean"]["output"];
 };
 
 export type DatasetConnection = {
@@ -1226,22 +1230,22 @@ export type DatasetConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount: Scalars["Int"];
+    totalCount: Scalars["Int"]["output"];
 };
 
 export type DatasetData = {
     __typename?: "DatasetData";
     /** An estimated size of linked objects */
-    estimatedLinkedObjectsSizeBytes: Scalars["Int"];
+    estimatedLinkedObjectsSizeBytes: Scalars["Int"]["output"];
     /**
      * An estimated size of data on disk not accounting for replication or
      * caching
      */
-    estimatedSizeBytes: Scalars["Int"];
+    estimatedSizeBytes: Scalars["Int"]["output"];
     /** Total number of linked objects in this dataset */
-    numLinkedObjects: Scalars["Int"];
+    numLinkedObjects: Scalars["Int"]["output"];
     /** Total number of records in this dataset */
-    numRecordsTotal: Scalars["Int"];
+    numRecordsTotal: Scalars["Int"]["output"];
     /**
      * Returns the specified number of the latest records in the dataset
      * This is equivalent to SQL query like:
@@ -1260,14 +1264,14 @@ export type DatasetData = {
      */
     tail: DataQueryResult;
     /** An estimated size of all objects in dataset */
-    totalSizeBytes: Scalars["Int"];
+    totalSizeBytes: Scalars["Int"]["output"];
 };
 
 export type DatasetDataTailArgs = {
     dataFormat?: InputMaybe<DataBatchFormat>;
-    limit?: InputMaybe<Scalars["Int"]>;
+    limit?: InputMaybe<Scalars["Int"]["input"]>;
     schemaFormat?: InputMaybe<DataSchemaFormat>;
-    skip?: InputMaybe<Scalars["Int"]>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type DatasetEdge = {
@@ -1290,17 +1294,17 @@ export type DatasetEndpoints = {
 
 export type DatasetEnvVars = {
     __typename?: "DatasetEnvVars";
-    exposedValue: Scalars["String"];
+    exposedValue: Scalars["String"]["output"];
     listEnvVariables: ViewDatasetEnvVarConnection;
 };
 
 export type DatasetEnvVarsExposedValueArgs = {
-    datasetEnvVarId: Scalars["DatasetEnvVarID"];
+    datasetEnvVarId: Scalars["DatasetEnvVarID"]["input"];
 };
 
 export type DatasetEnvVarsListEnvVariablesArgs = {
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type DatasetEnvVarsMut = {
@@ -1310,19 +1314,19 @@ export type DatasetEnvVarsMut = {
 };
 
 export type DatasetEnvVarsMutDeleteEnvVariableArgs = {
-    id: Scalars["DatasetEnvVarID"];
+    id: Scalars["DatasetEnvVarID"]["input"];
 };
 
 export type DatasetEnvVarsMutUpsertEnvVariableArgs = {
-    isSecret: Scalars["Boolean"];
-    key: Scalars["String"];
-    value: Scalars["String"];
+    isSecret: Scalars["Boolean"]["input"];
+    key: Scalars["String"]["input"];
+    value: Scalars["String"]["input"];
 };
 
 export type DatasetEnvVarsPermissions = {
     __typename?: "DatasetEnvVarsPermissions";
-    canUpdate: Scalars["Boolean"];
-    canView: Scalars["Boolean"];
+    canUpdate: Scalars["Boolean"]["output"];
+    canView: Scalars["Boolean"]["output"];
 };
 
 export type DatasetFlowConfigs = {
@@ -1372,7 +1376,7 @@ export type DatasetFlowProcessConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount: Scalars["Int"];
+    totalCount: Scalars["Int"]["output"];
 };
 
 export type DatasetFlowProcessEdge = {
@@ -1394,13 +1398,13 @@ export type DatasetFlowRuns = {
 };
 
 export type DatasetFlowRunsGetFlowArgs = {
-    flowId: Scalars["FlowID"];
+    flowId: Scalars["FlowID"]["input"];
 };
 
 export type DatasetFlowRunsListFlowsArgs = {
     filters?: InputMaybe<DatasetFlowFilters>;
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type DatasetFlowRunsMut = {
@@ -1414,7 +1418,7 @@ export type DatasetFlowRunsMut = {
 };
 
 export type DatasetFlowRunsMutCancelFlowRunArgs = {
-    flowId: Scalars["FlowID"];
+    flowId: Scalars["FlowID"]["input"];
 };
 
 export type DatasetFlowRunsMutTriggerCompactionFlowArgs = {
@@ -1441,10 +1445,10 @@ export type DatasetFlowTriggersByTypeArgs = {
 
 export type DatasetFlowTriggersMut = {
     __typename?: "DatasetFlowTriggersMut";
-    pauseFlow: Scalars["Boolean"];
-    pauseFlows: Scalars["Boolean"];
-    resumeFlow: Scalars["Boolean"];
-    resumeFlows: Scalars["Boolean"];
+    pauseFlow: Scalars["Boolean"]["output"];
+    pauseFlows: Scalars["Boolean"]["output"];
+    resumeFlow: Scalars["Boolean"]["output"];
+    resumeFlows: Scalars["Boolean"]["output"];
     setTrigger: SetFlowTriggerResult;
 };
 
@@ -1491,15 +1495,15 @@ export type DatasetFlowsMut = {
 
 export type DatasetFlowsPermissions = {
     __typename?: "DatasetFlowsPermissions";
-    canRun: Scalars["Boolean"];
-    canView: Scalars["Boolean"];
+    canRun: Scalars["Boolean"]["output"];
+    canView: Scalars["Boolean"]["output"];
 };
 
 export type DatasetGeneralPermissions = {
     __typename?: "DatasetGeneralPermissions";
-    canDelete: Scalars["Boolean"];
-    canRename: Scalars["Boolean"];
-    canSetVisibility: Scalars["Boolean"];
+    canDelete: Scalars["Boolean"]["output"];
+    canRename: Scalars["Boolean"]["output"];
+    canSetVisibility: Scalars["Boolean"]["output"];
 };
 
 /**
@@ -1535,7 +1539,7 @@ export type DatasetMetadata = {
      * Current readme file as discovered from attachments associated with the
      * dataset
      */
-    currentReadme?: Maybe<Scalars["String"]>;
+    currentReadme?: Maybe<Scalars["String"]["output"]>;
     /** Latest data schema */
     currentSchema?: Maybe<DataSchema>;
     /** Current transformation used by the derivative dataset */
@@ -1545,7 +1549,7 @@ export type DatasetMetadata = {
     /** Current vocabulary associated with the dataset */
     currentVocab?: Maybe<SetVocab>;
     /** Last recorded watermark */
-    currentWatermark?: Maybe<Scalars["DateTime"]>;
+    currentWatermark?: Maybe<Scalars["DateTime"]["output"]>;
     metadataProjection: Array<MetadataBlockExtended>;
     /** Sync statuses of push remotes */
     pushSyncStatuses: DatasetPushStatuses;
@@ -1557,7 +1561,7 @@ export type DatasetMetadataCurrentSchemaArgs = {
 
 export type DatasetMetadataMetadataProjectionArgs = {
     eventTypes: Array<MetadataEventType>;
-    head?: InputMaybe<Scalars["Multihash"]>;
+    head?: InputMaybe<Scalars["Multihash"]["input"]>;
 };
 
 export type DatasetMetadataMut = {
@@ -1569,12 +1573,12 @@ export type DatasetMetadataMut = {
 };
 
 export type DatasetMetadataMutUpdateReadmeArgs = {
-    content?: InputMaybe<Scalars["String"]>;
+    content?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type DatasetMetadataPermissions = {
     __typename?: "DatasetMetadataPermissions";
-    canCommit: Scalars["Boolean"];
+    canCommit: Scalars["Boolean"]["output"];
 };
 
 export type DatasetMut = {
@@ -1606,7 +1610,7 @@ export type DatasetMut = {
 };
 
 export type DatasetMutRenameArgs = {
-    newName: Scalars["DatasetName"];
+    newName: Scalars["DatasetName"]["input"];
 };
 
 export type DatasetMutSetVisibilityArgs = {
@@ -1614,7 +1618,7 @@ export type DatasetMutSetVisibilityArgs = {
 };
 
 export type DatasetMutSetWatermarkArgs = {
-    watermark: Scalars["DateTime"];
+    watermark: Scalars["DateTime"]["input"];
 };
 
 export type DatasetPermissions = {
@@ -1629,7 +1633,7 @@ export type DatasetPermissions = {
 
 export type DatasetPushStatus = {
     __typename?: "DatasetPushStatus";
-    remote: Scalars["DatasetRefRemote"];
+    remote: Scalars["DatasetRefRemote"]["output"];
     result: CompareChainsResult;
 };
 
@@ -1647,20 +1651,20 @@ export type DatasetRoleSetOperation = {
 };
 
 export type DatasetRoleUnsetOperation = {
-    dummy: Scalars["Boolean"];
+    dummy: Scalars["Boolean"]["input"];
 };
 
 export type DatasetState = {
     __typename?: "DatasetState";
     /** Alias to be used in the query */
-    alias: Scalars["String"];
+    alias: Scalars["String"]["output"];
     /**
      * Last block hash of the input datasets that was or should be considered
      * during the query planning
      */
-    blockHash?: Maybe<Scalars["Multihash"]>;
+    blockHash?: Maybe<Scalars["Multihash"]["output"]>;
     /** Globally unique identity of the dataset */
-    id: Scalars["DatasetID"];
+    id: Scalars["DatasetID"]["output"];
 };
 
 export enum DatasetVisibility {
@@ -1683,7 +1687,7 @@ export type DatasetWebhooks = {
 };
 
 export type DatasetWebhooksSubscriptionArgs = {
-    id: Scalars["WebhookSubscriptionID"];
+    id: Scalars["WebhookSubscriptionID"]["input"];
 };
 
 export type DatasetWebhooksMut = {
@@ -1698,13 +1702,13 @@ export type DatasetWebhooksMutCreateSubscriptionArgs = {
 };
 
 export type DatasetWebhooksMutSubscriptionArgs = {
-    id: Scalars["WebhookSubscriptionID"];
+    id: Scalars["WebhookSubscriptionID"]["input"];
 };
 
 export type DatasetWebhooksPermissions = {
     __typename?: "DatasetWebhooksPermissions";
-    canUpdate: Scalars["Boolean"];
-    canView: Scalars["Boolean"];
+    canUpdate: Scalars["Boolean"]["output"];
+    canView: Scalars["Boolean"]["output"];
 };
 
 export type Datasets = {
@@ -1734,38 +1738,38 @@ export type Datasets = {
 };
 
 export type DatasetsByAccountIdArgs = {
-    accountId: Scalars["AccountID"];
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    accountId: Scalars["AccountID"]["input"];
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type DatasetsByAccountNameArgs = {
-    accountName: Scalars["AccountName"];
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    accountName: Scalars["AccountName"]["input"];
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type DatasetsByIdArgs = {
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
 };
 
 export type DatasetsByIdsArgs = {
-    datasetIds: Array<Scalars["DatasetID"]>;
-    skipMissing: Scalars["Boolean"];
+    datasetIds: Array<Scalars["DatasetID"]["input"]>;
+    skipMissing: Scalars["Boolean"]["input"];
 };
 
 export type DatasetsByOwnerAndNameArgs = {
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
+    accountName: Scalars["AccountName"]["input"];
+    datasetName: Scalars["DatasetName"]["input"];
 };
 
 export type DatasetsByRefArgs = {
-    datasetRef: Scalars["DatasetRef"];
+    datasetRef: Scalars["DatasetRef"]["input"];
 };
 
 export type DatasetsByRefsArgs = {
-    datasetRefs: Array<Scalars["DatasetRef"]>;
-    skipMissing: Scalars["Boolean"];
+    datasetRefs: Array<Scalars["DatasetRef"]["input"]>;
+    skipMissing: Scalars["Boolean"]["input"];
 };
 
 export type DatasetsMut = {
@@ -1798,98 +1802,98 @@ export type DatasetsMut = {
 };
 
 export type DatasetsMutByIdArgs = {
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
 };
 
 export type DatasetsMutByIdsArgs = {
-    datasetIds: Array<Scalars["DatasetID"]>;
-    skipMissing: Scalars["Boolean"];
+    datasetIds: Array<Scalars["DatasetID"]["input"]>;
+    skipMissing: Scalars["Boolean"]["input"];
 };
 
 export type DatasetsMutCreateCollectionArgs = {
-    datasetAlias: Scalars["DatasetAlias"];
+    datasetAlias: Scalars["DatasetAlias"]["input"];
     datasetVisibility: DatasetVisibility;
     extraColumns?: InputMaybe<Array<ColumnInput>>;
-    extraEvents?: InputMaybe<Array<Scalars["String"]>>;
+    extraEvents?: InputMaybe<Array<Scalars["String"]["input"]>>;
     extraEventsFormat?: InputMaybe<MetadataManifestFormat>;
 };
 
 export type DatasetsMutCreateEmptyArgs = {
-    datasetAlias: Scalars["DatasetAlias"];
+    datasetAlias: Scalars["DatasetAlias"]["input"];
     datasetKind: DatasetKind;
     datasetVisibility: DatasetVisibility;
 };
 
 export type DatasetsMutCreateFromSnapshotArgs = {
     datasetVisibility: DatasetVisibility;
-    snapshot: Scalars["String"];
+    snapshot: Scalars["String"]["input"];
     snapshotFormat: MetadataManifestFormat;
 };
 
 export type DatasetsMutCreateVersionedFileArgs = {
-    datasetAlias: Scalars["DatasetAlias"];
+    datasetAlias: Scalars["DatasetAlias"]["input"];
     datasetVisibility: DatasetVisibility;
     extraColumns?: InputMaybe<Array<ColumnInput>>;
-    extraEvents?: InputMaybe<Array<Scalars["String"]>>;
+    extraEvents?: InputMaybe<Array<Scalars["String"]["input"]>>;
     extraEventsFormat?: InputMaybe<MetadataManifestFormat>;
 };
 
 export type DeleteAccountResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type DeleteAccountSuccess = DeleteAccountResult & {
     __typename?: "DeleteAccountSuccess";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type DeleteDatasetEnvVarResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type DeleteDatasetEnvVarResultNotFound = DeleteDatasetEnvVarResult & {
     __typename?: "DeleteDatasetEnvVarResultNotFound";
-    envVarId: Scalars["DatasetEnvVarID"];
-    message: Scalars["String"];
+    envVarId: Scalars["DatasetEnvVarID"]["output"];
+    message: Scalars["String"]["output"];
 };
 
 export type DeleteDatasetEnvVarResultSuccess = DeleteDatasetEnvVarResult & {
     __typename?: "DeleteDatasetEnvVarResultSuccess";
-    envVarId: Scalars["DatasetEnvVarID"];
-    message: Scalars["String"];
+    envVarId: Scalars["DatasetEnvVarID"]["output"];
+    message: Scalars["String"]["output"];
 };
 
 export type DeleteResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type DeleteResultDanglingReference = DeleteResult & {
     __typename?: "DeleteResultDanglingReference";
-    danglingChildRefs: Array<Scalars["DatasetRef"]>;
-    message: Scalars["String"];
-    notDeletedDataset: Scalars["DatasetAlias"];
+    danglingChildRefs: Array<Scalars["DatasetRef"]["output"]>;
+    message: Scalars["String"]["output"];
+    notDeletedDataset: Scalars["DatasetAlias"]["output"];
 };
 
 export type DeleteResultSuccess = DeleteResult & {
     __typename?: "DeleteResultSuccess";
-    deletedDataset: Scalars["DatasetAlias"];
-    message: Scalars["String"];
+    deletedDataset: Scalars["DatasetAlias"]["output"];
+    message: Scalars["String"]["output"];
 };
 
 export type DependencyDatasetResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type DependencyDatasetResultAccessible = DependencyDatasetResult & {
     __typename?: "DependencyDatasetResultAccessible";
     dataset: Dataset;
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type DependencyDatasetResultNotAccessible = DependencyDatasetResult & {
     __typename?: "DependencyDatasetResultNotAccessible";
-    id: Scalars["DatasetID"];
-    message: Scalars["String"];
+    id: Scalars["DatasetID"]["output"];
+    message: Scalars["String"]["output"];
 };
 
 /**
@@ -1899,7 +1903,7 @@ export type DependencyDatasetResultNotAccessible = DependencyDatasetResult & {
  */
 export type DisablePollingSource = {
     __typename?: "DisablePollingSource";
-    dummy?: Maybe<Scalars["String"]>;
+    dummy?: Maybe<Scalars["String"]["output"]>;
 };
 
 /**
@@ -1910,17 +1914,17 @@ export type DisablePollingSource = {
 export type DisablePushSource = {
     __typename?: "DisablePushSource";
     /** Identifies the source to be disabled. */
-    sourceName: Scalars["String"];
+    sourceName: Scalars["String"]["output"];
 };
 
 export type Eip4361AuthNonceResponse = {
     __typename?: "Eip4361AuthNonceResponse";
-    value: Scalars["Eip4361AuthNonce"];
+    value: Scalars["Eip4361AuthNonce"]["output"];
 };
 
 export type EncodedBlock = {
     __typename?: "EncodedBlock";
-    content: Scalars["String"];
+    content: Scalars["String"]["output"];
     encoding: MetadataManifestFormat;
 };
 
@@ -1935,12 +1939,12 @@ export type EngineDesc = {
      * OCI image repository and a tag of the latest engine image, e.g.
      * "ghcr.io/kamu-data/engine-datafusion:0.1.2"
      */
-    latestImage: Scalars["String"];
+    latestImage: Scalars["String"]["output"];
     /**
      * A short name of the engine, e.g. "Spark", "Flink".
      * Intended for use in UI for quick engine identification and selection.
      */
-    name: Scalars["String"];
+    name: Scalars["String"]["output"];
 };
 
 /**
@@ -1951,9 +1955,9 @@ export type EngineDesc = {
 export type EnvVar = {
     __typename?: "EnvVar";
     /** Name of the variable. */
-    name: Scalars["String"];
+    name: Scalars["String"]["output"];
     /** Value of the variable. */
-    value?: Maybe<Scalars["String"]>;
+    value?: Maybe<Scalars["String"]["output"]>;
 };
 
 /**
@@ -1970,7 +1974,7 @@ export type EventTimeSource = EventTimeSourceFromMetadata | EventTimeSourceFromP
  */
 export type EventTimeSourceFromMetadata = {
     __typename?: "EventTimeSourceFromMetadata";
-    dummy?: Maybe<Scalars["String"]>;
+    dummy?: Maybe<Scalars["String"]["output"]>;
 };
 
 /**
@@ -1981,9 +1985,9 @@ export type EventTimeSourceFromMetadata = {
 export type EventTimeSourceFromPath = {
     __typename?: "EventTimeSourceFromPath";
     /** Regular expression where first group contains the timestamp string. */
-    pattern: Scalars["String"];
+    pattern: Scalars["String"]["output"];
     /** Format of the expected timestamp in java.text.SimpleDateFormat form. */
-    timestampFormat?: Maybe<Scalars["String"]>;
+    timestampFormat?: Maybe<Scalars["String"]["output"]>;
 };
 
 /**
@@ -1993,7 +1997,7 @@ export type EventTimeSourceFromPath = {
  */
 export type EventTimeSourceFromSystemTime = {
     __typename?: "EventTimeSourceFromSystemTime";
-    dummy?: Maybe<Scalars["String"]>;
+    dummy?: Maybe<Scalars["String"]["output"]>;
 };
 
 /**
@@ -2018,17 +2022,17 @@ export type ExecuteTransform = {
      * should either carry the same watermark or specify a new (greater) one.
      * Thus, watermarks are monotonically non-decreasing.
      */
-    newWatermark?: Maybe<Scalars["DateTime"]>;
+    newWatermark?: Maybe<Scalars["DateTime"]["output"]>;
     /**
      * Hash of the checkpoint file used to restore transformation state, if
      * any.
      */
-    prevCheckpoint?: Maybe<Scalars["Multihash"]>;
+    prevCheckpoint?: Maybe<Scalars["Multihash"]["output"]>;
     /**
      * Last offset of the previous data slice, if any. Must be equal to the
      * last non-empty `newData.offsetInterval.end`.
      */
-    prevOffset?: Maybe<Scalars["Int"]>;
+    prevOffset?: Maybe<Scalars["Int"]["output"]>;
     /**
      * Defines inputs used in this transaction. Slices corresponding to every
      * input dataset must be present.
@@ -2044,21 +2048,21 @@ export type ExecuteTransform = {
 export type ExecuteTransformInput = {
     __typename?: "ExecuteTransformInput";
     /** Input dataset identifier. */
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["output"];
     /**
      * Hash of the last block that will be incorporated into the derivative
      * transformation. When present, defines a half-open `(prevBlockHash,
      * newBlockHash]` interval of blocks that will be considered in this
      * transaction.
      */
-    newBlockHash?: Maybe<Scalars["Multihash"]>;
+    newBlockHash?: Maybe<Scalars["Multihash"]["output"]>;
     /**
      * Offset of the last data record that will be incorporated into the
      * derivative transformation, if any. When present, defines a half-open
      * `(prevOffset, newOffset]` interval of data records that will be
      * considered in this transaction.
      */
-    newOffset?: Maybe<Scalars["Int"]>;
+    newOffset?: Maybe<Scalars["Int"]["output"]>;
     /**
      * Last block of the input dataset that was previously incorporated into
      * the derivative transformation, if any. Must be equal to the last
@@ -2066,7 +2070,7 @@ export type ExecuteTransformInput = {
      * half-open `(prevBlockHash, newBlockHash]` interval of blocks that will
      * be considered in this transaction.
      */
-    prevBlockHash?: Maybe<Scalars["Multihash"]>;
+    prevBlockHash?: Maybe<Scalars["Multihash"]["output"]>;
     /**
      * Last data record offset in the input dataset that was previously
      * incorporated into the derivative transformation, if any. Must be equal
@@ -2074,7 +2078,7 @@ export type ExecuteTransformInput = {
      * half-open `(prevOffset, newOffset]` interval of data records that will
      * be considered in this transaction.
      */
-    prevOffset?: Maybe<Scalars["Int"]>;
+    prevOffset?: Maybe<Scalars["Int"]["output"]>;
 };
 
 /**
@@ -2095,16 +2099,16 @@ export type FetchStepContainer = {
      * Arguments to the entrypoint. The OCI image's CMD is used if this is not
      * provided.
      */
-    args?: Maybe<Array<Scalars["String"]>>;
+    args?: Maybe<Array<Scalars["String"]["output"]>>;
     /**
      * Specifies the entrypoint. Not executed within a shell. The default OCI
      * image's ENTRYPOINT is used if this is not provided.
      */
-    command?: Maybe<Array<Scalars["String"]>>;
+    command?: Maybe<Array<Scalars["String"]["output"]>>;
     /** Environment variables to propagate into or set in the container. */
     env?: Maybe<Array<EnvVar>>;
     /** Image name and and an optional tag. */
-    image: Scalars["String"];
+    image: Scalars["String"]["output"];
 };
 
 /**
@@ -2119,7 +2123,7 @@ export type FetchStepEthereumLogs = {
      * for RPC endpoint lookup as well as asserting that provided `nodeUrl`
      * corresponds to the expected chain.
      */
-    chainId?: Maybe<Scalars["Int"]>;
+    chainId?: Maybe<Scalars["Int"]["output"]>;
     /**
      * An SQL WHERE clause that can be used to pre-filter the logs before
      * fetching them from the ETH node.
@@ -2129,14 +2133,14 @@ export type FetchStepEthereumLogs = {
      * X'5fbdb2315678afecb367f032d93f642f64180aa3' and topic1 =
      * X'000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266'"
      */
-    filter?: Maybe<Scalars["String"]>;
+    filter?: Maybe<Scalars["String"]["output"]>;
     /** Url of the node. */
-    nodeUrl?: Maybe<Scalars["String"]>;
+    nodeUrl?: Maybe<Scalars["String"]["output"]>;
     /**
      * Solidity log event signature to use for decoding. Using this field adds
      * `event` to the output containing decoded log as JSON.
      */
-    signature?: Maybe<Scalars["String"]>;
+    signature?: Maybe<Scalars["String"]["output"]>;
 };
 
 /**
@@ -2157,7 +2161,7 @@ export type FetchStepFilesGlob = {
      */
     order?: Maybe<SourceOrdering>;
     /** Path with a glob pattern. */
-    path: Scalars["String"];
+    path: Scalars["String"]["output"];
 };
 
 /**
@@ -2168,15 +2172,15 @@ export type FetchStepFilesGlob = {
 export type FetchStepMqtt = {
     __typename?: "FetchStepMqtt";
     /** Hostname of the MQTT broker. */
-    host: Scalars["String"];
+    host: Scalars["String"]["output"];
     /** Password to use for auth with the broker (can be templated). */
-    password?: Maybe<Scalars["String"]>;
+    password?: Maybe<Scalars["String"]["output"]>;
     /** Port of the MQTT broker. */
-    port: Scalars["Int"];
+    port: Scalars["Int"]["output"];
     /** List of topic subscription parameters. */
     topics: Array<MqttTopicSubscription>;
     /** Username to use for auth with the broker. */
-    username?: Maybe<Scalars["String"]>;
+    username?: Maybe<Scalars["String"]["output"]>;
 };
 
 /**
@@ -2193,12 +2197,12 @@ export type FetchStepUrl = {
     /** Headers to pass during the request (e.g. HTTP Authorization) */
     headers?: Maybe<Array<RequestHeader>>;
     /** URL of the data source */
-    url: Scalars["String"];
+    url: Scalars["String"]["output"];
 };
 
 export type FlightSqlDesc = {
     __typename?: "FlightSqlDesc";
-    url: Scalars["String"];
+    url: Scalars["String"]["output"];
 };
 
 export type Flow = {
@@ -2206,11 +2210,11 @@ export type Flow = {
     /** Flow config snapshot */
     configSnapshot?: Maybe<FlowConfigRule>;
     /** Associated dataset ID, if any */
-    datasetId?: Maybe<Scalars["DatasetID"]>;
+    datasetId?: Maybe<Scalars["DatasetID"]["output"]>;
     /** Description of key flow parameters */
     description: FlowDescription;
     /** Unique identifier of the flow */
-    flowId: Scalars["FlowID"];
+    flowId: Scalars["FlowID"]["output"];
     /** History of flow events */
     history: Array<FlowEvent>;
     /** A user, who initiated the flow run. None for system-initiated flows */
@@ -2228,14 +2232,14 @@ export type Flow = {
     /** Status of the flow */
     status: FlowStatus;
     /** IDs of associated tasks */
-    taskIds: Array<Scalars["TaskID"]>;
+    taskIds: Array<Scalars["TaskID"]["output"]>;
     /** Timing records associated with the flow lifecycle */
     timing: FlowTimingRecords;
 };
 
 export type FlowAbortedResult = {
     __typename?: "FlowAbortedResult";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type FlowActivationCause =
@@ -2246,7 +2250,7 @@ export type FlowActivationCause =
 
 export type FlowActivationCauseAutoPolling = {
     __typename?: "FlowActivationCauseAutoPolling";
-    dummy: Scalars["Boolean"];
+    dummy: Scalars["Boolean"]["output"];
 };
 
 export type FlowActivationCauseDatasetUpdate = {
@@ -2263,28 +2267,28 @@ export type FlowActivationCauseDatasetUpdateSource =
 
 export type FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange = {
     __typename?: "FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange";
-    dummy: Scalars["Boolean"];
+    dummy: Scalars["Boolean"]["output"];
 };
 
 export type FlowActivationCauseDatasetUpdateSourceHttpIngest = {
     __typename?: "FlowActivationCauseDatasetUpdateSourceHttpIngest";
-    sourceName?: Maybe<Scalars["String"]>;
+    sourceName?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type FlowActivationCauseDatasetUpdateSourceSmartProtocolPush = {
     __typename?: "FlowActivationCauseDatasetUpdateSourceSmartProtocolPush";
-    accountName?: Maybe<Scalars["AccountName"]>;
-    isForce: Scalars["Boolean"];
+    accountName?: Maybe<Scalars["AccountName"]["output"]>;
+    isForce: Scalars["Boolean"]["output"];
 };
 
 export type FlowActivationCauseDatasetUpdateSourceUpstreamFlow = {
     __typename?: "FlowActivationCauseDatasetUpdateSourceUpstreamFlow";
-    flowId: Scalars["FlowID"];
+    flowId: Scalars["FlowID"]["output"];
 };
 
 export type FlowActivationCauseIterationFinished = {
     __typename?: "FlowActivationCauseIterationFinished";
-    dummy: Scalars["Boolean"];
+    dummy: Scalars["Boolean"]["output"];
 };
 
 export type FlowActivationCauseManual = {
@@ -2293,8 +2297,8 @@ export type FlowActivationCauseManual = {
 };
 
 export type FlowConfigCompactionInput = {
-    maxSliceRecords: Scalars["Int"];
-    maxSliceSize: Scalars["Int"];
+    maxSliceRecords: Scalars["Int"]["input"];
+    maxSliceSize: Scalars["Int"]["input"];
 };
 
 export type FlowConfigIngestInput = {
@@ -2302,9 +2306,9 @@ export type FlowConfigIngestInput = {
      * Flag indicates to trigger next flow iteration right if `has_more` is
      * true
      */
-    fetchNextIteration: Scalars["Boolean"];
+    fetchNextIteration: Scalars["Boolean"]["input"];
     /** Flag indicates to ignore cache during ingest step for API calls */
-    fetchUncacheable: Scalars["Boolean"];
+    fetchUncacheable: Scalars["Boolean"]["input"];
 };
 
 export type FlowConfigInputResetPropagationMode =
@@ -2312,16 +2316,16 @@ export type FlowConfigInputResetPropagationMode =
     | { custom?: never; toSeed: FlowConfigInputResetPropagationModeToSeed };
 
 export type FlowConfigInputResetPropagationModeCustom = {
-    newHeadHash: Scalars["Multihash"];
+    newHeadHash: Scalars["Multihash"]["input"];
 };
 
 export type FlowConfigInputResetPropagationModeToSeed = {
-    dummy?: InputMaybe<Scalars["String"]>;
+    dummy?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type FlowConfigResetInput = {
     mode: FlowConfigInputResetPropagationMode;
-    oldHeadHash?: InputMaybe<Scalars["Multihash"]>;
+    oldHeadHash?: InputMaybe<Scalars["Multihash"]["input"]>;
 };
 
 export type FlowConfigResetPropagationMode =
@@ -2330,39 +2334,39 @@ export type FlowConfigResetPropagationMode =
 
 export type FlowConfigResetPropagationModeCustom = {
     __typename?: "FlowConfigResetPropagationModeCustom";
-    newHeadHash: Scalars["Multihash"];
+    newHeadHash: Scalars["Multihash"]["output"];
 };
 
 export type FlowConfigResetPropagationModeToSeed = {
     __typename?: "FlowConfigResetPropagationModeToSeed";
-    dummy?: Maybe<Scalars["String"]>;
+    dummy?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type FlowConfigRule = FlowConfigRuleCompaction | FlowConfigRuleIngest | FlowConfigRuleReset;
 
 export type FlowConfigRuleCompaction = {
     __typename?: "FlowConfigRuleCompaction";
-    maxSliceRecords: Scalars["Int"];
-    maxSliceSize: Scalars["Int"];
+    maxSliceRecords: Scalars["Int"]["output"];
+    maxSliceSize: Scalars["Int"]["output"];
 };
 
 export type FlowConfigRuleIngest = {
     __typename?: "FlowConfigRuleIngest";
-    fetchNextIteration: Scalars["Boolean"];
-    fetchUncacheable: Scalars["Boolean"];
+    fetchNextIteration: Scalars["Boolean"]["output"];
+    fetchUncacheable: Scalars["Boolean"]["output"];
 };
 
 export type FlowConfigRuleReset = {
     __typename?: "FlowConfigRuleReset";
     mode: FlowConfigResetPropagationMode;
-    oldHeadHash?: Maybe<Scalars["Multihash"]>;
+    oldHeadHash?: Maybe<Scalars["Multihash"]["output"]>;
 };
 
 export type FlowConfigSnapshotModified = FlowEvent & {
     __typename?: "FlowConfigSnapshotModified";
     configSnapshot: FlowConfigRule;
-    eventId: Scalars["EventID"];
-    eventTime: Scalars["DateTime"];
+    eventId: Scalars["EventID"]["output"];
+    eventTime: Scalars["DateTime"]["output"];
 };
 
 export type FlowConfiguration = {
@@ -2379,7 +2383,7 @@ export type FlowConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount: Scalars["Int"];
+    totalCount: Scalars["Int"]["output"];
 };
 
 export type FlowDescription =
@@ -2413,8 +2417,8 @@ export type FlowDescriptionDatasetPollingIngest = {
 export type FlowDescriptionDatasetPushIngest = {
     __typename?: "FlowDescriptionDatasetPushIngest";
     ingestResult?: Maybe<FlowDescriptionUpdateResult>;
-    message: Scalars["String"];
-    sourceName?: Maybe<Scalars["String"]>;
+    message: Scalars["String"]["output"];
+    sourceName?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type FlowDescriptionDatasetReorganizationResult =
@@ -2433,30 +2437,30 @@ export type FlowDescriptionDatasetResetToMetadata = {
 
 export type FlowDescriptionReorganizationNothingToDo = {
     __typename?: "FlowDescriptionReorganizationNothingToDo";
-    dummy?: Maybe<Scalars["String"]>;
-    message: Scalars["String"];
+    dummy?: Maybe<Scalars["String"]["output"]>;
+    message: Scalars["String"]["output"];
 };
 
 export type FlowDescriptionReorganizationSuccess = {
     __typename?: "FlowDescriptionReorganizationSuccess";
-    newHead: Scalars["Multihash"];
-    originalBlocksCount: Scalars["Int"];
-    resultingBlocksCount: Scalars["Int"];
+    newHead: Scalars["Multihash"]["output"];
+    originalBlocksCount: Scalars["Int"]["output"];
+    resultingBlocksCount: Scalars["Int"]["output"];
 };
 
 export type FlowDescriptionResetResult = {
     __typename?: "FlowDescriptionResetResult";
-    newHead: Scalars["Multihash"];
+    newHead: Scalars["Multihash"]["output"];
 };
 
 export type FlowDescriptionSystemGc = {
     __typename?: "FlowDescriptionSystemGC";
-    dummy: Scalars["Boolean"];
+    dummy: Scalars["Boolean"]["output"];
 };
 
 export type FlowDescriptionUnknown = {
     __typename?: "FlowDescriptionUnknown";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type FlowDescriptionUpdateResult =
@@ -2466,28 +2470,28 @@ export type FlowDescriptionUpdateResult =
 
 export type FlowDescriptionUpdateResultSuccess = {
     __typename?: "FlowDescriptionUpdateResultSuccess";
-    hasMore: Scalars["Boolean"];
-    numBlocks: Scalars["Int"];
-    numRecords: Scalars["Int"];
-    updatedWatermark?: Maybe<Scalars["DateTime"]>;
+    hasMore: Scalars["Boolean"]["output"];
+    numBlocks: Scalars["Int"]["output"];
+    numRecords: Scalars["Int"]["output"];
+    updatedWatermark?: Maybe<Scalars["DateTime"]["output"]>;
 };
 
 export type FlowDescriptionUpdateResultUnknown = {
     __typename?: "FlowDescriptionUpdateResultUnknown";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type FlowDescriptionUpdateResultUpToDate = {
     __typename?: "FlowDescriptionUpdateResultUpToDate";
     /** The value indicates whether the api cache was used */
-    uncacheable: Scalars["Boolean"];
+    uncacheable: Scalars["Boolean"]["output"];
 };
 
 export type FlowDescriptionWebhookDeliver = {
     __typename?: "FlowDescriptionWebhookDeliver";
-    eventType: Scalars["String"];
-    label: Scalars["String"];
-    targetUrl: Scalars["Url"];
+    eventType: Scalars["String"]["output"];
+    label: Scalars["String"]["output"];
+    targetUrl: Scalars["Url"]["output"];
 };
 
 export type FlowEdge = {
@@ -2496,57 +2500,57 @@ export type FlowEdge = {
 };
 
 export type FlowEvent = {
-    eventId: Scalars["EventID"];
-    eventTime: Scalars["DateTime"];
+    eventId: Scalars["EventID"]["output"];
+    eventTime: Scalars["DateTime"]["output"];
 };
 
 export type FlowEventAborted = FlowEvent & {
     __typename?: "FlowEventAborted";
-    eventId: Scalars["EventID"];
-    eventTime: Scalars["DateTime"];
+    eventId: Scalars["EventID"]["output"];
+    eventTime: Scalars["DateTime"]["output"];
 };
 
 export type FlowEventActivationCauseAdded = FlowEvent & {
     __typename?: "FlowEventActivationCauseAdded";
     activationCause: FlowActivationCause;
-    eventId: Scalars["EventID"];
-    eventTime: Scalars["DateTime"];
+    eventId: Scalars["EventID"]["output"];
+    eventTime: Scalars["DateTime"]["output"];
 };
 
 export type FlowEventCompleted = FlowEvent & {
     __typename?: "FlowEventCompleted";
-    eventId: Scalars["EventID"];
-    eventTime: Scalars["DateTime"];
+    eventId: Scalars["EventID"]["output"];
+    eventTime: Scalars["DateTime"]["output"];
 };
 
 export type FlowEventInitiated = FlowEvent & {
     __typename?: "FlowEventInitiated";
     activationCause: FlowActivationCause;
-    eventId: Scalars["EventID"];
-    eventTime: Scalars["DateTime"];
+    eventId: Scalars["EventID"]["output"];
+    eventTime: Scalars["DateTime"]["output"];
 };
 
 export type FlowEventScheduledForActivation = FlowEvent & {
     __typename?: "FlowEventScheduledForActivation";
-    eventId: Scalars["EventID"];
-    eventTime: Scalars["DateTime"];
-    scheduledForActivationAt: Scalars["DateTime"];
+    eventId: Scalars["EventID"]["output"];
+    eventTime: Scalars["DateTime"]["output"];
+    scheduledForActivationAt: Scalars["DateTime"]["output"];
 };
 
 export type FlowEventStartConditionUpdated = FlowEvent & {
     __typename?: "FlowEventStartConditionUpdated";
-    eventId: Scalars["EventID"];
-    eventTime: Scalars["DateTime"];
+    eventId: Scalars["EventID"]["output"];
+    eventTime: Scalars["DateTime"]["output"];
     startCondition: FlowStartCondition;
 };
 
 export type FlowEventTaskChanged = FlowEvent & {
     __typename?: "FlowEventTaskChanged";
-    eventId: Scalars["EventID"];
-    eventTime: Scalars["DateTime"];
-    nextAttemptAt?: Maybe<Scalars["DateTime"]>;
+    eventId: Scalars["EventID"]["output"];
+    eventTime: Scalars["DateTime"]["output"];
+    nextAttemptAt?: Maybe<Scalars["DateTime"]["output"]>;
     task: Task;
-    taskId: Scalars["TaskID"];
+    taskId: Scalars["TaskID"]["output"];
     taskStatus: TaskStatus;
 };
 
@@ -2561,38 +2565,38 @@ export type FlowIncompatibleDatasetKind = SetFlowConfigResult &
         __typename?: "FlowIncompatibleDatasetKind";
         actualDatasetKind: DatasetKind;
         expectedDatasetKind: DatasetKind;
-        message: Scalars["String"];
+        message: Scalars["String"]["output"];
     };
 
 export type FlowInvalidConfigInputError = SetFlowConfigResult & {
     __typename?: "FlowInvalidConfigInputError";
-    message: Scalars["String"];
-    reason: Scalars["String"];
+    message: Scalars["String"]["output"];
+    reason: Scalars["String"]["output"];
 };
 
 export type FlowInvalidRunConfigurations = TriggerFlowResult & {
     __typename?: "FlowInvalidRunConfigurations";
-    error: Scalars["String"];
-    message: Scalars["String"];
+    error: Scalars["String"]["output"];
+    message: Scalars["String"]["output"];
 };
 
 export type FlowInvalidTriggerInputError = SetFlowTriggerResult & {
     __typename?: "FlowInvalidTriggerInputError";
-    message: Scalars["String"];
-    reason: Scalars["String"];
+    message: Scalars["String"]["output"];
+    reason: Scalars["String"]["output"];
 };
 
 export type FlowInvalidTriggerStopPolicyInputError = SetFlowTriggerResult & {
     __typename?: "FlowInvalidTriggerStopPolicyInputError";
-    message: Scalars["String"];
-    reason: Scalars["String"];
+    message: Scalars["String"]["output"];
+    reason: Scalars["String"]["output"];
 };
 
 export type FlowNotFound = CancelFlowRunResult &
     GetFlowResult & {
         __typename?: "FlowNotFound";
-        flowId: Scalars["FlowID"];
-        message: Scalars["String"];
+        flowId: Scalars["FlowID"]["output"];
+        message: Scalars["String"]["output"];
     };
 
 export type FlowOutcome = FlowAbortedResult | FlowFailedError | FlowSuccessResult;
@@ -2601,8 +2605,8 @@ export type FlowPreconditionsNotMet = SetFlowConfigResult &
     SetFlowTriggerResult &
     TriggerFlowResult & {
         __typename?: "FlowPreconditionsNotMet";
-        message: Scalars["String"];
-        preconditions: Scalars["String"];
+        message: Scalars["String"]["output"];
+        preconditions: Scalars["String"]["output"];
     };
 
 export enum FlowProcessAutoStopReason {
@@ -2624,29 +2628,29 @@ export type FlowProcessFilters = {
     /** All processes with last attempt between these times, inclusive */
     lastAttemptBetween?: InputMaybe<FlowProcessFiltersTimeRange>;
     /** All processes with last failure since this time, inclusive */
-    lastFailureSince?: InputMaybe<Scalars["DateTime"]>;
+    lastFailureSince?: InputMaybe<Scalars["DateTime"]["input"]>;
     /** Minimum number of consecutive failures */
-    minConsecutiveFailures?: InputMaybe<Scalars["Int"]>;
+    minConsecutiveFailures?: InputMaybe<Scalars["Int"]["input"]>;
     /** All processes with next planned after this time, inclusive */
-    nextPlannedAfter?: InputMaybe<Scalars["DateTime"]>;
+    nextPlannedAfter?: InputMaybe<Scalars["DateTime"]["input"]>;
     /** All processes with next planned before this time, inclusive */
-    nextPlannedBefore?: InputMaybe<Scalars["DateTime"]>;
+    nextPlannedBefore?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
 export type FlowProcessFiltersTimeRange = {
-    end: Scalars["DateTime"];
-    start: Scalars["DateTime"];
+    end: Scalars["DateTime"]["input"];
+    start: Scalars["DateTime"]["input"];
 };
 
 export type FlowProcessGroupRollup = {
     __typename?: "FlowProcessGroupRollup";
-    active: Scalars["Int"];
-    failing: Scalars["Int"];
-    paused: Scalars["Int"];
-    stopped: Scalars["Int"];
-    total: Scalars["Int"];
-    unconfigured: Scalars["Int"];
-    worstConsecutiveFailures: Scalars["Int"];
+    active: Scalars["Int"]["output"];
+    failing: Scalars["Int"]["output"];
+    paused: Scalars["Int"]["output"];
+    stopped: Scalars["Int"]["output"];
+    total: Scalars["Int"]["output"];
+    unconfigured: Scalars["Int"]["output"];
+    worstConsecutiveFailures: Scalars["Int"]["output"];
 };
 
 export enum FlowProcessOrderField {
@@ -2671,16 +2675,16 @@ export type FlowProcessOrdering = {
 
 export type FlowProcessSummary = {
     __typename?: "FlowProcessSummary";
-    autoStoppedAt?: Maybe<Scalars["DateTime"]>;
+    autoStoppedAt?: Maybe<Scalars["DateTime"]["output"]>;
     autoStoppedReason?: Maybe<FlowProcessAutoStopReason>;
-    consecutiveFailures: Scalars["Int"];
+    consecutiveFailures: Scalars["Int"]["output"];
     effectiveState: FlowProcessEffectiveState;
-    lastAttemptAt?: Maybe<Scalars["DateTime"]>;
-    lastFailureAt?: Maybe<Scalars["DateTime"]>;
-    lastSuccessAt?: Maybe<Scalars["DateTime"]>;
-    nextPlannedAt?: Maybe<Scalars["DateTime"]>;
-    pausedAt?: Maybe<Scalars["DateTime"]>;
-    runningSince?: Maybe<Scalars["DateTime"]>;
+    lastAttemptAt?: Maybe<Scalars["DateTime"]["output"]>;
+    lastFailureAt?: Maybe<Scalars["DateTime"]["output"]>;
+    lastSuccessAt?: Maybe<Scalars["DateTime"]["output"]>;
+    nextPlannedAt?: Maybe<Scalars["DateTime"]["output"]>;
+    pausedAt?: Maybe<Scalars["DateTime"]["output"]>;
+    runningSince?: Maybe<Scalars["DateTime"]["output"]>;
     stopPolicy: FlowTriggerStopPolicy;
 };
 
@@ -2693,7 +2697,7 @@ export type FlowProcessTypePrimaryFilterInput = {
 };
 
 export type FlowProcessTypeWebhooksFilterInput = {
-    subscriptionIds?: InputMaybe<Array<Scalars["WebhookSubscriptionID"]>>;
+    subscriptionIds?: InputMaybe<Array<Scalars["WebhookSubscriptionID"]["input"]>>;
 };
 
 export enum FlowRetryBackoffType {
@@ -2706,13 +2710,13 @@ export enum FlowRetryBackoffType {
 export type FlowRetryPolicy = {
     __typename?: "FlowRetryPolicy";
     backoffType: FlowRetryBackoffType;
-    maxAttempts: Scalars["Int"];
+    maxAttempts: Scalars["Int"]["output"];
     minDelay: TimeDelta;
 };
 
 export type FlowRetryPolicyInput = {
     backoffType: FlowRetryBackoffType;
-    maxAttempts: Scalars["Int"];
+    maxAttempts: Scalars["Int"]["input"];
     minDelay: TimeDeltaInput;
 };
 
@@ -2724,28 +2728,28 @@ export type FlowStartCondition =
 
 export type FlowStartConditionExecutor = {
     __typename?: "FlowStartConditionExecutor";
-    taskId: Scalars["TaskID"];
+    taskId: Scalars["TaskID"]["output"];
 };
 
 export type FlowStartConditionReactive = {
     __typename?: "FlowStartConditionReactive";
-    accumulatedRecordsCount: Scalars["Int"];
+    accumulatedRecordsCount: Scalars["Int"]["output"];
     activeBatchingRule: FlowTriggerBatchingRule;
-    batchingDeadline: Scalars["DateTime"];
+    batchingDeadline: Scalars["DateTime"]["output"];
     forBreakingChange: FlowTriggerBreakingChangeRule;
-    watermarkModified: Scalars["Boolean"];
+    watermarkModified: Scalars["Boolean"]["output"];
 };
 
 export type FlowStartConditionSchedule = {
     __typename?: "FlowStartConditionSchedule";
-    wakeUpAt: Scalars["DateTime"];
+    wakeUpAt: Scalars["DateTime"]["output"];
 };
 
 export type FlowStartConditionThrottling = {
     __typename?: "FlowStartConditionThrottling";
-    intervalSec: Scalars["Int"];
-    shiftedFrom: Scalars["DateTime"];
-    wakeUpAt: Scalars["DateTime"];
+    intervalSec: Scalars["Int"]["output"];
+    shiftedFrom: Scalars["DateTime"]["output"];
+    wakeUpAt: Scalars["DateTime"]["output"];
 };
 
 export enum FlowStatus {
@@ -2757,30 +2761,30 @@ export enum FlowStatus {
 
 export type FlowSuccessResult = {
     __typename?: "FlowSuccessResult";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type FlowTimingRecords = {
     __typename?: "FlowTimingRecords";
     /** Recorded time of last task scheduling */
-    awaitingExecutorSince?: Maybe<Scalars["DateTime"]>;
+    awaitingExecutorSince?: Maybe<Scalars["DateTime"]["output"]>;
     /** Recorded time of flow completion (success or failure) */
-    completedAt?: Maybe<Scalars["DateTime"]>;
+    completedAt?: Maybe<Scalars["DateTime"]["output"]>;
     /** First scheduling time */
-    firstAttemptScheduledAt?: Maybe<Scalars["DateTime"]>;
+    firstAttemptScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
     /** Initiation time */
-    initiatedAt: Scalars["DateTime"];
+    initiatedAt: Scalars["DateTime"]["output"];
     /** Recorded time of finish of the latest task */
-    lastAttemptFinishedAt?: Maybe<Scalars["DateTime"]>;
+    lastAttemptFinishedAt?: Maybe<Scalars["DateTime"]["output"]>;
     /** Recorded start of running (Running state seen at least once) */
-    runningSince?: Maybe<Scalars["DateTime"]>;
+    runningSince?: Maybe<Scalars["DateTime"]["output"]>;
     /** Planned scheduling time (different than first in case of retries) */
-    scheduledAt?: Maybe<Scalars["DateTime"]>;
+    scheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
 };
 
 export type FlowTrigger = {
     __typename?: "FlowTrigger";
-    paused: Scalars["Boolean"];
+    paused: Scalars["Boolean"]["output"];
     reactive?: Maybe<FlowTriggerReactiveRule>;
     schedule?: Maybe<FlowTriggerScheduleRule>;
     stopPolicy: FlowTriggerStopPolicy;
@@ -2791,21 +2795,21 @@ export type FlowTriggerBatchingRule = FlowTriggerBatchingRuleBuffering | FlowTri
 export type FlowTriggerBatchingRuleBuffering = {
     __typename?: "FlowTriggerBatchingRuleBuffering";
     maxBatchingInterval: TimeDelta;
-    minRecordsToAwait: Scalars["Int"];
+    minRecordsToAwait: Scalars["Int"]["output"];
 };
 
 export type FlowTriggerBatchingRuleBufferingInput = {
     maxBatchingInterval: TimeDeltaInput;
-    minRecordsToAwait: Scalars["Int"];
+    minRecordsToAwait: Scalars["Int"]["input"];
 };
 
 export type FlowTriggerBatchingRuleImmediate = {
     __typename?: "FlowTriggerBatchingRuleImmediate";
-    dummy: Scalars["Boolean"];
+    dummy: Scalars["Boolean"]["output"];
 };
 
 export type FlowTriggerBatchingRuleImmediateInput = {
-    dummy: Scalars["Boolean"];
+    dummy: Scalars["Boolean"]["input"];
 };
 
 export type FlowTriggerBatchingRuleInput =
@@ -2834,7 +2838,7 @@ export type FlowTriggerRuleReactiveInput = {
 
 export type FlowTriggerRuleScheduleInput =
     /** Supported CRON syntax: min hour dayOfMonth month dayOfWeek */
-    | { cron5ComponentExpression: Scalars["String"]; timeDelta?: never }
+    | { cron5ComponentExpression: Scalars["String"]["input"]; timeDelta?: never }
     | { cron5ComponentExpression?: never; timeDelta: TimeDeltaInput };
 
 export type FlowTriggerScheduleRule = Cron5ComponentExpression | TimeDelta;
@@ -2843,11 +2847,11 @@ export type FlowTriggerStopPolicy = FlowTriggerStopPolicyAfterConsecutiveFailure
 
 export type FlowTriggerStopPolicyAfterConsecutiveFailures = {
     __typename?: "FlowTriggerStopPolicyAfterConsecutiveFailures";
-    maxFailures: Scalars["Int"];
+    maxFailures: Scalars["Int"]["output"];
 };
 
 export type FlowTriggerStopPolicyAfterConsecutiveFailuresInput = {
-    maxFailures: Scalars["Int"];
+    maxFailures: Scalars["Int"]["input"];
 };
 
 export type FlowTriggerStopPolicyInput =
@@ -2856,80 +2860,80 @@ export type FlowTriggerStopPolicyInput =
 
 export type FlowTriggerStopPolicyNever = {
     __typename?: "FlowTriggerStopPolicyNever";
-    dummy: Scalars["Boolean"];
+    dummy: Scalars["Boolean"]["output"];
 };
 
 export type FlowTriggerStopPolicyNeverInput = {
-    dummy: Scalars["Boolean"];
+    dummy: Scalars["Boolean"]["input"];
 };
 
 export type FlowTypeIsNotSupported = SetFlowTriggerResult & {
     __typename?: "FlowTypeIsNotSupported";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type FullTextSearchHighlight = {
     __typename?: "FullTextSearchHighlight";
-    bestFragment: Scalars["String"];
-    field: Scalars["String"];
+    bestFragment: Scalars["String"]["output"];
+    field: Scalars["String"]["output"];
 };
 
 export type FullTextSearchHit = {
     __typename?: "FullTextSearchHit";
     highlights?: Maybe<Array<FullTextSearchHighlight>>;
-    id: Scalars["String"];
-    schemaName: Scalars["String"];
-    score?: Maybe<Scalars["Float"]>;
-    source: Scalars["JSON"];
+    id: Scalars["String"]["output"];
+    schemaName: Scalars["String"]["output"];
+    score?: Maybe<Scalars["Float"]["output"]>;
+    source: Scalars["JSON"]["output"];
 };
 
 export type FullTextSearchResponse = {
     __typename?: "FullTextSearchResponse";
     hits: Array<FullTextSearchHit>;
-    timeout: Scalars["Boolean"];
-    tookMs: Scalars["Int"];
-    totalHits: Scalars["Int"];
+    timeout: Scalars["Boolean"]["output"];
+    tookMs: Scalars["Int"]["output"];
+    totalHits: Scalars["Int"]["output"];
 };
 
 export type GetFlowResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type GetFlowSuccess = GetFlowResult & {
     __typename?: "GetFlowSuccess";
     flow: Flow;
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type InitiatorFilterInput =
-    | { accounts: Array<Scalars["AccountID"]>; system?: never }
-    | { accounts?: never; system: Scalars["Boolean"] };
+    | { accounts: Array<Scalars["AccountID"]["input"]>; system?: never }
+    | { accounts?: never; system: Scalars["Boolean"]["input"] };
 
 export type JdbcDesc = {
     __typename?: "JdbcDesc";
-    url: Scalars["String"];
+    url: Scalars["String"]["output"];
 };
 
 export type KafkaProtocolDesc = {
     __typename?: "KafkaProtocolDesc";
-    url: Scalars["String"];
+    url: Scalars["String"]["output"];
 };
 
 /** Represents base64-encoded binary data using standard encoding */
 export type KeyValue = {
     __typename?: "KeyValue";
-    key: Scalars["String"];
-    value: Scalars["String"];
+    key: Scalars["String"]["output"];
+    value: Scalars["String"]["output"];
 };
 
 export type LinkProtocolDesc = {
     __typename?: "LinkProtocolDesc";
-    url: Scalars["String"];
+    url: Scalars["String"]["output"];
 };
 
 export type LoginResponse = {
     __typename?: "LoginResponse";
-    accessToken: Scalars["String"];
+    accessToken: Scalars["String"]["output"];
     account: Account;
 };
 
@@ -2960,7 +2964,7 @@ export type MergeStrategy =
  */
 export type MergeStrategyAppend = {
     __typename?: "MergeStrategyAppend";
-    dummy?: Maybe<Scalars["String"]>;
+    dummy?: Maybe<Scalars["String"]["output"]>;
 };
 
 /**
@@ -2979,7 +2983,7 @@ export type MergeStrategyChangelogStream = {
      * Names of the columns that uniquely identify the record throughout its
      * lifetime
      */
-    primaryKey: Array<Scalars["String"]>;
+    primaryKey: Array<Scalars["String"]["output"]>;
 };
 
 /**
@@ -2999,7 +3003,7 @@ export type MergeStrategyLedger = {
      * Names of the columns that uniquely identify the record throughout its
      * lifetime
      */
-    primaryKey: Array<Scalars["String"]>;
+    primaryKey: Array<Scalars["String"]["output"]>;
 };
 
 /**
@@ -3038,12 +3042,12 @@ export type MergeStrategySnapshot = {
      * Names of the columns to compared to determine if a row has changed
      * between two snapshots.
      */
-    compareColumns?: Maybe<Array<Scalars["String"]>>;
+    compareColumns?: Maybe<Array<Scalars["String"]["output"]>>;
     /**
      * Names of the columns that uniquely identify the record throughout its
      * lifetime.
      */
-    primaryKey: Array<Scalars["String"]>;
+    primaryKey: Array<Scalars["String"]["output"]>;
 };
 
 /**
@@ -3063,7 +3067,7 @@ export type MergeStrategyUpsertStream = {
      * Names of the columns that uniquely identify the record throughout its
      * lifetime
      */
-    primaryKey: Array<Scalars["String"]>;
+    primaryKey: Array<Scalars["String"]["output"]>;
 };
 
 export type MetadataBlockConnection = {
@@ -3074,7 +3078,7 @@ export type MetadataBlockConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount: Scalars["Int"];
+    totalCount: Scalars["Int"]["output"];
 };
 
 export type MetadataBlockEdge = {
@@ -3085,12 +3089,12 @@ export type MetadataBlockEdge = {
 export type MetadataBlockExtended = {
     __typename?: "MetadataBlockExtended";
     author: Account;
-    blockHash: Scalars["Multihash"];
+    blockHash: Scalars["Multihash"]["output"];
     encoded?: Maybe<EncodedBlock>;
     event: MetadataEvent;
-    prevBlockHash?: Maybe<Scalars["Multihash"]>;
-    sequenceNumber: Scalars["Int"];
-    systemTime: Scalars["DateTime"];
+    prevBlockHash?: Maybe<Scalars["Multihash"]["output"]>;
+    sequenceNumber: Scalars["Int"]["output"];
+    systemTime: Scalars["DateTime"]["output"];
 };
 
 export type MetadataBlockExtendedEncodedArgs = {
@@ -3105,7 +3109,7 @@ export type MetadataChain = {
      * Returns a metadata block corresponding to the specified hash and encoded
      * in desired format
      */
-    blockByHashEncoded?: Maybe<Scalars["String"]>;
+    blockByHashEncoded?: Maybe<Scalars["String"]["output"]>;
     /** Iterates all metadata blocks in the reverse chronological order */
     blocks: MetadataBlockConnection;
     /** Returns all named metadata block references */
@@ -3113,17 +3117,17 @@ export type MetadataChain = {
 };
 
 export type MetadataChainBlockByHashArgs = {
-    hash: Scalars["Multihash"];
+    hash: Scalars["Multihash"]["input"];
 };
 
 export type MetadataChainBlockByHashEncodedArgs = {
     format: MetadataManifestFormat;
-    hash: Scalars["Multihash"];
+    hash: Scalars["Multihash"]["input"];
 };
 
 export type MetadataChainBlocksArgs = {
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type MetadataChainMut = {
@@ -3133,7 +3137,7 @@ export type MetadataChainMut = {
 };
 
 export type MetadataChainMutCommitEventArgs = {
-    event: Scalars["String"];
+    event: Scalars["String"]["input"];
     eventFormat: MetadataManifestFormat;
 };
 
@@ -3176,29 +3180,29 @@ export enum MetadataManifestFormat {
 export type MetadataManifestMalformed = CommitResult &
     CreateDatasetFromSnapshotResult & {
         __typename?: "MetadataManifestMalformed";
-        isSuccess: Scalars["Boolean"];
-        message: Scalars["String"];
+        isSuccess: Scalars["Boolean"]["output"];
+        message: Scalars["String"]["output"];
     };
 
 export type MetadataManifestUnsupportedVersion = CommitResult &
     CreateDatasetFromSnapshotResult & {
         __typename?: "MetadataManifestUnsupportedVersion";
-        isSuccess: Scalars["Boolean"];
-        message: Scalars["String"];
+        isSuccess: Scalars["Boolean"]["output"];
+        message: Scalars["String"]["output"];
     };
 
 export type ModifyPasswordResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type ModifyPasswordSuccess = ModifyPasswordResult & {
     __typename?: "ModifyPasswordSuccess";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type ModifyPasswordWrongOldPassword = ModifyPasswordResult & {
     __typename?: "ModifyPasswordWrongOldPassword";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 /**
@@ -3220,7 +3224,7 @@ export enum MqttQos {
 export type MqttTopicSubscription = {
     __typename?: "MqttTopicSubscription";
     /** Name of the topic (may include patterns). */
-    path: Scalars["String"];
+    path: Scalars["String"]["output"];
     /**
      * Quality of service class.
      *
@@ -3267,7 +3271,7 @@ export type NameLookupResultConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount: Scalars["Int"];
+    totalCount: Scalars["Int"]["output"];
 };
 
 export type NameLookupResultEdge = {
@@ -3278,14 +3282,14 @@ export type NameLookupResultEdge = {
 export type NoChanges = CommitResult &
     UpdateReadmeResult & {
         __typename?: "NoChanges";
-        isSuccess: Scalars["Boolean"];
-        message: Scalars["String"];
+        isSuccess: Scalars["Boolean"]["output"];
+        message: Scalars["String"]["output"];
     };
 
 export type OdataProtocolDesc = {
     __typename?: "OdataProtocolDesc";
-    collectionUrl: Scalars["String"];
-    serviceUrl: Scalars["String"];
+    collectionUrl: Scalars["String"]["output"];
+    serviceUrl: Scalars["String"]["output"];
 };
 
 /**
@@ -3296,9 +3300,9 @@ export type OdataProtocolDesc = {
 export type OffsetInterval = {
     __typename?: "OffsetInterval";
     /** End of the closed interval [start; end]. */
-    end: Scalars["Int"];
+    end: Scalars["Int"]["output"];
     /** Start of the closed interval [start; end]. */
-    start: Scalars["Int"];
+    start: Scalars["Int"]["output"];
 };
 
 export enum OrderingDirection {
@@ -3309,37 +3313,37 @@ export enum OrderingDirection {
 export type PageBasedInfo = {
     __typename?: "PageBasedInfo";
     /** Index of the current page */
-    currentPage: Scalars["Int"];
+    currentPage: Scalars["Int"]["output"];
     /** When paginating forwards, are there more items? */
-    hasNextPage: Scalars["Boolean"];
+    hasNextPage: Scalars["Boolean"]["output"];
     /** When paginating backwards, are there more items? */
-    hasPreviousPage: Scalars["Boolean"];
+    hasPreviousPage: Scalars["Boolean"]["output"];
     /**
      * Approximate number of total pages assuming number of nodes per page
      * stays the same
      */
-    totalPages?: Maybe<Scalars["Int"]>;
+    totalPages?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type PauseWebhookSubscriptionResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type PauseWebhookSubscriptionResultSuccess = PauseWebhookSubscriptionResult & {
     __typename?: "PauseWebhookSubscriptionResultSuccess";
-    message: Scalars["String"];
-    paused: Scalars["Boolean"];
+    message: Scalars["String"]["output"];
+    paused: Scalars["Boolean"]["output"];
 };
 
 export type PauseWebhookSubscriptionResultUnexpected = PauseWebhookSubscriptionResult & {
     __typename?: "PauseWebhookSubscriptionResultUnexpected";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
     status: WebhookSubscriptionStatus;
 };
 
 export type PostgreSqlDesl = {
     __typename?: "PostgreSqlDesl";
-    url: Scalars["String"];
+    url: Scalars["String"]["output"];
 };
 
 /**
@@ -3362,7 +3366,7 @@ export type PrepStepDecompress = {
      * Path to a data file within a multi-file archive. Can contain glob
      * patterns.
      */
-    subPath?: Maybe<Scalars["String"]>;
+    subPath?: Maybe<Scalars["String"]["output"]>;
 };
 
 /**
@@ -3373,25 +3377,25 @@ export type PrepStepDecompress = {
 export type PrepStepPipe = {
     __typename?: "PrepStepPipe";
     /** Command to execute and its arguments. */
-    command: Array<Scalars["String"]>;
+    command: Array<Scalars["String"]["output"]>;
 };
 
 export type PrivateDatasetVisibility = {
     __typename?: "PrivateDatasetVisibility";
-    dummy?: Maybe<Scalars["String"]>;
+    dummy?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type PrivateDatasetVisibilityInput = {
-    dummy?: InputMaybe<Scalars["String"]>;
+    dummy?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type PublicDatasetVisibility = {
     __typename?: "PublicDatasetVisibility";
-    anonymousAvailable: Scalars["Boolean"];
+    anonymousAvailable: Scalars["Boolean"]["output"];
 };
 
 export type PublicDatasetVisibilityInput = {
-    anonymousAvailable: Scalars["Boolean"];
+    anonymousAvailable: Scalars["Boolean"]["input"];
 };
 
 export type Query = {
@@ -3406,7 +3410,7 @@ export type Query = {
     /** Admin-related functionality group */
     admin: Admin;
     /** Returns the version of the GQL API */
-    apiVersion: Scalars["String"];
+    apiVersion: Scalars["String"]["output"];
     /** Authentication and authorization-related functionality group */
     auth: Auth;
     /** Returns server's version and build configuration information */
@@ -3439,18 +3443,18 @@ export enum QueryDialect {
 }
 
 export type ReactivateWebhookSubscriptionResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type ReactivateWebhookSubscriptionResultSuccess = ReactivateWebhookSubscriptionResult & {
     __typename?: "ReactivateWebhookSubscriptionResultSuccess";
-    message: Scalars["String"];
-    reactivated: Scalars["Boolean"];
+    message: Scalars["String"]["output"];
+    reactivated: Scalars["Boolean"]["output"];
 };
 
 export type ReactivateWebhookSubscriptionResultUnexpected = ReactivateWebhookSubscriptionResult & {
     __typename?: "ReactivateWebhookSubscriptionResultUnexpected";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
     status: WebhookSubscriptionStatus;
 };
 
@@ -3481,39 +3485,39 @@ export type ReadStepCsv = {
      *
      * Defaults to: "rfc3339"
      */
-    dateFormat?: Maybe<Scalars["String"]>;
+    dateFormat?: Maybe<Scalars["String"]["output"]>;
     /**
      * Decodes the CSV files by the given encoding type.
      *
      * Defaults to: "utf8"
      */
-    encoding?: Maybe<Scalars["String"]>;
+    encoding?: Maybe<Scalars["String"]["output"]>;
     /**
      * Sets a single character used for escaping quotes inside an already
      * quoted value.
      *
      * Defaults to: "\\"
      */
-    escape?: Maybe<Scalars["String"]>;
+    escape?: Maybe<Scalars["String"]["output"]>;
     /**
      * Use the first line as names of columns.
      *
      * Defaults to: false
      */
-    header?: Maybe<Scalars["Boolean"]>;
+    header?: Maybe<Scalars["Boolean"]["output"]>;
     /**
      * Infers the input schema automatically from data. It requires one extra
      * pass over the data.
      *
      * Defaults to: false
      */
-    inferSchema?: Maybe<Scalars["Boolean"]>;
+    inferSchema?: Maybe<Scalars["Boolean"]["output"]>;
     /**
      * Sets the string representation of a null value.
      *
      * Defaults to: ""
      */
-    nullValue?: Maybe<Scalars["String"]>;
+    nullValue?: Maybe<Scalars["String"]["output"]>;
     /**
      * Sets a single character used for escaping quoted values where the
      * separator can be part of the value. Set an empty string to turn off
@@ -3521,7 +3525,7 @@ export type ReadStepCsv = {
      *
      * Defaults to: "\""
      */
-    quote?: Maybe<Scalars["String"]>;
+    quote?: Maybe<Scalars["String"]["output"]>;
     /**
      * A DDL-formatted schema. Schema can be used to coerce values into more
      * appropriate data types.
@@ -3529,13 +3533,13 @@ export type ReadStepCsv = {
      * Examples:
      * - ["date TIMESTAMP","city STRING","population INT"]
      */
-    schema?: Maybe<Array<Scalars["String"]>>;
+    schema?: Maybe<Array<Scalars["String"]["output"]>>;
     /**
      * Sets a single character as a separator for each field and value.
      *
      * Defaults to: ","
      */
-    separator?: Maybe<Scalars["String"]>;
+    separator?: Maybe<Scalars["String"]["output"]>;
     /**
      * Sets the string that indicates a timestamp format. The `rfc3339` is the
      * only required format, the other format strings are
@@ -3543,7 +3547,7 @@ export type ReadStepCsv = {
      *
      * Defaults to: "rfc3339"
      */
-    timestampFormat?: Maybe<Scalars["String"]>;
+    timestampFormat?: Maybe<Scalars["String"]["output"]>;
 };
 
 /**
@@ -3557,13 +3561,13 @@ export type ReadStepEsriShapefile = {
      * A DDL-formatted schema. Schema can be used to coerce values into more
      * appropriate data types.
      */
-    schema?: Maybe<Array<Scalars["String"]>>;
+    schema?: Maybe<Array<Scalars["String"]["output"]>>;
     /**
      * If the ZIP archive contains multiple shapefiles use this field to
      * specify a sub-path to the desired `.shp` file. Can contain glob patterns
      * to act as a filter.
      */
-    subPath?: Maybe<Scalars["String"]>;
+    subPath?: Maybe<Scalars["String"]["output"]>;
 };
 
 /**
@@ -3580,7 +3584,7 @@ export type ReadStepGeoJson = {
      * A DDL-formatted schema. Schema can be used to coerce values into more
      * appropriate data types.
      */
-    schema?: Maybe<Array<Scalars["String"]>>;
+    schema?: Maybe<Array<Scalars["String"]["output"]>>;
 };
 
 /**
@@ -3596,24 +3600,24 @@ export type ReadStepJson = {
      *
      * Defaults to: "rfc3339"
      */
-    dateFormat?: Maybe<Scalars["String"]>;
+    dateFormat?: Maybe<Scalars["String"]["output"]>;
     /**
      * Allows to forcibly set one of standard basic or extended encodings.
      *
      * Defaults to: "utf8"
      */
-    encoding?: Maybe<Scalars["String"]>;
+    encoding?: Maybe<Scalars["String"]["output"]>;
     /**
      * A DDL-formatted schema. Schema can be used to coerce values into more
      * appropriate data types.
      */
-    schema?: Maybe<Array<Scalars["String"]>>;
+    schema?: Maybe<Array<Scalars["String"]["output"]>>;
     /**
      * Path in the form of `a.b.c` to a sub-element of the root JSON object
      * that is an array or objects. If not specified it is assumed that the
      * root element is an array.
      */
-    subPath?: Maybe<Scalars["String"]>;
+    subPath?: Maybe<Scalars["String"]["output"]>;
     /**
      * Sets the string that indicates a timestamp format. The `rfc3339` is the
      * only required format, the other format strings are
@@ -3621,7 +3625,7 @@ export type ReadStepJson = {
      *
      * Defaults to: "rfc3339"
      */
-    timestampFormat?: Maybe<Scalars["String"]>;
+    timestampFormat?: Maybe<Scalars["String"]["output"]>;
 };
 
 /**
@@ -3637,7 +3641,7 @@ export type ReadStepNdGeoJson = {
      * A DDL-formatted schema. Schema can be used to coerce values into more
      * appropriate data types.
      */
-    schema?: Maybe<Array<Scalars["String"]>>;
+    schema?: Maybe<Array<Scalars["String"]["output"]>>;
 };
 
 /**
@@ -3654,18 +3658,18 @@ export type ReadStepNdJson = {
      *
      * Defaults to: "rfc3339"
      */
-    dateFormat?: Maybe<Scalars["String"]>;
+    dateFormat?: Maybe<Scalars["String"]["output"]>;
     /**
      * Allows to forcibly set one of standard basic or extended encodings.
      *
      * Defaults to: "utf8"
      */
-    encoding?: Maybe<Scalars["String"]>;
+    encoding?: Maybe<Scalars["String"]["output"]>;
     /**
      * A DDL-formatted schema. Schema can be used to coerce values into more
      * appropriate data types.
      */
-    schema?: Maybe<Array<Scalars["String"]>>;
+    schema?: Maybe<Array<Scalars["String"]["output"]>>;
     /**
      * Sets the string that indicates a timestamp format. The `rfc3339` is the
      * only required format, the other format strings are
@@ -3673,7 +3677,7 @@ export type ReadStepNdJson = {
      *
      * Defaults to: "rfc3339"
      */
-    timestampFormat?: Maybe<Scalars["String"]>;
+    timestampFormat?: Maybe<Scalars["String"]["output"]>;
 };
 
 /**
@@ -3687,55 +3691,55 @@ export type ReadStepParquet = {
      * A DDL-formatted schema. Schema can be used to coerce values into more
      * appropriate data types.
      */
-    schema?: Maybe<Array<Scalars["String"]>>;
+    schema?: Maybe<Array<Scalars["String"]["output"]>>;
 };
 
 export type RemoveWebhookSubscriptionResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type RemoveWebhookSubscriptionResultSuccess = RemoveWebhookSubscriptionResult & {
     __typename?: "RemoveWebhookSubscriptionResultSuccess";
-    message: Scalars["String"];
-    removed: Scalars["Boolean"];
+    message: Scalars["String"]["output"];
+    removed: Scalars["Boolean"]["output"];
 };
 
 export type RenameAccountNameNotUnique = RenameAccountResult & {
     __typename?: "RenameAccountNameNotUnique";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type RenameAccountResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type RenameAccountSuccess = RenameAccountResult & {
     __typename?: "RenameAccountSuccess";
-    message: Scalars["String"];
-    newName: Scalars["String"];
+    message: Scalars["String"]["output"];
+    newName: Scalars["String"]["output"];
 };
 
 export type RenameResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type RenameResultNameCollision = RenameResult & {
     __typename?: "RenameResultNameCollision";
-    collidingAlias: Scalars["DatasetAlias"];
-    message: Scalars["String"];
+    collidingAlias: Scalars["DatasetAlias"]["output"];
+    message: Scalars["String"]["output"];
 };
 
 export type RenameResultNoChanges = RenameResult & {
     __typename?: "RenameResultNoChanges";
-    message: Scalars["String"];
-    preservedName: Scalars["DatasetName"];
+    message: Scalars["String"]["output"];
+    preservedName: Scalars["DatasetName"]["output"];
 };
 
 export type RenameResultSuccess = RenameResult & {
     __typename?: "RenameResultSuccess";
-    message: Scalars["String"];
-    newName: Scalars["DatasetName"];
-    oldName: Scalars["DatasetName"];
+    message: Scalars["String"]["output"];
+    newName: Scalars["DatasetName"]["output"];
+    oldName: Scalars["DatasetName"]["output"];
 };
 
 /**
@@ -3746,58 +3750,58 @@ export type RenameResultSuccess = RenameResult & {
 export type RequestHeader = {
     __typename?: "RequestHeader";
     /** Name of the header. */
-    name: Scalars["String"];
+    name: Scalars["String"]["output"];
     /** Value of the header. */
-    value: Scalars["String"];
+    value: Scalars["String"]["output"];
 };
 
 export type RestProtocolDesc = {
     __typename?: "RestProtocolDesc";
-    pushUrl: Scalars["String"];
-    queryUrl: Scalars["String"];
-    tailUrl: Scalars["String"];
+    pushUrl: Scalars["String"]["output"];
+    queryUrl: Scalars["String"]["output"];
+    tailUrl: Scalars["String"]["output"];
 };
 
 export type ResumeWebhookSubscriptionResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type ResumeWebhookSubscriptionResultSuccess = ResumeWebhookSubscriptionResult & {
     __typename?: "ResumeWebhookSubscriptionResultSuccess";
-    message: Scalars["String"];
-    resumed: Scalars["Boolean"];
+    message: Scalars["String"]["output"];
+    resumed: Scalars["Boolean"]["output"];
 };
 
 export type ResumeWebhookSubscriptionResultUnexpected = ResumeWebhookSubscriptionResult & {
     __typename?: "ResumeWebhookSubscriptionResultUnexpected";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
     status: WebhookSubscriptionStatus;
 };
 
 export type RevokeResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type RevokeResultAlreadyRevoked = RevokeResult & {
     __typename?: "RevokeResultAlreadyRevoked";
-    message: Scalars["String"];
-    tokenId: Scalars["AccessTokenID"];
+    message: Scalars["String"]["output"];
+    tokenId: Scalars["AccessTokenID"]["output"];
 };
 
 export type RevokeResultSuccess = RevokeResult & {
     __typename?: "RevokeResultSuccess";
-    message: Scalars["String"];
-    tokenId: Scalars["AccessTokenID"];
+    message: Scalars["String"]["output"];
+    tokenId: Scalars["AccessTokenID"]["output"];
 };
 
 export type RotateWebhookSubscriptionSecretResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type RotateWebhookSubscriptionSecretSuccess = RotateWebhookSubscriptionSecretResult & {
     __typename?: "RotateWebhookSubscriptionSecretSuccess";
-    message: Scalars["String"];
-    newSecret: Scalars["String"];
+    message: Scalars["String"]["output"];
+    newSecret: Scalars["String"]["output"];
 };
 
 export type Search = {
@@ -3829,31 +3833,31 @@ export type Search = {
 
 export type SearchNameLookupArgs = {
     filters: LookupFilters;
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
-    query: Scalars["String"];
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
+    query: Scalars["String"]["input"];
 };
 
 export type SearchQueryArgs = {
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
-    query: Scalars["String"];
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
+    query: Scalars["String"]["input"];
 };
 
 export type SearchQueryFullTextArgs = {
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
-    prompt: Scalars["String"];
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
+    prompt: Scalars["String"]["input"];
 };
 
 export type SearchQueryHybridArgs = {
-    limit?: InputMaybe<Scalars["Int"]>;
-    prompt: Scalars["String"];
+    limit?: InputMaybe<Scalars["Int"]["input"]>;
+    prompt: Scalars["String"]["input"];
 };
 
 export type SearchQueryNaturalLanguageArgs = {
-    limit?: InputMaybe<Scalars["Int"]>;
-    prompt: Scalars["String"];
+    limit?: InputMaybe<Scalars["Int"]["input"]>;
+    prompt: Scalars["String"]["input"];
 };
 
 export type SearchResult = Dataset;
@@ -3866,7 +3870,7 @@ export type SearchResultConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount: Scalars["Int"];
+    totalCount: Scalars["Int"]["output"];
 };
 
 export type SearchResultEdge = {
@@ -3877,7 +3881,7 @@ export type SearchResultEdge = {
 export type SearchResultEx = {
     __typename?: "SearchResultEx";
     item: SearchResult;
-    score: Scalars["Float"];
+    score: Scalars["Float"]["output"];
 };
 
 export type SearchResultExConnection = {
@@ -3888,7 +3892,7 @@ export type SearchResultExConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount: Scalars["Int"];
+    totalCount: Scalars["Int"]["output"];
 };
 
 export type SearchResultExEdge = {
@@ -3905,7 +3909,7 @@ export type SearchResultExEdge = {
 export type Seed = {
     __typename?: "Seed";
     /** Unique identity of the dataset. */
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["output"];
     /** Type of the dataset. */
     datasetKind: DatasetKind;
 };
@@ -3931,31 +3935,31 @@ export type SetDataSchemaSchemaArgs = {
 };
 
 export type SetDatasetVisibilityResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type SetDatasetVisibilityResultSuccess = SetDatasetVisibilityResult & {
     __typename?: "SetDatasetVisibilityResultSuccess";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type SetFlowConfigResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type SetFlowConfigSuccess = SetFlowConfigResult & {
     __typename?: "SetFlowConfigSuccess";
     config: FlowConfiguration;
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type SetFlowTriggerResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type SetFlowTriggerSuccess = SetFlowTriggerResult & {
     __typename?: "SetFlowTriggerSuccess";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
     trigger: FlowTrigger;
 };
 
@@ -3967,9 +3971,9 @@ export type SetFlowTriggerSuccess = SetFlowTriggerResult & {
 export type SetInfo = {
     __typename?: "SetInfo";
     /** Brief single-sentence summary of a dataset. */
-    description?: Maybe<Scalars["String"]>;
+    description?: Maybe<Scalars["String"]["output"]>;
     /** Keywords, search terms, or tags used to describe the dataset. */
-    keywords?: Maybe<Array<Scalars["String"]>>;
+    keywords?: Maybe<Array<Scalars["String"]["output"]>>;
 };
 
 /**
@@ -3980,13 +3984,13 @@ export type SetInfo = {
 export type SetLicense = {
     __typename?: "SetLicense";
     /** Full name of the license. */
-    name: Scalars["String"];
+    name: Scalars["String"]["output"];
     /** Abbreviated name of the license. */
-    shortName: Scalars["String"];
+    shortName: Scalars["String"]["output"];
     /** License identifier from the SPDX License List. */
-    spdxId?: Maybe<Scalars["String"]>;
+    spdxId?: Maybe<Scalars["String"]["output"]>;
     /** URL where licensing terms can be found. */
-    websiteUrl: Scalars["String"];
+    websiteUrl: Scalars["String"]["output"];
 };
 
 /**
@@ -4013,12 +4017,12 @@ export type SetPollingSource = {
 };
 
 export type SetRoleResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type SetRoleResultSuccess = SetRoleResult & {
     __typename?: "SetRoleResultSuccess";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 /**
@@ -4042,33 +4046,33 @@ export type SetTransform = {
 export type SetVocab = {
     __typename?: "SetVocab";
     /** Name of the event time column. */
-    eventTimeColumn?: Maybe<Scalars["String"]>;
+    eventTimeColumn?: Maybe<Scalars["String"]["output"]>;
     /** Name of the offset column. */
-    offsetColumn?: Maybe<Scalars["String"]>;
+    offsetColumn?: Maybe<Scalars["String"]["output"]>;
     /** Name of the operation type column. */
-    operationTypeColumn?: Maybe<Scalars["String"]>;
+    operationTypeColumn?: Maybe<Scalars["String"]["output"]>;
     /** Name of the system time column. */
-    systemTimeColumn?: Maybe<Scalars["String"]>;
+    systemTimeColumn?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type SetWatermarkIsDerivative = SetWatermarkResult & {
     __typename?: "SetWatermarkIsDerivative";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type SetWatermarkResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type SetWatermarkUpToDate = SetWatermarkResult & {
     __typename?: "SetWatermarkUpToDate";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type SetWatermarkUpdated = SetWatermarkResult & {
     __typename?: "SetWatermarkUpdated";
-    message: Scalars["String"];
-    newHead: Scalars["Multihash"];
+    message: Scalars["String"]["output"];
+    newHead: Scalars["Multihash"]["output"];
 };
 
 /**
@@ -4085,7 +4089,7 @@ export type SourceCaching = SourceCachingForever;
  */
 export type SourceCachingForever = {
     __typename?: "SourceCachingForever";
-    dummy?: Maybe<Scalars["String"]>;
+    dummy?: Maybe<Scalars["String"]["output"]>;
 };
 
 /**
@@ -4109,11 +4113,11 @@ export type SourceState = {
      * Identifies the type of the state. Standard types include: `odf/etag`,
      * `odf/last-modified`.
      */
-    kind: Scalars["String"];
+    kind: Scalars["String"]["output"];
     /** Identifies the source that the state corresponds to. */
-    sourceName: Scalars["String"];
+    sourceName: Scalars["String"]["output"];
     /** Opaque value representing the state. */
-    value: Scalars["String"];
+    value: Scalars["String"]["output"];
 };
 
 /**
@@ -4128,56 +4132,56 @@ export type SqlQueryStep = {
      * query. Step without this alias will be treated as an output of the
      * transformation.
      */
-    alias?: Maybe<Scalars["String"]>;
+    alias?: Maybe<Scalars["String"]["output"]>;
     /** SQL query the result of which will be exposed under the alias. */
-    query: Scalars["String"];
+    query: Scalars["String"]["output"];
 };
 
 export type StartUploadVersionErrorTooLarge = StartUploadVersionResult & {
     __typename?: "StartUploadVersionErrorTooLarge";
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
-    uploadLimit: Scalars["Int"];
-    uploadSize: Scalars["Int"];
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
+    uploadLimit: Scalars["Int"]["output"];
+    uploadSize: Scalars["Int"]["output"];
 };
 
 export type StartUploadVersionResult = {
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
 };
 
 export type StartUploadVersionSuccess = StartUploadVersionResult & {
     __typename?: "StartUploadVersionSuccess";
     headers: Array<KeyValue>;
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
-    method: Scalars["String"];
-    uploadToken: Scalars["String"];
-    url: Scalars["String"];
-    useMultipart: Scalars["Boolean"];
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
+    method: Scalars["String"]["output"];
+    uploadToken: Scalars["String"]["output"];
+    url: Scalars["String"]["output"];
+    useMultipart: Scalars["Boolean"]["output"];
 };
 
 export type Task = {
     __typename?: "Task";
     /** Whether the task was ordered to be cancelled */
-    cancellationRequested: Scalars["Boolean"];
+    cancellationRequested: Scalars["Boolean"]["output"];
     /** Time when cancellation of task was requested */
-    cancellationRequestedAt?: Maybe<Scalars["DateTime"]>;
+    cancellationRequestedAt?: Maybe<Scalars["DateTime"]["output"]>;
     /** Time when task was originally created and placed in a queue */
-    createdAt: Scalars["DateTime"];
+    createdAt: Scalars["DateTime"]["output"];
     /** Time when task has reached a final outcome */
-    finishedAt?: Maybe<Scalars["DateTime"]>;
+    finishedAt?: Maybe<Scalars["DateTime"]["output"]>;
     /**
      * Describes a certain final outcome of the task once it reaches the
      * "finished" status
      */
     outcome?: Maybe<TaskOutcome>;
     /** Time when task transitioned into a running state */
-    ranAt?: Maybe<Scalars["DateTime"]>;
+    ranAt?: Maybe<Scalars["DateTime"]["output"]>;
     /** Life-cycle status of a task */
     status: TaskStatus;
     /** Unique and stable identifier of this task */
-    taskId: Scalars["TaskID"];
+    taskId: Scalars["TaskID"]["output"];
 };
 
 export type TaskFailureReason =
@@ -4187,20 +4191,20 @@ export type TaskFailureReason =
 
 export type TaskFailureReasonGeneral = {
     __typename?: "TaskFailureReasonGeneral";
-    message: Scalars["String"];
-    recoverable: Scalars["Boolean"];
+    message: Scalars["String"]["output"];
+    recoverable: Scalars["Boolean"]["output"];
 };
 
 export type TaskFailureReasonInputDatasetCompacted = {
     __typename?: "TaskFailureReasonInputDatasetCompacted";
     inputDataset: Dataset;
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type TaskFailureReasonWebhookDeliveryProblem = {
     __typename?: "TaskFailureReasonWebhookDeliveryProblem";
-    message: Scalars["String"];
-    targetUrl: Scalars["Url"];
+    message: Scalars["String"]["output"];
+    targetUrl: Scalars["Url"]["output"];
 };
 
 /** Describes a certain final outcome of the task */
@@ -4208,7 +4212,7 @@ export type TaskOutcome = TaskOutcomeCancelled | TaskOutcomeFailed | TaskOutcome
 
 export type TaskOutcomeCancelled = {
     __typename?: "TaskOutcomeCancelled";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type TaskOutcomeFailed = {
@@ -4218,7 +4222,7 @@ export type TaskOutcomeFailed = {
 
 export type TaskOutcomeSuccess = {
     __typename?: "TaskOutcomeSuccess";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 /** Life-cycle status of a task */
@@ -4240,19 +4244,19 @@ export enum TaskStatus {
 export type TemporalTable = {
     __typename?: "TemporalTable";
     /** Name of the dataset to be converted into a temporal table. */
-    name: Scalars["String"];
+    name: Scalars["String"]["output"];
     /** Column names used as the primary key for creating a table. */
-    primaryKey: Array<Scalars["String"]>;
+    primaryKey: Array<Scalars["String"]["output"]>;
 };
 
 export type TimeDelta = {
     __typename?: "TimeDelta";
-    every: Scalars["Int"];
+    every: Scalars["Int"]["output"];
     unit: TimeUnit;
 };
 
 export type TimeDeltaInput = {
-    every: Scalars["Int"];
+    every: Scalars["Int"]["input"];
     unit: TimeUnit;
 };
 
@@ -4265,12 +4269,12 @@ export enum TimeUnit {
 
 export type TotalDatasetsStatistic = {
     __typename?: "TotalDatasetsStatistic";
-    totalCheckpointsSizeBytes: Scalars["Int"];
-    totalDataSizeBytes: Scalars["Int"];
-    totalLinkedObjectsSizeBytes: Scalars["Int"];
-    totalNumLinkedObjects: Scalars["Int"];
-    totalRecords: Scalars["Int"];
-    totalSizeBytes: Scalars["Int"];
+    totalCheckpointsSizeBytes: Scalars["Int"]["output"];
+    totalDataSizeBytes: Scalars["Int"]["output"];
+    totalLinkedObjectsSizeBytes: Scalars["Int"]["output"];
+    totalNumLinkedObjects: Scalars["Int"]["output"];
+    totalRecords: Scalars["Int"]["output"];
+    totalSizeBytes: Scalars["Int"]["output"];
 };
 
 /**
@@ -4282,8 +4286,8 @@ export type Transform = TransformSql;
 
 export type TransformInput = {
     __typename?: "TransformInput";
-    alias: Scalars["String"];
-    datasetRef: Scalars["DatasetRef"];
+    alias: Scalars["String"]["output"];
+    datasetRef: Scalars["DatasetRef"]["output"];
     inputDataset: TransformInputDataset;
 };
 
@@ -4293,19 +4297,19 @@ export type TransformInput = {
  * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#transforminput-schema
  */
 export type TransformInputDataset = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type TransformInputDatasetAccessible = TransformInputDataset & {
     __typename?: "TransformInputDatasetAccessible";
     dataset: Dataset;
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type TransformInputDatasetNotAccessible = TransformInputDataset & {
     __typename?: "TransformInputDatasetNotAccessible";
-    datasetRef: Scalars["DatasetRef"];
-    message: Scalars["String"];
+    datasetRef: Scalars["DatasetRef"]["output"];
+    message: Scalars["String"]["output"];
 };
 
 /**
@@ -4315,114 +4319,114 @@ export type TransformInputDatasetNotAccessible = TransformInputDataset & {
  */
 export type TransformSql = {
     __typename?: "TransformSql";
-    engine: Scalars["String"];
+    engine: Scalars["String"]["output"];
     queries: Array<SqlQueryStep>;
     temporalTables?: Maybe<Array<TemporalTable>>;
-    version?: Maybe<Scalars["String"]>;
+    version?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type TriggerFlowResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type TriggerFlowSuccess = TriggerFlowResult & {
     __typename?: "TriggerFlowSuccess";
     flow: Flow;
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type UnsetRoleResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type UnsetRoleResultSuccess = UnsetRoleResult & {
     __typename?: "UnsetRoleResultSuccess";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type UpdateEmailNonUnique = UpdateEmailResult & {
     __typename?: "UpdateEmailNonUnique";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type UpdateEmailResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type UpdateEmailSuccess = UpdateEmailResult & {
     __typename?: "UpdateEmailSuccess";
-    message: Scalars["String"];
-    newEmail: Scalars["String"];
+    message: Scalars["String"]["output"];
+    newEmail: Scalars["String"]["output"];
 };
 
 export type UpdateReadmeResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type UpdateVersionErrorCasFailed = UpdateVersionResult & {
     __typename?: "UpdateVersionErrorCasFailed";
-    actualHead: Scalars["Multihash"];
-    expectedHead: Scalars["Multihash"];
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
+    actualHead: Scalars["Multihash"]["output"];
+    expectedHead: Scalars["Multihash"]["output"];
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
 };
 
 export type UpdateVersionErrorInvalidExtraData = UpdateVersionResult & {
     __typename?: "UpdateVersionErrorInvalidExtraData";
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
 };
 
 export type UpdateVersionResult = {
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
 };
 
 export type UpdateVersionSuccess = UpdateVersionResult & {
     __typename?: "UpdateVersionSuccess";
-    contentHash: Scalars["Multihash"];
-    isSuccess: Scalars["Boolean"];
-    message: Scalars["String"];
-    newHead: Scalars["Multihash"];
-    newVersion: Scalars["Int"];
-    oldHead: Scalars["Multihash"];
+    contentHash: Scalars["Multihash"]["output"];
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
+    newHead: Scalars["Multihash"]["output"];
+    newVersion: Scalars["Int"]["output"];
+    oldHead: Scalars["Multihash"]["output"];
 };
 
 export type UpdateWebhookSubscriptionResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type UpdateWebhookSubscriptionResultSuccess = UpdateWebhookSubscriptionResult & {
     __typename?: "UpdateWebhookSubscriptionResultSuccess";
-    message: Scalars["String"];
-    updated: Scalars["Boolean"];
+    message: Scalars["String"]["output"];
+    updated: Scalars["Boolean"]["output"];
 };
 
 export type UpdateWebhookSubscriptionResultUnexpected = UpdateWebhookSubscriptionResult & {
     __typename?: "UpdateWebhookSubscriptionResultUnexpected";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
     status: WebhookSubscriptionStatus;
 };
 
 export type UpsertDatasetEnvVarResult = {
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type UpsertDatasetEnvVarResultCreated = UpsertDatasetEnvVarResult & {
     __typename?: "UpsertDatasetEnvVarResultCreated";
     envVar: ViewDatasetEnvVar;
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type UpsertDatasetEnvVarResultUpdated = UpsertDatasetEnvVarResult & {
     __typename?: "UpsertDatasetEnvVarResultUpdated";
     envVar: ViewDatasetEnvVar;
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type UpsertDatasetEnvVarUpToDate = UpsertDatasetEnvVarResult & {
     __typename?: "UpsertDatasetEnvVarUpToDate";
-    message: Scalars["String"];
+    message: Scalars["String"]["output"];
 };
 
 export type VersionedFile = {
@@ -4436,24 +4440,24 @@ export type VersionedFile = {
 };
 
 export type VersionedFileAsOfArgs = {
-    blockHash?: InputMaybe<Scalars["Multihash"]>;
-    version?: InputMaybe<Scalars["Int"]>;
+    blockHash?: InputMaybe<Scalars["Multihash"]["input"]>;
+    version?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type VersionedFileVersionsArgs = {
-    maxVersion?: InputMaybe<Scalars["Int"]>;
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    maxVersion?: InputMaybe<Scalars["Int"]["input"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type VersionedFileContentDownload = {
     __typename?: "VersionedFileContentDownload";
     /** Download URL expiration timestamp */
-    expiresAt?: Maybe<Scalars["DateTime"]>;
+    expiresAt?: Maybe<Scalars["DateTime"]["output"]>;
     /** Headers to include in the request */
     headers: Array<KeyValue>;
     /** Direct download URL */
-    url: Scalars["String"];
+    url: Scalars["String"]["output"];
 };
 
 export type VersionedFileEntry = {
@@ -4462,23 +4466,23 @@ export type VersionedFileEntry = {
      * Returns encoded content in-band. Should be used for small files only and
      * will return an error if called on large data.
      */
-    content: Scalars["Base64Usnp"];
+    content: Scalars["Base64Usnp"]["output"];
     /** Multihash of the file content */
-    contentHash: Scalars["Multihash"];
+    contentHash: Scalars["Multihash"]["output"];
     /** Size of the content in bytes */
-    contentLength: Scalars["Int"];
+    contentLength: Scalars["Int"]["output"];
     /** Media type of the file content */
-    contentType: Scalars["String"];
+    contentType: Scalars["String"]["output"];
     /** Returns a direct download URL */
     contentUrl: VersionedFileContentDownload;
     /** Event time when this version was created/updated */
-    eventTime: Scalars["DateTime"];
+    eventTime: Scalars["DateTime"]["output"];
     /** Extra data associated with this file version */
-    extraData: Scalars["ExtraData"];
+    extraData: Scalars["ExtraData"]["output"];
     /** System time when this version was created/updated */
-    systemTime: Scalars["DateTime"];
+    systemTime: Scalars["DateTime"]["output"];
     /** File version */
-    version: Scalars["Int"];
+    version: Scalars["Int"]["output"];
 };
 
 export type VersionedFileEntryConnection = {
@@ -4489,7 +4493,7 @@ export type VersionedFileEntryConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount: Scalars["Int"];
+    totalCount: Scalars["Int"]["output"];
 };
 
 export type VersionedFileEntryEdge = {
@@ -4522,26 +4526,26 @@ export type VersionedFileMut = {
 };
 
 export type VersionedFileMutFinishUploadNewVersionArgs = {
-    expectedHead?: InputMaybe<Scalars["Multihash"]>;
-    extraData?: InputMaybe<Scalars["ExtraData"]>;
-    uploadToken: Scalars["String"];
+    expectedHead?: InputMaybe<Scalars["Multihash"]["input"]>;
+    extraData?: InputMaybe<Scalars["ExtraData"]["input"]>;
+    uploadToken: Scalars["String"]["input"];
 };
 
 export type VersionedFileMutStartUploadNewVersionArgs = {
-    contentLength: Scalars["Int"];
-    contentType?: InputMaybe<Scalars["String"]>;
+    contentLength: Scalars["Int"]["input"];
+    contentType?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type VersionedFileMutUpdateExtraDataArgs = {
-    expectedHead?: InputMaybe<Scalars["Multihash"]>;
-    extraData: Scalars["ExtraData"];
+    expectedHead?: InputMaybe<Scalars["Multihash"]["input"]>;
+    extraData: Scalars["ExtraData"]["input"];
 };
 
 export type VersionedFileMutUploadNewVersionArgs = {
-    content: Scalars["Base64Usnp"];
-    contentType?: InputMaybe<Scalars["String"]>;
-    expectedHead?: InputMaybe<Scalars["Multihash"]>;
-    extraData?: InputMaybe<Scalars["ExtraData"]>;
+    content: Scalars["Base64Usnp"]["input"];
+    contentType?: InputMaybe<Scalars["String"]["input"]>;
+    expectedHead?: InputMaybe<Scalars["Multihash"]["input"]>;
+    extraData?: InputMaybe<Scalars["ExtraData"]["input"]>;
 };
 
 export type ViewAccessToken = {
@@ -4549,26 +4553,26 @@ export type ViewAccessToken = {
     /** Access token account owner */
     account: Account;
     /** Date of token creation */
-    createdAt: Scalars["DateTime"];
+    createdAt: Scalars["DateTime"]["output"];
     /** Unique identifier of the access token */
-    id: Scalars["AccessTokenID"];
+    id: Scalars["AccessTokenID"]["output"];
     /** Name of the access token */
-    name: Scalars["String"];
+    name: Scalars["String"]["output"];
     /** Date of token revocation */
-    revokedAt?: Maybe<Scalars["DateTime"]>;
+    revokedAt?: Maybe<Scalars["DateTime"]["output"]>;
 };
 
 export type ViewDatasetEnvVar = {
     __typename?: "ViewDatasetEnvVar";
     /** Date of the dataset environment variable creation */
-    createdAt: Scalars["DateTime"];
+    createdAt: Scalars["DateTime"]["output"];
     /** Unique identifier of the dataset environment variable */
-    id: Scalars["DatasetEnvVarID"];
-    isSecret: Scalars["Boolean"];
+    id: Scalars["DatasetEnvVarID"]["output"];
+    isSecret: Scalars["Boolean"]["output"];
     /** Key of the dataset environment variable */
-    key: Scalars["String"];
+    key: Scalars["String"]["output"];
     /** Non secret value of dataset environment variable */
-    value?: Maybe<Scalars["String"]>;
+    value?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type ViewDatasetEnvVarConnection = {
@@ -4579,7 +4583,7 @@ export type ViewDatasetEnvVarConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount: Scalars["Int"];
+    totalCount: Scalars["Int"]["output"];
 };
 
 export type ViewDatasetEnvVarEdge = {
@@ -4589,13 +4593,13 @@ export type ViewDatasetEnvVarEdge = {
 
 export type WebSocketProtocolDesc = {
     __typename?: "WebSocketProtocolDesc";
-    url: Scalars["String"];
+    url: Scalars["String"]["output"];
 };
 
 export type WebhookFlowSubProcess = {
     __typename?: "WebhookFlowSubProcess";
-    id: Scalars["WebhookSubscriptionID"];
-    name: Scalars["String"];
+    id: Scalars["WebhookSubscriptionID"]["output"];
+    name: Scalars["String"]["output"];
     parentDataset?: Maybe<Dataset>;
     summary: FlowProcessSummary;
 };
@@ -4608,7 +4612,7 @@ export type WebhookFlowSubProcessConnection = {
     /** Page information */
     pageInfo: PageBasedInfo;
     /** Approximate number of total nodes */
-    totalCount: Scalars["Int"];
+    totalCount: Scalars["Int"]["output"];
 };
 
 export type WebhookFlowSubProcessEdge = {
@@ -4628,37 +4632,37 @@ export type WebhookSubscription = {
      * Associated dataset ID
      * Not present for system subscriptions
      */
-    datasetId?: Maybe<Scalars["DatasetID"]>;
+    datasetId?: Maybe<Scalars["DatasetID"]["output"]>;
     /** List of events that trigger the webhook */
-    eventTypes: Array<Scalars["String"]>;
+    eventTypes: Array<Scalars["String"]["output"]>;
     /** Unique identifier of the webhook subscription */
-    id: Scalars["WebhookSubscriptionID"];
+    id: Scalars["WebhookSubscriptionID"]["output"];
     /** Optional label for the subscription. Maybe an empty string. */
-    label: Scalars["String"];
+    label: Scalars["String"]["output"];
     /** Status of the subscription */
     status: WebhookSubscriptionStatus;
     /** Target URL for the webhook */
-    targetUrl: Scalars["String"];
+    targetUrl: Scalars["String"]["output"];
 };
 
 export type WebhookSubscriptionDuplicateLabel = CreateWebhookSubscriptionResult &
     UpdateWebhookSubscriptionResult & {
         __typename?: "WebhookSubscriptionDuplicateLabel";
-        label: Scalars["String"];
-        message: Scalars["String"];
+        label: Scalars["String"]["output"];
+        message: Scalars["String"]["output"];
     };
 
 export type WebhookSubscriptionInput = {
-    eventTypes: Array<Scalars["WebhookEventType"]>;
-    label: Scalars["WebhookSubscriptionLabel"];
-    targetUrl: Scalars["URL"];
+    eventTypes: Array<Scalars["WebhookEventType"]["input"]>;
+    label: Scalars["WebhookSubscriptionLabel"]["input"];
+    targetUrl: Scalars["URL"]["input"];
 };
 
 export type WebhookSubscriptionInvalidTargetUrl = CreateWebhookSubscriptionResult &
     UpdateWebhookSubscriptionResult & {
         __typename?: "WebhookSubscriptionInvalidTargetUrl";
-        innerMessage: Scalars["String"];
-        message: Scalars["String"];
+        innerMessage: Scalars["String"]["output"];
+        message: Scalars["String"]["output"];
     };
 
 export type WebhookSubscriptionMut = {
@@ -4678,8 +4682,8 @@ export type WebhookSubscriptionMutUpdateArgs = {
 export type WebhookSubscriptionNoEventTypesProvided = CreateWebhookSubscriptionResult &
     UpdateWebhookSubscriptionResult & {
         __typename?: "WebhookSubscriptionNoEventTypesProvided";
-        message: Scalars["String"];
-        numEventTypes: Scalars["Int"];
+        message: Scalars["String"]["output"];
+        numEventTypes: Scalars["Int"]["output"];
     };
 
 export enum WebhookSubscriptionStatus {
@@ -4693,12 +4697,12 @@ export enum WebhookSubscriptionStatus {
 export type Webhooks = {
     __typename?: "Webhooks";
     /** List of supported event types */
-    eventTypes: Array<Scalars["String"]>;
+    eventTypes: Array<Scalars["String"]["output"]>;
 };
 
 export type CreateAccessTokenMutationVariables = Exact<{
-    accountId: Scalars["AccountID"];
-    tokenName: Scalars["String"];
+    accountId: Scalars["AccountID"]["input"];
+    tokenName: Scalars["String"]["input"];
 }>;
 
 export type CreateAccessTokenMutation = {
@@ -4728,9 +4732,9 @@ export type CreateAccessTokenMutation = {
 };
 
 export type ListAccessTokensQueryVariables = Exact<{
-    accountId: Scalars["AccountID"];
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    accountId: Scalars["AccountID"]["input"];
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
 }>;
 
 export type ListAccessTokensQuery = {
@@ -4753,8 +4757,8 @@ export type ListAccessTokensQuery = {
 };
 
 export type RevokeAccessTokenMutationVariables = Exact<{
-    accountId: Scalars["AccountID"];
-    tokenId: Scalars["AccessTokenID"];
+    accountId: Scalars["AccountID"]["input"];
+    tokenId: Scalars["AccessTokenID"]["input"];
 }>;
 
 export type RevokeAccessTokenMutation = {
@@ -4774,7 +4778,7 @@ export type RevokeAccessTokenMutation = {
 };
 
 export type AccountByNameQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
+    accountName: Scalars["AccountName"]["input"];
 }>;
 
 export type AccountByNameQuery = {
@@ -4783,8 +4787,8 @@ export type AccountByNameQuery = {
 };
 
 export type AccountChangeEmailMutationVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    newEmail: Scalars["Email"];
+    accountName: Scalars["AccountName"]["input"];
+    newEmail: Scalars["Email"]["input"];
 }>;
 
 export type AccountChangeEmailMutation = {
@@ -4801,7 +4805,7 @@ export type AccountChangeEmailMutation = {
 };
 
 export type AccountDatasetFlowsPausedQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
+    accountName: Scalars["AccountName"]["input"];
 }>;
 
 export type AccountDatasetFlowsPausedQuery = {
@@ -4819,9 +4823,9 @@ export type AccountDatasetFlowsPausedQuery = {
 };
 
 export type AccountFlowsAsCardsQueryVariables = Exact<{
-    name: Scalars["AccountName"];
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    name: Scalars["AccountName"]["input"];
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
     filters?: InputMaybe<FlowProcessFilters>;
     ordering?: InputMaybe<FlowProcessOrdering>;
 }>;
@@ -4847,7 +4851,7 @@ export type AccountFlowsAsCardsQuery = {
 };
 
 export type AccountListDatasetsWithFlowsQueryVariables = Exact<{
-    name: Scalars["AccountName"];
+    name: Scalars["AccountName"]["input"];
 }>;
 
 export type AccountListDatasetsWithFlowsQuery = {
@@ -4868,10 +4872,10 @@ export type AccountListDatasetsWithFlowsQuery = {
 };
 
 export type AccountListFlowsQueryVariables = Exact<{
-    name: Scalars["AccountName"];
-    page?: InputMaybe<Scalars["Int"]>;
-    perPageTable?: InputMaybe<Scalars["Int"]>;
-    perPageTiles?: InputMaybe<Scalars["Int"]>;
+    name: Scalars["AccountName"]["input"];
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPageTable?: InputMaybe<Scalars["Int"]["input"]>;
+    perPageTiles?: InputMaybe<Scalars["Int"]["input"]>;
     filters?: InputMaybe<AccountFlowFilters>;
 }>;
 
@@ -4894,7 +4898,7 @@ export type AccountListFlowsQuery = {
 };
 
 export type AccountPauseFlowsMutationVariables = Exact<{
-    accountName: Scalars["AccountName"];
+    accountName: Scalars["AccountName"]["input"];
 }>;
 
 export type AccountPauseFlowsMutation = {
@@ -4912,9 +4916,9 @@ export type AccountPauseFlowsMutation = {
 };
 
 export type AccountPrimaryCardsQueryVariables = Exact<{
-    name: Scalars["AccountName"];
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    name: Scalars["AccountName"]["input"];
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
     filters?: InputMaybe<FlowProcessFilters>;
     ordering?: InputMaybe<FlowProcessOrdering>;
 }>;
@@ -4940,7 +4944,7 @@ export type AccountPrimaryCardsQuery = {
 };
 
 export type AccountResumeFlowsMutationVariables = Exact<{
-    accountName: Scalars["AccountName"];
+    accountName: Scalars["AccountName"]["input"];
 }>;
 
 export type AccountResumeFlowsMutation = {
@@ -4958,9 +4962,9 @@ export type AccountResumeFlowsMutation = {
 };
 
 export type AccountWebhookCardsQueryVariables = Exact<{
-    name: Scalars["AccountName"];
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    name: Scalars["AccountName"]["input"];
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
     filters?: InputMaybe<FlowProcessFilters>;
     ordering?: InputMaybe<FlowProcessOrdering>;
 }>;
@@ -4986,7 +4990,7 @@ export type AccountWebhookCardsQuery = {
 };
 
 export type AccountWithEmailQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
+    accountName: Scalars["AccountName"]["input"];
 }>;
 
 export type AccountWithEmailQuery = {
@@ -4995,8 +4999,8 @@ export type AccountWithEmailQuery = {
 };
 
 export type ChangeAccountUsernameMutationVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    newName: Scalars["AccountName"];
+    accountName: Scalars["AccountName"]["input"];
+    newName: Scalars["AccountName"]["input"];
 }>;
 
 export type ChangeAccountUsernameMutation = {
@@ -5013,8 +5017,8 @@ export type ChangeAccountUsernameMutation = {
 };
 
 export type ChangeAdminPasswordMutationVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    password: Scalars["AccountPassword"];
+    accountName: Scalars["AccountName"]["input"];
+    password: Scalars["AccountPassword"]["input"];
 }>;
 
 export type ChangeAdminPasswordMutation = {
@@ -5031,9 +5035,9 @@ export type ChangeAdminPasswordMutation = {
 };
 
 export type ChangeUserPasswordMutationVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    oldPassword: Scalars["AccountPassword"];
-    newPassword: Scalars["AccountPassword"];
+    accountName: Scalars["AccountName"]["input"];
+    oldPassword: Scalars["AccountPassword"]["input"];
+    newPassword: Scalars["AccountPassword"]["input"];
 }>;
 
 export type ChangeUserPasswordMutation = {
@@ -5050,7 +5054,7 @@ export type ChangeUserPasswordMutation = {
 };
 
 export type DeleteAccountByNameMutationVariables = Exact<{
-    accountName: Scalars["AccountName"];
+    accountName: Scalars["AccountName"]["input"];
 }>;
 
 export type DeleteAccountByNameMutation = {
@@ -5162,7 +5166,7 @@ export type AccountFragment = {
 };
 
 export type LoginWeb3WalletMutationVariables = Exact<{
-    account: Scalars["EvmWalletAddress"];
+    account: Scalars["EvmWalletAddress"]["input"];
 }>;
 
 export type LoginWeb3WalletMutation = {
@@ -5178,8 +5182,8 @@ export type LoginWeb3WalletMutation = {
 
 export type LoginMutationVariables = Exact<{
     login_method: AccountProvider;
-    login_credentials_json: Scalars["String"];
-    deviceCode?: InputMaybe<Scalars["DeviceCode"]>;
+    login_credentials_json: Scalars["String"]["input"];
+    deviceCode?: InputMaybe<Scalars["DeviceCode"]["input"]>;
 }>;
 
 export type LoginMutation = {
@@ -5195,7 +5199,7 @@ export type LoginMutation = {
 };
 
 export type FetchAccountDetailsMutationVariables = Exact<{
-    accessToken: Scalars["String"];
+    accessToken: Scalars["String"]["input"];
 }>;
 
 export type FetchAccountDetailsMutation = {
@@ -5204,7 +5208,7 @@ export type FetchAccountDetailsMutation = {
 };
 
 export type SetVisibilityDatasetMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
     visibility: DatasetVisibilityInput;
 }>;
 
@@ -5220,8 +5224,8 @@ export type SetVisibilityDatasetMutation = {
 };
 
 export type CommitEventToDatasetMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    event: Scalars["String"];
+    datasetId: Scalars["DatasetID"]["input"];
+    event: Scalars["String"]["input"];
 }>;
 
 export type CommitEventToDatasetMutation = {
@@ -5253,7 +5257,7 @@ export type CommitEventToDatasetMutation = {
 
 export type CreateEmptyDatasetMutationVariables = Exact<{
     datasetKind: DatasetKind;
-    datasetAlias: Scalars["DatasetAlias"];
+    datasetAlias: Scalars["DatasetAlias"]["input"];
     datasetVisibility: DatasetVisibility;
 }>;
 
@@ -5277,7 +5281,7 @@ export type CreateEmptyDatasetMutation = {
 };
 
 export type CreateDatasetFromSnapshotMutationVariables = Exact<{
-    snapshot: Scalars["String"];
+    snapshot: Scalars["String"]["input"];
     datasetVisibility: DatasetVisibility;
 }>;
 
@@ -5305,8 +5309,8 @@ export type CreateDatasetFromSnapshotMutation = {
 };
 
 export type UpdateReadmeMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    content: Scalars["String"];
+    datasetId: Scalars["DatasetID"]["input"];
+    content: Scalars["String"]["input"];
 }>;
 
 export type UpdateReadmeMutation = {
@@ -5327,8 +5331,8 @@ export type UpdateReadmeMutation = {
 };
 
 export type UpdateWatermarkMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    watermark: Scalars["DateTime"];
+    datasetId: Scalars["DatasetID"]["input"];
+    watermark: Scalars["DateTime"]["input"];
 }>;
 
 export type UpdateWatermarkMutation = {
@@ -5346,8 +5350,8 @@ export type UpdateWatermarkMutation = {
 };
 
 export type GetDatasetBasicsWithPermissionsQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
+    accountName: Scalars["AccountName"]["input"];
+    datasetName: Scalars["DatasetName"]["input"];
 }>;
 
 export type GetDatasetBasicsWithPermissionsQuery = {
@@ -5359,8 +5363,8 @@ export type GetDatasetBasicsWithPermissionsQuery = {
 };
 
 export type DatasetBlocksByEventTypeQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
+    accountName: Scalars["AccountName"]["input"];
+    datasetName: Scalars["DatasetName"]["input"];
     eventTypes: Array<MetadataEventType> | MetadataEventType;
     encoding: MetadataManifestFormat;
 }>;
@@ -5397,8 +5401,8 @@ export type DatasetBlocksByEventTypeQuery = {
 };
 
 export type DatasetByAccountAndDatasetNameQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
+    accountName: Scalars["AccountName"]["input"];
+    datasetName: Scalars["DatasetName"]["input"];
 }>;
 
 export type DatasetByAccountAndDatasetNameQuery = {
@@ -5407,7 +5411,7 @@ export type DatasetByAccountAndDatasetNameQuery = {
 };
 
 export type DatasetByIdQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
 }>;
 
 export type DatasetByIdQuery = {
@@ -5416,9 +5420,9 @@ export type DatasetByIdQuery = {
 };
 
 export type DatasetListCollaboratorsQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    datasetId: Scalars["DatasetID"]["input"];
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
 }>;
 
 export type DatasetListCollaboratorsQuery = {
@@ -5447,8 +5451,8 @@ export type DatasetListCollaboratorsQuery = {
 };
 
 export type SetRoleCollaboratorMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    accountId: Scalars["AccountID"];
+    datasetId: Scalars["DatasetID"]["input"];
+    accountId: Scalars["AccountID"]["input"];
     role: DatasetAccessRole;
 }>;
 
@@ -5467,8 +5471,8 @@ export type SetRoleCollaboratorMutation = {
 };
 
 export type UnsetRoleCollaboratorMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    accountIds: Array<Scalars["AccountID"]> | Scalars["AccountID"];
+    datasetId: Scalars["DatasetID"]["input"];
+    accountIds: Array<Scalars["AccountID"]["input"]> | Scalars["AccountID"]["input"];
 }>;
 
 export type UnsetRoleCollaboratorMutation = {
@@ -5486,9 +5490,9 @@ export type UnsetRoleCollaboratorMutation = {
 };
 
 export type GetDatasetDataSqlRunQueryVariables = Exact<{
-    query: Scalars["String"];
-    limit: Scalars["Int"];
-    skip?: InputMaybe<Scalars["Int"]>;
+    query: Scalars["String"]["input"];
+    limit: Scalars["Int"]["input"];
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
 }>;
 
 export type GetDatasetDataSqlRunQuery = {
@@ -5502,8 +5506,8 @@ export type GetDatasetDataSqlRunQuery = {
 };
 
 export type DatasetHeadBlockHashQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
+    accountName: Scalars["AccountName"]["input"];
+    datasetName: Scalars["DatasetName"]["input"];
 }>;
 
 export type DatasetHeadBlockHashQuery = {
@@ -5524,10 +5528,10 @@ export type DatasetHeadBlockHashQuery = {
 };
 
 export type GetDatasetHistoryQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
-    perPage?: InputMaybe<Scalars["Int"]>;
-    page?: InputMaybe<Scalars["Int"]>;
+    accountName: Scalars["AccountName"]["input"];
+    datasetName: Scalars["DatasetName"]["input"];
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
 }>;
 
 export type GetDatasetHistoryQuery = {
@@ -5555,8 +5559,8 @@ export type GetDatasetHistoryQuery = {
 };
 
 export type GetDatasetLineageQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
+    accountName: Scalars["AccountName"]["input"];
+    datasetName: Scalars["DatasetName"]["input"];
 }>;
 
 export type GetDatasetLineageQuery = {
@@ -5568,7 +5572,7 @@ export type GetDatasetLineageQuery = {
 };
 
 export type DatasetListDownstreamsQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
 }>;
 
 export type DatasetListDownstreamsQuery = {
@@ -5596,9 +5600,9 @@ export type DatasetListDownstreamsQuery = {
 };
 
 export type GetDatasetMainDataQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
-    limit?: InputMaybe<Scalars["Int"]>;
+    accountName: Scalars["AccountName"]["input"];
+    datasetName: Scalars["DatasetName"]["input"];
+    limit?: InputMaybe<Scalars["Int"]["input"]>;
 }>;
 
 export type GetDatasetMainDataQuery = {
@@ -5616,8 +5620,8 @@ export type GetDatasetMainDataQuery = {
 };
 
 export type DatasetProtocolsQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
+    accountName: Scalars["AccountName"]["input"];
+    datasetName: Scalars["DatasetName"]["input"];
 }>;
 
 export type DatasetProtocolsQuery = {
@@ -5645,7 +5649,7 @@ export type DatasetProtocolsQuery = {
 };
 
 export type DatasetPushSyncStatusesQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
 }>;
 
 export type DatasetPushSyncStatusesQuery = {
@@ -5675,7 +5679,7 @@ export type DatasetPushSyncStatusesQuery = {
 };
 
 export type GetDatasetSchemaQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
 }>;
 
 export type GetDatasetSchemaQuery = {
@@ -5695,8 +5699,8 @@ export type GetDatasetSchemaQuery = {
 };
 
 export type DatasetSystemTimeBlockByHashQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    blockHash: Scalars["Multihash"];
+    datasetId: Scalars["DatasetID"]["input"];
+    blockHash: Scalars["Multihash"]["input"];
 }>;
 
 export type DatasetSystemTimeBlockByHashQuery = {
@@ -5719,7 +5723,7 @@ export type DatasetSystemTimeBlockByHashQuery = {
 };
 
 export type DatasetUserRoleQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
 }>;
 
 export type DatasetUserRoleQuery = {
@@ -5728,9 +5732,9 @@ export type DatasetUserRoleQuery = {
 };
 
 export type DatasetsByAccountNameQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    perPage?: InputMaybe<Scalars["Int"]>;
-    page?: InputMaybe<Scalars["Int"]>;
+    accountName: Scalars["AccountName"]["input"];
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
 }>;
 
 export type DatasetsByAccountNameQuery = {
@@ -5747,7 +5751,7 @@ export type DatasetsByAccountNameQuery = {
 };
 
 export type DatasetsTotalCountByAccountNameQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
+    accountName: Scalars["AccountName"]["input"];
 }>;
 
 export type DatasetsTotalCountByAccountNameQuery = {
@@ -5756,7 +5760,7 @@ export type DatasetsTotalCountByAccountNameQuery = {
 };
 
 export type DeleteDatasetMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
 }>;
 
 export type DeleteDatasetMutation = {
@@ -5795,8 +5799,8 @@ export type EnginesQuery = {
 };
 
 export type DeleteEnvVariableMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    datasetEnvVarId: Scalars["DatasetEnvVarID"];
+    datasetId: Scalars["DatasetID"]["input"];
+    datasetEnvVarId: Scalars["DatasetEnvVarID"]["input"];
 }>;
 
 export type DeleteEnvVariableMutation = {
@@ -5816,9 +5820,9 @@ export type DeleteEnvVariableMutation = {
 };
 
 export type ExposedEnvVariableValueQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
-    datasetEnvVarId: Scalars["DatasetEnvVarID"];
+    accountName: Scalars["AccountName"]["input"];
+    datasetName: Scalars["DatasetName"]["input"];
+    datasetEnvVarId: Scalars["DatasetEnvVarID"]["input"];
 }>;
 
 export type ExposedEnvVariableValueQuery = {
@@ -5841,10 +5845,10 @@ export type ViewDatasetEnvVarDataFragment = {
 };
 
 export type ListEnvVariablesQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    accountName: Scalars["AccountName"]["input"];
+    datasetName: Scalars["DatasetName"]["input"];
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
 }>;
 
 export type ListEnvVariablesQuery = {
@@ -5869,10 +5873,10 @@ export type ListEnvVariablesQuery = {
 };
 
 export type UpsertEnvVariableMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    key: Scalars["String"];
-    value: Scalars["String"];
-    isSecret: Scalars["Boolean"];
+    datasetId: Scalars["DatasetID"]["input"];
+    key: Scalars["String"]["input"];
+    value: Scalars["String"]["input"];
+    isSecret: Scalars["Boolean"]["input"];
 }>;
 
 export type UpsertEnvVariableMutation = {
@@ -5901,7 +5905,7 @@ export type UpsertEnvVariableMutation = {
 };
 
 export type GetDatasetFlowConfigsQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
     datasetFlowType: DatasetFlowType;
 }>;
 
@@ -5954,7 +5958,7 @@ export type GetDatasetFlowConfigsQuery = {
 };
 
 export type SetCompactionFlowConfigMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
     compactionConfigInput: FlowConfigCompactionInput;
 }>;
 
@@ -5985,7 +5989,7 @@ export type SetCompactionFlowConfigMutation = {
 };
 
 export type SetIngestFlowConfigMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
     ingestConfigInput: FlowConfigIngestInput;
     retryPolicyInput?: InputMaybe<FlowRetryPolicyInput>;
 }>;
@@ -6017,7 +6021,7 @@ export type SetIngestFlowConfigMutation = {
 };
 
 export type PauseDatasetFlowTriggerMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
     datasetFlowType: DatasetFlowType;
 }>;
 
@@ -6036,7 +6040,7 @@ export type PauseDatasetFlowTriggerMutation = {
 };
 
 export type SetDatasetFlowTriggerMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
     datasetFlowType: DatasetFlowType;
     triggerRuleInput: FlowTriggerRuleInput;
     triggerStopPolicyInput: FlowTriggerStopPolicyInput;
@@ -6071,7 +6075,7 @@ export type SetDatasetFlowTriggerMutation = {
 };
 
 export type GetDatasetFlowTriggerQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
     datasetFlowType: DatasetFlowType;
 }>;
 
@@ -6116,8 +6120,8 @@ export type GetDatasetFlowTriggerQuery = {
 export type TimeDeltaDataFragment = { __typename?: "TimeDelta"; every: number; unit: TimeUnit };
 
 export type CancelFlowRunMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    flowId: Scalars["FlowID"];
+    datasetId: Scalars["DatasetID"]["input"];
+    flowId: Scalars["FlowID"]["input"];
 }>;
 
 export type CancelFlowRunMutation = {
@@ -6144,8 +6148,8 @@ export type CancelFlowRunMutation = {
 };
 
 export type GetFlowByIdQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    flowId: Scalars["FlowID"];
+    datasetId: Scalars["DatasetID"]["input"];
+    flowId: Scalars["FlowID"]["input"];
 }>;
 
 export type GetFlowByIdQuery = {
@@ -6199,7 +6203,7 @@ export type GetFlowByIdQuery = {
 };
 
 export type DatasetFlowsInitiatorsQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
 }>;
 
 export type DatasetFlowsInitiatorsQuery = {
@@ -6224,10 +6228,10 @@ export type DatasetFlowsInitiatorsQuery = {
 };
 
 export type GetDatasetListFlowsQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    page?: InputMaybe<Scalars["Int"]>;
-    perPageTable?: InputMaybe<Scalars["Int"]>;
-    perPageTiles?: InputMaybe<Scalars["Int"]>;
+    datasetId: Scalars["DatasetID"]["input"];
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPageTable?: InputMaybe<Scalars["Int"]["input"]>;
+    perPageTiles?: InputMaybe<Scalars["Int"]["input"]>;
     filters?: InputMaybe<DatasetFlowFilters>;
 }>;
 
@@ -6252,7 +6256,7 @@ export type GetDatasetListFlowsQuery = {
 };
 
 export type DatasetPauseFlowsMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
 }>;
 
 export type DatasetPauseFlowsMutation = {
@@ -6270,7 +6274,7 @@ export type DatasetPauseFlowsMutation = {
 };
 
 export type DatasetResumeFlowsMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
 }>;
 
 export type DatasetResumeFlowsMutation = {
@@ -6617,7 +6621,7 @@ export type FlowConnectionWidgetDataFragment = {
 };
 
 export type DatasetTriggerCompactionFlowMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
     compactionConfigInput?: InputMaybe<FlowConfigCompactionInput>;
 }>;
 
@@ -6652,7 +6656,7 @@ export type DatasetTriggerCompactionFlowMutation = {
 };
 
 export type DatasetTriggerIngestFlowMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
     ingestConfigInput?: InputMaybe<FlowConfigIngestInput>;
 }>;
 
@@ -6687,7 +6691,7 @@ export type DatasetTriggerIngestFlowMutation = {
 };
 
 export type DatasetTriggerResetFlowMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
     resetConfigInput: FlowConfigResetInput;
 }>;
 
@@ -6722,7 +6726,7 @@ export type DatasetTriggerResetFlowMutation = {
 };
 
 export type DatasetTriggerResetToMetadataFlowMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
 }>;
 
 export type DatasetTriggerResetToMetadataFlowMutation = {
@@ -6756,7 +6760,7 @@ export type DatasetTriggerResetToMetadataFlowMutation = {
 };
 
 export type DatasetTriggerTransformFlowMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
 }>;
 
 export type DatasetTriggerTransformFlowMutation = {
@@ -6790,7 +6794,7 @@ export type DatasetTriggerTransformFlowMutation = {
 };
 
 export type DatasetFlowsProcessesQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
 }>;
 
 export type DatasetFlowsProcessesQuery = {
@@ -7583,9 +7587,9 @@ export type MetadataBlockFragment = {
 };
 
 export type GetMetadataBlockQueryVariables = Exact<{
-    accountName: Scalars["AccountName"];
-    datasetName: Scalars["DatasetName"];
-    blockHash: Scalars["Multihash"];
+    accountName: Scalars["AccountName"]["input"];
+    datasetName: Scalars["DatasetName"]["input"];
+    blockHash: Scalars["Multihash"]["input"];
 }>;
 
 export type GetMetadataBlockQuery = {
@@ -7613,8 +7617,8 @@ export type GetMetadataBlockQuery = {
 };
 
 export type RenameDatasetMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    newName: Scalars["DatasetName"];
+    datasetId: Scalars["DatasetID"]["input"];
+    newName: Scalars["DatasetName"]["input"];
 }>;
 
 export type RenameDatasetMutation = {
@@ -7632,10 +7636,10 @@ export type RenameDatasetMutation = {
 };
 
 export type SearchCollaboratorQueryVariables = Exact<{
-    query: Scalars["String"];
+    query: Scalars["String"]["input"];
     filters: LookupFilters;
-    page?: InputMaybe<Scalars["Int"]>;
-    perPage?: InputMaybe<Scalars["Int"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
 }>;
 
 export type SearchCollaboratorQuery = {
@@ -7650,9 +7654,9 @@ export type SearchCollaboratorQuery = {
 };
 
 export type SearchDatasetsAutocompleteQueryVariables = Exact<{
-    query: Scalars["String"];
-    perPage?: InputMaybe<Scalars["Int"]>;
-    page?: InputMaybe<Scalars["Int"]>;
+    query: Scalars["String"]["input"];
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
 }>;
 
 export type SearchDatasetsAutocompleteQuery = {
@@ -7667,9 +7671,9 @@ export type SearchDatasetsAutocompleteQuery = {
 };
 
 export type SearchDatasetsOverviewQueryVariables = Exact<{
-    query: Scalars["String"];
-    perPage?: InputMaybe<Scalars["Int"]>;
-    page?: InputMaybe<Scalars["Int"]>;
+    query: Scalars["String"]["input"];
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
 }>;
 
 export type SearchDatasetsOverviewQuery = {
@@ -7686,8 +7690,8 @@ export type SearchDatasetsOverviewQuery = {
 };
 
 export type SemanticSearchDatasetsOverviewQueryVariables = Exact<{
-    prompt: Scalars["String"];
-    limit?: InputMaybe<Scalars["Int"]>;
+    prompt: Scalars["String"]["input"];
+    limit?: InputMaybe<Scalars["Int"]["input"]>;
 }>;
 
 export type SemanticSearchDatasetsOverviewQuery = {
@@ -7708,8 +7712,8 @@ export type SemanticSearchDatasetsOverviewQuery = {
 };
 
 export type DatasetWebhookByIdQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    id: Scalars["WebhookSubscriptionID"];
+    datasetId: Scalars["DatasetID"]["input"];
+    id: Scalars["WebhookSubscriptionID"]["input"];
 }>;
 
 export type DatasetWebhookByIdQuery = {
@@ -7735,7 +7739,7 @@ export type DatasetWebhookByIdQuery = {
 };
 
 export type DatasetWebhookCreateSubscriptionMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
     input: WebhookSubscriptionInput;
 }>;
 
@@ -7763,8 +7767,8 @@ export type DatasetWebhookCreateSubscriptionMutation = {
 };
 
 export type DatasetWebhookPauseSubscriptionMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    id: Scalars["WebhookSubscriptionID"];
+    datasetId: Scalars["DatasetID"]["input"];
+    id: Scalars["WebhookSubscriptionID"]["input"];
 }>;
 
 export type DatasetWebhookPauseSubscriptionMutation = {
@@ -7791,8 +7795,8 @@ export type DatasetWebhookPauseSubscriptionMutation = {
 };
 
 export type DatasetWebhookReactivateSubscriptionMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    id: Scalars["WebhookSubscriptionID"];
+    datasetId: Scalars["DatasetID"]["input"];
+    id: Scalars["WebhookSubscriptionID"]["input"];
 }>;
 
 export type DatasetWebhookReactivateSubscriptionMutation = {
@@ -7819,8 +7823,8 @@ export type DatasetWebhookReactivateSubscriptionMutation = {
 };
 
 export type DatasetWebhookRemoveSubscriptionMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    id: Scalars["WebhookSubscriptionID"];
+    datasetId: Scalars["DatasetID"]["input"];
+    id: Scalars["WebhookSubscriptionID"]["input"];
 }>;
 
 export type DatasetWebhookRemoveSubscriptionMutation = {
@@ -7845,8 +7849,8 @@ export type DatasetWebhookRemoveSubscriptionMutation = {
 };
 
 export type DatasetWebhookResumeSubscriptionMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    id: Scalars["WebhookSubscriptionID"];
+    datasetId: Scalars["DatasetID"]["input"];
+    id: Scalars["WebhookSubscriptionID"]["input"];
 }>;
 
 export type DatasetWebhookResumeSubscriptionMutation = {
@@ -7873,8 +7877,8 @@ export type DatasetWebhookResumeSubscriptionMutation = {
 };
 
 export type DatasetWebhookRotateSecretMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    id: Scalars["WebhookSubscriptionID"];
+    datasetId: Scalars["DatasetID"]["input"];
+    id: Scalars["WebhookSubscriptionID"]["input"];
 }>;
 
 export type DatasetWebhookRotateSecretMutation = {
@@ -7899,7 +7903,7 @@ export type DatasetWebhookRotateSecretMutation = {
 };
 
 export type DatasetWebhookSubscriptionsQueryVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
+    datasetId: Scalars["DatasetID"]["input"];
 }>;
 
 export type DatasetWebhookSubscriptionsQuery = {
@@ -7925,8 +7929,8 @@ export type DatasetWebhookSubscriptionsQuery = {
 };
 
 export type DatasetWebhookUpdateSubscriptionMutationVariables = Exact<{
-    datasetId: Scalars["DatasetID"];
-    id: Scalars["WebhookSubscriptionID"];
+    datasetId: Scalars["DatasetID"]["input"];
+    id: Scalars["WebhookSubscriptionID"]["input"];
     input: WebhookSubscriptionInput;
 }>;
 

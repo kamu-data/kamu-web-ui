@@ -184,7 +184,7 @@ describe("LoggedUserService", () => {
 
         it("should check user logout navigates to home page and clears GraphQL cache", fakeAsync(() => {
             const navigationServiceSpy = spyOn(navigationService, "navigateToHome");
-            const apolloClientSpy = spyOn(apollo.client, "clearStore").and.resolveTo();
+            const apolloClientSpy = spyOn(apollo.client.cache, "restore").and.resolveTo();
 
             attemptSuccessfulLoginViaAccessToken();
             tick();

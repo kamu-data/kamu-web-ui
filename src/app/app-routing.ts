@@ -10,7 +10,6 @@ import { ROUTES, Routes } from "@angular/router";
 
 import { AccountWhitelistNotFoundComponent } from "@common/components/account-whitelist-not-found/account-whitelist-not-found.component";
 import { PageNotFoundComponent } from "@common/components/page-not-found/page-not-found.component";
-import { accessTokenExpiredGuardFn } from "@common/guards/access-token-expired.guard";
 import { forbidAnonymousAccessGuardFn } from "@common/guards/forbid-anonymous-access.guard";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
@@ -165,9 +164,7 @@ export const provideConditionalGuardedRoutes = (): Provider => ({
         return [
             {
                 path: "",
-                canActivate: appConfigService.allowAnonymous
-                    ? [accessTokenExpiredGuardFn]
-                    : [forbidAnonymousAccessGuardFn, accessTokenExpiredGuardFn],
+                canActivate: appConfigService.allowAnonymous ? [] : [forbidAnonymousAccessGuardFn],
                 children: ANONYMOUS_GUARDED_ROUTES,
                 runGuardsAndResolvers: "always",
             },

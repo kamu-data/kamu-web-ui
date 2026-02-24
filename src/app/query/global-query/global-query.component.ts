@@ -59,14 +59,14 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
     private cdr = inject(ChangeDetectorRef);
     private queryMicroDbTrackerService = inject(QueryMicroDbTrackerService);
 
-    public async ngOnInit(): Promise<void> {
+    public ngOnInit(): void {
         this.sqlQueryService.resetSqlError();
         this.sqlQueryService.emitSqlQueryResponseChanged(null);
         this.sqlErrorMarker$ = this.sqlQueryService.sqlErrorOccurrences.pipe(
             map((data: DataSqlErrorUpdate) => data.error),
         );
         this.sqlQueryResponse$ = this.sqlQueryService.sqlQueryResponseChanges;
-        await this.buildSqlRequestCode();
+        promiseWithCatch(this.buildSqlRequestCode().then());
     }
 
     public setDefaultQuery(sqlRequestCode: string): void {
@@ -79,7 +79,7 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
                 AppValues.MICRO_DB_GLOBAL_QUERY_SQL,
             )) as DatasetEntry;
             this.sqlRequestCode = entry.query;
-        } catch (error) {
+        } catch {
             promiseWithCatch(
                 this.queryMicroDbTrackerService
                     .saveQuery(AppValues.MICRO_DB_GLOBAL_QUERY_SQL, this.sqlRequestCode)

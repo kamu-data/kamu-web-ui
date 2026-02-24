@@ -71,13 +71,16 @@ export class DataComponent extends BaseComponent implements OnInit {
     private cancelRequestService = inject(CancelRequestService);
     private queryMicroDbTrackerService = inject(QueryMicroDbTrackerService);
 
-    public async ngOnInit(): Promise<void> {
+    public ngOnInit(): void {
         this.sqlErrorMarker$ = this.sqlQueryService.sqlErrorOccurrences.pipe(
             map((data: DataSqlErrorUpdate) => data.error),
         );
         this.sqlQueryResponse$ = this.sqlQueryService.sqlQueryResponseChanges;
-        await this.buildSqlRequestCode();
-        this.runSQLRequest({ query: this.sqlRequestCode });
+        promiseWithCatch(
+            this.buildSqlRequestCode().then(() => {
+                this.runSQLRequest({ query: this.sqlRequestCode });
+            }),
+        );
     }
 
     public get datasetBasics(): DatasetBasicsFragment {
@@ -105,7 +108,7 @@ export class DataComponent extends BaseComponent implements OnInit {
                     this.datasetBasics.alias,
                 )) as DatasetEntry;
                 this.sqlRequestCode = entry.query;
-            } catch (error) {
+            } catch {
                 promiseWithCatch(
                     this.queryMicroDbTrackerService.saveQuery(this.datasetBasics.alias, this.sqlRequestCode).then(),
                 );

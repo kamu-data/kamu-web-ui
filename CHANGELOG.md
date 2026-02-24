@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Plugin for sort imports
 ### Fixed
 - Lineage tab: incorrect query on "Data Tab" when switching to another dataset
+- The bug with a redirect to the login page after a token expires
 ### Changed
 - Updated @graphql-codegen/* packages
 

@@ -36,17 +36,20 @@ describe("AppComponent", () => {
     let fetchAccountDetailsGQL: FetchAccountDetailsGQL;
     const DEFAULT_SEARCH_QUERY = "defaultSearchQuery";
 
+    const apolloMock = {
+        client: {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            cache: jasmine.createSpyObj("cache", ["restore"]),
+        },
+    };
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [AppComponent],
             providers: [
                 {
                     provide: Apollo,
-                    useValue: {
-                        client: {
-                            clearStore: jasmine.createSpy("clearStore").and.resolveTo(Promise.resolve()),
-                        },
-                    },
+                    useValue: apolloMock,
                 },
                 {
                     provide: ActivatedRoute,

@@ -14,7 +14,7 @@ import { catchError, first } from "rxjs/operators";
 import { Apollo } from "apollo-angular";
 
 import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ondestroy.adapter";
-import { isNull, promiseWithCatch } from "@common/helpers/app.helpers";
+import { isNull } from "@common/helpers/app.helpers";
 import { AccountFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -121,7 +121,7 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
     }
 
     private clearGraphQLCache(): void {
-        promiseWithCatch(this.apollo.client.clearStore());
+        this.apollo.client.cache.restore({});
     }
 
     private resetAccessToken(): void {

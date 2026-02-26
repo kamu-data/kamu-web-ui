@@ -412,10 +412,7 @@ export class FlowTableHelpers {
                         )}`;
                     case "FlowStartConditionThrottling":
                     case "FlowStartConditionSchedule": {
-                        return `Wake up time: ${format(
-                            node.startCondition.wakeUpAt,
-                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                        )}`;
+                        return `Wake up time: ${format(node.startCondition.wakeUpAt, AppValues.CRON_EXPRESSION_DATE_FORMAT)}`;
                     }
                     case "FlowStartConditionReactive":
                         return `Deadline time: ${format(

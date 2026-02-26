@@ -162,7 +162,9 @@ bootstrapApplication(AppComponent, {
                 } else if (error) {
                     // Network error (e.g., connection failed, timeout, etc.)
                     logError(error);
-                    toastrService.error(ErrorTexts.ERROR_NETWORK_DESCRIPTION, "", { disableTimeOut: true });
+                    toastrService.error(ErrorTexts.ERROR_NETWORK_DESCRIPTION, "", {
+                        disableTimeOut: true,
+                    });
                 }
             });
 

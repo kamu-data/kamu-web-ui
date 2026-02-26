@@ -26,7 +26,7 @@
   "importOrderTypeScriptVersion": "5.0.0",
   "overrides": [
     {
-      "files": ["src/*"],
+      "files": ["src/**/*"],
       "options": {
         "tabWidth": 4
       }

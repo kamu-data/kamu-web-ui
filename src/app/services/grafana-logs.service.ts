@@ -9,7 +9,7 @@ import { Injectable } from "@angular/core";
 
 import { addSeconds, subSeconds } from "date-fns";
 
-import { FlowEventTaskChanged } from "@api/kamu.graphql.interface";
+import { FlowEventTaskChanged, TaskStatus } from "@api/kamu.graphql.interface";
 
 import { GrafanaFieldDescriptor } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 
@@ -19,8 +19,8 @@ import { GrafanaFieldDescriptor } from "src/app/dataset-flow/dataset-flow-detail
 export class GrafanaLogsService {
     private availableFields: GrafanaFieldDescriptor[] = [];
 
-    public buildTaskUrl(initialUrl: string, eventTask: FlowEventTaskChanged): string {
-        this.addTaskFields(eventTask);
+    public buildTaskUrl(initialUrl: string, eventTasks: FlowEventTaskChanged[]): string {
+        this.addTaskFields(eventTasks);
         return this.proccessUrl(initialUrl);
     }
 
@@ -39,20 +39,25 @@ export class GrafanaLogsService {
             .trim();
     }
 
-    private addTaskFields(eventTask: FlowEventTaskChanged): void {
+    private addTaskFields(eventTask: FlowEventTaskChanged[]): void {
         this.availableFields = [];
+        const fromTime = eventTask.filter((item) => item.taskStatus === TaskStatus.Queued);
+        const toTime = eventTask.filter((item) => item.taskStatus === TaskStatus.Finished);
 
-        this.availableFields.push({ key: "taskId", value: eventTask.taskId });
+        this.availableFields.push({ key: "taskId", value: fromTime[0].taskId });
         this.availableFields.push({
             key: "fromTime",
-            value: subSeconds(eventTask.eventTime as string, 30)
+            value: subSeconds(fromTime[0].eventTime as string, 30)
                 .valueOf()
                 .toString(),
         });
 
         this.availableFields.push({
             key: "toTime",
-            value: addSeconds(eventTask.eventTime, 30).valueOf().toString(),
+            value:
+                toTime.length && toTime[0].eventTime
+                    ? addSeconds(toTime[0].eventTime, 30).valueOf().toString()
+                    : Date.now().valueOf().toString(),
         });
     }
 }

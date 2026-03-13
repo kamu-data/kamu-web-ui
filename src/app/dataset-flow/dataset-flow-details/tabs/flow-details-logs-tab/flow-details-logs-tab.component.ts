@@ -45,13 +45,25 @@ export class FlowDetailsLogsTabComponent {
         return this.loggedUserService.isAdmin;
     }
 
-    public get tasksEvent(): FlowEventTaskChanged[] {
+    public tasksEventById(taskId: string): FlowEventTaskChanged[] {
         return this.flowDetails.flowHistory.filter(
-            (item) => item.__typename === "FlowEventTaskChanged" && item.taskStatus === TaskStatus.Finished,
+            (item) => item.__typename === "FlowEventTaskChanged" && item.taskId === taskId,
         ) as FlowEventTaskChanged[];
     }
 
-    public grafanaTaskLogsUrl(url: string, eventTask: FlowEventTaskChanged): string {
+    public get taskIds(): string[] {
+        return this.flowDetails.flowHistory
+            .filter((item) => item.__typename === "FlowEventTaskChanged" && item.taskStatus === TaskStatus.Queued)
+            .map((item) => (item as FlowEventTaskChanged).taskId);
+    }
+
+    public tasksById(id: string): FlowEventTaskChanged[] {
+        return this.flowDetails.flowHistory.filter(
+            (item) => item.__typename === "FlowEventTaskChanged" && item.taskId === id,
+        ) as FlowEventTaskChanged[];
+    }
+
+    public grafanaTaskLogsUrl(url: string, eventTask: FlowEventTaskChanged[]): string {
         return this.grafanaLogsService.buildTaskUrl(url, eventTask);
     }
 }

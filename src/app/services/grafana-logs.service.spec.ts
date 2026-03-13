@@ -7,7 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 
-import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
+import { TaskStatus } from "@api/kamu.graphql.interface";
 
 import { GrafanaLogsService } from "src/app/services/grafana-logs.service";
 
@@ -25,7 +25,37 @@ describe("GrafanaLogsService", () => {
 
     it("should check build url for task", () => {
         const mockUrl = "http://test.com?taskId={{taskId}}&fromTime={{fromTime}}&toTime={{toTime}}";
-        const result = service.buildTaskUrl(mockUrl, mockDatasetFlowByIdResponse);
-        expect(result).toEqual("http://test.com?taskId=0&fromTime=1707762057477&toTime=1707762119554");
+        const result = service.buildTaskUrl(mockUrl, [
+            {
+                __typename: "FlowEventTaskChanged",
+                eventId: "3",
+                eventTime: "2024-03-13T13:54:32.269040795+00:00",
+                taskId: "0",
+                taskStatus: TaskStatus.Queued,
+                task: {
+                    taskId: "0",
+                    cancellationRequested: false,
+                    status: TaskStatus.Queued,
+                    createdAt: "2024-03-13T13:54:32.269040795+00:00",
+                },
+                nextAttemptAt: null,
+            },
+
+            {
+                __typename: "FlowEventTaskChanged",
+                eventId: "4",
+                eventTime: "2024-03-13T13:54:32.269040795+00:00",
+                taskId: "0",
+                taskStatus: TaskStatus.Finished,
+                task: {
+                    taskId: "0",
+                    cancellationRequested: false,
+                    status: TaskStatus.Finished,
+                    createdAt: "2024-03-13T13:58:32.269040795+00:00",
+                },
+                nextAttemptAt: null,
+            },
+        ]);
+        expect(result).toEqual("http://test.com?taskId=0&fromTime=1710338042269&toTime=1710338102269");
     });
 });

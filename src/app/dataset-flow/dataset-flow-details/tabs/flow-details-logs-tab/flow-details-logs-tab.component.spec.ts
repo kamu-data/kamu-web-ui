@@ -61,7 +61,7 @@ describe("FlowDetailsLogsTabComponent", () => {
                     eventId: "3",
                     eventTime: "2024-03-13T13:54:32.269040795+00:00",
                     taskId: "0",
-                    taskStatus: TaskStatus.Finished,
+                    taskStatus: TaskStatus.Queued,
                     task: {
                         outcome: null,
                     },

@@ -10,7 +10,7 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 import { MatIconModule } from "@angular/material/icon";
 
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { FlowEventTaskChanged, FlowHistoryDataFragment, TaskStatus } from "@api/kamu.graphql.interface";
+import { FlowEventTaskChanged, TaskStatus } from "@api/kamu.graphql.interface";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";

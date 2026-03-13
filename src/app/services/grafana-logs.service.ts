@@ -47,9 +47,7 @@ export class GrafanaLogsService {
         this.availableFields.push({ key: "taskId", value: fromTime[0].taskId });
         this.availableFields.push({
             key: "fromTime",
-            value: subSeconds(fromTime[0].eventTime as string, 30)
-                .valueOf()
-                .toString(),
+            value: subSeconds(fromTime[0].eventTime, 30).valueOf().toString(),
         });
 
         this.availableFields.push({

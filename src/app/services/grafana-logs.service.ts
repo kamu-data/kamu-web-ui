@@ -11,10 +11,7 @@ import { addSeconds, subSeconds } from "date-fns";
 
 import { FlowEventTaskChanged } from "@api/kamu.graphql.interface";
 
-import {
-    DatasetFlowByIdResponse,
-    GrafanaFieldDescriptor,
-} from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { GrafanaFieldDescriptor } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 
 @Injectable({
     providedIn: "root",
@@ -22,8 +19,8 @@ import {
 export class GrafanaLogsService {
     private availableFields: GrafanaFieldDescriptor[] = [];
 
-    public buildTaskUrl(initialUrl: string, flowDetails: DatasetFlowByIdResponse): string {
-        this.addTaskFields(flowDetails);
+    public buildTaskUrl(initialUrl: string, eventTask: FlowEventTaskChanged): string {
+        this.addTaskFields(eventTask);
         return this.proccessUrl(initialUrl);
     }
 
@@ -42,26 +39,20 @@ export class GrafanaLogsService {
             .trim();
     }
 
-    private addTaskFields(flowDetails: DatasetFlowByIdResponse): void {
+    private addTaskFields(eventTask: FlowEventTaskChanged): void {
         this.availableFields = [];
-        const events = flowDetails.flowHistory.filter((item) => item.__typename === "FlowEventTaskChanged");
-        if (events.length) {
-            this.availableFields.push({ key: "taskId", value: (events[0] as FlowEventTaskChanged).taskId });
-            this.availableFields.push({
-                key: "fromTime",
-                value: subSeconds(flowDetails.flow.timing.runningSince as string, 30)
-                    .valueOf()
-                    .toString(),
-            });
 
-            // TODO: this logic looks wrong, we should take data from a task, not from a flow
-            const finishedTime = flowDetails.flow.timing.lastAttemptFinishedAt;
-            this.availableFields.push({
-                key: "toTime",
-                value: finishedTime
-                    ? addSeconds(finishedTime, 30).valueOf().toString()
-                    : Date.now().valueOf().toString(),
-            });
-        }
+        this.availableFields.push({ key: "taskId", value: eventTask.taskId });
+        this.availableFields.push({
+            key: "fromTime",
+            value: subSeconds(eventTask.eventTime as string, 30)
+                .valueOf()
+                .toString(),
+        });
+
+        this.availableFields.push({
+            key: "toTime",
+            value: addSeconds(eventTask.eventTime, 30).valueOf().toString(),
+        });
     }
 }

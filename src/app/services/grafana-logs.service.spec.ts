@@ -7,6 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 
+import { FlowEventTaskChanged } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
 
 import { GrafanaLogsService } from "src/app/services/grafana-logs.service";
@@ -25,7 +26,10 @@ describe("GrafanaLogsService", () => {
 
     it("should check build url for task", () => {
         const mockUrl = "http://test.com?taskId={{taskId}}&fromTime={{fromTime}}&toTime={{toTime}}";
-        const result = service.buildTaskUrl(mockUrl, mockDatasetFlowByIdResponse);
-        expect(result).toEqual("http://test.com?taskId=0&fromTime=1707762057477&toTime=1707762119554");
+        const result = service.buildTaskUrl(
+            mockUrl,
+            mockDatasetFlowByIdResponse.flowHistory[2] as FlowEventTaskChanged,
+        );
+        expect(result).toEqual("http://test.com?taskId=0&fromTime=1710338042269&toTime=1710338102269");
     });
 });

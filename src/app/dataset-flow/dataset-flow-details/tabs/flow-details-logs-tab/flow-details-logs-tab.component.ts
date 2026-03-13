@@ -5,11 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
+import { NgForOf, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { FlowEventTaskChanged, FlowHistoryDataFragment, TaskStatus } from "@api/kamu.graphql.interface";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -26,6 +27,7 @@ import { GrafanaLogsService } from "src/app/services/grafana-logs.service";
         NgIf,
         //-----//
         MatIconModule,
+        NgForOf,
     ],
 })
 export class FlowDetailsLogsTabComponent {
@@ -43,7 +45,13 @@ export class FlowDetailsLogsTabComponent {
         return this.loggedUserService.isAdmin;
     }
 
-    public grafanaTaskLogsUrl(url: string): string {
-        return this.grafanaLogsService.buildTaskUrl(url, this.flowDetails);
+    public get tasksEvent(): FlowEventTaskChanged[] {
+        return this.flowDetails.flowHistory.filter(
+            (item) => item.__typename === "FlowEventTaskChanged" && item.taskStatus === TaskStatus.Finished,
+        ) as FlowEventTaskChanged[];
+    }
+
+    public grafanaTaskLogsUrl(url: string, eventTask: FlowEventTaskChanged): string {
+        return this.grafanaLogsService.buildTaskUrl(url, eventTask);
     }
 }

@@ -45,21 +45,15 @@ export class FlowDetailsLogsTabComponent {
         return this.loggedUserService.isAdmin;
     }
 
-    public tasksEventById(taskId: string): FlowEventTaskChanged[] {
-        return this.flowDetails.flowHistory.filter(
-            (item) => item.__typename === "FlowEventTaskChanged" && item.taskId === taskId,
-        ) as FlowEventTaskChanged[];
-    }
-
     public get taskIds(): string[] {
         return this.flowDetails.flowHistory
-            .filter((item) => item.__typename === "FlowEventTaskChanged" && item.taskStatus === TaskStatus.Queued)
+            .filter((item) => item.__typename === "FlowEventTaskChanged" && item.taskStatus === TaskStatus.Running)
             .map((item) => (item as FlowEventTaskChanged).taskId);
     }
 
-    public tasksById(id: string): FlowEventTaskChanged[] {
+    public getTaskChangeHistory(taskId: string): FlowEventTaskChanged[] {
         return this.flowDetails.flowHistory.filter(
-            (item) => item.__typename === "FlowEventTaskChanged" && item.taskId === id,
+            (item) => item.__typename === "FlowEventTaskChanged" && item.taskId === taskId,
         ) as FlowEventTaskChanged[];
     }
 

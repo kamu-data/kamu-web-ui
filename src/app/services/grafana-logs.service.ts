@@ -41,13 +41,16 @@ export class GrafanaLogsService {
 
     private addTaskFields(eventTask: FlowEventTaskChanged[]): void {
         this.availableFields = [];
-        const fromTime = eventTask.filter((item) => item.taskStatus === TaskStatus.Queued);
+        const fromTime = eventTask.filter((item) => item.taskStatus === TaskStatus.Running);
         const toTime = eventTask.filter((item) => item.taskStatus === TaskStatus.Finished);
 
         this.availableFields.push({ key: "taskId", value: fromTime[0].taskId });
         this.availableFields.push({
             key: "fromTime",
-            value: subSeconds(fromTime[0].eventTime, 30).valueOf().toString(),
+            value:
+                fromTime.length && fromTime[0].eventTime
+                    ? subSeconds(fromTime[0].eventTime, 30).valueOf().toString()
+                    : Date.now().valueOf().toString(),
         });
 
         this.availableFields.push({

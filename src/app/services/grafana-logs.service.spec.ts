@@ -31,11 +31,11 @@ describe("GrafanaLogsService", () => {
                 eventId: "3",
                 eventTime: "2024-03-13T13:54:32.269040795+00:00",
                 taskId: "0",
-                taskStatus: TaskStatus.Queued,
+                taskStatus: TaskStatus.Running,
                 task: {
                     taskId: "0",
                     cancellationRequested: false,
-                    status: TaskStatus.Queued,
+                    status: TaskStatus.Running,
                     createdAt: "2024-03-13T13:54:32.269040795+00:00",
                 },
                 nextAttemptAt: null,

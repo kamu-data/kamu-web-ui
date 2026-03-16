@@ -9,12 +9,9 @@ import { Injectable } from "@angular/core";
 
 import { addSeconds, subSeconds } from "date-fns";
 
-import { FlowEventTaskChanged } from "@api/kamu.graphql.interface";
+import { FlowEventTaskChanged, TaskStatus } from "@api/kamu.graphql.interface";
 
-import {
-    DatasetFlowByIdResponse,
-    GrafanaFieldDescriptor,
-} from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { GrafanaFieldDescriptor } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 
 @Injectable({
     providedIn: "root",
@@ -22,8 +19,8 @@ import {
 export class GrafanaLogsService {
     private availableFields: GrafanaFieldDescriptor[] = [];
 
-    public buildTaskUrl(initialUrl: string, flowDetails: DatasetFlowByIdResponse): string {
-        this.addTaskFields(flowDetails);
+    public buildTaskUrl(initialUrl: string, eventTasks: FlowEventTaskChanged[]): string {
+        this.addTaskFields(eventTasks);
         return this.proccessUrl(initialUrl);
     }
 
@@ -42,26 +39,26 @@ export class GrafanaLogsService {
             .trim();
     }
 
-    private addTaskFields(flowDetails: DatasetFlowByIdResponse): void {
+    private addTaskFields(eventTask: FlowEventTaskChanged[]): void {
         this.availableFields = [];
-        const events = flowDetails.flowHistory.filter((item) => item.__typename === "FlowEventTaskChanged");
-        if (events.length) {
-            this.availableFields.push({ key: "taskId", value: (events[0] as FlowEventTaskChanged).taskId });
-            this.availableFields.push({
-                key: "fromTime",
-                value: subSeconds(flowDetails.flow.timing.runningSince as string, 30)
-                    .valueOf()
-                    .toString(),
-            });
+        const fromTime = eventTask.filter((item) => item.taskStatus === TaskStatus.Running);
+        const toTime = eventTask.filter((item) => item.taskStatus === TaskStatus.Finished);
 
-            // TODO: this logic looks wrong, we should take data from a task, not from a flow
-            const finishedTime = flowDetails.flow.timing.lastAttemptFinishedAt;
-            this.availableFields.push({
-                key: "toTime",
-                value: finishedTime
-                    ? addSeconds(finishedTime, 30).valueOf().toString()
+        this.availableFields.push({ key: "taskId", value: fromTime[0].taskId });
+        this.availableFields.push({
+            key: "fromTime",
+            value:
+                fromTime.length && fromTime[0].eventTime
+                    ? subSeconds(fromTime[0].eventTime, 30).valueOf().toString()
                     : Date.now().valueOf().toString(),
-            });
-        }
+        });
+
+        this.availableFields.push({
+            key: "toTime",
+            value:
+                toTime.length && toTime[0].eventTime
+                    ? addSeconds(toTime[0].eventTime, 30).valueOf().toString()
+                    : Date.now().valueOf().toString(),
+        });
     }
 }

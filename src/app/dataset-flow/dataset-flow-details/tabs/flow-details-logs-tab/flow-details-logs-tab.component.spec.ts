@@ -10,6 +10,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 
 import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { TaskStatus } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
 
 import { AppConfigService } from "src/app/app-config.service";
@@ -52,6 +53,22 @@ describe("FlowDetailsLogsTabComponent", () => {
     it("should check grafana logs block is visible", () => {
         spyOnProperty(loggedUserService, "isAdmin", "get").and.returnValue(true);
         spyOnProperty(component, "grafanaTaskDetailsURL", "get").and.returnValue("http://mock.url");
+        component.flowDetails = {
+            ...mockDatasetFlowByIdResponse,
+            flowHistory: [
+                {
+                    __typename: "FlowEventTaskChanged",
+                    eventId: "3",
+                    eventTime: "2024-03-13T13:54:32.269040795+00:00",
+                    taskId: "0",
+                    taskStatus: TaskStatus.Running,
+                    task: {
+                        outcome: null,
+                    },
+                    nextAttemptAt: null,
+                },
+            ],
+        };
         fixture.detectChanges();
 
         const grafanaLogsBlock = findElementByDataTestId(fixture, "grafana-logs-section");

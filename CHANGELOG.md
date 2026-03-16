@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Plugin for sort imports
+- Flows: show logs with retriable tasks
 ### Fixed
 - Lineage tab: incorrect query on "Data Tab" when switching to another dataset
 - The bug with a redirect to the login page after a token expires

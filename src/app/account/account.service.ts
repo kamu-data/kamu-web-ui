@@ -38,6 +38,7 @@ import {
     FlowProcessFilters,
     FlowProcessGroupRollupDataFragment,
     FlowProcessOrdering,
+    FlowRunOrder,
 } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 import { DatasetsAccountResponse } from "@interface/dataset.interface";
@@ -101,6 +102,7 @@ export class AccountService {
         perPageTable: number;
         perPageTiles: number;
         filters: AccountFlowFilters;
+        order?: FlowRunOrder;
     }): Observable<FlowsTableData> {
         return combineLatest([
             this.accountApi.fetchAccountListFlows(params),

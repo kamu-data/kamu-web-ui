@@ -1,26 +1,27 @@
 query accountListFlows(
-  $name: AccountName!
-  $page: Int
-  $perPageTable: Int
-  $perPageTiles: Int
-  $filters: AccountFlowFilters
+    $name: AccountName!
+    $page: Int
+    $perPageTable: Int
+    $perPageTiles: Int
+    $filters: AccountFlowFilters
+    $order: FlowRunOrder
 ) {
-  accounts {
-    byName(name: $name) {
-      flows {
-        runs {
-          table: listFlows(page: $page, perPage: $perPageTable, filters: $filters) {
-            ...FlowConnectionData
-          }
-          tiles: listFlows(
-            page: 0
-            perPage: $perPageTiles
-            filters: { byProcessType: null, byStatus: null, byInitiator: null, byDatasetIds: [] }
-          ) {
-            ...FlowConnectionWidgetData
-          }
+    accounts {
+        byName(name: $name) {
+            flows {
+                runs {
+                    table: listFlows(page: $page, perPage: $perPageTable, filters: $filters, order: $order) {
+                        ...FlowConnectionData
+                    }
+                    tiles: listFlows(
+                        page: 0
+                        perPage: $perPageTiles
+                        filters: { byProcessType: null, byStatus: null, byInitiator: null, byDatasetIds: [] }
+                    ) {
+                        ...FlowConnectionWidgetData
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }

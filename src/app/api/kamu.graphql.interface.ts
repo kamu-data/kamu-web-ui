@@ -25,7 +25,6 @@ export type Scalars = {
     AccountPassword: { input: string; output: string };
     /** Base64-encoded binary data (url-safe, no padding) */
     Base64Usnp: { input: string; output: string };
-    /** Collection entry paths are similar to HTTP path components. They are rooted (start with `/`), separated by forward slashes, with elements URL-encoded (e.g. `/foo%20bar/baz`) */
     CollectionPath: { input: string; output: string };
     DatasetAlias: { input: string; output: string };
     DatasetEnvVarID: { input: string; output: string };
@@ -105,6 +104,8 @@ export type Account = {
     isAdmin: Scalars["Boolean"]["output"];
     /** Returns datasets belonging to this account */
     ownedDatasets: DatasetConnection;
+    /** Returns account quotas */
+    quotas: AccountQuotas;
     /** Access to account usage statistic */
     usage: AccountUsage;
 };
@@ -242,6 +243,7 @@ export type AccountFlowRuns = {
 
 export type AccountFlowRunsListFlowsArgs = {
     filters?: InputMaybe<AccountFlowFilters>;
+    order?: InputMaybe<FlowRunOrder>;
     page?: InputMaybe<Scalars["Int"]["input"]>;
     perPage?: InputMaybe<Scalars["Int"]["input"]>;
 };
@@ -291,6 +293,8 @@ export type AccountMut = {
     modifyPassword: ModifyPasswordResult;
     /** Change password with confirmation */
     modifyPasswordWithConfirmation: ModifyPasswordResult;
+    /** Access to the mutable quotas of this account */
+    quotas: AccountQuotasMut;
     /** Update account name */
     rename: RenameAccountResult;
     /** Update account email */
@@ -319,6 +323,34 @@ export enum AccountProvider {
     Password = "PASSWORD",
     Web3Wallet = "WEB3_WALLET",
 }
+
+export type AccountQuotas = {
+    __typename?: "AccountQuotas";
+    /** User-level quotas */
+    user: AccountQuotasUsage;
+};
+
+export type AccountQuotasMut = {
+    __typename?: "AccountQuotasMut";
+    /** Setting quotas at the account level. */
+    setAccountQuotas: SetAccountQuotasResult;
+};
+
+export type AccountQuotasMutSetAccountQuotasArgs = {
+    quotas: SetAccountQuotasInput;
+};
+
+export type AccountQuotasUsage = {
+    __typename?: "AccountQuotasUsage";
+    /** User-level quotas */
+    storage: AccountQuotasUsageStorage;
+};
+
+export type AccountQuotasUsageStorage = {
+    __typename?: "AccountQuotasUsageStorage";
+    /** Total bytes limit for this account. */
+    limitTotalBytes: Scalars["Int"]["output"];
+};
 
 export enum AccountType {
     Organization = "ORGANIZATION",
@@ -516,6 +548,10 @@ export type AdminSearchMut = {
     resetSearchIndices: Scalars["String"]["output"];
 };
 
+export type AdminSearchMutResetSearchIndicesArgs = {
+    entityNames?: InputMaybe<Array<SearchEntityName>>;
+};
+
 export type ApplyRolesMatrixResult = {
     __typename?: "ApplyRolesMatrixResult";
     message: Scalars["String"]["output"];
@@ -695,7 +731,7 @@ export type CollectionEntry = {
     __typename?: "CollectionEntry";
     /** Resolves the reference to linked dataset */
     asDataset?: Maybe<Dataset>;
-    /** Time when this version was created */
+    /** Event time when this entry was created */
     eventTime: Scalars["DateTime"]["output"];
     /** Extra data associated with this entry */
     extraData: Scalars["ExtraData"]["output"];
@@ -707,7 +743,7 @@ export type CollectionEntry = {
     path: Scalars["CollectionPath"]["output"];
     /** DID of the linked dataset */
     ref: Scalars["DatasetID"]["output"];
-    /** Time when this version was created */
+    /** System time when this entry was created */
     systemTime: Scalars["DateTime"]["output"];
 };
 
@@ -811,6 +847,15 @@ export type CollectionUpdateErrorNotFound = CollectionUpdateResult & {
     isSuccess: Scalars["Boolean"]["output"];
     message: Scalars["String"]["output"];
     path: Scalars["CollectionPath"]["output"];
+};
+
+export type CollectionUpdateErrorQuotaExceeded = CollectionUpdateResult & {
+    __typename?: "CollectionUpdateErrorQuotaExceeded";
+    incoming?: Maybe<Scalars["Int"]["output"]>;
+    isSuccess: Scalars["Boolean"]["output"];
+    limit?: Maybe<Scalars["Int"]["output"]>;
+    message: Scalars["String"]["output"];
+    used?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type CollectionUpdateInput = {
@@ -1403,6 +1448,7 @@ export type DatasetFlowRunsGetFlowArgs = {
 
 export type DatasetFlowRunsListFlowsArgs = {
     filters?: InputMaybe<DatasetFlowFilters>;
+    order?: InputMaybe<FlowRunOrder>;
     page?: InputMaybe<Scalars["Int"]["input"]>;
     perPage?: InputMaybe<Scalars["Int"]["input"]>;
 };
@@ -2720,6 +2766,17 @@ export type FlowRetryPolicyInput = {
     minDelay: TimeDeltaInput;
 };
 
+export enum FlowRunOrder {
+    /**
+     * Queue-oriented ordering:
+     * - by status: waiting, running, retrying, finished
+     * - by most recent activity
+     */
+    Queue = "QUEUE",
+    /** Earliest scheduled activation first. */
+    ScheduledForActivation = "SCHEDULED_FOR_ACTIVATION",
+}
+
 export type FlowStartCondition =
     | FlowStartConditionExecutor
     | FlowStartConditionReactive
@@ -3860,6 +3917,11 @@ export type SearchQueryNaturalLanguageArgs = {
     prompt: Scalars["String"]["input"];
 };
 
+export enum SearchEntityName {
+    Accounts = "ACCOUNTS",
+    Datasets = "DATASETS",
+}
+
 export type SearchResult = Dataset;
 
 export type SearchResultConnection = {
@@ -3912,6 +3974,31 @@ export type Seed = {
     datasetId: Scalars["DatasetID"]["output"];
     /** Type of the dataset. */
     datasetKind: DatasetKind;
+};
+
+export type SetAccountQuotasInput = {
+    storage?: InputMaybe<SetAccountQuotasStorageInput>;
+};
+
+export type SetAccountQuotasResult = {
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
+};
+
+export type SetAccountQuotasResultInvalidInput = SetAccountQuotasResult & {
+    __typename?: "SetAccountQuotasResultInvalidInput";
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
+};
+
+export type SetAccountQuotasResultSuccess = SetAccountQuotasResult & {
+    __typename?: "SetAccountQuotasResultSuccess";
+    isSuccess: Scalars["Boolean"]["output"];
+    message: Scalars["String"]["output"];
+};
+
+export type SetAccountQuotasStorageInput = {
+    limitTotalBytes?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 /**
@@ -4377,6 +4464,15 @@ export type UpdateVersionErrorInvalidExtraData = UpdateVersionResult & {
     message: Scalars["String"]["output"];
 };
 
+export type UpdateVersionErrorQuotaExceeded = UpdateVersionResult & {
+    __typename?: "UpdateVersionErrorQuotaExceeded";
+    incoming?: Maybe<Scalars["Int"]["output"]>;
+    isSuccess: Scalars["Boolean"]["output"];
+    limit?: Maybe<Scalars["Int"]["output"]>;
+    message: Scalars["String"]["output"];
+    used?: Maybe<Scalars["Int"]["output"]>;
+};
+
 export type UpdateVersionResult = {
     isSuccess: Scalars["Boolean"]["output"];
     message: Scalars["String"]["output"];
@@ -4475,11 +4571,11 @@ export type VersionedFileEntry = {
     contentType: Scalars["String"]["output"];
     /** Returns a direct download URL */
     contentUrl: VersionedFileContentDownload;
-    /** Event time when this version was created/updated */
+    /** Event time when this version was created */
     eventTime: Scalars["DateTime"]["output"];
     /** Extra data associated with this file version */
     extraData: Scalars["ExtraData"]["output"];
-    /** System time when this version was created/updated */
+    /** System time when this version was created */
     systemTime: Scalars["DateTime"]["output"];
     /** File version */
     version: Scalars["Int"]["output"];
@@ -4877,6 +4973,7 @@ export type AccountListFlowsQueryVariables = Exact<{
     perPageTable?: InputMaybe<Scalars["Int"]["input"]>;
     perPageTiles?: InputMaybe<Scalars["Int"]["input"]>;
     filters?: InputMaybe<AccountFlowFilters>;
+    order?: InputMaybe<FlowRunOrder>;
 }>;
 
 export type AccountListFlowsQuery = {
@@ -9824,12 +9921,13 @@ export const AccountListFlowsDocument = gql`
         $perPageTable: Int
         $perPageTiles: Int
         $filters: AccountFlowFilters
+        $order: FlowRunOrder
     ) {
         accounts {
             byName(name: $name) {
                 flows {
                     runs {
-                        table: listFlows(page: $page, perPage: $perPageTable, filters: $filters) {
+                        table: listFlows(page: $page, perPage: $perPageTable, filters: $filters, order: $order) {
                             ...FlowConnectionData
                         }
                         tiles: listFlows(

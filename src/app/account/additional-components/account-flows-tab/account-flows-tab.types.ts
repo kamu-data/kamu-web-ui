@@ -11,6 +11,7 @@ import {
     FlowProcessEffectiveState,
     FlowProcessGroupRollupDataFragment,
     FlowProcessOrderField,
+    FlowRunOrder,
     FlowStatus,
     InitiatorFilterInput,
     OrderingDirection,
@@ -392,4 +393,5 @@ export interface AccountFiltersParams {
     filterByStatus: MaybeNull<FlowStatus[]>;
     filterByInitiator: MaybeNull<InitiatorFilterInput>;
     datasetsIds: string[];
+    order?: FlowRunOrder;
 }

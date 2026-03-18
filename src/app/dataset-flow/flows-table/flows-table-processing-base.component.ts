@@ -13,7 +13,7 @@ import { Observable } from "rxjs";
 import { BaseComponent } from "@common/components/base.component";
 import { requireValue } from "@common/helpers/app.helpers";
 import AppValues from "@common/values/app.values";
-import { AccountFragment, FlowStatus, InitiatorFilterInput } from "@api/kamu.graphql.interface";
+import { AccountFragment, FlowRunOrder, FlowStatus, InitiatorFilterInput } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import {
@@ -49,6 +49,7 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
         filterByStatus?: MaybeNull<FlowStatus[]>,
         filterByInitiator?: MaybeNull<InitiatorFilterInput>,
         datasetsIds?: string[],
+        order?: FlowRunOrder,
     ): void;
 
     public getPageFromUrl(): void {

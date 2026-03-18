@@ -290,12 +290,6 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
     }
 
     private getFlowRunOrder(): FlowRunOrder {
-        console.log(
-            "==>",
-            this.filterByStatus?.length && this.filterByStatus[0] === FlowStatus.Waiting
-                ? FlowRunOrder.ScheduledForActivation
-                : FlowRunOrder.Queue,
-        );
         return this.filterByStatus?.length && this.filterByStatus[0] === FlowStatus.Waiting
             ? FlowRunOrder.ScheduledForActivation
             : FlowRunOrder.Queue;

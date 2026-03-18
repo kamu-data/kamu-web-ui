@@ -23,6 +23,7 @@ import {
     AccountFlowFilters,
     AccountFragment,
     DatasetBasicsFragment,
+    FlowRunOrder,
     FlowStatus,
     FlowSummaryDataFragment,
     InitiatorFilterInput,
@@ -111,6 +112,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
         filterByStatus?: MaybeNull<FlowStatus[]>,
         filterByInitiator?: MaybeNull<InitiatorFilterInput>,
         datasetsIds?: string[],
+        order?: FlowRunOrder,
     ): void {
         const polling$ = timer(0, environment.delay_polling_ms);
         const triggerWithInitial$ = this.fetchTrigger$.pipe(
@@ -119,6 +121,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
                 filterByStatus,
                 filterByInitiator,
                 datasetsIds,
+                order,
             }),
         );
         this.flowConnectionData$ = triggerWithInitial$.pipe(
@@ -140,6 +143,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
                                     byInitiator: params.filterByInitiator,
                                     byDatasetIds: params.datasetsIds ?? [],
                                 }),
+                                order: params.order,
                             }),
                             of([this.loggedUser]),
                         ]);
@@ -281,7 +285,20 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             this.filterByStatus,
             this.filterInitiator,
             this.selectedDatasetItems.map((x) => x.id),
+            this.getFlowRunOrder(),
         );
+    }
+
+    private getFlowRunOrder(): FlowRunOrder {
+        console.log(
+            "==>",
+            this.filterByStatus?.length && this.filterByStatus[0] === FlowStatus.Waiting
+                ? FlowRunOrder.ScheduledForActivation
+                : FlowRunOrder.Queue,
+        );
+        return this.filterByStatus?.length && this.filterByStatus[0] === FlowStatus.Waiting
+            ? FlowRunOrder.ScheduledForActivation
+            : FlowRunOrder.Queue;
     }
 
     private updateFilters(): void {
@@ -291,6 +308,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             filterByStatus: this.filterByStatus,
             filterByInitiator: this.filterInitiator,
             datasetsIds: this.selectedDatasetItems.map((x) => x.id),
+            order: this.getFlowRunOrder(),
         });
     }
 }

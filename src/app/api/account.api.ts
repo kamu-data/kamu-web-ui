@@ -48,6 +48,7 @@ import {
     DeleteAccountByNameMutation,
     FlowProcessFilters,
     FlowProcessOrdering,
+    FlowRunOrder,
 } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -160,6 +161,7 @@ export class AccountApi {
         perPageTable: number;
         perPageTiles: number;
         filters: AccountFlowFilters;
+        order?: FlowRunOrder;
     }): Observable<AccountListFlowsQuery> {
         return this.accountListFlowsGql
             .watch({
@@ -169,6 +171,7 @@ export class AccountApi {
                     perPageTable: params.perPageTable,
                     perPageTiles: params.perPageTiles,
                     filters: params.filters,
+                    order: params.order,
                 },
                 ...noCacheFetchPolicy,
                 context: {

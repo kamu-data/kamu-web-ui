@@ -582,6 +582,7 @@ export class DatasetApi {
                 variables: {
                     datasetId,
                 },
+                ...noCacheFetchPolicy,
             })
             .valueChanges.pipe(
                 onlyCompleteData(),
@@ -602,6 +603,7 @@ export class DatasetApi {
                     datasetId,
                     version,
                 },
+                ...noCacheFetchPolicy,
             })
             .valueChanges.pipe(
                 onlyCompleteData(),
@@ -622,6 +624,7 @@ export class DatasetApi {
                     datasetId,
                     blockHash,
                 },
+                ...noCacheFetchPolicy,
             })
             .valueChanges.pipe(
                 onlyCompleteData(),

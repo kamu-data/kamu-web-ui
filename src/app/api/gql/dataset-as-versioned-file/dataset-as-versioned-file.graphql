@@ -1,7 +1,7 @@
 query datasetAsVersionedFile($datasetId: DatasetID!) {
   datasets {
     byId(datasetId: $datasetId) {
-      name
+      ...DatasetBasics
       asVersionedFile {
         latest {
           ...VersionedFileEntryData

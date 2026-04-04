@@ -1,1 +1,18 @@
-<p>versioned-file-view works!</p>
+<div class="mt-4" *ngIf="fileDetails">
+    <div class="ms-3 d-flex align-items-end">
+        <mat-icon class="text=muted">file_present</mat-icon><span class="file-name ms-1">{{ fileDetails.name }}</span>
+    </div>
+    <div class="mt-4">
+        <!-- <iframe [src]="fileInfo.fileInfo.contentUrl.url" width="100%" height="600px"></iframe> -->
+
+        <pdf-viewer
+            [src]="safePdfUrl"
+            [render-text]="true"
+            [original-size]="false"
+            [autoresize]="true"
+            [show-borders]="true"
+            [external-link-target]="'top'"
+            style="width: 100%; height: 600px"
+        ></pdf-viewer>
+    </div>
+</div>

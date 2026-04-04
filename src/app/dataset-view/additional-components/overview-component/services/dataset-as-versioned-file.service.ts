@@ -26,13 +26,12 @@ export class DatasetAsVersionedFileService {
     private datasetApi = inject(DatasetApi);
 
     public requestDatasetAsVersionedFile(datasetId: string): Observable<VersionedFileView> {
+        console.log("push");
         return this.datasetApi.getDatasetAsVersionedFile(datasetId).pipe(
-            map((result: DatasetAsVersionedFileQuery) => {
-                return {
-                    name: result.datasets.byId?.name as string,
-                    fileInfo: result.datasets.byId?.asVersionedFile as VersionedFileEntryDataFragment,
-                };
-            }),
+            map((result: DatasetAsVersionedFileQuery) => ({
+                name: result.datasets.byId?.name as string,
+                fileInfo: result.datasets.byId?.asVersionedFile?.latest as VersionedFileEntryDataFragment,
+            })),
         );
     }
 
@@ -41,7 +40,7 @@ export class DatasetAsVersionedFileService {
             map((result: DatasetAsVersionedFileByVersionQuery) => {
                 return {
                     name: result.datasets.byId?.name as string,
-                    fileInfo: result.datasets.byId?.asVersionedFile as VersionedFileEntryDataFragment,
+                    fileInfo: result.datasets.byId?.asVersionedFile?.asOf as VersionedFileEntryDataFragment,
                 };
             }),
         );
@@ -55,7 +54,7 @@ export class DatasetAsVersionedFileService {
             map((result: DatasetAsVersionedFileByBlockHashQuery) => {
                 return {
                     name: result.datasets.byId?.name as string,
-                    fileInfo: result.datasets.byId?.asVersionedFile as VersionedFileEntryDataFragment,
+                    fileInfo: result.datasets.byId?.asVersionedFile?.asOf as VersionedFileEntryDataFragment,
                 };
             }),
         );

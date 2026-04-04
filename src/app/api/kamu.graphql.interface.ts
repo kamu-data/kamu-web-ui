@@ -5494,14 +5494,15 @@ export type DatasetAsVersionedFileQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
-        byId?: {
-            __typename?: "Dataset";
-            name: string;
-            asVersionedFile?: {
-                __typename?: "VersionedFile";
-                latest?: ({ __typename?: "VersionedFileEntry" } & VersionedFileEntryDataFragment) | null;
-            } | null;
-        } | null;
+        byId?:
+            | ({
+                  __typename?: "Dataset";
+                  asVersionedFile?: {
+                      __typename?: "VersionedFile";
+                      latest?: ({ __typename?: "VersionedFileEntry" } & VersionedFileEntryDataFragment) | null;
+                  } | null;
+              } & DatasetBasicsFragment)
+            | null;
     };
 };
 
@@ -10662,7 +10663,7 @@ export const DatasetAsVersionedFileDocument = gql`
     query datasetAsVersionedFile($datasetId: DatasetID!) {
         datasets {
             byId(datasetId: $datasetId) {
-                name
+                ...DatasetBasics
                 asVersionedFile {
                     latest {
                         ...VersionedFileEntryData
@@ -10671,6 +10672,7 @@ export const DatasetAsVersionedFileDocument = gql`
             }
         }
     }
+    ${DatasetBasicsFragmentDoc}
     ${VersionedFileEntryDataFragmentDoc}
 `;
 

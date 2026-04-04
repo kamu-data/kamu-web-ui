@@ -6,7 +6,7 @@
  */
 
 import { AsyncPipe, DecimalPipe, NgFor, NgIf, TitleCasePipe } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -55,11 +55,13 @@ import {
     DatasetOverviewTabData,
     DatasetViewTypeEnum,
     OverviewTabMode,
+    VersionedFileView,
 } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
 import { FileUploadService } from "src/app/services/file-upload.service";
 
 import { VersionedFileViewComponent } from "./components/versioned-file-view/versioned-file-view.component";
+import { DatasetAsVersionedFileService } from "./services/dataset-as-versioned-file.service";
 
 @Component({
     selector: "app-overview",
@@ -106,6 +108,9 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     public readonly URL_PARAM_ADD_PUSH_SOURCE = ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE;
     public readonly OverviewTabMode: typeof OverviewTabMode = OverviewTabMode;
     public readonly DatasetArchetype: typeof DatasetArchetype = DatasetArchetype;
+    public fileInfo$: Observable<VersionedFileView>;
+
+    private datasetAsVersionedFileService = inject(DatasetAsVersionedFileService);
 
     public datasetOverviewTabData$: Observable<DatasetOverviewTabData>;
     private ngbModalService = inject(NgbModal);
@@ -121,6 +126,9 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
         if (this.currentArchetype) {
             this.viewMode = this.setViewMode(this.currentArchetype);
         }
+        this.datasetAsVersionedFileService
+            .requestDatasetAsVersionedFile(this.datasetBasics.id)
+            .subscribe((x) => console.log("=", x));
     }
 
     public setViewMode(archetype: DatasetArchetype): OverviewTabMode {

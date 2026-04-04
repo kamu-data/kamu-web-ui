@@ -1,6 +1,26 @@
 <div class="dataset-result-container container-main">
     <div class="search-result-container__content">
-        <div>
+        {{ currentArchetype }}
+        <div class="d-flex justify-content-end" *ngIf="currentArchetype">
+            <mat-button-toggle-group [(ngModel)]="viewMode" [hideSingleSelectionIndicator]="true">
+                <mat-button-toggle
+                    *ngIf="currentArchetype === DatasetArchetype.VersionedFile"
+                    [value]="OverviewTabMode.VersionedFile"
+                >
+                    <mat-icon [svgIcon]="'clarify'" />
+                </mat-button-toggle>
+                <mat-button-toggle
+                    *ngIf="currentArchetype === DatasetArchetype.Collection"
+                    [value]="OverviewTabMode.Collection"
+                >
+                    <mat-icon [svgIcon]="'folder'" />
+                </mat-button-toggle>
+                <mat-button-toggle [value]="OverviewTabMode.Table">
+                    <mat-icon [svgIcon]="'table-chart-outline'" />
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+        <div *ngIf="viewMode === OverviewTabMode.Table">
             <div
                 *ngIf="hasDatasetInfo; else noDetails"
                 class="d-flex flex-row flex-justify-between mb-3"
@@ -207,6 +227,12 @@
                 [editable]="canEditReadme"
                 (editViewShowEmitter)="editingReadme = $event"
             />
+        </div>
+        <div *ngIf="viewMode === OverviewTabMode.VersionedFile">
+            <app-versioned-file-view />
+        </div>
+        <div *ngIf="viewMode === OverviewTabMode.Collection">
+            <p>Feature coming soon</p>
         </div>
     </div>
     <div class="card">

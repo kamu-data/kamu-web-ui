@@ -15,7 +15,7 @@
             class="container-details"
             *ngIf="
                 !(!currentTransform && datasetMetadataTabData.datasetBasics.kind === 'DERIVATIVE') &&
-                !(hasAnySource() && datasetMetadataTabData?.datasetBasics?.kind === 'ROOT')
+                !(hasAnySource() && datasetMetadataTabData.datasetBasics.kind === 'ROOT')
             "
         >
             <div class="sidebar mt-3">

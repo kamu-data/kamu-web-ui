@@ -5446,6 +5446,76 @@ export type UpdateWatermarkMutation = {
     };
 };
 
+export type DatasetAsVersionedFileByBlockHashQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"]["input"];
+    blockHash?: InputMaybe<Scalars["Multihash"]["input"]>;
+}>;
+
+export type DatasetAsVersionedFileByBlockHashQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            name: string;
+            asVersionedFile?: {
+                __typename?: "VersionedFile";
+                asOf?: ({ __typename?: "VersionedFileEntry" } & VersionedFileEntryDataFragment) | null;
+            } | null;
+        } | null;
+    };
+};
+
+export type DatasetAsVersionedFileByVersionQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"]["input"];
+    version?: InputMaybe<Scalars["Int"]["input"]>;
+}>;
+
+export type DatasetAsVersionedFileByVersionQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            name: string;
+            asVersionedFile?: {
+                __typename?: "VersionedFile";
+                asOf?: ({ __typename?: "VersionedFileEntry" } & VersionedFileEntryDataFragment) | null;
+            } | null;
+        } | null;
+    };
+};
+
+export type DatasetAsVersionedFileQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"]["input"];
+}>;
+
+export type DatasetAsVersionedFileQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            name: string;
+            asVersionedFile?: {
+                __typename?: "VersionedFile";
+                latest?: ({ __typename?: "VersionedFileEntry" } & VersionedFileEntryDataFragment) | null;
+            } | null;
+        } | null;
+    };
+};
+
+export type VersionedFileEntryDataFragment = {
+    __typename?: "VersionedFileEntry";
+    systemTime: string;
+    eventTime: string;
+    version: number;
+    content: string;
+    contentType: string;
+    contentLength: number;
+    contentUrl: { __typename?: "VersionedFileContentDownload"; url: string; expiresAt?: string | null };
+};
+
 export type GetDatasetBasicsWithPermissionsQueryVariables = Exact<{
     accountName: Scalars["AccountName"]["input"];
     datasetName: Scalars["DatasetName"]["input"];
@@ -7558,6 +7628,7 @@ export type DatasetOverviewFragment = {
     __typename?: "Dataset";
     metadata: {
         __typename?: "DatasetMetadata";
+        currentArchetype?: DatasetArchetype | null;
         currentPollingSource?: { __typename: "SetPollingSource" } | null;
         currentTransform?: { __typename: "SetTransform" } | null;
         currentPushSources: Array<{ __typename: "AddPushSource" }>;
@@ -8292,6 +8363,20 @@ export const AccountWithEmailFragmentDoc = gql`
         displayName
         avatarUrl
         email
+    }
+`;
+export const VersionedFileEntryDataFragmentDoc = gql`
+    fragment VersionedFileEntryData on VersionedFileEntry {
+        systemTime
+        eventTime
+        version
+        content
+        contentType
+        contentLength
+        contentUrl {
+            url
+            expiresAt
+        }
     }
 `;
 export const ViewDatasetEnvVarDataFragmentDoc = gql`
@@ -9575,6 +9660,7 @@ export const DatasetOverviewFragmentDoc = gql`
         ...DatasetReadme
         ...DatasetLastUpdate
         metadata {
+            currentArchetype
             currentPollingSource {
                 __typename
             }
@@ -10509,6 +10595,93 @@ export const UpdateWatermarkDocument = gql`
 })
 export class UpdateWatermarkGQL extends Apollo.Mutation<UpdateWatermarkMutation, UpdateWatermarkMutationVariables> {
     document = UpdateWatermarkDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetAsVersionedFileByBlockHashDocument = gql`
+    query datasetAsVersionedFileByBlockHash($datasetId: DatasetID!, $blockHash: Multihash) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                name
+                asVersionedFile {
+                    asOf(blockHash: $blockHash) {
+                        ...VersionedFileEntryData
+                    }
+                }
+            }
+        }
+    }
+    ${VersionedFileEntryDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetAsVersionedFileByBlockHashGQL extends Apollo.Query<
+    DatasetAsVersionedFileByBlockHashQuery,
+    DatasetAsVersionedFileByBlockHashQueryVariables
+> {
+    document = DatasetAsVersionedFileByBlockHashDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetAsVersionedFileByVersionDocument = gql`
+    query datasetAsVersionedFileByVersion($datasetId: DatasetID!, $version: Int) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                name
+                asVersionedFile {
+                    asOf(version: $version) {
+                        ...VersionedFileEntryData
+                    }
+                }
+            }
+        }
+    }
+    ${VersionedFileEntryDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetAsVersionedFileByVersionGQL extends Apollo.Query<
+    DatasetAsVersionedFileByVersionQuery,
+    DatasetAsVersionedFileByVersionQueryVariables
+> {
+    document = DatasetAsVersionedFileByVersionDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetAsVersionedFileDocument = gql`
+    query datasetAsVersionedFile($datasetId: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                name
+                asVersionedFile {
+                    latest {
+                        ...VersionedFileEntryData
+                    }
+                }
+            }
+        }
+    }
+    ${VersionedFileEntryDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetAsVersionedFileGQL extends Apollo.Query<
+    DatasetAsVersionedFileQuery,
+    DatasetAsVersionedFileQueryVariables
+> {
+    document = DatasetAsVersionedFileDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

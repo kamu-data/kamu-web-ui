@@ -1,35 +1,36 @@
 {
-  "semi": true,
-  "trailingComma": "all",
-  "printWidth": 120,
-  "plugins": ["@ianvs/prettier-plugin-sort-imports"],
-  "importOrder": [
-    "<BUILTIN_MODULES>",
-    "",
-    "^@angular/(.*)$",
-    "",
-    "^rxjs/?(.*)$",
-    "^@angular/material/(.*)$",
-    "",
-    "<THIRD_PARTY_MODULES>",
-    "",
-    "^@env/(.*)$",
-    "^@common/(.*)$",
-    "^@api/(.*)$",
-    "^@interface/(.*)$",
-    "",
-    "^src/(.*)$",
-    "",
-    "^[./]"
-  ],
-  "importOrderParserPlugins": ["typescript", "decorators-legacy"],
-  "importOrderTypeScriptVersion": "5.0.0",
-  "overrides": [
-    {
-      "files": ["src/**/*"],
-      "options": {
-        "tabWidth": 4
-      }
-    }
-  ]
+    "semi": true,
+    "trailingComma": "all",
+    "printWidth": 120,
+    "plugins": ["@ianvs/prettier-plugin-sort-imports"],
+    "importOrder": [
+        "<BUILTIN_MODULES>",
+        "",
+        "^@angular/(.*)$",
+        "",
+        "^rxjs/?(.*)$",
+        "^@angular/material/(.*)$",
+        "",
+        "<THIRD_PARTY_MODULES>",
+        "",
+        "^@env/(.*)$",
+        "^@common/(.*)$",
+        "^@api/(.*)$",
+        "^@interface/(.*)$",
+        "",
+        "^src/(.*)$",
+        "",
+        "^[./]"
+    ],
+    "importOrderParserPlugins": ["typescript", "decorators-legacy"],
+    "importOrderTypeScriptVersion": "5.0.0",
+    "overrides": [
+        {
+            "files": ["src/**/*"],
+            "excludeFiles": ["src/**/*.graphql"],
+            "options": {
+                "tabWidth": 4
+            }
+        }
+    ]
 }

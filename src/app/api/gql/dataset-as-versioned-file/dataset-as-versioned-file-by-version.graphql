@@ -1,0 +1,12 @@
+query datasetAsVersionedFileByVersion($datasetId: DatasetID!, $version: Int) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      name
+      asVersionedFile {
+        asOf(version: $version) {
+          ...VersionedFileEntryData
+        }
+      }
+    }
+  }
+}

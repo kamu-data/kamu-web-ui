@@ -26,7 +26,6 @@ export class DatasetAsVersionedFileService {
     private datasetApi = inject(DatasetApi);
 
     public requestDatasetAsVersionedFile(datasetId: string): Observable<VersionedFileView> {
-        console.log("push");
         return this.datasetApi.getDatasetAsVersionedFile(datasetId).pipe(
             map((result: DatasetAsVersionedFileQuery) => ({
                 name: result.datasets.byId?.name as string,

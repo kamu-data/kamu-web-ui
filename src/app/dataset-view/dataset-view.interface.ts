@@ -13,6 +13,8 @@ import {
 
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 
+import { MaybeNull } from "./../interface/app.types";
+
 export enum DatasetViewTypeEnum {
     Overview = "overview",
     Data = "data",
@@ -41,5 +43,5 @@ export enum OverviewTabMode {
 
 export interface VersionedFileView {
     name: string;
-    fileInfo: VersionedFileEntryDataFragment;
+    fileInfo: MaybeNull<VersionedFileEntryDataFragment>;
 }

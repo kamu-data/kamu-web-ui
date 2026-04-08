@@ -5,16 +5,35 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, DecimalPipe, NgFor, NgIf, TitleCasePipe } from "@angular/common";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
+import {
+    AsyncPipe,
+    DecimalPipe,
+    NgFor,
+    NgIf,
+    NgSwitch,
+    NgSwitchCase,
+    NgSwitchDefault,
+    TitleCasePipe,
+} from "@angular/common";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    inject,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+} from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatIconModule } from "@angular/material/icon";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { RouterLink } from "@angular/router";
 
-import { catchError, from, Observable, of, take } from "rxjs";
+import { catchError, finalize, from, Observable, of, shareReplay, take, tap } from "rxjs";
 
 import { NgbModal, NgbModalRef, NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
 
@@ -60,6 +79,7 @@ import {
 import ProjectLinks from "src/app/project-links";
 import { FileUploadService } from "src/app/services/file-upload.service";
 
+import { FileInformationSectionComponent } from "./components/versioned-file-view/components/file-informatin-section/file-information-section.component";
 import { VersionedFileViewComponent } from "./components/versioned-file-view/versioned-file-view.component";
 import { DatasetAsVersionedFileService } from "./services/dataset-as-versioned-file.service";
 
@@ -79,11 +99,13 @@ import { DatasetAsVersionedFileService } from "./services/dataset-as-versioned-f
         //-----//
         FormsModule,
         MatButtonToggleModule,
+        MatProgressBarModule,
         MatChipsModule,
         MatIconModule,
         NgbTooltip,
         //-----//
         FeatureFlagDirective,
+        FileInformationSectionComponent,
         OverviewHistorySummaryHeaderComponent,
         DynamicTableComponent,
         DataAccessPanelComponent,
@@ -95,7 +117,7 @@ import { DatasetAsVersionedFileService } from "./services/dataset-as-versioned-f
         VersionedFileViewComponent,
     ],
 })
-export class OverviewComponent extends BaseDatasetDataComponent implements OnInit {
+export class OverviewComponent extends BaseDatasetDataComponent implements OnInit, OnChanges {
     @Input(RoutingResolvers.DATASET_VIEW_OVERVIEW_KEY) public datasetOverviewTabData: DatasetOverviewTabData;
     public editingReadme = false;
     public droppedFile: File;
@@ -109,6 +131,7 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     public readonly OverviewTabMode: typeof OverviewTabMode = OverviewTabMode;
     public readonly DatasetArchetype: typeof DatasetArchetype = DatasetArchetype;
     public fileInfo$: Observable<VersionedFileView>;
+    public loadingFile: boolean = true;
 
     private datasetAsVersionedFileService = inject(DatasetAsVersionedFileService);
 
@@ -126,9 +149,26 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
         if (this.currentArchetype) {
             this.viewMode = this.setViewMode(this.currentArchetype);
         }
-        this.datasetAsVersionedFileService
-            .requestDatasetAsVersionedFile(this.datasetBasics.id)
-            .subscribe((x) => console.log("=", x));
+    }
+
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (
+            changes.datasetOverviewTabData &&
+            changes.datasetOverviewTabData.currentValue !== changes.datasetOverviewTabData.previousValue &&
+            this.currentArchetype
+        ) {
+            this.fileInfo$ = this.datasetAsVersionedFileService
+                .requestDatasetAsVersionedFile(this.datasetBasics.id)
+                .pipe(
+                    tap(() => {
+                        this.loadingFile = true;
+                    }),
+                    shareReplay(),
+                    finalize(() => {
+                        this.loadingFile = false;
+                    }),
+                );
+        }
     }
 
     public setViewMode(archetype: DatasetArchetype): OverviewTabMode {

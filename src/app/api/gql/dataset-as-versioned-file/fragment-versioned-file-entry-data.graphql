@@ -5,6 +5,7 @@ fragment VersionedFileEntryData on VersionedFileEntry {
   content
   contentType
   contentLength
+  contentHash
   contentUrl {
     url
     expiresAt

@@ -228,9 +228,11 @@
             />
         </div>
         <div *ngIf="viewMode === OverviewTabMode.VersionedFile">
-            <ng-container *ngIf="fileInfo$ | async as fileInfo">
-                <app-versioned-file-view [datasetBasics]="datasetBasics" [fileDetails]="fileInfo" />
-            </ng-container>
+            <app-versioned-file-view
+                [datasetBasics]="datasetBasics"
+                [fileInfo]="fileInfo$ | async"
+                [loadingFile]="loadingFile"
+            />
         </div>
         <div *ngIf="viewMode === OverviewTabMode.Collection">
             <p>Feature coming soon</p>
@@ -384,7 +386,7 @@
                             <mat-icon class="fs-4 mr-3">more_time</mat-icon>
                             <h2 class="dataset-info--subtitle">Created At:</h2>
                         </div>
-                        <div class="dataset-info--sub-block p-0">
+                        <div class="dataset-info--sub-block">
                             <app-display-time
                                 class="dataset-info--text"
                                 [title]="datasetOverviewTabData.overviewUpdate.overview.createdAt"
@@ -411,7 +413,7 @@
                             <h2 class="dataset-info--subtitle">Watermark:</h2>
                         </div>
                         <div
-                            class="dataset-info--sub-block d-flex align-items-center ps-1"
+                            class="dataset-info--sub-block text-nowrap d-flex align-items-center ps-1"
                             *ngIf="
                                 datasetOverviewTabData.overviewUpdate &&
                                     datasetOverviewTabData.overviewUpdate.overview.metadata.currentWatermark;
@@ -459,6 +461,11 @@
                     </div>
                 </ng-template>
             </div>
+
+            <app-file-information-section
+                *ngIf="currentArchetype && (fileInfo$ | async) as fileInfo"
+                [fileInfo]="fileInfo"
+            />
         </nav>
     </div>
 </div>

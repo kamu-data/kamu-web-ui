@@ -15,13 +15,16 @@ import {
     PercentPipe,
 } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
+import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
-import { PdfViewerModule } from "ng2-pdf-viewer";
+import { saveAs } from "file-saver";
+import { PDFDocumentProxy, PdfViewerModule } from "ng2-pdf-viewer";
 import { MarkdownModule } from "ngx-markdown";
 
+import { b64toBlob } from "@common/helpers/data.helpers";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -38,6 +41,7 @@ import { VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
         PercentPipe,
         JsonPipe,
         //-----//
+        MatButtonModule,
         MatIconModule,
         MarkdownModule,
         MatProgressBarModule,
@@ -68,7 +72,7 @@ export class VersionedFileViewComponent {
     private sanitizer = inject(DomSanitizer);
 
     @Input({ required: true })
-    set fileInfo(value: MaybeNull<VersionedFileView>) {
+    public set fileInfo(value: MaybeNull<VersionedFileView>) {
         this._fileDetails = value;
         if (value && value?.fileInfo) {
             this.fileLatestVersion = value?.fileInfo.version;
@@ -81,19 +85,16 @@ export class VersionedFileViewComponent {
                 case "text/plain": {
                     try {
                         this.plainText = atob(content);
-                    } catch (e) {
-                        throw new Error(`Base64 decoding error:${e}`);
+                    } catch {
+                        throw new Error(`Base64 decoding error`);
                     }
                     break;
                 }
 
                 case "application/pdf": {
-                    try {
-                        this.safePdfUrl = contentUrl.url;
-                        this.page = 1;
-                    } catch (e) {
-                        this.safePdfUrl = undefined;
-                    }
+                    this.safePdfUrl = contentUrl.url;
+                    this.page = 1;
+
                     break;
                 }
 
@@ -114,9 +115,9 @@ export class VersionedFileViewComponent {
                 case "application/vnd.desci.collaborative+json": {
                     try {
                         const jsonString = atob(cleanBase64);
-                        this.plainText = JSON.parse(jsonString);
-                    } catch (e) {
-                        throw new Error(`File parsing error:${e}`);
+                        this.plainText = JSON.parse(jsonString) as string;
+                    } catch {
+                        throw new Error(`File parsing error`);
                     }
                     break;
                 }
@@ -143,12 +144,44 @@ export class VersionedFileViewComponent {
         if (this.zoom > 0.5) this.zoom -= 0.1;
     }
 
-    public afterLoadComplete(pdfData: any) {
+    public afterLoadComplete(pdfData: PDFDocumentProxy) {
         this.totalPages = pdfData.numPages;
         this.isLoadedPdfFile = true;
     }
 
     public get fileDetails(): MaybeNull<VersionedFileView> {
         return this._fileDetails;
+    }
+
+    public getFileIcon(contentType: string): string {
+        if (!contentType) return "insert_drive_file";
+
+        if (contentType.startsWith("image/")) return "image";
+        if (contentType.startsWith("video/")) return "movie";
+        if (contentType.startsWith("audio/")) return "audiotrack";
+
+        switch (contentType) {
+            case "application/pdf":
+                return "picture_as_pdf";
+            case "text/plain":
+                return "description";
+            case "application/msword":
+            case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+                return "article";
+            default:
+                return "insert_drive_file";
+        }
+    }
+
+    public downloadFile() {
+        if (this.fileDetails?.fileInfo?.contentUrl.url) {
+            const content = this.fileDetails?.fileInfo?.content;
+
+            const contentType = this.fileDetails?.fileInfo?.contentType;
+            const cleanBase64 = content.replace(/-/g, "+").replace(/_/g, "/");
+            const blob = b64toBlob(cleanBase64, contentType);
+
+            saveAs(blob, this.fileDetails.name);
+        }
     }
 }

@@ -3,120 +3,124 @@
     <div class="mt-4 text-center">Loading file...</div>
 </div>
 <div class="mt-4" *ngIf="fileDetails">
-    <div class="ms-3 d-flex flex-column">
-        <div>
-            <mat-icon class="text=muted">file_present</mat-icon
-            ><span class="file-name ms-1">{{ fileDetails.name }}</span>
-        </div>
-        <div class="d-flex justify-content-end mt-4 me-2">
-            <button
-                class="border-1 bg-light border d-flex rounded-2 btn btn-sm justify-content-between align-items-center"
-            >
-                <!-- <mat-icon class="mat-icon-svg-size me-2 text-muted" svgIcon="pencil" /> -->
-                <mat-icon class="mat-icon-svg-size me-2 text-muted mb-1"> download</mat-icon>
-
-                <span class="fs-12 me-2 d-block">Download file</span>
-            </button>
-        </div>
+    <div class="d-flex align-items-end">
+        <mat-icon class="mat-icon-svg-size me-2 text-muted mb-2 fs-4">{{
+            getFileIcon(fileDetails.fileInfo?.contentType!)
+        }}</mat-icon>
+        <span class="file-name ms-1">{{ fileDetails.name }}</span>
     </div>
+    <div>
+        <div class="ms-3 d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <div class="fs-5 fw-500">Preview</div>
+                <button
+                    class="border-1 bg-light border d-flex rounded-2 btn btn-sm justify-content-between align-items-center"
+                    (click)="downloadFile()"
+                >
+                    <mat-icon class="mat-icon-svg-size me-2 text-muted mb-1"> download</mat-icon>
 
-    <div [ngSwitch]="fileDetails.fileInfo?.contentType" class="mb-4">
-        <!-- Pdf -->
-        <div *ngSwitchCase="'application/pdf'">
-            <div class="mt-4 mx-2 d-flex justify-content-end pdf-viewer-header" *ngIf="isLoadedPdfFile">
-                <button (click)="prevPage()" style="border: none" [disabled]="page <= 1">&#9664;</button>
-                <span>Page {{ page }} / {{ totalPages }}</span>
-                <button (click)="nextPage()" style="border: none" [disabled]="page >= totalPages">&#9654;</button>
+                    <span class="fs-12 me-2 d-block">Download file</span>
+                </button>
+            </div>
+        </div>
+        <div [ngSwitch]="fileDetails.fileInfo?.contentType" class="my-4">
+            <!-- Pdf -->
+            <div *ngSwitchCase="'application/pdf'" class="box pdf-container">
+                <div class="d-flex justify-content-end pdf-viewer-header" *ngIf="isLoadedPdfFile">
+                    <button (click)="prevPage()" style="border: none" [disabled]="page <= 1">&#9664;</button>
+                    <span>Page {{ page }} / {{ totalPages }}</span>
+                    <button (click)="nextPage()" style="border: none" [disabled]="page >= totalPages">&#9654;</button>
 
-                <div style="margin-left: 20px; display: flex; gap: 5px; align-items: center">
-                    <button (click)="zoomOut()" class="zoom-button">&#8211;</button>
-                    <span> {{ zoom | percent }}</span>
-                    <button (click)="zoomIn()" class="zoom-button">+</button>
+                    <div style="margin-left: 20px; display: flex; gap: 5px; align-items: center">
+                        <button (click)="zoomOut()" class="zoom-button">&#8211;</button>
+                        <span> {{ zoom | percent }}</span>
+                        <button (click)="zoomIn()" class="zoom-button">+</button>
+                    </div>
                 </div>
+                <div class="mt-4" *ngIf="safePdfUrl; else noFile">
+                    <pdf-viewer
+                        *ngIf="safePdfUrl; else noFile"
+                        [src]="safePdfUrl"
+                        [render-text]="true"
+                        [original-size]="false"
+                        [autoresize]="true"
+                        [show-borders]="true"
+                        [external-link-target]="'top'"
+                        [(page)]="page"
+                        [zoom]="zoom"
+                        [zoom-scale]="'page-width'"
+                        (after-load-complete)="afterLoadComplete($event)"
+                        style="width: 100%; height: 800px"
+                    ></pdf-viewer>
+                </div>
+                <ng-template #noFile>
+                    <p class="mt-4">The PDF cannot be displayed.</p>
+                </ng-template>
             </div>
-            <div class="mt-4" *ngIf="safePdfUrl; else noFile">
-                <pdf-viewer
-                    *ngIf="safePdfUrl; else noFile"
-                    [src]="safePdfUrl"
-                    [render-text]="true"
-                    [original-size]="false"
-                    [autoresize]="true"
-                    [show-borders]="true"
-                    [external-link-target]="'top'"
-                    [(page)]="page"
-                    [zoom]="zoom"
-                    [zoom-scale]="'page-width'"
-                    (after-load-complete)="afterLoadComplete($event)"
-                    style="width: 100%; height: 800px"
-                ></pdf-viewer>
-            </div>
-            <ng-template #noFile>
-                <p class="mt-4">The PDF cannot be displayed.</p>
+
+            <!-- Images -->
+            <ng-container *ngSwitchCase="'image/jpeg'">
+                <ng-container *ngTemplateOutlet="imageBox"></ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="'image/jpg'">
+                <ng-container *ngTemplateOutlet="imageBox"></ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="'image/png'">
+                <ng-container *ngTemplateOutlet="imageBox"></ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="'image/webp'">
+                <ng-container *ngTemplateOutlet="imageBox"></ng-container>
+            </ng-container>
+
+            <ng-template #imageBox>
+                <div class="text-center box p-4 mt-4">
+                    <img [src]="imagePath" class="preview-img" />
+                </div>
             </ng-template>
-        </div>
 
-        <!-- Images -->
-        <ng-container *ngSwitchCase="'image/jpeg'">
-            <ng-container *ngTemplateOutlet="imageBox"></ng-container>
-        </ng-container>
-        <ng-container *ngSwitchCase="'image/jpg'">
-            <ng-container *ngTemplateOutlet="imageBox"></ng-container>
-        </ng-container>
-        <ng-container *ngSwitchCase="'image/png'">
-            <ng-container *ngTemplateOutlet="imageBox"></ng-container>
-        </ng-container>
-        <ng-container *ngSwitchCase="'image/webp'">
-            <ng-container *ngTemplateOutlet="imageBox"></ng-container>
-        </ng-container>
+            <!-- Video -->
+            <ng-container *ngSwitchCase="'video/mp4'">
+                <ng-container *ngTemplateOutlet="videoBox"></ng-container>
+            </ng-container>
 
-        <ng-template #imageBox>
-            <div class="text-center mt-4">
-                <img [src]="imagePath" class="preview-img" />
+            <ng-container *ngSwitchCase="'video/quicktime'">
+                <ng-container *ngTemplateOutlet="videoBox"></ng-container>
+            </ng-container>
+
+            <ng-template #videoBox>
+                <div class="text-center mt-4">
+                    <video controls width="100%" height="500px" [src]="videoPath" playsinline>
+                        Your browser does not support embedded videos
+                    </video>
+                </div>
+            </ng-template>
+
+            <!-- Text -->
+            <ng-container *ngSwitchCase="'application/json'">
+                <ng-container *ngTemplateOutlet="jsonBox"></ng-container>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'application/vnd.desci.collaborative+json'">
+                <ng-container *ngTemplateOutlet="jsonBox"></ng-container>
+            </ng-container>
+
+            <ng-template #jsonBox>
+                <div class="box p-2 bg-light mt-4">
+                    <pre>{{ plainText | json }}</pre>
+                </div>
+            </ng-template>
+
+            <div class="mt-4" *ngSwitchCase="'text/plain'">
+                <p>{{ plainText }}</p>
             </div>
-        </ng-template>
 
-        <!-- Video -->
-        <ng-container *ngSwitchCase="'video/mp4'">
-            <ng-container *ngTemplateOutlet="videoBox"></ng-container>
-        </ng-container>
-
-        <ng-container *ngSwitchCase="'video/quicktime'">
-            <ng-container *ngTemplateOutlet="videoBox"></ng-container>
-        </ng-container>
-
-        <ng-template #videoBox>
-            <div class="text-center mt-4">
-                <video controls width="100%" height="500px" [src]="videoPath" playsinline>
-                    Your browser does not support embedded videos
-                </video>
-            </div>
-        </ng-template>
-
-        <!-- Text -->
-        <ng-container *ngSwitchCase="'application/json'">
-            <ng-container *ngTemplateOutlet="jsonBox"></ng-container>
-        </ng-container>
-
-        <ng-container *ngSwitchCase="'application/vnd.desci.collaborative+json'">
-            <ng-container *ngTemplateOutlet="jsonBox"></ng-container>
-        </ng-container>
-
-        <ng-template #jsonBox>
-            <div class="box p-2 bg-light mt-4">
-                <pre>{{ plainText | json }}</pre>
-            </div>
-        </ng-template>
-
-        <div class="mt-4" *ngSwitchCase="'text/plain'">
-            <p>{{ plainText }}</p>
-        </div>
-
-        <div class="mt-4 text-center" *ngSwitchDefault>
-            <div *ngIf="fileDetails.fileInfo">
-                <p class="fs-5 box p-4 bg-light">File preview is not supported</p>
-            </div>
-            <div *ngIf="!fileDetails.fileInfo?.contentType">
-                <span>File is empty</span>
+            <div class="mt-4 text-center" *ngSwitchDefault>
+                <div *ngIf="fileDetails.fileInfo">
+                    <p class="fs-5 box p-4 bg-light">File preview is not supported</p>
+                </div>
+                <div *ngIf="!fileDetails.fileInfo?.contentType">
+                    <span>File is empty</span>
+                </div>
             </div>
         </div>
     </div>

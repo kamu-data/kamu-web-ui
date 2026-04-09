@@ -18,16 +18,15 @@ import { VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
 @Component({
     selector: "app-file-information-section",
     imports: [NgIf, MatIconModule, DisplaySizePipe, DisplayHashComponent],
-    standalone: true,
     templateUrl: "./file-information-section.component.html",
-    // styleUrl: "./file-information-section.component.scss",
+    styleUrl: "./file-information-section.component.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileInformationSectionComponent {
     private _fileDetails: MaybeNull<VersionedFileView>;
 
     @Input({ required: true })
-    set fileInfo(value: MaybeNull<VersionedFileView>) {
+    public set fileInfo(value: MaybeNull<VersionedFileView>) {
         this._fileDetails = value;
     }
 

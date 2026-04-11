@@ -467,8 +467,3 @@ export const b64toBlob = (b64Data: string, contentType = "") => {
     }
     return new Blob(byteArrays, { type: contentType });
 };
-
-export const isUUID = (str: string): boolean => {
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    return uuidRegex.test(str);
-};

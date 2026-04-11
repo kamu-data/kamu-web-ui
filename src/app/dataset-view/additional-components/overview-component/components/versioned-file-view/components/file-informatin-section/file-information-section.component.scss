@@ -8,7 +8,7 @@
     cursor: pointer;
 
     &:disabled {
-        color: #a59a9a; /* Светло-серый цвет */
-        cursor: default; /* Возвращаем обычный курсор */
+        color: #a59a9a;
+        cursor: default;
     }
 }

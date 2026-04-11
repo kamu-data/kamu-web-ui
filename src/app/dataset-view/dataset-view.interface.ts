@@ -44,4 +44,5 @@ export enum OverviewTabMode {
 export interface VersionedFileView {
     name: string;
     fileInfo: MaybeNull<VersionedFileEntryDataFragment>;
+    countVersions?: number;
 }

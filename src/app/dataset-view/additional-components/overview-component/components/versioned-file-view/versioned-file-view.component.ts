@@ -5,23 +5,15 @@
  * included in the LICENSE file.
  */
 
-import {
-    JsonPipe,
-    NgIf,
-    NgSwitch,
-    NgSwitchCase,
-    NgSwitchDefault,
-    NgTemplateOutlet,
-    PercentPipe,
-} from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
+import { JsonPipe, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, NgTemplateOutlet } from "@angular/common";
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
+import { NgbAlert } from "@ng-bootstrap/ng-bootstrap";
 import { saveAs } from "file-saver";
-import { PDFDocumentProxy, PdfViewerModule } from "ng2-pdf-viewer";
 import { MarkdownModule } from "ngx-markdown";
 
 import { b64toBlob } from "@common/helpers/data.helpers";
@@ -29,6 +21,8 @@ import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
+
+import { PdfViewerContentComponent } from "./components/pdf-viewer/pdf-viewer-content.component";
 
 @Component({
     selector: "app-versioned-file-view",
@@ -38,15 +32,15 @@ import { VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
         NgSwitchCase,
         NgSwitchDefault,
         NgTemplateOutlet,
-        PercentPipe,
         JsonPipe,
         //-----//
         MatButtonModule,
         MatIconModule,
         MarkdownModule,
         MatProgressBarModule,
+        NgbAlert,
         //-----//
-        PdfViewerModule,
+        PdfViewerContentComponent,
     ],
     templateUrl: "./versioned-file-view.component.html",
     styleUrl: "./versioned-file-view.component.scss",
@@ -55,18 +49,14 @@ import { VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
 export class VersionedFileViewComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public loadingFile: boolean;
+    @Output() public goToLatestVersionedFileEmitter = new EventEmitter<void>();
     private _fileDetails: MaybeNull<VersionedFileView>;
     public safePdfUrl: string | undefined;
-
     public imagePath: SafeUrl;
     public videoPath: SafeUrl;
     public jsonPath: SafeUrl;
     public plainText: string = "";
 
-    public page: number = 1;
-    public totalPages: number = 0;
-    public zoom: number = 1.0;
-    public isLoadedPdfFile: boolean = false;
     public fileLatestVersion: number;
 
     private sanitizer = inject(DomSanitizer);
@@ -74,11 +64,15 @@ export class VersionedFileViewComponent {
     @Input({ required: true })
     public set fileInfo(value: MaybeNull<VersionedFileView>) {
         this._fileDetails = value;
-        if (value && value?.fileInfo) {
-            this.fileLatestVersion = value?.fileInfo.version;
-            const content = value?.fileInfo?.content;
-            const contentUrl = value?.fileInfo?.contentUrl;
-            const contentType = value.fileInfo.contentType;
+        this.setPreviewFileStrategy(this._fileDetails);
+    }
+
+    private setPreviewFileStrategy(details: MaybeNull<VersionedFileView>): void {
+        if (details && details?.fileInfo) {
+            this.fileLatestVersion = details?.fileInfo.version;
+            const content = details?.fileInfo?.content;
+            const contentUrl = details?.fileInfo?.contentUrl;
+            const contentType = details.fileInfo.contentType;
             const cleanBase64 = content.replace(/-/g, "+").replace(/_/g, "/");
 
             switch (contentType) {
@@ -93,7 +87,6 @@ export class VersionedFileViewComponent {
 
                 case "application/pdf": {
                     this.safePdfUrl = contentUrl.url;
-                    this.page = 1;
 
                     break;
                 }
@@ -128,29 +121,16 @@ export class VersionedFileViewComponent {
         }
     }
 
-    public nextPage() {
-        if (this.page < this.totalPages) this.page++;
-    }
-
-    public prevPage() {
-        if (this.page > 1) this.page--;
-    }
-
-    public zoomIn() {
-        this.zoom += 0.1;
-    }
-
-    public zoomOut() {
-        if (this.zoom > 0.5) this.zoom -= 0.1;
-    }
-
-    public afterLoadComplete(pdfData: PDFDocumentProxy) {
-        this.totalPages = pdfData.numPages;
-        this.isLoadedPdfFile = true;
+    public goToLatestVersionedFile(): void {
+        this.goToLatestVersionedFileEmitter.emit();
     }
 
     public get fileDetails(): MaybeNull<VersionedFileView> {
         return this._fileDetails;
+    }
+
+    public get isLatestVersion(): boolean {
+        return this.fileDetails?.fileInfo?.version === this.fileDetails?.countVersions;
     }
 
     public getFileIcon(contentType: string): string {

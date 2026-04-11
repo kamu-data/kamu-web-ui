@@ -583,6 +583,9 @@ export class DatasetApi {
                     datasetId,
                 },
                 ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
+                },
             })
             .valueChanges.pipe(
                 onlyCompleteData(),
@@ -604,6 +607,9 @@ export class DatasetApi {
                     version,
                 },
                 ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
+                },
             })
             .valueChanges.pipe(
                 onlyCompleteData(),
@@ -625,6 +631,9 @@ export class DatasetApi {
                     blockHash,
                 },
                 ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
+                },
             })
             .valueChanges.pipe(
                 onlyCompleteData(),

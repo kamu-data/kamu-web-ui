@@ -15,7 +15,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { RouterLink } from "@angular/router";
 
-import { catchError, finalize, from, Observable, of, shareReplay, take, tap } from "rxjs";
+import { catchError, finalize, from, Observable, of, shareReplay, take } from "rxjs";
 
 import { NgbModal, NgbModalRef, NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
 
@@ -139,18 +139,22 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
             changes.datasetOverviewTabData.currentValue !== changes.datasetOverviewTabData.previousValue &&
             this.currentArchetype
         ) {
-            this.fileInfo$ = this.datasetAsVersionedFileService
-                .requestDatasetAsVersionedFile(this.datasetBasics.id)
-                .pipe(
-                    tap(() => {
-                        this.loadingFile = true;
-                    }),
-                    shareReplay(),
-                    finalize(() => {
-                        this.loadingFile = false;
-                    }),
-                );
+            this.loadDatasetAsVersionedFile();
         }
+    }
+
+    private loadDatasetAsVersionedFile(): void {
+        this.loadingFile = true;
+        this.fileInfo$ = this.datasetAsVersionedFileService.requestDatasetAsVersionedFile(this.datasetBasics.id).pipe(
+            shareReplay(),
+            finalize(() => {
+                this.loadingFile = false;
+            }),
+        );
+    }
+
+    public goToLatestVersionedFile(): void {
+        this.loadDatasetAsVersionedFile();
     }
 
     public setViewMode(archetype: DatasetArchetype): OverviewTabMode {
@@ -163,6 +167,18 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
                 return OverviewTabMode.Table;
             }
         }
+    }
+
+    public changeFileVersion(version: number): void {
+        this.loadingFile = true;
+        this.fileInfo$ = this.datasetAsVersionedFileService
+            .requestDatasetAsVersionedFileByVersion(this.datasetBasics.id, version)
+            .pipe(
+                shareReplay(),
+                finalize(() => {
+                    this.loadingFile = false;
+                }),
+            );
     }
 
     public showWebsite(url: string): void {

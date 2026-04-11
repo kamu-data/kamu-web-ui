@@ -1,0 +1,30 @@
+<div class="d-flex justify-content-end pdf-viewer-header" *ngIf="isLoadedPdfFile">
+    <button (click)="prevPage()" style="border: none" [disabled]="page <= 1">&#9664;</button>
+    <span>Page {{ page }} / {{ totalPages }}</span>
+    <button (click)="nextPage()" style="border: none" [disabled]="page >= totalPages">&#9654;</button>
+
+    <div style="margin-left: 20px; display: flex; gap: 5px; align-items: center">
+        <button (click)="zoomOut()" class="zoom-button">&#8211;</button>
+        <span> {{ zoom | percent }}</span>
+        <button (click)="zoomIn()" class="zoom-button">+</button>
+    </div>
+</div>
+<div class="mt-4" *ngIf="safePdfUrl; else noFile">
+    <pdf-viewer
+        *ngIf="safePdfUrl; else noFile"
+        [src]="safePdfUrl"
+        [render-text]="true"
+        [original-size]="false"
+        [autoresize]="true"
+        [show-borders]="true"
+        [external-link-target]="'top'"
+        [(page)]="page"
+        [zoom]="zoom"
+        [zoom-scale]="'page-width'"
+        (after-load-complete)="afterLoadComplete($event)"
+        style="width: 100%; height: 800px"
+    ></pdf-viewer>
+</div>
+<ng-template #noFile>
+    <p class="mt-4">The PDF document cannot be displayed.</p>
+</ng-template>

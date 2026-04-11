@@ -1,1 +1,14 @@
+@use "var" as *;
 
+.change-version-btn {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: $app-navy-blue;
+    cursor: pointer;
+
+    &:disabled {
+        color: #a59a9a; /* Светло-серый цвет */
+        cursor: default; /* Возвращаем обычный курсор */
+    }
+}

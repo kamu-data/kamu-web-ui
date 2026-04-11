@@ -232,6 +232,7 @@
                 [datasetBasics]="datasetBasics"
                 [fileInfo]="fileInfo$ | async"
                 [loadingFile]="loadingFile"
+                (goToLatestVersionedFileEmitter)="goToLatestVersionedFile()"
             />
         </div>
         <div *ngIf="viewMode === OverviewTabMode.Collection">
@@ -465,6 +466,7 @@
             <app-file-information-section
                 *ngIf="currentArchetype && (fileInfo$ | async) as fileInfo"
                 [fileInfo]="fileInfo"
+                (changeFileVersionEmitter)="changeFileVersion($event)"
             />
         </nav>
     </div>

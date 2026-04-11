@@ -17,8 +17,19 @@
 
     <div class="dataset-info--block">
         <div class="dataset-info--sub-block d-flex align-items-center">
+            <mat-icon class="fs-4 mr-2">calendar_today</mat-icon>
+            <h2 class="dataset-info--subtitle">Created:</h2>
+        </div>
+
+        <div class="dataset-info--sub-block">
+            {{ fileDetails?.fileInfo?.eventTime | date: DISPLAY_TIME_FORMAT }}
+        </div>
+    </div>
+
+    <div class="dataset-info--block">
+        <div class="dataset-info--sub-block d-flex align-items-center">
             <mat-icon class="fs-4 mr-2">chrome_reader_mode</mat-icon>
-            <h2 class="dataset-info--subtitle">Content type:</h2>
+            <h2 class="dataset-info--subtitle">Content Type:</h2>
         </div>
 
         <div class="dataset-info--sub-block">
@@ -29,7 +40,7 @@
     <div class="dataset-info--block" *ngIf="fileDetails?.fileInfo">
         <div class="dataset-info--sub-block d-flex align-items-center">
             <mat-icon class="fs-4 mr-2">folder_open</mat-icon>
-            <h2 class="dataset-info--subtitle">Estimated Size:</h2>
+            <h2 class="dataset-info--subtitle">Size:</h2>
         </div>
         <div class="dataset-info--sub-block">
             <p class="dataset-info--text">
@@ -41,7 +52,7 @@
     <div class="dataset-info--block">
         <div class="dataset-info--sub-block d-flex align-items-center">
             <mat-icon class="fs-4 mr-2">numbers</mat-icon>
-            <h2 class="dataset-info--subtitle">Content hash:</h2>
+            <h2 class="dataset-info--subtitle">Content Hash:</h2>
         </div>
 
         <div class="dataset-info--sub-block">
@@ -55,8 +66,20 @@
         </div>
     </div>
 
-    <div class="d-flex justify-content-between px-2 mt-4 my-3">
-        <a>&#9664; Previous version</a>
-        <a>Next version &#9654;</a>
+    <div class="d-flex border-top justify-content-between px-4 pt-4 pb-3" style="margin-top: 25px">
+        <button
+            class="change-version-btn"
+            (click)="setVersion(currentFileVersion - 1)"
+            [disabled]="previousVersionBtnDisabled"
+        >
+            &#9664; Previous version
+        </button>
+        <button
+            class="change-version-btn"
+            (click)="setVersion(currentFileVersion + 1)"
+            [disabled]="nextVersionBtnDisabled"
+        >
+            Next version &#9654;
+        </button>
     </div>
 </div>

@@ -3,6 +3,9 @@ query datasetAsVersionedFileByVersion($datasetId: DatasetID!, $version: Int) {
     byId(datasetId: $datasetId) {
       name
       asVersionedFile {
+        versions {
+          totalCount
+        }
         asOf(version: $version) {
           ...VersionedFileEntryData
         }

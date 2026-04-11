@@ -5480,6 +5480,7 @@ export type DatasetAsVersionedFileByVersionQuery = {
             name: string;
             asVersionedFile?: {
                 __typename?: "VersionedFile";
+                versions: { __typename?: "VersionedFileEntryConnection"; totalCount: number };
                 asOf?: ({ __typename?: "VersionedFileEntry" } & VersionedFileEntryDataFragment) | null;
             } | null;
         } | null;
@@ -5499,6 +5500,7 @@ export type DatasetAsVersionedFileQuery = {
             name: string;
             asVersionedFile?: {
                 __typename?: "VersionedFile";
+                versions: { __typename?: "VersionedFileEntryConnection"; totalCount: number };
                 latest?: ({ __typename?: "VersionedFileEntry" } & VersionedFileEntryDataFragment) | null;
             } | null;
         } | null;
@@ -10637,6 +10639,9 @@ export const DatasetAsVersionedFileByVersionDocument = gql`
             byId(datasetId: $datasetId) {
                 name
                 asVersionedFile {
+                    versions {
+                        totalCount
+                    }
                     asOf(version: $version) {
                         ...VersionedFileEntryData
                     }
@@ -10666,6 +10671,9 @@ export const DatasetAsVersionedFileDocument = gql`
             byId(datasetId: $datasetId) {
                 name
                 asVersionedFile {
+                    versions {
+                        totalCount
+                    }
                     latest {
                         ...VersionedFileEntryData
                     }

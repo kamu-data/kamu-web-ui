@@ -30,6 +30,7 @@ export class DatasetAsVersionedFileService {
             map((result: DatasetAsVersionedFileQuery) => ({
                 name: result.datasets.byId?.name as string,
                 fileInfo: result.datasets.byId?.asVersionedFile?.latest as VersionedFileEntryDataFragment,
+                countVersions: result.datasets.byId?.asVersionedFile?.versions.totalCount as number,
             })),
         );
     }
@@ -40,6 +41,7 @@ export class DatasetAsVersionedFileService {
                 return {
                     name: result.datasets.byId?.name as string,
                     fileInfo: result.datasets.byId?.asVersionedFile?.asOf as VersionedFileEntryDataFragment,
+                    countVersions: result.datasets.byId?.asVersionedFile?.versions.totalCount as number,
                 };
             }),
         );

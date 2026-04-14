@@ -50,11 +50,13 @@ export class FileInformationSectionComponent {
     }
 
     public get nextVersionBtnDisabled(): boolean {
-        return this.currentFileVersion >= Number(this.fileDetails?.countVersions);
+        const noFileInfo = !this.fileDetails?.fileInfo;
+        return noFileInfo || this.currentFileVersion >= Number(this.fileDetails?.countVersions);
     }
 
     public get previousVersionBtnDisabled(): boolean {
-        return this.currentFileVersion <= 1;
+        const noFileInfo = !this.fileDetails?.fileInfo;
+        return noFileInfo || Boolean(this.fileDetails?.countVersions) || this.currentFileVersion <= 1;
     }
 
     public setVersion(version: number): void {

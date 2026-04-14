@@ -130,7 +130,8 @@ export class VersionedFileViewComponent {
     }
 
     public get isLatestVersion(): boolean {
-        return this.fileDetails?.fileInfo?.version === this.fileDetails?.countVersions;
+        const noFileInfo = !this.fileDetails?.fileInfo;
+        return noFileInfo || this.fileDetails?.fileInfo?.version === this.fileDetails?.countVersions;
     }
 
     public getFileIcon(contentType: string): string {

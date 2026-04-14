@@ -231,3 +231,15 @@ export function isAccessTokenExpired(accessToken: string): boolean {
     const isExpired = now.getTime() > expirationDate.getTime();
     return isExpired;
 }
+
+export function maskDotsInURL(url: string, segmentIndex: number): string {
+    const [path, query] = url.split("?");
+    const segments = path.split("/");
+
+    if (segments.length > segmentIndex) {
+        segments[segmentIndex] = segments[segmentIndex].replace(/\./g, "%2E");
+    }
+
+    const newPath = segments.join("/");
+    return query ? `${newPath}?${query}` : newPath;
+}

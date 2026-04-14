@@ -15,6 +15,7 @@ import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { NgbAlert } from "@ng-bootstrap/ng-bootstrap";
 import { saveAs } from "file-saver";
 import { MarkdownModule } from "ngx-markdown";
+import { ToastrService } from "ngx-toastr";
 
 import { b64toBlob } from "@common/helpers/data.helpers";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
@@ -60,6 +61,7 @@ export class VersionedFileViewComponent {
     public fileLatestVersion: number;
 
     private sanitizer = inject(DomSanitizer);
+    private toastrService = inject(ToastrService);
 
     @Input({ required: true })
     public set fileInfo(value: MaybeNull<VersionedFileView>) {
@@ -80,14 +82,13 @@ export class VersionedFileViewComponent {
                     try {
                         this.plainText = atob(content);
                     } catch {
-                        throw new Error(`Base64 decoding error`);
+                        this.plainText = content;
                     }
                     break;
                 }
 
                 case "application/pdf": {
                     this.safePdfUrl = contentUrl.url;
-
                     break;
                 }
 
@@ -110,13 +111,13 @@ export class VersionedFileViewComponent {
                         const jsonString = atob(cleanBase64);
                         this.plainText = JSON.parse(jsonString) as string;
                     } catch {
-                        throw new Error(`File parsing error`);
+                        this.plainText = atob(cleanBase64);
                     }
                     break;
                 }
 
                 default:
-                    throw new Error(`Content type not supported:${contentType} `);
+                    this.toastrService.info(`Content type not supported: ${contentType}`);
             }
         }
     }

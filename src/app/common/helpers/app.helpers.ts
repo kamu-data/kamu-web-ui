@@ -233,13 +233,30 @@ export function isAccessTokenExpired(accessToken: string): boolean {
 }
 
 export function maskDotsInURL(url: string, segmentIndex: number): string {
+    const mimeTypes = ["pdf", "png", "jpg", "jpeg", "mov", "mp4", "mov", "txt", "json"];
     const [path, query] = url.split("?");
     const segments = path.split("/");
 
+    const mimeRegex = new RegExp(`\\.(${mimeTypes.join("|")})$`, "i");
+
     if (segments.length > segmentIndex) {
-        segments[segmentIndex] = segments[segmentIndex].replace(/\./g, "%2E");
+        segments[segmentIndex] = segments[segmentIndex].replace(mimeRegex, "%2E$1");
     }
 
     const newPath = segments.join("/");
     return query ? `${newPath}?${query}` : newPath;
+    // if (segments.length > segmentIndex) {
+
+    //     const foundMime = mimeTypes.find((mime) => segments[segmentIndex].toLowerCase().endsWith("." + mime));
+
+    //     if (foundMime) {
+    //         // 2. Если нашли, заменяем ТОЛЬКО последнюю точку перед этим MIME
+    //         // Регулярное выражение строится динамически для конкретного найденного расширения
+    //         const regex = new RegExp(`\\.${foundMime}$`, "i");
+    //         segments[segmentIndex] = segments[segmentIndex].replace(regex, `%2E${foundMime}`);
+    //     }
+    // }
+
+    // const newPath = segments.join("/");
+    // return query ? `${newPath}?${query}` : newPath;
 }

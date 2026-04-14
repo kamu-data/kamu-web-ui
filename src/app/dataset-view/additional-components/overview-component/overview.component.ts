@@ -13,6 +13,7 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { RouterLink } from "@angular/router";
 
 import { catchError, finalize, from, Observable, of, shareReplay, take } from "rxjs";
@@ -84,6 +85,7 @@ import { DatasetAsVersionedFileService } from "./services/dataset-as-versioned-f
         MatProgressBarModule,
         MatChipsModule,
         MatIconModule,
+        MatTooltipModule,
         NgbTooltip,
         //-----//
         FeatureFlagDirective,

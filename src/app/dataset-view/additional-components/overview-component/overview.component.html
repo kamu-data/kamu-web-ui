@@ -5,6 +5,8 @@
                 <mat-button-toggle
                     *ngIf="currentArchetype === DatasetArchetype.VersionedFile"
                     [value]="OverviewTabMode.VersionedFile"
+                    [matTooltip]="'File view'"
+                    [matTooltipPosition]="'above'"
                 >
                     <mat-icon [svgIcon]="'clarify'" />
                 </mat-button-toggle>
@@ -14,7 +16,11 @@
                 >
                     <mat-icon [svgIcon]="'folder'" />
                 </mat-button-toggle>
-                <mat-button-toggle [value]="OverviewTabMode.Table">
+                <mat-button-toggle
+                    [value]="OverviewTabMode.Table"
+                    [matTooltip]="'Table view'"
+                    [matTooltipPosition]="'above'"
+                >
                     <mat-icon [svgIcon]="'table-chart-outline'" />
                 </mat-button-toggle>
             </mat-button-toggle-group>

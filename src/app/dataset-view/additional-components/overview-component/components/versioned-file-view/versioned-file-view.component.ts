@@ -5,8 +5,25 @@
  * included in the LICENSE file.
  */
 
-import { JsonPipe, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, NgTemplateOutlet } from "@angular/common";
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from "@angular/core";
+import {
+    JsonPipe,
+    NgComponentOutlet,
+    NgIf,
+    NgSwitch,
+    NgSwitchCase,
+    NgSwitchDefault,
+    NgTemplateOutlet,
+} from "@angular/common";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    Output,
+    Type,
+} from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
@@ -17,13 +34,14 @@ import { saveAs } from "file-saver";
 import { MarkdownModule } from "ngx-markdown";
 import { ToastrService } from "ngx-toastr";
 
-import { b64toBlob } from "@common/helpers/data.helpers";
+import { b64toBlob, getFileIconHelper } from "@common/helpers/data.helpers";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
 
 import { PdfViewerContentComponent } from "./components/pdf-viewer/pdf-viewer-content.component";
+import { PreviewFileTypePipe } from "./pipes/preview-file-type.pipe";
 
 @Component({
     selector: "app-versioned-file-view",
@@ -32,7 +50,7 @@ import { PdfViewerContentComponent } from "./components/pdf-viewer/pdf-viewer-co
         NgSwitch,
         NgSwitchCase,
         NgSwitchDefault,
-        NgTemplateOutlet,
+        NgComponentOutlet,
         JsonPipe,
         //-----//
         MatButtonModule,
@@ -41,7 +59,7 @@ import { PdfViewerContentComponent } from "./components/pdf-viewer/pdf-viewer-co
         MatProgressBarModule,
         NgbAlert,
         //-----//
-        PdfViewerContentComponent,
+        PreviewFileTypePipe,
     ],
     templateUrl: "./versioned-file-view.component.html",
     styleUrl: "./versioned-file-view.component.scss",
@@ -52,16 +70,18 @@ export class VersionedFileViewComponent {
     @Input({ required: true }) public loadingFile: boolean;
     @Output() public goToLatestVersionedFileEmitter = new EventEmitter<void>();
     private _fileDetails: MaybeNull<VersionedFileView>;
-    public safePdfUrl: string | undefined;
-    public imagePath: SafeUrl;
-    public videoPath: SafeUrl;
-    public jsonPath: SafeUrl;
-    public plainText: string = "";
+
+    public urlContentPath: SafeUrl;
+    public contentText: string | undefined;
+
+    pdfComponent: Type<PdfViewerContentComponent> | null = null;
 
     public fileLatestVersion: number;
 
     private sanitizer = inject(DomSanitizer);
     private toastrService = inject(ToastrService);
+    private cdr = inject(ChangeDetectorRef);
+    private previewFileTypePipe = new PreviewFileTypePipe();
 
     @Input({ required: true })
     public set fileInfo(value: MaybeNull<VersionedFileView>) {
@@ -69,7 +89,7 @@ export class VersionedFileViewComponent {
         this.setPreviewFileStrategy(this._fileDetails);
     }
 
-    private setPreviewFileStrategy(details: MaybeNull<VersionedFileView>): void {
+    private async setPreviewFileStrategy(details: MaybeNull<VersionedFileView>): Promise<void> {
         if (details && details?.fileInfo) {
             this.fileLatestVersion = details?.fileInfo.version;
             const content = details?.fileInfo?.content;
@@ -77,44 +97,41 @@ export class VersionedFileViewComponent {
             const contentType = details.fileInfo.contentType;
             const cleanBase64 = content.replace(/-/g, "+").replace(/_/g, "/");
 
-            switch (contentType) {
-                case "text/plain": {
+            switch (this.previewFileTypePipe.transform(contentType)) {
+                case "text": {
                     try {
-                        this.plainText = atob(content);
+                        this.contentText = atob(content);
                     } catch {
-                        this.plainText = content;
+                        this.contentText = content;
                     }
                     break;
                 }
 
-                case "application/pdf": {
-                    this.safePdfUrl = contentUrl.url;
+                case "pdf": {
+                    this.urlContentPath = contentUrl.url;
+                    const { PdfViewerContentComponent } =
+                        await import("./components/pdf-viewer/pdf-viewer-content.component");
+                    this.pdfComponent = PdfViewerContentComponent;
+                    this.cdr.detectChanges();
                     break;
                 }
 
-                case "image/jpeg":
-                case "image/webp":
-                case "image/jpg":
-                case "image/png":
-                    this.imagePath = this.sanitizer.bypassSecurityTrustUrl(contentUrl.url);
+                case "image":
+                    this.urlContentPath = this.sanitizer.bypassSecurityTrustUrl(contentUrl.url);
                     break;
 
-                case "video/mp4":
-                case "video/quicktime": {
-                    this.videoPath = this.sanitizer.bypassSecurityTrustUrl(contentUrl.url);
-                    break;
-                }
-
-                case "application/json":
-                case "application/vnd.desci.collaborative+json": {
+                case "json": {
                     try {
                         const jsonString = atob(cleanBase64);
-                        this.plainText = JSON.parse(jsonString) as string;
+                        this.contentText = JSON.parse(jsonString) as string;
                     } catch {
-                        this.plainText = atob(cleanBase64);
+                        this.contentText = atob(cleanBase64);
                     }
                     break;
                 }
+
+                case "video":
+                    break;
 
                 default:
                     this.toastrService.info(`Content type not supported: ${contentType}`);
@@ -136,23 +153,7 @@ export class VersionedFileViewComponent {
     }
 
     public getFileIcon(contentType: string): string {
-        if (!contentType) return "insert_drive_file";
-
-        if (contentType.startsWith("image/")) return "image";
-        if (contentType.startsWith("video/")) return "movie";
-        if (contentType.startsWith("audio/")) return "audiotrack";
-
-        switch (contentType) {
-            case "application/pdf":
-                return "picture_as_pdf";
-            case "text/plain":
-                return "description";
-            case "application/msword":
-            case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-                return "article";
-            default:
-                return "insert_drive_file";
-        }
+        return getFileIconHelper(contentType);
     }
 
     public downloadFile() {

@@ -30,49 +30,24 @@
                 </button>
             </div>
         </div>
-        <div [ngSwitch]="fileDetails.fileInfo?.contentType" class="my-4">
-            <!-- Pdf -->
-            <div *ngSwitchCase="'application/pdf'">
-                <app-pdf-viewer-content *ngIf="safePdfUrl" [safePdfUrl]="safePdfUrl" />
+
+        <div [ngSwitch]="fileDetails.fileInfo?.contentType! | previewFileType" class="my-4">
+            <div *ngSwitchCase="'pdf'">
+                @defer (when (pdfComponent)) {
+                    <ng-container *ngComponentOutlet="pdfComponent; inputs: { safePdfUrl: urlContentPath }" />
+                }
             </div>
 
-            <!-- Images -->
-            <ng-container *ngSwitchCase="'image/jpeg'">
-                <ng-container *ngTemplateOutlet="imageBox"></ng-container>
-            </ng-container>
-            <ng-container *ngSwitchCase="'image/jpg'">
-                <ng-container *ngTemplateOutlet="imageBox"></ng-container>
-            </ng-container>
-            <ng-container *ngSwitchCase="'image/png'">
-                <ng-container *ngTemplateOutlet="imageBox"></ng-container>
-            </ng-container>
-            <ng-container *ngSwitchCase="'image/webp'">
-                <ng-container *ngTemplateOutlet="imageBox"></ng-container>
-            </ng-container>
+            <div *ngSwitchCase="'image'" class="text-center box p-4 mt-4 bg-light">
+                <img [src]="urlContentPath" class="preview-img" />
+            </div>
 
-            <ng-template #imageBox>
-                <div class="text-center box p-4 mt-4 bg-light">
-                    <img [src]="imagePath" class="preview-img" />
-                </div>
-            </ng-template>
+            <div *ngSwitchCase="'json'" class="box p-2 bg-light mt-4">
+                <pre>{{ contentText | json }}</pre>
+            </div>
 
-            <!-- Text -->
-            <ng-container *ngSwitchCase="'application/json'">
-                <ng-container *ngTemplateOutlet="jsonBox"></ng-container>
-            </ng-container>
-
-            <ng-container *ngSwitchCase="'application/vnd.desci.collaborative+json'">
-                <ng-container *ngTemplateOutlet="jsonBox"></ng-container>
-            </ng-container>
-
-            <ng-template #jsonBox>
-                <div class="box p-2 bg-light mt-4">
-                    <pre>{{ plainText | json }}</pre>
-                </div>
-            </ng-template>
-
-            <div class="mt-4" *ngSwitchCase="'text/plain'">
-                <p>{{ plainText }}</p>
+            <div class="mt-4" *ngSwitchCase="'text'">
+                <p>{{ contentText }}</p>
             </div>
 
             <div class="mt-4 text-center" *ngSwitchDefault>

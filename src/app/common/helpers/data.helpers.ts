@@ -467,3 +467,20 @@ export const b64toBlob = (b64Data: string, contentType = "") => {
     }
     return new Blob(byteArrays, { type: contentType });
 };
+
+export function getFileIconHelper(contentType: string): string {
+    if (!contentType) return "insert_drive_file";
+
+    if (contentType.startsWith("image/")) return "image";
+    if (contentType.startsWith("video/")) return "movie";
+
+    switch (contentType) {
+        case "application/pdf":
+            return "picture_as_pdf";
+        case "text/plain":
+            return "description";
+
+        default:
+            return "insert_drive_file";
+    }
+}

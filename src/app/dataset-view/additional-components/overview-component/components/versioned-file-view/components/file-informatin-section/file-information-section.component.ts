@@ -56,7 +56,7 @@ export class FileInformationSectionComponent {
 
     public get previousVersionBtnDisabled(): boolean {
         const noFileInfo = !this.fileDetails?.fileInfo;
-        return noFileInfo || Boolean(this.fileDetails?.countVersions) || this.currentFileVersion <= 1;
+        return noFileInfo || this.currentFileVersion <= 1;
     }
 
     public setVersion(version: number): void {

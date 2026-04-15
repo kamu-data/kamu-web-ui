@@ -245,18 +245,4 @@ export function maskDotsInURL(url: string, segmentIndex: number): string {
 
     const newPath = segments.join("/");
     return query ? `${newPath}?${query}` : newPath;
-    // if (segments.length > segmentIndex) {
-
-    //     const foundMime = mimeTypes.find((mime) => segments[segmentIndex].toLowerCase().endsWith("." + mime));
-
-    //     if (foundMime) {
-    //         // 2. Если нашли, заменяем ТОЛЬКО последнюю точку перед этим MIME
-    //         // Регулярное выражение строится динамически для конкретного найденного расширения
-    //         const regex = new RegExp(`\\.${foundMime}$`, "i");
-    //         segments[segmentIndex] = segments[segmentIndex].replace(regex, `%2E${foundMime}`);
-    //     }
-    // }
-
-    // const newPath = segments.join("/");
-    // return query ? `${newPath}?${query}` : newPath;
 }

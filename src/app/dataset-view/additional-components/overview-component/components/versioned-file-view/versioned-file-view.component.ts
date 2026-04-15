@@ -43,7 +43,7 @@ import { MarkdownModule } from "ngx-markdown";
 import { ToastrService } from "ngx-toastr";
 
 import { BaseComponent } from "@common/components/base.component";
-import { b64toBlob, getFileIconHelper } from "@common/helpers/data.helpers";
+import { b64toBlob, extractAndAddExtension, getFileIconHelper } from "@common/helpers/data.helpers";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -190,7 +190,7 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
             const cleanBase64 = content.replace(/-/g, "+").replace(/_/g, "/");
             const blob = b64toBlob(cleanBase64, contentType);
 
-            saveAs(blob, fileDetails.name);
+            saveAs(blob, extractAndAddExtension(fileDetails.name));
         }
     }
 }

@@ -12,6 +12,7 @@ import { Pipe, PipeTransform } from "@angular/core";
 })
 export class PreviewFileTypePipe implements PipeTransform {
     transform(contentType: string): "pdf" | "image" | "json" | "text" | "video" | "unknown" {
+        if (!contentType) return "unknown";
         if (contentType === "application/pdf") return "pdf";
         if (contentType.startsWith("image/")) return "image";
         if (contentType.startsWith("video/")) return "video";

@@ -5,20 +5,24 @@
  * included in the LICENSE file.
  */
 
-import { DatePipe, NgIf } from "@angular/common";
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { AsyncPipe, DatePipe, NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
+
+import { Observable } from "rxjs";
 
 import { DisplayHashComponent } from "@common/components/display-hash/display-hash.component";
 import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 import AppValues from "@common/values/app.values";
-import { MaybeNull } from "@interface/app.types";
 
 import { VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
+
+import { DatasetAsVersionedFileService } from "../../../../services/dataset-as-versioned-file.service";
 
 @Component({
     selector: "app-file-information-section",
     imports: [
+        AsyncPipe,
         NgIf,
         DatePipe,
         //-----//
@@ -31,35 +35,35 @@ import { VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
     styleUrl: "./file-information-section.component.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileInformationSectionComponent {
-    @Input({ required: true })
-    public set fileInfo(value: MaybeNull<VersionedFileView>) {
-        this._fileDetails = value;
-    }
-    @Output() public changeFileVersionEmitter = new EventEmitter<number>();
+export class FileInformationSectionComponent implements OnInit {
+    public fileInfo$: Observable<VersionedFileView>;
 
-    private _fileDetails: MaybeNull<VersionedFileView>;
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
+    private datasetAsVersionedFileService = inject(DatasetAsVersionedFileService);
 
-    public get fileDetails(): MaybeNull<VersionedFileView> {
-        return this._fileDetails;
+    public ngOnInit(): void {
+        this.fileInfo$ = this.datasetAsVersionedFileService.versionedFileDetailsChanges;
     }
 
-    public get currentFileVersion(): number {
-        return Number(this.fileDetails?.fileInfo?.version);
+    public currentFileVersion(fileDetails: VersionedFileView): number {
+        return Number(fileDetails?.fileInfo?.version);
     }
 
-    public get nextVersionBtnDisabled(): boolean {
-        const noFileInfo = !this.fileDetails?.fileInfo;
-        return noFileInfo || this.currentFileVersion >= Number(this.fileDetails?.countVersions);
+    public nextVersionBtnDisabled(fileDetails: VersionedFileView): boolean {
+        const noFileInfo = !fileDetails?.fileInfo;
+        return noFileInfo || this.currentFileVersion(fileDetails) >= Number(fileDetails?.countVersions);
     }
 
-    public get previousVersionBtnDisabled(): boolean {
-        const noFileInfo = !this.fileDetails?.fileInfo;
-        return noFileInfo || this.currentFileVersion <= 1;
+    public previousVersionBtnDisabled(fileDetails: VersionedFileView): boolean {
+        const noFileInfo = !fileDetails?.fileInfo;
+        return noFileInfo || this.currentFileVersion(fileDetails) <= 1;
     }
 
-    public setVersion(version: number): void {
-        this.changeFileVersionEmitter.emit(version);
+    public setPreviousVersion(fileDetails: VersionedFileView): void {
+        this.datasetAsVersionedFileService.emitSelectFileVersionChanged(this.currentFileVersion(fileDetails) - 1);
+    }
+
+    public setNextVersion(fileDetails: VersionedFileView): void {
+        this.datasetAsVersionedFileService.emitSelectFileVersionChanged(this.currentFileVersion(fileDetails) + 1);
     }
 }

@@ -1,15 +1,16 @@
-<div *ngIf="loadingFile">
+<div *ngIf="loadingFile$ | async">
     <mat-progress-bar data-test-id="editor-progress-bar" class="w-100 mt-4" mode="indeterminate" />
     <div class="mt-4 text-center">Loading file...</div>
 </div>
-<div class="mt-4" *ngIf="fileDetails">
+
+<div class="mt-4" *ngIf="fileInfo$ | async as fileDetails">
     <div class="d-flex align-items-center gap-2">
         <mat-icon class="mat-icon-svg-size text-muted fs-4">{{
             getFileIcon(fileDetails.fileInfo?.contentType!)
         }}</mat-icon>
         <span class="file-name mt-2 d-inline-block">{{ fileDetails.name }}</span>
     </div>
-    <ngb-alert *ngIf="!isLatestVersion" [dismissible]="false" class="my-4">
+    <ngb-alert *ngIf="!isLatestVersion(fileDetails)" [dismissible]="false" class="my-4">
         A newer version of this file is available v({{ fileDetails.countVersions }}).
         <a class="text-dark fw-500 text-decoration-underline" (click)="goToLatestVersionedFile()"
             >Go to latest version</a
@@ -22,7 +23,7 @@
                 <div class="fs-5 fw-500">Preview</div>
                 <button
                     class="border-1 bg-light border d-flex rounded-2 btn btn-sm justify-content-between align-items-center"
-                    (click)="downloadFile()"
+                    (click)="downloadFile(fileDetails)"
                 >
                     <mat-icon class="mat-icon-svg-size me-2 text-muted mb-1"> download</mat-icon>
 

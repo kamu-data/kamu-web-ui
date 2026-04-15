@@ -6,6 +6,7 @@
  */
 
 import {
+    AsyncPipe,
     JsonPipe,
     NgComponentOutlet,
     NgIf,
@@ -21,31 +22,41 @@ import {
     EventEmitter,
     inject,
     Input,
+    OnChanges,
+    OnInit,
     Output,
+    SimpleChanges,
     Type,
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
+import { finalize, iif, Observable, shareReplay, switchMap, tap } from "rxjs";
+
 import { NgbAlert } from "@ng-bootstrap/ng-bootstrap";
 import { saveAs } from "file-saver";
+import { subscribe } from "graphql";
 import { MarkdownModule } from "ngx-markdown";
 import { ToastrService } from "ngx-toastr";
 
+import { BaseComponent } from "@common/components/base.component";
 import { b64toBlob, getFileIconHelper } from "@common/helpers/data.helpers";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
 
+import { DatasetAsVersionedFileService } from "../../services/dataset-as-versioned-file.service";
 import { PdfViewerContentComponent } from "./components/pdf-viewer/pdf-viewer-content.component";
 import { PreviewFileTypePipe } from "./pipes/preview-file-type.pipe";
 
 @Component({
     selector: "app-versioned-file-view",
     imports: [
+        AsyncPipe,
         NgIf,
         NgSwitch,
         NgSwitchCase,
@@ -65,11 +76,11 @@ import { PreviewFileTypePipe } from "./pipes/preview-file-type.pipe";
     styleUrl: "./versioned-file-view.component.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VersionedFileViewComponent {
+export class VersionedFileViewComponent extends BaseComponent implements OnInit, OnChanges {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    @Input({ required: true }) public loadingFile: boolean;
-    @Output() public goToLatestVersionedFileEmitter = new EventEmitter<void>();
-    private _fileDetails: MaybeNull<VersionedFileView>;
+
+    public fileInfo$: Observable<VersionedFileView>;
+    public loadingFile$: Observable<boolean>;
 
     public urlContentPath: SafeUrl;
     public contentText: string | undefined;
@@ -82,11 +93,30 @@ export class VersionedFileViewComponent {
     private toastrService = inject(ToastrService);
     private cdr = inject(ChangeDetectorRef);
     private previewFileTypePipe = new PreviewFileTypePipe();
+    private datasetAsVersionedFileService = inject(DatasetAsVersionedFileService);
 
-    @Input({ required: true })
-    public set fileInfo(value: MaybeNull<VersionedFileView>) {
-        this._fileDetails = value;
-        this.setPreviewFileStrategy(this._fileDetails);
+    public ngOnInit(): void {
+        this.loadingFile$ = this.datasetAsVersionedFileService.loadingFileDetailsChanges;
+        this.datasetAsVersionedFileService.selectFileVersionChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((version) => {
+                this.fileInfo$ = this.datasetAsVersionedFileService.requestDatasetAsVersionedFileByVersion(
+                    this.datasetBasics.id,
+                    version,
+                );
+            });
+    }
+
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes.datasetBasics && changes.datasetBasics.currentValue !== changes.datasetBasics.previousValue) {
+            this.loadDatasetAsVersionedFile();
+        }
+    }
+
+    private loadDatasetAsVersionedFile(): void {
+        this.fileInfo$ = this.datasetAsVersionedFileService
+            .requestDatasetAsVersionedFile(this.datasetBasics.id)
+            .pipe(tap((data) => this.setPreviewFileStrategy(data)));
     }
 
     private async setPreviewFileStrategy(details: MaybeNull<VersionedFileView>): Promise<void> {
@@ -140,31 +170,27 @@ export class VersionedFileViewComponent {
     }
 
     public goToLatestVersionedFile(): void {
-        this.goToLatestVersionedFileEmitter.emit();
+        this.loadDatasetAsVersionedFile();
     }
 
-    public get fileDetails(): MaybeNull<VersionedFileView> {
-        return this._fileDetails;
-    }
-
-    public get isLatestVersion(): boolean {
-        const noFileInfo = !this.fileDetails?.fileInfo;
-        return noFileInfo || this.fileDetails?.fileInfo?.version === this.fileDetails?.countVersions;
+    public isLatestVersion(fileDetails: VersionedFileView): boolean {
+        const noFileInfo = !fileDetails?.fileInfo;
+        return noFileInfo || fileDetails?.fileInfo?.version === fileDetails?.countVersions;
     }
 
     public getFileIcon(contentType: string): string {
         return getFileIconHelper(contentType);
     }
 
-    public downloadFile() {
-        if (this.fileDetails?.fileInfo?.contentUrl.url) {
-            const content = this.fileDetails?.fileInfo?.content;
+    public downloadFile(fileDetails: VersionedFileView) {
+        if (fileDetails?.fileInfo?.contentUrl.url) {
+            const content = fileDetails?.fileInfo?.content;
 
-            const contentType = this.fileDetails?.fileInfo?.contentType;
+            const contentType = fileDetails?.fileInfo?.contentType;
             const cleanBase64 = content.replace(/-/g, "+").replace(/_/g, "/");
             const blob = b64toBlob(cleanBase64, contentType);
 
-            saveAs(blob, this.fileDetails.name);
+            saveAs(blob, fileDetails.name);
         }
     }
 }

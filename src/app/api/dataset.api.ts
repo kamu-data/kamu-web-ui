@@ -75,6 +75,8 @@ import {
     UpdateReadmeMutation,
     UpdateWatermarkGQL,
     UpdateWatermarkMutation,
+    VersionedFileContentUrlGQL,
+    VersionedFileContentUrlQuery,
 } from "@api/kamu.graphql.interface";
 import { DatasetRequestBySql } from "@interface/dataset.interface";
 
@@ -109,6 +111,7 @@ export class DatasetApi {
     private datasetAsVersionedFileGQL = inject(DatasetAsVersionedFileGQL);
     private datasetAsVersionedFileByVersionGQL = inject(DatasetAsVersionedFileByVersionGQL);
     private datasetAsVersionedFileByBlockHashGQL = inject(DatasetAsVersionedFileByBlockHashGQL);
+    private versionedFileContentUrlGQL = inject(VersionedFileContentUrlGQL);
 
     public getBlocksByEventType(params: {
         accountName: string;
@@ -640,6 +643,27 @@ export class DatasetApi {
                 first(),
                 map((result: ObservableQuery.Result<DatasetAsVersionedFileByBlockHashQuery>) => {
                     return result.data as DatasetAsVersionedFileByBlockHashQuery;
+                }),
+            );
+    }
+
+    public getVersionedFileContentUrl(datasetId: string, version: number): Observable<VersionedFileContentUrlQuery> {
+        return this.versionedFileContentUrlGQL
+            .watch({
+                variables: {
+                    datasetId,
+                    version,
+                },
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .valueChanges.pipe(
+                onlyCompleteData(),
+                first(),
+                map((result: ObservableQuery.Result<VersionedFileContentUrlQuery>) => {
+                    return result.data as VersionedFileContentUrlQuery;
                 }),
             );
     }

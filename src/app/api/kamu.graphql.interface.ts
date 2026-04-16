@@ -5512,11 +5512,32 @@ export type VersionedFileEntryDataFragment = {
     systemTime: string;
     eventTime: string;
     version: number;
-    content: string;
     contentType: string;
     contentLength: number;
     contentHash: string;
     contentUrl: { __typename?: "VersionedFileContentDownload"; url: string; expiresAt?: string | null };
+};
+
+export type VersionedFileContentUrlQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"]["input"];
+    version?: InputMaybe<Scalars["Int"]["input"]>;
+}>;
+
+export type VersionedFileContentUrlQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            asVersionedFile?: {
+                __typename?: "VersionedFile";
+                asOf?: {
+                    __typename?: "VersionedFileEntry";
+                    contentUrl: { __typename?: "VersionedFileContentDownload"; url: string };
+                } | null;
+            } | null;
+        } | null;
+    };
 };
 
 export type GetDatasetBasicsWithPermissionsQueryVariables = Exact<{
@@ -8373,7 +8394,6 @@ export const VersionedFileEntryDataFragmentDoc = gql`
         systemTime
         eventTime
         version
-        content
         contentType
         contentLength
         contentHash
@@ -10692,6 +10712,35 @@ export class DatasetAsVersionedFileGQL extends Apollo.Query<
     DatasetAsVersionedFileQueryVariables
 > {
     document = DatasetAsVersionedFileDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const VersionedFileContentUrlDocument = gql`
+    query versionedFileContentUrl($datasetId: DatasetID!, $version: Int) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                asVersionedFile {
+                    asOf(version: $version) {
+                        contentUrl {
+                            url
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class VersionedFileContentUrlGQL extends Apollo.Query<
+    VersionedFileContentUrlQuery,
+    VersionedFileContentUrlQueryVariables
+> {
+    document = VersionedFileContentUrlDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

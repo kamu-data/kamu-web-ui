@@ -11,14 +11,14 @@ import { Pipe, PipeTransform } from "@angular/core";
     name: "previewFileType",
 })
 export class PreviewFileTypePipe implements PipeTransform {
-    public transform(contentType: string): "pdf" | "image" | "json" | "text" | "video" | "octet-stream" | "unknown" {
+    public transform(contentType: string): "pdf" | "image" | "json" | "text" | "video" | "unknown" {
         if (!contentType) return "unknown";
         if (contentType === "application/pdf") return "pdf";
         if (contentType.startsWith("image/")) return "image";
         if (contentType.startsWith("video/")) return "video";
         if (contentType.includes("json")) return "json";
-        if (contentType === "text/plain") return "text";
-        if (contentType === "application/octet-stream") return "octet-stream";
+        if (contentType === "text/plain" || contentType === "application/octet-stream") return "text";
+
         return "unknown";
     }
 }

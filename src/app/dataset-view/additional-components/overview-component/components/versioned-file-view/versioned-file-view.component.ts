@@ -24,16 +24,15 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
-import { catchError, EMPTY, Observable, tap, throwError } from "rxjs";
+import { Observable, tap } from "rxjs";
 
 import { NgbAlert } from "@ng-bootstrap/ng-bootstrap";
-import { saveAs } from "file-saver";
 import { MarkdownModule } from "ngx-markdown";
 import { ToastrService } from "ngx-toastr";
 
 import { BaseComponent } from "@common/components/base.component";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
-import { b64toBlob, extractAndAddExtension, getFileIconHelper } from "@common/helpers/data.helpers";
+import { getFileIconHelper } from "@common/helpers/data.helpers";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -43,10 +42,6 @@ import { DatasetAsVersionedFileService } from "../../services/dataset-as-version
 import { PdfViewerContentComponent } from "./components/pdf-viewer/pdf-viewer-content.component";
 import { PreviewFileTypePipe } from "./pipes/preview-file-type.pipe";
 
-export interface JsonData {
-    // Определите поля вашего JSON (замените на реальные)
-    [key: string]: unknown;
-}
 @Component({
     selector: "app-versioned-file-view",
     imports: [
@@ -74,10 +69,10 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
 
     public fileInfo$: Observable<VersionedFileView>;
-    public loadingFile$: Observable<boolean>;
+    public loadingFileDetails$: Observable<boolean>;
 
     public urlContentPath: SafeUrl;
-    public contentText$: Observable<undefined | Object>;
+    public contentText$: Observable<undefined | object | string>;
 
     public pdfComponent: Type<PdfViewerContentComponent> | null = null;
 
@@ -86,11 +81,12 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     private sanitizer = inject(DomSanitizer);
     private toastrService = inject(ToastrService);
     private cdr = inject(ChangeDetectorRef);
+    private http = inject(HttpClient);
     private previewFileTypePipe = new PreviewFileTypePipe();
     private datasetAsVersionedFileService = inject(DatasetAsVersionedFileService);
 
     public ngOnInit(): void {
-        this.loadingFile$ = this.datasetAsVersionedFileService.loadingFileDetailsChanges;
+        this.loadingFileDetails$ = this.datasetAsVersionedFileService.loadingFileDetailsChanges;
         this.datasetAsVersionedFileService.selectFileVersionChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((version) => {
@@ -121,7 +117,6 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
             const contentType = details.fileInfo.contentType;
 
             switch (this.previewFileTypePipe.transform(contentType)) {
-                case "octet-stream":
                 case "text": {
                     this.contentText$ = this.datasetAsVersionedFileService.requestFileAsText(contentUrl.url);
                     break;
@@ -168,14 +163,6 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     }
 
     public downloadFile(fileDetails: VersionedFileView) {
-        if (fileDetails?.fileInfo?.contentUrl.url) {
-            const content = fileDetails?.fileInfo?.content;
-
-            const contentType = fileDetails?.fileInfo?.contentType;
-            const cleanBase64 = content.replace(/-/g, "+").replace(/_/g, "/");
-            const blob = b64toBlob(cleanBase64, contentType);
-
-            saveAs(blob, extractAndAddExtension(fileDetails.name));
-        }
+        this.datasetAsVersionedFileService.downloadFile(this.datasetBasics.id, fileDetails);
     }
 }

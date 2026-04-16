@@ -8,17 +8,22 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 
-import { BehaviorSubject, catchError, EMPTY, finalize, map, Observable, ReplaySubject, Subject } from "rxjs";
+import { BehaviorSubject, catchError, EMPTY, finalize, map, Observable, of, ReplaySubject, Subject } from "rxjs";
+import { switchMap, take } from "rxjs/operators";
 
+import saveAs from "file-saver";
 import { ToastrService } from "ngx-toastr";
 
+import { extractAndAddExtension } from "@common/helpers/data.helpers";
 import { DatasetApi } from "@api/dataset.api";
 import {
     DatasetAsVersionedFileByBlockHashQuery,
     DatasetAsVersionedFileByVersionQuery,
     DatasetAsVersionedFileQuery,
+    VersionedFileContentUrlQuery,
     VersionedFileEntryDataFragment,
 } from "@api/kamu.graphql.interface";
+import { MaybeNullOrUndefined } from "@interface/app.types";
 
 import { VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
 
@@ -58,6 +63,16 @@ export class DatasetAsVersionedFileService {
 
     public get selectFileVersionChanges(): Observable<number> {
         return this.selectFileVersion$.asObservable();
+    }
+
+    private loadingFileContent$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
+    public emitLoadingFileContentChanged(value: boolean): void {
+        this.loadingFileContent$.next(value);
+    }
+
+    public get loadingFileContentChanges(): Observable<boolean> {
+        return this.loadingFileContent$.asObservable();
     }
 
     public requestDatasetAsVersionedFile(datasetId: string): Observable<VersionedFileView> {
@@ -110,8 +125,18 @@ export class DatasetAsVersionedFileService {
         );
     }
 
-    public requestFileAsJson(url: string): Observable<Object | undefined> {
+    public requestFileAsJson(url: string): Observable<object | undefined> {
         return this.http.get(url).pipe(
+            catchError(() => {
+                this.emitLoadingFileContentChanged(false);
+                this.toastrService.error(`Error loading file`);
+                return EMPTY;
+            }),
+        );
+    }
+
+    public requestFileAsText(url: string): Observable<string | undefined> {
+        return this.http.get(url, { responseType: "text" }).pipe(
             catchError(() => {
                 this.toastrService.error(`Error loading file`);
                 return EMPTY;
@@ -119,12 +144,41 @@ export class DatasetAsVersionedFileService {
         );
     }
 
-    public requestFileAsText(url: string): Observable<Object | undefined> {
-        return this.http.get(url, { responseType: "text" }).pipe(
-            catchError(() => {
-                this.toastrService.error(`Error loading file`);
-                return EMPTY;
+    public downloadFile(datasetId: string, fileDetails: VersionedFileView): void {
+        const info = fileDetails.fileInfo;
+        if (!info?.contentUrl?.url) {
+            this.toastrService.error(`Missing URL for file: ${fileDetails.name}, version: ${info?.version}`);
+            return;
+        }
+
+        const url$ = this.isUrlExpired(info.contentUrl.expiresAt)
+            ? this.getVersionedFileContentUrl(datasetId, info.version)
+            : of(info.contentUrl.url);
+
+        url$.pipe(
+            switchMap((url) => this.http.get(url, { responseType: "blob" })),
+            take(1),
+        ).subscribe({
+            next: (blob: Blob) => {
+                const fileName = extractAndAddExtension(fileDetails.name);
+                saveAs(blob, fileName);
+            },
+            error: () => {
+                this.toastrService.error("Failed to download file");
+            },
+        });
+    }
+
+    public getVersionedFileContentUrl(datasetId: string, version: number): Observable<string> {
+        return this.datasetApi.getVersionedFileContentUrl(datasetId, version).pipe(
+            map((data: VersionedFileContentUrlQuery) => {
+                return data.datasets.byId?.asVersionedFile?.asOf?.contentUrl.url as string;
             }),
         );
+    }
+
+    private isUrlExpired(expiredAt: MaybeNullOrUndefined<string>): boolean {
+        if (!expiredAt) return true;
+        return new Date() >= new Date(expiredAt);
     }
 }

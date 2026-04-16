@@ -14,7 +14,6 @@ import { switchMap, take } from "rxjs/operators";
 import saveAs from "file-saver";
 import { ToastrService } from "ngx-toastr";
 
-import { extractAndAddExtension } from "@common/helpers/data.helpers";
 import { DatasetApi } from "@api/dataset.api";
 import {
     DatasetAsVersionedFileByBlockHashQuery,
@@ -26,6 +25,8 @@ import {
 import { MaybeNullOrUndefined } from "@interface/app.types";
 
 import { VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
+
+import { extractAndAddExtension } from "../components/versioned-file-view/versioned-file-view.model";
 
 @Injectable({
     providedIn: "root",

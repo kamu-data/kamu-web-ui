@@ -81,7 +81,7 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     private sanitizer = inject(DomSanitizer);
     private toastrService = inject(ToastrService);
     private cdr = inject(ChangeDetectorRef);
-    private http = inject(HttpClient);
+
     private previewFileTypePipe = new PreviewFileTypePipe();
     private datasetAsVersionedFileService = inject(DatasetAsVersionedFileService);
 

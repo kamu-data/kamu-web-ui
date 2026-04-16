@@ -6,6 +6,7 @@
  */
 
 import {
+    DatasetArchetype,
     DatasetBasicsFragment,
     DatasetPermissionsFragment,
     VersionedFileEntryDataFragment,
@@ -45,4 +46,16 @@ export interface VersionedFileView {
     name: string;
     fileInfo: MaybeNull<VersionedFileEntryDataFragment>;
     countVersions?: number;
+}
+
+export function selectOverviewTabMode(archetype: DatasetArchetype): OverviewTabMode {
+    switch (archetype) {
+        case DatasetArchetype.VersionedFile:
+            return OverviewTabMode.VersionedFile;
+        case DatasetArchetype.Collection:
+            return OverviewTabMode.Collection;
+        default: {
+            return OverviewTabMode.Table;
+        }
+    }
 }

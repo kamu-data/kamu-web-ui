@@ -36,3 +36,48 @@ export const VIEW_MODE_BUTTONS_OPTIONS: ViewModeButtonsOptions[] = [
         archetype: null,
     },
 ];
+
+export function extractAndAddExtension(filename: string): string {
+    const KNOWN_EXTENSIONS = [
+        "jpg",
+        "jpeg",
+        "png",
+        "gif",
+        "webp",
+        "svg", // Images
+        "pdf",
+        "doc",
+        "docx",
+        "xls",
+        "xlsx",
+        "ppt",
+        "pptx", // Documents
+        "mp3",
+        "mp4",
+        "avi",
+        "mov",
+        "wav", // Media
+        "zip",
+        "rar",
+        "7z",
+        "tar",
+        "gz", // Archive
+        "txt",
+        "md",
+        "json",
+        "xml",
+        "html",
+        "css",
+        "js",
+        "ts", // Text
+    ];
+
+    for (const ext of KNOWN_EXTENSIONS) {
+        const pattern = new RegExp(`-${ext}$`, "i");
+        if (pattern.test(filename)) {
+            return filename.replace(pattern, `.${ext}`);
+        }
+    }
+
+    return filename;
+}

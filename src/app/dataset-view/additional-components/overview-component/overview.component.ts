@@ -57,6 +57,7 @@ import {
     DatasetOverviewTabData,
     DatasetViewTypeEnum,
     OverviewTabMode,
+    selectOverviewTabMode,
 } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
 import { FileUploadService } from "src/app/services/file-upload.service";
@@ -130,7 +131,7 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
         this.role$ = this.datasetCollaborationsService.getRoleByDatasetId(this.datasetOverviewTabData.datasetBasics.id);
         this.uploadFileLoading$ = this.fileUploadService.isUploadFile;
         if (this.currentArchetype) {
-            this.viewMode = this.setViewMode(this.currentArchetype);
+            this.viewMode = selectOverviewTabMode(this.currentArchetype);
         }
     }
 
@@ -138,18 +139,6 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
         return this.VIEW_MODE_BUTTONS.filter(
             (tab: ViewModeButtonsOptions) => !tab.archetype || tab.archetype === this.currentArchetype,
         );
-    }
-
-    public setViewMode(archetype: DatasetArchetype): OverviewTabMode {
-        switch (archetype) {
-            case DatasetArchetype.VersionedFile:
-                return OverviewTabMode.VersionedFile;
-            case DatasetArchetype.Collection:
-                return OverviewTabMode.Collection;
-            default: {
-                return OverviewTabMode.Table;
-            }
-        }
     }
 
     public showWebsite(url: string): void {

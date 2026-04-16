@@ -6,6 +6,7 @@
  */
 
 import { AsyncPipe, JsonPipe, NgComponentOutlet, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from "@angular/common";
+import { HttpClient } from "@angular/common/http";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -23,7 +24,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
-import { Observable, tap } from "rxjs";
+import { catchError, EMPTY, Observable, tap, throwError } from "rxjs";
 
 import { NgbAlert } from "@ng-bootstrap/ng-bootstrap";
 import { saveAs } from "file-saver";
@@ -42,6 +43,10 @@ import { DatasetAsVersionedFileService } from "../../services/dataset-as-version
 import { PdfViewerContentComponent } from "./components/pdf-viewer/pdf-viewer-content.component";
 import { PreviewFileTypePipe } from "./pipes/preview-file-type.pipe";
 
+export interface JsonData {
+    // Определите поля вашего JSON (замените на реальные)
+    [key: string]: unknown;
+}
 @Component({
     selector: "app-versioned-file-view",
     imports: [
@@ -72,7 +77,7 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     public loadingFile$: Observable<boolean>;
 
     public urlContentPath: SafeUrl;
-    public contentText: string | undefined;
+    public contentText$: Observable<undefined | Object>;
 
     public pdfComponent: Type<PdfViewerContentComponent> | null = null;
 
@@ -111,18 +116,14 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     private async setPreviewFileStrategy(details: MaybeNull<VersionedFileView>): Promise<void> {
         if (details && details?.fileInfo) {
             this.fileLatestVersion = details?.fileInfo.version;
-            const content = details?.fileInfo?.content;
+
             const contentUrl = details?.fileInfo?.contentUrl;
             const contentType = details.fileInfo.contentType;
-            const cleanBase64 = content.replace(/-/g, "+").replace(/_/g, "/");
 
             switch (this.previewFileTypePipe.transform(contentType)) {
+                case "octet-stream":
                 case "text": {
-                    try {
-                        this.contentText = atob(content);
-                    } catch {
-                        this.contentText = content;
-                    }
+                    this.contentText$ = this.datasetAsVersionedFileService.requestFileAsText(contentUrl.url);
                     break;
                 }
 
@@ -140,12 +141,7 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
                     break;
 
                 case "json": {
-                    try {
-                        const jsonString = atob(cleanBase64);
-                        this.contentText = JSON.parse(jsonString) as string;
-                    } catch {
-                        this.contentText = atob(cleanBase64);
-                    }
+                    this.contentText$ = this.datasetAsVersionedFileService.requestFileAsJson(contentUrl.url);
                     break;
                 }
 

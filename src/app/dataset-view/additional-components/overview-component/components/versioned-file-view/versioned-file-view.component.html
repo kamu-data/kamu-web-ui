@@ -44,11 +44,15 @@
             </div>
 
             <div *ngSwitchCase="'json'" class="box p-2 bg-light mt-4">
-                <pre>{{ contentText | json }}</pre>
+                <pre *ngIf="contentText$ | async as contentJson"> {{ contentJson | json }}</pre>
             </div>
 
-            <div class="mt-4" *ngSwitchCase="'text'">
-                <p>{{ contentText }}</p>
+            <div class="mt-4" *ngSwitchCase="'text'" class="box p-2 bg-light mt-4">
+                <p>{{ contentText$ | async }}</p>
+            </div>
+
+            <div class="mt-4" *ngSwitchCase="'octet-stream'" class="box p-2 bg-light mt-4">
+                <p>{{ contentText$ | async }}</p>
             </div>
 
             <div class="mt-4 text-center" *ngSwitchDefault>

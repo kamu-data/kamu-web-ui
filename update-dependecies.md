@@ -11,3 +11,6 @@
 - **monaco-editor** depends on **@angular/common**
 - **ngx-monaco-editor-v2** depends on **@angular/common**
 - **ngx-infinite-scroll** depends on **@angular/common**
+
+- "ng2-pdf-viewer": "^9.1.5" (these versions work correctly in pairs - touch only when absolutely necessary)
+- "pdfjs-dist": "^2.16.105"   

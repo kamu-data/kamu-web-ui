@@ -5,9 +5,12 @@
  * included in the LICENSE file.
  */
 
+import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 
-import { BehaviorSubject, finalize, map, Observable, ReplaySubject, Subject } from "rxjs";
+import { BehaviorSubject, catchError, EMPTY, finalize, map, Observable, ReplaySubject, Subject } from "rxjs";
+
+import { ToastrService } from "ngx-toastr";
 
 import { DatasetApi } from "@api/dataset.api";
 import {
@@ -24,6 +27,8 @@ import { VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
 })
 export class DatasetAsVersionedFileService {
     private datasetApi = inject(DatasetApi);
+    private http = inject(HttpClient);
+    private toastrService = inject(ToastrService);
 
     private versionedFileDetails$: Subject<VersionedFileView> = new ReplaySubject(1 /*bufferSize*/);
 
@@ -101,6 +106,24 @@ export class DatasetAsVersionedFileService {
                     name: result.datasets.byId?.name as string,
                     fileInfo: result.datasets.byId?.asVersionedFile?.asOf as VersionedFileEntryDataFragment,
                 };
+            }),
+        );
+    }
+
+    public requestFileAsJson(url: string): Observable<Object | undefined> {
+        return this.http.get(url).pipe(
+            catchError(() => {
+                this.toastrService.error(`Error loading file`);
+                return EMPTY;
+            }),
+        );
+    }
+
+    public requestFileAsText(url: string): Observable<Object | undefined> {
+        return this.http.get(url, { responseType: "text" }).pipe(
+            catchError(() => {
+                this.toastrService.error(`Error loading file`);
+                return EMPTY;
             }),
         );
     }

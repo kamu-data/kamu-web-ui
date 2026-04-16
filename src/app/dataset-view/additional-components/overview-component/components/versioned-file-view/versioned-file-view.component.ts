@@ -141,6 +141,7 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
                 }
 
                 case "video":
+                case "audio":
                     break;
 
                 default:

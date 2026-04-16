@@ -1,0 +1,91 @@
+<ng-container *ngIf="fileInfo$ | async as fileDetails">
+    <div class="card--row card--title d-flex align-items-center justify-content-between border-top">
+        <div class="pt-3">
+            <h2>File details</h2>
+        </div>
+    </div>
+    <div class="card--row dataset-info">
+        <div class="dataset-info--block">
+            <div class="dataset-info--sub-block d-flex align-items-center">
+                <mat-icon class="fs-4 mr-2">preview</mat-icon>
+                <h2 class="dataset-info--subtitle">Version:</h2>
+            </div>
+
+            <div class="dataset-info--sub-block">
+                {{ fileDetails?.fileInfo?.version ?? "-" }}
+            </div>
+        </div>
+
+        <div class="dataset-info--block">
+            <div class="dataset-info--sub-block d-flex align-items-center">
+                <mat-icon class="fs-4 mr-2">calendar_today</mat-icon>
+                <h2 class="dataset-info--subtitle">Created:</h2>
+            </div>
+
+            <div class="dataset-info--sub-block">
+                {{ (fileDetails?.fileInfo?.eventTime | date: DISPLAY_TIME_FORMAT) ?? "-" }}
+            </div>
+        </div>
+
+        <div class="dataset-info--block">
+            <div class="dataset-info--sub-block d-flex align-items-center">
+                <mat-icon class="fs-4 mr-2">chrome_reader_mode</mat-icon>
+                <h2 class="dataset-info--subtitle">Content Type:</h2>
+            </div>
+
+            <div class="dataset-info--sub-block">
+                {{ fileDetails?.fileInfo?.contentType ?? "-" }}
+            </div>
+        </div>
+
+        <div class="dataset-info--block" *ngIf="fileDetails?.fileInfo">
+            <div class="dataset-info--sub-block d-flex align-items-center">
+                <mat-icon class="fs-4 mr-2">folder_open</mat-icon>
+                <h2 class="dataset-info--subtitle">Size:</h2>
+            </div>
+            <div class="dataset-info--sub-block">
+                <p class="dataset-info--text">
+                    {{
+                        fileDetails?.fileInfo?.contentLength
+                            ? (fileDetails?.fileInfo?.contentLength! | displaySize)
+                            : "-"
+                    }}
+                </p>
+            </div>
+        </div>
+
+        <div class="dataset-info--block">
+            <div class="dataset-info--sub-block d-flex align-items-center">
+                <mat-icon class="fs-4 mr-2">numbers</mat-icon>
+                <h2 class="dataset-info--subtitle">Content Hash:</h2>
+            </div>
+
+            <div class="dataset-info--sub-block">
+                <app-display-hash
+                    *ngIf="fileDetails && fileDetails.fileInfo && fileDetails.fileInfo.contentHash; else noContentHash"
+                    [value]="fileDetails.fileInfo.contentHash"
+                    [showCopyButton]="true"
+                    [class]="'text-decoration-none text-dark mr-4 hashBlock'"
+                />
+                <ng-template #noContentHash>-</ng-template>
+            </div>
+        </div>
+
+        <div class="d-flex border-top justify-content-between px-4 pt-4 pb-3" style="margin-top: 25px">
+            <button
+                class="change-version-btn"
+                (click)="setPreviousVersion(fileDetails)"
+                [disabled]="previousVersionBtnDisabled(fileDetails)"
+            >
+                &#9664; Previous version
+            </button>
+            <button
+                class="change-version-btn"
+                (click)="setNextVersion(fileDetails)"
+                [disabled]="nextVersionBtnDisabled(fileDetails)"
+            >
+                Next version &#9654;
+            </button>
+        </div>
+    </div>
+</ng-container>

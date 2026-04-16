@@ -4,6 +4,7 @@ fragment DatasetOverview on Dataset {
   ...DatasetReadme
   ...DatasetLastUpdate
   metadata {
+    currentArchetype
     currentPollingSource {
       __typename
     }

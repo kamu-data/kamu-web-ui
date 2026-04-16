@@ -231,3 +231,18 @@ export function isAccessTokenExpired(accessToken: string): boolean {
     const isExpired = now.getTime() > expirationDate.getTime();
     return isExpired;
 }
+
+export function maskDotsInURL(url: string, segmentIndex: number): string {
+    const mimeTypes = ["pdf", "png", "jpg", "jpeg", "mov", "mp4", "mov", "txt", "json", "mp3"];
+    const [path, query] = url.split("?");
+    const segments = path.split("/");
+
+    const mimeRegex = new RegExp(`\\.(${mimeTypes.join("|")})$`, "i");
+
+    if (segments.length > segmentIndex) {
+        segments[segmentIndex] = segments[segmentIndex].replace(mimeRegex, "%2E$1");
+    }
+
+    const newPath = segments.join("/");
+    return query ? `${newPath}?${query}` : newPath;
+}

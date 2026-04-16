@@ -1,0 +1,13 @@
+query versionedFileContentUrl($datasetId: DatasetID!, $version: Int) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      asVersionedFile {
+        asOf(version: $version) {
+          contentUrl {
+            url
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,18 @@
 <div class="dataset-result-container container-main">
     <div class="search-result-container__content">
-        <div>
+        <div class="d-flex justify-content-end" *ngIf="currentArchetype">
+            <mat-button-toggle-group [(ngModel)]="viewMode" [hideSingleSelectionIndicator]="true">
+                <mat-button-toggle
+                    *ngFor="let button of visibleViewModeButtons"
+                    [value]="button.value"
+                    [matTooltip]="button.tooltip"
+                    [matTooltipPosition]="'above'"
+                >
+                    <mat-icon [svgIcon]="button.icon" />
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+        <div *ngIf="viewMode === OverviewTabMode.Table">
             <div
                 *ngIf="hasDatasetInfo; else noDetails"
                 class="d-flex flex-row flex-justify-between mb-3"
@@ -208,6 +220,12 @@
                 (editViewShowEmitter)="editingReadme = $event"
             />
         </div>
+        <div *ngIf="viewMode === OverviewTabMode.VersionedFile">
+            <app-versioned-file-view [datasetBasics]="datasetBasics" />
+        </div>
+        <div *ngIf="viewMode === OverviewTabMode.Collection">
+            <p>Feature coming soon</p>
+        </div>
     </div>
     <div class="card">
         <nav class="flex-row mat-typography">
@@ -357,7 +375,7 @@
                             <mat-icon class="fs-4 mr-3">more_time</mat-icon>
                             <h2 class="dataset-info--subtitle">Created At:</h2>
                         </div>
-                        <div class="dataset-info--sub-block p-0">
+                        <div class="dataset-info--sub-block">
                             <app-display-time
                                 class="dataset-info--text"
                                 [title]="datasetOverviewTabData.overviewUpdate.overview.createdAt"
@@ -384,7 +402,7 @@
                             <h2 class="dataset-info--subtitle">Watermark:</h2>
                         </div>
                         <div
-                            class="dataset-info--sub-block d-flex align-items-center ps-1"
+                            class="dataset-info--sub-block text-nowrap d-flex align-items-center ps-1"
                             *ngIf="
                                 datasetOverviewTabData.overviewUpdate &&
                                     datasetOverviewTabData.overviewUpdate.overview.metadata.currentWatermark;
@@ -432,6 +450,8 @@
                     </div>
                 </ng-template>
             </div>
+
+            <app-file-information-section *ngIf="currentArchetype" />
         </nav>
     </div>
 </div>

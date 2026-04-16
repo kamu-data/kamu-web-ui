@@ -8,8 +8,12 @@
 import { AsyncPipe, DecimalPipe, NgFor, NgIf, TitleCasePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { FormsModule } from "@angular/forms";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatIconModule } from "@angular/material/icon";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { RouterLink } from "@angular/router";
 
 import { catchError, from, Observable, of, take } from "rxjs";
@@ -29,12 +33,13 @@ import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import {
     DatasetAccessRole,
+    DatasetArchetype,
     DatasetBasicsFragment,
     DatasetCurrentInfoFragment,
     DatasetKind,
     MetadataBlockFragment,
 } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
+import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import { AppConfigService } from "src/app/app-config.service";
@@ -48,9 +53,21 @@ import { EditLicenseModalComponent } from "src/app/dataset-view/additional-compo
 import { EditWatermarkModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
 import { OverviewHistorySummaryHeaderComponent } from "src/app/dataset-view/additional-components/overview-component/components/overview-history-summary-header/overview-history-summary-header.component";
 import { ReadmeSectionComponent } from "src/app/dataset-view/additional-components/overview-component/components/readme-section/readme-section.component";
-import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import {
+    DatasetOverviewTabData,
+    DatasetViewTypeEnum,
+    OverviewTabMode,
+    selectOverviewTabMode,
+} from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
 import { FileUploadService } from "src/app/services/file-upload.service";
+
+import { FileInformationSectionComponent } from "./components/versioned-file-view/components/file-informatin-section/file-information-section.component";
+import { VersionedFileViewComponent } from "./components/versioned-file-view/versioned-file-view.component";
+import {
+    VIEW_MODE_BUTTONS_OPTIONS,
+    ViewModeButtonsOptions,
+} from "./components/versioned-file-view/versioned-file-view.model";
 
 @Component({
     selector: "app-overview",
@@ -66,11 +83,16 @@ import { FileUploadService } from "src/app/services/file-upload.service";
         NgFor,
         RouterLink,
         //-----//
+        FormsModule,
+        MatButtonToggleModule,
+        MatProgressBarModule,
         MatChipsModule,
         MatIconModule,
+        MatTooltipModule,
         NgbTooltip,
         //-----//
         FeatureFlagDirective,
+        FileInformationSectionComponent,
         OverviewHistorySummaryHeaderComponent,
         DynamicTableComponent,
         DataAccessPanelComponent,
@@ -79,6 +101,7 @@ import { FileUploadService } from "src/app/services/file-upload.service";
         DisplayHashComponent,
         DisplaySizePipe,
         DisplayTimeComponent,
+        VersionedFileViewComponent,
     ],
 })
 export class OverviewComponent extends BaseDatasetDataComponent implements OnInit {
@@ -87,10 +110,14 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     public droppedFile: File;
     public uploadFileLoading$: Observable<boolean>;
     public role$: Observable<MaybeNull<DatasetAccessRole>>;
+    public viewMode: OverviewTabMode = OverviewTabMode.Table;
     public readonly UPLOAD_FILE_IMAGE = AppValues.UPLOAD_FILE_IMAGE;
     public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
     public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
     public readonly URL_PARAM_ADD_PUSH_SOURCE = ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE;
+    public readonly OverviewTabMode: typeof OverviewTabMode = OverviewTabMode;
+    public readonly DatasetArchetype: typeof DatasetArchetype = DatasetArchetype;
+    public readonly VIEW_MODE_BUTTONS: ViewModeButtonsOptions[] = VIEW_MODE_BUTTONS_OPTIONS;
 
     public datasetOverviewTabData$: Observable<DatasetOverviewTabData>;
     private ngbModalService = inject(NgbModal);
@@ -103,7 +130,17 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     public ngOnInit(): void {
         this.role$ = this.datasetCollaborationsService.getRoleByDatasetId(this.datasetOverviewTabData.datasetBasics.id);
         this.uploadFileLoading$ = this.fileUploadService.isUploadFile;
+        if (this.currentArchetype) {
+            this.viewMode = selectOverviewTabMode(this.currentArchetype);
+        }
     }
+
+    public get visibleViewModeButtons() {
+        return this.VIEW_MODE_BUTTONS.filter(
+            (tab: ViewModeButtonsOptions) => !tab.archetype || tab.archetype === this.currentArchetype,
+        );
+    }
+
     public showWebsite(url: string): void {
         this.navigationService.navigateToWebsite(url);
     }
@@ -114,6 +151,10 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
 
     public get datasetBasics(): DatasetBasicsFragment {
         return this.datasetOverviewTabData.datasetBasics;
+    }
+
+    public get currentArchetype(): MaybeNullOrUndefined<DatasetArchetype> {
+        return this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentArchetype;
     }
 
     public get canEditDatasetInfo(): boolean {

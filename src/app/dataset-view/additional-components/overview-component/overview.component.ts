@@ -16,7 +16,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { RouterLink } from "@angular/router";
 
-import { catchError, finalize, from, Observable, of, shareReplay, take } from "rxjs";
+import { catchError, from, Observable, of, take } from "rxjs";
 
 import { NgbModal, NgbModalRef, NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
 
@@ -57,7 +57,6 @@ import {
     DatasetOverviewTabData,
     DatasetViewTypeEnum,
     OverviewTabMode,
-    VersionedFileView,
 } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
 import { FileUploadService } from "src/app/services/file-upload.service";
@@ -68,7 +67,6 @@ import {
     VIEW_MODE_BUTTONS_OPTIONS,
     ViewModeButtonsOptions,
 } from "./components/versioned-file-view/versioned-file-view.model";
-import { DatasetAsVersionedFileService } from "./services/dataset-as-versioned-file.service";
 
 @Component({
     selector: "app-overview",

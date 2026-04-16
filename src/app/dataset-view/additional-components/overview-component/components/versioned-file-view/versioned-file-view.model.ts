@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { DatasetArchetype } from "@api/kamu.graphql.interface";
 
 import { OverviewTabMode } from "src/app/dataset-view/dataset-view.interface";

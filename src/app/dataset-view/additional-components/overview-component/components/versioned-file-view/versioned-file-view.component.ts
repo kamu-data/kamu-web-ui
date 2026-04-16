@@ -5,26 +5,15 @@
  * included in the LICENSE file.
  */
 
-import {
-    AsyncPipe,
-    JsonPipe,
-    NgComponentOutlet,
-    NgIf,
-    NgSwitch,
-    NgSwitchCase,
-    NgSwitchDefault,
-    NgTemplateOutlet,
-} from "@angular/common";
+import { AsyncPipe, JsonPipe, NgComponentOutlet, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    EventEmitter,
     inject,
     Input,
     OnChanges,
     OnInit,
-    Output,
     SimpleChanges,
     Type,
 } from "@angular/core";
@@ -34,15 +23,15 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
-import { finalize, iif, Observable, shareReplay, switchMap, tap } from "rxjs";
+import { Observable, tap } from "rxjs";
 
 import { NgbAlert } from "@ng-bootstrap/ng-bootstrap";
 import { saveAs } from "file-saver";
-import { subscribe } from "graphql";
 import { MarkdownModule } from "ngx-markdown";
 import { ToastrService } from "ngx-toastr";
 
 import { BaseComponent } from "@common/components/base.component";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { b64toBlob, extractAndAddExtension, getFileIconHelper } from "@common/helpers/data.helpers";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
@@ -85,7 +74,7 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     public urlContentPath: SafeUrl;
     public contentText: string | undefined;
 
-    pdfComponent: Type<PdfViewerContentComponent> | null = null;
+    public pdfComponent: Type<PdfViewerContentComponent> | null = null;
 
     public fileLatestVersion: number;
 
@@ -116,7 +105,7 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     private loadDatasetAsVersionedFile(): void {
         this.fileInfo$ = this.datasetAsVersionedFileService
             .requestDatasetAsVersionedFile(this.datasetBasics.id)
-            .pipe(tap((data) => this.setPreviewFileStrategy(data)));
+            .pipe(tap((data) => promiseWithCatch(this.setPreviewFileStrategy(data))));
     }
 
     private async setPreviewFileStrategy(details: MaybeNull<VersionedFileView>): Promise<void> {

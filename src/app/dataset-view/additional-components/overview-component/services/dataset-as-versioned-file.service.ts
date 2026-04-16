@@ -16,7 +16,6 @@ import {
     DatasetAsVersionedFileQuery,
     VersionedFileEntryDataFragment,
 } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
 
 import { VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
 

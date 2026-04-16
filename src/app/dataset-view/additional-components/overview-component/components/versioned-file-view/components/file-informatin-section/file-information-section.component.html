@@ -23,7 +23,7 @@
             </div>
 
             <div class="dataset-info--sub-block">
-                {{ fileDetails?.fileInfo?.eventTime | date: DISPLAY_TIME_FORMAT }}
+                {{ (fileDetails?.fileInfo?.eventTime | date: DISPLAY_TIME_FORMAT) ?? "-" }}
             </div>
         </div>
 

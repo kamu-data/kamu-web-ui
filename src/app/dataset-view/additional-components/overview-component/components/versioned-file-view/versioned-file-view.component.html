@@ -53,6 +53,19 @@
                 <p>{{ contentText$ | async }}</p>
             </div>
 
+            <div class="mt-4" *ngSwitchCase="'video'" class="box p-2 bg-light mt-4">
+                <video controls preload="auto" width="100%" height="500px" [src]="urlContentPath" playsinline>
+                    Your browser does not support embedded videos
+                </video>
+            </div>
+
+            <div class="mt-4" *ngSwitchCase="'audio'" class="box p-4 bg-light">
+                <audio controls>
+                    <source [src]="urlContentPath" [type]="fileDetails.fileInfo?.contentType" />
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+
             <div class="mt-4 text-center" *ngSwitchDefault>
                 <div *ngIf="fileDetails.fileInfo">
                     <p class="fs-5 box p-4 bg-light">File preview is not supported</p>

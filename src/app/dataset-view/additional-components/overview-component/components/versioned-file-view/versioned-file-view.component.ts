@@ -131,6 +131,8 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
                     break;
                 }
 
+                case "audio":
+                case "video":
                 case "image":
                     this.urlContentPath = this.sanitizer.bypassSecurityTrustUrl(contentUrl.url);
                     break;
@@ -139,10 +141,6 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
                     this.contentText$ = this.datasetAsVersionedFileService.requestFileAsJson(contentUrl.url);
                     break;
                 }
-
-                case "video":
-                case "audio":
-                    break;
 
                 default:
                     this.toastrService.info(`Content type not supported: ${contentType}`);

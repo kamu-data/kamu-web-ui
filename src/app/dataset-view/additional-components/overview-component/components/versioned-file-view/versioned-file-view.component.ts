@@ -6,7 +6,6 @@
  */
 
 import { AsyncPipe, JsonPipe, NgComponentOutlet, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from "@angular/common";
-import { HttpClient } from "@angular/common/http";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,

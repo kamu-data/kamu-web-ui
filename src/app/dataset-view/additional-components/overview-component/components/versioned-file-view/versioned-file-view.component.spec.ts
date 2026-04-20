@@ -5,7 +5,13 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
+
+import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { VersionedFileViewComponent } from "./versioned-file-view.component";
 
@@ -15,7 +21,8 @@ describe("VersionedFileViewComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [VersionedFileViewComponent],
+            imports: [VersionedFileViewComponent, SharedTestModule],
+            providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi())],
         }).compileComponents();
 
         fixture = TestBed.createComponent(VersionedFileViewComponent);

@@ -5,7 +5,12 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
 
 import { DatasetAsVersionedFileService } from "./dataset-as-versioned-file.service";
 
@@ -13,7 +18,14 @@ describe("DatasetAsVersionedFileService", () => {
     let service: DatasetAsVersionedFileService;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            providers: [
+                Apollo,
+                provideToastr(),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        });
         service = TestBed.inject(DatasetAsVersionedFileService);
     });
 

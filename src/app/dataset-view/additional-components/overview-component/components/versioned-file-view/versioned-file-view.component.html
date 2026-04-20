@@ -3,14 +3,7 @@
     <div class="mt-4 text-center">Loading file...</div>
 </div>
 
-<div class="mt-4" *ngIf="fileInfo$ | async as fileDetails">
-    <div class="fs-5 fw-500 mb-2">File</div>
-    <div class="d-flex align-items-center gap-2">
-        <mat-icon class="mat-icon-svg-size text-muted fs-4">{{
-            getFileIcon(fileDetails.fileInfo?.contentType!)
-        }}</mat-icon>
-        <span class="file-name mt-2 d-inline-block">{{ fileDetails.name }}</span>
-    </div>
+<div *ngIf="fileInfo$ | async as fileDetails">
     <ngb-alert *ngIf="!isLatestVersion(fileDetails)" [dismissible]="false" class="my-4">
         A newer version of this file is available v({{ fileDetails.countVersions }}).
         <a class="text-dark fw-500 text-decoration-underline" (click)="goToLatestVersionedFile()"
@@ -20,7 +13,7 @@
 
     <div>
         <div class="d-flex flex-column">
-            <div class="d-flex justify-content-between align-items-center mt-4">
+            <div class="d-flex justify-content-between align-items-center">
                 <div class="fs-5 fw-500">Preview</div>
                 <button
                     *ngIf="fileDetails.fileInfo?.version"
@@ -60,7 +53,7 @@
             </div>
 
             <div class="mt-4" *ngSwitchCase="'audio'" class="box p-4 bg-light">
-                <audio controls>
+                <audio controls preload="auto" controlsList="nodownload">
                     <source [src]="urlContentPath" [type]="fileDetails.fileInfo?.contentType" />
                     Your browser does not support the audio element.
                 </audio>

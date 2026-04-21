@@ -14,6 +14,7 @@
     "lint": "eslint .",
     "lint-and-fix": "eslint . --fix",
     "stylelint": "stylelint '**/*.scss'",
+    "stylelint:windows": "stylelint \"**/*.scss\"",
     "stylelint-fix": "stylelint '**/*.scss' --fix",
     "prettier": "prettier --write '**/*.{ts,scss,js,html,spec.ts}'",
     "prettier-check": "prettier --check '**/*.{ts,scss,js,html,spec.ts}'",

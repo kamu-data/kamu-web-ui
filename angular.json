@@ -26,7 +26,9 @@
               "marked",
               "cron-parser",
               "@tweenjs/tween.js",
-              "siwe"
+              "siwe",
+              "ng2-pdf-viewer",
+              "file-saver"
             ],
             "outputPath": {
               "base": "dist/kamu-platform",

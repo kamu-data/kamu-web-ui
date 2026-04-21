@@ -19,7 +19,6 @@ import {
     DataBatchFormat,
     DataQueryResultErrorKind,
     DataSchemaFormat,
-    DatasetArchetype,
     DatasetAsVersionedFileByBlockHashQuery,
     DatasetAsVersionedFileByVersionQuery,
     DatasetAsVersionedFileQuery,

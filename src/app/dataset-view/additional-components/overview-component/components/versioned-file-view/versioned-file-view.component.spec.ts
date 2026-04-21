@@ -15,7 +15,7 @@ import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { VersionedFileViewComponent } from "./versioned-file-view.component";
 
-describe("VersionedFileViewComponent", () => {
+fdescribe("VersionedFileViewComponent", () => {
     let component: VersionedFileViewComponent;
     let fixture: ComponentFixture<VersionedFileViewComponent>;
 

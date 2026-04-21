@@ -452,20 +452,3 @@ export function stripSecondsFromDateToISOString(date: Date): string {
     modifiedDate.setSeconds(0, 0);
     return modifiedDate.toISOString();
 }
-
-export function getFileIconHelper(contentType: string): string {
-    if (!contentType) return "insert_drive_file";
-
-    if (contentType.startsWith("image/")) return "image";
-    if (contentType.startsWith("video/")) return "movie";
-
-    switch (contentType) {
-        case "application/pdf":
-            return "picture_as_pdf";
-        case "text/plain":
-            return "description";
-
-        default:
-            return "insert_drive_file";
-    }
-}

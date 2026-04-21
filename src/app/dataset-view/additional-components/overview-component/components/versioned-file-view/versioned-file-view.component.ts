@@ -31,7 +31,6 @@ import { ToastrService } from "ngx-toastr";
 
 import { BaseComponent } from "@common/components/base.component";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
-import { getFileIconHelper } from "@common/helpers/data.helpers";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -154,10 +153,6 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     public isLatestVersion(fileDetails: VersionedFileView): boolean {
         const noFileInfo = !fileDetails?.fileInfo;
         return noFileInfo || fileDetails?.fileInfo?.version === fileDetails?.countVersions;
-    }
-
-    public getFileIcon(contentType: string): string {
-        return getFileIconHelper(contentType);
     }
 
     public downloadFile(fileDetails: VersionedFileView) {

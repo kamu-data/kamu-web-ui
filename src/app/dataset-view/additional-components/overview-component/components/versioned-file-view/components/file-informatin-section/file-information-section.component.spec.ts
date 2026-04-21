@@ -11,13 +11,12 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { DatasetAsVersionedFileService } from "../../../../services/dataset-as-versioned-file.service";
 import { FileInformationSectionComponent } from "./file-information-section.component";
 
 describe("FileInformationSectionComponent", () => {
     let component: FileInformationSectionComponent;
     let fixture: ComponentFixture<FileInformationSectionComponent>;
-    let datasetAsVersionedFileService: DatasetAsVersionedFileService;
+    // let datasetAsVersionedFileService: DatasetAsVersionedFileService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -26,7 +25,7 @@ describe("FileInformationSectionComponent", () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(FileInformationSectionComponent);
-        datasetAsVersionedFileService = TestBed.inject(DatasetAsVersionedFileService);
+        //  datasetAsVersionedFileService = TestBed.inject(DatasetAsVersionedFileService);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

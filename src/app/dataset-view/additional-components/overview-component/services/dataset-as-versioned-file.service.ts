@@ -66,16 +66,6 @@ export class DatasetAsVersionedFileService {
         return this.selectFileVersion$.asObservable();
     }
 
-    private loadingFileContent$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
-    public emitLoadingFileContentChanged(value: boolean): void {
-        this.loadingFileContent$.next(value);
-    }
-
-    public get loadingFileContentChanges(): Observable<boolean> {
-        return this.loadingFileContent$.asObservable();
-    }
-
     public requestDatasetAsVersionedFile(datasetId: string): Observable<VersionedFileView> {
         this.emitLoadingFileDetailsChanged(true);
         return this.datasetApi.getDatasetAsVersionedFile(datasetId).pipe(
@@ -129,7 +119,6 @@ export class DatasetAsVersionedFileService {
     public requestFileAsJson(url: string): Observable<object | undefined> {
         return this.http.get(url).pipe(
             catchError(() => {
-                this.emitLoadingFileContentChanged(false);
                 this.toastrService.error(`Error loading file`);
                 return EMPTY;
             }),
@@ -178,7 +167,7 @@ export class DatasetAsVersionedFileService {
         );
     }
 
-    private isUrlExpired(expiredAt: MaybeNullOrUndefined<string>): boolean {
+    public isUrlExpired(expiredAt: MaybeNullOrUndefined<string>): boolean {
         if (!expiredAt) return true;
         return new Date() >= new Date(expiredAt);
     }

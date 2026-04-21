@@ -623,6 +623,7 @@ export class DatasetApi {
             );
     }
 
+    // TODO: implement later with URL and write unit test
     public getDatasetAsVersionedFileByBlockHash(
         datasetId: string,
         blockHash: string,

@@ -22,7 +22,7 @@ import { mockDatasetAsVersionedFileQuery } from "src/app/search/mock.data";
 import { DatasetAsVersionedFileService } from "../../../../services/dataset-as-versioned-file.service";
 import { FileInformationSectionComponent } from "./file-information-section.component";
 
-fdescribe("FileInformationSectionComponent", () => {
+describe("FileInformationSectionComponent", () => {
     let component: FileInformationSectionComponent;
     let fixture: ComponentFixture<FileInformationSectionComponent>;
     let datasetAsVersionedFileService: DatasetAsVersionedFileService;

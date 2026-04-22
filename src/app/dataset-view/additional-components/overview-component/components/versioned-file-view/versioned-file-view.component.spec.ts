@@ -84,50 +84,50 @@ describe("VersionedFileViewComponent", () => {
         expect(requestDatasetAsVersionedFileSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check setPreviewFileStrategy method for pdf file", () => {
+    it("should check setPreviewFileStrategy method for pdf file", async () => {
         const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("application/pdf");
-        component.setPreviewFileStrategy(mockVersionedFileView);
+        await component.setPreviewFileStrategy(mockVersionedFileView);
 
         expect(component.urlContentPath).toEqual(
             mockDatasetAsVersionedFileQuery.datasets.byId?.asVersionedFile?.latest?.contentUrl.url as string,
         );
     });
 
-    it("should check setPreviewFileStrategy method for text file", () => {
+    it("should check setPreviewFileStrategy method for text file", async () => {
         const requestFileAsTextSpy = spyOn(datasetAsVersionedFileService, "requestFileAsText");
         const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("text/plain");
         if (mockVersionedFileView.fileInfo) {
-            component.setPreviewFileStrategy(mockVersionedFileView);
+            await component.setPreviewFileStrategy(mockVersionedFileView);
 
             expect(requestFileAsTextSpy).toHaveBeenCalledTimes(1);
         }
     });
 
-    it("should check setPreviewFileStrategy method for video file", () => {
+    it("should check setPreviewFileStrategy method for video file", async () => {
         const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("video/mp4");
         if (mockVersionedFileView.fileInfo) {
-            component.setPreviewFileStrategy(mockVersionedFileView);
+            await component.setPreviewFileStrategy(mockVersionedFileView);
 
             expect(component.urlContentPath).toBeDefined();
         }
     });
 
-    it("should check setPreviewFileStrategy method for json file", () => {
+    it("should check setPreviewFileStrategy method for json file", async () => {
         const requestFileAsJsonSpy = spyOn(datasetAsVersionedFileService, "requestFileAsJson");
         const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("application/json");
         if (mockVersionedFileView.fileInfo) {
-            component.setPreviewFileStrategy(mockVersionedFileView);
+            await component.setPreviewFileStrategy(mockVersionedFileView);
 
             expect(requestFileAsJsonSpy).toHaveBeenCalledTimes(1);
         }
     });
 
-    it("should check setPreviewFileStrategy method for unspported file", () => {
+    it("should check setPreviewFileStrategy method for unspported file", async () => {
         const toastrServiceInfoSpy = spyOn(toastrService, "info");
         const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("unsupported/type");
 
         if (mockVersionedFileView.fileInfo) {
-            component.setPreviewFileStrategy(mockVersionedFileView);
+            await component.setPreviewFileStrategy(mockVersionedFileView);
 
             expect(toastrServiceInfoSpy).toHaveBeenCalledWith("Content type not supported: unsupported/type");
         }

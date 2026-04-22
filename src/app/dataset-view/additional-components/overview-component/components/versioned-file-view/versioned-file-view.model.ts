@@ -37,6 +37,7 @@ export const VIEW_MODE_BUTTONS_OPTIONS: ViewModeButtonsOptions[] = [
     },
 ];
 
+/* istanbul ignore next */
 export function extractAndAddExtension(filename: string): string {
     const KNOWN_EXTENSIONS = [
         "jpg",

@@ -11,7 +11,7 @@
                 <h2 class="dataset-info--subtitle">Version:</h2>
             </div>
 
-            <div class="dataset-info--sub-block">
+            <div data-test-id="file-version" class="dataset-info--sub-block">
                 {{ fileDetails?.fileInfo?.version ?? "-" }}
             </div>
         </div>
@@ -22,7 +22,7 @@
                 <h2 class="dataset-info--subtitle">Created:</h2>
             </div>
 
-            <div class="dataset-info--sub-block">
+            <div data-test-id="file-event-time" class="dataset-info--sub-block">
                 {{ (fileDetails?.fileInfo?.eventTime | date: DISPLAY_TIME_FORMAT) ?? "-" }}
             </div>
         </div>
@@ -33,7 +33,7 @@
                 <h2 class="dataset-info--subtitle">Content Type:</h2>
             </div>
 
-            <div class="dataset-info--sub-block">
+            <div data-test-id="file-content-type" class="dataset-info--sub-block">
                 {{ fileDetails?.fileInfo?.contentType ?? "-" }}
             </div>
         </div>
@@ -44,7 +44,7 @@
                 <h2 class="dataset-info--subtitle">Size:</h2>
             </div>
             <div class="dataset-info--sub-block">
-                <p class="dataset-info--text">
+                <p data-test-id="file-content-length" class="dataset-info--text">
                     {{
                         fileDetails?.fileInfo?.contentLength
                             ? (fileDetails?.fileInfo?.contentLength! | displaySize)
@@ -60,7 +60,7 @@
                 <h2 class="dataset-info--subtitle">Content Hash:</h2>
             </div>
 
-            <div class="dataset-info--sub-block">
+            <div data-test-id="file-content-hash" class="dataset-info--sub-block">
                 <app-display-hash
                     *ngIf="fileDetails && fileDetails.fileInfo && fileDetails.fileInfo.contentHash; else noContentHash"
                     [value]="fileDetails.fileInfo.contentHash"

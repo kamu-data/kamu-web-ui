@@ -107,7 +107,7 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
             .pipe(tap((data) => promiseWithCatch(this.setPreviewFileStrategy(data))));
     }
 
-    private async setPreviewFileStrategy(details: MaybeNull<VersionedFileView>): Promise<void> {
+    public async setPreviewFileStrategy(details: MaybeNull<VersionedFileView>): Promise<void> {
         if (details && details?.fileInfo) {
             this.fileLatestVersion = details?.fileInfo.version;
 
@@ -129,8 +129,8 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
                     break;
                 }
 
-                case "audio":
                 case "video":
+                case "audio":
                 case "image":
                     this.urlContentPath = this.sanitizer.bypassSecurityTrustUrl(contentUrl.url);
                     break;

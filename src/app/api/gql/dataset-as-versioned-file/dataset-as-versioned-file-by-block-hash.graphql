@@ -1,0 +1,12 @@
+query datasetAsVersionedFileByBlockHash($datasetId: DatasetID!, $blockHash: Multihash) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      name
+      asVersionedFile {
+        asOf(blockHash: $blockHash) {
+          ...VersionedFileEntryData
+        }
+      }
+    }
+  }
+}

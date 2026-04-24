@@ -19,6 +19,9 @@ import {
     DataBatchFormat,
     DataQueryResultErrorKind,
     DataSchemaFormat,
+    DatasetAsVersionedFileByBlockHashQuery,
+    DatasetAsVersionedFileByVersionQuery,
+    DatasetAsVersionedFileQuery,
     DatasetBasicsFragment,
     DatasetCurrentInfoFragment,
     DatasetHeadBlockHashQuery,
@@ -37,6 +40,7 @@ import {
     SearchDatasetsOverviewQuery,
     UpdateReadmeMutation,
     UpdateWatermarkMutation,
+    VersionedFileContentUrlQuery,
 } from "@api/kamu.graphql.interface";
 import { TEST_AVATAR_URL } from "@api/mock/auth.mock";
 import { OdfTypes } from "@interface/dataset-schema.interface";
@@ -377,6 +381,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                     },
                 },
                 currentTransform: null,
+                currentArchetype: null,
                 currentPushSources: [],
                 currentDownstreamDependencies: [],
                 currentInfo: {
@@ -1824,5 +1829,113 @@ export const mockSqlQueryRestResponse: SqlQueryExplanationResponse = {
             ],
         },
         schemaFormat: "ArrowJson",
+    },
+};
+
+export const mockDatasetAsVersionedFileByVersionQuery: DatasetAsVersionedFileByVersionQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byId: {
+            name: "test-file-pdf",
+            __typename: "Dataset",
+            asVersionedFile: {
+                __typename: "VersionedFile",
+                versions: {
+                    totalCount: 2,
+                    __typename: "VersionedFileEntryConnection",
+                },
+                asOf: {
+                    systemTime: "2025-12-18T13:09:28.643+00:00",
+                    eventTime: "2025-12-18T13:09:28.396+00:00",
+                    version: 1,
+                    contentType: "application/pdf",
+                    contentLength: 381846,
+                    contentHash: "f162037eb2f65a4e07a794a63c1bf1bcd37d2bd8d55dcce2b35d64a68ce6d79907d0f",
+                    contentUrl: {
+                        url: "https://s3.us-west-2.amazonaws.com/repo.dev.stg.kamu.dev.us-west-2/fed01dd0540db0ffb1d66922216063b4b12e750fede89",
+                        expiresAt: "2026-04-20T17:04:26.013070937+00:00",
+                        __typename: "VersionedFileContentDownload",
+                    },
+                    __typename: "VersionedFileEntry",
+                },
+            },
+        },
+    },
+};
+
+export const mockDatasetAsVersionedFileQuery: DatasetAsVersionedFileQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byId: {
+            name: "test-file-pdf",
+            __typename: "Dataset",
+            asVersionedFile: {
+                __typename: "VersionedFile",
+                latest: {
+                    systemTime: "2025-12-18T13:09:34.719+00:00",
+                    eventTime: "2025-12-18T13:09:34.311+00:00",
+                    version: 2,
+                    contentType: "application/pdf",
+                    contentLength: 381846,
+                    contentHash: "f162037eb2f65a4e07a794a63c1bf1bcd37d2bd8d55dcce2b35d64a68ce6d79907d0f",
+                    contentUrl: {
+                        url: "https://s3.us-west-2.amazonaws.com/repo.dev.stg.kamu.dev.us-west-2/fed01dd0540db0ffb1d66922216063b4b12e750fede89",
+                        expiresAt: "2026-04-20T17:06:49.060763118+00:00",
+                        __typename: "VersionedFileContentDownload",
+                    },
+                    __typename: "VersionedFileEntry",
+                },
+                versions: {
+                    totalCount: 2,
+                    __typename: "VersionedFileEntryConnection",
+                },
+            },
+        },
+    },
+};
+
+export const mockDatasetAsVersionedFileByBlockHashQuery: DatasetAsVersionedFileByBlockHashQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byId: {
+            name: "test-file-pdf",
+            __typename: "Dataset",
+            asVersionedFile: {
+                __typename: "VersionedFile",
+                asOf: {
+                    systemTime: "2025-12-18T13:09:34.719+00:00",
+                    eventTime: "2025-12-18T13:09:34.311+00:00",
+                    version: 2,
+                    contentType: "application/pdf",
+                    contentLength: 381846,
+                    contentHash: "f162037eb2f65a4e07a794a63c1bf1bcd37d2bd8d55dcce2b35d64a68ce6d79907d0f",
+                    contentUrl: {
+                        url: "https://s3.us-west-2.amazonaws.com/repo.dev.stg.kamu.dev.us-west-2/fed01dd0540db0ffb1d66922216063b4b12e750fede89",
+                        expiresAt: "2026-04-20T17:06:49.060763118+00:00",
+                        __typename: "VersionedFileContentDownload",
+                    },
+                    __typename: "VersionedFileEntry",
+                },
+            },
+        },
+    },
+};
+
+export const mockVersionedFileContentUrlQuery: VersionedFileContentUrlQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byId: {
+            __typename: "Dataset",
+            asVersionedFile: {
+                __typename: "VersionedFile",
+                asOf: {
+                    contentUrl: {
+                        url: "https://s3.us-west-2.amazonaws.com/repo.dev.stg.kamu.dev.us-west-2/fed01dd0540db0ffb1d66922216063b4b12e750fed",
+                        __typename: "VersionedFileContentDownload",
+                    },
+                    __typename: "VersionedFileEntry",
+                },
+            },
+        },
     },
 };

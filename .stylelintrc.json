@@ -2,17 +2,12 @@
   "extends": ["stylelint-config-standard-scss"],
   "plugins": ["stylelint-scss"],
   "rules": {
+    "selector-id-pattern": null,
     "scss/percent-placeholder-pattern": null,
     "selector-class-pattern": null,
     "no-descending-specificity": null,
-    "declaration-block-no-redundant-longhand-properties": [
-      true,
-      { "ignoreShorthands": ["grid-template"] }
-    ],
-    "selector-pseudo-element-no-unknown": [
-      true,
-      { "ignorePseudoElements": ["ng-deep"] }
-    ],
+    "declaration-block-no-redundant-longhand-properties": [true, { "ignoreShorthands": ["grid-template"] }],
+    "selector-pseudo-element-no-unknown": [true, { "ignorePseudoElements": ["ng-deep"] }],
     "number-max-precision": 3,
     "selector-type-no-unknown": [
       true,

@@ -24,6 +24,10 @@ import {
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetGQL,
     CreateEmptyDatasetMutation,
+    DatasetAsVersionedFileByBlockHashQuery,
+    DatasetAsVersionedFileByVersionGQL,
+    DatasetAsVersionedFileByVersionQuery,
+    DatasetAsVersionedFileQuery,
     DatasetBlocksByEventTypeGQL,
     DatasetBlocksByEventTypeQuery,
     DatasetByAccountAndDatasetNameGQL,
@@ -71,8 +75,12 @@ import {
     UpdateReadmeMutation,
     UpdateWatermarkGQL,
     UpdateWatermarkMutation,
+    VersionedFileContentUrlGQL,
+    VersionedFileContentUrlQuery,
 } from "@api/kamu.graphql.interface";
 import { DatasetRequestBySql } from "@interface/dataset.interface";
+
+import { DatasetAsVersionedFileByBlockHashGQL, DatasetAsVersionedFileGQL } from "./kamu.graphql.interface";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {
@@ -100,6 +108,10 @@ export class DatasetApi {
     private datasetPushSyncStatusesGQL = inject(DatasetPushSyncStatusesGQL);
     private datasetListDownstreamsGQL = inject(DatasetListDownstreamsGQL);
     private datasetBlocksByEventTypeGQL = inject(DatasetBlocksByEventTypeGQL);
+    private datasetAsVersionedFileGQL = inject(DatasetAsVersionedFileGQL);
+    private datasetAsVersionedFileByVersionGQL = inject(DatasetAsVersionedFileByVersionGQL);
+    private datasetAsVersionedFileByBlockHashGQL = inject(DatasetAsVersionedFileByBlockHashGQL);
+    private versionedFileContentUrlGQL = inject(VersionedFileContentUrlGQL);
 
     public getBlocksByEventType(params: {
         accountName: string;
@@ -563,6 +575,96 @@ export class DatasetApi {
                 first(),
                 map((result: ObservableQuery.Result<DatasetListDownstreamsQuery>) => {
                     return result.data as DatasetListDownstreamsQuery;
+                }),
+            );
+    }
+
+    public getDatasetAsVersionedFile(datasetId: string): Observable<DatasetAsVersionedFileQuery> {
+        return this.datasetAsVersionedFileGQL
+            .watch({
+                variables: {
+                    datasetId,
+                },
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .valueChanges.pipe(
+                onlyCompleteData(),
+                first(),
+                map((result: ObservableQuery.Result<DatasetAsVersionedFileQuery>) => {
+                    return result.data as DatasetAsVersionedFileQuery;
+                }),
+            );
+    }
+
+    public getDatasetAsVersionedFileByVersion(
+        datasetId: string,
+        version: number,
+    ): Observable<DatasetAsVersionedFileByVersionQuery> {
+        return this.datasetAsVersionedFileByVersionGQL
+            .watch({
+                variables: {
+                    datasetId,
+                    version,
+                },
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .valueChanges.pipe(
+                onlyCompleteData(),
+                first(),
+                map((result: ObservableQuery.Result<DatasetAsVersionedFileByVersionQuery>) => {
+                    return result.data as DatasetAsVersionedFileByVersionQuery;
+                }),
+            );
+    }
+
+    // TODO: implement later with URL and write unit test
+    public getDatasetAsVersionedFileByBlockHash(
+        datasetId: string,
+        blockHash: string,
+    ): Observable<DatasetAsVersionedFileByBlockHashQuery> {
+        return this.datasetAsVersionedFileByBlockHashGQL
+            .watch({
+                variables: {
+                    datasetId,
+                    blockHash,
+                },
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .valueChanges.pipe(
+                onlyCompleteData(),
+                first(),
+                map((result: ObservableQuery.Result<DatasetAsVersionedFileByBlockHashQuery>) => {
+                    return result.data as DatasetAsVersionedFileByBlockHashQuery;
+                }),
+            );
+    }
+
+    public getVersionedFileContentUrl(datasetId: string, version: number): Observable<VersionedFileContentUrlQuery> {
+        return this.versionedFileContentUrlGQL
+            .watch({
+                variables: {
+                    datasetId,
+                    version,
+                },
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .valueChanges.pipe(
+                onlyCompleteData(),
+                first(),
+                map((result: ObservableQuery.Result<VersionedFileContentUrlQuery>) => {
+                    return result.data as VersionedFileContentUrlQuery;
                 }),
             );
     }

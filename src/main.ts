@@ -17,7 +17,7 @@ import {
 import { MAT_RIPPLE_GLOBAL_OPTIONS } from "@angular/material/core";
 import { bootstrapApplication } from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
-import { provideRouter, withComponentInputBinding, withRouterConfig } from "@angular/router";
+import { provideRouter, UrlSerializer, withComponentInputBinding, withRouterConfig } from "@angular/router";
 
 import { firstValueFrom } from "rxjs";
 
@@ -34,6 +34,7 @@ import { SpinnerInterceptor } from "@common/components/spinner/spinner.intercept
 import { SpinnerService } from "@common/components/spinner/spinner.service";
 import { apolloCache } from "@common/helpers/apollo-cache.helper";
 import { HIGHLIGHT_OPTIONS_PROVIDER, isAccessTokenExpired, logError } from "@common/helpers/app.helpers";
+import { KamuUrlSerializer } from "@common/helpers/kamu-url-serializer";
 import { AuthInterceptor } from "@common/interceptors/auth.interceptor";
 import AppValues from "@common/values/app.values";
 import { ErrorTexts } from "@common/values/errors.text";
@@ -89,6 +90,7 @@ bootstrapApplication(AppComponent, {
                 sanitize: SecurityContext.NONE,
             }),
         ),
+        { provide: UrlSerializer, useClass: KamuUrlSerializer },
         provideAnimations(),
         provideHttpClient(withInterceptorsFromDi()),
 

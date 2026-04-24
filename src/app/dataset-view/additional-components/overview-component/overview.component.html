@@ -1,117 +1,133 @@
 <div class="dataset-result-container container-main">
     <div class="search-result-container__content">
-        <div>
-            <div
-                *ngIf="hasDatasetInfo; else noDetails"
-                class="d-flex flex-row flex-justify-between mb-3"
-                data-test-id="dataset-info-block"
-            >
-                <div class="d-flex flex-column me-auto">
-                    <div *ngIf="datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo.description">
-                        <h2 class="box-title align-items-center pb-3">Description</h2>
+        <div
+            class="d-flex justify-content-end"
+            *ngIf="currentArchetype && currentArchetype !== DatasetArchetype.Collection"
+        >
+            <mat-button-toggle-group [(ngModel)]="viewMode" [hideSingleSelectionIndicator]="true">
+                <mat-button-toggle
+                    *ngFor="let button of visibleViewModeButtons"
+                    [value]="button.value"
+                    [matTooltip]="button.tooltip"
+                    [matTooltipPosition]="'above'"
+                >
+                    <mat-icon [svgIcon]="button.icon" />
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
 
-                        <p>{{ datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo.description }}</p>
-                    </div>
-                    <div
-                        class="app-mat-chip"
-                        *ngIf="datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo.keywords"
-                    >
-                        <h2 class="box-title align-items-center pt-3">Keywords</h2>
-                        <mat-chip-set aria-label="Tags selection">
-                            <div
-                                *ngFor="
-                                    let keyword of datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo
-                                        .keywords
-                                "
-                            >
-                                <mat-chip appFeatureFlag="dataset.panel.overview.keywords">{{ keyword }}</mat-chip>
-                            </div>
-                        </mat-chip-set>
-                    </div>
+        <div
+            *ngIf="hasDatasetInfo; else noDetails"
+            class="d-flex flex-row flex-justify-between mb-3"
+            data-test-id="dataset-info-block"
+        >
+            <div class="d-flex flex-column me-auto">
+                <div *ngIf="datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo.description">
+                    <h2 class="box-title align-items-center pb-3">Description</h2>
+
+                    <p>{{ datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo.description }}</p>
                 </div>
-                <div *ngIf="canEditDatasetInfo" data-test-id="dataset-edit-info-block">
-                    <button
-                        class="btn-sm btn custom-edit"
-                        aria-label="Edit dataset details"
-                        data-test-id="edit-dataset-details"
-                        title="Edit dataset details"
+                <div
+                    class="app-mat-chip"
+                    *ngIf="datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo.keywords"
+                >
+                    <h2 class="box-title align-items-center pt-3">Keywords</h2>
+                    <mat-chip-set aria-label="Tags selection">
+                        <div
+                            *ngFor="
+                                let keyword of datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo
+                                    .keywords
+                            "
+                        >
+                            <mat-chip appFeatureFlag="dataset.panel.overview.keywords">{{ keyword }}</mat-chip>
+                        </div>
+                    </mat-chip-set>
+                </div>
+            </div>
+            <div *ngIf="canEditDatasetInfo" data-test-id="dataset-edit-info-block">
+                <button
+                    class="btn-sm btn custom-edit"
+                    aria-label="Edit dataset details"
+                    data-test-id="edit-dataset-details"
+                    title="Edit dataset details"
+                    (click)="openInformationModal()"
+                >
+                    <mat-icon class="mat-icon-svg-size" svgIcon="pencil" />
+                </button>
+            </div>
+        </div>
+
+        <ng-template #noDetails>
+            <div class="my-4" *ngIf="canAddDatasetInfo" data-test-id="dataset-add-info-block">
+                <p appFeatureFlag="dataset.panel.overview.description">
+                    You can
+                    <a
+                        class="text-decoration-none"
                         (click)="openInformationModal()"
+                        data-test-id="'open-information-modal'"
                     >
-                        <mat-icon class="mat-icon-svg-size" svgIcon="pencil" />
-                    </button>
-                </div>
-            </div>
-
-            <ng-template #noDetails>
-                <div class="my-4" *ngIf="canAddDatasetInfo" data-test-id="dataset-add-info-block">
-                    <p appFeatureFlag="dataset.panel.overview.description">
-                        You can
-                        <a
-                            class="text-decoration-none"
-                            (click)="openInformationModal()"
-                            data-test-id="'open-information-modal'"
-                        >
-                            Add information</a
-                        >
-                        about dataset.
-                    </p>
-                </div>
-            </ng-template>
-            <div
-                class="my-4"
-                *ngIf="canAddSetPollingSource && canAddPushSource"
-                data-test-id="add-set-polling-source-block"
-            >
-                <p appFeatureFlag="dataset.panel.overview.addPollingSource">
-                    You can
-                    <a
-                        class="text-decoration-none"
-                        [routerLink]="[
-                            '/',
-                            datasetOverviewTabData.datasetBasics.owner.accountName,
-                            datasetOverviewTabData.datasetBasics.name,
-                            URL_PARAM_ADD_POLLING_SOURCE,
-                        ]"
+                        Add information</a
                     >
-                        Add data polling source</a
-                    >
+                    about dataset.
                 </p>
             </div>
+        </ng-template>
+        <div
+            class="my-4"
+            *ngIf="canAddSetPollingSource && canAddPushSource"
+            data-test-id="add-set-polling-source-block"
+        >
+            <p appFeatureFlag="dataset.panel.overview.addPollingSource">
+                You can
+                <a
+                    class="text-decoration-none"
+                    [routerLink]="[
+                        '/',
+                        datasetOverviewTabData.datasetBasics.owner.accountName,
+                        datasetOverviewTabData.datasetBasics.name,
+                        URL_PARAM_ADD_POLLING_SOURCE,
+                    ]"
+                >
+                    Add data polling source</a
+                >
+            </p>
+        </div>
 
-            <div class="my-4" *ngIf="canAddSetPollingSource" data-test-id="add-push-source-block">
-                <p appFeatureFlag="dataset.panel.overview.addPushSource">
-                    You can
-                    <a
-                        class="text-decoration-none"
-                        [routerLink]="[
-                            '/',
-                            datasetOverviewTabData.datasetBasics.owner.accountName,
-                            datasetOverviewTabData.datasetBasics.name,
-                            URL_PARAM_ADD_PUSH_SOURCE,
-                        ]"
-                    >
-                        Add data push source</a
-                    >
-                </p>
-            </div>
+        <div class="my-4" *ngIf="canAddSetPollingSource" data-test-id="add-push-source-block">
+            <p appFeatureFlag="dataset.panel.overview.addPushSource">
+                You can
+                <a
+                    class="text-decoration-none"
+                    [routerLink]="[
+                        '/',
+                        datasetOverviewTabData.datasetBasics.owner.accountName,
+                        datasetOverviewTabData.datasetBasics.name,
+                        URL_PARAM_ADD_PUSH_SOURCE,
+                    ]"
+                >
+                    Add data push source</a
+                >
+            </p>
+        </div>
 
-            <div class="my-4" *ngIf="canAddSetTransform" data-test-id="add-set-transform-block">
-                <p appFeatureFlag="dataset.panel.overview.addTransform">
-                    You can
-                    <a
-                        class="text-decoration-none"
-                        [routerLink]="[
-                            '/',
-                            datasetOverviewTabData.datasetBasics.owner.accountName,
-                            datasetOverviewTabData.datasetBasics.name,
-                            URL_PARAM_SET_TRANSFORM,
-                        ]"
-                    >
-                        Add transformation</a
-                    >
-                </p>
-            </div>
+        <div class="my-4" *ngIf="canAddSetTransform" data-test-id="add-set-transform-block">
+            <p appFeatureFlag="dataset.panel.overview.addTransform">
+                You can
+                <a
+                    class="text-decoration-none"
+                    [routerLink]="[
+                        '/',
+                        datasetOverviewTabData.datasetBasics.owner.accountName,
+                        datasetOverviewTabData.datasetBasics.name,
+                        URL_PARAM_SET_TRANSFORM,
+                    ]"
+                >
+                    Add transformation</a
+                >
+            </p>
+        </div>
 
+        <div *ngIf="viewMode === OverviewTabMode.Table">
             <div class="d-flex justify-content-end mb-3">
                 <button
                     appFeatureFlag="dataset.panel.overview.addData"
@@ -138,14 +154,12 @@
                     <app-data-access-panel [datasetBasics]="datasetBasics" />
                 </div>
             </div>
-
             <app-overview-history-summary-header
                 data-test-id="overview-history-summary-header-block"
                 [metadataBlockFragment]="metadataFragmentBlock"
                 [numBlocksTotal]="datasetOverviewTabData.overviewUpdate.overview.metadata.chain.blocks.totalCount || 0"
                 [datasetName]="datasetOverviewTabData.datasetBasics.name"
             />
-
             <div class="text-center upload-file-container my-4" *ngIf="uploadFileLoading$ | async; else noLoading">
                 <img [src]="UPLOAD_FILE_IMAGE" class="upload-file-loading" />
             </div>
@@ -193,21 +207,24 @@
                     </div>
                 </ng-template>
             </ng-template>
-            <div class="my-4" *ngIf="canAddReadme" data-test-id="add-readme-block">
-                <p appFeatureFlag="dataset.panel.overview.readme">
-                    You can
-                    <a class="text-decoration-none" (click)="onAddReadme()" data-test-id="add-readme"> Add README.md</a>
-                </p>
-            </div>
-            <app-readme-section
-                data-test-id="readme-editor-block"
-                [datasetBasics]="datasetOverviewTabData.datasetBasics"
-                [currentReadme]="datasetOverviewTabData.overviewUpdate.overview.metadata.currentReadme"
-                [editingInProgress]="editingReadme"
-                [editable]="canEditReadme"
-                (editViewShowEmitter)="editingReadme = $event"
-            />
         </div>
+        <div *ngIf="viewMode === OverviewTabMode.VersionedFile">
+            <app-versioned-file-view [datasetBasics]="datasetBasics" />
+        </div>
+        <div class="my-4" *ngIf="canAddReadme" data-test-id="add-readme-block">
+            <p appFeatureFlag="dataset.panel.overview.readme">
+                You can
+                <a class="text-decoration-none" (click)="onAddReadme()" data-test-id="add-readme"> Add README.md</a>
+            </p>
+        </div>
+        <app-readme-section
+            data-test-id="readme-editor-block"
+            [datasetBasics]="datasetOverviewTabData.datasetBasics"
+            [currentReadme]="datasetOverviewTabData.overviewUpdate.overview.metadata.currentReadme"
+            [editingInProgress]="editingReadme"
+            [editable]="canEditReadme"
+            (editViewShowEmitter)="editingReadme = $event"
+        />
     </div>
     <div class="card">
         <nav class="flex-row mat-typography">
@@ -357,7 +374,7 @@
                             <mat-icon class="fs-4 mr-3">more_time</mat-icon>
                             <h2 class="dataset-info--subtitle">Created At:</h2>
                         </div>
-                        <div class="dataset-info--sub-block p-0">
+                        <div class="dataset-info--sub-block">
                             <app-display-time
                                 class="dataset-info--text"
                                 [title]="datasetOverviewTabData.overviewUpdate.overview.createdAt"
@@ -384,7 +401,7 @@
                             <h2 class="dataset-info--subtitle">Watermark:</h2>
                         </div>
                         <div
-                            class="dataset-info--sub-block d-flex align-items-center ps-1"
+                            class="dataset-info--sub-block text-nowrap d-flex align-items-center ps-1"
                             *ngIf="
                                 datasetOverviewTabData.overviewUpdate &&
                                     datasetOverviewTabData.overviewUpdate.overview.metadata.currentWatermark;
@@ -432,6 +449,8 @@
                     </div>
                 </ng-template>
             </div>
+
+            <app-file-information-section *ngIf="currentArchetype" />
         </nav>
     </div>
 </div>

@@ -2,6 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
+    "types": ["jasmine", "node"],
     "paths": {
       "@common/*": ["src/app/common/*"],
       "@api/*": ["src/app/api/*"],

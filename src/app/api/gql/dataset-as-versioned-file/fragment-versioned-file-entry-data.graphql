@@ -1,0 +1,12 @@
+fragment VersionedFileEntryData on VersionedFileEntry {
+  systemTime
+  eventTime
+  version
+  contentType
+  contentLength
+  contentHash
+  contentUrl {
+    url
+    expiresAt
+  }
+}

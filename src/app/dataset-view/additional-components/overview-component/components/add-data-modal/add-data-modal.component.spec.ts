@@ -18,6 +18,8 @@ import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockFile } from "@api/mock/upload-file.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
+import { AppUIConfig } from "src/app/app-config.model";
+import { AppConfigService } from "src/app/app-config.service";
 import { AddDataModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/add-data-modal/add-data-modal.component";
 import { FileFromUrlModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/file-from-url-modal/file-from-url-modal.component";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
@@ -29,6 +31,7 @@ describe("AddDataModalComponent", () => {
     let ngbModalService: NgbModal;
     let fileUploadService: FileUploadService;
     let modalService: ModalService;
+    let configService: AppUIConfig;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -41,7 +44,10 @@ describe("AddDataModalComponent", () => {
         ngbModalService = TestBed.inject(NgbModal);
         fileUploadService = TestBed.inject(FileUploadService);
         modalService = TestBed.inject(ModalService);
+        configService = TestBed.inject(AppConfigService);
         component.datasetBasics = mockDatasetBasicsRootFragment;
+        spyOnProperty(configService, "ingestUploadFileLimitMb", "get").and.returnValue(50);
+
         fixture.detectChanges();
     });
 

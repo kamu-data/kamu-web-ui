@@ -233,7 +233,7 @@ export function isAccessTokenExpired(accessToken: string): boolean {
 }
 
 export function maskDotsInURL(url: string, segmentIndex: number): string {
-    const mimeTypes = ["pdf", "png", "jpg", "jpeg", "mov", "mp4", "mov", "txt", "json", "mp3"];
+    const mimeTypes = ["pdf", "png", "jpg", "jpeg", "mov", "mp4", "mov", "txt", "json", "mp3", "csv"];
     const [path, query] = url.split("?");
     const segments = path.split("/");
 

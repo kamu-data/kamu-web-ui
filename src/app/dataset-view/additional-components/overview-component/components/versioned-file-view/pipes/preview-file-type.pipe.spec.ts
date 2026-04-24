@@ -21,8 +21,9 @@ describe("PreviewFileTypePipe", () => {
         { case: "video/mp4", expected: "video" },
         { case: "audio/mpeg", expected: "audio" },
         { case: "text/plain", expected: "text" },
+        { case: "text/csv", expected: "text" },
         { case: "application/json", expected: "json" },
-        { case: "application/octet-stream", expected: "text" },
+        { case: "application/octet-stream", expected: "unknown" },
         { case: "test", expected: "unknown" },
     ].forEach((item: { case: string; expected: string }) => {
         it(`should check transform method with  ${item.case}`, () => {

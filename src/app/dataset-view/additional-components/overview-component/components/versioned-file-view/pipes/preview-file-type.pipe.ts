@@ -20,7 +20,7 @@ export class PreviewFileTypePipe implements PipeTransform {
         if (contentType.startsWith("video/")) return "video";
         if (contentType.startsWith("audio/")) return "audio";
         if (contentType.includes("json")) return "json";
-        if (contentType === "text/plain" || contentType === "application/octet-stream") return "text";
+        if (contentType.startsWith("text/")) return "text";
 
         return "unknown";
     }

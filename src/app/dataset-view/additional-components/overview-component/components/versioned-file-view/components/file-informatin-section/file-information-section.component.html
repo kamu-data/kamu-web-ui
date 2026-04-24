@@ -4,15 +4,29 @@
             <h2>File details</h2>
         </div>
     </div>
-    <div class="card--row dataset-info">
+    <div class="card--row dataset-info mb-3">
         <div class="dataset-info--block">
             <div class="dataset-info--sub-block d-flex align-items-center">
                 <mat-icon class="fs-4 mr-2">preview</mat-icon>
                 <h2 class="dataset-info--subtitle">Version:</h2>
             </div>
 
-            <div data-test-id="file-version" class="dataset-info--sub-block">
-                {{ fileDetails?.fileInfo?.version ?? "-" }}
+            <div class="dataset-info--sub-block d-flex flex-row align-items-center">
+                <button
+                    class="change-version-btn"
+                    (click)="setPreviousVersion(fileDetails)"
+                    [disabled]="previousVersionBtnDisabled(fileDetails)"
+                >
+                    &#9664;
+                </button>
+                <span data-test-id="file-version" class="d-block"> {{ fileDetails?.fileInfo?.version ?? "-" }}</span>
+                <button
+                    class="change-version-btn"
+                    (click)="setNextVersion(fileDetails)"
+                    [disabled]="nextVersionBtnDisabled(fileDetails)"
+                >
+                    &#9654;
+                </button>
             </div>
         </div>
 
@@ -71,7 +85,7 @@
             </div>
         </div>
 
-        <div class="d-flex border-top justify-content-between px-4 pt-4 pb-3" style="margin-top: 25px">
+        <!-- <div class="d-flex border-top justify-content-between px-4 pt-4 pb-3" style="margin-top: 25px">
             <button
                 class="change-version-btn"
                 (click)="setPreviousVersion(fileDetails)"
@@ -86,6 +100,6 @@
             >
                 Next version &#9654;
             </button>
-        </div>
+        </div> -->
     </div>
 </ng-container>

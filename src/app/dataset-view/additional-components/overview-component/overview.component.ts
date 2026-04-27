@@ -62,6 +62,7 @@ import {
 import ProjectLinks from "src/app/project-links";
 import { FileUploadService } from "src/app/services/file-upload.service";
 
+import { CollectionViewComponent } from "./components/collection-view/collection-view.component";
 import { FileInformationSectionComponent } from "./components/versioned-file-view/components/file-informatin-section/file-information-section.component";
 import { VersionedFileViewComponent } from "./components/versioned-file-view/versioned-file-view.component";
 import {
@@ -91,6 +92,7 @@ import {
         MatTooltipModule,
         NgbTooltip,
         //-----//
+        CollectionViewComponent,
         FeatureFlagDirective,
         FileInformationSectionComponent,
         OverviewHistorySummaryHeaderComponent,
@@ -101,6 +103,7 @@ import {
         DisplayHashComponent,
         DisplaySizePipe,
         DisplayTimeComponent,
+
         VersionedFileViewComponent,
     ],
 })
@@ -110,7 +113,7 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     public droppedFile: File;
     public uploadFileLoading$: Observable<boolean>;
     public role$: Observable<MaybeNull<DatasetAccessRole>>;
-    public viewMode: OverviewTabMode = OverviewTabMode.Table;
+    public viewMode: OverviewTabMode = OverviewTabMode.Collection;
     public readonly UPLOAD_FILE_IMAGE = AppValues.UPLOAD_FILE_IMAGE;
     public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
     public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;

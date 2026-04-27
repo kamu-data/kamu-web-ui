@@ -1,0 +1,7 @@
+fragment CollectionEntryData on CollectionEntry {
+  systemTime
+  eventTime
+  path
+  ref
+  extraData
+}

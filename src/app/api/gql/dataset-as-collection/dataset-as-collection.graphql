@@ -1,0 +1,26 @@
+query datasetAsCollection(
+  $datasetId: DatasetID!
+  $pathPrefix: CollectionPath
+  $maxDepth: Int
+  $page: Int
+  $perPage: Int
+) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      name
+      asCollection {
+        latest {
+          entries(pathPrefix: $pathPrefix, maxDepth: $maxDepth, page: $page, perPage: $perPage) {
+            nodes {
+              ...CollectionEntryData
+            }
+            pageInfo {
+              ...DatasetPageInfo
+            }
+            totalCount
+          }
+        }
+      }
+    }
+  }
+}

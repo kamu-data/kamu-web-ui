@@ -5446,6 +5446,46 @@ export type UpdateWatermarkMutation = {
     };
 };
 
+export type DatasetAsCollectionQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"]["input"];
+    pathPrefix?: InputMaybe<Scalars["CollectionPath"]["input"]>;
+    maxDepth?: InputMaybe<Scalars["Int"]["input"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
+}>;
+
+export type DatasetAsCollectionQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            name: string;
+            asCollection?: {
+                __typename?: "Collection";
+                latest: {
+                    __typename?: "CollectionProjection";
+                    entries: {
+                        __typename?: "CollectionEntryConnection";
+                        totalCount: number;
+                        nodes: Array<{ __typename?: "CollectionEntry" } & CollectionEntryDataFragment>;
+                        pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
+                    };
+                };
+            } | null;
+        } | null;
+    };
+};
+
+export type CollectionEntryDataFragment = {
+    __typename?: "CollectionEntry";
+    systemTime: string;
+    eventTime: string;
+    path: string;
+    ref: string;
+    extraData: string;
+};
+
 export type DatasetAsVersionedFileByBlockHashQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"]["input"];
     blockHash?: InputMaybe<Scalars["Multihash"]["input"]>;
@@ -8389,6 +8429,15 @@ export const AccountWithEmailFragmentDoc = gql`
         email
     }
 `;
+export const CollectionEntryDataFragmentDoc = gql`
+    fragment CollectionEntryData on CollectionEntry {
+        systemTime
+        eventTime
+        path
+        ref
+        extraData
+    }
+`;
 export const VersionedFileEntryDataFragmentDoc = gql`
     fragment VersionedFileEntryData on VersionedFileEntry {
         systemTime
@@ -10619,6 +10668,47 @@ export const UpdateWatermarkDocument = gql`
 })
 export class UpdateWatermarkGQL extends Apollo.Mutation<UpdateWatermarkMutation, UpdateWatermarkMutationVariables> {
     document = UpdateWatermarkDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetAsCollectionDocument = gql`
+    query datasetAsCollection(
+        $datasetId: DatasetID!
+        $pathPrefix: CollectionPath
+        $maxDepth: Int
+        $page: Int
+        $perPage: Int
+    ) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                name
+                asCollection {
+                    latest {
+                        entries(pathPrefix: $pathPrefix, maxDepth: $maxDepth, page: $page, perPage: $perPage) {
+                            nodes {
+                                ...CollectionEntryData
+                            }
+                            pageInfo {
+                                ...DatasetPageInfo
+                            }
+                            totalCount
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${CollectionEntryDataFragmentDoc}
+    ${DatasetPageInfoFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetAsCollectionGQL extends Apollo.Query<DatasetAsCollectionQuery, DatasetAsCollectionQueryVariables> {
+    document = DatasetAsCollectionDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

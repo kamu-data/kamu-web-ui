@@ -24,6 +24,8 @@ import {
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetGQL,
     CreateEmptyDatasetMutation,
+    DatasetAsCollectionGQL,
+    DatasetAsCollectionQuery,
     DatasetAsVersionedFileByBlockHashQuery,
     DatasetAsVersionedFileByVersionGQL,
     DatasetAsVersionedFileByVersionQuery,
@@ -112,6 +114,7 @@ export class DatasetApi {
     private datasetAsVersionedFileByVersionGQL = inject(DatasetAsVersionedFileByVersionGQL);
     private datasetAsVersionedFileByBlockHashGQL = inject(DatasetAsVersionedFileByBlockHashGQL);
     private versionedFileContentUrlGQL = inject(VersionedFileContentUrlGQL);
+    private datasetAsCollectionGQL = inject(DatasetAsCollectionGQL);
 
     public getBlocksByEventType(params: {
         accountName: string;
@@ -665,6 +668,32 @@ export class DatasetApi {
                 first(),
                 map((result: ObservableQuery.Result<VersionedFileContentUrlQuery>) => {
                     return result.data as VersionedFileContentUrlQuery;
+                }),
+            );
+    }
+
+    public getDatasetAsCollection(params: {
+        datasetId: string;
+        pathPrefix: string;
+        maxDepth: number;
+        page: number;
+        perPage: number;
+    }): Observable<DatasetAsCollectionQuery> {
+        return this.datasetAsCollectionGQL
+            .watch({
+                variables: {
+                    ...params,
+                },
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .valueChanges.pipe(
+                onlyCompleteData(),
+                first(),
+                map((result: ObservableQuery.Result<DatasetAsCollectionQuery>) => {
+                    return result.data as DatasetAsCollectionQuery;
                 }),
             );
     }

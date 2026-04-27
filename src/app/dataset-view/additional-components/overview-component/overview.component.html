@@ -1,9 +1,6 @@
 <div class="dataset-result-container container-main">
     <div class="search-result-container__content">
-        <div
-            class="d-flex justify-content-end"
-            *ngIf="currentArchetype && currentArchetype !== DatasetArchetype.Collection"
-        >
+        <div class="d-flex justify-content-end" *ngIf="currentArchetype">
             <mat-button-toggle-group [(ngModel)]="viewMode" [hideSingleSelectionIndicator]="true">
                 <mat-button-toggle
                     *ngFor="let button of visibleViewModeButtons"
@@ -211,6 +208,10 @@
         <div *ngIf="viewMode === OverviewTabMode.VersionedFile">
             <app-versioned-file-view [datasetBasics]="datasetBasics" />
         </div>
+        <div *ngIf="viewMode === OverviewTabMode.Collection">
+            <app-collection-view [datasetBasics]="datasetBasics" />
+        </div>
+
         <div class="my-4" *ngIf="canAddReadme" data-test-id="add-readme-block">
             <p appFeatureFlag="dataset.panel.overview.readme">
                 You can

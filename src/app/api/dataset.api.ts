@@ -675,7 +675,7 @@ export class DatasetApi {
     public getDatasetAsCollection(params: {
         datasetId: string;
         pathPrefix: string;
-        maxDepth: number;
+        maxDepth?: number;
         page: number;
         perPage: number;
     }): Observable<DatasetAsCollectionQuery> {

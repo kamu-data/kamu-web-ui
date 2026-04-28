@@ -3,5 +3,12 @@ fragment CollectionEntryData on CollectionEntry {
   eventTime
   path
   ref
-  extraData
+  asDataset {
+    asVersionedFile {
+      latest {
+        contentType
+        contentLength
+      }
+    }
+  }
 }

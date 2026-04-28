@@ -5483,7 +5483,13 @@ export type CollectionEntryDataFragment = {
     eventTime: string;
     path: string;
     ref: string;
-    extraData: string;
+    asDataset?: {
+        __typename?: "Dataset";
+        asVersionedFile?: {
+            __typename?: "VersionedFile";
+            latest?: { __typename?: "VersionedFileEntry"; contentType: string; contentLength: number } | null;
+        } | null;
+    } | null;
 };
 
 export type DatasetAsVersionedFileByBlockHashQueryVariables = Exact<{
@@ -8435,7 +8441,14 @@ export const CollectionEntryDataFragmentDoc = gql`
         eventTime
         path
         ref
-        extraData
+        asDataset {
+            asVersionedFile {
+                latest {
+                    contentType
+                    contentLength
+                }
+            }
+        }
     }
 `;
 export const VersionedFileEntryDataFragmentDoc = gql`

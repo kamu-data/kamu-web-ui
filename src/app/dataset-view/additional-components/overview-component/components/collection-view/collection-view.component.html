@@ -1,1 +1,31 @@
-<p>collection-view works!</p>
+<div *ngIf="collectionInfo$ | async as collectionEntry">
+    <div *ngIf="collectionEntry.totalCount; else emptyCollection">
+        <div class="d-flex my-2 justify-content-end">Total count: {{ collectionEntry.totalCount }}</div>
+
+        <div
+            *ngFor="let item of displayNodes(collectionEntry.nodes); let i = index; let isLast = last"
+            class="node-row"
+        >
+            <!-- Если это заголовок папки -->
+            <div *ngIf="item.isFolder" [class.border-bottom]="isLast" class="d-flex align-items-center py-2 border-top">
+                <mat-icon class="me-1">folder</mat-icon>
+                <span class="folder-name">{{ item.displayName }}</span>
+            </div>
+
+            <!-- Если это сам файл -->
+            <div
+                *ngIf="!item.isFolder"
+                [class.border-bottom]="isLast"
+                class="d-flex align-items-center py-2 border-top"
+            >
+                <mat-icon class="me-1">insert_drive_file</mat-icon>
+                <span class="file-name">{{ item.displayName }}</span>
+            </div>
+        </div>
+    </div>
+    <ng-template #emptyCollection>
+        <div class="box p-4 bg-light text-center">
+            <span>Collection is empty</span>
+        </div>
+    </ng-template>
+</div>

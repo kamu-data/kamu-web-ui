@@ -1,26 +1,58 @@
+<div *ngIf="loadingCollection$ | async">
+    <mat-progress-bar data-test-id="editor-progress-bar" class="w-100 mt-4" mode="indeterminate" />
+    <div class="mt-4 text-center">Loading...</div>
+</div>
+
 <div *ngIf="collectionInfo$ | async as collectionEntry">
     <div *ngIf="collectionEntry.totalCount; else emptyCollection">
         <div class="d-flex my-2 justify-content-end">Total count: {{ collectionEntry.totalCount }}</div>
 
-        <div
-            *ngFor="let item of displayNodes(collectionEntry.nodes); let i = index; let isLast = last"
-            class="node-row"
-        >
-            <!-- Если это заголовок папки -->
-            <div *ngIf="item.isFolder" [class.border-bottom]="isLast" class="d-flex align-items-center py-2 border-top">
-                <mat-icon class="me-1">folder</mat-icon>
-                <span class="folder-name">{{ item.displayName }}</span>
-            </div>
+        <div class="border border-start-0 border-end-0 border-top-0" style="width: 100%; overflow: auto">
+            <table mat-table [dataSource]="dataSource">
+                <ng-container matColumnDef="go-up-button">
+                    <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        [attr.colspan]="displayedColumns.length"
+                        (dblclick)="goUp()"
+                        class="up-row"
+                    >
+                        <div class="d-flex align-items-center cursor-pointer">
+                            <mat-icon class="ms-2" svgIcon="shift">more_horiz</mat-icon>
+                        </div>
+                    </th>
+                </ng-container>
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>name</th>
+                    <td mat-cell *matCellDef="let element">
+                        <div *ngIf="element.isFolder" class="d-flex align-items-center">
+                            <mat-icon class="me-2">folder</mat-icon>
+                            <span class="truncate-cell">{{ element.displayName }}</span>
+                        </div>
 
-            <!-- Если это сам файл -->
-            <div
-                *ngIf="!item.isFolder"
-                [class.border-bottom]="isLast"
-                class="d-flex align-items-center py-2 border-top"
-            >
-                <mat-icon class="me-1">insert_drive_file</mat-icon>
-                <span class="file-name">{{ item.displayName }}</span>
-            </div>
+                        <div *ngIf="!element.isFolder" class="d-flex align-items-center">
+                            <mat-icon class="me-2">{{
+                                getFileIconHelper(element.asDataset.asVersionedFile.latest.contentType)
+                            }}</mat-icon>
+                            <span class="truncate-cell">{{ element.displayName }}</span>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <ng-container *ngFor="let col of extraDataKeys" [matColumnDef]="col">
+                    <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
+                    <td class="truncate-cell" mat-cell *matCellDef="let element">
+                        <span *ngIf="!element.isFolder"> {{ getValue(element.extraData[col]) }}</span>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+                <tr mat-header-row *matHeaderRowDef="['go-up-button']" [hidden]="maxDepth === 0"></tr>
+
+                <tr mat-row (dblclick)="clickTableRow(row)" *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
         </div>
     </div>
     <ng-template #emptyCollection>

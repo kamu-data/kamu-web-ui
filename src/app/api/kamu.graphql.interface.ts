@@ -5483,11 +5483,13 @@ export type CollectionEntryDataFragment = {
     eventTime: string;
     path: string;
     ref: string;
+    extraData: string;
     asDataset?: {
         __typename?: "Dataset";
+        alias: string;
         asVersionedFile?: {
             __typename?: "VersionedFile";
-            latest?: { __typename?: "VersionedFileEntry"; contentType: string; contentLength: number } | null;
+            latest?: { __typename?: "VersionedFileEntry"; contentType: string } | null;
         } | null;
     } | null;
 };
@@ -8441,11 +8443,12 @@ export const CollectionEntryDataFragmentDoc = gql`
         eventTime
         path
         ref
+        extraData
         asDataset {
+            alias
             asVersionedFile {
                 latest {
                     contentType
-                    contentLength
                 }
             }
         }

@@ -1,0 +1,14 @@
+.truncate-cell {
+    max-width: 600px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mat-mdc-row,
+.up-row {
+    &:hover {
+        background-color: rgb(0 0 0 / 3%);
+        cursor: pointer;
+    }
+}

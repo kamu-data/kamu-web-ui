@@ -7,7 +7,7 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { map, Observable } from "rxjs";
+import { BehaviorSubject, finalize, map, Observable } from "rxjs";
 
 import { DatasetApi } from "@api/dataset.api";
 import { CollectionEntryConnection, DatasetAsCollectionQuery } from "@api/kamu.graphql.interface";
@@ -18,6 +18,16 @@ import { CollectionEntryConnection, DatasetAsCollectionQuery } from "@api/kamu.g
 export class DatasetAsCollectionService {
     private datasetApi = inject(DatasetApi);
 
+    private loadingCollection$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
+    public emitLoadingCollectionChanged(value: boolean): void {
+        this.loadingCollection$.next(value);
+    }
+
+    public get loadingCollectionChanges(): Observable<boolean> {
+        return this.loadingCollection$.asObservable();
+    }
+
     public requestDatasetAsCollection(params: {
         datasetId: string;
         pathPrefix: string;
@@ -25,9 +35,13 @@ export class DatasetAsCollectionService {
         page: number;
         perPage: number;
     }): Observable<CollectionEntryConnection> {
+        this.emitLoadingCollectionChanged(true);
         return this.datasetApi.getDatasetAsCollection(params).pipe(
             map((result: DatasetAsCollectionQuery) => {
                 return result.datasets.byId?.asCollection?.latest.entries as CollectionEntryConnection;
+            }),
+            finalize(() => {
+                this.emitLoadingCollectionChanged(false);
             }),
         );
     }

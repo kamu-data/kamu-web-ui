@@ -1,8 +1,18 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { CollectionEntryDataFragment } from "@api/kamu.graphql.interface";
 
 import { CollectionEntryViewType } from "./collection-view.model";
 
-export function sortCollectionEntryData(nodes: CollectionEntryDataFragment[]): CollectionEntryViewType[] {
+export function sortCollectionEntryData(
+    nodes: CollectionEntryDataFragment[],
+    maxDepth: number,
+): CollectionEntryViewType[] {
     const result: CollectionEntryViewType[] = [];
     let lastFolder = "";
 
@@ -25,17 +35,33 @@ export function sortCollectionEntryData(nodes: CollectionEntryDataFragment[]): C
     // Grouping for displaying the folder header once
     sorted.forEach((node) => {
         const segments = node.path.split("/").filter(Boolean);
-
-        if (segments.length > 1) {
-            const currentFolder = segments[0];
+        if (segments.length > maxDepth + 1) {
+            const currentFolder = segments[maxDepth];
             if (currentFolder !== lastFolder) {
                 result.push({ ...node, isFolder: true, displayName: currentFolder });
                 lastFolder = currentFolder;
             }
         } else {
-            result.push({ ...node, isFolder: false, displayName: segments[0] });
+            result.push({ ...node, isFolder: false, displayName: segments[maxDepth] });
         }
     });
 
     return result;
+}
+
+export function getFileIconHelper(contentType: string): string {
+    if (!contentType) return "insert_drive_file";
+
+    if (contentType.startsWith("image/")) return "image";
+    if (contentType.startsWith("video/")) return "movie";
+
+    switch (contentType) {
+        case "application/pdf":
+            return "picture_as_pdf";
+        case "text/plain":
+            return "description";
+
+        default:
+            return "insert_drive_file";
+    }
 }

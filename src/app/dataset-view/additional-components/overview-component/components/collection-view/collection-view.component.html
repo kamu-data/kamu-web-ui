@@ -23,8 +23,10 @@
                         (dblclick)="goUp()"
                         class="up-row"
                     >
-                        <div class="d-flex align-items-center cursor-pointer">
-                            <mat-icon class="ms-2" svgIcon="shift">more_horiz</mat-icon>
+                        <div class="d-flex align-items-end cursor-pointer">
+                            <mat-icon class="ms-2" svgIcon="shift"></mat-icon>
+                            <span class="d-block">[..]</span>
+                            <span class="ms-2 d-block fw-bold">{{ pathPrefix }}</span>
                         </div>
                     </th>
                 </ng-container>

@@ -5,7 +5,15 @@
 
 <div *ngIf="collectionInfo$ | async as collectionEntry">
     <div *ngIf="collectionEntry.totalCount; else emptyCollection">
-        <div class="border border-start-0 border-end-0 border-top-0" style="width: 100%; overflow: auto">
+        <div
+            *ngIf="!(loadingCollection$ | async)"
+            class="border border-start-0 border-end-0 border-top-0"
+            style="width: 100%; overflow: auto"
+            infiniteScroll
+            [infiniteScrollDistance]="1"
+            [infiniteScrollThrottle]="150"
+            (scrolled)="onScroll()"
+        >
             <table mat-table [dataSource]="dataSource">
                 <ng-container matColumnDef="go-up-button">
                     <th
@@ -63,4 +71,7 @@
             <span>Collection is empty</span>
         </div>
     </ng-template>
+</div>
+<div *ngIf="loadingOnScroll$ | async">
+    <mat-progress-spinner class="mx-auto mt-4" [diameter]="30" [mode]="'indeterminate'"> </mat-progress-spinner>
 </div>

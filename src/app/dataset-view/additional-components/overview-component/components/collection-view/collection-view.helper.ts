@@ -65,3 +65,14 @@ export function getFileIconHelper(contentType: string): string {
             return "insert_drive_file";
     }
 }
+
+export function getCollectionValueHelper(value: unknown): string {
+    if (Array.isArray(value)) {
+        return value.length > 0 ? value.join(", ") : "-";
+    }
+
+    if (value === null || value === undefined || value === "") {
+        return "-";
+    }
+    return value as string;
+}

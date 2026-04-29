@@ -5,8 +5,6 @@
 
 <div *ngIf="collectionInfo$ | async as collectionEntry">
     <div *ngIf="collectionEntry.totalCount; else emptyCollection">
-        <div class="d-flex my-2 justify-content-end">Total count: {{ collectionEntry.totalCount }}</div>
-
         <div class="border border-start-0 border-end-0 border-top-0" style="width: 100%; overflow: auto">
             <table mat-table [dataSource]="dataSource">
                 <ng-container matColumnDef="go-up-button">
@@ -35,7 +33,12 @@
                             <mat-icon class="me-2">{{
                                 getFileIconHelper(element.asDataset.asVersionedFile.latest.contentType)
                             }}</mat-icon>
-                            <span class="truncate-cell">{{ element.displayName }}</span>
+                            <a
+                                [routerLink]="['/' + element.asDataset?.alias]"
+                                target="_blank"
+                                class="truncate-cell file-name"
+                                >{{ element.displayName }}</a
+                            >
                         </div>
                     </td>
                 </ng-container>

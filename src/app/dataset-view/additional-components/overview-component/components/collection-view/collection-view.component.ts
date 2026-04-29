@@ -11,7 +11,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { Router } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 
 import { Observable, tap } from "rxjs";
 
@@ -31,6 +31,7 @@ import { CollectionEntryViewType } from "./collection-view.model";
         AsyncPipe,
         NgIf,
         NgFor,
+        RouterLink,
         //-----//
         MatButtonModule,
         MatIconModule,
@@ -85,7 +86,9 @@ export class CollectionViewComponent implements OnChanges, OnInit {
                         nodes.length > 0
                             ? Object.keys(sortCollectionEntryData(result.nodes, this.maxDepth)[0].extraData)
                             : [];
-                    this.displayedColumns = [...this.displayedColumns, ...this.extraDataKeys];
+                    if (this.displayedColumns.length === 1) {
+                        this.displayedColumns = [...this.displayedColumns, ...this.extraDataKeys];
+                    }
                     this.dataSource.data = nodes;
                 }),
             );

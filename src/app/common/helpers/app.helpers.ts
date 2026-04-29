@@ -238,6 +238,7 @@ export function maskDotsInURL(url: string, segmentIndex: number): string {
         "png",
         "jpg",
         "jpeg",
+        "svg",
         "mov",
         "mp4",
         "mov",

@@ -50,19 +50,19 @@ export function sortCollectionEntryData(
 }
 
 export function getFileIconHelper(contentType: string): string {
-    if (!contentType) return "insert_drive_file";
+    if (!contentType) return "default-file";
 
-    if (contentType.startsWith("image/")) return "image";
-    if (contentType.startsWith("video/")) return "movie";
+    if (contentType.startsWith("image/")) return "image-file";
+    if (contentType.startsWith("video/")) return "video-file";
 
     switch (contentType) {
         case "application/pdf":
-            return "picture_as_pdf";
+            return "pdf-file";
         case "text/plain":
-            return "description";
+            return "txt-file";
 
         default:
-            return "insert_drive_file";
+            return "default-file";
     }
 }
 

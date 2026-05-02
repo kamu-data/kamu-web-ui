@@ -113,7 +113,7 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     public droppedFile: File;
     public uploadFileLoading$: Observable<boolean>;
     public role$: Observable<MaybeNull<DatasetAccessRole>>;
-    public viewMode: OverviewTabMode = OverviewTabMode.Collection;
+    public viewMode: OverviewTabMode = OverviewTabMode.Table;
     public readonly UPLOAD_FILE_IMAGE = AppValues.UPLOAD_FILE_IMAGE;
     public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
     public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;

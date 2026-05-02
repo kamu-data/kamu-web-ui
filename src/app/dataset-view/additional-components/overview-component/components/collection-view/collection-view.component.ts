@@ -83,6 +83,7 @@ export class CollectionViewComponent implements OnChanges, OnInit {
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.datasetBasics && changes.datasetBasics.previousValue !== changes.datasetBasics.currentValue) {
             this.currentPage = 1;
+            this.dataSource.data = [];
             this.datasetAsCollectionService.emitLoadingCollectionChanged(true);
             this.loadCollectionDataSubject$.next({ path: this.pathPrefix, page: this.currentPage });
             this.loadDatasetAsCollection();

@@ -231,6 +231,7 @@ export class AppComponent extends BaseComponent implements OnInit {
             .addSvgIcon("image-file", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/image-file.svg"))
             .addSvgIcon("pdf-file", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/pdf-file.svg"))
             .addSvgIcon("txt-file", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/txt-file.svg"))
+            .addSvgIcon("mp3-file", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/mp3-file.svg"))
             .addSvgIcon(
                 "collection-folder",
                 this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/collection-folder.svg"),

@@ -54,6 +54,7 @@ export function getFileIconHelper(contentType: string): string {
 
     if (contentType.startsWith("image/")) return "image-file";
     if (contentType.startsWith("video/")) return "video-file";
+    if (contentType.startsWith("audio/")) return "mp3-file";
 
     switch (contentType) {
         case "application/pdf":

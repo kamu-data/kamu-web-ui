@@ -7,10 +7,13 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { BehaviorSubject, map, Observable } from "rxjs";
+import { BehaviorSubject, filter, finalize, map, Observable, switchMap } from "rxjs";
 
 import { DatasetApi } from "@api/dataset.api";
 import { CollectionEntryConnection, DatasetAsCollectionQuery } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
+import { LoadCollectionDataParams } from "../components/collection-view/collection-view.model";
 
 @Injectable({
     providedIn: "root",
@@ -38,7 +41,17 @@ export class DatasetAsCollectionService {
         return this.loadingOnScroll$.asObservable();
     }
 
-    public requestDatasetAsCollection(params: {
+    private loadCollectionDataSubject$ = new BehaviorSubject<MaybeNull<LoadCollectionDataParams>>(null);
+
+    public loadCollectionDataChange(data: MaybeNull<LoadCollectionDataParams>): void {
+        return this.loadCollectionDataSubject$.next(data);
+    }
+
+    public get loadCollectionData$(): Observable<MaybeNull<LoadCollectionDataParams>> {
+        return this.loadCollectionDataSubject$.asObservable();
+    }
+
+    private requestDatasetAsCollection(params: {
         datasetId: string;
         pathPrefix: string;
         maxDepth?: number;
@@ -49,6 +62,25 @@ export class DatasetAsCollectionService {
             map((result: DatasetAsCollectionQuery) => {
                 return result.datasets.byId?.asCollection?.latest.entries as CollectionEntryConnection;
             }),
+        );
+    }
+
+    public loadCollectionInfo(datasetId: string, perPage: number): Observable<CollectionEntryConnection> {
+        return this.loadCollectionData$.pipe(
+            filter((params) => params !== null),
+            switchMap((params) =>
+                this.requestDatasetAsCollection({
+                    datasetId,
+                    pathPrefix: params.path,
+                    page: params.page - 1,
+                    perPage,
+                }).pipe(
+                    finalize(() => {
+                        this.emitLoadingCollectionChanged(false);
+                        this.emitLoadingOnScrollChanged(false);
+                    }),
+                ),
+            ),
         );
     }
 }

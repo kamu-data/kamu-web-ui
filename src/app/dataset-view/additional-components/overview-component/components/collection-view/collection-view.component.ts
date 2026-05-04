@@ -16,7 +16,18 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { Router } from "@angular/router";
 
-import { BehaviorSubject, buffer, debounceTime, filter, finalize, map, Observable, Subject, switchMap } from "rxjs";
+import {
+    BehaviorSubject,
+    buffer,
+    debounceTime,
+    filter,
+    finalize,
+    map,
+    Observable,
+    Subject,
+    switchMap,
+    tap,
+} from "rxjs";
 
 import { InfiniteScrollDirective } from "ngx-infinite-scroll";
 import { ToastrService } from "ngx-toastr";
@@ -70,7 +81,6 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     public collectionInfo$: Observable<CollectionEntryConnection>;
     public loadingCollection$: Observable<boolean>;
     public loadingOnScroll$: Observable<boolean>;
-    private loadCollectionDataSubject$ = new BehaviorSubject<MaybeNull<LoadCollectionDataParams>>(null);
     private click$ = new Subject<string>();
 
     public currentPage: number = 1;
@@ -114,15 +124,11 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             });
     }
 
-    public get loadCollectionData$(): Observable<{ path: string; page: number } | null> {
-        return this.loadCollectionDataSubject$.asObservable();
-    }
-
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.datasetBasics && changes.datasetBasics.previousValue !== changes.datasetBasics.currentValue) {
             this.resetTableView();
             this.datasetAsCollectionService.emitLoadingCollectionChanged(true);
-            this.loadCollectionDataSubject$.next({ path: this.pathPrefix, page: this.currentPage });
+            this.datasetAsCollectionService.loadCollectionDataChange({ path: this.pathPrefix, page: this.currentPage });
             this.loadDatasetAsCollection();
         }
     }
@@ -133,35 +139,20 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
         }
         this.currentPage++;
         this.datasetAsCollectionService.emitLoadingOnScrollChanged(true);
-        this.loadCollectionDataSubject$.next({ path: this.pathPrefix, page: this.currentPage });
+        this.datasetAsCollectionService.loadCollectionDataChange({ path: this.pathPrefix, page: this.currentPage });
     }
 
     private loadDatasetAsCollection(): void {
-        this.collectionInfo$ = this.loadCollectionData$.pipe(
-            filter((params) => params !== null),
-            switchMap((params) =>
-                this.datasetAsCollectionService
-                    .requestDatasetAsCollection({
-                        datasetId: this.datasetBasics.id,
-                        pathPrefix: params.path,
-                        page: params.page - 1,
-                        perPage: this.perPage,
-                    })
-                    .pipe(
-                        map((result) => {
-                            this.isAllDataLoaded = !result.pageInfo.hasNextPage;
-                            const nodes = sortCollectionEntryData(result.nodes, this.maxDepth);
-                            this.prepareDisplayColumns(result.nodes);
-                            this.dataSource.data = [...this.dataSource.data, ...nodes];
-                            return result;
-                        }),
-                        finalize(() => {
-                            this.datasetAsCollectionService.emitLoadingCollectionChanged(false);
-                            this.datasetAsCollectionService.emitLoadingOnScrollChanged(false);
-                        }),
-                    ),
-            ),
-        );
+        this.collectionInfo$ = this.datasetAsCollectionService
+            .loadCollectionInfo(this.datasetBasics.id, this.perPage)
+            .pipe(
+                tap((result) => {
+                    this.isAllDataLoaded = !result.pageInfo.hasNextPage;
+                    const nodes = sortCollectionEntryData(result.nodes, this.maxDepth);
+                    this.prepareDisplayColumns(result.nodes);
+                    this.dataSource.data = [...this.dataSource.data, ...nodes];
+                }),
+            );
     }
 
     private prepareDisplayColumns(nodes: CollectionEntry[]): void {
@@ -192,7 +183,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             this.currentPage = 1;
             this.dataSource.data = [];
             this.datasetAsCollectionService.emitLoadingCollectionChanged(true);
-            this.loadCollectionDataSubject$.next({ path: this.pathPrefix, page: this.currentPage });
+            this.datasetAsCollectionService.loadCollectionDataChange({ path: this.pathPrefix, page: this.currentPage });
         } else {
             const urlTree = this.router.createUrlTree([row.asDataset?.alias]);
             const url = this.router.serializeUrl(urlTree);
@@ -207,10 +198,10 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
         this.currentPage = 1;
         this.dataSource.data = [];
         this.datasetAsCollectionService.emitLoadingCollectionChanged(true);
-        this.loadCollectionDataSubject$.next({ path: this.pathPrefix, page: this.currentPage });
+        this.datasetAsCollectionService.loadCollectionDataChange({ path: this.pathPrefix, page: this.currentPage });
     }
 
-    public onEventClick(value: string, isFolder: boolean) {
+    public onCellEventClick(value: string, isFolder: boolean) {
         if (!isFolder) {
             this.click$.next(value);
         }

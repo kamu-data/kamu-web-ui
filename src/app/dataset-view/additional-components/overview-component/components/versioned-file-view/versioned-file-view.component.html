@@ -38,6 +38,10 @@
                 <img [src]="urlContentPath" class="preview-img" />
             </div>
 
+            <div *ngSwitchCase="'svg'" class="text-center box p-4 mt-4 bg-light">
+                <mat-icon svgIcon="custom-svg" class="preview-svg"></mat-icon>
+            </div>
+
             <div *ngSwitchCase="'json'" class="box p-2 bg-light mt-4">
                 <pre *ngIf="contentText$ | async as contentJson"> {{ contentJson | json }}</pre>
             </div>

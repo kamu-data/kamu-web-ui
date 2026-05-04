@@ -5,8 +5,19 @@
  * included in the LICENSE file.
  */
 
+import { Clipboard } from "@angular/cdk/clipboard";
 import { AsyncPipe, DatePipe, NgFor, NgIf, SlicePipe } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    inject,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+} from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
@@ -14,10 +25,12 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { Router } from "@angular/router";
 
-import { BehaviorSubject, filter, finalize, map, Observable, switchMap } from "rxjs";
+import { BehaviorSubject, buffer, debounceTime, filter, finalize, map, Observable, Subject, switchMap } from "rxjs";
 
 import { InfiniteScrollDirective } from "ngx-infinite-scroll";
+import { ToastrService } from "ngx-toastr";
 
+import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ondestroy.adapter";
 import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 import AppValues from "@common/values/app.values";
 import {
@@ -57,7 +70,7 @@ import { CollectionEntryViewType, LoadCollectionDataParams } from "./collection-
     styleUrl: "./collection-view.component.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionViewComponent implements OnChanges, OnInit {
+export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implements OnChanges, OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
 
     public dataSource = new MatTableDataSource<CollectionEntryViewType>();
@@ -65,6 +78,7 @@ export class CollectionViewComponent implements OnChanges, OnInit {
     public loadingCollection$: Observable<boolean>;
     public loadingOnScroll$: Observable<boolean>;
     private loadCollectionDataSubject$ = new BehaviorSubject<MaybeNull<LoadCollectionDataParams>>(null);
+    private click$ = new Subject<string>();
 
     public currentPage: number = 1;
     public pathPrefix = "/";
@@ -80,10 +94,31 @@ export class CollectionViewComponent implements OnChanges, OnInit {
 
     private datasetAsCollectionService = inject(DatasetAsCollectionService);
     private router = inject(Router);
+    private toastr = inject(ToastrService);
+    private clipboard = inject(Clipboard);
 
     public ngOnInit(): void {
         this.loadingCollection$ = this.datasetAsCollectionService.loadingCollectionChanges;
         this.loadingOnScroll$ = this.datasetAsCollectionService.loadingOnScrollChanges;
+        this.initClickListeners();
+    }
+
+    private initClickListeners(): void {
+        this.click$
+            .pipe(
+                buffer(this.click$.pipe(debounceTime(250))),
+                map((clicks: string[]) => ({
+                    count: clicks.length,
+                    text: clicks[0], // Take the text from the first click
+                })),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(({ count, text }) => {
+                if (count === 1) {
+                    this.clipboard.copy(text);
+                    this.toastr.success(`Copied`);
+                }
+            });
     }
 
     public get loadCollectionData$(): Observable<{ path: string; page: number } | null> {
@@ -184,6 +219,12 @@ export class CollectionViewComponent implements OnChanges, OnInit {
         this.dataSource.data = [];
         this.datasetAsCollectionService.emitLoadingCollectionChanged(true);
         this.loadCollectionDataSubject$.next({ path: this.pathPrefix, page: this.currentPage });
+    }
+
+    onEventClick(value: string, isFolder: boolean) {
+        if (!isFolder) {
+            this.click$.next(value);
+        }
     }
 
     private resetTableView(): void {

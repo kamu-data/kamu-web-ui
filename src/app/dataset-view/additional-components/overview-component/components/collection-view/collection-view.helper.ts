@@ -49,24 +49,6 @@ export function sortCollectionEntryData(
     return result;
 }
 
-export function getFileIconHelper(contentType: string): string {
-    if (!contentType) return "default-file";
-
-    if (contentType.startsWith("image/")) return "image-file";
-    if (contentType.startsWith("video/")) return "video-file";
-    if (contentType.startsWith("audio/")) return "mp3-file";
-
-    switch (contentType) {
-        case "application/pdf":
-            return "pdf-file";
-        case "text/plain":
-            return "txt-file";
-
-        default:
-            return "default-file";
-    }
-}
-
 export function getCollectionValueHelper(value: unknown): string {
     if (Array.isArray(value)) {
         return value.length > 0 ? value.join(", ") : "-";

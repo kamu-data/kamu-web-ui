@@ -42,7 +42,7 @@
                         <div *ngIf="!element.isFolder" class="d-flex align-items-center">
                             <mat-icon
                                 class="me-2"
-                                [svgIcon]="getFileIconHelper(element.asDataset.asVersionedFile.latest.contentType)"
+                                [svgIcon]="element.asDataset.asVersionedFile.latest.contentType | previewFileType"
                             ></mat-icon>
                             <span class="truncate-cell file-name">{{ element.displayName }}</span>
                         </div>

@@ -33,7 +33,8 @@ import {
 import { MaybeNull } from "@interface/app.types";
 
 import { DatasetAsCollectionService } from "../../services/dataset-as-collection.service";
-import { getCollectionValueHelper, getFileIconHelper, sortCollectionEntryData } from "./collection-view.helper";
+import { PreviewFileTypePipe } from "../versioned-file-view/pipes/preview-file-type.pipe";
+import { getCollectionValueHelper, sortCollectionEntryData } from "./collection-view.helper";
 import { CollectionEntryViewType, LoadCollectionDataParams } from "./collection-view.model";
 
 @Component({
@@ -56,6 +57,7 @@ import { CollectionEntryViewType, LoadCollectionDataParams } from "./collection-
 
         //-----//
         DisplaySizePipe,
+        PreviewFileTypePipe,
     ],
     templateUrl: "./collection-view.component.html",
     styleUrl: "./collection-view.component.scss",
@@ -181,10 +183,6 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
 
     public getValue(value: unknown): string {
         return getCollectionValueHelper(value);
-    }
-
-    public getFileIconHelper(contentType: string): string {
-        return getFileIconHelper(contentType);
     }
 
     public clickTableRow(row: CollectionEntryViewType): void {

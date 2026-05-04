@@ -223,15 +223,13 @@ export class AppComponent extends BaseComponent implements OnInit {
             .addSvgIcon("clarify", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/clarify.svg"))
             .addSvgIcon("folder", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/folder.svg"))
             .addSvgIcon("shift", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/shift.svg"))
-            .addSvgIcon(
-                "default-file",
-                this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/default-file.svg"),
-            )
-            .addSvgIcon("video-file", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/video-file.svg"))
-            .addSvgIcon("image-file", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/image-file.svg"))
-            .addSvgIcon("pdf-file", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/pdf-file.svg"))
-            .addSvgIcon("txt-file", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/txt-file.svg"))
-            .addSvgIcon("mp3-file", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/mp3-file.svg"))
+            .addSvgIcon("unknown", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/default-file.svg"))
+            .addSvgIcon("video", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/video-file.svg"))
+            .addSvgIcon("image", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/image-file.svg"))
+            .addSvgIcon("pdf", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/pdf-file.svg"))
+            .addSvgIcon("txt", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/txt-file.svg"))
+            .addSvgIcon("json", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/json-file.svg"))
+            .addSvgIcon("audio", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/mp3-file.svg"))
             .addSvgIcon(
                 "collection-folder",
                 this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/collection-folder.svg"),

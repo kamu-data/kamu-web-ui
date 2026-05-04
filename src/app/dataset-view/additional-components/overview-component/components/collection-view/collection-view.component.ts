@@ -7,16 +7,7 @@
 
 import { Clipboard } from "@angular/cdk/clipboard";
 import { AsyncPipe, DatePipe, NgFor, NgIf, SlicePipe } from "@angular/common";
-import {
-    ChangeDetectionStrategy,
-    Component,
-    DestroyRef,
-    inject,
-    Input,
-    OnChanges,
-    OnInit,
-    SimpleChanges,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -221,7 +212,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
         this.loadCollectionDataSubject$.next({ path: this.pathPrefix, page: this.currentPage });
     }
 
-    onEventClick(value: string, isFolder: boolean) {
+    public onEventClick(value: string, isFolder: boolean) {
         if (!isFolder) {
             this.click$.next(value);
         }

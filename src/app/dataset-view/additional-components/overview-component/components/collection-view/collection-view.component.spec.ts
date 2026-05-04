@@ -5,7 +5,11 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { Apollo } from "apollo-angular";
+import { provideToastr } from "ngx-toastr";
 
 import { CollectionViewComponent } from "./collection-view.component";
 
@@ -16,6 +20,7 @@ describe("CollectionViewComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [CollectionViewComponent],
+            providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi())],
         }).compileComponents();
 
         fixture = TestBed.createComponent(CollectionViewComponent);

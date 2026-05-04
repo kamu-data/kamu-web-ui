@@ -5489,7 +5489,13 @@ export type CollectionEntryDataFragment = {
         alias: string;
         asVersionedFile?: {
             __typename?: "VersionedFile";
-            latest?: { __typename?: "VersionedFileEntry"; contentType: string } | null;
+            latest?: {
+                __typename?: "VersionedFileEntry";
+                systemTime: string;
+                contentType: string;
+                contentLength: number;
+                contentHash: string;
+            } | null;
         } | null;
     } | null;
 };
@@ -8448,7 +8454,10 @@ export const CollectionEntryDataFragmentDoc = gql`
             alias
             asVersionedFile {
                 latest {
+                    systemTime
                     contentType
+                    contentLength
+                    contentHash
                 }
             }
         }

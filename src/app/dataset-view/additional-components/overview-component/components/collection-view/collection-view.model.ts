@@ -15,4 +15,7 @@ export interface LoadCollectionDataParams {
 export interface CollectionEntryViewType extends CollectionEntryDataFragment {
     isFolder: boolean;
     displayName: string;
+    systemTime: string;
+    hash?: string;
+    size?: number;
 }

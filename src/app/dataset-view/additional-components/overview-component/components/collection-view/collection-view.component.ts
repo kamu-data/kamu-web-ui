@@ -5,20 +5,23 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, NgFor, NgIf } from "@angular/common";
+import { AsyncPipe, DatePipe, NgFor, NgIf, SlicePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { Router, RouterLink } from "@angular/router";
+import { Router } from "@angular/router";
 
 import { BehaviorSubject, filter, finalize, map, Observable, switchMap } from "rxjs";
 
 import { InfiniteScrollDirective } from "ngx-infinite-scroll";
 
+import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
+import AppValues from "@common/values/app.values";
 import {
+    CollectionEntry,
     CollectionEntryConnection,
     CollectionEntryDataFragment,
     DatasetBasicsFragment,
@@ -32,10 +35,13 @@ import { CollectionEntryViewType, LoadCollectionDataParams } from "./collection-
 @Component({
     selector: "app-collection-view",
     imports: [
+        //-----//
         AsyncPipe,
+        DatePipe,
         NgIf,
         NgFor,
-        RouterLink,
+        SlicePipe,
+
         //-----//
         InfiniteScrollDirective,
         MatButtonModule,
@@ -45,6 +51,7 @@ import { CollectionEntryViewType, LoadCollectionDataParams } from "./collection-
         MatProgressSpinnerModule,
 
         //-----//
+        DisplaySizePipe,
     ],
     templateUrl: "./collection-view.component.html",
     styleUrl: "./collection-view.component.scss",
@@ -64,9 +71,12 @@ export class CollectionViewComponent implements OnChanges, OnInit {
     public maxDepth = 0;
     public isAllDataLoaded = false;
     public readonly perPage: number = 20;
+    public readonly INITIAL_DISPLAYED_COLUMNS: string[] = ["name", "systemTime", "hash", "size"];
 
-    public displayedColumns: string[] = ["name"];
+    public displayedColumns: string[] = [];
     public extraDataKeys: string[] = [];
+
+    public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
 
     private datasetAsCollectionService = inject(DatasetAsCollectionService);
     private router = inject(Router);
@@ -82,8 +92,7 @@ export class CollectionViewComponent implements OnChanges, OnInit {
 
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.datasetBasics && changes.datasetBasics.previousValue !== changes.datasetBasics.currentValue) {
-            this.currentPage = 1;
-            this.dataSource.data = [];
+            this.resetTableView();
             this.datasetAsCollectionService.emitLoadingCollectionChanged(true);
             this.loadCollectionDataSubject$.next({ path: this.pathPrefix, page: this.currentPage });
             this.loadDatasetAsCollection();
@@ -114,14 +123,7 @@ export class CollectionViewComponent implements OnChanges, OnInit {
                         map((result) => {
                             this.isAllDataLoaded = !result.pageInfo.hasNextPage;
                             const nodes = sortCollectionEntryData(result.nodes, this.maxDepth);
-                            this.extraDataKeys =
-                                nodes.length > 0
-                                    ? Object.keys(sortCollectionEntryData(result.nodes, this.maxDepth)[0].extraData)
-                                    : [];
-                            if (this.displayedColumns.length === 1) {
-                                this.displayedColumns = [...this.displayedColumns, ...this.extraDataKeys];
-                            }
-
+                            this.prepareDisplayColumns(result.nodes);
                             this.dataSource.data = [...this.dataSource.data, ...nodes];
                             return result;
                         }),
@@ -132,6 +134,19 @@ export class CollectionViewComponent implements OnChanges, OnInit {
                     ),
             ),
         );
+    }
+
+    private prepareDisplayColumns(nodes: CollectionEntry[]): void {
+        this.extraDataKeys =
+            nodes.length > 0 ? Object.keys(sortCollectionEntryData(nodes, this.maxDepth)[0].extraData) : [];
+
+        if (this.displayedColumns.length) {
+            this.displayedColumns = [...this.INITIAL_DISPLAYED_COLUMNS, ...this.extraDataKeys];
+        }
+        if (this.extraDataKeys.includes("content_length")) {
+            const filteredColumns = this.displayedColumns.filter((item) => item !== "hash" && item !== "size");
+            this.displayedColumns = filteredColumns;
+        }
     }
 
     public displayNodes(nodes: CollectionEntryDataFragment[]): CollectionEntryViewType[] {
@@ -169,5 +184,11 @@ export class CollectionViewComponent implements OnChanges, OnInit {
         this.dataSource.data = [];
         this.datasetAsCollectionService.emitLoadingCollectionChanged(true);
         this.loadCollectionDataSubject$.next({ path: this.pathPrefix, page: this.currentPage });
+    }
+
+    private resetTableView(): void {
+        this.currentPage = 1;
+        this.dataSource.data = [];
+        this.displayedColumns = this.INITIAL_DISPLAYED_COLUMNS;
     }
 }

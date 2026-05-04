@@ -8,7 +8,10 @@ fragment CollectionEntryData on CollectionEntry {
     alias
     asVersionedFile {
       latest {
+        systemTime
         contentType
+        contentLength
+        contentHash
       }
     }
   }

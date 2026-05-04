@@ -16,35 +16,35 @@ export function sortCollectionEntryData(
     const result: CollectionEntryViewType[] = [];
     let lastFolder = "";
 
-    // Sort: folders first, then files + alphabetical
-    const sorted = [...nodes].sort((a, b) => {
-        const segmentsA = a.path.split("/").filter(Boolean);
-        const segmentsB = b.path.split("/").filter(Boolean);
-
-        const isFolderA = segmentsA.length > 1;
-        const isFolderB = segmentsB.length > 1;
-
-        // 1. Prioritize folders
-        if (isFolderA && !isFolderB) return -1;
-        if (!isFolderA && isFolderB) return 1;
-
-        // 2. If both are folders or both are files, sort alphabetically.
-        return a.path.localeCompare(b.path);
-    });
-
     // Grouping for displaying the folder header once
-    sorted.forEach((node) => {
+    nodes.forEach((node: CollectionEntryDataFragment) => {
         const segments = node.path.split("/").filter(Boolean);
         if (segments.length > maxDepth + 1) {
             const currentFolder = segments[maxDepth];
             if (currentFolder !== lastFolder) {
-                result.push({ ...node, isFolder: true, displayName: currentFolder });
+                result.push({
+                    ...node,
+                    isFolder: true,
+                    displayName: currentFolder,
+                    systemTime: node.systemTime,
+                    size: node.asDataset?.asVersionedFile?.latest?.contentLength,
+                    hash: node.asDataset?.asVersionedFile?.latest?.contentHash,
+                });
                 lastFolder = currentFolder;
             }
         } else {
-            result.push({ ...node, isFolder: false, displayName: segments[maxDepth] });
+            result.push({
+                ...node,
+                isFolder: false,
+                displayName: segments[maxDepth],
+                systemTime: node.systemTime,
+                size: node.asDataset?.asVersionedFile?.latest?.contentLength,
+                hash: node.asDataset?.asVersionedFile?.latest?.contentHash,
+            });
         }
     });
+    // Sort: folders first
+    result.sort((a: CollectionEntryViewType, b: CollectionEntryViewType) => Number(b.isFolder) - Number(a.isFolder));
 
     return result;
 }

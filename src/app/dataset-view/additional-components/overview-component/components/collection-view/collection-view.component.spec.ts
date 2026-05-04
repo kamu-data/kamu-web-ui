@@ -11,6 +11,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+
 import { CollectionViewComponent } from "./collection-view.component";
 
 describe("CollectionViewComponent", () => {
@@ -22,6 +24,8 @@ describe("CollectionViewComponent", () => {
             imports: [CollectionViewComponent],
             providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi())],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(CollectionViewComponent);
         component = fixture.componentInstance;

@@ -16,18 +16,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { Router } from "@angular/router";
 
-import {
-    BehaviorSubject,
-    buffer,
-    debounceTime,
-    filter,
-    finalize,
-    map,
-    Observable,
-    Subject,
-    switchMap,
-    tap,
-} from "rxjs";
+import { buffer, debounceTime, map, Observable, Subject, tap } from "rxjs";
 
 import { InfiniteScrollDirective } from "ngx-infinite-scroll";
 import { ToastrService } from "ngx-toastr";
@@ -41,12 +30,11 @@ import {
     CollectionEntryDataFragment,
     DatasetBasicsFragment,
 } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
 
 import { DatasetAsCollectionService } from "../../services/dataset-as-collection.service";
 import { PreviewFileTypePipe } from "../versioned-file-view/pipes/preview-file-type.pipe";
 import { getCollectionValueHelper, sortCollectionEntryData } from "./collection-view.helper";
-import { CollectionEntryViewType, LoadCollectionDataParams } from "./collection-view.model";
+import { CollectionEntryViewType } from "./collection-view.model";
 
 @Component({
     selector: "app-collection-view",

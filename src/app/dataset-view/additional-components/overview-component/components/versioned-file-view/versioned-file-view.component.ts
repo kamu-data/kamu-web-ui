@@ -131,7 +131,6 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
                 }
 
                 case "svg":
-                    console.log("work");
                     this.iconRegistry.addSvgIcon(
                         "custom-svg",
                         this.sanitizer.bypassSecurityTrustResourceUrl(contentUrl.url),

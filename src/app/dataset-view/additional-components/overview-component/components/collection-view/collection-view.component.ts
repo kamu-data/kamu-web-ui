@@ -74,9 +74,9 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     private click$ = new Subject<string>();
 
     public currentPage: number = 1;
-    public pathPrefix = "/";
-    public maxDepth = 0;
-    public isAllDataLoaded = false;
+    public pathPrefix: string = "/";
+    public maxDepth: number = 0;
+    public isAllDataLoaded: boolean = false;
     public readonly perPage: number = 20;
     public readonly INITIAL_DISPLAYED_COLUMNS: string[] = ["name", "systemTime", "hash", "size"];
 

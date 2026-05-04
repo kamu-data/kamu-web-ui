@@ -344,32 +344,38 @@
                             </div>
                         </div>
                     </div>
-                    <div class="dataset-info--block">
-                        <div class="dataset-info--sub-block d-flex align-items-center">
-                            <mat-icon class="fs-4 mr-2">folder_open</mat-icon>
-                            <h2 class="dataset-info--subtitle">Estimated Size:</h2>
+                    <ng-container *ngIf="viewMode === OverviewTabMode.Table">
+                        <div class="dataset-info--block">
+                            <div class="dataset-info--sub-block d-flex align-items-center">
+                                <mat-icon class="fs-4 mr-2">folder_open</mat-icon>
+                                <h2 class="dataset-info--subtitle">Estimated Size:</h2>
+                            </div>
+                            <div class="dataset-info--sub-block">
+                                <p class="dataset-info--text">
+                                    {{
+                                        datasetOverviewTabData.overviewUpdate.size.estimatedSizeBytes
+                                            ? (datasetOverviewTabData.overviewUpdate.size.estimatedSizeBytes
+                                              | displaySize)
+                                            : "-"
+                                    }}
+                                </p>
+                            </div>
                         </div>
-                        <div class="dataset-info--sub-block">
-                            <p class="dataset-info--text">
-                                {{
-                                    datasetOverviewTabData.overviewUpdate.size.estimatedSizeBytes
-                                        ? (datasetOverviewTabData.overviewUpdate.size.estimatedSizeBytes | displaySize)
-                                        : "-"
-                                }}
-                            </p>
+                        <div class="dataset-info--block mt-1">
+                            <div class="dataset-info--sub-block d-flex align-items-center">
+                                <mat-icon class="fs-4 mr-3"> format_line_spacing </mat-icon>
+                                <h2 class="dataset-info--subtitle">Records:</h2>
+                            </div>
+                            <div class="dataset-info--sub-block">
+                                <p class="dataset-info--text">
+                                    {{
+                                        datasetOverviewTabData.overviewUpdate.size.numRecordsTotal || 0
+                                            | number: "1.0-0"
+                                    }}
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="dataset-info--block mt-1">
-                        <div class="dataset-info--sub-block d-flex align-items-center">
-                            <mat-icon class="fs-4 mr-3"> format_line_spacing </mat-icon>
-                            <h2 class="dataset-info--subtitle">Records:</h2>
-                        </div>
-                        <div class="dataset-info--sub-block">
-                            <p class="dataset-info--text">
-                                {{ datasetOverviewTabData.overviewUpdate.size.numRecordsTotal || 0 | number: "1.0-0" }}
-                            </p>
-                        </div>
-                    </div>
+                    </ng-container>
                     <div class="dataset-info--block" *ngIf="datasetOverviewTabData.overviewUpdate">
                         <div class="dataset-info--sub-block d-flex align-items-center">
                             <mat-icon class="fs-4 mr-3">more_time</mat-icon>

@@ -4,7 +4,7 @@
 </div>
 
 <div *ngIf="collectionInfo$ | async as collectionEntry">
-    <div *ngIf="collectionEntry.totalCount; else emptyCollection">
+    <div class="mb-4" *ngIf="collectionEntry.totalCount; else emptyCollection">
         <div
             *ngIf="!(loadingCollection$ | async)"
             class="border border-start-0 border-end-0 border-top-0"
@@ -94,6 +94,10 @@
 
                 <tr mat-row (dblclick)="clickTableRow(row)" *matRowDef="let row; columns: displayedColumns"></tr>
             </table>
+        </div>
+
+        <div class="d-flex justify-content-end mt-4">
+            <span class="fw-bold">Total files: {{ collectionEntry.totalCount }}</span>
         </div>
     </div>
     <ng-template #emptyCollection>

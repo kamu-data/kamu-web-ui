@@ -18,29 +18,31 @@ export function sortCollectionEntryData(
 
     // Grouping for displaying the folder header once
     nodes.forEach((node: CollectionEntryDataFragment) => {
-        const segments = node.path.split("/").filter(Boolean);
-        if (segments.length > maxDepth + 1) {
-            const currentFolder = segments[maxDepth];
-            if (currentFolder !== lastFolder) {
+        if (node.asDataset) {
+            const segments = node.path.split("/").filter(Boolean);
+            if (segments.length > maxDepth + 1) {
+                const currentFolder = segments[maxDepth];
+                if (currentFolder !== lastFolder) {
+                    result.push({
+                        ...node,
+                        isFolder: true,
+                        displayName: currentFolder,
+                        systemTime: node.systemTime,
+                        size: node.asDataset?.asVersionedFile?.latest?.contentLength,
+                        hash: node.asDataset?.asVersionedFile?.latest?.contentHash,
+                    });
+                    lastFolder = currentFolder;
+                }
+            } else {
                 result.push({
                     ...node,
-                    isFolder: true,
-                    displayName: currentFolder,
+                    isFolder: false,
+                    displayName: segments[maxDepth],
                     systemTime: node.systemTime,
                     size: node.asDataset?.asVersionedFile?.latest?.contentLength,
                     hash: node.asDataset?.asVersionedFile?.latest?.contentHash,
                 });
-                lastFolder = currentFolder;
             }
-        } else {
-            result.push({
-                ...node,
-                isFolder: false,
-                displayName: segments[maxDepth],
-                systemTime: node.systemTime,
-                size: node.asDataset?.asVersionedFile?.latest?.contentLength,
-                hash: node.asDataset?.asVersionedFile?.latest?.contentHash,
-            });
         }
     });
     // Sort: folders first

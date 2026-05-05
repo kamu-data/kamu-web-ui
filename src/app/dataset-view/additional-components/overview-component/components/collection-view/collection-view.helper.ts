@@ -28,8 +28,6 @@ export function sortCollectionEntryData(
                         isFolder: true,
                         displayName: currentFolder,
                         systemTime: node.systemTime,
-                        size: node.asDataset?.asVersionedFile?.latest?.contentLength,
-                        hash: node.asDataset?.asVersionedFile?.latest?.contentHash,
                     });
                     lastFolder = currentFolder;
                 }
@@ -39,8 +37,6 @@ export function sortCollectionEntryData(
                     isFolder: false,
                     displayName: segments[maxDepth],
                     systemTime: node.systemTime,
-                    size: node.asDataset?.asVersionedFile?.latest?.contentLength,
-                    hash: node.asDataset?.asVersionedFile?.latest?.contentHash,
                 });
             }
         }

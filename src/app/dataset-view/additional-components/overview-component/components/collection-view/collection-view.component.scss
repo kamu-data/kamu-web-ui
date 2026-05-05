@@ -5,8 +5,20 @@
     text-overflow: ellipsis;
 }
 
+.truncate-path {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
 .mat-mdc-row,
-.up-row {
+.mat-mdc-row .up-row {
+    height: 34px;
     &:hover {
         background-color: rgb(0 0 0 / 3%);
         cursor: pointer;
@@ -16,4 +28,19 @@
 .file-name {
     color: #000;
     text-decoration: none;
+}
+
+.file-icon {
+    transform: scale(0.8);
+}
+
+.mat-mdc-header-row {
+    height: 34px;
+    font-size: 12px;
+
+    .up-row {
+        &:hover {
+            cursor: pointer;
+        }
+    }
 }

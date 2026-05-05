@@ -5480,13 +5480,13 @@ export type DatasetAsCollectionQuery = {
 export type CollectionEntryDataFragment = {
     __typename?: "CollectionEntry";
     systemTime: string;
-    eventTime: string;
     path: string;
     ref: string;
     extraData: string;
     asDataset?: {
         __typename?: "Dataset";
         alias: string;
+        owner: { __typename?: "Account"; accountName: string; avatarUrl?: string | null };
         asVersionedFile?: {
             __typename?: "VersionedFile";
             latest?: {
@@ -8446,12 +8446,15 @@ export const AccountWithEmailFragmentDoc = gql`
 export const CollectionEntryDataFragmentDoc = gql`
     fragment CollectionEntryData on CollectionEntry {
         systemTime
-        eventTime
         path
         ref
         extraData
         asDataset {
             alias
+            owner {
+                accountName
+                avatarUrl
+            }
             asVersionedFile {
                 latest {
                     systemTime

@@ -25,7 +25,7 @@
                     >
                         <div class="d-flex align-items-center cursor-pointer" [title]="pathPrefix">
                             <mat-icon class="file-icon" svgIcon="shift"></mat-icon>
-                            <span class="ms-2 truncate-path d-block fw-bold">{{ pathPrefix }}</span>
+                            <span class="ms-2 truncate-path d-block fw-500">{{ pathPrefix }}</span>
                         </div>
                     </th>
                 </ng-container>
@@ -60,6 +60,20 @@
                         </div>
                     </td>
                 </ng-container>
+                <!-- Owner Column -->
+                <ng-container matColumnDef="owner">
+                    <th mat-header-cell *matHeaderCellDef>owner</th>
+                    <td
+                        mat-cell
+                        *matCellDef="let element"
+                        (click)="onCellEventClick(element.asDataset?.owner.accountName, element.isFolder)"
+                    >
+                        <div *ngIf="!element.isFolder" class="d-flex align-items-center">
+                            <img class="img-creator" [src]="element.asDataset?.owner.avatarUrl ?? DEFAULT_AVATAR_URL" />
+                            <span class="ms-2 truncate-path d-block"> {{ element.asDataset?.owner.accountName }}</span>
+                        </div>
+                    </td>
+                </ng-container>
                 <!-- ContentHash Column -->
                 <ng-container matColumnDef="hash">
                     <th mat-header-cell *matHeaderCellDef>content hash</th>
@@ -88,12 +102,15 @@
                 <ng-container *ngFor="let col of extraDataKeys" [matColumnDef]="col">
                     <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
                     <td
-                        class="truncate-cell"
                         mat-cell
                         *matCellDef="let element"
                         (click)="onCellEventClick(getValue(element.extraData[col]), element.isFolder)"
                     >
-                        <span *ngIf="!element.isFolder"> {{ getValue(element.extraData[col]) }}</span>
+                        <div class="d-flex align-items-center">
+                            <span class="truncate-cell" *ngIf="!element.isFolder">
+                                {{ getValue(element.extraData[col]) }}</span
+                            >
+                        </div>
                     </td>
                 </ng-container>
 

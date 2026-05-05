@@ -3,6 +3,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    margin-top: 3px;
 }
 
 .truncate-path {
@@ -10,6 +11,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    margin-top: 3px;
 
     &:hover {
         cursor: pointer;
@@ -40,7 +42,14 @@
 
     .up-row {
         &:hover {
+            background-color: rgb(0 0 0 / 3%);
             cursor: pointer;
         }
     }
+}
+
+.img-creator {
+    width: 18px;
+    height: 18px;
+    object-fit: cover;
 }

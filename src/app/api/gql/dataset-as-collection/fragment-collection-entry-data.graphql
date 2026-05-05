@@ -1,11 +1,14 @@
 fragment CollectionEntryData on CollectionEntry {
   systemTime
-  eventTime
   path
   ref
   extraData
   asDataset {
     alias
+    owner {
+      accountName
+      avatarUrl
+    }
     asVersionedFile {
       latest {
         systemTime

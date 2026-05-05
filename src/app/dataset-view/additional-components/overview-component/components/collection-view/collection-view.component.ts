@@ -76,7 +76,8 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     public maxDepth: number = 0;
     public isAllDataLoaded: boolean = false;
     public readonly perPage: number = 20;
-    public readonly INITIAL_DISPLAYED_COLUMNS: string[] = ["name", "systemTime", "hash", "size"];
+    public readonly INITIAL_DISPLAYED_COLUMNS: string[] = ["name", "systemTime", "owner", "hash", "size"];
+    public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 
     public displayedColumns: string[] = [];
     public extraDataKeys: string[] = [];

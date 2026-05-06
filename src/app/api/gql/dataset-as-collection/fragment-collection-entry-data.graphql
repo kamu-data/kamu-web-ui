@@ -9,6 +9,10 @@ fragment CollectionEntryData on CollectionEntry {
       accountName
       avatarUrl
     }
+    head
+    data {
+      estimatedSizeBytes
+    }
     asVersionedFile {
       latest {
         systemTime

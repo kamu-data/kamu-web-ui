@@ -5486,7 +5486,9 @@ export type CollectionEntryDataFragment = {
     asDataset?: {
         __typename?: "Dataset";
         alias: string;
+        head: string;
         owner: { __typename?: "Account"; accountName: string; avatarUrl?: string | null };
+        data: { __typename?: "DatasetData"; estimatedSizeBytes: number };
         asVersionedFile?: {
             __typename?: "VersionedFile";
             latest?: {
@@ -8454,6 +8456,10 @@ export const CollectionEntryDataFragmentDoc = gql`
             owner {
                 accountName
                 avatarUrl
+            }
+            head
+            data {
+                estimatedSizeBytes
             }
             asVersionedFile {
                 latest {

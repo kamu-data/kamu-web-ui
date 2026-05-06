@@ -5,7 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { CollectionEntryDataFragment } from "@api/kamu.graphql.interface";
+import { CollectionEntryConnection, CollectionEntryDataFragment, DatasetArchetype } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 export interface LoadCollectionDataParams {
     path: string;
@@ -13,7 +14,10 @@ export interface LoadCollectionDataParams {
 }
 
 export interface CollectionEntryViewType extends CollectionEntryDataFragment {
-    isFolder: boolean;
+    archetype: MaybeNull<DatasetArchetype>;
     displayName: string;
     systemTime: string;
+    hash: string;
+    size: number;
+    contentType: MaybeNull<string>;
 }

@@ -28,8 +28,12 @@ import {
     CollectionEntry,
     CollectionEntryConnection,
     CollectionEntryDataFragment,
+    DatasetArchetype,
     DatasetBasicsFragment,
 } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
+
+import { DatasetService } from "src/app/dataset-view/dataset.service";
 
 import { DatasetAsCollectionService } from "../../services/dataset-as-collection.service";
 import { PreviewFileTypePipe } from "../versioned-file-view/pipes/preview-file-type.pipe";
@@ -75,9 +79,13 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     public pathPrefix: string = "/";
     public maxDepth: number = 0;
     public isAllDataLoaded: boolean = false;
+    public selectedRow: CollectionEntryViewType | null = null;
     public readonly perPage: number = 20;
     public readonly INITIAL_DISPLAYED_COLUMNS: string[] = ["name", "systemTime", "owner", "hash", "size"];
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
+    public readonly DatasetArchetype: typeof DatasetArchetype = DatasetArchetype;
+    public cashEntries: Map<string, CollectionEntryViewType[]> = new Map();
+    public currentHead: string;
 
     public displayedColumns: string[] = [];
     public extraDataKeys: string[] = [];
@@ -88,6 +96,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     private router = inject(Router);
     private toastr = inject(ToastrService);
     private clipboard = inject(Clipboard);
+    private datasetService = inject(DatasetService);
 
     public ngOnInit(): void {
         this.loadingCollection$ = this.datasetAsCollectionService.loadingCollectionChanges;
@@ -108,7 +117,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             .subscribe(({ count, text }) => {
                 if (count === 1) {
                     this.clipboard.copy(text);
-                    this.toastr.success(`Copied`);
+                    this.toastr.success(`Copied`, "", { timeOut: 1000 });
                 }
             });
     }
@@ -116,8 +125,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.datasetBasics && changes.datasetBasics.previousValue !== changes.datasetBasics.currentValue) {
             this.resetTableView();
-            this.datasetAsCollectionService.emitLoadingCollectionChanged(true);
-            this.datasetAsCollectionService.loadCollectionDataChange({ path: this.pathPrefix, page: this.currentPage });
+            this.triggerLoadCollection();
             this.loadDatasetAsCollection();
         }
     }
@@ -127,19 +135,22 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             return;
         }
         this.currentPage++;
-        this.datasetAsCollectionService.emitLoadingOnScrollChanged(true);
-        this.datasetAsCollectionService.loadCollectionDataChange({ path: this.pathPrefix, page: this.currentPage });
+        this.triggerLoadCollection();
     }
 
     private loadDatasetAsCollection(): void {
         this.collectionInfo$ = this.datasetAsCollectionService
             .loadCollectionInfo(this.datasetBasics.id, this.perPage)
             .pipe(
-                tap((result) => {
+                map((result) => {
                     this.isAllDataLoaded = !result.pageInfo.hasNextPage;
                     const nodes = sortCollectionEntryData(result.nodes, this.maxDepth);
                     this.prepareDisplayColumns(result.nodes);
+                    if (result.totalCount !== this.dataSource.data.length) {
+                        this.cashEntries.set(this.pathPrefix, [...this.dataSource.data, ...nodes]);
+                    }
                     this.dataSource.data = [...this.dataSource.data, ...nodes];
+                    return result;
                 }),
             );
     }
@@ -165,19 +176,26 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
         return getCollectionValueHelper(value);
     }
 
-    public clickTableRow(row: CollectionEntryViewType): void {
-        if (row.isFolder) {
+    public isRowSelected(row: CollectionEntryViewType): boolean {
+        return this.selectedRow === row;
+    }
+
+    public dbClickTableRow(row: CollectionEntryViewType): void {
+        if (row.archetype === DatasetArchetype.Collection) {
             this.pathPrefix += `${this.maxDepth === 0 ? row.displayName : "/" + row.displayName}`;
             this.maxDepth += 1;
             this.currentPage = 1;
             this.dataSource.data = [];
-            this.datasetAsCollectionService.emitLoadingCollectionChanged(true);
-            this.datasetAsCollectionService.loadCollectionDataChange({ path: this.pathPrefix, page: this.currentPage });
+            this.checkHeadAndLoadCollection();
         } else {
             const urlTree = this.router.createUrlTree([row.asDataset?.alias]);
             const url = this.router.serializeUrl(urlTree);
             window.open(url, "_blank");
         }
+    }
+
+    public clickTableRow(row: CollectionEntryViewType): void {
+        this.selectedRow = row;
     }
 
     public goUp(): void {
@@ -186,19 +204,42 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
         this.maxDepth -= 1;
         this.currentPage = 1;
         this.dataSource.data = [];
-        this.datasetAsCollectionService.emitLoadingCollectionChanged(true);
-        this.datasetAsCollectionService.loadCollectionDataChange({ path: this.pathPrefix, page: this.currentPage });
+        this.checkHeadAndLoadCollection();
     }
 
-    public onCellEventClick(value: string, isFolder: boolean) {
-        if (!isFolder) {
+    public onCellEventClick(value: string, archetype: MaybeNull<DatasetArchetype>) {
+        if (archetype !== DatasetArchetype.Collection) {
             this.click$.next(value);
         }
+    }
+
+    private triggerLoadCollection(): void {
+        this.datasetAsCollectionService.emitLoadingCollectionChanged(true);
+        this.datasetAsCollectionService.loadCollectionDataChange({ path: this.pathPrefix, page: this.currentPage });
     }
 
     private resetTableView(): void {
         this.currentPage = 1;
         this.dataSource.data = [];
         this.displayedColumns = this.INITIAL_DISPLAYED_COLUMNS;
+    }
+
+    private checkHeadAndLoadCollection(): void {
+        this.datasetAsCollectionService.emitLoadingCollectionChanged(true);
+        this.datasetService
+            .isHeadHashBlockChanged(this.datasetBasics)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((headChanged) => {
+                if (headChanged) {
+                    this.cashEntries.clear();
+                }
+                const casheKeyExist = this.cashEntries.has(this.pathPrefix);
+                if (casheKeyExist) {
+                    this.dataSource.data = this.cashEntries.get(this.pathPrefix) as CollectionEntryViewType[];
+                    this.datasetAsCollectionService.emitLoadingCollectionChanged(false);
+                } else {
+                    this.triggerLoadCollection();
+                }
+            });
     }
 }

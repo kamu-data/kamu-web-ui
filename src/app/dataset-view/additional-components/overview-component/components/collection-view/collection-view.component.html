@@ -33,15 +33,27 @@
                 <ng-container matColumnDef="name">
                     <th mat-header-cell *matHeaderCellDef>name</th>
                     <td mat-cell *matCellDef="let element">
-                        <div *ngIf="element.isFolder" class="d-flex align-items-center">
+                        <div
+                            *ngIf="element.archetype === DatasetArchetype.Collection"
+                            class="d-flex align-items-center"
+                        >
                             <mat-icon class="me-2 file-icon" [svgIcon]="'collection-folder'"></mat-icon>
                             <div class="truncate-cell">{{ element.displayName }}</div>
                         </div>
 
-                        <div *ngIf="!element.isFolder" class="d-flex align-items-center">
+                        <div
+                            *ngIf="element.archetype !== DatasetArchetype.Collection"
+                            class="d-flex align-items-center"
+                        >
                             <mat-icon
                                 class="me-2 d-block file-icon"
-                                [svgIcon]="element.asDataset.asVersionedFile.latest.contentType | previewFileType"
+                                *ngIf="element.archetype"
+                                [svgIcon]="element.contentType | previewFileType"
+                            ></mat-icon>
+                            <mat-icon
+                                *ngIf="!element.archetype"
+                                class="me-2 d-block file-icon"
+                                [svgIcon]="'tree-file'"
                             ></mat-icon>
                             <div class="truncate-cell d-inline-block file-name">{{ element.displayName }}</div>
                         </div>
@@ -50,65 +62,80 @@
                 <!-- SystemTime Column -->
                 <ng-container matColumnDef="systemTime">
                     <th mat-header-cell *matHeaderCellDef>modified</th>
-                    <td
-                        mat-cell
-                        *matCellDef="let element"
-                        (click)="onCellEventClick(element.systemTime, element.isFolder)"
-                    >
-                        <div *ngIf="!element.isFolder" class="d-flex align-items-center">
+                    <td mat-cell *matCellDef="let element" class="copy-on-hover">
+                        <div
+                            *ngIf="element.archetype !== DatasetArchetype.Collection"
+                            class="d-flex align-items-center"
+                        >
                             <span class="truncate-cell">{{ element.systemTime | date: DISPLAY_TIME_FORMAT }}</span>
+                            <mat-icon
+                                class="copy-icon ms-2"
+                                (click)="onCellEventClick(element.systemTime, element.archetype)"
+                                >content_copy</mat-icon
+                            >
                         </div>
                     </td>
                 </ng-container>
                 <!-- Owner Column -->
                 <ng-container matColumnDef="owner">
                     <th mat-header-cell *matHeaderCellDef>owner</th>
-                    <td
-                        mat-cell
-                        *matCellDef="let element"
-                        (click)="onCellEventClick(element.asDataset?.owner.accountName, element.isFolder)"
-                    >
-                        <div *ngIf="!element.isFolder" class="d-flex align-items-center">
+                    <td mat-cell *matCellDef="let element" class="copy-on-hover">
+                        <div
+                            *ngIf="element.archetype !== DatasetArchetype.Collection"
+                            class="d-flex align-items-center"
+                        >
                             <img class="img-creator" [src]="element.asDataset?.owner.avatarUrl ?? DEFAULT_AVATAR_URL" />
                             <span class="ms-2 truncate-path d-block"> {{ element.asDataset?.owner.accountName }}</span>
+                            <mat-icon
+                                class="copy-icon ms-2"
+                                (click)="onCellEventClick(element.asDataset?.owner.accountName, element.archetype)"
+                                >content_copy</mat-icon
+                            >
                         </div>
                     </td>
                 </ng-container>
                 <!-- ContentHash Column -->
                 <ng-container matColumnDef="hash">
-                    <th mat-header-cell *matHeaderCellDef>content hash</th>
-                    <td mat-cell *matCellDef="let element" (click)="onCellEventClick(element.hash, element.isFolder)">
-                        <div *ngIf="!element.isFolder" class="d-flex align-items-center">
-                            <span class="truncate-cell">{{
-                                element.asDataset?.asVersionedFile?.latest?.contentHash | slice: -8
-                            }}</span>
+                    <th mat-header-cell *matHeaderCellDef>hash</th>
+                    <td mat-cell *matCellDef="let element" class="copy-on-hover">
+                        <div
+                            *ngIf="element.archetype !== DatasetArchetype.Collection"
+                            class="d-flex align-items-center"
+                        >
+                            <span class="truncate-cell">{{ element.hash | slice: -8 }}</span>
+                            <mat-icon class="copy-icon ms-2" (click)="onCellEventClick(element.hash, element.archetype)"
+                                >content_copy</mat-icon
+                            >
                         </div>
                     </td>
                 </ng-container>
                 <!-- Size Column -->
                 <ng-container matColumnDef="size">
                     <th mat-header-cell *matHeaderCellDef>size</th>
-                    <td mat-cell *matCellDef="let element" (click)="onCellEventClick(element.size, element.isFolder)">
-                        <div *ngIf="!element.isFolder" class="d-flex align-items-center">
-                            <span class="truncate-cell">{{
-                                element.asDataset?.asVersionedFile?.latest?.contentLength
-                                    ? (element.asDataset?.asVersionedFile?.latest?.contentLength! | displaySize)
-                                    : "-"
-                            }}</span>
+                    <td mat-cell *matCellDef="let element" class="copy-on-hover">
+                        <div
+                            *ngIf="element.archetype !== DatasetArchetype.Collection"
+                            class="d-flex align-items-center"
+                        >
+                            <span class="truncate-cell">{{ element.size ? (element.size | displaySize) : "-" }}</span>
+                            <mat-icon class="copy-icon ms-2" (click)="onCellEventClick(element.size, element.archetype)"
+                                >content_copy</mat-icon
+                            >
                         </div>
                     </td>
                 </ng-container>
-
+                <!-- Extra data Columns -->
                 <ng-container *ngFor="let col of extraDataKeys" [matColumnDef]="col">
                     <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
-                    <td
-                        mat-cell
-                        *matCellDef="let element"
-                        (click)="onCellEventClick(getValue(element.extraData[col]), element.isFolder)"
-                    >
+                    <td mat-cell *matCellDef="let element" class="copy-on-hover">
                         <div class="d-flex align-items-center">
-                            <span class="truncate-cell" *ngIf="!element.isFolder">
+                            <span class="truncate-cell" *ngIf="element.archetype !== DatasetArchetype.Collection">
                                 {{ getValue(element.extraData[col]) }}</span
+                            >
+                            <mat-icon
+                                class="copy-icon ms-2"
+                                (click)="onCellEventClick(getValue(element.extraData[col]), element.archetype)"
+                                >content_copy</mat-icon
                             >
                         </div>
                     </td>
@@ -118,7 +145,13 @@
 
                 <tr mat-header-row *matHeaderRowDef="['go-up-button']" [hidden]="maxDepth === 0"></tr>
 
-                <tr mat-row (dblclick)="clickTableRow(row)" *matRowDef="let row; columns: displayedColumns"></tr>
+                <tr
+                    mat-row
+                    (dblclick)="dbClickTableRow(row)"
+                    (click)="clickTableRow(row)"
+                    [class.selected-row]="isRowSelected(row)"
+                    *matRowDef="let row; columns: displayedColumns"
+                ></tr>
             </table>
         </div>
 

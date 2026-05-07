@@ -1,150 +1,162 @@
 <div *ngIf="loadingCollection$ | async">
-    <mat-progress-bar data-test-id="editor-progress-bar" class="w-100 mt-4" mode="indeterminate" />
-    <div class="mt-4 text-center">Loading...</div>
+    <mat-progress-bar data-test-id="editor-progress-bar" mode="indeterminate" class="w-100 mt-4"></mat-progress-bar>
+    <div class="mt-4 text-center text-muted">Loading...</div>
 </div>
 
 <div *ngIf="collectionInfo$ | async as collectionEntry">
-    <div class="mb-4" *ngIf="collectionEntry.totalCount; else emptyCollection">
+    <div *ngIf="collectionEntry.connection.totalCount; else emptyCollection" class="main-container">
         <div
             *ngIf="!(loadingCollection$ | async)"
-            class="border border-start-0 border-end-0 border-top-0"
+            class="border-bottom"
             style="width: 100%; overflow: auto"
             infiniteScroll
             [infiniteScrollDistance]="1"
             [infiniteScrollThrottle]="150"
             (scrolled)="onScroll()"
         >
-            <table mat-table [dataSource]="dataSource">
+            <table mat-table [dataSource]="dataSource" class="w-100">
+                <!-- Navigation: "Go Up" button for directory traversal -->
                 <ng-container matColumnDef="go-up-button">
                     <th
                         mat-header-cell
                         *matHeaderCellDef
                         [attr.colspan]="displayedColumns.length"
                         (dblclick)="goUp()"
-                        class="up-row"
+                        class="up-row cursor-pointer"
                     >
-                        <div class="d-flex align-items-center cursor-pointer" [title]="pathPrefix">
-                            <mat-icon class="file-icon" svgIcon="shift"></mat-icon>
+                        <div class="d-flex align-items-center" [title]="pathPrefix">
+                            <mat-icon svgIcon="shift" class="file-icon"></mat-icon>
                             <span class="ms-2 truncate-path d-block fw-500">{{ pathPrefix }}</span>
                         </div>
                     </th>
                 </ng-container>
-                <!-- Name Column -->
+
+                <!-- Column: Name  -->
                 <ng-container matColumnDef="name">
                     <th mat-header-cell *matHeaderCellDef>name</th>
-                    <td mat-cell *matCellDef="let element">
-                        <div
-                            *ngIf="element.archetype === DatasetArchetype.Collection"
-                            class="d-flex align-items-center"
-                        >
-                            <mat-icon class="me-2 file-icon" [svgIcon]="'collection-folder'"></mat-icon>
-                            <div class="truncate-cell">{{ element.displayName }}</div>
-                        </div>
+                    <td mat-cell *matCellDef="let el">
+                        <div class="d-flex align-items-center">
+                            <!-- 1. Display directory icon for Collections -->
+                            <mat-icon
+                                *ngIf="el.archetype === DatasetArchetype.Collection"
+                                class="me-2 file-icon"
+                                svgIcon="collection-folder"
+                            >
+                            </mat-icon>
 
-                        <div
-                            *ngIf="element.archetype !== DatasetArchetype.Collection"
-                            class="d-flex align-items-center"
-                        >
-                            <mat-icon
-                                class="me-2 d-block file-icon"
-                                *ngIf="element.archetype"
-                                [svgIcon]="element.contentType | previewFileType"
-                            ></mat-icon>
-                            <mat-icon
-                                *ngIf="!element.archetype"
-                                class="me-2 d-block file-icon"
-                                [svgIcon]="'tree-file'"
-                            ></mat-icon>
-                            <div class="truncate-cell d-inline-block file-name">{{ element.displayName }}</div>
+                            <!-- 2. Display file or object specific icons -->
+                            <ng-container *ngIf="el.archetype !== DatasetArchetype.Collection">
+                                <mat-icon
+                                    *ngIf="el.archetype"
+                                    class="me-2 file-icon"
+                                    [svgIcon]="el.contentType | previewFileType"
+                                >
+                                </mat-icon>
+
+                                <!-- System objects without a specific archetype -->
+                                <ng-container *ngIf="!el.archetype">
+                                    <mat-icon class="me-2 file-icon" [svgIcon]="el.asDataset ? 'database' : 'question'">
+                                    </mat-icon>
+                                </ng-container>
+                            </ng-container>
+
+                            <!-- Display the entry name -->
+                            <div class="truncate-cell d-inline-block file-name">
+                                {{ el.asDataset ? el.displayName : (el.displayName | displayDatasetId) }}
+                            </div>
                         </div>
                     </td>
                 </ng-container>
-                <!-- SystemTime Column -->
+
+                <!-- Column: Last Modified Time -->
                 <ng-container matColumnDef="systemTime">
                     <th mat-header-cell *matHeaderCellDef>modified</th>
-                    <td mat-cell *matCellDef="let element" class="copy-on-hover">
-                        <div
-                            *ngIf="element.archetype !== DatasetArchetype.Collection"
-                            class="d-flex align-items-center"
-                        >
-                            <span class="truncate-cell">{{ element.systemTime | date: DISPLAY_TIME_FORMAT }}</span>
+                    <td mat-cell *matCellDef="let el" class="copy-on-hover">
+                        <div class="d-flex align-items-center">
+                            <span class="truncate-cell">{{ el.systemTime | date: DISPLAY_TIME_FORMAT }}</span>
                             <mat-icon
+                                *ngIf="el.asDataset"
                                 class="copy-icon ms-2"
-                                (click)="onCellEventClick(element.systemTime, element.archetype)"
+                                (click)="onCellEventClick(el.systemTime, el.archetype)"
                                 >content_copy</mat-icon
                             >
                         </div>
                     </td>
                 </ng-container>
-                <!-- Owner Column -->
+
+                <!-- Column: Owner Info -->
                 <ng-container matColumnDef="owner">
                     <th mat-header-cell *matHeaderCellDef>owner</th>
-                    <td mat-cell *matCellDef="let element" class="copy-on-hover">
+                    <td mat-cell *matCellDef="let el" class="copy-on-hover">
                         <div
-                            *ngIf="element.archetype !== DatasetArchetype.Collection"
+                            *ngIf="el.archetype !== DatasetArchetype.Collection && el.asDataset"
                             class="d-flex align-items-center"
                         >
-                            <img class="img-creator" [src]="element.asDataset?.owner.avatarUrl ?? DEFAULT_AVATAR_URL" />
-                            <span class="ms-2 truncate-path d-block"> {{ element.asDataset?.owner.accountName }}</span>
+                            <img class="img-creator" [src]="el.asDataset.owner.avatarUrl ?? DEFAULT_AVATAR_URL" />
+                            <span class="ms-2 truncate-path d-block">{{ el.asDataset.owner.accountName }}</span>
                             <mat-icon
                                 class="copy-icon ms-2"
-                                (click)="onCellEventClick(element.asDataset?.owner.accountName, element.archetype)"
+                                (click)="onCellEventClick(el.asDataset.owner.accountName, el.archetype)"
                                 >content_copy</mat-icon
                             >
                         </div>
+                        <div *ngIf="el.archetype !== DatasetArchetype.Collection && !el.asDataset">-</div>
                     </td>
                 </ng-container>
-                <!-- ContentHash Column -->
+
+                <!-- Column: Content Hash -->
                 <ng-container matColumnDef="hash">
                     <th mat-header-cell *matHeaderCellDef>hash</th>
-                    <td mat-cell *matCellDef="let element" class="copy-on-hover">
-                        <div
-                            *ngIf="element.archetype !== DatasetArchetype.Collection"
-                            class="d-flex align-items-center"
-                        >
-                            <span class="truncate-cell">{{ element.hash | slice: -8 }}</span>
-                            <mat-icon class="copy-icon ms-2" (click)="onCellEventClick(element.hash, element.archetype)"
+                    <td mat-cell *matCellDef="let el" class="copy-on-hover">
+                        <div *ngIf="el.archetype !== DatasetArchetype.Collection" class="d-flex align-items-center">
+                            <span class="truncate-cell">{{ el.hash ? (el.hash | slice: -8) : "-" }}</span>
+                            <mat-icon
+                                *ngIf="el.asDataset && el.hash"
+                                class="copy-icon ms-2"
+                                (click)="onCellEventClick(el.hash, el.archetype)"
                                 >content_copy</mat-icon
                             >
                         </div>
                     </td>
                 </ng-container>
-                <!-- Size Column -->
+
+                <!-- Column: Content Size -->
                 <ng-container matColumnDef="size">
                     <th mat-header-cell *matHeaderCellDef>size</th>
-                    <td mat-cell *matCellDef="let element" class="copy-on-hover">
-                        <div
-                            *ngIf="element.archetype !== DatasetArchetype.Collection"
-                            class="d-flex align-items-center"
-                        >
-                            <span class="truncate-cell">{{ element.size ? (element.size | displaySize) : "-" }}</span>
-                            <mat-icon class="copy-icon ms-2" (click)="onCellEventClick(element.size, element.archetype)"
+                    <td mat-cell *matCellDef="let el" class="copy-on-hover">
+                        <div *ngIf="el.archetype !== DatasetArchetype.Collection" class="d-flex align-items-center">
+                            <span class="truncate-cell">{{ el.size ? (el.size | displaySize) : "-" }}</span>
+                            <mat-icon
+                                *ngIf="el.size"
+                                class="copy-icon ms-2"
+                                (click)="onCellEventClick(el.size, el.archetype)"
                                 >content_copy</mat-icon
                             >
                         </div>
                     </td>
                 </ng-container>
-                <!-- Extra data Columns -->
+
+                <!-- Dynamic Columns: Extra Data Keys -->
                 <ng-container *ngFor="let col of extraDataKeys" [matColumnDef]="col">
                     <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
-                    <td mat-cell *matCellDef="let element" class="copy-on-hover">
-                        <div class="d-flex align-items-center">
-                            <span class="truncate-cell" *ngIf="element.archetype !== DatasetArchetype.Collection">
-                                {{ getValue(element.extraData[col]) }}</span
-                            >
+                    <td mat-cell *matCellDef="let el" class="copy-on-hover">
+                        <div
+                            *ngIf="el.archetype !== DatasetArchetype.Collection && el.extraData?.[col]"
+                            class="d-flex align-items-center"
+                        >
+                            <span class="truncate-cell">{{ getValue(el.extraData[col]) }}</span>
                             <mat-icon
                                 class="copy-icon ms-2"
-                                (click)="onCellEventClick(getValue(element.extraData[col]), element.archetype)"
+                                (click)="onCellEventClick(getValue(el.extraData[col]), el.archetype)"
                                 >content_copy</mat-icon
                             >
                         </div>
                     </td>
                 </ng-container>
 
+                <!-- Table Row Definitions -->
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-
                 <tr mat-header-row *matHeaderRowDef="['go-up-button']" [hidden]="maxDepth === 0"></tr>
-
                 <tr
                     mat-row
                     (dblclick)="dbClickTableRow(row)"
@@ -154,17 +166,22 @@
                 ></tr>
             </table>
         </div>
-
-        <div class="d-flex justify-content-end mt-4">
-            <span class="fw-500">Total entries: {{ collectionEntry.totalCount }}</span>
+        <!-- Collection summary footer -->
+        <div *ngIf="!(loadingCollection$ | async)" class="d-flex justify-content-end mt-4 text-muted">
+            <span class="fw-500">Total entries: {{ entriesTotalCount }}</span>
         </div>
     </div>
+
+    <!-- Empty state template -->
     <ng-template #emptyCollection>
-        <div class="box p-4 bg-light text-center">
-            <span>Collection is empty</span>
+        <div class="box p-5 bg-light text-center mt-4">
+            <mat-icon class="text-muted mb-2">folder_open</mat-icon>
+            <p class="mb-0">Collection is empty</p>
         </div>
     </ng-template>
 </div>
-<div *ngIf="loadingOnScroll$ | async">
-    <mat-progress-spinner class="mx-auto mt-4" [diameter]="30" [mode]="'indeterminate'"> </mat-progress-spinner>
+
+<!-- Background loading state (Infinite Scroll) -->
+<div *ngIf="loadingOnScroll$ | async" class="py-4">
+    <mat-progress-spinner class="mx-auto" [diameter]="30" mode="indeterminate"></mat-progress-spinner>
 </div>

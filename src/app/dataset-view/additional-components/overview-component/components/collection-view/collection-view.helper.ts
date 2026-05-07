@@ -13,62 +13,64 @@ export function sortCollectionEntryData(
     nodes: CollectionEntryDataFragment[],
     maxDepth: number,
 ): CollectionEntryViewType[] {
-    const result: CollectionEntryViewType[] = [];
-    let lastFolder = "";
+    const grouped = new Map<string, CollectionEntryViewType>();
 
-    // Grouping for displaying the folder header once
     nodes.forEach((node: CollectionEntryDataFragment) => {
+        const segments = node.path.split("/").filter(Boolean);
+        const displayName = segments[maxDepth] || node.ref;
+        const isFolder = segments.length > maxDepth + 1;
+
+        // Grouping key: if it's a folder, group by name; if it's a file, group by unique ref
+        const groupKey = isFolder ? `dir:${displayName}` : `file:${node.ref}`;
+        if (grouped.has(groupKey)) return;
+
         if (node.asDataset) {
-            const segments = node.path.split("/").filter(Boolean);
-            if (segments.length > maxDepth + 1 && node.asDataset.asVersionedFile) {
-                const currentFolder = segments[maxDepth];
-                if (currentFolder !== lastFolder) {
-                    result.push({
-                        ...node,
-                        archetype: DatasetArchetype.Collection,
-                        displayName: currentFolder,
-                        systemTime: node.systemTime,
+            const latest = node.asDataset.asVersionedFile?.latest;
 
-                        hash: node.asDataset.asVersionedFile.latest?.contentHash!,
-                        size: 0,
-                        contentType: null,
-                    });
-                    lastFolder = currentFolder;
-                }
+            if (isFolder && node.asDataset.asVersionedFile) {
+                grouped.set(groupKey, {
+                    ...node,
+                    archetype: DatasetArchetype.Collection,
+                    displayName,
+                    systemTime: node.systemTime,
+                    hash: latest?.contentHash!,
+                    size: 0,
+                    contentType: null,
+                });
             } else {
-                if (node.asDataset?.asVersionedFile?.latest) {
-                    result.push({
-                        ...node,
-                        archetype: DatasetArchetype.VersionedFile,
-                        displayName: segments[maxDepth],
-                        systemTime: node.systemTime,
-
-                        hash: node.asDataset.asVersionedFile.latest?.contentHash,
-                        size: node.asDataset.asVersionedFile.latest?.contentLength,
-                        contentType: node.asDataset.asVersionedFile.latest?.contentType,
-                    });
-                } else {
-                    result.push({
-                        ...node,
-                        archetype: null,
-                        displayName: segments[maxDepth],
-                        systemTime: node.systemTime,
-                        hash: node.asDataset.head,
-                        size: node.asDataset.data.estimatedSizeBytes,
-                        contentType: null,
-                    });
-                }
+                grouped.set(groupKey, {
+                    ...node,
+                    archetype: latest ? DatasetArchetype.VersionedFile : null,
+                    displayName,
+                    systemTime: node.systemTime,
+                    hash: latest?.contentHash ?? node.asDataset.head,
+                    size: latest?.contentLength ?? node.asDataset.data.estimatedSizeBytes,
+                    contentType: latest?.contentType ?? null,
+                });
             }
+        } else {
+            // Case without asDataset
+            grouped.set(groupKey, {
+                ...node,
+                archetype: null,
+                displayName: node.ref,
+                systemTime: node.systemTime,
+                hash: null,
+                size: null,
+                contentType: null,
+            });
         }
     });
-    // Sort: folders first
-    result.sort((a: CollectionEntryViewType, b: CollectionEntryViewType) => {
-        if (a.archetype === b.archetype) return 0;
-        if (a.archetype === DatasetArchetype.Collection) return -1;
-        return 1;
+    return Array.from(grouped.values()).sort((a, b) => {
+        // 1. Folders (Collection) always take priority
+        const isFolderA = a.archetype === DatasetArchetype.Collection;
+        const isFolderB = b.archetype === DatasetArchetype.Collection;
+        if (isFolderA !== isFolderB) {
+            return isFolderA ? -1 : 1;
+        }
+        // 2. Sort by name (alphabetical) within groups
+        return a.displayName.localeCompare(b.displayName);
     });
-
-    return result;
 }
 
 export function getCollectionValueHelper(value: unknown): string {

@@ -11,13 +11,19 @@ import { MaybeNull } from "@interface/app.types";
 export interface LoadCollectionDataParams {
     path: string;
     page: number;
+    headChanged: boolean;
 }
 
 export interface CollectionEntryViewType extends CollectionEntryDataFragment {
     archetype: MaybeNull<DatasetArchetype>;
     displayName: string;
     systemTime: string;
-    hash: string;
-    size: number;
+    hash: MaybeNull<string>;
+    size: MaybeNull<number>;
     contentType: MaybeNull<string>;
+}
+
+export interface CollectionEntriesResult {
+    connection: CollectionEntryConnection;
+    headChanged: boolean;
 }

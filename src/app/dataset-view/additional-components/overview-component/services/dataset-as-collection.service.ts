@@ -7,19 +7,25 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { BehaviorSubject, filter, finalize, map, Observable, switchMap } from "rxjs";
+import { BehaviorSubject, connect, filter, finalize, map, Observable, switchMap } from "rxjs";
 
 import { DatasetApi } from "@api/dataset.api";
 import { CollectionEntryConnection, DatasetAsCollectionQuery } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
-import { LoadCollectionDataParams } from "../components/collection-view/collection-view.model";
+import {
+    CollectionEntriesResult,
+    CollectionEntryViewType,
+    LoadCollectionDataParams,
+} from "../components/collection-view/collection-view.model";
 
 @Injectable({
     providedIn: "root",
 })
 export class DatasetAsCollectionService {
     private datasetApi = inject(DatasetApi);
+
+    public cashEntries: Map<string, CollectionEntryViewType[]> = new Map();
 
     private loadingCollection$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
@@ -65,7 +71,7 @@ export class DatasetAsCollectionService {
         );
     }
 
-    public loadCollectionInfo(datasetId: string, perPage: number): Observable<CollectionEntryConnection> {
+    public loadCollectionInfo(datasetId: string, perPage: number): Observable<CollectionEntriesResult> {
         return this.loadCollectionData$.pipe(
             filter((params) => params !== null),
             switchMap((params) =>
@@ -75,6 +81,10 @@ export class DatasetAsCollectionService {
                     page: params.page - 1,
                     perPage,
                 }).pipe(
+                    map((data) => ({
+                        connection: data,
+                        headChanged: params.headChanged,
+                    })),
                     finalize(() => {
                         this.emitLoadingCollectionChanged(false);
                         this.emitLoadingOnScrollChanged(false);

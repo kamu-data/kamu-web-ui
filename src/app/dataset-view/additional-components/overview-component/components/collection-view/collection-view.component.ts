@@ -22,6 +22,7 @@ import { InfiniteScrollDirective } from "ngx-infinite-scroll";
 import { ToastrService } from "ngx-toastr";
 
 import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ondestroy.adapter";
+import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
 import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 import AppValues from "@common/values/app.values";
 import {
@@ -38,7 +39,7 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetAsCollectionService } from "../../services/dataset-as-collection.service";
 import { PreviewFileTypePipe } from "../versioned-file-view/pipes/preview-file-type.pipe";
 import { getCollectionValueHelper, sortCollectionEntryData } from "./collection-view.helper";
-import { CollectionEntryViewType } from "./collection-view.model";
+import { CollectionEntriesResult, CollectionEntryViewType } from "./collection-view.model";
 
 @Component({
     selector: "app-collection-view",
@@ -60,6 +61,7 @@ import { CollectionEntryViewType } from "./collection-view.model";
 
         //-----//
         DisplaySizePipe,
+        DisplayDatasetIdPipe,
         PreviewFileTypePipe,
     ],
     templateUrl: "./collection-view.component.html",
@@ -70,7 +72,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
 
     public dataSource = new MatTableDataSource<CollectionEntryViewType>();
-    public collectionInfo$: Observable<CollectionEntryConnection>;
+    public collectionInfo$: Observable<CollectionEntriesResult>;
     public loadingCollection$: Observable<boolean>;
     public loadingOnScroll$: Observable<boolean>;
     private click$ = new Subject<string>();
@@ -78,14 +80,13 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     public currentPage: number = 1;
     public pathPrefix: string = "/";
     public maxDepth: number = 0;
+    public entriesTotalCount: number;
     public isAllDataLoaded: boolean = false;
     public selectedRow: CollectionEntryViewType | null = null;
     public readonly perPage: number = 20;
     public readonly INITIAL_DISPLAYED_COLUMNS: string[] = ["name", "systemTime", "owner", "hash", "size"];
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly DatasetArchetype: typeof DatasetArchetype = DatasetArchetype;
-    public cashEntries: Map<string, CollectionEntryViewType[]> = new Map();
-    public currentHead: string;
 
     public displayedColumns: string[] = [];
     public extraDataKeys: string[] = [];
@@ -125,7 +126,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.datasetBasics && changes.datasetBasics.previousValue !== changes.datasetBasics.currentValue) {
             this.resetTableView();
-            this.triggerLoadCollection();
+            this.triggerLoadCollection(false);
             this.loadDatasetAsCollection();
         }
     }
@@ -135,22 +136,31 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             return;
         }
         this.currentPage++;
-        this.triggerLoadCollection();
+        this.triggerLoadCollection(false);
     }
 
     private loadDatasetAsCollection(): void {
         this.collectionInfo$ = this.datasetAsCollectionService
             .loadCollectionInfo(this.datasetBasics.id, this.perPage)
             .pipe(
-                map((result) => {
-                    this.isAllDataLoaded = !result.pageInfo.hasNextPage;
-                    const nodes = sortCollectionEntryData(result.nodes, this.maxDepth);
-                    this.prepareDisplayColumns(result.nodes);
-                    if (result.totalCount !== this.dataSource.data.length) {
-                        this.cashEntries.set(this.pathPrefix, [...this.dataSource.data, ...nodes]);
+                map(({ connection, headChanged }) => {
+                    if (headChanged || this.pathPrefix === "/") {
+                        this.entriesTotalCount = connection.totalCount;
+                    }
+                    this.isAllDataLoaded = !connection.pageInfo.hasNextPage;
+                    const nodes = sortCollectionEntryData(connection.nodes, this.maxDepth);
+                    this.prepareDisplayColumns(connection.nodes);
+                    if (connection.totalCount !== this.dataSource.data.length) {
+                        this.datasetAsCollectionService.cashEntries.set(this.pathPrefix, [
+                            ...this.dataSource.data,
+                            ...nodes,
+                        ]);
                     }
                     this.dataSource.data = [...this.dataSource.data, ...nodes];
-                    return result;
+                    return {
+                        connection,
+                        headChanged,
+                    };
                 }),
             );
     }
@@ -188,9 +198,11 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             this.dataSource.data = [];
             this.checkHeadAndLoadCollection();
         } else {
-            const urlTree = this.router.createUrlTree([row.asDataset?.alias]);
-            const url = this.router.serializeUrl(urlTree);
-            window.open(url, "_blank");
+            if (row.asDataset) {
+                const urlTree = this.router.createUrlTree([row.asDataset?.alias]);
+                const url = this.router.serializeUrl(urlTree);
+                window.open(url, "_blank");
+            }
         }
     }
 
@@ -213,9 +225,13 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
         }
     }
 
-    private triggerLoadCollection(): void {
+    private triggerLoadCollection(headChanged: boolean): void {
         this.datasetAsCollectionService.emitLoadingCollectionChanged(true);
-        this.datasetAsCollectionService.loadCollectionDataChange({ path: this.pathPrefix, page: this.currentPage });
+        this.datasetAsCollectionService.loadCollectionDataChange({
+            path: this.pathPrefix,
+            page: this.currentPage,
+            headChanged,
+        });
     }
 
     private resetTableView(): void {
@@ -231,14 +247,17 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((headChanged) => {
                 if (headChanged) {
-                    this.cashEntries.clear();
+                    this.datasetAsCollectionService.cashEntries.clear();
+                    this.isAllDataLoaded = false;
                 }
-                const casheKeyExist = this.cashEntries.has(this.pathPrefix);
+                const casheKeyExist = this.datasetAsCollectionService.cashEntries.has(this.pathPrefix);
                 if (casheKeyExist) {
-                    this.dataSource.data = this.cashEntries.get(this.pathPrefix) as CollectionEntryViewType[];
+                    this.dataSource.data = this.datasetAsCollectionService.cashEntries.get(
+                        this.pathPrefix,
+                    ) as CollectionEntryViewType[];
                     this.datasetAsCollectionService.emitLoadingCollectionChanged(false);
                 } else {
-                    this.triggerLoadCollection();
+                    this.triggerLoadCollection(headChanged);
                 }
             });
     }

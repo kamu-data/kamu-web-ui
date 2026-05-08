@@ -5,6 +5,8 @@
  * included in the LICENSE file.
  */
 
+import { defer, finalize, Observable, Subject } from "rxjs";
+
 import cronParser from "cron-parser";
 import { format, isSameDay, subDays } from "date-fns";
 import { jwtDecode } from "jwt-decode";
@@ -264,4 +266,12 @@ export function maskDotsInURL(url: string, segmentIndex: number): string {
 
     const newPath = segments.join("/");
     return query ? `${newPath}?${query}` : newPath;
+}
+
+export function trackBusy<T>(busy: Subject<boolean>) {
+    return (source$: Observable<T>) =>
+        defer(() => {
+            busy.next(true);
+            return source$;
+        }).pipe(finalize(() => busy.next(false)));
 }

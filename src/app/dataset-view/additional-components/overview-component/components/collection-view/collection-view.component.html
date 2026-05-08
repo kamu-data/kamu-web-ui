@@ -6,7 +6,7 @@
 <div *ngIf="collectionInfo$ | async as collectionEntry">
     <div *ngIf="collectionEntry.connection.totalCount; else emptyCollection" class="main-container">
         <div
-            *ngIf="!(loadingCollection$ | async)"
+            *ngIf="dataSource.data.length"
             class="border-bottom"
             style="width: 100%; overflow: auto"
             infiniteScroll
@@ -167,7 +167,7 @@
             </table>
         </div>
         <!-- Collection summary footer -->
-        <div *ngIf="!(loadingCollection$ | async)" class="d-flex justify-content-end mt-4 text-muted">
+        <div *ngIf="dataSource.data.length" class="d-flex justify-content-end mt-4 text-muted">
             <span class="fw-500">Total entries: {{ entriesTotalCount }}</span>
         </div>
     </div>

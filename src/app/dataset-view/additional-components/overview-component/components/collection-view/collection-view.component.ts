@@ -7,7 +7,16 @@
 
 import { Clipboard } from "@angular/cdk/clipboard";
 import { AsyncPipe, DatePipe, NgFor, NgIf, SlicePipe } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    inject,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+} from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -98,6 +107,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     private toastr = inject(ToastrService);
     private clipboard = inject(Clipboard);
     private datasetService = inject(DatasetService);
+    private cdr = inject(ChangeDetectorRef);
 
     public ngOnInit(): void {
         this.loadingCollection$ = this.datasetAsCollectionService.loadingCollectionChanges;
@@ -136,12 +146,10 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             return;
         }
         this.currentPage++;
-
-        this.datasetAsCollectionService.emitLoadingOnScrollChanged(true);
         this.datasetAsCollectionService.loadCollectionDataChange({
             path: this.pathPrefix,
             page: this.currentPage,
-            headChanged: false,
+            scrollActivated: true,
         });
     }
 
@@ -234,7 +242,6 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     }
 
     private triggerLoadCollection(headChanged: boolean): void {
-        this.datasetAsCollectionService.emitLoadingCollectionChanged(true);
         this.datasetAsCollectionService.loadCollectionDataChange({
             path: this.pathPrefix,
             page: this.currentPage,
@@ -249,7 +256,6 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     }
 
     private checkHeadAndLoadCollection(): void {
-        this.datasetAsCollectionService.emitLoadingCollectionChanged(true);
         this.datasetService
             .isHeadHashBlockChanged(this.datasetBasics)
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -263,7 +269,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
                     this.dataSource.data = this.datasetAsCollectionService.cacheEntries.get(
                         this.pathPrefix,
                     ) as CollectionEntryViewType[];
-                    this.datasetAsCollectionService.emitLoadingCollectionChanged(false);
+                    this.cdr.detectChanges();
                 } else {
                     this.triggerLoadCollection(headChanged);
                 }

@@ -9,6 +9,7 @@ import { inject, Injectable } from "@angular/core";
 
 import { BehaviorSubject, filter, finalize, map, Observable, switchMap } from "rxjs";
 
+import { trackBusy } from "@common/helpers/app.helpers";
 import { DatasetApi } from "@api/dataset.api";
 import { CollectionEntryConnection, DatasetAsCollectionQuery } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
@@ -27,21 +28,13 @@ export class DatasetAsCollectionService {
 
     public cacheEntries: Map<string, CollectionEntryViewType[]> = new Map();
 
-    private loadingCollection$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
-    public emitLoadingCollectionChanged(value: boolean): void {
-        this.loadingCollection$.next(value);
-    }
+    private loadingCollection$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
     public get loadingCollectionChanges(): Observable<boolean> {
         return this.loadingCollection$.asObservable();
     }
 
     private loadingOnScroll$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
-    public emitLoadingOnScrollChanged(value: boolean): void {
-        this.loadingOnScroll$.next(value);
-    }
 
     public get loadingOnScrollChanges(): Observable<boolean> {
         return this.loadingOnScroll$.asObservable();
@@ -74,23 +67,21 @@ export class DatasetAsCollectionService {
     public loadCollectionInfo(datasetId: string, perPage: number): Observable<CollectionEntriesResult> {
         return this.loadCollectionData$.pipe(
             filter((params) => params !== null),
-            switchMap((params) =>
-                this.requestDatasetAsCollection({
+            switchMap((params) => {
+                const activeBusySubject = params.scrollActivated ? this.loadingOnScroll$ : this.loadingCollection$;
+                return this.requestDatasetAsCollection({
                     datasetId,
                     pathPrefix: params.path,
                     page: params.page - 1,
                     perPage,
                 }).pipe(
+                    trackBusy(activeBusySubject),
                     map((data) => ({
                         connection: data,
                         headChanged: params.headChanged,
                     })),
-                    finalize(() => {
-                        this.emitLoadingCollectionChanged(false);
-                        this.emitLoadingOnScrollChanged(false);
-                    }),
-                ),
-            ),
+                );
+            }),
         );
     }
 }

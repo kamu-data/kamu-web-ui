@@ -11,7 +11,8 @@ import { MaybeNull } from "@interface/app.types";
 export interface LoadCollectionDataParams {
     path: string;
     page: number;
-    headChanged: boolean;
+    headChanged?: boolean;
+    scrollActivated?: boolean;
 }
 
 export interface CollectionEntryViewType extends CollectionEntryDataFragment {
@@ -25,5 +26,5 @@ export interface CollectionEntryViewType extends CollectionEntryDataFragment {
 
 export interface CollectionEntriesResult {
     connection: CollectionEntryConnection;
-    headChanged: boolean;
+    headChanged?: boolean;
 }

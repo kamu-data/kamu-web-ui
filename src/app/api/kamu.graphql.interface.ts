@@ -50,7 +50,7 @@ export type Scalars = {
     EventID: { input: string; output: string };
     EvmWalletAddress: { input: string; output: string };
     ExtraAttributes: { input: string; output: string };
-    ExtraData: { input: string; output: string };
+    ExtraData: { input: Record<string, any>; output: Record<string, any> };
     FlowID: { input: string; output: string };
     /** A scalar that can represent any JSON value. */
     JSON: { input: string; output: string };
@@ -5482,7 +5482,7 @@ export type CollectionEntryDataFragment = {
     systemTime: string;
     path: string;
     ref: string;
-    extraData: string;
+    extraData: Record<string, any>;
     asDataset?: {
         __typename?: "Dataset";
         alias: string;

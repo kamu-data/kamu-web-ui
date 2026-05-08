@@ -7,7 +7,7 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { BehaviorSubject, filter, finalize, map, Observable, switchMap } from "rxjs";
+import { BehaviorSubject, filter, map, Observable, switchMap } from "rxjs";
 
 import { trackBusy } from "@common/helpers/app.helpers";
 import { DatasetApi } from "@api/dataset.api";

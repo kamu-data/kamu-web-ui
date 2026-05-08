@@ -40,7 +40,6 @@ import { MaybeNull } from "@interface/app.types";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 
 import { DatasetAsCollectionService } from "../../services/dataset-as-collection.service";
-import { PreviewFileTypePipe } from "../versioned-file-view/pipes/preview-file-type.pipe";
 import { getCollectionValueHelper, resolveEntryIconHelper, sortCollectionEntryData } from "./collection-view.helper";
 import { CollectionEntriesResult, CollectionEntryViewType, CollectionViewNode } from "./collection-view.model";
 
@@ -212,8 +211,8 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             this.dataSource.data = [];
             this.checkHeadAndLoadCollection();
         } else {
-            if (row.asDataset) {
-                const urlTree = this.router.createUrlTree([row.asDataset?.alias]);
+            if ([CollectionViewNode.Dataset, CollectionViewNode.File].includes(row.nodeType)) {
+                const urlTree = this.router.createUrlTree([row?.alias]);
                 const url = this.router.serializeUrl(urlTree);
                 window.open(url, "_blank");
             }

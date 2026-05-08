@@ -41,7 +41,11 @@
 
                             <!-- Display the entry name -->
                             <div class="truncate-cell d-inline-block file-name">
-                                {{ el.asDataset ? el.displayName : (el.displayName | displayDatasetId) }}
+                                {{
+                                    el.nodeType !== CollectionViewNode.Broken
+                                        ? el.displayName
+                                        : (el.displayName | displayDatasetId)
+                                }}
                             </div>
                         </div>
                     </td>
@@ -54,7 +58,7 @@
                         <div class="d-flex align-items-center">
                             <span class="truncate-cell">{{ el.systemTime | date: DISPLAY_TIME_FORMAT }}</span>
                             <mat-icon
-                                *ngIf="el.asDataset"
+                                *ngIf="el.nodeType !== CollectionViewNode.Broken"
                                 class="copy-icon ms-2"
                                 (click)="onCellEventClick(el.systemTime, el.nodeType)"
                                 >content_copy</mat-icon
@@ -67,19 +71,23 @@
                 <ng-container matColumnDef="owner">
                     <th mat-header-cell *matHeaderCellDef>owner</th>
                     <td mat-cell *matCellDef="let el" class="copy-on-hover">
-                        <div
-                            *ngIf="el.nodeType !== CollectionViewNode.Folder && el.asDataset"
-                            class="d-flex align-items-center"
-                        >
-                            <img class="img-creator" [src]="el.asDataset.owner.avatarUrl ?? DEFAULT_AVATAR_URL" />
-                            <span class="ms-2 truncate-path d-block">{{ el.asDataset.owner.accountName }}</span>
-                            <mat-icon
-                                class="copy-icon ms-2"
-                                (click)="onCellEventClick(el.asDataset.owner.accountName, el.nodeType)"
-                                >content_copy</mat-icon
-                            >
-                        </div>
-                        <div *ngIf="el.nodeType !== CollectionViewNode.Folder && !el.asDataset">-</div>
+                        <ng-container>
+                            <div *ngIf="el.nodeType !== CollectionViewNode.Folder" class="d-flex align-items-center">
+                                <div
+                                    *ngIf="el.nodeType !== CollectionViewNode.Broken"
+                                    class="d-flex align-items-center"
+                                >
+                                    <img class="img-creator" [src]="el.owner.avatarUrl ?? DEFAULT_AVATAR_URL" />
+                                    <span class="ms-2 truncate-path d-block">{{ el.owner.accountName }}</span>
+                                    <mat-icon
+                                        class="copy-icon ms-2"
+                                        (click)="onCellEventClick(el.owner.accountName, el.nodeType)"
+                                        >content_copy</mat-icon
+                                    >
+                                </div>
+                                <div *ngIf="el.nodeType === CollectionViewNode.Broken">-</div>
+                            </div>
+                        </ng-container>
                     </td>
                 </ng-container>
 
@@ -90,7 +98,7 @@
                         <div *ngIf="el.nodeType !== CollectionViewNode.Folder" class="d-flex align-items-center">
                             <span class="truncate-cell">{{ el.hash ? (el.hash | slice: -8) : "-" }}</span>
                             <mat-icon
-                                *ngIf="el.asDataset && el.hash"
+                                *ngIf="el.nodeType !== CollectionViewNode.Broken && el.hash"
                                 class="copy-icon ms-2"
                                 (click)="onCellEventClick(el.hash, el.nodeType)"
                                 >content_copy</mat-icon
@@ -119,10 +127,7 @@
                 <ng-container *ngFor="let col of extraDataKeys" [matColumnDef]="col">
                     <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
                     <td mat-cell *matCellDef="let el" class="copy-on-hover">
-                        <div
-                            *ngIf="el.nodeType !== CollectionViewNode.Folder && el.extraData?.[col]"
-                            class="d-flex align-items-center"
-                        >
+                        <div *ngIf="el.nodeType !== CollectionViewNode.Folder" class="d-flex align-items-center">
                             <span class="truncate-cell">{{ getValue(el.extraData[col]) }}</span>
                             <mat-icon
                                 class="copy-icon ms-2"

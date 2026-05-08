@@ -5,10 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { CollectionEntryDataFragment, DatasetArchetype } from "@api/kamu.graphql.interface";
+import { CollectionEntryDataFragment } from "@api/kamu.graphql.interface";
 
 import { PreviewFileTypePipe } from "../versioned-file-view/pipes/preview-file-type.pipe";
-import { CollectionEntryViewType, CollectionViewNode } from "./collection-view.model";
+import { AccountCollectionType, CollectionEntryViewType, CollectionViewNode } from "./collection-view.model";
 
 export function sortCollectionEntryData(
     nodes: CollectionEntryDataFragment[],
@@ -27,26 +27,36 @@ export function sortCollectionEntryData(
 
         if (node.asDataset) {
             const latest = node.asDataset.asVersionedFile?.latest;
+            const owner: AccountCollectionType = {
+                accountName: node.asDataset.owner.accountName,
+                avatarUrl: node.asDataset.owner.avatarUrl,
+            };
 
             if (isFolder && node.asDataset.asVersionedFile) {
                 grouped.set(groupKey, {
                     ...node,
                     nodeType: CollectionViewNode.Folder,
+                    alias: null,
                     displayName,
                     systemTime: node.systemTime,
                     hash: latest?.contentHash || null,
                     size: 0,
                     contentType: null,
+                    owner,
+                    extraData: node.extraData,
                 });
             } else {
                 grouped.set(groupKey, {
                     ...node,
                     nodeType: latest ? CollectionViewNode.File : CollectionViewNode.Dataset,
+                    alias: node.asDataset.alias,
                     displayName,
                     systemTime: node.systemTime,
                     hash: latest?.contentHash ?? node.asDataset.head,
                     size: latest?.contentLength ?? node.asDataset.data.estimatedSizeBytes,
                     contentType: latest?.contentType ?? null,
+                    owner,
+                    extraData: node.extraData,
                 });
             }
         } else {
@@ -54,11 +64,14 @@ export function sortCollectionEntryData(
             grouped.set(groupKey, {
                 ...node,
                 nodeType: CollectionViewNode.Broken,
+                alias: null,
                 displayName: node.ref,
                 systemTime: node.systemTime,
                 hash: null,
                 size: null,
                 contentType: null,
+                owner: null,
+                extraData: node.extraData,
             });
         }
     });

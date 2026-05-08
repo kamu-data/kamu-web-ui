@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { CollectionEntryConnection, CollectionEntryDataFragment, DatasetArchetype } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
+import { CollectionEntryConnection } from "@api/kamu.graphql.interface";
+import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
 
 export interface LoadCollectionDataParams {
     path: string;
@@ -15,13 +15,21 @@ export interface LoadCollectionDataParams {
     scrollActivated?: boolean;
 }
 
-export interface CollectionEntryViewType extends CollectionEntryDataFragment {
+export interface CollectionEntryViewType {
     nodeType: CollectionViewNode;
     displayName: string;
+    alias: MaybeNull<string>;
     systemTime: string;
     hash: MaybeNull<string>;
     size: MaybeNull<number>;
+    owner: MaybeNull<AccountCollectionType>;
     contentType: MaybeNull<string>;
+    extraData: object;
+}
+
+export interface AccountCollectionType {
+    accountName: string;
+    avatarUrl: MaybeNullOrUndefined<string>;
 }
 
 export interface CollectionEntriesResult {

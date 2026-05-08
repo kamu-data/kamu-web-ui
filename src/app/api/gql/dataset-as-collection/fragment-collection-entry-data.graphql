@@ -14,6 +14,7 @@ fragment CollectionEntryData on CollectionEntry {
       estimatedSizeBytes
     }
     asVersionedFile {
+      # TODO: temporar and performance-ineffecient, don't forget to refactor
       latest {
         systemTime
         contentType

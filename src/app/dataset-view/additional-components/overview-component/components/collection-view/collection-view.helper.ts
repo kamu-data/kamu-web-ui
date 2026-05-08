@@ -33,7 +33,7 @@ export function sortCollectionEntryData(
                     archetype: DatasetArchetype.Collection,
                     displayName,
                     systemTime: node.systemTime,
-                    hash: latest?.contentHash!,
+                    hash: latest?.contentHash || null,
                     size: 0,
                     contentType: null,
                 });

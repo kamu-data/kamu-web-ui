@@ -16,7 +16,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { Router } from "@angular/router";
 
-import { buffer, debounceTime, map, Observable, Subject, tap } from "rxjs";
+import { buffer, debounceTime, map, Observable, Subject } from "rxjs";
 
 import { InfiniteScrollDirective } from "ngx-infinite-scroll";
 import { ToastrService } from "ngx-toastr";
@@ -27,7 +27,6 @@ import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 import AppValues from "@common/values/app.values";
 import {
     CollectionEntry,
-    CollectionEntryConnection,
     CollectionEntryDataFragment,
     DatasetArchetype,
     DatasetBasicsFragment,

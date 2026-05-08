@@ -7,7 +7,7 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { BehaviorSubject, connect, filter, finalize, map, Observable, switchMap } from "rxjs";
+import { BehaviorSubject, filter, finalize, map, Observable, switchMap } from "rxjs";
 
 import { DatasetApi } from "@api/dataset.api";
 import { CollectionEntryConnection, DatasetAsCollectionQuery } from "@api/kamu.graphql.interface";

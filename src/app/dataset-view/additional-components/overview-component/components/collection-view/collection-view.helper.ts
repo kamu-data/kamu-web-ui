@@ -20,7 +20,7 @@ export function sortCollectionEntryData(
         const displayName = segments[maxDepth] || node.ref;
         const isFolder = segments.length > maxDepth + 1;
 
-        // Grouping key: if it's a folder, group by name; if it's a file, group by unique ref
+        // Grouping key: if it's path is nested, group by name; if it's a file, group by unique ref
         const groupKey = isFolder ? `dir:${displayName}` : `file:${node.ref}`;
         if (grouped.has(groupKey)) return;
 

@@ -84,6 +84,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     public selectedRow: CollectionEntryViewType | null = null;
     public readonly perPage: number = 20;
     public readonly INITIAL_DISPLAYED_COLUMNS: string[] = ["name", "systemTime", "owner", "hash", "size"];
+    public readonly HIDDEN_EXTRA_DATA_COLUMNS = ["hash", "size"];
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly DatasetArchetype: typeof DatasetArchetype = DatasetArchetype;
 
@@ -135,6 +136,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             return;
         }
         this.currentPage++;
+
         this.datasetAsCollectionService.emitLoadingOnScrollChanged(true);
         this.datasetAsCollectionService.loadCollectionDataChange({
             path: this.pathPrefix,
@@ -177,7 +179,9 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             this.displayedColumns = [...this.INITIAL_DISPLAYED_COLUMNS, ...this.extraDataKeys];
         }
         if (this.extraDataKeys.includes("content_length")) {
-            const filteredColumns = this.displayedColumns.filter((item) => item !== "hash" && item !== "size");
+            const filteredColumns = this.displayedColumns.filter(
+                (col) => !this.HIDDEN_EXTRA_DATA_COLUMNS.includes(col),
+            );
             this.displayedColumns = filteredColumns;
         }
     }

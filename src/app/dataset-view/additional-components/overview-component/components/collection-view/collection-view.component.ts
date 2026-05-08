@@ -34,20 +34,15 @@ import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ond
 import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
 import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 import AppValues from "@common/values/app.values";
-import {
-    CollectionEntry,
-    CollectionEntryDataFragment,
-    DatasetArchetype,
-    DatasetBasicsFragment,
-} from "@api/kamu.graphql.interface";
+import { CollectionEntry, CollectionEntryDataFragment, DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 
 import { DatasetAsCollectionService } from "../../services/dataset-as-collection.service";
 import { PreviewFileTypePipe } from "../versioned-file-view/pipes/preview-file-type.pipe";
-import { getCollectionValueHelper, sortCollectionEntryData } from "./collection-view.helper";
-import { CollectionEntriesResult, CollectionEntryViewType } from "./collection-view.model";
+import { getCollectionValueHelper, resolveEntryIconHelper, sortCollectionEntryData } from "./collection-view.helper";
+import { CollectionEntriesResult, CollectionEntryViewType, CollectionViewNode } from "./collection-view.model";
 
 @Component({
     selector: "app-collection-view",
@@ -70,7 +65,6 @@ import { CollectionEntriesResult, CollectionEntryViewType } from "./collection-v
         //-----//
         DisplaySizePipe,
         DisplayDatasetIdPipe,
-        PreviewFileTypePipe,
     ],
     templateUrl: "./collection-view.component.html",
     styleUrl: "./collection-view.component.scss",
@@ -95,7 +89,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     public readonly INITIAL_DISPLAYED_COLUMNS: string[] = ["name", "systemTime", "owner", "hash", "size"];
     public readonly HIDDEN_EXTRA_DATA_COLUMNS = ["hash", "size"];
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
-    public readonly DatasetArchetype: typeof DatasetArchetype = DatasetArchetype;
+    public readonly CollectionViewNode: typeof CollectionViewNode = CollectionViewNode;
 
     public displayedColumns: string[] = [];
     public extraDataKeys: string[] = [];
@@ -202,12 +196,16 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
         return getCollectionValueHelper(value);
     }
 
+    public displayNameIcon(element: CollectionEntryViewType): string {
+        return resolveEntryIconHelper(element);
+    }
+
     public isRowSelected(row: CollectionEntryViewType): boolean {
         return this.selectedRow === row;
     }
 
     public dbClickTableRow(row: CollectionEntryViewType): void {
-        if (row.archetype === DatasetArchetype.Collection) {
+        if (row.nodeType === CollectionViewNode.Folder) {
             this.pathPrefix += `${this.maxDepth === 0 ? row.displayName : "/" + row.displayName}`;
             this.maxDepth += 1;
             this.currentPage = 1;
@@ -235,8 +233,8 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
         this.checkHeadAndLoadCollection();
     }
 
-    public onCellEventClick(value: string, archetype: MaybeNull<DatasetArchetype>) {
-        if (archetype !== DatasetArchetype.Collection) {
+    public onCellEventClick(value: string, nodeType: MaybeNull<CollectionViewNode>) {
+        if (nodeType !== CollectionViewNode.Folder) {
             this.click$.next(value);
         }
     }

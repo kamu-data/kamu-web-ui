@@ -16,7 +16,7 @@ export interface LoadCollectionDataParams {
 }
 
 export interface CollectionEntryViewType extends CollectionEntryDataFragment {
-    archetype: MaybeNull<DatasetArchetype>;
+    nodeType: CollectionViewNode;
     displayName: string;
     systemTime: string;
     hash: MaybeNull<string>;
@@ -27,4 +27,11 @@ export interface CollectionEntryViewType extends CollectionEntryDataFragment {
 export interface CollectionEntriesResult {
     connection: CollectionEntryConnection;
     headChanged?: boolean;
+}
+
+export enum CollectionViewNode {
+    File = "file",
+    Dataset = "dataset",
+    Folder = "folder",
+    Broken = "broken",
 }

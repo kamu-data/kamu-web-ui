@@ -36,29 +36,8 @@
                     <th mat-header-cell *matHeaderCellDef>name</th>
                     <td mat-cell *matCellDef="let el">
                         <div class="d-flex align-items-center">
-                            <!-- 1. Display directory icon for Collections -->
-                            <mat-icon
-                                *ngIf="el.archetype === DatasetArchetype.Collection"
-                                class="me-2 file-icon"
-                                svgIcon="collection-folder"
-                            >
-                            </mat-icon>
-
-                            <!-- 2. Display file or object specific icons -->
-                            <ng-container *ngIf="el.archetype !== DatasetArchetype.Collection">
-                                <mat-icon
-                                    *ngIf="el.archetype"
-                                    class="me-2 file-icon"
-                                    [svgIcon]="el.contentType | previewFileType"
-                                >
-                                </mat-icon>
-
-                                <!-- System objects without a specific archetype -->
-                                <ng-container *ngIf="!el.archetype">
-                                    <mat-icon class="me-2 file-icon" [svgIcon]="el.asDataset ? 'database' : 'question'">
-                                    </mat-icon>
-                                </ng-container>
-                            </ng-container>
+                            <!-- 1. Display the icon name -->
+                            <mat-icon class="me-2 file-icon" [svgIcon]="displayNameIcon(el)" />
 
                             <!-- Display the entry name -->
                             <div class="truncate-cell d-inline-block file-name">
@@ -77,7 +56,7 @@
                             <mat-icon
                                 *ngIf="el.asDataset"
                                 class="copy-icon ms-2"
-                                (click)="onCellEventClick(el.systemTime, el.archetype)"
+                                (click)="onCellEventClick(el.systemTime, el.nodeType)"
                                 >content_copy</mat-icon
                             >
                         </div>
@@ -89,18 +68,18 @@
                     <th mat-header-cell *matHeaderCellDef>owner</th>
                     <td mat-cell *matCellDef="let el" class="copy-on-hover">
                         <div
-                            *ngIf="el.archetype !== DatasetArchetype.Collection && el.asDataset"
+                            *ngIf="el.nodeType !== CollectionViewNode.Folder && el.asDataset"
                             class="d-flex align-items-center"
                         >
                             <img class="img-creator" [src]="el.asDataset.owner.avatarUrl ?? DEFAULT_AVATAR_URL" />
                             <span class="ms-2 truncate-path d-block">{{ el.asDataset.owner.accountName }}</span>
                             <mat-icon
                                 class="copy-icon ms-2"
-                                (click)="onCellEventClick(el.asDataset.owner.accountName, el.archetype)"
+                                (click)="onCellEventClick(el.asDataset.owner.accountName, el.nodeType)"
                                 >content_copy</mat-icon
                             >
                         </div>
-                        <div *ngIf="el.archetype !== DatasetArchetype.Collection && !el.asDataset">-</div>
+                        <div *ngIf="el.nodeType !== CollectionViewNode.Folder && !el.asDataset">-</div>
                     </td>
                 </ng-container>
 
@@ -108,12 +87,12 @@
                 <ng-container matColumnDef="hash">
                     <th mat-header-cell *matHeaderCellDef>hash</th>
                     <td mat-cell *matCellDef="let el" class="copy-on-hover">
-                        <div *ngIf="el.archetype !== DatasetArchetype.Collection" class="d-flex align-items-center">
+                        <div *ngIf="el.nodeType !== CollectionViewNode.Folder" class="d-flex align-items-center">
                             <span class="truncate-cell">{{ el.hash ? (el.hash | slice: -8) : "-" }}</span>
                             <mat-icon
                                 *ngIf="el.asDataset && el.hash"
                                 class="copy-icon ms-2"
-                                (click)="onCellEventClick(el.hash, el.archetype)"
+                                (click)="onCellEventClick(el.hash, el.nodeType)"
                                 >content_copy</mat-icon
                             >
                         </div>
@@ -124,12 +103,12 @@
                 <ng-container matColumnDef="size">
                     <th mat-header-cell *matHeaderCellDef>size</th>
                     <td mat-cell *matCellDef="let el" class="copy-on-hover">
-                        <div *ngIf="el.archetype !== DatasetArchetype.Collection" class="d-flex align-items-center">
+                        <div *ngIf="el.nodeType !== CollectionViewNode.Folder" class="d-flex align-items-center">
                             <span class="truncate-cell">{{ el.size ? (el.size | displaySize) : "-" }}</span>
                             <mat-icon
                                 *ngIf="el.size"
                                 class="copy-icon ms-2"
-                                (click)="onCellEventClick(el.size, el.archetype)"
+                                (click)="onCellEventClick(el.size, el.nodeType)"
                                 >content_copy</mat-icon
                             >
                         </div>
@@ -141,13 +120,13 @@
                     <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
                     <td mat-cell *matCellDef="let el" class="copy-on-hover">
                         <div
-                            *ngIf="el.archetype !== DatasetArchetype.Collection && el.extraData?.[col]"
+                            *ngIf="el.nodeType !== CollectionViewNode.Folder && el.extraData?.[col]"
                             class="d-flex align-items-center"
                         >
                             <span class="truncate-cell">{{ getValue(el.extraData[col]) }}</span>
                             <mat-icon
                                 class="copy-icon ms-2"
-                                (click)="onCellEventClick(getValue(el.extraData[col]), el.archetype)"
+                                (click)="onCellEventClick(getValue(el.extraData[col]), el.nodeType)"
                                 >content_copy</mat-icon
                             >
                         </div>

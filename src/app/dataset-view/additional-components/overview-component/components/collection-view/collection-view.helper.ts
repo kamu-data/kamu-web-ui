@@ -7,7 +7,8 @@
 
 import { CollectionEntryDataFragment, DatasetArchetype } from "@api/kamu.graphql.interface";
 
-import { CollectionEntryViewType } from "./collection-view.model";
+import { PreviewFileTypePipe } from "../versioned-file-view/pipes/preview-file-type.pipe";
+import { CollectionEntryViewType, CollectionViewNode } from "./collection-view.model";
 
 export function sortCollectionEntryData(
     nodes: CollectionEntryDataFragment[],
@@ -30,7 +31,7 @@ export function sortCollectionEntryData(
             if (isFolder && node.asDataset.asVersionedFile) {
                 grouped.set(groupKey, {
                     ...node,
-                    archetype: DatasetArchetype.Collection,
+                    nodeType: CollectionViewNode.Folder,
                     displayName,
                     systemTime: node.systemTime,
                     hash: latest?.contentHash || null,
@@ -40,7 +41,7 @@ export function sortCollectionEntryData(
             } else {
                 grouped.set(groupKey, {
                     ...node,
-                    archetype: latest ? DatasetArchetype.VersionedFile : null,
+                    nodeType: latest ? CollectionViewNode.File : CollectionViewNode.Dataset,
                     displayName,
                     systemTime: node.systemTime,
                     hash: latest?.contentHash ?? node.asDataset.head,
@@ -52,7 +53,7 @@ export function sortCollectionEntryData(
             // Case without asDataset
             grouped.set(groupKey, {
                 ...node,
-                archetype: null,
+                nodeType: CollectionViewNode.Broken,
                 displayName: node.ref,
                 systemTime: node.systemTime,
                 hash: null,
@@ -63,8 +64,8 @@ export function sortCollectionEntryData(
     });
     return Array.from(grouped.values()).sort((a, b) => {
         // 1. Folders (Collection) always take priority
-        const isFolderA = a.archetype === DatasetArchetype.Collection;
-        const isFolderB = b.archetype === DatasetArchetype.Collection;
+        const isFolderA = a.nodeType === CollectionViewNode.Folder;
+        const isFolderB = b.nodeType === CollectionViewNode.Folder;
         if (isFolderA !== isFolderB) {
             return isFolderA ? -1 : 1;
         }
@@ -82,4 +83,19 @@ export function getCollectionValueHelper(value: unknown): string {
         return "-";
     }
     return value as string;
+}
+
+export function resolveEntryIconHelper(element: CollectionEntryViewType): string {
+    const previewFileTypePipe = new PreviewFileTypePipe();
+    if (element.nodeType === CollectionViewNode.Folder) {
+        return "collection-folder";
+    }
+    if (element.nodeType === CollectionViewNode.Dataset) {
+        return "database";
+    }
+
+    if (element.nodeType === CollectionViewNode.Broken) {
+        return "question";
+    }
+    return previewFileTypePipe.transform(element.contentType as string);
 }

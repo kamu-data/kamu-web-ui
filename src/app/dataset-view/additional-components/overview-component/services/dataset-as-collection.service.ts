@@ -25,7 +25,7 @@ import {
 export class DatasetAsCollectionService {
     private datasetApi = inject(DatasetApi);
 
-    public cashEntries: Map<string, CollectionEntryViewType[]> = new Map();
+    public cacheEntries: Map<string, CollectionEntryViewType[]> = new Map();
 
     private loadingCollection$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 

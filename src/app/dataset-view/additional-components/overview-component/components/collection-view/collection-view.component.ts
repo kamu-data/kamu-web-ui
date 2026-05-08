@@ -155,7 +155,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
                     const nodes = sortCollectionEntryData(connection.nodes, this.maxDepth);
                     this.prepareDisplayColumns(connection.nodes);
                     if (connection.totalCount !== this.dataSource.data.length) {
-                        this.datasetAsCollectionService.cashEntries.set(this.pathPrefix, [
+                        this.datasetAsCollectionService.cacheEntries.set(this.pathPrefix, [
                             ...this.dataSource.data,
                             ...nodes,
                         ]);
@@ -251,12 +251,12 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((headChanged) => {
                 if (headChanged) {
-                    this.datasetAsCollectionService.cashEntries.clear();
+                    this.datasetAsCollectionService.cacheEntries.clear();
                     this.isAllDataLoaded = false;
                 }
-                const casheKeyExist = this.datasetAsCollectionService.cashEntries.has(this.pathPrefix);
-                if (casheKeyExist) {
-                    this.dataSource.data = this.datasetAsCollectionService.cashEntries.get(
+                const cacheKeyExists = this.datasetAsCollectionService.cacheEntries.has(this.pathPrefix);
+                if (cacheKeyExists) {
+                    this.dataSource.data = this.datasetAsCollectionService.cacheEntries.get(
                         this.pathPrefix,
                     ) as CollectionEntryViewType[];
                     this.datasetAsCollectionService.emitLoadingCollectionChanged(false);

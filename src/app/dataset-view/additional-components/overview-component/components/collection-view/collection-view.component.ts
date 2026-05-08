@@ -136,7 +136,12 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             return;
         }
         this.currentPage++;
-        this.triggerLoadCollection(false);
+        this.datasetAsCollectionService.emitLoadingOnScrollChanged(true);
+        this.datasetAsCollectionService.loadCollectionDataChange({
+            path: this.pathPrefix,
+            page: this.currentPage,
+            headChanged: false,
+        });
     }
 
     private loadDatasetAsCollection(): void {

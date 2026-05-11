@@ -5,12 +5,8 @@
  * included in the LICENSE file.
  */
 
-import {
-    AccountSummaryFragment,
-    CollectionEntryConnection,
-    CollectionEntryConnectionDataFragment,
-} from "@api/kamu.graphql.interface";
-import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
+import { AccountSummaryFragment, CollectionEntryConnectionDataFragment } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 export interface LoadCollectionDataParams {
     path: string;

@@ -34,7 +34,7 @@ import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ond
 import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
 import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 import AppValues from "@common/values/app.values";
-import { CollectionEntry, CollectionEntryDataFragment, DatasetBasicsFragment } from "@api/kamu.graphql.interface";
+import { CollectionEntryDataFragment, DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { DatasetService } from "src/app/dataset-view/dataset.service";

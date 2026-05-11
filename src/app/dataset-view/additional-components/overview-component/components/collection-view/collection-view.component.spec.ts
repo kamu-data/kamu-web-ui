@@ -182,19 +182,6 @@ describe("CollectionViewComponent", () => {
     });
 
     it("should check go up from folder", () => {
-        const row: CollectionEntryViewType = {
-            displayName: "test-file",
-            nodeType: CollectionViewNode.File,
-            alias: "account/test-file",
-            systemTime: "2025-11-12T12:22:04.577+00:00",
-            hash: "ewqeqwdsd1sl5l3lfdsfdsf",
-            size: 255548,
-            owner: {
-                accountName: "twest",
-            },
-            contentType: "application/pdf",
-            extraData: {},
-        };
         const isHeadHashBlockChangedSpy = spyOn(datasetService, "isHeadHashBlockChanged").and.returnValue(
             of(true).pipe(),
         );

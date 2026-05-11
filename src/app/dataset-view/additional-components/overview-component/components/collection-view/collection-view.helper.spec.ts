@@ -10,6 +10,11 @@ import { mockCollectionEntryConnection } from "src/app/search/mock.data";
 import { getCollectionValueHelper, resolveEntryIconHelper, sortCollectionEntryData } from "./collection-view.helper";
 import { CollectionEntryViewType, CollectionViewNode } from "./collection-view.model";
 
+type TestCase = {
+    case: string | string[] | null | undefined;
+    expected: string;
+};
+
 [
     { case: [], expected: "-" },
     { case: null, expected: "-" },
@@ -17,8 +22,8 @@ import { CollectionEntryViewType, CollectionViewNode } from "./collection-view.m
     { case: "", expected: "-" },
     { case: ["one", "two"], expected: "one, two" },
     { case: "test-value", expected: "test-value" },
-].forEach((item: { case: unknown; expected: string }) => {
-    it(`should check #getCollectionValueHelper with ${item.case}`, () => {
+].forEach((item: TestCase) => {
+    it(`should check #getCollectionValueHelper with ${JSON.stringify(item.case)}`, () => {
         expect(getCollectionValueHelper(item.case)).toEqual(item.expected);
     });
 });

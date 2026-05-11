@@ -11,28 +11,21 @@ import { GraphQLError } from "graphql";
 import { DynamicTableColumnClassEnum } from "@common/components/dynamic-table/dynamic-table.interface";
 import { OdfDefaultValues } from "@common/values/app-odf-default.values";
 import {
-    Account,
     AccountBasicsFragment,
     AccountProvider,
-    AccountSummaryFragment,
-    CollectionEntry,
-    CollectionEntryConnection,
     CollectionEntryConnectionDataFragment,
-    CollectionEntryDataFragment,
     CommitEventToDatasetMutation,
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetMutation,
     DataBatchFormat,
     DataQueryResultErrorKind,
     DataSchemaFormat,
-    Dataset,
     DatasetAsCollectionQuery,
     DatasetAsVersionedFileByBlockHashQuery,
     DatasetAsVersionedFileByVersionQuery,
     DatasetAsVersionedFileQuery,
     DatasetBasicsFragment,
     DatasetCurrentInfoFragment,
-    DatasetData,
     DatasetHeadBlockHashQuery,
     DatasetKind,
     DatasetPermissionsFragment,
@@ -49,9 +42,7 @@ import {
     SearchDatasetsOverviewQuery,
     UpdateReadmeMutation,
     UpdateWatermarkMutation,
-    VersionedFile,
     VersionedFileContentUrlQuery,
-    VersionedFileEntry,
 } from "@api/kamu.graphql.interface";
 import { TEST_AVATAR_URL } from "@api/mock/auth.mock";
 import { OdfTypes } from "@interface/dataset-schema.interface";
@@ -76,8 +67,6 @@ import { AddPushSourceEditFormType } from "src/app/dataset-view/additional-compo
 import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { SqlQueryExplanationResponse } from "src/app/query-explainer/query-explainer.types";
 import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
-
-import { CollectionEntriesResult } from "../dataset-view/additional-components/overview-component/components/collection-view/collection-view.model";
 
 export const mockPageBasedInfo: PageBasedInfo = {
     currentPage: 1,

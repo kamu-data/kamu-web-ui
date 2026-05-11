@@ -1,0 +1,9 @@
+fragment CollectionEntryConnectionData on CollectionEntryConnection {
+  nodes {
+    ...CollectionEntryData
+  }
+  pageInfo {
+    ...DatasetPageInfo
+  }
+  totalCount
+}

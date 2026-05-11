@@ -5,10 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { CollectionEntryDataFragment } from "@api/kamu.graphql.interface";
+import { AccountSummaryFragment, CollectionEntryDataFragment } from "@api/kamu.graphql.interface";
 
 import { PreviewFileTypePipe } from "../versioned-file-view/pipes/preview-file-type.pipe";
-import { AccountCollectionType, CollectionEntryViewType, CollectionViewNode } from "./collection-view.model";
+import { CollectionEntryViewType, CollectionViewNode } from "./collection-view.model";
 
 export function sortCollectionEntryData(
     nodes: CollectionEntryDataFragment[],
@@ -27,7 +27,7 @@ export function sortCollectionEntryData(
 
         if (node.asDataset) {
             const latest = node.asDataset.asVersionedFile?.latest;
-            const owner: AccountCollectionType = {
+            const owner: AccountSummaryFragment = {
                 accountName: node.asDataset.owner.accountName,
                 avatarUrl: node.asDataset.owner.avatarUrl,
             };

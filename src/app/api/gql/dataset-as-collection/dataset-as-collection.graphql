@@ -11,13 +11,7 @@ query datasetAsCollection(
       asCollection {
         latest {
           entries(pathPrefix: $pathPrefix, maxDepth: $maxDepth, page: $page, perPage: $perPage) {
-            nodes {
-              ...CollectionEntryData
-            }
-            pageInfo {
-              ...DatasetPageInfo
-            }
-            totalCount
+            ...CollectionEntryConnectionData
           }
         }
       }

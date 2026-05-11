@@ -11,7 +11,7 @@ import { BehaviorSubject, filter, map, Observable, switchMap } from "rxjs";
 
 import { trackBusy } from "@common/helpers/app.helpers";
 import { DatasetApi } from "@api/dataset.api";
-import { CollectionEntryConnection, DatasetAsCollectionQuery } from "@api/kamu.graphql.interface";
+import { CollectionEntryConnectionDataFragment, DatasetAsCollectionQuery } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import {
@@ -56,10 +56,10 @@ export class DatasetAsCollectionService {
         maxDepth?: number;
         page: number;
         perPage: number;
-    }): Observable<CollectionEntryConnection> {
+    }): Observable<CollectionEntryConnectionDataFragment> {
         return this.datasetApi.getDatasetAsCollection(params).pipe(
             map((result: DatasetAsCollectionQuery) => {
-                return result.datasets.byId?.asCollection?.latest.entries as CollectionEntryConnection;
+                return result.datasets.byId?.asCollection?.latest.entries as CollectionEntryConnectionDataFragment;
             }),
         );
     }

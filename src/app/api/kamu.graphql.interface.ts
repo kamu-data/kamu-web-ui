@@ -5229,6 +5229,8 @@ export type AccountFlowProcessCardConnectionDataFragment = {
     pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
 };
 
+export type AccountSummaryFragment = { __typename?: "Account"; accountName: string; avatarUrl?: string | null };
+
 export type WebhookFlowSubProcessConnectionDataFragment = {
     __typename?: "WebhookFlowSubProcessConnection";
     totalCount: number;
@@ -5465,16 +5467,18 @@ export type DatasetAsCollectionQuery = {
                 __typename?: "Collection";
                 latest: {
                     __typename?: "CollectionProjection";
-                    entries: {
-                        __typename?: "CollectionEntryConnection";
-                        totalCount: number;
-                        nodes: Array<{ __typename?: "CollectionEntry" } & CollectionEntryDataFragment>;
-                        pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
-                    };
+                    entries: { __typename?: "CollectionEntryConnection" } & CollectionEntryConnectionDataFragment;
                 };
             } | null;
         } | null;
     };
+};
+
+export type CollectionEntryConnectionDataFragment = {
+    __typename?: "CollectionEntryConnection";
+    totalCount: number;
+    nodes: Array<{ __typename?: "CollectionEntry" } & CollectionEntryDataFragment>;
+    pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
 };
 
 export type CollectionEntryDataFragment = {
@@ -5487,7 +5491,7 @@ export type CollectionEntryDataFragment = {
         __typename?: "Dataset";
         alias: string;
         head: string;
-        owner: { __typename?: "Account"; accountName: string; avatarUrl?: string | null };
+        owner: { __typename?: "Account" } & AccountSummaryFragment;
         data: { __typename?: "DatasetData"; estimatedSizeBytes: number };
         asVersionedFile?: {
             __typename?: "VersionedFile";
@@ -8445,6 +8449,12 @@ export const AccountWithEmailFragmentDoc = gql`
         email
     }
 `;
+export const AccountSummaryFragmentDoc = gql`
+    fragment AccountSummary on Account {
+        accountName
+        avatarUrl
+    }
+`;
 export const CollectionEntryDataFragmentDoc = gql`
     fragment CollectionEntryData on CollectionEntry {
         systemTime
@@ -8454,8 +8464,7 @@ export const CollectionEntryDataFragmentDoc = gql`
         asDataset {
             alias
             owner {
-                accountName
-                avatarUrl
+                ...AccountSummary
             }
             head
             data {
@@ -8471,6 +8480,20 @@ export const CollectionEntryDataFragmentDoc = gql`
             }
         }
     }
+    ${AccountSummaryFragmentDoc}
+`;
+export const CollectionEntryConnectionDataFragmentDoc = gql`
+    fragment CollectionEntryConnectionData on CollectionEntryConnection {
+        nodes {
+            ...CollectionEntryData
+        }
+        pageInfo {
+            ...DatasetPageInfo
+        }
+        totalCount
+    }
+    ${CollectionEntryDataFragmentDoc}
+    ${DatasetPageInfoFragmentDoc}
 `;
 export const VersionedFileEntryDataFragmentDoc = gql`
     fragment VersionedFileEntryData on VersionedFileEntry {
@@ -10721,21 +10744,14 @@ export const DatasetAsCollectionDocument = gql`
                 asCollection {
                     latest {
                         entries(pathPrefix: $pathPrefix, maxDepth: $maxDepth, page: $page, perPage: $perPage) {
-                            nodes {
-                                ...CollectionEntryData
-                            }
-                            pageInfo {
-                                ...DatasetPageInfo
-                            }
-                            totalCount
+                            ...CollectionEntryConnectionData
                         }
                     }
                 }
             }
         }
     }
-    ${CollectionEntryDataFragmentDoc}
-    ${DatasetPageInfoFragmentDoc}
+    ${CollectionEntryConnectionDataFragmentDoc}
 `;
 
 @Injectable({

@@ -5,7 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { CollectionEntryConnection } from "@api/kamu.graphql.interface";
+import {
+    AccountSummaryFragment,
+    CollectionEntryConnection,
+    CollectionEntryConnectionDataFragment,
+} from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
 
 export interface LoadCollectionDataParams {
@@ -22,18 +26,13 @@ export interface CollectionEntryViewType {
     systemTime: string;
     hash: MaybeNull<string>;
     size: MaybeNull<number>;
-    owner: MaybeNull<AccountCollectionType>;
+    owner: MaybeNull<AccountSummaryFragment>;
     contentType: MaybeNull<string>;
     extraData: object;
 }
 
-export interface AccountCollectionType {
-    accountName: string;
-    avatarUrl: MaybeNullOrUndefined<string>;
-}
-
 export interface CollectionEntriesResult {
-    connection: CollectionEntryConnection;
+    connection: CollectionEntryConnectionDataFragment;
     headChanged?: boolean;
 }
 

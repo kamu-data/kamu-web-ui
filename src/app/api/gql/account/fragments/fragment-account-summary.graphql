@@ -1,0 +1,4 @@
+fragment AccountSummary on Account {
+  accountName
+  avatarUrl
+}

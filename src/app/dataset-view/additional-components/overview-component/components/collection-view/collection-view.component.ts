@@ -172,7 +172,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             );
     }
 
-    private prepareDisplayColumns(nodes: CollectionEntry[]): void {
+    private prepareDisplayColumns(nodes: CollectionEntryDataFragment[]): void {
         this.extraDataKeys =
             nodes.length > 0 ? Object.keys(sortCollectionEntryData(nodes, this.maxDepth)[0].extraData) : [];
 
@@ -185,10 +185,6 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             );
             this.displayedColumns = filteredColumns;
         }
-    }
-
-    public displayNodes(nodes: CollectionEntryDataFragment[]): CollectionEntryViewType[] {
-        return sortCollectionEntryData(nodes, this.maxDepth);
     }
 
     public getValue(value: unknown): string {

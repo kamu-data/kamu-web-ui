@@ -6,8 +6,7 @@ fragment CollectionEntryData on CollectionEntry {
   asDataset {
     alias
     owner {
-      accountName
-      avatarUrl
+      ...AccountSummary
     }
     head
     data {

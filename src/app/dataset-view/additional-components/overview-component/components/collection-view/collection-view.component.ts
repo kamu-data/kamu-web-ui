@@ -208,7 +208,6 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             this.pathPrefix += `${this.maxDepth === 0 ? row.displayName : "/" + row.displayName}`;
             this.maxDepth += 1;
             this.currentPage = 1;
-            this.dataSource.data = [];
             this.checkHeadAndLoadCollection();
         } else {
             if ([CollectionViewNode.Dataset, CollectionViewNode.File].includes(row.nodeType)) {
@@ -228,7 +227,6 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
         this.pathPrefix = lastSlashIndex === 0 ? "/" : this.pathPrefix.substring(0, lastSlashIndex);
         this.maxDepth -= 1;
         this.currentPage = 1;
-        this.dataSource.data = [];
         this.checkHeadAndLoadCollection();
     }
 
@@ -268,6 +266,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
                     ) as CollectionEntryViewType[];
                     this.cdr.detectChanges();
                 } else {
+                    this.dataSource.data = [];
                     this.triggerLoadCollection(headChanged);
                 }
             });

@@ -26,9 +26,16 @@
             <span class="vcard-fullname d-block p-2 overflow-hidden" [title]="user.displayName">
                 {{ user.displayName | displayAccountName: user.accountProvider }}
             </span>
+
             <span class="vcard-username d-block px-2 overflow-hidden">
                 {{ user.accountName }}
             </span>
+            <div class="text-center me-4 d-flex align-items-center justify-content-between">
+                <span class="d-block px-2 overflow-hidden text-muted"> {{ user.id | displayDatasetId }} </span>
+                <div class="input-group-button ms-1">
+                    <app-copy-to-clipboard [text]="user.id" [dataTestId]="'copyToClipboard-accountId'" />
+                </div>
+            </div>
 
             <div class="my-3 text-center me-4">
                 <button
@@ -41,7 +48,8 @@
                     {{ isLoggedUser(user) ? "Edit profile" : "Follow" }}
                 </button>
             </div>
-            <mat-divider class="w-90 mt-50px"></mat-divider>
+
+            <mat-divider class="w-90 mt-30px"></mat-divider>
             <div appFeatureFlag="profile.companies" class="mt-2 me-4">
                 <h3 class="text-start pt-3 px-3 organization">Organizations</h3>
                 <div class="d-flex flex-row gap-2 text-start px-3">

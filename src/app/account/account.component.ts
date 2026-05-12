@@ -15,10 +15,12 @@ import { RouterLink, RouterOutlet } from "@angular/router";
 import { Observable } from "rxjs";
 import { map, shareReplay } from "rxjs/operators";
 
+import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
 import { ModalService } from "@common/components/modal/modal.service";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { DisplayAccountNamePipe } from "@common/pipes/display-account-name.pipe";
+import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { AccountNotFoundError } from "@common/values/errors";
@@ -46,7 +48,9 @@ import ProjectLinks from "src/app/project-links";
         MatDividerModule,
         MatIconModule,
         //-----//
+        CopyToClipboardComponent,
         DisplayAccountNamePipe,
+        DisplayDatasetIdPipe,
         FeatureFlagDirective,
     ],
 })

@@ -6,9 +6,9 @@
                 <span>{{ ReadSectionMapping[sourceEvent.read.__typename] }}</span>
             </app-block-row-data>
         </div>
-        <div class="mx-4" *ngIf="sourceEvent.read.schema && sourceEvent.read.schema.length > 0">
+        <div class="mx-4" *ngIf="sourceEvent.read.ddlSchema && sourceEvent.read.ddlSchema.length > 0">
             <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.SCHEMA" [label]="'Schema:'">
-                <app-schema-property [data]="sourceEvent.read.schema" />
+                <app-schema-property [data]="sourceEvent.read.ddlSchema!" />
             </app-block-row-data>
         </div>
         <div class="mx-4" *ngIf="sourceEvent.read.__typename === 'ReadStepCsv'">

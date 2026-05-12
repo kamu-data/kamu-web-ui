@@ -26,6 +26,7 @@ export type Scalars = {
     /** Base64-encoded binary data (url-safe, no padding) */
     Base64Usnp: { input: string; output: string };
     CollectionPath: { input: string; output: string };
+    DataSchemaInput: { input: string; output: string };
     DatasetAlias: { input: string; output: string };
     DatasetEnvVarID: { input: string; output: string };
     DatasetID: { input: string; output: string };
@@ -1862,6 +1863,7 @@ export type DatasetsMutCreateCollectionArgs = {
     extraColumns?: InputMaybe<Array<ColumnInput>>;
     extraEvents?: InputMaybe<Array<Scalars["String"]["input"]>>;
     extraEventsFormat?: InputMaybe<MetadataManifestFormat>;
+    extraSchema?: InputMaybe<Scalars["DataSchemaInput"]["input"]>;
 };
 
 export type DatasetsMutCreateEmptyArgs = {
@@ -1882,6 +1884,7 @@ export type DatasetsMutCreateVersionedFileArgs = {
     extraColumns?: InputMaybe<Array<ColumnInput>>;
     extraEvents?: InputMaybe<Array<Scalars["String"]["input"]>>;
     extraEventsFormat?: InputMaybe<MetadataManifestFormat>;
+    extraSchema?: InputMaybe<Scalars["DataSchemaInput"]["input"]>;
 };
 
 export type DeleteAccountResult = {
@@ -3520,21 +3523,25 @@ export type ReactivateWebhookSubscriptionResultUnexpected = ReactivateWebhookSub
  *
  * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstep-schema
  */
-export type ReadStep =
-    | ReadStepCsv
-    | ReadStepEsriShapefile
-    | ReadStepGeoJson
-    | ReadStepJson
-    | ReadStepNdGeoJson
-    | ReadStepNdJson
-    | ReadStepParquet;
+export type ReadStep = {
+    schema?: Maybe<DataSchema>;
+};
+
+/**
+ * Defines how raw data should be read into the structured form.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstep-schema
+ */
+export type ReadStepSchemaArgs = {
+    format?: InputMaybe<DataSchemaFormat>;
+};
 
 /**
  * Reader for comma-separated files.
  *
  * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepcsv-schema
  */
-export type ReadStepCsv = {
+export type ReadStepCsv = ReadStep & {
     __typename?: "ReadStepCsv";
     /**
      * Sets the string that indicates a date format. The `rfc3339` is the only
@@ -3543,6 +3550,14 @@ export type ReadStepCsv = {
      * Defaults to: "rfc3339"
      */
     dateFormat?: Maybe<Scalars["String"]["output"]>;
+    /**
+     * DEPRECATED: A DDL-formatted schema. Schema can be used to coerce values
+     * into more appropriate data types.
+     *
+     * Examples:
+     * - ["date TIMESTAMP","city STRING","population INT"]
+     */
+    ddlSchema?: Maybe<Array<Scalars["String"]["output"]>>;
     /**
      * Decodes the CSV files by the given encoding type.
      *
@@ -3583,14 +3598,8 @@ export type ReadStepCsv = {
      * Defaults to: "\""
      */
     quote?: Maybe<Scalars["String"]["output"]>;
-    /**
-     * A DDL-formatted schema. Schema can be used to coerce values into more
-     * appropriate data types.
-     *
-     * Examples:
-     * - ["date TIMESTAMP","city STRING","population INT"]
-     */
-    schema?: Maybe<Array<Scalars["String"]["output"]>>;
+    /** Schema used to coerce values into more appropriate data types. */
+    schema?: Maybe<DataSchema>;
     /**
      * Sets a single character as a separator for each field and value.
      *
@@ -3608,23 +3617,43 @@ export type ReadStepCsv = {
 };
 
 /**
+ * Reader for comma-separated files.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepcsv-schema
+ */
+export type ReadStepCsvSchemaArgs = {
+    format?: InputMaybe<DataSchemaFormat>;
+};
+
+/**
  * Reader for ESRI Shapefile format.
  *
  * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepesrishapefile-schema
  */
-export type ReadStepEsriShapefile = {
+export type ReadStepEsriShapefile = ReadStep & {
     __typename?: "ReadStepEsriShapefile";
     /**
-     * A DDL-formatted schema. Schema can be used to coerce values into more
-     * appropriate data types.
+     * DEPRECATED: A DDL-formatted schema. Schema can be used to coerce values
+     * into more appropriate data types.
      */
-    schema?: Maybe<Array<Scalars["String"]["output"]>>;
+    ddlSchema?: Maybe<Array<Scalars["String"]["output"]>>;
+    /** Schema used to coerce values into more appropriate data types. */
+    schema?: Maybe<DataSchema>;
     /**
      * If the ZIP archive contains multiple shapefiles use this field to
      * specify a sub-path to the desired `.shp` file. Can contain glob patterns
      * to act as a filter.
      */
     subPath?: Maybe<Scalars["String"]["output"]>;
+};
+
+/**
+ * Reader for ESRI Shapefile format.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepesrishapefile-schema
+ */
+export type ReadStepEsriShapefileSchemaArgs = {
+    format?: InputMaybe<DataSchemaFormat>;
 };
 
 /**
@@ -3635,13 +3664,27 @@ export type ReadStepEsriShapefile = {
  *
  * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepgeojson-schema
  */
-export type ReadStepGeoJson = {
+export type ReadStepGeoJson = ReadStep & {
     __typename?: "ReadStepGeoJson";
     /**
-     * A DDL-formatted schema. Schema can be used to coerce values into more
-     * appropriate data types.
+     * DEPRECATED: A DDL-formatted schema. Schema can be used to coerce values
+     * into more appropriate data types.
      */
-    schema?: Maybe<Array<Scalars["String"]["output"]>>;
+    ddlSchema?: Maybe<Array<Scalars["String"]["output"]>>;
+    /** Schema used to coerce values into more appropriate data types. */
+    schema?: Maybe<DataSchema>;
+};
+
+/**
+ * Reader for GeoJSON files. It expects one `FeatureCollection` object in the
+ * root and will create a record per each `Feature` inside it extracting the
+ * properties into individual columns and leaving the feature geometry in its
+ * own column.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepgeojson-schema
+ */
+export type ReadStepGeoJsonSchemaArgs = {
+    format?: InputMaybe<DataSchemaFormat>;
 };
 
 /**
@@ -3649,7 +3692,7 @@ export type ReadStepGeoJson = {
  *
  * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepjson-schema
  */
-export type ReadStepJson = {
+export type ReadStepJson = ReadStep & {
     __typename?: "ReadStepJson";
     /**
      * Sets the string that indicates a date format. The `rfc3339` is the only
@@ -3659,16 +3702,18 @@ export type ReadStepJson = {
      */
     dateFormat?: Maybe<Scalars["String"]["output"]>;
     /**
+     * DEPRECATED: A DDL-formatted schema. Schema can be used to coerce values
+     * into more appropriate data types.
+     */
+    ddlSchema?: Maybe<Array<Scalars["String"]["output"]>>;
+    /**
      * Allows to forcibly set one of standard basic or extended encodings.
      *
      * Defaults to: "utf8"
      */
     encoding?: Maybe<Scalars["String"]["output"]>;
-    /**
-     * A DDL-formatted schema. Schema can be used to coerce values into more
-     * appropriate data types.
-     */
-    schema?: Maybe<Array<Scalars["String"]["output"]>>;
+    /** Schema used to coerce values into more appropriate data types. */
+    schema?: Maybe<DataSchema>;
     /**
      * Path in the form of `a.b.c` to a sub-element of the root JSON object
      * that is an array or objects. If not specified it is assumed that the
@@ -3686,19 +3731,41 @@ export type ReadStepJson = {
 };
 
 /**
+ * Reader for JSON files that contain an array of objects within them.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepjson-schema
+ */
+export type ReadStepJsonSchemaArgs = {
+    format?: InputMaybe<DataSchemaFormat>;
+};
+
+/**
  * Reader for Newline-delimited GeoJSON files. It is similar to `GeoJson`
  * format but instead of `FeatureCollection` object in the root it expects
  * every individual feature object to appear on its own line.
  *
  * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepndgeojson-schema
  */
-export type ReadStepNdGeoJson = {
+export type ReadStepNdGeoJson = ReadStep & {
     __typename?: "ReadStepNdGeoJson";
     /**
-     * A DDL-formatted schema. Schema can be used to coerce values into more
-     * appropriate data types.
+     * DEPRECATED: A DDL-formatted schema. Schema can be used to coerce values
+     * into more appropriate data types.
      */
-    schema?: Maybe<Array<Scalars["String"]["output"]>>;
+    ddlSchema?: Maybe<Array<Scalars["String"]["output"]>>;
+    /** Schema used to coerce values into more appropriate data types. */
+    schema?: Maybe<DataSchema>;
+};
+
+/**
+ * Reader for Newline-delimited GeoJSON files. It is similar to `GeoJson`
+ * format but instead of `FeatureCollection` object in the root it expects
+ * every individual feature object to appear on its own line.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepndgeojson-schema
+ */
+export type ReadStepNdGeoJsonSchemaArgs = {
+    format?: InputMaybe<DataSchemaFormat>;
 };
 
 /**
@@ -3707,7 +3774,7 @@ export type ReadStepNdGeoJson = {
  *
  * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepndjson-schema
  */
-export type ReadStepNdJson = {
+export type ReadStepNdJson = ReadStep & {
     __typename?: "ReadStepNdJson";
     /**
      * Sets the string that indicates a date format. The `rfc3339` is the only
@@ -3717,16 +3784,18 @@ export type ReadStepNdJson = {
      */
     dateFormat?: Maybe<Scalars["String"]["output"]>;
     /**
+     * DEPRECATED: A DDL-formatted schema. Schema can be used to coerce values
+     * into more appropriate data types.
+     */
+    ddlSchema?: Maybe<Array<Scalars["String"]["output"]>>;
+    /**
      * Allows to forcibly set one of standard basic or extended encodings.
      *
      * Defaults to: "utf8"
      */
     encoding?: Maybe<Scalars["String"]["output"]>;
-    /**
-     * A DDL-formatted schema. Schema can be used to coerce values into more
-     * appropriate data types.
-     */
-    schema?: Maybe<Array<Scalars["String"]["output"]>>;
+    /** Schema used to coerce values into more appropriate data types. */
+    schema?: Maybe<DataSchema>;
     /**
      * Sets the string that indicates a timestamp format. The `rfc3339` is the
      * only required format, the other format strings are
@@ -3738,17 +3807,38 @@ export type ReadStepNdJson = {
 };
 
 /**
+ * Reader for files containing multiple newline-delimited JSON objects with the
+ * same schema.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepndjson-schema
+ */
+export type ReadStepNdJsonSchemaArgs = {
+    format?: InputMaybe<DataSchemaFormat>;
+};
+
+/**
  * Reader for Apache Parquet format.
  *
  * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepparquet-schema
  */
-export type ReadStepParquet = {
+export type ReadStepParquet = ReadStep & {
     __typename?: "ReadStepParquet";
     /**
-     * A DDL-formatted schema. Schema can be used to coerce values into more
-     * appropriate data types.
+     * DEPRECATED: A DDL-formatted schema. Schema can be used to coerce values
+     * into more appropriate data types.
      */
-    schema?: Maybe<Array<Scalars["String"]["output"]>>;
+    ddlSchema?: Maybe<Array<Scalars["String"]["output"]>>;
+    /** Schema used to coerce values into more appropriate data types. */
+    schema?: Maybe<DataSchema>;
+};
+
+/**
+ * Reader for Apache Parquet format.
+ *
+ * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepparquet-schema
+ */
+export type ReadStepParquetSchemaArgs = {
+    format?: InputMaybe<DataSchemaFormat>;
 };
 
 export type RemoveWebhookSubscriptionResult = {
@@ -7304,7 +7394,7 @@ export type PreprocessStepDataFragment = {
 
 export type ReadStepCsvDataFragment = {
     __typename?: "ReadStepCsv";
-    schema?: Array<string> | null;
+    ddlSchema?: Array<string> | null;
     separator?: string | null;
     encoding?: string | null;
     quote?: string | null;
@@ -7318,32 +7408,32 @@ export type ReadStepCsvDataFragment = {
 
 export type ReadStepEsriShapefileDataFragment = {
     __typename?: "ReadStepEsriShapefile";
-    schema?: Array<string> | null;
+    ddlSchema?: Array<string> | null;
     subPath?: string | null;
 };
 
-export type ReadStepGeoJsonDataFragment = { __typename?: "ReadStepGeoJson"; schema?: Array<string> | null };
+export type ReadStepGeoJsonDataFragment = { __typename?: "ReadStepGeoJson"; ddlSchema?: Array<string> | null };
 
 export type ReadStepJsonDataFragment = {
     __typename?: "ReadStepJson";
     subPath?: string | null;
-    schema?: Array<string> | null;
+    ddlSchema?: Array<string> | null;
     dateFormat?: string | null;
     encoding?: string | null;
     timestampFormat?: string | null;
 };
 
-export type ReadStepNdGeoJsonDataFragment = { __typename?: "ReadStepNdGeoJson"; schema?: Array<string> | null };
+export type ReadStepNdGeoJsonDataFragment = { __typename?: "ReadStepNdGeoJson"; ddlSchema?: Array<string> | null };
 
 export type ReadStepNdJsonDataFragment = {
     __typename?: "ReadStepNdJson";
     dateFormat?: string | null;
     encoding?: string | null;
-    schema?: Array<string> | null;
+    ddlSchema?: Array<string> | null;
     timestampFormat?: string | null;
 };
 
-export type ReadStepParquetDataFragment = { __typename?: "ReadStepParquet"; schema?: Array<string> | null };
+export type ReadStepParquetDataFragment = { __typename?: "ReadStepParquet"; ddlSchema?: Array<string> | null };
 
 export type AccessTokenDataFragment = {
     __typename?: "ViewAccessToken";
@@ -9304,7 +9394,7 @@ export const FetchStepEthereumLogsDataFragmentDoc = gql`
 `;
 export const ReadStepCsvDataFragmentDoc = gql`
     fragment ReadStepCsvData on ReadStepCsv {
-        schema
+        ddlSchema
         separator
         encoding
         quote
@@ -9319,7 +9409,7 @@ export const ReadStepCsvDataFragmentDoc = gql`
 export const ReadStepJsonDataFragmentDoc = gql`
     fragment ReadStepJsonData on ReadStepJson {
         subPath
-        schema
+        ddlSchema
         dateFormat
         encoding
         timestampFormat
@@ -9329,29 +9419,29 @@ export const ReadStepNdJsonDataFragmentDoc = gql`
     fragment ReadStepNdJsonData on ReadStepNdJson {
         dateFormat
         encoding
-        schema
+        ddlSchema
         timestampFormat
     }
 `;
 export const ReadStepGeoJsonDataFragmentDoc = gql`
     fragment ReadStepGeoJsonData on ReadStepGeoJson {
-        schema
+        ddlSchema
     }
 `;
 export const ReadStepNdGeoJsonDataFragmentDoc = gql`
     fragment ReadStepNdGeoJsonData on ReadStepNdGeoJson {
-        schema
+        ddlSchema
     }
 `;
 export const ReadStepEsriShapefileDataFragmentDoc = gql`
     fragment ReadStepEsriShapefileData on ReadStepEsriShapefile {
-        schema
+        ddlSchema
         subPath
     }
 `;
 export const ReadStepParquetDataFragmentDoc = gql`
     fragment ReadStepParquetData on ReadStepParquet {
-        schema
+        ddlSchema
     }
 `;
 export const MergeStrategySnapshotDataFragmentDoc = gql`

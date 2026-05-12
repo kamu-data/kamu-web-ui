@@ -1,5 +1,5 @@
 fragment ReadStepCsvData on ReadStepCsv {
-  schema
+  ddlSchema
   separator
   encoding
   quote

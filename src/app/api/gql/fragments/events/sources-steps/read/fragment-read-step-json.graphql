@@ -1,6 +1,6 @@
 fragment ReadStepJsonData on ReadStepJson {
   subPath
-  schema
+  ddlSchema
   dateFormat
   encoding
   timestampFormat

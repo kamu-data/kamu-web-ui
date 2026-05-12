@@ -5,6 +5,8 @@
  * included in the LICENSE file.
  */
 
+import { defer, finalize, Observable, Subject } from "rxjs";
+
 import cronParser from "cron-parser";
 import { format, isSameDay, subDays } from "date-fns";
 import { jwtDecode } from "jwt-decode";
@@ -233,7 +235,26 @@ export function isAccessTokenExpired(accessToken: string): boolean {
 }
 
 export function maskDotsInURL(url: string, segmentIndex: number): string {
-    const mimeTypes = ["pdf", "png", "jpg", "jpeg", "mov", "mp4", "mov", "txt", "json", "mp3", "csv"];
+    const mimeTypes = [
+        "pdf",
+        "png",
+        "jpg",
+        "jpeg",
+        "svg",
+        "mov",
+        "mp4",
+        "mov",
+        "avi",
+        "mkv",
+        "txt",
+        "json",
+        "mp3",
+        "csv",
+        "webp",
+        "xml",
+        "rtf",
+        "doc",
+    ];
     const [path, query] = url.split("?");
     const segments = path.split("/");
 
@@ -245,4 +266,12 @@ export function maskDotsInURL(url: string, segmentIndex: number): string {
 
     const newPath = segments.join("/");
     return query ? `${newPath}?${query}` : newPath;
+}
+
+export function trackBusy<T>(busy: Subject<boolean>) {
+    return (source$: Observable<T>) =>
+        defer(() => {
+            busy.next(true);
+            return source$;
+        }).pipe(finalize(() => busy.next(false)));
 }

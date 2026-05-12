@@ -50,7 +50,7 @@ export type Scalars = {
     EventID: { input: string; output: string };
     EvmWalletAddress: { input: string; output: string };
     ExtraAttributes: { input: string; output: string };
-    ExtraData: { input: string; output: string };
+    ExtraData: { input: Record<string, any>; output: Record<string, any> };
     FlowID: { input: string; output: string };
     /** A scalar that can represent any JSON value. */
     JSON: { input: string; output: string };
@@ -5229,6 +5229,8 @@ export type AccountFlowProcessCardConnectionDataFragment = {
     pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
 };
 
+export type AccountSummaryFragment = { __typename?: "Account"; accountName: string; avatarUrl?: string | null };
+
 export type WebhookFlowSubProcessConnectionDataFragment = {
     __typename?: "WebhookFlowSubProcessConnection";
     totalCount: number;
@@ -5444,6 +5446,64 @@ export type UpdateWatermarkMutation = {
                 | { __typename?: "SetWatermarkUpdated"; newHead: string; message: string };
         } | null;
     };
+};
+
+export type DatasetAsCollectionQueryVariables = Exact<{
+    datasetId: Scalars["DatasetID"]["input"];
+    pathPrefix?: InputMaybe<Scalars["CollectionPath"]["input"]>;
+    maxDepth?: InputMaybe<Scalars["Int"]["input"]>;
+    page?: InputMaybe<Scalars["Int"]["input"]>;
+    perPage?: InputMaybe<Scalars["Int"]["input"]>;
+}>;
+
+export type DatasetAsCollectionQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byId?: {
+            __typename?: "Dataset";
+            name: string;
+            asCollection?: {
+                __typename?: "Collection";
+                latest: {
+                    __typename?: "CollectionProjection";
+                    entries: { __typename?: "CollectionEntryConnection" } & CollectionEntryConnectionDataFragment;
+                };
+            } | null;
+        } | null;
+    };
+};
+
+export type CollectionEntryConnectionDataFragment = {
+    __typename?: "CollectionEntryConnection";
+    totalCount: number;
+    nodes: Array<{ __typename?: "CollectionEntry" } & CollectionEntryDataFragment>;
+    pageInfo: { __typename?: "PageBasedInfo" } & DatasetPageInfoFragment;
+};
+
+export type CollectionEntryDataFragment = {
+    __typename?: "CollectionEntry";
+    systemTime: string;
+    path: string;
+    ref: string;
+    extraData: Record<string, any>;
+    asDataset?: {
+        __typename?: "Dataset";
+        alias: string;
+        head: string;
+        owner: { __typename?: "Account" } & AccountSummaryFragment;
+        data: { __typename?: "DatasetData"; estimatedSizeBytes: number };
+        asVersionedFile?: {
+            __typename?: "VersionedFile";
+            latest?: {
+                __typename?: "VersionedFileEntry";
+                systemTime: string;
+                contentType: string;
+                contentLength: number;
+                contentHash: string;
+            } | null;
+        } | null;
+    } | null;
 };
 
 export type DatasetAsVersionedFileByBlockHashQueryVariables = Exact<{
@@ -8389,6 +8449,52 @@ export const AccountWithEmailFragmentDoc = gql`
         email
     }
 `;
+export const AccountSummaryFragmentDoc = gql`
+    fragment AccountSummary on Account {
+        accountName
+        avatarUrl
+    }
+`;
+export const CollectionEntryDataFragmentDoc = gql`
+    fragment CollectionEntryData on CollectionEntry {
+        systemTime
+        path
+        ref
+        extraData
+        asDataset {
+            alias
+            owner {
+                ...AccountSummary
+            }
+            head
+            data {
+                estimatedSizeBytes
+            }
+            asVersionedFile {
+                latest {
+                    systemTime
+                    contentType
+                    contentLength
+                    contentHash
+                }
+            }
+        }
+    }
+    ${AccountSummaryFragmentDoc}
+`;
+export const CollectionEntryConnectionDataFragmentDoc = gql`
+    fragment CollectionEntryConnectionData on CollectionEntryConnection {
+        nodes {
+            ...CollectionEntryData
+        }
+        pageInfo {
+            ...DatasetPageInfo
+        }
+        totalCount
+    }
+    ${CollectionEntryDataFragmentDoc}
+    ${DatasetPageInfoFragmentDoc}
+`;
 export const VersionedFileEntryDataFragmentDoc = gql`
     fragment VersionedFileEntryData on VersionedFileEntry {
         systemTime
@@ -10619,6 +10725,40 @@ export const UpdateWatermarkDocument = gql`
 })
 export class UpdateWatermarkGQL extends Apollo.Mutation<UpdateWatermarkMutation, UpdateWatermarkMutationVariables> {
     document = UpdateWatermarkDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetAsCollectionDocument = gql`
+    query datasetAsCollection(
+        $datasetId: DatasetID!
+        $pathPrefix: CollectionPath
+        $maxDepth: Int
+        $page: Int
+        $perPage: Int
+    ) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                name
+                asCollection {
+                    latest {
+                        entries(pathPrefix: $pathPrefix, maxDepth: $maxDepth, page: $page, perPage: $perPage) {
+                            ...CollectionEntryConnectionData
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${CollectionEntryConnectionDataFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetAsCollectionGQL extends Apollo.Query<DatasetAsCollectionQuery, DatasetAsCollectionQueryVariables> {
+    document = DatasetAsCollectionDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

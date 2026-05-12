@@ -1,22 +1,6 @@
 <div class="dataset-result-container container-main">
     <div class="search-result-container__content">
         <div
-            class="d-flex justify-content-end"
-            *ngIf="currentArchetype && currentArchetype !== DatasetArchetype.Collection"
-        >
-            <mat-button-toggle-group [(ngModel)]="viewMode" [hideSingleSelectionIndicator]="true">
-                <mat-button-toggle
-                    *ngFor="let button of visibleViewModeButtons"
-                    [value]="button.value"
-                    [matTooltip]="button.tooltip"
-                    [matTooltipPosition]="'above'"
-                >
-                    <mat-icon [svgIcon]="button.icon" />
-                </mat-button-toggle>
-            </mat-button-toggle-group>
-        </div>
-
-        <div
             *ngIf="hasDatasetInfo; else noDetails"
             class="d-flex flex-row flex-justify-between mb-3"
             data-test-id="dataset-info-block"
@@ -127,6 +111,19 @@
             </p>
         </div>
 
+        <div class="d-flex justify-content-end mb-4" *ngIf="currentArchetype">
+            <mat-button-toggle-group [(ngModel)]="viewMode" [hideSingleSelectionIndicator]="true">
+                <mat-button-toggle
+                    *ngFor="let button of visibleViewModeButtons"
+                    [value]="button.value"
+                    [matTooltip]="button.tooltip"
+                    [matTooltipPosition]="'above'"
+                >
+                    <mat-icon [svgIcon]="button.icon" />
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+
         <div *ngIf="viewMode === OverviewTabMode.Table">
             <div class="d-flex justify-content-end mb-3">
                 <button
@@ -211,6 +208,10 @@
         <div *ngIf="viewMode === OverviewTabMode.VersionedFile">
             <app-versioned-file-view [datasetBasics]="datasetBasics" />
         </div>
+        <div *ngIf="viewMode === OverviewTabMode.Collection">
+            <app-collection-view [datasetBasics]="datasetBasics" />
+        </div>
+
         <div class="my-4" *ngIf="canAddReadme" data-test-id="add-readme-block">
             <p appFeatureFlag="dataset.panel.overview.readme">
                 You can
@@ -343,32 +344,38 @@
                             </div>
                         </div>
                     </div>
-                    <div class="dataset-info--block">
-                        <div class="dataset-info--sub-block d-flex align-items-center">
-                            <mat-icon class="fs-4 mr-2">folder_open</mat-icon>
-                            <h2 class="dataset-info--subtitle">Estimated Size:</h2>
+                    <ng-container *ngIf="viewMode === OverviewTabMode.Table">
+                        <div class="dataset-info--block">
+                            <div class="dataset-info--sub-block d-flex align-items-center">
+                                <mat-icon class="fs-4 mr-2">folder_open</mat-icon>
+                                <h2 class="dataset-info--subtitle">Estimated Size:</h2>
+                            </div>
+                            <div class="dataset-info--sub-block">
+                                <p class="dataset-info--text">
+                                    {{
+                                        datasetOverviewTabData.overviewUpdate.size.estimatedSizeBytes
+                                            ? (datasetOverviewTabData.overviewUpdate.size.estimatedSizeBytes
+                                              | displaySize)
+                                            : "-"
+                                    }}
+                                </p>
+                            </div>
                         </div>
-                        <div class="dataset-info--sub-block">
-                            <p class="dataset-info--text">
-                                {{
-                                    datasetOverviewTabData.overviewUpdate.size.estimatedSizeBytes
-                                        ? (datasetOverviewTabData.overviewUpdate.size.estimatedSizeBytes | displaySize)
-                                        : "-"
-                                }}
-                            </p>
+                        <div class="dataset-info--block mt-1">
+                            <div class="dataset-info--sub-block d-flex align-items-center">
+                                <mat-icon class="fs-4 mr-3"> format_line_spacing </mat-icon>
+                                <h2 class="dataset-info--subtitle">Records:</h2>
+                            </div>
+                            <div class="dataset-info--sub-block">
+                                <p class="dataset-info--text">
+                                    {{
+                                        datasetOverviewTabData.overviewUpdate.size.numRecordsTotal || 0
+                                            | number: "1.0-0"
+                                    }}
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="dataset-info--block mt-1">
-                        <div class="dataset-info--sub-block d-flex align-items-center">
-                            <mat-icon class="fs-4 mr-3"> format_line_spacing </mat-icon>
-                            <h2 class="dataset-info--subtitle">Records:</h2>
-                        </div>
-                        <div class="dataset-info--sub-block">
-                            <p class="dataset-info--text">
-                                {{ datasetOverviewTabData.overviewUpdate.size.numRecordsTotal || 0 | number: "1.0-0" }}
-                            </p>
-                        </div>
-                    </div>
+                    </ng-container>
                     <div class="dataset-info--block" *ngIf="datasetOverviewTabData.overviewUpdate">
                         <div class="dataset-info--sub-block d-flex align-items-center">
                             <mat-icon class="fs-4 mr-3">more_time</mat-icon>
@@ -450,7 +457,7 @@
                 </ng-template>
             </div>
 
-            <app-file-information-section *ngIf="currentArchetype" />
+            <app-file-information-section *ngIf="viewMode === OverviewTabMode.VersionedFile" />
         </nav>
     </div>
 </div>

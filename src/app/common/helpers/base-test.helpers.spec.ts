@@ -206,6 +206,16 @@ export function registerMatSvgIcons(): void {
         "configuration",
         "play_pause",
         "clarify",
+        "image",
+        "collection-folder",
+        "question",
+        "video",
+        "pdf",
+        "shift",
+        "txt",
+        "json",
+        "audio",
+        "database",
     ];
     icons.forEach((icon: string) => {
         matIconRegistry.addSvgIcon(icon, domSanitizer.bypassSecurityTrustResourceUrl(`/assets/svg/${icon}.svg`));

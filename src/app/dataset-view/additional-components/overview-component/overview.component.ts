@@ -6,7 +6,7 @@
  */
 
 import { AsyncPipe, DecimalPipe, NgFor, NgIf, TitleCasePipe } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit, SimpleChanges } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -62,7 +62,8 @@ import {
 import ProjectLinks from "src/app/project-links";
 import { FileUploadService } from "src/app/services/file-upload.service";
 
-import { FileInformationSectionComponent } from "./components/versioned-file-view/components/file-informatin-section/file-information-section.component";
+import { CollectionViewComponent } from "./components/collection-view/collection-view.component";
+import { FileInformationSectionComponent } from "./components/versioned-file-view/components/file-information-section/file-information-section.component";
 import { VersionedFileViewComponent } from "./components/versioned-file-view/versioned-file-view.component";
 import {
     VIEW_MODE_BUTTONS_OPTIONS,
@@ -91,6 +92,7 @@ import {
         MatTooltipModule,
         NgbTooltip,
         //-----//
+        CollectionViewComponent,
         FeatureFlagDirective,
         FileInformationSectionComponent,
         OverviewHistorySummaryHeaderComponent,
@@ -101,6 +103,7 @@ import {
         DisplayHashComponent,
         DisplaySizePipe,
         DisplayTimeComponent,
+
         VersionedFileViewComponent,
     ],
 })
@@ -130,8 +133,16 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     public ngOnInit(): void {
         this.role$ = this.datasetCollaborationsService.getRoleByDatasetId(this.datasetOverviewTabData.datasetBasics.id);
         this.uploadFileLoading$ = this.fileUploadService.isUploadFile;
-        if (this.currentArchetype) {
-            this.viewMode = selectOverviewTabMode(this.currentArchetype);
+    }
+
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (
+            changes.datasetOverviewTabData &&
+            changes.datasetOverviewTabData.currentValue !== changes.datasetOverviewTabData.previousValue
+        ) {
+            if (this.currentArchetype) {
+                this.viewMode = selectOverviewTabMode(this.currentArchetype);
+            }
         }
     }
 

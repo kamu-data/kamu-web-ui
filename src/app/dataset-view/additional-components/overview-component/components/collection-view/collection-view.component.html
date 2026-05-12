@@ -1,0 +1,171 @@
+<div *ngIf="loadingCollection$ | async">
+    <mat-progress-bar data-test-id="collection-loader" mode="indeterminate" class="w-100 mt-4"></mat-progress-bar>
+    <div class="mt-4 text-center text-muted">Loading...</div>
+</div>
+
+<div *ngIf="collectionInfo$ | async as collectionEntry">
+    <div *ngIf="collectionEntry.connection.totalCount; else emptyCollection" class="main-container">
+        <div
+            *ngIf="dataSource.data.length"
+            class="border-bottom"
+            style="width: 100%; overflow: auto"
+            infiniteScroll
+            [infiniteScrollDistance]="1"
+            [infiniteScrollThrottle]="150"
+            (scrolled)="onScroll()"
+        >
+            <table mat-table [dataSource]="dataSource" class="w-100">
+                <!-- Navigation: "Go Up" button for directory traversal -->
+                <ng-container matColumnDef="go-up-button">
+                    <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        [attr.colspan]="displayedColumns.length"
+                        (dblclick)="goUp()"
+                        class="up-row cursor-pointer"
+                    >
+                        <div class="d-flex align-items-center" [title]="pathPrefix">
+                            <mat-icon svgIcon="shift" class="file-icon"></mat-icon>
+                            <span class="ms-2 truncate-path d-block fw-500">{{ pathPrefix }}</span>
+                        </div>
+                    </th>
+                </ng-container>
+
+                <!-- Column: Name  -->
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>name</th>
+                    <td mat-cell *matCellDef="let el">
+                        <div class="d-flex align-items-center">
+                            <!-- 1. Display the icon name -->
+                            <mat-icon class="me-2 file-icon" [svgIcon]="displayNameIcon(el)" />
+
+                            <!-- Display the entry name -->
+                            <div class="truncate-cell d-inline-block file-name">
+                                {{
+                                    el.nodeType !== CollectionViewNode.Broken
+                                        ? el.displayName
+                                        : (el.displayName | displayDatasetId)
+                                }}
+                            </div>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Column: Last Modified Time -->
+                <ng-container matColumnDef="systemTime">
+                    <th mat-header-cell *matHeaderCellDef>modified</th>
+                    <td mat-cell *matCellDef="let el" class="copy-on-hover">
+                        <div class="d-flex align-items-center">
+                            <span class="truncate-cell">{{ el.systemTime | date: DISPLAY_TIME_FORMAT }}</span>
+                            <mat-icon
+                                *ngIf="el.nodeType !== CollectionViewNode.Broken"
+                                class="copy-icon ms-2"
+                                (click)="onCellEventClick(el.systemTime, el.nodeType)"
+                                >content_copy</mat-icon
+                            >
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Column: Owner Info -->
+                <ng-container matColumnDef="owner">
+                    <th mat-header-cell *matHeaderCellDef>owner</th>
+                    <td mat-cell *matCellDef="let el" class="copy-on-hover">
+                        <ng-container>
+                            <div *ngIf="el.nodeType !== CollectionViewNode.Folder" class="d-flex align-items-center">
+                                <div
+                                    *ngIf="el.nodeType !== CollectionViewNode.Broken"
+                                    class="d-flex align-items-center"
+                                >
+                                    <img class="img-creator" [src]="el.owner.avatarUrl ?? DEFAULT_AVATAR_URL" />
+                                    <span class="ms-2 truncate-path d-block">{{ el.owner.accountName }}</span>
+                                    <mat-icon
+                                        class="copy-icon ms-2"
+                                        (click)="onCellEventClick(el.owner.accountName, el.nodeType)"
+                                        >content_copy</mat-icon
+                                    >
+                                </div>
+                                <div *ngIf="el.nodeType === CollectionViewNode.Broken">-</div>
+                            </div>
+                        </ng-container>
+                    </td>
+                </ng-container>
+
+                <!-- Column: Content Hash -->
+                <ng-container matColumnDef="hash">
+                    <th mat-header-cell *matHeaderCellDef>hash</th>
+                    <td mat-cell *matCellDef="let el" class="copy-on-hover">
+                        <div *ngIf="el.nodeType !== CollectionViewNode.Folder" class="d-flex align-items-center">
+                            <span class="truncate-cell">{{ el.hash ? (el.hash | slice: -8) : "-" }}</span>
+                            <mat-icon
+                                *ngIf="el.nodeType !== CollectionViewNode.Broken && el.hash"
+                                class="copy-icon ms-2"
+                                (click)="onCellEventClick(el.hash, el.nodeType)"
+                                >content_copy</mat-icon
+                            >
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Column: Content Size -->
+                <ng-container matColumnDef="size">
+                    <th mat-header-cell *matHeaderCellDef>size</th>
+                    <td mat-cell *matCellDef="let el" class="copy-on-hover">
+                        <div *ngIf="el.nodeType !== CollectionViewNode.Folder" class="d-flex align-items-center">
+                            <span class="truncate-cell">{{ el.size ? (el.size | displaySize) : "-" }}</span>
+                            <mat-icon
+                                *ngIf="el.size"
+                                class="copy-icon ms-2"
+                                (click)="onCellEventClick(el.size, el.nodeType)"
+                                >content_copy</mat-icon
+                            >
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Dynamic Columns: Extra Data Keys -->
+                <ng-container *ngFor="let col of extraDataKeys" [matColumnDef]="col">
+                    <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
+                    <td mat-cell *matCellDef="let el" class="copy-on-hover">
+                        <div *ngIf="el.nodeType !== CollectionViewNode.Folder" class="d-flex align-items-center">
+                            <span class="truncate-cell">{{ getValue(el.extraData[col]) }}</span>
+                            <mat-icon
+                                class="copy-icon ms-2"
+                                (click)="onCellEventClick(getValue(el.extraData[col]), el.nodeType)"
+                                >content_copy</mat-icon
+                            >
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Table Row Definitions -->
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-header-row *matHeaderRowDef="['go-up-button']" [hidden]="maxDepth === 0"></tr>
+                <tr
+                    mat-row
+                    (dblclick)="dbClickTableRow(row)"
+                    (click)="clickTableRow(row)"
+                    [class.selected-row]="isRowSelected(row)"
+                    *matRowDef="let row; columns: displayedColumns"
+                ></tr>
+            </table>
+        </div>
+        <!-- Collection summary footer -->
+        <div *ngIf="dataSource.data.length" class="d-flex justify-content-end mt-4 text-muted">
+            <span class="fw-500">Total entries: {{ entriesTotalCount }}</span>
+        </div>
+    </div>
+
+    <!-- Empty state template -->
+    <ng-template #emptyCollection>
+        <div class="box p-5 bg-light text-center mt-4">
+            <mat-icon class="text-muted mb-2">folder_open</mat-icon>
+            <p class="mb-0">Collection is empty</p>
+        </div>
+    </ng-template>
+</div>
+
+<!-- Background loading state (Infinite Scroll) -->
+<div *ngIf="loadingOnScroll$ | async" class="py-4">
+    <mat-progress-spinner class="mx-auto" [diameter]="30" mode="indeterminate"></mat-progress-spinner>
+</div>

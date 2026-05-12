@@ -23,6 +23,8 @@ import {
     CreateEmptyDatasetDocument,
     CreateEmptyDatasetMutation,
     DataSchemaFormat,
+    DatasetAsCollectionDocument,
+    DatasetAsCollectionQuery,
     DatasetAsVersionedFileByBlockHashDocument,
     DatasetAsVersionedFileByBlockHashQuery,
     DatasetAsVersionedFileByVersionDocument,
@@ -93,6 +95,7 @@ import {
     mockCreateDatasetFromSnapshotResponse,
     mockCreateEmptyDatasetResponse,
     mockDataset403OperationError,
+    mockDatasetAsCollectionQuery,
     mockDatasetAsVersionedFileByBlockHashQuery,
     mockDatasetAsVersionedFileByVersionQuery,
     mockDatasetAsVersionedFileQuery,
@@ -797,6 +800,39 @@ describe("DatasetApi", () => {
 
         op.flush({
             data: mockVersionedFileContentUrlQuery,
+        });
+
+        tick();
+
+        expect(subscription$.closed).toEqual(true);
+
+        flush();
+    }));
+
+    it("should get dataset as collection", fakeAsync(() => {
+        const PATH_PREFIX = "";
+        const PAGE = 0;
+        const PER_PAGE = 20;
+        const subscription$ = service
+            .getDatasetAsCollection({
+                datasetId: TEST_DATASET_ID,
+                pathPrefix: PATH_PREFIX,
+                page: 0,
+                perPage: 20,
+            })
+            .subscribe((res: DatasetAsCollectionQuery) => {
+                expect(res.datasets.byId?.asCollection?.latest.entries.totalCount).toEqual(
+                    mockDatasetAsCollectionQuery.datasets.byId?.asCollection?.latest.entries.totalCount,
+                );
+            });
+
+        const op = controller.expectOne(DatasetAsCollectionDocument);
+        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
+        expect(op.operation.variables.pathPrefix).toEqual(PATH_PREFIX);
+        expect(op.operation.variables.page).toEqual(PAGE);
+        expect(op.operation.variables.perPage).toEqual(PER_PAGE);
+        op.flush({
+            data: mockDatasetAsCollectionQuery,
         });
 
         tick();

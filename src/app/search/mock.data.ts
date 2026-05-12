@@ -13,12 +13,14 @@ import { OdfDefaultValues } from "@common/values/app-odf-default.values";
 import {
     AccountBasicsFragment,
     AccountProvider,
+    CollectionEntryConnectionDataFragment,
     CommitEventToDatasetMutation,
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetMutation,
     DataBatchFormat,
     DataQueryResultErrorKind,
     DataSchemaFormat,
+    DatasetAsCollectionQuery,
     DatasetAsVersionedFileByBlockHashQuery,
     DatasetAsVersionedFileByVersionQuery,
     DatasetAsVersionedFileQuery,
@@ -1938,4 +1940,306 @@ export const mockVersionedFileContentUrlQuery: VersionedFileContentUrlQuery = {
             },
         },
     },
+};
+
+export const mockDatasetAsCollectionQuery: DatasetAsCollectionQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byId: {
+            name: "collection-with-datasets",
+            __typename: "Dataset",
+            asCollection: {
+                __typename: "Collection",
+                latest: {
+                    __typename: "CollectionProjection",
+                    entries: {
+                        pageInfo: {
+                            hasNextPage: false,
+                            hasPreviousPage: false,
+                            currentPage: 0,
+                            totalPages: 1,
+                            __typename: "PageBasedInfo",
+                        },
+                        totalCount: 5,
+                        __typename: "CollectionEntryConnection",
+                        nodes: [
+                            {
+                                systemTime: "2026-05-07T13:03:50.925+00:00",
+                                path: "/dummy.pdf",
+                                ref: "did:odf:fed01a78f054c6bdda32004ff0e44c10afbf79e7b82c3924c849699c172100254fcae",
+                                extraData: {},
+                                __typename: "CollectionEntry",
+                                asDataset: {
+                                    alias: "molecule.dev.ad-001/dummy-2.pdf",
+                                    owner: {
+                                        accountName: "molecule.dev.ad-001",
+                                        avatarUrl: null,
+                                        __typename: "Account",
+                                    },
+                                    __typename: "Dataset",
+                                    head: "f16201e3bc391b292383d336c2d773e0e753e9d399f180a2fbfd076dbaaa07542756d",
+                                    data: {
+                                        __typename: "DatasetData",
+                                        estimatedSizeBytes: 3728,
+                                    },
+                                    asVersionedFile: {
+                                        __typename: "VersionedFile",
+                                        latest: {
+                                            systemTime: "2025-11-12T12:22:04.577+00:00",
+                                            contentType: "application/pdf",
+                                            contentLength: 11299,
+                                            contentHash:
+                                                "f16203047df848af331dacfdb08f5d1ef47d6bb89e525e73427d8323614bd5fe87ffe",
+                                            __typename: "VersionedFileEntry",
+                                        },
+                                    },
+                                },
+                            },
+                            {
+                                systemTime: "2026-05-07T13:04:49.695+00:00",
+                                path: "/e61fa65-507e-4289-af19-dab466fa8620.png",
+                                ref: "did:odf:fed017cafd9c20cbcaae3c1d346d6fccfb03cf19076df6c64fb66d65c7bd5b43bd207",
+                                extraData: {},
+                                __typename: "CollectionEntry",
+                                asDataset: {
+                                    alias: "molecule.dev.ad-001/8e61fa65-507e-4289-af19-dab466fa8620.png",
+                                    owner: {
+                                        accountName: "molecule.dev.ad-001",
+                                        avatarUrl: null,
+                                        __typename: "Account",
+                                    },
+                                    __typename: "Dataset",
+                                    head: "f1620ccdf62cb92c3dca43066b80d09feee885f5f73989d749704c55a0ec60a5d1f8c",
+                                    data: {
+                                        __typename: "DatasetData",
+                                        estimatedSizeBytes: 4236,
+                                    },
+                                    asVersionedFile: {
+                                        __typename: "VersionedFile",
+                                        latest: {
+                                            systemTime: "2025-08-18T08:38:53.179+00:00",
+                                            contentType: "image/png",
+                                            contentLength: 1287674,
+                                            contentHash:
+                                                "f16205fec6620980ea26144acc3760fbcf679ab0895439f2253b57c4e119a68e570e4",
+                                            __typename: "VersionedFileEntry",
+                                        },
+                                    },
+                                },
+                            },
+                            {
+                                systemTime: "2026-05-07T12:48:00.450+00:00",
+                                path: "/test-folder/another-test-folder/file.png",
+                                ref: "did:odf:fed01a5aa2cb7bf24f5aa4a9cd45fb0191296cc78829d38b6e5465e0e2775644ed3e2",
+                                extraData: {},
+                                __typename: "CollectionEntry",
+                                asDataset: {
+                                    alias: "molecule.dev.ad-001/data-processors-diagram-2.png",
+                                    owner: {
+                                        accountName: "molecule.dev.ad-001",
+                                        avatarUrl: null,
+                                        __typename: "Account",
+                                    },
+                                    __typename: "Dataset",
+                                    head: "f162004f1a66a5a55fb1157160a3f72802a4d344cf2edfb28270a1e6ba26d673c3caa",
+                                    data: {
+                                        __typename: "DatasetData",
+                                        estimatedSizeBytes: 4234,
+                                    },
+                                    asVersionedFile: {
+                                        __typename: "VersionedFile",
+                                        latest: {
+                                            systemTime: "2025-08-18T08:45:52.474+00:00",
+                                            contentType: "image/png",
+                                            contentLength: 148733,
+                                            contentHash:
+                                                "f162091dc5a5a5acc2eb78ec0fb98ecb8df3c7f7cb6bb28a7e0b4b933004c957a2ddb",
+                                            __typename: "VersionedFileEntry",
+                                        },
+                                    },
+                                },
+                            },
+                            {
+                                systemTime: "2026-05-07T12:49:40.513+00:00",
+                                path: "/test-folder/molecule-dataset",
+                                ref: "did:odf:fed0115517dd57cba7c7fe1a89f6e464642dd990213f4a0465a6328f41178cbb3c80a",
+                                extraData: {},
+                                __typename: "CollectionEntry",
+                                asDataset: {
+                                    alias: "molecule.dev.ad-001/data-room",
+                                    owner: {
+                                        accountName: "molecule.dev.ad-001",
+                                        avatarUrl: null,
+                                        __typename: "Account",
+                                    },
+                                    __typename: "Dataset",
+                                    head: "f16208f2dbf60069e174fa0f03dad39e504e13eb1ca7a03e81c3f73712d96cf2fa13f",
+                                    data: {
+                                        __typename: "DatasetData",
+                                        estimatedSizeBytes: 288733,
+                                    },
+                                    asVersionedFile: null,
+                                },
+                            },
+                            {
+                                systemTime: "2026-05-07T12:51:35.680+00:00",
+                                path: "/unknown-dataset",
+                                ref: "did:odf:fed01d359748f8a105f641667907569ef8b2b8b7e5093d5b94b19b89bee60c00f1277",
+                                extraData: {},
+                                __typename: "CollectionEntry",
+                                asDataset: null,
+                            },
+                        ],
+                    },
+                },
+            },
+        },
+    },
+};
+
+export const mockCollectionEntryConnection: CollectionEntryConnectionDataFragment = {
+    pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+        currentPage: 0,
+        totalPages: 1,
+        __typename: "PageBasedInfo",
+    },
+    totalCount: 5,
+
+    nodes: [
+        {
+            systemTime: "2026-05-07T13:03:50.925+00:00",
+            path: "/dummy.pdf",
+            ref: "did:odf:fed01a78f054c6bdda32004ff0e44c10afbf79e7b82c3924c849699c172100254fcae",
+            extraData: {
+                content_length: 20,
+            },
+            __typename: "CollectionEntry",
+            asDataset: {
+                alias: "molecule.dev.ad-001/dummy-2.pdf",
+                owner: {
+                    accountName: "molecule.dev.ad-001",
+                    avatarUrl: null,
+                    __typename: "Account",
+                },
+                __typename: "Dataset",
+                head: "f16201e3bc391b292383d336c2d773e0e753e9d399f180a2fbfd076dbaaa07542756d",
+                data: {
+                    __typename: "DatasetData",
+                    estimatedSizeBytes: 3728,
+                },
+                asVersionedFile: {
+                    __typename: "VersionedFile",
+                    latest: {
+                        systemTime: "2025-11-12T12:22:04.577+00:00",
+                        contentType: "application/pdf",
+                        contentLength: 11299,
+                        contentHash: "f16203047df848af331dacfdb08f5d1ef47d6bb89e525e73427d8323614bd5fe87ffe",
+                        __typename: "VersionedFileEntry",
+                    },
+                },
+            },
+        },
+        {
+            systemTime: "2026-05-07T13:04:49.695+00:00",
+            path: "/e61fa65-507e-4289-af19-dab466fa8620.png",
+            ref: "did:odf:fed017cafd9c20cbcaae3c1d346d6fccfb03cf19076df6c64fb66d65c7bd5b43bd207",
+            extraData: {
+                content_length: 20,
+            },
+            __typename: "CollectionEntry",
+            asDataset: {
+                alias: "molecule.dev.ad-001/8e61fa65-507e-4289-af19-dab466fa8620.png",
+                owner: {
+                    accountName: "molecule.dev.ad-001",
+                    avatarUrl: null,
+                    __typename: "Account",
+                },
+                __typename: "Dataset",
+                head: "f1620ccdf62cb92c3dca43066b80d09feee885f5f73989d749704c55a0ec60a5d1f8c",
+                data: {
+                    __typename: "DatasetData",
+                    estimatedSizeBytes: 4236,
+                },
+                asVersionedFile: {
+                    __typename: "VersionedFile",
+                    latest: {
+                        systemTime: "2025-08-18T08:38:53.179+00:00",
+                        contentType: "image/png",
+                        contentLength: 1287674,
+                        contentHash: "f16205fec6620980ea26144acc3760fbcf679ab0895439f2253b57c4e119a68e570e4",
+                        __typename: "VersionedFileEntry",
+                    },
+                },
+            },
+        },
+        {
+            systemTime: "2026-05-07T12:48:00.450+00:00",
+            path: "/test-folder/another-test-folder/file.png",
+            ref: "did:odf:fed01a5aa2cb7bf24f5aa4a9cd45fb0191296cc78829d38b6e5465e0e2775644ed3e2",
+            extraData: {
+                content_length: 20,
+            },
+            __typename: "CollectionEntry",
+            asDataset: {
+                alias: "molecule.dev.ad-001/data-processors-diagram-2.png",
+                owner: {
+                    accountName: "molecule.dev.ad-001",
+                    avatarUrl: null,
+                    __typename: "Account",
+                },
+                __typename: "Dataset",
+                head: "f162004f1a66a5a55fb1157160a3f72802a4d344cf2edfb28270a1e6ba26d673c3caa",
+                data: {
+                    __typename: "DatasetData",
+                    estimatedSizeBytes: 4234,
+                },
+                asVersionedFile: {
+                    __typename: "VersionedFile",
+                    latest: {
+                        systemTime: "2025-08-18T08:45:52.474+00:00",
+                        contentType: "image/png",
+                        contentLength: 148733,
+                        contentHash: "f162091dc5a5a5acc2eb78ec0fb98ecb8df3c7f7cb6bb28a7e0b4b933004c957a2ddb",
+                        __typename: "VersionedFileEntry",
+                    },
+                },
+            },
+        },
+        {
+            systemTime: "2026-05-07T12:49:40.513+00:00",
+            path: "/test-folder/molecule-dataset",
+            ref: "did:odf:fed0115517dd57cba7c7fe1a89f6e464642dd990213f4a0465a6328f41178cbb3c80a",
+            extraData: {
+                content_length: 0,
+            },
+            __typename: "CollectionEntry",
+            asDataset: {
+                alias: "molecule.dev.ad-001/data-room",
+                owner: {
+                    accountName: "molecule.dev.ad-001",
+                    avatarUrl: null,
+                    __typename: "Account",
+                },
+                __typename: "Dataset",
+                head: "f16208f2dbf60069e174fa0f03dad39e504e13eb1ca7a03e81c3f73712d96cf2fa13f",
+                data: {
+                    __typename: "DatasetData",
+                    estimatedSizeBytes: 288733,
+                },
+                asVersionedFile: null,
+            },
+        },
+        {
+            systemTime: "2026-05-07T12:51:35.680+00:00",
+            path: "/unknown-dataset",
+            ref: "did:odf:fed01d359748f8a105f641667907569ef8b2b8b7e5093d5b94b19b89bee60c00f1277",
+            extraData: {
+                content_length: 20,
+            },
+            __typename: "CollectionEntry",
+            asDataset: null,
+        },
+    ],
 };

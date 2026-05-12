@@ -1,0 +1,25 @@
+fragment CollectionEntryData on CollectionEntry {
+  systemTime
+  path
+  ref
+  extraData
+  asDataset {
+    alias
+    owner {
+      ...AccountSummary
+    }
+    head
+    data {
+      estimatedSizeBytes
+    }
+    asVersionedFile {
+      # TODO: temporar and performance-ineffecient, don't forget to refactor
+      latest {
+        systemTime
+        contentType
+        contentLength
+        contentHash
+      }
+    }
+  }
+}

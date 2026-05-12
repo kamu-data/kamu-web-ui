@@ -222,6 +222,21 @@ export class AppComponent extends BaseComponent implements OnInit {
             .addSvgIcon("play_pause", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/play_pause.svg"))
             .addSvgIcon("clarify", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/clarify.svg"))
             .addSvgIcon("folder", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/folder.svg"))
+            .addSvgIcon("shift", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/shift.svg"))
+            .addSvgIcon("unknown", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/default-file.svg"))
+            .addSvgIcon("video", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/video.svg"))
+            .addSvgIcon("image", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/image.svg"))
+            .addSvgIcon("pdf", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/pdf.svg"))
+            .addSvgIcon("txt", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/txt.svg"))
+            .addSvgIcon("json", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/json.svg"))
+            .addSvgIcon("audio", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/audio.svg"))
+            .addSvgIcon("svg", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/svg.svg"))
+            .addSvgIcon("database", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/database.svg"))
+            .addSvgIcon("question", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/question.svg"))
+            .addSvgIcon(
+                "collection-folder",
+                this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/collection-folder.svg"),
+            )
             .addSvgIcon(
                 "configuration",
                 this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/configuration.svg"),

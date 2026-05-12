@@ -7,7 +7,7 @@
 
 import { Pipe, PipeTransform } from "@angular/core";
 
-export type PreviewFileExtensionsType = "pdf" | "image" | "json" | "text" | "video" | "audio" | "unknown";
+export type PreviewFileExtensionsType = "pdf" | "image" | "json" | "text" | "video" | "audio" | "svg" | "unknown";
 
 @Pipe({
     name: "previewFileType",
@@ -16,10 +16,12 @@ export class PreviewFileTypePipe implements PipeTransform {
     public transform(contentType: string): PreviewFileExtensionsType {
         if (!contentType) return "unknown";
         if (contentType === "application/pdf") return "pdf";
+        if (contentType.includes("svg")) return "svg";
         if (contentType.startsWith("image/")) return "image";
         if (contentType.startsWith("video/")) return "video";
         if (contentType.startsWith("audio/")) return "audio";
         if (contentType.includes("json")) return "json";
+
         if (contentType.startsWith("text/")) return "text";
 
         return "unknown";

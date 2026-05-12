@@ -19,7 +19,7 @@ import {
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatButtonModule } from "@angular/material/button";
-import { MatIconModule } from "@angular/material/icon";
+import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
@@ -79,6 +79,7 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     private sanitizer = inject(DomSanitizer);
     private toastrService = inject(ToastrService);
     private cdr = inject(ChangeDetectorRef);
+    private iconRegistry = inject(MatIconRegistry);
 
     private previewFileTypePipe = new PreviewFileTypePipe();
     private datasetAsVersionedFileService = inject(DatasetAsVersionedFileService);
@@ -128,6 +129,13 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
                     this.cdr.detectChanges();
                     break;
                 }
+
+                case "svg":
+                    this.iconRegistry.addSvgIcon(
+                        "custom-svg",
+                        this.sanitizer.bypassSecurityTrustResourceUrl(contentUrl.url),
+                    );
+                    break;
 
                 case "video":
                 case "audio":

@@ -24,10 +24,12 @@
     font-style: normal;
     font-weight: 500;
     line-height: 24px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
-.mt-50px {
-    margin-top: 50px;
+.mt-30px {
+    margin-top: 30px;
 }
 
 .organization {

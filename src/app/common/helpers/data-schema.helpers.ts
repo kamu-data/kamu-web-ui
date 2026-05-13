@@ -42,8 +42,11 @@ export function odfType2String(type: DataSchemaTypeField): string {
                 "inner" in type.itemType && type.itemType.inner ? odfType2String(type.itemType) : type.itemType.kind;
             return `${type.kind}<${innerContent}>`;
         }
-        case OdfTypes.Timestamp:
-            return `${type.kind}<${type.unit}, ${type.timezone}>`;
+        case OdfTypes.Timestamp: {
+            const defaultUnit = "Millisecond";
+            const defaultTimezone = "UTC";
+            return `${type.kind}<${type.unit ?? defaultUnit}, ${type.timezone ?? defaultTimezone}>`;
+        }
         case OdfTypes.Duration:
         case OdfTypes.Time:
             return `${type.kind}<${type.unit}>`;

@@ -21,7 +21,6 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
     selector: "app-odf-schema-property",
     imports: [DynamicTableComponent],
     templateUrl: "./odf-schema-property.component.html",
-    styleUrl: "./odf-schema-property.component.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OdfSchemaPropertyComponent extends BasePropertyComponent {

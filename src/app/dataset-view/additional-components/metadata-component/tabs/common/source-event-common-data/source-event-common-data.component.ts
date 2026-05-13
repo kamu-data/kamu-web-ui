@@ -16,7 +16,6 @@ import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/com
 import { EnginePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/engine-property/engine-property.component";
 import { MergeStrategyPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";
 import { OdfSchemaPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/odf-schema-property/odf-schema-property.component";
-import { SchemaPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/schema-property/schema-property.component";
 import { SeparatorPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/separator-property/separator-property.component";
 import { SqlQueryViewerComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/sql-query-viewer/sql-query-viewer.component";
 

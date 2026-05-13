@@ -1,7 +1,6 @@
 fragment ReadStepNdJsonData on ReadStepNdJson {
   dateFormat
   encoding
-  ddlSchema
   timestampFormat
   schema(format: ODF_JSON) {
     ...DataSchemaInfo

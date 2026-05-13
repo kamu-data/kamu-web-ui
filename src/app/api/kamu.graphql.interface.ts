@@ -7396,7 +7396,6 @@ export type PreprocessStepDataFragment = {
 
 export type ReadStepCsvDataFragment = {
     __typename?: "ReadStepCsv";
-    ddlSchema?: Array<string> | null;
     separator?: string | null;
     encoding?: string | null;
     quote?: string | null;
@@ -7411,21 +7410,18 @@ export type ReadStepCsvDataFragment = {
 
 export type ReadStepEsriShapefileDataFragment = {
     __typename?: "ReadStepEsriShapefile";
-    ddlSchema?: Array<string> | null;
     subPath?: string | null;
     schema?: ({ __typename?: "DataSchema" } & DataSchemaInfoFragment) | null;
 };
 
 export type ReadStepGeoJsonDataFragment = {
     __typename?: "ReadStepGeoJson";
-    ddlSchema?: Array<string> | null;
     schema?: ({ __typename?: "DataSchema" } & DataSchemaInfoFragment) | null;
 };
 
 export type ReadStepJsonDataFragment = {
     __typename?: "ReadStepJson";
     subPath?: string | null;
-    ddlSchema?: Array<string> | null;
     dateFormat?: string | null;
     encoding?: string | null;
     timestampFormat?: string | null;
@@ -7434,7 +7430,6 @@ export type ReadStepJsonDataFragment = {
 
 export type ReadStepNdGeoJsonDataFragment = {
     __typename?: "ReadStepNdGeoJson";
-    ddlSchema?: Array<string> | null;
     schema?: ({ __typename?: "DataSchema" } & DataSchemaInfoFragment) | null;
 };
 
@@ -7442,14 +7437,12 @@ export type ReadStepNdJsonDataFragment = {
     __typename?: "ReadStepNdJson";
     dateFormat?: string | null;
     encoding?: string | null;
-    ddlSchema?: Array<string> | null;
     timestampFormat?: string | null;
     schema?: ({ __typename?: "DataSchema" } & DataSchemaInfoFragment) | null;
 };
 
 export type ReadStepParquetDataFragment = {
     __typename?: "ReadStepParquet";
-    ddlSchema?: Array<string> | null;
     schema?: ({ __typename?: "DataSchema" } & DataSchemaInfoFragment) | null;
 };
 
@@ -9418,7 +9411,6 @@ export const DataSchemaInfoFragmentDoc = gql`
 `;
 export const ReadStepCsvDataFragmentDoc = gql`
     fragment ReadStepCsvData on ReadStepCsv {
-        ddlSchema
         separator
         encoding
         quote
@@ -9437,7 +9429,6 @@ export const ReadStepCsvDataFragmentDoc = gql`
 export const ReadStepJsonDataFragmentDoc = gql`
     fragment ReadStepJsonData on ReadStepJson {
         subPath
-        ddlSchema
         dateFormat
         encoding
         timestampFormat
@@ -9451,7 +9442,6 @@ export const ReadStepNdJsonDataFragmentDoc = gql`
     fragment ReadStepNdJsonData on ReadStepNdJson {
         dateFormat
         encoding
-        ddlSchema
         timestampFormat
         schema(format: ODF_JSON) {
             ...DataSchemaInfo
@@ -9461,7 +9451,6 @@ export const ReadStepNdJsonDataFragmentDoc = gql`
 `;
 export const ReadStepGeoJsonDataFragmentDoc = gql`
     fragment ReadStepGeoJsonData on ReadStepGeoJson {
-        ddlSchema
         schema(format: ODF_JSON) {
             ...DataSchemaInfo
         }
@@ -9470,7 +9459,6 @@ export const ReadStepGeoJsonDataFragmentDoc = gql`
 `;
 export const ReadStepNdGeoJsonDataFragmentDoc = gql`
     fragment ReadStepNdGeoJsonData on ReadStepNdGeoJson {
-        ddlSchema
         schema(format: ODF_JSON) {
             ...DataSchemaInfo
         }
@@ -9479,7 +9467,6 @@ export const ReadStepNdGeoJsonDataFragmentDoc = gql`
 `;
 export const ReadStepEsriShapefileDataFragmentDoc = gql`
     fragment ReadStepEsriShapefileData on ReadStepEsriShapefile {
-        ddlSchema
         subPath
         schema(format: ODF_JSON) {
             ...DataSchemaInfo
@@ -9489,7 +9476,6 @@ export const ReadStepEsriShapefileDataFragmentDoc = gql`
 `;
 export const ReadStepParquetDataFragmentDoc = gql`
     fragment ReadStepParquetData on ReadStepParquet {
-        ddlSchema
         schema(format: ODF_JSON) {
             ...DataSchemaInfo
         }

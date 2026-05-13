@@ -1,5 +1,4 @@
 fragment ReadStepParquetData on ReadStepParquet {
-  ddlSchema
   schema(format: ODF_JSON) {
     ...DataSchemaInfo
   }

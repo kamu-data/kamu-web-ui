@@ -24,8 +24,6 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepCsv.schema": getSourcesDescriptors("AddPushSource.ReadStepCsv.schema"),
 
-    "AddPushSource.ReadStepCsv.ddlSchema": getSourcesDescriptors("AddPushSource.ReadStepCsv.ddlSchema"),
-
     "AddPushSource.ReadStepCsv.separator": getSourcesDescriptors("AddPushSource.ReadStepCsv.separator"),
 
     "AddPushSource.ReadStepCsv.encoding": getSourcesDescriptors("AddPushSource.ReadStepCsv.encoding"),
@@ -64,8 +62,6 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepJson.schema": getSourcesDescriptors("AddPushSource.ReadStepJson.schema"),
 
-    "AddPushSource.ReadStepJson.ddlSchema": getSourcesDescriptors("AddPushSource.ReadStepJson.ddlSchema"),
-
     "AddPushSource.ReadStepJson.encoding": getSourcesDescriptors("AddPushSource.ReadStepJson.encoding"),
 
     "AddPushSource.ReadStepJson.dateFormat": getSourcesDescriptors("AddPushSource.ReadStepJson.dateFormat"),
@@ -90,17 +86,11 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepGeoJson.schema": getSourcesDescriptors("AddPushSource.ReadStepGeoJson.schema"),
 
-    "AddPushSource.ReadStepGeoJson.ddlSchema": getSourcesDescriptors("AddPushSource.ReadStepGeoJson.ddlSchema"),
-
     "AddPushSource.ReadStepEsriShapefile.__typename": getSourcesDescriptors(
         "AddPushSource.ReadStepEsriShapefile.__typename",
     ),
 
     "AddPushSource.ReadStepEsriShapefile.schema": getSourcesDescriptors("AddPushSource.ReadStepEsriShapefile.schema"),
-
-    "AddPushSource.ReadStepEsriShapefile.ddlSchema": getSourcesDescriptors(
-        "AddPushSource.ReadStepEsriShapefile.ddlSchema",
-    ),
 
     "AddPushSource.ReadStepEsriShapefile.subPath": getSourcesDescriptors("AddPushSource.ReadStepEsriShapefile.subPath"),
 
@@ -108,13 +98,9 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "AddPushSource.ReadStepParquet.schema": getSourcesDescriptors("AddPushSource.ReadStepParquet.schema"),
 
-    "AddPushSource.ReadStepParquet.ddlSchema": getSourcesDescriptors("AddPushSource.ReadStepParquet.ddlSchema"),
-
     "AddPushSource.ReadStepNdJson.__typename": getSourcesDescriptors("AddPushSource.ReadStepNdJson.__typename"),
 
     "AddPushSource.ReadStepNdJson.schema": getSourcesDescriptors("AddPushSource.ReadStepNdJson.schema"),
-
-    "AddPushSource.ReadStepNdJson.ddlSchema": getSourcesDescriptors("AddPushSource.ReadStepNdJson.ddlSchema"),
 
     "AddPushSource.ReadStepNdJson.dateFormat": getSourcesDescriptors("AddPushSource.ReadStepNdJson.dateFormat"),
 
@@ -127,8 +113,6 @@ export const ADD_PUSH_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "AddPushSource.ReadStepNdGeoJson.__typename": getSourcesDescriptors("AddPushSource.ReadStepNdGeoJson.__typename"),
 
     "AddPushSource.ReadStepNdGeoJson.schema": getSourcesDescriptors("AddPushSource.ReadStepNdGeoJson.schema"),
-
-    "AddPushSource.ReadStepNdGeoJson.ddlSchema": getSourcesDescriptors("AddPushSource.ReadStepNdGeoJson.ddlSchema"),
 
     "AddPushSource.MergeStrategyChangelogStream.__typename": getSourcesDescriptors(
         "AddPushSource.MergeStrategyChangelogStream.__typename",

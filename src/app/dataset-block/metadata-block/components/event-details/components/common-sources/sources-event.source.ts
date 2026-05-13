@@ -30,13 +30,6 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
         separateRowForValue: false,
         dataTestId: "readStepCsv-__typename",
     },
-    "ReadStepCsv.ddlSchema": {
-        label: "Schema:",
-        tooltip: SourcesTooltipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: true,
-        dataTestId: "readStepCsv-schema",
-    },
     "ReadStepCsv.schema": {
         label: "Schema:",
         tooltip: SourcesTooltipsTexts.SCHEMA,
@@ -178,13 +171,6 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
         separateRowForValue: false,
         dataTestId: "ReadStepJson-__typename",
     },
-    "ReadStepJson.ddlSchema": {
-        label: "Schema:",
-        tooltip: SourcesTooltipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "readStepJson-schema",
-    },
     "ReadStepJson.schema": {
         label: "Schema:",
         tooltip: SourcesTooltipsTexts.SCHEMA,
@@ -255,13 +241,6 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
         separateRowForValue: false,
         dataTestId: "readStepGeoJson-__typename",
     },
-    "ReadStepGeoJson.ddlSchema": {
-        label: "Schema:",
-        tooltip: SourcesTooltipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "readStepGeoJson-schema",
-    },
     "ReadStepGeoJson.schema": {
         label: "Schema:",
         tooltip: SourcesTooltipsTexts.SCHEMA,
@@ -275,13 +254,6 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
         presentationComponent: StepTypePropertyComponent,
         separateRowForValue: false,
         dataTestId: "readStepEsriShapefile-__typename",
-    },
-    "ReadStepEsriShapefile.ddlSchema": {
-        label: "Schema:",
-        tooltip: SourcesTooltipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "readStepEsriShapefile-schema",
     },
     "ReadStepEsriShapefile.schema": {
         label: "Schema:",
@@ -304,13 +276,6 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
         separateRowForValue: false,
         dataTestId: "readStepParquet-__typename",
     },
-    "ReadStepParquet.ddlSchema": {
-        label: "Schema:",
-        tooltip: SourcesTooltipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "readStepParquet-schema",
-    },
     "ReadStepParquet.schema": {
         label: "Schema:",
         tooltip: SourcesTooltipsTexts.SCHEMA,
@@ -325,26 +290,12 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
         separateRowForValue: false,
         dataTestId: "readStepNdJson-__typename",
     },
-    "ReadStepNdJson.ddlSchema": {
-        label: "Schema:",
-        tooltip: SourcesTooltipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "ReadStepNdJson-schema",
-    },
     "ReadStepNdJson.schema": {
         label: "Schema:",
         tooltip: SourcesTooltipsTexts.SCHEMA,
         presentationComponent: OdfSchemaPropertyComponent,
         separateRowForValue: false,
         dataTestId: "ReadStepNdJson-schema-odf",
-    },
-    "ReadStepNdGeoJson.ddlSchema": {
-        label: "Schema:",
-        tooltip: SourcesTooltipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
-        separateRowForValue: false,
-        dataTestId: "readStepNdGeoJson-schema",
     },
     "ReadStepNdGeoJson.schema": {
         label: "Schema:",

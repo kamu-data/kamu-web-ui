@@ -4,4 +4,7 @@ fragment ReadStepJsonData on ReadStepJson {
   dateFormat
   encoding
   timestampFormat
+  schema(format: ODF_JSON) {
+    ...DataSchemaInfo
+  }
 }

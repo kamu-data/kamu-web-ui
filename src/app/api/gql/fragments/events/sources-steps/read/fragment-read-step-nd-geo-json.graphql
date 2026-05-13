@@ -1,3 +1,6 @@
 fragment ReadStepNdGeoJsonData on ReadStepNdGeoJson {
   ddlSchema
+  schema(format: ODF_JSON) {
+    ...DataSchemaInfo
+  }
 }

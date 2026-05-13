@@ -267,6 +267,8 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.ReadStepCsv.separator": getSourcesDescriptors("SetPollingSource.ReadStepCsv.separator"),
 
+    "SetPollingSource.ReadStepCsv.schema": getSourcesDescriptors("SetPollingSource.ReadStepCsv.schema"),
+
     "SetPollingSource.ReadStepCsv.ddlSchema": getSourcesDescriptors("SetPollingSource.ReadStepCsv.ddlSchema"),
 
     "SetPollingSource.ReadStepCsv.encoding": getSourcesDescriptors("SetPollingSource.ReadStepCsv.encoding"),
@@ -289,11 +291,15 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         "SetPollingSource.ReadStepNdGeoJson.__typename",
     ),
 
+    "SetPollingSource.ReadStepNdGeoJson.schema": getSourcesDescriptors("SetPollingSource.ReadStepNdGeoJson.schema"),
+
     "SetPollingSource.ReadStepNdGeoJson.ddlSchema": getSourcesDescriptors(
         "SetPollingSource.ReadStepNdGeoJson.ddlSchema",
     ),
 
     "SetPollingSource.ReadStepJson.__typename": getSourcesDescriptors("SetPollingSource.ReadStepJson.__typename"),
+
+    "SetPollingSource.ReadStepJson.schema": getSourcesDescriptors("SetPollingSource.ReadStepJson.schema"),
 
     "SetPollingSource.ReadStepJson.ddlSchema": getSourcesDescriptors("SetPollingSource.ReadStepJson.ddlSchema"),
 
@@ -318,6 +324,8 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     "SetPollingSource.ReadStepNdJson.timestampFormat": getSourcesDescriptors(
         "SetPollingSource.ReadStepNdJson.timestampFormat",
     ),
+
+    "SetPollingSource.ReadStepGeoJson.schema": getSourcesDescriptors("SetPollingSource.ReadStepGeoJson.schema"),
 
     "SetPollingSource.ReadStepGeoJson.ddlSchema": getSourcesDescriptors("SetPollingSource.ReadStepGeoJson.ddlSchema"),
 
@@ -365,6 +373,10 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         "SetPollingSource.ReadStepEsriShapefile.__typename",
     ),
 
+    "SetPollingSource.ReadStepEsriShapefile.schema": getSourcesDescriptors(
+        "SetPollingSource.ReadStepEsriShapefile.schema",
+    ),
+
     "SetPollingSource.ReadStepEsriShapefile.ddlSchema": getSourcesDescriptors(
         "SetPollingSource.ReadStepEsriShapefile.ddlSchema",
     ),
@@ -374,6 +386,8 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
     ),
 
     "SetPollingSource.ReadStepParquet.__typename": getSourcesDescriptors("SetPollingSource.ReadStepParquet.__typename"),
+
+    "SetPollingSource.ReadStepParquet.schema": getSourcesDescriptors("SetPollingSource.ReadStepParquet.schema"),
 
     "SetPollingSource.ReadStepParquet.ddlSchema": getSourcesDescriptors("SetPollingSource.ReadStepParquet.ddlSchema"),
 };

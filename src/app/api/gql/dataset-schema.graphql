@@ -4,8 +4,7 @@ query getDatasetSchema($datasetId: DatasetID!) {
       ...DatasetBasics
       metadata {
         currentSchema(format: ODF_JSON) {
-          format
-          content
+          ...DataSchemaInfo
         }
       }
     }

@@ -9,4 +9,7 @@ fragment ReadStepCsvData on ReadStepCsv {
   nullValue
   dateFormat
   timestampFormat
+  schema(format: ODF_JSON) {
+    ...DataSchemaInfo
+  }
 }

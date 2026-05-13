@@ -6032,7 +6032,7 @@ export type GetDatasetSchemaQuery = {
                   __typename?: "Dataset";
                   metadata: {
                       __typename?: "DatasetMetadata";
-                      currentSchema?: { __typename?: "DataSchema"; format: DataSchemaFormat; content: string } | null;
+                      currentSchema?: ({ __typename?: "DataSchema" } & DataSchemaInfoFragment) | null;
                   };
               } & DatasetBasicsFragment)
             | null;
@@ -7222,6 +7222,8 @@ export type AddPushSourceEventFragment = {
     preprocess?: ({ __typename?: "TransformSql" } & PreprocessStepDataFragment) | null;
 };
 
+export type DataSchemaInfoFragment = { __typename?: "DataSchema"; format: DataSchemaFormat; content: string };
+
 export type DisablePollingSourceEventFragment = { __typename?: "DisablePollingSource"; dummy?: string | null };
 
 export type ExecuteTransformEventFragment = {
@@ -7404,15 +7406,21 @@ export type ReadStepCsvDataFragment = {
     nullValue?: string | null;
     dateFormat?: string | null;
     timestampFormat?: string | null;
+    schema?: ({ __typename?: "DataSchema" } & DataSchemaInfoFragment) | null;
 };
 
 export type ReadStepEsriShapefileDataFragment = {
     __typename?: "ReadStepEsriShapefile";
     ddlSchema?: Array<string> | null;
     subPath?: string | null;
+    schema?: ({ __typename?: "DataSchema" } & DataSchemaInfoFragment) | null;
 };
 
-export type ReadStepGeoJsonDataFragment = { __typename?: "ReadStepGeoJson"; ddlSchema?: Array<string> | null };
+export type ReadStepGeoJsonDataFragment = {
+    __typename?: "ReadStepGeoJson";
+    ddlSchema?: Array<string> | null;
+    schema?: ({ __typename?: "DataSchema" } & DataSchemaInfoFragment) | null;
+};
 
 export type ReadStepJsonDataFragment = {
     __typename?: "ReadStepJson";
@@ -7421,9 +7429,14 @@ export type ReadStepJsonDataFragment = {
     dateFormat?: string | null;
     encoding?: string | null;
     timestampFormat?: string | null;
+    schema?: ({ __typename?: "DataSchema" } & DataSchemaInfoFragment) | null;
 };
 
-export type ReadStepNdGeoJsonDataFragment = { __typename?: "ReadStepNdGeoJson"; ddlSchema?: Array<string> | null };
+export type ReadStepNdGeoJsonDataFragment = {
+    __typename?: "ReadStepNdGeoJson";
+    ddlSchema?: Array<string> | null;
+    schema?: ({ __typename?: "DataSchema" } & DataSchemaInfoFragment) | null;
+};
 
 export type ReadStepNdJsonDataFragment = {
     __typename?: "ReadStepNdJson";
@@ -7431,9 +7444,14 @@ export type ReadStepNdJsonDataFragment = {
     encoding?: string | null;
     ddlSchema?: Array<string> | null;
     timestampFormat?: string | null;
+    schema?: ({ __typename?: "DataSchema" } & DataSchemaInfoFragment) | null;
 };
 
-export type ReadStepParquetDataFragment = { __typename?: "ReadStepParquet"; ddlSchema?: Array<string> | null };
+export type ReadStepParquetDataFragment = {
+    __typename?: "ReadStepParquet";
+    ddlSchema?: Array<string> | null;
+    schema?: ({ __typename?: "DataSchema" } & DataSchemaInfoFragment) | null;
+};
 
 export type AccessTokenDataFragment = {
     __typename?: "ViewAccessToken";
@@ -7788,7 +7806,7 @@ export type DatasetMetadataSummaryFragment = {
         currentLicense?: ({ __typename?: "SetLicense" } & LicenseFragment) | null;
         currentPollingSource?: ({ __typename?: "SetPollingSource" } & SetPollingSourceEventFragment) | null;
         currentTransform?: ({ __typename?: "SetTransform" } & DatasetTransformFragment) | null;
-        currentSchema?: { __typename?: "DataSchema"; format: DataSchemaFormat; content: string } | null;
+        currentSchema?: ({ __typename?: "DataSchema" } & DataSchemaInfoFragment) | null;
         currentVocab?: ({ __typename?: "SetVocab" } & SetVocabEventFragment) | null;
         currentPushSources: Array<{ __typename?: "AddPushSource" } & AddPushSourceEventFragment>;
         currentDownstreamDependencies: Array<
@@ -9392,6 +9410,12 @@ export const FetchStepEthereumLogsDataFragmentDoc = gql`
         signature
     }
 `;
+export const DataSchemaInfoFragmentDoc = gql`
+    fragment DataSchemaInfo on DataSchema {
+        format
+        content
+    }
+`;
 export const ReadStepCsvDataFragmentDoc = gql`
     fragment ReadStepCsvData on ReadStepCsv {
         ddlSchema
@@ -9404,7 +9428,11 @@ export const ReadStepCsvDataFragmentDoc = gql`
         nullValue
         dateFormat
         timestampFormat
+        schema(format: ODF_JSON) {
+            ...DataSchemaInfo
+        }
     }
+    ${DataSchemaInfoFragmentDoc}
 `;
 export const ReadStepJsonDataFragmentDoc = gql`
     fragment ReadStepJsonData on ReadStepJson {
@@ -9413,7 +9441,11 @@ export const ReadStepJsonDataFragmentDoc = gql`
         dateFormat
         encoding
         timestampFormat
+        schema(format: ODF_JSON) {
+            ...DataSchemaInfo
+        }
     }
+    ${DataSchemaInfoFragmentDoc}
 `;
 export const ReadStepNdJsonDataFragmentDoc = gql`
     fragment ReadStepNdJsonData on ReadStepNdJson {
@@ -9421,28 +9453,48 @@ export const ReadStepNdJsonDataFragmentDoc = gql`
         encoding
         ddlSchema
         timestampFormat
+        schema(format: ODF_JSON) {
+            ...DataSchemaInfo
+        }
     }
+    ${DataSchemaInfoFragmentDoc}
 `;
 export const ReadStepGeoJsonDataFragmentDoc = gql`
     fragment ReadStepGeoJsonData on ReadStepGeoJson {
         ddlSchema
+        schema(format: ODF_JSON) {
+            ...DataSchemaInfo
+        }
     }
+    ${DataSchemaInfoFragmentDoc}
 `;
 export const ReadStepNdGeoJsonDataFragmentDoc = gql`
     fragment ReadStepNdGeoJsonData on ReadStepNdGeoJson {
         ddlSchema
+        schema(format: ODF_JSON) {
+            ...DataSchemaInfo
+        }
     }
+    ${DataSchemaInfoFragmentDoc}
 `;
 export const ReadStepEsriShapefileDataFragmentDoc = gql`
     fragment ReadStepEsriShapefileData on ReadStepEsriShapefile {
         ddlSchema
         subPath
+        schema(format: ODF_JSON) {
+            ...DataSchemaInfo
+        }
     }
+    ${DataSchemaInfoFragmentDoc}
 `;
 export const ReadStepParquetDataFragmentDoc = gql`
     fragment ReadStepParquetData on ReadStepParquet {
         ddlSchema
+        schema(format: ODF_JSON) {
+            ...DataSchemaInfo
+        }
     }
+    ${DataSchemaInfoFragmentDoc}
 `;
 export const MergeStrategySnapshotDataFragmentDoc = gql`
     fragment MergeStrategySnapshotData on MergeStrategySnapshot {
@@ -9812,8 +9864,7 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
                 ...DatasetTransform
             }
             currentSchema(format: ODF_JSON) {
-                format
-                content
+                ...DataSchemaInfo
             }
             currentVocab {
                 ...SetVocabEvent
@@ -9837,6 +9888,7 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
     ${LicenseFragmentDoc}
     ${SetPollingSourceEventFragmentDoc}
     ${DatasetTransformFragmentDoc}
+    ${DataSchemaInfoFragmentDoc}
     ${SetVocabEventFragmentDoc}
     ${AddPushSourceEventFragmentDoc}
     ${DatasetReadmeFragmentDoc}
@@ -11472,14 +11524,14 @@ export const GetDatasetSchemaDocument = gql`
                 ...DatasetBasics
                 metadata {
                     currentSchema(format: ODF_JSON) {
-                        format
-                        content
+                        ...DataSchemaInfo
                     }
                 }
             }
         }
     }
     ${DatasetBasicsFragmentDoc}
+    ${DataSchemaInfoFragmentDoc}
 `;
 
 @Injectable({

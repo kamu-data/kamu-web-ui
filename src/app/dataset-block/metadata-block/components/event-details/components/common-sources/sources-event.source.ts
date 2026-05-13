@@ -20,6 +20,8 @@ import {
     EventRowDescriptorsByField,
 } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
 
+import { OdfSchemaPropertyComponent } from "../common/odf-schema-property/odf-schema-property.component";
+
 export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
     "ReadStepCsv.__typename": {
         label: "Type:",
@@ -34,6 +36,13 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
         presentationComponent: SchemaPropertyComponent,
         separateRowForValue: true,
         dataTestId: "readStepCsv-schema",
+    },
+    "ReadStepCsv.schema": {
+        label: "Schema:",
+        tooltip: SourcesTooltipsTexts.SCHEMA,
+        presentationComponent: OdfSchemaPropertyComponent,
+        separateRowForValue: true,
+        dataTestId: "readStepCsv-schema-odf",
     },
     "ReadStepCsv.separator": {
         label: "Separator:",
@@ -176,6 +185,13 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
         separateRowForValue: false,
         dataTestId: "readStepJson-schema",
     },
+    "ReadStepJson.schema": {
+        label: "Schema:",
+        tooltip: SourcesTooltipsTexts.SCHEMA,
+        presentationComponent: OdfSchemaPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "readStepJson-schema",
+    },
     "ReadStepJson.encoding": {
         label: "Encoding:",
         tooltip: SourcesTooltipsTexts.READ_JSON_ENCODING,
@@ -246,6 +262,13 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
         separateRowForValue: false,
         dataTestId: "readStepGeoJson-schema",
     },
+    "ReadStepGeoJson.schema": {
+        label: "Schema:",
+        tooltip: SourcesTooltipsTexts.SCHEMA,
+        presentationComponent: OdfSchemaPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "readStepGeoJson-schema-odf",
+    },
     "ReadStepEsriShapefile.__typename": {
         label: "Type:",
         tooltip: SourcesTooltipsTexts.READ_ESRI_SHAPE_FILE,
@@ -259,6 +282,13 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
         presentationComponent: SchemaPropertyComponent,
         separateRowForValue: false,
         dataTestId: "readStepEsriShapefile-schema",
+    },
+    "ReadStepEsriShapefile.schema": {
+        label: "Schema:",
+        tooltip: SourcesTooltipsTexts.SCHEMA,
+        presentationComponent: OdfSchemaPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "readStepEsriShapefile-schema-odf",
     },
     "ReadStepEsriShapefile.subPath": {
         label: "Sub path:",
@@ -281,6 +311,13 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
         separateRowForValue: false,
         dataTestId: "readStepParquet-schema",
     },
+    "ReadStepParquet.schema": {
+        label: "Schema:",
+        tooltip: SourcesTooltipsTexts.SCHEMA,
+        presentationComponent: OdfSchemaPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "readStepParquet-schema-odf",
+    },
     "ReadStepNdJson.__typename": {
         label: "Type:",
         tooltip: SourcesTooltipsTexts.READ_ND_JSON,
@@ -295,12 +332,26 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
         separateRowForValue: false,
         dataTestId: "ReadStepNdJson-schema",
     },
+    "ReadStepNdJson.schema": {
+        label: "Schema:",
+        tooltip: SourcesTooltipsTexts.SCHEMA,
+        presentationComponent: OdfSchemaPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "ReadStepNdJson-schema-odf",
+    },
     "ReadStepNdGeoJson.ddlSchema": {
         label: "Schema:",
         tooltip: SourcesTooltipsTexts.SCHEMA,
         presentationComponent: SchemaPropertyComponent,
         separateRowForValue: false,
         dataTestId: "readStepNdGeoJson-schema",
+    },
+    "ReadStepNdGeoJson.schema": {
+        label: "Schema:",
+        tooltip: SourcesTooltipsTexts.SCHEMA,
+        presentationComponent: OdfSchemaPropertyComponent,
+        separateRowForValue: false,
+        dataTestId: "readStepNdGeoJson-schema-odf",
     },
     "ReadStepNdJson.dateFormat": {
         label: "Date format:",

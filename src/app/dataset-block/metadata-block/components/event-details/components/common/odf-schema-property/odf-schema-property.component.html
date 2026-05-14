@@ -1,5 +1,5 @@
 <app-dynamic-table
-    *ngIf="datasetSchema.fields.length; else noSchema"
+    *ngIf="datasetSchema?.fields?.length; else noSchema"
     [attr.data-test-id]="dataTestId"
     [hasTableHeader]="true"
     [idTable]="'odf-schema-property'"

@@ -1,7 +1,13 @@
 <app-dynamic-table
+    *ngIf="datasetSchema.fields.length; else noSchema"
+    [attr.data-test-id]="dataTestId"
     [hasTableHeader]="true"
     [idTable]="'odf-schema-property'"
     [columnDescriptors]="[{ columnName: 'name' }, { columnName: 'type' }]"
     [dataRows]="schemaData(datasetSchema?.fields!)"
     tableClass="font-monospace"
 />
+
+<ng-template #noSchema>
+    <p>Schema does not exist</p>
+</ng-template>

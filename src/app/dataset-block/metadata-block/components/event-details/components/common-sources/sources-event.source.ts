@@ -34,7 +34,7 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
         tooltip: SourcesTooltipsTexts.SCHEMA,
         presentationComponent: OdfSchemaPropertyComponent,
         separateRowForValue: true,
-        dataTestId: "readStepCsv-schema-odf",
+        dataTestId: "readStepCsv-schema",
     },
     "ReadStepCsv.separator": {
         label: "Separator:",

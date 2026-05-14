@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
@@ -13,7 +14,7 @@ import { BehaviorSubject, of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { mockAccountDetails, TEST_AVATAR_URL, TEST_LOGIN } from "@api/mock/auth.mock";
 
@@ -45,6 +46,7 @@ describe("AccountComponent", () => {
             imports: [AccountComponent],
             providers: [
                 Apollo,
+                provideHttpClient(withInterceptorsFromDi()),
                 provideToastr(),
                 {
                     provide: ActivatedRoute,
@@ -60,6 +62,8 @@ describe("AccountComponent", () => {
         fetchAccountByNameSpy = spyOn(accountService, "fetchAccountByName").and.returnValue(of(mockAccountDetails));
         spyOnProperty(loggedUserService, "loggedInUserChanges", "get").and.returnValue(of(null));
         spyOn(accountService, "getDatasetsTotalCountByAccountName").and.returnValue(of(1));
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(AccountComponent);
         component = fixture.componentInstance;

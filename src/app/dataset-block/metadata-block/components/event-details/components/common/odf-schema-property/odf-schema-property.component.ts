@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
@@ -19,7 +20,12 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
 
 @Component({
     selector: "app-odf-schema-property",
-    imports: [DynamicTableComponent],
+    imports: [
+        //-----//
+        NgIf,
+        //-----//
+        DynamicTableComponent,
+    ],
     templateUrl: "./odf-schema-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

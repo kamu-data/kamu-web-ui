@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - displayed private and broken datasets
 - Account profille
   - added a button to copy the DID for an account
+- Reading the ODF schema in sources
 
 
 

@@ -112,7 +112,7 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
                 .exposedEnvVariableValue({
                     accountName: this.datasetBasics.owner.accountName,
                     datasetName: this.datasetBasics.name,
-                    datasetEnvVarId: this.row?.id,
+                    datasetEnvVarKey: this.row.key,
                 })
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe((data) => {

@@ -27,7 +27,6 @@ export type Scalars = {
     Base64Usnp: { input: string; output: string };
     CollectionPath: { input: string; output: string };
     DatasetAlias: { input: string; output: string };
-    DatasetEnvVarID: { input: string; output: string };
     DatasetID: { input: string; output: string };
     DatasetName: { input: string; output: string };
     DatasetRef: { input: string; output: string };
@@ -1344,7 +1343,7 @@ export type DatasetEnvVars = {
 };
 
 export type DatasetEnvVarsExposedValueArgs = {
-    datasetEnvVarId: Scalars["DatasetEnvVarID"]["input"];
+    datasetEnvVarKey: Scalars["String"]["input"];
 };
 
 export type DatasetEnvVarsListEnvVariablesArgs = {
@@ -1359,7 +1358,7 @@ export type DatasetEnvVarsMut = {
 };
 
 export type DatasetEnvVarsMutDeleteEnvVariableArgs = {
-    id: Scalars["DatasetEnvVarID"]["input"];
+    key: Scalars["String"]["input"];
 };
 
 export type DatasetEnvVarsMutUpsertEnvVariableArgs = {
@@ -1899,13 +1898,13 @@ export type DeleteDatasetEnvVarResult = {
 
 export type DeleteDatasetEnvVarResultNotFound = DeleteDatasetEnvVarResult & {
     __typename?: "DeleteDatasetEnvVarResultNotFound";
-    envVarId: Scalars["DatasetEnvVarID"]["output"];
+    envVarKey: Scalars["String"]["output"];
     message: Scalars["String"]["output"];
 };
 
 export type DeleteDatasetEnvVarResultSuccess = DeleteDatasetEnvVarResult & {
     __typename?: "DeleteDatasetEnvVarResultSuccess";
-    envVarId: Scalars["DatasetEnvVarID"]["output"];
+    envVarKey: Scalars["String"]["output"];
     message: Scalars["String"]["output"];
 };
 
@@ -4662,8 +4661,6 @@ export type ViewDatasetEnvVar = {
     __typename?: "ViewDatasetEnvVar";
     /** Date of the dataset environment variable creation */
     createdAt: Scalars["DateTime"]["output"];
-    /** Unique identifier of the dataset environment variable */
-    id: Scalars["DatasetEnvVarID"]["output"];
     isSecret: Scalars["Boolean"]["output"];
     /** Key of the dataset environment variable */
     key: Scalars["String"]["output"];
@@ -6051,7 +6048,7 @@ export type EnginesQuery = {
 
 export type DeleteEnvVariableMutationVariables = Exact<{
     datasetId: Scalars["DatasetID"]["input"];
-    datasetEnvVarId: Scalars["DatasetEnvVarID"]["input"];
+    datasetEnvVarKey: Scalars["String"]["input"];
 }>;
 
 export type DeleteEnvVariableMutation = {
@@ -6063,8 +6060,8 @@ export type DeleteEnvVariableMutation = {
             envVars: {
                 __typename?: "DatasetEnvVarsMut";
                 deleteEnvVariable:
-                    | { __typename?: "DeleteDatasetEnvVarResultNotFound"; message: string; envVarId: string }
-                    | { __typename?: "DeleteDatasetEnvVarResultSuccess"; message: string; envVarId: string };
+                    | { __typename?: "DeleteDatasetEnvVarResultNotFound"; message: string; envVarKey: string }
+                    | { __typename?: "DeleteDatasetEnvVarResultSuccess"; message: string; envVarKey: string };
             };
         } | null;
     };
@@ -6073,7 +6070,7 @@ export type DeleteEnvVariableMutation = {
 export type ExposedEnvVariableValueQueryVariables = Exact<{
     accountName: Scalars["AccountName"]["input"];
     datasetName: Scalars["DatasetName"]["input"];
-    datasetEnvVarId: Scalars["DatasetEnvVarID"]["input"];
+    datasetEnvVarKey: Scalars["String"]["input"];
 }>;
 
 export type ExposedEnvVariableValueQuery = {
@@ -6089,7 +6086,6 @@ export type ExposedEnvVariableValueQuery = {
 
 export type ViewDatasetEnvVarDataFragment = {
     __typename?: "ViewDatasetEnvVar";
-    id: string;
     key: string;
     value?: string | null;
     isSecret: boolean;
@@ -8511,7 +8507,6 @@ export const VersionedFileEntryDataFragmentDoc = gql`
 `;
 export const ViewDatasetEnvVarDataFragmentDoc = gql`
     fragment ViewDatasetEnvVarData on ViewDatasetEnvVar {
-        id
         key
         value
         isSecret
@@ -11582,18 +11577,18 @@ export class EnginesGQL extends Apollo.Query<EnginesQuery, EnginesQueryVariables
     }
 }
 export const DeleteEnvVariableDocument = gql`
-    mutation deleteEnvVariable($datasetId: DatasetID!, $datasetEnvVarId: DatasetEnvVarID!) {
+    mutation deleteEnvVariable($datasetId: DatasetID!, $datasetEnvVarKey: String!) {
         datasets {
             byId(datasetId: $datasetId) {
                 envVars {
-                    deleteEnvVariable(id: $datasetEnvVarId) {
+                    deleteEnvVariable(key: $datasetEnvVarKey) {
                         ... on DeleteDatasetEnvVarResultSuccess {
                             message
-                            envVarId
+                            envVarKey
                         }
                         ... on DeleteDatasetEnvVarResultNotFound {
                             message
-                            envVarId
+                            envVarKey
                         }
                     }
                 }
@@ -11616,15 +11611,11 @@ export class DeleteEnvVariableGQL extends Apollo.Mutation<
     }
 }
 export const ExposedEnvVariableValueDocument = gql`
-    query exposedEnvVariableValue(
-        $accountName: AccountName!
-        $datasetName: DatasetName!
-        $datasetEnvVarId: DatasetEnvVarID!
-    ) {
+    query exposedEnvVariableValue($accountName: AccountName!, $datasetName: DatasetName!, $datasetEnvVarKey: String!) {
         datasets {
             byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
                 envVars {
-                    exposedValue(datasetEnvVarId: $datasetEnvVarId)
+                    exposedValue(datasetEnvVarKey: $datasetEnvVarKey)
                 }
             }
         }

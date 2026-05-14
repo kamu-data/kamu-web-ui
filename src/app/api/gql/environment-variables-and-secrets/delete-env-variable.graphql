@@ -1,16 +1,16 @@
-mutation deleteEnvVariable($datasetId: DatasetID!, $datasetEnvVarId: DatasetEnvVarID!) {
+mutation deleteEnvVariable($datasetId: DatasetID!, $datasetEnvVarKey: String!) {
   datasets {
     byId(datasetId: $datasetId) {
       envVars {
-        deleteEnvVariable(id: $datasetEnvVarId) {
+        deleteEnvVariable(key: $datasetEnvVarKey) {
           ... on DeleteDatasetEnvVarResultSuccess {
             message
-            envVarId
+            envVarKey
           }
 
           ... on DeleteDatasetEnvVarResultNotFound {
             message
-            envVarId
+            envVarKey
           }
         }
       }

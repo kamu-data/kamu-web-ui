@@ -68,7 +68,7 @@ export class DatasetEnvironmentVariablesService {
     public deleteEnvVariable(params: {
         accountId: string;
         datasetId: string;
-        datasetEnvVarId: string;
+        datasetEnvVarKey: string;
     }): Observable<void> {
         return this.environmentVariablesApi.deleteEnvironmentVariable(params).pipe(
             map((result: DeleteEnvVariableMutation) => {
@@ -84,7 +84,7 @@ export class DatasetEnvironmentVariablesService {
     public exposedEnvVariableValue(params: {
         accountName: string;
         datasetName: string;
-        datasetEnvVarId: string;
+        datasetEnvVarKey: string;
     }): Observable<string> {
         return this.environmentVariablesApi
             .exposedEnvVariableValue(params)

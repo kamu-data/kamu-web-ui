@@ -137,7 +137,7 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
         this.dataSource.filter = "";
     }
 
-    public onDelete(datasetEnvVarId: string): void {
+    public onDelete(datasetEnvVarKey: string): void {
         promiseWithCatch(
             this.modalService.error({
                 title: "Delete",
@@ -150,7 +150,7 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
                             .deleteEnvVariable({
                                 accountId: this.datasetBasics.owner.id,
                                 datasetId: this.datasetBasics.id,
-                                datasetEnvVarId,
+                                datasetEnvVarKey,
                             })
                             .subscribe(() => {
                                 this.updateTable(this.currentPage);

@@ -23,12 +23,10 @@ import {
 } from "@api/kamu.graphql.interface";
 import { TEST_ACCOUNT_ID, TEST_ACCOUNT_NAME, TEST_DATASET_ID, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 import {
-    MOCK_ENV_VAR_ID,
-    MOCK_IS_SECRET,
-    MOCK_KEY,
     MOCK_PAGE,
     MOCK_PER_PAGE,
-    MOCK_VALUE,
+    MOCK_VAR_KEY,
+    MOCK_VAR_VALUE,
     mockDeleteEnvVariableMutation,
     mockExposedEnvVariableValueQuery,
     mockListEnvVariablesQuery,
@@ -59,9 +57,9 @@ describe("EnvironmentVariablesApi", () => {
             .upsertEnvironmentVariable({
                 accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
-                key: MOCK_KEY,
-                value: MOCK_VALUE,
-                isSecret: MOCK_IS_SECRET,
+                key: MOCK_VAR_KEY,
+                value: MOCK_VAR_VALUE,
+                isSecret: true,
             })
             .subscribe((result: UpsertEnvVariableMutation) => {
                 if (result.datasets.byId?.envVars.upsertEnvVariable.__typename === "UpsertDatasetEnvVarResultCreated") {
@@ -73,9 +71,9 @@ describe("EnvironmentVariablesApi", () => {
 
         const op = controller.expectOne(UpsertEnvVariableDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
-        expect(op.operation.variables.key).toEqual(MOCK_KEY);
-        expect(op.operation.variables.value).toEqual(MOCK_VALUE);
-        expect(op.operation.variables.isSecret).toEqual(MOCK_IS_SECRET);
+        expect(op.operation.variables.key).toEqual(MOCK_VAR_KEY);
+        expect(op.operation.variables.value).toEqual(MOCK_VAR_VALUE);
+        expect(op.operation.variables.isSecret).toEqual(true);
 
         op.flush({
             data: mockUpsertEnvVariableMutationCreated,
@@ -87,9 +85,9 @@ describe("EnvironmentVariablesApi", () => {
             .upsertEnvironmentVariable({
                 accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
-                key: MOCK_KEY,
-                value: MOCK_VALUE,
-                isSecret: MOCK_IS_SECRET,
+                key: MOCK_VAR_KEY,
+                value: MOCK_VAR_VALUE,
+                isSecret: true,
             })
             .subscribe((result: UpsertEnvVariableMutation) => {
                 if (result.datasets.byId?.envVars.upsertEnvVariable.__typename === "UpsertDatasetEnvVarResultUpdated") {
@@ -101,9 +99,9 @@ describe("EnvironmentVariablesApi", () => {
 
         const op = controller.expectOne(UpsertEnvVariableDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
-        expect(op.operation.variables.key).toEqual(MOCK_KEY);
-        expect(op.operation.variables.value).toEqual(MOCK_VALUE);
-        expect(op.operation.variables.isSecret).toEqual(MOCK_IS_SECRET);
+        expect(op.operation.variables.key).toEqual(MOCK_VAR_KEY);
+        expect(op.operation.variables.value).toEqual(MOCK_VAR_VALUE);
+        expect(op.operation.variables.isSecret).toEqual(true);
 
         op.flush({
             data: mockUpsertEnvVariableMutationUpdated,
@@ -115,9 +113,9 @@ describe("EnvironmentVariablesApi", () => {
             .upsertEnvironmentVariable({
                 accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
-                key: MOCK_KEY,
-                value: MOCK_VALUE,
-                isSecret: MOCK_IS_SECRET,
+                key: MOCK_VAR_KEY,
+                value: MOCK_VAR_VALUE,
+                isSecret: true,
             })
             .subscribe((result: UpsertEnvVariableMutation) => {
                 if (result.datasets.byId?.envVars.upsertEnvVariable.__typename === "UpsertDatasetEnvVarResultUpdated") {
@@ -129,9 +127,9 @@ describe("EnvironmentVariablesApi", () => {
 
         const op = controller.expectOne(UpsertEnvVariableDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
-        expect(op.operation.variables.key).toEqual(MOCK_KEY);
-        expect(op.operation.variables.value).toEqual(MOCK_VALUE);
-        expect(op.operation.variables.isSecret).toEqual(MOCK_IS_SECRET);
+        expect(op.operation.variables.key).toEqual(MOCK_VAR_KEY);
+        expect(op.operation.variables.value).toEqual(MOCK_VAR_VALUE);
+        expect(op.operation.variables.isSecret).toEqual(true);
 
         op.flush({
             data: mockUpsertEnvVariableMutationUpToDate,
@@ -168,11 +166,11 @@ describe("EnvironmentVariablesApi", () => {
             .deleteEnvironmentVariable({
                 accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
-                datasetEnvVarId: MOCK_ENV_VAR_ID,
+                datasetEnvVarKey: MOCK_VAR_KEY,
             })
             .subscribe((result: DeleteEnvVariableMutation) => {
-                expect(result.datasets.byId?.envVars.deleteEnvVariable.envVarId).toEqual(
-                    mockDeleteEnvVariableMutation.datasets.byId?.envVars.deleteEnvVariable.envVarId,
+                expect(result.datasets.byId?.envVars.deleteEnvVariable.envVarKey).toEqual(
+                    mockDeleteEnvVariableMutation.datasets.byId?.envVars.deleteEnvVariable.envVarKey,
                 );
                 expect(result.datasets.byId?.envVars.deleteEnvVariable.message).toEqual(
                     mockDeleteEnvVariableMutation.datasets.byId?.envVars.deleteEnvVariable.message,
@@ -181,7 +179,7 @@ describe("EnvironmentVariablesApi", () => {
 
         const op = controller.expectOne(DeleteEnvVariableDocument);
         expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
-        expect(op.operation.variables.datasetEnvVarId).toEqual(MOCK_ENV_VAR_ID);
+        expect(op.operation.variables.datasetEnvVarKey).toEqual(MOCK_VAR_KEY);
 
         op.flush({
             data: mockDeleteEnvVariableMutation,
@@ -193,7 +191,7 @@ describe("EnvironmentVariablesApi", () => {
             .exposedEnvVariableValue({
                 accountName: TEST_ACCOUNT_NAME,
                 datasetName: TEST_DATASET_NAME,
-                datasetEnvVarId: MOCK_ENV_VAR_ID,
+                datasetEnvVarKey: MOCK_VAR_KEY,
             })
             .subscribe((result: ExposedEnvVariableValueQuery) => {
                 expect(result.datasets.byOwnerAndName?.envVars.exposedValue).toEqual(
@@ -204,7 +202,7 @@ describe("EnvironmentVariablesApi", () => {
         const op = controller.expectOne(ExposedEnvVariableValueDocument);
         expect(op.operation.variables.accountName).toEqual(TEST_ACCOUNT_NAME);
         expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
-        expect(op.operation.variables.datasetEnvVarId).toEqual(MOCK_ENV_VAR_ID);
+        expect(op.operation.variables.datasetEnvVarKey).toEqual(MOCK_VAR_KEY);
 
         op.flush({
             data: mockExposedEnvVariableValueQuery,

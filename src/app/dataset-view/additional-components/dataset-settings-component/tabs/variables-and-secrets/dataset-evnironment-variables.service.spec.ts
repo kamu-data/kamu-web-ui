@@ -17,12 +17,10 @@ import { ViewDatasetEnvVar, ViewDatasetEnvVarConnection } from "@api/kamu.graphq
 import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_ID, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 import {
-    MOCK_ENV_VAR_ID,
-    MOCK_IS_SECRET,
-    MOCK_KEY,
     MOCK_PAGE,
     MOCK_PER_PAGE,
-    MOCK_VALUE,
+    MOCK_VAR_KEY,
+    MOCK_VAR_VALUE,
     mockDeleteEnvVariableMutation,
     mockDeleteEnvVariableMutationError,
     mockExposedEnvVariableValueQuery,
@@ -83,9 +81,9 @@ describe("EvnironmentVariablesService", () => {
             .upsertEnvVariable({
                 accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
-                key: MOCK_KEY,
-                value: MOCK_VALUE,
-                isSecret: MOCK_IS_SECRET,
+                key: MOCK_VAR_KEY,
+                value: MOCK_VAR_VALUE,
+                isSecret: true,
             })
             .subscribe();
 
@@ -105,7 +103,7 @@ describe("EvnironmentVariablesService", () => {
             .deleteEnvVariable({
                 accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
-                datasetEnvVarId: MOCK_ENV_VAR_ID,
+                datasetEnvVarKey: MOCK_VAR_KEY,
             })
             .subscribe();
 
@@ -125,7 +123,7 @@ describe("EvnironmentVariablesService", () => {
             .deleteEnvVariable({
                 accountId: TEST_ACCOUNT_ID,
                 datasetId: TEST_DATASET_ID,
-                datasetEnvVarId: MOCK_ENV_VAR_ID,
+                datasetEnvVarKey: MOCK_VAR_KEY,
             })
             .subscribe();
 
@@ -143,7 +141,7 @@ describe("EvnironmentVariablesService", () => {
             .exposedEnvVariableValue({
                 accountName: TEST_ACCOUNT_NAME,
                 datasetName: TEST_DATASET_NAME,
-                datasetEnvVarId: MOCK_ENV_VAR_ID,
+                datasetEnvVarKey: MOCK_VAR_KEY,
             })
             .subscribe((result) =>
                 expect(result).toEqual(

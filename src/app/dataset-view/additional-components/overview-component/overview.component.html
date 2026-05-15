@@ -209,7 +209,7 @@
             <app-versioned-file-view [datasetBasics]="datasetBasics" />
         </div>
         <div *ngIf="viewMode === OverviewTabMode.Collection">
-            <app-collection-view [datasetBasics]="datasetBasics" />
+            <app-collection-view [datasetBasics]="datasetBasics" [pathPrefix]="datasetOverviewTabData.pathPrefix!" />
         </div>
 
         <div class="my-4" *ngIf="canAddReadme" data-test-id="add-readme-block">

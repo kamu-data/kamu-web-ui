@@ -13,19 +13,21 @@
  */
 
 import { inject } from "@angular/core";
-import { ResolveFn } from "@angular/router";
+import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
 import { catchError, combineLatest, EMPTY, map } from "rxjs";
 
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
-export const datasetOverviewTabResolverFn: ResolveFn<DatasetOverviewTabData> = () => {
+export const datasetOverviewTabResolverFn: ResolveFn<DatasetOverviewTabData> = (route: ActivatedRouteSnapshot) => {
     const datasetService = inject(DatasetService);
     const datasetSubsService = inject(DatasetSubscriptionsService);
     const navigationService = inject(NavigationService);
+    const pathPrefix = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX) ?? "/";
 
     return combineLatest([
         datasetService.datasetChanges,
@@ -37,6 +39,7 @@ export const datasetOverviewTabResolverFn: ResolveFn<DatasetOverviewTabData> = (
                 datasetBasics,
                 datasetPermissions,
                 overviewUpdate,
+                pathPrefix,
             };
         }),
         catchError(() => {

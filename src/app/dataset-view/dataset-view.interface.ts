@@ -34,6 +34,7 @@ export interface DatasetViewData {
 
 export interface DatasetOverviewTabData extends DatasetViewData {
     overviewUpdate: OverviewUpdate;
+    pathPrefix?: string;
 }
 
 export enum OverviewTabMode {

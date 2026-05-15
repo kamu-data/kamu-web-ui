@@ -70,16 +70,16 @@ export class TemplatesYamlEventsService {
             kind: "SetPollingSource",
             ...params,
         };
-        if (params.read.schema?.length) {
-            const { schema: ddlSchema, ...readRest } = params.read;
-            this.initialTemplate.content = {
-                ...this.initialTemplate.content,
-                read: {
-                    ...readRest,
-                    ddlSchema,
-                },
-            };
-        }
+
+        const { schema: ddlSchema, ...readRest } = params.read;
+        this.initialTemplate.content = {
+            ...this.initialTemplate.content,
+            read: {
+                ...readRest,
+                ddlSchema,
+            },
+        };
+
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
             this.initialTemplate.content = {
                 ...this.initialTemplate.content,
@@ -109,16 +109,15 @@ export class TemplatesYamlEventsService {
             kind: "AddPushSource",
             ...params,
         };
-        if (params.read.ddlSchema?.length) {
-            const { schema: ddlSchema, ...readRest } = params.read;
-            this.initialTemplate.content = {
-                ...this.initialTemplate.content,
-                read: {
-                    ...readRest,
-                    ddlSchema,
-                },
-            };
-        }
+
+        const { schema: ddlSchema, ...readRest } = params.read;
+        this.initialTemplate.content = {
+            ...this.initialTemplate.content,
+            read: {
+                ...readRest,
+                ddlSchema,
+            },
+        };
 
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
             this.initialTemplate.content = {

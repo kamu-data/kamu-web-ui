@@ -147,6 +147,7 @@ export interface AddPollingSourceEditFormType {
         jsonKind?: ReadKind;
         subPath?: string;
         schema?: string[];
+        ddlSchema?: string[];
         separator?: string;
         encoding?: string;
         quote?: string;

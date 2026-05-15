@@ -102,8 +102,8 @@ export class EditPollingSourceService {
             });
         }
         const schema = sectionForm.controls.schema as FormArray;
-        if (!(schema.value as string[]).length && editFormValue.read.schema && editFormValue.read.schema.length) {
-            editFormValue.read.schema.forEach((item) => {
+        if (!(schema.value as string[]).length && editFormValue.read.ddlSchema && editFormValue.read.ddlSchema.length) {
+            editFormValue.read.ddlSchema.forEach((item) => {
                 const result = item.split(" ");
                 schema.push(
                     this.fb.group({

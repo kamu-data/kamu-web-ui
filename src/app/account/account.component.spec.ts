@@ -6,6 +6,7 @@
  */
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
@@ -54,8 +55,12 @@ describe("AccountComponent", () => {
                         queryParams: mockQueryParams.asObservable(),
                     },
                 },
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
             ],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         accountService = TestBed.inject(AccountService);
         loggedUserService = TestBed.inject(LoggedUserService);

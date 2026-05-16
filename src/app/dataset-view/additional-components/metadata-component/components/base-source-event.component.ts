@@ -90,7 +90,7 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
             ),
             this.datasetCommitService.commitEventErrorOccurrences,
         ]).subscribe(([eventYaml, message]) => {
-            this.changedEventYamlByHash = eventYaml;
+            this.changedEventYamlByHash = eventYaml as string;
             if (!message) {
                 this.navigationServices.navigateToDatasetView({
                     accountName: this.getDatasetInfoFromUrl().accountName,

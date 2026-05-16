@@ -621,7 +621,8 @@ router-outlet {
 #set-polling-source-topics,
 #query-explainer-table,
 #global-query-table,
-#subprocesses-table {
+#subprocesses-table,
+#odf-schema-property {
     * {
         font-size: 12px;
         height: 34px;

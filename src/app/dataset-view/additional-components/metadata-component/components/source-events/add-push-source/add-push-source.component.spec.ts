@@ -14,6 +14,7 @@ import { from, of } from "rxjs";
 
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
+import { ApolloTestingModule } from "apollo-angular/testing";
 
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
@@ -63,7 +64,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [...providersSection(mockAddPushSourceYaml), Apollo],
-            imports: [BrowserAnimationsModule, AddPushSourceComponent],
+            imports: [ApolloTestingModule, BrowserAnimationsModule, AddPushSourceComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AddPushSourceComponent);
@@ -79,7 +80,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
             sourceName: new FormControl(""),
             read: new FormGroup({
                 kind: new FormControl(ReadKind.CSV),
-                schema: new FormArray([
+                ddlSchema: new FormArray([
                     new FormGroup({
                         name: new FormControl("id"),
                         type: new FormControl("BIGINT"),
@@ -156,7 +157,7 @@ describe("AddPushSourceComponent without query parameter name", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [providersSection(""), Apollo],
-            imports: [BrowserAnimationsModule, AddPushSourceComponent],
+            imports: [ApolloTestingModule, BrowserAnimationsModule, AddPushSourceComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AddPushSourceComponent);

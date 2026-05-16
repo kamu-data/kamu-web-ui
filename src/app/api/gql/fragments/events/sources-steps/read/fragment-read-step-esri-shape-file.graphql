@@ -1,4 +1,6 @@
 fragment ReadStepEsriShapefileData on ReadStepEsriShapefile {
-  schema
   subPath
+  schema(format: ODF_JSON) {
+    ...DataSchemaInfo
+  }
 }

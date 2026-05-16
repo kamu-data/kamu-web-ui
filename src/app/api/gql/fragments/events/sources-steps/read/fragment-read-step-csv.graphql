@@ -1,5 +1,4 @@
 fragment ReadStepCsvData on ReadStepCsv {
-  schema
   separator
   encoding
   quote
@@ -9,4 +8,7 @@ fragment ReadStepCsvData on ReadStepCsv {
   nullValue
   dateFormat
   timestampFormat
+  schema(format: ODF_JSON) {
+    ...DataSchemaInfo
+  }
 }

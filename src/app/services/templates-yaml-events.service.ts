@@ -20,6 +20,8 @@ import {
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { AddPushSourceEditFormType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 
+import { SchemaType } from "../dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.component";
+
 @Injectable({
     providedIn: "root",
 })
@@ -70,6 +72,11 @@ export class TemplatesYamlEventsService {
             kind: "SetPollingSource",
             ...params,
         };
+
+        if (params.read.ddlSchema?.length) {
+            params.read.ddlSchema = (params.read.ddlSchema as SchemaType[]).map((item) => `${item.name} ${item.type}`);
+        }
+
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
             this.initialTemplate.content = {
                 ...this.initialTemplate.content,
@@ -99,6 +106,11 @@ export class TemplatesYamlEventsService {
             kind: "AddPushSource",
             ...params,
         };
+
+        if (params.read.ddlSchema?.length) {
+            params.read.ddlSchema = (params.read.ddlSchema as SchemaType[]).map((item) => `${item.name} ${item.type}`);
+        }
+
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
             this.initialTemplate.content = {
                 ...this.initialTemplate.content,

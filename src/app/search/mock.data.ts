@@ -344,15 +344,12 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                     },
                     read: {
                         __typename: "ReadStepCsv",
-                        schema: [
-                            "id BIGINT",
-                            "date_reported TIMESTAMP",
-                            "zone STRING",
-                            "gender STRING",
-                            "age_group STRING",
-                            "case_status STRING",
-                            "case_type STRING",
-                        ],
+                        schema: {
+                            format: DataSchemaFormat.OdfJson,
+                            content:
+                                '{"fields":[{"name":"id","type":{"kind":"Option","inner":{"kind":"Int64"}}},{"name":"source","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"captures","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"capture_measure","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"taxon_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"scientific_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"parent_taxon","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"year","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"rfmo","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_code","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"flag","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"ocean","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"latitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"longitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"dataset_organisation","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_acknowledgement","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_url","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_date","type":{"kind":"Date"}}]}',
+                            __typename: "DataSchema",
+                        },
                         separator: null,
                         dateFormat: null,
                         encoding: null,
@@ -1315,7 +1312,7 @@ export const mockParseAddPushSourceEventFromYamlToObject: AddPushSourceEditFormT
     sourceName: "mockSource",
     read: {
         kind: ReadKind.CSV,
-        schema: ["id INT"],
+        ddlSchema: ["id INT"],
         separator: OdfDefaultValues.CSV_SEPARATOR,
         encoding: OdfDefaultValues.CSV_ENCODING,
         quote: OdfDefaultValues.CSV_QUOTE,

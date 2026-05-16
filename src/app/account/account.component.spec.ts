@@ -47,6 +47,7 @@ describe("AccountComponent", () => {
             imports: [AccountComponent],
             providers: [
                 Apollo,
+                provideHttpClient(withInterceptorsFromDi()),
                 provideToastr(),
                 {
                     provide: ActivatedRoute,
@@ -66,6 +67,8 @@ describe("AccountComponent", () => {
         fetchAccountByNameSpy = spyOn(accountService, "fetchAccountByName").and.returnValue(of(mockAccountDetails));
         spyOnProperty(loggedUserService, "loggedInUserChanges", "get").and.returnValue(of(null));
         spyOn(accountService, "getDatasetsTotalCountByAccountName").and.returnValue(of(1));
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(AccountComponent);
         component = fixture.componentInstance;

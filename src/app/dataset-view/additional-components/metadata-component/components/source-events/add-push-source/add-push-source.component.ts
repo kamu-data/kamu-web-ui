@@ -62,6 +62,7 @@ export class AddPushSourceComponent extends BaseSourceEventComponent {
     private blockService = inject(BlockService);
 
     public ngOnInit(): void {
+        super.ngOnInit();
         this.initEditForm();
     }
 

@@ -13,6 +13,8 @@ import {
     ReadKind,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 
+import { SchemaType } from "../../form-components/schema-field/schema-field.component";
+
 export enum AddPushSourceSection {
     SOURCE_NAME = "sourceName",
     READ = "read",
@@ -33,7 +35,7 @@ export interface AddPushSourceEditFormType {
         kind: ReadKind;
         jsonKind?: ReadKind;
         subPath?: string;
-        schema?: string[];
+        ddlSchema?: string[] | SchemaType[];
         separator?: string;
         encoding?: string;
         quote?: string;

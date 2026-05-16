@@ -31,6 +31,7 @@ describe("MetadataSchemaTabComponent", () => {
             imports: [MetadataSchemaTabComponent],
             providers: [provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         });
+        registerMatSvgIcons();
         fixture = TestBed.createComponent(MetadataSchemaTabComponent);
         component = fixture.componentInstance;
         component.datasetMetadataTabData = {
@@ -43,7 +44,7 @@ describe("MetadataSchemaTabComponent", () => {
                 size: mockOverviewDataUpdate.size,
             } as OverviewUpdate,
         };
-        registerMatSvgIcons();
+
         fixture.detectChanges();
     });
 

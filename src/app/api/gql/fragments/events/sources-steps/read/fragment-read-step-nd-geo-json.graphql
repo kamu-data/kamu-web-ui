@@ -1,3 +1,5 @@
 fragment ReadStepNdGeoJsonData on ReadStepNdGeoJson {
-  schema
+  schema(format: ODF_JSON) {
+    ...DataSchemaInfo
+  }
 }

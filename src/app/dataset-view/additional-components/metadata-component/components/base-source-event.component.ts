@@ -9,7 +9,7 @@ import { inject, Injectable, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, FormGroup } from "@angular/forms";
 
-import { catchError, from, of, take } from "rxjs";
+import { catchError, combineLatest, from, of, take } from "rxjs";
 
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 
@@ -83,22 +83,26 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
                 : this.selectSourceEvent(form, sourceEvent);
         instance.datasetInfo = this.getDatasetInfoFromUrl();
 
-        from(modalRef.result)
-            .pipe(
+        combineLatest([
+            from(modalRef.result).pipe(
                 take(1),
                 catchError(() => of(null)),
-            )
-            .subscribe((eventYaml: string) => {
-                this.changedEventYamlByHash = eventYaml;
+            ),
+            this.datasetCommitService.commitEventErrorOccurrences,
+        ]).subscribe(([eventYaml, message]) => {
+            this.changedEventYamlByHash = eventYaml;
+            if (!message) {
                 this.navigationServices.navigateToDatasetView({
                     accountName: this.getDatasetInfoFromUrl().accountName,
                     datasetName: this.getDatasetInfoFromUrl().datasetName,
                     tab: DatasetViewTypeEnum.Overview,
                 });
-            });
+            }
+        });
     }
 
     public saveSourceEvent(form: FormGroup, sourceEvent: SourcesEvents): void {
+        this.datasetCommitService.emitCommitEventErrorOccurred("");
         this.datasetCommitService
             .commitEventToDataset({
                 accountId: this.loggedUserService.currentlyLoggedInUser.id,

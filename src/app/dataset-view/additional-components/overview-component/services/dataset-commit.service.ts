@@ -65,6 +65,7 @@ export class DatasetCommitService {
                 map((data: CommitEventToDatasetMutation) => {
                     if (data.datasets.byId) {
                         if (data.datasets.byId.metadata.chain.commitEvent.__typename === "CommitResultSuccess") {
+                            this.emitCommitEventErrorOccurred("");
                             return true;
                         } else if (
                             data.datasets.byId.metadata.chain.commitEvent.__typename === "CommitResultAppendError" ||

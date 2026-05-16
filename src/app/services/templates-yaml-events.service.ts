@@ -73,7 +73,9 @@ export class TemplatesYamlEventsService {
             ...params,
         };
 
-        params.read.ddlSchema = (params.read.ddlSchema as SchemaType[]).map((item) => `${item.name} ${item.type}`);
+        if (params.read.ddlSchema?.length) {
+            params.read.ddlSchema = (params.read.ddlSchema as SchemaType[]).map((item) => `${item.name} ${item.type}`);
+        }
 
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
             this.initialTemplate.content = {
@@ -105,7 +107,9 @@ export class TemplatesYamlEventsService {
             ...params,
         };
 
-        params.read.ddlSchema = (params.read.ddlSchema as SchemaType[]).map((item) => `${item.name} ${item.type}`);
+        if (params.read.ddlSchema?.length) {
+            params.read.ddlSchema = (params.read.ddlSchema as SchemaType[]).map((item) => `${item.name} ${item.type}`);
+        }
 
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
             this.initialTemplate.content = {

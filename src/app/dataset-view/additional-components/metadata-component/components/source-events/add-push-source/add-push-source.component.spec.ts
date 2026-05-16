@@ -79,7 +79,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
             sourceName: new FormControl(""),
             read: new FormGroup({
                 kind: new FormControl(ReadKind.CSV),
-                schema: new FormArray([
+                ddlSchema: new FormArray([
                     new FormGroup({
                         name: new FormControl("id"),
                         type: new FormControl("BIGINT"),

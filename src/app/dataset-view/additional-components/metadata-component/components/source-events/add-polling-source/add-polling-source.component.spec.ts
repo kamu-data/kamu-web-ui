@@ -108,7 +108,7 @@ describe("AddPollingSourceComponent", () => {
             }),
             read: new FormGroup({
                 kind: new FormControl(ReadKind.CSV),
-                schema: new FormArray([
+                ddlSchema: new FormArray([
                     new FormGroup({
                         name: new FormControl("id"),
                         type: new FormControl("BIGINT"),

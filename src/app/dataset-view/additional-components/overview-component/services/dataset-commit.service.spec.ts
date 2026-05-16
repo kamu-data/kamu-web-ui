@@ -189,14 +189,16 @@ describe("DatasetCommitService", () => {
         },
     );
 
-    it("should check commitEventToDataset() method with hard error", fakeAsync(() => {
+    it("should check commitEventToDataset() method with MetadataManifestUnsupportedVersionError error", fakeAsync(() => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
         spyOn(datasetApi, "commitEvent").and.returnValue(
             of(mockCommitEventToDataseMetadataManifestUnsupportedVersionError),
         );
 
         const subscription$ = requestCommitEvent().subscribe({
-            next: () => fail("unexpected success"),
+            next: (result) => {
+                expect(result).toBeFalse();
+            },
             error: (e: unknown) => {
                 expect(e instanceof DatasetOperationError).toBeTrue();
             },

@@ -163,8 +163,7 @@ describe("EditPollingSourceService", () => {
         expect(sectionFetchForm.value.args as string[]).toEqual(result.args);
     });
 
-    // eslint-disable-next-line jasmine/no-disabled-tests
-    xit("should be check patch form with read CSV step with schema", () => {
+    it("should be check patch form with read CSV step with schema", () => {
         const sectionReadForm = new FormGroup({
             kind: new FormControl(ReadKind.CSV),
             ddlSchema: new FormArray([]),
@@ -179,7 +178,7 @@ describe("EditPollingSourceService", () => {
             },
             read: {
                 kind: ReadKind.CSV,
-                ddlSchema: [{ name: "id", type: "BIGINT" }],
+                ddlSchema: ["id INT"],
             },
             merge: {
                 kind: MergeKind.APPEND,

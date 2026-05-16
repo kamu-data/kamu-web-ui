@@ -64,12 +64,17 @@ export class DatasetCommitService {
                 ),
                 map((data: CommitEventToDatasetMutation) => {
                     if (data.datasets.byId) {
-                        if (data.datasets.byId.metadata.chain.commitEvent.__typename === "CommitResultSuccess") {
+                        const typename = data.datasets.byId.metadata.chain.commitEvent.__typename;
+                        if (typename === "CommitResultSuccess") {
                             this.emitCommitEventErrorOccurred("");
                             return true;
                         } else if (
-                            data.datasets.byId.metadata.chain.commitEvent.__typename === "CommitResultAppendError" ||
-                            data.datasets.byId.metadata.chain.commitEvent.__typename === "MetadataManifestMalformed"
+                            [
+                                "CommitResultAppendError",
+                                "MetadataManifestMalformed",
+                                "NoChanges",
+                                "MetadataManifestUnsupportedVersion",
+                            ].includes(typename)
                         ) {
                             this.emitCommitEventErrorOccurred(data.datasets.byId.metadata.chain.commitEvent.message);
                             return false;

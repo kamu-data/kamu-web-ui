@@ -111,12 +111,14 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
                 event: this.selectSourceEvent(form, sourceEvent),
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.navigationServices.navigateToDatasetView({
-                    accountName: this.getDatasetInfoFromUrl().accountName,
-                    datasetName: this.getDatasetInfoFromUrl().datasetName,
-                    tab: DatasetViewTypeEnum.Overview,
-                });
+            .subscribe((success: boolean) => {
+                if (success) {
+                    this.navigationServices.navigateToDatasetView({
+                        accountName: this.getDatasetInfoFromUrl().accountName,
+                        datasetName: this.getDatasetInfoFromUrl().datasetName,
+                        tab: DatasetViewTypeEnum.Overview,
+                    });
+                }
             });
     }
 

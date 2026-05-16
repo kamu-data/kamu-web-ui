@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.66.0] - 2026-05-16
 ### Added
 - Preview for the dataset as a collection
   - displayed hierarchical entries for the latest version of collection
@@ -14,8 +14,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Account profille
   - added a button to copy the DID for an account
 - Reading the ODF schema in sources
-
-
 
 ## [0.65.0] - 2026-04-24
 ### Added

@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - preview supported file types
   - switching file versions feature
   - file download feature
+- URL parameter to manage the collection state
 
 ## [0.64.0] - 2026-03-18
 ### Added

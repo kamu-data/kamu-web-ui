@@ -37,7 +37,10 @@ import AppValues from "@common/values/app.values";
 import { CollectionEntryDataFragment, DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
+import ProjectLinks from "src/app/project-links";
+import { NavigationService } from "src/app/services/navigation.service";
 
 import { DatasetAsCollectionService } from "../../services/dataset-as-collection.service";
 import { getCollectionValueHelper, resolveEntryIconHelper, sortCollectionEntryData } from "./collection-view.helper";
@@ -71,6 +74,7 @@ import { CollectionEntriesResult, CollectionEntryViewType, CollectionViewNode } 
 })
 export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implements OnChanges, OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public pathPrefix: string;
 
     public dataSource = new MatTableDataSource<CollectionEntryViewType>();
     public collectionInfo$: Observable<CollectionEntriesResult>;
@@ -79,8 +83,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     private click$ = new Subject<string>();
 
     public currentPage: number = 1;
-    public pathPrefix: string = "/";
-    public maxDepth: number = 0;
+    public maxDepth: number;
     public entriesTotalCount: number;
     public isAllDataLoaded: boolean = false;
     public selectedRow: CollectionEntryViewType | null = null;
@@ -101,6 +104,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     private clipboard = inject(Clipboard);
     private datasetService = inject(DatasetService);
     private cdr = inject(ChangeDetectorRef);
+    private navigationService = inject(NavigationService);
 
     public ngOnInit(): void {
         this.loadingCollection$ = this.datasetAsCollectionService.loadingCollectionChanges;
@@ -131,6 +135,9 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             this.resetTableView();
             this.triggerLoadCollection(false);
             this.loadDatasetAsCollection();
+        }
+        if (changes.pathPrefix && changes.pathPrefix.previousValue !== changes.pathPrefix.currentValue) {
+            this.maxDepth = this.pathPrefix === "/" ? 0 : this.pathPrefix.split("/").length - 1;
         }
     }
 
@@ -202,9 +209,14 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     public dbClickTableRow(row: CollectionEntryViewType): void {
         if (row.nodeType === CollectionViewNode.Folder) {
             this.pathPrefix += `${this.maxDepth === 0 ? row.displayName : "/" + row.displayName}`;
-            this.maxDepth += 1;
             this.currentPage = 1;
             this.checkHeadAndLoadCollection();
+            this.navigationService.navigateToDatasetView({
+                accountName: this.datasetBasics.owner.accountName,
+                datasetName: this.datasetBasics.name,
+                tab: DatasetViewTypeEnum.Overview,
+                [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: this.pathPrefix,
+            });
         } else {
             if ([CollectionViewNode.Dataset, CollectionViewNode.File].includes(row.nodeType)) {
                 const urlTree = this.router.createUrlTree([row?.alias]);
@@ -221,9 +233,14 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     public goUp(): void {
         const lastSlashIndex = this.pathPrefix.lastIndexOf("/");
         this.pathPrefix = lastSlashIndex === 0 ? "/" : this.pathPrefix.substring(0, lastSlashIndex);
-        this.maxDepth -= 1;
         this.currentPage = 1;
         this.checkHeadAndLoadCollection();
+        this.navigationService.navigateToDatasetView({
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
+            tab: DatasetViewTypeEnum.Overview,
+            [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: this.pathPrefix,
+        });
     }
 
     public onCellEventClick(value: string, nodeType: MaybeNull<CollectionViewNode>) {

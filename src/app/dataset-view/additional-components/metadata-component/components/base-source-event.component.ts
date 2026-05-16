@@ -90,6 +90,11 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
             )
             .subscribe((eventYaml: string) => {
                 this.changedEventYamlByHash = eventYaml;
+                this.navigationServices.navigateToDatasetView({
+                    accountName: this.getDatasetInfoFromUrl().accountName,
+                    datasetName: this.getDatasetInfoFromUrl().datasetName,
+                    tab: DatasetViewTypeEnum.Overview,
+                });
             });
     }
 

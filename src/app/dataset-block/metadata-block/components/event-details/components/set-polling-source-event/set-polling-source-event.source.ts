@@ -307,6 +307,8 @@ export const SET_POLLING_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
 
     "SetPollingSource.ReadStepNdJson.__typename": getSourcesDescriptors("SetPollingSource.ReadStepNdJson.__typename"),
 
+    "SetPollingSource.ReadStepNdJson.schema": getSourcesDescriptors("SetPollingSource.ReadStepNdJson.schema"),
+
     "SetPollingSource.ReadStepNdJson.dateFormat": getSourcesDescriptors("SetPollingSource.ReadStepNdJson.dateFormat"),
 
     "SetPollingSource.ReadStepNdJson.encoding": getSourcesDescriptors("SetPollingSource.ReadStepNdJson.encoding"),

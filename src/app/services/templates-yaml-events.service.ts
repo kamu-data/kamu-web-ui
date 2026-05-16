@@ -20,6 +20,8 @@ import {
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { AddPushSourceEditFormType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 
+import { SchemaType } from "../dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.component";
+
 @Injectable({
     providedIn: "root",
 })
@@ -71,14 +73,7 @@ export class TemplatesYamlEventsService {
             ...params,
         };
 
-        const { schema: ddlSchema, ...readRest } = params.read;
-        this.initialTemplate.content = {
-            ...this.initialTemplate.content,
-            read: {
-                ...readRest,
-                ddlSchema,
-            },
-        };
+        params.read.ddlSchema = (params.read.ddlSchema as SchemaType[]).map((item) => `${item.name} ${item.type}`);
 
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
             this.initialTemplate.content = {
@@ -110,14 +105,7 @@ export class TemplatesYamlEventsService {
             ...params,
         };
 
-        const { schema: ddlSchema, ...readRest } = params.read;
-        this.initialTemplate.content = {
-            ...this.initialTemplate.content,
-            read: {
-                ...readRest,
-                ddlSchema,
-            },
-        };
+        params.read.ddlSchema = (params.read.ddlSchema as SchemaType[]).map((item) => `${item.name} ${item.type}`);
 
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
             this.initialTemplate.content = {

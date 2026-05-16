@@ -2,8 +2,7 @@
     <mat-progress-bar data-test-id="collection-loader" mode="indeterminate" class="w-100 mt-4"></mat-progress-bar>
     <div class="mt-4 text-center text-muted">Loading...</div>
 </div>
-{{ pathPrefix }}
-{{ maxDepth }}
+
 <div *ngIf="collectionInfo$ | async as collectionEntry">
     <div *ngIf="collectionEntry.connection.totalCount; else emptyCollection" class="main-container">
         <div

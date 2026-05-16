@@ -13,7 +13,7 @@
  */
 
 import { inject } from "@angular/core";
-import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
+import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
 import { catchError, combineLatest, EMPTY, map } from "rxjs";
 

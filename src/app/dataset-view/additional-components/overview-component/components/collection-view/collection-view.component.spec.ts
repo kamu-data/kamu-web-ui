@@ -60,6 +60,7 @@ describe("CollectionViewComponent", () => {
                 isFirstChange: () => true,
             },
         };
+        component.pathPrefix = "/test-folder";
         component.ngOnChanges(datasetBasicsSimpleChanges);
 
         fixture.detectChanges();
@@ -111,7 +112,6 @@ describe("CollectionViewComponent", () => {
 
         component.dbClickTableRow(row);
         expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(1);
-        expect(component.maxDepth).toEqual(1);
     });
 
     it("should check double click on file row", () => {
@@ -134,7 +134,6 @@ describe("CollectionViewComponent", () => {
 
         component.dbClickTableRow(row);
         expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(0);
-        expect(component.maxDepth).toEqual(0);
     });
 
     it("should check to select table row", () => {
@@ -178,16 +177,15 @@ describe("CollectionViewComponent", () => {
 
         component.dbClickTableRow(row);
         expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(0);
-        expect(component.maxDepth).toEqual(0);
     });
 
     it("should check go up from folder", () => {
         const isHeadHashBlockChangedSpy = spyOn(datasetService, "isHeadHashBlockChanged").and.returnValue(
             of(true).pipe(),
         );
-        component.maxDepth = 1;
+        component.currentPage = 2;
         component.goUp();
-        expect(component.maxDepth).toEqual(0);
+        expect(component.currentPage).toEqual(1);
         expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(1);
     });
 });

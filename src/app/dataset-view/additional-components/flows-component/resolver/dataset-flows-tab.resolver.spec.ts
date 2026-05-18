@@ -46,7 +46,7 @@ describe("datasetFlowsTabResolverFn", () => {
         datasetSubsService.emitOverviewChanged(mockOverviewUpdate);
         const routeSnapshot = {
             paramMap: convertToParamMap({ [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME }),
-            queryParamMap: convertToParamMap({}),
+            queryParamMap: convertToParamMap({ [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: undefined }),
         } as ActivatedRouteSnapshot;
         const mockState = {
             url: `/kamu/datasetName/${DatasetViewTypeEnum.Flows}`,
@@ -57,6 +57,7 @@ describe("datasetFlowsTabResolverFn", () => {
                 datasetBasics: mockDatasetBasicsRootFragment,
                 datasetPermissions: mockFullPowerDatasetPermissionsFragment,
                 overviewUpdate: mockOverviewUpdate,
+                pathPrefix: "/",
             });
         });
     });

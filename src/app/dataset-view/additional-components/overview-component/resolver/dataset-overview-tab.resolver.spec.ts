@@ -6,7 +6,7 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
 import { Observable, throwError } from "rxjs";
 
@@ -17,6 +17,7 @@ import { datasetOverviewTabResolverFn } from "src/app/dataset-view/additional-co
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 
@@ -45,7 +46,11 @@ describe("datasetOverviewTabResolverFn", () => {
         datasetService.emitDatasetChanged(mockDatasetBasicsRootFragment);
         datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
         datasetSubsService.emitOverviewChanged(mockOverviewUpdate);
-        const routeSnapshot = {} as ActivatedRouteSnapshot;
+        const routeSnapshot = {
+            queryParamMap: convertToParamMap({
+                [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: undefined,
+            }),
+        } as ActivatedRouteSnapshot;
         const mockState = {} as RouterStateSnapshot;
 
         const result = executeResolver(routeSnapshot, mockState) as Observable<DatasetOverviewTabData>;
@@ -54,6 +59,7 @@ describe("datasetOverviewTabResolverFn", () => {
                 datasetBasics: mockDatasetBasicsRootFragment,
                 datasetPermissions: mockFullPowerDatasetPermissionsFragment,
                 overviewUpdate: mockOverviewUpdate,
+                pathPrefix: "/",
             });
         });
     });
@@ -64,7 +70,11 @@ describe("datasetOverviewTabResolverFn", () => {
         datasetService.emitDatasetChanged(mockDatasetBasicsRootFragment);
         datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
         datasetSubsService.emitOverviewChanged(mockOverviewUpdate);
-        const routeSnapshot = {} as ActivatedRouteSnapshot;
+        const routeSnapshot = {
+            queryParamMap: convertToParamMap({
+                [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: undefined,
+            }),
+        } as ActivatedRouteSnapshot;
         const mockState = {} as RouterStateSnapshot;
 
         (executeResolver(routeSnapshot, mockState) as Observable<DatasetOverviewTabData>).subscribe({

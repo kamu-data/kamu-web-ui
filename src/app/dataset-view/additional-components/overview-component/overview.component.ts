@@ -296,7 +296,7 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     }
 
     public get visibleUpdateButton(): boolean {
-        return this.enableScheduling && this.canSchedule;
+        return this.isUserLogged && this.enableScheduling && this.canSchedule;
     }
 
     public get visibleGetDataButton(): boolean {

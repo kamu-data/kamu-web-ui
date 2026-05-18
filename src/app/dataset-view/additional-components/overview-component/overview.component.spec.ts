@@ -214,6 +214,13 @@ describe("OverviewComponent", () => {
         expect(component.showDragAndDropBlock).toBeTruthy();
     });
 
+    it("should check visibility 'Get Data' button", () => {
+        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+        fixture.detectChanges();
+        const buttonElement = findElementByDataTestId(fixture, "get-data-button");
+        expect(buttonElement).toBeDefined();
+    });
+
     it("should check navigate to flows tab when 'refresh now' button was clicked", fakeAsync(() => {
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         spyOnProperty(component, "enableScheduling", "get").and.returnValue(true);

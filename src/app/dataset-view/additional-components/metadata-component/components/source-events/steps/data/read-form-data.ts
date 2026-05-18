@@ -18,7 +18,7 @@ export const READ_FORM_DATA: JsonFormData = {
     Csv: {
         controls: [
             {
-                name: "schema",
+                name: "ddlSchema",
                 label: "Schema",
                 value: "",
                 type: ControlType.SCHEMA,
@@ -123,7 +123,7 @@ export const READ_FORM_DATA: JsonFormData = {
     AllGeo: {
         controls: [
             {
-                name: "schema",
+                name: "ddlSchema",
                 label: "Schema",
                 value: "",
                 type: ControlType.SCHEMA,
@@ -147,7 +147,7 @@ export const READ_FORM_DATA: JsonFormData = {
     EsriShapefile: {
         controls: [
             {
-                name: "schema",
+                name: "ddlSchema",
                 label: "Schema",
                 value: "",
                 type: ControlType.SCHEMA,
@@ -168,7 +168,7 @@ export const READ_FORM_DATA: JsonFormData = {
     Parquet: {
         controls: [
             {
-                name: "schema",
+                name: "ddlSchema",
                 label: "Schema",
                 value: "",
                 tooltip: SourcesTooltipsTexts.SCHEMA,
@@ -180,7 +180,7 @@ export const READ_FORM_DATA: JsonFormData = {
     AllJson: {
         controls: [
             {
-                name: "schema",
+                name: "ddlSchema",
                 label: "Schema",
                 value: "",
                 type: ControlType.SCHEMA,

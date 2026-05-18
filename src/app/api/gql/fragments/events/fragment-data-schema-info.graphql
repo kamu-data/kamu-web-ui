@@ -1,0 +1,4 @@
+fragment DataSchemaInfo on DataSchema {
+  format
+  content
+}

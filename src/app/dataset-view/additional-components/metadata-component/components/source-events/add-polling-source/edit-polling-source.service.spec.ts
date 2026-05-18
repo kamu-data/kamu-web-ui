@@ -166,7 +166,7 @@ describe("EditPollingSourceService", () => {
     it("should be check patch form with read CSV step with schema", () => {
         const sectionReadForm = new FormGroup({
             kind: new FormControl(ReadKind.CSV),
-            schema: new FormArray([]),
+            ddlSchema: new FormArray([]),
         });
         const editFormValue = {
             fetch: {
@@ -178,7 +178,7 @@ describe("EditPollingSourceService", () => {
             },
             read: {
                 kind: ReadKind.CSV,
-                schema: ["id BIGINT"],
+                ddlSchema: ["id INT"],
             },
             merge: {
                 kind: MergeKind.APPEND,
@@ -186,7 +186,7 @@ describe("EditPollingSourceService", () => {
         };
         const groupName = SetPollingSourceSection.READ;
         service.patchFormValues(sectionReadForm, editFormValue, groupName);
-        expect(sectionReadForm.value.schema?.length).toEqual(1);
+        expect(sectionReadForm.value.ddlSchema?.length).toEqual(1);
     });
 
     it("should be check patch form with merge CSV step with schema", () => {

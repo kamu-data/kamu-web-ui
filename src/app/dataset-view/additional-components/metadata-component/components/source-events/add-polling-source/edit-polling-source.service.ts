@@ -30,6 +30,8 @@ import {
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { SourcesSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
 
+import { SchemaType } from "../../form-components/schema-field/schema-field.component";
+
 @Injectable({
     providedIn: "root",
 })
@@ -101,11 +103,15 @@ export class EditPollingSourceService {
                 jsonKind: editFormValue.read.kind,
             });
         }
-        const schema = sectionForm.controls.schema as FormArray;
-        if (!(schema.value as string[]).length && editFormValue.read.schema && editFormValue.read.schema.length) {
-            editFormValue.read.schema.forEach((item) => {
+        const ddlSchemaControl = sectionForm.controls.ddlSchema as FormArray;
+        if (
+            !(ddlSchemaControl.value as SchemaType[]).length &&
+            editFormValue.read.ddlSchema &&
+            editFormValue.read.ddlSchema.length
+        ) {
+            (editFormValue.read.ddlSchema as string[]).forEach((item) => {
                 const result = item.split(" ");
-                schema.push(
+                ddlSchemaControl.push(
                     this.fb.group({
                         name: [result[0]],
                         type: [result[1]],

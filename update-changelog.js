@@ -37,7 +37,3 @@ const linesLicense = fs.readFileSync(licensePath, "utf8").split(/\r?\n/);
 const lineIndexLicense = 13;
 linesLicense[lineIndexLicense] = `Licensed Work:             Kamu Web UI Version ${version}`;
 fs.writeFileSync(licensePath, linesLicense.join("\n"));
-
-// Commit changes
-execSync("git add LICENSE.txt CHANGELOG.md", { stdio: "inherit" });
-execSync(`git commit -m "Release v${version}"`, { stdio: "inherit" });

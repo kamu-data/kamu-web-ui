@@ -299,10 +299,6 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
         return this.isUserLogged && this.enableScheduling && this.canSchedule;
     }
 
-    public get visibleGetDataButton(): boolean {
-        return this.isUserLogged;
-    }
-
     public get hasSetPollingSource(): boolean {
         return !isNil(this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentPollingSource);
     }

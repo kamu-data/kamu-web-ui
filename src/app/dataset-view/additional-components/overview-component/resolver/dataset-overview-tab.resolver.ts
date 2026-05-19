@@ -5,22 +5,14 @@
  * included in the LICENSE file.
  */
 
-/**
- * Copyright Kamu Data, Inc. and contributors. All rights reserved.
- *
- * Use of this software is governed by the Business Source License
- * included in the LICENSE file.
- */
-
 import { inject } from "@angular/core";
-import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
+import { ResolveFn } from "@angular/router";
 
 import { catchError, combineLatest, EMPTY, map } from "rxjs";
 
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
 export const datasetOverviewTabResolverFn: ResolveFn<DatasetOverviewTabData> = () => {

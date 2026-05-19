@@ -13,9 +13,16 @@ import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 
 import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
 import { YamlEditorComponent } from "src/app/editor/components/yaml-editor/yaml-editor.component";
+import { MONACO_VERSION } from "src/app/editor/generated/monaco-version";
 
 @NgModule({
-    imports: [CommonModule, FormsModule, MonacoEditorModule.forRoot(), SqlEditorComponent, YamlEditorComponent],
+    imports: [
+        CommonModule,
+        FormsModule,
+        MonacoEditorModule.forRoot({ baseUrl: `./assets/monaco-${MONACO_VERSION}/min/vs` }),
+        SqlEditorComponent,
+        YamlEditorComponent,
+    ],
     exports: [SqlEditorComponent, YamlEditorComponent],
 })
 export class EditorModule {}

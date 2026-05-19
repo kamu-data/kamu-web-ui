@@ -22,7 +22,8 @@
     "gql-codegen": "graphql-codegen --config gql-codegen.yml && prettier --write src/app/api/kamu.graphql.interface.ts",
     "release-patch": "npm version patch && node update-changelog.js",
     "release-minor": "npm version minor && node update-changelog.js",
-    "release-major": "npm version major && node update-changelog.js"
+    "release-major": "npm version major && node update-changelog.js",
+    "prebuild": "node scripts/set-monaco-version.js"
   },
   "private": true,
   "dependencies": {

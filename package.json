@@ -23,7 +23,8 @@
     "release-patch": "npm version patch -m \"Release v%s\"",
     "release-minor": "npm version minor -m \"Release v%s\"",
     "release-major": "npm version major -m \"Release v%s\"",
-    "version": "node update-changelog.js && git add CHANGELOG.md LICENSE.txt && git commit -m \"CHANGELOG.md LICENSE.txt updated\""
+    "version": "node update-changelog.js && git add CHANGELOG.md LICENSE.txt && git commit -m \"CHANGELOG.md LICENSE.txt updated\"",
+    "prebuild": "node scripts/set-monaco-version.js"
   },
   "private": true,
   "dependencies": {

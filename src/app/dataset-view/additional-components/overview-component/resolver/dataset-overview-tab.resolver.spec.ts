@@ -46,11 +46,7 @@ describe("datasetOverviewTabResolverFn", () => {
         datasetService.emitDatasetChanged(mockDatasetBasicsRootFragment);
         datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
         datasetSubsService.emitOverviewChanged(mockOverviewUpdate);
-        const routeSnapshot = {
-            queryParamMap: convertToParamMap({
-                [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: undefined,
-            }),
-        } as ActivatedRouteSnapshot;
+        const routeSnapshot = {} as ActivatedRouteSnapshot;
         const mockState = {} as RouterStateSnapshot;
 
         const result = executeResolver(routeSnapshot, mockState) as Observable<DatasetOverviewTabData>;
@@ -59,7 +55,6 @@ describe("datasetOverviewTabResolverFn", () => {
                 datasetBasics: mockDatasetBasicsRootFragment,
                 datasetPermissions: mockFullPowerDatasetPermissionsFragment,
                 overviewUpdate: mockOverviewUpdate,
-                pathPrefix: "/",
             });
         });
     });
@@ -70,11 +65,7 @@ describe("datasetOverviewTabResolverFn", () => {
         datasetService.emitDatasetChanged(mockDatasetBasicsRootFragment);
         datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
         datasetSubsService.emitOverviewChanged(mockOverviewUpdate);
-        const routeSnapshot = {
-            queryParamMap: convertToParamMap({
-                [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: undefined,
-            }),
-        } as ActivatedRouteSnapshot;
+        const routeSnapshot = {} as ActivatedRouteSnapshot;
         const mockState = {} as RouterStateSnapshot;
 
         (executeResolver(routeSnapshot, mockState) as Observable<DatasetOverviewTabData>).subscribe({

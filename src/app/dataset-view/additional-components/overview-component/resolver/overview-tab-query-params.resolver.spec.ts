@@ -8,7 +8,7 @@ import ProjectLinks from "src/app/project-links";
 
 import { overviewTabQueryParamsResolverFn } from "./overview-tab-query-params.resolver";
 
-fdescribe("overviewTabQueryParamsResolver", () => {
+describe("overviewTabQueryParamsResolver", () => {
     const executeResolver: ResolveFn<OverviewTabQueryParamsType> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => overviewTabQueryParamsResolverFn(...resolverParameters));
 

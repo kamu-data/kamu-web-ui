@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - URL parameter to manage the collection state
+### Changed
+- Modified release scripts
 
 ## [0.67.0] - 2026-05-19
 ### Fixed

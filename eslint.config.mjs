@@ -15,6 +15,7 @@ export default [
       "coverage/**",
       "**/kamu.graphql.interface.ts",
       "**/add-license.js",
+      "src/app/editor/generated/monaco-version.ts"
     ],
   },
   // Main configuration for TypeScript files with Jasmine

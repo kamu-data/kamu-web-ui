@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - URL parameter to manage the collection state
 
+## [0.67.0] - 2026-05-19
+### Fixed
+- Lineage tab: error displaying a dataset without a source
+- Visibility of the "Get Data" button for an authorized user
+- Defined HTTP caching policy for static assets
+
 ## [0.66.0] - 2026-05-16
 ### Added
 - Preview for the dataset as a collection

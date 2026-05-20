@@ -50,6 +50,20 @@ export class LineageGraphBuilderService {
                         nodes: [...sourceSubgraph.nodes, ...datasetSubgraph.nodes],
                         links: [...sourceSubgraph.links, ...datasetSubgraph.links],
                     };
+
+                    // Workaround for ngx-graph: the 'dagre' layout crashes if the graph contains nodes but 0 links.
+                    // Adding a hidden self-loop edge prevents the "Cannot read properties of undefined (reading 'nodes')" error.
+                    const { nodes, links } = graph;
+                    if (nodes.length === 1 && links.length === 0) {
+                        const singleNodeId = graph.nodes[0].id;
+                        graph.links.push({
+                            id: `hidden-loop-link-${singleNodeId}`,
+                            source: singleNodeId,
+                            target: singleNodeId,
+                            data: { isHidden: true },
+                        });
+                    }
+
                     return {
                         graph,
                         originDataset: lineageUpdate.origin,

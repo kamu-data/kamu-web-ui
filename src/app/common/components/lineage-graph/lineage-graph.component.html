@@ -231,7 +231,7 @@
         </ng-template>
 
         <ng-template #linkTemplate let-link>
-            <svg:g class="edge">
+            <svg:g class="edge" [style.opacity]="link.data?.isHidden ? 0 : 1">
                 <path class="line" stroke-width="2" [attr.d]="link.line" marker-end="url(#arrow)"></path>
             </svg:g>
         </ng-template>

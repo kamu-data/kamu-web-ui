@@ -3,11 +3,14 @@
         <div class="btn-group-parent">
             <button
                 appFeatureFlag="dataset.getData"
-                class="get-data-button border rounded btn-group-item d-flex justify-content-center align-items-center"
+                class="border rounded btn-group-item d-flex justify-content-center align-items-center"
                 data-test-id="searchAdditionalButtons"
-                (click)="openDataAccessModal()"
+                (click)="onClickGetData()"
+                [ngClass]="{
+                    'get-data-button-logged': isUserLogged,
+                }"
             >
-                <mat-icon class="fs-5 pt-1" style="color: #fff">system_update_alt</mat-icon>
+                <mat-icon class="fs-5 pt-1 text-muted" [class.text-light]="isUserLogged">system_update_alt</mat-icon>
                 <span class="mr-2 get-data-text">Get Data</span>
                 <mat-icon>arrow_drop_down</mat-icon>
             </button>

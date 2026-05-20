@@ -1,7 +1,7 @@
 @use "var" as *;
 
 .btn-group-parent {
-    .get-data-button {
+    .get-data-button-logged {
         background: #2c974b;
         border-color: rgb(27 31 36 / 15%);
         color: #fff;
@@ -28,4 +28,12 @@
 
 .nav-margin {
     margin-right: 20px;
+}
+
+.text-light {
+    color: #fff !important;
+}
+
+.text-dark {
+    color: #000 !important;
 }

@@ -46,7 +46,6 @@ describe("datasetFlowsTabResolverFn", () => {
         datasetSubsService.emitOverviewChanged(mockOverviewUpdate);
         const routeSnapshot = {
             paramMap: convertToParamMap({ [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME }),
-            queryParamMap: convertToParamMap({}),
         } as ActivatedRouteSnapshot;
         const mockState = {
             url: `/kamu/datasetName/${DatasetViewTypeEnum.Flows}`,

@@ -34,6 +34,7 @@ export interface DatasetViewData {
 
 export interface DatasetOverviewTabData extends DatasetViewData {
     overviewUpdate: OverviewUpdate;
+    pathPrefix?: string;
 }
 
 export enum OverviewTabMode {
@@ -58,4 +59,8 @@ export function selectOverviewTabMode(archetype: DatasetArchetype): OverviewTabM
             return OverviewTabMode.Table;
         }
     }
+}
+
+export interface OverviewTabQueryParamsType {
+    pathPrefix: string;
 }

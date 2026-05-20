@@ -57,6 +57,7 @@ import {
     DatasetOverviewTabData,
     DatasetViewTypeEnum,
     OverviewTabMode,
+    OverviewTabQueryParamsType,
     selectOverviewTabMode,
 } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
@@ -109,6 +110,7 @@ import {
 })
 export class OverviewComponent extends BaseDatasetDataComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_OVERVIEW_KEY) public datasetOverviewTabData: DatasetOverviewTabData;
+    @Input(RoutingResolvers.OVERVIEW_TAB_QUERY_PARAMS_KEY) public queryParams: OverviewTabQueryParamsType;
     public editingReadme = false;
     public droppedFile: File;
     public uploadFileLoading$: Observable<boolean>;

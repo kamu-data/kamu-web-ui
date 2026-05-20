@@ -69,8 +69,8 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public version: number;
 
-    private datasetBasics$ = new BehaviorSubject<MaybeNull<DatasetBasicsFragment>>(null);
-    private version$ = new BehaviorSubject<MaybeNull<number>>(null);
+    public datasetBasics$ = new BehaviorSubject<MaybeNull<DatasetBasicsFragment>>(null);
+    public version$ = new BehaviorSubject<MaybeNull<number>>(null);
 
     public fileInfo$: Observable<VersionedFileView>;
     public loadingFileDetails$: Observable<boolean>;
@@ -91,7 +91,7 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     private datasetAsVersionedFileService = inject(DatasetAsVersionedFileService);
 
     public ngOnInit(): void {
-        this.loadingFileDetails$ = this.datasetAsVersionedFileService.loadingFileDetailsChanges.pipe();
+        this.loadingFileDetails$ = this.datasetAsVersionedFileService.loadingFileDetailsChanges;
 
         this.fileInfo$ = combineLatest([this.datasetBasics$, this.version$]).pipe(
             switchMap(([dataset, version]) => {
@@ -110,7 +110,7 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
         if (changes.datasetBasics) {
             this.datasetBasics$.next(changes.datasetBasics.currentValue as DatasetBasicsFragment);
         }
-        if (changes.version) {
+        if (changes.version && changes.version.previousValue !== changes.version.currentValue) {
             this.version$.next(changes.version.currentValue as number);
         }
     }

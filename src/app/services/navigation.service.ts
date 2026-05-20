@@ -133,6 +133,7 @@ export class NavigationService {
                         webhooksState: params.webhooksState?.join(","),
                         page: params.page === 1 ? undefined : params.page,
                         pathPrefix: params.pathPrefix,
+                        version: params.version,
                     },
                     state: params.state,
                 },

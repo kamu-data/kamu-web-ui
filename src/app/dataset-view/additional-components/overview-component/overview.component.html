@@ -210,7 +210,7 @@
             </ng-template>
         </div>
         <div *ngIf="viewMode === OverviewTabMode.VersionedFile">
-            <app-versioned-file-view [datasetBasics]="datasetBasics" />
+            <app-versioned-file-view [datasetBasics]="datasetBasics" [version]="queryParams.version" />
         </div>
         <div *ngIf="viewMode === OverviewTabMode.Collection">
             <app-collection-view [datasetBasics]="datasetBasics" [pathPrefix]="queryParams.pathPrefix" />
@@ -461,7 +461,11 @@
                 </ng-template>
             </div>
 
-            <app-file-information-section *ngIf="viewMode === OverviewTabMode.VersionedFile" />
+            <app-file-information-section
+                *ngIf="viewMode === OverviewTabMode.VersionedFile"
+                [datasetBasics]="datasetBasics"
+                [version]="queryParams.version"
+            />
         </nav>
     </div>
 </div>

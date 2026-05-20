@@ -63,4 +63,5 @@ export function selectOverviewTabMode(archetype: DatasetArchetype): OverviewTabM
 
 export interface OverviewTabQueryParamsType {
     pathPrefix: string;
+    version: number;
 }

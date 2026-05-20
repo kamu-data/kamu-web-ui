@@ -14,7 +14,7 @@ export const overviewTabQueryParamsResolverFn: ResolveFn<OverviewTabQueryParamsT
     route: ActivatedRouteSnapshot,
 ) => {
     const pathPrefix = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX) ?? "/";
-    const version = Number(route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_VERSION));
+    const version = Number(route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_VERSION)) ?? 0;
     return {
         pathPrefix,
         version,

@@ -187,6 +187,7 @@ describe("NavigationService", () => {
                 category: undefined,
                 webhooksState: undefined,
                 pathPrefix: undefined,
+                version: undefined,
             },
             state: undefined,
         });
@@ -209,6 +210,7 @@ describe("NavigationService", () => {
                 category: undefined,
                 webhooksState: undefined,
                 pathPrefix: undefined,
+                version: undefined,
             },
             state: undefined,
         });

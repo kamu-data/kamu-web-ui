@@ -91,10 +91,9 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     private datasetAsVersionedFileService = inject(DatasetAsVersionedFileService);
 
     public ngOnInit(): void {
-        this.loadingFileDetails$ = this.datasetAsVersionedFileService.loadingFileDetailsChanges;
+        this.loadingFileDetails$ = this.datasetAsVersionedFileService.loadingFileDetailsChanges.pipe();
 
         this.fileInfo$ = combineLatest([this.datasetBasics$, this.version$]).pipe(
-            filter(([dataset]) => !!dataset),
             switchMap(([dataset, version]) => {
                 const datasetId = dataset?.id as string;
                 if (this.isRedirectToLatestVersion || !version) {

@@ -23,7 +23,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
 import { BehaviorSubject, combineLatest, Observable } from "rxjs";
-import { filter, switchMap, tap } from "rxjs/operators";
+import { switchMap, tap } from "rxjs/operators";
 
 import { NgbAlert } from "@ng-bootstrap/ng-bootstrap";
 import { MarkdownModule } from "ngx-markdown";

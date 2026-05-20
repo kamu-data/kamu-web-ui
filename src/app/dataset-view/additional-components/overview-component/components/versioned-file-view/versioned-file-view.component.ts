@@ -96,7 +96,7 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
         this.fileInfo$ = combineLatest([this.datasetBasics$, this.version$]).pipe(
             filter(([dataset]) => !!dataset),
             switchMap(([dataset, version]) => {
-                const datasetId = dataset!.id;
+                const datasetId = dataset?.id as string;
                 if (this.isRedirectToLatestVersion || !version) {
                     this.isRedirectToLatestVersion = false;
                     return this.datasetAsVersionedFileService.requestDatasetAsVersionedFile(datasetId);
@@ -109,10 +109,10 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
 
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.datasetBasics) {
-            this.datasetBasics$.next(changes.datasetBasics.currentValue);
+            this.datasetBasics$.next(changes.datasetBasics.currentValue as DatasetBasicsFragment);
         }
         if (changes.version) {
-            this.version$.next(changes.version.currentValue);
+            this.version$.next(changes.version.currentValue as number);
         }
     }
 

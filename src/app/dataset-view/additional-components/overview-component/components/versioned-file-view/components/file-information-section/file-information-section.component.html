@@ -14,7 +14,7 @@
             <div class="dataset-info--sub-block d-flex flex-row align-items-center">
                 <button
                     class="change-version-btn"
-                    (click)="setVersion(fileDetails, -1)"
+                    (click)="navigateToAdjacentVersion(fileDetails, -1)"
                     [disabled]="previousVersionBtnDisabled(fileDetails)"
                 >
                     &#9664;
@@ -24,7 +24,7 @@
                 >
                 <button
                     class="change-version-btn"
-                    (click)="setVersion(fileDetails, 1)"
+                    (click)="navigateToAdjacentVersion(fileDetails, 1)"
                     [disabled]="nextVersionBtnDisabled(fileDetails)"
                 >
                     &#9654;

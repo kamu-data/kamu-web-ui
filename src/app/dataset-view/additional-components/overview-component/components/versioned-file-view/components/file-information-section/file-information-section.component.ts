@@ -65,7 +65,7 @@ export class FileInformationSectionComponent implements OnInit {
         return noFileInfo || this.currentFileVersion(fileDetails) <= 1;
     }
 
-    public setVersion(fileDetails: VersionedFileView, step: number): void {
+    public navigateToAdjacentVersion(fileDetails: VersionedFileView, step: number): void {
         this.navigationService.navigateToDatasetView({
             accountName: this.datasetBasics.owner.accountName,
             datasetName: this.datasetBasics.name,

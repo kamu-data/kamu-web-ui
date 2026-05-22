@@ -22,6 +22,7 @@ export interface DatasetNavigationParams {
     category?: FlowsCategoryUnion;
     webhooksState?: FlowProcessEffectiveState[];
     pathPrefix?: string;
+    version?: string;
 }
 export interface DatasetInfo {
     accountName: string;

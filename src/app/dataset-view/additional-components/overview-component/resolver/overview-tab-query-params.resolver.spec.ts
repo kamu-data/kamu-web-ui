@@ -27,13 +27,17 @@ describe("overviewTabQueryParamsResolver", () => {
 
     it("should check resolver", () => {
         const routeSnapshot = {
-            queryParamMap: convertToParamMap({ [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: undefined }),
+            queryParamMap: convertToParamMap({
+                [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: undefined,
+                [ProjectLinks.URL_QUERY_PARAM_VERSION]: 2,
+            }),
         } as ActivatedRouteSnapshot;
         const mockState = {} as RouterStateSnapshot;
 
         const result = executeResolver(routeSnapshot, mockState) as OverviewTabQueryParamsType;
         expect(result).toEqual({
             pathPrefix: "/",
+            version: 2,
         });
     });
 });

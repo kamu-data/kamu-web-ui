@@ -5,7 +5,7 @@
         </div>
     </div>
     <div class="card--row dataset-info mb-3">
-        <div class="dataset-info--block">
+        <div class="dataset-info--block" *ngIf="fileDetails?.fileInfo?.version">
             <div class="dataset-info--sub-block d-flex align-items-center">
                 <mat-icon class="fs-4 mr-2">preview</mat-icon>
                 <h2 class="dataset-info--subtitle">Version:</h2>
@@ -14,15 +14,17 @@
             <div class="dataset-info--sub-block d-flex flex-row align-items-center">
                 <button
                     class="change-version-btn"
-                    (click)="setPreviousVersion(fileDetails)"
+                    (click)="navigateToAdjacentVersion(fileDetails, -1)"
                     [disabled]="previousVersionBtnDisabled(fileDetails)"
                 >
                     &#9664;
                 </button>
-                <span data-test-id="file-version" class="d-block"> {{ fileDetails?.fileInfo?.version ?? "-" }}</span>
+                <span *ngIf="fileDetails?.fileInfo?.version" data-test-id="file-version" class="d-block">
+                    {{ version ? version : fileDetails?.fileInfo?.version }}</span
+                >
                 <button
                     class="change-version-btn"
-                    (click)="setNextVersion(fileDetails)"
+                    (click)="navigateToAdjacentVersion(fileDetails, 1)"
                     [disabled]="nextVersionBtnDisabled(fileDetails)"
                 >
                     &#9654;

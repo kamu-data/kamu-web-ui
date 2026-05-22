@@ -46,7 +46,7 @@ export class DatasetAsVersionedFileService {
         return this.versionedFileDetails$.asObservable();
     }
 
-    private loadingFileDetails$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    private loadingFileDetails$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
     public emitLoadingFileDetailsChanged(value: boolean): void {
         this.loadingFileDetails$.next(value);
@@ -69,6 +69,7 @@ export class DatasetAsVersionedFileService {
     public requestDatasetAsVersionedFile(datasetId: string): Observable<VersionedFileView> {
         this.emitLoadingFileDetailsChanged(true);
         return this.datasetApi.getDatasetAsVersionedFile(datasetId).pipe(
+            take(1),
             map((result: DatasetAsVersionedFileQuery) => {
                 const data = {
                     name: result.datasets.byId?.name as string,
@@ -87,6 +88,7 @@ export class DatasetAsVersionedFileService {
     public requestDatasetAsVersionedFileByVersion(datasetId: string, version: number): Observable<VersionedFileView> {
         this.emitLoadingFileDetailsChanged(true);
         return this.datasetApi.getDatasetAsVersionedFileByVersion(datasetId, version).pipe(
+            take(1),
             map((result: DatasetAsVersionedFileByVersionQuery) => {
                 const data = {
                     name: result.datasets.byId?.name as string,

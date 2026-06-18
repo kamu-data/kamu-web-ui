@@ -85,6 +85,11 @@ export class EditPollingSourceService {
     }
 
     private patchReadStep(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
+        const schemaFields = editFormValue.read.schema as { fields: SchemaType[] };
+        if (editFormValue.read.schema && (editFormValue.read.schema as { fields: SchemaType[] }).fields.length) {
+            editFormValue.read.schema = schemaFields.fields;
+        }
+
         sectionForm.patchValue({ ...editFormValue.read });
         if ([ReadKind.JSON, ReadKind.ND_JSON].includes(editFormValue.read.kind)) {
             sectionForm.patchValue({
@@ -103,18 +108,14 @@ export class EditPollingSourceService {
                 jsonKind: editFormValue.read.kind,
             });
         }
-        const ddlSchemaControl = sectionForm.controls.ddlSchema as FormArray;
-        if (
-            !(ddlSchemaControl.value as SchemaType[]).length &&
-            editFormValue.read.ddlSchema &&
-            editFormValue.read.ddlSchema.length
-        ) {
-            (editFormValue.read.ddlSchema as string[]).forEach((item) => {
-                const result = item.split(" ");
+        const ddlSchemaControl = sectionForm.controls.schema as FormArray;
+        const readSchema = editFormValue.read.schema as SchemaType[];
+        if (!(ddlSchemaControl.value as SchemaType[]).length && editFormValue.read.schema && readSchema.length) {
+            readSchema.forEach((item) => {
                 ddlSchemaControl.push(
                     this.fb.group({
-                        name: [result[0]],
-                        type: [result[1]],
+                        name: [item.name],
+                        type: [item.type],
                     }),
                 );
             });

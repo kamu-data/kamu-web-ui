@@ -18,7 +18,7 @@ export const READ_FORM_DATA: JsonFormData = {
     Csv: {
         controls: [
             {
-                name: "ddlSchema",
+                name: "schema",
                 label: "Schema",
                 value: "",
                 type: ControlType.SCHEMA,

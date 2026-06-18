@@ -9,8 +9,10 @@ import {
     DynamicTableColumnClassEnum,
     DynamicTableDataRow,
 } from "@common/components/dynamic-table/dynamic-table.interface";
+import { SchemaField } from "@common/components/edit-schema-table/edit-schema-table.types";
 import { removeAllLineBreaks } from "@common/helpers/app.helpers";
 import {
+    DataSchemaDefaultField,
     DataSchemaField,
     DataSchemaTypeField,
     DatasetSchema,
@@ -38,9 +40,10 @@ export function odfType2String(type: DataSchemaTypeField): string {
         case OdfTypes.Null:
             return `${type.kind}<${type.inner ? odfType2String(type.inner) : ""}>`;
         case OdfTypes.List: {
-            const innerContent =
-                "inner" in type.itemType && type.itemType.inner ? odfType2String(type.itemType) : type.itemType.kind;
-            return `${type.kind}<${innerContent}>`;
+            const innerContent = (
+                "inner" in type.itemType && type.itemType.inner ? odfType2String(type.itemType) : type.itemType
+            ) as DataSchemaTypeField;
+            return `${type.kind}<${odfType2String(innerContent)}>`;
         }
         case OdfTypes.Timestamp: {
             const defaultUnit = "Millisecond";
@@ -51,7 +54,7 @@ export function odfType2String(type: DataSchemaTypeField): string {
         case OdfTypes.Time:
             return `${type.kind}<${type.unit}>`;
         case OdfTypes.Map:
-            return `${type.kind}<${type.keyType.kind}, ${type.valueType.kind}>`;
+            return `${type.kind}<${odfType2String(type.keyType)}, ${odfType2String(type.valueType)}>`;
         case OdfTypes.Struct:
             return type.fields.length
                 ? `${type.kind}<${type.fields.map((x) => `${x.name}:${odfType2String(x.type)}`).join(", ")}>`
@@ -84,6 +87,15 @@ export function schemaAsDataRows(schema: DataSchemaField[]): DynamicTableDataRow
                 value: x.extra && Object.keys(x.extra).length ? x : "",
                 cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
             },
+        };
+    });
+}
+
+export function schemaEditAsDataRows(schema: DataSchemaField[]): DataSchemaField[] {
+    return schema.map((x) => {
+        return {
+            name: x.name,
+            type: x.type,
         };
     });
 }

@@ -1,0 +1,100 @@
+<div [id]="idTable" style="width: 100%; overflow: auto" class="dynamic-table">
+    <pre>{{ dataSource.data | json }}</pre>
+    <pre>{{ editingRow | json }}</pre>
+
+    <table mat-table [dataSource]="dataSource" #table>
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>name</th>
+            <td mat-cell *matCellDef="let element; let rowIndex = index">
+                <div *ngIf="editingIndex === rowIndex; else viewName">
+                    <input *ngIf="editingRow" [(ngModel)]="editingRow.name" type="text" class="form-control" />
+                </div>
+
+                <ng-template #viewName>
+                    {{ element.name }}
+                </ng-template>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>type</th>
+            <td mat-cell *matCellDef="let element; let rowIndex = index">
+                <div *ngIf="editingIndex === rowIndex; else viewType" class="d-flex justify-content-between">
+                    <app-type-editor
+                        *ngIf="editingRow?.type"
+                        [value]="editingRow?.type!"
+                        (typeChange)="typeChangeHandle($event)"
+                    />
+
+                    <div class="action-buttons d-flex ms-4 align-items-center">
+                        <button
+                            class="d-flex align-items-center justify-content-center edit-button mt-1"
+                            (click)="saveEditing(rowIndex)"
+                            [disabled]="!editingRow?.name"
+                        >
+                            <mat-icon class="action-button text-muted" svgIcon="check" />
+                        </button>
+
+                        <button
+                            class="d-flex align-items-center justify-content-center delete-button mt-1"
+                            (click)="cancelEditing()"
+                        >
+                            <mat-icon class="action-button text-muted" svgIcon="close"></mat-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <ng-template #viewType>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>{{ odfType2String(element) }}</div>
+                        <div class="action-buttons d-flex">
+                            <button
+                                class="d-flex align-items-center justify-content-center edit-button"
+                                (click)="editRow(element, rowIndex); $event.stopPropagation()"
+                            >
+                                <mat-icon class="action-button text-muted" svgIcon="pencil" />
+                            </button>
+
+                            <button
+                                class="d-flex align-items-center justify-content-center delete-button"
+                                (click)="deleteRow(rowIndex); $event.stopPropagation()"
+                            >
+                                <mat-icon class="action-button text-muted" svgIcon="delete"></mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </ng-template>
+            </td>
+        </ng-container>
+
+        <ng-container *ngIf="hasTableHeader">
+            <tr class="table-header-background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        </ng-container>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <div class="mt-3">
+        <ng-container>
+            <button
+                class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center me-3"
+                data-test-id="add-schema-field"
+                (click)="startAddField()"
+            >
+                <mat-icon class="text-muted fs-4 d-block">add</mat-icon>
+                <span class="fs-12 me-2 d-block"> Add field</span>
+            </button>
+        </ng-container>
+    </div>
+
+    <!-- <div class="mt-4" *ngIf="editingRow && editingRow.type.kind === OdfTypes.Struct">
+        <app-edit-schema-table
+            class="mb-2"
+            [hasTableHeader]="true"
+            [columnDescriptors]="[{ columnName: 'name' }, { columnName: 'type' }]"
+            [dataRows]="schemaData(editingRow.type.fields)"
+            [idTable]="'edit-schema-table-struct'"
+            tableClass="font-monospace"
+            (typeStructChangeEmitter)="typeStructChange($event)"
+        />
+    </div> -->
+</div>

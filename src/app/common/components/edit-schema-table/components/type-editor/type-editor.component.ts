@@ -1,0 +1,135 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
+import { JsonPipe, NgClass, NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+
+import { NgSelectModule } from "@ng-select/ng-select";
+
+import {
+    DataSchemaListField,
+    DataSchemaMapField,
+    DataSchemaOptionField,
+    DataSchemaStructField,
+    DataSchemaTimeField,
+    DataSchemaTypeField,
+    OdfTypes,
+    PRIMITIVES_TYPES,
+} from "@interface/dataset-schema.interface";
+
+import {
+    DataSchemaTypeOption,
+    TIMEZONE_OPTIONS_LIST,
+    TimezoneTimestampOption,
+    TYPES_OPTIONS_LIST,
+    UNIT_OPTIONS_LIST,
+    UnitTimestampOption,
+} from "../../edit-schema-table.types";
+
+@Component({
+    selector: "app-type-editor",
+    imports: [NgIf, FormsModule, NgSelectModule, TypeEditorComponent],
+    templateUrl: "./type-editor.component.html",
+    styleUrl: "./type-editor.component.scss",
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class TypeEditorComponent {
+    @Input({ required: true }) value: DataSchemaTypeField;
+    @Input() depth: number = 0;
+    @Output() typeChange = new EventEmitter<DataSchemaTypeField>();
+
+    public readonly TYPES_OPTIONS_LIST: DataSchemaTypeOption[] = TYPES_OPTIONS_LIST;
+    public readonly UNIT_OPTIONS_LIST: UnitTimestampOption[] = UNIT_OPTIONS_LIST;
+    public readonly TIMEZONE_OPTIONS_LIST: TimezoneTimestampOption[] = TIMEZONE_OPTIONS_LIST;
+
+    public get schemaTimeField(): DataSchemaTimeField {
+        return this.value as DataSchemaTimeField;
+    }
+
+    public isComplexType(kind: OdfTypes): boolean {
+        return [OdfTypes.List, OdfTypes.Map, OdfTypes.Option].includes(kind);
+    }
+
+    public changeEditorType(event: DataSchemaTypeOption): void {
+        if (PRIMITIVES_TYPES.includes(event.value)) {
+            this.value = { kind: this.value.kind } as DataSchemaTypeField;
+        }
+
+        if ([OdfTypes.Time, OdfTypes.Duration].includes(event.value)) {
+            const timeField = this.value as DataSchemaTimeField;
+            this.value = {
+                kind: timeField.kind,
+                unit: timeField.unit,
+            };
+        }
+
+        if (event.value === OdfTypes.Timestamp) {
+            const timeField = this.value as DataSchemaTimeField;
+            this.value = {
+                kind: timeField.kind,
+                unit: timeField.unit,
+                timezone: timeField.timezone,
+            };
+        }
+
+        if (event.value === OdfTypes.Option) {
+            this.value = {
+                kind: this.value.kind,
+                inner: { kind: OdfTypes.String },
+            } as DataSchemaOptionField;
+            console.log("OdfTypes.Option=", this.value);
+        }
+
+        if (event.value === OdfTypes.List) {
+            this.value = {
+                kind: this.value.kind,
+                itemType: { kind: OdfTypes.String },
+            } as DataSchemaListField;
+        }
+
+        if (event.value === OdfTypes.Map) {
+            this.value = {
+                kind: this.value.kind,
+                keyType: { kind: OdfTypes.String },
+                valueType: { kind: OdfTypes.String },
+            } as DataSchemaMapField;
+        }
+
+        if (event.value === OdfTypes.Struct) {
+            this.value = {
+                kind: this.value.kind,
+                fields: [],
+            } as DataSchemaStructField;
+        }
+
+        console.log("emit", this.value);
+        this.typeChange.emit(this.value);
+    }
+
+    public changeUnitTime(event: DataSchemaTypeOption): void {
+        this.value = { ...this.value, unit: event.value } as DataSchemaTimeField;
+        console.log("changeUnitTime=", this.value);
+        this.typeChange.emit(this.value);
+    }
+
+    public typeOptionChange(event: DataSchemaTypeField): void {
+        this.typeChange.emit({ ...this.value, inner: event } as DataSchemaTypeField);
+    }
+
+    public typeListChange(event: DataSchemaTypeField): void {
+        this.typeChange.emit({ ...this.value, itemType: event } as DataSchemaTypeField);
+    }
+
+    public typeMapValueChange(event: DataSchemaTypeField): void {
+        this.typeChange.emit({ ...this.value, valueType: event } as DataSchemaTypeField);
+    }
+
+    public typeMapKeyChange(event: DataSchemaTypeField): void {
+        this.typeChange.emit({ ...this.value, keyType: event } as DataSchemaTypeField);
+    }
+}

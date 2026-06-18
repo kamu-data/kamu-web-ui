@@ -109,6 +109,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     private initEditForm(): void {
         if (this.eventYamlByHash) {
             this.editFormValue = this.editService.parseEventFromYaml(this.eventYamlByHash);
+            this.editFormValue.read.schema = this.editFormValue.read.schema;
             this.editService.patchFormValues(this.sectionForm, this.editFormValue, this.sectionName);
         }
     }

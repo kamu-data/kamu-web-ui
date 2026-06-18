@@ -73,9 +73,9 @@ export class TemplatesYamlEventsService {
             ...params,
         };
 
-        if (params.read.ddlSchema?.length) {
-            params.read.ddlSchema = (params.read.ddlSchema as SchemaType[]).map((item) => `${item.name} ${item.type}`);
-        }
+        // if (params.read.schema?.fields.length) {
+        //     params.read.schema = (params.read.schema as SchemaType[]).map((item) => `${item.name} ${item.type}`);
+        // }
 
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
             this.initialTemplate.content = {

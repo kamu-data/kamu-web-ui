@@ -9,10 +9,8 @@ import {
     DynamicTableColumnClassEnum,
     DynamicTableDataRow,
 } from "@common/components/dynamic-table/dynamic-table.interface";
-import { SchemaField } from "@common/components/edit-schema-table/edit-schema-table.types";
 import { removeAllLineBreaks } from "@common/helpers/app.helpers";
 import {
-    DataSchemaDefaultField,
     DataSchemaField,
     DataSchemaTypeField,
     DatasetSchema,

@@ -5,10 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 
 import { stringify } from "yaml";
 
+import { EditSchemaTableService } from "@common/components/edit-schema-table/service/edit-schema-table.service";
 import { SetLicense, SetTransform } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -20,8 +21,6 @@ import {
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { AddPushSourceEditFormType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 
-import { SchemaType } from "../dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.component";
-
 @Injectable({
     providedIn: "root",
 })
@@ -31,6 +30,8 @@ export class TemplatesYamlEventsService {
     private readonly initialSetWatermarkTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: SetWatermark\n";
     private readonly initialDisablePollingSourceTemplate =
         "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: DisablePollingSource\n";
+
+    private editSchemaService = inject(EditSchemaTableService);
 
     private readonly initialTemplate = {
         kind: "MetadataEvent",
@@ -68,14 +69,23 @@ export class TemplatesYamlEventsService {
             params.read.kind = params.read.jsonKind;
             delete params.read.jsonKind;
         }
+
         this.initialTemplate.content = {
             kind: "SetPollingSource",
             ...params,
         };
 
-        // if (params.read.schema?.fields.length) {
-        //     params.read.schema = (params.read.schema as SchemaType[]).map((item) => `${item.name} ${item.type}`);
-        // }
+        if (this.editSchemaService.currentData.length) {
+            this.initialTemplate.content = {
+                ...this.initialTemplate.content,
+                read: {
+                    ...params.read,
+                    schema: {
+                        fields: this.editSchemaService.currentData,
+                    },
+                },
+            };
+        }
 
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
             this.initialTemplate.content = {
@@ -107,8 +117,16 @@ export class TemplatesYamlEventsService {
             ...params,
         };
 
-        if (params.read.ddlSchema?.length) {
-            params.read.ddlSchema = (params.read.ddlSchema as SchemaType[]).map((item) => `${item.name} ${item.type}`);
+        if (this.editSchemaService.currentData.length) {
+            this.initialTemplate.content = {
+                ...this.initialTemplate.content,
+                read: {
+                    ...params.read,
+                    schema: {
+                        fields: this.editSchemaService.currentData,
+                    },
+                },
+            };
         }
 
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {

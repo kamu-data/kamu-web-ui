@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { JsonPipe, NgClass, NgIf } from "@angular/common";
+import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
@@ -39,9 +39,9 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TypeEditorComponent {
-    @Input({ required: true }) value: DataSchemaTypeField;
-    @Input() depth: number = 0;
-    @Output() typeChange = new EventEmitter<DataSchemaTypeField>();
+    @Input({ required: true }) public value: DataSchemaTypeField;
+    @Input() public depth: number = 0;
+    @Output() public typeChange = new EventEmitter<DataSchemaTypeField>();
 
     public readonly TYPES_OPTIONS_LIST: DataSchemaTypeOption[] = TYPES_OPTIONS_LIST;
     public readonly UNIT_OPTIONS_LIST: UnitTimestampOption[] = UNIT_OPTIONS_LIST;
@@ -82,7 +82,6 @@ export class TypeEditorComponent {
                 kind: this.value.kind,
                 inner: { kind: OdfTypes.String },
             } as DataSchemaOptionField;
-            console.log("OdfTypes.Option=", this.value);
         }
 
         if (event.value === OdfTypes.List) {
@@ -106,14 +105,11 @@ export class TypeEditorComponent {
                 fields: [],
             } as DataSchemaStructField;
         }
-
-        console.log("emit", this.value);
         this.typeChange.emit(this.value);
     }
 
     public changeUnitTime(event: DataSchemaTypeOption): void {
         this.value = { ...this.value, unit: event.value } as DataSchemaTimeField;
-        console.log("changeUnitTime=", this.value);
         this.typeChange.emit(this.value);
     }
 

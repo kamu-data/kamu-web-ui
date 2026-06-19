@@ -1,7 +1,4 @@
 <div [id]="idTable" style="width: 100%; overflow: auto" class="dynamic-table">
-    <pre>{{ dataSource.data | json }}</pre>
-    <pre>{{ editingRow | json }}</pre>
-
     <table mat-table [dataSource]="dataSource" #table>
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>name</th>
@@ -85,16 +82,4 @@
             </button>
         </ng-container>
     </div>
-
-    <!-- <div class="mt-4" *ngIf="editingRow && editingRow.type.kind === OdfTypes.Struct">
-        <app-edit-schema-table
-            class="mb-2"
-            [hasTableHeader]="true"
-            [columnDescriptors]="[{ columnName: 'name' }, { columnName: 'type' }]"
-            [dataRows]="schemaData(editingRow.type.fields)"
-            [idTable]="'edit-schema-table-struct'"
-            tableClass="font-monospace"
-            (typeStructChangeEmitter)="typeStructChange($event)"
-        />
-    </div> -->
 </div>

@@ -5,9 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { JsonPipe, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from "@angular/material/table";
 

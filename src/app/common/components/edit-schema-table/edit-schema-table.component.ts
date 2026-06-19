@@ -6,8 +6,9 @@
  */
 
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import { JsonPipe, NgIf } from "@angular/common";
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, SimpleChanges } from "@angular/core";
+import { NgIf } from "@angular/common";
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output, SimpleChanges } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
@@ -20,24 +21,23 @@ import { odfType2String, schemaEditAsDataRows } from "@common/helpers/data-schem
 import {
     DataSchemaField,
     DataSchemaOptionField,
-    DataSchemaStructField,
     DataSchemaTimeField,
     DataSchemaTypeField,
     OdfTypes,
 } from "@interface/dataset-schema.interface";
 
+import { BaseComponent } from "../base.component";
 import { DynamicTableColumnDescriptor } from "../dynamic-table/dynamic-table.interface";
-import { MaybeNull } from "./../../../interface/app.types";
 import { TypeEditorComponent } from "./components/type-editor/type-editor.component";
 import {
     DataSchemaTypeOption,
-    SchemaField,
     TIMEZONE_OPTIONS_LIST,
     TimezoneTimestampOption,
     TYPES_OPTIONS_LIST,
     UNIT_OPTIONS_LIST,
     UnitTimestampOption,
 } from "./edit-schema-table.types";
+import { EditSchemaTableService } from "./service/edit-schema-table.service";
 
 @Component({
     selector: "app-edit-schema-table",
@@ -46,7 +46,6 @@ import {
 
         NgIf,
         FormsModule,
-        JsonPipe,
         //-----//
         MatIconModule,
         MatTableModule,
@@ -62,13 +61,15 @@ import {
     styleUrl: "./edit-schema-table.component.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditSchemaTableComponent {
+export class EditSchemaTableComponent extends BaseComponent {
     @Input({ required: true }) public hasTableHeader: boolean;
     @Input({ required: true }) public dataRows: DataSchemaField[];
     @Input({ required: true }) public idTable: string;
     @Input({ required: true }) public columnDescriptors: DynamicTableColumnDescriptor[];
 
     @Output() public typeStructChangeEmitter = new EventEmitter<{ fields: DataSchemaField[]; index: number }>();
+
+    public schemaService = inject(EditSchemaTableService);
 
     public dataSource = new MatTableDataSource<DataSchemaField>([]);
 
@@ -77,11 +78,21 @@ export class EditSchemaTableComponent {
     public readonly TIMEZONE_OPTIONS_LIST: TimezoneTimestampOption[] = TIMEZONE_OPTIONS_LIST;
     public readonly OdfTypes: typeof OdfTypes = OdfTypes;
 
-    public editingRow: MaybeNull<SchemaField> = null;
-    public editingIndex: MaybeNull<number> = null;
-    public addingField: boolean = false;
+    public get editingRow() {
+        return this.schemaService.editingRow;
+    }
+    public get editingIndex() {
+        return this.schemaService.editingIndex;
+    }
+    public get addingField() {
+        return this.schemaService.addingField;
+    }
 
     public ngOnInit(): void {
+        this.schemaService.dataRows$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((rows) => {
+            this.dataSource.data = rows;
+        });
+
         this.displayTable();
     }
 
@@ -112,74 +123,45 @@ export class EditSchemaTableComponent {
 
     private displayTable(): void {
         if (this.displayedColumns.length === 0) {
-            this.dataSource.data = [];
+            this.schemaService.setDataRows([]);
         } else {
-            this.dataSource.data = this.dataRows;
+            this.schemaService.setDataRows(this.dataRows);
         }
     }
 
     public editRow(element: DataSchemaField, index: number): void {
-        this.editingRow = JSON.parse(JSON.stringify(element));
-        this.editingIndex = index;
+        this.schemaService.editRow(element, index);
     }
 
     public deleteRow(rowIndex: number): void {
-        const updatedData = this.dataSource.data.filter((_, i) => i !== rowIndex);
-        this.dataSource.data = updatedData;
+        this.schemaService.deleteRow(rowIndex);
     }
 
     public saveEditing(indexRow: number): void {
-        if (this.editingRow) {
-            const updatedData = [...this.dataSource.data];
-
-            updatedData[indexRow] = this.editingRow;
-            this.dataSource.data = updatedData;
-        }
-
-        this.resetEditing();
+        this.schemaService.saveEditing(indexRow);
     }
 
     public cancelEditing(): void {
-        this.resetEditing();
-        if (this.addingField) {
-            const currentData = [...this.dataSource.data];
-            currentData.pop();
-            this.dataSource.data = currentData;
-            this.addingField = false;
-        }
+        this.schemaService.cancelEditing();
     }
 
     public odfType2String(element: DataSchemaField): string {
         return odfType2String(element.type);
     }
 
-    private resetEditing(): void {
-        this.editingRow = null;
-        this.editingIndex = null;
-    }
-
     public typeChangeHandle(event: DataSchemaTypeField): void {
-        if (this.editingRow) {
-            this.editingRow.type = event;
-        }
+        this.schemaService.typeChangeHandle(event);
     }
 
     public schemaData(schema: DataSchemaField[]): DataSchemaField[] {
-        console.log("2222schema====", schema);
         return schemaEditAsDataRows(schema);
     }
 
     public typeStructChange(event: { fields: DataSchemaField[]; index: number }): void {
-        const updatedData = [...this.dataSource.data];
-
-        (updatedData[event.index].type as DataSchemaStructField).fields = event.fields;
-        this.dataSource.data = updatedData;
+        this.schemaService.typeStructChange(event);
     }
 
     public startAddField(): void {
-        this.addingField = true;
-        this.dataSource.data = [...this.dataSource.data, { name: "newField", type: { kind: OdfTypes.String } }];
-        this.editingRow = { name: "newField", type: { kind: OdfTypes.String } };
-        this.editingIndex = this.dataSource.data.length - 1;
+        this.schemaService.startAddField();
     }
 }

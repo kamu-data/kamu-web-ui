@@ -1,5 +1,5 @@
 <div class="d-flex align-items-start flex-column">
-    <div class="d-flex flex-row align-items-center">
+    <div class="d-flex flex-row align-items-center" [class.custom-border]="depth > 0">
         <ng-select
             class="width-120"
             [class.pt-3]="isComplexType(value.kind) && depth === 0"
@@ -68,31 +68,31 @@
     </div>
 
     <ng-container *ngIf="value.kind === 'Option'">
-        <div class="d-flex flex-column py-2">
+        <div class="d-flex flex-column mt-2" [class.ms-2]="depth > 0">
             <span class="text-muted fs-12 d-block text-uppercase">innerType</span>
-            <div>
+            <div class="mb-3">
                 <app-type-editor [value]="value.inner" [depth]="depth + 1" (typeChange)="typeOptionChange($event)" />
             </div>
         </div>
     </ng-container>
     <ng-container *ngIf="value.kind === 'List'">
-        <div class="d-flex flex-column py-2">
+        <div class="d-flex flex-column mt-2" [class.ms-2]="depth > 0">
             <span class="text-muted fs-12 d-block text-uppercase">itemType</span>
-            <div>
+            <div class="mb-3">
                 <app-type-editor [value]="value.itemType" [depth]="depth + 1" (typeChange)="typeListChange($event)" />
             </div>
         </div>
     </ng-container>
     <ng-container *ngIf="value.kind === 'Map'">
-        <div class="d-flex flex-column py-2">
+        <div class="d-flex flex-column mt-2" [class.ms-2]="depth > 0">
             <span class="text-muted fs-12 d-block text-uppercase">keyType</span>
-            <div>
+            <div class="mb-3">
                 <app-type-editor [depth]="depth + 1" [value]="value.keyType" (typeChange)="typeMapKeyChange($event)" />
             </div>
         </div>
-        <div class="d-flex flex-column pb-3">
+        <div class="d-flex flex-column mb-3" [class.ms-2]="depth > 0">
             <span class="text-muted fs-12 d-block text-uppercase">keyValue</span>
-            <div>
+            <div class="mb-3">
                 <app-type-editor
                     [depth]="depth + 1"
                     [value]="value.valueType"

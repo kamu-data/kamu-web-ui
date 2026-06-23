@@ -44,7 +44,25 @@ export interface SchemaType {
     ],
 })
 export class SchemaFieldComponent extends BaseField {
+    public structFields: DataSchemaField[] = [];
+
     public schemaData(schema: DataSchemaField[]): DataSchemaField[] {
         return schemaEditAsDataRows(schema);
+    }
+
+    public onStructFieldsChange(updatedFields: DataSchemaField[]): void {
+        // 1. Создаем абсолютно новую ссылку на массив для триггера OnPush
+        console.log("test struct", updatedFields);
+        // console.log("123====>", updatedFields);
+        // const structFields = [...updatedFields];
+
+        // // 2. Если эти structFields являются частью редактируемой строки родителя (editingRow)
+        // if (this.editingRow && "fields" in this.editingRow) {
+        //     // Обновляем структуру внутри текущей редактируемой строки
+        //     this.editingRow.fields = structFields;
+        // }
+
+        // // 3. Принудительно запускаем проверку изменений для OnPush компонента
+        // this.displayTable();
     }
 }

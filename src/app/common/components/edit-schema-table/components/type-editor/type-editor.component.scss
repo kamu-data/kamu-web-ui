@@ -14,3 +14,8 @@
     border-left: 2px solid rgb(147 197 253);
     padding-left: 6px;
 }
+
+.ng-dropdown-panel {
+    z-index: 1050;
+    position: absolute;
+}

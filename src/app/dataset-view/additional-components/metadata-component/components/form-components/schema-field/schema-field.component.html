@@ -11,5 +11,6 @@
         [dataRows]="schemaData(form.controls.schema.value)"
         [idTable]="'edit-schema-table'"
         tableClass="font-monospace"
+        (dataRowsChange)="onStructFieldsChange($event)"
     />
 </div>

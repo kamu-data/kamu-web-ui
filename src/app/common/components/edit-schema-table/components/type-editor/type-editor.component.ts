@@ -46,6 +46,7 @@ export class TypeEditorComponent {
     public readonly TYPES_OPTIONS_LIST: DataSchemaTypeOption[] = TYPES_OPTIONS_LIST;
     public readonly UNIT_OPTIONS_LIST: UnitTimestampOption[] = UNIT_OPTIONS_LIST;
     public readonly TIMEZONE_OPTIONS_LIST: TimezoneTimestampOption[] = TIMEZONE_OPTIONS_LIST;
+    public readonly OdfTypes: typeof OdfTypes = OdfTypes;
 
     public get schemaTimeField(): DataSchemaTimeField {
         return this.value as DataSchemaTimeField;
@@ -64,7 +65,7 @@ export class TypeEditorComponent {
             const timeField = this.value as DataSchemaTimeField;
             this.value = {
                 kind: timeField.kind,
-                unit: timeField.unit,
+                unit: "Millisecond",
             };
         }
 
@@ -72,8 +73,8 @@ export class TypeEditorComponent {
             const timeField = this.value as DataSchemaTimeField;
             this.value = {
                 kind: timeField.kind,
-                unit: timeField.unit,
-                timezone: timeField.timezone,
+                unit: "Millisecond",
+                timezone: "UTC",
             };
         }
 

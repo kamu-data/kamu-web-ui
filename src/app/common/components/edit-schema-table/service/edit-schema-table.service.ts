@@ -28,9 +28,12 @@ export class EditSchemaTableService {
     private dataRowsSubject = new BehaviorSubject<DataSchemaField[]>([]);
     public dataRows$: Observable<DataSchemaField[]> = this.dataRowsSubject.asObservable();
 
-    public editingRow: MaybeNull<SchemaField> = null;
+    public editingRow: MaybeNull<DataSchemaField> = null;
     public editingIndex: MaybeNull<number> = null;
     public addingField: boolean = false;
+
+    public editingStructRow: MaybeNull<SchemaField> = null;
+    public editingStructRowIndex: MaybeNull<number> = null;
 
     private modalService = inject(ModalService);
 
@@ -43,7 +46,12 @@ export class EditSchemaTableService {
     }
 
     public editRow(element: DataSchemaField, index: number): void {
-        this.editingRow = JSON.parse(JSON.stringify(element)) as SchemaField;
+        console.log("edit Strct", element);
+        if (element.type.kind === OdfTypes.Struct) {
+            this.editingStructRow = element;
+            this.editingStructRowIndex = index;
+        }
+        this.editingRow = element;
         this.editingIndex = index;
     }
 
@@ -70,6 +78,15 @@ export class EditSchemaTableService {
             );
             return;
         }
+        if (!this.editingRow.name) {
+            promiseWithCatch(
+                this.modalService.warning({
+                    message: `Enter column name`,
+                    yesButtonText: "Ok",
+                }),
+            );
+            return;
+        }
 
         const updatedData = [...this.currentData];
         updatedData[indexRow] = this.editingRow;
@@ -87,10 +104,10 @@ export class EditSchemaTableService {
 
     public startAddField(): void {
         this.addingField = true;
-        const newField: DataSchemaField = { name: "newField", type: { kind: OdfTypes.String } };
+        const newField: DataSchemaField = { name: "", type: { kind: OdfTypes.String } };
 
         this.setDataRows([...this.currentData, newField]);
-        this.editingRow = { name: "newField", type: { kind: OdfTypes.String } };
+        this.editingRow = newField;
         this.editingIndex = this.currentData.length - 1;
     }
 

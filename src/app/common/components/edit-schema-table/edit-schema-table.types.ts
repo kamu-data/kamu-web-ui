@@ -7,6 +7,11 @@
 
 import { DataSchemaTypeField, OdfTypes } from "@interface/dataset-schema.interface";
 
+export enum EditSchemaView {
+    SCHEMA = "schema",
+    STRUCT = "struct",
+}
+
 export interface SchemaField {
     name: string;
     type: DataSchemaTypeField;

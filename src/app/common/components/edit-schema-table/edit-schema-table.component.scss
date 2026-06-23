@@ -51,6 +51,7 @@ table {
 .edit-button {
     border: none;
     height: 28px;
+    background-color: transparent;
 
     &:hover {
         background-color: rgba(214 232 255);
@@ -62,6 +63,7 @@ table {
 .delete-button {
     border: none;
     height: 28px;
+    background-color: transparent;
 
     &:hover {
         background-color: rgba(214 232 255);
@@ -70,21 +72,62 @@ table {
     }
 }
 
+.row-editable {
+    background-color: rgba(239, 246, 255, 1);
+}
+
 .dynamic-table {
+    overflow: visible !important;
     tr {
         .action-buttons {
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.2s ease-in-out;
+
+            .action-button {
+                background-color: transparent;
+            }
         }
 
         &:hover {
-            background-color: rgba(0, 0, 0, 0.03);
-
             .action-buttons {
                 opacity: 1;
                 visibility: visible;
             }
+
+            &:not(.row-editable) {
+                background-color: rgba(0, 0, 0, 0.02);
+            }
+        }
+    }
+}
+
+.dynamic-table {
+    table {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    .mat-column-name {
+        width: 25%;
+        max-width: 25%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .mat-column-type {
+        width: 75%;
+        max-width: 75%;
+    }
+}
+
+.dynamic-table {
+    ::ng-deep {
+        mat-cell,
+        td,
+        tr {
+            overflow: visible !important;
         }
     }
 }

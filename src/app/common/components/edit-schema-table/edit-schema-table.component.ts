@@ -13,12 +13,13 @@ import {
     EventEmitter,
     inject,
     Input,
+    OnChanges,
     OnInit,
     Output,
     SimpleChanges,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { FormsModule } from "@angular/forms";
+import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { MatTooltipModule } from "@angular/material/tooltip";
@@ -43,6 +44,7 @@ import { BaseComponent } from "../base.component";
 import { DynamicTableColumnDescriptor } from "../dynamic-table/dynamic-table.interface";
 import { TypeEditorComponent } from "./components/type-editor/type-editor.component";
 import {
+    ChangeStructType,
     DataSchemaTypeOption,
     EditSchemaView,
     TIMEZONE_OPTIONS_LIST,
@@ -57,7 +59,6 @@ import { EditSchemaTableService } from "./service/edit-schema-table.service";
     selector: "app-edit-schema-table",
     imports: [
         //-----//
-        JsonPipe,
         NgIf,
         FormsModule,
         //-----//
@@ -77,15 +78,18 @@ import { EditSchemaTableService } from "./service/edit-schema-table.service";
     styleUrl: "./edit-schema-table.component.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditSchemaTableComponent extends BaseComponent implements OnInit {
+export class EditSchemaTableComponent extends BaseComponent implements OnInit, OnChanges {
+    @Input() public form: FormGroup;
+    @Input() public controlName: string;
     @Input({ required: true }) public hasTableHeader: boolean;
     @Input({ required: true }) public dataRows: DataSchemaField[];
     @Input({ required: true }) public idTable: string;
     @Input({ required: true }) public columnDescriptors: DynamicTableColumnDescriptor[];
 
-    @Output() public dataRowsChange = new EventEmitter<DataSchemaField[]>();
+    @Output() public dataRowsChange = new EventEmitter<ChangeStructType>();
 
     private schemaService = inject(EditSchemaTableService);
+    private fb = inject(FormBuilder);
 
     public dataSource = new MatTableDataSource<DataSchemaField>([]);
 
@@ -95,9 +99,14 @@ export class EditSchemaTableComponent extends BaseComponent implements OnInit {
     public readonly OdfTypes: typeof OdfTypes = OdfTypes;
     public readonly EditSchemaView: typeof EditSchemaView = EditSchemaView;
     public currentSchemaView: EditSchemaView = EditSchemaView.SCHEMA;
+    public editingStructFieldName = "";
 
     public get editingRow(): MaybeNull<DataSchemaField> {
         return this.schemaService.editingRow;
+    }
+
+    public get editingStructRow(): MaybeNull<DataSchemaField> {
+        return this.schemaService.editingStructRow;
     }
 
     public get structField(): MaybeNull<DataSchemaStructField> {
@@ -161,6 +170,7 @@ export class EditSchemaTableComponent extends BaseComponent implements OnInit {
         } else {
             if (element.type.kind === OdfTypes.Struct) {
                 this.currentSchemaView = EditSchemaView.STRUCT;
+                this.editingStructFieldName = element.name;
             }
             this.schemaService.editRow(element, index);
         }
@@ -168,10 +178,24 @@ export class EditSchemaTableComponent extends BaseComponent implements OnInit {
 
     public deleteRow(rowIndex: number): void {
         this.schemaService.deleteRow(rowIndex);
+        (this.form.controls.schema as FormArray).removeAt(rowIndex);
     }
 
     public saveEditing(indexRow: number): void {
         this.schemaService.saveEditing(indexRow);
+
+        if (this.schemaService.addingField && this.form) {
+            const schemaControl = this.form.controls.schema as FormArray;
+            schemaControl.push(
+                new FormGroup({
+                    name: new FormControl(""),
+                    type: new FormControl(OdfTypes.String),
+                }),
+            );
+            schemaControl.setValue(this.schemaService.currentData);
+            this.schemaService.setDataRows(schemaControl.value);
+            this.schemaService.addingField = false;
+        }
     }
 
     public cancelEditing(): void {
@@ -186,14 +210,6 @@ export class EditSchemaTableComponent extends BaseComponent implements OnInit {
         this.schemaService.typeChangeHandle(event);
     }
 
-    public schemaData(schema: DataSchemaField[]): DataSchemaField[] {
-        return schemaEditAsDataRows(schema);
-    }
-
-    public typeStructChange(event: { fields: DataSchemaField[]; index: number }): void {
-        this.schemaService.typeStructChange(event);
-    }
-
     public startAddField(): void {
         this.schemaService.startAddField();
     }
@@ -204,15 +220,14 @@ export class EditSchemaTableComponent extends BaseComponent implements OnInit {
 
     public onNavChange(event: NgbNavChangeEvent, index: number): void {
         const nextNav = event.nextId as EditSchemaView;
-        this.schemaService.saveEditing(index);
+
+        (this.editingStructRow?.type as DataSchemaStructField).fields = this.schemaService.currentData;
+        this.dataRowsChange.emit({
+            data: this.editingStructRow as DataSchemaField,
+            index: this.schemaService.editingStructRowIndex as number,
+        });
+
+        this.schemaService.setDataRows(this.form.controls.schema.value);
         this.currentSchemaView = nextNav;
-    }
-
-    public onStructFieldsChange(updatedFields: DataSchemaField[]): void {
-        const structFields = [...updatedFields];
-
-        if (this.editingRow && "fields" in this.editingRow) {
-            this.editingRow.fields = structFields;
-        }
     }
 }

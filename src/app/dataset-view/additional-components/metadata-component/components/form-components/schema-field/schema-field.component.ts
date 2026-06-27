@@ -5,7 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { JsonPipe } from "@angular/common";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from "@angular/material/table";
@@ -13,15 +14,25 @@ import { MatTableModule } from "@angular/material/table";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 
 import { EditSchemaTableComponent } from "@common/components/edit-schema-table/edit-schema-table.component";
+import { ChangeStructType } from "@common/components/edit-schema-table/edit-schema-table.types";
+import { EditSchemaTableService } from "@common/components/edit-schema-table/service/edit-schema-table.service";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { schemaEditAsDataRows } from "@common/helpers/data-schema.helpers";
-import { DataSchemaField } from "@interface/dataset-schema.interface";
+import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 
 export interface SchemaType {
     name: string;
     type: string;
+}
+
+export function replaceFieldByIndex(
+    fields: DataSchemaField[],
+    indexToReplace: number,
+    newFieldData: DataSchemaField,
+): DataSchemaField[] {
+    return fields.map((field, index) => (index === indexToReplace ? { ...newFieldData } : field));
 }
 
 @Component({
@@ -31,7 +42,6 @@ export interface SchemaType {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-
         FormsModule,
         ReactiveFormsModule,
         //-----//
@@ -43,26 +53,25 @@ export interface SchemaType {
         EditSchemaTableComponent,
     ],
 })
-export class SchemaFieldComponent extends BaseField {
-    public structFields: DataSchemaField[] = [];
+export class SchemaFieldComponent extends BaseField implements OnInit {
+    public schemaFields: DataSchemaField[] = [];
 
-    public schemaData(schema: DataSchemaField[]): DataSchemaField[] {
-        return schemaEditAsDataRows(schema);
+    private cdr = inject(ChangeDetectorRef);
+    private schemaService = inject(EditSchemaTableService);
+
+    public ngOnInit(): void {
+        this.schemaFields = this.form.controls.schema.value;
+        console.log("before==>", this.schemaFields);
     }
 
-    public onStructFieldsChange(updatedFields: DataSchemaField[]): void {
-        // 1. Создаем абсолютно новую ссылку на массив для триггера OnPush
-        console.log("test struct", updatedFields);
-        // console.log("123====>", updatedFields);
-        // const structFields = [...updatedFields];
+    public onStructFieldsChange(updatedField: ChangeStructType): void {
+        const schema = this.form.controls.schema;
+        const updatedData = replaceFieldByIndex(schema.value, updatedField.index, updatedField.data);
+        schema.setValue(updatedData);
+        this.schemaService.setDataRows(updatedData);
 
-        // // 2. Если эти structFields являются частью редактируемой строки родителя (editingRow)
-        // if (this.editingRow && "fields" in this.editingRow) {
-        //     // Обновляем структуру внутри текущей редактируемой строки
-        //     this.editingRow.fields = structFields;
-        // }
+        console.log("after==>", schema.value);
 
-        // // 3. Принудительно запускаем проверку изменений для OnPush компонента
-        // this.displayTable();
+        this.cdr.detectChanges();
     }
 }

@@ -46,12 +46,12 @@ export class EditSchemaTableService {
     }
 
     public editRow(element: DataSchemaField, index: number): void {
-        console.log("edit Strct", element);
         if (element.type.kind === OdfTypes.Struct) {
-            this.editingStructRow = element;
+            this.editingStructRow = { ...element };
             this.editingStructRowIndex = index;
+        } else {
         }
-        this.editingRow = element;
+        this.editingRow = { ...element };
         this.editingIndex = index;
     }
 
@@ -89,7 +89,7 @@ export class EditSchemaTableService {
         }
 
         const updatedData = [...this.currentData];
-        updatedData[indexRow] = this.editingRow;
+        updatedData[indexRow] = { ...this.editingRow };
         this.setDataRows(updatedData);
         this.resetEditing();
     }
@@ -107,25 +107,19 @@ export class EditSchemaTableService {
         const newField: DataSchemaField = { name: "", type: { kind: OdfTypes.String } };
 
         this.setDataRows([...this.currentData, newField]);
-        this.editingRow = newField;
+        this.editingRow = { ...newField };
         this.editingIndex = this.currentData.length - 1;
     }
 
     public typeChangeHandle(event: DataSchemaTypeField): void {
         if (this.editingRow) {
-            this.editingRow.type = event;
+            this.editingRow.type = { ...event };
         }
-    }
-
-    public typeStructChange(event: { fields: DataSchemaField[]; index: number }): void {
-        const updatedData = [...this.currentData];
-        (updatedData[event.index].type as DataSchemaStructField).fields = event.fields;
-        this.setDataRows(updatedData);
     }
 
     public resetEditing(): void {
         this.editingRow = null;
         this.editingIndex = null;
-        this.addingField = false;
+        // this.addingField = false;
     }
 }

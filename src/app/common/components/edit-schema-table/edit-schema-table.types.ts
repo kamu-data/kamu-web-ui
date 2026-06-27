@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DataSchemaTypeField, OdfTypes } from "@interface/dataset-schema.interface";
+import { DataSchemaField, DataSchemaTypeField, OdfTypes } from "@interface/dataset-schema.interface";
 
 export enum EditSchemaView {
     SCHEMA = "schema",
@@ -186,3 +186,7 @@ export const TYPES_OPTIONS_LIST: DataSchemaTypeOption[] = [
         value: OdfTypes.Timestamp,
     },
 ];
+export interface ChangeStructType {
+    data: DataSchemaField;
+    index: number;
+}

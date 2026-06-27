@@ -8,9 +8,11 @@
         class="mb-2"
         [hasTableHeader]="true"
         [columnDescriptors]="[{ columnName: 'name' }, { columnName: 'type' }]"
-        [dataRows]="schemaData(form.controls.schema.value)"
+        [dataRows]="form.controls.schema.value"
         [idTable]="'edit-schema-table'"
         tableClass="font-monospace"
         (dataRowsChange)="onStructFieldsChange($event)"
+        [form]="form"
+        [controlName]="controlName"
     />
 </div>

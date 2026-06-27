@@ -32,31 +32,28 @@ export const extractSchemaFieldsFromData = (data: DynamicTableDataRow): DataSche
 };
 
 export function odfType2String(type: DataSchemaTypeField): string {
+    const defaultUnit = "Millisecond";
+    const defaultTimezone = "UTC";
     switch (type.kind) {
         case OdfTypes.Option:
             return `${odfType2String(type.inner)}?`;
         case OdfTypes.Null:
             return `${type.kind}<${type.inner ? odfType2String(type.inner) : ""}>`;
         case OdfTypes.List: {
-            const innerContent = (
-                "inner" in type.itemType && type.itemType.inner ? odfType2String(type.itemType) : type.itemType
-            ) as DataSchemaTypeField;
-            return `${type.kind}<${odfType2String(innerContent)}>`;
+            return `${type.kind}<${odfType2String(type.itemType)}>`;
         }
         case OdfTypes.Timestamp: {
-            const defaultUnit = "Millisecond";
-            const defaultTimezone = "UTC";
             return `${type.kind}<${type.unit ?? defaultUnit}, ${type.timezone ?? defaultTimezone}>`;
         }
         case OdfTypes.Duration:
         case OdfTypes.Time:
-            return `${type.kind}<${type.unit}>`;
+            return `${type.kind}<${type.unit ?? defaultUnit}>`;
         case OdfTypes.Map:
             return `${type.kind}<${odfType2String(type.keyType)}, ${odfType2String(type.valueType)}>`;
         case OdfTypes.Struct:
             return type.fields.length
                 ? `${type.kind}<${type.fields.map((x) => `${x.name}:${odfType2String(x.type)}`).join(", ")}>`
-                : "";
+                : `Struct`;
 
         default:
             return type.kind;

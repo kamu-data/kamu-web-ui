@@ -1,5 +1,8 @@
 <div [id]="idTable" style="width: 100%; overflow: auto" class="dynamic-table">
-    <!-- <pre>{{ editingRow | json }}</pre> -->
+    <!-- <pre>{{ this.dataSource.data | json }}</pre> -->
+    <!-- <pre>{{ editingRow | json }}</pre>
+    <pre>Struct: {{ editingStructRow | json }}</pre> -->
+    <!-- <pre> {{ form.controls.schema.value | json }}</pre> -->
     <table
         mat-table
         [dataSource]="dataSource"
@@ -56,7 +59,7 @@
 
                 <ng-template #viewType>
                     <div class="d-flex align-items-center justify-content-between">
-                        <div>{{ odfType2String(element) }}</div>
+                        <div class="truncate-cell">{{ odfType2String(element) }}</div>
                         <div class="action-buttons d-flex">
                             <button
                                 class="d-flex align-items-center justify-content-center edit-button"
@@ -110,11 +113,21 @@
             (navChange)="onNavChange($event, rowIndex)"
         >
             <li [ngbNavItem]="EditSchemaView.SCHEMA">
-                <button ngbNavLink>Back to schema</button>
+                <button [disabled]="!structFieldName" ngbNavLink>Root</button>
             </li>
             <li [ngbNavItem]="EditSchemaView.STRUCT">
-                <button ngbNavLink>{{ structFieldName }}: Struct</button>
+                <button ngbNavLink>{{ editingStructFieldName }}</button>
                 <ng-template ngbNavContent>
+                    <div class="mt-4 mb-2">
+                        <label> Name:</label>
+                        <input
+                            [placeholder]="'Enter name'"
+                            *ngIf="editingStructRow"
+                            [(ngModel)]="editingStructRow.name"
+                            type="text"
+                            class="form-control"
+                        />
+                    </div>
                     <div class="mt-3">Fields:</div>
                     <app-edit-schema-table
                         class="mb-2"
@@ -122,7 +135,6 @@
                         [columnDescriptors]="[{ columnName: 'name' }, { columnName: 'type' }]"
                         [dataRows]="structField?.fields ?? []"
                         [idTable]="'edit-schema-table-inner'"
-                        (dataRowsChange)="onStructFieldsChange($event)"
                         tableClass="font-monospace"
                     />
                 </ng-template>

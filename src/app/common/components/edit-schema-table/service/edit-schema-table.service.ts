@@ -12,12 +12,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { ModalService } from "@common/components/modal/modal.service";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { MaybeNull } from "@interface/app.types";
-import {
-    DataSchemaField,
-    DataSchemaStructField,
-    DataSchemaTypeField,
-    OdfTypes,
-} from "@interface/dataset-schema.interface";
+import { DataSchemaField, DataSchemaTypeField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { SchemaField } from "../edit-schema-table.types";
 

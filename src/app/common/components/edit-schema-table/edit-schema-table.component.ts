@@ -6,7 +6,7 @@
  */
 
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import { JsonPipe, NgIf } from "@angular/common";
+import { NgIf } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -29,7 +29,7 @@ import { NgSelectModule } from "@ng-select/ng-select";
 import { ToastrModule } from "ngx-toastr";
 
 import { AutoFocusDirective } from "@common/directives/auto-focus.directive";
-import { odfType2String, schemaEditAsDataRows } from "@common/helpers/data-schema.helpers";
+import { odfType2String } from "@common/helpers/data-schema.helpers";
 import { MaybeNull } from "@interface/app.types";
 import {
     DataSchemaField,
@@ -218,7 +218,7 @@ export class EditSchemaTableComponent extends BaseComponent implements OnInit, O
         return Boolean(this.schemaService.editingRow);
     }
 
-    public onNavChange(event: NgbNavChangeEvent, index: number): void {
+    public onNavChange(event: NgbNavChangeEvent, _index: number): void {
         const nextNav = event.nextId as EditSchemaView;
 
         (this.editingStructRow?.type as DataSchemaStructField).fields = this.schemaService.currentData;

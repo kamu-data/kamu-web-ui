@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { JsonPipe } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
@@ -17,8 +16,7 @@ import { EditSchemaTableComponent } from "@common/components/edit-schema-table/e
 import { ChangeStructType } from "@common/components/edit-schema-table/edit-schema-table.types";
 import { EditSchemaTableService } from "@common/components/edit-schema-table/service/edit-schema-table.service";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
-import { schemaEditAsDataRows } from "@common/helpers/data-schema.helpers";
-import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 
@@ -61,7 +59,6 @@ export class SchemaFieldComponent extends BaseField implements OnInit {
 
     public ngOnInit(): void {
         this.schemaFields = this.form.controls.schema.value;
-        console.log("before==>", this.schemaFields);
     }
 
     public onStructFieldsChange(updatedField: ChangeStructType): void {
@@ -69,8 +66,6 @@ export class SchemaFieldComponent extends BaseField implements OnInit {
         const updatedData = replaceFieldByIndex(schema.value, updatedField.index, updatedField.data);
         schema.setValue(updatedData);
         this.schemaService.setDataRows(updatedData);
-
-        console.log("after==>", schema.value);
 
         this.cdr.detectChanges();
     }

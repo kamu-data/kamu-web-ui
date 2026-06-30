@@ -154,6 +154,30 @@ export class EditSchemaTableHarness extends ComponentHarness {
         await (await this.locatorFor(this.sel("cancel-edit"))()).click();
     }
 
+    /**
+     * Returns true if the Save (check) button is currently disabled.
+     * Reads the `disabled` attribute off the save-field element — present and
+     * non-null when Angular sets `[disabled]="!editingRow?.name"` to true.
+     */
+    public async isSaveDisabled(): Promise<boolean> {
+        const btn = await this.locatorForOptional(this.sel("save-field"))();
+        if (!btn) return true;
+        const attr = await btn.getAttribute("disabled");
+        return attr !== null;
+    }
+
+    /**
+     * Returns true if the Add Field button is currently disabled.
+     * Reads the `disabled` attribute off the add-field element — present and
+     * non-null when Angular sets `[disabled]="disabledAddFieldButton"` to true.
+     */
+    public async isAddFieldDisabled(): Promise<boolean> {
+        const btn = await this.locatorForOptional(this.sel("add-field"))();
+        if (!btn) return true;
+        const attr = await btn.getAttribute("disabled");
+        return attr !== null;
+    }
+
     // ---------------------------------------------------------------------------
     // Composite helpers
     // ---------------------------------------------------------------------------

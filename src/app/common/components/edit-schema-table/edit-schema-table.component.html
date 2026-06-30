@@ -17,6 +17,8 @@
                         type="text"
                         class="form-control"
                         [attr.data-test-id]="tablePath + ':name-input'"
+                        (keydown.enter)="saveEditing(rowIndex)"
+                        (keydown.escape)="cancelEditing()"
                     />
                 </div>
                 <ng-template #viewName>

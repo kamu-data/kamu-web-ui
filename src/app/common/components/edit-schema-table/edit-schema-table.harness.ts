@@ -7,7 +7,7 @@
 
 /* istanbul ignore file */
 
-import { BaseHarnessFilters, ComponentHarness, HarnessPredicate } from "@angular/cdk/testing";
+import { BaseHarnessFilters, ComponentHarness, HarnessPredicate, TestKey } from "@angular/cdk/testing";
 
 import { DataSchemaField, DataSchemaStructField, OdfTypes } from "@interface/dataset-schema.interface";
 
@@ -142,6 +142,18 @@ export class EditSchemaTableHarness extends ComponentHarness {
         const input = await this.locatorFor(this.sel("name-input"))();
         await input.clear();
         await input.sendKeys(value);
+    }
+
+    /** Sends the Enter key to the name input, triggering save if the name is non-blank. */
+    public async pressEnter(): Promise<void> {
+        const input = await this.locatorFor(this.sel("name-input"))();
+        await input.sendKeys(TestKey.ENTER);
+    }
+
+    /** Sends the Escape key to the name input, triggering cancel. */
+    public async pressEscape(): Promise<void> {
+        const input = await this.locatorFor(this.sel("name-input"))();
+        await input.sendKeys(TestKey.ESCAPE);
     }
 
     /** Clicks the save (check) button. */

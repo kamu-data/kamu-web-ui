@@ -246,6 +246,71 @@ describe("EditSchemaTableComponent", () => {
     });
 
     // ---------------------------------------------------------------------------
+    // Scenario 18 — keyboard shortcuts: Enter saves, Escape cancels
+    // ---------------------------------------------------------------------------
+
+    describe("scenario 18: keyboard shortcuts", () => {
+        it("pressing Enter while editing saves the row when the name is non-blank", async () => {
+            await setup([stringField("id"), stringField("name")]);
+            await table.editField("id");
+            fixture.detectChanges();
+            await table.setNameInput("identifier");
+            fixture.detectChanges();
+            await table.pressEnter();
+            fixture.detectChanges();
+
+            // Row is no longer in edit mode (save-field button gone)
+            expect(await table.isSaveDisabled()).toBeTrue();
+            const names = await table.getFieldNames();
+            expect(names).toContain("identifier");
+            expect(names).not.toContain("id");
+            expect(host.lastEmitted?.map((f) => f.name)).toContain("identifier");
+        });
+
+        it("pressing Enter with a blank name is a no-op — row stays in edit mode", async () => {
+            await setup([stringField("id")]);
+            await table.startAddField();
+            fixture.detectChanges();
+
+            // Input is blank — Enter should not save
+            await table.pressEnter();
+            fixture.detectChanges();
+
+            // Still in edit mode: provisional row still present
+            expect(await table.getRowCount()).toBe(2);
+            expect(await table.isSaveDisabled()).toBeTrue();
+        });
+
+        it("pressing Escape during add cancels and removes the provisional row", async () => {
+            await setup([stringField("id"), stringField("name")]);
+            await table.startAddField();
+            fixture.detectChanges();
+            expect(await table.getRowCount()).toBe(3);
+
+            await table.pressEscape();
+            fixture.detectChanges();
+
+            expect(await table.getRowCount()).toBe(2);
+            expect(await table.getFieldNames()).toEqual(["id", "name"]);
+        });
+
+        it("pressing Escape during edit restores the original value without emitting", async () => {
+            await setup([stringField("id"), stringField("name")]);
+            await table.editField("id");
+            fixture.detectChanges();
+            await table.setNameInput("changed");
+            fixture.detectChanges();
+
+            await table.pressEscape();
+            fixture.detectChanges();
+
+            expect(await table.getFieldNames()).toEqual(["id", "name"]);
+            // No new emission — lastEmitted from setup is null
+            expect(host.lastEmitted).toBeNull();
+        });
+    });
+
+    // ---------------------------------------------------------------------------
     // Scenario 19 — trackBy stability under transient duplicate names
     // ---------------------------------------------------------------------------
 

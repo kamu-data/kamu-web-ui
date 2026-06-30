@@ -133,16 +133,6 @@ describe("normalizeSchemaFields", () => {
         expect(normalizeSchemaFields(once)).toEqual(nestedFields);
     });
 
-    it("should map a legacy flat row with a known type to its OdfTypes kind", () => {
-        const legacy = [{ name: "amount", type: "Int64" }];
-        expect(normalizeSchemaFields(legacy)).toEqual([{ name: "amount", type: { kind: OdfTypes.Int64 } }]);
-    });
-
-    it("should fall back to String for an unknown legacy type string", () => {
-        const legacy = [{ name: "weird", type: "DECIMAL(10,2)" }];
-        expect(normalizeSchemaFields(legacy)).toEqual([{ name: "weird", type: { kind: OdfTypes.String } }]);
-    });
-
     it("should return an empty array for null/undefined input", () => {
         expect(normalizeSchemaFields(null)).toEqual([]);
         expect(normalizeSchemaFields(undefined)).toEqual([]);

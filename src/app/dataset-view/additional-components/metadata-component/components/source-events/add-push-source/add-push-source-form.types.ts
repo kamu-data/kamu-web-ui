@@ -36,7 +36,6 @@ export interface AddPushSourceEditFormType {
         jsonKind?: ReadKind;
         subPath?: string;
         schema?: DataSchemaField[];
-        ddlSchema?: string[];
         separator?: string;
         encoding?: string;
         quote?: string;

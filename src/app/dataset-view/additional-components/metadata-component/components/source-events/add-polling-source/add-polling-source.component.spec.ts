@@ -17,6 +17,7 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 
 import { OdfDefaultValues } from "@common/values/app-odf-default.values";
 import { mockAccountDetails } from "@api/mock/auth.mock";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
 import { DatasetNavigationParams } from "@interface/navigation.interface";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -108,12 +109,7 @@ describe("AddPollingSourceComponent", () => {
             }),
             read: new FormGroup({
                 kind: new FormControl(ReadKind.CSV),
-                ddlSchema: new FormArray([
-                    new FormGroup({
-                        name: new FormControl("id"),
-                        type: new FormControl("BIGINT"),
-                    }),
-                ]),
+                schema: new FormControl<DataSchemaField[]>([]),
                 header: new FormControl(OdfDefaultValues.CSV_HEADER),
                 encoding: new FormControl(OdfDefaultValues.CSV_ENCODING),
                 separator: new FormControl(OdfDefaultValues.CSV_SEPARATOR),

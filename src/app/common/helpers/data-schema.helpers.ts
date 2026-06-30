@@ -87,59 +87,17 @@ export function schemaAsDataRows(schema: DataSchemaField[]): DynamicTableDataRow
 }
 
 /**
- * A legacy flat schema row: a field name paired with a plain string type (the pre-ODF-object
- * representation). Retained only for backward compatibility while loading already-stored schemas.
- */
-interface LegacyFlatSchemaField {
-    name: string;
-    type: string;
-}
-
-function isLegacyFlatSchemaField(field: unknown): field is LegacyFlatSchemaField {
-    return (
-        typeof field === "object" &&
-        field !== null &&
-        "type" in field &&
-        typeof (field as { type: unknown }).type === "string"
-    );
-}
-
-function isKnownOdfType(value: string): value is OdfTypes {
-    return (Object.values(OdfTypes) as string[]).includes(value);
-}
-
-/**
  * Normalizes any accepted schema input into the canonical rich `DataSchemaField[]` model.
  *
  * Accepts:
- *  - the ODF object form `{ fields: DataSchemaField[] }`,
- *  - a bare `DataSchemaField[]` (already normalized — idempotent), or
- *  - the legacy flat form `{ name: string; type: string }[]`.
- *
- * For a legacy flat row the string `type` is wrapped as `{ kind }`, best-effort: if the string is a
- * known `OdfTypes` it is used directly, otherwise we keep `String`. Full DDL-type parsing (e.g.
- * compound/nested types encoded as strings) is intentionally out of scope here — see TODO below.
+ *  - the ODF object form `{ fields: DataSchemaField[] }`, or
+ *  - a bare `DataSchemaField[]` (already normalized — idempotent).
  */
-export function normalizeSchemaFields(
-    input: DatasetSchema | DataSchemaField[] | LegacyFlatSchemaField[] | null | undefined,
-): DataSchemaField[] {
+export function normalizeSchemaFields(input: DatasetSchema | DataSchemaField[] | null | undefined): DataSchemaField[] {
     if (!input) {
         return [];
     }
-
-    const fields: (DataSchemaField | LegacyFlatSchemaField)[] = Array.isArray(input) ? input : input.fields;
-
-    return fields.map((field) => {
-        if (isLegacyFlatSchemaField(field)) {
-            // TODO: shallow best-effort mapping only — complex DDL type strings are not parsed here.
-            const kind = isKnownOdfType(field.type) ? field.type : OdfTypes.String;
-            return {
-                name: field.name,
-                type: { kind } as DataSchemaTypeField,
-            };
-        }
-        return field;
-    });
+    return Array.isArray(input) ? input : input.fields;
 }
 
 /**

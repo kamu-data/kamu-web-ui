@@ -1315,7 +1315,6 @@ export const mockParseAddPushSourceEventFromYamlToObject: AddPushSourceEditFormT
     sourceName: "mockSource",
     read: {
         kind: ReadKind.CSV,
-        ddlSchema: ["id INT"],
         separator: OdfDefaultValues.CSV_SEPARATOR,
         encoding: OdfDefaultValues.CSV_ENCODING,
         quote: OdfDefaultValues.CSV_QUOTE,

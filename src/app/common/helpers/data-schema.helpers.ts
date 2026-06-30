@@ -38,7 +38,7 @@ export function odfType2String(type: DataSchemaTypeField): string {
         case OdfTypes.Option:
             return `${odfType2String(type.inner)}?`;
         case OdfTypes.Null:
-            return `${type.kind}<${type.inner ? odfType2String(type.inner) : ""}>`;
+            return type.kind;
         case OdfTypes.List: {
             return `${type.kind}<${odfType2String(type.itemType)}>`;
         }

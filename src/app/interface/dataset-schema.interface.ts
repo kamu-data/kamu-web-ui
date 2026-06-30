@@ -83,7 +83,6 @@ export interface DataSchemaOptionField extends DataSchemaBaseField {
 }
 interface DataSchemaNullField extends DataSchemaBaseField {
     kind: OdfTypes.Null;
-    inner?: DataSchemaTypeField;
 }
 export interface DataSchemaListField extends DataSchemaBaseField {
     kind: OdfTypes.List;

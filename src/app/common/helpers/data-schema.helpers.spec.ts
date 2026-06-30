@@ -28,11 +28,8 @@ describe("odfType2String", () => {
     });
 
     it("should map Null type", () => {
-        const field: DataSchemaTypeField = {
-            kind: OdfTypes.Null,
-            inner: { kind: OdfTypes.String },
-        };
-        expect(odfType2String(field)).toBe("Null<String>");
+        const field: DataSchemaTypeField = { kind: OdfTypes.Null };
+        expect(odfType2String(field)).toBe("Null");
     });
 
     it("should map Duration type", () => {

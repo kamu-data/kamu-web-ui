@@ -102,6 +102,36 @@ describe("SchemaFieldComponent", () => {
             expect(component.schemaErrors.length).toBeGreaterThan(0);
         });
 
+        it("duplicate names inside a List<Struct> make the control invalid (nested fields not editable via table)", () => {
+            // List<Struct> with duplicate fields invalidates the control. The inner struct fields
+            // are not surfaced in the table (no nested table row appears for List/Option/Map),
+            // so there is currently no row-level error icon — the form is blocked but the user
+            // cannot fix it without re-uploading or editing the schema source. This test documents
+            // the current policy: validation fires, control is invalid, no crash.
+            const withDupInList: DataSchemaField[] = [
+                {
+                    name: "items",
+                    type: {
+                        kind: OdfTypes.List,
+                        itemType: {
+                            kind: OdfTypes.Struct,
+                            fields: [
+                                { name: "sku", type: { kind: OdfTypes.String } },
+                                { name: "sku", type: { kind: OdfTypes.String } },
+                            ],
+                        },
+                    },
+                },
+            ];
+            schemaControl().setValue(withDupInList);
+            schemaControl().updateValueAndValidity();
+            fixture.detectChanges();
+
+            expect(schemaControl().valid).toBeFalse();
+            expect(component.schemaErrors.length).toBeGreaterThan(0);
+            expect(component.schemaErrors[0].path).toEqual(["items", "itemType", "fields", "sku"]);
+        });
+
         it("duplicate names inside a nested Struct make the control invalid", async () => {
             const withDupInStruct: DataSchemaField[] = [
                 {

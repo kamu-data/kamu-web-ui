@@ -13,8 +13,10 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { findComponentInstance, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
+import { NgSelectComponent } from "@ng-select/ng-select";
+
+import { findComponentInstance, findElement, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { DataSchemaField, DataSchemaListField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { EditSchemaTableComponent } from "./edit-schema-table.component";
 import { EditSchemaTableHarness } from "./edit-schema-table.harness";
@@ -198,6 +200,52 @@ describe("EditSchemaTableComponent", () => {
             await table.save();
             fixture.detectChanges();
             expect(host.lastEmitted?.[0].type).toEqual({ kind: OdfTypes.Int64 });
+        });
+
+        it("type change via real TypeEditor ng-select fires typeChange and is saved in emitted array", async () => {
+            await setup([stringField("amount")]);
+            await table.editField("amount");
+            fixture.detectChanges();
+
+            // Drive the kind ng-select via its public API (no CDK harness for ng-select)
+            const ngSelect = findElement(fixture, "ng-select").componentInstance as NgSelectComponent;
+            ngSelect.open();
+            fixture.detectChanges();
+            const item = ngSelect.itemsList.items.find(
+                (i) => (i.value as { value?: OdfTypes } | null)?.value === OdfTypes.Int64,
+            );
+            if (!item) throw new Error("Int64 option not found in kind ng-select");
+            ngSelect.select(item);
+            fixture.detectChanges();
+
+            await table.save();
+            fixture.detectChanges();
+            expect(host.lastEmitted?.[0].type).toEqual(jasmine.objectContaining({ kind: OdfTypes.Int64 }));
+        });
+
+        it("loading a List<Struct> field, opening edit, and saving unchanged preserves the type shape", async () => {
+            const listStructField: DataSchemaField = {
+                name: "items",
+                type: {
+                    kind: OdfTypes.List,
+                    itemType: {
+                        kind: OdfTypes.Struct,
+                        fields: [{ name: "sku", type: { kind: OdfTypes.String } }],
+                    },
+                },
+            };
+            await setup([listStructField]);
+            await table.editField("items");
+            fixture.detectChanges();
+            await table.save();
+            fixture.detectChanges();
+
+            const emitted = host.lastEmitted?.[0].type as DataSchemaListField;
+            expect(emitted.kind).toBe(OdfTypes.List);
+            expect(emitted.itemType.kind).toBe(OdfTypes.Struct);
+            if (emitted.itemType.kind === OdfTypes.Struct) {
+                expect(emitted.itemType.fields).toEqual([{ name: "sku", type: { kind: OdfTypes.String } }]);
+            }
         });
     });
 

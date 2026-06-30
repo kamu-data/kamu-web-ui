@@ -6,12 +6,13 @@
  */
 
 import { NgIf } from "@angular/common";
-import { ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, forwardRef, HostBinding, Input, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
 import { NgSelectModule } from "@ng-select/ng-select";
 
 import {
+    DataSchemaField,
     DataSchemaListField,
     DataSchemaMapField,
     DataSchemaOptionField,
@@ -21,6 +22,7 @@ import {
     OdfTypes,
 } from "@interface/dataset-schema.interface";
 
+import { EditSchemaTableComponent } from "../../edit-schema-table.component";
 import {
     DataSchemaTypeOption,
     TIMEZONE_OPTIONS_LIST,
@@ -32,7 +34,7 @@ import {
 
 @Component({
     selector: "app-type-editor",
-    imports: [NgIf, FormsModule, NgSelectModule, TypeEditorComponent],
+    imports: [NgIf, FormsModule, NgSelectModule, TypeEditorComponent, forwardRef(() => EditSchemaTableComponent)],
     templateUrl: "./type-editor.component.html",
     styleUrl: "./type-editor.component.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,6 +61,10 @@ export class TypeEditorComponent {
 
     public get schemaTimeField(): DataSchemaTimeField {
         return this.value as DataSchemaTimeField;
+    }
+
+    public get schemaStructField(): DataSchemaStructField {
+        return this.value as DataSchemaStructField;
     }
 
     public isComplexType(kind: OdfTypes): boolean {
@@ -137,5 +143,10 @@ export class TypeEditorComponent {
 
     public typeMapKeyChange(event: DataSchemaTypeField): void {
         this.typeChange.emit({ ...this.value, keyType: event } as DataSchemaTypeField);
+    }
+
+    public typeStructFieldsChange(fields: DataSchemaField[]): void {
+        this.value = { ...this.value, fields } as DataSchemaStructField;
+        this.typeChange.emit(this.value);
     }
 }

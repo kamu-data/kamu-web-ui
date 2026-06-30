@@ -121,4 +121,14 @@
             </div>
         </div>
     </ng-container>
+    <ng-container *ngIf="value.kind === OdfTypes.Struct">
+        <div class="nested-struct-editor mt-2" [class.ms-2]="depth > 0">
+            <app-edit-schema-table
+                [fields]="schemaStructField.fields"
+                [depth]="depth + 1"
+                [tablePath]="typePath + '.fields'"
+                (fieldsChange)="typeStructFieldsChange($event)"
+            />
+        </div>
+    </ng-container>
 </div>

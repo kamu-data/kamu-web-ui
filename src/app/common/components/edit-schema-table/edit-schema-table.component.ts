@@ -6,7 +6,7 @@
  */
 
 import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
-import { NgIf } from "@angular/common";
+import { NgFor, NgIf } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -37,10 +37,17 @@ import {
 import { TypeEditorComponent } from "./components/type-editor/type-editor.component";
 import { schemaNameWarnings, SchemaValidationError, SchemaWarning } from "./validation/schema-validation";
 
+interface NestedStructTable {
+    fields: DataSchemaField[];
+    path: string[];
+    tablePath: string;
+}
+
 @Component({
     selector: "app-edit-schema-table",
     imports: [
         //-----//
+        NgFor,
         NgIf,
         FormsModule,
         //-----//
@@ -53,7 +60,7 @@ import { schemaNameWarnings, SchemaValidationError, SchemaWarning } from "./vali
         CdkDrag,
         CdkDragHandle,
         //-----//
-        TypeEditorComponent,
+        forwardRef(() => TypeEditorComponent),
         AutoFocusDirective,
         forwardRef(() => EditSchemaTableComponent),
     ],
@@ -75,7 +82,7 @@ export class EditSchemaTableComponent implements OnChanges {
 
     public dataSource = new MatTableDataSource<DataSchemaField>([]);
 
-    public readonly displayedColumns = ["drag", "name", "type"];
+    public readonly displayedColumns = ["name", "type"];
 
     public editingIndex: MaybeNull<number> = null;
     public addingField = false;
@@ -107,12 +114,11 @@ export class EditSchemaTableComponent implements OnChanges {
         return odfType2String(element.type);
     }
 
-    public isStruct(field: DataSchemaField): boolean {
-        return field.type.kind === OdfTypes.Struct;
-    }
-
-    public structFields(field: DataSchemaField): DataSchemaField[] {
-        return (field.type as DataSchemaStructField).fields as DataSchemaField[];
+    public nestedStructTables(field: DataSchemaField): NestedStructTable[] {
+        return this.collectNestedStructTables(field.type, []).map((table) => ({
+            ...table,
+            tablePath: this.nestedTablePath(field.name, table.path),
+        }));
     }
 
     /** Returns the leaf-level errors (path.length === 1) for a given field name at this scope. */
@@ -120,12 +126,12 @@ export class EditSchemaTableComponent implements OnChanges {
         return this.errors.filter((e) => e.path[0] === name && e.path.length === 1);
     }
 
-    /** Returns errors that belong to the nested struct of a given field (path: [name, "fields", ...rest]),
-     *  with the leading "name, fields" segments stripped so the nested table can treat them as root-relative. */
-    public nestedErrorsForField(name: string): SchemaValidationError[] {
+    /** Returns errors that belong to a nested struct path, stripped so the nested table can treat them as root-relative. */
+    public nestedErrorsForPath(name: string, path: string[]): SchemaValidationError[] {
+        const prefix = [name, ...path];
         return this.errors
-            .filter((e) => e.path[0] === name && e.path[1] === "fields" && e.path.length > 2)
-            .map((e) => ({ ...e, path: e.path.slice(2) }));
+            .filter((e) => prefix.every((segment, index) => e.path[index] === segment) && e.path.length > prefix.length)
+            .map((e) => ({ ...e, path: e.path.slice(prefix.length) }));
     }
 
     /** Returns warnings for a given field name at this scope. */
@@ -206,17 +212,67 @@ export class EditSchemaTableComponent implements OnChanges {
         return index;
     }
 
-    public nestedTablePath(fieldName: string): string {
-        return `${this.tablePath}.${fieldName}`;
+    public nestedTablePath(fieldName: string, path: string[] = ["fields"]): string {
+        const qualifier = path.length === 1 && path[0] === "fields" ? "" : `.${path.slice(0, -1).join(".")}`;
+        return `${this.tablePath}.${fieldName}${qualifier}`;
     }
 
-    public onNestedFieldsChange(parentIndex: number, nestedFields: DataSchemaField[]): void {
+    public onNestedFieldsChange(parentIndex: number, path: string[], nestedFields: DataSchemaField[]): void {
         const parent = this.fields[parentIndex];
-        const updatedType: DataSchemaStructField = {
-            ...(parent.type as DataSchemaStructField),
-            fields: nestedFields,
-        };
+        const updatedType = this.updateNestedStructFields(parent.type, path, nestedFields);
         const updated = this.fields.map((f, i) => (i === parentIndex ? { ...f, type: updatedType } : f));
         this.fieldsChange.emit(updated);
+    }
+
+    public trackByNestedStructPath(_index: number, table: NestedStructTable): string {
+        return table.path.join(".");
+    }
+
+    private collectNestedStructTables(type: DataSchemaTypeField, path: string[]): Omit<NestedStructTable, "tablePath">[] {
+        switch (type.kind) {
+            case OdfTypes.Struct:
+                return [{ fields: type.fields as DataSchemaField[], path: [...path, "fields"] }];
+            case OdfTypes.Option:
+                return this.collectNestedStructTables(type.inner, [...path, "inner"]);
+            case OdfTypes.List:
+                return this.collectNestedStructTables(type.itemType, [...path, "itemType"]);
+            case OdfTypes.Map:
+                return [
+                    ...this.collectNestedStructTables(type.keyType, [...path, "keyType"]),
+                    ...this.collectNestedStructTables(type.valueType, [...path, "valueType"]),
+                ];
+            default:
+                return [];
+        }
+    }
+
+    private updateNestedStructFields(
+        type: DataSchemaTypeField,
+        path: string[],
+        nestedFields: DataSchemaField[],
+    ): DataSchemaTypeField {
+        const [segment, ...rest] = path;
+        switch (segment) {
+            case "fields":
+                return { ...(type as DataSchemaStructField), fields: nestedFields };
+            case "inner":
+                return type.kind === OdfTypes.Option
+                    ? { ...type, inner: this.updateNestedStructFields(type.inner, rest, nestedFields) }
+                    : type;
+            case "itemType":
+                return type.kind === OdfTypes.List
+                    ? { ...type, itemType: this.updateNestedStructFields(type.itemType, rest, nestedFields) }
+                    : type;
+            case "keyType":
+                return type.kind === OdfTypes.Map
+                    ? { ...type, keyType: this.updateNestedStructFields(type.keyType, rest, nestedFields) }
+                    : type;
+            case "valueType":
+                return type.kind === OdfTypes.Map
+                    ? { ...type, valueType: this.updateNestedStructFields(type.valueType, rest, nestedFields) }
+                    : type;
+            default:
+                return type;
+        }
     }
 }

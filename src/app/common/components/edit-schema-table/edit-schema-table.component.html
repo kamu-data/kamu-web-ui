@@ -14,20 +14,6 @@
         [cdkDropListDisabled]="dragDisabled"
         (cdkDropListDropped)="dropField($event)"
     >
-        <ng-container matColumnDef="drag">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let element; let rowIndex = index">
-                <mat-icon
-                    *ngIf="editingIndex !== rowIndex"
-                    class="drag-handle"
-                    [class.drag-handle-disabled]="dragDisabled"
-                    cdkDragHandle
-                    [attr.data-test-id]="tablePath + ':drag-handle:' + (element.name || '#' + rowIndex)"
-                    >drag_indicator</mat-icon
-                >
-            </td>
-        </ng-container>
-
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>name</th>
             <td mat-cell *matCellDef="let element; let rowIndex = index">
@@ -50,6 +36,14 @@
                         [class.text-danger]="leafErrorsForField(element.name).length > 0"
                         [attr.data-test-id]="tablePath + ':field-name:' + element.name"
                     >
+                        <mat-icon
+                            *ngIf="editingIndex !== rowIndex"
+                            class="drag-handle"
+                            [class.drag-handle-disabled]="dragDisabled"
+                            cdkDragHandle
+                            [attr.data-test-id]="tablePath + ':drag-handle:' + (element.name || '#' + rowIndex)"
+                            >drag_indicator</mat-icon
+                        >
                         {{ element.name }}
                         <mat-icon
                             *ngIf="leafErrorsForField(element.name).length > 0"
@@ -117,14 +111,16 @@
                             </button>
                         </div>
                     </div>
-                    <!-- Inline nested table for Struct fields -->
-                    <div *ngIf="isStruct(element)" class="nested-struct-container">
+                    <div
+                        *ngFor="let nestedTable of nestedStructTables(element); trackBy: trackByNestedStructPath"
+                        class="nested-struct-container"
+                    >
                         <app-edit-schema-table
-                            [fields]="structFields(element)"
+                            [fields]="nestedTable.fields"
                             [depth]="depth + 1"
-                            [tablePath]="nestedTablePath(element.name)"
-                            [errors]="nestedErrorsForField(element.name)"
-                            (fieldsChange)="onNestedFieldsChange(rowIndex, $event)"
+                            [tablePath]="nestedTable.tablePath"
+                            [errors]="nestedErrorsForPath(element.name, nestedTable.path)"
+                            (fieldsChange)="onNestedFieldsChange(rowIndex, nestedTable.path, $event)"
                         />
                     </div>
                 </ng-template>

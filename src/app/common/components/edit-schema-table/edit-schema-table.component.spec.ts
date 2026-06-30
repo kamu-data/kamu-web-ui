@@ -18,6 +18,7 @@ import { NgSelectComponent } from "@ng-select/ng-select";
 import { findComponentInstance, findElement, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { DataSchemaField, DataSchemaListField, OdfTypes } from "@interface/dataset-schema.interface";
 
+import { TypeEditorComponent } from "./components/type-editor/type-editor.component";
 import { EditSchemaTableComponent } from "./edit-schema-table.component";
 import { EditSchemaTableHarness } from "./edit-schema-table.harness";
 import { ORDER_SCHEMA } from "./schema-editor.fixtures.spec";
@@ -245,6 +246,88 @@ describe("EditSchemaTableComponent", () => {
             expect(emitted.itemType.kind).toBe(OdfTypes.Struct);
             if (emitted.itemType.kind === OdfTypes.Struct) {
                 expect(emitted.itemType.fields).toEqual([{ name: "sku", type: { kind: OdfTypes.String } }]);
+            }
+        });
+
+        it("editing a List item type as Struct exposes a nested table and saves its fields", async () => {
+            await setup([stringField("items")]);
+            await table.editField("items");
+            fixture.detectChanges();
+
+            const rootTypeEditor = findComponentInstance(
+                fixture,
+                TypeEditorComponent,
+                (c) => c.typePath === "root:type:items",
+            );
+            rootTypeEditor.changeEditorType({ value: OdfTypes.List, label: OdfTypes.List });
+            fixture.detectChanges();
+
+            const itemTypeEditor = findComponentInstance(
+                fixture,
+                TypeEditorComponent,
+                (c) => c.typePath === "root:type:items.item",
+            );
+            itemTypeEditor.changeEditorType({ value: OdfTypes.Struct, label: OdfTypes.Struct });
+            fixture.detectChanges();
+
+            const structTable = await loader.getHarness(EditSchemaTableHarness.withPath("root:type:items.item.fields"));
+            await structTable.addField("sku");
+            fixture.detectChanges();
+
+            await table.save();
+            fixture.detectChanges();
+
+            const emitted = host.lastEmitted?.[0].type as DataSchemaListField;
+            expect(emitted.kind).toBe(OdfTypes.List);
+            expect(emitted.itemType.kind).toBe(OdfTypes.Struct);
+            if (emitted.itemType.kind === OdfTypes.Struct) {
+                expect(emitted.itemType.fields).toEqual([{ name: "sku", type: { kind: OdfTypes.String } }]);
+            }
+        });
+
+        it("saving an Option inner type as Struct keeps its nested table expanded in view mode", async () => {
+            await setup([stringField("c")]);
+            await table.editField("c");
+            fixture.detectChanges();
+
+            const rootTypeEditor = findComponentInstance(
+                fixture,
+                TypeEditorComponent,
+                (component) => component.typePath === "root:type:c",
+            );
+            rootTypeEditor.changeEditorType({ value: OdfTypes.Option, label: OdfTypes.Option });
+            fixture.detectChanges();
+
+            const innerTypeEditor = findComponentInstance(
+                fixture,
+                TypeEditorComponent,
+                (component) => component.typePath === "root:type:c.inner",
+            );
+            innerTypeEditor.changeEditorType({ value: OdfTypes.Struct, label: OdfTypes.Struct });
+            fixture.detectChanges();
+
+            const editStructTable = await loader.getHarness(
+                EditSchemaTableHarness.withPath("root:type:c.inner.fields"),
+            );
+            await editStructTable.addField("f1");
+            fixture.detectChanges();
+
+            await table.save();
+            fixture.detectChanges();
+
+            const viewStructTable = await loader.getHarness(EditSchemaTableHarness.withPath("root.c.inner"));
+            expect(await viewStructTable.getFieldNames()).toEqual(["f1"]);
+
+            await viewStructTable.addField("f2");
+            fixture.detectChanges();
+
+            const emitted = host.lastEmitted?.[0].type;
+            expect(emitted?.kind).toBe(OdfTypes.Option);
+            if (emitted?.kind === OdfTypes.Option) {
+                expect(emitted.inner.kind).toBe(OdfTypes.Struct);
+                if (emitted.inner.kind === OdfTypes.Struct) {
+                    expect(emitted.inner.fields.map((field) => field.name)).toEqual(["f1", "f2"]);
+                }
             }
         });
     });

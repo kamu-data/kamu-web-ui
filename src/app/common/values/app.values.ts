@@ -41,6 +41,9 @@ export default class AppValues {
     public static readonly TIMEOUT_REFRESH_FLOW_MS = 1500;
     public static readonly SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL = "Dataset is unavailable";
     public static readonly DEFAULT_OFFSET_COLUMN_NAME = "offset";
+    public static readonly DEFAULT_OP_COLUMN_NAME = "op";
+    public static readonly DEFAULT_SYSTEM_TIME_COLUMN_NAME = "system_time";
+    public static readonly DEFAULT_EVENT_TIME_COLUMN_NAME = "event_time";
     public static readonly DEFAULT_FLOW_INITIATOR = "system process";
     public static readonly HEADERS_SKIP_LOADING_KEY = "Skip-loading";
     public static readonly HEADERS_AUTHORIZATION_KEY = "Authorization";

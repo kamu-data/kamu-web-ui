@@ -221,5 +221,69 @@ describe("BlockService", () => {
 
             expect(result).toEqual([]);
         });
+
+        // Regression test: with multiple AddPushSource blocks in the projection, the
+        // method must pick the block matching params.sourceName, not just the first
+        // AddPushSource block — otherwise editing one source can load another's schema.
+        it("should return the schema for the requested source when multiple push sources exist", () => {
+            const multiSourceQuery: DatasetBlocksSchemaByEventTypeQuery = {
+                datasets: {
+                    byOwnerAndName: {
+                        metadata: {
+                            metadataProjection: [
+                                {
+                                    __typename: "MetadataBlockExtended",
+                                    event: {
+                                        __typename: "AddPushSource",
+                                        sourceName: "source-a",
+                                        read: {
+                                            __typename: "ReadStepCsv",
+                                            schema: {
+                                                __typename: "DataSchema",
+                                                content: JSON.stringify({
+                                                    fields: [{ name: "a_field", type: { kind: "String" } }],
+                                                }),
+                                                format: "ODF_JSON" as never,
+                                            },
+                                        } as never,
+                                        merge: {} as never,
+                                    },
+                                },
+                                {
+                                    __typename: "MetadataBlockExtended",
+                                    event: {
+                                        __typename: "AddPushSource",
+                                        sourceName: "source-b",
+                                        read: {
+                                            __typename: "ReadStepCsv",
+                                            schema: {
+                                                __typename: "DataSchema",
+                                                content: JSON.stringify({
+                                                    fields: [{ name: "b_field", type: { kind: "Int32" } }],
+                                                }),
+                                                format: "ODF_JSON" as never,
+                                            },
+                                        } as never,
+                                        merge: {} as never,
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                },
+            } as DatasetBlocksSchemaByEventTypeQuery;
+            spyOn(datasetApi, "getSchemaFieldsByEventType").and.returnValue(of(multiSourceQuery));
+
+            let result: DataSchemaField[] = [];
+            service
+                .getAddPushSourceSchemaFields({
+                    accountName: mockDatasetInfo.accountName,
+                    datasetName: mockDatasetInfo.datasetName,
+                    sourceName: "source-b",
+                })
+                .subscribe((fields) => (result = fields));
+
+            expect(result).toEqual([{ name: "b_field", type: { kind: OdfTypes.Int32 } }]);
+        });
     });
 });

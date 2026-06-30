@@ -137,7 +137,9 @@ export class BlockService {
             .pipe(
                 map((data) => {
                     const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection ?? [];
-                    const block = blocks.find((b) => b.event.__typename === "AddPushSource");
+                    const block = blocks.find(
+                        (b) => b.event.__typename === "AddPushSource" && b.event.sourceName === params.sourceName,
+                    );
                     if (!block) return [];
                     const event = block.event;
                     if (event.__typename !== "AddPushSource") return [];

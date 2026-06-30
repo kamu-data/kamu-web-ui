@@ -120,12 +120,12 @@ export class EditSchemaTableComponent implements OnChanges {
         return this.errors.filter((e) => e.path[0] === name && e.path.length === 1);
     }
 
-    /** Returns errors that belong to the nested struct of a given field (path[0] === name, path.length > 1),
-     *  with the leading path segment stripped so the nested table can treat them as root-relative. */
+    /** Returns errors that belong to the nested struct of a given field (path: [name, "fields", ...rest]),
+     *  with the leading "name, fields" segments stripped so the nested table can treat them as root-relative. */
     public nestedErrorsForField(name: string): SchemaValidationError[] {
         return this.errors
-            .filter((e) => e.path[0] === name && e.path.length > 1)
-            .map((e) => ({ ...e, path: e.path.slice(1) }));
+            .filter((e) => e.path[0] === name && e.path[1] === "fields" && e.path.length > 2)
+            .map((e) => ({ ...e, path: e.path.slice(2) }));
     }
 
     /** Returns warnings for a given field name at this scope. */

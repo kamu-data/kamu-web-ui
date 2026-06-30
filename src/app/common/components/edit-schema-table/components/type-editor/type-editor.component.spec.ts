@@ -7,10 +7,10 @@
 
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { By } from "@angular/platform-browser";
 
 import { NgSelectComponent } from "@ng-select/ng-select";
 
+import { findElement } from "@common/helpers/base-test.helpers.spec";
 import {
     DataSchemaListField,
     DataSchemaMapField,
@@ -21,7 +21,7 @@ import {
     OdfTypes,
 } from "@interface/dataset-schema.interface";
 
-import { DataSchemaTypeOption, TYPES_OPTIONS_LIST } from "../../edit-schema-table.types";
+import { TYPES_OPTIONS_LIST } from "../../edit-schema-table.types";
 import { TypeEditorComponent } from "./type-editor.component";
 
 // ---------------------------------------------------------------------------
@@ -122,10 +122,19 @@ describe("TypeEditorComponent", () => {
         it("emits updated unit when changeUnitTime is called", () => {
             host.value = { kind: OdfTypes.Timestamp, unit: "Millisecond", timezone: "UTC" };
             fixture.detectChanges();
-            editor().changeUnitTime({ value: "Second" } as unknown as DataSchemaTypeOption);
+            editor().changeUnitTime({ label: "Second", value: "Second" });
             fixture.detectChanges();
             const emitted = host.lastEmitted as DataSchemaTimeField;
             expect(emitted.unit).toBe("Second");
+        });
+
+        it("emits updated timezone when changeTimezone is called", () => {
+            host.value = { kind: OdfTypes.Timestamp, unit: "Millisecond", timezone: "UTC" };
+            fixture.detectChanges();
+            editor().changeTimezone({ label: "UTC", value: "UTC" });
+            fixture.detectChanges();
+            const emitted = host.lastEmitted as DataSchemaTimeField;
+            expect(emitted.timezone).toBe("UTC");
         });
     });
 
@@ -367,8 +376,7 @@ describe("TypeEditorComponent", () => {
         // ng-select has no CDK harness. Drive it via NgSelectComponent's public API
         // (open + select) to avoid DOM timing issues with the option panel.
         function selectKindViaApi(kindValue: OdfTypes): void {
-            const ngSelect = fixture.debugElement.children[0].query(By.css("ng-select"))
-                .componentInstance as NgSelectComponent;
+            const ngSelect = findElement(fixture, "ng-select").componentInstance as NgSelectComponent;
             ngSelect.open();
             fixture.detectChanges();
             const item = ngSelect.itemsList.items.find(
@@ -387,6 +395,50 @@ describe("TypeEditorComponent", () => {
         it("selecting Struct from the kind panel emits { kind: Struct, fields: [] }", () => {
             selectKindViaApi(OdfTypes.Struct);
             expect(host.lastEmitted).toEqual(jasmine.objectContaining({ kind: OdfTypes.Struct }));
+        });
+
+        // Regression test: the Timestamp unit/timezone ng-selects previously updated
+        // value.unit/value.timezone via ngModel but had no (change) binding, so edits
+        // never reached typeChange and were lost when the parent saved editingRow.
+        describe("Timestamp unit/timezone wiring", () => {
+            function selectFromNgSelectByDataTestId(testId: string, predicate: (value: unknown) => boolean): void {
+                const ngSelect = findElement(fixture, `[data-test-id="${testId}"]`)
+                    .componentInstance as NgSelectComponent;
+                ngSelect.open();
+                fixture.detectChanges();
+                const item = ngSelect.itemsList.items.find((i) => predicate(i.value));
+                if (!item) throw new Error(`ng-select option not found for ${testId}`);
+                ngSelect.select(item);
+                fixture.detectChanges();
+            }
+
+            beforeEach(() => {
+                host.value = { kind: OdfTypes.Timestamp, unit: "Millisecond", timezone: "UTC" };
+                host.typePath = "root:type:ts";
+                fixture.detectChanges();
+            });
+
+            it("selecting a unit from the Timestamp unit dropdown emits the new unit via typeChange", () => {
+                selectFromNgSelectByDataTestId(
+                    "root:type:ts:unit",
+                    (v) => (v as { value?: string } | null)?.value === "Second",
+                );
+                const emitted = host.lastEmitted as DataSchemaTimeField;
+                expect(emitted).not.toBeNull();
+                expect(emitted.unit).toBe("Second");
+            });
+
+            it("selecting a timezone from the Timestamp timezone dropdown emits via typeChange", () => {
+                // Only "UTC" is a valid option today, but re-selecting it must still
+                // fire (change) and reach typeChange — proving the binding exists at all.
+                selectFromNgSelectByDataTestId(
+                    "root:type:ts:timezone",
+                    (v) => (v as { value?: string } | null)?.value === "UTC",
+                );
+                const emitted = host.lastEmitted as DataSchemaTimeField;
+                expect(emitted).not.toBeNull();
+                expect(emitted.timezone).toBe("UTC");
+            });
         });
     });
 });

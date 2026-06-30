@@ -113,8 +113,13 @@ export class TypeEditorComponent {
         this.typeChange.emit(this.value);
     }
 
-    public changeUnitTime(event: DataSchemaTypeOption): void {
+    public changeUnitTime(event: UnitTimestampOption): void {
         this.value = { ...this.value, unit: event.value } as DataSchemaTimeField;
+        this.typeChange.emit(this.value);
+    }
+
+    public changeTimezone(event: TimezoneTimestampOption): void {
+        this.value = { ...this.value, timezone: event.value } as DataSchemaTimeField;
         this.typeChange.emit(this.value);
     }
 

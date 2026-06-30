@@ -102,7 +102,7 @@ describe("SchemaFieldComponent", () => {
             expect(component.schemaErrors.length).toBeGreaterThan(0);
         });
 
-        it("duplicate names inside a nested Struct make the control invalid", () => {
+        it("duplicate names inside a nested Struct make the control invalid", async () => {
             const withDupInStruct: DataSchemaField[] = [
                 {
                     name: "address",
@@ -121,6 +121,13 @@ describe("SchemaFieldComponent", () => {
 
             expect(schemaControl().valid).toBeFalse();
             expect(component.schemaErrors.length).toBeGreaterThan(0);
+
+            // The error icon must surface inside the nested table next to the duplicate field,
+            // not just invalidate the control silently — regression test for the "fields" path
+            // segment inserted by validateSchemaFields not being stripped before being passed down.
+            const rootTable = await harness.rootTable();
+            const addressTable = await rootTable.nestedTable("address");
+            expect(await addressTable.hasErrorIcon("city")).toBeTrue();
         });
     });
 

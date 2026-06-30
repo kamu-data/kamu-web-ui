@@ -26,6 +26,7 @@
                 bindValue="value"
                 [clearable]="false"
                 [attr.data-test-id]="typePath + ':unit'"
+                (change)="changeUnitTime($event)"
             >
                 <ng-template ng-option-tmp let-item="item" let-index="index">
                     <label class="fs-14 inline-block"> {{ item.value }} </label>
@@ -41,6 +42,7 @@
                 appendTo="body"
                 [clearable]="false"
                 [attr.data-test-id]="typePath + ':timezone'"
+                (change)="changeTimezone($event)"
             >
                 <ng-template ng-option-tmp let-item="item" let-index="index">
                     <label class="fs-14 inline-block"> {{ item.value }} </label>

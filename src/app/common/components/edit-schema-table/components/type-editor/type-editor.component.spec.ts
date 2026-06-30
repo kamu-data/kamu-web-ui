@@ -5,7 +5,9 @@
  * included in the LICENSE file.
  */
 
+import { provideRouter } from "@angular/router";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { OdfTypes } from "@interface/dataset-schema.interface";
 
 import { TypeEditorComponent } from "./type-editor.component";
 
@@ -16,10 +18,12 @@ describe("TypeEditorComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [TypeEditorComponent],
+            providers: [provideRouter([])],
         }).compileComponents();
 
         fixture = TestBed.createComponent(TypeEditorComponent);
         component = fixture.componentInstance;
+        component.value = { kind: OdfTypes.String };
         fixture.detectChanges();
     });
 

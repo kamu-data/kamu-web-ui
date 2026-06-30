@@ -9,6 +9,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ActivatedRoute } from "@angular/router";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 
 import { from, of } from "rxjs";
 
@@ -17,6 +19,7 @@ import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 
 import { mockAccountDetails } from "@api/mock/auth.mock";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
@@ -63,9 +66,16 @@ describe("AddPushSourceComponent with query parameter name", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [...providersSection(mockAddPushSourceYaml), Apollo],
+            providers: [
+                ...providersSection(mockAddPushSourceYaml),
+                Apollo,
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
             imports: [ApolloTestingModule, BrowserAnimationsModule, AddPushSourceComponent],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(AddPushSourceComponent);
         modalService = TestBed.inject(NgbModal);
@@ -156,9 +166,16 @@ describe("AddPushSourceComponent without query parameter name", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [providersSection(""), Apollo],
+            providers: [
+                providersSection(""),
+                Apollo,
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
             imports: [ApolloTestingModule, BrowserAnimationsModule, AddPushSourceComponent],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(AddPushSourceComponent);
         component = fixture.componentInstance;

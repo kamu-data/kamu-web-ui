@@ -12,7 +12,7 @@ import { AfterViewInit, Directive, ElementRef, inject } from "@angular/core";
     standalone: true,
 })
 export class AutoFocusDirective implements AfterViewInit {
-    private el = inject(ElementRef);
+    private el = inject<ElementRef<HTMLElement>>(ElementRef);
 
     public ngAfterViewInit(): void {
         setTimeout(() => {

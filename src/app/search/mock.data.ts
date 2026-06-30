@@ -1293,6 +1293,9 @@ export const mockParseSetPollingSourceEventFromYamlToObject: AddPollingSourceEdi
             kind: EventTimeSourceKind.FROM_METADATA,
         },
     },
+    // `read` mirrors the exact output of `parseEventFromYaml`, which does not emit `schema`.
+    // The cast keeps the value assignable to the (schema-required) form type without inventing a
+    // key the parser never produces. TODO(Phase 5): once `read.schema` is retyped, drop the cast.
     read: {
         kind: ReadKind.CSV,
         separator: ",",
@@ -1301,7 +1304,7 @@ export const mockParseSetPollingSourceEventFromYamlToObject: AddPollingSourceEdi
         escape: "\\",
         dateFormat: "yyyy-MM-dd",
         timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
-    },
+    } as AddPollingSourceEditFormType["read"],
     merge: {
         kind: MergeKind.APPEND,
     },
@@ -1597,6 +1600,7 @@ export const mockSetPollingSourceEditFormWithReadNdJsonFormat: AddPollingSourceE
         dateFormat: OdfDefaultValues.CSV_DATE_FORMAT,
         timestampFormat: OdfDefaultValues.CSV_TIMESTAMP_FORMAT,
         subPath: "/test",
+        schema: [],
     },
     merge: {
         kind: MergeKind.APPEND,

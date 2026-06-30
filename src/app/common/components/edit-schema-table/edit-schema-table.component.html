@@ -35,7 +35,7 @@
                 <div *ngIf="editingIndex === rowIndex; else viewType" class="d-flex justify-content-between py-3">
                     <app-type-editor
                         *ngIf="editingRow?.type"
-                        [value]="editingRow?.type!"
+                        [value]="editingRow!.type"
                         (typeChange)="typeChangeHandle($event)"
                     />
 

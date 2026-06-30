@@ -36,6 +36,7 @@ table {
 
 .action-buttons {
     padding: 2px;
+
     .action-button {
         display: flex;
         align-items: center;
@@ -54,8 +55,7 @@ table {
     background-color: transparent;
 
     &:hover {
-        background-color: rgba(214 232 255);
-
+        background-color: rgb(214 232 255);
         border-radius: 6px;
     }
 }
@@ -66,18 +66,18 @@ table {
     background-color: transparent;
 
     &:hover {
-        background-color: rgba(214 232 255);
-
+        background-color: rgb(214 232 255);
         border-radius: 6px;
     }
 }
 
 .row-editable {
-    background-color: rgba(239, 246, 255, 1);
+    background-color: rgb(239 246 255 / 100%);
 }
 
 .dynamic-table {
     overflow: visible !important;
+
     tr {
         .action-buttons {
             opacity: 0;
@@ -96,7 +96,7 @@ table {
             }
 
             &:not(.row-editable) {
-                background-color: rgba(0, 0, 0, 0.02);
+                background-color: rgb(0 0 0 / 2%);
             }
         }
     }

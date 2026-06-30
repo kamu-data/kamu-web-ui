@@ -5,7 +5,11 @@
  * included in the LICENSE file.
  */
 
+import { provideRouter } from "@angular/router";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 
 import { EditSchemaTableComponent } from "./edit-schema-table.component";
 
@@ -16,10 +20,17 @@ describe("EditSchemaTableComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [EditSchemaTableComponent],
+            providers: [provideRouter([]), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(EditSchemaTableComponent);
         component = fixture.componentInstance;
+        component.hasTableHeader = true;
+        component.dataRows = [];
+        component.idTable = "test-schema-table";
+        component.columnDescriptors = [{ columnName: "name" }, { columnName: "type" }];
         fixture.detectChanges();
     });
 

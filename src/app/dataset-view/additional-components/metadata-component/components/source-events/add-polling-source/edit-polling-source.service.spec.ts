@@ -61,6 +61,7 @@ describe("EditPollingSourceService", () => {
                 escape: "\\",
                 dateFormat: "yyyy-MM-dd",
                 timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
+                schema: [],
             },
             merge: {
                 kind: MergeKind.APPEND,
@@ -100,6 +101,7 @@ describe("EditPollingSourceService", () => {
                 escape: "\\",
                 dateFormat: "yyyy-MM-dd",
                 timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
+                schema: [],
             },
             merge: {
                 kind: MergeKind.APPEND,
@@ -143,6 +145,7 @@ describe("EditPollingSourceService", () => {
                 escape: "\\",
                 dateFormat: "yyyy-MM-dd",
                 timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
+                schema: [],
             },
             merge: {
                 kind: MergeKind.APPEND,
@@ -166,7 +169,7 @@ describe("EditPollingSourceService", () => {
     it("should be check patch form with read CSV step with schema", () => {
         const sectionReadForm = new FormGroup({
             kind: new FormControl(ReadKind.CSV),
-            ddlSchema: new FormArray([]),
+            schema: new FormArray([]),
         });
         const editFormValue = {
             fetch: {
@@ -178,7 +181,7 @@ describe("EditPollingSourceService", () => {
             },
             read: {
                 kind: ReadKind.CSV,
-                ddlSchema: ["id INT"],
+                schema: { fields: [{ name: "id", type: "INT" }] },
             },
             merge: {
                 kind: MergeKind.APPEND,
@@ -186,7 +189,7 @@ describe("EditPollingSourceService", () => {
         };
         const groupName = SetPollingSourceSection.READ;
         service.patchFormValues(sectionReadForm, editFormValue, groupName);
-        expect(sectionReadForm.value.ddlSchema?.length).toEqual(1);
+        expect(sectionReadForm.value.schema?.length).toEqual(1);
     });
 
     it("should be check patch form with merge CSV step with schema", () => {
@@ -205,7 +208,7 @@ describe("EditPollingSourceService", () => {
             },
             read: {
                 kind: ReadKind.CSV,
-                schema: ["id BIGINT"],
+                schema: [{ name: "id", type: "BIGINT" }],
             },
             merge: {
                 kind: MergeKind.SNAPSHOT,

@@ -7,7 +7,7 @@
 
 /* istanbul ignore file */
 
-import { ComponentHarness } from "@angular/cdk/testing";
+import { LocatorFactory } from "@angular/cdk/testing";
 
 /**
  * Drives an ng-select widget from a CDK harness context.
@@ -17,17 +17,17 @@ import { ComponentHarness } from "@angular/cdk/testing";
  * by clicking the container, then click an option by its data-test-id. All ng-select fragility
  * is isolated here so callers stay stable.
  *
- * @param harness  The harness instance whose documentRootLocatorFactory is used for overlay lookup.
+ * Call this from inside a ComponentHarness subclass, passing `this.documentRootLocatorFactory()`:
+ *
+ *   await selectNgOption(this.documentRootLocatorFactory(), selectTestId, optionTestId);
+ *
+ * @param root  A LocatorFactory scoped to the document root (needed because ng-select overlays
+ *              are appended to <body>, outside the component's own DOM subtree).
  * @param selectTestId  The data-test-id on the ng-select host element (e.g. `"root:type:city:kind"`).
  * @param optionTestId  The full data-test-id of the option element to click
  *                      (e.g. `"root:type:city:kind-option:Int64"`).
  */
-export async function selectNgOption(
-    harness: ComponentHarness,
-    selectTestId: string,
-    optionTestId: string,
-): Promise<void> {
-    const root = harness.documentRootLocatorFactory();
+export async function selectNgOption(root: LocatorFactory, selectTestId: string, optionTestId: string): Promise<void> {
     const container = await root.locatorFor(`[data-test-id="${selectTestId}"]`)();
     await container.click();
     const option = await root.locatorFor(`[data-test-id="${optionTestId}"]`)();

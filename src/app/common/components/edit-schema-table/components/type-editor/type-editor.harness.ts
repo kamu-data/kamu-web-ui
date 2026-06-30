@@ -36,6 +36,6 @@ export class TypeEditorHarness extends ComponentHarness {
             throw new Error("TypeEditorHarness: host has no data-test-id — cannot derive kind select id");
         }
 
-        await selectNgOption(this, `${typePath}:kind`, `${typePath}:kind-option:${kind}`);
+        await selectNgOption(this.documentRootLocatorFactory(), `${typePath}:kind`, `${typePath}:kind-option:${kind}`);
     }
 }

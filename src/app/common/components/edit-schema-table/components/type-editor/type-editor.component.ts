@@ -6,7 +6,7 @@
  */
 
 import { NgIf } from "@angular/common";
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
 import { NgSelectModule } from "@ng-select/ng-select";
@@ -42,6 +42,11 @@ export class TypeEditorComponent {
     @Input({ required: true }) public value: DataSchemaTypeField;
     @Input() public depth: number = 0;
     @Input() public typePath: string = "type";
+    // Reflected onto the host element so TypeEditorHarness can resolve the typePath at runtime
+    // without receiving it as a separate constructor argument (CDK harnesses have no DI).
+    @HostBinding("attr.data-test-id") public get hostTestId(): string {
+        return this.typePath;
+    }
     @Output() public typeChange = new EventEmitter<DataSchemaTypeField>();
 
     public readonly TYPES_OPTIONS_LIST: DataSchemaTypeOption[] = TYPES_OPTIONS_LIST;

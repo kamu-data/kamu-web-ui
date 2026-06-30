@@ -4,7 +4,7 @@
     [class.nested-table]="depth > 0"
     [attr.data-test-id]="tablePath"
 >
-    <table mat-table [dataSource]="dataSource" #table>
+    <table mat-table [dataSource]="dataSource" [trackBy]="trackByFieldName" #table>
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>name</th>
             <td mat-cell *matCellDef="let element; let rowIndex = index">

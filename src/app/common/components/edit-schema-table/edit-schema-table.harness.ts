@@ -9,6 +9,8 @@
 
 import { BaseHarnessFilters, ComponentHarness, HarnessPredicate } from "@angular/cdk/testing";
 
+import { DataSchemaField, DataSchemaStructField, OdfTypes } from "@interface/dataset-schema.interface";
+
 interface EditSchemaTableHarnessFilters extends BaseHarnessFilters {
     tablePath?: string;
 }
@@ -34,6 +36,37 @@ export class EditSchemaTableHarness extends ComponentHarness {
                 return el !== null;
             },
         );
+    }
+
+    // ---------------------------------------------------------------------------
+    // Data assertion utilities (static — operate on emitted DataSchemaField[] values)
+    // ---------------------------------------------------------------------------
+
+    /**
+     * Finds a field by name in an emitted DataSchemaField array and returns its struct children.
+     * Throws with a descriptive message if the field is missing or is not a Struct, so test code
+     * never needs unsafe casts or optional-chaining on expected-present values.
+     */
+    public static structFieldsOf(fields: DataSchemaField[], name: string): DataSchemaField[] {
+        const field = EditSchemaTableHarness.findOrThrow(fields, name);
+        if (field.type.kind !== OdfTypes.Struct) {
+            throw new Error(`Expected field "${name}" to be a Struct but got ${field.type.kind}`);
+        }
+        return (field.type as unknown as DataSchemaStructField).fields as DataSchemaField[];
+    }
+
+    /**
+     * Finds a field by name in a DataSchemaField array and returns it as a non-nullable value.
+     * Throws with a descriptive message if the field is missing.
+     */
+    public static requireField(fields: DataSchemaField[], name: string): DataSchemaField {
+        return EditSchemaTableHarness.findOrThrow(fields, name);
+    }
+
+    private static findOrThrow(fields: DataSchemaField[], name: string): DataSchemaField {
+        const field = fields.find((f) => f.name === name);
+        if (!field) throw new Error(`Expected field "${name}" not found in [${fields.map((f) => f.name).join(", ")}]`);
+        return field;
     }
 
     // ---------------------------------------------------------------------------

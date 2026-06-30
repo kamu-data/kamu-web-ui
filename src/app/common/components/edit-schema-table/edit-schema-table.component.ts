@@ -184,6 +184,10 @@ export class EditSchemaTableComponent implements OnChanges {
         }
     }
 
+    public trackByFieldName(_index: number, field: DataSchemaField): string {
+        return field.name;
+    }
+
     public nestedTablePath(fieldName: string): string {
         return `${this.tablePath}.${fieldName}`;
     }

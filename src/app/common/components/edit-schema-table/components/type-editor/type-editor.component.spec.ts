@@ -397,6 +397,46 @@ describe("TypeEditorComponent", () => {
             expect(host.lastEmitted).toEqual(jasmine.objectContaining({ kind: OdfTypes.Struct }));
         });
 
+        it("Struct→String→Struct via ng-select API preserves children", () => {
+            host.value = {
+                kind: OdfTypes.Struct,
+                fields: [{ name: "sku", type: { kind: OdfTypes.String } }],
+            } as DataSchemaStructField;
+            fixture.detectChanges();
+
+            selectKindViaApi(OdfTypes.String);
+            fixture.detectChanges();
+
+            selectKindViaApi(OdfTypes.Struct);
+            fixture.detectChanges();
+
+            const emitted = host.lastEmitted as DataSchemaStructField;
+            expect(emitted.kind).toBe(OdfTypes.Struct);
+            expect(emitted.fields.map((f) => f.name)).toContain("sku");
+        });
+
+        it("List<Struct>→String→List via ng-select API preserves itemType children", () => {
+            host.value = {
+                kind: OdfTypes.List,
+                itemType: {
+                    kind: OdfTypes.Struct,
+                    fields: [{ name: "qty", type: { kind: OdfTypes.Int32 } }],
+                },
+            } as DataSchemaListField;
+            fixture.detectChanges();
+
+            selectKindViaApi(OdfTypes.String);
+            fixture.detectChanges();
+
+            selectKindViaApi(OdfTypes.List);
+            fixture.detectChanges();
+
+            const emitted = host.lastEmitted as DataSchemaListField;
+            expect(emitted.kind).toBe(OdfTypes.List);
+            expect(emitted.itemType.kind).toBe(OdfTypes.Struct);
+            expect((emitted.itemType as DataSchemaStructField).fields.map((f) => f.name)).toContain("qty");
+        });
+
         // Regression test: the Timestamp unit/timezone ng-selects previously updated
         // value.unit/value.timezone via ngModel but had no (change) binding, so edits
         // never reached typeChange and were lost when the parent saved editingRow.

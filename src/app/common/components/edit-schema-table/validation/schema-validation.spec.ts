@@ -121,6 +121,67 @@ describe("validateSchemaFields", () => {
     it("should return no errors for an empty field array", () => {
         expect(validateSchemaFields([])).toEqual([]);
     });
+
+    it("should detect duplicate names inside a List<Struct> itemType", () => {
+        const listField: DataSchemaField = {
+            name: "items",
+            type: {
+                kind: OdfTypes.List,
+                itemType: {
+                    kind: OdfTypes.Struct,
+                    fields: [
+                        { name: "sku", type: { kind: OdfTypes.String } },
+                        { name: "sku", type: { kind: OdfTypes.String } },
+                    ],
+                },
+            },
+        };
+        const errors = validateSchemaFields([listField]);
+        expect(errors.length).toBe(1);
+        expect(errors[0].code).toBe(SchemaValidationErrorCode.DUPLICATE_NAME);
+        expect(errors[0].path).toEqual(["items", "itemType", "fields", "sku"]);
+    });
+
+    it("should detect duplicate names inside an Option<Struct> inner type", () => {
+        const optField: DataSchemaField = {
+            name: "payload",
+            type: {
+                kind: OdfTypes.Option,
+                inner: {
+                    kind: OdfTypes.Struct,
+                    fields: [
+                        { name: "x", type: { kind: OdfTypes.Int32 } },
+                        { name: "x", type: { kind: OdfTypes.Int32 } },
+                    ],
+                },
+            },
+        };
+        const errors = validateSchemaFields([optField]);
+        expect(errors.length).toBe(1);
+        expect(errors[0].code).toBe(SchemaValidationErrorCode.DUPLICATE_NAME);
+        expect(errors[0].path).toEqual(["payload", "inner", "fields", "x"]);
+    });
+
+    it("should detect duplicate names inside Map value Struct", () => {
+        const mapField: DataSchemaField = {
+            name: "lookup",
+            type: {
+                kind: OdfTypes.Map,
+                keyType: { kind: OdfTypes.String },
+                valueType: {
+                    kind: OdfTypes.Struct,
+                    fields: [
+                        { name: "val", type: { kind: OdfTypes.Int64 } },
+                        { name: "val", type: { kind: OdfTypes.Int64 } },
+                    ],
+                },
+            },
+        };
+        const errors = validateSchemaFields([mapField]);
+        expect(errors.length).toBe(1);
+        expect(errors[0].code).toBe(SchemaValidationErrorCode.DUPLICATE_NAME);
+        expect(errors[0].path).toEqual(["lookup", "valueType", "fields", "val"]);
+    });
 });
 
 // ---------------------------------------------------------------------------

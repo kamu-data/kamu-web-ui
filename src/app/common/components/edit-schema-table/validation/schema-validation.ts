@@ -6,7 +6,7 @@
  */
 
 import AppValues from "@common/values/app.values";
-import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
+import { DataSchemaField, DataSchemaTypeField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import {
     SchemaValidationError,
@@ -76,6 +76,28 @@ export const SQL_RESERVED_KEYWORDS = new Set([
     "with",
 ]);
 
+/** Recursively walks a type tree, validating any Struct fields found at any depth. */
+function validateTypeFields(type: DataSchemaTypeField, basePath: string[]): SchemaValidationError[] {
+    switch (type.kind) {
+        case OdfTypes.Struct:
+            return validateSchemaFields(
+                type.fields.map((f) => ({ name: f.name, type: f.type })),
+                [...basePath, "fields"],
+            );
+        case OdfTypes.List:
+            return validateTypeFields(type.itemType, [...basePath, "itemType"]);
+        case OdfTypes.Option:
+            return validateTypeFields(type.inner, [...basePath, "inner"]);
+        case OdfTypes.Map:
+            return [
+                ...validateTypeFields(type.keyType, [...basePath, "keyType"]),
+                ...validateTypeFields(type.valueType, [...basePath, "valueType"]),
+            ];
+        default:
+            return [];
+    }
+}
+
 /**
  * Recursively validates a `DataSchemaField[]`, returning hard errors for:
  *  - empty field names,
@@ -105,14 +127,7 @@ export function validateSchemaFields(fields: DataSchemaField[], basePath: string
             }
         }
 
-        if (field.type.kind === OdfTypes.Struct) {
-            errors.push(
-                ...validateSchemaFields(
-                    field.type.fields.map((f) => ({ name: f.name, type: f.type })),
-                    [...fieldPath, "fields"],
-                ),
-            );
-        }
+        errors.push(...validateTypeFields(field.type, fieldPath));
     }
 
     return errors;

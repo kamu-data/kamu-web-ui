@@ -130,11 +130,10 @@ describe("BlockService", () => {
         });
 
         it("should return [] when metadataProjection is empty", () => {
-            spyOn(datasetApi, "getSchemaFieldsByEventType").and.returnValue(
-                of({
-                    datasets: { byOwnerAndName: { metadata: { metadataProjection: [] } } },
-                } as unknown as DatasetBlocksSchemaByEventTypeQuery),
-            );
+            const emptyQuery: DatasetBlocksSchemaByEventTypeQuery = {
+                datasets: { byOwnerAndName: { metadata: { metadataProjection: [] } } },
+            };
+            spyOn(datasetApi, "getSchemaFieldsByEventType").and.returnValue(of(emptyQuery));
 
             let result: DataSchemaField[] = [{ name: "sentinel", type: { kind: OdfTypes.String } }];
             service
@@ -206,11 +205,10 @@ describe("BlockService", () => {
         });
 
         it("should return [] when metadataProjection is empty", () => {
-            spyOn(datasetApi, "getSchemaFieldsByEventType").and.returnValue(
-                of({
-                    datasets: { byOwnerAndName: { metadata: { metadataProjection: [] } } },
-                } as unknown as DatasetBlocksSchemaByEventTypeQuery),
-            );
+            const emptyQuery: DatasetBlocksSchemaByEventTypeQuery = {
+                datasets: { byOwnerAndName: { metadata: { metadataProjection: [] } } },
+            };
+            spyOn(datasetApi, "getSchemaFieldsByEventType").and.returnValue(of(emptyQuery));
 
             let result: DataSchemaField[] = [{ name: "sentinel", type: { kind: OdfTypes.String } }];
             service

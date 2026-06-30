@@ -136,6 +136,7 @@ export interface AddPollingSourceEditFormType {
         args?: string[];
         path?: string;
         url?: string;
+        image?: string;
         order?: string;
         topics?: TopicsType[];
         chainId?: number;

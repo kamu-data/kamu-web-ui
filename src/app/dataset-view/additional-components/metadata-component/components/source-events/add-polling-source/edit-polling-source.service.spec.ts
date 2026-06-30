@@ -171,11 +171,11 @@ describe("EditPollingSourceService", () => {
             kind: new FormControl(ReadKind.CSV),
             schema: new FormControl([]),
         });
-        const editFormValue = {
+        const editFormValue: AddPollingSourceEditFormType = {
             fetch: { kind: FetchKind.CONTAINER, image: "test_image", env: [], command: ["-a"], args: ["arg1"] },
             read: { kind: ReadKind.CSV, schema: [] },
             merge: { kind: MergeKind.APPEND },
-        } as unknown as AddPollingSourceEditFormType;
+        };
         service.patchFormValues(sectionReadForm, editFormValue, SetPollingSourceSection.READ, null);
         expect(sectionReadForm.value.kind).toEqual(ReadKind.CSV);
         expect(sectionReadForm.value.schema).toEqual([]);

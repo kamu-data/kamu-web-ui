@@ -9,15 +9,13 @@ import { TestBed } from "@angular/core/testing";
 
 import { parse } from "yaml";
 
-import { OdfTypes } from "@interface/dataset-schema.interface";
+import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import {
-    AddPollingSourceEditFormType,
     FetchKind,
     MergeKind,
     ReadKind,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
-import { AddPushSourceEditFormType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 import { mockPreprocessStepValue, mockSetPollingSourceEditFormWithReadNdJsonFormat } from "src/app/search/mock.data";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 
@@ -66,10 +64,10 @@ describe("TemplatesYamlEventsService", () => {
                             fields: [{ name: "city", type: { kind: OdfTypes.String } }],
                         },
                     },
-                ],
+                ] as DataSchemaField[],
             },
             merge: { kind: MergeKind.APPEND },
-        } as unknown as AddPollingSourceEditFormType;
+        };
         const yaml = service.buildYamlSetPollingSourceEvent(params, null);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const parsed = parse(yaml);
@@ -84,10 +82,10 @@ describe("TemplatesYamlEventsService", () => {
             sourceName: "test",
             read: {
                 kind: ReadKind.CSV,
-                schema: [{ name: "id", type: { kind: OdfTypes.Int64 } }],
+                schema: [{ name: "id", type: { kind: OdfTypes.Int64 } }] as DataSchemaField[],
             },
             merge: { kind: MergeKind.APPEND },
-        } as unknown as AddPushSourceEditFormType;
+        };
         const yaml = service.buildYamlAddPushSourceEvent(params, null);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const parsed = parse(yaml);
@@ -100,9 +98,9 @@ describe("TemplatesYamlEventsService", () => {
     it("should pass through read.schema unchanged when schema is empty for polling source", () => {
         const params = {
             fetch: { kind: FetchKind.URL, url: "http://example.com" },
-            read: { kind: ReadKind.CSV, schema: [] },
+            read: { kind: ReadKind.CSV, schema: [] as DataSchemaField[] },
             merge: { kind: MergeKind.APPEND },
-        } as unknown as AddPollingSourceEditFormType;
+        };
         const yaml = service.buildYamlSetPollingSourceEvent(params, null);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const parsed = parse(yaml);

@@ -50,6 +50,7 @@
                     <app-type-editor
                         *ngIf="editingRow?.type"
                         [value]="editingRow!.type"
+                        [typePath]="tablePath + ':type:' + (editingRow!.name || '#' + rowIndex)"
                         (typeChange)="typeChangeHandle($event)"
                     />
                     <div class="action-buttons d-flex ms-4 align-items-center">
@@ -78,14 +79,14 @@
                             <button
                                 class="d-flex align-items-center justify-content-center edit-button"
                                 (click)="editRow(element, rowIndex); $event.stopPropagation()"
-                                [attr.data-test-id]="tablePath + ':edit-field:' + element.name"
+                                [attr.data-test-id]="tablePath + ':edit-field:' + (element.name || '#' + rowIndex)"
                             >
                                 <mat-icon class="action-button text-muted" svgIcon="pencil" />
                             </button>
                             <button
                                 class="d-flex align-items-center justify-content-center delete-button"
                                 (click)="deleteRow(rowIndex); $event.stopPropagation()"
-                                [attr.data-test-id]="tablePath + ':delete-field:' + element.name"
+                                [attr.data-test-id]="tablePath + ':delete-field:' + (element.name || '#' + rowIndex)"
                             >
                                 <mat-icon class="action-button text-muted" svgIcon="delete"></mat-icon>
                             </button>
@@ -110,6 +111,7 @@
             mat-row
             *matRowDef="let row; columns: displayedColumns; let rowIndex = index"
             [class.row-editable]="editingIndex === rowIndex"
+            [attr.data-test-id]="tablePath + ':row:' + rowIndex"
         ></tr>
     </table>
 

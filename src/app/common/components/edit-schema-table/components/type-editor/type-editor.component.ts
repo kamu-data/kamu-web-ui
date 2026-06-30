@@ -41,6 +41,7 @@ import {
 export class TypeEditorComponent {
     @Input({ required: true }) public value: DataSchemaTypeField;
     @Input() public depth: number = 0;
+    @Input() public typePath: string = "type";
     @Output() public typeChange = new EventEmitter<DataSchemaTypeField>();
 
     public readonly TYPES_OPTIONS_LIST: DataSchemaTypeOption[] = TYPES_OPTIONS_LIST;

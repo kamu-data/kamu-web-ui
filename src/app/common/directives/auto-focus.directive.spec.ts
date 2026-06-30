@@ -15,10 +15,7 @@ describe("AutoFocusDirective", () => {
         TestBed.configureTestingModule({
             providers: [{ provide: ElementRef, useValue: new ElementRef(document.createElement("input")) }],
         });
-        const directive = runInInjectionContext(
-            TestBed.inject(EnvironmentInjector),
-            () => new AutoFocusDirective(),
-        );
+        const directive = runInInjectionContext(TestBed.inject(EnvironmentInjector), () => new AutoFocusDirective());
         expect(directive).toBeTruthy();
     });
 });

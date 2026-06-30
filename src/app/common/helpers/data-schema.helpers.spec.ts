@@ -5,11 +5,7 @@
  * included in the LICENSE file.
  */
 
-import {
-    normalizeSchemaFields,
-    odfType2String,
-    schemaFieldsToObjectForm,
-} from "@common/helpers/data-schema.helpers";
+import { normalizeSchemaFields, odfType2String, schemaFieldsToObjectForm } from "@common/helpers/data-schema.helpers";
 import { DataSchemaField, DataSchemaTypeField, OdfTypes } from "@interface/dataset-schema.interface";
 
 describe("odfType2String", () => {

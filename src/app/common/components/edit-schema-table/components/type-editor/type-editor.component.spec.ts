@@ -5,8 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { provideRouter } from "@angular/router";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { provideRouter } from "@angular/router";
+
 import { OdfTypes } from "@interface/dataset-schema.interface";
 
 import { TypeEditorComponent } from "./type-editor.component";

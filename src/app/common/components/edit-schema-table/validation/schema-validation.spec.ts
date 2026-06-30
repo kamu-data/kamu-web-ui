@@ -6,11 +6,12 @@
  */
 
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
+
 import {
+    schemaNameWarnings,
     SchemaValidationErrorCode,
     SchemaWarningCode,
     validateSchemaFields,
-    schemaNameWarnings,
 } from "./schema-validation";
 
 // ---------------------------------------------------------------------------
@@ -36,10 +37,7 @@ describe("validateSchemaFields", () => {
     });
 
     it("should return no errors for a valid nested schema", () => {
-        const fields: DataSchemaField[] = [
-            field("id"),
-            structField("address", [field("city"), field("zip")]),
-        ];
+        const fields: DataSchemaField[] = [field("id"), structField("address", [field("city"), field("zip")])];
         expect(validateSchemaFields(fields)).toEqual([]);
     });
 
@@ -80,9 +78,7 @@ describe("validateSchemaFields", () => {
     });
 
     it("should return DUPLICATE_NAME error for duplicates inside a nested struct", () => {
-        const fields: DataSchemaField[] = [
-            structField("address", [field("city"), field("zip"), field("city")]),
-        ];
+        const fields: DataSchemaField[] = [structField("address", [field("city"), field("zip"), field("city")])];
         const errors = validateSchemaFields(fields);
         expect(errors.length).toBe(1);
         expect(errors[0].code).toBe(SchemaValidationErrorCode.DUPLICATE_NAME);
@@ -105,10 +101,7 @@ describe("validateSchemaFields", () => {
     });
 
     it("should detect errors at multiple levels in the same call", () => {
-        const fields: DataSchemaField[] = [
-            field(""),
-            structField("address", [field("city"), field("city")]),
-        ];
+        const fields: DataSchemaField[] = [field(""), structField("address", [field("city"), field("city")])];
         const errors = validateSchemaFields(fields);
         expect(errors.length).toBe(2);
         const codes = errors.map((e) => e.code);

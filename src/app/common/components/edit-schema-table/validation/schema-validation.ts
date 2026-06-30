@@ -5,8 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 import AppValues from "@common/values/app.values";
+import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
+
 import {
     SchemaValidationError,
     SchemaValidationErrorCode,
@@ -84,10 +85,7 @@ export const SQL_RESERVED_KEYWORDS = new Set([
  * Each error carries the path to the offending field (e.g. `["address", "fields", "city"]`)
  * and an error code.
  */
-export function validateSchemaFields(
-    fields: DataSchemaField[],
-    basePath: string[] = [],
-): SchemaValidationError[] {
+export function validateSchemaFields(fields: DataSchemaField[], basePath: string[] = []): SchemaValidationError[] {
     const errors: SchemaValidationError[] = [];
     const seen = new Set<string>();
 

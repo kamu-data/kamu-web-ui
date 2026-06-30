@@ -120,6 +120,50 @@ table {
         width: 100px;
         max-width: 75%;
     }
+
+    .mat-column-drag {
+        width: 24px;
+        max-width: 24px;
+        padding-left: 4px !important;
+        padding-right: 0 !important;
+    }
+}
+
+.drag-handle {
+    color: $app-color-fg-default;
+    cursor: grab;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out;
+
+    &:active {
+        cursor: grabbing;
+    }
+}
+
+.drag-handle-disabled {
+    cursor: default;
+    pointer-events: none;
+}
+
+.dynamic-table tr:hover .drag-handle:not(.drag-handle-disabled) {
+    opacity: 1;
+    visibility: visible;
+}
+
+.cdk-drag-preview {
+    box-shadow:
+        0 5px 5px -3px rgb(0 0 0 / 20%),
+        0 8px 10px 1px rgb(0 0 0 / 14%),
+        0 3px 14px 2px rgb(0 0 0 / 12%);
+}
+
+.cdk-drag-placeholder {
+    opacity: 0;
+}
+
+.cdk-drop-list-dragging tr:not(.cdk-drag-placeholder) {
+    transition: transform 0.2s cubic-bezier(0, 0, 0.2, 1);
 }
 
 .dynamic-table {

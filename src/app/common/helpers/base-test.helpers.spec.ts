@@ -146,6 +146,23 @@ export function getInputElementByDataTestId<T>(fixture: ComponentFixture<T>, id:
     return getElementByDataTestId(fixture, id) as HTMLInputElement;
 }
 
+/**
+ * Finds the instance of a directive/component class matching a predicate, e.g. to
+ * disambiguate between multiple instances of the same component (by an @Input value)
+ * when CSS/data-test-id selectors can't reach the component instance itself.
+ * Throws with a descriptive message if no match is found.
+ */
+export function findComponentInstance<T, C>(
+    fixture: ComponentFixture<T>,
+    directive: new (...args: never[]) => C,
+    predicate: (instance: C) => boolean,
+): C {
+    const debugElements = fixture.debugElement.queryAll(By.directive(directive));
+    const match = debugElements.find((el) => predicate(el.componentInstance as C));
+    if (!match) throw new Error(`No instance of ${directive.name} matching the given predicate was found`);
+    return match.componentInstance as C;
+}
+
 export function dispatchInputEvent<T>(fixture: ComponentFixture<T>, id: string, value: string): void {
     const element = getInputElementByDataTestId(fixture, id);
     element.value = value;

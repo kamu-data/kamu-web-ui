@@ -190,6 +190,12 @@ export class EditSchemaTableHarness extends ComponentHarness {
         return attr !== null;
     }
 
+    /** Returns true if a drag handle is rendered for the field identified by name (absent while that row is in edit mode). */
+    public async hasDragHandle(name: string): Promise<boolean> {
+        const handle = await this.locatorForOptional(this.sel("drag-handle", name))();
+        return handle !== null;
+    }
+
     // ---------------------------------------------------------------------------
     // Composite helpers
     // ---------------------------------------------------------------------------

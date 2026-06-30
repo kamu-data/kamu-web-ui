@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
 import { NgIf } from "@angular/common";
 import {
     ChangeDetectionStrategy,
@@ -48,6 +49,10 @@ import { schemaNameWarnings, SchemaValidationError, SchemaWarning } from "./vali
         MatTooltipModule,
         NgSelectModule,
         //-----//
+        CdkDropList,
+        CdkDrag,
+        CdkDragHandle,
+        //-----//
         TypeEditorComponent,
         AutoFocusDirective,
         forwardRef(() => EditSchemaTableComponent),
@@ -70,7 +75,7 @@ export class EditSchemaTableComponent implements OnChanges {
 
     public dataSource = new MatTableDataSource<DataSchemaField>([]);
 
-    public readonly displayedColumns = ["name", "type"];
+    public readonly displayedColumns = ["drag", "name", "type"];
 
     public editingIndex: MaybeNull<number> = null;
     public addingField = false;
@@ -84,6 +89,18 @@ export class EditSchemaTableComponent implements OnChanges {
 
     public get disabledAddFieldButton(): boolean {
         return this.editingIndex !== null;
+    }
+
+    /** Dragging is disabled while any row (including a blank add-row) is being edited. */
+    public get dragDisabled(): boolean {
+        return this.editingIndex !== null;
+    }
+
+    public dropField(event: CdkDragDrop<DataSchemaField[]>): void {
+        if (event.previousIndex === event.currentIndex) return;
+        const updated = [...this.fields];
+        moveItemInArray(updated, event.previousIndex, event.currentIndex);
+        this.fieldsChange.emit(updated);
     }
 
     public odfType2String(element: DataSchemaField): string {
@@ -185,7 +202,7 @@ export class EditSchemaTableComponent implements OnChanges {
         }
     }
 
-    public trackByFieldName(index: number, _field: DataSchemaField): number {
+    public trackByFieldIndex(index: number, _field: DataSchemaField): number {
         return index;
     }
 

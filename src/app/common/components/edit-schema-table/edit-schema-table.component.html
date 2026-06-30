@@ -4,7 +4,30 @@
     [class.nested-table]="depth > 0"
     [attr.data-test-id]="tablePath"
 >
-    <table mat-table [dataSource]="dataSource" [trackBy]="trackByFieldName" #table>
+    <table
+        mat-table
+        [dataSource]="dataSource"
+        [trackBy]="trackByFieldIndex"
+        #table
+        cdkDropList
+        [cdkDropListData]="dataSource.data"
+        [cdkDropListDisabled]="dragDisabled"
+        (cdkDropListDropped)="dropField($event)"
+    >
+        <ng-container matColumnDef="drag">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element; let rowIndex = index">
+                <mat-icon
+                    *ngIf="editingIndex !== rowIndex"
+                    class="drag-handle"
+                    [class.drag-handle-disabled]="dragDisabled"
+                    cdkDragHandle
+                    [attr.data-test-id]="tablePath + ':drag-handle:' + (element.name || '#' + rowIndex)"
+                    >drag_indicator</mat-icon
+                >
+            </td>
+        </ng-container>
+
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>name</th>
             <td mat-cell *matCellDef="let element; let rowIndex = index">
@@ -114,6 +137,9 @@
             *matRowDef="let row; columns: displayedColumns; let rowIndex = index"
             [class.row-editable]="editingIndex === rowIndex"
             [attr.data-test-id]="tablePath + ':row:' + rowIndex"
+            cdkDrag
+            [cdkDragData]="row"
+            [cdkDragDisabled]="dragDisabled"
         ></tr>
     </table>
 

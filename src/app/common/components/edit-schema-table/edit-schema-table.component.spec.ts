@@ -5,15 +5,15 @@
  * included in the LICENSE file.
  */
 
+import { CdkDragDrop } from "@angular/cdk/drag-drop";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { By } from "@angular/platform-browser";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { findComponentInstance, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { EditSchemaTableComponent } from "./edit-schema-table.component";
@@ -188,8 +188,11 @@ describe("EditSchemaTableComponent", () => {
             await table.editField("ts");
             fixture.detectChanges();
             // Set the type at the component level (contract — no ng-select interaction)
-            const editorComponent = fixture.debugElement.query(By.directive(EditSchemaTableComponent))
-                .componentInstance as EditSchemaTableComponent;
+            const editorComponent = findComponentInstance(
+                fixture,
+                EditSchemaTableComponent,
+                (c) => c.tablePath === "root",
+            );
             editorComponent.typeChangeHandle({ kind: OdfTypes.Int64 });
             fixture.detectChanges();
             await table.save();
@@ -326,6 +329,87 @@ describe("EditSchemaTableComponent", () => {
 
             // Both rows still present in the DOM — trackBy must not collapse them
             expect(await table.getRowCount()).toBe(2);
+        });
+    });
+
+    // ---------------------------------------------------------------------------
+    // Scenario 20 — drag & drop reordering
+    // ---------------------------------------------------------------------------
+
+    describe("scenario 20: drag & drop reordering", () => {
+        // Drag-drop has no CDK test harness — drive the component method directly,
+        // matching the existing interop pattern used for type-change tests. Filters by
+        // tablePath since nested tables are separate EditSchemaTableComponent instances
+        // and By.directive alone would always match the first (root) one in the fixture.
+        function componentInstanceOf(tablePath: string): EditSchemaTableComponent {
+            return findComponentInstance(fixture, EditSchemaTableComponent, (c) => c.tablePath === tablePath);
+        }
+
+        it("dropping a top-level field at a new index reorders fields and emits", async () => {
+            await setup([stringField("a"), stringField("b"), stringField("c")]);
+            const component = componentInstanceOf("root");
+
+            component.dropField({ previousIndex: 0, currentIndex: 2 } as CdkDragDrop<DataSchemaField[]>);
+            fixture.detectChanges();
+
+            expect(await table.getFieldNames()).toEqual(["b", "c", "a"]);
+            expect(host.lastEmitted?.map((f) => f.name)).toEqual(["b", "c", "a"]);
+        });
+
+        it("dropping at the same index is a no-op — no emission", async () => {
+            await setup([stringField("a"), stringField("b")]);
+            const component = componentInstanceOf("root");
+
+            component.dropField({ previousIndex: 1, currentIndex: 1 } as CdkDragDrop<DataSchemaField[]>);
+            fixture.detectChanges();
+
+            expect(host.lastEmitted).toBeNull();
+        });
+
+        it("reordering fields within a nested Struct only changes that struct's fields", async () => {
+            await setup(ORDER_SCHEMA);
+            fixture.detectChanges();
+
+            const customerTable = await table.nestedTable("customer");
+            const customerComponent = componentInstanceOf("root.customer");
+            const namesBefore = await customerTable.getFieldNames();
+
+            customerComponent.dropField({ previousIndex: 0, currentIndex: 1 } as CdkDragDrop<DataSchemaField[]>);
+            fixture.detectChanges();
+
+            const emitted = host.lastEmitted ?? [];
+            const customerFields = EditSchemaTableHarness.structFieldsOf(emitted, "customer");
+            expect(customerFields.map((f) => f.name)).toEqual([
+                namesBefore[1],
+                namesBefore[0],
+                ...namesBefore.slice(2),
+            ]);
+
+            // Sibling Struct and root order untouched
+            const shippingFields = EditSchemaTableHarness.structFieldsOf(emitted, "shipping");
+            expect(shippingFields.map((f) => f.name)).toEqual(["carrier", "tracking"]);
+            expect(emitted.map((f) => f.name)).toEqual(ORDER_SCHEMA.map((f) => f.name));
+        });
+
+        it("drag handle is not rendered for a row currently being edited", async () => {
+            await setup([stringField("id"), stringField("name")]);
+            expect(await table.hasDragHandle("id")).toBeTrue();
+
+            await table.editField("id");
+            fixture.detectChanges();
+
+            expect(await table.hasDragHandle("id")).toBeFalse();
+        });
+
+        it("dragDisabled is true while a row is being edited or added", async () => {
+            await setup([stringField("id")]);
+            const component = componentInstanceOf("root");
+            expect(component.dragDisabled).toBeFalse();
+
+            await table.startAddField();
+            fixture.detectChanges();
+
+            expect(component.dragDisabled).toBeTrue();
         });
     });
 

@@ -34,6 +34,7 @@ import {
 } from "@interface/dataset-schema.interface";
 
 import { TypeEditorComponent } from "./components/type-editor/type-editor.component";
+import { schemaNameWarnings, SchemaValidationError, SchemaWarning } from "./validation/schema-validation";
 
 @Component({
     selector: "app-edit-schema-table",
@@ -59,6 +60,10 @@ export class EditSchemaTableComponent implements OnChanges {
     @Input({ required: true }) public fields: DataSchemaField[] = [];
     @Input() public depth: number = 0;
     @Input() public tablePath: string = "root";
+    /** Hard errors from validateSchemaFields, scoped to this table's path prefix. */
+    @Input() public errors: SchemaValidationError[] = [];
+    /** Non-blocking warnings from schemaNameWarnings, scoped to this table's path prefix. */
+    @Input() public warnings: SchemaWarning[] = [];
     @Output() public fieldsChange = new EventEmitter<DataSchemaField[]>();
 
     public readonly OdfTypes: typeof OdfTypes = OdfTypes;
@@ -91,6 +96,38 @@ export class EditSchemaTableComponent implements OnChanges {
 
     public structFields(field: DataSchemaField): DataSchemaField[] {
         return (field.type as DataSchemaStructField).fields as DataSchemaField[];
+    }
+
+    /** Returns the leaf-level errors (path.length === 1) for a given field name at this scope. */
+    public leafErrorsForField(name: string): SchemaValidationError[] {
+        return this.errors.filter((e) => e.path[0] === name && e.path.length === 1);
+    }
+
+    /** Returns errors that belong to the nested struct of a given field (path[0] === name, path.length > 1),
+     *  with the leading path segment stripped so the nested table can treat them as root-relative. */
+    public nestedErrorsForField(name: string): SchemaValidationError[] {
+        return this.errors
+            .filter((e) => e.path[0] === name && e.path.length > 1)
+            .map((e) => ({ ...e, path: e.path.slice(1) }));
+    }
+
+    /** Returns warnings for a given field name at this scope. */
+    public warningsForField(name: string): SchemaWarning[] {
+        return schemaNameWarnings(name);
+    }
+
+    /** Returns the tooltip text for all leaf errors on a field. */
+    public errorTooltip(name: string): string {
+        return this.leafErrorsForField(name)
+            .map((e) => e.code)
+            .join(", ");
+    }
+
+    /** Returns the tooltip text for all warnings on a field. */
+    public warningTooltip(name: string): string {
+        return this.warningsForField(name)
+            .map((w) => w.code)
+            .join(", ");
     }
 
     public editRow(element: DataSchemaField, index: number): void {

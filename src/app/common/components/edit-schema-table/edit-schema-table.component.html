@@ -20,7 +20,25 @@
                     />
                 </div>
                 <ng-template #viewName>
-                    <span [attr.data-test-id]="tablePath + ':field-name:' + element.name">{{ element.name }}</span>
+                    <span
+                        class="field-name"
+                        [class.text-danger]="leafErrorsForField(element.name).length > 0"
+                        [attr.data-test-id]="tablePath + ':field-name:' + element.name"
+                    >
+                        {{ element.name }}
+                        <mat-icon
+                            *ngIf="leafErrorsForField(element.name).length > 0"
+                            class="inline-icon text-danger"
+                            [matTooltip]="errorTooltip(element.name)"
+                            svgIcon="close"
+                        />
+                        <mat-icon
+                            *ngIf="warningsForField(element.name).length > 0"
+                            class="inline-icon text-warning"
+                            [matTooltip]="warningTooltip(element.name)"
+                            >warning</mat-icon
+                        >
+                    </span>
                 </ng-template>
             </td>
         </ng-container>
@@ -79,6 +97,7 @@
                             [fields]="structFields(element)"
                             [depth]="depth + 1"
                             [tablePath]="nestedTablePath(element.name)"
+                            [errors]="nestedErrorsForField(element.name)"
                             (fieldsChange)="onNestedFieldsChange(rowIndex, $event)"
                         />
                     </div>

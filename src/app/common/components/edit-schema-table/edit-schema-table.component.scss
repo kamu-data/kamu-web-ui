@@ -141,3 +141,18 @@ table {
 .nested-table {
     margin-top: 4px;
 }
+
+.field-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.inline-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    vertical-align: middle;
+    flex-shrink: 0;
+}

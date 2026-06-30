@@ -4,5 +4,11 @@
         <label class="form-label">{{ label }} </label>
     </div>
 
-    <app-edit-schema-table class="mb-2" [fields]="schemaControl.value" (fieldsChange)="onFieldsChange($event)" />
+    <app-edit-schema-table
+        class="mb-2"
+        [fields]="schemaControl.value"
+        [errors]="schemaErrors"
+        [warnings]="schemaWarnings"
+        (fieldsChange)="onFieldsChange($event)"
+    />
 </div>

@@ -18,6 +18,7 @@ import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { EditSchemaTableComponent } from "./edit-schema-table.component";
 import { EditSchemaTableHarness } from "./edit-schema-table.harness";
+import { ORDER_SCHEMA } from "./schema-editor.fixtures.spec";
 
 // ---------------------------------------------------------------------------
 // TestHost
@@ -83,7 +84,7 @@ describe("EditSchemaTableComponent", () => {
     });
 
     // ---------------------------------------------------------------------------
-    // Add
+    // Add (scenarios 1, 2)
     // ---------------------------------------------------------------------------
 
     describe("adding a field", () => {
@@ -104,6 +105,46 @@ describe("EditSchemaTableComponent", () => {
             fixture.detectChanges();
             expect(await table.getRowCount()).toBe(1);
             expect(host.lastEmitted).toEqual([stringField("id")]);
+        });
+
+        // Scenario 1 — add many in a row, insertion order preserved
+        it("scenario 1: adding multiple fields in sequence preserves insertion order", async () => {
+            await setup();
+            await table.addField("order_id");
+            fixture.detectChanges();
+            await table.addField("placed_at");
+            fixture.detectChanges();
+            await table.addField("status");
+            fixture.detectChanges();
+
+            expect(await table.getFieldNames()).toEqual(["order_id", "placed_at", "status"]);
+            expect(host.lastEmitted?.map((f) => f.name)).toEqual(["order_id", "placed_at", "status"]);
+        });
+
+        // Scenario 2 — blank provisional row: Save and Add disabled until a name is typed
+        it("scenario 2: blank provisional row disables Save and Add buttons", async () => {
+            await setup([stringField("id")]);
+            await table.startAddField();
+            fixture.detectChanges();
+
+            expect(await table.isSaveDisabled()).toBeTrue();
+            expect(await table.isAddFieldDisabled()).toBeTrue();
+        });
+
+        // Scenario 11 — start add, cancel → row removed and original list restored
+        it("scenario 11: cancel during add removes the provisional row and restores the list", async () => {
+            await setup([stringField("id"), stringField("name")]);
+            await table.startAddField();
+            fixture.detectChanges();
+            expect(await table.getRowCount()).toBe(3);
+
+            await table.cancel();
+            fixture.detectChanges();
+
+            expect(await table.getRowCount()).toBe(2);
+            expect(await table.getFieldNames()).toEqual(["id", "name"]);
+            // No spurious emission — original list unchanged
+            expect(host.lastEmitted).toEqual([stringField("id"), stringField("name")]);
         });
     });
 
@@ -138,7 +179,7 @@ describe("EditSchemaTableComponent", () => {
     });
 
     // ---------------------------------------------------------------------------
-    // Delete
+    // Delete (scenarios 10, 9A)
     // ---------------------------------------------------------------------------
 
     describe("deleting a field", () => {
@@ -148,6 +189,39 @@ describe("EditSchemaTableComponent", () => {
             fixture.detectChanges();
             const names = await table.getFieldNames();
             expect(names).toEqual(["a", "c"]);
+        });
+
+        // Scenario 10 — delete a middle field, surrounding order intact
+        it("scenario 10: deleting a middle field preserves the order of remaining fields", async () => {
+            await setup(ORDER_SCHEMA);
+            fixture.detectChanges();
+            // Delete a middle scalar field ("notes" is index 2)
+            await table.deleteField("notes");
+            fixture.detectChanges();
+
+            const names = await table.getFieldNames();
+            expect(names).not.toContain("notes");
+            // Surrounding fields in their original relative order
+            expect(names.indexOf("order_id")).toBeLessThan(names.indexOf("placed_at"));
+            expect(names.indexOf("placed_at")).toBeLessThan(names.indexOf("tags"));
+        });
+
+        // Scenario 9 (branch A — instant delete) — delete non-empty Struct removes whole subtree;
+        // sibling Struct stays intact.
+        it("scenario 9A: deleting a non-empty Struct removes it and its subtree; sibling Struct untouched", async () => {
+            await setup(ORDER_SCHEMA);
+            fixture.detectChanges();
+
+            await table.deleteField("customer");
+            fixture.detectChanges();
+
+            const names = await table.getFieldNames();
+            expect(names).not.toContain("customer");
+
+            // shipping (sibling Struct) is still present and renderable
+            expect(names).toContain("shipping");
+            const shippingTable = await table.nestedTable("shipping");
+            expect(await shippingTable.getFieldNames()).toContain("carrier");
         });
     });
 

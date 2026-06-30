@@ -15,6 +15,7 @@ import {
     DataSchemaListField,
     DataSchemaMapField,
     DataSchemaOptionField,
+    DataSchemaStructField,
     DataSchemaTimeField,
     DataSchemaTypeField,
     OdfTypes,
@@ -257,6 +258,53 @@ describe("TypeEditorComponent", () => {
             expect(emitted.kind).toBe(OdfTypes.List);
             expect((emitted.itemType as DataSchemaMapField).kind).toBe(OdfTypes.Map);
             expect((emitted.itemType as DataSchemaMapField).valueType).toEqual({ kind: OdfTypes.String });
+        });
+    });
+
+    // ---------------------------------------------------------------------------
+    // Scenario 8 — complex type composition via contract-level handler calls
+    // ---------------------------------------------------------------------------
+
+    describe("scenario 8: complex type composition", () => {
+        it("scalar → Timestamp emits unit and timezone", () => {
+            selectKind(OdfTypes.Timestamp);
+            fixture.detectChanges();
+
+            const emitted = host.lastEmitted as DataSchemaTimeField;
+            expect(emitted.kind).toBe(OdfTypes.Timestamp);
+            expect(emitted.unit).toBeDefined();
+            expect(emitted.timezone).toBeDefined();
+        });
+
+        it("String → List → itemType set to Struct — assembles List<Struct<sku:String>>", () => {
+            selectKind(OdfTypes.List);
+            fixture.detectChanges();
+
+            // Replace itemType with a Struct (mirrors the child TypeEditorComponent's typeChange output).
+            editor().typeListChange({
+                kind: OdfTypes.Struct,
+                fields: [{ name: "sku", type: { kind: OdfTypes.String } }],
+            } as DataSchemaStructField);
+            fixture.detectChanges();
+
+            const emitted = host.lastEmitted as DataSchemaListField;
+            expect(emitted.kind).toBe(OdfTypes.List);
+            expect(emitted.itemType.kind).toBe(OdfTypes.Struct);
+            expect((emitted.itemType as DataSchemaStructField).fields.map((f) => f.name)).toContain("sku");
+        });
+
+        it("Option<List<String>>: switch to Option then set inner to List<String>", () => {
+            selectKind(OdfTypes.Option);
+            fixture.detectChanges();
+
+            // Replace the default Option<String> inner with List<String>.
+            editor().typeOptionChange({ kind: OdfTypes.List, itemType: { kind: OdfTypes.String } });
+            fixture.detectChanges();
+
+            const emitted = host.lastEmitted as DataSchemaOptionField;
+            expect(emitted.kind).toBe(OdfTypes.Option);
+            expect(emitted.inner.kind).toBe(OdfTypes.List);
+            expect((emitted.inner as DataSchemaListField).itemType.kind).toBe(OdfTypes.String);
         });
     });
 

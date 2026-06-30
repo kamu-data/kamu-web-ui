@@ -11,6 +11,8 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
 
+import { EditSchemaTableHarness } from "@common/components/edit-schema-table/edit-schema-table.harness";
+import { ORDER_SCHEMA } from "@common/components/edit-schema-table/schema-editor.fixtures.spec";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
@@ -31,6 +33,16 @@ describe("SchemaFieldComponent", () => {
         return component.schemaControl;
     }
 
+    async function setup(initialFields: DataSchemaField[] = []): Promise<void> {
+        fixture = TestBed.createComponent(SchemaFieldComponent);
+        component = fixture.componentInstance;
+        component.form = new FormGroup({ schema: new FormControl<DataSchemaField[]>(initialFields) });
+        component.controlName = "schema";
+        fixture.detectChanges();
+        await fixture.whenStable();
+        harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, SchemaFieldHarness);
+    }
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, SchemaFieldComponent],
@@ -38,15 +50,7 @@ describe("SchemaFieldComponent", () => {
         }).compileComponents();
 
         registerMatSvgIcons();
-
-        fixture = TestBed.createComponent(SchemaFieldComponent);
-        component = fixture.componentInstance;
-        component.form = new FormGroup({ schema: new FormControl<DataSchemaField[]>([]) });
-        component.controlName = "schema";
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, SchemaFieldHarness);
+        await setup();
     });
 
     // ---------------------------------------------------------------------------
@@ -159,6 +163,70 @@ describe("SchemaFieldComponent", () => {
 
             const table = await harness.rootTable();
             expect(await table.hasWarningIcon("select")).toBeTrue();
+        });
+
+        // Scenario 3 — SQL keyword / system-column warning, control valid
+        it("scenario 3: system-column name 'op' shows a warning but keeps the control valid", async () => {
+            await harness.addField("op");
+            fixture.detectChanges();
+
+            expect(schemaControl().valid).toBeTrue();
+            const table = await harness.rootTable();
+            expect(await table.hasWarningIcon("op")).toBeTrue();
+        });
+    });
+
+    // ---------------------------------------------------------------------------
+    // Scenario 4 — duplicate (case variant) → error icon, control invalid
+    // ---------------------------------------------------------------------------
+
+    describe("scenario 4: duplicate names (case variants)", () => {
+        it("duplicate name in a different case is flagged as an error and invalidates the control", async () => {
+            await harness.addField("City");
+            fixture.detectChanges();
+            await harness.addField("city");
+            fixture.detectChanges();
+
+            expect(schemaControl().valid).toBeFalse();
+            expect(component.schemaErrors.length).toBeGreaterThan(0);
+
+            // The error icon appears next to at least one of the duplicate fields
+            const table = await harness.rootTable();
+            const cityError = await table.hasErrorIcon("city");
+            const CityError = await table.hasErrorIcon("City");
+            expect(cityError || CityError).toBeTrue();
+        });
+    });
+
+    // ---------------------------------------------------------------------------
+    // Scenario 5 — 3-level rename leaves sibling Structs untouched
+    // ---------------------------------------------------------------------------
+
+    describe("scenario 5: deep rename keeps sibling Structs intact", () => {
+        it("renaming customer.address.geo.lat does not affect the shipping Struct", async () => {
+            await setup(ORDER_SCHEMA);
+
+            const rootTable = await harness.rootTable();
+            const customerTable = await rootTable.nestedTable("customer");
+            const addressTable = await customerTable.nestedTable("address");
+            const geoTable = await addressTable.nestedTable("geo");
+            await geoTable.renameField("lat", "latitude");
+            fixture.detectChanges();
+
+            // Renamed field reflected in the control
+            const fields = schemaControl().value;
+            const customerFields = EditSchemaTableHarness.structFieldsOf(fields, "customer");
+            const addressFields = EditSchemaTableHarness.structFieldsOf(customerFields, "address");
+            const geoFields = EditSchemaTableHarness.structFieldsOf(addressFields, "geo");
+            expect(geoFields.map((f) => f.name)).toContain("latitude");
+            expect(geoFields.map((f) => f.name)).not.toContain("lat");
+
+            // shipping Struct untouched
+            const shippingFields = EditSchemaTableHarness.structFieldsOf(fields, "shipping");
+            expect(shippingFields.map((f) => f.name)).toEqual(["carrier", "tracking"]);
+
+            // Control remains valid after rename
+            expect(schemaControl().valid).toBeTrue();
         });
     });
 });

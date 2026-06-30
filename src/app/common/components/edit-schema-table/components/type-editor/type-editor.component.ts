@@ -19,7 +19,6 @@ import {
     DataSchemaTimeField,
     DataSchemaTypeField,
     OdfTypes,
-    PRIMITIVES_TYPES,
 } from "@interface/dataset-schema.interface";
 
 import {
@@ -63,52 +62,41 @@ export class TypeEditorComponent {
     }
 
     public changeEditorType(event: DataSchemaTypeOption): void {
-        if (PRIMITIVES_TYPES.includes(event.value)) {
-            this.value = { kind: this.value.kind } as DataSchemaTypeField;
-        }
+        const kind = event.value;
 
-        if ([OdfTypes.Time, OdfTypes.Duration].includes(event.value)) {
-            const timeField = this.value as DataSchemaTimeField;
+        // Default: strip any complex-type-specific fields; covers all simple/primitive kinds.
+        this.value = { kind } as DataSchemaTypeField;
+
+        if ([OdfTypes.Time, OdfTypes.Duration].includes(kind)) {
             this.value = {
-                kind: timeField.kind,
+                kind: kind as OdfTypes.Time | OdfTypes.Duration,
                 unit: "Millisecond",
             };
-        }
-
-        if (event.value === OdfTypes.Timestamp) {
-            const timeField = this.value as DataSchemaTimeField;
+        } else if (kind === OdfTypes.Timestamp) {
             this.value = {
-                kind: timeField.kind,
+                kind,
                 unit: "Millisecond",
                 timezone: "UTC",
             };
-        }
-
-        if (event.value === OdfTypes.Option) {
+        } else if (kind === OdfTypes.Option) {
             this.value = {
-                kind: this.value.kind,
+                kind,
                 inner: { kind: OdfTypes.String },
             } as DataSchemaOptionField;
-        }
-
-        if (event.value === OdfTypes.List) {
+        } else if (kind === OdfTypes.List) {
             this.value = {
-                kind: this.value.kind,
+                kind,
                 itemType: { kind: OdfTypes.String },
             } as DataSchemaListField;
-        }
-
-        if (event.value === OdfTypes.Map) {
+        } else if (kind === OdfTypes.Map) {
             this.value = {
-                kind: this.value.kind,
+                kind,
                 keyType: { kind: OdfTypes.String },
                 valueType: { kind: OdfTypes.String },
             } as DataSchemaMapField;
-        }
-
-        if (event.value === OdfTypes.Struct) {
+        } else if (kind === OdfTypes.Struct) {
             this.value = {
-                kind: this.value.kind,
+                kind,
                 fields: [],
             } as DataSchemaStructField;
         }

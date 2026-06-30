@@ -77,9 +77,7 @@ describe("TypeEditorComponent", () => {
     function selectKind(kind: OdfTypes): void {
         const opt = TYPES_OPTIONS_LIST.find((o) => o.value === kind);
         if (!opt) throw new Error(`No type option for kind: ${kind}`);
-        const ed = editor();
-        ed.value = { kind } as DataSchemaTypeField;
-        ed.changeEditorType(opt);
+        editor().changeEditorType(opt);
     }
 
     // ---------------------------------------------------------------------------

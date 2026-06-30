@@ -43,6 +43,7 @@ export const PRIMITIVES_TYPES: OdfTypes[] = [
     OdfTypes.Int8,
     OdfTypes.Int16,
     OdfTypes.Int32,
+    OdfTypes.Int64,
     OdfTypes.UInt8,
     OdfTypes.UInt16,
     OdfTypes.UInt32,

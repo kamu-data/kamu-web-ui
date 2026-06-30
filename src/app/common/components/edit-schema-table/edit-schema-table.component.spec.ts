@@ -11,6 +11,7 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
@@ -126,7 +127,8 @@ describe("EditSchemaTableComponent", () => {
             await table.editField("ts");
             fixture.detectChanges();
             // Set the type at the component level (contract — no ng-select interaction)
-            const editorComponent = fixture.debugElement.children[0].componentInstance as EditSchemaTableComponent;
+            const editorComponent = fixture.debugElement.query(By.directive(EditSchemaTableComponent))
+                .componentInstance as EditSchemaTableComponent;
             editorComponent.typeChangeHandle({ kind: OdfTypes.Int64 });
             fixture.detectChanges();
             await table.save();

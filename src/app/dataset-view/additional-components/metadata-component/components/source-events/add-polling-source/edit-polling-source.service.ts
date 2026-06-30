@@ -13,9 +13,9 @@ import { Observable } from "rxjs";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { parse } from "yaml";
 
-import { normalizeSchemaFields } from "@common/helpers/data-schema.helpers";
 import { MetadataManifestFormat } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
 
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
@@ -55,6 +55,7 @@ export class EditPollingSourceService {
         sectionForm: FormGroup,
         editFormValue: AddPollingSourceEditFormType,
         groupName: SourcesSection,
+        datasetInfo: MaybeNull<DatasetInfo>,
     ): void {
         switch (groupName) {
             case SetPollingSourceSection.FETCH: {
@@ -62,7 +63,7 @@ export class EditPollingSourceService {
                 break;
             }
             case SetPollingSourceSection.READ: {
-                this.patchReadStep(sectionForm, editFormValue);
+                this.patchReadStep(sectionForm, editFormValue, datasetInfo);
                 break;
             }
             case SetPollingSourceSection.MERGE: {
@@ -83,7 +84,11 @@ export class EditPollingSourceService {
         }
     }
 
-    private patchReadStep(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
+    private patchReadStep(
+        sectionForm: FormGroup,
+        editFormValue: AddPollingSourceEditFormType,
+        datasetInfo: MaybeNull<DatasetInfo>,
+    ): void {
         sectionForm.patchValue({ ...editFormValue.read });
         if ([ReadKind.JSON, ReadKind.ND_JSON].includes(editFormValue.read.kind)) {
             sectionForm.patchValue({
@@ -102,10 +107,13 @@ export class EditPollingSourceService {
                 jsonKind: editFormValue.read.kind,
             });
         }
-        // TODO(Phase 5): use normalizeSchemaFields once read.schema type is tightened
-        if (editFormValue.read.schema) {
+        if (datasetInfo) {
             const schemaControl = sectionForm.get("schema");
-            schemaControl?.setValue(normalizeSchemaFields(editFormValue.read.schema));
+            if (schemaControl) {
+                this.blockService
+                    .getPollingSourceSchemaFields(datasetInfo)
+                    .subscribe((fields: DataSchemaField[]) => schemaControl.setValue(fields));
+            }
         }
     }
 

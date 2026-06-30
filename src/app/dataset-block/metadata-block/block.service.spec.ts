@@ -12,8 +12,10 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 
 import { DatasetApi } from "@api/dataset.api";
+import { DatasetBlocksByEventTypeQuery, MetadataEventType, MetadataManifestFormat } from "@api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery, TEST_BLOCK_HASH } from "@api/mock/dataset.mock";
 import { MaybeUndefined } from "@interface/app.types";
+import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { MetadataBlockInfo } from "src/app/dataset-block/metadata-block/metadata-block.types";
@@ -49,5 +51,180 @@ describe("BlockService", () => {
             });
 
         expect(metadataBlock$.closed).toBeTrue();
+    });
+
+    describe("getPollingSourceSchemaFields", () => {
+        const odfJsonContent = JSON.stringify({
+            fields: [
+                { name: "id", type: { kind: "Int32" } },
+                { name: "name", type: { kind: "String" } },
+            ],
+        });
+
+        function mockProjection(schemaContent: string | null): DatasetBlocksByEventTypeQuery {
+            return {
+                datasets: {
+                    byOwnerAndName: {
+                        metadata: {
+                            metadataProjection: [
+                                {
+                                    __typename: "MetadataBlockExtended",
+                                    encoded: null,
+                                    event: {
+                                        __typename: "SetPollingSource",
+                                        read: {
+                                            __typename: "ReadStepCsv",
+                                            schema: schemaContent
+                                                ? {
+                                                      __typename: "DataSchema",
+                                                      content: schemaContent,
+                                                      format: "ODF_JSON" as never,
+                                                  }
+                                                : null,
+                                        } as never,
+                                        fetch: {} as never,
+                                        merge: {} as never,
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                },
+            } as DatasetBlocksByEventTypeQuery;
+        }
+
+        it("should extract DataSchemaField[] from a GQL SetPollingSource event", () => {
+            const spy = spyOn(datasetApi, "getBlocksByEventType").and.returnValue(of(mockProjection(odfJsonContent)));
+            const expected: DataSchemaField[] = [
+                { name: "id", type: { kind: OdfTypes.Int32 } },
+                { name: "name", type: { kind: OdfTypes.String } },
+            ];
+
+            let result: DataSchemaField[] = [];
+            service
+                .getPollingSourceSchemaFields({
+                    accountName: mockDatasetInfo.accountName,
+                    datasetName: mockDatasetInfo.datasetName,
+                })
+                .subscribe((fields) => (result = fields));
+
+            expect(spy).toHaveBeenCalledWith(
+                jasmine.objectContaining({
+                    eventTypes: [MetadataEventType.SetPollingSource],
+                    encoding: MetadataManifestFormat.Yaml,
+                }),
+            );
+            expect(result).toEqual(expected);
+        });
+
+        it("should return [] when the block has no schema", () => {
+            spyOn(datasetApi, "getBlocksByEventType").and.returnValue(of(mockProjection(null)));
+
+            let result: DataSchemaField[] = [{ name: "sentinel", type: { kind: OdfTypes.String } }];
+            service
+                .getPollingSourceSchemaFields({
+                    accountName: mockDatasetInfo.accountName,
+                    datasetName: mockDatasetInfo.datasetName,
+                })
+                .subscribe((fields) => (result = fields));
+
+            expect(result).toEqual([]);
+        });
+
+        it("should return [] when metadataProjection is empty", () => {
+            const emptyQuery: DatasetBlocksByEventTypeQuery = {
+                datasets: { byOwnerAndName: { metadata: { metadataProjection: [] } } },
+            } as DatasetBlocksByEventTypeQuery;
+            spyOn(datasetApi, "getBlocksByEventType").and.returnValue(of(emptyQuery));
+
+            let result: DataSchemaField[] = [{ name: "sentinel", type: { kind: OdfTypes.String } }];
+            service
+                .getPollingSourceSchemaFields({
+                    accountName: mockDatasetInfo.accountName,
+                    datasetName: mockDatasetInfo.datasetName,
+                })
+                .subscribe((fields) => (result = fields));
+
+            expect(result).toEqual([]);
+        });
+    });
+
+    describe("getAddPushSourceSchemaFields", () => {
+        const odfJsonContent = JSON.stringify({
+            fields: [{ name: "amount", type: { kind: "Float64" } }],
+        });
+
+        function mockPushProjection(sourceName: string, schemaContent: string | null): DatasetBlocksByEventTypeQuery {
+            return {
+                datasets: {
+                    byOwnerAndName: {
+                        metadata: {
+                            metadataProjection: [
+                                {
+                                    __typename: "MetadataBlockExtended",
+                                    encoded: null,
+                                    event: {
+                                        __typename: "AddPushSource",
+                                        sourceName,
+                                        read: {
+                                            __typename: "ReadStepCsv",
+                                            schema: schemaContent
+                                                ? {
+                                                      __typename: "DataSchema",
+                                                      content: schemaContent,
+                                                      format: "ODF_JSON" as never,
+                                                  }
+                                                : null,
+                                        } as never,
+                                        merge: {} as never,
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                },
+            } as DatasetBlocksByEventTypeQuery;
+        }
+
+        it("should extract DataSchemaField[] from a matching AddPushSource event", () => {
+            const spy = spyOn(datasetApi, "getBlocksByEventType").and.returnValue(
+                of(mockPushProjection("my-source", odfJsonContent)),
+            );
+            const expected: DataSchemaField[] = [{ name: "amount", type: { kind: OdfTypes.Float64 } }];
+
+            let result: DataSchemaField[] = [];
+            service
+                .getAddPushSourceSchemaFields({
+                    accountName: mockDatasetInfo.accountName,
+                    datasetName: mockDatasetInfo.datasetName,
+                    sourceName: "my-source",
+                })
+                .subscribe((fields) => (result = fields));
+
+            expect(spy).toHaveBeenCalledWith(
+                jasmine.objectContaining({
+                    eventTypes: [MetadataEventType.AddPushSource],
+                    encoding: MetadataManifestFormat.Yaml,
+                }),
+            );
+            expect(result).toEqual(expected);
+        });
+
+        it("should return [] when sourceName does not match", () => {
+            spyOn(datasetApi, "getBlocksByEventType").and.returnValue(
+                of(mockPushProjection("other-source", odfJsonContent)),
+            );
+
+            let result: DataSchemaField[] = [{ name: "sentinel", type: { kind: OdfTypes.String } }];
+            service
+                .getAddPushSourceSchemaFields({
+                    accountName: mockDatasetInfo.accountName,
+                    datasetName: mockDatasetInfo.datasetName,
+                    sourceName: "my-source",
+                })
+                .subscribe((fields) => (result = fields));
+
+            expect(result).toEqual([]);
+        });
     });
 });

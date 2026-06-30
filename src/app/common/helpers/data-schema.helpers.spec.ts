@@ -5,7 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { normalizeSchemaFields, odfType2String, schemaFieldsToObjectForm } from "@common/helpers/data-schema.helpers";
+import {
+    extractSchemaFromReadStep,
+    normalizeSchemaFields,
+    odfType2String,
+    schemaFieldsToObjectForm,
+} from "@common/helpers/data-schema.helpers";
 import { DataSchemaField, DataSchemaTypeField, OdfTypes } from "@interface/dataset-schema.interface";
 
 describe("odfType2String", () => {
@@ -153,5 +158,38 @@ describe("schemaFieldsToObjectForm", () => {
     it("should produce an object form that round-trips through normalizeSchemaFields", () => {
         const fields: DataSchemaField[] = [{ name: "id", type: { kind: OdfTypes.Int32 } }];
         expect(normalizeSchemaFields(schemaFieldsToObjectForm(fields))).toEqual(fields);
+    });
+});
+
+describe("extractSchemaFromReadStep", () => {
+    const odfJsonContent = JSON.stringify({
+        fields: [
+            { name: "id", type: { kind: "Int32" } },
+            { name: "name", type: { kind: "String" } },
+        ],
+    });
+
+    it("should parse ODF_JSON content into DataSchemaField[]", () => {
+        const readStep = { schema: { content: odfJsonContent } };
+        expect(extractSchemaFromReadStep(readStep)).toEqual([
+            { name: "id", type: { kind: OdfTypes.Int32 } },
+            { name: "name", type: { kind: OdfTypes.String } },
+        ]);
+    });
+
+    it("should return [] when schema is null", () => {
+        expect(extractSchemaFromReadStep({ schema: null })).toEqual([]);
+    });
+
+    it("should return [] when schema content is empty string", () => {
+        expect(extractSchemaFromReadStep({ schema: { content: "" } })).toEqual([]);
+    });
+
+    it("should return [] when readStep is null", () => {
+        expect(extractSchemaFromReadStep(null)).toEqual([]);
+    });
+
+    it("should return [] when readStep is undefined", () => {
+        expect(extractSchemaFromReadStep(undefined)).toEqual([]);
     });
 });

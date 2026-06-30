@@ -5723,7 +5723,7 @@ export type DatasetBlocksByEventTypeQuery = {
                     encoded?: { __typename?: "EncodedBlock"; content: string } | null;
                     event:
                         | { __typename?: "AddData" }
-                        | { __typename?: "AddPushSource"; sourceName: string }
+                        | ({ __typename?: "AddPushSource" } & AddPushSourceEventFragment)
                         | { __typename?: "DisablePollingSource" }
                         | { __typename?: "DisablePushSource" }
                         | { __typename?: "ExecuteTransform" }
@@ -5732,7 +5732,7 @@ export type DatasetBlocksByEventTypeQuery = {
                         | { __typename?: "SetDataSchema" }
                         | { __typename?: "SetInfo" }
                         | { __typename?: "SetLicense" }
-                        | { __typename?: "SetPollingSource" }
+                        | ({ __typename?: "SetPollingSource" } & SetPollingSourceEventFragment)
                         | { __typename?: "SetTransform" }
                         | { __typename?: "SetVocab" };
                 }>;
@@ -11055,15 +11055,16 @@ export const DatasetBlocksByEventTypeDocument = gql`
                             content
                         }
                         event {
-                            ... on AddPushSource {
-                                sourceName
-                            }
+                            ...SetPollingSourceEvent
+                            ...AddPushSourceEvent
                         }
                     }
                 }
             }
         }
     }
+    ${SetPollingSourceEventFragmentDoc}
+    ${AddPushSourceEventFragmentDoc}
 `;
 
 @Injectable({

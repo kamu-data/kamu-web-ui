@@ -74,7 +74,7 @@ describe("EditPollingSourceService", () => {
             headers: [],
         };
         const groupName = SetPollingSourceSection.FETCH;
-        service.patchFormValues(sectionFetchForm, editFormValue, groupName);
+        service.patchFormValues(sectionFetchForm, editFormValue, groupName, null);
         expect(sectionFetchForm.value.headers?.length).toEqual(0);
         expect(sectionFetchForm.value.url).toEqual(result.url);
         expect(sectionFetchForm.value.eventTime).toEqual(result.eventTime);
@@ -114,7 +114,7 @@ describe("EditPollingSourceService", () => {
             eventTime: { pattern: null, timestampFormat: null },
             headers: [{ name: "test_name", value: "test_value" }],
         };
-        service.patchFormValues(sectionFetchForm, editFormValue, groupName);
+        service.patchFormValues(sectionFetchForm, editFormValue, groupName, null);
         expect(sectionFetchForm.value.headers?.length).toEqual(1);
         expect(sectionFetchForm.value.url).toEqual(result.url);
         expect(sectionFetchForm.value.eventTime).toEqual(result.eventTime);
@@ -160,25 +160,25 @@ describe("EditPollingSourceService", () => {
             args: ["arg1"],
         };
         const groupName = SetPollingSourceSection.FETCH;
-        service.patchFormValues(sectionFetchForm, editFormValue, groupName);
+        service.patchFormValues(sectionFetchForm, editFormValue, groupName, null);
         expect(sectionFetchForm.value.image).toEqual(result.image);
         expect(sectionFetchForm.value.command as string[]).toEqual(result.command);
         expect(sectionFetchForm.value.args as string[]).toEqual(result.args);
     });
 
-    it("should be check patch form with read CSV step with schema", () => {
+    it("should patch read form CSV kind without schema when datasetInfo is null", () => {
         const sectionReadForm = new FormGroup({
             kind: new FormControl(ReadKind.CSV),
             schema: new FormControl([]),
         });
         const editFormValue = {
             fetch: { kind: FetchKind.CONTAINER, image: "test_image", env: [], command: ["-a"], args: ["arg1"] },
-            read: { kind: ReadKind.CSV, schema: [{ name: "id", type: { kind: "String" } }] },
+            read: { kind: ReadKind.CSV, schema: [] },
             merge: { kind: MergeKind.APPEND },
         } as unknown as AddPollingSourceEditFormType;
-        const groupName = SetPollingSourceSection.READ;
-        service.patchFormValues(sectionReadForm, editFormValue, groupName);
-        expect(sectionReadForm.value.schema?.length).toEqual(1);
+        service.patchFormValues(sectionReadForm, editFormValue, SetPollingSourceSection.READ, null);
+        expect(sectionReadForm.value.kind).toEqual(ReadKind.CSV);
+        expect(sectionReadForm.value.schema).toEqual([]);
     });
 
     it("should be check patch form with merge CSV step with schema", () => {
@@ -198,7 +198,7 @@ describe("EditPollingSourceService", () => {
             primaryKey: ["id", "test"],
             compareColumns: ["id"],
         };
-        service.patchFormValues(sectionMergeForm, editFormValue, groupName);
+        service.patchFormValues(sectionMergeForm, editFormValue, groupName, null);
         expect(sectionMergeForm.value.kind).toEqual(result.kind);
         expect(sectionMergeForm.value.primaryKey?.length).toEqual(result.primaryKey.length);
         expect(sectionMergeForm.value.compareColumns?.length).toEqual(result.compareColumns.length);

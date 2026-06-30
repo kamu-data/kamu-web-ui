@@ -150,6 +150,19 @@ export function schemaFieldsToObjectForm(fields: DataSchemaField[]): DatasetSche
     return { fields };
 }
 
+/**
+ * Extracts and normalizes `DataSchemaField[]` from a GQL read-step's
+ * `schema(format: ODF_JSON)` field.  Returns `[]` when the field is absent
+ * or empty so callers never receive `null`/`undefined`.
+ */
+export function extractSchemaFromReadStep(
+    readStep: { schema?: { content: string } | null } | null | undefined,
+): DataSchemaField[] {
+    const content = readStep?.schema?.content;
+    if (!content) return [];
+    return normalizeSchemaFields(parseSchemaFromJson(content));
+}
+
 export function schemaEditAsDataRows(schema: DataSchemaField[]): DataSchemaField[] {
     return schema.map((x) => {
         return {

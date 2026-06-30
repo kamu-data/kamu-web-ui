@@ -6,6 +6,7 @@
  */
 
 import { inject, Injectable } from "@angular/core";
+import { FormGroup } from "@angular/forms";
 
 import { Observable } from "rxjs";
 
@@ -13,6 +14,7 @@ import { parse } from "yaml";
 
 import { MetadataManifestFormat } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
 
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
@@ -38,5 +40,13 @@ export class EditAddPushSourceService {
             sourceName,
             encoding: MetadataManifestFormat.Yaml,
         });
+    }
+
+    public patchSchemaField(readForm: FormGroup, info: DatasetInfo, sourceName: string): void {
+        const schemaControl = readForm.get("schema");
+        if (!schemaControl) return;
+        this.blockService
+            .getAddPushSourceSchemaFields({ ...info, sourceName })
+            .subscribe((fields: DataSchemaField[]) => schemaControl.setValue(fields));
     }
 }

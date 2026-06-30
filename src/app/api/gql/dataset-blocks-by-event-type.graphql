@@ -12,9 +12,8 @@ query datasetBlocksByEventType(
             content
           }
           event {
-            ... on AddPushSource {
-              sourceName
-            }
+            ...SetPollingSourceEvent
+            ...AddPushSourceEvent
           }
         }
       }

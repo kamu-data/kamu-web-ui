@@ -14,13 +14,11 @@ import { extractSchemaFromReadStep } from "@common/helpers/data-schema.helpers";
 import { DatasetApi } from "@api/dataset.api";
 import {
     AddPushSource,
-    AddPushSourceEventFragment,
     GetMetadataBlockQuery,
     MetadataBlockExtended,
     MetadataBlockFragment,
     MetadataEventType,
     MetadataManifestFormat,
-    SetPollingSourceEventFragment,
 } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
@@ -117,16 +115,13 @@ export class BlockService {
         datasetName: string;
     }): Observable<DataSchemaField[]> {
         return this.datasetApi
-            .getBlocksByEventType({
-                ...params,
-                eventTypes: [MetadataEventType.SetPollingSource],
-                encoding: MetadataManifestFormat.Yaml,
-            })
+            .getSchemaFieldsByEventType({ ...params, eventTypes: [MetadataEventType.SetPollingSource] })
             .pipe(
                 map((data) => {
                     const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection ?? [];
                     if (!blocks.length) return [];
-                    const event = blocks[0].event as SetPollingSourceEventFragment;
+                    const event = blocks[0].event;
+                    if (event.__typename !== "SetPollingSource") return [];
                     return extractSchemaFromReadStep(event.read);
                 }),
             );
@@ -138,19 +133,14 @@ export class BlockService {
         sourceName: string;
     }): Observable<DataSchemaField[]> {
         return this.datasetApi
-            .getBlocksByEventType({
-                ...params,
-                eventTypes: [MetadataEventType.AddPushSource],
-                encoding: MetadataManifestFormat.Yaml,
-            })
+            .getSchemaFieldsByEventType({ ...params, eventTypes: [MetadataEventType.AddPushSource] })
             .pipe(
                 map((data) => {
                     const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection ?? [];
-                    const block = blocks.find(
-                        (b) => b.event.__typename === "AddPushSource" && b.event.sourceName === params.sourceName,
-                    );
+                    const block = blocks.find((b) => b.event.__typename === "AddPushSource");
                     if (!block) return [];
-                    const event = block.event as AddPushSourceEventFragment;
+                    const event = block.event;
+                    if (event.__typename !== "AddPushSource") return [];
                     return extractSchemaFromReadStep(event.read);
                 }),
             );

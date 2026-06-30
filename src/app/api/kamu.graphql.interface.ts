@@ -5703,14 +5703,14 @@ export type GetDatasetBasicsWithPermissionsQuery = {
     };
 };
 
-export type DatasetBlocksByEventTypeQueryVariables = Exact<{
+export type DatasetBlocksEncodedByEventTypeQueryVariables = Exact<{
     accountName: Scalars["AccountName"]["input"];
     datasetName: Scalars["DatasetName"]["input"];
     eventTypes: Array<MetadataEventType> | MetadataEventType;
     encoding: MetadataManifestFormat;
 }>;
 
-export type DatasetBlocksByEventTypeQuery = {
+export type DatasetBlocksEncodedByEventTypeQuery = {
     __typename?: "Query";
     datasets: {
         __typename?: "Datasets";
@@ -5721,6 +5721,28 @@ export type DatasetBlocksByEventTypeQuery = {
                 metadataProjection: Array<{
                     __typename?: "MetadataBlockExtended";
                     encoded?: { __typename?: "EncodedBlock"; content: string } | null;
+                }>;
+            };
+        } | null;
+    };
+};
+
+export type DatasetBlocksSchemaByEventTypeQueryVariables = Exact<{
+    accountName: Scalars["AccountName"]["input"];
+    datasetName: Scalars["DatasetName"]["input"];
+    eventTypes: Array<MetadataEventType> | MetadataEventType;
+}>;
+
+export type DatasetBlocksSchemaByEventTypeQuery = {
+    __typename?: "Query";
+    datasets: {
+        __typename?: "Datasets";
+        byOwnerAndName?: {
+            __typename?: "Dataset";
+            metadata: {
+                __typename?: "DatasetMetadata";
+                metadataProjection: Array<{
+                    __typename?: "MetadataBlockExtended";
                     event:
                         | { __typename?: "AddData" }
                         | ({ __typename?: "AddPushSource" } & AddPushSourceEventFragment)
@@ -11040,8 +11062,8 @@ export class GetDatasetBasicsWithPermissionsGQL extends Apollo.Query<
         super(apollo);
     }
 }
-export const DatasetBlocksByEventTypeDocument = gql`
-    query datasetBlocksByEventType(
+export const DatasetBlocksEncodedByEventTypeDocument = gql`
+    query datasetBlocksEncodedByEventType(
         $accountName: AccountName!
         $datasetName: DatasetName!
         $eventTypes: [MetadataEventType!]!
@@ -11054,6 +11076,36 @@ export const DatasetBlocksByEventTypeDocument = gql`
                         encoded(encoding: $encoding) {
                             content
                         }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class DatasetBlocksEncodedByEventTypeGQL extends Apollo.Query<
+    DatasetBlocksEncodedByEventTypeQuery,
+    DatasetBlocksEncodedByEventTypeQueryVariables
+> {
+    document = DatasetBlocksEncodedByEventTypeDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const DatasetBlocksSchemaByEventTypeDocument = gql`
+    query datasetBlocksSchemaByEventType(
+        $accountName: AccountName!
+        $datasetName: DatasetName!
+        $eventTypes: [MetadataEventType!]!
+    ) {
+        datasets {
+            byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+                metadata {
+                    metadataProjection(eventTypes: $eventTypes) {
                         event {
                             ...SetPollingSourceEvent
                             ...AddPushSourceEvent
@@ -11070,11 +11122,11 @@ export const DatasetBlocksByEventTypeDocument = gql`
 @Injectable({
     providedIn: "root",
 })
-export class DatasetBlocksByEventTypeGQL extends Apollo.Query<
-    DatasetBlocksByEventTypeQuery,
-    DatasetBlocksByEventTypeQueryVariables
+export class DatasetBlocksSchemaByEventTypeGQL extends Apollo.Query<
+    DatasetBlocksSchemaByEventTypeQuery,
+    DatasetBlocksSchemaByEventTypeQueryVariables
 > {
-    document = DatasetBlocksByEventTypeDocument;
+    document = DatasetBlocksSchemaByEventTypeDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

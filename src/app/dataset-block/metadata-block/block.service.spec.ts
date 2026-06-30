@@ -12,7 +12,7 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 
 import { DatasetApi } from "@api/dataset.api";
-import { DatasetBlocksByEventTypeQuery, MetadataEventType, MetadataManifestFormat } from "@api/kamu.graphql.interface";
+import { DatasetBlocksSchemaByEventTypeQuery, MetadataEventType } from "@api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery, TEST_BLOCK_HASH } from "@api/mock/dataset.mock";
 import { MaybeUndefined } from "@interface/app.types";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
@@ -61,7 +61,7 @@ describe("BlockService", () => {
             ],
         });
 
-        function mockProjection(schemaContent: string | null): DatasetBlocksByEventTypeQuery {
+        function mockProjection(schemaContent: string | null): DatasetBlocksSchemaByEventTypeQuery {
             return {
                 datasets: {
                     byOwnerAndName: {
@@ -69,7 +69,6 @@ describe("BlockService", () => {
                             metadataProjection: [
                                 {
                                     __typename: "MetadataBlockExtended",
-                                    encoded: null,
                                     event: {
                                         __typename: "SetPollingSource",
                                         read: {
@@ -90,11 +89,13 @@ describe("BlockService", () => {
                         },
                     },
                 },
-            } as DatasetBlocksByEventTypeQuery;
+            } as DatasetBlocksSchemaByEventTypeQuery;
         }
 
         it("should extract DataSchemaField[] from a GQL SetPollingSource event", () => {
-            const spy = spyOn(datasetApi, "getBlocksByEventType").and.returnValue(of(mockProjection(odfJsonContent)));
+            const spy = spyOn(datasetApi, "getSchemaFieldsByEventType").and.returnValue(
+                of(mockProjection(odfJsonContent)),
+            );
             const expected: DataSchemaField[] = [
                 { name: "id", type: { kind: OdfTypes.Int32 } },
                 { name: "name", type: { kind: OdfTypes.String } },
@@ -109,16 +110,13 @@ describe("BlockService", () => {
                 .subscribe((fields) => (result = fields));
 
             expect(spy).toHaveBeenCalledWith(
-                jasmine.objectContaining({
-                    eventTypes: [MetadataEventType.SetPollingSource],
-                    encoding: MetadataManifestFormat.Yaml,
-                }),
+                jasmine.objectContaining({ eventTypes: [MetadataEventType.SetPollingSource] }),
             );
             expect(result).toEqual(expected);
         });
 
         it("should return [] when the block has no schema", () => {
-            spyOn(datasetApi, "getBlocksByEventType").and.returnValue(of(mockProjection(null)));
+            spyOn(datasetApi, "getSchemaFieldsByEventType").and.returnValue(of(mockProjection(null)));
 
             let result: DataSchemaField[] = [{ name: "sentinel", type: { kind: OdfTypes.String } }];
             service
@@ -132,10 +130,11 @@ describe("BlockService", () => {
         });
 
         it("should return [] when metadataProjection is empty", () => {
-            const emptyQuery: DatasetBlocksByEventTypeQuery = {
-                datasets: { byOwnerAndName: { metadata: { metadataProjection: [] } } },
-            } as DatasetBlocksByEventTypeQuery;
-            spyOn(datasetApi, "getBlocksByEventType").and.returnValue(of(emptyQuery));
+            spyOn(datasetApi, "getSchemaFieldsByEventType").and.returnValue(
+                of({
+                    datasets: { byOwnerAndName: { metadata: { metadataProjection: [] } } },
+                } as unknown as DatasetBlocksSchemaByEventTypeQuery),
+            );
 
             let result: DataSchemaField[] = [{ name: "sentinel", type: { kind: OdfTypes.String } }];
             service
@@ -154,7 +153,7 @@ describe("BlockService", () => {
             fields: [{ name: "amount", type: { kind: "Float64" } }],
         });
 
-        function mockPushProjection(sourceName: string, schemaContent: string | null): DatasetBlocksByEventTypeQuery {
+        function mockPushProjection(schemaContent: string | null): DatasetBlocksSchemaByEventTypeQuery {
             return {
                 datasets: {
                     byOwnerAndName: {
@@ -162,10 +161,9 @@ describe("BlockService", () => {
                             metadataProjection: [
                                 {
                                     __typename: "MetadataBlockExtended",
-                                    encoded: null,
                                     event: {
                                         __typename: "AddPushSource",
-                                        sourceName,
+                                        sourceName: "my-source",
                                         read: {
                                             __typename: "ReadStepCsv",
                                             schema: schemaContent
@@ -183,12 +181,12 @@ describe("BlockService", () => {
                         },
                     },
                 },
-            } as DatasetBlocksByEventTypeQuery;
+            } as DatasetBlocksSchemaByEventTypeQuery;
         }
 
-        it("should extract DataSchemaField[] from a matching AddPushSource event", () => {
-            const spy = spyOn(datasetApi, "getBlocksByEventType").and.returnValue(
-                of(mockPushProjection("my-source", odfJsonContent)),
+        it("should extract DataSchemaField[] from an AddPushSource event", () => {
+            const spy = spyOn(datasetApi, "getSchemaFieldsByEventType").and.returnValue(
+                of(mockPushProjection(odfJsonContent)),
             );
             const expected: DataSchemaField[] = [{ name: "amount", type: { kind: OdfTypes.Float64 } }];
 
@@ -202,17 +200,16 @@ describe("BlockService", () => {
                 .subscribe((fields) => (result = fields));
 
             expect(spy).toHaveBeenCalledWith(
-                jasmine.objectContaining({
-                    eventTypes: [MetadataEventType.AddPushSource],
-                    encoding: MetadataManifestFormat.Yaml,
-                }),
+                jasmine.objectContaining({ eventTypes: [MetadataEventType.AddPushSource] }),
             );
             expect(result).toEqual(expected);
         });
 
-        it("should return [] when sourceName does not match", () => {
-            spyOn(datasetApi, "getBlocksByEventType").and.returnValue(
-                of(mockPushProjection("other-source", odfJsonContent)),
+        it("should return [] when metadataProjection is empty", () => {
+            spyOn(datasetApi, "getSchemaFieldsByEventType").and.returnValue(
+                of({
+                    datasets: { byOwnerAndName: { metadata: { metadataProjection: [] } } },
+                } as unknown as DatasetBlocksSchemaByEventTypeQuery),
             );
 
             let result: DataSchemaField[] = [{ name: "sentinel", type: { kind: OdfTypes.String } }];

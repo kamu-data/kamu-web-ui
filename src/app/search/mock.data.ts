@@ -1293,9 +1293,9 @@ export const mockParseSetPollingSourceEventFromYamlToObject: AddPollingSourceEdi
             kind: EventTimeSourceKind.FROM_METADATA,
         },
     },
-    // `read` mirrors the exact output of `parseEventFromYaml`, which does not emit `schema`.
-    // The cast keeps the value assignable to the (schema-required) form type without inventing a
-    // key the parser never produces. TODO(Phase 5): once `read.schema` is retyped, drop the cast.
+    // `parseEventFromYaml` only produces what is in the YAML; `schema` is never present because
+    // the schema control is populated separately via GQL (see `patchReadStep`). The cast is
+    // intentional: this mock tests the raw YAML-parse output, not a fully-patched form value.
     read: {
         kind: ReadKind.CSV,
         separator: ",",

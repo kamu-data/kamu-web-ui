@@ -169,24 +169,13 @@ describe("EditPollingSourceService", () => {
     it("should be check patch form with read CSV step with schema", () => {
         const sectionReadForm = new FormGroup({
             kind: new FormControl(ReadKind.CSV),
-            schema: new FormArray([]),
+            schema: new FormControl([]),
         });
         const editFormValue = {
-            fetch: {
-                kind: FetchKind.CONTAINER,
-                image: "test_image",
-                env: [],
-                command: ["-a"],
-                args: ["arg1"],
-            },
-            read: {
-                kind: ReadKind.CSV,
-                schema: { fields: [{ name: "id", type: "INT" }] },
-            },
-            merge: {
-                kind: MergeKind.APPEND,
-            },
-        };
+            fetch: { kind: FetchKind.CONTAINER, image: "test_image", env: [], command: ["-a"], args: ["arg1"] },
+            read: { kind: ReadKind.CSV, schema: [{ name: "id", type: { kind: "String" } }] },
+            merge: { kind: MergeKind.APPEND },
+        } as unknown as AddPollingSourceEditFormType;
         const groupName = SetPollingSourceSection.READ;
         service.patchFormValues(sectionReadForm, editFormValue, groupName);
         expect(sectionReadForm.value.schema?.length).toEqual(1);
@@ -199,23 +188,10 @@ describe("EditPollingSourceService", () => {
             compareColumns: new FormArray([]),
         });
         const editFormValue = {
-            fetch: {
-                kind: FetchKind.CONTAINER,
-                image: "test_image",
-                env: [],
-                command: ["-a"],
-                args: ["arg1"],
-            },
-            read: {
-                kind: ReadKind.CSV,
-                schema: [{ name: "id", type: "BIGINT" }],
-            },
-            merge: {
-                kind: MergeKind.SNAPSHOT,
-                primaryKey: ["id", "test"],
-                compareColumns: ["id"],
-            },
-        };
+            fetch: { kind: FetchKind.CONTAINER, image: "test_image", env: [], command: ["-a"], args: ["arg1"] },
+            read: { kind: ReadKind.CSV, schema: [{ name: "id", type: { kind: "Int64" } }] },
+            merge: { kind: MergeKind.SNAPSHOT, primaryKey: ["id", "test"], compareColumns: ["id"] },
+        } as unknown as AddPollingSourceEditFormType;
         const groupName = SetPollingSourceSection.MERGE;
         const result = {
             kind: MergeKind.SNAPSHOT,

@@ -6,8 +6,7 @@
  */
 
 import { SqlQueryStep, Transform } from "@api/kamu.graphql.interface";
-
-import { SchemaType } from "../../form-components/schema-field/schema-field.component";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 export enum SetPollingSourceSection {
     READ = "read",
@@ -148,11 +147,7 @@ export interface AddPollingSourceEditFormType {
         kind: ReadKind;
         jsonKind?: ReadKind;
         subPath?: string;
-        schema:
-            | SchemaType[]
-            | {
-                  fields: SchemaType[];
-              };
+        schema: DataSchemaField[];
 
         separator?: string;
         encoding?: string;

@@ -20,6 +20,7 @@ import {
 import { BaseComponent } from "@common/components/base.component";
 import { getValidators } from "@common/helpers/data.helpers";
 import { MaybeNull } from "@interface/app.types";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import { ArrayKeysFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/array-keys-field/array-keys-field.component";
 import { CacheFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/cache-field/cache-field.component";
@@ -137,7 +138,9 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
 
     private initForm(kind: string): void {
         this.sectionFormData[kind].controls.forEach((item: JsonFormControl) => {
-            if (this.isArrayControl(item.type)) {
+            if (item.type === this.controlType.SCHEMA) {
+                this.sectionForm.addControl(item.name, this.fb.control<DataSchemaField[]>([]));
+            } else if (this.isArrayControl(item.type)) {
                 this.sectionForm.addControl(item.name, this.fb.array([]));
             } else if (item.type === this.controlType.EVENT_TIME) {
                 this.sectionForm.addControl(

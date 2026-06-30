@@ -8,9 +8,7 @@
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormArray, FormControl, FormGroup } from "@angular/forms";
-
-import { RxwebValidators } from "@rxweb/reactive-form-validators";
+import { FormControl, FormGroup } from "@angular/forms";
 
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
@@ -32,12 +30,7 @@ describe("SchemaFieldComponent", () => {
         fixture = TestBed.createComponent(SchemaFieldComponent);
         component = fixture.componentInstance;
         component.form = new FormGroup({
-            schema: new FormArray([
-                new FormGroup({
-                    name: new FormControl("id", [RxwebValidators.unique(), RxwebValidators.required()]),
-                    type: new FormControl("BIGINT", [RxwebValidators.required()]),
-                }),
-            ]),
+            schema: new FormControl([]),
         });
         component.controlName = "schema";
         fixture.detectChanges();

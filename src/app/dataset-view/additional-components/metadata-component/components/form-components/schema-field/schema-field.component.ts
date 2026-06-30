@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from "@angular/material/table";
 
@@ -17,19 +17,6 @@ import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-ic
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
-
-export interface SchemaType {
-    name: string;
-    type: string;
-}
-
-export function replaceFieldByIndex(
-    fields: DataSchemaField[],
-    indexToReplace: number,
-    newFieldData: DataSchemaField,
-): DataSchemaField[] {
-    return fields.map((field, index) => (index === indexToReplace ? { ...newFieldData } : field));
-}
 
 @Component({
     selector: "app-schema-field",
@@ -49,18 +36,12 @@ export function replaceFieldByIndex(
         EditSchemaTableComponent,
     ],
 })
-export class SchemaFieldComponent extends BaseField implements OnInit {
-    public schemaFields: DataSchemaField[] = [];
-
-    private cdr = inject(ChangeDetectorRef);
-
-    public ngOnInit(): void {
-        this.schemaFields = (this.form.controls.schema.value as DataSchemaField[]) ?? [];
+export class SchemaFieldComponent extends BaseField {
+    public get schemaControl(): FormControl<DataSchemaField[]> {
+        return this.form.get(this.controlName) as FormControl<DataSchemaField[]>;
     }
 
     public onFieldsChange(fields: DataSchemaField[]): void {
-        this.schemaFields = fields;
-        this.form.controls.schema.setValue(fields);
-        this.cdr.detectChanges();
+        this.schemaControl.setValue(fields);
     }
 }

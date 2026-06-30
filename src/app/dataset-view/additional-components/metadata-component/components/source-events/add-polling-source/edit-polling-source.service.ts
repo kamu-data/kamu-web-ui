@@ -13,6 +13,7 @@ import { Observable } from "rxjs";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { parse } from "yaml";
 
+import { normalizeSchemaFields } from "@common/helpers/data-schema.helpers";
 import { MetadataManifestFormat } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
@@ -29,8 +30,6 @@ import {
     TopicsType,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { SourcesSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
-
-import { SchemaType } from "../../form-components/schema-field/schema-field.component";
 
 @Injectable({
     providedIn: "root",
@@ -85,11 +84,6 @@ export class EditPollingSourceService {
     }
 
     private patchReadStep(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
-        const schemaFields = editFormValue.read.schema as { fields: SchemaType[] };
-        if (editFormValue.read.schema && (editFormValue.read.schema as { fields: SchemaType[] }).fields.length) {
-            editFormValue.read.schema = schemaFields.fields;
-        }
-
         sectionForm.patchValue({ ...editFormValue.read });
         if ([ReadKind.JSON, ReadKind.ND_JSON].includes(editFormValue.read.kind)) {
             sectionForm.patchValue({
@@ -108,17 +102,10 @@ export class EditPollingSourceService {
                 jsonKind: editFormValue.read.kind,
             });
         }
-        const ddlSchemaControl = sectionForm.controls.schema as FormArray;
-        const readSchema = editFormValue.read.schema as SchemaType[];
-        if (!(ddlSchemaControl.value as SchemaType[]).length && editFormValue.read.schema && readSchema.length) {
-            readSchema.forEach((item) => {
-                ddlSchemaControl.push(
-                    this.fb.group({
-                        name: [item.name],
-                        type: [item.type],
-                    }),
-                );
-            });
+        // TODO(Phase 5): use normalizeSchemaFields once read.schema type is tightened
+        if (editFormValue.read.schema) {
+            const schemaControl = sectionForm.get("schema");
+            schemaControl?.setValue(normalizeSchemaFields(editFormValue.read.schema));
         }
     }
 

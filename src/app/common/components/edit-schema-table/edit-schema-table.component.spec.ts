@@ -146,6 +146,26 @@ describe("EditSchemaTableComponent", () => {
             // No spurious emission — original list unchanged
             expect(host.lastEmitted).toEqual([stringField("id"), stringField("name")]);
         });
+
+        // Scenario 12 — edit-while-adding discards blank row, target row enters edit mode
+        it("scenario 12: clicking edit on another row while a blank add row is pending discards the blank row", async () => {
+            await setup([stringField("id"), stringField("name")]);
+            await table.startAddField();
+            fixture.detectChanges();
+            // 3 rows: id, name, and the provisional blank row
+            expect(await table.getRowCount()).toBe(3);
+
+            // Click edit on "id" — the blank add row should be discarded
+            await table.editField("id");
+            fixture.detectChanges();
+
+            // Provisional row gone — back to 2
+            expect(await table.getRowCount()).toBe(2);
+            expect(await table.getFieldNames()).toEqual(["id", "name"]);
+            // No {name:""} leak in emitted value
+            const emitted = host.lastEmitted ?? [];
+            expect(emitted.every((f) => f.name !== "")).toBeTrue();
+        });
     });
 
     // ---------------------------------------------------------------------------
@@ -222,6 +242,25 @@ describe("EditSchemaTableComponent", () => {
             expect(names).toContain("shipping");
             const shippingTable = await table.nestedTable("shipping");
             expect(await shippingTable.getFieldNames()).toContain("carrier");
+        });
+    });
+
+    // ---------------------------------------------------------------------------
+    // Scenario 19 — trackBy stability under transient duplicate names
+    // ---------------------------------------------------------------------------
+
+    describe("scenario 19: trackBy stable under transient duplicate names", () => {
+        it("both rows remain visible while a rename temporarily collides with an existing name", async () => {
+            await setup([stringField("alpha"), stringField("beta")]);
+
+            // Open edit on "alpha" and type "beta" (collision) without saving
+            await table.editField("alpha");
+            fixture.detectChanges();
+            await table.setNameInput("beta");
+            fixture.detectChanges();
+
+            // Both rows still present in the DOM — trackBy must not collapse them
+            expect(await table.getRowCount()).toBe(2);
         });
     });
 

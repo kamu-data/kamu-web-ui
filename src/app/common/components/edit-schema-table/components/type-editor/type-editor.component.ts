@@ -53,6 +53,10 @@ export class TypeEditorComponent {
     public readonly TIMEZONE_OPTIONS_LIST: TimezoneTimestampOption[] = TIMEZONE_OPTIONS_LIST;
     public readonly OdfTypes: typeof OdfTypes = OdfTypes;
 
+    // Retains the last-known value for each complex kind so switching away and back
+    // within the same edit session restores the prior sub-config instead of losing it.
+    private readonly complexCache = new Map<OdfTypes, DataSchemaTypeField>();
+
     public get schemaTimeField(): DataSchemaTimeField {
         return this.value as DataSchemaTimeField;
     }
@@ -63,9 +67,12 @@ export class TypeEditorComponent {
 
     public changeEditorType(event: DataSchemaTypeOption): void {
         const kind = event.value;
+        const complexKinds = [OdfTypes.Struct, OdfTypes.List, OdfTypes.Map, OdfTypes.Option];
 
-        // Default: strip any complex-type-specific fields; covers all simple/primitive kinds.
-        this.value = { kind } as DataSchemaTypeField;
+        // Cache the current value before switching away from a complex kind.
+        if (complexKinds.includes(this.value?.kind)) {
+            this.complexCache.set(this.value.kind, this.value);
+        }
 
         if ([OdfTypes.Time, OdfTypes.Duration].includes(kind)) {
             this.value = {
@@ -79,26 +86,29 @@ export class TypeEditorComponent {
                 timezone: "UTC",
             };
         } else if (kind === OdfTypes.Option) {
-            this.value = {
+            this.value = (this.complexCache.get(OdfTypes.Option) as DataSchemaOptionField | undefined) ?? {
                 kind,
                 inner: { kind: OdfTypes.String },
-            } as DataSchemaOptionField;
+            };
         } else if (kind === OdfTypes.List) {
-            this.value = {
+            this.value = (this.complexCache.get(OdfTypes.List) as DataSchemaListField | undefined) ?? {
                 kind,
                 itemType: { kind: OdfTypes.String },
-            } as DataSchemaListField;
+            };
         } else if (kind === OdfTypes.Map) {
-            this.value = {
+            this.value = (this.complexCache.get(OdfTypes.Map) as DataSchemaMapField | undefined) ?? {
                 kind,
                 keyType: { kind: OdfTypes.String },
                 valueType: { kind: OdfTypes.String },
-            } as DataSchemaMapField;
+            };
         } else if (kind === OdfTypes.Struct) {
-            this.value = {
+            this.value = (this.complexCache.get(OdfTypes.Struct) as DataSchemaStructField | undefined) ?? {
                 kind,
                 fields: [],
-            } as DataSchemaStructField;
+            };
+        } else {
+            // Primitive / scalar kinds
+            this.value = { kind } as DataSchemaTypeField;
         }
         this.typeChange.emit(this.value);
     }

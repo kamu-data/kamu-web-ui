@@ -309,6 +309,57 @@ describe("TypeEditorComponent", () => {
     });
 
     // ---------------------------------------------------------------------------
+    // Scenario 6 & 7 — type-switch round-trip preserves nested config (Fix A)
+    // ---------------------------------------------------------------------------
+
+    describe("scenario 6 & 7: type-switch round-trip preserves nested config", () => {
+        // Scenario 6 — Struct → scalar → Struct: children survive
+        it("scenario 6: Struct→String→Struct restores the original fields", () => {
+            // Start with a Struct with one field
+            host.value = {
+                kind: OdfTypes.Struct,
+                fields: [{ name: "sku", type: { kind: OdfTypes.String } }],
+            } as DataSchemaStructField;
+            fixture.detectChanges();
+
+            // Switch to String (scalar)
+            selectKind(OdfTypes.String);
+            fixture.detectChanges();
+            expect(host.lastEmitted?.kind).toBe(OdfTypes.String);
+
+            // Switch back to Struct
+            selectKind(OdfTypes.Struct);
+            fixture.detectChanges();
+
+            const emitted = host.lastEmitted as DataSchemaStructField;
+            expect(emitted.kind).toBe(OdfTypes.Struct);
+            expect(emitted.fields.map((f) => f.name)).toContain("sku");
+        });
+
+        // Scenario 7 — List<Struct> itemType survives a kind round-trip switch
+        it("scenario 7: List itemType survives switching away to String and back to List", () => {
+            host.value = {
+                kind: OdfTypes.List,
+                itemType: { kind: OdfTypes.Struct, fields: [{ name: "qty", type: { kind: OdfTypes.Int32 } }] },
+            } as DataSchemaListField;
+            fixture.detectChanges();
+
+            // Switch away to String
+            selectKind(OdfTypes.String);
+            fixture.detectChanges();
+
+            // Switch back to List
+            selectKind(OdfTypes.List);
+            fixture.detectChanges();
+
+            const emitted = host.lastEmitted as DataSchemaListField;
+            expect(emitted.kind).toBe(OdfTypes.List);
+            expect(emitted.itemType.kind).toBe(OdfTypes.Struct);
+            expect((emitted.itemType as DataSchemaStructField).fields.map((f) => f.name)).toContain("qty");
+        });
+    });
+
+    // ---------------------------------------------------------------------------
     // ng-select wiring (smoke) — may be quarantined if flaky in CI
     // ---------------------------------------------------------------------------
 

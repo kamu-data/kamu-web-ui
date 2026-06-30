@@ -132,7 +132,8 @@ export class EditSchemaTableComponent implements OnChanges {
 
     public editRow(element: DataSchemaField, index: number): void {
         if (this.editingRow && !this.editingRow.name) {
-            this.saveEditing(this.editingIndex as number);
+            // Blank provisional add row — discard it instead of attempting a no-op save.
+            this.cancelEditing();
             return;
         }
         this.editingRow = { ...element, type: { ...element.type } };
@@ -184,8 +185,8 @@ export class EditSchemaTableComponent implements OnChanges {
         }
     }
 
-    public trackByFieldName(_index: number, field: DataSchemaField): string {
-        return field.name;
+    public trackByFieldName(index: number, _field: DataSchemaField): number {
+        return index;
     }
 
     public nestedTablePath(fieldName: string): string {

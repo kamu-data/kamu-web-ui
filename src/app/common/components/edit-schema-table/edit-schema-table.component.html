@@ -1,14 +1,10 @@
-<div [id]="idTable" style="width: 100%; overflow: auto" class="dynamic-table">
-    <!-- <pre>{{ this.dataSource.data | json }}</pre> -->
-    <!-- <pre>{{ editingRow | json }}</pre>
-    <pre>Struct: {{ editingStructRow | json }}</pre> -->
-    <!-- <pre> {{ form.controls.schema.value | json }}</pre> -->
-    <table
-        mat-table
-        [dataSource]="dataSource"
-        #table
-        *ngIf="currentSchemaView === EditSchemaView.SCHEMA; else editStructTemplate"
-    >
+<div
+    style="width: 100%; overflow: auto"
+    class="dynamic-table"
+    [class.nested-table]="depth > 0"
+    [attr.data-test-id]="tablePath"
+>
+    <table mat-table [dataSource]="dataSource" #table>
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>name</th>
             <td mat-cell *matCellDef="let element; let rowIndex = index">
@@ -20,11 +16,11 @@
                         [(ngModel)]="editingRow.name"
                         type="text"
                         class="form-control"
+                        [attr.data-test-id]="tablePath + ':name-input'"
                     />
                 </div>
-
                 <ng-template #viewName>
-                    {{ element.name }}
+                    <span [attr.data-test-id]="tablePath + ':field-name:' + element.name">{{ element.name }}</span>
                 </ng-template>
             </td>
         </ng-container>
@@ -38,19 +34,19 @@
                         [value]="editingRow!.type"
                         (typeChange)="typeChangeHandle($event)"
                     />
-
                     <div class="action-buttons d-flex ms-4 align-items-center">
                         <button
                             class="d-flex align-items-center justify-content-center edit-button mt-1"
                             (click)="saveEditing(rowIndex)"
                             [disabled]="!editingRow?.name"
+                            [attr.data-test-id]="tablePath + ':save-field'"
                         >
                             <mat-icon class="action-button text-muted" svgIcon="check" />
                         </button>
-
                         <button
                             class="d-flex align-items-center justify-content-center delete-button mt-1"
                             (click)="cancelEditing()"
+                            [attr.data-test-id]="tablePath + ':cancel-edit'"
                         >
                             <mat-icon class="action-button text-muted" svgIcon="close"></mat-icon>
                         </button>
@@ -64,25 +60,33 @@
                             <button
                                 class="d-flex align-items-center justify-content-center edit-button"
                                 (click)="editRow(element, rowIndex); $event.stopPropagation()"
+                                [attr.data-test-id]="tablePath + ':edit-field:' + element.name"
                             >
                                 <mat-icon class="action-button text-muted" svgIcon="pencil" />
                             </button>
-
                             <button
                                 class="d-flex align-items-center justify-content-center delete-button"
                                 (click)="deleteRow(rowIndex); $event.stopPropagation()"
+                                [attr.data-test-id]="tablePath + ':delete-field:' + element.name"
                             >
                                 <mat-icon class="action-button text-muted" svgIcon="delete"></mat-icon>
                             </button>
                         </div>
                     </div>
+                    <!-- Inline nested table for Struct fields -->
+                    <div *ngIf="isStruct(element)" class="nested-struct-container">
+                        <app-edit-schema-table
+                            [fields]="structFields(element)"
+                            [depth]="depth + 1"
+                            [tablePath]="nestedTablePath(element.name)"
+                            (fieldsChange)="onNestedFieldsChange(rowIndex, $event)"
+                        />
+                    </div>
                 </ng-template>
             </td>
         </ng-container>
 
-        <ng-container *ngIf="hasTableHeader">
-            <tr class="table-header-background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        </ng-container>
+        <tr class="table-header-background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr
             mat-row
             *matRowDef="let row; columns: displayedColumns; let rowIndex = index"
@@ -90,56 +94,15 @@
         ></tr>
     </table>
 
-    <div class="mt-3" *ngIf="currentSchemaView === EditSchemaView.SCHEMA">
-        <ng-container>
-            <button
-                class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center me-3"
-                data-test-id="add-schema-field"
-                (click)="startAddField()"
-                [disabled]="disabledAddFieldButton"
-            >
-                <mat-icon class="text-muted fs-4 d-block">add</mat-icon>
-                <span class="fs-12 me-2 d-block"> Add field</span>
-            </button>
-        </ng-container>
-    </div>
-
-    <ng-template #editStructTemplate let-rowIndex="rowIndex">
-        <ul
-            ngbNav
-            #nav="ngbNav"
-            [(activeId)]="currentSchemaView"
-            class="nav-tabs"
-            (navChange)="onNavChange($event, rowIndex)"
+    <div class="mt-3">
+        <button
+            class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center me-3"
+            [attr.data-test-id]="tablePath + ':add-field'"
+            (click)="startAddField()"
+            [disabled]="disabledAddFieldButton"
         >
-            <li [ngbNavItem]="EditSchemaView.SCHEMA">
-                <button [disabled]="!structFieldName" ngbNavLink>Root</button>
-            </li>
-            <li [ngbNavItem]="EditSchemaView.STRUCT">
-                <button ngbNavLink>{{ editingStructFieldName }}</button>
-                <ng-template ngbNavContent>
-                    <div class="mt-4 mb-2">
-                        <label> Name:</label>
-                        <input
-                            [placeholder]="'Enter name'"
-                            *ngIf="editingStructRow"
-                            [(ngModel)]="editingStructRow.name"
-                            type="text"
-                            class="form-control"
-                        />
-                    </div>
-                    <div class="mt-3">Fields:</div>
-                    <app-edit-schema-table
-                        class="mb-2"
-                        [hasTableHeader]="true"
-                        [columnDescriptors]="[{ columnName: 'name' }, { columnName: 'type' }]"
-                        [dataRows]="structField?.fields ?? []"
-                        [idTable]="'edit-schema-table-inner'"
-                        tableClass="font-monospace"
-                    />
-                </ng-template>
-            </li>
-        </ul>
-        <div [ngbNavOutlet]="nav" class="mt-2"></div>
-    </ng-template>
+            <mat-icon class="text-muted fs-4 d-block">add</mat-icon>
+            <span class="fs-12 me-2 d-block"> Add field</span>
+        </button>
+    </div>
 </div>

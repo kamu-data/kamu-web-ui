@@ -13,8 +13,6 @@ import { MatTableModule } from "@angular/material/table";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 
 import { EditSchemaTableComponent } from "@common/components/edit-schema-table/edit-schema-table.component";
-import { ChangeStructType } from "@common/components/edit-schema-table/edit-schema-table.types";
-import { EditSchemaTableService } from "@common/components/edit-schema-table/service/edit-schema-table.service";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
@@ -55,18 +53,14 @@ export class SchemaFieldComponent extends BaseField implements OnInit {
     public schemaFields: DataSchemaField[] = [];
 
     private cdr = inject(ChangeDetectorRef);
-    private schemaService = inject(EditSchemaTableService);
 
     public ngOnInit(): void {
-        this.schemaFields = this.form.controls.schema.value;
+        this.schemaFields = (this.form.controls.schema.value as DataSchemaField[]) ?? [];
     }
 
-    public onStructFieldsChange(updatedField: ChangeStructType): void {
-        const schema = this.form.controls.schema;
-        const updatedData = replaceFieldByIndex(schema.value, updatedField.index, updatedField.data);
-        schema.setValue(updatedData);
-        this.schemaService.setDataRows(updatedData);
-
+    public onFieldsChange(fields: DataSchemaField[]): void {
+        this.schemaFields = fields;
+        this.form.controls.schema.setValue(fields);
         this.cdr.detectChanges();
     }
 }

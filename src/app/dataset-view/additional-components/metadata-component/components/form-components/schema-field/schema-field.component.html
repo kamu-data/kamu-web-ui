@@ -4,15 +4,5 @@
         <label class="form-label">{{ label }} </label>
     </div>
 
-    <app-edit-schema-table
-        class="mb-2"
-        [hasTableHeader]="true"
-        [columnDescriptors]="[{ columnName: 'name' }, { columnName: 'type' }]"
-        [dataRows]="form.controls.schema.value"
-        [idTable]="'edit-schema-table'"
-        tableClass="font-monospace"
-        (dataRowsChange)="onStructFieldsChange($event)"
-        [form]="form"
-        [controlName]="controlName"
-    />
+    <app-edit-schema-table class="mb-2" [fields]="schemaFields" (fieldsChange)="onFieldsChange($event)" />
 </div>

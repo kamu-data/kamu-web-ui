@@ -28,10 +28,7 @@ describe("EditSchemaTableComponent", () => {
 
         fixture = TestBed.createComponent(EditSchemaTableComponent);
         component = fixture.componentInstance;
-        component.hasTableHeader = true;
-        component.dataRows = [];
-        component.idTable = "test-schema-table";
-        component.columnDescriptors = [{ columnName: "name" }, { columnName: "type" }];
+        component.fields = [];
         fixture.detectChanges();
     });
 

@@ -100,6 +100,17 @@ table {
             }
         }
     }
+
+    .add-field-container {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    &:hover > .add-field-container {
+        opacity: 1;
+        visibility: visible;
+    }
 }
 
 .dynamic-table {

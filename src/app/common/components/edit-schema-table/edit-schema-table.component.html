@@ -32,7 +32,7 @@
                 </div>
                 <ng-template #viewName>
                     <span
-                        class="field-name"
+                        class="field-name pt-2"
                         [class.text-danger]="leafErrorsForField(element.name).length > 0"
                         [attr.data-test-id]="tablePath + ':field-name:' + element.name"
                     >
@@ -97,7 +97,7 @@
                 </div>
 
                 <ng-template #viewType>
-                    <div class="d-flex align-items-center justify-content-between type-view-row pt-2">
+                    <div class="d-flex align-items-center justify-content-between type-view-row pt-1">
                         <div class="truncate-cell">{{ odfType2String(element) }}</div>
                         <div class="action-buttons d-flex">
                             <button

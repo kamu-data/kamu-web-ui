@@ -6,7 +6,15 @@
  */
 
 import { NgIf } from "@angular/common";
-import { ChangeDetectionStrategy, Component, EventEmitter, forwardRef, HostBinding, Input, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    forwardRef,
+    HostBinding,
+    Input,
+    Output,
+} from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
 import { NgSelectModule } from "@ng-select/ng-select";

@@ -228,7 +228,10 @@ export class EditSchemaTableComponent implements OnChanges {
         return table.path.join(".");
     }
 
-    private collectNestedStructTables(type: DataSchemaTypeField, path: string[]): Omit<NestedStructTable, "tablePath">[] {
+    private collectNestedStructTables(
+        type: DataSchemaTypeField,
+        path: string[],
+    ): Omit<NestedStructTable, "tablePath">[] {
         switch (type.kind) {
             case OdfTypes.Struct:
                 return [{ fields: type.fields as DataSchemaField[], path: [...path, "fields"] }];

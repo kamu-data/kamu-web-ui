@@ -6,14 +6,14 @@
  */
 
 export enum SchemaValidationErrorCode {
-    EMPTY_NAME = "EMPTY_NAME",
-    INVALID_NAME = "INVALID_NAME",
-    DUPLICATE_NAME = "DUPLICATE_NAME",
+    EMPTY_NAME = "Name is required",
+    INVALID_NAME = "Invalid characters used",
+    DUPLICATE_NAME = "This name is already taken",
 }
 
 export enum SchemaWarningCode {
-    SYSTEM_COLUMN_NAME = "SYSTEM_COLUMN_NAME",
-    SQL_RESERVED_KEYWORD = "SQL_RESERVED_KEYWORD",
+    SYSTEM_COLUMN_NAME = "Matches a system column name",
+    SQL_RESERVED_KEYWORD = "SQL reserved keyword",
 }
 
 export interface SchemaValidationError {

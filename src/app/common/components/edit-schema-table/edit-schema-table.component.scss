@@ -9,7 +9,9 @@ table {
     }
 
     .truncate-cell {
-        max-width: 535px;
+        max-width: 100%;
+        min-width: 0;
+        flex: 1 1 auto;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -36,6 +38,7 @@ table {
 
 .action-buttons {
     padding: 2px;
+    flex-shrink: 0;
 
     .action-button {
         display: flex;
@@ -104,33 +107,54 @@ table {
     .add-field-container {
         opacity: 0;
         visibility: hidden;
-        transition: opacity 0.2s ease-in-out;
+        max-height: 0;
+        margin-top: 0 !important;
+        overflow: hidden;
+        transition:
+            opacity 0.2s ease-in-out,
+            max-height 0.2s ease-in-out,
+            margin-top 0.2s ease-in-out;
     }
 
     &:hover > .add-field-container {
         opacity: 1;
         visibility: visible;
+        max-height: 48px;
+        margin-top: 12px !important;
     }
 }
 
 .dynamic-table {
     table {
         width: 100%;
-        table-layout: fixed;
+        table-layout: auto;
     }
 
     .mat-column-name {
-        width: 30%;
-        max-width: 30%;
+        width: auto;
+        min-width: 96px;
+        max-width: 260px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
 
     .mat-column-type {
-        width: 100px;
-        max-width: 75%;
+        width: 100%;
+        min-width: 0;
     }
+}
+
+.type-editor-row,
+.type-view-row {
+    min-width: 0;
+    width: 100%;
+}
+
+.type-editor-slot {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: visible;
 }
 
 .drag-handle {
@@ -182,8 +206,11 @@ table {
 
 .nested-struct-container {
     margin-top: 8px;
+    margin-bottom: 8px;
     padding-left: 16px;
     border-left: 2px solid $app-color-border-default;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .nested-table {

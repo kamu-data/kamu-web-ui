@@ -1,25 +1,59 @@
 .width-120 {
     width: 120px;
+    min-width: 88px;
+    max-width: 120px;
+    flex-shrink: 1;
 }
 
 .width-60 {
     width: 120px;
+    min-width: 60px;
+    max-width: 120px;
+    flex-shrink: 1;
 }
 
 .width-150 {
     width: 150px;
+    min-width: 100px;
+    max-width: 150px;
+    flex-shrink: 1;
+}
+
+.nested-struct-editor .width-120,
+.nested-struct-editor .width-60 {
+    min-width: 64px;
 }
 
 .custom-border {
     border-left: 2px solid rgb(147 197 253);
     padding-left: 6px;
+    min-width: 0;
 }
 
 .ng-dropdown-panel {
     z-index: 1050;
     position: absolute;
+    width: max-content;
+    min-width: 100%;
+    max-width: 260px;
 }
 
 .nested-struct-editor {
-    min-width: 360px;
+    min-width: 0;
+    width: 100%;
+    flex: 1 1 auto;
+}
+
+.nested-struct-editor ::ng-deep .dynamic-table {
+    min-width: 0;
+}
+
+.type-editor-root {
+    min-width: 0;
+    width: 100%;
+}
+
+.type-editor-kind-row {
+    min-width: 0;
+    row-gap: 4px;
 }

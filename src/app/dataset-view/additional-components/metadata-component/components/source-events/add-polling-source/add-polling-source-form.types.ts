@@ -148,7 +148,11 @@ export interface AddPollingSourceEditFormType {
         kind: ReadKind;
         jsonKind?: ReadKind;
         subPath?: string;
-        schema: DataSchemaField[];
+        schema:
+            | {
+                  fields: DataSchemaField[];
+              }
+            | DataSchemaField[];
 
         separator?: string;
         encoding?: string;

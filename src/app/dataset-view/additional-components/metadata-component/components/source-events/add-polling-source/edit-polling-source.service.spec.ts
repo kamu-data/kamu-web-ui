@@ -173,7 +173,7 @@ describe("EditPollingSourceService", () => {
         });
         const editFormValue: AddPollingSourceEditFormType = {
             fetch: { kind: FetchKind.CONTAINER, image: "test_image", env: [], command: ["-a"], args: ["arg1"] },
-            read: { kind: ReadKind.CSV, schema: [] },
+            read: { kind: ReadKind.CSV, schema: { fields: [] } },
             merge: { kind: MergeKind.APPEND },
         };
         service.patchFormValues(sectionReadForm, editFormValue, SetPollingSourceSection.READ, null);
@@ -189,7 +189,7 @@ describe("EditPollingSourceService", () => {
         });
         const editFormValue = {
             fetch: { kind: FetchKind.CONTAINER, image: "test_image", env: [], command: ["-a"], args: ["arg1"] },
-            read: { kind: ReadKind.CSV, schema: [{ name: "id", type: { kind: "Int64" } }] },
+            read: { kind: ReadKind.CSV, schema: { fields: [{ name: "id", type: { kind: "Int64" } }] } },
             merge: { kind: MergeKind.SNAPSHOT, primaryKey: ["id", "test"], compareColumns: ["id"] },
         } as unknown as AddPollingSourceEditFormType;
         const groupName = SetPollingSourceSection.MERGE;

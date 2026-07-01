@@ -236,6 +236,8 @@ export function registerMatSvgIcons(): void {
         "json",
         "audio",
         "database",
+        "delete",
+        "pencil",
     ];
     icons.forEach((icon: string) => {
         matIconRegistry.addSvgIcon(icon, domSanitizer.bypassSecurityTrustResourceUrl(`/assets/svg/${icon}.svg`));

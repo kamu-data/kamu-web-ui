@@ -89,7 +89,9 @@ export class EditPollingSourceService {
         editFormValue: AddPollingSourceEditFormType,
         datasetInfo: MaybeNull<DatasetInfo>,
     ): void {
-        sectionForm.patchValue({ ...editFormValue.read });
+        const { schema, ...rest } = editFormValue.read;
+        sectionForm.patchValue({ schema: (schema as { fields: DataSchemaField[] })?.fields });
+        sectionForm.patchValue({ ...rest });
         if ([ReadKind.JSON, ReadKind.ND_JSON].includes(editFormValue.read.kind)) {
             sectionForm.patchValue({
                 ...editFormValue.read,
@@ -109,6 +111,7 @@ export class EditPollingSourceService {
         }
         if (datasetInfo) {
             const schemaControl = sectionForm.get("schema");
+
             if (schemaControl) {
                 this.blockService
                     .getPollingSourceSchemaFields(datasetInfo)

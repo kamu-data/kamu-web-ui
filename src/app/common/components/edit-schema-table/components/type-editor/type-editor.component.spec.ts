@@ -5,12 +5,14 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { NgSelectComponent } from "@ng-select/ng-select";
 
-import { findElement } from "@common/helpers/base-test.helpers.spec";
+import { findElement, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import {
     DataSchemaListField,
     DataSchemaMapField,
@@ -62,7 +64,10 @@ describe("TypeEditorComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [TestHostComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(TestHostComponent);
         host = fixture.componentInstance;

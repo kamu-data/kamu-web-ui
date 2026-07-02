@@ -1,7 +1,7 @@
 <div class="d-flex align-items-start flex-column type-editor-root" [class.custom-border]="depth > 0">
     <div class="d-flex flex-row align-items-center flex-wrap type-editor-kind-row">
         <ng-select
-            class="width-120"
+            class="width-110"
             [ngModel]="selectedKind"
             [items]="TYPES_OPTIONS_LIST"
             bindLabel="label"
@@ -20,7 +20,7 @@
         <ng-container *ngIf="selectedKind === 'Timestamp'">
             <span class="text-muted gap-2">&nbsp;&lt;&nbsp;</span>
             <ng-select
-                class="width-120"
+                class="width-110"
                 [ngModel]="schemaTimeField.unit"
                 [items]="UNIT_OPTIONS_LIST"
                 bindLabel="label"
@@ -54,7 +54,7 @@
         <ng-container *ngIf="selectedKind === OdfTypes.Time || selectedKind === OdfTypes.Duration">
             <span class="text-muted gap-2">&nbsp;&lt;&nbsp;</span>
             <ng-select
-                class="width-120"
+                class="width-110"
                 [ngModel]="schemaTimeField.unit"
                 [items]="UNIT_OPTIONS_LIST"
                 bindLabel="label"
@@ -75,6 +75,7 @@
                 class="form-check-input"
                 type="checkbox"
                 [ngModel]="optional"
+                [title]="'Optional'"
                 [ngModelOptions]="{ standalone: true }"
                 [attr.data-test-id]="typePath + ':optional'"
                 (ngModelChange)="changeOptional($event)"

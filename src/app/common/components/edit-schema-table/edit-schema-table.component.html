@@ -36,7 +36,7 @@
                         [class.text-danger]="leafErrorsForField(element.name).length > 0"
                         [attr.data-test-id]="tablePath + ':field-name:' + element.name"
                     >
-                        <span class="d-flex align-items-center gap-1">
+                        <span class="truncate-cell-name">
                             {{ element.name }}
                             <mat-icon
                                 *ngIf="leafErrorsForField(element.name).length > 0"
@@ -101,7 +101,7 @@
 
                 <ng-template #viewType>
                     <div class="d-flex align-items-center justify-content-between type-view-row pt-1">
-                        <div class="truncate-cell">{{ odfType2String(element) }}</div>
+                        <div class="truncate-cell-type">{{ odfType2String(element) }}</div>
                         <div class="action-buttons d-flex">
                             <button
                                 class="d-flex align-items-center justify-content-center edit-button"
@@ -121,7 +121,7 @@
                     </div>
                     <div
                         *ngFor="let nestedTable of nestedStructTables(element); trackBy: trackByNestedStructPath"
-                        class="nested-struct-container"
+                        class="nested-struct-container mb-2"
                     >
                         <app-edit-schema-table
                             [fields]="nestedTable.fields"

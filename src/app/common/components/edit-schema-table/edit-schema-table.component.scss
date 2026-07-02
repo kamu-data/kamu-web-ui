@@ -130,18 +130,18 @@ table {
         table-layout: auto;
     }
 
-    .mat-column-name {
-        width: auto;
-        min-width: 96px;
-        max-width: 260px;
+    .truncate-cell-name {
+        max-width: 125px;
+        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: nowrap;
     }
 
-    .mat-column-type {
-        width: 100%;
-        min-width: 0;
+    .truncate-cell-type {
+        max-width: 380px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
@@ -206,9 +206,6 @@ table {
 
 .nested-struct-container {
     margin-top: 8px;
-    margin-bottom: 8px;
-    padding-left: 16px;
-    border-left: 2px solid $app-color-border-default;
     min-width: 0;
 }
 
@@ -230,4 +227,15 @@ table {
     line-height: 14px;
     vertical-align: middle;
     flex-shrink: 0;
+}
+
+.add-field-container button {
+    font-family: sans-serif;
+}
+
+.dynamic-table th.mat-column-name,
+.dynamic-table td.mat-column-name {
+    width: 170px;
+    min-width: 170px;
+    max-width: 170px;
 }

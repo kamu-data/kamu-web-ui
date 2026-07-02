@@ -5,7 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from "@angular/material/table";
@@ -44,6 +45,8 @@ import { schemaValidator } from "./schema-field.component.helpers";
     ],
 })
 export class SchemaFieldComponent extends BaseField implements OnInit {
+    private readonly cdr = inject(ChangeDetectorRef);
+
     public get schemaControl(): FormControl<DataSchemaField[]> {
         return this.form.get(this.controlName) as FormControl<DataSchemaField[]>;
     }
@@ -61,6 +64,9 @@ export class SchemaFieldComponent extends BaseField implements OnInit {
     public ngOnInit(): void {
         this.schemaControl.addValidators(schemaValidator);
         this.schemaControl.updateValueAndValidity();
+        this.schemaControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.cdr.markForCheck();
+        });
     }
 
     public onFieldsChange(fields: DataSchemaField[]): void {

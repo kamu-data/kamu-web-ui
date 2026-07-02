@@ -16,7 +16,7 @@
     >
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>name</th>
-            <td mat-cell *matCellDef="let element; let rowIndex = index">
+            <td mat-cell *matCellDef="let element; let rowIndex = index" class="font-monospace">
                 <div *ngIf="editingIndex === rowIndex; else viewName">
                     <input
                         appAutofocus
@@ -32,30 +32,33 @@
                 </div>
                 <ng-template #viewName>
                     <span
-                        class="field-name pt-2"
+                        class="field-name pt-2 d-flex align-items-center w-100"
                         [class.text-danger]="leafErrorsForField(element.name).length > 0"
                         [attr.data-test-id]="tablePath + ':field-name:' + element.name"
                     >
+                        <span class="d-flex align-items-center gap-1">
+                            {{ element.name }}
+                            <mat-icon
+                                *ngIf="leafErrorsForField(element.name).length > 0"
+                                class="inline-icon text-danger"
+                                [matTooltip]="errorTooltip(element.name)"
+                                svgIcon="close"
+                            />
+                            <mat-icon
+                                *ngIf="warningsForField(element.name).length > 0"
+                                class="inline-icon text-warning"
+                                [matTooltip]="warningTooltip(element.name)"
+                                >warning</mat-icon
+                            >
+                        </span>
+
                         <mat-icon
                             *ngIf="editingIndex !== rowIndex"
-                            class="drag-handle"
+                            class="drag-handle text-muted ms-auto"
                             [class.drag-handle-disabled]="dragDisabled"
                             cdkDragHandle
                             [attr.data-test-id]="tablePath + ':drag-handle:' + (element.name || '#' + rowIndex)"
                             >drag_indicator</mat-icon
-                        >
-                        {{ element.name }}
-                        <mat-icon
-                            *ngIf="leafErrorsForField(element.name).length > 0"
-                            class="inline-icon text-danger"
-                            [matTooltip]="errorTooltip(element.name)"
-                            svgIcon="close"
-                        />
-                        <mat-icon
-                            *ngIf="warningsForField(element.name).length > 0"
-                            class="inline-icon text-warning"
-                            [matTooltip]="warningTooltip(element.name)"
-                            >warning</mat-icon
                         >
                     </span>
                 </ng-template>
@@ -64,7 +67,7 @@
 
         <ng-container matColumnDef="type">
             <th mat-header-cell *matHeaderCellDef>type</th>
-            <td mat-cell *matCellDef="let element; let rowIndex = index">
+            <td mat-cell *matCellDef="let element; let rowIndex = index" class="font-monospace">
                 <div
                     *ngIf="editingIndex === rowIndex; else viewType"
                     class="d-flex justify-content-between py-3 type-editor-row"

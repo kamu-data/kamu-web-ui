@@ -143,7 +143,9 @@ export class TypeEditorComponent {
     public changeOptional(optional: boolean): void {
         if (optional === this.optional) return;
 
-        this.value = optional ? { kind: OdfTypes.Option, inner: this.value } : (this.value as DataSchemaOptionField).inner;
+        this.value = optional
+            ? { kind: OdfTypes.Option, inner: this.value }
+            : (this.value as DataSchemaOptionField).inner;
         this.typeChange.emit(this.value);
     }
 

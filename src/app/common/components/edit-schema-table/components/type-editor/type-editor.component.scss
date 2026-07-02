@@ -6,7 +6,7 @@
 }
 
 .width-60 {
-    width: 120px;
+    width: 65px;
     min-width: 60px;
     max-width: 120px;
     flex-shrink: 1;
@@ -56,4 +56,16 @@
 .type-editor-kind-row {
     min-width: 0;
     row-gap: 4px;
+}
+
+.optional-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 32px;
+    white-space: nowrap;
+}
+
+.optional-toggle .form-check-input {
+    margin-top: 0;
 }

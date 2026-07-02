@@ -165,18 +165,30 @@ describe("TypeEditorComponent", () => {
     // ---------------------------------------------------------------------------
 
     describe("Option type", () => {
-        it("emits Option<String> on switch to Option", () => {
-            selectKind(OdfTypes.Option);
+        it("does not expose Option as a kind option", () => {
+            expect(TYPES_OPTIONS_LIST.some((option) => option.value === OdfTypes.Option)).toBeFalse();
+        });
+
+        it("emits Option<String> when Optional is enabled", () => {
+            editor().changeOptional(true);
             fixture.detectChanges();
             const emitted = host.lastEmitted as DataSchemaOptionField;
             expect(emitted.kind).toBe(OdfTypes.Option);
-            expect(emitted.inner).toBeDefined();
+            expect(emitted.inner).toEqual({ kind: OdfTypes.String });
         });
 
-        it("emits updated inner type via typeOptionChange", () => {
+        it("emits the inner type when Optional is disabled", () => {
             host.value = { kind: OdfTypes.Option, inner: { kind: OdfTypes.String } };
             fixture.detectChanges();
-            editor().typeOptionChange({ kind: OdfTypes.Int64 });
+            editor().changeOptional(false);
+            fixture.detectChanges();
+            expect(host.lastEmitted).toEqual({ kind: OdfTypes.String });
+        });
+
+        it("keeps the Option wrapper when changing the selected base type", () => {
+            host.value = { kind: OdfTypes.Option, inner: { kind: OdfTypes.String } };
+            fixture.detectChanges();
+            selectKind(OdfTypes.Int64);
             fixture.detectChanges();
             const emitted = host.lastEmitted as DataSchemaOptionField;
             expect(emitted.kind).toBe(OdfTypes.Option);
@@ -307,12 +319,11 @@ describe("TypeEditorComponent", () => {
             expect((emitted.itemType as DataSchemaStructField).fields.map((f) => f.name)).toContain("sku");
         });
 
-        it("Option<List<String>>: switch to Option then set inner to List<String>", () => {
-            selectKind(OdfTypes.Option);
+        it("Option<List<String>>: enable Optional then set base type to List<String>", () => {
+            editor().changeOptional(true);
             fixture.detectChanges();
 
-            // Replace the default Option<String> inner with List<String>.
-            editor().typeOptionChange({ kind: OdfTypes.List, itemType: { kind: OdfTypes.String } });
+            selectKind(OdfTypes.List);
             fixture.detectChanges();
 
             const emitted = host.lastEmitted as DataSchemaOptionField;

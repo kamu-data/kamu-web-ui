@@ -2,7 +2,7 @@
     <div class="d-flex flex-row align-items-center flex-wrap type-editor-kind-row">
         <ng-select
             class="width-120"
-            [ngModel]="value.kind"
+            [ngModel]="selectedKind"
             [items]="TYPES_OPTIONS_LIST"
             bindLabel="label"
             bindValue="value"
@@ -16,11 +16,12 @@
                 </label>
             </ng-template>
         </ng-select>
-        <ng-container *ngIf="value.kind === 'Timestamp'">
+
+        <ng-container *ngIf="selectedKind === 'Timestamp'">
             <span class="text-muted gap-2">&nbsp;&lt;&nbsp;</span>
             <ng-select
                 class="width-120"
-                [(ngModel)]="value.unit"
+                [ngModel]="schemaTimeField.unit"
                 [items]="UNIT_OPTIONS_LIST"
                 bindLabel="label"
                 bindValue="value"
@@ -35,7 +36,7 @@
             <span class="text-muted">&nbsp;,&nbsp;</span>
             <ng-select
                 class="width-60"
-                [(ngModel)]="schemaTimeField.timezone"
+                [ngModel]="schemaTimeField.timezone"
                 [items]="TIMEZONE_OPTIONS_LIST"
                 bindLabel="label"
                 bindValue="value"
@@ -50,11 +51,11 @@
             </ng-select>
             <span class="text-muted">&nbsp;&gt;</span>
         </ng-container>
-        <ng-container *ngIf="value.kind === OdfTypes.Time || value.kind === OdfTypes.Duration">
+        <ng-container *ngIf="selectedKind === OdfTypes.Time || selectedKind === OdfTypes.Duration">
             <span class="text-muted gap-2">&nbsp;&lt;&nbsp;</span>
             <ng-select
                 class="width-120"
-                [(ngModel)]="value.unit"
+                [ngModel]="schemaTimeField.unit"
                 [items]="UNIT_OPTIONS_LIST"
                 bindLabel="label"
                 bindValue="value"
@@ -69,27 +70,25 @@
 
             <span class="text-muted">&nbsp;&gt;</span>
         </ng-container>
+        <label class="form-check optional-toggle mb-0 ms-2">
+            <input
+                class="form-check-input"
+                type="checkbox"
+                [ngModel]="optional"
+                [ngModelOptions]="{ standalone: true }"
+                [attr.data-test-id]="typePath + ':optional'"
+                (ngModelChange)="changeOptional($event)"
+            />
+            <span class="form-check-label fs-12">?</span>
+        </label>
     </div>
 
-    <ng-container *ngIf="value.kind === OdfTypes.Option">
-        <div class="d-flex flex-column mt-2" [class.ms-2]="depth > 0">
-            <span class="text-muted fs-12 d-block">Inner Type</span>
-            <div class="">
-                <app-type-editor
-                    [value]="value.inner"
-                    [depth]="depth + 1"
-                    [typePath]="typePath + '.inner'"
-                    (typeChange)="typeOptionChange($event)"
-                />
-            </div>
-        </div>
-    </ng-container>
-    <ng-container *ngIf="value.kind === OdfTypes.List">
+    <ng-container *ngIf="selectedKind === OdfTypes.List">
         <div class="d-flex flex-column mt-2" [class.ms-2]="depth > 0">
             <span class="text-muted fs-12 d-block">Item Type</span>
             <div>
                 <app-type-editor
-                    [value]="value.itemType"
+                    [value]="schemaListField.itemType"
                     [depth]="depth + 1"
                     [typePath]="typePath + '.item'"
                     (typeChange)="typeListChange($event)"
@@ -97,13 +96,13 @@
             </div>
         </div>
     </ng-container>
-    <ng-container *ngIf="value.kind === OdfTypes.Map">
+    <ng-container *ngIf="selectedKind === OdfTypes.Map">
         <div class="d-flex flex-column mt-2" [class.ms-2]="depth > 0">
             <span class="text-muted fs-12 d-block">Key Type</span>
             <div>
                 <app-type-editor
                     [depth]="depth + 1"
-                    [value]="value.keyType"
+                    [value]="schemaMapField.keyType"
                     [typePath]="typePath + '.key'"
                     (typeChange)="typeMapKeyChange($event)"
                 />
@@ -114,14 +113,14 @@
             <div>
                 <app-type-editor
                     [depth]="depth + 1"
-                    [value]="value.valueType"
+                    [value]="schemaMapField.valueType"
                     [typePath]="typePath + '.value'"
                     (typeChange)="typeMapValueChange($event)"
                 />
             </div>
         </div>
     </ng-container>
-    <ng-container *ngIf="value.kind === OdfTypes.Struct">
+    <ng-container *ngIf="selectedKind === OdfTypes.Struct">
         <div class="nested-struct-editor mt-2" [class.ms-2]="depth > 0">
             <app-edit-schema-table
                 [fields]="schemaStructField.fields"

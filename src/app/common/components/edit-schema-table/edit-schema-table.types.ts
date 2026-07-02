@@ -143,10 +143,6 @@ export const TYPES_OPTIONS_LIST: DataSchemaTypeOption[] = [
         value: OdfTypes.Null,
     },
     {
-        label: OdfTypes.Option,
-        value: OdfTypes.Option,
-    },
-    {
         label: OdfTypes.Struct,
         value: OdfTypes.Struct,
     },

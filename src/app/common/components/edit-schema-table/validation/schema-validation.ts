@@ -116,8 +116,6 @@ export function validateSchemaFields(fields: DataSchemaField[], basePath: string
 
         if (!field.name) {
             errors.push({ path: fieldPath, code: SchemaValidationErrorCode.EMPTY_NAME });
-        } else if (!AppValues.SCHEMA_NAME_PATTERN.test(field.name)) {
-            errors.push({ path: fieldPath, code: SchemaValidationErrorCode.INVALID_NAME });
         } else {
             const lower = field.name.toLowerCase();
             if (seen.has(lower)) {

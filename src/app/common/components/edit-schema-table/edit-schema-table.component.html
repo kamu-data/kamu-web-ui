@@ -38,12 +38,13 @@
                     >
                         <span class="truncate-cell-name">
                             {{ element.name }}
+
                             <mat-icon
                                 *ngIf="leafErrorsForField(element.name).length > 0"
                                 class="inline-icon text-danger"
                                 [matTooltip]="errorTooltip(element.name)"
-                                svgIcon="close"
-                            />
+                                >warning</mat-icon
+                            >
                             <mat-icon
                                 *ngIf="warningsForField(element.name).length > 0"
                                 class="inline-icon text-warning"

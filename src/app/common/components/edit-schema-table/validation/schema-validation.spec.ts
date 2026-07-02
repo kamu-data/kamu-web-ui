@@ -48,14 +48,6 @@ describe("validateSchemaFields", () => {
         expect(errors[0].code).toBe(SchemaValidationErrorCode.EMPTY_NAME);
     });
 
-    it("should return INVALID_NAME error for a name that does not match the pattern", () => {
-        // Names starting with non-alphanumeric are invalid per SCHEMA_NAME_PATTERN
-        const fields: DataSchemaField[] = [field("_invalid")];
-        const errors = validateSchemaFields(fields);
-        expect(errors.length).toBe(1);
-        expect(errors[0].code).toBe(SchemaValidationErrorCode.INVALID_NAME);
-    });
-
     it("should accept a name with spaces (permissive name — valid per SCHEMA_NAME_PATTERN)", () => {
         // SCHEMA_NAME_PATTERN allows spaces after the first character
         const fields: DataSchemaField[] = [field("my field")];

@@ -185,6 +185,20 @@ describe("EditSchemaTableComponent", () => {
             expect(names).not.toContain("id");
         });
 
+        it("saves the current edited row when switching edit mode to another row", async () => {
+            await setup([stringField("id"), stringField("name")]);
+            await table.editField("id");
+            fixture.detectChanges();
+            await table.setNameInput("identifier");
+            fixture.detectChanges();
+
+            await table.editField("name");
+            fixture.detectChanges();
+
+            expect(host.lastEmitted?.map((field) => field.name)).toEqual(["identifier", "name"]);
+            expect(await table.getFieldNames()).toContain("identifier");
+        });
+
         it("type change on editingRow is reflected in the emitted array", async () => {
             await setup([stringField("ts")]);
             // Open edit mode for "ts"
@@ -295,20 +309,11 @@ describe("EditSchemaTableComponent", () => {
                 TypeEditorComponent,
                 (component) => component.typePath === "root:type:c",
             );
-            rootTypeEditor.changeEditorType({ value: OdfTypes.Option, label: OdfTypes.Option });
+            rootTypeEditor.changeOptional(true);
+            rootTypeEditor.changeEditorType({ value: OdfTypes.Struct, label: OdfTypes.Struct });
             fixture.detectChanges();
 
-            const innerTypeEditor = findComponentInstance(
-                fixture,
-                TypeEditorComponent,
-                (component) => component.typePath === "root:type:c.inner",
-            );
-            innerTypeEditor.changeEditorType({ value: OdfTypes.Struct, label: OdfTypes.Struct });
-            fixture.detectChanges();
-
-            const editStructTable = await loader.getHarness(
-                EditSchemaTableHarness.withPath("root:type:c.inner.fields"),
-            );
+            const editStructTable = await loader.getHarness(EditSchemaTableHarness.withPath("root:type:c.fields"));
             await editStructTable.addField("f1");
             fixture.detectChanges();
 

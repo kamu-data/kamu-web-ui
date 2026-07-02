@@ -158,6 +158,8 @@ export class EditSchemaTableComponent implements OnChanges {
             // Blank provisional add row — discard it instead of attempting a no-op save.
             this.cancelEditing();
             return;
+        } else if (this.editingIndex !== null) {
+            this.commitEditingRow();
         }
         this.editingRow = { ...element, type: { ...element.type } };
         this.editingIndex = index;
@@ -226,6 +228,15 @@ export class EditSchemaTableComponent implements OnChanges {
 
     public trackByNestedStructPath(_index: number, table: NestedStructTable): string {
         return table.path.join(".");
+    }
+
+    private commitEditingRow(): void {
+        if (!this.editingRow || this.editingIndex === null) return;
+
+        const saved = this.editingRow;
+        const updated = this.fields.map((field, index) => (index === this.editingIndex ? { ...saved } : field));
+        this.addingField = false;
+        this.fieldsChange.emit(updated);
     }
 
     private collectNestedStructTables(

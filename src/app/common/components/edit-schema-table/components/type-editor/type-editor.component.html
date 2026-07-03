@@ -70,18 +70,18 @@
 
             <span class="text-muted">&nbsp;&gt;</span>
         </ng-container>
-        <label class="form-check optional-toggle mb-0 ms-2">
-            <input
-                class="form-check-input"
-                type="checkbox"
-                [ngModel]="optional"
-                [title]="'Optional'"
-                [ngModelOptions]="{ standalone: true }"
-                [attr.data-test-id]="typePath + ':optional'"
-                (ngModelChange)="changeOptional($event)"
-            />
-            <span class="form-check-label fs-12">?</span>
-        </label>
+        <button
+            type="button"
+            class="optional-toggle ms-2"
+            [class.optional-toggle-active]="optional"
+            title="Optional"
+            role="switch"
+            [attr.aria-checked]="optional"
+            [attr.data-test-id]="typePath + ':optional'"
+            (click)="changeOptional(!optional)"
+        >
+            ?
+        </button>
     </div>
 
     <ng-container *ngIf="selectedKind === OdfTypes.List">

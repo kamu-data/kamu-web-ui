@@ -61,11 +61,32 @@
 .optional-toggle {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    min-height: 32px;
+    justify-content: center;
+    width: 24px;
+    height: 20px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background-color: rgb(13 110 253 / 0.35);
+    color: rgb(255 255 255 / 0.78);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+        background-color 120ms ease,
+        box-shadow 120ms ease,
+        color 120ms ease;
     white-space: nowrap;
 }
 
-.optional-toggle .form-check-input {
-    margin-top: 0;
+.optional-toggle:hover,
+.optional-toggle:focus-visible {
+    color: #ffffff;
+    box-shadow: 0 0 0 2px rgb(13 110 253 / 0.18);
+}
+
+.optional-toggle-active {
+    background-color: #0d6efd;
+    color: #ffffff;
 }

@@ -177,6 +177,24 @@ describe("TypeEditorComponent", () => {
             expect(emitted.inner).toEqual({ kind: OdfTypes.String });
         });
 
+        it("toggles Optional through the UI switch and reflects its accessibility state", () => {
+            const optionalToggle = findElement(fixture, `[data-test-id="root:type:field:optional"]`)
+                .nativeElement as HTMLButtonElement;
+
+            expect(optionalToggle.getAttribute("role")).toBe("switch");
+            expect(optionalToggle.getAttribute("aria-checked")).toBe("false");
+            expect(optionalToggle.classList.contains("optional-toggle-active")).toBeFalse();
+
+            optionalToggle.click();
+            fixture.detectChanges();
+
+            const emitted = host.lastEmitted as DataSchemaOptionField;
+            expect(emitted.kind).toBe(OdfTypes.Option);
+            expect(emitted.inner).toEqual({ kind: OdfTypes.String });
+            expect(optionalToggle.getAttribute("aria-checked")).toBe("true");
+            expect(optionalToggle.classList.contains("optional-toggle-active")).toBeTrue();
+        });
+
         it("emits the inner type when Optional is disabled", () => {
             host.value = { kind: OdfTypes.Option, inner: { kind: OdfTypes.String } };
             fixture.detectChanges();

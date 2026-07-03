@@ -199,6 +199,26 @@ describe("EditSchemaTableComponent", () => {
             expect(await table.getFieldNames()).toContain("identifier");
         });
 
+        it("saves the current edited row type when switching edit mode to another row", async () => {
+            await setup([stringField("id"), stringField("name")]);
+            await table.editField("id");
+            fixture.detectChanges();
+
+            const editorComponent = findComponentInstance(
+                fixture,
+                EditSchemaTableComponent,
+                (component) => component.tablePath === "root",
+            );
+            editorComponent.typeChangeHandle({ kind: OdfTypes.Int64 });
+            fixture.detectChanges();
+
+            await table.editField("name");
+            fixture.detectChanges();
+
+            expect(host.lastEmitted?.[0].type).toEqual({ kind: OdfTypes.Int64 });
+            expect(host.lastEmitted?.[1]).toEqual(stringField("name"));
+        });
+
         it("type change on editingRow is reflected in the emitted array", async () => {
             await setup([stringField("ts")]);
             // Open edit mode for "ts"

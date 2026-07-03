@@ -67,8 +67,8 @@
     padding: 0;
     border: 0;
     border-radius: 999px;
-    background-color: rgb(13 110 253 / 0.35);
-    color: rgb(255 255 255 / 0.78);
+    background-color: rgb(13 110 253 / 35%);
+    color: rgb(255 255 255 / 78%);
     font-size: 12px;
     font-weight: 600;
     line-height: 1;
@@ -82,11 +82,11 @@
 
 .optional-toggle:hover,
 .optional-toggle:focus-visible {
-    color: #ffffff;
-    box-shadow: 0 0 0 2px rgb(13 110 253 / 0.18);
+    color: #fff;
+    box-shadow: 0 0 0 2px rgb(13 110 253 / 18%);
 }
 
 .optional-toggle-active {
     background-color: #0d6efd;
-    color: #ffffff;
+    color: #fff;
 }

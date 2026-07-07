@@ -176,7 +176,12 @@ table {
     pointer-events: none;
 }
 
-.dynamic-table tr:hover > td.mat-column-name .field-name > .drag-handle:not(.drag-handle-disabled) {
+.dynamic-table
+    tr:hover
+    > td.mat-column-type
+    > .type-view-row
+    > .action-buttons
+    > .drag-handle:not(.drag-handle-disabled) {
     opacity: 1;
     visibility: visible;
 }
@@ -240,4 +245,8 @@ table {
     width: 170px;
     min-width: 170px;
     max-width: 170px;
+}
+
+.drag-margin {
+    margin-top: 1px;
 }

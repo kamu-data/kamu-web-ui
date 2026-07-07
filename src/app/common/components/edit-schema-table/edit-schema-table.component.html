@@ -52,15 +52,6 @@
                                 >warning</mat-icon
                             >
                         </span>
-
-                        <mat-icon
-                            *ngIf="editingIndex !== rowIndex"
-                            class="drag-handle text-muted ms-auto"
-                            [class.drag-handle-disabled]="dragDisabled"
-                            cdkDragHandle
-                            [attr.data-test-id]="tablePath + ':drag-handle:' + (element.name || '#' + rowIndex)"
-                            >drag_indicator</mat-icon
-                        >
                     </span>
                 </ng-template>
             </td>
@@ -118,6 +109,14 @@
                             >
                                 <mat-icon class="action-button text-muted" svgIcon="delete"></mat-icon>
                             </button>
+                            <mat-icon
+                                *ngIf="editingIndex !== rowIndex"
+                                class="drag-handle text-muted drag-margin"
+                                [class.drag-handle-disabled]="dragDisabled"
+                                cdkDragHandle
+                                [attr.data-test-id]="tablePath + ':drag-handle:' + (element.name || '#' + rowIndex)"
+                                >drag_indicator</mat-icon
+                            >
                         </div>
                     </div>
                     <div

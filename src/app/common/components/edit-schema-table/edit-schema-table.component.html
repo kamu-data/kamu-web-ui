@@ -128,8 +128,10 @@
                             [fields]="nestedTable.fields"
                             [depth]="depth + 1"
                             [tablePath]="nestedTable.tablePath"
+                            [parentDragDisabled]="dragDisabled"
                             [errors]="nestedErrorsForPath(element.name, nestedTable.path)"
                             (fieldsChange)="onNestedFieldsChange(rowIndex, nestedTable.path, $event)"
+                            (editingStateChange)="onNestedEditingStateChange(nestedTable.tablePath, $event)"
                         />
                     </div>
                 </ng-template>

@@ -72,11 +72,13 @@ export class EditSchemaTableComponent implements OnChanges {
     @Input({ required: true }) public fields: DataSchemaField[] = [];
     @Input() public depth: number = 0;
     @Input() public tablePath: string = "root";
+    @Input() public parentDragDisabled = false;
     /** Hard errors from validateSchemaFields, scoped to this table's path prefix. */
     @Input() public errors: SchemaValidationError[] = [];
     /** Non-blocking warnings from schemaNameWarnings, scoped to this table's path prefix. */
     @Input() public warnings: SchemaWarning[] = [];
     @Output() public fieldsChange = new EventEmitter<DataSchemaField[]>();
+    @Output() public editingStateChange = new EventEmitter<boolean>();
 
     public readonly OdfTypes: typeof OdfTypes = OdfTypes;
 
@@ -87,6 +89,7 @@ export class EditSchemaTableComponent implements OnChanges {
     public editingIndex: MaybeNull<number> = null;
     public addingField = false;
     public editingRow: MaybeNull<DataSchemaField> = null;
+    private readonly nestedEditingTables = new Set<string>();
 
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.fields) {
@@ -100,7 +103,7 @@ export class EditSchemaTableComponent implements OnChanges {
 
     /** Dragging is disabled while any row (including a blank add-row) is being edited. */
     public get dragDisabled(): boolean {
-        return this.editingIndex !== null;
+        return this.parentDragDisabled || this.hasActiveEditing;
     }
 
     public dropField(event: CdkDragDrop<DataSchemaField[]>): void {
@@ -163,6 +166,7 @@ export class EditSchemaTableComponent implements OnChanges {
         }
         this.editingRow = { ...element, type: { ...element.type } };
         this.editingIndex = index;
+        this.emitEditingState();
     }
 
     public deleteRow(rowIndex: number): void {
@@ -180,6 +184,7 @@ export class EditSchemaTableComponent implements OnChanges {
         this.editingRow = null;
         this.editingIndex = null;
         this.fieldsChange.emit(updated);
+        this.emitEditingState();
     }
 
     public cancelEditing(): void {
@@ -193,6 +198,7 @@ export class EditSchemaTableComponent implements OnChanges {
             this.editingRow = null;
             this.editingIndex = null;
         }
+        this.emitEditingState();
     }
 
     public startAddField(): void {
@@ -205,6 +211,7 @@ export class EditSchemaTableComponent implements OnChanges {
         this.editingRow = { ...newField };
         this.editingIndex = updated.length - 1;
         this.fieldsChange.emit(updated);
+        this.emitEditingState();
     }
 
     public typeChangeHandle(event: DataSchemaTypeField): void {
@@ -229,8 +236,25 @@ export class EditSchemaTableComponent implements OnChanges {
         this.fieldsChange.emit(updated);
     }
 
+    public onNestedEditingStateChange(tablePath: string, editing: boolean): void {
+        if (editing) {
+            this.nestedEditingTables.add(tablePath);
+        } else {
+            this.nestedEditingTables.delete(tablePath);
+        }
+        this.emitEditingState();
+    }
+
     public trackByNestedStructPath(_index: number, table: NestedStructTable): string {
         return table.path.join(".");
+    }
+
+    private get hasActiveEditing(): boolean {
+        return this.editingIndex !== null || this.nestedEditingTables.size > 0;
+    }
+
+    private emitEditingState(): void {
+        this.editingStateChange.emit(this.hasActiveEditing);
     }
 
     private commitEditingRow(): void {
@@ -239,6 +263,7 @@ export class EditSchemaTableComponent implements OnChanges {
 
         this.addingField = false;
         this.fieldsChange.emit(updated);
+        this.emitEditingState();
     }
 
     private fieldsWithCommittedEditingRow(): MaybeNull<DataSchemaField[]> {

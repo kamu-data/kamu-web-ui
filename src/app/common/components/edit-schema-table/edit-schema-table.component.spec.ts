@@ -593,6 +593,28 @@ describe("EditSchemaTableComponent", () => {
 
             expect(component.dragDisabled).toBeTrue();
         });
+
+        it("dragDisabled is true for parent and nested tables while a nested row is being edited", async () => {
+            await setup([structField("address", [stringField("street"), stringField("city")]), stringField("id")]);
+            const rootComponent = componentInstanceOf("root");
+            const addressComponent = componentInstanceOf("root.address");
+            const addressTable = await table.nestedTable("address");
+
+            expect(rootComponent.dragDisabled).toBeFalse();
+            expect(addressComponent.dragDisabled).toBeFalse();
+
+            await addressTable.editField("street");
+            fixture.detectChanges();
+
+            expect(rootComponent.dragDisabled).toBeTrue();
+            expect(addressComponent.dragDisabled).toBeTrue();
+
+            await addressTable.save();
+            fixture.detectChanges();
+
+            expect(rootComponent.dragDisabled).toBeFalse();
+            expect(addressComponent.dragDisabled).toBeFalse();
+        });
     });
 
     // ---------------------------------------------------------------------------

@@ -95,7 +95,7 @@ export class EditSchemaTableComponent implements OnChanges {
     }
 
     public get disabledAddFieldButton(): boolean {
-        return this.editingIndex !== null;
+        return this.editingRow !== null && !this.editingRow.name;
     }
 
     /** Dragging is disabled while any row (including a blank add-row) is being edited. */
@@ -196,8 +196,11 @@ export class EditSchemaTableComponent implements OnChanges {
     }
 
     public startAddField(): void {
+        const fields = this.editingIndex === null ? this.fields : this.fieldsWithCommittedEditingRow();
+        if (!fields) return;
+
         const newField: DataSchemaField = { name: "", type: { kind: OdfTypes.String } };
-        const updated = [...this.fields, newField];
+        const updated = [...fields, newField];
         this.addingField = true;
         this.editingRow = { ...newField };
         this.editingIndex = updated.length - 1;
@@ -231,12 +234,18 @@ export class EditSchemaTableComponent implements OnChanges {
     }
 
     private commitEditingRow(): void {
-        if (!this.editingRow || this.editingIndex === null) return;
+        const updated = this.fieldsWithCommittedEditingRow();
+        if (!updated) return;
 
-        const saved = this.editingRow;
-        const updated = this.fields.map((field, index) => (index === this.editingIndex ? { ...saved } : field));
         this.addingField = false;
         this.fieldsChange.emit(updated);
+    }
+
+    private fieldsWithCommittedEditingRow(): MaybeNull<DataSchemaField[]> {
+        if (!this.editingRow || this.editingIndex === null || !this.editingRow.name) return null;
+
+        const saved = this.editingRow;
+        return this.fields.map((field, index) => (index === this.editingIndex ? { ...saved } : field));
     }
 
     private collectNestedStructTables(

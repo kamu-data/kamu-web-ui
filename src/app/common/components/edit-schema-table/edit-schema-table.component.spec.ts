@@ -134,6 +134,32 @@ describe("EditSchemaTableComponent", () => {
             expect(await table.isAddFieldDisabled()).toBeTrue();
         });
 
+        it("clicking Add field while editing saves the current row and opens a new blank row", async () => {
+            await setup([stringField("id"), stringField("name")]);
+            await table.editField("id");
+            fixture.detectChanges();
+            await table.setNameInput("identifier");
+            fixture.detectChanges();
+
+            const editorComponent = findComponentInstance(
+                fixture,
+                EditSchemaTableComponent,
+                (component) => component.tablePath === "root",
+            );
+            editorComponent.typeChangeHandle({ kind: OdfTypes.Int64 });
+            fixture.detectChanges();
+
+            expect(await table.isAddFieldDisabled()).toBeFalse();
+            await table.startAddField();
+            fixture.detectChanges();
+
+            expect(await table.getRowCount()).toBe(3);
+            expect(await table.isSaveDisabled()).toBeTrue();
+            expect(host.lastEmitted?.[0]).toEqual({ name: "identifier", type: { kind: OdfTypes.Int64 } });
+            expect(host.lastEmitted?.[1]).toEqual(stringField("name"));
+            expect(host.lastEmitted?.[2]).toEqual({ name: "", type: { kind: OdfTypes.String } });
+        });
+
         // Scenario 11 — start add, cancel → row removed and original list restored
         it("scenario 11: cancel during add removes the provisional row and restores the list", async () => {
             await setup([stringField("id"), stringField("name")]);

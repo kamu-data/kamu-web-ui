@@ -82,7 +82,8 @@ table {
     overflow: visible !important;
 
     tr {
-        .action-buttons {
+        > td.mat-column-type > .type-view-row > .action-buttons,
+        > td.mat-column-type > .type-editor-row > .action-buttons {
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.2s ease-in-out;
@@ -93,7 +94,8 @@ table {
         }
 
         &:hover {
-            .action-buttons {
+            > td.mat-column-type > .type-view-row > .action-buttons,
+            > td.mat-column-type > .type-editor-row > .action-buttons {
                 opacity: 1;
                 visibility: visible;
             }
@@ -174,7 +176,7 @@ table {
     pointer-events: none;
 }
 
-.dynamic-table tr:hover .drag-handle:not(.drag-handle-disabled) {
+.dynamic-table tr:hover > td.mat-column-name .field-name > .drag-handle:not(.drag-handle-disabled) {
     opacity: 1;
     visibility: visible;
 }

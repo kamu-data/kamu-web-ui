@@ -89,6 +89,7 @@
             <span class="text-muted fs-12 d-block">Item Type</span>
             <div>
                 <app-type-editor
+                    #typeEditor
                     [value]="schemaListField.itemType"
                     [depth]="depth + 1"
                     [typePath]="typePath + '.item'"
@@ -102,6 +103,7 @@
             <span class="text-muted fs-12 d-block">Key Type</span>
             <div>
                 <app-type-editor
+                    #typeEditor
                     [depth]="depth + 1"
                     [value]="schemaMapField.keyType"
                     [typePath]="typePath + '.key'"
@@ -113,6 +115,7 @@
             <span class="text-muted fs-12 d-block">Key Value</span>
             <div>
                 <app-type-editor
+                    #typeEditor
                     [depth]="depth + 1"
                     [value]="schemaMapField.valueType"
                     [typePath]="typePath + '.value'"
@@ -124,6 +127,7 @@
     <ng-container *ngIf="selectedKind === OdfTypes.Struct">
         <div class="nested-struct-editor mt-2" [class.ms-2]="depth > 0">
             <app-edit-schema-table
+                #nestedEditSchemaTable
                 [fields]="schemaStructField.fields"
                 [depth]="depth + 1"
                 [tablePath]="typePath + '.fields'"

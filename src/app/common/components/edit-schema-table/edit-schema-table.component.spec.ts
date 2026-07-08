@@ -381,6 +381,26 @@ describe("EditSchemaTableComponent", () => {
                 }
             }
         });
+
+        it("saves pending nested Struct edits when saving the outer row", async () => {
+            await setup([structField("subject", [stringField("id"), stringField("gender")])]);
+
+            await table.editField("subject");
+            fixture.detectChanges();
+
+            const structTable = await loader.getHarness(EditSchemaTableHarness.withPath("root:type:subject.fields"));
+            await structTable.editField("id");
+            fixture.detectChanges();
+            await structTable.setNameInput("id23");
+            fixture.detectChanges();
+
+            await table.save();
+            fixture.detectChanges();
+
+            const emitted = host.lastEmitted ?? [];
+            const subjectFields = EditSchemaTableHarness.structFieldsOf(emitted, "subject");
+            expect(subjectFields.map((field) => field.name)).toEqual(["id23", "gender"]);
+        });
     });
 
     // ---------------------------------------------------------------------------
@@ -614,6 +634,46 @@ describe("EditSchemaTableComponent", () => {
 
             expect(rootComponent.dragDisabled).toBeFalse();
             expect(addressComponent.dragDisabled).toBeFalse();
+        });
+
+        it("prevents editing or adding a root row while a nested Struct row is being edited", async () => {
+            await setup([structField("address", [stringField("street"), stringField("city")]), stringField("id")]);
+            const addressTable = await table.nestedTable("address");
+
+            await addressTable.editField("street");
+            fixture.detectChanges();
+
+            expect(await table.isAddFieldDisabled()).toBeTrue();
+
+            await table.startAddField();
+            fixture.detectChanges();
+            expect(await table.getRowCount()).toBe(2);
+
+            await table.editField("id");
+            fixture.detectChanges();
+            expect(await table.hasDragHandle("id")).toBeTrue();
+        });
+
+        it("prevents editing or adding a sibling Struct row while another nested Struct row is being edited", async () => {
+            await setup([
+                structField("address", [stringField("street"), stringField("city")]),
+                structField("shipping", [stringField("carrier")]),
+            ]);
+            const addressTable = await table.nestedTable("address");
+            const shippingTable = await table.nestedTable("shipping");
+
+            await addressTable.editField("street");
+            fixture.detectChanges();
+
+            expect(await shippingTable.isAddFieldDisabled()).toBeTrue();
+
+            await shippingTable.startAddField();
+            fixture.detectChanges();
+            expect(await shippingTable.getRowCount()).toBe(1);
+
+            await shippingTable.editField("carrier");
+            fixture.detectChanges();
+            expect(await shippingTable.hasDragHandle("carrier")).toBeTrue();
         });
     });
 

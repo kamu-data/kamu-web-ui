@@ -15,7 +15,9 @@ import {
     Input,
     OnChanges,
     Output,
+    QueryList,
     SimpleChanges,
+    ViewChildren,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
@@ -89,6 +91,9 @@ export class EditSchemaTableComponent implements OnChanges {
     public editingIndex: MaybeNull<number> = null;
     public addingField = false;
     public editingRow: MaybeNull<DataSchemaField> = null;
+    @ViewChildren("nestedEditSchemaTable")
+    private readonly nestedEditSchemaTables?: QueryList<EditSchemaTableComponent>;
+    @ViewChildren("typeEditor") private readonly typeEditors?: QueryList<TypeEditorComponent>;
     private readonly nestedEditingTables = new Set<string>();
 
     public ngOnChanges(changes: SimpleChanges): void {
@@ -98,7 +103,7 @@ export class EditSchemaTableComponent implements OnChanges {
     }
 
     public get disabledAddFieldButton(): boolean {
-        return this.editingRow !== null && !this.editingRow.name;
+        return this.hasBlockingEditing || (this.editingRow !== null && !this.editingRow.name);
     }
 
     /** Dragging is disabled while any row (including a blank add-row) is being edited. */
@@ -157,6 +162,10 @@ export class EditSchemaTableComponent implements OnChanges {
     }
 
     public editRow(element: DataSchemaField, index: number): void {
+        if (this.hasBlockingEditing) {
+            return;
+        }
+
         if (this.editingRow && !this.editingRow.name) {
             // Blank provisional add row — discard it instead of attempting a no-op save.
             this.cancelEditing();
@@ -175,6 +184,10 @@ export class EditSchemaTableComponent implements OnChanges {
     }
 
     public saveEditing(indexRow: number): void {
+        if (!this.flushEditingChildren()) {
+            return;
+        }
+
         if (!this.editingRow || !this.editingRow.name) {
             return;
         }
@@ -202,6 +215,10 @@ export class EditSchemaTableComponent implements OnChanges {
     }
 
     public startAddField(): void {
+        if (this.hasBlockingEditing) {
+            return;
+        }
+
         const fields = this.editingIndex === null ? this.fields : this.fieldsWithCommittedEditingRow();
         if (!fields) return;
 
@@ -249,21 +266,55 @@ export class EditSchemaTableComponent implements OnChanges {
         return table.path.join(".");
     }
 
+    public flushEditing(): boolean {
+        if (!this.flushEditingChildren()) {
+            return false;
+        }
+
+        if (this.editingIndex === null) {
+            return true;
+        }
+
+        return this.commitEditingRow();
+    }
+
     private get hasActiveEditing(): boolean {
         return this.editingIndex !== null || this.nestedEditingTables.size > 0;
+    }
+
+    private get hasBlockingEditing(): boolean {
+        return this.hasExternalEditing || (this.editingIndex === null && this.nestedEditingTables.size > 0);
+    }
+
+    private get hasExternalEditing(): boolean {
+        return this.parentDragDisabled && !this.hasActiveEditing;
     }
 
     private emitEditingState(): void {
         this.editingStateChange.emit(this.hasActiveEditing);
     }
 
-    private commitEditingRow(): void {
+    private flushEditingChildren(): boolean {
+        let flushed = true;
+        this.typeEditors?.forEach((typeEditor) => {
+            flushed = typeEditor.flushEditing() && flushed;
+        });
+        this.nestedEditSchemaTables?.forEach((nestedTable) => {
+            flushed = nestedTable.flushEditing() && flushed;
+        });
+        return flushed;
+    }
+
+    private commitEditingRow(): boolean {
         const updated = this.fieldsWithCommittedEditingRow();
-        if (!updated) return;
+        if (!updated) return false;
 
         this.addingField = false;
+        this.editingRow = null;
+        this.editingIndex = null;
         this.fieldsChange.emit(updated);
         this.emitEditingState();
+        return true;
     }
 
     private fieldsWithCommittedEditingRow(): MaybeNull<DataSchemaField[]> {

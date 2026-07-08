@@ -66,6 +66,7 @@
                 >
                     <div class="type-editor-slot">
                         <app-type-editor
+                            #typeEditor
                             *ngIf="editingRow?.type"
                             [value]="editingRow!.type"
                             [typePath]="tablePath + ':type:' + (editingRow!.name || '#' + rowIndex)"
@@ -124,6 +125,7 @@
                         class="nested-struct-container mb-2"
                     >
                         <app-edit-schema-table
+                            #nestedEditSchemaTable
                             [fields]="nestedTable.fields"
                             [depth]="depth + 1"
                             [tablePath]="nestedTable.tablePath"

@@ -14,6 +14,8 @@ import {
     HostBinding,
     Input,
     Output,
+    QueryList,
+    ViewChildren,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
@@ -57,6 +59,9 @@ export class TypeEditorComponent {
         return this.typePath;
     }
     @Output() public typeChange = new EventEmitter<DataSchemaTypeField>();
+    @ViewChildren("typeEditor") private readonly childTypeEditors?: QueryList<TypeEditorComponent>;
+    @ViewChildren("nestedEditSchemaTable")
+    private readonly nestedEditSchemaTables?: QueryList<EditSchemaTableComponent>;
 
     public readonly TYPES_OPTIONS_LIST: DataSchemaTypeOption[] = TYPES_OPTIONS_LIST;
     public readonly UNIT_OPTIONS_LIST: UnitTimestampOption[] = UNIT_OPTIONS_LIST;
@@ -176,6 +181,17 @@ export class TypeEditorComponent {
     public typeStructFieldsChange(fields: DataSchemaField[]): void {
         this.value = this.wrapOptional({ ...this.baseValue, fields } as DataSchemaStructField);
         this.typeChange.emit(this.value);
+    }
+
+    public flushEditing(): boolean {
+        let flushed = true;
+        this.childTypeEditors?.forEach((typeEditor) => {
+            flushed = typeEditor.flushEditing() && flushed;
+        });
+        this.nestedEditSchemaTables?.forEach((nestedTable) => {
+            flushed = nestedTable.flushEditing() && flushed;
+        });
+        return flushed;
     }
 
     private get baseValue(): DataSchemaTypeField {

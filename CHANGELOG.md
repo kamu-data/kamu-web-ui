@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - URL parameter to manage the versioned file state
 ### Changed
 - Modified release scripts
+- Integration of the UInt64 type into the schema as a scalar type
 
 ## [0.67.0] - 2026-05-19
 ### Fixed

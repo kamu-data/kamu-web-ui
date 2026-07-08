@@ -58,6 +58,7 @@ export type Scalars = {
     Multihash: { input: string; output: string };
     TaskID: { input: string; output: string };
     URL: { input: string; output: string };
+    Uint64: { input: number; output: number };
     /** URL is a String implementing the [URL Standard](http://url.spec.whatwg.org/) */
     Url: { input: string; output: string };
     WebhookEventType: { input: string; output: string };
@@ -475,7 +476,7 @@ export type AccountsMutCreateWalletAccountsArgs = {
 /**
  * Indicates that data has been ingested into a root dataset.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#adddata-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/AddData
  */
 export type AddData = {
     __typename?: "AddData";
@@ -510,14 +511,14 @@ export type AddData = {
      * Last offset of the previous data slice, if any. Must be equal to the
      * last non-empty `newData.offsetInterval.end`.
      */
-    prevOffset?: Maybe<Scalars["Int"]["output"]>;
+    prevOffset?: Maybe<Scalars["Uint64"]["output"]>;
 };
 
 /**
  * Describes how to ingest data into a root dataset from a certain logical
  * source.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#addpushsource-schema
+ * Schema: https://opendatafabric.org/schemas/legacy/v0/AddPushSource
  */
 export type AddPushSource = {
     __typename?: "AddPushSource";
@@ -561,7 +562,7 @@ export type ApplyRolesMatrixResult = {
 /**
  * Embedded attachment item.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#attachmentembedded-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/AttachmentEmbedded
  */
 export type AttachmentEmbedded = {
     __typename?: "AttachmentEmbedded";
@@ -574,14 +575,14 @@ export type AttachmentEmbedded = {
 /**
  * Defines the source of attachment files.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#attachments-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/Attachments
  */
 export type Attachments = AttachmentsEmbedded;
 
 /**
  * For attachments that are specified inline and are embedded in the metadata.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#attachmentsembedded-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/Attachments#/$defs/Embedded
  */
 export type AttachmentsEmbedded = {
     __typename?: "AttachmentsEmbedded";
@@ -687,14 +688,14 @@ export type CancelFlowRunSuccess = CancelFlowRunResult & {
 /**
  * Describes a checkpoint produced by an engine
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#checkpoint-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/Checkpoint
  */
 export type Checkpoint = {
     __typename?: "Checkpoint";
     /** Hash sum of the checkpoint file. */
     physicalHash: Scalars["Multihash"]["output"];
     /** Size of checkpoint file in bytes. */
-    size: Scalars["Int"]["output"];
+    size: Scalars["Uint64"]["output"];
 };
 
 export type CliProtocolDesc = {
@@ -966,7 +967,7 @@ export enum CompareChainsStatus {
 /**
  * Defines a compression algorithm.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#compressionformat-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/CompressionFormat
  */
 export enum CompressionFormat {
     Gzip = "GZIP",
@@ -1153,7 +1154,7 @@ export enum DataSchemaFormat {
 /**
  * Describes a slice of data added to a dataset or produced via transformation
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#dataslice-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/DataSlice
  */
 export type DataSlice = {
     __typename?: "DataSlice";
@@ -1164,7 +1165,7 @@ export type DataSlice = {
     /** Hash sum of the data part file. */
     physicalHash: Scalars["Multihash"]["output"];
     /** Size of data file in bytes. */
-    size: Scalars["Int"]["output"];
+    size: Scalars["Uint64"]["output"];
 };
 
 export type DataTypeInput = {
@@ -1556,7 +1557,7 @@ export type DatasetGeneralPermissions = {
 /**
  * Represents type of the dataset.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#datasetkind-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/DatasetKind
  */
 export enum DatasetKind {
     Derivative = "DERIVATIVE",
@@ -1948,7 +1949,7 @@ export type DependencyDatasetResultNotAccessible = DependencyDatasetResult & {
 /**
  * Disables the previously defined polling source.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#disablepollingsource-schema
+ * Schema: https://opendatafabric.org/schemas/legacy/v0/DisablePollingSource
  */
 export type DisablePollingSource = {
     __typename?: "DisablePollingSource";
@@ -1958,7 +1959,7 @@ export type DisablePollingSource = {
 /**
  * Disables the previously defined source.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#disablepushsource-schema
+ * Schema: https://opendatafabric.org/schemas/legacy/v0/DisablePushSource
  */
 export type DisablePushSource = {
     __typename?: "DisablePushSource";
@@ -1999,7 +2000,7 @@ export type EngineDesc = {
 /**
  * Defines an environment variable passed into some job.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#envvar-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/EnvVar
  */
 export type EnvVar = {
     __typename?: "EnvVar";
@@ -2012,14 +2013,14 @@ export type EnvVar = {
 /**
  * Defines the external source of data.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#eventtimesource-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/EventTimeSource
  */
 export type EventTimeSource = EventTimeSourceFromMetadata | EventTimeSourceFromPath | EventTimeSourceFromSystemTime;
 
 /**
  * Extracts event time from the source's metadata.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#eventtimesourcefrommetadata-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/EventTimeSource#/$defs/FromMetadata
  */
 export type EventTimeSourceFromMetadata = {
     __typename?: "EventTimeSourceFromMetadata";
@@ -2029,7 +2030,7 @@ export type EventTimeSourceFromMetadata = {
 /**
  * Extracts event time from the path component of the source.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#eventtimesourcefrompath-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/EventTimeSource#/$defs/FromPath
  */
 export type EventTimeSourceFromPath = {
     __typename?: "EventTimeSourceFromPath";
@@ -2042,7 +2043,7 @@ export type EventTimeSourceFromPath = {
 /**
  * Assigns event time from the system time source.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#eventtimesourcefromsystemtime-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/EventTimeSource#/$defs/FromSystemTime
  */
 export type EventTimeSourceFromSystemTime = {
     __typename?: "EventTimeSourceFromSystemTime";
@@ -2052,7 +2053,7 @@ export type EventTimeSourceFromSystemTime = {
 /**
  * Indicates that derivative transformation has been performed.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#executetransform-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/ExecuteTransform
  */
 export type ExecuteTransform = {
     __typename?: "ExecuteTransform";
@@ -2081,7 +2082,7 @@ export type ExecuteTransform = {
      * Last offset of the previous data slice, if any. Must be equal to the
      * last non-empty `newData.offsetInterval.end`.
      */
-    prevOffset?: Maybe<Scalars["Int"]["output"]>;
+    prevOffset?: Maybe<Scalars["Uint64"]["output"]>;
     /**
      * Defines inputs used in this transaction. Slices corresponding to every
      * input dataset must be present.
@@ -2092,7 +2093,7 @@ export type ExecuteTransform = {
 /**
  * Describes a slice of the input dataset used during a transformation
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#executetransforminput-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/ExecuteTransformInput
  */
 export type ExecuteTransformInput = {
     __typename?: "ExecuteTransformInput";
@@ -2111,7 +2112,7 @@ export type ExecuteTransformInput = {
      * `(prevOffset, newOffset]` interval of data records that will be
      * considered in this transaction.
      */
-    newOffset?: Maybe<Scalars["Int"]["output"]>;
+    newOffset?: Maybe<Scalars["Uint64"]["output"]>;
     /**
      * Last block of the input dataset that was previously incorporated into
      * the derivative transformation, if any. Must be equal to the last
@@ -2127,20 +2128,20 @@ export type ExecuteTransformInput = {
      * half-open `(prevOffset, newOffset]` interval of data records that will
      * be considered in this transaction.
      */
-    prevOffset?: Maybe<Scalars["Int"]["output"]>;
+    prevOffset?: Maybe<Scalars["Uint64"]["output"]>;
 };
 
 /**
  * Defines the external source of data.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#fetchstep-schema
+ * Schema: https://opendatafabric.org/schemas/legacy/v0/FetchStep
  */
 export type FetchStep = FetchStepContainer | FetchStepEthereumLogs | FetchStepFilesGlob | FetchStepMqtt | FetchStepUrl;
 
 /**
  * Runs the specified OCI container to fetch data from an arbitrary source.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#fetchstepcontainer-schema
+ * Schema: https://opendatafabric.org/schemas/legacy/v0/FetchStep#/$defs/Container
  */
 export type FetchStepContainer = {
     __typename?: "FetchStepContainer";
@@ -2163,7 +2164,7 @@ export type FetchStepContainer = {
 /**
  * Connects to an Ethereum node to stream transaction logs.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#fetchstepethereumlogs-schema
+ * Schema: https://opendatafabric.org/schemas/legacy/v0/FetchStep#/$defs/EthereumLogs
  */
 export type FetchStepEthereumLogs = {
     __typename?: "FetchStepEthereumLogs";
@@ -2172,7 +2173,7 @@ export type FetchStepEthereumLogs = {
      * for RPC endpoint lookup as well as asserting that provided `nodeUrl`
      * corresponds to the expected chain.
      */
-    chainId?: Maybe<Scalars["Int"]["output"]>;
+    chainId?: Maybe<Scalars["Uint64"]["output"]>;
     /**
      * An SQL WHERE clause that can be used to pre-filter the logs before
      * fetching them from the ETH node.
@@ -2195,7 +2196,7 @@ export type FetchStepEthereumLogs = {
 /**
  * Uses glob operator to match files on the local file system.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#fetchstepfilesglob-schema
+ * Schema: https://opendatafabric.org/schemas/legacy/v0/FetchStep#/$defs/FilesGlob
  */
 export type FetchStepFilesGlob = {
     __typename?: "FetchStepFilesGlob";
@@ -2216,7 +2217,7 @@ export type FetchStepFilesGlob = {
 /**
  * Connects to an MQTT broker to fetch events from the specified topic.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#fetchstepmqtt-schema
+ * Schema: https://opendatafabric.org/schemas/legacy/v0/FetchStep#/$defs/Mqtt
  */
 export type FetchStepMqtt = {
     __typename?: "FetchStepMqtt";
@@ -2235,7 +2236,7 @@ export type FetchStepMqtt = {
 /**
  * Pulls data from one of the supported sources by its URL.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#fetchstepurl-schema
+ * Schema: https://opendatafabric.org/schemas/legacy/v0/FetchStep#/$defs/Url
  */
 export type FetchStepUrl = {
     __typename?: "FetchStepUrl";
@@ -3005,7 +3006,7 @@ export type LookupFilters = {
  * Merge strategy determines how newly ingested data should be combined with
  * the data that already exists in the dataset.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mergestrategy-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/MergeStrategy
  */
 export type MergeStrategy =
     | MergeStrategyAppend
@@ -3020,7 +3021,7 @@ export type MergeStrategy =
  * Under this strategy new data will be appended to the dataset in its
  * entirety, without any deduplication.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mergestrategyappend-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/MergeStrategy#/$defs/Append
  */
 export type MergeStrategyAppend = {
     __typename?: "MergeStrategyAppend";
@@ -3035,7 +3036,7 @@ export type MergeStrategyAppend = {
  * corrections as per RFC-015. No pre-processing except for format validation
  * is done.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mergestrategychangelogstream-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/MergeStrategy#/$defs/ChangelogStream
  */
 export type MergeStrategyChangelogStream = {
     __typename?: "MergeStrategyChangelogStream";
@@ -3055,7 +3056,7 @@ export type MergeStrategyChangelogStream = {
  * contain partially overlapping set of records and only those records that
  * were not previously seen will be appended.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mergestrategyledger-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/MergeStrategy#/$defs/Ledger
  */
 export type MergeStrategyLedger = {
     __typename?: "MergeStrategyLedger";
@@ -3094,7 +3095,7 @@ export type MergeStrategyLedger = {
  * be specified in `compareColumns` property to speed up the detection of
  * modified rows.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mergestrategysnapshot-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/MergeStrategy#/$defs/Snapshot
  */
 export type MergeStrategySnapshot = {
     __typename?: "MergeStrategySnapshot";
@@ -3119,7 +3120,7 @@ export type MergeStrategySnapshot = {
  * primary key to re-classify the events into an append or a correction from/to
  * pair, looking up the previous values.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mergestrategyupsertstream-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/MergeStrategy#/$defs/UpsertStream
  */
 export type MergeStrategyUpsertStream = {
     __typename?: "MergeStrategyUpsertStream";
@@ -3204,7 +3205,7 @@ export type MetadataChainMutCommitEventArgs = {
 /**
  * Represents a transaction that occurred on a dataset.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#metadataevent-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/MetadataEvent
  */
 export type MetadataEvent =
     | AddData
@@ -3268,7 +3269,7 @@ export type ModifyPasswordWrongOldPassword = ModifyPasswordResult & {
 /**
  * MQTT quality of service class.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mqttqos-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/MqttQos
  */
 export enum MqttQos {
     AtLeastOnce = "AT_LEAST_ONCE",
@@ -3279,7 +3280,7 @@ export enum MqttQos {
 /**
  * MQTT topic subscription parameters.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#mqtttopicsubscription-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/MqttTopicSubscription
  */
 export type MqttTopicSubscription = {
     __typename?: "MqttTopicSubscription";
@@ -3355,14 +3356,14 @@ export type OdataProtocolDesc = {
 /**
  * Describes a range of data as a closed arithmetic interval of offsets
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#offsetinterval-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/OffsetInterval
  */
 export type OffsetInterval = {
     __typename?: "OffsetInterval";
     /** End of the closed interval [start; end]. */
-    end: Scalars["Int"]["output"];
+    end: Scalars["Uint64"]["output"];
     /** Start of the closed interval [start; end]. */
-    start: Scalars["Int"]["output"];
+    start: Scalars["Uint64"]["output"];
 };
 
 export enum OrderingDirection {
@@ -3409,14 +3410,14 @@ export type PostgreSqlDesl = {
 /**
  * Defines the steps to prepare raw data for ingestion.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#prepstep-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/PrepStep
  */
 export type PrepStep = PrepStepDecompress | PrepStepPipe;
 
 /**
  * Pulls data from one of the supported sources by its URL.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#prepstepdecompress-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/PrepStep#/$defs/Decompress
  */
 export type PrepStepDecompress = {
     __typename?: "PrepStepDecompress";
@@ -3432,7 +3433,7 @@ export type PrepStepDecompress = {
 /**
  * Executes external command to process the data using piped input/output.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#prepsteppipe-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/PrepStep#/$defs/Pipe
  */
 export type PrepStepPipe = {
     __typename?: "PrepStepPipe";
@@ -3521,7 +3522,7 @@ export type ReactivateWebhookSubscriptionResultUnexpected = ReactivateWebhookSub
 /**
  * Defines how raw data should be read into the structured form.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstep-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/ReadStep
  */
 export type ReadStep = {
     schema?: Maybe<DataSchema>;
@@ -3530,7 +3531,7 @@ export type ReadStep = {
 /**
  * Defines how raw data should be read into the structured form.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstep-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/ReadStep
  */
 export type ReadStepSchemaArgs = {
     format?: InputMaybe<DataSchemaFormat>;
@@ -3539,7 +3540,7 @@ export type ReadStepSchemaArgs = {
 /**
  * Reader for comma-separated files.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepcsv-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/ReadStep#/$defs/Csv
  */
 export type ReadStepCsv = ReadStep & {
     __typename?: "ReadStepCsv";
@@ -3619,7 +3620,7 @@ export type ReadStepCsv = ReadStep & {
 /**
  * Reader for comma-separated files.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepcsv-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/ReadStep#/$defs/Csv
  */
 export type ReadStepCsvSchemaArgs = {
     format?: InputMaybe<DataSchemaFormat>;
@@ -3628,7 +3629,7 @@ export type ReadStepCsvSchemaArgs = {
 /**
  * Reader for ESRI Shapefile format.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepesrishapefile-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/ReadStep#/$defs/EsriShapefile
  */
 export type ReadStepEsriShapefile = ReadStep & {
     __typename?: "ReadStepEsriShapefile";
@@ -3650,7 +3651,7 @@ export type ReadStepEsriShapefile = ReadStep & {
 /**
  * Reader for ESRI Shapefile format.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepesrishapefile-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/ReadStep#/$defs/EsriShapefile
  */
 export type ReadStepEsriShapefileSchemaArgs = {
     format?: InputMaybe<DataSchemaFormat>;
@@ -3662,7 +3663,7 @@ export type ReadStepEsriShapefileSchemaArgs = {
  * properties into individual columns and leaving the feature geometry in its
  * own column.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepgeojson-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/ReadStep#/$defs/GeoJson
  */
 export type ReadStepGeoJson = ReadStep & {
     __typename?: "ReadStepGeoJson";
@@ -3681,7 +3682,7 @@ export type ReadStepGeoJson = ReadStep & {
  * properties into individual columns and leaving the feature geometry in its
  * own column.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepgeojson-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/ReadStep#/$defs/GeoJson
  */
 export type ReadStepGeoJsonSchemaArgs = {
     format?: InputMaybe<DataSchemaFormat>;
@@ -3690,7 +3691,7 @@ export type ReadStepGeoJsonSchemaArgs = {
 /**
  * Reader for JSON files that contain an array of objects within them.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepjson-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/ReadStep#/$defs/Json
  */
 export type ReadStepJson = ReadStep & {
     __typename?: "ReadStepJson";
@@ -3733,7 +3734,7 @@ export type ReadStepJson = ReadStep & {
 /**
  * Reader for JSON files that contain an array of objects within them.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepjson-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/ReadStep#/$defs/Json
  */
 export type ReadStepJsonSchemaArgs = {
     format?: InputMaybe<DataSchemaFormat>;
@@ -3744,7 +3745,7 @@ export type ReadStepJsonSchemaArgs = {
  * format but instead of `FeatureCollection` object in the root it expects
  * every individual feature object to appear on its own line.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepndgeojson-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/ReadStep#/$defs/NdGeoJson
  */
 export type ReadStepNdGeoJson = ReadStep & {
     __typename?: "ReadStepNdGeoJson";
@@ -3762,7 +3763,7 @@ export type ReadStepNdGeoJson = ReadStep & {
  * format but instead of `FeatureCollection` object in the root it expects
  * every individual feature object to appear on its own line.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepndgeojson-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/ReadStep#/$defs/NdGeoJson
  */
 export type ReadStepNdGeoJsonSchemaArgs = {
     format?: InputMaybe<DataSchemaFormat>;
@@ -3772,7 +3773,7 @@ export type ReadStepNdGeoJsonSchemaArgs = {
  * Reader for files containing multiple newline-delimited JSON objects with the
  * same schema.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepndjson-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/ReadStep#/$defs/NdJson
  */
 export type ReadStepNdJson = ReadStep & {
     __typename?: "ReadStepNdJson";
@@ -3810,7 +3811,7 @@ export type ReadStepNdJson = ReadStep & {
  * Reader for files containing multiple newline-delimited JSON objects with the
  * same schema.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepndjson-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/ReadStep#/$defs/NdJson
  */
 export type ReadStepNdJsonSchemaArgs = {
     format?: InputMaybe<DataSchemaFormat>;
@@ -3819,7 +3820,7 @@ export type ReadStepNdJsonSchemaArgs = {
 /**
  * Reader for Apache Parquet format.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepparquet-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/ReadStep#/$defs/Parquet
  */
 export type ReadStepParquet = ReadStep & {
     __typename?: "ReadStepParquet";
@@ -3835,7 +3836,7 @@ export type ReadStepParquet = ReadStep & {
 /**
  * Reader for Apache Parquet format.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#readstepparquet-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/ReadStep#/$defs/Parquet
  */
 export type ReadStepParquetSchemaArgs = {
     format?: InputMaybe<DataSchemaFormat>;
@@ -3892,7 +3893,7 @@ export type RenameResultSuccess = RenameResult & {
 /**
  * Defines a header (e.g. HTTP) to be passed into some request.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#requestheader-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/RequestHeader
  */
 export type RequestHeader = {
     __typename?: "RequestHeader";
@@ -4056,7 +4057,7 @@ export type SearchResultExEdge = {
  * Establishes the identity of the dataset. Always the first metadata event in
  * the chain.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#seed-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/Seed
  */
 export type Seed = {
     __typename?: "Seed";
@@ -4094,7 +4095,7 @@ export type SetAccountQuotasStorageInput = {
 /**
  * Associates a set of files with this dataset.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#setattachments-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/SetAttachments
  */
 export type SetAttachments = {
     __typename?: "SetAttachments";
@@ -4143,7 +4144,7 @@ export type SetFlowTriggerSuccess = SetFlowTriggerResult & {
 /**
  * Provides basic human-readable information about a dataset.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#setinfo-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/SetInfo
  */
 export type SetInfo = {
     __typename?: "SetInfo";
@@ -4156,7 +4157,7 @@ export type SetInfo = {
 /**
  * Defines a license that applies to this dataset.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#setlicense-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/SetLicense
  */
 export type SetLicense = {
     __typename?: "SetLicense";
@@ -4174,7 +4175,7 @@ export type SetLicense = {
  * Contains information on how externally-hosted data can be ingested into the
  * root dataset.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#setpollingsource-schema
+ * Schema: https://opendatafabric.org/schemas/legacy/v0/SetPollingSource
  */
 export type SetPollingSource = {
     __typename?: "SetPollingSource";
@@ -4205,7 +4206,7 @@ export type SetRoleResultSuccess = SetRoleResult & {
 /**
  * Defines a transformation that produces data in a derivative dataset.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#settransform-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/SetTransform
  */
 export type SetTransform = {
     __typename?: "SetTransform";
@@ -4218,7 +4219,7 @@ export type SetTransform = {
 /**
  * Lets you manipulate names of the system columns to avoid conflicts.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#setvocab-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/SetVocab
  */
 export type SetVocab = {
     __typename?: "SetVocab";
@@ -4255,14 +4256,14 @@ export type SetWatermarkUpdated = SetWatermarkResult & {
 /**
  * Defines how external data should be cached.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#sourcecaching-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/SourceCaching
  */
 export type SourceCaching = SourceCachingForever;
 
 /**
  * After source was processed once it will never be ingested again.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#sourcecachingforever-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/SourceCaching#/$defs/Forever
  */
 export type SourceCachingForever = {
     __typename?: "SourceCachingForever";
@@ -4272,7 +4273,7 @@ export type SourceCachingForever = {
 /**
  * Specifies how input files should be ordered before ingestion.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#sourceordering-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/SourceOrdering
  */
 export enum SourceOrdering {
     ByEventTime = "BY_EVENT_TIME",
@@ -4282,7 +4283,7 @@ export enum SourceOrdering {
 /**
  * The state of the source the data was added from to allow fast resuming.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#sourcestate-schema
+ * Schema: https://opendatafabric.org/schemas/source/v1alpha1/SourceState
  */
 export type SourceState = {
     __typename?: "SourceState";
@@ -4300,7 +4301,7 @@ export type SourceState = {
 /**
  * Defines a query in a multi-step SQL transformation.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#sqlquerystep-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/SqlQueryStep
  */
 export type SqlQueryStep = {
     __typename?: "SqlQueryStep";
@@ -4416,7 +4417,7 @@ export enum TaskStatus {
  * Temporary Flink-specific extension for creating temporal tables from
  * streams.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#temporaltable-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/TemporalTable
  */
 export type TemporalTable = {
     __typename?: "TemporalTable";
@@ -4457,7 +4458,7 @@ export type TotalDatasetsStatistic = {
 /**
  * Engine-specific processing queries that shape the resulting data.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#transform-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/Transform
  */
 export type Transform = TransformSql;
 
@@ -4471,7 +4472,7 @@ export type TransformInput = {
 /**
  * Describes a derivative transformation input
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#transforminput-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/TransformInput
  */
 export type TransformInputDataset = {
     message: Scalars["String"]["output"];
@@ -4492,7 +4493,7 @@ export type TransformInputDatasetNotAccessible = TransformInputDataset & {
 /**
  * Transform using one of the SQL dialects.
  *
- * See: https://github.com/kamu-data/open-data-fabric/blob/master/open-data-fabric.md#transformsql-schema
+ * Schema: https://opendatafabric.org/schemas/dataset/v1alpha1/Transform#/$defs/Sql
  */
 export type TransformSql = {
     __typename?: "TransformSql";

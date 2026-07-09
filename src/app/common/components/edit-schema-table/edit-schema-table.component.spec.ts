@@ -176,24 +176,35 @@ describe("EditSchemaTableComponent", () => {
             expect(host.lastEmitted).toEqual([stringField("id"), stringField("name")]);
         });
 
-        // Scenario 12 — edit-while-adding discards blank row, target row enters edit mode
-        it("scenario 12: clicking edit on another row while a blank add row is pending discards the blank row", async () => {
+        // Scenario 12 — blank add row cannot be auto-saved, so target row stays in view mode
+        it("scenario 12: clicking edit on another row while a blank add row is pending is a no-op", async () => {
             await setup([stringField("id"), stringField("name")]);
             await table.startAddField();
             fixture.detectChanges();
             // 3 rows: id, name, and the provisional blank row
             expect(await table.getRowCount()).toBe(3);
 
-            // Click edit on "id" — the blank add row should be discarded
+            // Click edit on "id" — the blank add row cannot be saved, so editing does not switch
             await table.editField("id");
             fixture.detectChanges();
 
-            // Provisional row gone — back to 2
-            expect(await table.getRowCount()).toBe(2);
-            expect(await table.getFieldNames()).toEqual(["id", "name"]);
-            // No {name:""} leak in emitted value
-            const emitted = host.lastEmitted ?? [];
-            expect(emitted.every((f) => f.name !== "")).toBeTrue();
+            expect(await table.getRowCount()).toBe(3);
+            expect(await table.hasDragHandle("id")).toBeTrue();
+        });
+
+        it("clicking edit on another row while adding a named row saves the new row first", async () => {
+            await setup([stringField("id"), stringField("name")]);
+            await table.startAddField();
+            fixture.detectChanges();
+            await table.setNameInput("age");
+            fixture.detectChanges();
+
+            await table.editField("id");
+            fixture.detectChanges();
+
+            expect(await table.getRowCount()).toBe(3);
+            expect(await table.hasDragHandle("id")).toBeFalse();
+            expect(host.lastEmitted?.map((field) => field.name)).toEqual(["id", "name", "age"]);
         });
     });
 
@@ -636,25 +647,25 @@ describe("EditSchemaTableComponent", () => {
             expect(addressComponent.dragDisabled).toBeFalse();
         });
 
-        it("prevents editing or adding a root row while a nested Struct row is being edited", async () => {
+        it("saves a nested Struct row before editing a root row", async () => {
             await setup([structField("address", [stringField("street"), stringField("city")]), stringField("id")]);
             const addressTable = await table.nestedTable("address");
 
             await addressTable.editField("street");
             fixture.detectChanges();
-
-            expect(await table.isAddFieldDisabled()).toBeTrue();
-
-            await table.startAddField();
+            await addressTable.setNameInput("road");
             fixture.detectChanges();
-            expect(await table.getRowCount()).toBe(2);
 
             await table.editField("id");
             fixture.detectChanges();
-            expect(await table.hasDragHandle("id")).toBeTrue();
+
+            expect(await table.hasDragHandle("id")).toBeFalse();
+            const emitted = host.lastEmitted ?? [];
+            const addressFields = EditSchemaTableHarness.structFieldsOf(emitted, "address");
+            expect(addressFields.map((field) => field.name)).toEqual(["road", "city"]);
         });
 
-        it("prevents editing or adding a sibling Struct row while another nested Struct row is being edited", async () => {
+        it("saves a nested Struct row before editing a sibling Struct row", async () => {
             await setup([
                 structField("address", [stringField("street"), stringField("city")]),
                 structField("shipping", [stringField("carrier")]),
@@ -664,16 +675,16 @@ describe("EditSchemaTableComponent", () => {
 
             await addressTable.editField("street");
             fixture.detectChanges();
-
-            expect(await shippingTable.isAddFieldDisabled()).toBeTrue();
-
-            await shippingTable.startAddField();
+            await addressTable.setNameInput("road");
             fixture.detectChanges();
-            expect(await shippingTable.getRowCount()).toBe(1);
 
             await shippingTable.editField("carrier");
             fixture.detectChanges();
-            expect(await shippingTable.hasDragHandle("carrier")).toBeTrue();
+
+            expect(await shippingTable.hasDragHandle("carrier")).toBeFalse();
+            const emitted = host.lastEmitted ?? [];
+            const addressFields = EditSchemaTableHarness.structFieldsOf(emitted, "address");
+            expect(addressFields.map((field) => field.name)).toEqual(["road", "city"]);
         });
     });
 

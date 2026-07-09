@@ -15,7 +15,7 @@
         (cdkDropListDropped)="dropField($event)"
     >
         <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>name</th>
+            <th mat-header-cell *matHeaderCellDef>Name</th>
             <td mat-cell *matCellDef="let element; let rowIndex = index" class="font-monospace">
                 <div *ngIf="editingIndex === rowIndex; else viewName">
                     <input
@@ -58,7 +58,7 @@
         </ng-container>
 
         <ng-container matColumnDef="type">
-            <th mat-header-cell *matHeaderCellDef>type</th>
+            <th mat-header-cell *matHeaderCellDef>Type</th>
             <td mat-cell *matCellDef="let element; let rowIndex = index" class="font-monospace">
                 <div
                     *ngIf="editingIndex === rowIndex; else viewType"
@@ -130,6 +130,7 @@
                             [depth]="depth + 1"
                             [tablePath]="nestedTable.tablePath"
                             [parentDragDisabled]="dragDisabled"
+                            [editingCoordinator]="activeEditingCoordinator"
                             [errors]="nestedErrorsForPath(element.name, nestedTable.path)"
                             (fieldsChange)="onNestedFieldsChange(rowIndex, nestedTable.path, $event)"
                             (editingStateChange)="onNestedEditingStateChange(nestedTable.tablePath, $event)"

@@ -163,7 +163,7 @@ table {
     color: $app-color-fg-default;
     cursor: grab;
     opacity: 0;
-    visibility: hidden;
+    display: none;
     transition: opacity 0.2s ease-in-out;
 
     &:active {
@@ -183,7 +183,7 @@ table {
     > .action-buttons
     > .drag-handle:not(.drag-handle-disabled) {
     opacity: 1;
-    visibility: visible;
+    display: block;
 }
 
 .cdk-drag-preview {

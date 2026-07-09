@@ -22,6 +22,10 @@ export interface DataSchemaTypeOption {
     value: OdfTypes;
 }
 
+export interface EditSchemaEditingCoordinator {
+    flushEditing: () => boolean;
+}
+
 export type TimestampPrecision = "Second" | "Millisecond" | "Microsecond" | "Nanosecond";
 export type TimestampTimezone = "UTC";
 

@@ -427,6 +427,21 @@ describe("EditSchemaTableComponent", () => {
             expect(names).toEqual(["a", "c"]);
         });
 
+        it("deleting another row while adding a blank row removes the blank row too", async () => {
+            await setup([stringField("a"), stringField("b"), stringField("c")]);
+
+            await table.startAddField();
+            fixture.detectChanges();
+            expect(await table.getRowCount()).toBe(4);
+
+            await table.deleteField("b");
+            fixture.detectChanges();
+
+            expect(await table.getRowCount()).toBe(2);
+            expect(await table.getFieldNames()).toEqual(["a", "c"]);
+            expect(host.lastEmitted?.map((field) => field.name)).toEqual(["a", "c"]);
+        });
+
         // Scenario 10 — delete a middle field, surrounding order intact
         it("scenario 10: deleting a middle field preserves the order of remaining fields", async () => {
             await setup(ORDER_SCHEMA);

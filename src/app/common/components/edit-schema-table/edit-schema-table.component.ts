@@ -183,7 +183,10 @@ export class EditSchemaTableComponent implements OnChanges {
     }
 
     public deleteRow(rowIndex: number): void {
-        const updated = this.fields.filter((_, i) => i !== rowIndex);
+        const indexToDelete = this.prepareFieldsForDelete(rowIndex);
+        if (indexToDelete === null) return;
+
+        const updated = this.fields.filter((_, i) => i !== indexToDelete);
         this.applyFields(updated);
         this.fieldsChange.emit(updated);
     }
@@ -319,6 +322,25 @@ export class EditSchemaTableComponent implements OnChanges {
     private applyFields(fields: DataSchemaField[]): void {
         this.fields = fields;
         this.dataSource.data = fields;
+    }
+
+    private prepareFieldsForDelete(rowIndex: number): MaybeNull<number> {
+        if (this.addingField && this.editingIndex !== null && !this.editingRow?.name) {
+            const blankIndex = this.editingIndex;
+            const updated = this.fields.filter((_, index) => index !== blankIndex);
+            this.addingField = false;
+            this.editingRow = null;
+            this.editingIndex = null;
+            this.applyFields(updated);
+            this.emitEditingState();
+            return rowIndex > blankIndex ? rowIndex - 1 : rowIndex;
+        }
+
+        if (!this.activeEditingCoordinator.flushEditing()) {
+            return null;
+        }
+
+        return rowIndex;
     }
 
     private fieldsWithCommittedEditingRow(): MaybeNull<DataSchemaField[]> {

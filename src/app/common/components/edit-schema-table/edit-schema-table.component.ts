@@ -96,7 +96,7 @@ export class EditSchemaTableComponent implements OnChanges {
     @ViewChildren("nestedEditSchemaTable")
     private readonly nestedEditSchemaTables?: QueryList<EditSchemaTableComponent>;
     @ViewChildren("typeEditor") private readonly typeEditors?: QueryList<TypeEditorComponent>;
-    public readonly localEditingCoordinator: EditSchemaEditingCoordinator = {
+    private readonly localEditingCoordinator: EditSchemaEditingCoordinator = {
         flushEditing: () => this.flushEditing(),
     };
     private readonly nestedEditingTables = new Set<string>();
@@ -124,8 +124,7 @@ export class EditSchemaTableComponent implements OnChanges {
         if (event.previousIndex === event.currentIndex) return;
         const updated = [...this.fields];
         moveItemInArray(updated, event.previousIndex, event.currentIndex);
-        this.applyFields(updated);
-        this.fieldsChange.emit(updated);
+        this.emitFieldsChange(updated);
     }
 
     public odfType2String(element: DataSchemaField): string {
@@ -185,10 +184,8 @@ export class EditSchemaTableComponent implements OnChanges {
     public deleteRow(rowIndex: number): void {
         const indexToDelete = this.prepareFieldsForDelete(rowIndex);
         if (indexToDelete === null) return;
-
         const updated = this.fields.filter((_, i) => i !== indexToDelete);
-        this.applyFields(updated);
-        this.fieldsChange.emit(updated);
+        this.emitFieldsChange(updated);
     }
 
     public saveEditing(indexRow: number): void {
@@ -201,25 +198,18 @@ export class EditSchemaTableComponent implements OnChanges {
         }
         const saved = this.editingRow;
         const updated = this.fields.map((f, i) => (i === indexRow ? { ...saved } : f));
-        this.addingField = false;
-        this.editingRow = null;
-        this.editingIndex = null;
-        this.applyFields(updated);
-        this.fieldsChange.emit(updated);
+        this.clearEditingState();
+        this.emitFieldsChange(updated);
         this.emitEditingState();
     }
 
     public cancelEditing(): void {
         if (this.addingField) {
             const updated = this.fields.filter((_, i) => i !== this.editingIndex);
-            this.addingField = false;
-            this.editingRow = null;
-            this.editingIndex = null;
-            this.applyFields(updated);
-            this.fieldsChange.emit(updated);
+            this.clearEditingState();
+            this.emitFieldsChange(updated);
         } else {
-            this.editingRow = null;
-            this.editingIndex = null;
+            this.clearEditingState();
         }
         this.emitEditingState();
     }
@@ -228,14 +218,12 @@ export class EditSchemaTableComponent implements OnChanges {
         if (!this.activeEditingCoordinator.flushEditing()) {
             return;
         }
-
         const newField: DataSchemaField = { name: "", type: { kind: OdfTypes.String } };
         const updated = [...this.fields, newField];
         this.addingField = true;
         this.editingRow = { ...newField };
         this.editingIndex = updated.length - 1;
-        this.applyFields(updated);
-        this.fieldsChange.emit(updated);
+        this.emitFieldsChange(updated);
         this.emitEditingState();
     }
 
@@ -258,8 +246,7 @@ export class EditSchemaTableComponent implements OnChanges {
         const parent = this.fields[parentIndex];
         const updatedType = this.updateNestedStructFields(parent.type, path, nestedFields);
         const updated = this.fields.map((f, i) => (i === parentIndex ? { ...f, type: updatedType } : f));
-        this.applyFields(updated);
-        this.fieldsChange.emit(updated);
+        this.emitFieldsChange(updated);
     }
 
     public onNestedEditingStateChange(tablePath: string, editing: boolean): void {
@@ -279,11 +266,9 @@ export class EditSchemaTableComponent implements OnChanges {
         if (!this.flushEditingChildren()) {
             return false;
         }
-
         if (this.editingIndex === null) {
             return true;
         }
-
         return this.commitEditingRow();
     }
 
@@ -310,11 +295,8 @@ export class EditSchemaTableComponent implements OnChanges {
         const updated = this.fieldsWithCommittedEditingRow();
         if (!updated) return false;
 
-        this.addingField = false;
-        this.editingRow = null;
-        this.editingIndex = null;
-        this.applyFields(updated);
-        this.fieldsChange.emit(updated);
+        this.clearEditingState();
+        this.emitFieldsChange(updated);
         this.emitEditingState();
         return true;
     }
@@ -324,13 +306,22 @@ export class EditSchemaTableComponent implements OnChanges {
         this.dataSource.data = fields;
     }
 
+    private emitFieldsChange(fields: DataSchemaField[]): void {
+        this.applyFields(fields);
+        this.fieldsChange.emit(fields);
+    }
+
+    private clearEditingState(): void {
+        this.addingField = false;
+        this.editingRow = null;
+        this.editingIndex = null;
+    }
+
     private prepareFieldsForDelete(rowIndex: number): MaybeNull<number> {
         if (this.addingField && this.editingIndex !== null && !this.editingRow?.name) {
             const blankIndex = this.editingIndex;
             const updated = this.fields.filter((_, index) => index !== blankIndex);
-            this.addingField = false;
-            this.editingRow = null;
-            this.editingIndex = null;
+            this.clearEditingState();
             this.applyFields(updated);
             this.emitEditingState();
             return rowIndex > blankIndex ? rowIndex - 1 : rowIndex;
@@ -345,7 +336,6 @@ export class EditSchemaTableComponent implements OnChanges {
 
     private fieldsWithCommittedEditingRow(): MaybeNull<DataSchemaField[]> {
         if (!this.editingRow || this.editingIndex === null || !this.editingRow.name) return null;
-
         const saved = this.editingRow;
         return this.fields.map((field, index) => (index === this.editingIndex ? { ...saved } : field));
     }

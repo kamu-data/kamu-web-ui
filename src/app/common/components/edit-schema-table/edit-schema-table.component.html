@@ -51,6 +51,12 @@
                                 [matTooltip]="warningTooltip(element.name)"
                                 >warning</mat-icon
                             >
+                            <mat-icon
+                                *ngIf="isEmptyStruct(element)"
+                                class="inline-icon text-danger empty-struct-icon"
+                                matTooltip="Structure has no fields"
+                                >warning</mat-icon
+                            >
                         </span>
                     </span>
                 </ng-template>

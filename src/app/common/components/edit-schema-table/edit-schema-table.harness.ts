@@ -261,4 +261,10 @@ export class EditSchemaTableHarness extends ComponentHarness {
         const icon = await this.locatorForOptional(`${this.sel("field-name", fieldName)} mat-icon.text-warning`)();
         return icon ? icon.getAttribute("ng-reflect-message") : null;
     }
+
+    /** Returns true if the empty-Struct warning icon is present next to the named field. */
+    public async hasEmptyStructIcon(fieldName: string): Promise<boolean> {
+        const icon = await this.locatorForOptional(`${this.sel("field-name", fieldName)} mat-icon.empty-struct-icon`)();
+        return icon !== null;
+    }
 }

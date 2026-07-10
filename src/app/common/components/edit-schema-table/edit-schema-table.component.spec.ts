@@ -75,7 +75,7 @@ describe("EditSchemaTableComponent", () => {
         fixture.detectChanges();
         await fixture.whenStable();
         loader = TestbedHarnessEnvironment.loader(fixture);
-        table = await loader.getHarness(EditSchemaTableHarness);
+        table = await loader.getHarness(EditSchemaTableHarness.withPath("root"));
     }
 
     beforeEach(async () => {
@@ -709,6 +709,18 @@ describe("EditSchemaTableComponent", () => {
     // ---------------------------------------------------------------------------
 
     describe("nesting a Struct", () => {
+        it("shows a warning icon next to an empty Struct only", async () => {
+            await setup([
+                structField("empty", []),
+                structField("address", [stringField("street")]),
+                stringField("name"),
+            ]);
+
+            expect(await table.hasEmptyStructIcon("empty")).toBeTrue();
+            expect(await table.hasEmptyStructIcon("address")).toBeFalse();
+            expect(await table.hasEmptyStructIcon("name")).toBeFalse();
+        });
+
         it("adding a field inside a nested Struct updates parent type.fields immutably", async () => {
             // Start with address as a Struct with one child
             const initial: DataSchemaField[] = [stringField("id"), structField("address", [stringField("street")])];

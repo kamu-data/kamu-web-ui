@@ -170,6 +170,10 @@ export class EditSchemaTableComponent implements OnChanges {
             .join(", ");
     }
 
+    public isEmptyStruct(field: DataSchemaField): boolean {
+        return field.type.kind === OdfTypes.Struct && field.type.fields.length === 0;
+    }
+
     public editRow(element: DataSchemaField, index: number): void {
         let targetIndex = index;
         if (this.addingField && this.editingIndex !== null && !this.editingRow?.name) {

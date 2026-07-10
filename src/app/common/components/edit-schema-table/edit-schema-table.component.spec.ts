@@ -176,20 +176,21 @@ describe("EditSchemaTableComponent", () => {
             expect(host.lastEmitted).toEqual([stringField("id"), stringField("name")]);
         });
 
-        // Scenario 12 — blank add row cannot be auto-saved, so target row stays in view mode
-        it("scenario 12: clicking edit on another row while a blank add row is pending is a no-op", async () => {
+        // Scenario 12 — switching edit target discards a blank provisional row
+        it("scenario 12: clicking edit on another row removes a pending blank add row", async () => {
             await setup([stringField("id"), stringField("name")]);
             await table.startAddField();
             fixture.detectChanges();
             // 3 rows: id, name, and the provisional blank row
             expect(await table.getRowCount()).toBe(3);
 
-            // Click edit on "id" — the blank add row cannot be saved, so editing does not switch
+            // Click edit on "id" — the blank provisional row is discarded before switching
             await table.editField("id");
             fixture.detectChanges();
 
-            expect(await table.getRowCount()).toBe(3);
-            expect(await table.hasDragHandle("id")).toBeTrue();
+            expect(await table.getRowCount()).toBe(2);
+            expect(await table.hasDragHandle("id")).toBeFalse();
+            expect(host.lastEmitted).toEqual([stringField("id"), stringField("name")]);
         });
 
         it("clicking edit on another row while adding a named row saves the new row first", async () => {

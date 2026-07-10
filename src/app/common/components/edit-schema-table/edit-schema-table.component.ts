@@ -171,13 +171,25 @@ export class EditSchemaTableComponent implements OnChanges {
     }
 
     public editRow(element: DataSchemaField, index: number): void {
+        let targetIndex = index;
+        if (this.addingField && this.editingIndex !== null && !this.editingRow?.name) {
+            const blankIndex = this.editingIndex;
+            const updated = this.fields.filter((_, fieldIndex) => fieldIndex !== blankIndex);
+            this.clearEditingState();
+            this.emitFieldsChange(updated);
+            this.emitEditingState();
+            if (targetIndex > blankIndex) {
+                targetIndex--;
+            }
+        }
+
         if (!this.activeEditingCoordinator.flushEditing()) {
             return;
         }
 
-        const target = this.fields[index] ?? element;
+        const target = this.fields[targetIndex] ?? element;
         this.editingRow = { ...target, type: { ...target.type } };
-        this.editingIndex = index;
+        this.editingIndex = targetIndex;
         this.emitEditingState();
     }
 

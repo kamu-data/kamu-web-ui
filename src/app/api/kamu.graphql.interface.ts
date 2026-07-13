@@ -5721,6 +5721,20 @@ export type DatasetBlocksEncodedByEventTypeQuery = {
                 metadataProjection: Array<{
                     __typename?: "MetadataBlockExtended";
                     encoded?: { __typename?: "EncodedBlock"; content: string } | null;
+                    event:
+                        | { __typename?: "AddData" }
+                        | { __typename?: "AddPushSource"; sourceName: string }
+                        | { __typename?: "DisablePollingSource" }
+                        | { __typename?: "DisablePushSource" }
+                        | { __typename?: "ExecuteTransform" }
+                        | { __typename?: "Seed" }
+                        | { __typename?: "SetAttachments" }
+                        | { __typename?: "SetDataSchema" }
+                        | { __typename?: "SetInfo" }
+                        | { __typename?: "SetLicense" }
+                        | { __typename?: "SetPollingSource" }
+                        | { __typename?: "SetTransform" }
+                        | { __typename?: "SetVocab" };
                 }>;
             };
         } | null;
@@ -11075,6 +11089,11 @@ export const DatasetBlocksEncodedByEventTypeDocument = gql`
                     metadataProjection(eventTypes: $eventTypes) {
                         encoded(encoding: $encoding) {
                             content
+                        }
+                        event {
+                            ... on AddPushSource {
+                                sourceName
+                            }
                         }
                     }
                 }

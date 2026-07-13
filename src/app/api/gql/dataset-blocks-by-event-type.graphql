@@ -11,6 +11,12 @@ query datasetBlocksEncodedByEventType(
           encoded(encoding: $encoding) {
             content
           }
+
+          event {
+            ... on AddPushSource {
+              sourceName
+            }
+          }
         }
       }
     }

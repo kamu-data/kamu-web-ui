@@ -7,13 +7,13 @@
 
 import { Transform } from "stream";
 
+import { DataSchemaField } from "@interface/dataset-schema.interface";
+
 import {
     MergeKind,
     PreprocessKind,
     ReadKind,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
-
-import { SchemaType } from "../../form-components/schema-field/schema-field.component";
 
 export enum AddPushSourceSection {
     SOURCE_NAME = "sourceName",
@@ -35,7 +35,7 @@ export interface AddPushSourceEditFormType {
         kind: ReadKind;
         jsonKind?: ReadKind;
         subPath?: string;
-        ddlSchema?: string[] | SchemaType[];
+        schema?: DataSchemaField[];
         separator?: string;
         encoding?: string;
         quote?: string;

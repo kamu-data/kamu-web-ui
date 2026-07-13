@@ -32,6 +32,26 @@ export enum OdfTypes {
     String = "String",
 }
 
+export const PRIMITIVES_TYPES: OdfTypes[] = [
+    OdfTypes.Binary,
+    OdfTypes.Bool,
+    OdfTypes.Date,
+    OdfTypes.Decimal,
+    OdfTypes.Float16,
+    OdfTypes.Float32,
+    OdfTypes.Float64,
+    OdfTypes.Int8,
+    OdfTypes.Int16,
+    OdfTypes.Int32,
+    OdfTypes.Int64,
+    OdfTypes.UInt8,
+    OdfTypes.UInt16,
+    OdfTypes.UInt32,
+    OdfTypes.UInt64,
+    OdfTypes.String,
+    OdfTypes.Null,
+];
+
 export enum OdfExtraAttributes {
     EXTRA_ATTRIBUTE_DESCRIPTION = "opendatafabric.org/description",
     EXTRA_ATTRIBUTE_TYPE = "opendatafabric.org/type",
@@ -57,33 +77,32 @@ interface DataSchemaBaseField {
     kind: OdfTypes;
 }
 
-interface DataSchemaOptionField extends DataSchemaBaseField {
+export interface DataSchemaOptionField extends DataSchemaBaseField {
     kind: OdfTypes.Option;
     inner: DataSchemaTypeField;
 }
 interface DataSchemaNullField extends DataSchemaBaseField {
     kind: OdfTypes.Null;
-    inner?: DataSchemaTypeField;
 }
-interface DataSchemaListField extends DataSchemaBaseField {
+export interface DataSchemaListField extends DataSchemaBaseField {
     kind: OdfTypes.List;
     itemType: DataSchemaTypeField;
 }
-interface DataSchemaTimeField extends DataSchemaBaseField {
+export interface DataSchemaTimeField extends DataSchemaBaseField {
     kind: OdfTypes.Timestamp | OdfTypes.Duration | OdfTypes.Time;
     unit: string;
     timezone?: string;
 }
-interface DataSchemaMapField extends DataSchemaBaseField {
+export interface DataSchemaMapField extends DataSchemaBaseField {
     kind: OdfTypes.Map;
-    keyType: { kind: string };
-    valueType: { kind: string };
+    keyType: DataSchemaTypeField;
+    valueType: DataSchemaTypeField;
 }
-interface DataSchemaStructField extends DataSchemaBaseField {
+export interface DataSchemaStructField extends DataSchemaBaseField {
     kind: OdfTypes.Struct;
     fields: { name: string; type: DataSchemaTypeField }[];
 }
-interface DataSchemaDefaultField extends DataSchemaBaseField {
+export interface DataSchemaDefaultField extends DataSchemaBaseField {
     kind: Exclude<
         OdfTypes,
         | OdfTypes.Option

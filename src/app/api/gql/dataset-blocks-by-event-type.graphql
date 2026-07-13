@@ -1,4 +1,4 @@
-query datasetBlocksByEventType(
+query datasetBlocksEncodedByEventType(
   $accountName: AccountName!
   $datasetName: DatasetName!
   $eventTypes: [MetadataEventType!]!
@@ -11,6 +11,7 @@ query datasetBlocksByEventType(
           encoded(encoding: $encoding) {
             content
           }
+
           event {
             ... on AddPushSource {
               sourceName

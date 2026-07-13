@@ -5,6 +5,8 @@
  * included in the LICENSE file.
  */
 
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -16,7 +18,9 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { mockAccountDetails } from "@api/mock/auth.mock";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
@@ -63,9 +67,16 @@ describe("AddPushSourceComponent with query parameter name", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [...providersSection(mockAddPushSourceYaml), Apollo],
+            providers: [
+                ...providersSection(mockAddPushSourceYaml),
+                Apollo,
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
             imports: [ApolloTestingModule, BrowserAnimationsModule, AddPushSourceComponent],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(AddPushSourceComponent);
         modalService = TestBed.inject(NgbModal);
@@ -80,12 +91,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
             sourceName: new FormControl(""),
             read: new FormGroup({
                 kind: new FormControl(ReadKind.CSV),
-                ddlSchema: new FormArray([
-                    new FormGroup({
-                        name: new FormControl("id"),
-                        type: new FormControl("BIGINT"),
-                    }),
-                ]),
+                schema: new FormControl<DataSchemaField[]>([]),
             }),
             merge: new FormGroup({
                 kind: new FormControl(MergeKind.APPEND),
@@ -156,9 +162,16 @@ describe("AddPushSourceComponent without query parameter name", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [providersSection(""), Apollo],
+            providers: [
+                providersSection(""),
+                Apollo,
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
             imports: [ApolloTestingModule, BrowserAnimationsModule, AddPushSourceComponent],
         }).compileComponents();
+
+        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(AddPushSourceComponent);
         component = fixture.componentInstance;
@@ -169,12 +182,7 @@ describe("AddPushSourceComponent without query parameter name", () => {
             sourceName: new FormControl("mockName"),
             read: new FormGroup({
                 kind: new FormControl(ReadKind.CSV),
-                schema: new FormArray([
-                    new FormGroup({
-                        name: new FormControl("id"),
-                        type: new FormControl("BIGINT"),
-                    }),
-                ]),
+                schema: new FormControl<DataSchemaField[]>([]),
             }),
             merge: new FormGroup({
                 kind: new FormControl(MergeKind.APPEND),

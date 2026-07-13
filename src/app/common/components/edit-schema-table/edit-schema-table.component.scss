@@ -1,0 +1,252 @@
+@use "var" as *;
+
+table {
+    width: 100%;
+
+    .mat-mdc-cell {
+        border: 1px solid $app-color-border-default;
+        color: $app-color-fg-default;
+    }
+
+    .truncate-cell {
+        max-width: 100%;
+        min-width: 0;
+        flex: 1 1 auto;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.mat-mdc-header-cell {
+    color: $app-color-fg-default;
+    border: 1px solid $app-color-border-default;
+    font-size: 15px;
+    text-align: left;
+    background: $app-alice-blue !important;
+}
+
+.dynamic-table th.mat-mdc-header-cell,
+.dynamic-table td.mat-mdc-cell,
+.dynamic-table td.mat-mdc-footer-cell,
+.dynamic-table th.mat-mdc-header-cell:first-of-type,
+.dynamic-table td.mat-mdc-cell:first-of-type,
+.dynamic-table td.mat-mdc-footer-cell:first-of-type {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.action-buttons {
+    padding: 2px;
+    flex-shrink: 0;
+
+    .action-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 19px;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
+
+.edit-button {
+    border: none;
+    height: 28px;
+    background-color: transparent;
+
+    &:hover {
+        background-color: rgb(214 232 255);
+        border-radius: 6px;
+    }
+}
+
+.delete-button {
+    border: none;
+    height: 28px;
+    background-color: transparent;
+
+    &:hover {
+        background-color: rgb(214 232 255);
+        border-radius: 6px;
+    }
+}
+
+.row-editable {
+    background-color: rgb(239 246 255 / 100%);
+}
+
+.dynamic-table {
+    overflow: visible !important;
+
+    tr {
+        > td.mat-column-type > .type-view-row > .action-buttons,
+        > td.mat-column-type > .type-editor-row > .action-buttons {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease-in-out;
+
+            .action-button {
+                background-color: transparent;
+            }
+        }
+
+        &:hover {
+            > td.mat-column-type > .type-view-row > .action-buttons,
+            > td.mat-column-type > .type-editor-row > .action-buttons {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            &:not(.row-editable) {
+                background-color: rgb(0 0 0 / 2%);
+            }
+        }
+    }
+
+    .add-field-container {
+        opacity: 0;
+        visibility: hidden;
+        max-height: 0;
+        margin-top: 0 !important;
+        overflow: hidden;
+        transition:
+            opacity 0.2s ease-in-out,
+            max-height 0.2s ease-in-out,
+            margin-top 0.2s ease-in-out;
+    }
+
+    &:hover > .add-field-container {
+        opacity: 1;
+        visibility: visible;
+        max-height: 48px;
+        margin-top: 12px !important;
+    }
+}
+
+.dynamic-table {
+    table {
+        width: 100%;
+        table-layout: auto;
+    }
+
+    .truncate-cell-name {
+        max-width: 125px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .truncate-cell-type {
+        max-width: 380px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.type-editor-row,
+.type-view-row {
+    min-width: 0;
+    width: 100%;
+}
+
+.type-editor-slot {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: visible;
+}
+
+.drag-handle {
+    color: $app-color-fg-default;
+    cursor: grab;
+    opacity: 0;
+    display: none;
+    transition: opacity 0.2s ease-in-out;
+
+    &:active {
+        cursor: grabbing;
+    }
+}
+
+.drag-handle-disabled {
+    cursor: default;
+    pointer-events: none;
+}
+
+.dynamic-table
+    tr:hover
+    > td.mat-column-type
+    > .type-view-row
+    > .action-buttons
+    > .drag-handle:not(.drag-handle-disabled) {
+    opacity: 1;
+    display: block;
+}
+
+.cdk-drag-preview {
+    box-shadow:
+        0 5px 5px -3px rgb(0 0 0 / 20%),
+        0 8px 10px 1px rgb(0 0 0 / 14%),
+        0 3px 14px 2px rgb(0 0 0 / 12%);
+}
+
+.cdk-drag-placeholder {
+    opacity: 0;
+}
+
+.cdk-drop-list-dragging tr:not(.cdk-drag-placeholder) {
+    transition: transform 0.2s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.dynamic-table {
+    ::ng-deep {
+        mat-cell,
+        td,
+        tr {
+            overflow: visible !important;
+        }
+    }
+}
+
+.nested-struct-container {
+    margin-top: 8px;
+    min-width: 0;
+}
+
+.nested-table {
+    margin-top: 4px;
+}
+
+.field-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    max-width: 100%;
+}
+
+.inline-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+.add-field-container button {
+    font-family: sans-serif;
+}
+
+.dynamic-table th.mat-column-name,
+.dynamic-table td.mat-column-name {
+    width: 170px;
+    min-width: 170px;
+    max-width: 170px;
+}
+
+.drag-margin {
+    margin-top: 1px;
+}

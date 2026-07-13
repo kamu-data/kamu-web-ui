@@ -11,7 +11,6 @@ import { FormGroup } from "@angular/forms";
 import AppValues from "@common/values/app.values";
 import { AddPushSource, SetPollingSource } from "@api/kamu.graphql.interface";
 
-import { SchemaType } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.component";
 import {
     AddPollingSourceEditFormType,
     EventTimeSourceKind,
@@ -22,7 +21,6 @@ import {
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import {
     OrderControlType,
-    SchemaControlType,
     SourceOrder,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
 import { AddPushSourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
@@ -32,7 +30,6 @@ import { AddPushSourceSection } from "src/app/dataset-view/additional-components
 })
 export class ProcessFormService {
     public transformForm(formGroup: FormGroup): void {
-        this.transformSchema(formGroup);
         this.processEmptyPrepareStep(formGroup);
         if ("fetch" in formGroup.value) {
             this.processFetchOrderControl(formGroup);
@@ -49,15 +46,6 @@ export class ProcessFormService {
         const form = formGroup.value as AddPollingSourceEditFormType;
         if (form.fetch.chainId) {
             form.fetch.chainId = +form.fetch.chainId;
-        }
-    }
-
-    private transformSchema(formGroup: FormGroup): void {
-        const form = formGroup.value as SchemaControlType;
-        if (form.read.schema?.length && typeof form.read.schema[0] !== "string") {
-            form.read.schema = (form.read.schema as SchemaType[]).map((item) => {
-                return `${this.processSchemaName(item.name.trim())} ${item.type}`;
-            });
         }
     }
 
@@ -159,9 +147,5 @@ export class ProcessFormService {
                 }
             });
         }
-    }
-
-    private processSchemaName(name: string): string {
-        return /\s/.test(name) ? `\`${name}\`` : name;
     }
 }

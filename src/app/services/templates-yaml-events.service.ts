@@ -9,6 +9,7 @@ import { Injectable } from "@angular/core";
 
 import { stringify } from "yaml";
 
+import { schemaFieldsToObjectForm } from "@common/helpers/data-schema.helpers";
 import { SetLicense, SetTransform } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -19,8 +20,6 @@ import {
     ReadKind,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { AddPushSourceEditFormType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
-
-import { SchemaType } from "../dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.component";
 
 @Injectable({
     providedIn: "root",
@@ -68,13 +67,21 @@ export class TemplatesYamlEventsService {
             params.read.kind = params.read.jsonKind;
             delete params.read.jsonKind;
         }
+
         this.initialTemplate.content = {
             kind: "SetPollingSource",
             ...params,
         };
 
-        if (params.read.ddlSchema?.length) {
-            params.read.ddlSchema = (params.read.ddlSchema as SchemaType[]).map((item) => `${item.name} ${item.type}`);
+        const schemaFields = params.read.schema;
+        if (schemaFields?.length) {
+            this.initialTemplate.content = {
+                ...this.initialTemplate.content,
+                read: {
+                    ...params.read,
+                    schema: schemaFieldsToObjectForm(schemaFields),
+                },
+            };
         }
 
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
@@ -107,8 +114,15 @@ export class TemplatesYamlEventsService {
             ...params,
         };
 
-        if (params.read.ddlSchema?.length) {
-            params.read.ddlSchema = (params.read.ddlSchema as SchemaType[]).map((item) => `${item.name} ${item.type}`);
+        const pushSchemaFields = params.read.schema;
+        if (pushSchemaFields?.length) {
+            this.initialTemplate.content = {
+                ...this.initialTemplate.content,
+                read: {
+                    ...params.read,
+                    schema: schemaFieldsToObjectForm(pushSchemaFields),
+                },
+            };
         }
 
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {

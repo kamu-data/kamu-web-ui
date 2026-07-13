@@ -175,17 +175,12 @@ export class EditSchemaTableComponent implements OnChanges {
     }
 
     public editRow(element: DataSchemaField, index: number): void {
-        let targetIndex = index;
-        if (this.addingField && this.editingIndex !== null && !this.editingRow?.name) {
-            const blankIndex = this.editingIndex;
-            const updated = this.fields.filter((_, fieldIndex) => fieldIndex !== blankIndex);
-            this.clearEditingState();
-            this.emitFieldsChange(updated);
+        const discarded = this.discardBlankAddRowIfPresent(index);
+        if (discarded) {
+            this.emitFieldsChange(discarded.fields);
             this.emitEditingState();
-            if (targetIndex > blankIndex) {
-                targetIndex--;
-            }
         }
+        const targetIndex = discarded?.adjustedIndex ?? index;
 
         if (!this.activeEditingCoordinator.flushEditing()) {
             return;
@@ -334,13 +329,11 @@ export class EditSchemaTableComponent implements OnChanges {
     }
 
     private prepareFieldsForDelete(rowIndex: number): MaybeNull<number> {
-        if (this.addingField && this.editingIndex !== null && !this.editingRow?.name) {
-            const blankIndex = this.editingIndex;
-            const updated = this.fields.filter((_, index) => index !== blankIndex);
-            this.clearEditingState();
-            this.applyFields(updated);
+        const discarded = this.discardBlankAddRowIfPresent(rowIndex);
+        if (discarded) {
+            this.applyFields(discarded.fields);
             this.emitEditingState();
-            return rowIndex > blankIndex ? rowIndex - 1 : rowIndex;
+            return discarded.adjustedIndex;
         }
 
         if (!this.activeEditingCoordinator.flushEditing()) {
@@ -348,6 +341,23 @@ export class EditSchemaTableComponent implements OnChanges {
         }
 
         return rowIndex;
+    }
+
+    /**
+     * If a blank in-progress "add field" row is present, removes it from `fields`, clears editing
+     * state, and returns the updated fields plus `targetIndex` adjusted for the removed row.
+     * Returns `null` when there is no blank add-row to discard.
+     */
+    private discardBlankAddRowIfPresent(
+        targetIndex: number,
+    ): MaybeNull<{ fields: DataSchemaField[]; adjustedIndex: number }> {
+        if (!this.addingField || this.editingIndex === null || this.editingRow?.name) {
+            return null;
+        }
+        const blankIndex = this.editingIndex;
+        const fields = this.fields.filter((_, fieldIndex) => fieldIndex !== blankIndex);
+        this.clearEditingState();
+        return { fields, adjustedIndex: targetIndex > blankIndex ? targetIndex - 1 : targetIndex };
     }
 
     private fieldsWithCommittedEditingRow(): MaybeNull<DataSchemaField[]> {

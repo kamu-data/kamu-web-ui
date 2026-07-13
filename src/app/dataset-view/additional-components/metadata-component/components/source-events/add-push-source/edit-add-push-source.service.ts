@@ -8,7 +8,7 @@
 import { inject, Injectable } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 
-import { Observable } from "rxjs";
+import { Observable, take } from "rxjs";
 
 import { parse } from "yaml";
 
@@ -47,6 +47,7 @@ export class EditAddPushSourceService {
         if (!schemaControl) return;
         this.blockService
             .getAddPushSourceSchemaFields({ ...info, sourceName })
+            .pipe(take(1))
             .subscribe((fields: DataSchemaField[]) => schemaControl.setValue(fields));
     }
 }

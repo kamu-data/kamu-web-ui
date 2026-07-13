@@ -8,7 +8,7 @@
 import { inject, Injectable } from "@angular/core";
 import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
 
-import { Observable } from "rxjs";
+import { Observable, take } from "rxjs";
 
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { parse } from "yaml";
@@ -115,6 +115,7 @@ export class EditPollingSourceService {
             if (schemaControl) {
                 this.blockService
                     .getPollingSourceSchemaFields(datasetInfo)
+                    .pipe(take(1))
                     .subscribe((fields: DataSchemaField[]) => schemaControl.setValue(fields));
             }
         }

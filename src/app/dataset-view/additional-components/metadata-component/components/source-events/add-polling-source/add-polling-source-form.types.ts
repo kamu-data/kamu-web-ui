@@ -148,12 +148,7 @@ export interface AddPollingSourceEditFormType {
         kind: ReadKind;
         jsonKind?: ReadKind;
         subPath?: string;
-        schema:
-            | {
-                  fields: DataSchemaField[];
-              }
-            | DataSchemaField[];
-
+        schema: DataSchemaField[];
         separator?: string;
         encoding?: string;
         quote?: string;
@@ -180,7 +175,13 @@ export interface AddPollingSourceEditFormType {
 
 export interface EditFormParseType {
     content: {
-        event: AddPollingSourceEditFormType;
+        event: Omit<AddPollingSourceEditFormType, "read"> & {
+            read: Omit<AddPollingSourceEditFormType["read"], "schema"> & {
+                schema?: {
+                    fields: DataSchemaField[];
+                };
+            };
+        };
     };
 }
 

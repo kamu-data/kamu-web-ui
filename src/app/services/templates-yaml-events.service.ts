@@ -12,7 +12,6 @@ import { stringify } from "yaml";
 import { schemaFieldsToObjectForm } from "@common/helpers/data-schema.helpers";
 import { SetLicense, SetTransform } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
-import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import {
     AddPollingSourceEditFormType,
@@ -74,7 +73,7 @@ export class TemplatesYamlEventsService {
             ...params,
         };
 
-        const schemaFields = params.read.schema as DataSchemaField[];
+        const schemaFields = params.read.schema;
         if (schemaFields?.length) {
             this.initialTemplate.content = {
                 ...this.initialTemplate.content,
@@ -115,7 +114,7 @@ export class TemplatesYamlEventsService {
             ...params,
         };
 
-        const pushSchemaFields = params.read.schema as DataSchemaField[];
+        const pushSchemaFields = params.read.schema;
         if (pushSchemaFields?.length) {
             this.initialTemplate.content = {
                 ...this.initialTemplate.content,

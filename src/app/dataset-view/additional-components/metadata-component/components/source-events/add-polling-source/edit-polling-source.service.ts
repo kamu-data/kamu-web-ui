@@ -45,7 +45,14 @@ export class EditPollingSourceService {
 
     public parseEventFromYaml(event: string): AddPollingSourceEditFormType {
         const editFormParseValue = parse(event) as EditFormParseType;
-        return editFormParseValue.content.event;
+        const parsedEvent = editFormParseValue.content.event;
+        return {
+            ...parsedEvent,
+            read: {
+                ...parsedEvent.read,
+                schema: parsedEvent.read.schema?.fields ?? [],
+            },
+        };
     }
 
     public getEventAsYaml(info: DatasetInfo): Observable<MaybeNull<string>> {
@@ -92,9 +99,7 @@ export class EditPollingSourceService {
         datasetInfo: MaybeNull<DatasetInfo>,
         destroyRef: DestroyRef,
     ): void {
-        const { schema, ...rest } = editFormValue.read;
-        sectionForm.patchValue({ schema: (schema as { fields: DataSchemaField[] })?.fields });
-        sectionForm.patchValue({ ...rest });
+        sectionForm.patchValue(editFormValue.read);
         if ([ReadKind.JSON, ReadKind.ND_JSON].includes(editFormValue.read.kind)) {
             sectionForm.patchValue({
                 ...editFormValue.read,

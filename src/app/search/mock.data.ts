@@ -1293,9 +1293,6 @@ export const mockParseSetPollingSourceEventFromYamlToObject: AddPollingSourceEdi
             kind: EventTimeSourceKind.FROM_METADATA,
         },
     },
-    // `parseEventFromYaml` only produces what is in the YAML; `schema` is never present because
-    // the schema control is populated separately via GQL (see `patchReadStep`). The cast is
-    // intentional: this mock tests the raw YAML-parse output, not a fully-patched form value.
     read: {
         kind: ReadKind.CSV,
         separator: ",",
@@ -1304,7 +1301,8 @@ export const mockParseSetPollingSourceEventFromYamlToObject: AddPollingSourceEdi
         escape: "\\",
         dateFormat: "yyyy-MM-dd",
         timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
-    } as AddPollingSourceEditFormType["read"],
+        schema: [],
+    },
     merge: {
         kind: MergeKind.APPEND,
     },

@@ -11,6 +11,8 @@ import { FormArray, FormControl, FormGroup } from "@angular/forms";
 
 import { Apollo } from "apollo-angular";
 
+import { OdfTypes } from "@interface/dataset-schema.interface";
+
 import {
     AddPollingSourceEditFormType,
     FetchKind,
@@ -42,6 +44,29 @@ describe("EditPollingSourceService", () => {
             "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2023-06-02T08:44:54.984731027Z\n  prevBlockHash: zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u\n  sequenceNumber: 1\n  event:\n    kind: SetPollingSource\n    fetch:\n      kind: FilesGlob\n      path: path\n      eventTime:\n        kind: FromMetadata\n    read:\n      kind: Csv\n      separator: ','\n      encoding: UTF-8\n      quote: '\"'\n      escape: \\\n      dateFormat: yyyy-MM-dd\n      timestampFormat: yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]\n    merge:\n      kind: Append\n";
         const result: AddPollingSourceEditFormType = mockParseSetPollingSourceEventFromYamlToObject;
         expect(service.parseEventFromYaml(mockEventYaml)).toEqual(result);
+    });
+
+    it("should normalize schema object from yaml to form fields", () => {
+        const mockEventYaml = `
+content:
+  event:
+    kind: SetPollingSource
+    fetch:
+      kind: FilesGlob
+    read:
+      kind: Csv
+      schema:
+        fields:
+          - name: id
+            type:
+              kind: Int64
+    merge:
+      kind: Append
+`;
+
+        expect(service.parseEventFromYaml(mockEventYaml).read.schema).toEqual([
+            { name: "id", type: { kind: OdfTypes.Int64 } },
+        ]);
     });
 
     it("should be check patch form with fetch url step and without headers", () => {
@@ -176,7 +201,7 @@ describe("EditPollingSourceService", () => {
         });
         const editFormValue: AddPollingSourceEditFormType = {
             fetch: { kind: FetchKind.CONTAINER, image: "test_image", env: [], command: ["-a"], args: ["arg1"] },
-            read: { kind: ReadKind.CSV, schema: { fields: [] } },
+            read: { kind: ReadKind.CSV, schema: [] },
             merge: { kind: MergeKind.APPEND },
         };
         service.patchFormValues(sectionReadForm, editFormValue, SetPollingSourceSection.READ, null, destroyRef);
@@ -190,11 +215,11 @@ describe("EditPollingSourceService", () => {
             primaryKey: new FormArray([]),
             compareColumns: new FormArray([]),
         });
-        const editFormValue = {
+        const editFormValue: AddPollingSourceEditFormType = {
             fetch: { kind: FetchKind.CONTAINER, image: "test_image", env: [], command: ["-a"], args: ["arg1"] },
-            read: { kind: ReadKind.CSV, schema: { fields: [{ name: "id", type: { kind: "Int64" } }] } },
+            read: { kind: ReadKind.CSV, schema: [{ name: "id", type: { kind: OdfTypes.Int64 } }] },
             merge: { kind: MergeKind.SNAPSHOT, primaryKey: ["id", "test"], compareColumns: ["id"] },
-        } as unknown as AddPollingSourceEditFormType;
+        };
         const groupName = SetPollingSourceSection.MERGE;
         const result = {
             kind: MergeKind.SNAPSHOT,

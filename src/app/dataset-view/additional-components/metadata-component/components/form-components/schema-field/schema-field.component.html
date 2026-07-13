@@ -6,13 +6,8 @@
 
     <app-edit-schema-table
         class="mb-2"
-        [hasTableHeader]="true"
-        [columnDescriptors]="[{ columnName: 'name' }, { columnName: 'type' }]"
-        [dataRows]="form.controls.schema.value"
-        [idTable]="'edit-schema-table'"
-        tableClass="font-monospace"
-        (dataRowsChange)="onStructFieldsChange($event)"
-        [form]="form"
-        [controlName]="controlName"
+        [fields]="schemaControl.value"
+        [errors]="schemaErrors"
+        (fieldsChange)="onFieldsChange($event)"
     />
 </div>

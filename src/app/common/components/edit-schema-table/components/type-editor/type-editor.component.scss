@@ -1,21 +1,92 @@
-.width-120 {
-    width: 120px;
+.width-110 {
+    width: 130px;
+    min-width: 110px;
+    max-width: 130px;
+    flex-shrink: 1;
 }
 
 .width-60 {
-    width: 120px;
+    width: 65px;
+    min-width: 60px;
+    max-width: 120px;
+    flex-shrink: 1;
 }
 
 .width-150 {
     width: 150px;
+    min-width: 100px;
+    max-width: 150px;
+    flex-shrink: 1;
+}
+
+.nested-struct-editor .width-120,
+.nested-struct-editor .width-60 {
+    min-width: 64px;
 }
 
 .custom-border {
     border-left: 2px solid rgb(147 197 253);
     padding-left: 6px;
+    min-width: 0;
 }
 
 .ng-dropdown-panel {
     z-index: 1050;
     position: absolute;
+    width: max-content;
+    min-width: 100%;
+    max-width: 260px;
+}
+
+.nested-struct-editor {
+    min-width: 0;
+    width: 100%;
+    flex: 1 1 auto;
+}
+
+.nested-struct-editor ::ng-deep .dynamic-table {
+    min-width: 0;
+}
+
+.type-editor-root {
+    min-width: 0;
+    width: 100%;
+}
+
+.type-editor-kind-row {
+    min-width: 0;
+    row-gap: 4px;
+}
+
+.optional-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 20px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background-color: rgb(13 110 253 / 35%);
+    color: rgb(255 255 255 / 78%);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+        background-color 120ms ease,
+        box-shadow 120ms ease,
+        color 120ms ease;
+    white-space: nowrap;
+}
+
+.optional-toggle:hover,
+.optional-toggle:focus-visible {
+    color: #fff;
+    box-shadow: 0 0 0 2px rgb(13 110 253 / 18%);
+}
+
+.optional-toggle-active {
+    background-color: #0d6efd;
+    color: #fff;
 }

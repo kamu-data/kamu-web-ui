@@ -5,7 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { inject, Injectable } from "@angular/core";
+import { DestroyRef, inject, Injectable } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
 
 import { Observable } from "rxjs";
@@ -15,6 +16,7 @@ import { parse } from "yaml";
 
 import { MetadataManifestFormat } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
 
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
@@ -30,8 +32,6 @@ import {
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { SourcesSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
 
-import { SchemaType } from "../../form-components/schema-field/schema-field.component";
-
 @Injectable({
     providedIn: "root",
 })
@@ -45,7 +45,14 @@ export class EditPollingSourceService {
 
     public parseEventFromYaml(event: string): AddPollingSourceEditFormType {
         const editFormParseValue = parse(event) as EditFormParseType;
-        return editFormParseValue.content.event;
+        const parsedEvent = editFormParseValue.content.event;
+        return {
+            ...parsedEvent,
+            read: {
+                ...parsedEvent.read,
+                schema: parsedEvent.read.schema?.fields ?? [],
+            },
+        };
     }
 
     public getEventAsYaml(info: DatasetInfo): Observable<MaybeNull<string>> {
@@ -56,6 +63,8 @@ export class EditPollingSourceService {
         sectionForm: FormGroup,
         editFormValue: AddPollingSourceEditFormType,
         groupName: SourcesSection,
+        datasetInfo: MaybeNull<DatasetInfo>,
+        destroyRef: DestroyRef,
     ): void {
         switch (groupName) {
             case SetPollingSourceSection.FETCH: {
@@ -63,7 +72,7 @@ export class EditPollingSourceService {
                 break;
             }
             case SetPollingSourceSection.READ: {
-                this.patchReadStep(sectionForm, editFormValue);
+                this.patchReadStep(sectionForm, editFormValue, datasetInfo, destroyRef);
                 break;
             }
             case SetPollingSourceSection.MERGE: {
@@ -84,13 +93,13 @@ export class EditPollingSourceService {
         }
     }
 
-    private patchReadStep(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
-        const schemaFields = editFormValue.read.schema as { fields: SchemaType[] };
-        if (editFormValue.read.schema && (editFormValue.read.schema as { fields: SchemaType[] }).fields.length) {
-            editFormValue.read.schema = schemaFields.fields;
-        }
-
-        sectionForm.patchValue({ ...editFormValue.read });
+    private patchReadStep(
+        sectionForm: FormGroup,
+        editFormValue: AddPollingSourceEditFormType,
+        datasetInfo: MaybeNull<DatasetInfo>,
+        destroyRef: DestroyRef,
+    ): void {
+        sectionForm.patchValue(editFormValue.read);
         if ([ReadKind.JSON, ReadKind.ND_JSON].includes(editFormValue.read.kind)) {
             sectionForm.patchValue({
                 ...editFormValue.read,
@@ -108,17 +117,15 @@ export class EditPollingSourceService {
                 jsonKind: editFormValue.read.kind,
             });
         }
-        const ddlSchemaControl = sectionForm.controls.schema as FormArray;
-        const readSchema = editFormValue.read.schema as SchemaType[];
-        if (!(ddlSchemaControl.value as SchemaType[]).length && editFormValue.read.schema && readSchema.length) {
-            readSchema.forEach((item) => {
-                ddlSchemaControl.push(
-                    this.fb.group({
-                        name: [item.name],
-                        type: [item.type],
-                    }),
-                );
-            });
+        if (datasetInfo) {
+            const schemaControl = sectionForm.get("schema");
+
+            if (schemaControl) {
+                this.blockService
+                    .getPollingSourceSchemaFields(datasetInfo)
+                    .pipe(takeUntilDestroyed(destroyRef))
+                    .subscribe((fields: DataSchemaField[]) => schemaControl.setValue(fields));
+            }
         }
     }
 

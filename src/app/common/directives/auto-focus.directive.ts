@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 import { AfterViewInit, Directive, ElementRef, inject } from "@angular/core";
 
 @Directive({
@@ -5,9 +12,9 @@ import { AfterViewInit, Directive, ElementRef, inject } from "@angular/core";
     standalone: true,
 })
 export class AutoFocusDirective implements AfterViewInit {
-    private el = inject(ElementRef);
+    private el = inject<ElementRef<HTMLElement>>(ElementRef);
 
-    ngAfterViewInit(): void {
+    public ngAfterViewInit(): void {
         setTimeout(() => {
             this.el.nativeElement.focus();
         }, 50);

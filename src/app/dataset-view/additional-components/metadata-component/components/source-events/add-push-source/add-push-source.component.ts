@@ -6,7 +6,7 @@
  */
 
 import { NgIf } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatStepperModule } from "@angular/material/stepper";
 import { RouterLink } from "@angular/router";
@@ -49,7 +49,7 @@ import ProjectLinks from "src/app/project-links";
         StepperNavigationComponent,
     ],
 })
-export class AddPushSourceComponent extends BaseSourceEventComponent {
+export class AddPushSourceComponent extends BaseSourceEventComponent implements AfterViewInit {
     @Input(ProjectLinks.URL_QUERY_PARAM_PUSH_SOURCE_NAME) public queryParamName: string;
     @Input(RoutingResolvers.ADD_PUSH_SOURCE_KEY) public eventYamlByHash: string;
     @Input(RoutingResolvers.DATASET_INFO_KEY) public datasetInfo: DatasetInfo;
@@ -64,6 +64,17 @@ export class AddPushSourceComponent extends BaseSourceEventComponent {
     public ngOnInit(): void {
         super.ngOnInit();
         this.initEditForm();
+    }
+
+    public ngAfterViewInit(): void {
+        if (this.eventYamlByHash && this.queryParamName) {
+            this.editService.patchSchemaField(
+                this.readPushForm,
+                this.datasetInfo,
+                this.queryParamName,
+                this.destroyRef,
+            );
+        }
     }
 
     public addPushSourceForm: FormGroup = this.fb.group({

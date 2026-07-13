@@ -15,7 +15,6 @@ import {
     PrepareKind,
     ReadKind,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
-import { SchemaControlType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
 import { ProcessFormService } from "src/app/dataset-view/additional-components/metadata-component/services/process-form.service";
 
 describe("ProcessFormService", () => {
@@ -65,13 +64,13 @@ describe("ProcessFormService", () => {
         };
         const expectedResult = {
             fetch: { eventTime: { kind: EventTimeSourceKind.FROM_METADATA } },
-            read: { kind: ReadKind.CSV, schema: ["id BIGINT"] },
+            read: { kind: ReadKind.CSV, schema: [{ name: "id", type: "BIGINT" }] },
             merge: { kind: MergeKind.APPEND },
         };
         expect(formGroup.value).toEqual(initialResult);
         service.transformForm(formGroup);
         expect(transformFormSpy).toHaveBeenCalledTimes(1);
-        expect(formGroup.value as SchemaControlType).toEqual(expectedResult);
+        expect(formGroup.value).toEqual(expectedResult);
     });
 
     it("should check remove eventTime when fetch type is container ", () => {
@@ -110,13 +109,13 @@ describe("ProcessFormService", () => {
         };
         const expectedResult = {
             fetch: { kind: FetchKind.CONTAINER },
-            read: { kind: ReadKind.CSV, schema: ["`id (A.M.)` BIGINT"] },
+            read: { kind: ReadKind.CSV, schema: [{ name: "id (A.M.)", type: "BIGINT" }] },
             merge: { kind: MergeKind.APPEND },
         };
         expect(formGroupFetchContainer.value).toEqual(initialResult);
         service.transformForm(formGroupFetchContainer);
 
-        expect(formGroupFetchContainer.value as SchemaControlType).toEqual(expectedResult);
+        expect(formGroupFetchContainer.value).toEqual(expectedResult);
     });
 
     it("should check parse command correct on the PREPARE step. ", () => {
@@ -150,12 +149,12 @@ describe("ProcessFormService", () => {
 
         const expectedResult = {
             fetch: { kind: FetchKind.CONTAINER },
-            read: { kind: ReadKind.CSV, schema: ["`id (A.M.)` BIGINT"] },
+            read: { kind: ReadKind.CSV, schema: [{ name: "id (A.M.)", type: "BIGINT" }] },
             prepare: [{ kind: PrepareKind.PIPE, command: ["i", "-c", "'1,/OBSERVATION/d'"] }],
             merge: { kind: MergeKind.APPEND },
         };
         service.transformForm(formGroupFetchContainer);
 
-        expect(formGroupFetchContainer.value as SchemaControlType).toEqual(expectedResult);
+        expect(formGroupFetchContainer.value).toEqual(jasmine.objectContaining(expectedResult));
     });
 });

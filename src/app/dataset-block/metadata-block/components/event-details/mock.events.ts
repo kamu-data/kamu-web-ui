@@ -64,7 +64,6 @@ export const mockSetPollingSourceEvent: SetPollingSource = {
             __typename: "DataSchema",
         },
         separator: ",",
-        ddlSchema: null,
         encoding: null,
         quote: null,
         escape: null,

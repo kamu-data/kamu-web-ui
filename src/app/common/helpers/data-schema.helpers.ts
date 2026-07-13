@@ -37,8 +37,6 @@ export function odfType2String(type: DataSchemaTypeField): string {
     switch (type.kind) {
         case OdfTypes.Option:
             return `${odfType2String(type.inner)}?`;
-        case OdfTypes.Null:
-            return `${type.kind}<${type.inner ? odfType2String(type.inner) : ""}>`;
         case OdfTypes.List: {
             return `${type.kind}<${odfType2String(type.itemType)}>`;
         }
@@ -84,6 +82,41 @@ export function schemaAsDataRows(schema: DataSchemaField[]): DynamicTableDataRow
             },
         };
     });
+}
+
+/**
+ * Normalizes any accepted schema input into the canonical rich `DataSchemaField[]` model.
+ *
+ * Accepts:
+ *  - the ODF object form `{ fields: DataSchemaField[] }`, or
+ *  - a bare `DataSchemaField[]` (already normalized — idempotent).
+ */
+export function normalizeSchemaFields(input: DatasetSchema | DataSchemaField[] | null | undefined): DataSchemaField[] {
+    if (!input) {
+        return [];
+    }
+    return Array.isArray(input) ? input : input.fields;
+}
+
+/**
+ * Wraps a `DataSchemaField[]` in the canonical ODF object wire shape `{ fields }` used by the YAML
+ * builders.
+ */
+export function schemaFieldsToObjectForm(fields: DataSchemaField[]): DatasetSchema {
+    return { fields };
+}
+
+/**
+ * Extracts and normalizes `DataSchemaField[]` from a GQL read-step's
+ * `schema(format: ODF_JSON)` field.  Returns `[]` when the field is absent
+ * or empty so callers never receive `null`/`undefined`.
+ */
+export function extractSchemaFromReadStep(
+    readStep: { schema?: { content: string } | null } | null | undefined,
+): DataSchemaField[] {
+    const content = readStep?.schema?.content;
+    if (!content) return [];
+    return normalizeSchemaFields(parseSchemaFromJson(content));
 }
 
 export function schemaEditAsDataRows(schema: DataSchemaField[]): DataSchemaField[] {

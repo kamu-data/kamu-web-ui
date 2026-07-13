@@ -5,35 +5,22 @@
  * included in the LICENSE file.
  */
 
-import { JsonPipe } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from "@angular/material/table";
 
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 
 import { EditSchemaTableComponent } from "@common/components/edit-schema-table/edit-schema-table.component";
-import { ChangeStructType } from "@common/components/edit-schema-table/edit-schema-table.types";
-import { EditSchemaTableService } from "@common/components/edit-schema-table/service/edit-schema-table.service";
+import { SchemaValidationError } from "@common/components/edit-schema-table/validation/schema-validation";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
-import { schemaEditAsDataRows } from "@common/helpers/data-schema.helpers";
-import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 
-export interface SchemaType {
-    name: string;
-    type: string;
-}
-
-export function replaceFieldByIndex(
-    fields: DataSchemaField[],
-    indexToReplace: number,
-    newFieldData: DataSchemaField,
-): DataSchemaField[] {
-    return fields.map((field, index) => (index === indexToReplace ? { ...newFieldData } : field));
-}
+import { schemaValidator } from "./schema-field.component.helpers";
 
 @Component({
     selector: "app-schema-field",
@@ -54,24 +41,27 @@ export function replaceFieldByIndex(
     ],
 })
 export class SchemaFieldComponent extends BaseField implements OnInit {
-    public schemaFields: DataSchemaField[] = [];
+    private readonly cdr = inject(ChangeDetectorRef);
 
-    private cdr = inject(ChangeDetectorRef);
-    private schemaService = inject(EditSchemaTableService);
-
-    public ngOnInit(): void {
-        this.schemaFields = this.form.controls.schema.value;
-        console.log("before==>", this.schemaFields);
+    public get schemaControl(): FormControl<DataSchemaField[]> {
+        return this.form.get(this.controlName) as FormControl<DataSchemaField[]>;
     }
 
-    public onStructFieldsChange(updatedField: ChangeStructType): void {
-        const schema = this.form.controls.schema;
-        const updatedData = replaceFieldByIndex(schema.value, updatedField.index, updatedField.data);
-        schema.setValue(updatedData);
-        this.schemaService.setDataRows(updatedData);
+    public get schemaErrors(): SchemaValidationError[] {
+        const err = this.schemaControl.errors;
+        return (err?.["schemaErrors"] as SchemaValidationError[]) ?? [];
+    }
 
-        console.log("after==>", schema.value);
+    public ngOnInit(): void {
+        this.schemaControl.addValidators(schemaValidator);
+        this.schemaControl.updateValueAndValidity();
+        this.schemaControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.cdr.markForCheck();
+        });
+    }
 
-        this.cdr.detectChanges();
+    public onFieldsChange(fields: DataSchemaField[]): void {
+        this.schemaControl.setValue(fields);
+        this.schemaControl.markAsTouched();
     }
 }

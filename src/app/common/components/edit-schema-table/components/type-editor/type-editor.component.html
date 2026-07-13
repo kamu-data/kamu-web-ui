@@ -1,27 +1,33 @@
-<div class="d-flex align-items-start flex-column" [class.custom-border]="depth > 0">
-    <div class="d-flex flex-row align-items-center">
+<div class="d-flex align-items-start flex-column type-editor-root" [class.custom-border]="depth > 0">
+    <div class="d-flex flex-row align-items-center flex-wrap type-editor-kind-row">
         <ng-select
-            class="width-120"
-            [(ngModel)]="value.kind"
+            class="width-110"
+            [ngModel]="selectedKind"
             [items]="TYPES_OPTIONS_LIST"
             bindLabel="label"
             bindValue="value"
             [clearable]="false"
+            [attr.data-test-id]="typePath + ':kind'"
             (change)="changeEditorType($event)"
         >
             <ng-template ng-option-tmp let-item="item" let-index="index">
-                <label class="fs-14 inline-block"> {{ item.value }} </label>
+                <label class="fs-14 inline-block" [attr.data-test-id]="typePath + ':kind-option:' + item.value">
+                    {{ item.value }}
+                </label>
             </ng-template>
         </ng-select>
-        <ng-container *ngIf="value.kind === 'Timestamp'">
+
+        <ng-container *ngIf="selectedKind === 'Timestamp'">
             <span class="text-muted gap-2">&nbsp;&lt;&nbsp;</span>
             <ng-select
-                class="width-120"
-                [(ngModel)]="value.unit"
+                class="width-110"
+                [ngModel]="schemaTimeField.unit"
                 [items]="UNIT_OPTIONS_LIST"
                 bindLabel="label"
                 bindValue="value"
                 [clearable]="false"
+                [attr.data-test-id]="typePath + ':unit'"
+                (change)="changeUnitTime($event)"
             >
                 <ng-template ng-option-tmp let-item="item" let-index="index">
                     <label class="fs-14 inline-block"> {{ item.value }} </label>
@@ -30,12 +36,14 @@
             <span class="text-muted">&nbsp;,&nbsp;</span>
             <ng-select
                 class="width-60"
-                [(ngModel)]="schemaTimeField.timezone"
+                [ngModel]="schemaTimeField.timezone"
                 [items]="TIMEZONE_OPTIONS_LIST"
                 bindLabel="label"
                 bindValue="value"
                 appendTo="body"
                 [clearable]="false"
+                [attr.data-test-id]="typePath + ':timezone'"
+                (change)="changeTimezone($event)"
             >
                 <ng-template ng-option-tmp let-item="item" let-index="index">
                     <label class="fs-14 inline-block"> {{ item.value }} </label>
@@ -43,15 +51,16 @@
             </ng-select>
             <span class="text-muted">&nbsp;&gt;</span>
         </ng-container>
-        <ng-container *ngIf="value.kind === OdfTypes.Time || value.kind === OdfTypes.Duration">
+        <ng-container *ngIf="selectedKind === OdfTypes.Time || selectedKind === OdfTypes.Duration">
             <span class="text-muted gap-2">&nbsp;&lt;&nbsp;</span>
             <ng-select
-                class="width-120"
-                [(ngModel)]="value.unit"
+                class="width-110"
+                [ngModel]="schemaTimeField.unit"
                 [items]="UNIT_OPTIONS_LIST"
                 bindLabel="label"
                 bindValue="value"
                 [clearable]="false"
+                [attr.data-test-id]="typePath + ':unit'"
                 (change)="changeUnitTime($event)"
             >
                 <ng-template ng-option-tmp let-item="item" let-index="index">
@@ -61,40 +70,69 @@
 
             <span class="text-muted">&nbsp;&gt;</span>
         </ng-container>
+        <button
+            type="button"
+            class="optional-toggle ms-2"
+            [class.optional-toggle-active]="optional"
+            title="Optional"
+            role="switch"
+            [attr.aria-checked]="optional"
+            [attr.data-test-id]="typePath + ':optional'"
+            (click)="changeOptional(!optional)"
+        >
+            ?
+        </button>
     </div>
 
-    <ng-container *ngIf="value.kind === OdfTypes.Option">
-        <div class="d-flex flex-column mt-2" [class.ms-2]="depth > 0">
-            <span class="text-muted fs-12 d-block">Inner Type</span>
-            <div class="">
-                <app-type-editor [value]="value.inner" [depth]="depth + 1" (typeChange)="typeOptionChange($event)" />
-            </div>
-        </div>
-    </ng-container>
-    <ng-container *ngIf="value.kind === OdfTypes.List">
+    <ng-container *ngIf="selectedKind === OdfTypes.List">
         <div class="d-flex flex-column mt-2" [class.ms-2]="depth > 0">
             <span class="text-muted fs-12 d-block">Item Type</span>
             <div>
-                <app-type-editor [value]="value.itemType" [depth]="depth + 1" (typeChange)="typeListChange($event)" />
+                <app-type-editor
+                    #typeEditor
+                    [value]="schemaListField.itemType"
+                    [depth]="depth + 1"
+                    [typePath]="typePath + '.item'"
+                    (typeChange)="typeListChange($event)"
+                />
             </div>
         </div>
     </ng-container>
-    <ng-container *ngIf="value.kind === OdfTypes.Map">
+    <ng-container *ngIf="selectedKind === OdfTypes.Map">
         <div class="d-flex flex-column mt-2" [class.ms-2]="depth > 0">
             <span class="text-muted fs-12 d-block">Key Type</span>
             <div>
-                <app-type-editor [depth]="depth + 1" [value]="value.keyType" (typeChange)="typeMapKeyChange($event)" />
+                <app-type-editor
+                    #typeEditor
+                    [depth]="depth + 1"
+                    [value]="schemaMapField.keyType"
+                    [typePath]="typePath + '.key'"
+                    (typeChange)="typeMapKeyChange($event)"
+                />
             </div>
         </div>
         <div class="d-flex flex-column mb-1" [class.ms-2]="depth > 0">
             <span class="text-muted fs-12 d-block">Key Value</span>
             <div>
                 <app-type-editor
+                    #typeEditor
                     [depth]="depth + 1"
-                    [value]="value.valueType"
+                    [value]="schemaMapField.valueType"
+                    [typePath]="typePath + '.value'"
                     (typeChange)="typeMapValueChange($event)"
                 />
             </div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="selectedKind === OdfTypes.Struct">
+        <div class="nested-struct-editor mt-2" [class.ms-2]="depth > 0">
+            <app-edit-schema-table
+                #nestedEditSchemaTable
+                [fields]="schemaStructField.fields"
+                [depth]="depth + 1"
+                [tablePath]="typePath + '.fields'"
+                (fieldsChange)="typeStructFieldsChange($event)"
+            />
         </div>
     </ng-container>
 </div>

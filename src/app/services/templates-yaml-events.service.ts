@@ -5,11 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { inject, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 
 import { stringify } from "yaml";
 
-import { EditSchemaTableService } from "@common/components/edit-schema-table/service/edit-schema-table.service";
+import { schemaFieldsToObjectForm } from "@common/helpers/data-schema.helpers";
 import { SetLicense, SetTransform } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -30,8 +30,6 @@ export class TemplatesYamlEventsService {
     private readonly initialSetWatermarkTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: SetWatermark\n";
     private readonly initialDisablePollingSourceTemplate =
         "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: DisablePollingSource\n";
-
-    private editSchemaService = inject(EditSchemaTableService);
 
     private readonly initialTemplate = {
         kind: "MetadataEvent",
@@ -75,14 +73,13 @@ export class TemplatesYamlEventsService {
             ...params,
         };
 
-        if (this.editSchemaService.currentData.length) {
+        const schemaFields = params.read.schema;
+        if (schemaFields?.length) {
             this.initialTemplate.content = {
                 ...this.initialTemplate.content,
                 read: {
                     ...params.read,
-                    schema: {
-                        fields: this.editSchemaService.currentData,
-                    },
+                    schema: schemaFieldsToObjectForm(schemaFields),
                 },
             };
         }
@@ -117,14 +114,13 @@ export class TemplatesYamlEventsService {
             ...params,
         };
 
-        if (this.editSchemaService.currentData.length) {
+        const pushSchemaFields = params.read.schema;
+        if (pushSchemaFields?.length) {
             this.initialTemplate.content = {
                 ...this.initialTemplate.content,
                 read: {
                     ...params.read,
-                    schema: {
-                        fields: this.editSchemaService.currentData,
-                    },
+                    schema: schemaFieldsToObjectForm(pushSchemaFields),
                 },
             };
         }

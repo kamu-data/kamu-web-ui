@@ -1301,6 +1301,7 @@ export const mockParseSetPollingSourceEventFromYamlToObject: AddPollingSourceEdi
         escape: "\\",
         dateFormat: "yyyy-MM-dd",
         timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
+        schema: [],
     },
     merge: {
         kind: MergeKind.APPEND,
@@ -1312,7 +1313,6 @@ export const mockParseAddPushSourceEventFromYamlToObject: AddPushSourceEditFormT
     sourceName: "mockSource",
     read: {
         kind: ReadKind.CSV,
-        ddlSchema: ["id INT"],
         separator: OdfDefaultValues.CSV_SEPARATOR,
         encoding: OdfDefaultValues.CSV_ENCODING,
         quote: OdfDefaultValues.CSV_QUOTE,
@@ -1597,6 +1597,7 @@ export const mockSetPollingSourceEditFormWithReadNdJsonFormat: AddPollingSourceE
         dateFormat: OdfDefaultValues.CSV_DATE_FORMAT,
         timestampFormat: OdfDefaultValues.CSV_TIMESTAMP_FORMAT,
         subPath: "/test",
+        schema: [],
     },
     merge: {
         kind: MergeKind.APPEND,

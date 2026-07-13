@@ -20,6 +20,8 @@ import {
 import { BaseComponent } from "@common/components/base.component";
 import { getValidators } from "@common/helpers/data.helpers";
 import { MaybeNull } from "@interface/app.types";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 import { ArrayKeysFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/array-keys-field/array-keys-field.component";
 import { CacheFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/cache-field/cache-field.component";
@@ -81,6 +83,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public description: string;
     @Input({ required: true }) public sectionName: SourcesSection;
     @Input({ required: true }) public eventYamlByHash: MaybeNull<string> = null;
+    @Input() public datasetInfo: MaybeNull<DatasetInfo> = null;
     private editFormValue: AddPollingSourceEditFormType;
     public controlType: typeof ControlType = ControlType;
     public readonly KIND_NAME_CONTROL = "kind";
@@ -109,8 +112,13 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     private initEditForm(): void {
         if (this.eventYamlByHash) {
             this.editFormValue = this.editService.parseEventFromYaml(this.eventYamlByHash);
-            this.editFormValue.read.schema = this.editFormValue.read.schema;
-            this.editService.patchFormValues(this.sectionForm, this.editFormValue, this.sectionName);
+            this.editService.patchFormValues(
+                this.sectionForm,
+                this.editFormValue,
+                this.sectionName,
+                this.datasetInfo,
+                this.destroyRef,
+            );
         }
     }
 
@@ -137,7 +145,9 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
 
     private initForm(kind: string): void {
         this.sectionFormData[kind].controls.forEach((item: JsonFormControl) => {
-            if (this.isArrayControl(item.type)) {
+            if (item.type === this.controlType.SCHEMA) {
+                this.sectionForm.addControl(item.name, this.fb.control<DataSchemaField[]>([]));
+            } else if (this.isArrayControl(item.type)) {
                 this.sectionForm.addControl(item.name, this.fb.array([]));
             } else if (item.type === this.controlType.EVENT_TIME) {
                 this.sectionForm.addControl(

@@ -5,10 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { inject, Injectable } from "@angular/core";
+import { DestroyRef, inject, Injectable } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormGroup } from "@angular/forms";
 
-import { Observable, take } from "rxjs";
+import { Observable } from "rxjs";
 
 import { parse } from "yaml";
 
@@ -42,12 +43,12 @@ export class EditAddPushSourceService {
         });
     }
 
-    public patchSchemaField(readForm: FormGroup, info: DatasetInfo, sourceName: string): void {
+    public patchSchemaField(readForm: FormGroup, info: DatasetInfo, sourceName: string, destroyRef: DestroyRef): void {
         const schemaControl = readForm.get("schema");
         if (!schemaControl) return;
         this.blockService
             .getAddPushSourceSchemaFields({ ...info, sourceName })
-            .pipe(take(1))
+            .pipe(takeUntilDestroyed(destroyRef))
             .subscribe((fields: DataSchemaField[]) => schemaControl.setValue(fields));
     }
 }

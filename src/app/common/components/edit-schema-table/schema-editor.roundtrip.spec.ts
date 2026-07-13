@@ -15,6 +15,7 @@
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { DestroyRef } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
 
@@ -174,6 +175,7 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
             },
             SetPollingSourceSection.READ,
             mockDatasetInfo,
+            TestBed.inject(DestroyRef),
         );
 
         expect(spy).toHaveBeenCalledWith(
@@ -381,6 +383,7 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
             },
             SetPollingSourceSection.READ,
             mockDatasetInfo,
+            TestBed.inject(DestroyRef),
         );
 
         expect(schemaControl.value).toEqual(ORDER_SCHEMA);

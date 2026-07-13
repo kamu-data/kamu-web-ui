@@ -68,7 +68,12 @@ export class AddPushSourceComponent extends BaseSourceEventComponent implements 
 
     public ngAfterViewInit(): void {
         if (this.eventYamlByHash && this.queryParamName) {
-            this.editService.patchSchemaField(this.readPushForm, this.datasetInfo, this.queryParamName);
+            this.editService.patchSchemaField(
+                this.readPushForm,
+                this.datasetInfo,
+                this.queryParamName,
+                this.destroyRef,
+            );
         }
     }
 

@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { DestroyRef } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
 
@@ -22,6 +23,7 @@ import { mockDatasetInfo, mockParseAddPushSourceEventFromYamlToObject } from "sr
 describe("EditAddPushSourceService", () => {
     let service: EditAddPushSourceService;
     let blockService: BlockService;
+    let destroyRef: DestroyRef;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -29,6 +31,7 @@ describe("EditAddPushSourceService", () => {
         });
         service = TestBed.inject(EditAddPushSourceService);
         blockService = TestBed.inject(BlockService);
+        destroyRef = TestBed.inject(DestroyRef);
     });
 
     it("should be created", () => {
@@ -50,7 +53,7 @@ describe("EditAddPushSourceService", () => {
         const spy = spyOn(blockService, "getAddPushSourceSchemaFields").and.returnValue(of(expectedFields));
 
         const readForm = new FormGroup({ schema: new FormControl<DataSchemaField[]>([]) });
-        service.patchSchemaField(readForm, mockDatasetInfo, "my-source");
+        service.patchSchemaField(readForm, mockDatasetInfo, "my-source", destroyRef);
 
         expect(spy).toHaveBeenCalledWith(
             jasmine.objectContaining({
@@ -65,7 +68,7 @@ describe("EditAddPushSourceService", () => {
     it("should not subscribe when schema control is absent in patchSchemaField", () => {
         const spy = spyOn(blockService, "getAddPushSourceSchemaFields");
         const readForm = new FormGroup({ otherControl: new FormControl("") });
-        service.patchSchemaField(readForm, mockDatasetInfo, "my-source");
+        service.patchSchemaField(readForm, mockDatasetInfo, "my-source", destroyRef);
         expect(spy).not.toHaveBeenCalled();
     });
 });

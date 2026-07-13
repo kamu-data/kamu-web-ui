@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { DestroyRef } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
 
@@ -22,12 +23,14 @@ import { mockParseSetPollingSourceEventFromYamlToObject } from "src/app/search/m
 
 describe("EditPollingSourceService", () => {
     let service: EditPollingSourceService;
+    let destroyRef: DestroyRef;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo],
         });
         service = TestBed.inject(EditPollingSourceService);
+        destroyRef = TestBed.inject(DestroyRef);
     });
 
     it("should be created", () => {
@@ -74,7 +77,7 @@ describe("EditPollingSourceService", () => {
             headers: [],
         };
         const groupName = SetPollingSourceSection.FETCH;
-        service.patchFormValues(sectionFetchForm, editFormValue, groupName, null);
+        service.patchFormValues(sectionFetchForm, editFormValue, groupName, null, destroyRef);
         expect(sectionFetchForm.value.headers?.length).toEqual(0);
         expect(sectionFetchForm.value.url).toEqual(result.url);
         expect(sectionFetchForm.value.eventTime).toEqual(result.eventTime);
@@ -114,7 +117,7 @@ describe("EditPollingSourceService", () => {
             eventTime: { pattern: null, timestampFormat: null },
             headers: [{ name: "test_name", value: "test_value" }],
         };
-        service.patchFormValues(sectionFetchForm, editFormValue, groupName, null);
+        service.patchFormValues(sectionFetchForm, editFormValue, groupName, null, destroyRef);
         expect(sectionFetchForm.value.headers?.length).toEqual(1);
         expect(sectionFetchForm.value.url).toEqual(result.url);
         expect(sectionFetchForm.value.eventTime).toEqual(result.eventTime);
@@ -160,7 +163,7 @@ describe("EditPollingSourceService", () => {
             args: ["arg1"],
         };
         const groupName = SetPollingSourceSection.FETCH;
-        service.patchFormValues(sectionFetchForm, editFormValue, groupName, null);
+        service.patchFormValues(sectionFetchForm, editFormValue, groupName, null, destroyRef);
         expect(sectionFetchForm.value.image).toEqual(result.image);
         expect(sectionFetchForm.value.command as string[]).toEqual(result.command);
         expect(sectionFetchForm.value.args as string[]).toEqual(result.args);
@@ -176,7 +179,7 @@ describe("EditPollingSourceService", () => {
             read: { kind: ReadKind.CSV, schema: { fields: [] } },
             merge: { kind: MergeKind.APPEND },
         };
-        service.patchFormValues(sectionReadForm, editFormValue, SetPollingSourceSection.READ, null);
+        service.patchFormValues(sectionReadForm, editFormValue, SetPollingSourceSection.READ, null, destroyRef);
         expect(sectionReadForm.value.kind).toEqual(ReadKind.CSV);
         expect(sectionReadForm.value.schema).toEqual([]);
     });
@@ -198,7 +201,7 @@ describe("EditPollingSourceService", () => {
             primaryKey: ["id", "test"],
             compareColumns: ["id"],
         };
-        service.patchFormValues(sectionMergeForm, editFormValue, groupName, null);
+        service.patchFormValues(sectionMergeForm, editFormValue, groupName, null, destroyRef);
         expect(sectionMergeForm.value.kind).toEqual(result.kind);
         expect(sectionMergeForm.value.primaryKey?.length).toEqual(result.primaryKey.length);
         expect(sectionMergeForm.value.compareColumns?.length).toEqual(result.compareColumns.length);

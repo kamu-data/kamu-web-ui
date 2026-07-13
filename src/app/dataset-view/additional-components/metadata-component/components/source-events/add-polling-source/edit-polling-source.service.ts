@@ -5,10 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { inject, Injectable } from "@angular/core";
+import { DestroyRef, inject, Injectable } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
 
-import { Observable, take } from "rxjs";
+import { Observable } from "rxjs";
 
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { parse } from "yaml";
@@ -56,6 +57,7 @@ export class EditPollingSourceService {
         editFormValue: AddPollingSourceEditFormType,
         groupName: SourcesSection,
         datasetInfo: MaybeNull<DatasetInfo>,
+        destroyRef: DestroyRef,
     ): void {
         switch (groupName) {
             case SetPollingSourceSection.FETCH: {
@@ -63,7 +65,7 @@ export class EditPollingSourceService {
                 break;
             }
             case SetPollingSourceSection.READ: {
-                this.patchReadStep(sectionForm, editFormValue, datasetInfo);
+                this.patchReadStep(sectionForm, editFormValue, datasetInfo, destroyRef);
                 break;
             }
             case SetPollingSourceSection.MERGE: {
@@ -88,6 +90,7 @@ export class EditPollingSourceService {
         sectionForm: FormGroup,
         editFormValue: AddPollingSourceEditFormType,
         datasetInfo: MaybeNull<DatasetInfo>,
+        destroyRef: DestroyRef,
     ): void {
         const { schema, ...rest } = editFormValue.read;
         sectionForm.patchValue({ schema: (schema as { fields: DataSchemaField[] })?.fields });
@@ -115,7 +118,7 @@ export class EditPollingSourceService {
             if (schemaControl) {
                 this.blockService
                     .getPollingSourceSchemaFields(datasetInfo)
-                    .pipe(take(1))
+                    .pipe(takeUntilDestroyed(destroyRef))
                     .subscribe((fields: DataSchemaField[]) => schemaControl.setValue(fields));
             }
         }

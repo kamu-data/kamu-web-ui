@@ -38,7 +38,7 @@ import {
 
 import { TypeEditorComponent } from "./components/type-editor/type-editor.component";
 import { EditSchemaEditingCoordinator, FieldView, NestedStructTable } from "./edit-schema-table.types";
-import { schemaNameWarnings, SchemaValidationError, SchemaWarning } from "./validation/schema-validation";
+import { schemaNameWarnings, SchemaValidationError } from "./validation/schema-validation";
 
 @Component({
     selector: "app-edit-schema-table",

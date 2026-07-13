@@ -22,7 +22,6 @@ export default class AppValues {
     public static readonly URL_PATTERN = /^(http:\/\/)|(https:\/\/)/i;
     public static readonly URL_PATTERN_ONLY_HTTPS = /^(https:\/\/)/i;
     public static readonly ZERO_OR_POSITIVE_PATTERN = /^[0-9]*$/i;
-    public static readonly SCHEMA_NAME_PATTERN = /^[a-zA-Z0-9]+[a-zA-Z0-9\s(_)]*$/i;
     public static readonly SPLIT_ARGUMENTS_PATTERN = /[^\s"']+|"([^"]*)"+|'([^']*)'/g;
     public static readonly DATASET_NAME_PATTERN = /^([a-zA-Z0-9][a-zA-Z0-9-]*)+(\.[a-zA-Z0-9][a-zA-Z0-9-]*)*$/i;
 

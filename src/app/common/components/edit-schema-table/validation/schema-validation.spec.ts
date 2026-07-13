@@ -48,12 +48,6 @@ describe("validateSchemaFields", () => {
         expect(errors[0].code).toBe(SchemaValidationErrorCode.EMPTY_NAME);
     });
 
-    it("should accept a name with spaces (permissive name — valid per SCHEMA_NAME_PATTERN)", () => {
-        // SCHEMA_NAME_PATTERN allows spaces after the first character
-        const fields: DataSchemaField[] = [field("my field")];
-        expect(validateSchemaFields(fields)).toEqual([]);
-    });
-
     it("should return DUPLICATE_NAME error for sibling duplicates at root", () => {
         const fields: DataSchemaField[] = [field("id"), field("name"), field("id")];
         const errors = validateSchemaFields(fields);

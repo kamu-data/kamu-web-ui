@@ -101,7 +101,6 @@ function validateTypeFields(type: DataSchemaTypeField, basePath: string[]): Sche
 /**
  * Recursively validates a `DataSchemaField[]`, returning hard errors for:
  *  - empty field names,
- *  - names that do not match `AppValues.SCHEMA_NAME_PATTERN`,
  *  - sibling-duplicate names at each scope (including inside every nested struct).
  *
  * Each error carries the path to the offending field (e.g. `["address", "fields", "city"]`)

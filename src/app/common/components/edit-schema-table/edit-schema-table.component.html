@@ -10,7 +10,7 @@
         [trackBy]="trackByFieldIndex"
         #table
         cdkDropList
-        [cdkDropListData]="dataSource.data"
+        [cdkDropListData]="fields"
         [cdkDropListDisabled]="dragDisabled"
         (cdkDropListDropped)="dropField($event)"
     >
@@ -33,26 +33,26 @@
                 <ng-template #viewName>
                     <span
                         class="field-name pt-2 d-flex align-items-center w-100"
-                        [class.text-danger]="leafErrorsForField(element.name).length > 0"
-                        [attr.data-test-id]="tablePath + ':field-name:' + element.name"
+                        [class.text-danger]="element.leafErrors.length > 0"
+                        [attr.data-test-id]="tablePath + ':field-name:' + element.field.name"
                     >
                         <span class="truncate-cell-name">
-                            {{ element.name }}
+                            {{ element.field.name }}
 
                             <mat-icon
-                                *ngIf="leafErrorsForField(element.name).length > 0"
+                                *ngIf="element.leafErrors.length > 0"
                                 class="inline-icon text-danger"
-                                [matTooltip]="errorTooltip(element.name)"
+                                [matTooltip]="element.errorTooltip"
                                 >warning</mat-icon
                             >
                             <mat-icon
-                                *ngIf="warningsForField(element.name).length > 0"
+                                *ngIf="element.warnings.length > 0"
                                 class="inline-icon text-warning"
-                                [matTooltip]="warningTooltip(element.name)"
+                                [matTooltip]="element.warningTooltip"
                                 >warning</mat-icon
                             >
                             <mat-icon
-                                *ngIf="isEmptyStruct(element)"
+                                *ngIf="isEmptyStruct(element.field)"
                                 class="inline-icon text-danger empty-struct-icon"
                                 matTooltip="Structure has no fields"
                                 >warning</mat-icon
@@ -100,19 +100,23 @@
 
                 <ng-template #viewType>
                     <div class="d-flex align-items-center justify-content-between type-view-row pt-1">
-                        <div class="truncate-cell-type">{{ odfType2String(element) }}</div>
+                        <div class="truncate-cell-type">{{ odfType2String(element.field) }}</div>
                         <div class="action-buttons d-flex">
                             <button
                                 class="d-flex align-items-center justify-content-center edit-button"
-                                (click)="editRow(element, rowIndex); $event.stopPropagation()"
-                                [attr.data-test-id]="tablePath + ':edit-field:' + (element.name || '#' + rowIndex)"
+                                (click)="editRow(element.field, rowIndex); $event.stopPropagation()"
+                                [attr.data-test-id]="
+                                    tablePath + ':edit-field:' + (element.field.name || '#' + rowIndex)
+                                "
                             >
                                 <mat-icon class="action-button text-muted" svgIcon="pencil" />
                             </button>
                             <button
                                 class="d-flex align-items-center justify-content-center delete-button"
                                 (click)="deleteRow(rowIndex); $event.stopPropagation()"
-                                [attr.data-test-id]="tablePath + ':delete-field:' + (element.name || '#' + rowIndex)"
+                                [attr.data-test-id]="
+                                    tablePath + ':delete-field:' + (element.field.name || '#' + rowIndex)
+                                "
                             >
                                 <mat-icon class="action-button text-muted" svgIcon="delete"></mat-icon>
                             </button>
@@ -121,13 +125,15 @@
                                 class="drag-handle text-muted drag-margin"
                                 [class.drag-handle-disabled]="dragDisabled"
                                 cdkDragHandle
-                                [attr.data-test-id]="tablePath + ':drag-handle:' + (element.name || '#' + rowIndex)"
+                                [attr.data-test-id]="
+                                    tablePath + ':drag-handle:' + (element.field.name || '#' + rowIndex)
+                                "
                                 >drag_indicator</mat-icon
                             >
                         </div>
                     </div>
                     <div
-                        *ngFor="let nestedTable of nestedStructTables(element); trackBy: trackByNestedStructPath"
+                        *ngFor="let nestedTable of element.nestedTables; trackBy: trackByNestedStructPath"
                         class="nested-struct-container mb-2"
                     >
                         <app-edit-schema-table
@@ -137,7 +143,7 @@
                             [tablePath]="nestedTable.tablePath"
                             [parentDragDisabled]="dragDisabled"
                             [editingCoordinator]="activeEditingCoordinator"
-                            [errors]="nestedErrorsForPath(element.name, nestedTable.path)"
+                            [errors]="nestedTable.errors"
                             (fieldsChange)="onNestedFieldsChange(rowIndex, nestedTable.path, $event)"
                             (editingStateChange)="onNestedEditingStateChange(nestedTable.tablePath, $event)"
                         />
@@ -153,7 +159,7 @@
             [class.row-editable]="editingIndex === rowIndex"
             [attr.data-test-id]="tablePath + ':row:' + rowIndex"
             cdkDrag
-            [cdkDragData]="row"
+            [cdkDragData]="row.field"
             [cdkDragDisabled]="dragDisabled"
         ></tr>
     </table>

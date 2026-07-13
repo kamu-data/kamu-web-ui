@@ -7,6 +7,24 @@
 
 import { DataSchemaField, DataSchemaTypeField, OdfTypes } from "@interface/dataset-schema.interface";
 
+import { SchemaValidationError, SchemaWarning } from "./validation/schema-validation.types";
+
+export interface NestedStructTable {
+    fields: DataSchemaField[];
+    path: string[];
+    tablePath: string;
+    errors: SchemaValidationError[];
+}
+
+export interface FieldView {
+    field: DataSchemaField;
+    leafErrors: SchemaValidationError[];
+    errorTooltip: string;
+    warnings: SchemaWarning[];
+    warningTooltip: string;
+    nestedTables: NestedStructTable[];
+}
+
 export enum EditSchemaView {
     SCHEMA = "schema",
     STRUCT = "struct",

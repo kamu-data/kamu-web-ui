@@ -37,14 +37,8 @@ import {
 } from "@interface/dataset-schema.interface";
 
 import { TypeEditorComponent } from "./components/type-editor/type-editor.component";
-import { EditSchemaEditingCoordinator } from "./edit-schema-table.types";
+import { EditSchemaEditingCoordinator, FieldView, NestedStructTable } from "./edit-schema-table.types";
 import { schemaNameWarnings, SchemaValidationError, SchemaWarning } from "./validation/schema-validation";
-
-interface NestedStructTable {
-    fields: DataSchemaField[];
-    path: string[];
-    tablePath: string;
-}
 
 @Component({
     selector: "app-edit-schema-table",
@@ -79,14 +73,12 @@ export class EditSchemaTableComponent implements OnChanges {
     @Input() public editingCoordinator?: EditSchemaEditingCoordinator;
     /** Hard errors from validateSchemaFields, scoped to this table's path prefix. */
     @Input() public errors: SchemaValidationError[] = [];
-    /** Non-blocking warnings from schemaNameWarnings, scoped to this table's path prefix. */
-    @Input() public warnings: SchemaWarning[] = [];
     @Output() public fieldsChange = new EventEmitter<DataSchemaField[]>();
     @Output() public editingStateChange = new EventEmitter<boolean>();
 
     public readonly OdfTypes: typeof OdfTypes = OdfTypes;
 
-    public dataSource = new MatTableDataSource<DataSchemaField>([]);
+    public dataSource = new MatTableDataSource<FieldView>([]);
 
     public readonly displayedColumns = ["name", "type"];
 
@@ -102,8 +94,8 @@ export class EditSchemaTableComponent implements OnChanges {
     private readonly nestedEditingTables = new Set<string>();
 
     public ngOnChanges(changes: SimpleChanges): void {
-        if (changes.fields) {
-            this.dataSource.data = this.fields ?? [];
+        if (changes.fields || changes.errors || changes.tablePath) {
+            this.rebuildFieldViews();
         }
     }
 
@@ -129,45 +121,6 @@ export class EditSchemaTableComponent implements OnChanges {
 
     public odfType2String(element: DataSchemaField): string {
         return odfType2String(element.type);
-    }
-
-    public nestedStructTables(field: DataSchemaField): NestedStructTable[] {
-        return this.collectNestedStructTables(field.type, []).map((table) => ({
-            ...table,
-            tablePath: this.nestedTablePath(field.name, table.path),
-        }));
-    }
-
-    /** Returns the leaf-level errors (path.length === 1) for a given field name at this scope. */
-    public leafErrorsForField(name: string): SchemaValidationError[] {
-        return this.errors.filter((e) => e.path[0] === name && e.path.length === 1);
-    }
-
-    /** Returns errors that belong to a nested struct path, stripped so the nested table can treat them as root-relative. */
-    public nestedErrorsForPath(name: string, path: string[]): SchemaValidationError[] {
-        const prefix = [name, ...path];
-        return this.errors
-            .filter((e) => prefix.every((segment, index) => e.path[index] === segment) && e.path.length > prefix.length)
-            .map((e) => ({ ...e, path: e.path.slice(prefix.length) }));
-    }
-
-    /** Returns warnings for a given field name at this scope. */
-    public warningsForField(name: string): SchemaWarning[] {
-        return schemaNameWarnings(name);
-    }
-
-    /** Returns the tooltip text for all leaf errors on a field. */
-    public errorTooltip(name: string): string {
-        return this.leafErrorsForField(name)
-            .map((e) => e.code)
-            .join(", ");
-    }
-
-    /** Returns the tooltip text for all warnings on a field. */
-    public warningTooltip(name: string): string {
-        return this.warningsForField(name)
-            .map((w) => w.code)
-            .join(", ");
     }
 
     public isEmptyStruct(field: DataSchemaField): boolean {
@@ -244,7 +197,7 @@ export class EditSchemaTableComponent implements OnChanges {
         }
     }
 
-    public trackByFieldIndex(index: number, _field: DataSchemaField): number {
+    public trackByFieldIndex(index: number, _field: FieldView): number {
         return index;
     }
 
@@ -314,7 +267,7 @@ export class EditSchemaTableComponent implements OnChanges {
 
     private applyFields(fields: DataSchemaField[]): void {
         this.fields = fields;
-        this.dataSource.data = fields;
+        this.rebuildFieldViews();
     }
 
     private emitFieldsChange(fields: DataSchemaField[]): void {
@@ -369,7 +322,7 @@ export class EditSchemaTableComponent implements OnChanges {
     private collectNestedStructTables(
         type: DataSchemaTypeField,
         path: string[],
-    ): Omit<NestedStructTable, "tablePath">[] {
+    ): Omit<NestedStructTable, "tablePath" | "errors">[] {
         switch (type.kind) {
             case OdfTypes.Struct:
                 return [{ fields: type.fields as DataSchemaField[], path: [...path, "fields"] }];
@@ -385,6 +338,39 @@ export class EditSchemaTableComponent implements OnChanges {
             default:
                 return [];
         }
+    }
+
+    private rebuildFieldViews(): void {
+        this.dataSource.data = (this.fields ?? []).map((field) => {
+            const leafErrors = this.errors.filter((error) => error.path[0] === field.name && error.path.length === 1);
+            const warnings = schemaNameWarnings(field.name);
+            const nestedTables = this.collectNestedStructTables(field.type, []).map((table) => ({
+                ...table,
+                tablePath: this.nestedTablePath(field.name, table.path),
+                errors: this.nestedErrorsForPath(field.name, table.path),
+            }));
+
+            return {
+                field,
+                leafErrors,
+                errorTooltip: leafErrors.map((error) => error.code).join(", "),
+                warnings,
+                warningTooltip: warnings.map((warning) => warning.code).join(", "),
+                nestedTables,
+            };
+        });
+    }
+
+    /** Strips the path prefix so a nested table can treat errors as root-relative. */
+    private nestedErrorsForPath(name: string, path: string[]): SchemaValidationError[] {
+        const prefix = [name, ...path];
+        return this.errors
+            .filter(
+                (error) =>
+                    prefix.every((segment, index) => error.path[index] === segment) &&
+                    error.path.length > prefix.length,
+            )
+            .map((error) => ({ ...error, path: error.path.slice(prefix.length) }));
     }
 
     private updateNestedStructFields(

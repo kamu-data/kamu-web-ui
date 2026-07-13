@@ -184,7 +184,6 @@ describe("SchemaFieldComponent", () => {
             fixture.detectChanges();
 
             expect(schemaControl().valid).toBeTrue();
-            expect(component.schemaWarnings.length).toBeGreaterThan(0);
 
             const table = await harness.rootTable();
             expect(await table.hasWarningIcon("event_time")).toBeTrue();
@@ -195,7 +194,6 @@ describe("SchemaFieldComponent", () => {
             fixture.detectChanges();
 
             expect(schemaControl().valid).toBeTrue();
-            expect(component.schemaWarnings.length).toBeGreaterThan(0);
 
             const table = await harness.rootTable();
             expect(await table.hasWarningIcon("select")).toBeTrue();

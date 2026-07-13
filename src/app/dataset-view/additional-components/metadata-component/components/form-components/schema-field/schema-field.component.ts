@@ -14,11 +14,7 @@ import { MatTableModule } from "@angular/material/table";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 
 import { EditSchemaTableComponent } from "@common/components/edit-schema-table/edit-schema-table.component";
-import {
-    schemaNameWarnings,
-    SchemaValidationError,
-    SchemaWarning,
-} from "@common/components/edit-schema-table/validation/schema-validation";
+import { SchemaValidationError } from "@common/components/edit-schema-table/validation/schema-validation";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
@@ -54,11 +50,6 @@ export class SchemaFieldComponent extends BaseField implements OnInit {
     public get schemaErrors(): SchemaValidationError[] {
         const err = this.schemaControl.errors;
         return (err?.["schemaErrors"] as SchemaValidationError[]) ?? [];
-    }
-
-    public get schemaWarnings(): SchemaWarning[] {
-        const fields = this.schemaControl.value ?? [];
-        return fields.flatMap((f) => schemaNameWarnings(f.name));
     }
 
     public ngOnInit(): void {

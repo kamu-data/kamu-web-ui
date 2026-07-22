@@ -16,6 +16,8 @@ import { Apollo } from "apollo-angular";
 import { DatasetOperationError } from "@common/values/errors";
 import { DatasetApi } from "@api/dataset.api";
 import {
+    CreateDatasetAsCollectionMutation,
+    CreateDatasetAsVersionedFileMutation,
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetMutation,
     DatasetKind,
@@ -184,5 +186,131 @@ describe("DatasetCreateService", () => {
         service.errorMessageChanges.subscribe((error) => {
             expect(error).toBe("Fail");
         });
+    });
+
+    it("should create collection and navigate to its overview", () => {
+        const mockResponse: CreateDatasetAsCollectionMutation = {
+            datasets: {
+                createCollection: {
+                    message: "Success",
+                    dataset: mockDatasetBasicsDerivedFragment,
+                    __typename: "CreateDatasetResultSuccess",
+                },
+            },
+        };
+        const params = {
+            datasetAlias: "my-collection",
+            datasetVisibility: DatasetVisibility.Private,
+        };
+        spyOn(datasetApi, "createDatasetAsCollection").and.returnValue(of(mockResponse));
+        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+
+        service.createCollection(params).subscribe();
+
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
+            accountName: mockAccountDetails.accountName,
+            datasetName: mockDatasetBasicsDerivedFragment.name,
+            tab: DatasetViewTypeEnum.Overview,
+        });
+    });
+
+    it("should emit an error when collection creation fails", () => {
+        const mockResponse: CreateDatasetAsCollectionMutation = {
+            datasets: {
+                createCollection: {
+                    message: "Collection already exists",
+                    __typename: "CreateDatasetResultNameCollision",
+                },
+            },
+        };
+        spyOn(datasetApi, "createDatasetAsCollection").and.returnValue(of(mockResponse));
+        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        const emitErrorMessageChangedSpy = spyOn(service, "emitErrorMessageChanged");
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+
+        service
+            .createCollection({
+                datasetAlias: "my-collection",
+                datasetVisibility: DatasetVisibility.Public,
+            })
+            .subscribe();
+
+        expect(emitErrorMessageChangedSpy).toHaveBeenCalledOnceWith("Collection already exists");
+        expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
+    });
+
+    it("should require a logged user to create a collection", () => {
+        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(null);
+
+        expect(() =>
+            service.createCollection({
+                datasetAlias: "my-collection",
+                datasetVisibility: DatasetVisibility.Public,
+            }),
+        ).toThrow(new DatasetOperationError([new Error(DatasetCreateService.NOT_LOGGED_USER_ERROR)]));
+    });
+
+    it("should create versioned file and navigate to its overview", () => {
+        const mockResponse: CreateDatasetAsVersionedFileMutation = {
+            datasets: {
+                createVersionedFile: {
+                    message: "Success",
+                    dataset: mockDatasetBasicsDerivedFragment,
+                    __typename: "CreateDatasetResultSuccess",
+                },
+            },
+        };
+        const params = {
+            datasetAlias: "my-versioned-file",
+            datasetVisibility: DatasetVisibility.Private,
+        };
+        spyOn(datasetApi, "createDatasetAsVersionedFile").and.returnValue(of(mockResponse));
+        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+
+        service.createVersionedFile(params).subscribe();
+
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
+            accountName: mockAccountDetails.accountName,
+            datasetName: mockDatasetBasicsDerivedFragment.name,
+            tab: DatasetViewTypeEnum.Overview,
+        });
+    });
+
+    it("should emit an error when versioned file creation fails", () => {
+        const mockResponse: CreateDatasetAsVersionedFileMutation = {
+            datasets: {
+                createVersionedFile: {
+                    message: "Versioned file already exists",
+                    __typename: "CreateDatasetResultNameCollision",
+                },
+            },
+        };
+        spyOn(datasetApi, "createDatasetAsVersionedFile").and.returnValue(of(mockResponse));
+        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        const emitErrorMessageChangedSpy = spyOn(service, "emitErrorMessageChanged");
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+
+        service
+            .createVersionedFile({
+                datasetAlias: "my-versioned-file",
+                datasetVisibility: DatasetVisibility.Public,
+            })
+            .subscribe();
+
+        expect(emitErrorMessageChangedSpy).toHaveBeenCalledOnceWith("Versioned file already exists");
+        expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
+    });
+
+    it("should require a logged user to create a versioned file", () => {
+        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(null);
+
+        expect(() =>
+            service.createVersionedFile({
+                datasetAlias: "my-versioned-file",
+                datasetVisibility: DatasetVisibility.Public,
+            }),
+        ).toThrow(new DatasetOperationError([new Error(DatasetCreateService.NOT_LOGGED_USER_ERROR)]));
     });
 });

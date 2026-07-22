@@ -20,7 +20,7 @@ import { NgSelectModule } from "@ng-select/ng-select";
 import { BaseComponent } from "@common/components/base.component";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import AppValues from "@common/values/app.values";
-import { AccountProvider, DatasetArchetype, DatasetKind, DatasetVisibility } from "@api/kamu.graphql.interface";
+import { AccountProvider, DatasetKind, DatasetVisibility } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";

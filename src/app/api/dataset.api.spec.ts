@@ -18,6 +18,10 @@ import { DatasetApi } from "@api/dataset.api";
 import {
     CommitEventToDatasetDocument,
     CommitEventToDatasetMutation,
+    CreateDatasetAsCollectionDocument,
+    CreateDatasetAsCollectionMutation,
+    CreateDatasetAsVersionedFileDocument,
+    CreateDatasetAsVersionedFileMutation,
     CreateDatasetFromSnapshotDocument,
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetDocument,
@@ -99,6 +103,7 @@ import {
     mockDatasetAsVersionedFileByBlockHashQuery,
     mockDatasetAsVersionedFileByVersionQuery,
     mockDatasetAsVersionedFileQuery,
+    mockDatasetBasicsDerivedFragment,
     mockDatasetHeadBlockHashQuery,
     mockDatasetHistoryResponse,
     mockDatasetLineageResponse,
@@ -490,6 +495,68 @@ describe("DatasetApi", () => {
         flush();
     }));
 
+    it("should create dataset as collection", fakeAsync(() => {
+        const mockDatasetAlias = "my-collection";
+        const mockResponse: CreateDatasetAsCollectionMutation = {
+            datasets: {
+                createCollection: {
+                    message: "Success",
+                    dataset: mockDatasetBasicsDerivedFragment,
+                    __typename: "CreateDatasetResultSuccess",
+                },
+            },
+        };
+        const subscription = service
+            .createDatasetAsCollection({
+                datasetAlias: mockDatasetAlias,
+                datasetVisibility: DatasetVisibility.Private,
+            })
+            .subscribe((res: CreateDatasetAsCollectionMutation) => {
+                expect(res.datasets.createCollection.__typename).toEqual("CreateDatasetResultSuccess");
+            });
+
+        const op = controller.expectOne(CreateDatasetAsCollectionDocument);
+        expect(op.operation.variables.datasetAlias).toEqual(mockDatasetAlias);
+        expect(op.operation.variables.datasetVisibility).toEqual(DatasetVisibility.Private);
+        op.flush({ data: mockResponse });
+
+        tick();
+
+        expect(subscription.closed).toBeTrue();
+        flush();
+    }));
+
+    it("should create dataset as versioned file", fakeAsync(() => {
+        const mockDatasetAlias = "my-versioned-file";
+        const mockResponse: CreateDatasetAsVersionedFileMutation = {
+            datasets: {
+                createVersionedFile: {
+                    message: "Success",
+                    dataset: mockDatasetBasicsDerivedFragment,
+                    __typename: "CreateDatasetResultSuccess",
+                },
+            },
+        };
+        const subscription = service
+            .createDatasetAsVersionedFile({
+                datasetAlias: mockDatasetAlias,
+                datasetVisibility: DatasetVisibility.Public,
+            })
+            .subscribe((res: CreateDatasetAsVersionedFileMutation) => {
+                expect(res.datasets.createVersionedFile.__typename).toEqual("CreateDatasetResultSuccess");
+            });
+
+        const op = controller.expectOne(CreateDatasetAsVersionedFileDocument);
+        expect(op.operation.variables.datasetAlias).toEqual(mockDatasetAlias);
+        expect(op.operation.variables.datasetVisibility).toEqual(DatasetVisibility.Public);
+        op.flush({ data: mockResponse });
+
+        tick();
+
+        expect(subscription.closed).toBeTrue();
+        flush();
+    }));
+
     it("should successfully commit event", () => {
         const mockEvent = "mock event";
         service
@@ -643,6 +710,26 @@ describe("DatasetApi", () => {
             action: (): Observable<unknown> => {
                 return service.createDatasetFromSnapshot({
                     snapshot: "someSnapshot",
+                    datasetVisibility: DatasetVisibility.Public,
+                });
+            },
+        },
+        {
+            operationName: "createCollection",
+            expectedGqlQuery: CreateDatasetAsCollectionDocument,
+            action: (): Observable<unknown> => {
+                return service.createDatasetAsCollection({
+                    datasetAlias: MOCK_NEW_DATASET_NAME,
+                    datasetVisibility: DatasetVisibility.Public,
+                });
+            },
+        },
+        {
+            operationName: "createVersionedFile",
+            expectedGqlQuery: CreateDatasetAsVersionedFileDocument,
+            action: (): Observable<unknown> => {
+                return service.createDatasetAsVersionedFile({
+                    datasetAlias: MOCK_NEW_DATASET_NAME,
                     datasetVisibility: DatasetVisibility.Public,
                 });
             },

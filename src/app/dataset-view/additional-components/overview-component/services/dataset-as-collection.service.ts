@@ -11,11 +11,7 @@ import { BehaviorSubject, filter, map, Observable, switchMap } from "rxjs";
 
 import { trackBusy } from "@common/helpers/app.helpers";
 import { DatasetApi } from "@api/dataset.api";
-import {
-    CollectionEntryConnectionDataFragment,
-    DatasetAsCollectionQuery,
-    DatasetVisibility,
-} from "@api/kamu.graphql.interface";
+import { CollectionEntryConnectionDataFragment, DatasetAsCollectionQuery } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import {

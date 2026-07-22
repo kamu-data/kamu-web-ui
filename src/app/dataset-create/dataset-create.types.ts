@@ -8,7 +8,7 @@
 import { FormControl } from "@angular/forms";
 
 import AppValues from "@common/values/app.values";
-import { DatasetArchetype, DatasetKind, DatasetVisibility } from "@api/kamu.graphql.interface";
+import { DatasetKind, DatasetVisibility } from "@api/kamu.graphql.interface";
 
 export interface CreateDatasetFormType {
     owner: FormControl<string>;

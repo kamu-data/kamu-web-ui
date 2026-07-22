@@ -168,13 +168,15 @@ export class DatasetCreateComponent extends BaseComponent {
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe();
         } else if (this.archetype === ArchetypeViewType.COLLECTION) {
-            console.log("collection");
             this.datasetCreateService
                 .createCollection({ datasetAlias: datasetName, datasetVisibility: visibility })
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe();
         } else {
-            console.log("file");
+            this.datasetCreateService
+                .createVersionedFile({ datasetAlias: datasetName, datasetVisibility: visibility })
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe();
         }
     }
 

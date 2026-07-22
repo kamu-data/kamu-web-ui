@@ -1,6 +1,6 @@
-mutation createDatasetAsCollection($datasetAlias: DatasetAlias!, $datasetVisibility: DatasetVisibility!) {
+mutation createDatasetAsVersionedFile($datasetAlias: DatasetAlias!, $datasetVisibility: DatasetVisibility!) {
   datasets {
-    createCollection(datasetAlias: $datasetAlias, datasetVisibility: $datasetVisibility) {
+    createVersionedFile(datasetAlias: $datasetAlias, datasetVisibility: $datasetVisibility) {
       ... on CreateDatasetResultSuccess {
         message
         dataset {
@@ -13,6 +13,10 @@ mutation createDatasetAsCollection($datasetAlias: DatasetAlias!, $datasetVisibil
       }
 
       ... on CreateDatasetResultMissingInputs {
+        message
+      }
+
+      ... on CreateDatasetResultNameCollision {
         message
       }
 

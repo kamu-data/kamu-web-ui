@@ -5620,6 +5620,29 @@ export type CollectionEntryDataFragment = {
     } | null;
 };
 
+export type CreateDatasetAsVersionedFileMutationVariables = Exact<{
+    datasetAlias: Scalars["DatasetAlias"]["input"];
+    datasetVisibility: DatasetVisibility;
+}>;
+
+export type CreateDatasetAsVersionedFileMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        createVersionedFile:
+            | { __typename?: "CreateDatasetResultInvalidSnapshot"; message: string }
+            | { __typename?: "CreateDatasetResultMissingInputs"; message: string }
+            | { __typename?: "CreateDatasetResultNameCollision"; message: string }
+            | {
+                  __typename?: "CreateDatasetResultSuccess";
+                  message: string;
+                  dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+              }
+            | { __typename?: "MetadataManifestMalformed"; message: string }
+            | { __typename?: "MetadataManifestUnsupportedVersion"; message: string };
+    };
+};
+
 export type DatasetAsVersionedFileByBlockHashQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"]["input"];
     blockHash?: InputMaybe<Scalars["Multihash"]["input"]>;
@@ -10937,9 +10960,6 @@ export const CreateDatasetAsCollectionDocument = gql`
                 ... on CreateDatasetResultNameCollision {
                     message
                 }
-                ... on CreateDatasetResultNameCollision {
-                    message
-                }
                 ... on MetadataManifestMalformed {
                     message
                 }
@@ -10994,6 +11014,53 @@ export const DatasetAsCollectionDocument = gql`
 })
 export class DatasetAsCollectionGQL extends Apollo.Query<DatasetAsCollectionQuery, DatasetAsCollectionQueryVariables> {
     document = DatasetAsCollectionDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const CreateDatasetAsVersionedFileDocument = gql`
+    mutation createDatasetAsVersionedFile($datasetAlias: DatasetAlias!, $datasetVisibility: DatasetVisibility!) {
+        datasets {
+            createVersionedFile(datasetAlias: $datasetAlias, datasetVisibility: $datasetVisibility) {
+                ... on CreateDatasetResultSuccess {
+                    message
+                    dataset {
+                        ...DatasetBasics
+                    }
+                }
+                ... on CreateDatasetResultInvalidSnapshot {
+                    message
+                }
+                ... on CreateDatasetResultMissingInputs {
+                    message
+                }
+                ... on CreateDatasetResultNameCollision {
+                    message
+                }
+                ... on CreateDatasetResultNameCollision {
+                    message
+                }
+                ... on MetadataManifestMalformed {
+                    message
+                }
+                ... on MetadataManifestUnsupportedVersion {
+                    message
+                }
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class CreateDatasetAsVersionedFileGQL extends Apollo.Mutation<
+    CreateDatasetAsVersionedFileMutation,
+    CreateDatasetAsVersionedFileMutationVariables
+> {
+    document = CreateDatasetAsVersionedFileDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

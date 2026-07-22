@@ -22,6 +22,8 @@ import {
     CommitEventToDatasetMutation,
     CreateDatasetAsCollectionGQL,
     CreateDatasetAsCollectionMutation,
+    CreateDatasetAsVersionedFileGQL,
+    CreateDatasetAsVersionedFileMutation,
     CreateDatasetFromSnapshotGQL,
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetGQL,
@@ -121,6 +123,7 @@ export class DatasetApi {
     private versionedFileContentUrlGQL = inject(VersionedFileContentUrlGQL);
     private datasetAsCollectionGQL = inject(DatasetAsCollectionGQL);
     private createDatasetAsCollectionGQL = inject(CreateDatasetAsCollectionGQL);
+    private createDatasetAsVersionedFileGQL = inject(CreateDatasetAsVersionedFileGQL);
 
     public createDatasetAsCollection(params: {
         datasetAlias: string;
@@ -130,6 +133,18 @@ export class DatasetApi {
             first(),
             map((result: ApolloLink.Result<CreateDatasetAsCollectionMutation>) => {
                 return result.data as CreateDatasetAsCollectionMutation;
+            }),
+        );
+    }
+
+    public createDatasetAsVersionedFile(params: {
+        datasetAlias: string;
+        datasetVisibility: DatasetVisibility;
+    }): Observable<CreateDatasetAsVersionedFileMutation> {
+        return this.createDatasetAsVersionedFileGQL.mutate({ variables: { ...params } }).pipe(
+            first(),
+            map((result: ApolloLink.Result<CreateDatasetAsVersionedFileMutation>) => {
+                return result.data as CreateDatasetAsVersionedFileMutation;
             }),
         );
     }

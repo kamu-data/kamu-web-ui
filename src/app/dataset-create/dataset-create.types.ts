@@ -68,10 +68,10 @@ export const ARCHETYPE_LIST: SelectArchetypeType[] = [
     {
         id: 1,
         value: ArchetypeViewType.DATASET_WITH_DATA,
-        label: "Structured Dataset",
+        label: "None",
         image: AppValues.DATASET_WITH_DATA_LOGO,
         iconClass: "kamu-icon",
-        tooltip: "Store and process structured data. Supports ingestion, queries, and transformations.",
+        tooltip: "Data is presented in its underlying form as a changelog ledger.",
     },
     {
         id: 2,
@@ -79,7 +79,7 @@ export const ARCHETYPE_LIST: SelectArchetypeType[] = [
         label: "Versioned File",
         image: AppValues.DATASET_VERSIONED_FILE_LOGO,
         iconClass: "kamu-icon",
-        tooltip: "Store a single file while preserving every uploaded version.",
+        tooltip: "Represents a versioned history of a single file, useful for tracking changes to unstructured content.",
     },
     {
         id: 3,
@@ -87,6 +87,6 @@ export const ARCHETYPE_LIST: SelectArchetypeType[] = [
         label: "Collection",
         image: AppValues.DATASET_COLLECTION_LOGO,
         iconClass: "kamu-icon",
-        tooltip: "Organize links to datasets and versioned files in a folder-like hierarchy.",
+        tooltip: "Used to organize links to datasets into a hierarchical directory-like structure.",
     },
 ];

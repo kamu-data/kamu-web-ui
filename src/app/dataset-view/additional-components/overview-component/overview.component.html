@@ -132,6 +132,7 @@
                     data-test-id="add-more-data"
                     *ngIf="showAddDataButton"
                     (click)="addData()"
+                    [disabled]="currentArchetype"
                 >
                     <mat-icon class="text-muted fs-4 d-block">add</mat-icon>
                     <span class="fs-12 me-2 d-block"> Add data</span>

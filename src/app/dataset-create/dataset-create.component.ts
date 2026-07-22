@@ -19,14 +19,17 @@ import { NgSelectModule } from "@ng-select/ng-select";
 import { BaseComponent } from "@common/components/base.component";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import AppValues from "@common/values/app.values";
-import { AccountProvider, DatasetKind, DatasetVisibility } from "@api/kamu.graphql.interface";
+import { AccountProvider, DatasetArchetype, DatasetKind, DatasetVisibility } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { LoginMethodsService } from "src/app/auth/login-methods.service";
 import { DatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import {
+    ARCHETYPE_LIST,
+    ArchetypeViewType,
     CreateDatasetFormType,
+    SelectArchetypeType,
     SelectStorageItemType,
     STORAGE_LIST,
 } from "src/app/dataset-create/dataset-create.types";
@@ -70,6 +73,7 @@ export class DatasetCreateComponent extends BaseComponent {
     public showMonacoEditor = false;
     public errorMessage$: Observable<string>;
     public owners: string[] = [];
+    public archetype: ArchetypeViewType = ArchetypeViewType.DATASET_WITH_DATA;
     public createDatasetForm: FormGroup<CreateDatasetFormType> = this.fb.nonNullable.group({
         owner: ["", [Validators.required]],
         datasetName: ["", [Validators.required, Validators.pattern(AppValues.DATASET_NAME_PATTERN)]],
@@ -77,6 +81,8 @@ export class DatasetCreateComponent extends BaseComponent {
         visibility: [DatasetVisibility.Private],
     });
     public readonly DROPDOWN_LIST: SelectStorageItemType[] = STORAGE_LIST;
+    public readonly ARCHETYPE_LIST: SelectArchetypeType[] = ARCHETYPE_LIST;
+    public readonly ArchetypeViewType: typeof ArchetypeViewType = ArchetypeViewType;
 
     // default id item from STORAGE_LIST
     public selectedStorage: number = 1;
@@ -139,14 +145,37 @@ export class DatasetCreateComponent extends BaseComponent {
         this.setAvailabilityControls();
     }
 
+    public onChangeArchetype(event: SelectArchetypeType): void {
+        this.createDatasetForm.controls.datasetName.enable();
+        this.createDatasetForm.controls.owner.enable();
+        if (event.value === ArchetypeViewType.DATASET_WITH_DATA) {
+            this.createDatasetForm.controls.kind.enable();
+        } else {
+            this.createDatasetForm.controls.kind.disable();
+
+            this.yamlTemplate = "";
+            this.showMonacoEditor = false;
+        }
+    }
+
     private createDatasetFromForm(): void {
-        const kind = this.createDatasetForm.controls.kind.value;
         const datasetName = this.createDatasetForm.controls.datasetName.value;
         const visibility = this.visibiltyControl.value;
-        this.datasetCreateService
-            .createEmptyDataset({ datasetKind: kind, datasetAlias: datasetName, datasetVisibility: visibility })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe();
+        if (this.archetype === ArchetypeViewType.DATASET_WITH_DATA) {
+            const kind = this.createDatasetForm.controls.kind.value;
+            this.datasetCreateService
+                .createEmptyDataset({ datasetKind: kind, datasetAlias: datasetName, datasetVisibility: visibility })
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe();
+        } else if (this.archetype === ArchetypeViewType.COLLECTION) {
+            console.log("collection");
+            this.datasetCreateService
+                .createCollection({ datasetAlias: datasetName, datasetVisibility: visibility })
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe();
+        } else {
+            console.log("file");
+        }
     }
 
     private createDatasetFromSnapshot(): void {

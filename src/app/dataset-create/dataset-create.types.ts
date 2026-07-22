@@ -8,7 +8,7 @@
 import { FormControl } from "@angular/forms";
 
 import AppValues from "@common/values/app.values";
-import { DatasetKind, DatasetVisibility } from "@api/kamu.graphql.interface";
+import { DatasetArchetype, DatasetKind, DatasetVisibility } from "@api/kamu.graphql.interface";
 
 export interface CreateDatasetFormType {
     owner: FormControl<string>;
@@ -46,5 +46,35 @@ export const STORAGE_LIST: SelectStorageItemType[] = [
         image: AppValues.IPFS_LOGO,
         iconClass: "ipfs-icon",
         disabled: true,
+    },
+];
+
+export enum ArchetypeViewType {
+    DATASET_WITH_DATA = "Dataset with data",
+    COLLECTION = "Collection",
+    VERSIONED_FILE = "Versioned file",
+}
+
+export interface SelectArchetypeType {
+    id: number;
+    value: ArchetypeViewType;
+    label: string;
+}
+
+export const ARCHETYPE_LIST: SelectArchetypeType[] = [
+    {
+        id: 1,
+        value: ArchetypeViewType.VERSIONED_FILE,
+        label: "Versioned file",
+    },
+    {
+        id: 2,
+        value: ArchetypeViewType.COLLECTION,
+        label: "Collection",
+    },
+    {
+        id: 3,
+        value: ArchetypeViewType.DATASET_WITH_DATA,
+        label: "Dataset with data",
     },
 ];

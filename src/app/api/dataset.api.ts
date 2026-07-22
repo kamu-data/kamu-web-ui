@@ -20,6 +20,8 @@ import AppValues from "@common/values/app.values";
 import {
     CommitEventToDatasetGQL,
     CommitEventToDatasetMutation,
+    CreateDatasetAsCollectionGQL,
+    CreateDatasetAsCollectionMutation,
     CreateDatasetFromSnapshotGQL,
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetGQL,
@@ -118,6 +120,19 @@ export class DatasetApi {
     private datasetAsVersionedFileByBlockHashGQL = inject(DatasetAsVersionedFileByBlockHashGQL);
     private versionedFileContentUrlGQL = inject(VersionedFileContentUrlGQL);
     private datasetAsCollectionGQL = inject(DatasetAsCollectionGQL);
+    private createDatasetAsCollectionGQL = inject(CreateDatasetAsCollectionGQL);
+
+    public createDatasetAsCollection(params: {
+        datasetAlias: string;
+        datasetVisibility: DatasetVisibility;
+    }): Observable<CreateDatasetAsCollectionMutation> {
+        return this.createDatasetAsCollectionGQL.mutate({ variables: { ...params } }).pipe(
+            first(),
+            map((result: ApolloLink.Result<CreateDatasetAsCollectionMutation>) => {
+                return result.data as CreateDatasetAsCollectionMutation;
+            }),
+        );
+    }
 
     public getBlocksByEventType(params: {
         accountName: string;

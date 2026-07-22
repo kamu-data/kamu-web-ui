@@ -98,6 +98,18 @@
                 bindLabel="label"
                 bindValue="value"
             >
+                <ng-template ng-option-tmp let-item="item" let-index="index">
+                    <div class="d-flex align-items-start">
+                        <img [class]="item.iconClass" class="ms-2" [src]="item.image" />
+                        <label class="fs-14 inline-block"> {{ item.label }} </label>
+                        <mat-icon
+                            class="text-muted fs-5 ms-1 help-icon"
+                            [matTooltip]="item.tooltip"
+                            [matTooltipPosition]="'right'"
+                            >help_outline</mat-icon
+                        >
+                    </div>
+                </ng-template>
             </ng-select>
         </div>
         <mat-divider />

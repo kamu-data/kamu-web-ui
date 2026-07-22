@@ -11,6 +11,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 import { Observable } from "rxjs";
 
@@ -51,6 +52,7 @@ import { EditorModule } from "src/app/editor/editor.module";
         //-----//
         MatDividerModule,
         MatIconModule,
+        MatTooltipModule,
         NgSelectModule,
         //-----//
         FormValidationErrorsDirective,

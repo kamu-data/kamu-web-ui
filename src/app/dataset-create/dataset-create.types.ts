@@ -59,22 +59,34 @@ export interface SelectArchetypeType {
     id: number;
     value: ArchetypeViewType;
     label: string;
+    image: string;
+    iconClass: string;
+    tooltip: string;
 }
 
 export const ARCHETYPE_LIST: SelectArchetypeType[] = [
     {
         id: 1,
-        value: ArchetypeViewType.VERSIONED_FILE,
-        label: "Versioned file",
+        value: ArchetypeViewType.DATASET_WITH_DATA,
+        label: "Structured Dataset",
+        image: AppValues.DATASET_WITH_DATA_LOGO,
+        iconClass: "kamu-icon",
+        tooltip: "Store and process structured data. Supports ingestion, queries, and transformations.",
     },
     {
         id: 2,
-        value: ArchetypeViewType.COLLECTION,
-        label: "Collection",
+        value: ArchetypeViewType.VERSIONED_FILE,
+        label: "Versioned File",
+        image: AppValues.DATASET_VERSIONED_FILE_LOGO,
+        iconClass: "kamu-icon",
+        tooltip: "Store a single file while preserving every uploaded version.",
     },
     {
         id: 3,
-        value: ArchetypeViewType.DATASET_WITH_DATA,
-        label: "Dataset with data",
+        value: ArchetypeViewType.COLLECTION,
+        label: "Collection",
+        image: AppValues.DATASET_COLLECTION_LOGO,
+        iconClass: "kamu-icon",
+        tooltip: "Organize links to datasets and versioned files in a folder-like hierarchy.",
     },
 ];

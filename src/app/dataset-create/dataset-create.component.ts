@@ -106,7 +106,7 @@ export class DatasetCreateComponent extends BaseComponent {
         return this.createDatasetForm.get("owner");
     }
 
-    public get visibiltyControl(): FormControl<DatasetVisibility> {
+    public get visibilityControl(): FormControl<DatasetVisibility> {
         return this.createDatasetForm.controls.visibility;
     }
 
@@ -161,25 +161,30 @@ export class DatasetCreateComponent extends BaseComponent {
     }
 
     private createDatasetFromForm(): void {
-        const datasetName = this.createDatasetForm.controls.datasetName.value;
-        const visibility = this.visibiltyControl.value;
-        if (this.archetype === ArchetypeViewType.DATASET_WITH_DATA) {
-            const kind = this.createDatasetForm.controls.kind.value;
-            this.datasetCreateService
-                .createEmptyDataset({ datasetKind: kind, datasetAlias: datasetName, datasetVisibility: visibility })
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe();
-        } else if (this.archetype === ArchetypeViewType.COLLECTION) {
-            this.datasetCreateService
-                .createCollection({ datasetAlias: datasetName, datasetVisibility: visibility })
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe();
-        } else {
-            this.datasetCreateService
-                .createVersionedFile({ datasetAlias: datasetName, datasetVisibility: visibility })
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe();
-        }
+        const datasetAlias = this.createDatasetForm.controls.datasetName.value;
+        const datasetVisibility = this.visibilityControl.value;
+        const datasetKind = this.createDatasetForm.controls.kind.value;
+
+        const creationStrategies: Record<ArchetypeViewType, () => Observable<void>> = {
+            [ArchetypeViewType.DATASET_WITH_DATA]: () =>
+                this.datasetCreateService.createEmptyDataset({
+                    datasetKind,
+                    datasetAlias,
+                    datasetVisibility,
+                }),
+            [ArchetypeViewType.COLLECTION]: () =>
+                this.datasetCreateService.createCollection({
+                    datasetAlias,
+                    datasetVisibility,
+                }),
+            [ArchetypeViewType.VERSIONED_FILE]: () =>
+                this.datasetCreateService.createVersionedFile({
+                    datasetAlias,
+                    datasetVisibility,
+                }),
+        };
+
+        creationStrategies[this.archetype]().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 
     private createDatasetFromSnapshot(): void {
@@ -187,7 +192,7 @@ export class DatasetCreateComponent extends BaseComponent {
             this.datasetCreateService
                 .createDatasetFromSnapshot({
                     snapshot: this.yamlTemplate,
-                    datasetVisibility: this.visibiltyControl.value,
+                    datasetVisibility: this.visibilityControl.value,
                 })
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe();

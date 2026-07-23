@@ -16,11 +16,13 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 
 import { getInputElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import { DatasetVisibility } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetCreateComponent } from "src/app/dataset-create/dataset-create.component";
 import { DatasetCreateService } from "src/app/dataset-create/dataset-create.service";
+import { ArchetypeViewType } from "src/app/dataset-create/dataset-create.types";
 
 describe("DatasetCreateComponent", () => {
     let component: DatasetCreateComponent;
@@ -80,6 +82,73 @@ describe("DatasetCreateComponent", () => {
 
         expect(createDatasetFromFormSpy).toHaveBeenCalledTimes(1);
     });
+
+    it("should create a collection for the collection archetype", () => {
+        component.archetype = ArchetypeViewType.COLLECTION;
+        component.createDatasetForm.patchValue({
+            datasetName: "my-collection",
+            visibility: DatasetVisibility.Public,
+        });
+        const createCollectionSpy = spyOn(datasetCreateService, "createCollection").and.returnValue(of());
+
+        component.onCreateDataset();
+
+        expect(createCollectionSpy).toHaveBeenCalledOnceWith({
+            datasetAlias: "my-collection",
+            datasetVisibility: DatasetVisibility.Public,
+        });
+    });
+
+    it("should create a versioned file for the versioned file archetype", () => {
+        component.archetype = ArchetypeViewType.VERSIONED_FILE;
+        component.createDatasetForm.patchValue({
+            datasetName: "my-versioned-file",
+            visibility: DatasetVisibility.Private,
+        });
+        const createVersionedFileSpy = spyOn(datasetCreateService, "createVersionedFile").and.returnValue(of());
+
+        component.onCreateDataset();
+
+        expect(createVersionedFileSpy).toHaveBeenCalledOnceWith({
+            datasetAlias: "my-versioned-file",
+            datasetVisibility: DatasetVisibility.Private,
+        });
+    });
+
+    it("should disable structured dataset controls and snapshot initialization for collection", () => {
+        component.showMonacoEditor = true;
+        component.yamlTemplate = "snapshot";
+        component.createDatasetForm.controls.datasetName.disable();
+        component.createDatasetForm.controls.owner.disable();
+
+        component.onChangeArchetype(component.ARCHETYPE_LIST[2]);
+
+        expect(component.createDatasetForm.controls.datasetName.enabled).toBeTrue();
+        expect(component.createDatasetForm.controls.owner.enabled).toBeTrue();
+        expect(component.createDatasetForm.controls.kind.disabled).toBeTrue();
+        expect(component.showMonacoEditor).toBeFalse();
+        expect(component.yamlTemplate).toBe("");
+    });
+
+    it("should enable dataset kind for the structured dataset archetype", () => {
+        component.createDatasetForm.controls.kind.disable();
+
+        component.onChangeArchetype(component.ARCHETYPE_LIST[0]);
+
+        expect(component.createDatasetForm.controls.kind.enabled).toBeTrue();
+    });
+
+    it("should disable snapshot initialization in the template for non-structured archetypes", fakeAsync(() => {
+        tick();
+        component.archetype = ArchetypeViewType.VERSIONED_FILE;
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        const checkboxInput = getInputElementByDataTestId(fixture, "show-monaco-editor");
+        expect(checkboxInput.disabled).toBeTrue();
+        flush();
+    }));
 
     it("should check call createDatasetFromSnapshot()", () => {
         component.showMonacoEditor = true;

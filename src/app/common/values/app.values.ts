@@ -11,6 +11,9 @@ export default class AppValues {
     public static readonly APP_LOGO = "assets/icons/kamu_logo_icon.svg";
     public static readonly AMAZON_S3_BYO_LOGO = "assets/icons/amazon-s3-byo.svg";
     public static readonly IPFS_LOGO = "assets/icons/ipfs-logo.svg";
+    public static readonly DATASET_WITH_DATA_LOGO = "assets/icons/db-table.svg";
+    public static readonly DATASET_COLLECTION_LOGO = "assets/icons/db-folder.svg";
+    public static readonly DATASET_VERSIONED_FILE_LOGO = "assets/icons/db-file.svg";
     public static readonly LOCAL_STORAGE_ACCESS_TOKEN = "access_token";
     public static readonly LOCAL_STORAGE_LOGIN_DEVICE_CODE = "login_device_code";
     public static readonly LOCAL_STORAGE_LOGIN_REDIRECT_URL = "login_redirect_url";

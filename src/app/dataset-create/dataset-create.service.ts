@@ -14,6 +14,8 @@ import { DatasetOperationError } from "@common/values/errors";
 import { DatasetApi } from "@api/dataset.api";
 import {
     AccountFragment,
+    CreateDatasetAsCollectionMutation,
+    CreateDatasetAsVersionedFileMutation,
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetMutation,
     DatasetKind,
@@ -85,6 +87,53 @@ export class DatasetCreateService {
                         });
                     } else {
                         this.emitErrorMessageChanged(data.datasets.createFromSnapshot.message);
+                    }
+                }),
+            );
+        } else {
+            throw new DatasetOperationError([new Error(DatasetCreateService.NOT_LOGGED_USER_ERROR)]);
+        }
+    }
+
+    public createCollection(params: { datasetAlias: string; datasetVisibility: DatasetVisibility }): Observable<void> {
+        const loggedUser: MaybeNull<AccountFragment> = this.loggedUserService.maybeCurrentlyLoggedInUser;
+        if (loggedUser) {
+            return this.datasetApi.createDatasetAsCollection(params).pipe(
+                map((data: CreateDatasetAsCollectionMutation) => {
+                    if (data.datasets.createCollection.__typename === "CreateDatasetResultSuccess") {
+                        const datasetName = data.datasets.createCollection.dataset.name;
+                        this.navigationService.navigateToDatasetView({
+                            accountName: loggedUser.accountName,
+                            datasetName,
+                            tab: DatasetViewTypeEnum.Overview,
+                        });
+                    } else {
+                        this.emitErrorMessageChanged(data.datasets.createCollection.message);
+                    }
+                }),
+            );
+        } else {
+            throw new DatasetOperationError([new Error(DatasetCreateService.NOT_LOGGED_USER_ERROR)]);
+        }
+    }
+
+    public createVersionedFile(params: {
+        datasetAlias: string;
+        datasetVisibility: DatasetVisibility;
+    }): Observable<void> {
+        const loggedUser: MaybeNull<AccountFragment> = this.loggedUserService.maybeCurrentlyLoggedInUser;
+        if (loggedUser) {
+            return this.datasetApi.createDatasetAsVersionedFile(params).pipe(
+                map((data: CreateDatasetAsVersionedFileMutation) => {
+                    if (data.datasets.createVersionedFile.__typename === "CreateDatasetResultSuccess") {
+                        const datasetName = data.datasets.createVersionedFile.dataset.name;
+                        this.navigationService.navigateToDatasetView({
+                            accountName: loggedUser.accountName,
+                            datasetName,
+                            tab: DatasetViewTypeEnum.Overview,
+                        });
+                    } else {
+                        this.emitErrorMessageChanged(data.datasets.createVersionedFile.message);
                     }
                 }),
             );

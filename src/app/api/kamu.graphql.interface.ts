@@ -5539,6 +5539,29 @@ export type UpdateWatermarkMutation = {
     };
 };
 
+export type CreateDatasetAsCollectionMutationVariables = Exact<{
+    datasetAlias: Scalars["DatasetAlias"]["input"];
+    datasetVisibility: DatasetVisibility;
+}>;
+
+export type CreateDatasetAsCollectionMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        createCollection:
+            | { __typename?: "CreateDatasetResultInvalidSnapshot"; message: string }
+            | { __typename?: "CreateDatasetResultMissingInputs"; message: string }
+            | { __typename?: "CreateDatasetResultNameCollision"; message: string }
+            | {
+                  __typename?: "CreateDatasetResultSuccess";
+                  message: string;
+                  dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+              }
+            | { __typename?: "MetadataManifestMalformed"; message: string }
+            | { __typename?: "MetadataManifestUnsupportedVersion"; message: string };
+    };
+};
+
 export type DatasetAsCollectionQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"]["input"];
     pathPrefix?: InputMaybe<Scalars["CollectionPath"]["input"]>;
@@ -5595,6 +5618,29 @@ export type CollectionEntryDataFragment = {
             } | null;
         } | null;
     } | null;
+};
+
+export type CreateDatasetAsVersionedFileMutationVariables = Exact<{
+    datasetAlias: Scalars["DatasetAlias"]["input"];
+    datasetVisibility: DatasetVisibility;
+}>;
+
+export type CreateDatasetAsVersionedFileMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        createVersionedFile:
+            | { __typename?: "CreateDatasetResultInvalidSnapshot"; message: string }
+            | { __typename?: "CreateDatasetResultMissingInputs"; message: string }
+            | { __typename?: "CreateDatasetResultNameCollision"; message: string }
+            | {
+                  __typename?: "CreateDatasetResultSuccess";
+                  message: string;
+                  dataset: { __typename?: "Dataset" } & DatasetBasicsFragment;
+              }
+            | { __typename?: "MetadataManifestMalformed"; message: string }
+            | { __typename?: "MetadataManifestUnsupportedVersion"; message: string };
+    };
 };
 
 export type DatasetAsVersionedFileByBlockHashQueryVariables = Exact<{
@@ -10895,6 +10941,50 @@ export class UpdateWatermarkGQL extends Apollo.Mutation<UpdateWatermarkMutation,
         super(apollo);
     }
 }
+export const CreateDatasetAsCollectionDocument = gql`
+    mutation createDatasetAsCollection($datasetAlias: DatasetAlias!, $datasetVisibility: DatasetVisibility!) {
+        datasets {
+            createCollection(datasetAlias: $datasetAlias, datasetVisibility: $datasetVisibility) {
+                ... on CreateDatasetResultSuccess {
+                    message
+                    dataset {
+                        ...DatasetBasics
+                    }
+                }
+                ... on CreateDatasetResultInvalidSnapshot {
+                    message
+                }
+                ... on CreateDatasetResultMissingInputs {
+                    message
+                }
+                ... on CreateDatasetResultNameCollision {
+                    message
+                }
+                ... on MetadataManifestMalformed {
+                    message
+                }
+                ... on MetadataManifestUnsupportedVersion {
+                    message
+                }
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class CreateDatasetAsCollectionGQL extends Apollo.Mutation<
+    CreateDatasetAsCollectionMutation,
+    CreateDatasetAsCollectionMutationVariables
+> {
+    document = CreateDatasetAsCollectionDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const DatasetAsCollectionDocument = gql`
     query datasetAsCollection(
         $datasetId: DatasetID!
@@ -10924,6 +11014,53 @@ export const DatasetAsCollectionDocument = gql`
 })
 export class DatasetAsCollectionGQL extends Apollo.Query<DatasetAsCollectionQuery, DatasetAsCollectionQueryVariables> {
     document = DatasetAsCollectionDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const CreateDatasetAsVersionedFileDocument = gql`
+    mutation createDatasetAsVersionedFile($datasetAlias: DatasetAlias!, $datasetVisibility: DatasetVisibility!) {
+        datasets {
+            createVersionedFile(datasetAlias: $datasetAlias, datasetVisibility: $datasetVisibility) {
+                ... on CreateDatasetResultSuccess {
+                    message
+                    dataset {
+                        ...DatasetBasics
+                    }
+                }
+                ... on CreateDatasetResultInvalidSnapshot {
+                    message
+                }
+                ... on CreateDatasetResultMissingInputs {
+                    message
+                }
+                ... on CreateDatasetResultNameCollision {
+                    message
+                }
+                ... on CreateDatasetResultNameCollision {
+                    message
+                }
+                ... on MetadataManifestMalformed {
+                    message
+                }
+                ... on MetadataManifestUnsupportedVersion {
+                    message
+                }
+            }
+        }
+    }
+    ${DatasetBasicsFragmentDoc}
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class CreateDatasetAsVersionedFileGQL extends Apollo.Mutation<
+    CreateDatasetAsVersionedFileMutation,
+    CreateDatasetAsVersionedFileMutationVariables
+> {
+    document = CreateDatasetAsVersionedFileDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

@@ -1,0 +1,36 @@
+mutation createDatasetAsVersionedFile($datasetAlias: DatasetAlias!, $datasetVisibility: DatasetVisibility!) {
+  datasets {
+    createVersionedFile(datasetAlias: $datasetAlias, datasetVisibility: $datasetVisibility) {
+      ... on CreateDatasetResultSuccess {
+        message
+        dataset {
+          ...DatasetBasics
+        }
+      }
+
+      ... on CreateDatasetResultInvalidSnapshot {
+        message
+      }
+
+      ... on CreateDatasetResultMissingInputs {
+        message
+      }
+
+      ... on CreateDatasetResultNameCollision {
+        message
+      }
+
+      ... on CreateDatasetResultNameCollision {
+        message
+      }
+
+      ... on MetadataManifestMalformed {
+        message
+      }
+
+      ... on MetadataManifestUnsupportedVersion {
+        message
+      }
+    }
+  }
+}

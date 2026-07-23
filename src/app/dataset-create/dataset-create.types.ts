@@ -79,7 +79,8 @@ export const ARCHETYPE_LIST: SelectArchetypeType[] = [
         label: "Versioned File",
         image: AppValues.DATASET_VERSIONED_FILE_LOGO,
         iconClass: "kamu-icon",
-        tooltip: "Represents a versioned history of a single file, useful for tracking changes to unstructured content.",
+        tooltip:
+            "Represents a versioned history of a single file, useful for tracking changes to unstructured content.",
     },
     {
         id: 3,

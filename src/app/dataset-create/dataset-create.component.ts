@@ -85,6 +85,8 @@ export class DatasetCreateComponent extends BaseComponent {
     public readonly DROPDOWN_LIST: SelectStorageItemType[] = STORAGE_LIST;
     public readonly ARCHETYPE_LIST: SelectArchetypeType[] = ARCHETYPE_LIST;
     public readonly ArchetypeViewType: typeof ArchetypeViewType = ArchetypeViewType;
+    public readonly ARCHETYPE_TOOLTIP: string =
+        "Archetypes are common schema blueprints optimized for specific types of tasks. While data is still stored as a changelog ledger under the hood, archetypes provide convenient ways to visualize and edit the data.";
 
     // default id item from STORAGE_LIST
     public selectedStorage: number = 1;
@@ -153,6 +155,7 @@ export class DatasetCreateComponent extends BaseComponent {
         if (event.value === ArchetypeViewType.DATASET_WITH_DATA) {
             this.createDatasetForm.controls.kind.enable();
         } else {
+            this.createDatasetForm.patchValue({ kind: DatasetKind.Root });
             this.createDatasetForm.controls.kind.disable();
 
             this.yamlTemplate = "";

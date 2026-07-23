@@ -88,7 +88,15 @@
         <mat-divider />
 
         <div class="my-4 select-storage-width">
-            <label for="select-storage" class="fs-12">Archetype </label><br />
+            <div class="d-flex flex-row align-items-center">
+                <label for="select-storage" class="fs-12">Archetype </label>
+                <mat-icon
+                    class="text-muted fs-5 ms-1 mt-1 help-icon"
+                    [matTooltip]="ARCHETYPE_TOOLTIP"
+                    [matTooltipPosition]="'right'"
+                    >help_outline</mat-icon
+                >
+            </div>
             <ng-select
                 [items]="ARCHETYPE_LIST"
                 [(ngModel)]="archetype"
@@ -97,6 +105,7 @@
                 [clearable]="false"
                 bindLabel="label"
                 bindValue="value"
+                class="pb-3"
             >
                 <ng-template ng-option-tmp let-item="item" let-index="index">
                     <div class="d-flex align-items-start">
@@ -116,7 +125,7 @@
 
         <ng-container *ngIf="isAccountProviderMultiMode">
             <div class="margin-storage-control select-storage-width">
-                <label for="select-storage" class="fs-12">Storage </label><br />
+                <label for="select-storage" class="fs-12 mb-1">Storage </label><br />
                 <ng-select
                     [items]="DROPDOWN_LIST"
                     [(ngModel)]="selectedStorage"

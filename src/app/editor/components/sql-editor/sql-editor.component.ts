@@ -13,6 +13,7 @@ import {
     EventEmitter,
     inject,
     Input,
+    NgZone,
     OnDestroy,
     OnInit,
     Output,
@@ -71,6 +72,7 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnInit, O
     @ViewChild("monacoEditor") private monaco: monaco.editor.IStandaloneCodeEditor;
 
     private cdr = inject(ChangeDetectorRef);
+    private ngZone = inject(NgZone);
     private readonly INITIAL_EDITOR_HEIGHT = 200;
     private readonly EDITOR_VERTICAL_PADDINGS = 30;
 
@@ -132,16 +134,18 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnInit, O
         super.onInitEditor(editor);
 
         const runQueryFn = () => {
-            const selection = editor.getSelection();
-            const model = editor.getModel();
-            if (model && selection) {
-                this.selectedText = model.getValueInRange(selection);
-                if (this.selectedText) {
-                    this.onRunSql.emit(this.selectedText);
-                } else {
-                    this.onRunSql.emit();
+            this.ngZone.run(() => {
+                const selection = editor.getSelection();
+                const model = editor.getModel();
+                if (model && selection) {
+                    this.selectedText = model.getValueInRange(selection);
+                    if (this.selectedText) {
+                        this.onRunSql.emit(this.selectedText);
+                    } else {
+                        this.onRunSql.emit();
+                    }
                 }
-            }
+            });
         };
 
         const hasSelectionKey = editor.createContextKey<boolean>("hasSelection", false);

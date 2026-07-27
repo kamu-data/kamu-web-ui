@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] 
 ### Added
 - Support for creating versioned files and collections
+### Fixed
+- Query timer starts on Ctrl+Enter
 
 ## [0.68.0] - 2026-07-13
 ### Added

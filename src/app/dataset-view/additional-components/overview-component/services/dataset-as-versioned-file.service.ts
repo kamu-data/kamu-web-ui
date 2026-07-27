@@ -9,7 +9,7 @@ import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 
 import { BehaviorSubject, catchError, EMPTY, finalize, map, Observable, of, ReplaySubject, Subject } from "rxjs";
-import { switchMap, take } from "rxjs/operators";
+import { switchMap, take, tap } from "rxjs/operators";
 
 import saveAs from "file-saver";
 import { ToastrService } from "ngx-toastr";
@@ -19,12 +19,22 @@ import {
     DatasetAsVersionedFileByBlockHashQuery,
     DatasetAsVersionedFileByVersionQuery,
     DatasetAsVersionedFileQuery,
+    DatasetBasicsFragment,
+    FinishUploadNewVersionMutation,
+    StartUploadNewVersionMutation,
     VersionedFileContentUrlQuery,
     VersionedFileEntryDataFragment,
 } from "@api/kamu.graphql.interface";
 import { MaybeNullOrUndefined } from "@interface/app.types";
+import {
+    UploadAvailableMethod,
+    UploadPrepareData,
+    UploadPrepareResponse,
+} from "@interface/ingest-via-file-upload.types";
 
-import { VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetViewTypeEnum, VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
+import { FileUploadService } from "src/app/services/file-upload.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 import { extractAndAddExtension } from "../components/versioned-file-view/versioned-file-view.model";
 
@@ -35,6 +45,8 @@ export class DatasetAsVersionedFileService {
     private datasetApi = inject(DatasetApi);
     private http = inject(HttpClient);
     private toastrService = inject(ToastrService);
+    private fileUploadService = inject(FileUploadService);
+    private navigationService = inject(NavigationService);
 
     private versionedFileDetails$: Subject<VersionedFileView> = new ReplaySubject(1 /*bufferSize*/);
 
@@ -46,7 +58,7 @@ export class DatasetAsVersionedFileService {
         return this.versionedFileDetails$.asObservable();
     }
 
-    private loadingFileDetails$: BehaviorSubject<boolean> = new BehaviorSubject(true);
+    private loadingFileDetails$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     public emitLoadingFileDetailsChanged(value: boolean): void {
         this.loadingFileDetails$.next(value);
@@ -158,6 +170,92 @@ export class DatasetAsVersionedFileService {
             error: () => {
                 this.toastrService.error("Failed to download file");
             },
+        });
+    }
+
+    public uploadFilePrepare(params: {
+        datasetId: string;
+        contentLength: number;
+        contentType: string;
+    }): Observable<UploadPrepareResponse> {
+        return this.datasetApi.startUploadVersionedFile(params).pipe(
+            take(1),
+            switchMap((response: StartUploadNewVersionMutation) => {
+                const result = response.datasets.byId?.asVersionedFile?.startUploadNewVersion;
+
+                if (!result || result.__typename !== "StartUploadVersionSuccess") {
+                    this.toastrService.error(result?.message ?? "Failed to prepare file upload");
+                    return EMPTY;
+                }
+
+                const uploadPrepareResponse: UploadPrepareResponse = {
+                    uploadToken: result.uploadToken,
+                    uploadUrl: result.url,
+                    method: result.method as UploadAvailableMethod,
+                    useMultipart: result.useMultipart,
+                    headers: result.headers.map(({ key, value }): [string, string] => [key, value]),
+                    fields: [],
+                };
+
+                return of(uploadPrepareResponse);
+            }),
+        );
+    }
+
+    public finishUploadFile(params: { datasetId: string; uploadToken: string }): Observable<number> {
+        return this.datasetApi.finishUploadVersionedFile(params).pipe(
+            take(1),
+            switchMap((response: FinishUploadNewVersionMutation) => {
+                const result = response.datasets.byId?.asVersionedFile?.finishUploadNewVersion;
+
+                if (!result || result.__typename !== "UpdateVersionSuccess") {
+                    this.toastrService.error(result?.message ?? "Failed to finish file upload");
+                    return EMPTY;
+                }
+
+                return of(result.newVersion);
+            }),
+        );
+    }
+
+    public uploadVersionedFile(file: File, datasetBasics: DatasetBasicsFragment): Observable<number> {
+        const uploadPrepare$: Observable<UploadPrepareResponse> = this.uploadFilePrepare({
+            datasetId: datasetBasics.id,
+            contentLength: file.size,
+            contentType: file.type,
+        });
+        let uploadToken = "";
+        return uploadPrepare$.pipe(
+            tap((data) => {
+                uploadToken = data.uploadToken;
+            }),
+
+            switchMap((uploadPrepareResponse: UploadPrepareResponse) =>
+                this.fileUploadService.prepareUploadData(uploadPrepareResponse, file),
+            ),
+            switchMap(({ uploadPrepareResponse, bodyObject, uploadHeaders }: UploadPrepareData) =>
+                this.fileUploadService.uploadFileByMethod(
+                    uploadPrepareResponse.method,
+                    uploadPrepareResponse.uploadUrl,
+                    bodyObject,
+                    uploadHeaders,
+                ),
+            ),
+            switchMap(() => {
+                return this.finishUploadFile({ datasetId: datasetBasics.id, uploadToken });
+            }),
+            tap((newVersion: number) => {
+                this.updatePage(datasetBasics, newVersion);
+            }),
+        );
+    }
+
+    public updatePage(datasetBasics: DatasetBasicsFragment, version: number): void {
+        this.navigationService.navigateToDatasetView({
+            accountName: datasetBasics.owner.accountName,
+            datasetName: datasetBasics.name,
+            tab: DatasetViewTypeEnum.Overview,
+            version: version.toString(),
         });
     }
 

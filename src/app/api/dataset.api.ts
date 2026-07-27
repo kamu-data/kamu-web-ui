@@ -59,6 +59,8 @@ import {
     DatasetVisibilityInput,
     DeleteDatasetGQL,
     DeleteDatasetMutation,
+    FinishUploadNewVersionGQL,
+    FinishUploadNewVersionMutation,
     GetDatasetBasicsWithPermissionsGQL,
     GetDatasetBasicsWithPermissionsQuery,
     GetDatasetDataSqlRunGQL,
@@ -79,6 +81,8 @@ import {
     RenameDatasetMutation,
     SetVisibilityDatasetGQL,
     SetVisibilityDatasetMutation,
+    StartUploadNewVersionGQL,
+    StartUploadNewVersionMutation,
     UpdateReadmeGQL,
     UpdateReadmeMutation,
     UpdateWatermarkGQL,
@@ -124,6 +128,47 @@ export class DatasetApi {
     private datasetAsCollectionGQL = inject(DatasetAsCollectionGQL);
     private createDatasetAsCollectionGQL = inject(CreateDatasetAsCollectionGQL);
     private createDatasetAsVersionedFileGQL = inject(CreateDatasetAsVersionedFileGQL);
+    private startUploadNewVersionGQL = inject(StartUploadNewVersionGQL);
+    private finishUploadNewVersionGQL = inject(FinishUploadNewVersionGQL);
+
+    public finishUploadVersionedFile(params: {
+        datasetId: string;
+        uploadToken: string;
+    }): Observable<FinishUploadNewVersionMutation> {
+        return this.finishUploadNewVersionGQL
+            .mutate({
+                variables: { ...params },
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .pipe(
+                first(),
+                map((result: ApolloLink.Result<FinishUploadNewVersionMutation>) => {
+                    return result.data as FinishUploadNewVersionMutation;
+                }),
+            );
+    }
+
+    public startUploadVersionedFile(params: {
+        datasetId: string;
+        contentLength: number;
+        contentType: string;
+    }): Observable<StartUploadNewVersionMutation> {
+        return this.startUploadNewVersionGQL
+            .mutate({
+                variables: { ...params },
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .pipe(
+                first(),
+                map((result: ApolloLink.Result<StartUploadNewVersionMutation>) => {
+                    return result.data as StartUploadNewVersionMutation;
+                }),
+            );
+    }
 
     public createDatasetAsCollection(params: {
         datasetAlias: string;

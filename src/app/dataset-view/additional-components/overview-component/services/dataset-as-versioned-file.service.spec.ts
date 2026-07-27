@@ -59,6 +59,12 @@ describe("DatasetAsVersionedFileService", () => {
         expect(service).toBeTruthy();
     });
 
+    it("should initialize file details loader as disabled", () => {
+        service.loadingFileDetailsChanges.subscribe((isLoading) => {
+            expect(isLoading).toBeFalse();
+        });
+    });
+
     it("should check #requestFileAsText with success", () => {
         const mockContent = "hello world";
         const testUrl = "/test-file.txt";

@@ -1,0 +1,29 @@
+mutation startUploadNewVersion($datasetId: DatasetID!, $contentLength: Int!, $contentType: String) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      asVersionedFile {
+        startUploadNewVersion(contentLength: $contentLength, contentType: $contentType) {
+          ... on StartUploadVersionSuccess {
+            url
+            method
+            isSuccess
+            uploadToken
+            useMultipart
+            message
+            headers {
+              key
+              value
+            }
+          }
+
+          ... on StartUploadVersionErrorTooLarge {
+            isSuccess
+            message
+            uploadSize
+            uploadLimit
+          }
+        }
+      }
+    }
+  }
+}

@@ -15,6 +15,7 @@
         <div class="d-flex flex-column">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="fs-5 fw-500">Preview</div>
+
                 <button
                     *ngIf="fileDetails.fileInfo?.version"
                     class="border-1 bg-light border d-flex rounded-2 btn btn-sm justify-content-between align-items-center"
@@ -25,9 +26,29 @@
                     <span class="fs-12 me-2 d-block">Download file</span>
                 </button>
             </div>
+            <div class="d-flex justify-content-start mt-4">
+                <input
+                    type="file"
+                    class="file-input d-none"
+                    onclick="this.value = null"
+                    (change)="onFileSelected($event)"
+                    data-test-id="input-file"
+                    #fileUpload
+                />
+                <div class="d-flex align-items-center" *ngIf="fileDetails.fileInfo?.contentType">
+                    <button
+                        (click)="fileUpload.click()"
+                        class="border-1 bg-light border d-flex rounded-2 btn btn-sm justify-content-between align-items-center"
+                        data-test-id="upload-file-button"
+                    >
+                        <mat-icon class="mat-icon-svg-size me-2 text-muted mb-1"> upload</mat-icon>
+                        <span class="fs-12 me-2 d-block">Upload file</span>
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <div [ngSwitch]="fileDetails.fileInfo?.contentType! | previewFileType" class="my-4">
+        <div [ngSwitch]="fileDetails.fileInfo?.contentType! | previewFileType" class="mb-4 mt-2">
             <div *ngSwitchCase="'pdf'">
                 @defer (when (pdfComponent)) {
                     <ng-container *ngComponentOutlet="pdfComponent; inputs: { safePdfUrl: urlContentPath }" />
@@ -39,7 +60,7 @@
             </div>
 
             <div *ngSwitchCase="'svg'" class="text-center box p-4 mt-4 bg-light">
-                <mat-icon svgIcon="custom-svg" class="preview-svg"></mat-icon>
+                <mat-icon *ngIf="svgIconName" [svgIcon]="svgIconName" class="preview-svg"></mat-icon>
             </div>
 
             <div *ngSwitchCase="'json'" class="box p-2 bg-light mt-4">
@@ -57,8 +78,7 @@
             </div>
 
             <div class="mt-4" *ngSwitchCase="'audio'" class="box p-4 bg-light">
-                <audio controls preload="auto" controlsList="nodownload">
-                    <source [src]="urlContentPath" [type]="fileDetails.fileInfo?.contentType" />
+                <audio [src]="urlContentPath" controls preload="auto" controlsList="nodownload">
                     Your browser does not support the audio element.
                 </audio>
             </div>
@@ -67,8 +87,30 @@
                 <div *ngIf="fileDetails.fileInfo">
                     <p class="fs-5 box p-4 bg-light">File preview is not supported</p>
                 </div>
-                <div class="box p-4 bg-light" *ngIf="!fileDetails.fileInfo?.contentType">
-                    <span>File is empty</span>
+
+                <div
+                    class="upload-file-container my-4 bg-light"
+                    appDragAndDrop
+                    (click)="fileUpload.click()"
+                    (fileDropped)="onFileDropped($event)"
+                    *ngIf="!fileDetails.fileInfo?.contentType"
+                >
+                    <div class="mt-4 mb-2">
+                        <span class="upload-file-description">File is empty</span>
+                    </div>
+                    <div class="upload-file-icon">
+                        <mat-icon class="text-muted">cloud_upload</mat-icon>
+                    </div>
+                    <p class="upload-file-description text-muted">Drag and drop file</p>
+
+                    <div class="add-data-button-container mb-4">
+                        <button
+                            class="border-1 add-data-button bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
+                        >
+                            <mat-icon class="mat-icon-svg-size text-muted mb-1"> upload</mat-icon>
+                            <span class="fs-12 ms-2 d-block w-100"> Upload file</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

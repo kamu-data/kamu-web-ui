@@ -100,6 +100,24 @@ describe("VersionedFileViewComponent", () => {
         });
     });
 
+    it("should not request the same dataset version twice", () => {
+        component.datasetBasics$.next(mockDatasetBasicsRootFragment);
+        component.version$.next(2);
+        const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("text/plain");
+        const requestDatasetAsVersionedFileByVersionSpy = spyOn(
+            datasetAsVersionedFileService,
+            "requestDatasetAsVersionedFileByVersion",
+        ).and.returnValue(of(mockVersionedFileView));
+        spyOn(component, "setPreviewFileStrategy").and.resolveTo();
+
+        component.ngOnInit();
+        const subscription = component.fileInfo$.subscribe();
+        component.datasetBasics$.next({ ...mockDatasetBasicsRootFragment });
+
+        expect(requestDatasetAsVersionedFileByVersionSpy).toHaveBeenCalledTimes(1);
+        subscription.unsubscribe();
+    });
+
     it("should check setPreviewFileStrategy method for pdf file", async () => {
         const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("application/pdf");
         await component.setPreviewFileStrategy(mockVersionedFileView);
@@ -117,6 +135,34 @@ describe("VersionedFileViewComponent", () => {
 
             expect(requestFileAsTextSpy).toHaveBeenCalledTimes(1);
         }
+    });
+
+    it("should refresh text preview when file version changes", async () => {
+        const requestFileAsTextSpy = spyOn(datasetAsVersionedFileService, "requestFileAsText").and.callFake(
+            (url: string) => of(url),
+        );
+        const firstVersion: VersionedFileView = setMockObjectByContentType("text/plain");
+        const secondVersionUrl = "https://example.com/version-3.txt";
+        const secondVersion: VersionedFileView = {
+            ...firstVersion,
+            fileInfo: {
+                ...(firstVersion.fileInfo as VersionedFileEntryDataFragment),
+                version: 3,
+                contentHash: "new-content-hash",
+                contentUrl: {
+                    url: secondVersionUrl,
+                    expiresAt: "2026-04-20T17:06:49.060763118+00:00",
+                },
+            },
+        };
+
+        await component.setPreviewFileStrategy(firstVersion);
+        await component.setPreviewFileStrategy(secondVersion);
+
+        expect(requestFileAsTextSpy.calls.mostRecent().args[0]).toBe(secondVersionUrl);
+        component.contentText$.subscribe((content) => {
+            expect(content).toBe(secondVersionUrl);
+        });
     });
 
     it("should check setPreviewFileStrategy method for video file", async () => {

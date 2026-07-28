@@ -22,4 +22,11 @@ export interface UploadPrepareData {
     uploadHeaders: HttpHeaders;
 }
 
+export interface IngestFileDataRequest {
+    version: number;
+    content_hash: string;
+    content_length: number;
+    content_type: string;
+}
+
 export type UploadAvailableMethod = "POST" | "PUT";

@@ -20,23 +20,28 @@ import {
     DatasetAsVersionedFileByVersionQuery,
     DatasetAsVersionedFileQuery,
     DatasetBasicsFragment,
+    DatasetEndpoints,
     FinishUploadNewVersionMutation,
     StartUploadNewVersionMutation,
     VersionedFileContentUrlQuery,
     VersionedFileEntryDataFragment,
 } from "@api/kamu.graphql.interface";
-import { MaybeNullOrUndefined } from "@interface/app.types";
+import { MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
 import {
     UploadAvailableMethod,
     UploadPrepareData,
     UploadPrepareResponse,
 } from "@interface/ingest-via-file-upload.types";
+import { DatasetInfo } from "@interface/navigation.interface";
 
 import { DatasetViewTypeEnum, VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
 import { FileUploadService } from "src/app/services/file-upload.service";
+import { LocalStorageService } from "src/app/services/local-storage.service";
 import { NavigationService } from "src/app/services/navigation.service";
+import { ProtocolsService } from "src/app/services/protocols.service";
 
 import { extractAndAddExtension } from "../components/versioned-file-view/versioned-file-view.model";
+import { IngestFileDataRequest } from "./../../../../interface/ingest-via-file-upload.types";
 
 @Injectable({
     providedIn: "root",
@@ -46,7 +51,9 @@ export class DatasetAsVersionedFileService {
     private http = inject(HttpClient);
     private toastrService = inject(ToastrService);
     private fileUploadService = inject(FileUploadService);
+    private localStorageService = inject(LocalStorageService);
     private navigationService = inject(NavigationService);
+    private protocolsService = inject(ProtocolsService);
 
     private versionedFileDetails$: Subject<VersionedFileView> = new ReplaySubject(1 /*bufferSize*/);
 
@@ -270,5 +277,54 @@ export class DatasetAsVersionedFileService {
     public isUrlExpired(expiredAt: MaybeNullOrUndefined<string>): boolean {
         if (!expiredAt) return true;
         return new Date() >= new Date(expiredAt);
+    }
+
+    private requestFileInfoByVersion(datasetId: string, version: number): Observable<VersionedFileEntryDataFragment> {
+        return this.datasetApi.getDatasetAsVersionedFileByVersion(datasetId, version).pipe(
+            take(1),
+            map((result: DatasetAsVersionedFileByVersionQuery) => {
+                return result.datasets.byId?.asVersionedFile?.asOf as VersionedFileEntryDataFragment;
+            }),
+        );
+    }
+
+    private ingestDataToVersionedFile(
+        datasetInfo: DatasetInfo,
+        ingestData: IngestFileDataRequest[],
+    ): Observable<object> {
+        return this.protocolsService.getProtocols(datasetInfo).pipe(
+            switchMap((protocols: MaybeUndefined<DatasetEndpoints>) => {
+                return this.http.post<object>(`${protocols?.rest.pushUrl}`, ingestData, {
+                    headers: { Authorization: `Bearer ${this.localStorageService.accessToken}` },
+                });
+            }),
+        );
+    }
+
+    public rollBackVersionedFile(datasetBasics: DatasetBasicsFragment, version: number): void {
+        this.emitLoadingFileDetailsChanged(true);
+        const datasetInfo: DatasetInfo = {
+            accountName: datasetBasics.owner.accountName,
+            datasetName: datasetBasics.name,
+        };
+        this.requestFileInfoByVersion(datasetBasics.id, version - 1)
+            .pipe(
+                switchMap((data: VersionedFileEntryDataFragment) => {
+                    const ingestData: IngestFileDataRequest = {
+                        version: version + 1,
+                        content_hash: data.contentHash,
+                        content_length: data.contentLength,
+                        content_type: data.contentType,
+                    };
+                    return this.ingestDataToVersionedFile(datasetInfo, [ingestData]);
+                }),
+                take(1),
+                finalize(() => {
+                    this.emitLoadingFileDetailsChanged(false);
+                }),
+            )
+            .subscribe(() => {
+                this.updatePage(datasetBasics, version + 1);
+            });
     }
 }

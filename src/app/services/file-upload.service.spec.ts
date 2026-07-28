@@ -16,6 +16,7 @@ import { Apollo } from "apollo-angular";
 
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockFile, mockUploadPrepareResponse } from "@api/mock/upload-file.mock";
+import { IngestFileDataRequest } from "@interface/ingest-via-file-upload.types";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { mockDatasetEndPoints } from "src/app/data-access-panel/data-access-panel-mock.data";

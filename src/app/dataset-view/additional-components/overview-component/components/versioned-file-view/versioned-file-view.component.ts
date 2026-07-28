@@ -31,17 +31,13 @@ import { MarkdownModule } from "ngx-markdown";
 import { ToastrService } from "ngx-toastr";
 
 import { BaseComponent } from "@common/components/base.component";
-import { ModalService } from "@common/components/modal/modal.service";
 import { DragAndDropDirective } from "@common/directives/drag-and-drop.directive";
-import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
-import { AppConfigService } from "src/app/app-config.service";
 import { DatasetViewTypeEnum, VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 
-import { AddPeopleModalComponent } from "../../../dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.component";
 import { DatasetAsVersionedFileService } from "../../services/dataset-as-versioned-file.service";
 import { FileInformationModalComponent } from "./components/file-information-modal/file-information-modal.component";
 import { PdfViewerContentComponent } from "./components/pdf-viewer/pdf-viewer-content.component";
@@ -205,6 +201,10 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
 
     public downloadFile(fileDetails: VersionedFileView): void {
         this.datasetAsVersionedFileService.downloadFile(this.datasetBasics.id, fileDetails);
+    }
+
+    public onRollbackFile(version: number): void {
+        this.datasetAsVersionedFileService.rollBackVersionedFile(this.datasetBasics, version);
     }
 
     public onFileSelected(event: Event): void {

@@ -23,10 +23,10 @@ import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
-import { BehaviorSubject, combineLatest, from, Observable, of } from "rxjs";
-import { distinctUntilChanged, map, switchMap } from "rxjs/operators";
+import { BehaviorSubject, combineLatest, from, Observable, of, take } from "rxjs";
+import { catchError, distinctUntilChanged, filter, map, switchMap } from "rxjs/operators";
 
-import { NgbAlert } from "@ng-bootstrap/ng-bootstrap";
+import { NgbAlert, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { MarkdownModule } from "ngx-markdown";
 import { ToastrService } from "ngx-toastr";
 
@@ -41,9 +41,12 @@ import { AppConfigService } from "src/app/app-config.service";
 import { DatasetViewTypeEnum, VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 
+import { AddPeopleModalComponent } from "../../../dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.component";
 import { DatasetAsVersionedFileService } from "../../services/dataset-as-versioned-file.service";
+import { FileInformationModalComponent } from "./components/file-information-modal/file-information-modal.component";
 import { PdfViewerContentComponent } from "./components/pdf-viewer/pdf-viewer-content.component";
 import { PreviewFileTypePipe } from "./pipes/preview-file-type.pipe";
+import { FileInformationData } from "./versioned-file-view.model";
 
 @Component({
     selector: "app-versioned-file-view",
@@ -95,8 +98,7 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     private navigationService = inject(NavigationService);
     private previewFileTypePipe = inject(PreviewFileTypePipe);
     private datasetAsVersionedFileService = inject(DatasetAsVersionedFileService);
-    private configService = inject(AppConfigService);
-    private modalService = inject(ModalService);
+    private ngbModalService = inject(NgbModal);
 
     public ngOnInit(): void {
         this.loadingFileDetails$ = this.datasetAsVersionedFileService.loadingFileDetailsChanges;
@@ -219,9 +221,25 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     }
 
     private onUploaduploadVersionedFile(file: File): void {
-        this.datasetAsVersionedFileService
-            .uploadVersionedFile(file, this.datasetBasics)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+        const modalRef = this.ngbModalService.open(FileInformationModalComponent);
+        const modalRefInstance = modalRef.componentInstance as FileInformationModalComponent;
+        modalRefInstance.fileInformation = file;
+
+        from(modalRef.result)
+            .pipe(
+                filter((data) => !!data),
+                switchMap((result: FileInformationData) => {
+                    const updatedFile = new File([file], file.name, {
+                        type: result.contentType,
+                        lastModified: file.lastModified,
+                    });
+                    return this.datasetAsVersionedFileService
+                        .uploadVersionedFile(updatedFile, this.datasetBasics)
+                        .pipe(takeUntilDestroyed(this.destroyRef));
+                }),
+                take(1),
+                catchError(() => of(null)),
+            )
             .subscribe();
     }
 }

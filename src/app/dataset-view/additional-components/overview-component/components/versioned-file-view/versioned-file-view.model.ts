@@ -1,3 +1,5 @@
+import { FormControl } from "@angular/forms";
+
 /**
  * Copyright Kamu Data, Inc. and contributors. All rights reserved.
  *
@@ -6,6 +8,7 @@
  */
 
 import { DatasetArchetype } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 import { OverviewTabMode } from "src/app/dataset-view/dataset-view.interface";
 
@@ -14,6 +17,18 @@ export interface ViewModeButtonsOptions {
     icon: string;
     tooltip: string;
     archetype: DatasetArchetype | null;
+}
+
+export interface FileInformationData {
+    name: string;
+    contentLength: number;
+    contentType: string;
+}
+
+export interface FileFormType {
+    name: FormControl<MaybeNull<string>>;
+    contentLength: FormControl<MaybeNull<number>>;
+    contentType: FormControl<MaybeNull<string>>;
 }
 
 export const VIEW_MODE_BUTTONS_OPTIONS: ViewModeButtonsOptions[] = [

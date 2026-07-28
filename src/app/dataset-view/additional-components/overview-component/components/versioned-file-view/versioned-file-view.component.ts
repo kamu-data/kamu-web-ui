@@ -216,7 +216,7 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     }
 
     public onFileDropped(files: FileList): void {
-        const droppedFile = files[0] as File;
+        const droppedFile = files[0];
         this.onUploaduploadVersionedFile(droppedFile);
     }
 

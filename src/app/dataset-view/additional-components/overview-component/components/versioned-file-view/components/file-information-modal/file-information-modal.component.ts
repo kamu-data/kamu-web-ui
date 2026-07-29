@@ -29,7 +29,6 @@ import { FileFormType } from "../../versioned-file-view.model";
         FormValidationErrorsDirective,
     ],
     templateUrl: "./file-information-modal.component.html",
-    styleUrl: "./file-information-modal.component.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileInformationModalComponent implements OnInit {

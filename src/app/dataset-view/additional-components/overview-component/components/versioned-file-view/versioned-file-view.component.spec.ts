@@ -263,6 +263,7 @@ describe("VersionedFileViewComponent", () => {
         const uploadVersionedFileSpy = spyOn(datasetAsVersionedFileService, "uploadVersionedFile").and.returnValue(
             of(3),
         );
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
 
         component.onFileSelected({
             target: {
@@ -278,6 +279,12 @@ describe("VersionedFileViewComponent", () => {
         expect(uploadedFile.name).toBe(file.name);
         expect(uploadedFile.type).toBe("text/plain");
         expect(uploadVersionedFileSpy.calls.mostRecent().args[1]).toBe(mockDatasetBasicsRootFragment);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledOnceWith({
+            accountName: mockDatasetBasicsRootFragment.owner.accountName,
+            datasetName: mockDatasetBasicsRootFragment.name,
+            tab: DatasetViewTypeEnum.Overview,
+            version: "3",
+        });
     });
 
     it("should upload a dropped file", async () => {
@@ -294,12 +301,40 @@ describe("VersionedFileViewComponent", () => {
         const uploadVersionedFileSpy = spyOn(datasetAsVersionedFileService, "uploadVersionedFile").and.returnValue(
             of(4),
         );
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
 
         component.onFileDropped([file] as unknown as FileList);
         await modalRef.result;
 
         expect(uploadVersionedFileSpy).toHaveBeenCalledTimes(1);
         expect(uploadVersionedFileSpy.calls.mostRecent().args[0].type).toBe("application/json");
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledOnceWith({
+            accountName: mockDatasetBasicsRootFragment.owner.accountName,
+            datasetName: mockDatasetBasicsRootFragment.name,
+            tab: DatasetViewTypeEnum.Overview,
+            version: "4",
+        });
+    });
+
+    it("should not navigate when the file information modal is dismissed", async () => {
+        const file = new File(["content"], "file.txt", { type: "text/plain" });
+        const modalRef = {
+            componentInstance: {},
+            result: Promise.reject(new Error("Modal dismissed")),
+        } as NgbModalRef;
+        spyOn(ngbModalService, "open").and.returnValue(modalRef);
+        const uploadVersionedFileSpy = spyOn(datasetAsVersionedFileService, "uploadVersionedFile");
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+
+        component.onFileSelected({
+            target: {
+                files: [file] as unknown as FileList,
+            },
+        } as unknown as Event);
+        await modalRef.result.catch(() => undefined);
+
+        expect(uploadVersionedFileSpy).not.toHaveBeenCalled();
+        expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
     });
 
     it("should ignore a file input event without files", () => {

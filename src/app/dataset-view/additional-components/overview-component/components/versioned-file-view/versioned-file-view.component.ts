@@ -23,7 +23,7 @@ import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
-import { BehaviorSubject, combineLatest, from, Observable, of, take } from "rxjs";
+import { BehaviorSubject, combineLatest, EMPTY, from, Observable, of, take } from "rxjs";
 import { catchError, distinctUntilChanged, filter, map, switchMap } from "rxjs/operators";
 
 import { NgbAlert, NgbModal } from "@ng-bootstrap/ng-bootstrap";
@@ -211,16 +211,16 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
         const input = event.target as HTMLInputElement;
         if (input.files?.length) {
             const file: File = input.files[0];
-            this.onUploaduploadVersionedFile(file);
+            this.onUploadVersionedFile(file);
         }
     }
 
     public onFileDropped(files: FileList): void {
         const droppedFile = files[0];
-        this.onUploaduploadVersionedFile(droppedFile);
+        this.onUploadVersionedFile(droppedFile);
     }
 
-    private onUploaduploadVersionedFile(file: File): void {
+    private onUploadVersionedFile(file: File): void {
         const modalRef = this.ngbModalService.open(FileInformationModalComponent);
         const modalRefInstance = modalRef.componentInstance as FileInformationModalComponent;
         modalRefInstance.fileInformation = file;
@@ -233,13 +233,19 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
                         type: result.contentType,
                         lastModified: file.lastModified,
                     });
-                    return this.datasetAsVersionedFileService
-                        .uploadVersionedFile(updatedFile, this.datasetBasics)
-                        .pipe(takeUntilDestroyed(this.destroyRef));
+                    return this.datasetAsVersionedFileService.uploadVersionedFile(updatedFile, this.datasetBasics);
                 }),
                 take(1),
-                catchError(() => of(null)),
+                catchError(() => EMPTY),
+                takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe();
+            .subscribe((newVersion: number) => {
+                this.navigationService.navigateToDatasetView({
+                    accountName: this.datasetBasics.owner.accountName,
+                    datasetName: this.datasetBasics.name,
+                    tab: DatasetViewTypeEnum.Overview,
+                    version: newVersion.toString(),
+                });
+            });
     }
 }

@@ -251,9 +251,6 @@ export class DatasetAsVersionedFileService {
             switchMap(() => {
                 return this.finishUploadFile({ datasetId: datasetBasics.id, uploadToken });
             }),
-            tap((newVersion: number) => {
-                this.updatePage(datasetBasics, newVersion);
-            }),
         );
     }
 

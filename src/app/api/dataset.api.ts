@@ -18,6 +18,8 @@ import { resetCacheHelper, updateCacheHelper } from "@common/helpers/apollo-cach
 import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import AppValues from "@common/values/app.values";
 import {
+    CollectionAddEntryGQL,
+    CollectionAddEntryMutation,
     CommitEventToDatasetGQL,
     CommitEventToDatasetMutation,
     CreateDatasetAsCollectionGQL,
@@ -130,6 +132,27 @@ export class DatasetApi {
     private createDatasetAsVersionedFileGQL = inject(CreateDatasetAsVersionedFileGQL);
     private startUploadNewVersionGQL = inject(StartUploadNewVersionGQL);
     private finishUploadNewVersionGQL = inject(FinishUploadNewVersionGQL);
+    private collectionAddEntryGQL = inject(CollectionAddEntryGQL);
+
+    public collectionAddEntry(params: {
+        datasetId: string;
+        path: string;
+        ref: string;
+    }): Observable<CollectionAddEntryMutation> {
+        return this.collectionAddEntryGQL
+            .mutate({
+                variables: { ...params },
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .pipe(
+                first(),
+                map((result: ApolloLink.Result<CollectionAddEntryMutation>) => {
+                    return result.data as CollectionAddEntryMutation;
+                }),
+            );
+    }
 
     public finishUploadVersionedFile(params: {
         datasetId: string;

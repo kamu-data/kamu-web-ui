@@ -54,6 +54,6 @@ export class FileInformationModalComponent implements OnInit {
     }
 
     public onUploadFile(): void {
-        this.activeModal.close(this.fileForm.value);
+        this.activeModal.close(this.fileForm.getRawValue());
     }
 }

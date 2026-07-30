@@ -25,16 +25,30 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { Router } from "@angular/router";
 
-import { buffer, debounceTime, map, Observable, Subject } from "rxjs";
+import {
+    buffer,
+    catchError,
+    debounceTime,
+    EMPTY,
+    filter,
+    from,
+    map,
+    Observable,
+    of,
+    Subject,
+    switchMap,
+    take,
+} from "rxjs";
 
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { InfiniteScrollDirective } from "ngx-infinite-scroll";
 import { ToastrService } from "ngx-toastr";
 
-import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ondestroy.adapter";
+import { BaseComponent } from "@common/components/base.component";
 import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
 import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 import AppValues from "@common/values/app.values";
-import { CollectionEntryDataFragment, DatasetBasicsFragment } from "@api/kamu.graphql.interface";
+import { CollectionEntryDataFragment, DatasetBasicsFragment, DatasetVisibility } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -43,6 +57,9 @@ import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
 import { DatasetAsCollectionService } from "../../services/dataset-as-collection.service";
+import { DatasetAsVersionedFileService } from "../../services/dataset-as-versioned-file.service";
+import { FileInformationModalComponent } from "../versioned-file-view/components/file-information-modal/file-information-modal.component";
+import { FileInformationData } from "../versioned-file-view/versioned-file-view.model";
 import { getCollectionValueHelper, resolveEntryIconHelper, sortCollectionEntryData } from "./collection-view.helper";
 import { CollectionEntriesResult, CollectionEntryViewType, CollectionViewNode } from "./collection-view.model";
 
@@ -72,7 +89,7 @@ import { CollectionEntriesResult, CollectionEntryViewType, CollectionViewNode } 
     styleUrl: "./collection-view.component.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implements OnChanges, OnInit {
+export class CollectionViewComponent extends BaseComponent implements OnChanges, OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public pathPrefix: string;
 
@@ -105,6 +122,9 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     private datasetService = inject(DatasetService);
     private cdr = inject(ChangeDetectorRef);
     private navigationService = inject(NavigationService);
+
+    private datasetAsVersionedFileService = inject(DatasetAsVersionedFileService);
+    private ngbModalService = inject(NgbModal);
 
     public ngOnInit(): void {
         this.loadingCollection$ = this.datasetAsCollectionService.loadingCollectionChanges;
@@ -283,5 +303,76 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
                     this.triggerLoadCollection(headChanged);
                 }
             });
+    }
+
+    public onFileSelected(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        if (input.files?.length) {
+            const file: File = input.files[0];
+            this.onUploadVersionedFile(file);
+        }
+    }
+
+    private onUploadVersionedFile(file: File): void {
+        const modalRef = this.ngbModalService.open(FileInformationModalComponent);
+        const modalRefInstance = modalRef.componentInstance as FileInformationModalComponent;
+        modalRefInstance.fileInformation = file;
+
+        from(modalRef.result)
+            .pipe(
+                filter((data) => !!data),
+                switchMap((fileInformation: FileInformationData) =>
+                    this.createAndUploadVersionedFile(file, fileInformation),
+                ),
+                switchMap((newDataset) => this.addVersionedFileToCollection(newDataset)),
+                take(1),
+                catchError(() => EMPTY),
+            )
+            .subscribe(() => {
+                this.navigateToCollection();
+            });
+    }
+
+    private createAndUploadVersionedFile(
+        file: File,
+        fileInformation: FileInformationData,
+    ): Observable<DatasetBasicsFragment> {
+        return this.datasetAsCollectionService
+            .createVersionedFileInCollection({
+                datasetAlias: fileInformation.name,
+                datasetVisibility: DatasetVisibility.Public,
+            })
+            .pipe(
+                switchMap((newDataset) => {
+                    const updatedFile = this.createFileWithContentType(file, fileInformation.contentType);
+                    return this.datasetAsVersionedFileService
+                        .uploadVersionedFile(updatedFile, newDataset)
+                        .pipe(map(() => newDataset));
+                }),
+            );
+    }
+
+    private createFileWithContentType(file: File, contentType: string): File {
+        return new File([file], file.name, {
+            type: contentType,
+            lastModified: file.lastModified,
+        });
+    }
+
+    private addVersionedFileToCollection(newDataset: DatasetBasicsFragment): Observable<void> {
+        return this.datasetAsCollectionService.addEntry({
+            datasetId: this.datasetBasics.id,
+            path: `${this.pathPrefix}${newDataset.name}`,
+            ref: newDataset.id,
+        });
+    }
+
+    private navigateToCollection(): void {
+        this.navigationService.navigateToDatasetView({
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
+            tab: DatasetViewTypeEnum.Overview,
+            pathPrefix: this.pathPrefix !== "/" ? this.pathPrefix : "",
+        });
     }
 }

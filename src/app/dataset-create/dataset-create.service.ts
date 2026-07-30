@@ -8,7 +8,7 @@
 import { inject, Injectable } from "@angular/core";
 
 import { Observable, Subject } from "rxjs";
-import { map } from "rxjs/operators";
+import { filter, map } from "rxjs/operators";
 
 import { DatasetOperationError } from "@common/values/errors";
 import { DatasetApi } from "@api/dataset.api";
@@ -18,6 +18,7 @@ import {
     CreateDatasetAsVersionedFileMutation,
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetMutation,
+    DatasetBasicsFragment,
     DatasetKind,
     DatasetVisibility,
 } from "@api/kamu.graphql.interface";
@@ -120,22 +121,20 @@ export class DatasetCreateService {
     public createVersionedFile(params: {
         datasetAlias: string;
         datasetVisibility: DatasetVisibility;
-    }): Observable<void> {
+    }): Observable<DatasetBasicsFragment> {
         const loggedUser: MaybeNull<AccountFragment> = this.loggedUserService.maybeCurrentlyLoggedInUser;
         if (loggedUser) {
             return this.datasetApi.createDatasetAsVersionedFile(params).pipe(
                 map((data: CreateDatasetAsVersionedFileMutation) => {
                     if (data.datasets.createVersionedFile.__typename === "CreateDatasetResultSuccess") {
-                        const datasetName = data.datasets.createVersionedFile.dataset.name;
-                        this.navigationService.navigateToDatasetView({
-                            accountName: loggedUser.accountName,
-                            datasetName,
-                            tab: DatasetViewTypeEnum.Overview,
-                        });
+                        const dataset = data.datasets.createVersionedFile.dataset;
+                        return dataset;
                     } else {
                         this.emitErrorMessageChanged(data.datasets.createVersionedFile.message);
+                        return null;
                     }
                 }),
+                filter((dataset): dataset is DatasetBasicsFragment => dataset !== null),
             );
         } else {
             throw new DatasetOperationError([new Error(DatasetCreateService.NOT_LOGGED_USER_ERROR)]);

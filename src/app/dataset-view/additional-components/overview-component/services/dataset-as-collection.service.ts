@@ -7,12 +7,25 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { BehaviorSubject, filter, map, Observable, switchMap } from "rxjs";
+import { BehaviorSubject, EMPTY, filter, map, Observable, switchMap } from "rxjs";
+
+import { ToastrService } from "ngx-toastr";
 
 import { trackBusy } from "@common/helpers/app.helpers";
+import { DatasetOperationError } from "@common/values/errors";
 import { DatasetApi } from "@api/dataset.api";
-import { CollectionEntryConnectionDataFragment, DatasetAsCollectionQuery } from "@api/kamu.graphql.interface";
+import {
+    AccountFragment,
+    CollectionAddEntryMutation,
+    CollectionEntryConnectionDataFragment,
+    CreateDatasetAsVersionedFileMutation,
+    DatasetAsCollectionQuery,
+    DatasetBasicsFragment,
+    DatasetVisibility,
+} from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
+
+import { DatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 
 import {
     CollectionEntriesResult,
@@ -25,6 +38,7 @@ import {
 })
 export class DatasetAsCollectionService {
     private datasetApi = inject(DatasetApi);
+    private toastrService = inject(ToastrService);
 
     public cacheEntries: Map<string, CollectionEntryViewType[]> = new Map();
 
@@ -48,6 +62,36 @@ export class DatasetAsCollectionService {
 
     public get loadCollectionData$(): Observable<MaybeNull<LoadCollectionDataParams>> {
         return this.loadCollectionDataSubject$.asObservable();
+    }
+
+    public createVersionedFileInCollection(params: {
+        datasetAlias: string;
+        datasetVisibility: DatasetVisibility;
+    }): Observable<DatasetBasicsFragment> {
+        return this.datasetApi.createDatasetAsVersionedFile(params).pipe(
+            map((data: CreateDatasetAsVersionedFileMutation) => {
+                if (data.datasets.createVersionedFile.__typename === "CreateDatasetResultSuccess") {
+                    const dataset = data.datasets.createVersionedFile.dataset;
+                    return dataset;
+                } else {
+                    this.toastrService.error(data.datasets.createVersionedFile.message);
+                    return null;
+                }
+            }),
+            filter((dataset): dataset is DatasetBasicsFragment => dataset !== null),
+        );
+    }
+
+    public addEntry(params: { datasetId: string; path: string; ref: string }): Observable<void> {
+        return this.datasetApi.collectionAddEntry(params).pipe(
+            map((result: CollectionAddEntryMutation) => {
+                const typename = result.datasets.byId?.asCollection?.addEntry.__typename;
+                const message = result.datasets.byId?.asCollection?.addEntry.message;
+                if (typename !== "CollectionUpdateSuccess") {
+                    this.toastrService.error(message);
+                }
+            }),
+        );
     }
 
     private requestDatasetAsCollection(params: {

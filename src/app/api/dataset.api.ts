@@ -20,6 +20,8 @@ import AppValues from "@common/values/app.values";
 import {
     CollectionAddEntryGQL,
     CollectionAddEntryMutation,
+    CollectionRemoveEntryGQL,
+    CollectionRemoveEntryMutation,
     CommitEventToDatasetGQL,
     CommitEventToDatasetMutation,
     CreateDatasetAsCollectionGQL,
@@ -133,6 +135,26 @@ export class DatasetApi {
     private startUploadNewVersionGQL = inject(StartUploadNewVersionGQL);
     private finishUploadNewVersionGQL = inject(FinishUploadNewVersionGQL);
     private collectionAddEntryGQL = inject(CollectionAddEntryGQL);
+    private collectionRemoveEntryGQL = inject(CollectionRemoveEntryGQL);
+
+    public collectionRemoveEntry(params: {
+        datasetId: string;
+        path: string;
+    }): Observable<CollectionRemoveEntryMutation> {
+        return this.collectionRemoveEntryGQL
+            .mutate({
+                variables: { ...params },
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .pipe(
+                first(),
+                map((result: ApolloLink.Result<CollectionRemoveEntryMutation>) => {
+                    return result.data as CollectionRemoveEntryMutation;
+                }),
+            );
+    }
 
     public collectionAddEntry(params: {
         datasetId: string;

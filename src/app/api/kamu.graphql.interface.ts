@@ -5564,6 +5564,30 @@ export type CollectionAddEntryMutation = {
     };
 };
 
+export type CollectionRemoveEntryMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"]["input"];
+    path: Scalars["CollectionPath"]["input"];
+}>;
+
+export type CollectionRemoveEntryMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            asCollection?: {
+                __typename?: "CollectionMut";
+                removeEntry:
+                    | { __typename?: "CollectionUpdateErrorCasFailed"; isSuccess: boolean; message: string }
+                    | { __typename?: "CollectionUpdateErrorNotFound"; isSuccess: boolean; message: string }
+                    | { __typename?: "CollectionUpdateErrorQuotaExceeded"; isSuccess: boolean; message: string }
+                    | { __typename?: "CollectionUpdateSuccess"; isSuccess: boolean; message: string }
+                    | { __typename?: "CollectionUpdateUpToDate"; isSuccess: boolean; message: string };
+            } | null;
+        } | null;
+    };
+};
+
 export type CreateDatasetAsCollectionMutationVariables = Exact<{
     datasetAlias: Scalars["DatasetAlias"]["input"];
     datasetVisibility: DatasetVisibility;
@@ -11067,6 +11091,52 @@ export class CollectionAddEntryGQL extends Apollo.Mutation<
     CollectionAddEntryMutationVariables
 > {
     document = CollectionAddEntryDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const CollectionRemoveEntryDocument = gql`
+    mutation collectionRemoveEntry($datasetId: DatasetID!, $path: CollectionPath!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                asCollection {
+                    removeEntry(path: $path) {
+                        ... on CollectionUpdateSuccess {
+                            isSuccess
+                            message
+                        }
+                        ... on CollectionUpdateErrorCasFailed {
+                            isSuccess
+                            message
+                        }
+                        ... on CollectionUpdateErrorNotFound {
+                            isSuccess
+                            message
+                        }
+                        ... on CollectionUpdateErrorQuotaExceeded {
+                            isSuccess
+                            message
+                        }
+                        ... on CollectionUpdateUpToDate {
+                            isSuccess
+                            message
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class CollectionRemoveEntryGQL extends Apollo.Mutation<
+    CollectionRemoveEntryMutation,
+    CollectionRemoveEntryMutationVariables
+> {
+    document = CollectionRemoveEntryDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

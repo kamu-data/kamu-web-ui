@@ -1,0 +1,34 @@
+mutation collectionRemoveEntry($datasetId: DatasetID!, $path: CollectionPath!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      asCollection {
+        removeEntry(path: $path) {
+          ... on CollectionUpdateSuccess {
+            isSuccess
+            message
+          }
+
+          ... on CollectionUpdateErrorCasFailed {
+            isSuccess
+            message
+          }
+
+          ... on CollectionUpdateErrorNotFound {
+            isSuccess
+            message
+          }
+
+          ... on CollectionUpdateErrorQuotaExceeded {
+            isSuccess
+            message
+          }
+
+          ... on CollectionUpdateUpToDate {
+            isSuccess
+            message
+          }
+        }
+      }
+    }
+  }
+}

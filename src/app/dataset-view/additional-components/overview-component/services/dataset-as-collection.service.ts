@@ -18,6 +18,7 @@ import {
     AccountFragment,
     CollectionAddEntryMutation,
     CollectionEntryConnectionDataFragment,
+    CollectionRemoveEntryMutation,
     CreateDatasetAsVersionedFileMutation,
     DatasetAsCollectionQuery,
     DatasetBasicsFragment,
@@ -79,6 +80,18 @@ export class DatasetAsCollectionService {
                 }
             }),
             filter((dataset): dataset is DatasetBasicsFragment => dataset !== null),
+        );
+    }
+
+    public removeEntry(params: { datasetId: string; path: string }): Observable<void> {
+        return this.datasetApi.collectionRemoveEntry(params).pipe(
+            map((result: CollectionRemoveEntryMutation) => {
+                const typename = result.datasets.byId?.asCollection?.removeEntry.__typename;
+                const message = result.datasets.byId?.asCollection?.removeEntry.message;
+                if (typename !== "CollectionUpdateSuccess") {
+                    this.toastrService.error(message);
+                }
+            }),
         );
     }
 

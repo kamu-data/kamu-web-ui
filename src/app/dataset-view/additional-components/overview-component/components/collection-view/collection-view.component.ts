@@ -26,18 +26,21 @@ import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { Router } from "@angular/router";
 
 import {
+    BehaviorSubject,
     buffer,
     catchError,
+    combineLatest,
     debounceTime,
     EMPTY,
     filter,
+    finalize,
     from,
     map,
     Observable,
-    of,
     Subject,
     switchMap,
     take,
+    tap,
 } from "rxjs";
 
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
@@ -98,6 +101,7 @@ export class CollectionViewComponent extends BaseComponent implements OnChanges,
     public loadingCollection$: Observable<boolean>;
     public loadingOnScroll$: Observable<boolean>;
     private click$ = new Subject<string>();
+    private readonly uploadingVersionedFile$ = new BehaviorSubject(false);
 
     public currentPage: number = 1;
     public maxDepth: number;
@@ -127,7 +131,10 @@ export class CollectionViewComponent extends BaseComponent implements OnChanges,
     private ngbModalService = inject(NgbModal);
 
     public ngOnInit(): void {
-        this.loadingCollection$ = this.datasetAsCollectionService.loadingCollectionChanges;
+        this.loadingCollection$ = combineLatest([
+            this.datasetAsCollectionService.loadingCollectionChanges,
+            this.uploadingVersionedFile$,
+        ]).pipe(map(([collectionLoading, fileUploading]) => collectionLoading || fileUploading));
         this.loadingOnScroll$ = this.datasetAsCollectionService.loadingOnScrollChanges;
         this.initClickListeners();
     }
@@ -159,6 +166,18 @@ export class CollectionViewComponent extends BaseComponent implements OnChanges,
         if (changes.pathPrefix && changes.pathPrefix.previousValue !== changes.pathPrefix.currentValue) {
             this.maxDepth = this.pathPrefix === "/" ? 0 : this.pathPrefix.split("/").length - 1;
         }
+    }
+
+    public removeItem(): void {
+        this.datasetAsCollectionService
+            .removeEntry({
+                datasetId: this.datasetBasics.id,
+                path: this.selectedRow?.path!,
+            })
+            .subscribe(() => {
+                this.selectedRow = null;
+                this.navigateToCollection();
+            });
     }
 
     public onScroll(): void {
@@ -321,12 +340,15 @@ export class CollectionViewComponent extends BaseComponent implements OnChanges,
         from(modalRef.result)
             .pipe(
                 filter((data) => !!data),
+                tap(() => this.uploadingVersionedFile$.next(true)),
                 switchMap((fileInformation: FileInformationData) =>
                     this.createAndUploadVersionedFile(file, fileInformation),
                 ),
                 switchMap((newDataset) => this.addVersionedFileToCollection(newDataset)),
                 take(1),
                 catchError(() => EMPTY),
+                finalize(() => this.uploadingVersionedFile$.next(false)),
+                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(() => {
                 this.navigateToCollection();
@@ -372,7 +394,7 @@ export class CollectionViewComponent extends BaseComponent implements OnChanges,
             accountName: this.datasetBasics.owner.accountName,
             datasetName: this.datasetBasics.name,
             tab: DatasetViewTypeEnum.Overview,
-            pathPrefix: this.pathPrefix !== "/" ? this.pathPrefix : "",
+            [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: this.pathPrefix !== "/" ? this.pathPrefix : undefined,
         });
     }
 }

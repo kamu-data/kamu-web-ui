@@ -237,6 +237,9 @@ export class AppComponent extends BaseComponent implements OnInit {
                 "collection-folder",
                 this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/collection-folder.svg"),
             )
+            .addSvgIcon("delete", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/delete.svg"))
+            .addSvgIcon("check", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/check.svg"))
+            .addSvgIcon("close", this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/close.svg"))
             .addSvgIcon(
                 "configuration",
                 this.domSanitizer.bypassSecurityTrustResourceUrl("/assets/svg/configuration.svg"),

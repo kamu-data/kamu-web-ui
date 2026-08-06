@@ -7,6 +7,8 @@
 
 import { Transform } from "stream";
 
+import { DataSchemaField } from "@interface/dataset-schema.interface";
+
 import {
     MergeKind,
     PreprocessKind,
@@ -33,7 +35,7 @@ export interface AddPushSourceEditFormType {
         kind: ReadKind;
         jsonKind?: ReadKind;
         subPath?: string;
-        schema?: string[];
+        schema?: DataSchemaField[];
         separator?: string;
         encoding?: string;
         quote?: string;

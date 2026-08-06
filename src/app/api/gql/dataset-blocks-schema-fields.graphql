@@ -1,0 +1,18 @@
+query datasetBlocksSchemaByEventType(
+  $accountName: AccountName!
+  $datasetName: DatasetName!
+  $eventTypes: [MetadataEventType!]!
+) {
+  datasets {
+    byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+      metadata {
+        metadataProjection(eventTypes: $eventTypes) {
+          event {
+            ...SetPollingSourceEvent
+            ...AddPushSourceEvent
+          }
+        }
+      }
+    }
+  }
+}

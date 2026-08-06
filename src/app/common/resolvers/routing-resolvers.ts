@@ -58,4 +58,6 @@ export default class RoutingResolvers {
     public static readonly WEBHOOKS_ADD_NEW_KEY = "webhooksAddNewData";
     public static readonly WEBHOOKS_EDIT_KEY = "webhooksEditData";
     public static readonly WEBHOOKS_ROTATE_SECRET = "webhooksRotateSecretData";
+
+    public static readonly OVERVIEW_TAB_QUERY_PARAMS_KEY = "overviewTabQeryParamsData";
 }

@@ -17,6 +17,7 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 
 import { OdfDefaultValues } from "@common/values/app-odf-default.values";
 import { mockAccountDetails } from "@api/mock/auth.mock";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
 import { DatasetNavigationParams } from "@interface/navigation.interface";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -54,7 +55,7 @@ describe("AddPollingSourceComponent", () => {
     let loggedUserService: LoggedUserService;
 
     const MOCK_EVENT_YAML =
-        'kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2025-07-31T09:14:31.436171360Z\n  prevBlockHash: f16203af1cb7aa30e9a9c12f8f76d54bf1d27f912a9f84d7938ec06b129e22977fa38\n  sequenceNumber: 13\n  event:\n    kind: SetPollingSource\n    fetch:\n      kind: Url\n      url: https://api.etherscan.io/api?module2=account&action=tokentx&address=0xeadb3840596cabf312f2bc88a4bb0b93a4e1ff5f&page=1&offset=1000&startblock=0&endblock=99999999&apikey=${{ env.ETHERSCAN_API_KEY }}\n      eventTime:\n        kind: FromMetadata\n    read:\n      kind: Json\n      subPath: result\n      dateFormat: rfc3339\n      encoding: utf8\n      timestampFormat: rfc3339\n    preprocess:\n      kind: Sql\n      engine: datafusion\n      queries:\n      - query: |\n          SELECT\n            to_timestamp_seconds(cast(timeStamp as bigint)) as block_time,\n            cast(blockNumber as bigint) as block_number,\n            blockHash as block_hash,\n            hash as transaction_hash,\n            transactionIndex as transaction_index,\n            nonce,\n            "from",\n            to,\n            value,\n            contractAddress as contract_address,\n            tokenName as token_name,\n            tokenSymbol as token_symbol,\n            tokenDecimal as token_decimal,\n            gas,\n            gasPrice as gas_price,\n            gasUsed as gas_used,\n            cumulativeGasUsed as cumulative_gas_used,\n            confirmations\n          FROM input\n    merge:\n      kind: Ledger\n      primaryKey:\n      - transaction_hash\n';
+        'kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2025-07-31T09:14:31.436171360Z\n  prevBlockHash: f16203af1cb7aa30e9a9c12f8f76d54bf1d27f912a9f84d7938ec06b129e22977fa38\n  sequenceNumber: 13\n  event:\n    kind: SetPollingSource\n    fetch:\n      kind: Url\n      url: https://api.etherscan.io/api?module2=account&action=tokentx&address=0xeadb3840596cabf312f2bc88a4bb0b93a4e1ff5f&page=1&offset=1000&startblock=0&endblock=99999999&apikey=${{ env.ETHERSCAN_API_KEY }}\n      eventTime:\n        kind: FromMetadata\n    read:\n      kind: Json\n      subPath: result\n      dateFormat: rfc3339\n      encoding: utf8\n      timestampFormat: rfc3339\n      schema:\n      fileds: []\n    preprocess:\n      kind: Sql\n      engine: datafusion\n      queries:\n      - query: |\n          SELECT\n            to_timestamp_seconds(cast(timeStamp as bigint)) as block_time,\n            cast(blockNumber as bigint) as block_number,\n            blockHash as block_hash,\n            hash as transaction_hash,\n            transactionIndex as transaction_index,\n            nonce,\n            "from",\n            to,\n            value,\n            contractAddress as contract_address,\n            tokenName as token_name,\n            tokenSymbol as token_symbol,\n            tokenDecimal as token_decimal,\n            gas,\n            gasPrice as gas_price,\n            gasUsed as gas_used,\n            cumulativeGasUsed as cumulative_gas_used,\n            confirmations\n          FROM input\n    merge:\n      kind: Ledger\n      primaryKey:\n      - transaction_hash\n';
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [ApolloTestingModule, AddPollingSourceComponent, BrowserAnimationsModule],
@@ -108,12 +109,7 @@ describe("AddPollingSourceComponent", () => {
             }),
             read: new FormGroup({
                 kind: new FormControl(ReadKind.CSV),
-                schema: new FormArray([
-                    new FormGroup({
-                        name: new FormControl("id"),
-                        type: new FormControl("BIGINT"),
-                    }),
-                ]),
+                schema: new FormControl<DataSchemaField[]>([]),
                 header: new FormControl(OdfDefaultValues.CSV_HEADER),
                 encoding: new FormControl(OdfDefaultValues.CSV_ENCODING),
                 separator: new FormControl(OdfDefaultValues.CSV_SEPARATOR),

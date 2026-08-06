@@ -25,6 +25,8 @@ import { datasetViewActiveTabResolverFn } from "src/app/dataset-view/resolvers/d
 import { datasetViewResolverFn } from "src/app/dataset-view/resolvers/dataset-view.resolver";
 import ProjectLinks from "src/app/project-links";
 
+import { overviewTabQueryParamsResolverFn } from "./additional-components/overview-component/resolver/overview-tab-query-params.resolver";
+
 export const DATASET_VIEW_ROUTES: Routes = [
     {
         path: "",
@@ -48,7 +50,10 @@ export const DATASET_VIEW_ROUTES: Routes = [
                 data: {
                     [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Overview,
                 },
-                resolve: { [RoutingResolvers.DATASET_VIEW_OVERVIEW_KEY]: datasetOverviewTabResolverFn },
+                resolve: {
+                    [RoutingResolvers.DATASET_VIEW_OVERVIEW_KEY]: datasetOverviewTabResolverFn,
+                    [RoutingResolvers.OVERVIEW_TAB_QUERY_PARAMS_KEY]: overviewTabQueryParamsResolverFn,
+                },
             },
             {
                 path: DatasetViewTypeEnum.Data,

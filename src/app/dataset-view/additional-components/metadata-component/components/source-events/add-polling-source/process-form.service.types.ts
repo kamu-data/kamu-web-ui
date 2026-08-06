@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { SchemaType } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.component";
 import {
     EventTimeSourceKind,
     FetchKind,
@@ -27,10 +26,4 @@ export interface OrderControlType {
         eventTime?: { kind: EventTimeSourceKind; pattern?: string; timestampFormat?: string };
     };
 }
-export interface SchemaControlType {
-    read: {
-        schema?: SchemaType[] | string[];
-    };
-}
-
 export type SourcesSection = SetPollingSourceSection | AddPushSourceSection;

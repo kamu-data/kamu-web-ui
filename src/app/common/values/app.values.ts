@@ -11,6 +11,9 @@ export default class AppValues {
     public static readonly APP_LOGO = "assets/icons/kamu_logo_icon.svg";
     public static readonly AMAZON_S3_BYO_LOGO = "assets/icons/amazon-s3-byo.svg";
     public static readonly IPFS_LOGO = "assets/icons/ipfs-logo.svg";
+    public static readonly DATASET_WITH_DATA_LOGO = "assets/icons/db-table.svg";
+    public static readonly DATASET_COLLECTION_LOGO = "assets/icons/db-folder.svg";
+    public static readonly DATASET_VERSIONED_FILE_LOGO = "assets/icons/db-file.svg";
     public static readonly LOCAL_STORAGE_ACCESS_TOKEN = "access_token";
     public static readonly LOCAL_STORAGE_LOGIN_DEVICE_CODE = "login_device_code";
     public static readonly LOCAL_STORAGE_LOGIN_REDIRECT_URL = "login_redirect_url";
@@ -22,7 +25,6 @@ export default class AppValues {
     public static readonly URL_PATTERN = /^(http:\/\/)|(https:\/\/)/i;
     public static readonly URL_PATTERN_ONLY_HTTPS = /^(https:\/\/)/i;
     public static readonly ZERO_OR_POSITIVE_PATTERN = /^[0-9]*$/i;
-    public static readonly SCHEMA_NAME_PATTERN = /^[a-zA-Z0-9]+[a-zA-Z0-9\s(_)]*$/i;
     public static readonly SPLIT_ARGUMENTS_PATTERN = /[^\s"']+|"([^"]*)"+|'([^']*)'/g;
     public static readonly DATASET_NAME_PATTERN = /^([a-zA-Z0-9][a-zA-Z0-9-]*)+(\.[a-zA-Z0-9][a-zA-Z0-9-]*)*$/i;
 
@@ -41,6 +43,9 @@ export default class AppValues {
     public static readonly TIMEOUT_REFRESH_FLOW_MS = 1500;
     public static readonly SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL = "Dataset is unavailable";
     public static readonly DEFAULT_OFFSET_COLUMN_NAME = "offset";
+    public static readonly DEFAULT_OP_COLUMN_NAME = "op";
+    public static readonly DEFAULT_SYSTEM_TIME_COLUMN_NAME = "system_time";
+    public static readonly DEFAULT_EVENT_TIME_COLUMN_NAME = "event_time";
     public static readonly DEFAULT_FLOW_INITIATOR = "system process";
     public static readonly HEADERS_SKIP_LOADING_KEY = "Skip-loading";
     public static readonly HEADERS_AUTHORIZATION_KEY = "Authorization";

@@ -1,9 +1,10 @@
 {
   "name": "kamu-platform",
-  "version": "0.65.0",
+  "version": "0.69.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --watch",
+    "start:no-watch": "ng serve --watch=false",
     "build": "ng build",
     "build:stats": "ng build --stats-json",
     "build-prod": "ng build --configuration production",
@@ -20,9 +21,11 @@
     "prettier-check": "prettier --check '**/*.{ts,scss,js,html,spec.ts}'",
     "gql-update-schema": "curl https://raw.githubusercontent.com/kamu-data/kamu-cli/master/resources/schema.gql > resources/schema.graphql",
     "gql-codegen": "graphql-codegen --config gql-codegen.yml && prettier --write src/app/api/kamu.graphql.interface.ts",
-    "release-patch": "npm version patch && node update-changelog.js",
-    "release-minor": "npm version minor && node update-changelog.js",
-    "release-major": "npm version major && node update-changelog.js"
+    "release-patch": "npm version patch -m \"Release v%s\"",
+    "release-minor": "npm version minor -m \"Release v%s\"",
+    "release-major": "npm version major -m \"Release v%s\"",
+    "version": "node update-changelog.js && git add CHANGELOG.md LICENSE.txt",
+    "prebuild": "node scripts/set-monaco-version.js"
   },
   "private": true,
   "dependencies": {

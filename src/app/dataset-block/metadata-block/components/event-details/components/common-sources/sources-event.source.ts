@@ -10,7 +10,6 @@ import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
 import { EnginePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/engine-property/engine-property.component";
 import { MergeStrategyPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/merge-strategy-property/merge-strategy-property.component";
-import { SchemaPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/schema-property/schema-property.component";
 import { SeparatorPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/separator-property/separator-property.component";
 import { SimplePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/simple-property/simple-property.component";
 import { SqlQueryViewerComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/sql-query-viewer/sql-query-viewer.component";
@@ -19,6 +18,8 @@ import {
     EventRowDescriptor,
     EventRowDescriptorsByField,
 } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
+
+import { OdfSchemaPropertyComponent } from "../common/odf-schema-property/odf-schema-property.component";
 
 export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
     "ReadStepCsv.__typename": {
@@ -31,7 +32,7 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
     "ReadStepCsv.schema": {
         label: "Schema:",
         tooltip: SourcesTooltipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
+        presentationComponent: OdfSchemaPropertyComponent,
         separateRowForValue: true,
         dataTestId: "readStepCsv-schema",
     },
@@ -172,7 +173,7 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
     "ReadStepJson.schema": {
         label: "Schema:",
         tooltip: SourcesTooltipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
+        presentationComponent: OdfSchemaPropertyComponent,
         separateRowForValue: false,
         dataTestId: "readStepJson-schema",
     },
@@ -242,9 +243,9 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
     "ReadStepGeoJson.schema": {
         label: "Schema:",
         tooltip: SourcesTooltipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
+        presentationComponent: OdfSchemaPropertyComponent,
         separateRowForValue: false,
-        dataTestId: "readStepGeoJson-schema",
+        dataTestId: "readStepGeoJson-schema-odf",
     },
     "ReadStepEsriShapefile.__typename": {
         label: "Type:",
@@ -256,9 +257,9 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
     "ReadStepEsriShapefile.schema": {
         label: "Schema:",
         tooltip: SourcesTooltipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
+        presentationComponent: OdfSchemaPropertyComponent,
         separateRowForValue: false,
-        dataTestId: "readStepEsriShapefile-schema",
+        dataTestId: "readStepEsriShapefile-schema-odf",
     },
     "ReadStepEsriShapefile.subPath": {
         label: "Sub path:",
@@ -277,9 +278,9 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
     "ReadStepParquet.schema": {
         label: "Schema:",
         tooltip: SourcesTooltipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
+        presentationComponent: OdfSchemaPropertyComponent,
         separateRowForValue: false,
-        dataTestId: "readStepParquet-schema",
+        dataTestId: "readStepParquet-schema-odf",
     },
     "ReadStepNdJson.__typename": {
         label: "Type:",
@@ -291,16 +292,16 @@ export const SOURCES_EVENT_DESCRIPTORS: EventRowDescriptorsByField = {
     "ReadStepNdJson.schema": {
         label: "Schema:",
         tooltip: SourcesTooltipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
+        presentationComponent: OdfSchemaPropertyComponent,
         separateRowForValue: false,
-        dataTestId: "ReadStepNdJson-schema",
+        dataTestId: "ReadStepNdJson-schema-odf",
     },
     "ReadStepNdGeoJson.schema": {
         label: "Schema:",
         tooltip: SourcesTooltipsTexts.SCHEMA,
-        presentationComponent: SchemaPropertyComponent,
+        presentationComponent: OdfSchemaPropertyComponent,
         separateRowForValue: false,
-        dataTestId: "readStepNdGeoJson-schema",
+        dataTestId: "readStepNdGeoJson-schema-odf",
     },
     "ReadStepNdJson.dateFormat": {
         label: "Date format:",

@@ -48,3 +48,46 @@ export const STORAGE_LIST: SelectStorageItemType[] = [
         disabled: true,
     },
 ];
+
+export enum ArchetypeViewType {
+    DATASET_WITH_DATA = "Dataset with data",
+    COLLECTION = "Collection",
+    VERSIONED_FILE = "Versioned file",
+}
+
+export interface SelectArchetypeType {
+    id: number;
+    value: ArchetypeViewType;
+    label: string;
+    image: string;
+    iconClass: string;
+    tooltip: string;
+}
+
+export const ARCHETYPE_LIST: SelectArchetypeType[] = [
+    {
+        id: 1,
+        value: ArchetypeViewType.DATASET_WITH_DATA,
+        label: "None",
+        image: AppValues.DATASET_WITH_DATA_LOGO,
+        iconClass: "kamu-icon",
+        tooltip: "Data is presented in its underlying form as a changelog ledger.",
+    },
+    {
+        id: 2,
+        value: ArchetypeViewType.VERSIONED_FILE,
+        label: "Versioned File",
+        image: AppValues.DATASET_VERSIONED_FILE_LOGO,
+        iconClass: "kamu-icon",
+        tooltip:
+            "Represents a versioned history of a single file, useful for tracking changes to unstructured content.",
+    },
+    {
+        id: 3,
+        value: ArchetypeViewType.COLLECTION,
+        label: "Collection",
+        image: AppValues.DATASET_COLLECTION_LOGO,
+        iconClass: "kamu-icon",
+        tooltip: "Used to organize links to datasets into a hierarchical directory-like structure.",
+    },
+];

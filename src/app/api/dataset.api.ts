@@ -20,6 +20,10 @@ import AppValues from "@common/values/app.values";
 import {
     CommitEventToDatasetGQL,
     CommitEventToDatasetMutation,
+    CreateDatasetAsCollectionGQL,
+    CreateDatasetAsCollectionMutation,
+    CreateDatasetAsVersionedFileGQL,
+    CreateDatasetAsVersionedFileMutation,
     CreateDatasetFromSnapshotGQL,
     CreateDatasetFromSnapshotMutation,
     CreateEmptyDatasetGQL,
@@ -30,8 +34,10 @@ import {
     DatasetAsVersionedFileByVersionGQL,
     DatasetAsVersionedFileByVersionQuery,
     DatasetAsVersionedFileQuery,
-    DatasetBlocksByEventTypeGQL,
-    DatasetBlocksByEventTypeQuery,
+    DatasetBlocksEncodedByEventTypeGQL,
+    DatasetBlocksEncodedByEventTypeQuery,
+    DatasetBlocksSchemaByEventTypeGQL,
+    DatasetBlocksSchemaByEventTypeQuery,
     DatasetByAccountAndDatasetNameGQL,
     DatasetByAccountAndDatasetNameQuery,
     DatasetByIdGQL,
@@ -109,20 +115,47 @@ export class DatasetApi {
     private datasetSystemTimeBlockByHashGQL = inject(DatasetSystemTimeBlockByHashGQL);
     private datasetPushSyncStatusesGQL = inject(DatasetPushSyncStatusesGQL);
     private datasetListDownstreamsGQL = inject(DatasetListDownstreamsGQL);
-    private datasetBlocksByEventTypeGQL = inject(DatasetBlocksByEventTypeGQL);
+    private datasetBlocksEncodedByEventTypeGQL = inject(DatasetBlocksEncodedByEventTypeGQL);
+    private datasetBlocksSchemaByEventTypeGQL = inject(DatasetBlocksSchemaByEventTypeGQL);
     private datasetAsVersionedFileGQL = inject(DatasetAsVersionedFileGQL);
     private datasetAsVersionedFileByVersionGQL = inject(DatasetAsVersionedFileByVersionGQL);
     private datasetAsVersionedFileByBlockHashGQL = inject(DatasetAsVersionedFileByBlockHashGQL);
     private versionedFileContentUrlGQL = inject(VersionedFileContentUrlGQL);
     private datasetAsCollectionGQL = inject(DatasetAsCollectionGQL);
+    private createDatasetAsCollectionGQL = inject(CreateDatasetAsCollectionGQL);
+    private createDatasetAsVersionedFileGQL = inject(CreateDatasetAsVersionedFileGQL);
+
+    public createDatasetAsCollection(params: {
+        datasetAlias: string;
+        datasetVisibility: DatasetVisibility;
+    }): Observable<CreateDatasetAsCollectionMutation> {
+        return this.createDatasetAsCollectionGQL.mutate({ variables: { ...params } }).pipe(
+            first(),
+            map((result: ApolloLink.Result<CreateDatasetAsCollectionMutation>) => {
+                return result.data as CreateDatasetAsCollectionMutation;
+            }),
+        );
+    }
+
+    public createDatasetAsVersionedFile(params: {
+        datasetAlias: string;
+        datasetVisibility: DatasetVisibility;
+    }): Observable<CreateDatasetAsVersionedFileMutation> {
+        return this.createDatasetAsVersionedFileGQL.mutate({ variables: { ...params } }).pipe(
+            first(),
+            map((result: ApolloLink.Result<CreateDatasetAsVersionedFileMutation>) => {
+                return result.data as CreateDatasetAsVersionedFileMutation;
+            }),
+        );
+    }
 
     public getBlocksByEventType(params: {
         accountName: string;
         datasetName: string;
         eventTypes: [MetadataEventType];
         encoding: MetadataManifestFormat;
-    }): Observable<DatasetBlocksByEventTypeQuery> {
-        return this.datasetBlocksByEventTypeGQL
+    }): Observable<DatasetBlocksEncodedByEventTypeQuery> {
+        return this.datasetBlocksEncodedByEventTypeGQL
             .watch({
                 variables: { ...params },
                 ...noCacheFetchPolicy,
@@ -133,8 +166,30 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<DatasetBlocksByEventTypeQuery>) => {
-                    return result.data as DatasetBlocksByEventTypeQuery;
+                map((result: ObservableQuery.Result<DatasetBlocksEncodedByEventTypeQuery>) => {
+                    return result.data as DatasetBlocksEncodedByEventTypeQuery;
+                }),
+            );
+    }
+
+    public getSchemaFieldsByEventType(params: {
+        accountName: string;
+        datasetName: string;
+        eventTypes: [MetadataEventType];
+    }): Observable<DatasetBlocksSchemaByEventTypeQuery> {
+        return this.datasetBlocksSchemaByEventTypeGQL
+            .watch({
+                variables: { ...params },
+                ...noCacheFetchPolicy,
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .valueChanges.pipe(
+                onlyCompleteData(),
+                first(),
+                map((result: ObservableQuery.Result<DatasetBlocksSchemaByEventTypeQuery>) => {
+                    return result.data as DatasetBlocksSchemaByEventTypeQuery;
                 }),
             );
     }

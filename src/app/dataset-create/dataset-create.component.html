@@ -87,9 +87,45 @@
         </div>
         <mat-divider />
 
+        <div class="my-4 select-storage-width">
+            <div class="d-flex flex-row align-items-center">
+                <label for="select-storage" class="fs-12">Archetype </label>
+                <mat-icon
+                    class="text-muted fs-5 ms-1 mt-1 help-icon"
+                    [matTooltip]="ARCHETYPE_TOOLTIP"
+                    [matTooltipPosition]="'right'"
+                    >help_outline</mat-icon
+                >
+            </div>
+            <ng-select
+                [items]="ARCHETYPE_LIST"
+                [(ngModel)]="archetype"
+                [ngModelOptions]="{ standalone: true }"
+                (change)="onChangeArchetype($event)"
+                [clearable]="false"
+                bindLabel="label"
+                bindValue="value"
+                class="pb-3"
+            >
+                <ng-template ng-option-tmp let-item="item" let-index="index">
+                    <div class="d-flex align-items-start">
+                        <img [class]="item.iconClass" class="ms-2" [src]="item.image" />
+                        <label class="fs-14 inline-block"> {{ item.label }} </label>
+                        <mat-icon
+                            class="text-muted fs-5 ms-1 help-icon"
+                            [matTooltip]="item.tooltip"
+                            [matTooltipPosition]="'right'"
+                            >help_outline</mat-icon
+                        >
+                    </div>
+                </ng-template>
+            </ng-select>
+        </div>
+        <mat-divider />
+
         <ng-container *ngIf="isAccountProviderMultiMode">
             <div class="margin-storage-control select-storage-width">
-                <label for="select-storage" class="fs-12">Storage </label><br />
+                <label for="select-storage" class="fs-12 mb-1">Storage </label><br />
                 <ng-select
                     [items]="DROPDOWN_LIST"
                     [(ngModel)]="selectedStorage"
@@ -110,16 +146,17 @@
     </form>
 
     <div class="my-4">
-        <label class="form-yaml-checkbox-label"
+        <label class="form-yaml-checkbox-label d-flex align-items-center"
             ><input
                 type="checkbox"
                 class="checkbox"
                 (change)="onShowMonacoEditor()"
                 [(ngModel)]="showMonacoEditor"
                 data-test-id="show-monaco-editor"
+                [disabled]="archetype !== ArchetypeViewType.DATASET_WITH_DATA"
             />
-            Initialize from YAML snapshot</label
-        >
+            <span class="fs-16 ms-2">Initialize from YAML snapshot</span>
+        </label>
     </div>
     <ng-container *ngIf="showMonacoEditor">
         <div class="container-monaco border border-1 mt-4 ps-2 pe-2 pt-4 rounded-3">
@@ -142,7 +179,7 @@
     <mat-divider />
     <div class="my-4 d-flex align-items-center text-muted">
         <mat-icon class="mat-icon-svg-size me-2" svgIcon="information" />
-        <span class="fs-6 pt-1">You are creating a dataset in your personal account.</span>
+        <span class="fs-6 pt-2">You are creating a dataset in your personal account.</span>
     </div>
     <mat-divider />
     <div class="mt-4 mb-4">

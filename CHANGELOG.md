@@ -4,7 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.69.0] - 2026-07-29 
+### Added
+- Support for creating versioned files and collections
+### Fixed
+- Query timer starts on Ctrl+Enter
+
+## [0.68.0] - 2026-07-13
+### Added
+- URL parameter to manage the collection state
+- URL parameter to manage the versioned file state
+- Schema editor for sources
+### Changed
+- Modified release scripts
+- Integration of the UInt64 type into the schema as a scalar type
+
+## [0.67.0] - 2026-05-19
+### Fixed
+- Lineage tab: error displaying a dataset without a source
+- Visibility of the "Get Data" button for an authorized user
+- Defined HTTP caching policy for static assets
+
+## [0.66.0] - 2026-05-16
 ### Added
 - Preview for the dataset as a collection
   - displayed hierarchical entries for the latest version of collection
@@ -13,8 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - displayed private and broken datasets
 - Account profille
   - added a button to copy the DID for an account
-
-
+- Reading the ODF schema in sources
 
 ## [0.65.0] - 2026-04-24
 ### Added

@@ -6,7 +6,6 @@
  */
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { SimpleChanges } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of, tap } from "rxjs";
@@ -17,8 +16,9 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { VersionedFileEntryDataFragment } from "@api/kamu.graphql.interface";
 
-import { VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetViewTypeEnum, VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
 import { mockDatasetAsVersionedFileQuery, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 import { DatasetAsVersionedFileService } from "../../services/dataset-as-versioned-file.service";
 import { VersionedFileViewComponent } from "./versioned-file-view.component";
@@ -28,6 +28,7 @@ describe("VersionedFileViewComponent", () => {
     let fixture: ComponentFixture<VersionedFileViewComponent>;
     let datasetAsVersionedFileService: DatasetAsVersionedFileService;
     let toastrService: ToastrService;
+    let navigationService: NavigationService;
 
     const MOCK_VERSIONED_VIEW_FILE: VersionedFileView = {
         name: mockDatasetAsVersionedFileQuery.datasets.byId?.name as string,
@@ -53,35 +54,50 @@ describe("VersionedFileViewComponent", () => {
         }).compileComponents();
 
         datasetAsVersionedFileService = TestBed.inject(DatasetAsVersionedFileService);
+        navigationService = TestBed.inject(NavigationService);
         toastrService = TestBed.inject(ToastrService);
         fixture = TestBed.createComponent(VersionedFileViewComponent);
         component = fixture.componentInstance;
         component.datasetBasics = mockDatasetBasicsRootFragment;
-        spyOnProperty(datasetAsVersionedFileService, "selectFileVersionChanges", "get").and.returnValue(of(2));
-        fixture.detectChanges();
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check ngOnChanges", () => {
+    it("should check ngOnInit", () => {
+        component.version$.next(0);
+        fixture.detectChanges();
         const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("text/plain");
         const requestDatasetAsVersionedFileSpy = spyOn(
             datasetAsVersionedFileService,
             "requestDatasetAsVersionedFile",
         ).and.returnValue(of(mockVersionedFileView).pipe(tap()));
         spyOn(component, "setPreviewFileStrategy").and.returnValue(Promise.resolve());
-        const datasetBasicsSimpleChanges: SimpleChanges = {
-            datasetBasics: {
-                previousValue: undefined,
-                currentValue: mockDatasetBasicsRootFragment,
-                firstChange: true,
-                isFirstChange: () => true,
-            },
-        };
-        component.ngOnChanges(datasetBasicsSimpleChanges);
-        expect(requestDatasetAsVersionedFileSpy).toHaveBeenCalledTimes(1);
+
+        component.ngOnInit();
+        component.fileInfo$.subscribe(() => {
+            expect(requestDatasetAsVersionedFileSpy).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    it("should check ngOnInit with version", () => {
+        component.version$.next(2);
+        fixture.detectChanges();
+        const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("text/plain");
+        spyOn(datasetAsVersionedFileService, "requestDatasetAsVersionedFile").and.returnValue(
+            of(mockVersionedFileView).pipe(tap()),
+        );
+        const requestDatasetAsVersionedFileByVersionSpy = spyOn(
+            datasetAsVersionedFileService,
+            "requestDatasetAsVersionedFileByVersion",
+        ).and.returnValue(of(mockVersionedFileView).pipe(tap()));
+        spyOn(component, "setPreviewFileStrategy").and.returnValue(Promise.resolve());
+
+        component.ngOnInit();
+        component.fileInfo$.subscribe(() => {
+            expect(requestDatasetAsVersionedFileByVersionSpy).toHaveBeenCalledTimes(1);
+        });
     });
 
     it("should check setPreviewFileStrategy method for pdf file", async () => {
@@ -134,13 +150,13 @@ describe("VersionedFileViewComponent", () => {
     });
 
     it("should check redirecr to latest version", () => {
-        const requestDatasetAsVersionedFileSpy = spyOn(
-            datasetAsVersionedFileService,
-            "requestDatasetAsVersionedFile",
-        ).and.returnValue(of().pipe(tap()));
-
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.returnValue();
         component.goToLatestVersionedFile();
-        expect(requestDatasetAsVersionedFileSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
+            jasmine.objectContaining({
+                tab: DatasetViewTypeEnum.Overview,
+            }),
+        );
     });
 
     it("should check is latest version", () => {

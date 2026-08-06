@@ -27,16 +27,16 @@ describe("MetadataPushSourcesTabComponent", () => {
             imports: [MetadataPushSourcesTabComponent, SharedTestModule],
             providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         });
+        registerMatSvgIcons();
         fixture = TestBed.createComponent(MetadataPushSourcesTabComponent);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-
         component.datasetMetadataTabData = {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             metadataSummary: mockMetadataRootUpdate.metadataSummary,
         };
-        registerMatSvgIcons();
+
         fixture.detectChanges();
     });
 

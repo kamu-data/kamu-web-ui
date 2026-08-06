@@ -11,6 +11,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 import { Observable } from "rxjs";
 
@@ -26,7 +27,10 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { LoginMethodsService } from "src/app/auth/login-methods.service";
 import { DatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import {
+    ARCHETYPE_LIST,
+    ArchetypeViewType,
     CreateDatasetFormType,
+    SelectArchetypeType,
     SelectStorageItemType,
     STORAGE_LIST,
 } from "src/app/dataset-create/dataset-create.types";
@@ -48,6 +52,7 @@ import { EditorModule } from "src/app/editor/editor.module";
         //-----//
         MatDividerModule,
         MatIconModule,
+        MatTooltipModule,
         NgSelectModule,
         //-----//
         FormValidationErrorsDirective,
@@ -70,6 +75,7 @@ export class DatasetCreateComponent extends BaseComponent {
     public showMonacoEditor = false;
     public errorMessage$: Observable<string>;
     public owners: string[] = [];
+    public archetype: ArchetypeViewType = ArchetypeViewType.DATASET_WITH_DATA;
     public createDatasetForm: FormGroup<CreateDatasetFormType> = this.fb.nonNullable.group({
         owner: ["", [Validators.required]],
         datasetName: ["", [Validators.required, Validators.pattern(AppValues.DATASET_NAME_PATTERN)]],
@@ -77,6 +83,10 @@ export class DatasetCreateComponent extends BaseComponent {
         visibility: [DatasetVisibility.Private],
     });
     public readonly DROPDOWN_LIST: SelectStorageItemType[] = STORAGE_LIST;
+    public readonly ARCHETYPE_LIST: SelectArchetypeType[] = ARCHETYPE_LIST;
+    public readonly ArchetypeViewType: typeof ArchetypeViewType = ArchetypeViewType;
+    public readonly ARCHETYPE_TOOLTIP: string =
+        "Archetypes are common schema blueprints optimized for specific types of tasks. While data is still stored as a changelog ledger under the hood, archetypes provide convenient ways to visualize and edit the data.";
 
     // default id item from STORAGE_LIST
     public selectedStorage: number = 1;
@@ -98,7 +108,7 @@ export class DatasetCreateComponent extends BaseComponent {
         return this.createDatasetForm.get("owner");
     }
 
-    public get visibiltyControl(): FormControl<DatasetVisibility> {
+    public get visibilityControl(): FormControl<DatasetVisibility> {
         return this.createDatasetForm.controls.visibility;
     }
 
@@ -139,14 +149,45 @@ export class DatasetCreateComponent extends BaseComponent {
         this.setAvailabilityControls();
     }
 
+    public onChangeArchetype(event: SelectArchetypeType): void {
+        this.createDatasetForm.controls.datasetName.enable();
+        this.createDatasetForm.controls.owner.enable();
+        if (event.value === ArchetypeViewType.DATASET_WITH_DATA) {
+            this.createDatasetForm.controls.kind.enable();
+        } else {
+            this.createDatasetForm.patchValue({ kind: DatasetKind.Root });
+            this.createDatasetForm.controls.kind.disable();
+
+            this.yamlTemplate = "";
+            this.showMonacoEditor = false;
+        }
+    }
+
     private createDatasetFromForm(): void {
-        const kind = this.createDatasetForm.controls.kind.value;
-        const datasetName = this.createDatasetForm.controls.datasetName.value;
-        const visibility = this.visibiltyControl.value;
-        this.datasetCreateService
-            .createEmptyDataset({ datasetKind: kind, datasetAlias: datasetName, datasetVisibility: visibility })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe();
+        const datasetAlias = this.createDatasetForm.controls.datasetName.value;
+        const datasetVisibility = this.visibilityControl.value;
+        const datasetKind = this.createDatasetForm.controls.kind.value;
+
+        const creationStrategies: Record<ArchetypeViewType, () => Observable<void>> = {
+            [ArchetypeViewType.DATASET_WITH_DATA]: () =>
+                this.datasetCreateService.createEmptyDataset({
+                    datasetKind,
+                    datasetAlias,
+                    datasetVisibility,
+                }),
+            [ArchetypeViewType.COLLECTION]: () =>
+                this.datasetCreateService.createCollection({
+                    datasetAlias,
+                    datasetVisibility,
+                }),
+            [ArchetypeViewType.VERSIONED_FILE]: () =>
+                this.datasetCreateService.createVersionedFile({
+                    datasetAlias,
+                    datasetVisibility,
+                }),
+        };
+
+        creationStrategies[this.archetype]().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 
     private createDatasetFromSnapshot(): void {
@@ -154,7 +195,7 @@ export class DatasetCreateComponent extends BaseComponent {
             this.datasetCreateService
                 .createDatasetFromSnapshot({
                     snapshot: this.yamlTemplate,
-                    datasetVisibility: this.visibiltyControl.value,
+                    datasetVisibility: this.visibilityControl.value,
                 })
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe();

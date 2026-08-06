@@ -9,6 +9,7 @@ import { Injectable } from "@angular/core";
 
 import { stringify } from "yaml";
 
+import { schemaFieldsToObjectForm } from "@common/helpers/data-schema.helpers";
 import { SetLicense, SetTransform } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -66,10 +67,23 @@ export class TemplatesYamlEventsService {
             params.read.kind = params.read.jsonKind;
             delete params.read.jsonKind;
         }
+
         this.initialTemplate.content = {
             kind: "SetPollingSource",
             ...params,
         };
+
+        const schemaFields = params.read.schema;
+        if (schemaFields?.length) {
+            this.initialTemplate.content = {
+                ...this.initialTemplate.content,
+                read: {
+                    ...params.read,
+                    schema: schemaFieldsToObjectForm(schemaFields),
+                },
+            };
+        }
+
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
             this.initialTemplate.content = {
                 ...this.initialTemplate.content,
@@ -99,6 +113,18 @@ export class TemplatesYamlEventsService {
             kind: "AddPushSource",
             ...params,
         };
+
+        const pushSchemaFields = params.read.schema;
+        if (pushSchemaFields?.length) {
+            this.initialTemplate.content = {
+                ...this.initialTemplate.content,
+                read: {
+                    ...params.read,
+                    schema: schemaFieldsToObjectForm(pushSchemaFields),
+                },
+            };
+        }
+
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
             this.initialTemplate.content = {
                 ...this.initialTemplate.content,

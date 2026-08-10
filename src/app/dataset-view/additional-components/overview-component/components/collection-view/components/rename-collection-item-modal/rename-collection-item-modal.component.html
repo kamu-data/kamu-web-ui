@@ -1,0 +1,54 @@
+<div class="d-flex p-4">
+    <div class="flex-grow-1 ms-2 text-center">
+        <span class="fs-5 fw-bold"> File information</span>
+    </div>
+    <div>
+        <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()"></button>
+    </div>
+</div>
+<div class="px-4">
+    <mat-divider />
+</div>
+
+<div class="body p-4">
+    <form [formGroup]="renameItemForm" (ngSubmit)="onRenameItem()">
+        <div class="mt-4">
+            <label for="content-type" class="form-label">Name <span class="text-danger">*</span></label>
+            <input
+                class="form-control"
+                id="content-type"
+                formControlName="name"
+                data-test-id="collection-item-name"
+                #name
+            />
+            <div
+                class="text-danger fs-12"
+                [input]="name"
+                [fieldLabel]="'Name'"
+                [appFieldError]="['required']"
+                [group]="renameItemForm"
+                [dataTestId]="'error-message-name'"
+            ></div>
+        </div>
+    </form>
+</div>
+
+<div class="p-4 d-flex justify-content-end">
+    <button
+        type="button"
+        (click)="activeModal.close()"
+        class="btn btn-light me-2"
+        data-test-id="cancel-rename-collection-item"
+    >
+        Cancel
+    </button>
+    <button
+        type="button"
+        class="btn btn-success"
+        data-test-id="rename-item-modal"
+        (click)="onRenameItem()"
+        [disabled]="renameItemForm.invalid"
+    >
+        Rename
+    </button>
+</div>

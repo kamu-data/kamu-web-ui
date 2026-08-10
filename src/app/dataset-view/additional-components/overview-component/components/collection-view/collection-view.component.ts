@@ -37,6 +37,7 @@ import {
     from,
     map,
     Observable,
+    shareReplay,
     Subject,
     switchMap,
     take,
@@ -65,6 +66,7 @@ import { FileInformationModalComponent } from "../versioned-file-view/components
 import { FileInformationData } from "../versioned-file-view/versioned-file-view.model";
 import { getCollectionValueHelper, resolveEntryIconHelper, sortCollectionEntryData } from "./collection-view.helper";
 import { CollectionEntriesResult, CollectionEntryViewType, CollectionViewNode } from "./collection-view.model";
+import { RenameCollectionItemModalComponent } from "./components/rename-collection-item-modal/rename-collection-item-modal.component";
 
 @Component({
     selector: "app-collection-view",
@@ -134,7 +136,10 @@ export class CollectionViewComponent extends BaseComponent implements OnChanges,
         this.loadingCollection$ = combineLatest([
             this.datasetAsCollectionService.loadingCollectionChanges,
             this.uploadingVersionedFile$,
-        ]).pipe(map(([collectionLoading, fileUploading]) => collectionLoading || fileUploading));
+        ]).pipe(
+            map(([collectionLoading, fileUploading]) => collectionLoading || fileUploading),
+            shareReplay(1),
+        );
         this.loadingOnScroll$ = this.datasetAsCollectionService.loadingOnScrollChanges;
         this.initClickListeners();
     }
@@ -175,7 +180,31 @@ export class CollectionViewComponent extends BaseComponent implements OnChanges,
                 path: this.selectedRow?.path!,
             })
             .subscribe(() => {
-                this.selectedRow = null;
+                this.navigateToCollection();
+            });
+    }
+
+    public renameItem(): void {
+        const modalRef = this.ngbModalService.open(RenameCollectionItemModalComponent);
+        const modalRefInstance = modalRef.componentInstance as RenameCollectionItemModalComponent;
+        modalRefInstance.name = this.selectedRow?.displayName!;
+
+        from(modalRef.result)
+            .pipe(
+                filter((data) => !!data),
+                switchMap((newName: string) => {
+                    return this.datasetAsCollectionService.renameEntry({
+                        datasetId: this.datasetBasics.id,
+                        pathFrom: this.selectedRow?.path!,
+                        pathTo: this.replaceLastPathSegment(this.selectedRow?.path!, newName),
+                    });
+                }),
+
+                take(1),
+                catchError(() => EMPTY),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(() => {
                 this.navigateToCollection();
             });
     }
@@ -231,6 +260,10 @@ export class CollectionViewComponent extends BaseComponent implements OnChanges,
             );
             this.displayedColumns = filteredColumns;
         }
+    }
+
+    private replaceLastPathSegment(path: string, newSegment: string): string {
+        return path.replace(/[^/]+\/?$/, newSegment);
     }
 
     public getValue(value: unknown): string {
@@ -390,6 +423,7 @@ export class CollectionViewComponent extends BaseComponent implements OnChanges,
     }
 
     private navigateToCollection(): void {
+        this.selectedRow = null;
         this.navigationService.navigateToDatasetView({
             accountName: this.datasetBasics.owner.accountName,
             datasetName: this.datasetBasics.name,

@@ -5,54 +5,53 @@
  * included in the LICENSE file.
  */
 
+import { AsyncPipe, DatePipe, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
+import { DisplayHashComponent } from "@common/components/display-hash/display-hash.component";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 
-import { FileFormType } from "../../versioned-file-view.model";
+import { FileFormType } from "../../../versioned-file-view/versioned-file-view.model";
+import { RenameCollectionItemForm } from "../../collection-view.model";
 
 @Component({
-    selector: "app-file-information-modal",
+    selector: "app-rename-collection-item-modal",
     imports: [
         //-----//
         FormsModule,
         ReactiveFormsModule,
-
         //-----//
         MatDividerModule,
-
         //-----//
         FormValidationErrorsDirective,
     ],
-    templateUrl: "./file-information-modal.component.html",
+    templateUrl: "./rename-collection-item-modal.component.html",
+    styleUrl: "./rename-collection-item-modal.component.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileInformationModalComponent implements OnInit {
-    @Input({ required: true }) public fileInformation: File;
+export class RenameCollectionItemModalComponent implements OnInit {
+    @Input({ required: true }) public name: string;
 
     public activeModal = inject(NgbActiveModal);
     private fb = inject(FormBuilder);
 
-    public fileForm: FormGroup<FileFormType> = this.fb.group({
+    public renameItemForm: FormGroup<RenameCollectionItemForm> = this.fb.group({
         name: ["", [Validators.required]],
-        contentLength: [0, [Validators.required]],
-        contentType: ["", [Validators.required]],
     });
 
     public ngOnInit(): void {
-        this.fileForm.patchValue({
-            name: this.fileInformation.name,
-            contentLength: this.fileInformation.size,
-            contentType: this.fileInformation.type,
+        this.renameItemForm.patchValue({
+            name: this.name,
         });
-        this.fileForm.controls.contentLength.disable();
     }
 
-    public onUploadFile(): void {
-        this.activeModal.close(this.fileForm.getRawValue());
+    public onRenameItem(): void {
+        this.activeModal.close(this.renameItemForm.controls.name.value);
     }
 }

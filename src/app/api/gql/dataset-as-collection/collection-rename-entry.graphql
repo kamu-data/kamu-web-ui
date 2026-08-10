@@ -1,0 +1,34 @@
+mutation collectionRenameEntry($datasetId: DatasetID!, $pathFrom: CollectionPath!, $pathTo: CollectionPath!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      asCollection {
+        updateEntries(operations: [{ move: { pathFrom: $pathFrom, pathTo: $pathTo } }]) {
+          ... on CollectionUpdateSuccess {
+            isSuccess
+            message
+          }
+
+          ... on CollectionUpdateErrorCasFailed {
+            isSuccess
+            message
+          }
+
+          ... on CollectionUpdateErrorNotFound {
+            isSuccess
+            message
+          }
+
+          ... on CollectionUpdateErrorQuotaExceeded {
+            isSuccess
+            message
+          }
+
+          ... on CollectionUpdateUpToDate {
+            isSuccess
+            message
+          }
+        }
+      }
+    }
+  }
+}

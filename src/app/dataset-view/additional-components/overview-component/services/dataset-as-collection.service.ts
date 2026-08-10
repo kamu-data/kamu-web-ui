@@ -19,6 +19,7 @@ import {
     CollectionAddEntryMutation,
     CollectionEntryConnectionDataFragment,
     CollectionRemoveEntryMutation,
+    CollectionRenameEntryMutation,
     CreateDatasetAsVersionedFileMutation,
     DatasetAsCollectionQuery,
     DatasetBasicsFragment,
@@ -80,6 +81,18 @@ export class DatasetAsCollectionService {
                 }
             }),
             filter((dataset): dataset is DatasetBasicsFragment => dataset !== null),
+        );
+    }
+
+    public renameEntry(params: { datasetId: string; pathFrom: string; pathTo: string }): Observable<void> {
+        return this.datasetApi.collectionRenameEntry(params).pipe(
+            map((result: CollectionRenameEntryMutation) => {
+                const typename = result.datasets.byId?.asCollection?.updateEntries.__typename;
+                const message = result.datasets.byId?.asCollection?.updateEntries.message;
+                if (typename !== "CollectionUpdateSuccess") {
+                    this.toastrService.error(message);
+                }
+            }),
         );
     }
 

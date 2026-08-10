@@ -22,6 +22,8 @@ import {
     CollectionAddEntryMutation,
     CollectionRemoveEntryGQL,
     CollectionRemoveEntryMutation,
+    CollectionRenameEntryGQL,
+    CollectionRenameEntryMutation,
     CommitEventToDatasetGQL,
     CommitEventToDatasetMutation,
     CreateDatasetAsCollectionGQL,
@@ -136,6 +138,27 @@ export class DatasetApi {
     private finishUploadNewVersionGQL = inject(FinishUploadNewVersionGQL);
     private collectionAddEntryGQL = inject(CollectionAddEntryGQL);
     private collectionRemoveEntryGQL = inject(CollectionRemoveEntryGQL);
+    private collectionRenameEntryGQL = inject(CollectionRenameEntryGQL);
+
+    public collectionRenameEntry(params: {
+        datasetId: string;
+        pathFrom: string;
+        pathTo: string;
+    }): Observable<CollectionRenameEntryMutation> {
+        return this.collectionRenameEntryGQL
+            .mutate({
+                variables: { ...params },
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .pipe(
+                first(),
+                map((result: ApolloLink.Result<CollectionRenameEntryMutation>) => {
+                    return result.data as CollectionRenameEntryMutation;
+                }),
+            );
+    }
 
     public collectionRemoveEntry(params: {
         datasetId: string;

@@ -174,10 +174,15 @@ export class CollectionViewComponent extends BaseComponent implements OnChanges,
     }
 
     public removeItem(): void {
+        const selectedRow = this.selectedRow;
+        if (!selectedRow) {
+            return;
+        }
+
         this.datasetAsCollectionService
             .removeEntry({
                 datasetId: this.datasetBasics.id,
-                path: this.selectedRow?.path!,
+                path: selectedRow.path,
             })
             .subscribe(() => {
                 this.navigateToCollection();
@@ -185,9 +190,14 @@ export class CollectionViewComponent extends BaseComponent implements OnChanges,
     }
 
     public renameItem(): void {
+        const selectedRow = this.selectedRow;
+        if (!selectedRow) {
+            return;
+        }
+
         const modalRef = this.ngbModalService.open(RenameCollectionItemModalComponent);
         const modalRefInstance = modalRef.componentInstance as RenameCollectionItemModalComponent;
-        modalRefInstance.name = this.selectedRow?.displayName!;
+        modalRefInstance.name = selectedRow.displayName;
 
         from(modalRef.result)
             .pipe(
@@ -195,8 +205,8 @@ export class CollectionViewComponent extends BaseComponent implements OnChanges,
                 switchMap((newName: string) => {
                     return this.datasetAsCollectionService.renameEntry({
                         datasetId: this.datasetBasics.id,
-                        pathFrom: this.selectedRow?.path!,
-                        pathTo: this.replaceLastPathSegment(this.selectedRow?.path!, newName),
+                        pathFrom: selectedRow.path,
+                        pathTo: this.replaceLastPathSegment(selectedRow.path, newName),
                     });
                 }),
 
@@ -300,6 +310,12 @@ export class CollectionViewComponent extends BaseComponent implements OnChanges,
 
     public clickTableRow(row: CollectionEntryViewType): void {
         this.selectedRow = row;
+    }
+
+    public onDocumentClick(event: Event, table: HTMLElement): void {
+        if (!table.contains(event.target as Node)) {
+            this.selectedRow = null;
+        }
     }
 
     public goUp(): void {

@@ -45,6 +45,7 @@
 <div *ngIf="collectionInfo$ | async as collectionEntry">
     <div *ngIf="collectionEntry.connection.totalCount; else emptyCollection" class="main-container">
         <div
+            #collectionTable
             *ngIf="dataSource.data.length"
             class="border-bottom"
             style="width: 100%; overflow: auto"
@@ -53,7 +54,12 @@
             [infiniteScrollThrottle]="150"
             (scrolled)="onScroll()"
         >
-            <table mat-table [dataSource]="dataSource" class="w-100">
+            <table
+                mat-table
+                [dataSource]="dataSource"
+                class="w-100"
+                (document:click)="onDocumentClick($event, collectionTable)"
+            >
                 <!-- Navigation: "Go Up" button for directory traversal -->
                 <ng-container matColumnDef="go-up-button">
                     <th

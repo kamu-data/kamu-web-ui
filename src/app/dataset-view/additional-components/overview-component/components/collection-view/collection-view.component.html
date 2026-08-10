@@ -3,9 +3,49 @@
     <div class="mt-4 text-center text-muted">Loading...</div>
 </div>
 
+<div class="d-flex mb-4" *ngIf="!(loadingCollection$ | async)">
+    <input
+        type="file"
+        class="file-input d-none"
+        onclick="this.value = null"
+        (change)="onFileSelected($event)"
+        data-test-id="input-file"
+        #fileUpload
+    />
+    <div class="d-flex align-items-center">
+        <button
+            (click)="fileUpload.click()"
+            class="border-1 bg-light border d-flex rounded-2 btn btn-sm justify-content-between align-items-center"
+            data-test-id="upload-file-button"
+        >
+            <mat-icon class="text-muted fs-4 d-block"> upload</mat-icon>
+            <span class="fs-12 me-2 d-block">Upload</span>
+        </button>
+        <button
+            (click)="removeItem()"
+            class="border-1 bg-light border d-flex rounded-2 btn btn-sm ms-4 justify-content-between align-items-center"
+            data-test-id="upload-file-button"
+            [disabled]="!selectedRow"
+        >
+            <mat-icon class="text-muted fs-4 d-block">delete</mat-icon>
+            <span class="fs-12 me-2 d-block">Remove</span>
+        </button>
+        <button
+            (click)="renameItem()"
+            class="border-1 bg-light border d-flex rounded-2 btn btn-sm ms-4 justify-content-between align-items-center"
+            data-test-id="rename-item-collection"
+            [disabled]="!selectedRow"
+        >
+            <mat-icon class="text-muted fs-4 d-block">edit</mat-icon>
+            <span class="fs-12 me-2 d-block">Rename</span>
+        </button>
+    </div>
+</div>
+
 <div *ngIf="collectionInfo$ | async as collectionEntry">
     <div *ngIf="collectionEntry.connection.totalCount; else emptyCollection" class="main-container">
         <div
+            #collectionTable
             *ngIf="dataSource.data.length"
             class="border-bottom"
             style="width: 100%; overflow: auto"
@@ -14,7 +54,12 @@
             [infiniteScrollThrottle]="150"
             (scrolled)="onScroll()"
         >
-            <table mat-table [dataSource]="dataSource" class="w-100">
+            <table
+                mat-table
+                [dataSource]="dataSource"
+                class="w-100"
+                (document:click)="onDocumentClick($event, collectionTable)"
+            >
                 <!-- Navigation: "Go Up" button for directory traversal -->
                 <ng-container matColumnDef="go-up-button">
                     <th

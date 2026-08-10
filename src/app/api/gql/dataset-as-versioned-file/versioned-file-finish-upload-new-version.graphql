@@ -1,0 +1,30 @@
+mutation finishUploadNewVersion($datasetId: DatasetID!, $uploadToken: String!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      asVersionedFile {
+        finishUploadNewVersion(uploadToken: $uploadToken) {
+          ... on UpdateVersionSuccess {
+            isSuccess
+            message
+            newVersion
+          }
+
+          ... on UpdateVersionErrorCasFailed {
+            isSuccess
+            message
+          }
+
+          ... on UpdateVersionErrorInvalidExtraData {
+            isSuccess
+            message
+          }
+
+          ... on UpdateVersionErrorQuotaExceeded {
+            isSuccess
+            message
+          }
+        }
+      }
+    }
+  }
+}

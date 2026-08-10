@@ -25,16 +25,34 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { Router } from "@angular/router";
 
-import { buffer, debounceTime, map, Observable, Subject } from "rxjs";
+import {
+    BehaviorSubject,
+    buffer,
+    catchError,
+    combineLatest,
+    debounceTime,
+    EMPTY,
+    filter,
+    finalize,
+    from,
+    map,
+    Observable,
+    shareReplay,
+    Subject,
+    switchMap,
+    take,
+    tap,
+} from "rxjs";
 
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { InfiniteScrollDirective } from "ngx-infinite-scroll";
 import { ToastrService } from "ngx-toastr";
 
-import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ondestroy.adapter";
+import { BaseComponent } from "@common/components/base.component";
 import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
 import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 import AppValues from "@common/values/app.values";
-import { CollectionEntryDataFragment, DatasetBasicsFragment } from "@api/kamu.graphql.interface";
+import { CollectionEntryDataFragment, DatasetBasicsFragment, DatasetVisibility } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -43,8 +61,12 @@ import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
 import { DatasetAsCollectionService } from "../../services/dataset-as-collection.service";
+import { DatasetAsVersionedFileService } from "../../services/dataset-as-versioned-file.service";
+import { FileInformationModalComponent } from "../versioned-file-view/components/file-information-modal/file-information-modal.component";
+import { FileInformationData } from "../versioned-file-view/versioned-file-view.model";
 import { getCollectionValueHelper, resolveEntryIconHelper, sortCollectionEntryData } from "./collection-view.helper";
 import { CollectionEntriesResult, CollectionEntryViewType, CollectionViewNode } from "./collection-view.model";
+import { RenameCollectionItemModalComponent } from "./components/rename-collection-item-modal/rename-collection-item-modal.component";
 
 @Component({
     selector: "app-collection-view",
@@ -72,7 +94,7 @@ import { CollectionEntriesResult, CollectionEntryViewType, CollectionViewNode } 
     styleUrl: "./collection-view.component.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implements OnChanges, OnInit {
+export class CollectionViewComponent extends BaseComponent implements OnChanges, OnInit {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public pathPrefix: string;
 
@@ -81,6 +103,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     public loadingCollection$: Observable<boolean>;
     public loadingOnScroll$: Observable<boolean>;
     private click$ = new Subject<string>();
+    private readonly uploadingVersionedFile$ = new BehaviorSubject(false);
 
     public currentPage: number = 1;
     public maxDepth: number;
@@ -106,8 +129,17 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     private cdr = inject(ChangeDetectorRef);
     private navigationService = inject(NavigationService);
 
+    private datasetAsVersionedFileService = inject(DatasetAsVersionedFileService);
+    private ngbModalService = inject(NgbModal);
+
     public ngOnInit(): void {
-        this.loadingCollection$ = this.datasetAsCollectionService.loadingCollectionChanges;
+        this.loadingCollection$ = combineLatest([
+            this.datasetAsCollectionService.loadingCollectionChanges,
+            this.uploadingVersionedFile$,
+        ]).pipe(
+            map(([collectionLoading, fileUploading]) => collectionLoading || fileUploading),
+            shareReplay(1),
+        );
         this.loadingOnScroll$ = this.datasetAsCollectionService.loadingOnScrollChanges;
         this.initClickListeners();
     }
@@ -139,6 +171,52 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
         if (changes.pathPrefix && changes.pathPrefix.previousValue !== changes.pathPrefix.currentValue) {
             this.maxDepth = this.pathPrefix === "/" ? 0 : this.pathPrefix.split("/").length - 1;
         }
+    }
+
+    public removeItem(): void {
+        const selectedRow = this.selectedRow;
+        if (!selectedRow) {
+            return;
+        }
+
+        this.datasetAsCollectionService
+            .removeEntry({
+                datasetId: this.datasetBasics.id,
+                path: selectedRow.path,
+            })
+            .subscribe(() => {
+                this.navigateToCollection();
+            });
+    }
+
+    public renameItem(): void {
+        const selectedRow = this.selectedRow;
+        if (!selectedRow) {
+            return;
+        }
+
+        const modalRef = this.ngbModalService.open(RenameCollectionItemModalComponent);
+        const modalRefInstance = modalRef.componentInstance as RenameCollectionItemModalComponent;
+        modalRefInstance.name = selectedRow.displayName;
+
+        from(modalRef.result)
+            .pipe(
+                filter((data) => !!data),
+                switchMap((newName: string) => {
+                    return this.datasetAsCollectionService.renameEntry({
+                        datasetId: this.datasetBasics.id,
+                        pathFrom: selectedRow.path,
+                        pathTo: this.replaceLastPathSegment(selectedRow.path, newName),
+                    });
+                }),
+
+                take(1),
+                catchError(() => EMPTY),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(() => {
+                this.navigateToCollection();
+            });
     }
 
     public onScroll(): void {
@@ -194,6 +272,10 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
         }
     }
 
+    private replaceLastPathSegment(path: string, newSegment: string): string {
+        return path.replace(/[^/]+\/?$/, newSegment);
+    }
+
     public getValue(value: unknown): string {
         return getCollectionValueHelper(value);
     }
@@ -228,6 +310,12 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
 
     public clickTableRow(row: CollectionEntryViewType): void {
         this.selectedRow = row;
+    }
+
+    public onDocumentClick(event: Event, table: HTMLElement): void {
+        if (!table.contains(event.target as Node)) {
+            this.selectedRow = null;
+        }
     }
 
     public goUp(): void {
@@ -283,5 +371,80 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
                     this.triggerLoadCollection(headChanged);
                 }
             });
+    }
+
+    public onFileSelected(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        if (input.files?.length) {
+            const file: File = input.files[0];
+            this.onUploadVersionedFile(file);
+        }
+    }
+
+    private onUploadVersionedFile(file: File): void {
+        const modalRef = this.ngbModalService.open(FileInformationModalComponent);
+        const modalRefInstance = modalRef.componentInstance as FileInformationModalComponent;
+        modalRefInstance.fileInformation = file;
+
+        from(modalRef.result)
+            .pipe(
+                filter((data) => !!data),
+                tap(() => this.uploadingVersionedFile$.next(true)),
+                switchMap((fileInformation: FileInformationData) =>
+                    this.createAndUploadVersionedFile(file, fileInformation),
+                ),
+                switchMap((newDataset) => this.addVersionedFileToCollection(newDataset)),
+                take(1),
+                catchError(() => EMPTY),
+                finalize(() => this.uploadingVersionedFile$.next(false)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(() => {
+                this.navigateToCollection();
+            });
+    }
+
+    private createAndUploadVersionedFile(
+        file: File,
+        fileInformation: FileInformationData,
+    ): Observable<DatasetBasicsFragment> {
+        return this.datasetAsCollectionService
+            .createVersionedFileInCollection({
+                datasetAlias: fileInformation.name,
+                datasetVisibility: DatasetVisibility.Public,
+            })
+            .pipe(
+                switchMap((newDataset) => {
+                    const updatedFile = this.createFileWithContentType(file, fileInformation.contentType);
+                    return this.datasetAsVersionedFileService
+                        .uploadVersionedFile(updatedFile, newDataset)
+                        .pipe(map(() => newDataset));
+                }),
+            );
+    }
+
+    private createFileWithContentType(file: File, contentType: string): File {
+        return new File([file], file.name, {
+            type: contentType,
+            lastModified: file.lastModified,
+        });
+    }
+
+    private addVersionedFileToCollection(newDataset: DatasetBasicsFragment): Observable<void> {
+        return this.datasetAsCollectionService.addEntry({
+            datasetId: this.datasetBasics.id,
+            path: `${this.pathPrefix}${newDataset.name}`,
+            ref: newDataset.id,
+        });
+    }
+
+    private navigateToCollection(): void {
+        this.selectedRow = null;
+        this.navigationService.navigateToDatasetView({
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
+            tab: DatasetViewTypeEnum.Overview,
+            [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: this.pathPrefix !== "/" ? this.pathPrefix : undefined,
+        });
     }
 }

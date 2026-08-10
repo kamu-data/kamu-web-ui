@@ -13,14 +13,14 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 
-import { Observable } from "rxjs";
+import { finalize, Observable, tap } from "rxjs";
 
 import { NgSelectModule } from "@ng-select/ng-select";
 
 import { BaseComponent } from "@common/components/base.component";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import AppValues from "@common/values/app.values";
-import { AccountProvider, DatasetKind, DatasetVisibility } from "@api/kamu.graphql.interface";
+import { AccountProvider, DatasetBasicsFragment, DatasetKind, DatasetVisibility } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -36,6 +36,9 @@ import {
 } from "src/app/dataset-create/dataset-create.types";
 import { YamlEditorComponent } from "src/app/editor/components/yaml-editor/yaml-editor.component";
 import { EditorModule } from "src/app/editor/editor.module";
+
+import { DatasetViewTypeEnum } from "../dataset-view/dataset-view.interface";
+import { NavigationService } from "../services/navigation.service";
 
 @Component({
     selector: "app-dataset-create",
@@ -66,6 +69,7 @@ export class DatasetCreateComponent extends BaseComponent {
     private datasetCreateService = inject(DatasetCreateService);
     private loggedUserService = inject(LoggedUserService);
     private loginMethodsService = inject(LoginMethodsService);
+    private navigationService = inject(NavigationService);
 
     public readonly DatasetVisibility: typeof DatasetVisibility = DatasetVisibility;
     public readonly DatasetKind: typeof DatasetKind = DatasetKind;
@@ -168,7 +172,7 @@ export class DatasetCreateComponent extends BaseComponent {
         const datasetVisibility = this.visibilityControl.value;
         const datasetKind = this.createDatasetForm.controls.kind.value;
 
-        const creationStrategies: Record<ArchetypeViewType, () => Observable<void>> = {
+        const creationStrategies: Record<ArchetypeViewType, () => Observable<void | DatasetBasicsFragment>> = {
             [ArchetypeViewType.DATASET_WITH_DATA]: () =>
                 this.datasetCreateService.createEmptyDataset({
                     datasetKind,
@@ -181,10 +185,20 @@ export class DatasetCreateComponent extends BaseComponent {
                     datasetVisibility,
                 }),
             [ArchetypeViewType.VERSIONED_FILE]: () =>
-                this.datasetCreateService.createVersionedFile({
-                    datasetAlias,
-                    datasetVisibility,
-                }),
+                this.datasetCreateService
+                    .createVersionedFile({
+                        datasetAlias,
+                        datasetVisibility,
+                    })
+                    .pipe(
+                        tap(() => {
+                            this.navigationService.navigateToDatasetView({
+                                accountName: this.loggedUserService.currentlyLoggedInUser.accountName,
+                                datasetName: datasetAlias,
+                                tab: DatasetViewTypeEnum.Overview,
+                            });
+                        }),
+                    ),
         };
 
         creationStrategies[this.archetype]().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();

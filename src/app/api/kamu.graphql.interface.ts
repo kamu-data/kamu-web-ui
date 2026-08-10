@@ -5539,6 +5539,80 @@ export type UpdateWatermarkMutation = {
     };
 };
 
+export type CollectionAddEntryMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"]["input"];
+    path: Scalars["CollectionPath"]["input"];
+    ref: Scalars["DatasetID"]["input"];
+}>;
+
+export type CollectionAddEntryMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            asCollection?: {
+                __typename?: "CollectionMut";
+                addEntry:
+                    | { __typename?: "CollectionUpdateErrorCasFailed"; isSuccess: boolean; message: string }
+                    | { __typename?: "CollectionUpdateErrorNotFound"; isSuccess: boolean; message: string }
+                    | { __typename?: "CollectionUpdateErrorQuotaExceeded"; isSuccess: boolean; message: string }
+                    | { __typename?: "CollectionUpdateSuccess"; isSuccess: boolean; message: string }
+                    | { __typename?: "CollectionUpdateUpToDate"; isSuccess: boolean; message: string };
+            } | null;
+        } | null;
+    };
+};
+
+export type CollectionRemoveEntryMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"]["input"];
+    path: Scalars["CollectionPath"]["input"];
+}>;
+
+export type CollectionRemoveEntryMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            asCollection?: {
+                __typename?: "CollectionMut";
+                removeEntry:
+                    | { __typename?: "CollectionUpdateErrorCasFailed"; isSuccess: boolean; message: string }
+                    | { __typename?: "CollectionUpdateErrorNotFound"; isSuccess: boolean; message: string }
+                    | { __typename?: "CollectionUpdateErrorQuotaExceeded"; isSuccess: boolean; message: string }
+                    | { __typename?: "CollectionUpdateSuccess"; isSuccess: boolean; message: string }
+                    | { __typename?: "CollectionUpdateUpToDate"; isSuccess: boolean; message: string };
+            } | null;
+        } | null;
+    };
+};
+
+export type CollectionRenameEntryMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"]["input"];
+    pathFrom: Scalars["CollectionPath"]["input"];
+    pathTo: Scalars["CollectionPath"]["input"];
+}>;
+
+export type CollectionRenameEntryMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            asCollection?: {
+                __typename?: "CollectionMut";
+                updateEntries:
+                    | { __typename?: "CollectionUpdateErrorCasFailed"; isSuccess: boolean; message: string }
+                    | { __typename?: "CollectionUpdateErrorNotFound"; isSuccess: boolean; message: string }
+                    | { __typename?: "CollectionUpdateErrorQuotaExceeded"; isSuccess: boolean; message: string }
+                    | { __typename?: "CollectionUpdateSuccess"; isSuccess: boolean; message: string }
+                    | { __typename?: "CollectionUpdateUpToDate"; isSuccess: boolean; message: string };
+            } | null;
+        } | null;
+    };
+};
+
 export type CreateDatasetAsCollectionMutationVariables = Exact<{
     datasetAlias: Scalars["DatasetAlias"]["input"];
     datasetVisibility: DatasetVisibility;
@@ -5715,6 +5789,29 @@ export type VersionedFileEntryDataFragment = {
     contentUrl: { __typename?: "VersionedFileContentDownload"; url: string; expiresAt?: string | null };
 };
 
+export type FinishUploadNewVersionMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"]["input"];
+    uploadToken: Scalars["String"]["input"];
+}>;
+
+export type FinishUploadNewVersionMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            asVersionedFile?: {
+                __typename?: "VersionedFileMut";
+                finishUploadNewVersion:
+                    | { __typename?: "UpdateVersionErrorCasFailed"; isSuccess: boolean; message: string }
+                    | { __typename?: "UpdateVersionErrorInvalidExtraData"; isSuccess: boolean; message: string }
+                    | { __typename?: "UpdateVersionErrorQuotaExceeded"; isSuccess: boolean; message: string }
+                    | { __typename?: "UpdateVersionSuccess"; isSuccess: boolean; message: string; newVersion: number };
+            } | null;
+        } | null;
+    };
+};
+
 export type VersionedFileContentUrlQueryVariables = Exact<{
     datasetId: Scalars["DatasetID"]["input"];
     version?: InputMaybe<Scalars["Int"]["input"]>;
@@ -5732,6 +5829,43 @@ export type VersionedFileContentUrlQuery = {
                     __typename?: "VersionedFileEntry";
                     contentUrl: { __typename?: "VersionedFileContentDownload"; url: string };
                 } | null;
+            } | null;
+        } | null;
+    };
+};
+
+export type StartUploadNewVersionMutationVariables = Exact<{
+    datasetId: Scalars["DatasetID"]["input"];
+    contentLength: Scalars["Int"]["input"];
+    contentType?: InputMaybe<Scalars["String"]["input"]>;
+}>;
+
+export type StartUploadNewVersionMutation = {
+    __typename?: "Mutation";
+    datasets: {
+        __typename?: "DatasetsMut";
+        byId?: {
+            __typename?: "DatasetMut";
+            asVersionedFile?: {
+                __typename?: "VersionedFileMut";
+                startUploadNewVersion:
+                    | {
+                          __typename?: "StartUploadVersionErrorTooLarge";
+                          isSuccess: boolean;
+                          message: string;
+                          uploadSize: number;
+                          uploadLimit: number;
+                      }
+                    | {
+                          __typename?: "StartUploadVersionSuccess";
+                          url: string;
+                          method: string;
+                          isSuccess: boolean;
+                          uploadToken: string;
+                          useMultipart: boolean;
+                          message: string;
+                          headers: Array<{ __typename?: "KeyValue"; key: string; value: string }>;
+                      };
             } | null;
         } | null;
     };
@@ -10941,6 +11075,144 @@ export class UpdateWatermarkGQL extends Apollo.Mutation<UpdateWatermarkMutation,
         super(apollo);
     }
 }
+export const CollectionAddEntryDocument = gql`
+    mutation collectionAddEntry($datasetId: DatasetID!, $path: CollectionPath!, $ref: DatasetID!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                asCollection {
+                    addEntry(entry: { path: $path, ref: $ref }) {
+                        ... on CollectionUpdateSuccess {
+                            isSuccess
+                            message
+                        }
+                        ... on CollectionUpdateErrorCasFailed {
+                            isSuccess
+                            message
+                        }
+                        ... on CollectionUpdateErrorNotFound {
+                            isSuccess
+                            message
+                        }
+                        ... on CollectionUpdateErrorQuotaExceeded {
+                            isSuccess
+                            message
+                        }
+                        ... on CollectionUpdateUpToDate {
+                            isSuccess
+                            message
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class CollectionAddEntryGQL extends Apollo.Mutation<
+    CollectionAddEntryMutation,
+    CollectionAddEntryMutationVariables
+> {
+    document = CollectionAddEntryDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const CollectionRemoveEntryDocument = gql`
+    mutation collectionRemoveEntry($datasetId: DatasetID!, $path: CollectionPath!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                asCollection {
+                    removeEntry(path: $path) {
+                        ... on CollectionUpdateSuccess {
+                            isSuccess
+                            message
+                        }
+                        ... on CollectionUpdateErrorCasFailed {
+                            isSuccess
+                            message
+                        }
+                        ... on CollectionUpdateErrorNotFound {
+                            isSuccess
+                            message
+                        }
+                        ... on CollectionUpdateErrorQuotaExceeded {
+                            isSuccess
+                            message
+                        }
+                        ... on CollectionUpdateUpToDate {
+                            isSuccess
+                            message
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class CollectionRemoveEntryGQL extends Apollo.Mutation<
+    CollectionRemoveEntryMutation,
+    CollectionRemoveEntryMutationVariables
+> {
+    document = CollectionRemoveEntryDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const CollectionRenameEntryDocument = gql`
+    mutation collectionRenameEntry($datasetId: DatasetID!, $pathFrom: CollectionPath!, $pathTo: CollectionPath!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                asCollection {
+                    updateEntries(operations: [{ move: { pathFrom: $pathFrom, pathTo: $pathTo } }]) {
+                        ... on CollectionUpdateSuccess {
+                            isSuccess
+                            message
+                        }
+                        ... on CollectionUpdateErrorCasFailed {
+                            isSuccess
+                            message
+                        }
+                        ... on CollectionUpdateErrorNotFound {
+                            isSuccess
+                            message
+                        }
+                        ... on CollectionUpdateErrorQuotaExceeded {
+                            isSuccess
+                            message
+                        }
+                        ... on CollectionUpdateUpToDate {
+                            isSuccess
+                            message
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class CollectionRenameEntryGQL extends Apollo.Mutation<
+    CollectionRenameEntryMutation,
+    CollectionRenameEntryMutationVariables
+> {
+    document = CollectionRenameEntryDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const CreateDatasetAsCollectionDocument = gql`
     mutation createDatasetAsCollection($datasetAlias: DatasetAlias!, $datasetVisibility: DatasetVisibility!) {
         datasets {
@@ -11159,6 +11431,49 @@ export class DatasetAsVersionedFileGQL extends Apollo.Query<
         super(apollo);
     }
 }
+export const FinishUploadNewVersionDocument = gql`
+    mutation finishUploadNewVersion($datasetId: DatasetID!, $uploadToken: String!) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                asVersionedFile {
+                    finishUploadNewVersion(uploadToken: $uploadToken) {
+                        ... on UpdateVersionSuccess {
+                            isSuccess
+                            message
+                            newVersion
+                        }
+                        ... on UpdateVersionErrorCasFailed {
+                            isSuccess
+                            message
+                        }
+                        ... on UpdateVersionErrorInvalidExtraData {
+                            isSuccess
+                            message
+                        }
+                        ... on UpdateVersionErrorQuotaExceeded {
+                            isSuccess
+                            message
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class FinishUploadNewVersionGQL extends Apollo.Mutation<
+    FinishUploadNewVersionMutation,
+    FinishUploadNewVersionMutationVariables
+> {
+    document = FinishUploadNewVersionDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
 export const VersionedFileContentUrlDocument = gql`
     query versionedFileContentUrl($datasetId: DatasetID!, $version: Int) {
         datasets {
@@ -11183,6 +11498,50 @@ export class VersionedFileContentUrlGQL extends Apollo.Query<
     VersionedFileContentUrlQueryVariables
 > {
     document = VersionedFileContentUrlDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+        super(apollo);
+    }
+}
+export const StartUploadNewVersionDocument = gql`
+    mutation startUploadNewVersion($datasetId: DatasetID!, $contentLength: Int!, $contentType: String) {
+        datasets {
+            byId(datasetId: $datasetId) {
+                asVersionedFile {
+                    startUploadNewVersion(contentLength: $contentLength, contentType: $contentType) {
+                        ... on StartUploadVersionSuccess {
+                            url
+                            method
+                            isSuccess
+                            uploadToken
+                            useMultipart
+                            message
+                            headers {
+                                key
+                                value
+                            }
+                        }
+                        ... on StartUploadVersionErrorTooLarge {
+                            isSuccess
+                            message
+                            uploadSize
+                            uploadLimit
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+@Injectable({
+    providedIn: "root",
+})
+export class StartUploadNewVersionGQL extends Apollo.Mutation<
+    StartUploadNewVersionMutation,
+    StartUploadNewVersionMutationVariables
+> {
+    document = StartUploadNewVersionDocument;
 
     constructor(apollo: Apollo.Apollo) {
         super(apollo);

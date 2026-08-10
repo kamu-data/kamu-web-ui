@@ -18,6 +18,12 @@ import { resetCacheHelper, updateCacheHelper } from "@common/helpers/apollo-cach
 import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import AppValues from "@common/values/app.values";
 import {
+    CollectionAddEntryGQL,
+    CollectionAddEntryMutation,
+    CollectionRemoveEntryGQL,
+    CollectionRemoveEntryMutation,
+    CollectionRenameEntryGQL,
+    CollectionRenameEntryMutation,
     CommitEventToDatasetGQL,
     CommitEventToDatasetMutation,
     CreateDatasetAsCollectionGQL,
@@ -59,6 +65,8 @@ import {
     DatasetVisibilityInput,
     DeleteDatasetGQL,
     DeleteDatasetMutation,
+    FinishUploadNewVersionGQL,
+    FinishUploadNewVersionMutation,
     GetDatasetBasicsWithPermissionsGQL,
     GetDatasetBasicsWithPermissionsQuery,
     GetDatasetDataSqlRunGQL,
@@ -79,6 +87,8 @@ import {
     RenameDatasetMutation,
     SetVisibilityDatasetGQL,
     SetVisibilityDatasetMutation,
+    StartUploadNewVersionGQL,
+    StartUploadNewVersionMutation,
     UpdateReadmeGQL,
     UpdateReadmeMutation,
     UpdateWatermarkGQL,
@@ -124,6 +134,109 @@ export class DatasetApi {
     private datasetAsCollectionGQL = inject(DatasetAsCollectionGQL);
     private createDatasetAsCollectionGQL = inject(CreateDatasetAsCollectionGQL);
     private createDatasetAsVersionedFileGQL = inject(CreateDatasetAsVersionedFileGQL);
+    private startUploadNewVersionGQL = inject(StartUploadNewVersionGQL);
+    private finishUploadNewVersionGQL = inject(FinishUploadNewVersionGQL);
+    private collectionAddEntryGQL = inject(CollectionAddEntryGQL);
+    private collectionRemoveEntryGQL = inject(CollectionRemoveEntryGQL);
+    private collectionRenameEntryGQL = inject(CollectionRenameEntryGQL);
+
+    public collectionRenameEntry(params: {
+        datasetId: string;
+        pathFrom: string;
+        pathTo: string;
+    }): Observable<CollectionRenameEntryMutation> {
+        return this.collectionRenameEntryGQL
+            .mutate({
+                variables: { ...params },
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .pipe(
+                first(),
+                map((result: ApolloLink.Result<CollectionRenameEntryMutation>) => {
+                    return result.data as CollectionRenameEntryMutation;
+                }),
+            );
+    }
+
+    public collectionRemoveEntry(params: {
+        datasetId: string;
+        path: string;
+    }): Observable<CollectionRemoveEntryMutation> {
+        return this.collectionRemoveEntryGQL
+            .mutate({
+                variables: { ...params },
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .pipe(
+                first(),
+                map((result: ApolloLink.Result<CollectionRemoveEntryMutation>) => {
+                    return result.data as CollectionRemoveEntryMutation;
+                }),
+            );
+    }
+
+    public collectionAddEntry(params: {
+        datasetId: string;
+        path: string;
+        ref: string;
+    }): Observable<CollectionAddEntryMutation> {
+        return this.collectionAddEntryGQL
+            .mutate({
+                variables: { ...params },
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .pipe(
+                first(),
+                map((result: ApolloLink.Result<CollectionAddEntryMutation>) => {
+                    return result.data as CollectionAddEntryMutation;
+                }),
+            );
+    }
+
+    public finishUploadVersionedFile(params: {
+        datasetId: string;
+        uploadToken: string;
+    }): Observable<FinishUploadNewVersionMutation> {
+        return this.finishUploadNewVersionGQL
+            .mutate({
+                variables: { ...params },
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .pipe(
+                first(),
+                map((result: ApolloLink.Result<FinishUploadNewVersionMutation>) => {
+                    return result.data as FinishUploadNewVersionMutation;
+                }),
+            );
+    }
+
+    public startUploadVersionedFile(params: {
+        datasetId: string;
+        contentLength: number;
+        contentType: string;
+    }): Observable<StartUploadNewVersionMutation> {
+        return this.startUploadNewVersionGQL
+            .mutate({
+                variables: { ...params },
+                context: {
+                    skipLoading: true,
+                },
+            })
+            .pipe(
+                first(),
+                map((result: ApolloLink.Result<StartUploadNewVersionMutation>) => {
+                    return result.data as StartUploadNewVersionMutation;
+                }),
+            );
+    }
 
     public createDatasetAsCollection(params: {
         datasetAlias: string;

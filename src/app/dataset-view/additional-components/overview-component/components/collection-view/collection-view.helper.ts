@@ -44,6 +44,7 @@ export function sortCollectionEntryData(
                     contentType: null,
                     owner,
                     extraData: node.extraData,
+                    path: node.path,
                 });
             } else {
                 grouped.set(groupKey, {
@@ -57,6 +58,7 @@ export function sortCollectionEntryData(
                     contentType: latest?.contentType ?? null,
                     owner,
                     extraData: node.extraData,
+                    path: node.path,
                 });
             }
         } else {
@@ -72,6 +74,7 @@ export function sortCollectionEntryData(
                 contentType: null,
                 owner: null,
                 extraData: node.extraData,
+                path: node.path,
             });
         }
     });

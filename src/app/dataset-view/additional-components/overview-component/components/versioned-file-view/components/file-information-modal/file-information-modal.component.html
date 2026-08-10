@@ -1,0 +1,64 @@
+<div class="d-flex p-4">
+    <div class="flex-grow-1 ms-2 text-center">
+        <span class="fs-5 fw-bold"> File information</span>
+    </div>
+    <div>
+        <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()"></button>
+    </div>
+</div>
+<div class="px-4">
+    <mat-divider />
+</div>
+
+<div class="body p-4">
+    <form [formGroup]="fileForm" (ngSubmit)="onUploadFile()">
+        <div class="mt-4">
+            <label for="file-name" class="form-label">Name</label>
+            <input class="form-control" id="file-name" formControlName="name" data-test-id="license-name" #name />
+        </div>
+        <div class="mt-4">
+            <label for="license-url" class="form-label"
+                >Content length <span class="text-muted fs-12">(Bytes)</span></label
+            >
+            <input
+                class="form-control"
+                id="contentLength"
+                formControlName="contentLength"
+                data-test-id="contentLength"
+            />
+        </div>
+        <div class="mt-4">
+            <label for="content-type" class="form-label">MIME type <span class="text-danger">*</span></label>
+            <input
+                class="form-control"
+                id="content-type"
+                formControlName="contentType"
+                data-test-id="contentType"
+                #contentType
+            />
+            <div
+                class="text-danger fs-12"
+                [input]="contentType"
+                [fieldLabel]="'Content type'"
+                [appFieldError]="['required']"
+                [group]="fileForm"
+                [dataTestId]="'error-message-contentType'"
+            ></div>
+        </div>
+    </form>
+</div>
+
+<div class="p-4 d-flex justify-content-end">
+    <button type="button" (click)="activeModal.close()" class="btn btn-light me-2" data-test-id="cancel-upload">
+        Cancel
+    </button>
+    <button
+        type="button"
+        class="btn btn-success"
+        data-test-id="save-license"
+        (click)="onUploadFile()"
+        [disabled]="!fileForm.valid"
+    >
+        Upload file
+    </button>
+</div>

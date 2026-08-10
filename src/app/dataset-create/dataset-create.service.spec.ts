@@ -269,8 +269,10 @@ describe("DatasetCreateService", () => {
         spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
 
-        service.createVersionedFile(params).subscribe();
+        const nextSpy = jasmine.createSpy("next");
+        service.createVersionedFile(params).subscribe(nextSpy);
 
+        expect(nextSpy).toHaveBeenCalledOnceWith(mockDatasetBasicsDerivedFragment);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
             accountName: mockAccountDetails.accountName,
             datasetName: mockDatasetBasicsDerivedFragment.name,
@@ -291,16 +293,18 @@ describe("DatasetCreateService", () => {
         spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         const emitErrorMessageChangedSpy = spyOn(service, "emitErrorMessageChanged");
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        const nextSpy = jasmine.createSpy("next");
 
         service
             .createVersionedFile({
                 datasetAlias: "my-versioned-file",
                 datasetVisibility: DatasetVisibility.Public,
             })
-            .subscribe();
+            .subscribe(nextSpy);
 
         expect(emitErrorMessageChangedSpy).toHaveBeenCalledOnceWith("Versioned file already exists");
         expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
+        expect(nextSpy).not.toHaveBeenCalled();
     });
 
     it("should require a logged user to create a versioned file", () => {

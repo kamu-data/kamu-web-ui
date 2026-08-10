@@ -17,20 +17,21 @@ import {
     SimpleChanges,
     Type,
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
-import { BehaviorSubject, combineLatest, Observable } from "rxjs";
-import { switchMap, tap } from "rxjs/operators";
+import { BehaviorSubject, combineLatest, EMPTY, from, Observable, of, take } from "rxjs";
+import { catchError, distinctUntilChanged, filter, map, switchMap } from "rxjs/operators";
 
-import { NgbAlert } from "@ng-bootstrap/ng-bootstrap";
+import { NgbAlert, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { MarkdownModule } from "ngx-markdown";
 import { ToastrService } from "ngx-toastr";
 
 import { BaseComponent } from "@common/components/base.component";
-import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { DragAndDropDirective } from "@common/directives/drag-and-drop.directive";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -38,8 +39,10 @@ import { DatasetViewTypeEnum, VersionedFileView } from "src/app/dataset-view/dat
 import { NavigationService } from "src/app/services/navigation.service";
 
 import { DatasetAsVersionedFileService } from "../../services/dataset-as-versioned-file.service";
+import { FileInformationModalComponent } from "./components/file-information-modal/file-information-modal.component";
 import { PdfViewerContentComponent } from "./components/pdf-viewer/pdf-viewer-content.component";
 import { PreviewFileTypePipe } from "./pipes/preview-file-type.pipe";
+import { FileInformationData } from "./versioned-file-view.model";
 
 @Component({
     selector: "app-versioned-file-view",
@@ -59,6 +62,7 @@ import { PreviewFileTypePipe } from "./pipes/preview-file-type.pipe";
         NgbAlert,
         //-----//
         PreviewFileTypePipe,
+        DragAndDropDirective,
     ],
     templateUrl: "./versioned-file-view.component.html",
     styleUrl: "./versioned-file-view.component.scss",
@@ -74,13 +78,14 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
 
     public fileInfo$: Observable<VersionedFileView>;
     public loadingFileDetails$: Observable<boolean>;
-    public contentText$: Observable<undefined | object | string>;
+    public contentText$: Observable<undefined | object | string> = of(undefined);
 
-    public urlContentPath: SafeUrl;
+    public urlContentPath: SafeUrl | undefined;
+    public svgIconName: string | undefined;
     public pdfComponent: Type<PdfViewerContentComponent> | null = null;
     public fileLatestVersion: number;
 
-    private isRedirectToLatestVersion = false;
+    private previewVersion: number | null = null;
 
     private sanitizer = inject(DomSanitizer);
     private toastrService = inject(ToastrService);
@@ -89,20 +94,26 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     private navigationService = inject(NavigationService);
     private previewFileTypePipe = inject(PreviewFileTypePipe);
     private datasetAsVersionedFileService = inject(DatasetAsVersionedFileService);
+    private ngbModalService = inject(NgbModal);
 
     public ngOnInit(): void {
         this.loadingFileDetails$ = this.datasetAsVersionedFileService.loadingFileDetailsChanges;
 
         this.fileInfo$ = combineLatest([this.datasetBasics$, this.version$]).pipe(
-            switchMap(([dataset, version]) => {
-                const datasetId = dataset?.id as string;
-                if (this.isRedirectToLatestVersion || !version) {
-                    this.isRedirectToLatestVersion = false;
+            map(([dataset, version]) => ({
+                datasetId: dataset?.id as string,
+                version,
+            })),
+            distinctUntilChanged(
+                (previous, current) => previous.datasetId === current.datasetId && previous.version === current.version,
+            ),
+            switchMap(({ datasetId, version }) => {
+                if (!version) {
                     return this.datasetAsVersionedFileService.requestDatasetAsVersionedFile(datasetId);
                 }
                 return this.datasetAsVersionedFileService.requestDatasetAsVersionedFileByVersion(datasetId, version);
             }),
-            tap((data) => promiseWithCatch(this.setPreviewFileStrategy(data))),
+            switchMap((data) => from(this.setPreviewFileStrategy(data)).pipe(map(() => data))),
         );
     }
 
@@ -116,9 +127,15 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     }
 
     public async setPreviewFileStrategy(details: MaybeNull<VersionedFileView>): Promise<void> {
-        if (!details?.fileInfo) return;
+        this.previewVersion = details?.fileInfo?.version ?? null;
+        this.resetPreview();
 
-        const { version, contentUrl, contentType } = details.fileInfo;
+        if (!details?.fileInfo) {
+            this.cdr.markForCheck();
+            return;
+        }
+
+        const { version, contentUrl, contentType, contentHash } = details.fileInfo;
         this.fileLatestVersion = version;
 
         const fileType = this.previewFileTypePipe.transform(contentType);
@@ -136,13 +153,16 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
                 this.urlContentPath = contentUrl.url;
                 const { PdfViewerContentComponent } =
                     await import("./components/pdf-viewer/pdf-viewer-content.component");
+
+                if (this.previewVersion !== version) return;
+
                 this.pdfComponent = PdfViewerContentComponent;
-                this.cdr.detectChanges();
                 break;
 
             case "svg":
+                this.svgIconName = `custom-svg-${contentHash}`;
                 this.iconRegistry.addSvgIcon(
-                    "custom-svg",
+                    this.svgIconName,
                     this.sanitizer.bypassSecurityTrustResourceUrl(contentUrl.url),
                 );
                 break;
@@ -156,12 +176,18 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
             default:
                 this.toastrService.info(`Content type not supported: ${contentType}`);
         }
+
+        this.cdr.markForCheck();
+    }
+
+    private resetPreview(): void {
+        this.contentText$ = of(undefined);
+        this.urlContentPath = undefined;
+        this.svgIconName = undefined;
+        this.pdfComponent = null;
     }
 
     public goToLatestVersionedFile(): void {
-        this.isRedirectToLatestVersion = true;
-        this.version$.next(this.version);
-
         this.navigationService.navigateToDatasetView({
             accountName: this.datasetBasics.owner.accountName,
             datasetName: this.datasetBasics.name,
@@ -175,5 +201,51 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
 
     public downloadFile(fileDetails: VersionedFileView): void {
         this.datasetAsVersionedFileService.downloadFile(this.datasetBasics.id, fileDetails);
+    }
+
+    public onRollbackFile(version: number): void {
+        this.datasetAsVersionedFileService.rollBackVersionedFile(this.datasetBasics, version);
+    }
+
+    public onFileSelected(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        if (input.files?.length) {
+            const file: File = input.files[0];
+            this.onUploadVersionedFile(file);
+        }
+    }
+
+    public onFileDropped(files: FileList): void {
+        const droppedFile = files[0];
+        this.onUploadVersionedFile(droppedFile);
+    }
+
+    private onUploadVersionedFile(file: File): void {
+        const modalRef = this.ngbModalService.open(FileInformationModalComponent);
+        const modalRefInstance = modalRef.componentInstance as FileInformationModalComponent;
+        modalRefInstance.fileInformation = file;
+
+        from(modalRef.result)
+            .pipe(
+                filter((data) => !!data),
+                switchMap((result: FileInformationData) => {
+                    const updatedFile = new File([file], file.name, {
+                        type: result.contentType,
+                        lastModified: file.lastModified,
+                    });
+                    return this.datasetAsVersionedFileService.uploadVersionedFile(updatedFile, this.datasetBasics);
+                }),
+                take(1),
+                catchError(() => EMPTY),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe((newVersion: number) => {
+                this.navigationService.navigateToDatasetView({
+                    accountName: this.datasetBasics.owner.accountName,
+                    datasetName: this.datasetBasics.name,
+                    tab: DatasetViewTypeEnum.Overview,
+                    version: newVersion.toString(),
+                });
+            });
     }
 }

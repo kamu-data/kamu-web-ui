@@ -5,6 +5,8 @@
  * included in the LICENSE file.
  */
 
+import { FormControl } from "@angular/forms";
+
 import { AccountSummaryFragment, CollectionEntryConnectionDataFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -25,6 +27,7 @@ export interface CollectionEntryViewType {
     owner: MaybeNull<AccountSummaryFragment>;
     contentType: MaybeNull<string>;
     extraData: object;
+    path: string;
 }
 
 export interface CollectionEntriesResult {
@@ -37,4 +40,8 @@ export enum CollectionViewNode {
     Dataset = "dataset",
     Folder = "folder",
     Broken = "broken",
+}
+
+export interface RenameCollectionItemForm {
+    name: FormControl<MaybeNull<string>>;
 }

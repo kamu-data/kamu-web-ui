@@ -51,6 +51,8 @@ import {
     DatasetVisibility,
     DeleteDatasetDocument,
     DeleteDatasetMutation,
+    FinishUploadNewVersionDocument,
+    FinishUploadNewVersionMutation,
     GetDatasetBasicsWithPermissionsDocument,
     GetDatasetBasicsWithPermissionsQuery,
     GetDatasetDataSqlRunDocument,
@@ -67,6 +69,8 @@ import {
     GetMetadataBlockQuery,
     RenameDatasetDocument,
     RenameDatasetMutation,
+    StartUploadNewVersionDocument,
+    StartUploadNewVersionMutation,
     UpdateReadmeDocument,
     UpdateReadmeMutation,
     UpdateWatermarkDocument,
@@ -549,6 +553,89 @@ describe("DatasetApi", () => {
         const op = controller.expectOne(CreateDatasetAsVersionedFileDocument);
         expect(op.operation.variables.datasetAlias).toEqual(mockDatasetAlias);
         expect(op.operation.variables.datasetVisibility).toEqual(DatasetVisibility.Public);
+        op.flush({ data: mockResponse });
+
+        tick();
+
+        expect(subscription.closed).toBeTrue();
+        flush();
+    }));
+
+    it("should start uploading a new versioned file version", fakeAsync(() => {
+        const contentLength = 42;
+        const contentType = "text/plain";
+        const mockResponse: StartUploadNewVersionMutation = {
+            datasets: {
+                byId: {
+                    asVersionedFile: {
+                        startUploadNewVersion: {
+                            __typename: "StartUploadVersionSuccess",
+                            url: "https://example.com/upload",
+                            method: "PUT",
+                            isSuccess: true,
+                            uploadToken: "upload-token",
+                            useMultipart: false,
+                            message: "Success",
+                            headers: [],
+                        },
+                    },
+                },
+            },
+        };
+        const subscription = service
+            .startUploadVersionedFile({
+                datasetId: TEST_DATASET_ID,
+                contentLength,
+                contentType,
+            })
+            .subscribe((response) => {
+                expect(response).toEqual(mockResponse);
+            });
+
+        const op = controller.expectOne(StartUploadNewVersionDocument);
+        expect(op.operation.variables).toEqual({
+            datasetId: TEST_DATASET_ID,
+            contentLength,
+            contentType,
+        });
+        op.flush({ data: mockResponse });
+
+        tick();
+
+        expect(subscription.closed).toBeTrue();
+        flush();
+    }));
+
+    it("should finish uploading a new versioned file version", fakeAsync(() => {
+        const uploadToken = "upload-token";
+        const mockResponse: FinishUploadNewVersionMutation = {
+            datasets: {
+                byId: {
+                    asVersionedFile: {
+                        finishUploadNewVersion: {
+                            __typename: "UpdateVersionSuccess",
+                            isSuccess: true,
+                            message: "Success",
+                            newVersion: 3,
+                        },
+                    },
+                },
+            },
+        };
+        const subscription = service
+            .finishUploadVersionedFile({
+                datasetId: TEST_DATASET_ID,
+                uploadToken,
+            })
+            .subscribe((response) => {
+                expect(response).toEqual(mockResponse);
+            });
+
+        const op = controller.expectOne(FinishUploadNewVersionDocument);
+        expect(op.operation.variables).toEqual({
+            datasetId: TEST_DATASET_ID,
+            uploadToken,
+        });
         op.flush({ data: mockResponse });
 
         tick();

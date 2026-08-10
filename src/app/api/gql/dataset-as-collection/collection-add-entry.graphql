@@ -1,0 +1,34 @@
+mutation collectionAddEntry($datasetId: DatasetID!, $path: CollectionPath!, $ref: DatasetID!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      asCollection {
+        addEntry(entry: { path: $path, ref: $ref }) {
+          ... on CollectionUpdateSuccess {
+            isSuccess
+            message
+          }
+
+          ... on CollectionUpdateErrorCasFailed {
+            isSuccess
+            message
+          }
+
+          ... on CollectionUpdateErrorNotFound {
+            isSuccess
+            message
+          }
+
+          ... on CollectionUpdateErrorQuotaExceeded {
+            isSuccess
+            message
+          }
+
+          ... on CollectionUpdateUpToDate {
+            isSuccess
+            message
+          }
+        }
+      }
+    }
+  }
+}

@@ -72,7 +72,7 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
     public dataSource = new MatTableDataSource();
     @ViewChild(MatSort) private sort: MatSort;
     public pageBasedInfo: PageBasedInfo;
-    public readonly PER_PAGE = 2;
+    public readonly PER_PAGE = 15;
     public searchByKey = "";
     public currentPage: number = 1;
 

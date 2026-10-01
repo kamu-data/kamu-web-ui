@@ -1,12 +1,8 @@
-query exposedEnvVariableValue(
-  $accountName: AccountName!
-  $datasetName: DatasetName!
-  $datasetEnvVarId: DatasetEnvVarID!
-) {
+query exposedEnvVariableValue($accountName: AccountName!, $datasetName: DatasetName!, $datasetEnvVarKey: String!) {
   datasets {
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
       envVars {
-        exposedValue(datasetEnvVarId: $datasetEnvVarId)
+        exposedValue(datasetEnvVarKey: $datasetEnvVarKey)
       }
     }
   }

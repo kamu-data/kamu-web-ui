@@ -17,10 +17,8 @@ import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/
 
 export const MOCK_PER_PAGE = 5;
 export const MOCK_PAGE = 1;
-export const MOCK_KEY = "mock-key";
-export const MOCK_VALUE = "mock-value";
-export const MOCK_IS_SECRET = true;
-export const MOCK_ENV_VAR_ID = "10937430-43ed-4f87-a687-3365fea9d942";
+export const MOCK_VAR_KEY = "mock-key";
+export const MOCK_VAR_VALUE = "mock-value";
 export const MOCK_NEW_VALUE = "mock-new-value";
 
 export const mockListEnvVariablesQuery: ListEnvVariablesQuery = {
@@ -40,35 +38,30 @@ export const mockListEnvVariablesQuery: ListEnvVariablesQuery = {
                     totalCount: 5,
                     nodes: [
                         {
-                            id: "10937430-43ed-4f87-a687-3365fea9d942",
                             key: "key-1",
                             value: "value-1",
                             isSecret: false,
                             __typename: "ViewDatasetEnvVar",
                         },
                         {
-                            id: "0545c6f4-4609-45ac-bf70-1c3cfb02f50b",
                             key: "key-2",
                             value: "value-2",
                             isSecret: false,
                             __typename: "ViewDatasetEnvVar",
                         },
                         {
-                            id: "6583ad2f-3b5f-4bb7-93ab-7c9c1ad77099",
                             key: "key-3",
                             value: null,
                             isSecret: true,
                             __typename: "ViewDatasetEnvVar",
                         },
                         {
-                            id: "2ddc35f1-e01f-429f-b8a3-25fc998ecf2b",
                             key: "key-4",
                             value: null,
                             isSecret: true,
                             __typename: "ViewDatasetEnvVar",
                         },
                         {
-                            id: "2c8c2cc0-a01e-496c-b662-95081bddcbb7",
                             key: "key-5",
                             value: null,
                             isSecret: true,
@@ -99,7 +92,6 @@ export const mockUpsertEnvVariableMutationCreated: UpsertEnvVariableMutation = {
                 upsertEnvVariable: {
                     message: "Created",
                     envVar: {
-                        id: "05c146a0-f781-4bc6-a9d6-a4a7629c2b7c",
                         key: "key-1",
                         value: "value-1",
                         isSecret: false,
@@ -122,7 +114,6 @@ export const mockUpsertEnvVariableMutationUpdated: UpsertEnvVariableMutation = {
                 upsertEnvVariable: {
                     message: "Updated",
                     envVar: {
-                        id: "015854a3-74a7-4abc-908e-e49a5ebe904f",
                         key: "key1",
                         value: "value12",
                         isSecret: false,
@@ -160,7 +151,7 @@ export const mockDeleteEnvVariableMutation: DeleteEnvVariableMutation = {
             envVars: {
                 deleteEnvVariable: {
                     message: "Success",
-                    envVarId: "10937430-43ed-4f87-a687-3365fea9d942",
+                    envVarKey: MOCK_VAR_KEY,
                     __typename: "DeleteDatasetEnvVarResultSuccess",
                 },
                 __typename: "DatasetEnvVarsMut",
@@ -177,7 +168,7 @@ export const mockDeleteEnvVariableMutationError: DeleteEnvVariableMutation = {
             envVars: {
                 deleteEnvVariable: {
                     message: "Error",
-                    envVarId: "10937430-43ed-4f87-a687-3365fea9d942",
+                    envVarKey: MOCK_VAR_KEY,
                     __typename: "DeleteDatasetEnvVarResultNotFound",
                 },
                 __typename: "DatasetEnvVarsMut",

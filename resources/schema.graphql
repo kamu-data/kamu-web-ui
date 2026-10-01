@@ -1283,16 +1283,14 @@ type DatasetEndpoints {
 	odata: OdataProtocolDesc!
 }
 
-scalar DatasetEnvVarID
-
 type DatasetEnvVars {
-	exposedValue(datasetEnvVarId: DatasetEnvVarID!): String!
+	exposedValue(datasetEnvVarKey: String!): String!
 	listEnvVariables(page: Int, perPage: Int): ViewDatasetEnvVarConnection!
 }
 
 type DatasetEnvVarsMut {
 	upsertEnvVariable(key: String!, value: String!, isSecret: Boolean!): UpsertDatasetEnvVarResult!
-	deleteEnvVariable(id: DatasetEnvVarID!): DeleteDatasetEnvVarResult!
+	deleteEnvVariable(key: String!): DeleteDatasetEnvVarResult!
 }
 
 type DatasetEnvVarsPermissions {
@@ -1806,12 +1804,12 @@ interface DeleteDatasetEnvVarResult {
 }
 
 type DeleteDatasetEnvVarResultNotFound implements DeleteDatasetEnvVarResult {
-	envVarId: DatasetEnvVarID!
+	envVarKey: String!
 	message: String!
 }
 
 type DeleteDatasetEnvVarResultSuccess implements DeleteDatasetEnvVarResult {
-	envVarId: DatasetEnvVarID!
+	envVarKey: String!
 	message: String!
 }
 
@@ -4643,10 +4641,6 @@ type ViewAccessToken {
 }
 
 type ViewDatasetEnvVar {
-	"""
-	Unique identifier of the dataset environment variable
-	"""
-	id: DatasetEnvVarID!
 	"""
 	Key of the dataset environment variable
 	"""

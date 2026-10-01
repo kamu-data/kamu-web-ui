@@ -20,7 +20,7 @@ import { provideToastr } from "ngx-toastr";
 import { ModalService } from "@common/components/modal/modal.service";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { ViewDatasetEnvVarConnection } from "@api/kamu.graphql.interface";
-import { MOCK_ENV_VAR_ID, mockListEnvVariablesQuery } from "@api/mock/environment-variables-and-secrets.mock";
+import { MOCK_VAR_KEY, mockListEnvVariablesQuery } from "@api/mock/environment-variables-and-secrets.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
 import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
@@ -129,7 +129,7 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
             return Promise.resolve("");
         });
         const deleteEnvVariableSpy = spyOn(environmentVariablesService, "deleteEnvVariable").and.callThrough();
-        component.onDelete(MOCK_ENV_VAR_ID);
+        component.onDelete(MOCK_VAR_KEY);
         expect(modalWindowSpy).toHaveBeenCalledTimes(1);
         expect(deleteEnvVariableSpy).toHaveBeenCalledTimes(1);
     });

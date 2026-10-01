@@ -72,7 +72,7 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
     public dataSource = new MatTableDataSource();
     @ViewChild(MatSort) private sort: MatSort;
     public pageBasedInfo: PageBasedInfo;
-    public readonly PER_PAGE = 2;
+    public readonly PER_PAGE = 15;
     public searchByKey = "";
     public currentPage: number = 1;
 
@@ -137,7 +137,7 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
         this.dataSource.filter = "";
     }
 
-    public onDelete(datasetEnvVarId: string): void {
+    public onDelete(datasetEnvVarKey: string): void {
         promiseWithCatch(
             this.modalService.error({
                 title: "Delete",
@@ -150,7 +150,7 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
                             .deleteEnvVariable({
                                 accountId: this.datasetBasics.owner.id,
                                 datasetId: this.datasetBasics.id,
-                                datasetEnvVarId,
+                                datasetEnvVarKey,
                             })
                             .subscribe(() => {
                                 this.updateTable(this.currentPage);

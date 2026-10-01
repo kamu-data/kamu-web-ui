@@ -83,7 +83,7 @@ export class EnvironmentVariablesApi {
     public deleteEnvironmentVariable(params: {
         accountId: string;
         datasetId: string;
-        datasetEnvVarId: string;
+        datasetEnvVarKey: string;
     }): Observable<DeleteEnvVariableMutation> {
         return this.deleteEnvVariableGQL
             .mutate({
@@ -91,7 +91,7 @@ export class EnvironmentVariablesApi {
                 update: (cache, { data }) => {
                     const id = cache.identify({
                         __typename: "ViewDatasetEnvVar",
-                        id: (data as DeleteEnvVariableMutation).datasets.byId?.envVars.deleteEnvVariable.envVarId,
+                        key: (data as DeleteEnvVariableMutation).datasets.byId?.envVars.deleteEnvVariable.envVarKey,
                     });
                     cache.evict({ id });
                 },
@@ -107,7 +107,7 @@ export class EnvironmentVariablesApi {
     public exposedEnvVariableValue(params: {
         accountName: string;
         datasetName: string;
-        datasetEnvVarId: string;
+        datasetEnvVarKey: string;
     }): Observable<ExposedEnvVariableValueQuery> {
         return this.exposedEnvVariableValueGQL
             .watch({ variables: { ...params }, ...noCacheFetchPolicy })

@@ -8,7 +8,6 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 
 import { BaseComponent } from "@common/components/base.component";
-import { GithubLoginCredentials } from "@api/auth.api.model";
 
 import { LoginService } from "src/app/auth/login/login.service";
 import ProjectLinks from "src/app/project-links";
@@ -24,7 +23,7 @@ export class GithubCallbackComponent extends BaseComponent implements OnInit {
     @Input(ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL) public redirectUrl: string;
     @Input(ProjectLinks.URL_QUERY_PARAM_CODE) public set code(value: string) {
         if (value) {
-            this.loginService.githubLogin({ code: value } as GithubLoginCredentials, this.redirectUrl);
+            this.loginService.githubLogin({ code: value }, this.redirectUrl);
         }
     }
 

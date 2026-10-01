@@ -67,7 +67,7 @@ export class LineageGraphBuilderService {
                     return {
                         graph,
                         originDataset: lineageUpdate.origin,
-                    } as LineageGraphUpdate;
+                    };
                 } else {
                     return null;
                 }
@@ -96,7 +96,7 @@ export class LineageGraphBuilderService {
         return {
             nodes: this.buildDatasetGraphNodes(uniqueDatasets, lineageUpdate.origin),
             links: this.buildDatasetEdges(lineageUpdate),
-        } as LineageGraph;
+        };
     }
 
     private buildDatasetGraphNodes(
@@ -123,7 +123,7 @@ export class LineageGraphBuilderService {
                             avatarUrl: dataset.owner.avatarUrl,
                         },
                     } as LineageGraphNodeData,
-                } as Node;
+                };
             } else {
                 const id = (dataset as DependencyDatasetResultNotAccessible).id;
                 return {
@@ -155,7 +155,7 @@ export class LineageGraphBuilderService {
                     id: `${source}__and__${target}`,
                     source,
                     target,
-                } as Edge;
+                };
             },
         );
     }
@@ -200,7 +200,7 @@ export class LineageGraphBuilderService {
                                 kind: this.graphNodeKindMapper[kind],
                                 dataObject: {},
                             } as LineageGraphNodeData,
-                        } as Node;
+                        };
                         sourceNodesByLabel.set(sourceNodeLabel, sourceNode);
                     }
 
@@ -240,7 +240,7 @@ export class LineageGraphBuilderService {
                             kind: this.graphNodeKindMapper[kind],
                             dataObject: {},
                         } as LineageGraphNodeData,
-                    } as Node;
+                    };
                     sourceNodesByLabel.set(sourceNodeLabel, sourceNode);
                 }
 

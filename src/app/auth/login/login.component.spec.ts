@@ -192,7 +192,7 @@ describe("LoginComponent", () => {
                     {
                         login: TEST_LOGIN,
                         password: TEST_PASSWORD,
-                    } as PasswordLoginCredentials,
+                    },
                     "",
                 );
             });
@@ -263,7 +263,7 @@ describe("LoginComponent", () => {
             const SOME_DEVICE_CODE = "23da-ewewr-fdgf-fghgfh";
             mockQueryParams.next({
                 [ProjectLinks.URL_QUERY_PARAM_DEVICE_CODE]: SOME_DEVICE_CODE,
-            } as LoginPageQueryParams);
+            });
             fixture.detectChanges();
 
             const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromPasswordLogin").and.returnValue(

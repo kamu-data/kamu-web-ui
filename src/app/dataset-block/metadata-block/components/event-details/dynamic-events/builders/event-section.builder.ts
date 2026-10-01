@@ -74,9 +74,9 @@ export abstract class EventSectionBuilder<TEvent extends GenericDynamicEventType
             descriptor: {
                 ...this.UNSUPPORTED_ROW_DESCRIPTOR,
                 label: `Unsupported(${key})`,
-            } as EventRowDescriptor,
+            },
             value,
-        } as EventRow;
+        };
     }
 
     public buildSupportedRow(
@@ -89,6 +89,6 @@ export abstract class EventSectionBuilder<TEvent extends GenericDynamicEventType
         return {
             descriptor: rowDescriptors[`${eventType}.${sectionType}.${key}`],
             value,
-        } as EventRow;
+        };
     }
 }

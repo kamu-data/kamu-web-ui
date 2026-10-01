@@ -31,7 +31,7 @@ describe("FileInformationSectionComponent", () => {
         name: mockDatasetAsVersionedFileQuery.datasets.byId?.name as string,
         fileInfo: mockDatasetAsVersionedFileQuery.datasets.byId?.asVersionedFile
             ?.latest as VersionedFileEntryDataFragment,
-        countVersions: mockDatasetAsVersionedFileQuery.datasets.byId?.asVersionedFile?.versions.totalCount as number,
+        countVersions: mockDatasetAsVersionedFileQuery.datasets.byId?.asVersionedFile?.versions.totalCount,
     };
 
     beforeEach(async () => {

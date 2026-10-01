@@ -22,7 +22,6 @@ import {
     AccountProvider,
     FetchAccountDetailsDocument,
     GetEnabledLoginMethodsDocument,
-    GetEnabledLoginMethodsQuery,
     LoginDocument,
 } from "@api/kamu.graphql.interface";
 import {
@@ -73,7 +72,7 @@ describe("AuthApi", () => {
                 auth: {
                     enabledProviders: mockEnabledLoginMethods,
                 },
-            } as GetEnabledLoginMethodsQuery,
+            },
         });
 
         tick();
@@ -88,7 +87,7 @@ describe("AuthApi", () => {
             .fetchAccountAndTokenFromPasswordLogin({
                 login: TEST_LOGIN,
                 password: TEST_PASSWORD,
-            } as PasswordLoginCredentials)
+            })
             .subscribe();
 
         const expectedCredentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
@@ -107,7 +106,7 @@ describe("AuthApi", () => {
             .fetchAccountAndTokenFromPasswordLogin({
                 login: TEST_LOGIN,
                 password: TEST_PASSWORD,
-            } as PasswordLoginCredentials)
+            })
             .pipe(first())
             .subscribe({
                 next: () => fail("Unexpected success"),
@@ -125,9 +124,7 @@ describe("AuthApi", () => {
     }));
 
     it("should check full login Github success", () => {
-        service
-            .fetchAccountAndTokenFromGithubCallbackCode({ code: TEST_GITHUB_CODE } as GithubLoginCredentials)
-            .subscribe();
+        service.fetchAccountAndTokenFromGithubCallbackCode({ code: TEST_GITHUB_CODE }).subscribe();
 
         const expectedCredentials: GithubLoginCredentials = { code: TEST_GITHUB_CODE };
 
@@ -142,7 +139,7 @@ describe("AuthApi", () => {
 
     it("should check full login Github failure", fakeAsync(() => {
         const subscription$ = service
-            .fetchAccountAndTokenFromGithubCallbackCode({ code: TEST_GITHUB_CODE } as GithubLoginCredentials)
+            .fetchAccountAndTokenFromGithubCallbackCode({ code: TEST_GITHUB_CODE })
             .pipe(first())
             .subscribe({
                 next: () => fail("Unexpected success"),

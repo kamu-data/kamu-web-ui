@@ -303,7 +303,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             accountName: this.flowsData.datasetBasics.owner.accountName,
             datasetName: this.flowsData.datasetBasics.name,
             tab: DatasetViewTypeEnum.Flows,
-            category: this.flowsSelectionState.flowsCategory as WebhooksSelectedCategory,
+            category: this.flowsSelectionState.flowsCategory,
             webhooksState: states.length ? states : undefined,
         });
         this.refreshFlow();

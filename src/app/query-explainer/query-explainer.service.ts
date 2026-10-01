@@ -66,7 +66,7 @@ export class QueryExplainerService {
                 if ("output" in cloneData) {
                     delete cloneData.output;
                 }
-                return cloneData as QueryExplainerProofResponse;
+                return cloneData;
             }),
             tap((res: QueryExplainerProofResponse) => {
                 if (res.subQueries?.length) {

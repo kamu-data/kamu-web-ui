@@ -69,9 +69,7 @@ export class SearchService {
                 const filteredDatasets = data.search.queryNaturalLanguage.nodes.filter(
                     (node) => node.score > Number(this.DEFAULT_THRESHOLD_SCORE),
                 );
-                const datasets: DatasetSearchOverviewFragment[] = filteredDatasets.map(
-                    (node) => node.item as DatasetSearchOverviewFragment,
-                );
+                const datasets: DatasetSearchOverviewFragment[] = filteredDatasets.map((node) => node.item);
                 const pageInfo = data.search.queryNaturalLanguage.pageInfo;
                 const totalCount = data.search.queryNaturalLanguage.totalCount;
                 const page = data.search.queryNaturalLanguage.pageInfo.currentPage;

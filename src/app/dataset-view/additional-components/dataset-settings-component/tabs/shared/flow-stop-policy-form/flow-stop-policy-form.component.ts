@@ -71,13 +71,13 @@ export class FlowStopPolicyFormComponent extends BaseComponent implements OnInit
             case FlowTriggerStopPolicyType.NEVER:
                 return {
                     never: { dummy: false },
-                } as FlowTriggerStopPolicyInput;
+                };
 
             case FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES:
             case null: // No stop policy yet
                 return {
                     afterConsecutiveFailures: { maxFailures: stopPolicyFormValue.maxFailures },
-                } as FlowTriggerStopPolicyInput;
+                };
 
             /* istanbul ignore next */
             default:

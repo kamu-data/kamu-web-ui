@@ -25,7 +25,7 @@ export const editorMock: monaco.editor.IStandaloneCodeEditor = {
             set: (_: boolean) => {},
             reset: () => {},
             get: () => defaultValue,
-        } as monaco.editor.IContextKey<boolean>;
+        };
     },
 
     getSelection(): monaco.Selection {

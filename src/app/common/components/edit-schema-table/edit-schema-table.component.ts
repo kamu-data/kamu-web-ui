@@ -325,7 +325,7 @@ export class EditSchemaTableComponent implements OnChanges {
     ): Omit<NestedStructTable, "tablePath" | "errors">[] {
         switch (type.kind) {
             case OdfTypes.Struct:
-                return [{ fields: type.fields as DataSchemaField[], path: [...path, "fields"] }];
+                return [{ fields: type.fields, path: [...path, "fields"] }];
             case OdfTypes.Option:
                 return this.collectNestedStructTables(type.inner, [...path, "inner"]);
             case OdfTypes.List:

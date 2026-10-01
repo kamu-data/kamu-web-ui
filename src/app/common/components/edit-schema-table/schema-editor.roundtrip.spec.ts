@@ -112,7 +112,7 @@ function mockGqlProjectionWithSchema(schemaContent: string): DatasetBlocksSchema
                 },
             },
         },
-    } as DatasetBlocksSchemaByEventTypeQuery;
+    };
 }
 
 // ---------------------------------------------------------------------------

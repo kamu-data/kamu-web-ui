@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
 - Account flows: pagination and pausing/resuming flows targeted the logged-in account instead of the viewed one
+### Changed
+- Minor updates for most dependencies
 
 ## [0.69.0] - 2026-07-29 
 ### Added

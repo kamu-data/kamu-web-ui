@@ -7,7 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 import { provideAnimations } from "@angular/platform-browser/animations";
-import { ActivatedRouteSnapshot, Data, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
@@ -39,9 +39,9 @@ describe("flowDetailsSummaryResolverFn", () => {
             parent: {
                 data: {
                     [RoutingResolvers.FLOW_DETAILS_KEY]: mockDatasetFlowByIdResponse,
-                } as Data,
+                },
             },
-        } as ActivatedRouteSnapshot;
+        } as unknown as ActivatedRouteSnapshot;
 
         const result = executeResolver(mockRoute, mockState);
 
@@ -55,9 +55,9 @@ describe("flowDetailsSummaryResolverFn", () => {
                 description: "parent route has no data",
                 mockRoute: {
                     parent: {
-                        data: {} as Data,
+                        data: {},
                     },
-                } as ActivatedRouteSnapshot,
+                } as unknown as ActivatedRouteSnapshot,
             },
             {
                 description: "parent route data is null",
@@ -65,15 +65,15 @@ describe("flowDetailsSummaryResolverFn", () => {
                     parent: {
                         data: {
                             [RoutingResolvers.FLOW_DETAILS_KEY]: null,
-                        } as Data,
+                        },
                     },
-                } as ActivatedRouteSnapshot,
+                } as unknown as ActivatedRouteSnapshot,
             },
             {
                 description: "parent route is null",
                 mockRoute: {
                     parent: null,
-                } as ActivatedRouteSnapshot,
+                } as unknown as ActivatedRouteSnapshot,
             },
             {
                 description: "parent route is undefined",

@@ -25,7 +25,6 @@ import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-compo
 import { FlowStopPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.component";
 import { FlowStopPolicyFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.harness";
 import { DatasetSettingsTransformOptionsTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.component";
-import { DatasetSettingsTransformOptionsTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.data";
 import { TransformTriggerFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.harness";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
@@ -54,7 +53,7 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
             reactive: null,
             stopPolicy: null,
             paused: true,
-        } as DatasetSettingsTransformOptionsTabData;
+        };
 
         fixture.detectChanges();
         await fixture.whenStable();

@@ -106,7 +106,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                     cron: {
                         cronExpression: "",
                     },
-                } as IngestTriggerFormValue;
+                };
             }
 
             case "Cron5ComponentExpression": {
@@ -119,7 +119,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
                     cron: {
                         cronExpression: schedule.cron5ComponentExpression,
                     },
-                } as IngestTriggerFormValue;
+                };
             }
 
             /* istanbul ignore next */
@@ -156,7 +156,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
     }
 
     public saveUpdates(): void {
-        const formValue = this.form.getRawValue() as SchedulingSettingsFormValue;
+        const formValue = this.form.getRawValue();
         const ingestTriggerFormValue = formValue.ingestTrigger;
 
         if (formValue.updatesEnabled) {

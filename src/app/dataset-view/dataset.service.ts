@@ -40,7 +40,6 @@ import {
     GetDatasetLineageQuery,
     GetDatasetMainDataQuery,
     GetDatasetSchemaQuery,
-    MetadataBlockFragment,
 } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetSchema } from "@interface/dataset-schema.interface";
@@ -100,7 +99,7 @@ export class DatasetService {
                         this.metadataTabDataUpdate(data, schema);
                         this.lineageDataReset();
                         this.historyDataReset();
-                        this.setHeadBlockHash(data.datasets.byOwnerAndName.metadata.chain.refs as BlockRef[]);
+                        this.setHeadBlockHash(data.datasets.byOwnerAndName.metadata.chain.refs);
 
                         this.emitDownstreamsCountChanged(
                             data.datasets.byOwnerAndName.metadata.currentDownstreamDependencies.length,
@@ -173,7 +172,7 @@ export class DatasetService {
                         { currentPage: numPage },
                     );
                     const historyUpdate: DatasetHistoryUpdate = {
-                        history: data.datasets.byOwnerAndName.metadata.chain.blocks.nodes as MetadataBlockFragment[],
+                        history: data.datasets.byOwnerAndName.metadata.chain.blocks.nodes,
                         pageInfo,
                     };
                     this.datasetSubsService.emitHistoryChanged(historyUpdate);
@@ -198,7 +197,7 @@ export class DatasetService {
                         { currentPage: numPage },
                     );
                     const historyUpdate: DatasetHistoryUpdate = {
-                        history: data.datasets.byOwnerAndName.metadata.chain.blocks.nodes as MetadataBlockFragment[],
+                        history: data.datasets.byOwnerAndName.metadata.chain.blocks.nodes,
                         pageInfo,
                     };
                     return historyUpdate;
@@ -335,7 +334,7 @@ export class DatasetService {
                 return {
                     basics:
                         downDependency.__typename === "DependencyDatasetResultAccessible"
-                            ? (downDependency.dataset as DatasetLineageBasicsFragment)
+                            ? downDependency.dataset
                             : (downDependency as DependencyDatasetResultNotAccessible),
                     upstreamDependencies: [],
                     downstreamDependencies:
@@ -344,7 +343,7 @@ export class DatasetService {
                                   return {
                                       basics:
                                           downDependency2.__typename === "DependencyDatasetResultAccessible"
-                                              ? (downDependency2.dataset as DatasetLineageBasicsFragment)
+                                              ? downDependency2.dataset
                                               : (downDependency2 as DependencyDatasetResultNotAccessible),
                                       upstreamDependencies: [],
                                       downstreamDependencies:
@@ -355,7 +354,7 @@ export class DatasetService {
                                                             basics:
                                                                 downDependency3.__typename ===
                                                                 "DependencyDatasetResultAccessible"
-                                                                    ? (downDependency3.dataset as DatasetLineageBasicsFragment)
+                                                                    ? downDependency3.dataset
                                                                     : (downDependency3 as DependencyDatasetResultNotAccessible),
                                                             upstreamDependencies: [],
                                                             downstreamDependencies:
@@ -367,7 +366,7 @@ export class DatasetService {
                                                                                   basics:
                                                                                       downDependency4.__typename ===
                                                                                       "DependencyDatasetResultAccessible"
-                                                                                          ? (downDependency4.dataset as DatasetLineageBasicsFragment)
+                                                                                          ? downDependency4.dataset
                                                                                           : (downDependency4 as DependencyDatasetResultNotAccessible),
                                                                                   upstreamDependencies: [],
                                                                                   downstreamDependencies:
@@ -406,7 +405,7 @@ export class DatasetService {
                 return {
                     basics:
                         upDependency.__typename === "DependencyDatasetResultAccessible"
-                            ? (upDependency.dataset as DatasetLineageBasicsFragment)
+                            ? upDependency.dataset
                             : (upDependency as DependencyDatasetResultNotAccessible),
                     downstreamDependencies: [],
                     upstreamDependencies:
@@ -415,7 +414,7 @@ export class DatasetService {
                                   return {
                                       basics:
                                           upDependency2.__typename === "DependencyDatasetResultAccessible"
-                                              ? (upDependency2.dataset as DatasetLineageBasicsFragment)
+                                              ? upDependency2.dataset
                                               : (upDependency2 as DependencyDatasetResultNotAccessible),
                                       downstreamDependencies: [],
                                       upstreamDependencies:
@@ -426,7 +425,7 @@ export class DatasetService {
                                                             basics:
                                                                 upDependency3.__typename ===
                                                                 "DependencyDatasetResultAccessible"
-                                                                    ? (upDependency3.dataset as DatasetLineageBasicsFragment)
+                                                                    ? upDependency3.dataset
                                                                     : (upDependency3 as DependencyDatasetResultNotAccessible),
                                                             downstreamDependencies: [],
                                                             upstreamDependencies:
@@ -438,7 +437,7 @@ export class DatasetService {
                                                                                   basics:
                                                                                       upDependency4.__typename ===
                                                                                       "DependencyDatasetResultAccessible"
-                                                                                          ? (upDependency4.dataset as DatasetLineageBasicsFragment)
+                                                                                          ? upDependency4.dataset
                                                                                           : (upDependency4 as DependencyDatasetResultNotAccessible),
                                                                                   downstreamDependencies: [],
                                                                                   upstreamDependencies:
@@ -450,7 +449,7 @@ export class DatasetService {
                                                                                                         basics:
                                                                                                             upDependency5.__typename ===
                                                                                                             "DependencyDatasetResultAccessible"
-                                                                                                                ? (upDependency5.dataset as DatasetLineageBasicsFragment)
+                                                                                                                ? upDependency5.dataset
                                                                                                                 : (upDependency5 as DependencyDatasetResultNotAccessible),
                                                                                                         downstreamDependencies:
                                                                                                             [],

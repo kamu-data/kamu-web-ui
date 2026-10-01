@@ -89,7 +89,7 @@ describe("BlockService", () => {
                         },
                     },
                 },
-            } as DatasetBlocksSchemaByEventTypeQuery;
+            };
         }
 
         it("should extract DataSchemaField[] from a GQL SetPollingSource event", () => {
@@ -180,7 +180,7 @@ describe("BlockService", () => {
                         },
                     },
                 },
-            } as DatasetBlocksSchemaByEventTypeQuery;
+            };
         }
 
         it("should extract DataSchemaField[] from an AddPushSource event", () => {
@@ -271,7 +271,7 @@ describe("BlockService", () => {
                         },
                     },
                 },
-            } as DatasetBlocksSchemaByEventTypeQuery;
+            };
             spyOn(datasetApi, "getSchemaFieldsByEventType").and.returnValue(of(multiSourceQuery));
 
             let result: DataSchemaField[] = [];

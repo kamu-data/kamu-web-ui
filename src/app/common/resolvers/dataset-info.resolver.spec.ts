@@ -6,7 +6,7 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, Params, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
 import { datasetInfoResolverFn } from "@common/resolvers/dataset-info.resolver";
 import { DatasetInfo } from "@interface/navigation.interface";
@@ -29,8 +29,8 @@ describe("datasetInfoResolverFn", () => {
             params: {
                 accountName: "mockAccountName",
                 datasetName: "mockDatasetName",
-            } as Params,
-        } as ActivatedRouteSnapshot;
+            },
+        } as unknown as ActivatedRouteSnapshot;
         const result = await executeResolver(mockRoute, mockState);
 
         expect(result).toEqual({

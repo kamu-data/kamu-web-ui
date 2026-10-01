@@ -328,7 +328,7 @@ describe("TypeEditorComponent", () => {
             editor().typeListChange({
                 kind: OdfTypes.Struct,
                 fields: [{ name: "sku", type: { kind: OdfTypes.String } }],
-            } as DataSchemaStructField);
+            });
             fixture.detectChanges();
 
             const emitted = host.lastEmitted as DataSchemaListField;
@@ -362,7 +362,7 @@ describe("TypeEditorComponent", () => {
             host.value = {
                 kind: OdfTypes.Struct,
                 fields: [{ name: "sku", type: { kind: OdfTypes.String } }],
-            } as DataSchemaStructField;
+            };
             fixture.detectChanges();
 
             // Switch to String (scalar)
@@ -384,7 +384,7 @@ describe("TypeEditorComponent", () => {
             host.value = {
                 kind: OdfTypes.List,
                 itemType: { kind: OdfTypes.Struct, fields: [{ name: "qty", type: { kind: OdfTypes.Int32 } }] },
-            } as DataSchemaListField;
+            };
             fixture.detectChanges();
 
             // Switch away to String
@@ -435,7 +435,7 @@ describe("TypeEditorComponent", () => {
             host.value = {
                 kind: OdfTypes.Struct,
                 fields: [{ name: "sku", type: { kind: OdfTypes.String } }],
-            } as DataSchemaStructField;
+            };
             fixture.detectChanges();
 
             selectKindViaApi(OdfTypes.String);
@@ -456,7 +456,7 @@ describe("TypeEditorComponent", () => {
                     kind: OdfTypes.Struct,
                     fields: [{ name: "qty", type: { kind: OdfTypes.Int32 } }],
                 },
-            } as DataSchemaListField;
+            };
             fixture.detectChanges();
 
             selectKindViaApi(OdfTypes.String);

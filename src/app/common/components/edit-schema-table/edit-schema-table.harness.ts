@@ -7,13 +7,9 @@
 
 /* istanbul ignore file */
 
-import { BaseHarnessFilters, ComponentHarness, HarnessPredicate, TestKey } from "@angular/cdk/testing";
+import { ComponentHarness, HarnessPredicate, TestKey } from "@angular/cdk/testing";
 
-import { DataSchemaField, DataSchemaStructField, OdfTypes } from "@interface/dataset-schema.interface";
-
-interface EditSchemaTableHarnessFilters extends BaseHarnessFilters {
-    tablePath?: string;
-}
+import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 export class EditSchemaTableHarness extends ComponentHarness {
     public static readonly hostSelector = "app-edit-schema-table";
@@ -27,7 +23,7 @@ export class EditSchemaTableHarness extends ComponentHarness {
      *   `loader.getHarness(EditSchemaTableHarness.withPath("root.address"))`
      */
     public static withPath(path: string): HarnessPredicate<EditSchemaTableHarness> {
-        return new HarnessPredicate(EditSchemaTableHarness, {} as EditSchemaTableHarnessFilters).addOption(
+        return new HarnessPredicate(EditSchemaTableHarness, {}).addOption(
             "tablePath",
             path,
             async (harness, tablePath) => {
@@ -52,7 +48,7 @@ export class EditSchemaTableHarness extends ComponentHarness {
         if (field.type.kind !== OdfTypes.Struct) {
             throw new Error(`Expected field "${name}" to be a Struct but got ${field.type.kind}`);
         }
-        return (field.type as unknown as DataSchemaStructField).fields as DataSchemaField[];
+        return field.type.fields;
     }
 
     /**

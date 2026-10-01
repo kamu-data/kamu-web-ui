@@ -41,7 +41,7 @@ describe("flowDetailsActiveTabResolverFn", () => {
                     {
                         data: {
                             [ProjectLinks.URL_PARAM_TAB]: tab,
-                        } as Data,
+                        },
                     },
                 ],
             } as ActivatedRouteSnapshot;
@@ -87,7 +87,7 @@ describe("flowDetailsActiveTabResolverFn", () => {
                         {
                             data: {
                                 [ProjectLinks.URL_PARAM_TAB]: null,
-                            } as Data,
+                            },
                         },
                     ],
                 } as unknown as ActivatedRouteSnapshot,

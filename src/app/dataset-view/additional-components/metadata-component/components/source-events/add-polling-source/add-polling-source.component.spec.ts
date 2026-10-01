@@ -18,7 +18,6 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { OdfDefaultValues } from "@common/values/app-odf-default.values";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
-import { DatasetNavigationParams } from "@interface/navigation.interface";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
@@ -163,7 +162,7 @@ describe("AddPollingSourceComponent", () => {
             accountName: mockDatasetBasicsRootFragment.owner.accountName,
             datasetName: mockDatasetBasicsRootFragment.name,
             tab: DatasetViewTypeEnum.Overview,
-        } as DatasetNavigationParams);
+        });
     });
 
     it("check dataset editability fails upon derived dataset", () => {
@@ -176,7 +175,7 @@ describe("AddPollingSourceComponent", () => {
             accountName: mockDatasetBasicsDerivedFragment.owner.accountName,
             datasetName: mockDatasetBasicsDerivedFragment.name,
             tab: DatasetViewTypeEnum.Overview,
-        } as DatasetNavigationParams);
+        });
     });
 
     it("should check open edit modal", () => {

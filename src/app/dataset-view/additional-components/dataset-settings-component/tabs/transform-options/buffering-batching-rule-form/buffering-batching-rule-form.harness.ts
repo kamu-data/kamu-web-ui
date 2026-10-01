@@ -88,6 +88,6 @@ export class BufferingBatchingRuleFormHarness extends ComponentHarness {
         return {
             minRecordsToAwait,
             maxBatchingInterval,
-        } as BufferingBatchingRuleFormValue;
+        };
     }
 }

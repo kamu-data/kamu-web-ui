@@ -45,7 +45,7 @@ export class MetadataLicenseTabComponent {
     private navigationService = inject(NavigationService);
 
     public get license(): MaybeNullOrUndefined<LicenseFragment> {
-        return this.datasetMetadataTabData.overviewUpdate.overview.metadata.currentLicense as LicenseFragment;
+        return this.datasetMetadataTabData.overviewUpdate.overview.metadata.currentLicense;
     }
 
     public get datasetBasics(): DatasetBasicsFragment {

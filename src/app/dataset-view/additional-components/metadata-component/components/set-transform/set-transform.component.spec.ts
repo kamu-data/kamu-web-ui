@@ -16,7 +16,6 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
 import { mockAccountDetails } from "@api/mock/auth.mock";
-import { DatasetNavigationParams } from "@interface/navigation.interface";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import {
@@ -127,7 +126,7 @@ describe("SetTransformComponent", () => {
             accountName: mockDatasetBasicsDerivedFragment.owner.accountName,
             datasetName: mockDatasetBasicsDerivedFragment.name,
             tab: DatasetViewTypeEnum.Overview,
-        } as DatasetNavigationParams);
+        });
     });
 
     it("check dataset editability fails upon root dataset", () => {
@@ -140,7 +139,7 @@ describe("SetTransformComponent", () => {
             accountName: mockDatasetBasicsRootFragment.owner.accountName,
             datasetName: mockDatasetBasicsRootFragment.name,
             tab: DatasetViewTypeEnum.Overview,
-        } as DatasetNavigationParams);
+        });
     });
 
     it("should check select engine", () => {

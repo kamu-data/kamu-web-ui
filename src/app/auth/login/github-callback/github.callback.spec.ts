@@ -13,7 +13,6 @@ import { Apollo } from "apollo-angular";
 
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { AuthApi } from "@api/auth.api";
-import { GithubLoginCredentials } from "@api/auth.api.model";
 
 import { GithubCallbackComponent } from "src/app/auth/login/github-callback/github.callback";
 import { LoginService } from "src/app/auth/login/login.service";
@@ -54,7 +53,7 @@ describe("GithubCallbackComponent", () => {
         component.code = GITHUB_TEST_CODE;
         fixture.detectChanges();
 
-        expect(githubLoginSpy).toHaveBeenCalledWith({ code: GITHUB_TEST_CODE } as GithubLoginCredentials, undefined);
+        expect(githubLoginSpy).toHaveBeenCalledWith({ code: GITHUB_TEST_CODE }, undefined);
     });
 
     it("should don't call githubLogin method", () => {

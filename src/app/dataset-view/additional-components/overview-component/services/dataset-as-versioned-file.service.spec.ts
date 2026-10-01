@@ -118,8 +118,7 @@ describe("DatasetAsVersionedFileService", () => {
             name: mockDatasetAsVersionedFileQuery.datasets.byId?.name as string,
             fileInfo: mockDatasetAsVersionedFileQuery.datasets.byId?.asVersionedFile
                 ?.latest as VersionedFileEntryDataFragment,
-            countVersions: mockDatasetAsVersionedFileQuery.datasets.byId?.asVersionedFile?.versions
-                .totalCount as number,
+            countVersions: mockDatasetAsVersionedFileQuery.datasets.byId?.asVersionedFile?.versions.totalCount,
         };
         const getDatasetAsVersionedFileSpy = spyOn(datasetApi, "getDatasetAsVersionedFile").and.returnValue(
             of(mockDatasetAsVersionedFileQuery),
@@ -140,8 +139,7 @@ describe("DatasetAsVersionedFileService", () => {
             name: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.name as string,
             fileInfo: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.asVersionedFile
                 ?.asOf as VersionedFileEntryDataFragment,
-            countVersions: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.asVersionedFile?.versions
-                .totalCount as number,
+            countVersions: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.asVersionedFile?.versions.totalCount,
         };
         const getDatasetAsVersionedFileByVersionSpy = spyOn(
             datasetApi,
@@ -195,8 +193,7 @@ describe("DatasetAsVersionedFileService", () => {
             name: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.name as string,
             fileInfo: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.asVersionedFile
                 ?.asOf as VersionedFileEntryDataFragment,
-            countVersions: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.asVersionedFile?.versions
-                .totalCount as number,
+            countVersions: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.asVersionedFile?.versions.totalCount,
         };
         mockVersionedFileView.fileInfo = null;
         service.downloadFile(TEST_DATASET_ID, mockVersionedFileView);
@@ -209,8 +206,7 @@ describe("DatasetAsVersionedFileService", () => {
             name: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.name as string,
             fileInfo: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.asVersionedFile
                 ?.asOf as VersionedFileEntryDataFragment,
-            countVersions: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.asVersionedFile?.versions
-                .totalCount as number,
+            countVersions: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.asVersionedFile?.versions.totalCount,
         };
         service.downloadFile(TEST_DATASET_ID, mockVersionedFileView);
 
@@ -232,8 +228,7 @@ describe("DatasetAsVersionedFileService", () => {
             name: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.name as string,
             fileInfo: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.asVersionedFile
                 ?.asOf as VersionedFileEntryDataFragment,
-            countVersions: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.asVersionedFile?.versions
-                .totalCount as number,
+            countVersions: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.asVersionedFile?.versions.totalCount,
         };
         const getVersionedFileContentUrlSpy = spyOn(service, "getVersionedFileContentUrl").and.returnValue(
             of(contentUrl),

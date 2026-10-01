@@ -21,10 +21,7 @@ import AppValues from "@common/values/app.values";
 })
 export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnInit {
     @Input({ required: true }) public appFieldError:
-        | ValidationError
-        | ValidationError[]
-        | ValidationErrorTuple
-        | ValidationErrorTuple[];
+        ValidationError | ValidationError[] | ValidationErrorTuple | ValidationErrorTuple[];
     @Input() public input: HTMLInputElement | NgSelectComponent | HTMLSelectElement | undefined;
     @Input({ required: true }) public group: FormGroup | FormArray;
     @Input() public fieldControl: AbstractControl | null;

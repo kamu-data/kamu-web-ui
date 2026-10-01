@@ -11,7 +11,7 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular
 import { map, Observable, of, switchMap } from "rxjs";
 
 import { isNil } from "@common/helpers/app.helpers";
-import { DatasetFlowType, FlowConfigRuleIngest, GetDatasetFlowConfigsQuery } from "@api/kamu.graphql.interface";
+import { DatasetFlowType, GetDatasetFlowConfigsQuery } from "@api/kamu.graphql.interface";
 
 import { DatasetFlowConfigService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-config.service";
 import { datasetSettingsGeneralTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/resolver/dataset-settings-general-tab.resolver";
@@ -39,16 +39,16 @@ export const datasetSettingsIngestConfigurationResolverFn: ResolveFn<
                             ...data,
                             ingestionRule: flowConfigRule,
                             retryPolicy,
-                        } as DatasetSettingsIngestConfigurationTabData;
+                        };
                     } else if (isNil(flowConfigRule)) {
                         return {
                             ...data,
                             ingestionRule: {
                                 fetchUncacheable: false,
                                 fetchNextIteration: false,
-                            } as FlowConfigRuleIngest,
+                            },
                             retryPolicy,
-                        } as DatasetSettingsIngestConfigurationTabData;
+                        };
                     } else {
                         throw new Error(
                             `Unexpected flow config rule type: ${flowConfigRule?.__typename}. Expected FlowConfigRuleIngest.`,

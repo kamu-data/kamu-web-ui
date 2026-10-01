@@ -153,19 +153,19 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     }
 
     public flowTypeDescription(flow: FlowSummaryDataWithTriggerFragment): string {
-        return FlowTableHelpers.flowTypeDescription(flow as FlowSummaryDataFragment);
+        return FlowTableHelpers.flowTypeDescription(flow);
     }
 
     public descriptionColumnOptions(element: FlowSummaryDataWithTriggerFragment): { icon: string; class: string } {
-        return FlowTableHelpers.descriptionColumnTableOptions(element as FlowSummaryDataFragment);
+        return FlowTableHelpers.descriptionColumnTableOptions(element);
     }
 
     public descriptionDatasetFlowEndOfMessage(element: FlowSummaryDataWithTriggerFragment): string {
-        return FlowTableHelpers.descriptionEndOfMessage(element as FlowSummaryDataFragment);
+        return FlowTableHelpers.descriptionEndOfMessage(element);
     }
 
     public descriptionDatasetFlowSubMessage(element: FlowSummaryDataWithTriggerFragment): string {
-        return FlowTableHelpers.descriptionSubMessage(element as FlowSummaryDataFragment);
+        return FlowTableHelpers.descriptionSubMessage(element);
     }
 
     public durationBlockVisible(node: FlowSummaryDataFragment): boolean {

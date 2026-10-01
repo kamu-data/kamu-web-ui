@@ -68,7 +68,7 @@ function setFieldElementValue(element: SupportedInputElement, value: string): vo
     // Dispatch an `input` or `change` fake event
     // so Angular form bindings take notice of the change.
     const isSelect = element instanceof HTMLSelectElement;
-    const event: Event = new Event(isSelect ? "change" : "input", { bubbles: !isSelect } as EventInit);
+    const event: Event = new Event(isSelect ? "change" : "input", { bubbles: !isSelect });
     element.dispatchEvent(event);
 }
 

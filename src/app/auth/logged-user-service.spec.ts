@@ -15,7 +15,6 @@ import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/tes
 import { provideToastr } from "ngx-toastr";
 
 import { AuthApi } from "@api/auth.api";
-import { GithubLoginCredentials, PasswordLoginCredentials } from "@api/auth.api.model";
 import { AccountFragment, FetchAccountDetailsDocument, LoginDocument } from "@api/kamu.graphql.interface";
 import {
     mockAccountDetails,
@@ -78,7 +77,7 @@ describe("LoggedUserService", () => {
         }
 
         function loginFullyViaGithub(): void {
-            loginService.githubLogin({ code: TEST_GITHUB_CODE } as GithubLoginCredentials, null);
+            loginService.githubLogin({ code: TEST_GITHUB_CODE }, null);
 
             const op = controller.expectOne(LoginDocument);
             op.flush({
@@ -91,7 +90,7 @@ describe("LoggedUserService", () => {
                 {
                     login: TEST_LOGIN,
                     password: TEST_PASSWORD,
-                } as PasswordLoginCredentials,
+                },
                 null,
             );
 

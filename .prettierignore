@@ -7,3 +7,5 @@ resources
 
 *.md
 *.eslintrc
+# Generated code
+src/app/api/kamu.graphql.interface.ts

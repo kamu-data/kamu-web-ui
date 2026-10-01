@@ -69,7 +69,7 @@ export class DatasetSettingsIngestConfigurationTabComponent extends BaseComponen
                 flowRetryPolicy: FlowRetryPolicyFormComponent.buildFormValue(
                     this.ingestConfigurationTabData.retryPolicy,
                 ),
-            } as IngestConfigurationFormValue,
+            },
             { emitEvent: true },
         );
         this.cdr.detectChanges();

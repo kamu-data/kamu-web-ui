@@ -160,9 +160,9 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
 
     public toggleStateAccountFlowConfigs(paused: boolean): void {
         if (!paused) {
-            this.accountService.accountPauseFlows(this.loggedUser.accountName).subscribe();
+            this.accountService.accountPauseFlows(this.accountName).subscribe();
         } else {
-            this.accountService.accountResumeFlows(this.loggedUser.accountName).subscribe();
+            this.accountService.accountResumeFlows(this.accountName).subscribe();
         }
         setTimeout(() => {
             this.refreshNow();
@@ -230,7 +230,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
         if (page === 1) {
             this.ngZone.run(() =>
                 this.navigationService.navigateToOwnerView(
-                    this.loggedUser.accountName,
+                    this.accountName,
                     AccountTabs.FLOWS,
                     undefined,
                     this.accountFlowsData.activeNav,
@@ -240,7 +240,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
         } else {
             this.ngZone.run(() =>
                 this.navigationService.navigateToOwnerView(
-                    this.loggedUser.accountName,
+                    this.accountName,
                     AccountTabs.FLOWS,
                     page,
                     this.accountFlowsData.activeNav,

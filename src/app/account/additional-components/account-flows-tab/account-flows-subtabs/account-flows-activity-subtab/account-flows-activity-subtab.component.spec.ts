@@ -90,7 +90,7 @@ describe("AccountFlowsActivitySubtabComponent", () => {
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
         component.onPageChange(1);
         expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
-            component.loggedUser.accountName,
+            MOCK_ACCOUNT_NAME,
             AccountTabs.FLOWS,
             undefined,
             component.accountFlowsData.activeNav,
@@ -102,9 +102,22 @@ describe("AccountFlowsActivitySubtabComponent", () => {
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
         component.onPageChange(2);
         expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
-            component.loggedUser.accountName,
+            MOCK_ACCOUNT_NAME,
             AccountTabs.FLOWS,
             2,
+            component.accountFlowsData.activeNav,
+            component.accountFlowsData.flowGroup,
+        );
+    });
+
+    it("should keep viewed account (not logged user) when paginating another account's flows", () => {
+        expect(component.loggedUser.accountName).not.toEqual(MOCK_ACCOUNT_NAME);
+        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+        component.onPageChange(3);
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
+            MOCK_ACCOUNT_NAME,
+            AccountTabs.FLOWS,
+            3,
             component.accountFlowsData.activeNav,
             component.accountFlowsData.flowGroup,
         );
@@ -146,7 +159,7 @@ describe("AccountFlowsActivitySubtabComponent", () => {
         const refreshNowSpy = spyOn(component, "refreshNow");
         component.toggleStateAccountFlowConfigs(mockPause);
         tick(component.TIMEOUT_REFRESH_FLOW);
-        expect(accountResumeFlowsSpy).toHaveBeenCalledTimes(1);
+        expect(accountResumeFlowsSpy).toHaveBeenCalledOnceWith(MOCK_ACCOUNT_NAME);
         expect(refreshNowSpy).toHaveBeenCalledTimes(1);
         flush();
     }));
@@ -157,7 +170,7 @@ describe("AccountFlowsActivitySubtabComponent", () => {
         const refreshNowSpy = spyOn(component, "refreshNow");
         component.toggleStateAccountFlowConfigs(mockPause);
         tick(component.TIMEOUT_REFRESH_FLOW);
-        expect(accountPauseFlowsSpy).toHaveBeenCalledTimes(1);
+        expect(accountPauseFlowsSpy).toHaveBeenCalledOnceWith(MOCK_ACCOUNT_NAME);
         expect(refreshNowSpy).toHaveBeenCalledTimes(1);
         flush();
     }));

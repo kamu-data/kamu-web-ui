@@ -137,8 +137,13 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 5. Push the version change and the tag: `git push`
 6. GitHub Actions will pick up the new tag and create a new GitHub release from it
 
+## Agent Harness
 
+Coding agents (Claude Code, Codex) follow [`AGENTS.md`](./AGENTS.md), with task-specific skills in
+`.claude/skills/` and hooks in `scripts/agents/` that enforce the main rules. To use them you need
+Python 3, nvm with the Node version from `.nvmrc`, and `npm ci` done once. For Codex, trust the
+project and review its hooks with `/hooks`.
 
-
-
-
+After changing anything agent-related (`AGENTS.md`, `CLAUDE.md`, skills, hooks), run
+`npm run lint-harness`; CI runs it too. How the harness is built and how to change it:
+[`docs/internal/agent-harness.md`](./docs/internal/agent-harness.md).

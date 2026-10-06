@@ -1,0 +1,20 @@
+name: lint-harness
+# Unfiltered on purpose: skills, AGENTS.md and design docs are exactly what this checks,
+# including on documentation-only changes.
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  workflow_dispatch: { }
+jobs:
+  lint_harness:
+    name: Lint / Agent harness
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Agent hooks and harness lints
+        run: npm run lint-harness

@@ -4,4 +4,12 @@
 /coverage
 /src/app/editor/generated
 /.vscode
-/docs/internal
+
+# Agent harness runtime state and local working material
+.codex/*
+!.codex/hooks.json
+.claude/settings.local.json
+.claude/state/
+.claude/worktrees/
+.spec
+__pycache__/

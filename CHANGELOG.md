@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Flow history: the completion event lists the downstream flows initiated by the flow, with their status and datasets
+- Agent harness for Claude Code and Codex, mirroring kamu-cli's: shared rules in `AGENTS.md`, task skills, and hooks that guard commands and edits, format with prettier and pin the `.nvmrc` Node version
 ### Changed
 - Updated GraphQL schema: `DependencyDatasetResult*` types renamed to `DatasetAccessResult*`, activation cause dataset is nullable (requires a matching kamu-cli release)
 ### Fixed

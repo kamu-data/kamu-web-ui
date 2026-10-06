@@ -1,0 +1,29 @@
+{
+  "skills": [
+    {
+      "skill": "kamu-ui-unit-tests",
+      "paths": ["src/**/*.spec.ts", "src/**/*.harness.ts", "src/**/*mock*.ts", "src/app/common/modules/*-test.module.ts"]
+    },
+    { "skill": "kamu-ui-graphql-api", "paths": ["src/app/api/**/*.graphql", "src/app/api/*.api.ts"] },
+    {
+      "skill": "kamu-ui-routing",
+      "paths": ["src/app/**/*routing*.ts", "src/app/project-links.ts", "src/app/common/resolvers/routing-resolvers.ts"]
+    },
+    { "skill": "kamu-ui-release-dependency-workflows", "paths": ["CHANGELOG.md", "package.json", "update-dependecies.md"] },
+    {
+      "skill": "kamu-ui-prose-and-comments",
+      "paths": ["AGENTS.md", "CLAUDE.md", "DEVELOPER.md", "docs/**/*.md", ".claude/skills/**", ".claude/agents/**"]
+    },
+    {
+      "skill": "kamu-ui-angular-style",
+      "paths": ["src/app/**/*.ts", "src/app/**/*.html", "src/app/**/*.scss"],
+      "baseline": true
+    }
+  ],
+  "generated": [
+    { "paths": ["src/app/api/kamu.graphql.interface.ts"], "command": "npm run gql-codegen" },
+    { "paths": ["resources/schema.graphql"], "command": "npm run gql-update-schema" },
+    { "paths": ["src/app/editor/generated/**"], "command": "node scripts/set-monaco-version.js" },
+    { "paths": ["package-lock.json"], "command": "npm install" }
+  ]
+}

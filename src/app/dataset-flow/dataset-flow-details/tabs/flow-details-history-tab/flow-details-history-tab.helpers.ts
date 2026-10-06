@@ -9,6 +9,7 @@ import { format } from "date-fns/format";
 
 import { pluralize } from "@common/helpers/app.helpers";
 import { DataHelpers } from "@common/helpers/data.helpers";
+import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
 import AppValues from "@common/values/app.values";
 import {
     FlowActivationCause,
@@ -359,22 +360,18 @@ export class DatasetFlowDetailsHelpers {
             case "FlowActivationCauseManual":
                 return `Triggered by <a class="fs-12" href="${DatasetFlowDetailsHelpers.accountHyperlink(activationCause.initiator.accountName)}">${activationCause.initiator.accountName}</a>`;
             case "FlowActivationCauseDatasetUpdate": {
-                const datasetHyperlink = DatasetFlowDetailsHelpers.datasetHyperlink(
-                    activationCause.dataset.owner.accountName,
-                    activationCause.dataset.name,
-                );
-                const inputDatasetLink = `Input dataset: <a class="fs-12" href="${datasetHyperlink}">${activationCause.dataset.owner.accountName}/${activationCause.dataset.name}</a>`;
+                // The dataset is missing when it was deleted or is not readable by the user
+                const dataset = activationCause.dataset;
+                const inputDatasetLink = dataset
+                    ? `Input dataset: <a class="fs-12" href="${DatasetFlowDetailsHelpers.datasetHyperlink(dataset.owner.accountName, dataset.name)}">${dataset.owner.accountName}/${dataset.name}</a>`
+                    : `Input dataset: <span title="${activationCause.datasetId}">${new DisplayDatasetIdPipe().transform(activationCause.datasetId)}</span> (unavailable)`;
                 switch (activationCause.source.__typename) {
                     case "FlowActivationCauseDatasetUpdateSourceUpstreamFlow": {
-                        const flowHistoryHyperlink = DatasetFlowDetailsHelpers.flowHistoryHyperlink(
-                            activationCause.dataset.owner.accountName,
-                            activationCause.dataset.name,
-                            activationCause.source.flowId,
-                        );
-
-                        const flowHistoryLink =
-                            `<a class="fs-12" href="${flowHistoryHyperlink}">` +
-                            `Flow #${activationCause.source.flowId}</a>`;
+                        const flowId = activationCause.source.flowId;
+                        const flowHistoryLink = dataset
+                            ? `<a class="fs-12" href="${DatasetFlowDetailsHelpers.flowHistoryHyperlink(dataset.owner.accountName, dataset.name, flowId)}">` +
+                              `Flow #${flowId}</a>`
+                            : `Flow #${flowId}`;
                         return `${flowHistoryLink}. ${inputDatasetLink}`;
                     }
                     case "FlowActivationCauseDatasetUpdateSourceHttpIngest":

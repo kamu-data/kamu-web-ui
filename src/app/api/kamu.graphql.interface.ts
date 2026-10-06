@@ -91,31 +91,71 @@ export type AccessTokenEdge = {
 
 export type Account = {
   __typename?: 'Account';
-  /** Access to the access token management */
+  /**
+   * Access to the access token management.
+   * Available only to the account itself.
+   */
   accessTokens: AccountAccessTokens;
-  /** Symbolic account name */
+  /**
+   * Symbolic account name.
+   * Visible to everyone.
+   */
   accountName: Scalars['AccountName']['output'];
-  /** Account provider */
+  /**
+   * Account provider.
+   * Visible to everyone.
+   */
   accountProvider: AccountProvider;
-  /** Account type */
+  /**
+   * Account type.
+   * Visible to everyone.
+   */
   accountType: AccountType;
-  /** Avatar URL */
+  /**
+   * Avatar URL.
+   * Visible to everyone.
+   */
   avatarUrl?: Maybe<Scalars['Url']['output']>;
-  /** Account name to display */
+  /**
+   * Account name to display.
+   * Visible to everyone.
+   */
   displayName: Scalars['AccountDisplayName']['output'];
-  /** Email address */
+  /**
+   * Email address.
+   * Available only to the account itself.
+   */
   email: Scalars['String']['output'];
-  /** Access to the flow configurations of this account */
+  /**
+   * Access to the flow configurations of this account.
+   * Available only to the account itself and to administrators.
+   */
   flows: AccountFlows;
-  /** Unique and stable identifier of this account */
+  /**
+   * Unique and stable identifier of this account.
+   * Visible to everyone.
+   */
   id: Scalars['AccountID']['output'];
-  /** Indicates the administrator status */
-  isAdmin: Scalars['Boolean']['output'];
-  /** Returns datasets belonging to this account */
+  /**
+   * Indicates the administrator status.
+   * Visible only to the account itself and to administrators, `null` for
+   * everyone else.
+   */
+  isAdmin?: Maybe<Scalars['Boolean']['output']>;
+  /**
+   * Returns datasets belonging to this account.
+   * Lists only the datasets the caller is allowed to read.
+   */
   ownedDatasets: DatasetConnection;
-  /** Returns account quotas */
+  /**
+   * Returns account quotas.
+   * Available only to the account itself and to administrators.
+   */
   quotas: AccountQuotas;
-  /** Access to account usage statistic */
+  /**
+   * Access to account usage statistic.
+   * Available only to the account itself and to administrators.
+   */
   usage: AccountUsage;
 };
 
@@ -316,23 +356,47 @@ export type AccountLookupFilter = {
 
 export type AccountMut = {
   __typename?: 'AccountMut';
-  /** Access to the mutable flow configurations of this account */
+  /**
+   * Access to the access token management of this account.
+   * Available only to the account itself.
+   */
   accessTokens: AccountAccessTokensMut;
   /** Convert to read-only accessor to an account */
   account: Account;
-  /** Delete a selected account. Allowed only for admin users */
+  /**
+   * Delete a selected account.
+   * Allowed only to the account itself and to administrators.
+   */
   delete: DeleteAccountResult;
-  /** Access to the mutable flow configurations of this account */
+  /**
+   * Access to the mutable flow configurations of this account.
+   * Available only to the account itself.
+   */
   flows: AccountFlowsMut;
-  /** Reset password for a selected account. Allowed only for admin users */
+  /**
+   * Reset password for a selected account.
+   * Allowed only to the account itself and to administrators.
+   */
   modifyPassword: ModifyPasswordResult;
-  /** Change password with confirmation */
+  /**
+   * Change password with confirmation.
+   * Allowed only to the account itself and to administrators.
+   */
   modifyPasswordWithConfirmation: ModifyPasswordResult;
-  /** Access to the mutable quotas of this account */
+  /**
+   * Access to the mutable quotas of this account.
+   * Changes are allowed only to administrators.
+   */
   quotas: AccountQuotasMut;
-  /** Update account name */
+  /**
+   * Update account name.
+   * Allowed only to the account itself and to administrators.
+   */
   rename: RenameAccountResult;
-  /** Update account email */
+  /**
+   * Update account email.
+   * Allowed only to the account itself and to administrators.
+   */
   updateEmail: UpdateEmailResult;
 };
 
@@ -1345,6 +1409,26 @@ export type Dataset = {
   webhooks: DatasetWebhooks;
 };
 
+/**
+ * A dataset the caller may read, or only its ID when the dataset is missing
+ * or not readable by the caller
+ */
+export type DatasetAccessResult = {
+  message: Scalars['String']['output'];
+};
+
+export type DatasetAccessResultAccessible = DatasetAccessResult & {
+  __typename?: 'DatasetAccessResultAccessible';
+  dataset: Dataset;
+  message: Scalars['String']['output'];
+};
+
+export type DatasetAccessResultNotAccessible = DatasetAccessResult & {
+  __typename?: 'DatasetAccessResultNotAccessible';
+  id: Scalars['DatasetID']['output'];
+  message: Scalars['String']['output'];
+};
+
 export enum DatasetAccessRole {
   /** Role allows modifying dataset data */
   Editor = 'EDITOR',
@@ -1719,7 +1803,7 @@ export type DatasetMetadata = {
    */
   currentArchetype?: Maybe<DatasetArchetype>;
   /** Current downstream dependencies of a dataset */
-  currentDownstreamDependencies: Array<DependencyDatasetResult>;
+  currentDownstreamDependencies: Array<DatasetAccessResult>;
   /** Current descriptive information about the dataset */
   currentInfo: SetInfo;
   /** Current license associated with the dataset */
@@ -1738,7 +1822,7 @@ export type DatasetMetadata = {
   /** Current transformation used by the derivative dataset */
   currentTransform?: Maybe<SetTransform>;
   /** Current upstream dependencies of a dataset */
-  currentUpstreamDependencies: Array<DependencyDatasetResult>;
+  currentUpstreamDependencies: Array<DatasetAccessResult>;
   /** Current vocabulary associated with the dataset */
   currentVocab?: Maybe<SetVocab>;
   /** Last recorded watermark */
@@ -2097,22 +2181,6 @@ export type DeleteResultSuccess = DeleteResult & {
   message: Scalars['String']['output'];
 };
 
-export type DependencyDatasetResult = {
-  message: Scalars['String']['output'];
-};
-
-export type DependencyDatasetResultAccessible = DependencyDatasetResult & {
-  __typename?: 'DependencyDatasetResultAccessible';
-  dataset: Dataset;
-  message: Scalars['String']['output'];
-};
-
-export type DependencyDatasetResultNotAccessible = DependencyDatasetResult & {
-  __typename?: 'DependencyDatasetResultNotAccessible';
-  id: Scalars['DatasetID']['output'];
-  message: Scalars['String']['output'];
-};
-
 /**
  * Disables the previously defined polling source.
  *
@@ -2430,6 +2498,11 @@ export type Flow = {
   datasetId?: Maybe<Scalars['DatasetID']['output']>;
   /** Description of key flow parameters */
   description: FlowDescription;
+  /**
+   * Flows activated by this flow's completion. Filled asynchronously, so
+   * the list may lag briefly behind the completion
+   */
+  downstreamFlows: Array<FlowDownstreamLink>;
   /** Unique identifier of the flow */
   flowId: Scalars['FlowID']['output'];
   /** History of flow events */
@@ -2468,7 +2541,9 @@ export type FlowActivationCauseAutoPolling = {
 
 export type FlowActivationCauseDatasetUpdate = {
   __typename?: 'FlowActivationCauseDatasetUpdate';
-  dataset: Dataset;
+  /** Null when the dataset was deleted or is not readable by the caller */
+  dataset?: Maybe<Dataset>;
+  datasetId: Scalars['DatasetID']['output'];
   source: FlowActivationCauseDatasetUpdateSource;
 };
 
@@ -2687,6 +2762,24 @@ export type FlowDescriptionWebhookDeliver = {
   targetUrl: Scalars['Url']['output'];
 };
 
+/** A flow that was activated by the completion of another flow */
+export type FlowDownstreamLink = {
+  __typename?: 'FlowDownstreamLink';
+  /** When the downstream flow received the activation */
+  activatedAt: Scalars['DateTime']['output'];
+  /** Null only when `datasetId` is null */
+  dataset?: Maybe<DatasetAccessResult>;
+  /** Dataset the downstream flow belongs to, if any */
+  datasetId?: Maybe<Scalars['DatasetID']['output']>;
+  /**
+   * Null unless the caller may see the downstream flow: Read on its
+   * dataset, and Maintain for webhook deliveries
+   */
+  flow?: Maybe<Flow>;
+  /** Downstream flow ID */
+  flowId: Scalars['FlowID']['output'];
+};
+
 export type FlowEdge = {
   __typename?: 'FlowEdge';
   node: Flow;
@@ -2712,6 +2805,11 @@ export type FlowEventActivationCauseAdded = FlowEvent & {
 
 export type FlowEventCompleted = FlowEvent & {
   __typename?: 'FlowEventCompleted';
+  /**
+   * Flows activated by this flow's completion. Filled asynchronously, so
+   * the list may lag briefly behind the completion
+   */
+  downstreamFlows: Array<FlowDownstreamLink>;
   eventId: Scalars['EventID']['output'];
   eventTime: Scalars['DateTime']['output'];
 };
@@ -5996,7 +6094,7 @@ export type WebhookFlowSubProcessConnectionDataFragment = { __typename?: 'Webhoo
 
 export type AccountWithEmailFragment = { __typename?: 'Account', id: string, accountName: string, displayName: string, avatarUrl?: string | null, email: string };
 
-export type AccountFragment = { __typename?: 'Account', id: string, accountName: string, displayName: string, accountType: AccountType, avatarUrl?: string | null, isAdmin: boolean, accountProvider: AccountProvider };
+export type AccountFragment = { __typename?: 'Account', id: string, accountName: string, displayName: string, accountType: AccountType, avatarUrl?: string | null, isAdmin?: boolean | null, accountProvider: AccountProvider };
 
 export type LoginWeb3WalletMutationVariables = Exact<{
   account: Scalars['EvmWalletAddress']['input'];
@@ -6392,8 +6490,8 @@ export type DatasetListDownstreamsQueryVariables = Exact<{
 
 
 export type DatasetListDownstreamsQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentDownstreamDependencies: Array<
-          | { __typename?: 'DependencyDatasetResultAccessible', dataset: { __typename?: 'Dataset', name: string, owner: { __typename?: 'Account', accountName: string, avatarUrl?: string | null } } }
-          | { __typename?: 'DependencyDatasetResultNotAccessible' }
+          | { __typename?: 'DatasetAccessResultAccessible', dataset: { __typename?: 'Dataset', name: string, owner: { __typename?: 'Account', accountName: string, avatarUrl?: string | null } } }
+          | { __typename?: 'DatasetAccessResultNotAccessible' }
         > } } | null } };
 
 export type GetDatasetMainDataQueryVariables = Exact<{
@@ -6778,6 +6876,28 @@ export type FlowConnectionDataFragment = { __typename?: 'FlowConnection', totalC
     & DatasetPageInfoFragment
   ) };
 
+export type FlowDownstreamLinkDataFragment = { __typename?: 'FlowDownstreamLink', flowId: string, activatedAt: string, datasetId?: string | null, dataset?:
+    | { __typename: 'DatasetAccessResultAccessible', dataset: (
+        { __typename?: 'Dataset' }
+        & DatasetBasicsFragment
+      ) }
+    | { __typename: 'DatasetAccessResultNotAccessible', id: string }
+   | null, flow?: { __typename?: 'Flow', flowId: string, status: FlowStatus, outcome?:
+      | { __typename: 'FlowAbortedResult' }
+      | { __typename: 'FlowFailedError' }
+      | { __typename: 'FlowSuccessResult' }
+     | null, description:
+      | { __typename: 'FlowDescriptionDatasetExecuteTransform' }
+      | { __typename: 'FlowDescriptionDatasetHardCompaction' }
+      | { __typename: 'FlowDescriptionDatasetPollingIngest' }
+      | { __typename: 'FlowDescriptionDatasetPushIngest' }
+      | { __typename: 'FlowDescriptionDatasetReset' }
+      | { __typename: 'FlowDescriptionDatasetResetToMetadata' }
+      | { __typename: 'FlowDescriptionSystemGC' }
+      | { __typename: 'FlowDescriptionUnknown' }
+      | { __typename: 'FlowDescriptionWebhookDeliver' }
+     } | null };
+
 type FlowHistoryData_FlowConfigSnapshotModified_Fragment = { __typename: 'FlowConfigSnapshotModified', eventId: string, eventTime: string, configSnapshot:
     | { __typename: 'FlowConfigRuleCompaction' }
     | { __typename: 'FlowConfigRuleIngest' }
@@ -6788,10 +6908,10 @@ type FlowHistoryData_FlowEventAborted_Fragment = { __typename: 'FlowEventAborted
 
 type FlowHistoryData_FlowEventActivationCauseAdded_Fragment = { __typename: 'FlowEventActivationCauseAdded', eventId: string, eventTime: string, activationCause:
     | { __typename: 'FlowActivationCauseAutoPolling' }
-    | { __typename: 'FlowActivationCauseDatasetUpdate', dataset: (
+    | { __typename: 'FlowActivationCauseDatasetUpdate', datasetId: string, dataset?: (
         { __typename?: 'Dataset' }
         & DatasetBasicsFragment
-      ), source:
+      ) | null, source:
         | { __typename: 'FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange' }
         | { __typename: 'FlowActivationCauseDatasetUpdateSourceHttpIngest', sourceName?: string | null }
         | { __typename: 'FlowActivationCauseDatasetUpdateSourceSmartProtocolPush', accountName?: string | null, isForce: boolean }
@@ -6804,14 +6924,17 @@ type FlowHistoryData_FlowEventActivationCauseAdded_Fragment = { __typename: 'Flo
       ) }
    };
 
-type FlowHistoryData_FlowEventCompleted_Fragment = { __typename: 'FlowEventCompleted', eventId: string, eventTime: string };
+type FlowHistoryData_FlowEventCompleted_Fragment = { __typename: 'FlowEventCompleted', eventId: string, eventTime: string, downstreamFlows: Array<(
+    { __typename?: 'FlowDownstreamLink' }
+    & FlowDownstreamLinkDataFragment
+  )> };
 
 type FlowHistoryData_FlowEventInitiated_Fragment = { __typename: 'FlowEventInitiated', eventId: string, eventTime: string, activationCause:
     | { __typename: 'FlowActivationCauseAutoPolling' }
-    | { __typename: 'FlowActivationCauseDatasetUpdate', dataset: (
+    | { __typename: 'FlowActivationCauseDatasetUpdate', datasetId: string, dataset?: (
         { __typename?: 'Dataset' }
         & DatasetBasicsFragment
-      ), source:
+      ) | null, source:
         | { __typename: 'FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange' }
         | { __typename: 'FlowActivationCauseDatasetUpdateSourceHttpIngest', sourceName?: string | null }
         | { __typename: 'FlowActivationCauseDatasetUpdateSourceSmartProtocolPush', accountName?: string | null, isForce: boolean }
@@ -7377,37 +7500,37 @@ export type DatasetLineageFragment = (
       { __typename?: 'SetLicense' }
       & LicenseFragment
     ) | null, currentUpstreamDependencies: Array<
-      | { __typename?: 'DependencyDatasetResultAccessible', dataset: (
+      | { __typename?: 'DatasetAccessResultAccessible', dataset: (
           { __typename?: 'Dataset', metadata: (
             { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
               { __typename?: 'SetLicense' }
               & LicenseFragment
             ) | null, currentUpstreamDependencies: Array<
-              | { __typename?: 'DependencyDatasetResultAccessible', dataset: (
+              | { __typename?: 'DatasetAccessResultAccessible', dataset: (
                   { __typename?: 'Dataset', metadata: (
                     { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
                       { __typename?: 'SetLicense' }
                       & LicenseFragment
                     ) | null, currentUpstreamDependencies: Array<
-                      | { __typename?: 'DependencyDatasetResultAccessible', dataset: (
+                      | { __typename?: 'DatasetAccessResultAccessible', dataset: (
                           { __typename?: 'Dataset', metadata: (
                             { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
                               { __typename?: 'SetLicense' }
                               & LicenseFragment
                             ) | null, currentUpstreamDependencies: Array<
-                              | { __typename?: 'DependencyDatasetResultAccessible', dataset: (
+                              | { __typename?: 'DatasetAccessResultAccessible', dataset: (
                                   { __typename?: 'Dataset', metadata: (
                                     { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
                                       { __typename?: 'SetLicense' }
                                       & LicenseFragment
                                     ) | null, currentUpstreamDependencies: Array<
-                                      | { __typename?: 'DependencyDatasetResultAccessible', dataset: (
+                                      | { __typename?: 'DatasetAccessResultAccessible', dataset: (
                                           { __typename?: 'Dataset', metadata: (
                                             { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
                                               { __typename?: 'SetLicense' }
                                               & LicenseFragment
                                             ) | null, currentUpstreamDependencies: Array<
-                                              | { __typename?: 'DependencyDatasetResultAccessible', dataset: (
+                                              | { __typename?: 'DatasetAccessResultAccessible', dataset: (
                                                   { __typename?: 'Dataset', metadata: (
                                                     { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
                                                       { __typename?: 'SetLicense' }
@@ -7417,67 +7540,67 @@ export type DatasetLineageFragment = (
                                                   ) }
                                                   & DatasetStreamLineageBasicsFragment
                                                 ) }
-                                              | { __typename?: 'DependencyDatasetResultNotAccessible', id: string }
+                                              | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
                                             > }
                                             & CurrentSourceFetchUrlFragment
                                           ) }
                                           & DatasetStreamLineageBasicsFragment
                                         ) }
-                                      | { __typename?: 'DependencyDatasetResultNotAccessible', id: string }
+                                      | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
                                     > }
                                     & CurrentSourceFetchUrlFragment
                                   ) }
                                   & DatasetStreamLineageBasicsFragment
                                 ) }
-                              | { __typename?: 'DependencyDatasetResultNotAccessible', id: string }
+                              | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
                             > }
                             & CurrentSourceFetchUrlFragment
                           ) }
                           & DatasetStreamLineageBasicsFragment
                         ) }
-                      | { __typename?: 'DependencyDatasetResultNotAccessible', id: string }
+                      | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
                     > }
                     & CurrentSourceFetchUrlFragment
                   ) }
                   & DatasetStreamLineageBasicsFragment
                 ) }
-              | { __typename?: 'DependencyDatasetResultNotAccessible', id: string }
+              | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
             > }
             & CurrentSourceFetchUrlFragment
           ) }
           & DatasetStreamLineageBasicsFragment
         ) }
-      | { __typename?: 'DependencyDatasetResultNotAccessible', id: string }
+      | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
     >, currentDownstreamDependencies: Array<
-      | { __typename?: 'DependencyDatasetResultAccessible', dataset: (
+      | { __typename?: 'DatasetAccessResultAccessible', dataset: (
           { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentDownstreamDependencies: Array<
-              | { __typename?: 'DependencyDatasetResultAccessible', dataset: (
+              | { __typename?: 'DatasetAccessResultAccessible', dataset: (
                   { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentDownstreamDependencies: Array<
-                      | { __typename?: 'DependencyDatasetResultAccessible', dataset: (
+                      | { __typename?: 'DatasetAccessResultAccessible', dataset: (
                           { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentDownstreamDependencies: Array<
-                              | { __typename?: 'DependencyDatasetResultAccessible', dataset: (
+                              | { __typename?: 'DatasetAccessResultAccessible', dataset: (
                                   { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentDownstreamDependencies: Array<
-                                      | { __typename?: 'DependencyDatasetResultAccessible', dataset: (
+                                      | { __typename?: 'DatasetAccessResultAccessible', dataset: (
                                           { __typename?: 'Dataset' }
                                           & DatasetStreamLineageBasicsFragment
                                         ) }
-                                      | { __typename?: 'DependencyDatasetResultNotAccessible', id: string }
+                                      | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
                                     > } }
                                   & DatasetStreamLineageBasicsFragment
                                 ) }
-                              | { __typename?: 'DependencyDatasetResultNotAccessible', id: string }
+                              | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
                             > } }
                           & DatasetStreamLineageBasicsFragment
                         ) }
-                      | { __typename?: 'DependencyDatasetResultNotAccessible', id: string }
+                      | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
                     > } }
                   & DatasetStreamLineageBasicsFragment
                 ) }
-              | { __typename?: 'DependencyDatasetResultNotAccessible', id: string }
+              | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
             > } }
           & DatasetStreamLineageBasicsFragment
         ) }
-      | { __typename?: 'DependencyDatasetResultNotAccessible', id: string }
+      | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
     > }
     & CurrentSourceFetchUrlFragment
   ) }
@@ -7529,8 +7652,8 @@ export type DatasetMetadataSummaryFragment = (
       { __typename?: 'AddPushSource' }
       & AddPushSourceEventFragment
     )>, currentDownstreamDependencies: Array<
-      | { __typename: 'DependencyDatasetResultAccessible' }
-      | { __typename: 'DependencyDatasetResultNotAccessible' }
+      | { __typename: 'DatasetAccessResultAccessible' }
+      | { __typename: 'DatasetAccessResultNotAccessible' }
     > } }
   & DatasetReadmeFragment
   & DatasetLastUpdateFragment
@@ -7558,11 +7681,11 @@ export type DatasetSearchOverviewFragment = (
       { __typename?: 'SetLicense' }
       & LicenseFragment
     ) | null, currentDownstreamDependencies: Array<
-      | { __typename?: 'DependencyDatasetResultAccessible', dataset: (
+      | { __typename?: 'DatasetAccessResultAccessible', dataset: (
           { __typename?: 'Dataset' }
           & DatasetBasicsFragment
         ) }
-      | { __typename?: 'DependencyDatasetResultNotAccessible', id: string }
+      | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
     > } }
   & DatasetBasicsFragment
 );
@@ -7651,8 +7774,8 @@ export type GetMetadataBlockQuery = { __typename?: 'Query', datasets: { __typena
             { __typename?: 'MetadataBlockExtended' }
             & MetadataBlockFragment
           ) | null }, currentDownstreamDependencies: Array<
-          | { __typename: 'DependencyDatasetResultAccessible' }
-          | { __typename: 'DependencyDatasetResultNotAccessible' }
+          | { __typename: 'DatasetAccessResultAccessible' }
+          | { __typename: 'DatasetAccessResultNotAccessible' }
         > } }
       & DatasetBasicsFragment
     ) | null } };
@@ -8342,6 +8465,34 @@ export const FlowConnectionDataFragmentDoc = gql`
 }
     ${FlowSummaryDataWithTriggerFragmentDoc}
 ${DatasetPageInfoFragmentDoc}`;
+export const FlowDownstreamLinkDataFragmentDoc = gql`
+    fragment FlowDownstreamLinkData on FlowDownstreamLink {
+  flowId
+  activatedAt
+  datasetId
+  dataset {
+    __typename
+    ... on DatasetAccessResultAccessible {
+      dataset {
+        ...DatasetBasics
+      }
+    }
+    ... on DatasetAccessResultNotAccessible {
+      id
+    }
+  }
+  flow {
+    flowId
+    status
+    outcome {
+      __typename
+    }
+    description {
+      __typename
+    }
+  }
+}
+    ${DatasetBasicsFragmentDoc}`;
 export const FlowHistoryDataFragmentDoc = gql`
     fragment FlowHistoryData on FlowEvent {
   __typename
@@ -8365,6 +8516,7 @@ export const FlowHistoryDataFragmentDoc = gql`
         }
       }
       ... on FlowActivationCauseDatasetUpdate {
+        datasetId
         dataset {
           ...DatasetBasics
         }
@@ -8463,6 +8615,7 @@ export const FlowHistoryDataFragmentDoc = gql`
         }
       }
       ... on FlowActivationCauseDatasetUpdate {
+        datasetId
         dataset {
           ...DatasetBasics
         }
@@ -8490,11 +8643,15 @@ export const FlowHistoryDataFragmentDoc = gql`
   ... on FlowEventCompleted {
     eventId
     eventTime
+    downstreamFlows {
+      ...FlowDownstreamLinkData
+    }
   }
 }
     ${AccountFragmentDoc}
 ${DatasetBasicsFragmentDoc}
-${TimeDeltaDataFragmentDoc}`;
+${TimeDeltaDataFragmentDoc}
+${FlowDownstreamLinkDataFragmentDoc}`;
 export const FlowItemWidgetDataFragmentDoc = gql`
     fragment FlowItemWidgetData on Flow {
   flowId
@@ -8658,10 +8815,10 @@ export const DatasetLineageFragmentDoc = gql`
     }
     currentWatermark
     currentUpstreamDependencies {
-      ... on DependencyDatasetResultNotAccessible {
+      ... on DatasetAccessResultNotAccessible {
         id
       }
-      ... on DependencyDatasetResultAccessible {
+      ... on DatasetAccessResultAccessible {
         dataset {
           ...DatasetStreamLineageBasics
           metadata {
@@ -8674,10 +8831,10 @@ export const DatasetLineageFragmentDoc = gql`
             }
             currentWatermark
             currentUpstreamDependencies {
-              ... on DependencyDatasetResultNotAccessible {
+              ... on DatasetAccessResultNotAccessible {
                 id
               }
-              ... on DependencyDatasetResultAccessible {
+              ... on DatasetAccessResultAccessible {
                 dataset {
                   ...DatasetStreamLineageBasics
                   metadata {
@@ -8690,10 +8847,10 @@ export const DatasetLineageFragmentDoc = gql`
                     }
                     currentWatermark
                     currentUpstreamDependencies {
-                      ... on DependencyDatasetResultNotAccessible {
+                      ... on DatasetAccessResultNotAccessible {
                         id
                       }
-                      ... on DependencyDatasetResultAccessible {
+                      ... on DatasetAccessResultAccessible {
                         dataset {
                           ...DatasetStreamLineageBasics
                           metadata {
@@ -8706,10 +8863,10 @@ export const DatasetLineageFragmentDoc = gql`
                             }
                             currentWatermark
                             currentUpstreamDependencies {
-                              ... on DependencyDatasetResultNotAccessible {
+                              ... on DatasetAccessResultNotAccessible {
                                 id
                               }
-                              ... on DependencyDatasetResultAccessible {
+                              ... on DatasetAccessResultAccessible {
                                 dataset {
                                   ...DatasetStreamLineageBasics
                                   metadata {
@@ -8722,10 +8879,10 @@ export const DatasetLineageFragmentDoc = gql`
                                     }
                                     currentWatermark
                                     currentUpstreamDependencies {
-                                      ... on DependencyDatasetResultNotAccessible {
+                                      ... on DatasetAccessResultNotAccessible {
                                         id
                                       }
-                                      ... on DependencyDatasetResultAccessible {
+                                      ... on DatasetAccessResultAccessible {
                                         dataset {
                                           ...DatasetStreamLineageBasics
                                           metadata {
@@ -8738,10 +8895,10 @@ export const DatasetLineageFragmentDoc = gql`
                                             }
                                             currentWatermark
                                             currentUpstreamDependencies {
-                                              ... on DependencyDatasetResultNotAccessible {
+                                              ... on DatasetAccessResultNotAccessible {
                                                 id
                                               }
-                                              ... on DependencyDatasetResultAccessible {
+                                              ... on DatasetAccessResultAccessible {
                                                 dataset {
                                                   ...DatasetStreamLineageBasics
                                                   metadata {
@@ -8778,10 +8935,10 @@ export const DatasetLineageFragmentDoc = gql`
       }
     }
     currentDownstreamDependencies {
-      ... on DependencyDatasetResultNotAccessible {
+      ... on DatasetAccessResultNotAccessible {
         id
       }
-      ... on DependencyDatasetResultAccessible {
+      ... on DatasetAccessResultAccessible {
         dataset {
           ...DatasetStreamLineageBasics
           metadata {
@@ -8789,10 +8946,10 @@ export const DatasetLineageFragmentDoc = gql`
               sourceName
             }
             currentDownstreamDependencies {
-              ... on DependencyDatasetResultNotAccessible {
+              ... on DatasetAccessResultNotAccessible {
                 id
               }
-              ... on DependencyDatasetResultAccessible {
+              ... on DatasetAccessResultAccessible {
                 dataset {
                   ...DatasetStreamLineageBasics
                   metadata {
@@ -8800,10 +8957,10 @@ export const DatasetLineageFragmentDoc = gql`
                       sourceName
                     }
                     currentDownstreamDependencies {
-                      ... on DependencyDatasetResultNotAccessible {
+                      ... on DatasetAccessResultNotAccessible {
                         id
                       }
-                      ... on DependencyDatasetResultAccessible {
+                      ... on DatasetAccessResultAccessible {
                         dataset {
                           ...DatasetStreamLineageBasics
                           metadata {
@@ -8811,10 +8968,10 @@ export const DatasetLineageFragmentDoc = gql`
                               sourceName
                             }
                             currentDownstreamDependencies {
-                              ... on DependencyDatasetResultNotAccessible {
+                              ... on DatasetAccessResultNotAccessible {
                                 id
                               }
-                              ... on DependencyDatasetResultAccessible {
+                              ... on DatasetAccessResultAccessible {
                                 dataset {
                                   ...DatasetStreamLineageBasics
                                   metadata {
@@ -8822,10 +8979,10 @@ export const DatasetLineageFragmentDoc = gql`
                                       sourceName
                                     }
                                     currentDownstreamDependencies {
-                                      ... on DependencyDatasetResultNotAccessible {
+                                      ... on DatasetAccessResultNotAccessible {
                                         id
                                       }
-                                      ... on DependencyDatasetResultAccessible {
+                                      ... on DatasetAccessResultAccessible {
                                         dataset {
                                           ...DatasetStreamLineageBasics
                                         }
@@ -9323,10 +9480,10 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
       ...AddPushSourceEvent
     }
     currentDownstreamDependencies {
-      ... on DependencyDatasetResultNotAccessible {
+      ... on DatasetAccessResultNotAccessible {
         __typename
       }
-      ... on DependencyDatasetResultAccessible {
+      ... on DatasetAccessResultAccessible {
         __typename
       }
     }
@@ -9438,10 +9595,10 @@ export const DatasetSearchOverviewFragmentDoc = gql`
       ...License
     }
     currentDownstreamDependencies {
-      ... on DependencyDatasetResultNotAccessible {
+      ... on DatasetAccessResultNotAccessible {
         id
       }
-      ... on DependencyDatasetResultAccessible {
+      ... on DatasetAccessResultAccessible {
         dataset {
           ...DatasetBasics
         }
@@ -10811,7 +10968,7 @@ export const DatasetListDownstreamsDocument = gql`
     byId(datasetId: $datasetId) {
       metadata {
         currentDownstreamDependencies {
-          ... on DependencyDatasetResultAccessible {
+          ... on DatasetAccessResultAccessible {
             dataset {
               name
               owner {
@@ -11977,10 +12134,10 @@ export const GetMetadataBlockDocument = gql`
           }
         }
         currentDownstreamDependencies {
-          ... on DependencyDatasetResultNotAccessible {
+          ... on DatasetAccessResultNotAccessible {
             __typename
           }
-          ... on DependencyDatasetResultAccessible {
+          ... on DatasetAccessResultAccessible {
             __typename
           }
         }

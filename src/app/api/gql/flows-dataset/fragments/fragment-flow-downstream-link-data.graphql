@@ -1,0 +1,26 @@
+fragment FlowDownstreamLinkData on FlowDownstreamLink {
+  flowId
+  activatedAt
+  datasetId
+  dataset {
+    __typename
+    ... on DatasetAccessResultAccessible {
+      dataset {
+        ...DatasetBasics
+      }
+    }
+    ... on DatasetAccessResultNotAccessible {
+      id
+    }
+  }
+  flow {
+    flowId
+    status
+    outcome {
+      __typename
+    }
+    description {
+      __typename
+    }
+  }
+}

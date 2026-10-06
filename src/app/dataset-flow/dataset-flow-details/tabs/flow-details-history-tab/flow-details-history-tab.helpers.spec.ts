@@ -15,10 +15,12 @@ import {
     eventFlowDescriptionsResultHistoryTab,
     flowEventIconOptionsResults,
     flowEventSubMessageResults,
+    flowEventSubMessageWithUnavailableDatasetResults,
     flowOutcomeOptionsResults,
     mockFlowHistoryDataFragmentForDescriptions,
     mockFlowHistoryDataFragmentForIconOptions,
     mockFlowHistoryDataFragmentForSubMessages,
+    mockFlowHistoryDataFragmentWithUnavailableDataset,
     mockFlowHistoryDataOutcomeOptions,
     mockFlowSummaryDataFragmentIngestResult,
     mockHistoryFragmentWithFinishedStatus,
@@ -100,6 +102,14 @@ describe("DatasetFlowDetailsHelpers", () => {
         it(`should check flow event submessage with typename = ${item.__typename}`, () => {
             expect(DatasetFlowDetailsHelpers.flowEventSubMessage(item, mockFlowSummaryDataFragments[0])).toEqual(
                 flowEventSubMessageResults[index],
+            );
+        });
+    });
+
+    mockFlowHistoryDataFragmentWithUnavailableDataset.forEach((item, index) => {
+        it(`should check flow event submessage with typename = ${item.__typename} and unavailable input dataset`, () => {
+            expect(DatasetFlowDetailsHelpers.flowEventSubMessage(item, mockFlowSummaryDataFragments[0])).toEqual(
+                flowEventSubMessageWithUnavailableDatasetResults[index],
             );
         });
     });

@@ -6,14 +6,14 @@
  */
 
 import {
+    DatasetAccessResultNotAccessible,
     DatasetLineageBasicsFragment,
     DatasetSearchOverviewFragment,
-    DependencyDatasetResultNotAccessible,
     PageBasedInfo,
 } from "@api/kamu.graphql.interface";
 
 export interface DatasetLineageNode {
-    basics: DatasetLineageBasicsFragment | DependencyDatasetResultNotAccessible;
+    basics: DatasetLineageBasicsFragment | DatasetAccessResultNotAccessible;
     downstreamDependencies: DatasetLineageNode[];
     upstreamDependencies: DatasetLineageNode[];
 }

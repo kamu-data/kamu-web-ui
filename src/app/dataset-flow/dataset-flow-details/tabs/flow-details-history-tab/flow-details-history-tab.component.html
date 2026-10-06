@@ -39,6 +39,11 @@
                                 [innerHTML]="flowEventSubMessage(flowEvent, flowDetails) | safeHtml"
                                 [attr.data-test-id]="'history-item-' + i + '-submessage'"
                             ></span>
+                            <app-flow-details-downstream-flows
+                                *ngIf="downstreamFlows(flowEvent) as links"
+                                [links]="links"
+                                [attr.data-test-id]="'history-item-' + i + '-downstream-flows'"
+                            />
                         </div>
                     </div>
                     <div class="col-md-3">

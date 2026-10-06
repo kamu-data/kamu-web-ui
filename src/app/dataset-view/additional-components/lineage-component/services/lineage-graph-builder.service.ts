@@ -14,9 +14,9 @@ import { Edge, Node } from "@swimlane/ngx-graph";
 import { isNil } from "@common/helpers/app.helpers";
 import { chainNameFromId } from "@common/helpers/data.helpers";
 import {
+    DatasetAccessResultNotAccessible,
     DatasetKind,
     DatasetLineageBasicsFragment,
-    DependencyDatasetResultNotAccessible,
     FetchStep,
 } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
@@ -100,10 +100,10 @@ export class LineageGraphBuilderService {
     }
 
     private buildDatasetGraphNodes(
-        uniqueDatasets: (DatasetLineageBasicsFragment | DependencyDatasetResultNotAccessible)[],
+        uniqueDatasets: (DatasetLineageBasicsFragment | DatasetAccessResultNotAccessible)[],
         currentDataset: DatasetLineageBasicsFragment,
     ): Node[] {
-        return uniqueDatasets.map((dataset: DatasetLineageBasicsFragment | DependencyDatasetResultNotAccessible) => {
+        return uniqueDatasets.map((dataset: DatasetLineageBasicsFragment | DatasetAccessResultNotAccessible) => {
             if (dataset.__typename === "Dataset") {
                 return {
                     id: this.sanitizeID(dataset.id),
@@ -125,7 +125,7 @@ export class LineageGraphBuilderService {
                     } as LineageGraphNodeData,
                 };
             } else {
-                const id = (dataset as DependencyDatasetResultNotAccessible).id;
+                const id = (dataset as DatasetAccessResultNotAccessible).id;
                 return {
                     id: this.sanitizeID(id),
                     label: id,
@@ -138,26 +138,20 @@ export class LineageGraphBuilderService {
     }
 
     private buildDatasetEdges(lineageUpdate: LineageUpdate): Edge[] {
-        return lineageUpdate.edges.map(
-            (edge: (DatasetLineageBasicsFragment | DependencyDatasetResultNotAccessible)[]) => {
-                const edgeStart =
-                    edge[0].__typename === "Dataset"
-                        ? edge[0].id
-                        : (edge[0] as DependencyDatasetResultNotAccessible).id;
+        return lineageUpdate.edges.map((edge: (DatasetLineageBasicsFragment | DatasetAccessResultNotAccessible)[]) => {
+            const edgeStart =
+                edge[0].__typename === "Dataset" ? edge[0].id : (edge[0] as DatasetAccessResultNotAccessible).id;
 
-                const edgeEnd =
-                    edge[1].__typename === "Dataset"
-                        ? edge[1].id
-                        : (edge[1] as DependencyDatasetResultNotAccessible).id;
-                const source: string = this.sanitizeID(edgeStart);
-                const target: string = this.sanitizeID(edgeEnd);
-                return {
-                    id: `${source}__and__${target}`,
-                    source,
-                    target,
-                };
-            },
-        );
+            const edgeEnd =
+                edge[1].__typename === "Dataset" ? edge[1].id : (edge[1] as DatasetAccessResultNotAccessible).id;
+            const source: string = this.sanitizeID(edgeStart);
+            const target: string = this.sanitizeID(edgeEnd);
+            return {
+                id: `${source}__and__${target}`,
+                source,
+                target,
+            };
+        });
     }
 
     private buildSourceSubgraph(uniqueDatasets: DatasetLineageBasicsFragment[]): LineageGraph {

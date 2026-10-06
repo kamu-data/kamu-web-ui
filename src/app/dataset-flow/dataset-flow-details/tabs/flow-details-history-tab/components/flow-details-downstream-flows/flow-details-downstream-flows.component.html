@@ -1,0 +1,49 @@
+<div *ngIf="items.length" class="ms-2" data-test-id="downstream-flows">
+    <div class="fs-12" data-test-id="downstream-flows-title">{{ title }}</div>
+    <ul class="list-unstyled mb-0">
+        <li
+            *ngFor="let item of items; let i = index"
+            class="d-flex align-items-center"
+            [attr.data-test-id]="'downstream-flow-' + i"
+        >
+            <mat-icon class="icon-status me-1" [ngClass]="item.icon.class">{{ item.icon.icon }}</mat-icon>
+            <a
+                *ngIf="item.flowLink; else plainFlowId"
+                [routerLink]="item.flowLink"
+                class="fs-12 fw-500"
+                [attr.data-test-id]="'downstream-flow-' + i + '-link'"
+            >
+                Flow #{{ item.flowId }}
+            </a>
+            <ng-template #plainFlowId>
+                <span class="fs-12 fw-500" [attr.data-test-id]="'downstream-flow-' + i + '-id'">
+                    Flow #{{ item.flowId }}
+                </span>
+            </ng-template>
+            <span
+                *ngIf="item.flowStatusDescription"
+                class="fs-12 ms-1"
+                [attr.data-test-id]="'downstream-flow-' + i + '-status'"
+            >
+                {{ item.flowStatusDescription }}
+            </span>
+            <span *ngIf="item.datasetLink || item.unavailableDatasetId" class="fs-12 mx-1 text-muted">&middot;</span>
+            <a
+                *ngIf="item.datasetLink"
+                [routerLink]="item.datasetLink"
+                class="fs-12"
+                [attr.data-test-id]="'downstream-flow-' + i + '-dataset'"
+            >
+                {{ item.datasetAlias }}
+            </a>
+            <span
+                *ngIf="item.unavailableDatasetId"
+                class="fs-12 text-muted"
+                [matTooltip]="item.unavailableDatasetId"
+                [attr.data-test-id]="'downstream-flow-' + i + '-unavailable-dataset'"
+            >
+                {{ item.unavailableDatasetId | displayDatasetId }} (unavailable)
+            </span>
+        </li>
+    </ul>
+</div>

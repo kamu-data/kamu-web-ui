@@ -139,7 +139,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     }
 
     public get isAdmin(): boolean {
-        return this.loggedAccount.isAdmin;
+        return this.loggedAccount.isAdmin ?? false;
     }
 
     public get isWeb3Wallet(): boolean {

@@ -21,6 +21,7 @@ fragment FlowHistoryData on FlowEvent {
         }
       }
       ... on FlowActivationCauseDatasetUpdate {
+        datasetId
         dataset {
           ...DatasetBasics
         }
@@ -128,6 +129,7 @@ fragment FlowHistoryData on FlowEvent {
         }
       }
       ... on FlowActivationCauseDatasetUpdate {
+        datasetId
         dataset {
           ...DatasetBasics
         }
@@ -157,5 +159,8 @@ fragment FlowHistoryData on FlowEvent {
   ... on FlowEventCompleted {
     eventId
     eventTime
+    downstreamFlows {
+      ...FlowDownstreamLinkData
+    }
   }
 }

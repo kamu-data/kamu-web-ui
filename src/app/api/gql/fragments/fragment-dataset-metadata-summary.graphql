@@ -31,11 +31,11 @@ fragment DatasetMetadataSummary on Dataset {
     }
 
     currentDownstreamDependencies {
-      ... on DependencyDatasetResultNotAccessible {
+      ... on DatasetAccessResultNotAccessible {
         __typename
       }
 
-      ... on DependencyDatasetResultAccessible {
+      ... on DatasetAccessResultAccessible {
         __typename
       }
     }

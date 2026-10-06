@@ -11,11 +11,11 @@ query getMetadataBlock($accountName: AccountName!, $datasetName: DatasetName!, $
         }
 
         currentDownstreamDependencies {
-          ... on DependencyDatasetResultNotAccessible {
+          ... on DatasetAccessResultNotAccessible {
             __typename
           }
 
-          ... on DependencyDatasetResultAccessible {
+          ... on DatasetAccessResultAccessible {
             __typename
           }
         }

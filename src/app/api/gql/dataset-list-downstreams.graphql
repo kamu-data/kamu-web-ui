@@ -3,7 +3,7 @@ query datasetListDownstreams($datasetId: DatasetID!) {
     byId(datasetId: $datasetId) {
       metadata {
         currentDownstreamDependencies {
-          ... on DependencyDatasetResultAccessible {
+          ... on DatasetAccessResultAccessible {
             dataset {
               name
               owner {

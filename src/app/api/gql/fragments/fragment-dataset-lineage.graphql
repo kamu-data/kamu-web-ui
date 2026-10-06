@@ -11,10 +11,10 @@ fragment DatasetLineage on Dataset {
     }
     currentWatermark
     currentUpstreamDependencies {
-      ... on DependencyDatasetResultNotAccessible {
+      ... on DatasetAccessResultNotAccessible {
         id
       }
-      ... on DependencyDatasetResultAccessible {
+      ... on DatasetAccessResultAccessible {
         dataset {
           ...DatasetStreamLineageBasics
           metadata {
@@ -27,11 +27,11 @@ fragment DatasetLineage on Dataset {
             }
             currentWatermark
             currentUpstreamDependencies {
-              ... on DependencyDatasetResultNotAccessible {
+              ... on DatasetAccessResultNotAccessible {
                 id
               }
 
-              ... on DependencyDatasetResultAccessible {
+              ... on DatasetAccessResultAccessible {
                 dataset {
                   ...DatasetStreamLineageBasics
                   metadata {
@@ -44,11 +44,11 @@ fragment DatasetLineage on Dataset {
                     }
                     currentWatermark
                     currentUpstreamDependencies {
-                      ... on DependencyDatasetResultNotAccessible {
+                      ... on DatasetAccessResultNotAccessible {
                         id
                       }
 
-                      ... on DependencyDatasetResultAccessible {
+                      ... on DatasetAccessResultAccessible {
                         dataset {
                           ...DatasetStreamLineageBasics
                           metadata {
@@ -61,11 +61,11 @@ fragment DatasetLineage on Dataset {
                             }
                             currentWatermark
                             currentUpstreamDependencies {
-                              ... on DependencyDatasetResultNotAccessible {
+                              ... on DatasetAccessResultNotAccessible {
                                 id
                               }
 
-                              ... on DependencyDatasetResultAccessible {
+                              ... on DatasetAccessResultAccessible {
                                 dataset {
                                   ...DatasetStreamLineageBasics
                                   metadata {
@@ -78,11 +78,11 @@ fragment DatasetLineage on Dataset {
                                     }
                                     currentWatermark
                                     currentUpstreamDependencies {
-                                      ... on DependencyDatasetResultNotAccessible {
+                                      ... on DatasetAccessResultNotAccessible {
                                         id
                                       }
 
-                                      ... on DependencyDatasetResultAccessible {
+                                      ... on DatasetAccessResultAccessible {
                                         dataset {
                                           ...DatasetStreamLineageBasics
                                           metadata {
@@ -95,11 +95,11 @@ fragment DatasetLineage on Dataset {
                                             }
                                             currentWatermark
                                             currentUpstreamDependencies {
-                                              ... on DependencyDatasetResultNotAccessible {
+                                              ... on DatasetAccessResultNotAccessible {
                                                 id
                                               }
 
-                                              ... on DependencyDatasetResultAccessible {
+                                              ... on DatasetAccessResultAccessible {
                                                 dataset {
                                                   ...DatasetStreamLineageBasics
                                                   metadata {
@@ -136,11 +136,11 @@ fragment DatasetLineage on Dataset {
       }
     }
     currentDownstreamDependencies {
-      ... on DependencyDatasetResultNotAccessible {
+      ... on DatasetAccessResultNotAccessible {
         id
       }
 
-      ... on DependencyDatasetResultAccessible {
+      ... on DatasetAccessResultAccessible {
         dataset {
           ...DatasetStreamLineageBasics
           metadata {
@@ -148,11 +148,11 @@ fragment DatasetLineage on Dataset {
               sourceName
             }
             currentDownstreamDependencies {
-              ... on DependencyDatasetResultNotAccessible {
+              ... on DatasetAccessResultNotAccessible {
                 id
               }
 
-              ... on DependencyDatasetResultAccessible {
+              ... on DatasetAccessResultAccessible {
                 dataset {
                   ...DatasetStreamLineageBasics
                   metadata {
@@ -160,11 +160,11 @@ fragment DatasetLineage on Dataset {
                       sourceName
                     }
                     currentDownstreamDependencies {
-                      ... on DependencyDatasetResultNotAccessible {
+                      ... on DatasetAccessResultNotAccessible {
                         id
                       }
 
-                      ... on DependencyDatasetResultAccessible {
+                      ... on DatasetAccessResultAccessible {
                         dataset {
                           ...DatasetStreamLineageBasics
                           metadata {
@@ -172,11 +172,11 @@ fragment DatasetLineage on Dataset {
                               sourceName
                             }
                             currentDownstreamDependencies {
-                              ... on DependencyDatasetResultNotAccessible {
+                              ... on DatasetAccessResultNotAccessible {
                                 id
                               }
 
-                              ... on DependencyDatasetResultAccessible {
+                              ... on DatasetAccessResultAccessible {
                                 dataset {
                                   ...DatasetStreamLineageBasics
                                   metadata {
@@ -184,11 +184,11 @@ fragment DatasetLineage on Dataset {
                                       sourceName
                                     }
                                     currentDownstreamDependencies {
-                                      ... on DependencyDatasetResultNotAccessible {
+                                      ... on DatasetAccessResultNotAccessible {
                                         id
                                       }
 
-                                      ... on DependencyDatasetResultAccessible {
+                                      ... on DatasetAccessResultAccessible {
                                         dataset {
                                           ...DatasetStreamLineageBasics
                                         }

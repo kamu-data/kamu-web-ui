@@ -142,6 +142,7 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         activationCause: {
             __typename: "FlowActivationCauseDatasetUpdate",
+            datasetId: mockDatasetBasicsDerivedFragment.id,
             dataset: { ...mockDatasetBasicsDerivedFragment },
             source: {
                 __typename: "FlowActivationCauseDatasetUpdateSourceUpstreamFlow",
@@ -155,6 +156,7 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         activationCause: {
             __typename: "FlowActivationCauseDatasetUpdate",
+            datasetId: mockDatasetBasicsDerivedFragment.id,
             dataset: { ...mockDatasetBasicsDerivedFragment },
             source: {
                 __typename: "FlowActivationCauseDatasetUpdateSourceHttpIngest",
@@ -272,6 +274,7 @@ export const mockFlowHistoryDataFragmentForIconOptions: FlowHistoryDataFragment[
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         activationCause: {
             __typename: "FlowActivationCauseDatasetUpdate",
+            datasetId: mockDatasetBasicsDerivedFragment.id,
             dataset: { ...mockDatasetBasicsDerivedFragment },
             source: {
                 __typename: "FlowActivationCauseDatasetUpdateSourceSmartProtocolPush",
@@ -346,6 +349,7 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         activationCause: {
             __typename: "FlowActivationCauseDatasetUpdate",
+            datasetId: mockDatasetBasicsDerivedFragment.id,
             dataset: { ...mockDatasetBasicsDerivedFragment },
             source: {
                 __typename: "FlowActivationCauseDatasetUpdateSourceUpstreamFlow",
@@ -437,4 +441,42 @@ export const flowOutcomeOptionsResults: { icon: string; class: string }[] = [
     { icon: "check_circle", class: "completed-status" },
     { icon: "dangerous", class: "failed-status" },
     { icon: "cancel", class: "aborted-outcome" },
+];
+
+const mockUnavailableDatasetId = "did:odf:fed01df230b49615d175307d580c33d6fda61fc7b9aec91df0f5c1a5ebe3b8cbfee02";
+
+export const mockFlowHistoryDataFragmentWithUnavailableDataset: FlowHistoryDataFragment[] = [
+    {
+        __typename: "FlowEventInitiated",
+        eventId: "1",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        activationCause: {
+            __typename: "FlowActivationCauseDatasetUpdate",
+            datasetId: mockUnavailableDatasetId,
+            dataset: null,
+            source: {
+                __typename: "FlowActivationCauseDatasetUpdateSourceUpstreamFlow",
+                flowId: "12345",
+            },
+        },
+    },
+    {
+        __typename: "FlowEventActivationCauseAdded",
+        eventId: "2",
+        eventTime: "2024-03-13T13:54:30.656488373+00:00",
+        activationCause: {
+            __typename: "FlowActivationCauseDatasetUpdate",
+            datasetId: mockUnavailableDatasetId,
+            dataset: null,
+            source: {
+                __typename: "FlowActivationCauseDatasetUpdateSourceHttpIngest",
+                sourceName: "source",
+            },
+        },
+    },
+];
+
+export const flowEventSubMessageWithUnavailableDatasetResults: string[] = [
+    `Flow #12345. Input dataset: <span title="${mockUnavailableDatasetId}">did:odf:fed...cbfee02</span> (unavailable)`,
+    `Input dataset: <span title="${mockUnavailableDatasetId}">did:odf:fed...cbfee02</span> (unavailable)`,
 ];

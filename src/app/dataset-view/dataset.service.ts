@@ -23,6 +23,7 @@ import {
     CompareChainsResultStatus,
     CompareChainsStatus,
     DataQueryResultSuccessViewFragment,
+    DatasetAccessResultNotAccessible,
     DatasetBasicsFragment,
     DatasetByIdQuery,
     DatasetDataSizeFragment,
@@ -34,7 +35,6 @@ import {
     DatasetPageInfoFragment,
     DatasetPermissionsFragment,
     DatasetPushSyncStatusesQuery,
-    DependencyDatasetResultNotAccessible,
     GetDatasetBasicsWithPermissionsQuery,
     GetDatasetHistoryQuery,
     GetDatasetLineageQuery,
@@ -261,7 +261,7 @@ export class DatasetService {
         return this.datasetApi.datasetListDownstreams(datasetId).pipe(
             map((data) => {
                 const list = data.datasets.byId?.metadata.currentDownstreamDependencies.map((downstream) => {
-                    if (downstream.__typename === "DependencyDatasetResultAccessible") {
+                    if (downstream.__typename === "DatasetAccessResultAccessible") {
                         return `${downstream.dataset.owner.accountName}/${downstream.dataset.name}`;
                     }
                 });
@@ -333,53 +333,53 @@ export class DatasetService {
             downstreamDependencies: originMetadata.currentDownstreamDependencies.map((downDependency) => {
                 return {
                     basics:
-                        downDependency.__typename === "DependencyDatasetResultAccessible"
+                        downDependency.__typename === "DatasetAccessResultAccessible"
                             ? downDependency.dataset
-                            : (downDependency as DependencyDatasetResultNotAccessible),
+                            : (downDependency as DatasetAccessResultNotAccessible),
                     upstreamDependencies: [],
                     downstreamDependencies:
-                        downDependency.__typename === "DependencyDatasetResultAccessible"
+                        downDependency.__typename === "DatasetAccessResultAccessible"
                             ? downDependency.dataset.metadata.currentDownstreamDependencies.map((downDependency2) => {
                                   return {
                                       basics:
-                                          downDependency2.__typename === "DependencyDatasetResultAccessible"
+                                          downDependency2.__typename === "DatasetAccessResultAccessible"
                                               ? downDependency2.dataset
-                                              : (downDependency2 as DependencyDatasetResultNotAccessible),
+                                              : (downDependency2 as DatasetAccessResultNotAccessible),
                                       upstreamDependencies: [],
                                       downstreamDependencies:
-                                          downDependency2.__typename === "DependencyDatasetResultAccessible"
+                                          downDependency2.__typename === "DatasetAccessResultAccessible"
                                               ? downDependency2.dataset.metadata.currentDownstreamDependencies.map(
                                                     (downDependency3) => {
                                                         return {
                                                             basics:
                                                                 downDependency3.__typename ===
-                                                                "DependencyDatasetResultAccessible"
+                                                                "DatasetAccessResultAccessible"
                                                                     ? downDependency3.dataset
-                                                                    : (downDependency3 as DependencyDatasetResultNotAccessible),
+                                                                    : (downDependency3 as DatasetAccessResultNotAccessible),
                                                             upstreamDependencies: [],
                                                             downstreamDependencies:
                                                                 downDependency3.__typename ===
-                                                                "DependencyDatasetResultAccessible"
+                                                                "DatasetAccessResultAccessible"
                                                                     ? downDependency3.dataset.metadata.currentDownstreamDependencies.map(
                                                                           (downDependency4) => {
                                                                               return {
                                                                                   basics:
                                                                                       downDependency4.__typename ===
-                                                                                      "DependencyDatasetResultAccessible"
+                                                                                      "DatasetAccessResultAccessible"
                                                                                           ? downDependency4.dataset
-                                                                                          : (downDependency4 as DependencyDatasetResultNotAccessible),
+                                                                                          : (downDependency4 as DatasetAccessResultNotAccessible),
                                                                                   upstreamDependencies: [],
                                                                                   downstreamDependencies:
                                                                                       downDependency4.__typename ===
-                                                                                      "DependencyDatasetResultAccessible"
+                                                                                      "DatasetAccessResultAccessible"
                                                                                           ? downDependency4.dataset.metadata.currentDownstreamDependencies.map(
                                                                                                 (downDependency5) => {
                                                                                                     return {
                                                                                                         basics:
                                                                                                             downDependency5.__typename ===
-                                                                                                            "DependencyDatasetResultAccessible"
+                                                                                                            "DatasetAccessResultAccessible"
                                                                                                                 ? (downDependency5.dataset as DatasetLineageBasicsFragment)
-                                                                                                                : (downDependency5 as DependencyDatasetResultNotAccessible),
+                                                                                                                : (downDependency5 as DatasetAccessResultNotAccessible),
                                                                                                         upstreamDependencies:
                                                                                                             [],
                                                                                                         downstreamDependencies:
@@ -404,53 +404,53 @@ export class DatasetService {
             upstreamDependencies: originMetadata.currentUpstreamDependencies.map((upDependency) => {
                 return {
                     basics:
-                        upDependency.__typename === "DependencyDatasetResultAccessible"
+                        upDependency.__typename === "DatasetAccessResultAccessible"
                             ? upDependency.dataset
-                            : (upDependency as DependencyDatasetResultNotAccessible),
+                            : (upDependency as DatasetAccessResultNotAccessible),
                     downstreamDependencies: [],
                     upstreamDependencies:
-                        upDependency.__typename === "DependencyDatasetResultAccessible"
+                        upDependency.__typename === "DatasetAccessResultAccessible"
                             ? upDependency.dataset.metadata.currentUpstreamDependencies.map((upDependency2) => {
                                   return {
                                       basics:
-                                          upDependency2.__typename === "DependencyDatasetResultAccessible"
+                                          upDependency2.__typename === "DatasetAccessResultAccessible"
                                               ? upDependency2.dataset
-                                              : (upDependency2 as DependencyDatasetResultNotAccessible),
+                                              : (upDependency2 as DatasetAccessResultNotAccessible),
                                       downstreamDependencies: [],
                                       upstreamDependencies:
-                                          upDependency2.__typename === "DependencyDatasetResultAccessible"
+                                          upDependency2.__typename === "DatasetAccessResultAccessible"
                                               ? upDependency2.dataset.metadata.currentUpstreamDependencies.map(
                                                     (upDependency3) => {
                                                         return {
                                                             basics:
                                                                 upDependency3.__typename ===
-                                                                "DependencyDatasetResultAccessible"
+                                                                "DatasetAccessResultAccessible"
                                                                     ? upDependency3.dataset
-                                                                    : (upDependency3 as DependencyDatasetResultNotAccessible),
+                                                                    : (upDependency3 as DatasetAccessResultNotAccessible),
                                                             downstreamDependencies: [],
                                                             upstreamDependencies:
                                                                 upDependency3.__typename ===
-                                                                "DependencyDatasetResultAccessible"
+                                                                "DatasetAccessResultAccessible"
                                                                     ? upDependency3.dataset.metadata.currentUpstreamDependencies.map(
                                                                           (upDependency4) => {
                                                                               return {
                                                                                   basics:
                                                                                       upDependency4.__typename ===
-                                                                                      "DependencyDatasetResultAccessible"
+                                                                                      "DatasetAccessResultAccessible"
                                                                                           ? upDependency4.dataset
-                                                                                          : (upDependency4 as DependencyDatasetResultNotAccessible),
+                                                                                          : (upDependency4 as DatasetAccessResultNotAccessible),
                                                                                   downstreamDependencies: [],
                                                                                   upstreamDependencies:
                                                                                       upDependency4.__typename ===
-                                                                                      "DependencyDatasetResultAccessible"
+                                                                                      "DatasetAccessResultAccessible"
                                                                                           ? upDependency4.dataset.metadata.currentUpstreamDependencies.map(
                                                                                                 (upDependency5) => {
                                                                                                     return {
                                                                                                         basics:
                                                                                                             upDependency5.__typename ===
-                                                                                                            "DependencyDatasetResultAccessible"
+                                                                                                            "DatasetAccessResultAccessible"
                                                                                                                 ? upDependency5.dataset
-                                                                                                                : (upDependency5 as DependencyDatasetResultNotAccessible),
+                                                                                                                : (upDependency5 as DatasetAccessResultNotAccessible),
                                                                                                         downstreamDependencies:
                                                                                                             [],
                                                                                                         upstreamDependencies:

@@ -8,14 +8,17 @@
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { provideRouter } from "@angular/router";
 
 import { FlowStatus, TaskStatus } from "@api/kamu.graphql.interface";
 import {
     mockDatasetFlowByIdResponse,
+    mockFlowEventCompleted,
     mockFlowHistoryDataFragment,
     mockFlowSummaryDataFragments,
 } from "@api/mock/dataset-flow.mock";
 
+import { FlowDetailsDownstreamFlowsHarness } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/components/flow-details-downstream-flows/flow-details-downstream-flows.component.harness";
 import { FlowDetailsHistoryTabComponent } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.component";
 import { FlowDetailsHistoryTabHarness } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.component.harness";
 
@@ -28,6 +31,7 @@ describe("FlowDetailsHistoryTabComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FlowDetailsHistoryTabComponent],
+            providers: [provideRouter([])],
         }).compileComponents();
     });
 
@@ -194,6 +198,27 @@ describe("FlowDetailsHistoryTabComponent", () => {
             expect(await harness.getHistoryItemDescription(0)).toContain("Flow initiated automatically");
             expect(await harness.getHistoryItemDescription(1)).toContain("Waiting for reactive condition");
             expect(await harness.getHistoryItemDescription(2)).toContain("Polling ingest task running");
+        });
+    });
+
+    describe("Downstream flows", () => {
+        it("should list downstream flows under the completed event", async () => {
+            await setupComponent({
+                flow: { ...mockFlowSummaryDataFragments[0], status: FlowStatus.Finished },
+                flowHistory: [...mockFlowHistoryDataFragment, mockFlowEventCompleted],
+            });
+
+            expect(await harness.getHistoryItemDescription(3)).toEqual("Flow completed");
+            const downstreamFlows = await loader.getAllHarnesses(FlowDetailsDownstreamFlowsHarness);
+            expect(downstreamFlows.length).toBe(1);
+            expect(await downstreamFlows[0].getTitle()).toEqual("Initiated 3 downstream flows:");
+        });
+
+        it("should not list downstream flows for other events", async () => {
+            await setupComponent();
+
+            const downstreamFlows = await loader.getAllHarnesses(FlowDetailsDownstreamFlowsHarness);
+            expect(downstreamFlows.length).toBe(0);
         });
     });
 });

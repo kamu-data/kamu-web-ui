@@ -19,8 +19,15 @@ import {
 } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
+/** The part of a flow needed to describe its type and status */
+export type FlowStatusInfo = {
+    status: FlowStatus;
+    outcome?: MaybeNull<Pick<NonNullable<FlowSummaryDataFragment["outcome"]>, "__typename">>;
+    description: Pick<FlowSummaryDataFragment["description"], "__typename">;
+};
+
 export class FlowTableHelpers {
-    public static flowTypeDescription(flow: FlowSummaryDataFragment): string {
+    public static flowTypeDescription(flow: FlowStatusInfo): string {
         const decriptionFlow = flow.description;
         switch (decriptionFlow.__typename) {
             case "FlowDescriptionDatasetPollingIngest":
@@ -45,7 +52,7 @@ export class FlowTableHelpers {
         }
     }
 
-    public static descriptionColumnTableOptions(element: FlowSummaryDataFragment): { icon: string; class: string } {
+    public static descriptionColumnTableOptions(element: FlowStatusInfo): { icon: string; class: string } {
         switch (element.status) {
             case FlowStatus.Finished:
                 /* istanbul ignore next */
@@ -75,7 +82,7 @@ export class FlowTableHelpers {
         }
     }
 
-    public static descriptionEndOfMessage(element: FlowSummaryDataFragment): string {
+    public static descriptionEndOfMessage(element: FlowStatusInfo): string {
         switch (element.status) {
             case FlowStatus.Finished:
                 /* istanbul ignore next */

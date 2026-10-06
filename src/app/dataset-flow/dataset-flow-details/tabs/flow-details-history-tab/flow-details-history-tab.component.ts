@@ -13,9 +13,16 @@ import { MatIconModule } from "@angular/material/icon";
 import { DataHelpers } from "@common/helpers/data.helpers";
 import { SafeHtmlPipe } from "@common/pipes/safe-html.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { FlowHistoryDataFragment, FlowStatus, FlowSummaryDataFragment, TaskStatus } from "@api/kamu.graphql.interface";
+import {
+    FlowDownstreamLinkDataFragment,
+    FlowHistoryDataFragment,
+    FlowStatus,
+    FlowSummaryDataFragment,
+    TaskStatus,
+} from "@api/kamu.graphql.interface";
 
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { FlowDetailsDownstreamFlowsComponent } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/components/flow-details-downstream-flows/flow-details-downstream-flows.component";
 import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
 
 @Component({
@@ -34,6 +41,8 @@ import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-det
         MatIconModule,
         //-----//
         SafeHtmlPipe,
+        //-----//
+        FlowDetailsDownstreamFlowsComponent,
     ],
 })
 export class FlowDetailsHistoryTabComponent {
@@ -70,6 +79,10 @@ export class FlowDetailsHistoryTabComponent {
 
     public flowEventDescription(flowEvent: FlowHistoryDataFragment, flowDetails: FlowSummaryDataFragment): string {
         return DatasetFlowDetailsHelpers.flowEventDescription(flowEvent, flowDetails);
+    }
+
+    public downstreamFlows(flowEvent: FlowHistoryDataFragment): FlowDownstreamLinkDataFragment[] | null {
+        return flowEvent.__typename === "FlowEventCompleted" ? flowEvent.downstreamFlows : null;
     }
 
     public flowEventIconOptions(flowEvent: FlowHistoryDataFragment): { icon: string; class: string } {

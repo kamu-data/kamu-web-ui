@@ -22,6 +22,7 @@ import {
     DatasetTriggerTransformFlowMutation,
     FlowConnectionDataFragment,
     FlowConnectionWidgetDataFragment,
+    FlowDownstreamLinkDataFragment,
     FlowHistoryDataFragment,
     FlowItemWidgetDataFragment,
     FlowProcessAutoStopReason,
@@ -54,6 +55,7 @@ import {
 } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 import {
+    mockDatasetBasicsDerivedFragment,
     mockDatasetMainDataId,
     mockOwnerFieldsWithAvatar,
     mockPublicDatasetVisibility,
@@ -1466,6 +1468,55 @@ export const mockFlowHistoryDataFragment: FlowHistoryDataFragment[] = [
         nextAttemptAt: null,
     },
 ];
+
+export const mockFlowDownstreamLinks: FlowDownstreamLinkDataFragment[] = [
+    {
+        __typename: "FlowDownstreamLink",
+        flowId: "12",
+        activatedAt: "2024-03-13T13:54:35+00:00",
+        datasetId: "did:odf:fed01df230b49615d175307d580c33d6fda61fc7b9aec91df0f5c1a5ebe3b8cbfee02",
+        dataset: {
+            __typename: "DatasetAccessResultNotAccessible",
+            id: "did:odf:fed01df230b49615d175307d580c33d6fda61fc7b9aec91df0f5c1a5ebe3b8cbfee02",
+        },
+        flow: null,
+    },
+    {
+        __typename: "FlowDownstreamLink",
+        flowId: "11",
+        activatedAt: "2024-03-13T13:54:34+00:00",
+        datasetId: mockDatasetBasicsDerivedFragment.id,
+        dataset: {
+            __typename: "DatasetAccessResultAccessible",
+            dataset: mockDatasetBasicsDerivedFragment,
+        },
+        flow: null,
+    },
+    {
+        __typename: "FlowDownstreamLink",
+        flowId: "10",
+        activatedAt: "2024-03-13T13:54:34+00:00",
+        datasetId: mockDatasetBasicsDerivedFragment.id,
+        dataset: {
+            __typename: "DatasetAccessResultAccessible",
+            dataset: mockDatasetBasicsDerivedFragment,
+        },
+        flow: {
+            __typename: "Flow",
+            flowId: "10",
+            status: FlowStatus.Finished,
+            outcome: { __typename: "FlowSuccessResult" },
+            description: { __typename: "FlowDescriptionDatasetExecuteTransform" },
+        },
+    },
+];
+
+export const mockFlowEventCompleted: FlowHistoryDataFragment = {
+    __typename: "FlowEventCompleted",
+    eventId: "4",
+    eventTime: "2024-03-13T13:54:33+00:00",
+    downstreamFlows: mockFlowDownstreamLinks,
+};
 
 export const mockDatasetFlowByIdResponse: DatasetFlowByIdResponse = {
     flow: mockFlowSummaryDataFragments[0],

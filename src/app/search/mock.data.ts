@@ -564,7 +564,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                 currentPushSources: [],
                 currentUpstreamDependencies: [
                     {
-                        __typename: "DependencyDatasetResultAccessible",
+                        __typename: "DatasetAccessResultAccessible",
                         dataset: {
                             __typename: "Dataset",
                             metadata: {
@@ -580,15 +580,15 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                 currentPushSources: [],
                                 currentUpstreamDependencies: [
                                     {
-                                        __typename: "DependencyDatasetResultNotAccessible",
+                                        __typename: "DatasetAccessResultNotAccessible",
                                         id: "did:odf:fed015a10726e64a523634f8ccb908dd3f0cbb58cf7e88d85fca1cd3f93229f8064cf",
                                     },
                                     {
-                                        __typename: "DependencyDatasetResultNotAccessible",
+                                        __typename: "DatasetAccessResultNotAccessible",
                                         id: "did:odf:fed01fe86d2aeb360dcd4badc1b29e9bb96729c3e83af9ec0a2b0336d993924c3d521",
                                     },
                                     {
-                                        __typename: "DependencyDatasetResultAccessible",
+                                        __typename: "DatasetAccessResultAccessible",
                                         dataset: {
                                             __typename: "Dataset",
                                             metadata: {
@@ -605,7 +605,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                 currentPushSources: [],
                                                 currentUpstreamDependencies: [
                                                     {
-                                                        __typename: "DependencyDatasetResultNotAccessible",
+                                                        __typename: "DatasetAccessResultNotAccessible",
                                                         id: "did:odf:fed0108383b3e6fc9309e2b408aeca8fb53f521f4ccac39ee0694ca461993a19fd977",
                                                     },
                                                 ],
@@ -633,7 +633,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                         },
                                     },
                                     {
-                                        __typename: "DependencyDatasetResultAccessible",
+                                        __typename: "DatasetAccessResultAccessible",
                                         dataset: {
                                             __typename: "Dataset",
                                             metadata: {
@@ -650,7 +650,7 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                 currentPushSources: [],
                                                 currentUpstreamDependencies: [
                                                     {
-                                                        __typename: "DependencyDatasetResultAccessible",
+                                                        __typename: "DatasetAccessResultAccessible",
                                                         dataset: {
                                                             __typename: "Dataset",
                                                             metadata: {

@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+- Flow history: the completion event lists the downstream flows initiated by the flow, with their status and datasets
+### Changed
+- Updated GraphQL schema: `DependencyDatasetResult*` types renamed to `DatasetAccessResult*`, activation cause dataset is nullable (requires a matching kamu-cli release)
+### Fixed
+- Flow history: flows activated by a deleted or inaccessible upstream dataset show its ID instead of failing
+
 ## [0.69.1] - 2026-10-01
 ### Fixed
 - Account flows: pagination and pausing/resuming flows targeted the logged-in account instead of the viewed one

@@ -68,7 +68,7 @@ export class PasswordAndAuthenticationTabComponent implements OnInit {
     }
 
     public get isAdmin(): boolean {
-        return this.account.isAdmin;
+        return this.account.isAdmin ?? false;
     }
 
     public updateUserPassword(): void {

@@ -42,7 +42,9 @@ export class FlowDetailsDownstreamFlowsComponent {
 
     @Input({ required: true }) public set links(links: FlowDownstreamLinkDataFragment[]) {
         this.items = [...links]
-            .sort((a, b) => a.activatedAt.localeCompare(b.activatedAt) || Number(a.flowId) - Number(b.flowId))
+            .sort(
+                (a, b) => Date.parse(a.activatedAt) - Date.parse(b.activatedAt) || Number(a.flowId) - Number(b.flowId),
+            )
             .map((link) => FlowDetailsDownstreamFlowsComponent.toItem(link));
     }
 

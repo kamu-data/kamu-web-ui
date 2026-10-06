@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.70.0] - 2026-10-06
 ### Added
 - Flow history: the completion event lists the downstream flows initiated by the flow, with their status and datasets
 - Agent harness for Claude Code and Codex, mirroring kamu-cli's: shared rules in `AGENTS.md`, task skills, and hooks that guard commands and edits, format with prettier and pin the `.nvmrc` Node version

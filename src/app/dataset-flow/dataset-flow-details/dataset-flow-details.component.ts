@@ -61,6 +61,9 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
     public readonly FlowDetailsTabs: typeof FlowDetailsTabs = FlowDetailsTabs;
     public readonly FLOWS_TYPE = DatasetViewTypeEnum.Flows;
     public readonly TIMEOUT_REFRESH_FLOW = 800;
+    public static readonly REFRESH_INTERVAL_MS = 5000;
+    // Downstream flow links are filled in shortly after the flow finishes, so keep refreshing a little longer
+    public static readonly REFRESHES_AFTER_FINISH = 2;
 
     public datasetViewMenuData$: Observable<ViewMenuData>;
     public datasetFlowDetails$: Observable<MaybeUndefined<DatasetFlowByIdResponse>>;
@@ -85,10 +88,15 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
     }
 
     private startTimer(): void {
-        timer(0, 5000)
+        let refreshesAfterFinish = 0;
+        timer(0, DatasetFlowDetailsComponent.REFRESH_INTERVAL_MS)
             .pipe(
                 skip(1),
-                takeWhile(() => this.flowDetails.flow.status !== FlowStatus.Finished),
+                takeWhile(
+                    () =>
+                        this.flowDetails.flow.status !== FlowStatus.Finished ||
+                        ++refreshesAfterFinish <= DatasetFlowDetailsComponent.REFRESHES_AFTER_FINISH,
+                ),
                 tap(() => {
                     this.refreshNow();
                 }),

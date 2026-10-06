@@ -8,7 +8,7 @@
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { importProvidersFrom } from "@angular/core";
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
 import { of, shareReplay } from "rxjs";
@@ -18,6 +18,7 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { FlowStatus } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowByIdResponse, mockFlowSummaryDataFragments } from "@api/mock/dataset-flow.mock";
 
 import { DatasetFlowDetailsComponent } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.component";
@@ -114,6 +115,37 @@ describe("DatasetFlowDetailsComponent", () => {
     it(`should check refresh flow now`, () => {
         component.refreshNow();
         expect(navigateToFlowDetailsSpy).toHaveBeenCalledTimes(1);
+    });
+
+    describe("Auto refresh", () => {
+        const interval = DatasetFlowDetailsComponent.REFRESH_INTERVAL_MS;
+
+        it("should refresh a finished flow a few more times, then stop", fakeAsync(() => {
+            navigateToFlowDetailsSpy.calls.reset();
+            component.ngOnInit();
+
+            tick(interval * 5);
+            expect(navigateToFlowDetailsSpy).toHaveBeenCalledTimes(DatasetFlowDetailsComponent.REFRESHES_AFTER_FINISH);
+        }));
+
+        it("should keep refreshing an unfinished flow until shortly after it finishes", fakeAsync(() => {
+            component.flowDetails = {
+                ...mockDatasetFlowByIdResponse,
+                flow: { ...mockFlowSummaryDataFragments[0], status: FlowStatus.Running },
+            };
+            navigateToFlowDetailsSpy.calls.reset();
+            component.ngOnInit();
+
+            tick(interval * 3);
+            expect(navigateToFlowDetailsSpy).toHaveBeenCalledTimes(3);
+
+            component.flowDetails = mockDatasetFlowByIdResponse;
+            tick(interval * 5);
+            expect(navigateToFlowDetailsSpy).toHaveBeenCalledTimes(
+                3 + DatasetFlowDetailsComponent.REFRESHES_AFTER_FINISH,
+            );
+            discardPeriodicTasks();
+        }));
     });
 
     it(`should check created router link`, () => {

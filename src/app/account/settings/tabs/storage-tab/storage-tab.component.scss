@@ -3,6 +3,11 @@
 $storage-color-quota-reached: #cf222e;
 $storage-color-near-quota: #9a6700;
 
+// The pastel shades of dataset kind badges and flow tiles
+$storage-color-data: #bddef1;
+$storage-color-checkpoints: #8bdaaf;
+$storage-color-linked-objects: #ffcba6;
+
 p {
     margin: 0;
 }
@@ -14,7 +19,7 @@ p {
     overflow: hidden;
     border: 1px solid $app-color-border-default;
     border-radius: 6px;
-    background-color: $app-color-timeline-badge-bg;
+    background-color: $app-white;
 
     &--near-quota {
         border-color: $storage-color-near-quota;
@@ -29,15 +34,15 @@ p {
     height: 100%;
 
     &--data {
-        background-color: $app-navy-blue;
+        background-color: $storage-color-data;
     }
 
     &--checkpoints {
-        background-color: $app-dark-sea-green;
+        background-color: $storage-color-checkpoints;
     }
 
     &--linked-objects {
-        background-color: $app-naples-yellow;
+        background-color: $storage-color-linked-objects;
     }
 }
 

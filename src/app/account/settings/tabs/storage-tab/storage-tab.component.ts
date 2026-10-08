@@ -52,6 +52,10 @@ export class StorageTabComponent {
         return StorageTabComponent.usedPercent(this.quota);
     }
 
+    public get remainingBytes(): number {
+        return Math.max((this.quota.limitBytes ?? 0) - this.quota.usedBytes, 0);
+    }
+
     public trackBySegmentId(_index: number, segment: StorageUsageSegment): string {
         return segment.id;
     }

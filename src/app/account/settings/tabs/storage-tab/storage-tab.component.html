@@ -22,6 +22,13 @@
         >&nbsp;<span class="text-muted" data-test-id="storage-used-percent"
             >({{ usedPercent | number: "1.0-0" }}%)</span
         >
+        ·
+        <span data-test-id="storage-remaining">
+            <ng-container *ngIf="remainingBytes > 0; else noSpaceLeft">
+                <span class="fw-semibold">{{ remainingBytes | displaySize }}</span> left
+            </ng-container>
+            <ng-template #noSpaceLeft>no space left</ng-template>
+        </span>
     </ng-template>
 </div>
 

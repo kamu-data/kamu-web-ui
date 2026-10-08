@@ -54,7 +54,7 @@ describe("StorageTabComponent", () => {
         render(mockStorageQuotaWithinLimit);
 
         expect(component.state).toEqual(StorageQuotaState.WITHIN_QUOTA);
-        expect(textOf("storage-summary")).toEqual("Used 610.4 MB of 953.7 MB (64%)");
+        expect(textOf("storage-summary")).toEqual("Used 610.4 MB of 953.7 MB (64%) · 343.3 MB left");
         expect(textOf("storage-explanation")).toContain("Once the quota is reached");
         expect(segmentWidth("data")).toEqual("50%");
         expect(segmentWidth("checkpoints")).toEqual("4%");
@@ -77,6 +77,7 @@ describe("StorageTabComponent", () => {
 
         expect(component.state).toEqual(StorageQuotaState.QUOTA_REACHED);
         expect(segmentWidth("data")).toEqual("100%");
+        expect(textOf("storage-remaining")).toEqual("no space left");
         checkVisible(fixture, "storage-quota-reached", true);
         checkVisible(fixture, "storage-near-quota", false);
     });
@@ -89,6 +90,7 @@ describe("StorageTabComponent", () => {
         expect(textOf("storage-summary")).toEqual("1.9 GB used · Unlimited");
         expect(textOf("storage-explanation")).toContain("no storage limit");
         checkVisible(fixture, "storage-used-percent", false);
+        checkVisible(fixture, "storage-remaining", false);
         checkVisible(fixture, "storage-near-quota", false);
         checkVisible(fixture, "storage-quota-reached", false);
         expect(segmentWidth("data")).toEqual("75%");

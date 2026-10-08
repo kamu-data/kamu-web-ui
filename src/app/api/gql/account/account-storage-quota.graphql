@@ -1,7 +1,6 @@
 query accountStorageQuota($accountName: AccountName!) {
   accounts {
     byName(name: $accountName) {
-      id
       quotas {
         user {
           storage {

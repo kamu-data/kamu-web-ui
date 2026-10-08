@@ -143,7 +143,7 @@ One case per api method: assert the variables sent, flush a fixture typed with t
 | Raw `nativeElement` clicks inside Material components | Depends on Material's internal DOM; the Material harnesses are the supported API |
 | Hand-built Apollo response objects inline in specs | Not reusable and not type-checked against codegen; fixtures go to `api/mock/` |
 | Testing private methods through `component["method"]` | Tests the implementation; drive the public inputs, outputs and DOM instead |
-| DOM helpers for a new display-only component ("nothing to click, so no harness") | Assertions on texts, states and widths are as tied to DOM structure as clicks are; the storage tab spec first took this route and was rewritten onto a harness |
+| DOM helpers for a new display-only component ("nothing to click, so no harness") | Assertions on texts, states and widths are as tied to DOM structure as clicks are, and the next spec that hosts the component has no API to reuse |
 
 ## What lives elsewhere
 

@@ -48,11 +48,16 @@ export class StorageTabComponent {
 
     public static readonly NEAR_QUOTA_PERCENT = 90;
     public readonly StorageQuotaState: typeof StorageQuotaState = StorageQuotaState;
-    public readonly supportEmail: MaybeUndefined<string> = inject(AppConfigService).supportEmail;
 
     public quota: AccountStorageQuota;
     public state: StorageQuotaState;
     public segments: StorageUsageSegment[] = [];
+
+    private appConfigService = inject(AppConfigService);
+
+    public get supportEmail(): MaybeUndefined<string> {
+        return this.appConfigService.supportEmail;
+    }
 
     public get usedPercent(): number {
         return StorageTabComponent.usedPercent(this.quota);

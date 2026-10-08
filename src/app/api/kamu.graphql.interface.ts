@@ -5966,7 +5966,7 @@ export type AccountStorageQuotaQueryVariables = Exact<{
 }>;
 
 
-export type AccountStorageQuotaQuery = { __typename?: 'Query', accounts: { __typename?: 'Accounts', byName?: { __typename?: 'Account', id: string, quotas: { __typename?: 'AccountQuotas', user: { __typename?: 'AccountQuotasUsage', storage: { __typename?: 'AccountQuotasUsageStorage', limitTotalBytes?: number | null } } }, usage: { __typename?: 'AccountUsage', storage: { __typename?: 'TotalDatasetsStatistic', totalSizeBytes: number, totalDataSizeBytes: number, totalCheckpointsSizeBytes: number, totalLinkedObjectsSizeBytes: number } } } | null } };
+export type AccountStorageQuotaQuery = { __typename?: 'Query', accounts: { __typename?: 'Accounts', byName?: { __typename?: 'Account', quotas: { __typename?: 'AccountQuotas', user: { __typename?: 'AccountQuotasUsage', storage: { __typename?: 'AccountQuotasUsageStorage', limitTotalBytes?: number | null } } }, usage: { __typename?: 'AccountUsage', storage: { __typename?: 'TotalDatasetsStatistic', totalSizeBytes: number, totalDataSizeBytes: number, totalCheckpointsSizeBytes: number, totalLinkedObjectsSizeBytes: number } } } | null } };
 
 export type AccountWebhookCardsQueryVariables = Exact<{
   name: Scalars['AccountName']['input'];
@@ -9984,7 +9984,6 @@ export const AccountStorageQuotaDocument = gql`
     query accountStorageQuota($accountName: AccountName!) {
   accounts {
     byName(name: $accountName) {
-      id
       quotas {
         user {
           storage {

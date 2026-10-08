@@ -24,9 +24,12 @@ import { NavigationService } from "src/app/services/navigation.service";
 })
 export class AccountWhitelistNotFoundComponent {
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;
-    public readonly supportEmail: MaybeUndefined<string> = inject(AppConfigService).supportEmail;
-
+    private appConfigService = inject(AppConfigService);
     private navigationService = inject(NavigationService);
+
+    public get supportEmail(): MaybeUndefined<string> {
+        return this.appConfigService.supportEmail;
+    }
 
     public navigateToLogin(): void {
         this.navigationService.navigateToLogin();

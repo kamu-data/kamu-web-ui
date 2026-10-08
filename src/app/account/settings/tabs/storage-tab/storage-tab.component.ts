@@ -5,18 +5,21 @@
  * included in the LICENSE file.
  */
 
-import { DecimalPipe, NgFor, NgIf } from "@angular/common";
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { DecimalPipe, NgFor, NgIf, NgTemplateOutlet } from "@angular/common";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
 
 import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { MaybeUndefined } from "@interface/app.types";
 
 import {
     AccountStorageQuota,
     StorageQuotaState,
     StorageUsageSegment,
 } from "src/app/account/settings/tabs/storage-tab/storage-tab.model";
+import { AppConfigService } from "src/app/app-config.service";
 
 @Component({
     selector: "app-storage-tab",
@@ -28,8 +31,10 @@ import {
         DecimalPipe,
         NgFor,
         NgIf,
+        NgTemplateOutlet,
         //-----//
         MatDividerModule,
+        MatIconModule,
         //-----//
         DisplaySizePipe,
     ],
@@ -43,6 +48,7 @@ export class StorageTabComponent {
 
     public static readonly NEAR_QUOTA_PERCENT = 90;
     public readonly StorageQuotaState: typeof StorageQuotaState = StorageQuotaState;
+    public readonly supportEmail: MaybeUndefined<string> = inject(AppConfigService).supportEmail;
 
     public quota: AccountStorageQuota;
     public state: StorageQuotaState;
@@ -54,6 +60,11 @@ export class StorageTabComponent {
 
     public get remainingBytes(): number {
         return Math.max((this.quota.limitBytes ?? 0) - this.quota.usedBytes, 0);
+    }
+
+    /** Complements the rounded used percentage, so that both always add up to 100% */
+    public get remainingPercent(): number {
+        return Math.max(100 - Math.round(this.usedPercent), 0);
     }
 
     public trackBySegmentId(_index: number, segment: StorageUsageSegment): string {

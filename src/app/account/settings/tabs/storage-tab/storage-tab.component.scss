@@ -71,7 +71,27 @@ p {
 .storage-warning {
     color: $storage-color-near-quota;
 
-    &--danger {
-        color: $storage-color-quota-reached;
+    a {
+        color: inherit;
+        text-decoration: underline;
     }
+}
+
+.storage-alert {
+    max-width: 720px;
+    padding: 12px 16px;
+    border: 1px solid rgb(255 129 130 / 40%);
+    border-radius: 6px;
+    background: #ffebe9;
+    color: $storage-color-quota-reached;
+
+    a {
+        color: inherit;
+        font-weight: 600;
+        text-decoration: underline;
+    }
+}
+
+.storage-alert__icon {
+    flex-shrink: 0;
 }

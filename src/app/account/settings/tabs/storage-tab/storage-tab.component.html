@@ -26,6 +26,7 @@
         <span data-test-id="storage-remaining">
             <ng-container *ngIf="remainingBytes > 0; else noSpaceLeft">
                 <span class="fw-semibold">{{ remainingBytes | displaySize }}</span> left
+                <span class="text-muted" data-test-id="storage-remaining-percent">({{ remainingPercent }}%)</span>
             </ng-container>
             <ng-template #noSpaceLeft>no space left</ng-template>
         </span>
@@ -58,12 +59,29 @@
 </ul>
 
 <p *ngIf="state === StorageQuotaState.NEAR_QUOTA" class="storage-warning mt-3" data-test-id="storage-near-quota">
-    Your storage is almost full. Delete datasets you no longer need, or ask an administrator to raise your quota.
+    Your storage is almost full. Delete datasets you no longer need, or
+    <ng-container *ngTemplateOutlet="contactSupport" /> to raise your quota.
 </p>
-<p
+<div
     *ngIf="state === StorageQuotaState.QUOTA_REACHED"
-    class="storage-warning storage-warning--danger mt-3"
+    class="storage-alert d-flex align-items-start mt-4"
+    role="alert"
     data-test-id="storage-quota-reached"
 >
-    Storage quota reached. New data cannot be added until you free up space or an administrator raises your quota.
-</p>
+    <mat-icon class="storage-alert__icon me-2">error_outline</mat-icon>
+    <div>
+        <p class="fw-semibold">Your storage quota is exhausted</p>
+        <p class="mt-1">
+            New data can no longer be added to your datasets: updates, ingests and uploads will fail. Delete datasets
+            you no longer need, or <ng-container *ngTemplateOutlet="contactSupport" /> to raise your quota.
+        </p>
+    </div>
+</div>
+
+<ng-template #contactSupport>
+    <ng-container *ngIf="supportEmail; else contactAdministrator">
+        contact Kamu support at
+        <a [href]="'mailto:' + supportEmail" data-test-id="storage-support-link">{{ supportEmail }}</a>
+    </ng-container>
+    <ng-template #contactAdministrator>contact your administrator</ng-template>
+</ng-template>

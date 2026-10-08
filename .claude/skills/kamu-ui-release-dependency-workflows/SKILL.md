@@ -25,8 +25,9 @@ disagree, `DEVELOPER.md` wins and this skill gets fixed.
 - `### Added` for new features, `### Changed` for behaviour changes, `### Fixed` for bug fixes.
 - Write for end users of the UI; prefix with the area when it helps (`Account flows: …`).
   Wording rules: `kamu-ui-prose-and-comments`.
-- One consolidated entry per feature, written at finalization — never per step. Do not add or
-  request entries for in-progress work (AGENTS.md, "Changelog review context").
+- Keep one consolidated entry per feature, never one per implementation step. A feature may add
+  its entry during development; do not request or review it during an ordinary feature review
+  (AGENTS.md, "Changelog review context").
 - Keep the literal `## [Unreleased]` heading: `update-changelog.js` finds that line during
   `npm version` and replaces it with `## [x.y.z] - YYYY-MM-DD`; without it the release fails.
 

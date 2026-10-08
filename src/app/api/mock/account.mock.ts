@@ -16,6 +16,7 @@ import {
     AccountPrimaryCardsQuery,
     AccountProvider,
     AccountResumeFlowsMutation,
+    AccountStorageQuotaQuery,
     AccountType,
     AccountWebhookCardsQuery,
     AccountWithEmailQuery,
@@ -388,6 +389,35 @@ export const mockAccountWithEmailQuery: AccountWithEmailQuery = {
             displayName: "kamu",
             avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
             email: "kamu23@example.com",
+            __typename: "Account",
+        },
+        __typename: "Accounts",
+    },
+};
+
+export const mockAccountStorageQuotaQuery: AccountStorageQuotaQuery = {
+    accounts: {
+        byName: {
+            quotas: {
+                user: {
+                    storage: {
+                        limitTotalBytes: 1_000_000_000,
+                        __typename: "AccountQuotasUsageStorage",
+                    },
+                    __typename: "AccountQuotasUsage",
+                },
+                __typename: "AccountQuotas",
+            },
+            usage: {
+                storage: {
+                    totalSizeBytes: 640_000_000,
+                    totalDataSizeBytes: 500_000_000,
+                    totalCheckpointsSizeBytes: 40_000_000,
+                    totalLinkedObjectsSizeBytes: 100_000_000,
+                    __typename: "TotalDatasetsStatistic",
+                },
+                __typename: "AccountUsage",
+            },
             __typename: "Account",
         },
         __typename: "Accounts",

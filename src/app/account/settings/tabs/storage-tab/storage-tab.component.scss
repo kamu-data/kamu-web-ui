@@ -1,0 +1,97 @@
+@use "var" as *;
+
+$storage-color-quota-reached: #cf222e;
+$storage-color-near-quota: #9a6700;
+
+// The pastel shades of dataset kind badges and flow tiles
+$storage-color-data: #bddef1;
+$storage-color-checkpoints: #8bdaaf;
+$storage-color-linked-objects: #ffcba6;
+
+p {
+    margin: 0;
+}
+
+.storage-bar {
+    display: flex;
+    height: 12px;
+    max-width: 560px;
+    overflow: hidden;
+    border: 1px solid $app-color-border-default;
+    border-radius: 6px;
+    background-color: $app-white;
+
+    &--near-quota {
+        border-color: $storage-color-near-quota;
+    }
+
+    &--quota-reached {
+        border-color: $storage-color-quota-reached;
+    }
+}
+
+.storage-bar__segment {
+    height: 100%;
+
+    &--data {
+        background-color: $storage-color-data;
+    }
+
+    &--checkpoints {
+        background-color: $storage-color-checkpoints;
+    }
+
+    &--linked-objects {
+        background-color: $storage-color-linked-objects;
+    }
+}
+
+.storage-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    padding: 0;
+    list-style: none;
+    font-size: 14px;
+}
+
+.storage-legend__item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.storage-legend__swatch {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+}
+
+.storage-warning {
+    color: $storage-color-near-quota;
+
+    a {
+        color: inherit;
+        text-decoration: underline;
+    }
+}
+
+.storage-alert {
+    max-width: 720px;
+    padding: 12px 16px;
+    border: 1px solid rgb(255 129 130 / 40%);
+    border-radius: 6px;
+    background: #ffebe9;
+    color: $storage-color-quota-reached;
+
+    a {
+        color: inherit;
+        font-weight: 600;
+        text-decoration: underline;
+    }
+}
+
+.storage-alert__icon {
+    flex-shrink: 0;
+}

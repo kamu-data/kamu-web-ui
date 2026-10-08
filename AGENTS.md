@@ -78,18 +78,23 @@ The hooks resolve the pinned version for their own formatting runs.
 
 ### Changelog review context
 
-Do not require or suggest `CHANGELOG.md` updates while reviewing uncommitted work on an
-in-progress feature branch, regardless of branch size. The changelog is consolidated into one
-entry when the feature is finalized.
+Features may add one consolidated, user-facing `CHANGELOG.md` entry during development.
 
-- Check for a changelog entry only when the user explicitly asks for PR finalization, release
-  preparation, or changelog work.
+- Do not request or review a changelog entry during an ordinary feature review. Check it only
+  when the user asks for PR finalization, release preparation, or changelog work.
 
 ### Schema review context
 
 `resources/schema.graphql` and `src/app/api/kamu.graphql.interface.ts` are generated and change
 in bulk. Review the `.graphql` documents and the code using the generated types; do not review
 the generated files line by line or flag their size.
+
+## Branches
+
+Name a branch `<type>/<issue>-<slug>`: `type` is `feature`, `fix` or `chore`, `issue` is the
+GitHub issue number the work closes, and `slug` is a few kebab-case words
+(`feature/874-storage-quota-panel`). This matches kamu-cli. Leave out the number only when no
+issue exists. When a request has no issue yet, file one first.
 
 ## Code style and tests
 
@@ -144,7 +149,7 @@ change invalidates what it says.
 | `.claude/agents/` | Sub-agent role prompts; they restate rules from this file and defer to it. |
 | `docs/internal/` | Living design docs. Changing behaviour a document describes means amending it in the same change. |
 | `DEVELOPER.md` | The human developer guide and owner of human procedures. Skills link to its sections rather than copying them. |
-| `CHANGELOG.md` | Written at finalization only (see [Changelog review context](#changelog-review-context)). |
+| `CHANGELOG.md` | User-visible changes under `Unreleased`; see [Changelog review context](#changelog-review-context). |
 | `resources/schema.graphql` | Generated — `npm run gql-update-schema`. |
 | `src/app/api/kamu.graphql.interface.ts` | Generated — `npm run gql-codegen`. |
 | `src/app/editor/generated/` | Generated (gitignored) — `node scripts/set-monaco-version.js`, run as `prebuild`. |

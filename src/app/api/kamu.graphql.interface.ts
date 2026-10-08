@@ -452,8 +452,11 @@ export type AccountQuotasUsage = {
 
 export type AccountQuotasUsageStorage = {
   __typename?: 'AccountQuotasUsageStorage';
-  /** Total bytes limit for this account. */
-  limitTotalBytes: Scalars['Int']['output'];
+  /**
+   * Total bytes limit for this account, or `null` when the storage of this
+   * account is unlimited.
+   */
+  limitTotalBytes?: Maybe<Scalars['Int']['output']>;
 };
 
 /**
@@ -5958,6 +5961,13 @@ export type AccountResumeFlowsMutationVariables = Exact<{
 
 export type AccountResumeFlowsMutation = { __typename?: 'Mutation', accounts: { __typename?: 'AccountsMut', byName?: { __typename?: 'AccountMut', flows: { __typename?: 'AccountFlowsMut', triggers: { __typename?: 'AccountFlowTriggersMut', resumeAccountDatasetFlows: boolean } } } | null } };
 
+export type AccountStorageQuotaQueryVariables = Exact<{
+  accountName: Scalars['AccountName']['input'];
+}>;
+
+
+export type AccountStorageQuotaQuery = { __typename?: 'Query', accounts: { __typename?: 'Accounts', byName?: { __typename?: 'Account', quotas: { __typename?: 'AccountQuotas', user: { __typename?: 'AccountQuotasUsage', storage: { __typename?: 'AccountQuotasUsageStorage', limitTotalBytes?: number | null } } }, usage: { __typename?: 'AccountUsage', storage: { __typename?: 'TotalDatasetsStatistic', totalSizeBytes: number, totalDataSizeBytes: number, totalCheckpointsSizeBytes: number, totalLinkedObjectsSizeBytes: number } } } | null } };
+
 export type AccountWebhookCardsQueryVariables = Exact<{
   name: Scalars['AccountName']['input'];
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -9965,6 +9975,40 @@ export const AccountResumeFlowsDocument = gql`
   })
   export class AccountResumeFlowsGQL extends Apollo.Mutation<AccountResumeFlowsMutation, AccountResumeFlowsMutationVariables> {
     document = AccountResumeFlowsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const AccountStorageQuotaDocument = gql`
+    query accountStorageQuota($accountName: AccountName!) {
+  accounts {
+    byName(name: $accountName) {
+      quotas {
+        user {
+          storage {
+            limitTotalBytes
+          }
+        }
+      }
+      usage {
+        storage {
+          totalSizeBytes
+          totalDataSizeBytes
+          totalCheckpointsSizeBytes
+          totalLinkedObjectsSizeBytes
+        }
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AccountStorageQuotaGQL extends Apollo.Query<AccountStorageQuotaQuery, AccountStorageQuotaQueryVariables> {
+    document = AccountStorageQuotaDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

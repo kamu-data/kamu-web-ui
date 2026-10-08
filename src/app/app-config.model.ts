@@ -15,6 +15,7 @@ export interface AppRuntimeConfig {
     loginInstructions?: AppLoginInstructions;
     grafanaLogs?: GrafanaLogsConfiguration;
     features?: FeaturesRuntimeConfig;
+    supportEmail?: string;
 }
 
 export interface AppLoginInstructions {

@@ -34,6 +34,8 @@ import {
     AccountPrimaryCardsQuery,
     AccountResumeFlowsGQL,
     AccountResumeFlowsMutation,
+    AccountStorageQuotaGQL,
+    AccountStorageQuotaQuery,
     AccountWebhookCardsGQL,
     AccountWebhookCardsQuery,
     AccountWithEmailGQL,
@@ -61,6 +63,7 @@ export class AccountApi {
     private accountPauseFlowsGql = inject(AccountPauseFlowsGQL);
     private accountResumeFlowsGql = inject(AccountResumeFlowsGQL);
     private accountWithEmailGql = inject(AccountWithEmailGQL);
+    private accountStorageQuotaGql = inject(AccountStorageQuotaGQL);
     private accountChangeEmailGQL = inject(AccountChangeEmailGQL);
     private deleteAccountByNameGQL = inject(DeleteAccountByNameGQL);
     private changeAccountUsernameGQL = inject(ChangeAccountUsernameGQL);
@@ -135,6 +138,23 @@ export class AccountApi {
                 first(),
                 map((result: ObservableQuery.Result<AccountWithEmailQuery>) => {
                     return result.data as AccountWithEmailQuery;
+                }),
+            );
+    }
+
+    public fetchAccountStorageQuota(accountName: string): Observable<AccountStorageQuotaQuery> {
+        return this.accountStorageQuotaGql
+            .watch({
+                variables: {
+                    accountName,
+                },
+                ...noCacheFetchPolicy,
+            })
+            .valueChanges.pipe(
+                onlyCompleteData(),
+                first(),
+                map((result: ObservableQuery.Result<AccountStorageQuotaQuery>) => {
+                    return result.data as AccountStorageQuotaQuery;
                 }),
             );
     }

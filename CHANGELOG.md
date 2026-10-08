@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+- Account settings: a Storage tab shows how much of the storage quota the account uses and how much is left, split into data, checkpoints and linked files, with a warning when the quota is nearly or fully used; accounts without a limit see "Unlimited"
+- Runtime config: optional `supportEmail`, the address offered in storage quota warnings and on the "account not found" page; without it, those messages refer to the administrator or omit the contact link
+### Changed
+- Updated GraphQL schema: the account storage quota limit is nullable, `null` meaning unlimited
+
 ## [0.70.0] - 2026-10-06
 ### Added
 - Flow history: the completion event lists the downstream flows initiated by the flow, with their status and datasets

@@ -23,6 +23,8 @@ import { EmailsTabComponent } from "src/app/account/settings/tabs/emails-tab/ema
 import { accountSettingsEmailResolverFn } from "src/app/account/settings/tabs/emails-tab/resolver/account-settings-email.resolver";
 import { PasswordAndAuthenticationTabComponent } from "src/app/account/settings/tabs/password-and-authentication-tab/password-and-authentication-tab.component";
 import { accountSettingsPasswordAndAuthenticationResolverFn } from "src/app/account/settings/tabs/password-and-authentication-tab/resolver/account-settings-password-and-authentication.resolver";
+import { accountSettingsStorageResolverFn } from "src/app/account/settings/tabs/storage-tab/resolver/account-settings-storage.resolver";
+import { StorageTabComponent } from "src/app/account/settings/tabs/storage-tab/storage-tab.component";
 import ProjectLinks from "src/app/project-links";
 
 export const ACCOUNT_SETTINGS_ROUTES: Routes = [
@@ -64,6 +66,15 @@ export const ACCOUNT_SETTINGS_ROUTES: Routes = [
                 },
                 runGuardsAndResolvers: "always",
                 resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_ACCOUNT_KEY]: accountSettingsAccountResolverFn },
+            },
+            {
+                path: AccountSettingsTabs.STORAGE,
+                component: StorageTabComponent,
+                data: {
+                    [ProjectLinks.URL_PARAM_TAB]: AccountSettingsTabs.STORAGE,
+                },
+                runGuardsAndResolvers: "always",
+                resolve: { [RoutingResolvers.ACCOUNT_SETTINGS_STORAGE_KEY]: accountSettingsStorageResolverFn },
             },
             {
                 path: AccountSettingsTabs.SECURITY,

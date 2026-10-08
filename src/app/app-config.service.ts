@@ -52,6 +52,10 @@ export class AppConfigService {
         return this.appRuntimeConfig.grafanaLogs ?? null;
     }
 
+    public get supportEmail(): MaybeUndefined<string> {
+        return this.appRuntimeConfig.supportEmail;
+    }
+
     public get loginInstructions(): AppLoginInstructions | null {
         if (this.appRuntimeConfig.loginInstructions) {
             return this.appRuntimeConfig.loginInstructions;

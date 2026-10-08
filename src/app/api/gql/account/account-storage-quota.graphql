@@ -1,0 +1,21 @@
+query accountStorageQuota($accountName: AccountName!) {
+  accounts {
+    byName(name: $accountName) {
+      quotas {
+        user {
+          storage {
+            limitTotalBytes
+          }
+        }
+      }
+      usage {
+        storage {
+          totalSizeBytes
+          totalDataSizeBytes
+          totalCheckpointsSizeBytes
+          totalLinkedObjectsSizeBytes
+        }
+      }
+    }
+  }
+}

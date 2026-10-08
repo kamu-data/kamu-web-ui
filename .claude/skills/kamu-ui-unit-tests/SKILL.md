@@ -51,9 +51,11 @@ beforeEach(async () => {
 
 ### Driving the DOM: harnesses first
 
-**Prefer CDK component harnesses in new tests where they fit.** Not every existing spec uses
-them, but a harness keeps the test about behaviour rather than DOM structure, and is reused by
-every spec that hosts the component.
+**A new component spec drives the component through CDK harnesses — this is the default, not
+an option.** That holds for display-only components too: reading texts, states, links and widths
+goes through harness methods as much as clicking and typing does. A harness keeps the test about
+behaviour rather than DOM structure, and is reused by every spec that hosts the component. Older
+specs written with the DOM helpers stay as they are until they are rewritten for another reason.
 
 - **Material components:** use the Material harnesses — `MatRadioButtonHarness`,
   `MatSlideToggleHarness`, `MatCheckboxHarness`, `MatTableHarness`, … from
@@ -81,15 +83,18 @@ every spec that hosts the component.
   (`EditSchemaTableHarness` uses `TypeEditorHarness`). References:
   `common/components/time-delta-form/time-delta-form.harness.ts`,
   `common/components/edit-schema-table/edit-schema-table.harness.ts`.
-- When a test drives a form or composite component that other specs host too, write its harness
-  instead of more DOM helpers.
-- Load with `TestbedHarnessEnvironment.loader(fixture)` then `await loader.getHarness(XHarness)`;
-  harness calls run change detection themselves, so tests using them are `async`, not
-  `fakeAsync`.
+- A new component with anything to assert beyond "it renders" gets its own harness; extend an
+  existing harness when the component already has one.
+- Load a child's harness with `TestbedHarnessEnvironment.loader(fixture)` then
+  `await loader.getHarness(XHarness)`; for the fixture's own component use
+  `await TestbedHarnessEnvironment.harnessForFixture(fixture, XHarness)`
+  (`account/settings/tabs/storage-tab/storage-tab.component.spec.ts`). Harness calls run change
+  detection themselves, so tests using them are `async`, not `fakeAsync`.
 
 ### DOM helpers
 
-For simple checks, or specs that already use them, the helpers in
+In specs that already use them, and in a new spec only for a single trivial check (one element
+present or absent, with no harness to extend), the helpers in
 `@common/helpers/base-test.helpers.spec` select by `data-test-id`:
 `getElementByDataTestId`, `findElementByDataTestId`, `emitClickOnElementByDataTestId`,
 `checkVisible`, `setFieldValue`, `dispatchInputEvent`, `checkButtonDisabled`,
@@ -138,6 +143,7 @@ One case per api method: assert the variables sent, flush a fixture typed with t
 | Raw `nativeElement` clicks inside Material components | Depends on Material's internal DOM; the Material harnesses are the supported API |
 | Hand-built Apollo response objects inline in specs | Not reusable and not type-checked against codegen; fixtures go to `api/mock/` |
 | Testing private methods through `component["method"]` | Tests the implementation; drive the public inputs, outputs and DOM instead |
+| DOM helpers for a new display-only component ("nothing to click, so no harness") | Assertions on texts, states and widths are as tied to DOM structure as clicks are, and the next spec that hosts the component has no API to reuse |
 
 ## What lives elsewhere
 

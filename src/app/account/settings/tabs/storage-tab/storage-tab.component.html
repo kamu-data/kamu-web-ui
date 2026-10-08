@@ -1,0 +1,54 @@
+<h2>Storage</h2>
+<mat-divider />
+<p class="mt-3">
+    Datasets owned by your account count toward its storage quota: their data, checkpoints and linked files. Once the
+    quota is reached, new data can no longer be added to your datasets.
+</p>
+
+<div class="storage-summary mt-4" data-test-id="storage-summary">
+    <ng-container *ngIf="state === StorageQuotaState.UNLIMITED; else limitedSummary">
+        <span class="fw-600">{{ quota.usedBytes | displaySize }}</span> used ·
+        <span data-test-id="storage-unlimited">Unlimited</span>
+    </ng-container>
+    <ng-template #limitedSummary>
+        Used <span class="fw-600">{{ quota.usedBytes | displaySize }}</span> of
+        <span class="fw-600">{{ quota.limitBytes ?? 0 | displaySize }}</span>
+        <span class="text-muted" data-test-id="storage-used-percent">({{ usedPercent | number: "1.0-0" }}%)</span>
+    </ng-template>
+</div>
+
+<div
+    class="storage-bar mt-2"
+    [class.storage-bar--near-quota]="state === StorageQuotaState.NEAR_QUOTA"
+    [class.storage-bar--quota-reached]="state === StorageQuotaState.QUOTA_REACHED"
+    data-test-id="storage-bar"
+>
+    <div
+        *ngFor="let segment of segments; trackBy: trackBySegmentId"
+        [class]="'storage-bar__segment storage-bar__segment--' + segment.id"
+        [style.width.%]="segment.percent"
+        [attr.title]="segment.label + ': ' + (segment.bytes | displaySize)"
+        [attr.data-test-id]="'storage-segment-' + segment.id"
+    ></div>
+</div>
+
+<ul class="storage-legend mt-2" data-test-id="storage-legend">
+    <li *ngFor="let segment of segments; trackBy: trackBySegmentId" class="storage-legend__item">
+        <span [class]="'storage-legend__swatch storage-bar__segment--' + segment.id"></span>
+        {{ segment.label }}
+        <span class="text-muted" [attr.data-test-id]="'storage-legend-' + segment.id">{{
+            segment.bytes | displaySize
+        }}</span>
+    </li>
+</ul>
+
+<p *ngIf="state === StorageQuotaState.NEAR_QUOTA" class="storage-warning mt-3" data-test-id="storage-near-quota">
+    Your storage is almost full. Delete datasets you no longer need, or ask an administrator to raise your quota.
+</p>
+<p
+    *ngIf="state === StorageQuotaState.QUOTA_REACHED"
+    class="storage-warning storage-warning--danger mt-3"
+    data-test-id="storage-quota-reached"
+>
+    Storage quota reached. New data cannot be added until you free up space or an administrator raises your quota.
+</p>

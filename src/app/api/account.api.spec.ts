@@ -34,6 +34,8 @@ import {
     AccountPrimaryCardsQuery,
     AccountResumeFlowsDocument,
     AccountResumeFlowsMutation,
+    AccountStorageQuotaDocument,
+    AccountStorageQuotaQuery,
     AccountWebhookCardsDocument,
     AccountWebhookCardsQuery,
     AccountWithEmailDocument,
@@ -65,6 +67,7 @@ import {
     mockAccountListFlowsQuery,
     mockAccountPauseFlowsMutationSuccess,
     mockAccountResumeFlowsMutationSuccess,
+    mockAccountStorageQuotaQuery,
     mockAccountWithEmailQuery,
     mockChangeAccountUsernameMutation,
     mockChangeAdminPasswordMutation,
@@ -258,6 +261,19 @@ describe("AccountApi", () => {
 
         op.flush({
             data: mockAccountWithEmailQuery,
+        });
+    });
+
+    it("should check fetch account storage quota", () => {
+        service.fetchAccountStorageQuota(ACCOUNT_NAME).subscribe((state: AccountStorageQuotaQuery) => {
+            expect(state.accounts.byName?.quotas.user.storage.limitTotalBytes).toEqual(1_000_000_000);
+            expect(state.accounts.byName?.usage.storage.totalSizeBytes).toEqual(640_000_000);
+        });
+        const op = controller.expectOne(AccountStorageQuotaDocument);
+        expect(op.operation.variables.accountName).toEqual(ACCOUNT_NAME);
+
+        op.flush({
+            data: mockAccountStorageQuotaQuery,
         });
     });
 

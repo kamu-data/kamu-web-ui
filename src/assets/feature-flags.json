@@ -475,6 +475,10 @@
         "developmentState": "stable"
       },
       {
+        "id": "storage",
+        "developmentState": "stable"
+      },
+      {
         "id": "notifications",
         "developmentState": "reserved"
       },

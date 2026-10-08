@@ -12,6 +12,7 @@ export enum AccountSettingsTabs {
     ACCESSIBILITY = "accessibility",
     NOTIFICATIONS = "notifications",
     BILLING = "billing",
+    STORAGE = "storage",
     EMAILS = "emails",
     SECURITY = "security",
     ORGANIZATIONS = "organizations",
@@ -80,6 +81,13 @@ export const ACCOUNT_SETTINGS_MENU_ITEMS: AccountSettingsMenuItem[] = [
         iconName: "billing",
         label: "Billing and plans",
         featureFlag: "settings.billing",
+    },
+    {
+        activeTab: AccountSettingsTabs.STORAGE,
+        class: "",
+        iconName: "database",
+        label: "Storage",
+        featureFlag: "settings.storage",
     },
     {
         activeTab: AccountSettingsTabs.EMAILS,

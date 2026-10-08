@@ -91,6 +91,13 @@ entry when the feature is finalized.
 in bulk. Review the `.graphql` documents and the code using the generated types; do not review
 the generated files line by line or flag their size.
 
+## Branches
+
+Name a branch `<type>/<issue>-<slug>`: `type` is `feature`, `fix` or `chore`, `issue` is the
+GitHub issue number the work closes, and `slug` is a few kebab-case words
+(`feature/874-storage-quota-panel`). This matches kamu-cli. Leave out the number only when no
+issue exists. When a request has no issue yet, file one first.
+
 ## Code style and tests
 
 Angular and TypeScript style lives in the `kamu-ui-angular-style` skill and test conventions in

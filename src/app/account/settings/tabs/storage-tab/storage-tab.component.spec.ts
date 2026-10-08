@@ -37,6 +37,10 @@ describe("StorageTabComponent", () => {
         fixture.detectChanges();
     }
 
+    function textOf(dataTestId: string): string {
+        return (getElementByDataTestId(fixture, dataTestId).textContent ?? "").replace(/\s+/g, " ").trim();
+    }
+
     function segmentWidth(id: string): string {
         return getElementByDataTestId(fixture, `storage-segment-${id}`).style.width;
     }
@@ -50,8 +54,8 @@ describe("StorageTabComponent", () => {
         render(mockStorageQuotaWithinLimit);
 
         expect(component.state).toEqual(StorageQuotaState.WITHIN_QUOTA);
-        expect(getElementByDataTestId(fixture, "storage-summary").textContent).toContain("of");
-        expect(getElementByDataTestId(fixture, "storage-used-percent").textContent?.trim()).toEqual("(64%)");
+        expect(textOf("storage-summary")).toEqual("Used 610.4 MB of 953.7 MB (64%)");
+        expect(textOf("storage-explanation")).toContain("Once the quota is reached");
         expect(segmentWidth("data")).toEqual("50%");
         expect(segmentWidth("checkpoints")).toEqual("4%");
         expect(segmentWidth("linked-objects")).toEqual("10%");
@@ -82,6 +86,8 @@ describe("StorageTabComponent", () => {
 
         expect(component.state).toEqual(StorageQuotaState.UNLIMITED);
         checkVisible(fixture, "storage-unlimited", true);
+        expect(textOf("storage-summary")).toEqual("1.9 GB used · Unlimited");
+        expect(textOf("storage-explanation")).toContain("no storage limit");
         checkVisible(fixture, "storage-used-percent", false);
         checkVisible(fixture, "storage-near-quota", false);
         checkVisible(fixture, "storage-quota-reached", false);

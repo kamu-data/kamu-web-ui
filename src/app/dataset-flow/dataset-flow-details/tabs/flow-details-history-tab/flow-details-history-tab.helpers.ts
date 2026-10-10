@@ -16,15 +16,18 @@ import {
     FlowConfigSnapshotModified,
     FlowEventActivationCauseAdded,
     FlowEventInitiated,
+    FlowEventRetryPolicyModified,
     FlowEventScheduledForActivation,
     FlowEventStartConditionUpdated,
     FlowEventTaskChanged,
     FlowHistoryDataFragment,
     FlowOutcomeDataFragment,
+    FlowRetryBackoffType,
     FlowStartCondition,
     FlowStatus,
     FlowSummaryDataFragment,
     TaskStatus,
+    TimeDelta,
 } from "@api/kamu.graphql.interface";
 
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
@@ -58,6 +61,8 @@ export class DatasetFlowDetailsHelpers {
                 return "Flow scheduled for activation";
             case "FlowConfigSnapshotModified":
                 return "Flow configuration was modified";
+            case "FlowEventRetryPolicyModified":
+                return "Retry policy was modified";
             case "FlowEventCompleted":
                 return "Flow completed";
             /* istanbul ignore next */
@@ -81,6 +86,8 @@ export class DatasetFlowDetailsHelpers {
                 return { icon: "timer", class: "text-muted" };
             case "FlowConfigSnapshotModified":
                 return { icon: "outbound", class: "text-muted" };
+            case "FlowEventRetryPolicyModified":
+                return { icon: "replay", class: "text-muted" };
             case "FlowEventTaskChanged": {
                 const event = flowEvent as FlowEventTaskChanged;
                 switch (event.taskStatus) {
@@ -152,6 +159,8 @@ export class DatasetFlowDetailsHelpers {
                         throw new Error("Unknown configSnapshot typename");
                 }
             }
+            case "FlowEventRetryPolicyModified":
+                return this.describeRetryPolicy(flowEvent);
             case "FlowEventAborted":
             case "FlowEventCompleted":
                 return "";
@@ -443,6 +452,39 @@ export class DatasetFlowDetailsHelpers {
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown start condition typename");
+        }
+    }
+
+    private static describeRetryPolicy(event: FlowEventRetryPolicyModified): string {
+        const retryPolicy = event.retryPolicy;
+        if (!retryPolicy) {
+            return "Retries disabled";
+        }
+        return (
+            `Up to ${retryPolicy.maxAttempts} ${retryPolicy.maxAttempts === 1 ? "retry" : "retries"}, ` +
+            `minimum delay ${this.describeTimeDelta(retryPolicy.minDelay)}, ` +
+            `${this.describeBackoffType(retryPolicy.backoffType)} backoff`
+        );
+    }
+
+    private static describeTimeDelta(timeDelta: TimeDelta): string {
+        const unit = timeDelta.unit.toLowerCase().slice(0, -1);
+        return `${timeDelta.every} ${pluralize(unit, timeDelta.every)}`;
+    }
+
+    private static describeBackoffType(backoffType: FlowRetryBackoffType): string {
+        switch (backoffType) {
+            case FlowRetryBackoffType.Fixed:
+                return "fixed";
+            case FlowRetryBackoffType.Linear:
+                return "linear";
+            case FlowRetryBackoffType.Exponential:
+                return "exponential";
+            case FlowRetryBackoffType.ExponentialWithJitter:
+                return "exponential with jitter";
+            /* istanbul ignore next */
+            default:
+                throw new Error("Unknown backoff type");
         }
     }
 

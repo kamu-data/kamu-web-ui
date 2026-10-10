@@ -2824,6 +2824,13 @@ export type FlowEventInitiated = FlowEvent & {
   eventTime: Scalars['DateTime']['output'];
 };
 
+export type FlowEventRetryPolicyModified = FlowEvent & {
+  __typename?: 'FlowEventRetryPolicyModified';
+  eventId: Scalars['EventID']['output'];
+  eventTime: Scalars['DateTime']['output'];
+  retryPolicy?: Maybe<FlowRetryPolicy>;
+};
+
 export type FlowEventScheduledForActivation = FlowEvent & {
   __typename?: 'FlowEventScheduledForActivation';
   eventId: Scalars['EventID']['output'];
@@ -6818,6 +6825,10 @@ export type GetFlowByIdQuery = { __typename?: 'Query', datasets: { __typename?: 
                     & FlowHistoryData_FlowEventInitiated_Fragment
                   )
                   | (
+                    { __typename?: 'FlowEventRetryPolicyModified' }
+                    & FlowHistoryData_FlowEventRetryPolicyModified_Fragment
+                  )
+                  | (
                     { __typename?: 'FlowEventScheduledForActivation' }
                     & FlowHistoryData_FlowEventScheduledForActivation_Fragment
                   )
@@ -6957,6 +6968,11 @@ type FlowHistoryData_FlowEventInitiated_Fragment = { __typename: 'FlowEventIniti
       ) }
    };
 
+type FlowHistoryData_FlowEventRetryPolicyModified_Fragment = { __typename: 'FlowEventRetryPolicyModified', eventId: string, eventTime: string, retryPolicy?: { __typename?: 'FlowRetryPolicy', maxAttempts: number, backoffType: FlowRetryBackoffType, minDelay: (
+      { __typename?: 'TimeDelta' }
+      & TimeDeltaDataFragment
+    ) } | null };
+
 type FlowHistoryData_FlowEventScheduledForActivation_Fragment = { __typename: 'FlowEventScheduledForActivation', scheduledForActivationAt: string, eventId: string, eventTime: string };
 
 type FlowHistoryData_FlowEventStartConditionUpdated_Fragment = { __typename: 'FlowEventStartConditionUpdated', eventId: string, eventTime: string, startCondition:
@@ -6991,6 +7007,7 @@ export type FlowHistoryDataFragment =
   | FlowHistoryData_FlowEventActivationCauseAdded_Fragment
   | FlowHistoryData_FlowEventCompleted_Fragment
   | FlowHistoryData_FlowEventInitiated_Fragment
+  | FlowHistoryData_FlowEventRetryPolicyModified_Fragment
   | FlowHistoryData_FlowEventScheduledForActivation_Fragment
   | FlowHistoryData_FlowEventStartConditionUpdated_Fragment
   | FlowHistoryData_FlowEventTaskChanged_Fragment
@@ -8648,6 +8665,15 @@ export const FlowHistoryDataFragmentDoc = gql`
   ... on FlowConfigSnapshotModified {
     configSnapshot {
       __typename
+    }
+  }
+  ... on FlowEventRetryPolicyModified {
+    retryPolicy {
+      maxAttempts
+      minDelay {
+        ...TimeDeltaData
+      }
+      backoffType
     }
   }
   ... on FlowEventCompleted {

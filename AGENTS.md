@@ -107,8 +107,8 @@ attachments, the same as an image dragged into the web editor:
 
 - `gh` 2.99 or later: `gh pr create` / `gh pr edit` / `gh pr comment` with
   `--attach 'path/to/image.png#Alt text'`, repeated per image.
-- Older `gh`: upload each image, then put the returned `url` into the body as
-  `![Alt text](<url>)` and update it with `gh api -X PATCH repos/kamu-data/kamu-web-ui/pulls/<n> -F body=@body.md`:
+- Older `gh`: upload each image, embed the returned `url` in the body as a Markdown image with
+  alt text, and update the body with `gh api -X PATCH repos/kamu-data/kamu-web-ui/pulls/<n> -F body=@body.md`:
 
   ```sh
   curl -s -X POST "https://uploads.github.com/user-attachments/assets?name=shot.png&content_type=image/png&repository_id=$(gh api repos/kamu-data/kamu-web-ui --jq .id)" \

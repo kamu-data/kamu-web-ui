@@ -102,15 +102,19 @@ A PR description starts with `Closes #<issue>` and, when the UI needs an unrelea
 change, the kamu-cli PR it depends on; such a PR stays a draft until that change is released.
 Then a `### Changes` list and, for visible changes, `### Screenshots`.
 
-Screenshots come from the real app against a backend, not from mocks, and are attached through
-the GitHub web editor, which hosts them as user attachments. Neither `gh` nor the API can upload
-images, so:
+Screenshots come from the real app against a backend, not from mocks, and are GitHub user
+attachments, the same as an image dragged into the web editor:
 
-1. Open the PR with `gh pr create`, leaving the `### Screenshots` section with a one-line
-   caption of what the images show.
-2. Save the images outside the repository and send them to the user (Claude: `SendUserFile`)
-   with their paths.
-3. Ask the user to drag them into the description.
+- `gh` 2.99 or later: `gh pr create` / `gh pr edit` / `gh pr comment` with
+  `--attach 'path/to/image.png#Alt text'`, repeated per image.
+- Older `gh`: upload each image, then put the returned `url` into the body as
+  `![Alt text](<url>)` and update it with `gh api -X PATCH repos/kamu-data/kamu-web-ui/pulls/<n> -F body=@body.md`:
+
+  ```sh
+  curl -s -X POST "https://uploads.github.com/user-attachments/assets?name=shot.png&content_type=image/png&repository_id=$(gh api repos/kamu-data/kamu-web-ui --jq .id)" \
+    -H "Authorization: Bearer $(gh auth token)" -H "Accept: application/json" \
+    --data-binary @shot.png
+  ```
 
 Never commit screenshots, push a branch or open a PR to host them, or link them through
 `raw.githubusercontent.com`: such branches outlive the PR and clutter the repository.

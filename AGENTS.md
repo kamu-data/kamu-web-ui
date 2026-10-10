@@ -96,6 +96,25 @@ GitHub issue number the work closes, and `slug` is a few kebab-case words
 (`feature/874-storage-quota-panel`). This matches kamu-cli. Leave out the number only when no
 issue exists. When a request has no issue yet, file one first.
 
+## Pull requests
+
+A PR description starts with `Closes #<issue>` and, when the UI needs an unreleased backend
+change, the kamu-cli PR it depends on; such a PR stays a draft until that change is released.
+Then a `### Changes` list and, for visible changes, `### Screenshots`.
+
+Screenshots come from the real app against a backend, not from mocks, and are attached through
+the GitHub web editor, which hosts them as user attachments. Neither `gh` nor the API can upload
+images, so:
+
+1. Open the PR with `gh pr create`, leaving the `### Screenshots` section with a one-line
+   caption of what the images show.
+2. Save the images outside the repository and send them to the user (Claude: `SendUserFile`)
+   with their paths.
+3. Ask the user to drag them into the description.
+
+Never commit screenshots, push a branch or open a PR to host them, or link them through
+`raw.githubusercontent.com`: such branches outlive the PR and clutter the repository.
+
 ## Code style and tests
 
 Angular and TypeScript style lives in the `kamu-ui-angular-style` skill and test conventions in

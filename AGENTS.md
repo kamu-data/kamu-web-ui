@@ -98,26 +98,9 @@ issue exists. When a request has no issue yet, file one first.
 
 ## Pull requests
 
-A PR description starts with `Closes #<issue>` and, when the UI needs an unreleased backend
-change, the kamu-cli PR it depends on; such a PR stays a draft until that change is released.
-Then a `### Changes` list and, for visible changes, `### Screenshots`.
-
-Screenshots come from the real app against a backend, not from mocks, and are GitHub user
-attachments, the same as an image dragged into the web editor:
-
-- `gh` 2.99 or later: `gh pr create` / `gh pr edit` / `gh pr comment` with
-  `--attach 'path/to/image.png#Alt text'`, repeated per image.
-- Older `gh`: upload each image, embed the returned `url` in the body as a Markdown image with
-  alt text, and update the body with `gh api -X PATCH repos/kamu-data/kamu-web-ui/pulls/<n> -F body=@body.md`:
-
-  ```sh
-  curl -s -X POST "https://uploads.github.com/user-attachments/assets?name=shot.png&content_type=image/png&repository_id=$(gh api repos/kamu-data/kamu-web-ui --jq .id)" \
-    -H "Authorization: Bearer $(gh auth token)" -H "Accept: application/json" \
-    --data-binary @shot.png
-  ```
-
-Never commit screenshots, push a branch or open a PR to host them, or link them through
-`raw.githubusercontent.com`: such branches outlive the PR and clutter the repository.
+PR descriptions, editing PRs and issues, and screenshots are covered by the
+`kamu-ui-github-operations` skill; load it before any `gh` command that creates or changes a PR or
+issue.
 
 ## Code style and tests
 
@@ -146,6 +129,7 @@ in addition to that match (an api class needs both `kamu-ui-graphql-api` and
 | Changelog, release, npm dependency updates | `kamu-ui-release-dependency-workflows` | `CHANGELOG.md`, `package.json`, `update-dependecies.md` |
 | Comments and any prose in docs, skills or sub-agent prompts | `kamu-ui-prose-and-comments` | `AGENTS.md`, `CLAUDE.md`, `DEVELOPER.md`, `docs/**/*.md`, `.claude/skills/**`, `.claude/agents/**` |
 | Adding a new routed page, tab or settings section end to end | `kamu-ui-adding-a-page` | |
+| GitHub through `gh`: PR descriptions, editing PRs and issues, screenshots, known `gh` failures and their workarounds | `kamu-ui-github-operations` | |
 | Writing any component, service, template or style: DI, change detection, subscriptions, base classes, naming, constants (baseline) | `kamu-ui-angular-style` | `src/app/**/*.ts`, `src/app/**/*.html`, `src/app/**/*.scss` |
 
 ### Documents

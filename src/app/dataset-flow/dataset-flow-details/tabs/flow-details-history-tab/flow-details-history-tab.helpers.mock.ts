@@ -10,6 +10,7 @@ import {
     AccountType,
     FlowHistoryDataFragment,
     FlowOutcomeDataFragment,
+    FlowRetryBackoffType,
     FlowStatus,
     FlowSummaryDataFragment,
     TaskStatus,
@@ -226,6 +227,45 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         },
     },
 ];
+
+export const mockFlowEventRetryPolicyModified: FlowHistoryDataFragment = {
+    __typename: "FlowEventRetryPolicyModified",
+    eventId: "13",
+    eventTime: "2024-03-13T13:54:30.656488373+00:00",
+    retryPolicy: {
+        __typename: "FlowRetryPolicy",
+        maxAttempts: 3,
+        minDelay: {
+            __typename: "TimeDelta",
+            every: 5,
+            unit: TimeUnit.Minutes,
+        },
+        backoffType: FlowRetryBackoffType.ExponentialWithJitter,
+    },
+};
+
+export const mockFlowEventRetryPolicyModifiedSingleRetry: FlowHistoryDataFragment = {
+    __typename: "FlowEventRetryPolicyModified",
+    eventId: "14",
+    eventTime: "2024-03-13T13:54:30.656488373+00:00",
+    retryPolicy: {
+        __typename: "FlowRetryPolicy",
+        maxAttempts: 1,
+        minDelay: {
+            __typename: "TimeDelta",
+            every: 1,
+            unit: TimeUnit.Hours,
+        },
+        backoffType: FlowRetryBackoffType.Fixed,
+    },
+};
+
+export const mockFlowEventRetryPolicyModifiedDisabled: FlowHistoryDataFragment = {
+    __typename: "FlowEventRetryPolicyModified",
+    eventId: "15",
+    eventTime: "2024-03-13T13:54:30.656488373+00:00",
+    retryPolicy: null,
+};
 
 export const eventFlowDescriptionsResultHistoryTab: string[] = [
     "Flow initiated automatically",

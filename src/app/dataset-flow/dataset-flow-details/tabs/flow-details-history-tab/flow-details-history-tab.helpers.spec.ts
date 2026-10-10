@@ -17,6 +17,9 @@ import {
     flowEventSubMessageResults,
     flowEventSubMessageWithUnavailableDatasetResults,
     flowOutcomeOptionsResults,
+    mockFlowEventRetryPolicyModified,
+    mockFlowEventRetryPolicyModifiedDisabled,
+    mockFlowEventRetryPolicyModifiedSingleRetry,
     mockFlowHistoryDataFragmentForDescriptions,
     mockFlowHistoryDataFragmentForIconOptions,
     mockFlowHistoryDataFragmentForSubMessages,
@@ -208,6 +211,49 @@ describe("DatasetFlowDetailsHelpers", () => {
                 mockFlowSummaryDataFragments[5],
             ),
         ).toEqual(flowEventSubMessageResults[17]);
+    });
+
+    it(`should check flow event description with typename = FlowEventRetryPolicyModified`, () => {
+        expect(
+            DatasetFlowDetailsHelpers.flowEventDescription(
+                mockFlowEventRetryPolicyModified,
+                mockFlowSummaryDataFragments[0],
+            ),
+        ).toEqual("Retry policy was modified");
+    });
+
+    it(`should check flow event icon and class with typename = FlowEventRetryPolicyModified`, () => {
+        expect(DatasetFlowDetailsHelpers.flowEventIconOptions(mockFlowEventRetryPolicyModified)).toEqual({
+            icon: "replay",
+            class: "text-muted",
+        });
+    });
+
+    it(`should check flow event submessage with typename = FlowEventRetryPolicyModified`, () => {
+        expect(
+            DatasetFlowDetailsHelpers.flowEventSubMessage(
+                mockFlowEventRetryPolicyModified,
+                mockFlowSummaryDataFragments[0],
+            ),
+        ).toEqual("Up to 3 retries, minimum delay 5 minutes, exponential with jitter backoff");
+    });
+
+    it(`should check flow event submessage with typename = FlowEventRetryPolicyModified and a single retry`, () => {
+        expect(
+            DatasetFlowDetailsHelpers.flowEventSubMessage(
+                mockFlowEventRetryPolicyModifiedSingleRetry,
+                mockFlowSummaryDataFragments[0],
+            ),
+        ).toEqual("Up to 1 retry, minimum delay 1 hour, fixed backoff");
+    });
+
+    it(`should check flow event submessage with typename = FlowEventRetryPolicyModified and retries disabled`, () => {
+        expect(
+            DatasetFlowDetailsHelpers.flowEventSubMessage(
+                mockFlowEventRetryPolicyModifiedDisabled,
+                mockFlowSummaryDataFragments[0],
+            ),
+        ).toEqual("Retries disabled");
     });
 
     it(`should check don't show dynamic image`, () => {

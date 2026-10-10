@@ -96,6 +96,12 @@ GitHub issue number the work closes, and `slug` is a few kebab-case words
 (`feature/874-storage-quota-panel`). This matches kamu-cli. Leave out the number only when no
 issue exists. When a request has no issue yet, file one first.
 
+## Pull requests
+
+PR descriptions, editing PRs and issues, and screenshots are covered by the
+`kamu-ui-github-operations` skill; load it before any `gh` command that creates or changes a PR or
+issue.
+
 ## Code style and tests
 
 Angular and TypeScript style lives in the `kamu-ui-angular-style` skill and test conventions in
@@ -123,6 +129,7 @@ in addition to that match (an api class needs both `kamu-ui-graphql-api` and
 | Changelog, release, npm dependency updates | `kamu-ui-release-dependency-workflows` | `CHANGELOG.md`, `package.json`, `update-dependecies.md` |
 | Comments and any prose in docs, skills or sub-agent prompts | `kamu-ui-prose-and-comments` | `AGENTS.md`, `CLAUDE.md`, `DEVELOPER.md`, `docs/**/*.md`, `.claude/skills/**`, `.claude/agents/**` |
 | Adding a new routed page, tab or settings section end to end | `kamu-ui-adding-a-page` | |
+| GitHub through `gh`: PR descriptions, editing PRs and issues, screenshots, known `gh` failures and their workarounds | `kamu-ui-github-operations` | |
 | Writing any component, service, template or style: DI, change detection, subscriptions, base classes, naming, constants (baseline) | `kamu-ui-angular-style` | `src/app/**/*.ts`, `src/app/**/*.html`, `src/app/**/*.scss` |
 
 ### Documents

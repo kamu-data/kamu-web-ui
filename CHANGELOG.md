@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Runtime config: optional `supportEmail`, the address offered in storage quota warnings and on the "account not found" page; without it, those messages refer to the administrator or omit the contact link
 ### Changed
 - Updated GraphQL schema: the account storage quota limit is nullable, `null` meaning unlimited
-- Updated GraphQL schema: new `FlowEventRetryPolicyModified` flow event (requires a matching kamu-cli release)
+- Updated GraphQL schema: new `FlowEventRetryPolicyModified` flow event (requires kamu-cli v0.270.0)
+- Updated GraphQL schema: descriptions for every type, field and enum value
 
 ## [0.70.0] - 2026-10-06
 ### Added

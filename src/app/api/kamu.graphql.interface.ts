@@ -16,19 +16,37 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  /** Unique identifier of an access token */
   AccessTokenID: { input: string; output: string; }
+  /** Account name to display */
   AccountDisplayName: { input: string; output: string; }
+  /** Unique and stable identifier of an account (`did:...`) */
   AccountID: { input: string; output: string; }
+  /** Unique symbolic name of an account */
   AccountName: { input: string; output: string; }
+  /** Account password */
   AccountPassword: { input: string; output: string; }
   /** Base64-encoded binary data (url-safe, no padding) */
   Base64Usnp: { input: string; output: string; }
+  /**
+   * Path of a collection entry: rooted, slash-separated, with URL-encoded
+   * elements (e.g. `/foo%20bar/baz`)
+   */
   CollectionPath: { input: string; output: string; }
+  /** ODF data schema in its JSON form */
   DataSchemaInput: { input: string; output: string; }
+  /**
+   * Dataset name, optionally prefixed with the owner account
+   * (`account/dataset`)
+   */
   DatasetAlias: { input: string; output: string; }
+  /** Unique and stable identifier of a dataset (`did:odf:...`) */
   DatasetID: { input: string; output: string; }
+  /** Name of a dataset, unique within its owner account */
   DatasetName: { input: string; output: string; }
+  /** Reference to a local dataset by ID or alias */
   DatasetRef: { input: string; output: string; }
+  /** Reference to a remote dataset by ID, alias or URL */
   DatasetRefRemote: { input: string; output: string; }
   /**
    * Implement the DateTime<Utc> scalar
@@ -36,7 +54,9 @@ export type Scalars = {
    * The input/output is a string in RFC3339 format.
    */
   DateTime: { input: string; output: string; }
+  /** Code that identifies a device during the device authorization flow */
   DeviceCode: { input: string; output: string; }
+  /** Decentralized identifier (DID) */
   Did: { input: string; output: string; }
   /**
    * Wallet address in did:pkh format.
@@ -44,37 +64,61 @@ export type Scalars = {
    * Example: did:pkh:eip155:1:0xb9c5714089478a327f09197987f16f9e5d936e8a
    */
   DidPkh: { input: string; output: string; }
+  /** Single-use nonce of a Sign-In with Ethereum message */
   Eip4361AuthNonce: { input: string; output: string; }
+  /** Email address */
   Email: { input: string; output: string; }
+  /** Identifier of a stored event */
   EventID: { input: string; output: string; }
+  /** Hex-encoded EVM wallet address */
   EvmWalletAddress: { input: string; output: string; }
   ExtraAttributes: { input: string; output: string; }
+  /** JSON object of user-defined fields with string, number or boolean values */
   ExtraData: { input: Record<string, any>; output: Record<string, any>; }
+  /** Unique identifier of a flow */
   FlowID: { input: string; output: string; }
   /** A scalar that can represent any JSON value. */
   JSON: { input: string; output: string; }
+  /** Self-describing hash in multibase encoding */
   Multihash: { input: string; output: string; }
   ResourceAnnotations: { input: string; output: string; }
   ResourceConditions: { input: string; output: string; }
+  /** Unique and stable identifier of a resource */
   ResourceID: { input: string; output: string; }
   ResourceLabels: { input: string; output: string; }
+  /** Name of a resource */
   ResourceName: { input: string; output: string; }
+  /** Short name that selects a resource type (e.g. in `kind` filters) */
   ResourceSelectorName: { input: string; output: string; }
+  /**
+   * Resource type selector as authored: a selector name, an alias, a type
+   * name or a schema URI
+   */
   ResourceTypeSelectorRaw: { input: string; output: string; }
+  /** Unique identifier of a task */
   TaskID: { input: string; output: string; }
+  /** Name of a resource type */
   TypeName: { input: string; output: string; }
+  /** URI of a resource type schema */
   TypeUri: { input: string; output: string; }
+  /** Absolute URL */
   URL: { input: string; output: string; }
+  /** Unsigned 64-bit integer, passed as a string to avoid precision loss */
   Uint64: { input: number; output: number; }
   /** URL is a String implementing the [URL Standard](http://url.spec.whatwg.org/) */
   Url: { input: string; output: string; }
+  /** Type of event a webhook subscription delivers (e.g. `DATASET.REF.UPDATED`) */
   WebhookEventType: { input: string; output: string; }
+  /** Unique identifier of a webhook subscription */
   WebhookSubscriptionID: { input: string; output: string; }
+  /** Human-readable label of a webhook subscription */
   WebhookSubscriptionLabel: { input: string; output: string; }
 };
 
+/** A page of `ViewAccessToken` items */
 export type AccessTokenConnection = {
   __typename?: 'AccessTokenConnection';
+  /** Items of this page, each wrapped in an edge */
   edges: Array<AccessTokenEdge>;
   /** A shorthand for `edges { node { ... } }` */
   nodes: Array<ViewAccessToken>;
@@ -84,11 +128,14 @@ export type AccessTokenConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** An edge wrapping a single `ViewAccessToken` item */
 export type AccessTokenEdge = {
   __typename?: 'AccessTokenEdge';
+  /** The item itself */
   node: ViewAccessToken;
 };
 
+/** User or organization account */
 export type Account = {
   __typename?: 'Account';
   /**
@@ -160,40 +207,51 @@ export type Account = {
 };
 
 
+/** User or organization account */
 export type AccountOwnedDatasetsArgs = {
   page?: InputMaybe<Scalars['Int']['input']>;
   perPage?: InputMaybe<Scalars['Int']['input']>;
 };
 
+/** Access tokens of an account */
 export type AccountAccessTokens = {
   __typename?: 'AccountAccessTokens';
+  /** Lists access tokens of this account, including revoked ones */
   listAccessTokens: AccessTokenConnection;
 };
 
 
+/** Access tokens of an account */
 export type AccountAccessTokensListAccessTokensArgs = {
   page?: InputMaybe<Scalars['Int']['input']>;
   perPage?: InputMaybe<Scalars['Int']['input']>;
 };
 
+/** Mutations managing access tokens of an account */
 export type AccountAccessTokensMut = {
   __typename?: 'AccountAccessTokensMut';
+  /** Creates a new access token with the given name for this account */
   createAccessToken: CreateTokenResult;
+  /** Revokes the access token with the given ID */
   revokeAccessToken: RevokeResult;
 };
 
 
+/** Mutations managing access tokens of an account */
 export type AccountAccessTokensMutCreateAccessTokenArgs = {
   tokenName: Scalars['String']['input'];
 };
 
 
+/** Mutations managing access tokens of an account */
 export type AccountAccessTokensMutRevokeAccessTokenArgs = {
   tokenId: Scalars['AccessTokenID']['input'];
 };
 
+/** A page of `Account` items */
 export type AccountConnection = {
   __typename?: 'AccountConnection';
+  /** Items of this page, each wrapped in an edge */
   edges: Array<AccountEdge>;
   /** A shorthand for `edges { node { ... } }` */
   nodes: Array<Account>;
@@ -203,34 +261,51 @@ export type AccountConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** Change of an account's role in a dataset */
 export type AccountDatasetRelationOperation = {
+  /** Account whose role changes */
   accountId: Scalars['AccountID']['input'];
+  /** Dataset the role applies to */
   datasetId: Scalars['DatasetID']['input'];
+  /** Change to apply */
   operation: DatasetRoleOperation;
 };
 
+/** An edge wrapping a single `Account` item */
 export type AccountEdge = {
   __typename?: 'AccountEdge';
+  /** The item itself */
   node: Account;
 };
 
+/** Account was not created: a unique field value is already taken */
 export type AccountFieldNonUnique = CreateAccountResult & {
   __typename?: 'AccountFieldNonUnique';
+  /** Name of the field whose value is already taken */
   field: Scalars['String']['output'];
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Filters for flows of an account's datasets */
 export type AccountFlowFilters = {
+  /** Only flows of these datasets, empty means all owned datasets */
   byDatasetIds: Array<Scalars['DatasetID']['input']>;
+  /** Only flows started by the given initiator */
   byInitiator?: InputMaybe<InitiatorFilterInput>;
+  /** Only flows of the given process kind */
   byProcessType?: InputMaybe<FlowProcessTypeFilterInput>;
+  /** Only flows in one of these statuses */
   byStatus?: InputMaybe<Array<FlowStatus>>;
 };
 
+/** Flow process of an account: a dataset process or a webhook delivery */
 export type AccountFlowProcessCard = DatasetFlowProcess | WebhookFlowSubProcess;
 
+/** A page of `AccountFlowProcessCard` items */
 export type AccountFlowProcessCardConnection = {
   __typename?: 'AccountFlowProcessCardConnection';
+  /** Items of this page, each wrapped in an edge */
   edges: Array<AccountFlowProcessCardEdge>;
   /** A shorthand for `edges { node { ... } }` */
   nodes: Array<AccountFlowProcessCard>;
@@ -240,22 +315,32 @@ export type AccountFlowProcessCardConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** An edge wrapping a single `AccountFlowProcessCard` item */
 export type AccountFlowProcessCardEdge = {
   __typename?: 'AccountFlowProcessCardEdge';
+  /** The item itself */
   node: AccountFlowProcessCard;
 };
 
+/** Recurring flow processes of the datasets owned by an account */
 export type AccountFlowProcesses = {
   __typename?: 'AccountFlowProcesses';
+  /** Page of dataset and webhook delivery processes together */
   allCards: AccountFlowProcessCardConnection;
+  /** State counts of dataset and webhook delivery processes together */
   fullRollup: FlowProcessGroupRollup;
+  /** Page of dataset ingest and transform processes */
   primaryCards: DatasetFlowProcessConnection;
+  /** State counts of dataset ingest and transform processes */
   primaryRollup: FlowProcessGroupRollup;
+  /** Page of webhook delivery processes */
   webhookCards: WebhookFlowSubProcessConnection;
+  /** State counts of webhook delivery processes */
   webhookRollup: FlowProcessGroupRollup;
 };
 
 
+/** Recurring flow processes of the datasets owned by an account */
 export type AccountFlowProcessesAllCardsArgs = {
   filters?: InputMaybe<FlowProcessFilters>;
   ordering?: InputMaybe<FlowProcessOrdering>;
@@ -264,11 +349,13 @@ export type AccountFlowProcessesAllCardsArgs = {
 };
 
 
+/** Recurring flow processes of the datasets owned by an account */
 export type AccountFlowProcessesFullRollupArgs = {
   filters?: InputMaybe<FlowProcessFilters>;
 };
 
 
+/** Recurring flow processes of the datasets owned by an account */
 export type AccountFlowProcessesPrimaryCardsArgs = {
   filters?: InputMaybe<FlowProcessFilters>;
   ordering?: InputMaybe<FlowProcessOrdering>;
@@ -277,11 +364,13 @@ export type AccountFlowProcessesPrimaryCardsArgs = {
 };
 
 
+/** Recurring flow processes of the datasets owned by an account */
 export type AccountFlowProcessesPrimaryRollupArgs = {
   filters?: InputMaybe<FlowProcessFilters>;
 };
 
 
+/** Recurring flow processes of the datasets owned by an account */
 export type AccountFlowProcessesWebhookCardsArgs = {
   filters?: InputMaybe<FlowProcessFilters>;
   ordering?: InputMaybe<FlowProcessOrdering>;
@@ -290,17 +379,22 @@ export type AccountFlowProcessesWebhookCardsArgs = {
 };
 
 
+/** Recurring flow processes of the datasets owned by an account */
 export type AccountFlowProcessesWebhookRollupArgs = {
   filters?: InputMaybe<FlowProcessFilters>;
 };
 
+/** Flow run queries across datasets owned by an account */
 export type AccountFlowRuns = {
   __typename?: 'AccountFlowRuns';
+  /** Lists the account's datasets that have at least one flow */
   listDatasetsWithFlow: DatasetConnection;
+  /** Lists flows of the account's datasets, paginated and optionally filtered */
   listFlows: FlowConnection;
 };
 
 
+/** Flow run queries across datasets owned by an account */
 export type AccountFlowRunsListFlowsArgs = {
   filters?: InputMaybe<AccountFlowFilters>;
   order?: InputMaybe<FlowRunOrder>;
@@ -308,18 +402,23 @@ export type AccountFlowRunsListFlowsArgs = {
   perPage?: InputMaybe<Scalars['Int']['input']>;
 };
 
+/** Flow trigger queries across datasets owned by an account */
 export type AccountFlowTriggers = {
   __typename?: 'AccountFlowTriggers';
   /** Checks if all triggers of all datasets in account are disabled */
   allPaused: Scalars['Boolean']['output'];
 };
 
+/** Flow trigger mutations across all datasets owned by an account */
 export type AccountFlowTriggersMut = {
   __typename?: 'AccountFlowTriggersMut';
+  /** Pauses flow triggers of all datasets owned by the account */
   pauseAccountDatasetFlows: Scalars['Boolean']['output'];
+  /** Resumes flow triggers of all datasets owned by the account */
   resumeAccountDatasetFlows: Scalars['Boolean']['output'];
 };
 
+/** Flow queries scoped to an account */
 export type AccountFlows = {
   __typename?: 'AccountFlows';
   /** Returns interface for flow processes summary queries */
@@ -330,8 +429,10 @@ export type AccountFlows = {
   triggers: AccountFlowTriggers;
 };
 
+/** Flow mutations scoped to an account */
 export type AccountFlowsMut = {
   __typename?: 'AccountFlowsMut';
+  /** Flow trigger mutations for the account's datasets */
   triggers: AccountFlowTriggersMut;
 };
 
@@ -350,10 +451,13 @@ export type AccountHandle = {
   name: Scalars['AccountName']['output'];
 };
 
+/** Filters narrowing an account name lookup */
 export type AccountLookupFilter = {
+  /** Accounts to leave out of the results */
   excludeAccountsByIds: Array<Scalars['AccountID']['input']>;
 };
 
+/** Mutations of a single account */
 export type AccountMut = {
   __typename?: 'AccountMut';
   /**
@@ -401,38 +505,48 @@ export type AccountMut = {
 };
 
 
+/** Mutations of a single account */
 export type AccountMutModifyPasswordArgs = {
   password: Scalars['AccountPassword']['input'];
 };
 
 
+/** Mutations of a single account */
 export type AccountMutModifyPasswordWithConfirmationArgs = {
   newPassword: Scalars['AccountPassword']['input'];
   oldPassword: Scalars['AccountPassword']['input'];
 };
 
 
+/** Mutations of a single account */
 export type AccountMutRenameArgs = {
   newName: Scalars['AccountName']['input'];
 };
 
 
+/** Mutations of a single account */
 export type AccountMutUpdateEmailArgs = {
   newEmail: Scalars['Email']['input'];
 };
 
+/** Method an account uses to log in */
 export enum AccountProvider {
+  /** Login via GitHub OAuth */
   OauthGithub = 'OAUTH_GITHUB',
+  /** Login with account name and password */
   Password = 'PASSWORD',
+  /** Login by signing a message with an Ethereum wallet */
   Web3Wallet = 'WEB3_WALLET'
 }
 
+/** Quotas of an account */
 export type AccountQuotas = {
   __typename?: 'AccountQuotas';
   /** User-level quotas */
   user: AccountQuotasUsage;
 };
 
+/** Mutations of account quotas */
 export type AccountQuotasMut = {
   __typename?: 'AccountQuotasMut';
   /** Setting quotas at the account level. */
@@ -440,16 +554,19 @@ export type AccountQuotasMut = {
 };
 
 
+/** Mutations of account quotas */
 export type AccountQuotasMutSetAccountQuotasArgs = {
   quotas: SetAccountQuotasInput;
 };
 
+/** User-level quotas of an account */
 export type AccountQuotasUsage = {
   __typename?: 'AccountQuotasUsage';
   /** User-level quotas */
   storage: AccountQuotasUsageStorage;
 };
 
+/** Storage quotas of an account */
 export type AccountQuotasUsageStorage = {
   __typename?: 'AccountQuotasUsageStorage';
   /**
@@ -466,29 +583,42 @@ export type AccountQuotasUsageStorage = {
  * checked for agreement, so a mismatch is reported rather than ignored.
  */
 export type AccountRefInput = {
+  /** Account DID, used for lookup when given */
   did?: InputMaybe<Scalars['AccountID']['input']>;
+  /** Resource ID of the account, only checked for agreement */
   id?: InputMaybe<Scalars['ResourceID']['input']>;
+  /** Account name, used for lookup when `did` is absent */
   name?: InputMaybe<Scalars['AccountName']['input']>;
 };
 
+/** Kind of account */
 export enum AccountType {
+  /** Account of an organization */
   Organization = 'ORGANIZATION',
+  /** Account of an individual user */
   User = 'USER'
 }
 
+/** Resource usage of an account */
 export type AccountUsage = {
   __typename?: 'AccountUsage';
+  /** Aggregated storage statistics of datasets owned by the account */
   storage: TotalDatasetsStatistic;
 };
 
+/** Collaborator of a dataset with their role */
 export type AccountWithRole = {
   __typename?: 'AccountWithRole';
+  /** Collaborator account */
   account: Account;
+  /** Role of the account in the dataset */
   role: DatasetAccessRole;
 };
 
+/** A page of `AccountWithRole` items */
 export type AccountWithRoleConnection = {
   __typename?: 'AccountWithRoleConnection';
+  /** Items of this page, each wrapped in an edge */
   edges: Array<AccountWithRoleEdge>;
   /** A shorthand for `edges { node { ... } }` */
   nodes: Array<AccountWithRole>;
@@ -498,11 +628,14 @@ export type AccountWithRoleConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** An edge wrapping a single `AccountWithRole` item */
 export type AccountWithRoleEdge = {
   __typename?: 'AccountWithRoleEdge';
+  /** The item itself */
   node: AccountWithRole;
 };
 
+/** Account lookup queries */
 export type Accounts = {
   __typename?: 'Accounts';
   /** Returns an account by its ID, if found */
@@ -523,27 +656,32 @@ export type Accounts = {
 };
 
 
+/** Account lookup queries */
 export type AccountsByIdArgs = {
   accountId: Scalars['AccountID']['input'];
 };
 
 
+/** Account lookup queries */
 export type AccountsByIdsArgs = {
   accountIds: Array<Scalars['AccountID']['input']>;
   skipMissing: Scalars['Boolean']['input'];
 };
 
 
+/** Account lookup queries */
 export type AccountsByNameArgs = {
   name: Scalars['AccountName']['input'];
 };
 
 
+/** Account lookup queries */
 export type AccountsByNamesArgs = {
   accountNames: Array<Scalars['AccountName']['input']>;
   skipMissing: Scalars['Boolean']['input'];
 };
 
+/** Mutations of accounts */
 export type AccountsMut = {
   __typename?: 'AccountsMut';
   /** Returns a mutable account by its id */
@@ -568,34 +706,40 @@ export type AccountsMut = {
 };
 
 
+/** Mutations of accounts */
 export type AccountsMutByIdArgs = {
   accountId: Scalars['AccountID']['input'];
 };
 
 
+/** Mutations of accounts */
 export type AccountsMutByIdsArgs = {
   accountIds: Array<Scalars['AccountID']['input']>;
   skipMissing: Scalars['Boolean']['input'];
 };
 
 
+/** Mutations of accounts */
 export type AccountsMutByNameArgs = {
   accountName: Scalars['AccountName']['input'];
 };
 
 
+/** Mutations of accounts */
 export type AccountsMutByNamesArgs = {
   accountNames: Array<Scalars['AccountName']['input']>;
   skipMissing: Scalars['Boolean']['input'];
 };
 
 
+/** Mutations of accounts */
 export type AccountsMutCreateAccountArgs = {
   accountName: Scalars['AccountName']['input'];
   email?: InputMaybe<Scalars['Email']['input']>;
 };
 
 
+/** Mutations of accounts */
 export type AccountsMutCreateWalletAccountsArgs = {
   walletAddresses: Array<Scalars['DidPkh']['input']>;
 };
@@ -610,49 +754,42 @@ export type AddData = {
   /** ODF extensions. */
   extra?: Maybe<Scalars['ExtraAttributes']['output']>;
   /**
-   * Describes checkpoint written during this transaction, if any. If an
-   * engine operation resulted in no updates to the checkpoint, but
-   * checkpoint is still relevant for subsequent runs - a hash of the
-   * previous checkpoint should be specified.
+   * Describes checkpoint written during this transaction, if any. If an engine operation
+   * resulted in no updates to the checkpoint, but checkpoint is still relevant for subsequent
+   * runs - a hash of the previous checkpoint should be specified.
    */
   newCheckpoint?: Maybe<Checkpoint>;
   /** Describes output data written during this transaction, if any. */
   newData?: Maybe<DataSlice>;
   /**
-   * The state of the source the data was added from to allow fast resuming.
-   * If the state did not change but is still relevant for subsequent runs it
-   * should be carried, i.e. only the last state per source is considered
-   * when resuming.
+   * The state of the source the data was added from to allow fast resuming. If the state did
+   * not change but is still relevant for subsequent runs it should be carried, i.e. only the
+   * last state per source is considered when resuming.
    */
   newSourceState?: Maybe<SourceState>;
   /**
-   * Last watermark of the output data stream, if any. Initial blocks may not
-   * have watermarks, but once watermark is set - all subsequent blocks
-   * should either carry the same watermark or specify a new (greater) one.
-   * Thus, watermarks are monotonically non-decreasing.
+   * Last watermark of the output data stream, if any. Initial blocks may not have watermarks,
+   * but once watermark is set - all subsequent blocks should either carry the same watermark or
+   * specify a new (greater) one. Thus, watermarks are monotonically non-decreasing.
    */
   newWatermark?: Maybe<Scalars['DateTime']['output']>;
   /** Hash of the checkpoint file used to restore ingestion state, if any. */
   prevCheckpoint?: Maybe<Scalars['Multihash']['output']>;
   /**
-   * Last offset of the previous data slice, if any. Must be equal to the
-   * last non-empty `newData.offsetInterval.end`.
+   * Last offset of the previous data slice, if any. Must be equal to the last non-empty
+   * `newData.offsetInterval.end`.
    */
   prevOffset?: Maybe<Scalars['Uint64']['output']>;
 };
 
 /**
- * Describes how to ingest data into a root dataset from a certain logical
- * source.
+ * Describes how to ingest data into a root dataset from a certain logical source.
  *
  * Schema: https://opendatafabric.org/schemas/legacy/v0/AddPushSource
  */
 export type AddPushSource = {
   __typename?: 'AddPushSource';
-  /**
-   * Determines how newly-ingested data should be merged with existing
-   * history.
-   */
+  /** Determines how newly-ingested data should be merged with existing history. */
   merge: MergeStrategy;
   /** Pre-processing query that shapes the data. */
   preprocess?: Maybe<Transform>;
@@ -662,33 +799,45 @@ export type AddPushSource = {
   sourceName: Scalars['String']['output'];
 };
 
+/** Administrative queries, available only to administrators */
 export type Admin = {
   __typename?: 'Admin';
+  /** Checks that the caller has administrator access, returns "OK" */
   selfTest: Scalars['String']['output'];
 };
 
+/** Administrative mutations, available only to administrators */
 export type AdminMut = {
   __typename?: 'AdminMut';
+  /** Search index administration */
   search: AdminSearchMut;
 };
 
+/** Search index administration */
 export type AdminSearchMut = {
   __typename?: 'AdminSearchMut';
+  /** Drops and fully rebuilds the given search indices, all of them if none are given */
   resetSearchIndices: Scalars['String']['output'];
 };
 
 
+/** Search index administration */
 export type AdminSearchMutResetSearchIndicesArgs = {
   entityNames?: InputMaybe<Array<SearchEntityName>>;
 };
 
+/** One manifest to apply as part of a batch */
 export type ApplyManifestInput = {
+  /** Format the manifest text is in */
   format: ResourceManifestFormat;
+  /** Manifest text describing the desired resource state */
   manifest: Scalars['String']['input'];
 };
 
+/** Account-dataset relations were applied */
 export type ApplyRolesMatrixResult = {
   __typename?: 'ApplyRolesMatrixResult';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
@@ -723,48 +872,63 @@ export type AttachmentsEmbedded = {
   items: Array<AttachmentEmbedded>;
 };
 
+/** Authentication and authorization queries */
 export type Auth = {
   __typename?: 'Auth';
+  /** Login methods enabled on this node */
   enabledProviders: Array<AccountProvider>;
+  /** Dataset roles granted to the given accounts */
   relations: AuthRelationConnection;
 };
 
 
+/** Authentication and authorization queries */
 export type AuthRelationsArgs = {
   accountIds: Array<Scalars['AccountID']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
   perPage?: InputMaybe<Scalars['Int']['input']>;
 };
 
+/** Authentication mutations */
 export type AuthMut = {
   __typename?: 'AuthMut';
+  /** Returns the account that the given access token belongs to */
   accountDetails: Account;
+  /** Logs in with the given provider credentials and issues an access token */
   login: LoginResponse;
   /** Web3-related functionality group */
   web3: AuthWeb3Mut;
 };
 
 
+/** Authentication mutations */
 export type AuthMutAccountDetailsArgs = {
   accessToken: Scalars['String']['input'];
 };
 
 
+/** Authentication mutations */
 export type AuthMutLoginArgs = {
   deviceCode?: InputMaybe<Scalars['DeviceCode']['input']>;
   loginCredentialsJson: Scalars['String']['input'];
   loginMethod: AccountProvider;
 };
 
+/** Role an account has in a dataset */
 export type AuthRelation = {
   __typename?: 'AuthRelation';
+  /** Account the role is granted to */
   account: Account;
+  /** Dataset the role applies to */
   dataset: Dataset;
+  /** Role of the account in the dataset */
   role: DatasetAccessRole;
 };
 
+/** A page of `AuthRelation` items */
 export type AuthRelationConnection = {
   __typename?: 'AuthRelationConnection';
+  /** Items of this page, each wrapped in an edge */
   edges: Array<AuthRelationEdge>;
   /** A shorthand for `edges { node { ... } }` */
   nodes: Array<AuthRelation>;
@@ -774,99 +938,150 @@ export type AuthRelationConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** An edge wrapping a single `AuthRelation` item */
 export type AuthRelationEdge = {
   __typename?: 'AuthRelationEdge';
+  /** The item itself */
   node: AuthRelation;
 };
 
+/** Web3 wallet authentication mutations */
 export type AuthWeb3Mut = {
   __typename?: 'AuthWeb3Mut';
+  /** Issues a nonce for the wallet to sign in a Sign-In with Ethereum message */
   eip4361AuthNonce: Eip4361AuthNonceResponse;
 };
 
 
+/** Web3 wallet authentication mutations */
 export type AuthWeb3MutEip4361AuthNonceArgs = {
   account: Scalars['EvmWalletAddress']['input'];
 };
 
+/** Resource handle found for one reference of a batch */
 export type BatchResourceHandleSuccess = {
   __typename?: 'BatchResourceHandleSuccess';
+  /** Handle of the resource the reference resolved to */
   handle: ResourceHandle;
+  /** Zero-based position of the reference in the request */
   requestIndex: Scalars['Int']['output'];
 };
 
+/** Result of looking up resource handles by reference */
 export type BatchResourceHandlesOutcome = BatchResourceHandlesResult | ResourceAccountResolutionProblem | ResourceUnsupportedSelectorProblem;
 
+/** Resource handles found and references that could not be resolved */
 export type BatchResourceHandlesResult = {
   __typename?: 'BatchResourceHandlesResult';
+  /** Handles found, one per resolved reference */
   handles: Array<BatchResourceHandleSuccess>;
+  /** References that could not be resolved */
   problems: Array<BatchResourceProblem>;
 };
 
+/** Manifest rendered for one reference of a batch */
 export type BatchResourceManifestSuccess = {
   __typename?: 'BatchResourceManifestSuccess';
+  /** Manifest of the resource the reference resolved to */
   manifest: ResourceRenderManifestResult;
+  /** Zero-based position of the reference in the request */
   requestIndex: Scalars['Int']['output'];
 };
 
+/** Result of rendering manifests for resources looked up by reference */
 export type BatchResourceManifestsOutcome = BatchResourceManifestsResult | ResourceAccountResolutionProblem | ResourceUnsupportedSelectorProblem;
 
+/** Rendered manifests and references that could not be resolved */
 export type BatchResourceManifestsResult = {
   __typename?: 'BatchResourceManifestsResult';
+  /** Manifests rendered, one per resolved reference */
   manifests: Array<BatchResourceManifestSuccess>;
+  /** References that could not be resolved */
   problems: Array<BatchResourceProblem>;
 };
 
+/** Reference of a batch that could not be resolved */
 export type BatchResourceProblem = {
   __typename?: 'BatchResourceProblem';
+  /** Why the reference could not be resolved */
   problem: ResourceLookupProblem;
+  /** Zero-based position of the reference in the request */
   requestIndex: Scalars['Int']['output'];
 };
 
+/** Resource found for one reference of a batch */
 export type BatchResourceSuccess = {
   __typename?: 'BatchResourceSuccess';
+  /** Zero-based position of the reference in the request */
   requestIndex: Scalars['Int']['output'];
+  /** Resource the reference resolved to */
   resource: Resource;
 };
 
+/** Result of looking up resources by reference */
 export type BatchResourcesOutcome = BatchResourcesResult | ResourceAccountResolutionProblem | ResourceUnsupportedSelectorProblem;
 
+/** Resources found and references that could not be resolved */
 export type BatchResourcesResult = {
   __typename?: 'BatchResourcesResult';
+  /** References that could not be resolved */
   problems: Array<BatchResourceProblem>;
+  /** Resources found, one per resolved reference */
   resources: Array<BatchResourceSuccess>;
 };
 
+/** Named reference to a metadata block */
 export type BlockRef = {
   __typename?: 'BlockRef';
+  /** Hash of the block the reference points to */
   blockHash: Scalars['Multihash']['output'];
+  /** Name of the reference, e.g. `head` */
   name: Scalars['String']['output'];
 };
 
+/** Build details of the running server; fields are null when unknown */
 export type BuildInfo = {
   __typename?: 'BuildInfo';
+  /** Version of the application */
   appVersion: Scalars['String']['output'];
+  /** Time the binary was built */
   buildTimestamp?: Maybe<Scalars['String']['output']>;
+  /** Cargo features enabled in the build */
   cargoFeatures?: Maybe<Scalars['String']['output']>;
+  /** Compiler optimization level of the build */
   cargoOptLevel?: Maybe<Scalars['String']['output']>;
+  /** Target triple the binary was built for */
   cargoTargetTriple?: Maybe<Scalars['String']['output']>;
+  /** Git branch the binary was built from */
   gitBranch?: Maybe<Scalars['String']['output']>;
+  /** Date of the git commit the binary was built from */
   gitCommitDate?: Maybe<Scalars['String']['output']>;
+  /** Output of `git describe` for the built revision */
   gitDescribe?: Maybe<Scalars['String']['output']>;
+  /** Git commit hash the binary was built from */
   gitSha?: Maybe<Scalars['String']['output']>;
+  /** Release channel of the Rust compiler */
   rustcChannel?: Maybe<Scalars['String']['output']>;
+  /** Commit hash of the Rust compiler */
   rustcCommitSha?: Maybe<Scalars['String']['output']>;
+  /** Host target triple of the Rust compiler */
   rustcHostTriple?: Maybe<Scalars['String']['output']>;
+  /** Version of the Rust compiler */
   rustcSemver?: Maybe<Scalars['String']['output']>;
 };
 
+/** Outcome of cancelling a flow run */
 export type CancelFlowRunResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Flow run was cancelled */
 export type CancelFlowRunSuccess = CancelFlowRunResult & {
   __typename?: 'CancelFlowRunSuccess';
+  /** Flow after cancellation */
   flow: Flow;
+  /** Human-readable success message */
   message: Scalars['String']['output'];
 };
 
@@ -883,12 +1098,16 @@ export type Checkpoint = {
   size: Scalars['Uint64']['output'];
 };
 
+/** Kamu CLI commands to sync a dataset with this node */
 export type CliProtocolDesc = {
   __typename?: 'CliProtocolDesc';
+  /** Command that pulls the dataset from this node */
   pullCommand: Scalars['String']['output'];
+  /** Command that pushes a local dataset to this node */
   pushCommand: Scalars['String']['output'];
 };
 
+/** Mutations that manage account access to datasets in bulk */
 export type CollaborationMut = {
   __typename?: 'CollaborationMut';
   /** Batch application of relations between accounts and datasets */
@@ -896,10 +1115,12 @@ export type CollaborationMut = {
 };
 
 
+/** Mutations that manage account access to datasets in bulk */
 export type CollaborationMutApplyAccountDatasetRelationsArgs = {
   operations: Array<AccountDatasetRelationOperation>;
 };
 
+/** Collection archetype view of a dataset: a set of entries linking to other datasets by path */
 export type Collection = {
   __typename?: 'Collection';
   /**
@@ -912,10 +1133,12 @@ export type Collection = {
 };
 
 
+/** Collection archetype view of a dataset: a set of entries linking to other datasets by path */
 export type CollectionAsOfArgs = {
   blockHash: Scalars['Multihash']['input'];
 };
 
+/** Entry of a collection that links a path to a dataset */
 export type CollectionEntry = {
   __typename?: 'CollectionEntry';
   /** Resolves the reference to linked dataset */
@@ -936,8 +1159,10 @@ export type CollectionEntry = {
   systemTime: Scalars['DateTime']['output'];
 };
 
+/** A page of `CollectionEntry` items */
 export type CollectionEntryConnection = {
   __typename?: 'CollectionEntryConnection';
+  /** Items of this page, each wrapped in an edge */
   edges: Array<CollectionEntryEdge>;
   /** A shorthand for `edges { node { ... } }` */
   nodes: Array<CollectionEntry>;
@@ -947,11 +1172,14 @@ export type CollectionEntryConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** An edge wrapping a single `CollectionEntry` item */
 export type CollectionEntryEdge = {
   __typename?: 'CollectionEntryEdge';
+  /** The item itself */
   node: CollectionEntry;
 };
 
+/** Collection entry to add */
 export type CollectionEntryInput = {
   /** Json object containing extra column values */
   extraData?: InputMaybe<Scalars['ExtraData']['input']>;
@@ -961,6 +1189,7 @@ export type CollectionEntryInput = {
   ref: Scalars['DatasetID']['input'];
 };
 
+/** Mutations of a collection dataset */
 export type CollectionMut = {
   __typename?: 'CollectionMut';
   /** Links new entry to this collection */
@@ -974,12 +1203,14 @@ export type CollectionMut = {
 };
 
 
+/** Mutations of a collection dataset */
 export type CollectionMutAddEntryArgs = {
   entry: CollectionEntryInput;
   expectedHead?: InputMaybe<Scalars['Multihash']['input']>;
 };
 
 
+/** Mutations of a collection dataset */
 export type CollectionMutMoveEntryArgs = {
   expectedHead?: InputMaybe<Scalars['Multihash']['input']>;
   extraData?: InputMaybe<Scalars['ExtraData']['input']>;
@@ -988,17 +1219,20 @@ export type CollectionMutMoveEntryArgs = {
 };
 
 
+/** Mutations of a collection dataset */
 export type CollectionMutRemoveEntryArgs = {
   expectedHead?: InputMaybe<Scalars['Multihash']['input']>;
   path: Scalars['CollectionPath']['input'];
 };
 
 
+/** Mutations of a collection dataset */
 export type CollectionMutUpdateEntriesArgs = {
   expectedHead?: InputMaybe<Scalars['Multihash']['input']>;
   operations: Array<CollectionUpdateInput>;
 };
 
+/** State of a collection at a specific point in its history */
 export type CollectionProjection = {
   __typename?: 'CollectionProjection';
   /**
@@ -1013,6 +1247,7 @@ export type CollectionProjection = {
 };
 
 
+/** State of a collection at a specific point in its history */
 export type CollectionProjectionEntriesArgs = {
   maxDepth?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -1021,39 +1256,57 @@ export type CollectionProjectionEntriesArgs = {
 };
 
 
+/** State of a collection at a specific point in its history */
 export type CollectionProjectionEntriesByRefArgs = {
   refs: Array<Scalars['DatasetID']['input']>;
 };
 
 
+/** State of a collection at a specific point in its history */
 export type CollectionProjectionEntryArgs = {
   path: Scalars['CollectionPath']['input'];
 };
 
+/** Dataset head did not match the expected one, likely due to a concurrent update */
 export type CollectionUpdateErrorCasFailed = CollectionUpdateResult & {
   __typename?: 'CollectionUpdateErrorCasFailed';
+  /** Current head block hash of the dataset, null if it has none */
   actualHead?: Maybe<Scalars['Multihash']['output']>;
+  /** Head block hash the caller expected */
   expectedHead: Scalars['Multihash']['output'];
+  /** Always false */
   isSuccess: Scalars['Boolean']['output'];
+  /** Human-readable error message */
   message: Scalars['String']['output'];
 };
 
+/** Entry referenced by an operation does not exist */
 export type CollectionUpdateErrorNotFound = CollectionUpdateResult & {
   __typename?: 'CollectionUpdateErrorNotFound';
+  /** Always false */
   isSuccess: Scalars['Boolean']['output'];
+  /** Human-readable error message */
   message: Scalars['String']['output'];
+  /** Path that was not found */
   path: Scalars['CollectionPath']['output'];
 };
 
+/** Update would exceed the storage quota of the account */
 export type CollectionUpdateErrorQuotaExceeded = CollectionUpdateResult & {
   __typename?: 'CollectionUpdateErrorQuotaExceeded';
+  /** Size of the rejected data, in bytes; null if no quota is configured */
   incoming?: Maybe<Scalars['Int']['output']>;
+  /** Always false */
   isSuccess: Scalars['Boolean']['output'];
+  /** Storage limit, in bytes; null if no quota is configured */
   limit?: Maybe<Scalars['Int']['output']>;
+  /** Human-readable error message */
   message: Scalars['String']['output'];
+  /** Storage already used, in bytes; null if no quota is configured */
   used?: Maybe<Scalars['Int']['output']>;
 };
 
+/** Single collection update operation; exactly one field must be set */
 export type CollectionUpdateInput = {
   /**
    * Inserts a new entry under the specified path. If an entry at the target
@@ -1071,37 +1324,55 @@ export type CollectionUpdateInput = {
   remove?: InputMaybe<CollectionUpdateInputRemove>;
 };
 
+/** Adds an entry to the collection */
 export type CollectionUpdateInputAdd = {
+  /** Entry to add */
   entry: CollectionEntryInput;
 };
 
+/** Moves an entry to a new path */
 export type CollectionUpdateInputMove = {
   /** Optionally update the extra data */
   extraData?: InputMaybe<Scalars['ExtraData']['input']>;
+  /** Current path of the entry */
   pathFrom: Scalars['CollectionPath']['input'];
+  /** New path of the entry */
   pathTo: Scalars['CollectionPath']['input'];
 };
 
+/** Removes an entry from the collection */
 export type CollectionUpdateInputRemove = {
+  /** Path of the entry to remove */
   path: Scalars['CollectionPath']['input'];
 };
 
+/** Outcome of updating collection entries */
 export type CollectionUpdateResult = {
+  /** Whether the operation succeeded */
   isSuccess: Scalars['Boolean']['output'];
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Collection entries were updated */
 export type CollectionUpdateSuccess = CollectionUpdateResult & {
   __typename?: 'CollectionUpdateSuccess';
+  /** Always true */
   isSuccess: Scalars['Boolean']['output'];
+  /** Always empty */
   message: Scalars['String']['output'];
+  /** Hash of the metadata chain head after the update */
   newHead: Scalars['Multihash']['output'];
+  /** Hash of the metadata chain head before the update */
   oldHead: Scalars['Multihash']['output'];
 };
 
+/** Operations did not change the collection */
 export type CollectionUpdateUpToDate = CollectionUpdateResult & {
   __typename?: 'CollectionUpdateUpToDate';
+  /** Always true */
   isSuccess: Scalars['Boolean']['output'];
+  /** Always empty */
   message: Scalars['String']['output'];
 };
 
@@ -1113,46 +1384,69 @@ export type ColumnInput = {
   type: DataTypeInput;
 };
 
+/** Outcome of committing an event to the metadata chain */
 export type CommitResult = {
+  /** Whether the operation succeeded */
   isSuccess: Scalars['Boolean']['output'];
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Event could not be appended to the metadata chain */
 export type CommitResultAppendError = CommitResult & UpdateReadmeResult & {
   __typename?: 'CommitResultAppendError';
+  /** Always false */
   isSuccess: Scalars['Boolean']['output'];
+  /** Reason the append failed */
   message: Scalars['String']['output'];
 };
 
+/** Event was committed to the metadata chain */
 export type CommitResultSuccess = CommitResult & UpdateReadmeResult & {
   __typename?: 'CommitResultSuccess';
+  /** Always true */
   isSuccess: Scalars['Boolean']['output'];
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
+  /** Hash of the new chain head */
   newHead: Scalars['Multihash']['output'];
+  /** Hash of the chain head before the commit, null if the chain was empty */
   oldHead?: Maybe<Scalars['Multihash']['output']>;
 };
 
+/** Outcome of comparing a remote metadata chain with the local one */
 export type CompareChainsResult = CompareChainsResultError | CompareChainsResultStatus;
 
+/** Metadata chains could not be compared */
 export type CompareChainsResultError = {
   __typename?: 'CompareChainsResultError';
+  /** Reason of the failure */
   reason: CompareChainsResultReason;
 };
 
+/** Reason the metadata chains could not be compared */
 export type CompareChainsResultReason = {
   __typename?: 'CompareChainsResultReason';
+  /** Description of the problem */
   message: Scalars['String']['output'];
 };
 
+/** Metadata chains were compared successfully */
 export type CompareChainsResultStatus = {
   __typename?: 'CompareChainsResultStatus';
+  /** State of the remote chain relative to the local one */
   message: CompareChainsStatus;
 };
 
+/** State of a remote metadata chain relative to the local one */
 export enum CompareChainsStatus {
+  /** Remote has blocks the local chain is missing */
   Ahead = 'AHEAD',
+  /** Remote is missing blocks the local chain has */
   Behind = 'BEHIND',
+  /** Chains have diverged or belong to different datasets */
   Diverged = 'DIVERGED',
+  /** Both chains have the same head */
   Equal = 'EQUAL'
 }
 
@@ -1166,91 +1460,138 @@ export enum CompressionFormat {
   Zip = 'ZIP'
 }
 
+/** Access token was not created: the account already has a token with this name */
 export type CreateAccessTokenResultDuplicate = CreateTokenResult & {
   __typename?: 'CreateAccessTokenResultDuplicate';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
+  /** Name that is already taken */
   tokenName: Scalars['String']['output'];
 };
 
+/** Access token was created */
 export type CreateAccessTokenResultSuccess = CreateTokenResult & {
   __typename?: 'CreateAccessTokenResultSuccess';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
+  /** The created token */
   token: CreatedAccessToken;
 };
 
+/** Outcome of creating an account */
 export type CreateAccountResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Account was created */
 export type CreateAccountSuccess = CreateAccountResult & {
   __typename?: 'CreateAccountSuccess';
+  /** The created account */
   account: Account;
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Outcome of creating a dataset from a snapshot */
 export type CreateDatasetFromSnapshotResult = {
+  /** Whether the operation succeeded */
   isSuccess: Scalars['Boolean']['output'];
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Outcome of creating an empty dataset */
 export type CreateDatasetResult = {
+  /** Whether the operation succeeded */
   isSuccess: Scalars['Boolean']['output'];
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Snapshot or the events in it are invalid */
 export type CreateDatasetResultInvalidSnapshot = CreateDatasetFromSnapshotResult & {
   __typename?: 'CreateDatasetResultInvalidSnapshot';
+  /** Always false */
   isSuccess: Scalars['Boolean']['output'];
+  /** Reason the snapshot was rejected */
   message: Scalars['String']['output'];
 };
 
+/** Derivative dataset references inputs that do not exist */
 export type CreateDatasetResultMissingInputs = CreateDatasetFromSnapshotResult & {
   __typename?: 'CreateDatasetResultMissingInputs';
+  /** Always false */
   isSuccess: Scalars['Boolean']['output'];
+  /** Human-readable error message */
   message: Scalars['String']['output'];
+  /** References to the inputs that could not be resolved */
   missingInputs: Array<Scalars['String']['output']>;
 };
 
+/** Dataset with the requested name already exists */
 export type CreateDatasetResultNameCollision = CreateDatasetFromSnapshotResult & CreateDatasetResult & {
   __typename?: 'CreateDatasetResultNameCollision';
+  /** Owner account of the existing dataset, null in single-tenant mode */
   accountName?: Maybe<Scalars['AccountName']['output']>;
+  /** Name that is already taken */
   datasetName: Scalars['DatasetName']['output'];
+  /** Always false */
   isSuccess: Scalars['Boolean']['output'];
+  /** Human-readable error message */
   message: Scalars['String']['output'];
 };
 
+/** Dataset was created */
 export type CreateDatasetResultSuccess = CreateDatasetFromSnapshotResult & CreateDatasetResult & {
   __typename?: 'CreateDatasetResultSuccess';
+  /** Created dataset */
   dataset: Dataset;
+  /** Always true */
   isSuccess: Scalars['Boolean']['output'];
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Outcome of creating an access token */
 export type CreateTokenResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Outcome of creating wallet accounts */
 export type CreateWalletAccountsResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Wallet accounts exist for all given addresses */
 export type CreateWalletAccountsSuccess = CreateWalletAccountsResult & {
   __typename?: 'CreateWalletAccountsSuccess';
+  /** Accounts of the given wallets, including already existing ones */
   accounts: Array<Account>;
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Outcome of creating a webhook subscription */
 export type CreateWebhookSubscriptionResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Webhook subscription was created */
 export type CreateWebhookSubscriptionResultSuccess = CreateWebhookSubscriptionResult & {
   __typename?: 'CreateWebhookSubscriptionResultSuccess';
+  /** Human-readable success message */
   message: Scalars['String']['output'];
+  /** Secret for verifying delivery signatures, returned only once */
   secret: Scalars['String']['output'];
+  /** Unique identifier of the new subscription */
   subscriptionId: Scalars['String']['output'];
 };
 
+/** Newly created access token, including its secret value */
 export type CreatedAccessToken = {
   __typename?: 'CreatedAccessToken';
   /** Access token account owner */
@@ -1263,33 +1604,46 @@ export type CreatedAccessToken = {
   name: Scalars['String']['output'];
 };
 
+/** Cron schedule of a trigger */
 export type Cron5ComponentExpression = {
   __typename?: 'Cron5ComponentExpression';
+  /** Cron expression: min hour dayOfMonth month dayOfWeek */
   cron5ComponentExpression: Scalars['String']['output'];
 };
 
+/** Batch of records encoded in the requested format */
 export type DataBatch = {
   __typename?: 'DataBatch';
+  /** Encoded records */
   content: Scalars['String']['output'];
+  /** Format the content is encoded in */
   format: DataBatchFormat;
+  /** Number of records in the batch */
   numRecords: Scalars['Int']['output'];
 };
 
+/** Encoding of the records in a data batch */
 export enum DataBatchFormat {
+  /** CSV with a header row */
   Csv = 'CSV',
   /**
    * Deprecated: Use `JSON_AOS` instead and expect it to become default in
    * future versions
    */
   Json = 'JSON',
+  /** JSON array of arrays, one array of values per record */
   JsonAoa = 'JSON_AOA',
+  /** JSON array of objects, one object per record */
   JsonAos = 'JSON_AOS',
   /** Deprecated: Use `ND_JSON` instead */
   JsonLd = 'JSON_LD',
+  /** JSON object with an array of values per column */
   JsonSoa = 'JSON_SOA',
+  /** Newline-delimited JSON, one object per line */
   NdJson = 'ND_JSON'
 }
 
+/** Queries that operate on data across datasets */
 export type DataQueries = {
   __typename?: 'DataQueries';
   /** Lists engines known to the system and recommended for use */
@@ -1299,6 +1653,7 @@ export type DataQueries = {
 };
 
 
+/** Queries that operate on data across datasets */
 export type DataQueriesQueryArgs = {
   dataFormat?: InputMaybe<DataBatchFormat>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1308,37 +1663,60 @@ export type DataQueriesQueryArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
 };
 
+/** Outcome of a data query */
 export type DataQueryResult = DataQueryResultError | DataQueryResultSuccess;
 
+/** Query could not be executed */
 export type DataQueryResultError = {
   __typename?: 'DataQueryResultError';
+  /** Category of the problem */
   errorKind: DataQueryResultErrorKind;
+  /** Description of the problem */
   errorMessage: Scalars['String']['output'];
 };
 
+/** Category of a query error */
 export enum DataQueryResultErrorKind {
+  /** Query is malformed or refers to a dataset or block that does not exist */
   InvalidSql = 'INVALID_SQL'
 }
 
+/** Query executed successfully */
 export type DataQueryResultSuccess = {
   __typename?: 'DataQueryResultSuccess';
+  /** Records of the result */
   data: DataBatch;
+  /**
+   * Input datasets of the query and the blocks they were read at, allowing
+   * the query to be reproduced
+   */
   datasets: Array<DatasetState>;
+  /** Maximum number of records the result was limited to */
   limit: Scalars['Int']['output'];
+  /** Schema of the result */
   schema: DataSchema;
 };
 
+/** Schema of data rendered in the requested format */
 export type DataSchema = {
   __typename?: 'DataSchema';
+  /** Schema rendered in the format */
   content: Scalars['String']['output'];
+  /** Format the content is rendered in */
   format: DataSchemaFormat;
 };
 
+/** Format a data schema is rendered in */
 export enum DataSchemaFormat {
+  /** Arrow schema as JSON */
   ArrowJson = 'ARROW_JSON',
+  /** Open Data Fabric schema as JSON */
   OdfJson = 'ODF_JSON',
+  /** Open Data Fabric schema as YAML */
   OdfYaml = 'ODF_YAML',
+  /** Parquet schema in its message type text notation */
   Parquet = 'PARQUET',
+  /** Parquet schema as JSON */
   ParquetJson = 'PARQUET_JSON'
 }
 
@@ -1359,11 +1737,13 @@ export type DataSlice = {
   size: Scalars['Uint64']['output'];
 };
 
+/** Data type of a column */
 export type DataTypeInput = {
   /** Defines type using DDL syntax */
   ddl: Scalars['String']['input'];
 };
 
+/** Dataset with its metadata, data and related information */
 export type Dataset = {
   __typename?: 'Dataset';
   /** Returns dataset alias (user + name) */
@@ -1417,21 +1797,29 @@ export type Dataset = {
  * or not readable by the caller
  */
 export type DatasetAccessResult = {
+  /** Human-readable access status */
   message: Scalars['String']['output'];
 };
 
+/** Dataset was found and is readable by the caller */
 export type DatasetAccessResultAccessible = DatasetAccessResult & {
   __typename?: 'DatasetAccessResultAccessible';
+  /** Accessible dataset */
   dataset: Dataset;
+  /** Human-readable access status */
   message: Scalars['String']['output'];
 };
 
+/** Dataset does not exist or is not readable by the caller */
 export type DatasetAccessResultNotAccessible = DatasetAccessResult & {
   __typename?: 'DatasetAccessResultNotAccessible';
+  /** Identifier of the requested dataset */
   id: Scalars['DatasetID']['output'];
+  /** Human-readable access status */
   message: Scalars['String']['output'];
 };
 
+/** Role granting an account access to a dataset */
 export enum DatasetAccessRole {
   /** Role allows modifying dataset data */
   Editor = 'EDITOR',
@@ -1441,11 +1829,15 @@ export enum DatasetAccessRole {
   Reader = 'READER'
 }
 
+/** Well-known kind of a dataset that defines how its data is interpreted */
 export enum DatasetArchetype {
+  /** Set of entries linking paths to other datasets */
   Collection = 'COLLECTION',
+  /** File whose every version is stored as a record */
   VersionedFile = 'VERSIONED_FILE'
 }
 
+/** Access sharing of a dataset with other accounts */
 export type DatasetCollaboration = {
   __typename?: 'DatasetCollaboration';
   /** Accounts (and their roles) that have access to the dataset */
@@ -1453,11 +1845,13 @@ export type DatasetCollaboration = {
 };
 
 
+/** Access sharing of a dataset with other accounts */
 export type DatasetCollaborationAccountRolesArgs = {
   page?: InputMaybe<Scalars['Int']['input']>;
   perPage?: InputMaybe<Scalars['Int']['input']>;
 };
 
+/** Mutations that manage account access to a dataset */
 export type DatasetCollaborationMut = {
   __typename?: 'DatasetCollaborationMut';
   /** Grant account access as the specified role for the dataset */
@@ -1467,24 +1861,31 @@ export type DatasetCollaborationMut = {
 };
 
 
+/** Mutations that manage account access to a dataset */
 export type DatasetCollaborationMutSetRoleArgs = {
   accountId: Scalars['AccountID']['input'];
   role: DatasetAccessRole;
 };
 
 
+/** Mutations that manage account access to a dataset */
 export type DatasetCollaborationMutUnsetRolesArgs = {
   accountIds: Array<Scalars['AccountID']['input']>;
 };
 
+/** Permissions for managing access of other accounts to a dataset */
 export type DatasetCollaborationPermissions = {
   __typename?: 'DatasetCollaborationPermissions';
+  /** Whether the account can grant and revoke access to the dataset */
   canUpdate: Scalars['Boolean']['output'];
+  /** Whether the account can see who has access to the dataset */
   canView: Scalars['Boolean']['output'];
 };
 
+/** A page of `Dataset` items */
 export type DatasetConnection = {
   __typename?: 'DatasetConnection';
+  /** Items of this page, each wrapped in an edge */
   edges: Array<DatasetEdge>;
   /** A shorthand for `edges { node { ... } }` */
   nodes: Array<Dataset>;
@@ -1494,6 +1895,7 @@ export type DatasetConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** Data stored in a dataset and its statistics */
 export type DatasetData = {
   __typename?: 'DatasetData';
   /** An estimated size of linked objects */
@@ -1529,6 +1931,7 @@ export type DatasetData = {
 };
 
 
+/** Data stored in a dataset and its statistics */
 export type DatasetDataTailArgs = {
   dataFormat?: InputMaybe<DataBatchFormat>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1536,65 +1939,91 @@ export type DatasetDataTailArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
 };
 
+/** An edge wrapping a single `Dataset` item */
 export type DatasetEdge = {
   __typename?: 'DatasetEdge';
+  /** The item itself */
   node: Dataset;
 };
 
+/** Ways to access a dataset over the supported protocols */
 export type DatasetEndpoints = {
   __typename?: 'DatasetEndpoints';
+  /** Commands to pull and push the dataset with the kamu CLI */
   cli: CliProtocolDesc;
+  /** Arrow Flight SQL endpoint */
   flightsql: FlightSqlDesc;
+  /** JDBC connection URL */
   jdbc: JdbcDesc;
+  /** Kafka protocol endpoint, currently a placeholder */
   kafka: KafkaProtocolDesc;
+  /** `OData` API endpoints */
   odata: OdataProtocolDesc;
+  /** PostgreSQL protocol endpoint, currently a placeholder */
   postgresql: PostgreSqlDesl;
+  /** REST API endpoints for the dataset */
   rest: RestProtocolDesc;
+  /** Link to the dataset page in the web UI */
   webLink: LinkProtocolDesc;
+  /** WebSocket endpoint, currently a placeholder */
   websocket: WebSocketProtocolDesc;
 };
 
+/** Environment variables of a dataset */
 export type DatasetEnvVars = {
   __typename?: 'DatasetEnvVars';
+  /** Returns the value of a variable, decrypting it if it is secret */
   exposedValue: Scalars['String']['output'];
+  /** Lists environment variables of the dataset */
   listEnvVariables: ViewDatasetEnvVarConnection;
 };
 
 
+/** Environment variables of a dataset */
 export type DatasetEnvVarsExposedValueArgs = {
   datasetEnvVarKey: Scalars['String']['input'];
 };
 
 
+/** Environment variables of a dataset */
 export type DatasetEnvVarsListEnvVariablesArgs = {
   page?: InputMaybe<Scalars['Int']['input']>;
   perPage?: InputMaybe<Scalars['Int']['input']>;
 };
 
+/** Mutations that manage environment variables of a dataset */
 export type DatasetEnvVarsMut = {
   __typename?: 'DatasetEnvVarsMut';
+  /** Deletes an environment variable by its key */
   deleteEnvVariable: DeleteDatasetEnvVarResult;
+  /** Creates or updates an environment variable, optionally as a secret */
   upsertEnvVariable: UpsertDatasetEnvVarResult;
 };
 
 
+/** Mutations that manage environment variables of a dataset */
 export type DatasetEnvVarsMutDeleteEnvVariableArgs = {
   key: Scalars['String']['input'];
 };
 
 
+/** Mutations that manage environment variables of a dataset */
 export type DatasetEnvVarsMutUpsertEnvVariableArgs = {
   isSecret: Scalars['Boolean']['input'];
   key: Scalars['String']['input'];
   value: Scalars['String']['input'];
 };
 
+/** Permissions for environment variables of a dataset */
 export type DatasetEnvVarsPermissions = {
   __typename?: 'DatasetEnvVarsPermissions';
+  /** Whether the account can change the environment variables */
   canUpdate: Scalars['Boolean']['output'];
+  /** Whether the account can see the environment variables */
   canView: Scalars['Boolean']['output'];
 };
 
+/** Flow configuration queries of a dataset */
 export type DatasetFlowConfigs = {
   __typename?: 'DatasetFlowConfigs';
   /** Returns defined configuration for a flow of specified type */
@@ -1602,43 +2031,59 @@ export type DatasetFlowConfigs = {
 };
 
 
+/** Flow configuration queries of a dataset */
 export type DatasetFlowConfigsByTypeArgs = {
   datasetFlowType: DatasetFlowType;
 };
 
+/** Mutations that change flow configurations of a dataset */
 export type DatasetFlowConfigsMut = {
   __typename?: 'DatasetFlowConfigsMut';
+  /** Sets the compaction flow configuration of a root dataset */
   setCompactionConfig: SetFlowConfigResult;
+  /** Sets the ingest flow configuration of a root dataset */
   setIngestConfig: SetFlowConfigResult;
 };
 
 
+/** Mutations that change flow configurations of a dataset */
 export type DatasetFlowConfigsMutSetCompactionConfigArgs = {
   compactionConfigInput: FlowConfigCompactionInput;
   retryPolicyInput?: InputMaybe<FlowRetryPolicyInput>;
 };
 
 
+/** Mutations that change flow configurations of a dataset */
 export type DatasetFlowConfigsMutSetIngestConfigArgs = {
   ingestConfigInput: FlowConfigIngestInput;
   retryPolicyInput?: InputMaybe<FlowRetryPolicyInput>;
 };
 
+/** Filters for flows of a dataset */
 export type DatasetFlowFilters = {
+  /** Only flows started by the given initiator */
   byInitiator?: InputMaybe<InitiatorFilterInput>;
+  /** Only flows of the given process kind */
   byProcessType?: InputMaybe<FlowProcessTypeFilterInput>;
+  /** Only flows in one of these statuses */
   byStatus?: InputMaybe<Array<FlowStatus>>;
 };
 
+/** Recurring flow process of a dataset */
 export type DatasetFlowProcess = {
   __typename?: 'DatasetFlowProcess';
+  /** Dataset the process belongs to */
   dataset: Dataset;
+  /** Kind of flow this process runs */
   flowType: DatasetFlowType;
+  /** Health and timing of the process */
   summary: FlowProcessSummary;
 };
 
+/** A page of `DatasetFlowProcess` items */
 export type DatasetFlowProcessConnection = {
   __typename?: 'DatasetFlowProcessConnection';
+  /** Items of this page, each wrapped in an edge */
   edges: Array<DatasetFlowProcessEdge>;
   /** A shorthand for `edges { node { ... } }` */
   nodes: Array<DatasetFlowProcess>;
@@ -1648,30 +2093,44 @@ export type DatasetFlowProcessConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** An edge wrapping a single `DatasetFlowProcess` item */
 export type DatasetFlowProcessEdge = {
   __typename?: 'DatasetFlowProcessEdge';
+  /** The item itself */
   node: DatasetFlowProcess;
 };
 
+/** Recurring flow processes of a dataset */
 export type DatasetFlowProcesses = {
   __typename?: 'DatasetFlowProcesses';
+  /**
+   * Main update process: ingest for a root dataset, transform for a
+   * derivative
+   */
   primary: DatasetFlowProcess;
+  /** Webhook delivery processes of subscriptions to this dataset */
   webhooks: WebhookFlowSubProcessGroup;
 };
 
+/** Flow run queries of a dataset */
 export type DatasetFlowRuns = {
   __typename?: 'DatasetFlowRuns';
+  /** Returns a flow of this dataset by its ID */
   getFlow: GetFlowResult;
+  /** Lists accounts that have started flows of this dataset */
   listFlowInitiators: AccountConnection;
+  /** Lists flows of this dataset, paginated and optionally filtered */
   listFlows: FlowConnection;
 };
 
 
+/** Flow run queries of a dataset */
 export type DatasetFlowRunsGetFlowArgs = {
   flowId: Scalars['FlowID']['input'];
 };
 
 
+/** Flow run queries of a dataset */
 export type DatasetFlowRunsListFlowsArgs = {
   filters?: InputMaybe<DatasetFlowFilters>;
   order?: InputMaybe<FlowRunOrder>;
@@ -1679,36 +2138,48 @@ export type DatasetFlowRunsListFlowsArgs = {
   perPage?: InputMaybe<Scalars['Int']['input']>;
 };
 
+/** Mutations that trigger or cancel flow runs of a dataset */
 export type DatasetFlowRunsMut = {
   __typename?: 'DatasetFlowRunsMut';
+  /** Cancels a scheduled or running flow of this dataset */
   cancelFlowRun: CancelFlowRunResult;
+  /** Manually triggers a compaction flow of a root dataset */
   triggerCompactionFlow: TriggerFlowResult;
+  /** Manually triggers an ingest flow of a root dataset */
   triggerIngestFlow: TriggerFlowResult;
+  /** Manually triggers a flow that resets the dataset head to an earlier block */
   triggerResetFlow: TriggerFlowResult;
+  /** Manually triggers a flow that removes data and keeps only metadata */
   triggerResetToMetadataFlow: TriggerFlowResult;
+  /** Manually triggers a transform flow of a derivative dataset */
   triggerTransformFlow: TriggerFlowResult;
 };
 
 
+/** Mutations that trigger or cancel flow runs of a dataset */
 export type DatasetFlowRunsMutCancelFlowRunArgs = {
   flowId: Scalars['FlowID']['input'];
 };
 
 
+/** Mutations that trigger or cancel flow runs of a dataset */
 export type DatasetFlowRunsMutTriggerCompactionFlowArgs = {
   compactionConfigInput?: InputMaybe<FlowConfigCompactionInput>;
 };
 
 
+/** Mutations that trigger or cancel flow runs of a dataset */
 export type DatasetFlowRunsMutTriggerIngestFlowArgs = {
   ingestConfigInput?: InputMaybe<FlowConfigIngestInput>;
 };
 
 
+/** Mutations that trigger or cancel flow runs of a dataset */
 export type DatasetFlowRunsMutTriggerResetFlowArgs = {
   resetConfigInput?: InputMaybe<FlowConfigResetInput>;
 };
 
+/** Flow trigger queries of a dataset */
 export type DatasetFlowTriggers = {
   __typename?: 'DatasetFlowTriggers';
   /** Returns defined trigger for a flow of specified type */
@@ -1716,44 +2187,61 @@ export type DatasetFlowTriggers = {
 };
 
 
+/** Flow trigger queries of a dataset */
 export type DatasetFlowTriggersByTypeArgs = {
   datasetFlowType: DatasetFlowType;
 };
 
+/** Mutations that manage flow triggers of a dataset */
 export type DatasetFlowTriggersMut = {
   __typename?: 'DatasetFlowTriggersMut';
+  /** Pauses the trigger of a flow type */
   pauseFlow: Scalars['Boolean']['output'];
+  /** Pauses triggers of all flow types of the dataset */
   pauseFlows: Scalars['Boolean']['output'];
+  /** Resumes the trigger of a flow type */
   resumeFlow: Scalars['Boolean']['output'];
+  /** Resumes triggers of all flow types of the dataset */
   resumeFlows: Scalars['Boolean']['output'];
+  /** Creates or replaces the trigger of a flow type */
   setTrigger: SetFlowTriggerResult;
 };
 
 
+/** Mutations that manage flow triggers of a dataset */
 export type DatasetFlowTriggersMutPauseFlowArgs = {
   datasetFlowType: DatasetFlowType;
 };
 
 
+/** Mutations that manage flow triggers of a dataset */
 export type DatasetFlowTriggersMutResumeFlowArgs = {
   datasetFlowType: DatasetFlowType;
 };
 
 
+/** Mutations that manage flow triggers of a dataset */
 export type DatasetFlowTriggersMutSetTriggerArgs = {
   datasetFlowType: DatasetFlowType;
   triggerRuleInput: FlowTriggerRuleInput;
   triggerStopPolicyInput: FlowTriggerStopPolicyInput;
 };
 
+/** Kind of a flow that operates on a dataset */
 export enum DatasetFlowType {
+  /** Runs the transformation of a derivative dataset */
   ExecuteTransform = 'EXECUTE_TRANSFORM',
+  /** Compacts data slices of a dataset */
   HardCompaction = 'HARD_COMPACTION',
+  /** Ingests new data into a root dataset */
   Ingest = 'INGEST',
+  /** Moves the dataset head to an earlier block, by default its seed */
   Reset = 'RESET',
+  /** Drops the dataset's data while keeping its metadata */
   ResetToMetadata = 'RESET_TO_METADATA'
 }
 
+/** Flow queries scoped to a dataset */
 export type DatasetFlows = {
   __typename?: 'DatasetFlows';
   /** Returns interface for flow configurations queries */
@@ -1766,23 +2254,34 @@ export type DatasetFlows = {
   triggers: DatasetFlowTriggers;
 };
 
+/** Flow mutations scoped to a dataset */
 export type DatasetFlowsMut = {
   __typename?: 'DatasetFlowsMut';
+  /** Flow configuration mutations */
   configs: DatasetFlowConfigsMut;
+  /** Mutations that trigger or cancel flow runs */
   runs: DatasetFlowRunsMut;
+  /** Flow trigger mutations */
   triggers: DatasetFlowTriggersMut;
 };
 
+/** Permissions for flows of a dataset */
 export type DatasetFlowsPermissions = {
   __typename?: 'DatasetFlowsPermissions';
+  /** Whether the account can trigger and configure the flows */
   canRun: Scalars['Boolean']['output'];
+  /** Whether the account can see the flows and their history */
   canView: Scalars['Boolean']['output'];
 };
 
+/** Permissions for general management of a dataset */
 export type DatasetGeneralPermissions = {
   __typename?: 'DatasetGeneralPermissions';
+  /** Whether the account can delete the dataset */
   canDelete: Scalars['Boolean']['output'];
+  /** Whether the account can rename the dataset */
   canRename: Scalars['Boolean']['output'];
+  /** Whether the account can change the dataset visibility */
   canSetVisibility: Scalars['Boolean']['output'];
 };
 
@@ -1796,6 +2295,7 @@ export enum DatasetKind {
   Root = 'ROOT'
 }
 
+/** Metadata of a dataset and its current state derived from the metadata chain */
 export type DatasetMetadata = {
   __typename?: 'DatasetMetadata';
   /** Access to the temporal metadata chain of the dataset */
@@ -1830,22 +2330,29 @@ export type DatasetMetadata = {
   currentVocab?: Maybe<SetVocab>;
   /** Last recorded watermark */
   currentWatermark?: Maybe<Scalars['DateTime']['output']>;
+  /**
+   * Blocks holding the currently effective events of the requested types,
+   * as of the given head or the latest block
+   */
   metadataProjection: Array<MetadataBlockExtended>;
   /** Sync statuses of push remotes */
   pushSyncStatuses: DatasetPushStatuses;
 };
 
 
+/** Metadata of a dataset and its current state derived from the metadata chain */
 export type DatasetMetadataCurrentSchemaArgs = {
   format?: InputMaybe<DataSchemaFormat>;
 };
 
 
+/** Metadata of a dataset and its current state derived from the metadata chain */
 export type DatasetMetadataMetadataProjectionArgs = {
   eventTypes: Array<MetadataEventType>;
   head?: InputMaybe<Scalars['Multihash']['input']>;
 };
 
+/** Mutations of the dataset metadata */
 export type DatasetMetadataMut = {
   __typename?: 'DatasetMetadataMut';
   /** Access to the mutable metadata chain of the dataset */
@@ -1855,15 +2362,19 @@ export type DatasetMetadataMut = {
 };
 
 
+/** Mutations of the dataset metadata */
 export type DatasetMetadataMutUpdateReadmeArgs = {
   content?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Permissions for metadata of a dataset */
 export type DatasetMetadataPermissions = {
   __typename?: 'DatasetMetadataPermissions';
+  /** Whether the account can commit new metadata events */
   canCommit: Scalars['Boolean']['output'];
 };
 
+/** Mutations of a single dataset */
 export type DatasetMut = {
   __typename?: 'DatasetMut';
   /** Downcast a dataset to a collection interface */
@@ -1893,53 +2404,76 @@ export type DatasetMut = {
 };
 
 
+/** Mutations of a single dataset */
 export type DatasetMutRenameArgs = {
   newName: Scalars['DatasetName']['input'];
 };
 
 
+/** Mutations of a single dataset */
 export type DatasetMutSetVisibilityArgs = {
   visibility: DatasetVisibilityInput;
 };
 
 
+/** Mutations of a single dataset */
 export type DatasetMutSetWatermarkArgs = {
   watermark: Scalars['DateTime']['input'];
 };
 
+/** Actions the current account is allowed to perform on a dataset */
 export type DatasetPermissions = {
   __typename?: 'DatasetPermissions';
+  /** Permissions for managing access of other accounts */
   collaboration: DatasetCollaborationPermissions;
+  /** Permissions for dataset environment variables */
   envVars: DatasetEnvVarsPermissions;
+  /** Permissions for dataset flows */
   flows: DatasetFlowsPermissions;
+  /** Permissions for general dataset management */
   general: DatasetGeneralPermissions;
+  /** Permissions for dataset metadata */
   metadata: DatasetMetadataPermissions;
+  /** Permissions for dataset webhooks */
   webhooks: DatasetWebhooksPermissions;
 };
 
+/** Sync state of a dataset relative to one of its push remotes */
 export type DatasetPushStatus = {
   __typename?: 'DatasetPushStatus';
+  /** Remote dataset the local one is pushed to */
   remote: Scalars['DatasetRefRemote']['output'];
+  /** Result of comparing the remote metadata chain with the local one */
   result: CompareChainsResult;
 };
 
+/** Sync states of a dataset relative to all its push remotes */
 export type DatasetPushStatuses = {
   __typename?: 'DatasetPushStatuses';
+  /** Sync state per push remote */
   statuses: Array<DatasetPushStatus>;
 };
 
+/** Change to an account's role in a dataset */
 export type DatasetRoleOperation =
+  /** Grant the role, replacing any existing one */
   { set: DatasetRoleSetOperation; unset?: never; }
-  |  { set?: never; unset: DatasetRoleUnsetOperation; };
+  |  /** Revoke the existing role */
+  { set?: never; unset: DatasetRoleUnsetOperation; };
 
+/** Grants a role to an account */
 export type DatasetRoleSetOperation = {
+  /** Role to grant */
   role: DatasetAccessRole;
 };
 
+/** Revokes the role of an account */
 export type DatasetRoleUnsetOperation = {
+  /** Placeholder field without meaning, its value is ignored */
   dummy: Scalars['Boolean']['input'];
 };
 
+/** Input dataset of a query and the state it was queried at */
 export type DatasetState = {
   __typename?: 'DatasetState';
   /** Alias to be used in the query */
@@ -1953,17 +2487,25 @@ export type DatasetState = {
   id: Scalars['DatasetID']['output'];
 };
 
+/** Who can see a dataset */
 export enum DatasetVisibility {
+  /** Only the owner and accounts granted access */
   Private = 'PRIVATE',
+  /** Everyone */
   Public = 'PUBLIC'
 }
 
+/** New visibility of a dataset */
 export type DatasetVisibilityInput =
+  /** Dataset is visible only to accounts with explicit access */
   { private: PrivateDatasetVisibilityInput; public?: never; }
-  |  { private?: never; public: PublicDatasetVisibilityInput; };
+  |  /** Dataset is readable by all authenticated users, optionally anonymous too */
+  { private?: never; public: PublicDatasetVisibilityInput; };
 
+/** Visibility of a dataset */
 export type DatasetVisibilityOutput = PrivateDatasetVisibility | PublicDatasetVisibility;
 
+/** Webhook subscription queries of a dataset */
 export type DatasetWebhooks = {
   __typename?: 'DatasetWebhooks';
   /** Returns a webhook subscription by ID */
@@ -1973,33 +2515,42 @@ export type DatasetWebhooks = {
 };
 
 
+/** Webhook subscription queries of a dataset */
 export type DatasetWebhooksSubscriptionArgs = {
   id: Scalars['WebhookSubscriptionID']['input'];
 };
 
+/** Webhook subscription mutations of a dataset */
 export type DatasetWebhooksMut = {
   __typename?: 'DatasetWebhooksMut';
+  /** Creates a webhook subscription for this dataset */
   createSubscription: CreateWebhookSubscriptionResult;
   /** Returns a webhook subscription management API by ID */
   subscription?: Maybe<WebhookSubscriptionMut>;
 };
 
 
+/** Webhook subscription mutations of a dataset */
 export type DatasetWebhooksMutCreateSubscriptionArgs = {
   input: WebhookSubscriptionInput;
 };
 
 
+/** Webhook subscription mutations of a dataset */
 export type DatasetWebhooksMutSubscriptionArgs = {
   id: Scalars['WebhookSubscriptionID']['input'];
 };
 
+/** Permissions for webhooks of a dataset */
 export type DatasetWebhooksPermissions = {
   __typename?: 'DatasetWebhooksPermissions';
+  /** Whether the account can change the webhook subscriptions */
   canUpdate: Scalars['Boolean']['output'];
+  /** Whether the account can see the webhook subscriptions */
   canView: Scalars['Boolean']['output'];
 };
 
+/** Queries for looking up and listing datasets */
 export type Datasets = {
   __typename?: 'Datasets';
   /** Returns datasets belonging to the specified account */
@@ -2027,6 +2578,7 @@ export type Datasets = {
 };
 
 
+/** Queries for looking up and listing datasets */
 export type DatasetsByAccountIdArgs = {
   accountId: Scalars['AccountID']['input'];
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -2034,6 +2586,7 @@ export type DatasetsByAccountIdArgs = {
 };
 
 
+/** Queries for looking up and listing datasets */
 export type DatasetsByAccountNameArgs = {
   accountName: Scalars['AccountName']['input'];
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -2041,33 +2594,39 @@ export type DatasetsByAccountNameArgs = {
 };
 
 
+/** Queries for looking up and listing datasets */
 export type DatasetsByIdArgs = {
   datasetId: Scalars['DatasetID']['input'];
 };
 
 
+/** Queries for looking up and listing datasets */
 export type DatasetsByIdsArgs = {
   datasetIds: Array<Scalars['DatasetID']['input']>;
   skipMissing: Scalars['Boolean']['input'];
 };
 
 
+/** Queries for looking up and listing datasets */
 export type DatasetsByOwnerAndNameArgs = {
   accountName: Scalars['AccountName']['input'];
   datasetName: Scalars['DatasetName']['input'];
 };
 
 
+/** Queries for looking up and listing datasets */
 export type DatasetsByRefArgs = {
   datasetRef: Scalars['DatasetRef']['input'];
 };
 
 
+/** Queries for looking up and listing datasets */
 export type DatasetsByRefsArgs = {
   datasetRefs: Array<Scalars['DatasetRef']['input']>;
   skipMissing: Scalars['Boolean']['input'];
 };
 
+/** Mutations that look up and create datasets */
 export type DatasetsMut = {
   __typename?: 'DatasetsMut';
   /** Returns a mutable dataset by its ID, if found */
@@ -2098,17 +2657,20 @@ export type DatasetsMut = {
 };
 
 
+/** Mutations that look up and create datasets */
 export type DatasetsMutByIdArgs = {
   datasetId: Scalars['DatasetID']['input'];
 };
 
 
+/** Mutations that look up and create datasets */
 export type DatasetsMutByIdsArgs = {
   datasetIds: Array<Scalars['DatasetID']['input']>;
   skipMissing: Scalars['Boolean']['input'];
 };
 
 
+/** Mutations that look up and create datasets */
 export type DatasetsMutCreateCollectionArgs = {
   datasetAlias: Scalars['DatasetAlias']['input'];
   datasetVisibility: DatasetVisibility;
@@ -2119,6 +2681,7 @@ export type DatasetsMutCreateCollectionArgs = {
 };
 
 
+/** Mutations that look up and create datasets */
 export type DatasetsMutCreateEmptyArgs = {
   datasetAlias: Scalars['DatasetAlias']['input'];
   datasetKind: DatasetKind;
@@ -2126,6 +2689,7 @@ export type DatasetsMutCreateEmptyArgs = {
 };
 
 
+/** Mutations that look up and create datasets */
 export type DatasetsMutCreateFromSnapshotArgs = {
   datasetVisibility: DatasetVisibility;
   snapshot: Scalars['String']['input'];
@@ -2133,6 +2697,7 @@ export type DatasetsMutCreateFromSnapshotArgs = {
 };
 
 
+/** Mutations that look up and create datasets */
 export type DatasetsMutCreateVersionedFileArgs = {
   datasetAlias: Scalars['DatasetAlias']['input'];
   datasetVisibility: DatasetVisibility;
@@ -2142,45 +2707,66 @@ export type DatasetsMutCreateVersionedFileArgs = {
   extraSchema?: InputMaybe<Scalars['DataSchemaInput']['input']>;
 };
 
+/** Outcome of deleting an account */
 export type DeleteAccountResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Account was deleted */
 export type DeleteAccountSuccess = DeleteAccountResult & {
   __typename?: 'DeleteAccountSuccess';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Outcome of deleting an environment variable */
 export type DeleteDatasetEnvVarResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Environment variable with the given key does not exist */
 export type DeleteDatasetEnvVarResultNotFound = DeleteDatasetEnvVarResult & {
   __typename?: 'DeleteDatasetEnvVarResultNotFound';
+  /** Key that was not found */
   envVarKey: Scalars['String']['output'];
+  /** Human-readable error message */
   message: Scalars['String']['output'];
 };
 
+/** Environment variable was deleted */
 export type DeleteDatasetEnvVarResultSuccess = DeleteDatasetEnvVarResult & {
   __typename?: 'DeleteDatasetEnvVarResultSuccess';
+  /** Key of the deleted environment variable */
   envVarKey: Scalars['String']['output'];
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Outcome of deleting a dataset */
 export type DeleteResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Dataset was not deleted because downstream datasets still use it as input */
 export type DeleteResultDanglingReference = DeleteResult & {
   __typename?: 'DeleteResultDanglingReference';
+  /** Downstream datasets that reference this dataset as input */
   danglingChildRefs: Array<Scalars['DatasetRef']['output']>;
+  /** Human-readable error message */
   message: Scalars['String']['output'];
+  /** Alias of the dataset that was not deleted */
   notDeletedDataset: Scalars['DatasetAlias']['output'];
 };
 
+/** Dataset was deleted */
 export type DeleteResultSuccess = DeleteResult & {
   __typename?: 'DeleteResultSuccess';
+  /** Alias of the deleted dataset */
   deletedDataset: Scalars['DatasetAlias']['output'];
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
@@ -2205,17 +2791,23 @@ export type DisablePushSource = {
   sourceName: Scalars['String']['output'];
 };
 
+/** Nonce issued for a Sign-In with Ethereum login */
 export type Eip4361AuthNonceResponse = {
   __typename?: 'Eip4361AuthNonceResponse';
+  /** Nonce to include in the signed message */
   value: Scalars['Eip4361AuthNonce']['output'];
 };
 
+/** Metadata block serialized in a manifest format */
 export type EncodedBlock = {
   __typename?: 'EncodedBlock';
+  /** Serialized block */
   content: Scalars['String']['output'];
+  /** Format the block is serialized in */
   encoding: MetadataManifestFormat;
 };
 
+/** Data processing engine available on the node */
 export type EngineDesc = {
   __typename?: 'EngineDesc';
   /**
@@ -2296,34 +2888,29 @@ export type EventTimeSourceFromSystemTime = {
 export type ExecuteTransform = {
   __typename?: 'ExecuteTransform';
   /**
-   * Describes checkpoint written during this transaction, if any. If an
-   * engine operation resulted in no updates to the checkpoint, but
-   * checkpoint is still relevant for subsequent runs - a hash of the
-   * previous checkpoint should be specified.
+   * Describes checkpoint written during this transaction, if any. If an engine operation
+   * resulted in no updates to the checkpoint, but checkpoint is still relevant for subsequent
+   * runs - a hash of the previous checkpoint should be specified.
    */
   newCheckpoint?: Maybe<Checkpoint>;
   /** Describes output data written during this transaction, if any. */
   newData?: Maybe<DataSlice>;
   /**
-   * Last watermark of the output data stream, if any. Initial blocks may not
-   * have watermarks, but once watermark is set - all subsequent blocks
-   * should either carry the same watermark or specify a new (greater) one.
-   * Thus, watermarks are monotonically non-decreasing.
+   * Last watermark of the output data stream, if any. Initial blocks may not have watermarks,
+   * but once watermark is set - all subsequent blocks should either carry the same watermark or
+   * specify a new (greater) one. Thus, watermarks are monotonically non-decreasing.
    */
   newWatermark?: Maybe<Scalars['DateTime']['output']>;
-  /**
-   * Hash of the checkpoint file used to restore transformation state, if
-   * any.
-   */
+  /** Hash of the checkpoint file used to restore transformation state, if any. */
   prevCheckpoint?: Maybe<Scalars['Multihash']['output']>;
   /**
-   * Last offset of the previous data slice, if any. Must be equal to the
-   * last non-empty `newData.offsetInterval.end`.
+   * Last offset of the previous data slice, if any. Must be equal to the last non-empty
+   * `newData.offsetInterval.end`.
    */
   prevOffset?: Maybe<Scalars['Uint64']['output']>;
   /**
-   * Defines inputs used in this transaction. Slices corresponding to every
-   * input dataset must be present.
+   * Defines inputs used in this transaction. Slices corresponding to every input dataset must
+   * be present.
    */
   queryInputs: Array<ExecuteTransformInput>;
 };
@@ -2338,33 +2925,29 @@ export type ExecuteTransformInput = {
   /** Input dataset identifier. */
   datasetId: Scalars['DatasetID']['output'];
   /**
-   * Hash of the last block that will be incorporated into the derivative
-   * transformation. When present, defines a half-open `(prevBlockHash,
-   * newBlockHash]` interval of blocks that will be considered in this
-   * transaction.
+   * Hash of the last block that will be incorporated into the derivative transformation. When
+   * present, defines a half-open `(prevBlockHash, newBlockHash]` interval of blocks that will
+   * be considered in this transaction.
    */
   newBlockHash?: Maybe<Scalars['Multihash']['output']>;
   /**
-   * Offset of the last data record that will be incorporated into the
-   * derivative transformation, if any. When present, defines a half-open
-   * `(prevOffset, newOffset]` interval of data records that will be
-   * considered in this transaction.
+   * Offset of the last data record that will be incorporated into the derivative
+   * transformation, if any. When present, defines a half-open `(prevOffset, newOffset]`
+   * interval of data records that will be considered in this transaction.
    */
   newOffset?: Maybe<Scalars['Uint64']['output']>;
   /**
-   * Last block of the input dataset that was previously incorporated into
-   * the derivative transformation, if any. Must be equal to the last
-   * non-empty `newBlockHash`. Together with `newBlockHash` defines a
-   * half-open `(prevBlockHash, newBlockHash]` interval of blocks that will
-   * be considered in this transaction.
+   * Last block of the input dataset that was previously incorporated into the derivative
+   * transformation, if any. Must be equal to the last non-empty `newBlockHash`. Together with
+   * `newBlockHash` defines a half-open `(prevBlockHash, newBlockHash]` interval of blocks that
+   * will be considered in this transaction.
    */
   prevBlockHash?: Maybe<Scalars['Multihash']['output']>;
   /**
-   * Last data record offset in the input dataset that was previously
-   * incorporated into the derivative transformation, if any. Must be equal
-   * to the last non-empty `newOffset`. Together with `newOffset` defines a
-   * half-open `(prevOffset, newOffset]` interval of data records that will
-   * be considered in this transaction.
+   * Last data record offset in the input dataset that was previously incorporated into the
+   * derivative transformation, if any. Must be equal to the last non-empty `newOffset`.
+   * Together with `newOffset` defines a half-open `(prevOffset, newOffset]` interval of data
+   * records that will be considered in this transaction.
    */
   prevOffset?: Maybe<Scalars['Uint64']['output']>;
 };
@@ -2383,14 +2966,11 @@ export type FetchStep = FetchStepContainer | FetchStepEthereumLogs | FetchStepFi
  */
 export type FetchStepContainer = {
   __typename?: 'FetchStepContainer';
-  /**
-   * Arguments to the entrypoint. The OCI image's CMD is used if this is not
-   * provided.
-   */
+  /** Arguments to the entrypoint. The OCI image's CMD is used if this is not provided. */
   args?: Maybe<Array<Scalars['String']['output']>>;
   /**
-   * Specifies the entrypoint. Not executed within a shell. The default OCI
-   * image's ENTRYPOINT is used if this is not provided.
+   * Specifies the entrypoint. Not executed within a shell. The default OCI image's ENTRYPOINT
+   * is used if this is not provided.
    */
   command?: Maybe<Array<Scalars['String']['output']>>;
   /** Environment variables to propagate into or set in the container. */
@@ -2407,26 +2987,24 @@ export type FetchStepContainer = {
 export type FetchStepEthereumLogs = {
   __typename?: 'FetchStepEthereumLogs';
   /**
-   * Identifier of the chain to scan logs from. This parameter may be used
-   * for RPC endpoint lookup as well as asserting that provided `nodeUrl`
-   * corresponds to the expected chain.
+   * Identifier of the chain to scan logs from. This parameter may be used for RPC endpoint
+   * lookup as well as asserting that provided `nodeUrl` corresponds to the expected chain.
    */
   chainId?: Maybe<Scalars['Uint64']['output']>;
   /**
-   * An SQL WHERE clause that can be used to pre-filter the logs before
-   * fetching them from the ETH node.
+   * An SQL WHERE clause that can be used to pre-filter the logs before fetching them from the
+   * ETH node.
    *
    * Examples:
-   * - "block_number > 123 and address =
-   * X'5fbdb2315678afecb367f032d93f642f64180aa3' and topic1 =
-   * X'000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266'"
+   * - "block_number > 123 and address = X'5fbdb2315678afecb367f032d93f642f64180aa3' and topic1
+   * = X'000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266'"
    */
   filter?: Maybe<Scalars['String']['output']>;
   /** Url of the node. */
   nodeUrl?: Maybe<Scalars['String']['output']>;
   /**
-   * Solidity log event signature to use for decoding. Using this field adds
-   * `event` to the output containing decoded log as JSON.
+   * Solidity log event signature to use for decoding. Using this field adds `event` to the
+   * output containing decoded log as JSON.
    */
   signature?: Maybe<Scalars['String']['output']>;
 };
@@ -2488,11 +3066,14 @@ export type FetchStepUrl = {
   url: Scalars['String']['output'];
 };
 
+/** Arrow Flight SQL endpoint */
 export type FlightSqlDesc = {
   __typename?: 'FlightSqlDesc';
+  /** Arrow Flight SQL server URL */
   url: Scalars['String']['output'];
 };
 
+/** One run of a flow, possibly over several task attempts */
 export type Flow = {
   __typename?: 'Flow';
   /** Flow config snapshot */
@@ -2530,64 +3111,90 @@ export type Flow = {
   timing: FlowTimingRecords;
 };
 
+/** Flow was aborted before completion */
 export type FlowAbortedResult = {
   __typename?: 'FlowAbortedResult';
+  /** Fixed status text */
   message: Scalars['String']['output'];
 };
 
+/** Reason a flow was started */
 export type FlowActivationCause = FlowActivationCauseAutoPolling | FlowActivationCauseDatasetUpdate | FlowActivationCauseIterationFinished | FlowActivationCauseManual;
 
+/** Flow was started by a schedule or after a restart */
 export type FlowActivationCauseAutoPolling = {
   __typename?: 'FlowActivationCauseAutoPolling';
+  /** Placeholder without meaning, always true */
   dummy: Scalars['Boolean']['output'];
 };
 
+/** Flow was started by an update of a dataset */
 export type FlowActivationCauseDatasetUpdate = {
   __typename?: 'FlowActivationCauseDatasetUpdate';
   /** Null when the dataset was deleted or is not readable by the caller */
   dataset?: Maybe<Dataset>;
+  /** Identifier of the updated dataset */
   datasetId: Scalars['DatasetID']['output'];
+  /** What updated the dataset */
   source: FlowActivationCauseDatasetUpdateSource;
 };
 
+/** What updated the dataset */
 export type FlowActivationCauseDatasetUpdateSource = FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange | FlowActivationCauseDatasetUpdateSourceHttpIngest | FlowActivationCauseDatasetUpdateSourceSmartProtocolPush | FlowActivationCauseDatasetUpdateSourceUpstreamFlow;
 
+/** Dataset was changed outside of the flow system */
 export type FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange = {
   __typename?: 'FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange';
+  /** Placeholder without meaning, always true */
   dummy: Scalars['Boolean']['output'];
 };
 
+/** Dataset was updated by data pushed over HTTP */
 export type FlowActivationCauseDatasetUpdateSourceHttpIngest = {
   __typename?: 'FlowActivationCauseDatasetUpdateSourceHttpIngest';
+  /** Name of the push source, null for the default source */
   sourceName?: Maybe<Scalars['String']['output']>;
 };
 
+/** Dataset was updated by a push over the smart transfer protocol */
 export type FlowActivationCauseDatasetUpdateSourceSmartProtocolPush = {
   __typename?: 'FlowActivationCauseDatasetUpdateSourceSmartProtocolPush';
+  /** Account that pushed the data, null if unknown */
   accountName?: Maybe<Scalars['AccountName']['output']>;
+  /** Whether the push was forced, possibly rewriting history */
   isForce: Scalars['Boolean']['output'];
 };
 
+/** Dataset was updated by another flow */
 export type FlowActivationCauseDatasetUpdateSourceUpstreamFlow = {
   __typename?: 'FlowActivationCauseDatasetUpdateSourceUpstreamFlow';
+  /** Identifier of the flow that updated the dataset */
   flowId: Scalars['FlowID']['output'];
 };
 
+/** Flow was started because the previous ingest left more data to fetch */
 export type FlowActivationCauseIterationFinished = {
   __typename?: 'FlowActivationCauseIterationFinished';
+  /** Placeholder without meaning, always true */
   dummy: Scalars['Boolean']['output'];
 };
 
+/** Flow was started manually by a user */
 export type FlowActivationCauseManual = {
   __typename?: 'FlowActivationCauseManual';
+  /** Account that started the flow */
   initiator: Account;
 };
 
+/** Settings of a compaction flow */
 export type FlowConfigCompactionInput = {
+  /** Maximum number of records in a compacted data slice */
   maxSliceRecords: Scalars['Int']['input'];
+  /** Maximum size of a compacted data slice, in bytes */
   maxSliceSize: Scalars['Int']['input'];
 };
 
+/** Settings of an ingest flow */
 export type FlowConfigIngestInput = {
   /**
    * Flag indicates to trigger next flow iteration right if `has_more` is
@@ -2598,70 +3205,113 @@ export type FlowConfigIngestInput = {
   fetchUncacheable: Scalars['Boolean']['input'];
 };
 
+/** Block a reset moves the dataset head to */
 export type FlowConfigInputResetPropagationMode =
+  /** Reset to a given block */
   { custom: FlowConfigInputResetPropagationModeCustom; toSeed?: never; }
-  |  { custom?: never; toSeed: FlowConfigInputResetPropagationModeToSeed; };
+  |  /** Reset to the seed block */
+  { custom?: never; toSeed: FlowConfigInputResetPropagationModeToSeed; };
 
+/** Reset the dataset head to a given block */
 export type FlowConfigInputResetPropagationModeCustom = {
+  /** Hash of the block that becomes the new head */
   newHeadHash: Scalars['Multihash']['input'];
 };
 
+/** Reset the dataset head to its seed block */
 export type FlowConfigInputResetPropagationModeToSeed = {
+  /** Placeholder without meaning, the value is ignored */
   dummy?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Settings of a reset flow */
 export type FlowConfigResetInput = {
+  /** Block the dataset head is moved to */
   mode: FlowConfigInputResetPropagationMode;
+  /**
+   * Expected current head; the reset fails if the head differs, null to
+   * skip the check
+   */
   oldHeadHash?: InputMaybe<Scalars['Multihash']['input']>;
 };
 
+/** Block a reset moves the dataset head to */
 export type FlowConfigResetPropagationMode = FlowConfigResetPropagationModeCustom | FlowConfigResetPropagationModeToSeed;
 
+/** Reset the dataset head to a given block */
 export type FlowConfigResetPropagationModeCustom = {
   __typename?: 'FlowConfigResetPropagationModeCustom';
+  /** Hash of the block that becomes the new head */
   newHeadHash: Scalars['Multihash']['output'];
 };
 
+/** Reset the dataset head to its seed block */
 export type FlowConfigResetPropagationModeToSeed = {
   __typename?: 'FlowConfigResetPropagationModeToSeed';
+  /** Placeholder without meaning, always null */
   dummy?: Maybe<Scalars['String']['output']>;
 };
 
+/** Settings specific to the flow type */
 export type FlowConfigRule = FlowConfigRuleCompaction | FlowConfigRuleIngest | FlowConfigRuleReset;
 
+/** Settings of a compaction flow */
 export type FlowConfigRuleCompaction = {
   __typename?: 'FlowConfigRuleCompaction';
+  /** Maximum number of records in a compacted data slice */
   maxSliceRecords: Scalars['Int']['output'];
+  /** Maximum size of a compacted data slice, in bytes */
   maxSliceSize: Scalars['Int']['output'];
 };
 
+/** Settings of an ingest flow */
 export type FlowConfigRuleIngest = {
   __typename?: 'FlowConfigRuleIngest';
+  /**
+   * Whether to run the next ingest right away when the source has more
+   * data
+   */
   fetchNextIteration: Scalars['Boolean']['output'];
+  /** Whether to ignore the cache for API calls during ingest */
   fetchUncacheable: Scalars['Boolean']['output'];
 };
 
+/** Settings of a reset flow */
 export type FlowConfigRuleReset = {
   __typename?: 'FlowConfigRuleReset';
+  /** Block the dataset head is moved to */
   mode: FlowConfigResetPropagationMode;
+  /**
+   * Expected current head; the reset fails if the head differs, null to
+   * skip the check
+   */
   oldHeadHash?: Maybe<Scalars['Multihash']['output']>;
 };
 
+/** Configuration used by the flow was changed */
 export type FlowConfigSnapshotModified = FlowEvent & {
   __typename?: 'FlowConfigSnapshotModified';
+  /** New configuration of the flow */
   configSnapshot: FlowConfigRule;
+  /** Unique identifier of the event */
   eventId: Scalars['EventID']['output'];
+  /** Time the event occurred */
   eventTime: Scalars['DateTime']['output'];
 };
 
+/** Settings that define how a flow runs */
 export type FlowConfiguration = {
   __typename?: 'FlowConfiguration';
+  /** Retry policy for failed runs, null to use the flow type's default */
   retryPolicy?: Maybe<FlowRetryPolicy>;
+  /** Settings specific to the flow type */
   rule: FlowConfigRule;
 };
 
+/** A page of `Flow` items */
 export type FlowConnection = {
   __typename?: 'FlowConnection';
+  /** Items of this page, each wrapped in an edge */
   edges: Array<FlowEdge>;
   /** A shorthand for `edges { node { ... } }` */
   nodes: Array<Flow>;
@@ -2671,97 +3321,141 @@ export type FlowConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** What a flow does, with its result once it succeeded */
 export type FlowDescription = FlowDescriptionDatasetExecuteTransform | FlowDescriptionDatasetHardCompaction | FlowDescriptionDatasetPollingIngest | FlowDescriptionDatasetPushIngest | FlowDescriptionDatasetReset | FlowDescriptionDatasetResetToMetadata | FlowDescriptionSystemGc | FlowDescriptionUnknown | FlowDescriptionWebhookDeliver;
 
+/** Flow that runs the transformation of a derivative dataset */
 export type FlowDescriptionDatasetExecuteTransform = {
   __typename?: 'FlowDescriptionDatasetExecuteTransform';
+  /** Transformation the flow runs */
   transform: SetTransform;
+  /** Result of the transformation, null until the flow succeeds */
   transformResult?: Maybe<FlowDescriptionUpdateResult>;
 };
 
+/** Flow that compacts data slices of a dataset */
 export type FlowDescriptionDatasetHardCompaction = {
   __typename?: 'FlowDescriptionDatasetHardCompaction';
+  /** Result of the compaction, null until the flow succeeds */
   compactionResult?: Maybe<FlowDescriptionDatasetReorganizationResult>;
 };
 
+/** Flow that ingests data from the dataset's polling source */
 export type FlowDescriptionDatasetPollingIngest = {
   __typename?: 'FlowDescriptionDatasetPollingIngest';
+  /** Result of the ingest, null until the flow succeeds */
   ingestResult?: Maybe<FlowDescriptionUpdateResult>;
+  /** Polling source the data is fetched from */
   pollingSource: SetPollingSource;
 };
 
+/** Flow that ingests data pushed into the dataset */
 export type FlowDescriptionDatasetPushIngest = {
   __typename?: 'FlowDescriptionDatasetPushIngest';
+  /** Result of the ingest, null until the flow succeeds */
   ingestResult?: Maybe<FlowDescriptionUpdateResult>;
+  /** Human-readable description of what started the flow */
   message: Scalars['String']['output'];
+  /** Name of the push source, null for the default source or when unknown */
   sourceName?: Maybe<Scalars['String']['output']>;
 };
 
+/** Result of a flow that rewrites the dataset's history */
 export type FlowDescriptionDatasetReorganizationResult = FlowDescriptionReorganizationNothingToDo | FlowDescriptionReorganizationSuccess;
 
+/** Flow that moves the dataset head to an earlier block */
 export type FlowDescriptionDatasetReset = {
   __typename?: 'FlowDescriptionDatasetReset';
+  /** Result of the reset, null until the flow succeeds */
   resetResult?: Maybe<FlowDescriptionResetResult>;
 };
 
+/** Flow that drops the dataset's data while keeping its metadata */
 export type FlowDescriptionDatasetResetToMetadata = {
   __typename?: 'FlowDescriptionDatasetResetToMetadata';
+  /** Result of the reset, null until the flow succeeds */
   resetToMetadataResult?: Maybe<FlowDescriptionDatasetReorganizationResult>;
 };
 
+/** Dataset needed no changes */
 export type FlowDescriptionReorganizationNothingToDo = {
   __typename?: 'FlowDescriptionReorganizationNothingToDo';
+  /** Placeholder without meaning, always null */
   dummy?: Maybe<Scalars['String']['output']>;
+  /** Fixed status text */
   message: Scalars['String']['output'];
 };
 
+/** Dataset history was rewritten */
 export type FlowDescriptionReorganizationSuccess = {
   __typename?: 'FlowDescriptionReorganizationSuccess';
+  /** Hash of the new head block */
   newHead: Scalars['Multihash']['output'];
+  /** Number of metadata blocks before the rewrite */
   originalBlocksCount: Scalars['Int']['output'];
+  /** Number of metadata blocks after the rewrite */
   resultingBlocksCount: Scalars['Int']['output'];
 };
 
+/** Dataset head was moved */
 export type FlowDescriptionResetResult = {
   __typename?: 'FlowDescriptionResetResult';
+  /** Hash of the new head block */
   newHead: Scalars['Multihash']['output'];
 };
 
+/** System garbage collection flow */
 export type FlowDescriptionSystemGc = {
   __typename?: 'FlowDescriptionSystemGC';
+  /** Placeholder without meaning, always true */
   dummy: Scalars['Boolean']['output'];
 };
 
+/** Dataset flow whose details could not be determined */
 export type FlowDescriptionUnknown = {
   __typename?: 'FlowDescriptionUnknown';
+  /** Why the details are unavailable */
   message: Scalars['String']['output'];
 };
 
+/** Result of a flow that updates a dataset */
 export type FlowDescriptionUpdateResult = FlowDescriptionUpdateResultSuccess | FlowDescriptionUpdateResultUnknown | FlowDescriptionUpdateResultUpToDate;
 
+/** Dataset was updated with new data */
 export type FlowDescriptionUpdateResultSuccess = {
   __typename?: 'FlowDescriptionUpdateResultSuccess';
+  /** Whether the source has more data to fetch */
   hasMore: Scalars['Boolean']['output'];
+  /** Number of metadata blocks added */
   numBlocks: Scalars['Int']['output'];
+  /** Number of data records added */
   numRecords: Scalars['Int']['output'];
+  /** New watermark of the dataset, null if it did not change */
   updatedWatermark?: Maybe<Scalars['DateTime']['output']>;
 };
 
+/** Dataset was updated, but the added data could not be determined */
 export type FlowDescriptionUpdateResultUnknown = {
   __typename?: 'FlowDescriptionUpdateResultUnknown';
+  /** Why the added data could not be determined */
   message: Scalars['String']['output'];
 };
 
+/** Dataset was already up to date, nothing was added */
 export type FlowDescriptionUpdateResultUpToDate = {
   __typename?: 'FlowDescriptionUpdateResultUpToDate';
   /** The value indicates whether the api cache was used */
   uncacheable: Scalars['Boolean']['output'];
 };
 
+/** Flow that delivers an event to a webhook subscription */
 export type FlowDescriptionWebhookDeliver = {
   __typename?: 'FlowDescriptionWebhookDeliver';
+  /** Type of the delivered event */
   eventType: Scalars['String']['output'];
+  /** Label of the webhook subscription */
   label: Scalars['String']['output'];
+  /** URL the event is delivered to */
   targetUrl: Scalars['Url']['output'];
 };
 
@@ -2783,29 +3477,42 @@ export type FlowDownstreamLink = {
   flowId: Scalars['FlowID']['output'];
 };
 
+/** An edge wrapping a single `Flow` item */
 export type FlowEdge = {
   __typename?: 'FlowEdge';
+  /** The item itself */
   node: Flow;
 };
 
+/** Event in the history of a flow */
 export type FlowEvent = {
+  /** Unique identifier of the event */
   eventId: Scalars['EventID']['output'];
+  /** Time the event occurred */
   eventTime: Scalars['DateTime']['output'];
 };
 
+/** Flow was aborted */
 export type FlowEventAborted = FlowEvent & {
   __typename?: 'FlowEventAborted';
+  /** Unique identifier of the event */
   eventId: Scalars['EventID']['output'];
+  /** Time the event occurred */
   eventTime: Scalars['DateTime']['output'];
 };
 
+/** Another reason to run was added to a waiting flow */
 export type FlowEventActivationCauseAdded = FlowEvent & {
   __typename?: 'FlowEventActivationCauseAdded';
+  /** Added reason to run the flow */
   activationCause: FlowActivationCause;
+  /** Unique identifier of the event */
   eventId: Scalars['EventID']['output'];
+  /** Time the event occurred */
   eventTime: Scalars['DateTime']['output'];
 };
 
+/** Flow completed with an outcome */
 export type FlowEventCompleted = FlowEvent & {
   __typename?: 'FlowEventCompleted';
   /**
@@ -2813,111 +3520,174 @@ export type FlowEventCompleted = FlowEvent & {
    * the list may lag briefly behind the completion
    */
   downstreamFlows: Array<FlowDownstreamLink>;
+  /** Unique identifier of the event */
   eventId: Scalars['EventID']['output'];
+  /** Time the event occurred */
   eventTime: Scalars['DateTime']['output'];
 };
 
+/** Flow was created */
 export type FlowEventInitiated = FlowEvent & {
   __typename?: 'FlowEventInitiated';
+  /** Reason the flow was started */
   activationCause: FlowActivationCause;
+  /** Unique identifier of the event */
   eventId: Scalars['EventID']['output'];
+  /** Time the event occurred */
   eventTime: Scalars['DateTime']['output'];
 };
 
+/** Retry policy used by the flow was changed */
 export type FlowEventRetryPolicyModified = FlowEvent & {
   __typename?: 'FlowEventRetryPolicyModified';
+  /** Unique identifier of the event */
   eventId: Scalars['EventID']['output'];
+  /** Time the event occurred */
   eventTime: Scalars['DateTime']['output'];
+  /** New retry policy, null if failed runs are not retried */
   retryPolicy?: Maybe<FlowRetryPolicy>;
 };
 
+/** Flow's planned activation time was set */
 export type FlowEventScheduledForActivation = FlowEvent & {
   __typename?: 'FlowEventScheduledForActivation';
+  /** Unique identifier of the event */
   eventId: Scalars['EventID']['output'];
+  /** Time the event occurred */
   eventTime: Scalars['DateTime']['output'];
+  /** Time the flow is planned to activate */
   scheduledForActivationAt: Scalars['DateTime']['output'];
 };
 
+/** Flow's start condition was set */
 export type FlowEventStartConditionUpdated = FlowEvent & {
   __typename?: 'FlowEventStartConditionUpdated';
+  /** Unique identifier of the event */
   eventId: Scalars['EventID']['output'];
+  /** Time the event occurred */
   eventTime: Scalars['DateTime']['output'];
+  /** What the flow waits for before it runs */
   startCondition: FlowStartCondition;
 };
 
+/** Task of the flow was scheduled, started or finished */
 export type FlowEventTaskChanged = FlowEvent & {
   __typename?: 'FlowEventTaskChanged';
+  /** Unique identifier of the event */
   eventId: Scalars['EventID']['output'];
+  /** Time the event occurred */
   eventTime: Scalars['DateTime']['output'];
+  /** Time of the next attempt after a retryable failure, null otherwise */
   nextAttemptAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Task of the flow */
   task: Task;
+  /** Identifier of the task */
   taskId: Scalars['TaskID']['output'];
+  /** New status of the task */
   taskStatus: TaskStatus;
 };
 
+/** Flow failed */
 export type FlowFailedError = {
   __typename?: 'FlowFailedError';
+  /** Why the flow failed */
   reason: TaskFailureReason;
 };
 
+/** Flow type is not applicable to this kind of dataset */
 export type FlowIncompatibleDatasetKind = SetFlowConfigResult & SetFlowTriggerResult & TriggerFlowResult & {
   __typename?: 'FlowIncompatibleDatasetKind';
+  /** Kind of the target dataset */
   actualDatasetKind: DatasetKind;
+  /** Dataset kind the flow type requires */
   expectedDatasetKind: DatasetKind;
+  /** Human-readable error message */
   message: Scalars['String']['output'];
 };
 
+/** Provided flow configuration input is invalid */
 export type FlowInvalidConfigInputError = SetFlowConfigResult & {
   __typename?: 'FlowInvalidConfigInputError';
+  /** Human-readable error message */
   message: Scalars['String']['output'];
+  /** Explanation of what is invalid in the input */
   reason: Scalars['String']['output'];
 };
 
+/** Provided flow run configuration is invalid */
 export type FlowInvalidRunConfigurations = TriggerFlowResult & {
   __typename?: 'FlowInvalidRunConfigurations';
+  /** Explanation of what is invalid in the configuration */
   error: Scalars['String']['output'];
+  /** Human-readable error message */
   message: Scalars['String']['output'];
 };
 
+/** Provided trigger rule is invalid */
 export type FlowInvalidTriggerInputError = SetFlowTriggerResult & {
   __typename?: 'FlowInvalidTriggerInputError';
+  /** Human-readable error message */
   message: Scalars['String']['output'];
+  /** Explanation of what is invalid in the rule */
   reason: Scalars['String']['output'];
 };
 
+/** Provided trigger stop policy is invalid */
 export type FlowInvalidTriggerStopPolicyInputError = SetFlowTriggerResult & {
   __typename?: 'FlowInvalidTriggerStopPolicyInputError';
+  /** Human-readable error message */
   message: Scalars['String']['output'];
+  /** Explanation of what is invalid in the stop policy */
   reason: Scalars['String']['output'];
 };
 
+/** Flow does not exist or does not belong to this dataset */
 export type FlowNotFound = CancelFlowRunResult & GetFlowResult & {
   __typename?: 'FlowNotFound';
+  /** Identifier of the flow that was requested */
   flowId: Scalars['FlowID']['output'];
+  /** Human-readable error message */
   message: Scalars['String']['output'];
 };
 
+/** Final result of a finished flow */
 export type FlowOutcome = FlowAbortedResult | FlowFailedError | FlowSuccessResult;
 
+/** Dataset does not satisfy the preconditions of the flow */
 export type FlowPreconditionsNotMet = SetFlowConfigResult & SetFlowTriggerResult & TriggerFlowResult & {
   __typename?: 'FlowPreconditionsNotMet';
+  /** Human-readable error message */
   message: Scalars['String']['output'];
+  /** Description of the unmet precondition */
   preconditions: Scalars['String']['output'];
 };
 
+/** Why a flow process was stopped automatically */
 export enum FlowProcessAutoStopReason {
+  /** Failures in a row reached the stop policy threshold */
   StopPolicy = 'STOP_POLICY',
+  /** A run failed in a way that retrying cannot fix */
   UnrecoverableFailure = 'UNRECOVERABLE_FAILURE'
 }
 
+/** Overall state of a flow process */
 export enum FlowProcessEffectiveState {
+  /** Trigger is enabled and the last run did not fail */
   Active = 'ACTIVE',
+  /** Trigger is enabled but recent runs failed */
   Failing = 'FAILING',
+  /** Trigger was paused by a user */
   PausedManual = 'PAUSED_MANUAL',
+  /** Trigger was stopped automatically after failures */
   StoppedAuto = 'STOPPED_AUTO',
+  /** No trigger is set, the flow runs only manually */
   Unconfigured = 'UNCONFIGURED'
 }
 
+/**
+ * Conditions a flow process must match; processes without a trigger are
+ * excluded unless states are given explicitly
+ */
 export type FlowProcessFilters = {
   /** State filter */
   effectiveStateIn?: InputMaybe<Array<FlowProcessEffectiveState>>;
@@ -2933,22 +3703,34 @@ export type FlowProcessFilters = {
   nextPlannedBefore?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
+/** Time range with inclusive bounds */
 export type FlowProcessFiltersTimeRange = {
+  /** End of the range, inclusive */
   end: Scalars['DateTime']['input'];
+  /** Start of the range, inclusive */
   start: Scalars['DateTime']['input'];
 };
 
+/** Counts of flow processes in a group by effective state */
 export type FlowProcessGroupRollup = {
   __typename?: 'FlowProcessGroupRollup';
+  /** Number of processes running without failures */
   active: Scalars['Int']['output'];
+  /** Number of processes with failures below the stop threshold */
   failing: Scalars['Int']['output'];
+  /** Number of processes paused by a user */
   paused: Scalars['Int']['output'];
+  /** Number of processes stopped automatically */
   stopped: Scalars['Int']['output'];
+  /** Number of processes in the group */
   total: Scalars['Int']['output'];
+  /** Number of processes without a trigger */
   unconfigured: Scalars['Int']['output'];
+  /** Longest streak of failed runs in a row among the processes */
   worstConsecutiveFailures: Scalars['Int']['output'];
 };
 
+/** Property of a flow process to sort by */
 export enum FlowProcessOrderField {
   /** Chronic issues first. */
   ConsecutiveFailures = 'CONSECUTIVE_FAILURES',
@@ -2964,58 +3746,97 @@ export enum FlowProcessOrderField {
   NextPlannedAt = 'NEXT_PLANNED_AT'
 }
 
+/** Sort order of flow processes */
 export type FlowProcessOrdering = {
+  /** Sort direction */
   direction: OrderingDirection;
+  /** Property to sort by */
   field: FlowProcessOrderField;
 };
 
+/** Health and timing of a recurring flow process */
 export type FlowProcessSummary = {
   __typename?: 'FlowProcessSummary';
+  /** Time the process was stopped automatically, null if it was not */
   autoStoppedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Why the process was stopped automatically, null if it was not */
   autoStoppedReason?: Maybe<FlowProcessAutoStopReason>;
+  /** Number of failed runs in a row, reset by a success */
   consecutiveFailures: Scalars['Int']['output'];
+  /** Current state of the process */
   effectiveState: FlowProcessEffectiveState;
+  /** Completion time of the last run, successful or failed */
   lastAttemptAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Completion time of the last failed run, null if none failed */
   lastFailureAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Completion time of the last successful run, null if none succeeded */
   lastSuccessAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Planned time of the next run, null if none is planned */
   nextPlannedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Time the user paused the process, null if not paused */
   pausedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Start time of the run in progress, null if none is running */
   runningSince?: Maybe<Scalars['DateTime']['output']>;
+  /** When the trigger stops itself after failures */
   stopPolicy: FlowTriggerStopPolicy;
 };
 
+/** Selects flows by process kind */
 export type FlowProcessTypeFilterInput =
+  /** Flows of the dataset itself */
   { primary: FlowProcessTypePrimaryFilterInput; webhooks?: never; }
-  |  { primary?: never; webhooks: FlowProcessTypeWebhooksFilterInput; };
+  |  /** Webhook delivery flows of the dataset's subscriptions */
+  { primary?: never; webhooks: FlowProcessTypeWebhooksFilterInput; };
 
+/** Filter for flows of the dataset itself */
 export type FlowProcessTypePrimaryFilterInput = {
+  /** Only flows of these types, null or empty means all types */
   byFlowTypes?: InputMaybe<Array<DatasetFlowType>>;
 };
 
+/** Filter for webhook delivery flows */
 export type FlowProcessTypeWebhooksFilterInput = {
+  /** Only deliveries of these subscriptions, null or empty means all */
   subscriptionIds?: InputMaybe<Array<Scalars['WebhookSubscriptionID']['input']>>;
 };
 
+/** How the retry delay grows with each retry */
 export enum FlowRetryBackoffType {
+  /** The delay doubles with each retry */
   Exponential = 'EXPONENTIAL',
+  /**
+   * The delay doubles with each retry, plus a random part below the base
+   * delay
+   */
   ExponentialWithJitter = 'EXPONENTIAL_WITH_JITTER',
+  /** Every retry waits the base delay */
   Fixed = 'FIXED',
+  /** Retry N waits N times the base delay */
   Linear = 'LINEAR'
 }
 
+/** How a flow retries after a recoverable failure */
 export type FlowRetryPolicy = {
   __typename?: 'FlowRetryPolicy';
+  /** How the delay grows with each retry */
   backoffType: FlowRetryBackoffType;
+  /** Maximum number of retries after the first attempt */
   maxAttempts: Scalars['Int']['output'];
+  /** Base delay before a retry */
   minDelay: TimeDelta;
 };
 
+/** How a flow retries after a recoverable failure */
 export type FlowRetryPolicyInput = {
+  /** How the delay grows with each retry */
   backoffType: FlowRetryBackoffType;
+  /** Maximum number of retries after the first attempt */
   maxAttempts: Scalars['Int']['input'];
+  /** Base delay before a retry */
   minDelay: TimeDeltaInput;
 };
 
+/** Sort order of flow runs */
 export enum FlowRunOrder {
   /**
    * Queue-oriented ordering:
@@ -3027,46 +3848,69 @@ export enum FlowRunOrder {
   ScheduledForActivation = 'SCHEDULED_FOR_ACTIVATION'
 }
 
+/** What a waiting flow waits for before it runs */
 export type FlowStartCondition = FlowStartConditionExecutor | FlowStartConditionReactive | FlowStartConditionSchedule | FlowStartConditionThrottling;
 
+/** Flow waits for its task to be picked up by an executor */
 export type FlowStartConditionExecutor = {
   __typename?: 'FlowStartConditionExecutor';
+  /** Identifier of the scheduled task */
   taskId: Scalars['TaskID']['output'];
 };
 
+/** Flow waits for enough new input data */
 export type FlowStartConditionReactive = {
   __typename?: 'FlowStartConditionReactive';
+  /** Number of new input records accumulated so far */
   accumulatedRecordsCount: Scalars['Int']['output'];
+  /** Batching rule in effect for this flow */
   activeBatchingRule: FlowTriggerBatchingRule;
+  /** Time the flow runs even if too few records arrived */
   batchingDeadline: Scalars['DateTime']['output'];
+  /** How to react when an input's history is rewritten */
   forBreakingChange: FlowTriggerBreakingChangeRule;
+  /** Whether any input advanced its watermark */
   watermarkModified: Scalars['Boolean']['output'];
 };
 
+/** Flow waits for its scheduled time */
 export type FlowStartConditionSchedule = {
   __typename?: 'FlowStartConditionSchedule';
+  /** Time the flow is scheduled to run */
   wakeUpAt: Scalars['DateTime']['output'];
 };
 
+/** Flow was delayed because its previous run was too recent */
 export type FlowStartConditionThrottling = {
   __typename?: 'FlowStartConditionThrottling';
+  /** Minimum interval between runs, in seconds */
   intervalSec: Scalars['Int']['output'];
+  /** Time the flow would have run without throttling */
   shiftedFrom: Scalars['DateTime']['output'];
+  /** Time the flow will run */
   wakeUpAt: Scalars['DateTime']['output'];
 };
 
+/** Lifecycle status of a flow */
 export enum FlowStatus {
+  /** Flow has completed with an outcome */
   Finished = 'FINISHED',
+  /** Previous attempt failed and the flow waits for the next one */
   Retrying = 'RETRYING',
+  /** Flow task is running */
   Running = 'RUNNING',
+  /** Flow waits for its start condition or for its task to start */
   Waiting = 'WAITING'
 }
 
+/** Flow completed successfully */
 export type FlowSuccessResult = {
   __typename?: 'FlowSuccessResult';
+  /** Fixed status text */
   message: Scalars['String']['output'];
 };
 
+/** Key moments in the lifecycle of a flow */
 export type FlowTimingRecords = {
   __typename?: 'FlowTimingRecords';
   /** Recorded time of last task scheduling */
@@ -3091,168 +3935,260 @@ export type FlowTimingRecords = {
   scheduledAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
+/** Rule that defines when a flow runs automatically */
 export type FlowTrigger = {
   __typename?: 'FlowTrigger';
+  /** Whether the trigger is inactive: paused by a user or auto-stopped */
   paused: Scalars['Boolean']['output'];
+  /** Reactive rule, null if the trigger runs on a schedule */
   reactive?: Maybe<FlowTriggerReactiveRule>;
+  /** Schedule rule, null if the trigger is reactive */
   schedule?: Maybe<FlowTriggerScheduleRule>;
+  /** When the trigger stops itself after failures */
   stopPolicy: FlowTriggerStopPolicy;
 };
 
+/** How new input data is accumulated before a reactive flow runs */
 export type FlowTriggerBatchingRule = FlowTriggerBatchingRuleBuffering | FlowTriggerBatchingRuleImmediate;
 
+/**
+ * Accumulate new input data until enough records arrive or the interval
+ * passes
+ */
 export type FlowTriggerBatchingRuleBuffering = {
   __typename?: 'FlowTriggerBatchingRuleBuffering';
+  /** Longest wait after the first new data before the flow runs anyway */
   maxBatchingInterval: TimeDelta;
+  /** Number of new input records that runs the flow */
   minRecordsToAwait: Scalars['Int']['output'];
 };
 
+/**
+ * Accumulate new input data until enough records arrive or the interval
+ * passes
+ */
 export type FlowTriggerBatchingRuleBufferingInput = {
+  /** Longest wait after the first new data before the flow runs anyway */
   maxBatchingInterval: TimeDeltaInput;
+  /** Number of new input records that runs the flow */
   minRecordsToAwait: Scalars['Int']['input'];
 };
 
+/** Run the flow as soon as new input data appears */
 export type FlowTriggerBatchingRuleImmediate = {
   __typename?: 'FlowTriggerBatchingRuleImmediate';
+  /** Placeholder without meaning, always true */
   dummy: Scalars['Boolean']['output'];
 };
 
+/** Run the flow as soon as new input data appears */
 export type FlowTriggerBatchingRuleImmediateInput = {
+  /** Placeholder without meaning, the value is ignored */
   dummy: Scalars['Boolean']['input'];
 };
 
+/** How new input data is accumulated before a reactive flow runs */
 export type FlowTriggerBatchingRuleInput =
+  /** Accumulate new input data first */
   { buffering: FlowTriggerBatchingRuleBufferingInput; immediate?: never; }
-  |  { buffering?: never; immediate: FlowTriggerBatchingRuleImmediateInput; };
+  |  /** Run as soon as new input data appears */
+  { buffering?: never; immediate: FlowTriggerBatchingRuleImmediateInput; };
 
+/** How to react to a breaking change (history rewrite) of a dataset */
 export enum FlowTriggerBreakingChangeRule {
+  /** Ignore breaking changes */
   NoAction = 'NO_ACTION',
+  /** React to breaking changes, e.g. reset a derivative dataset to metadata */
   Recover = 'RECOVER'
 }
 
+/** Rule that runs a flow in reaction to changes of its inputs */
 export type FlowTriggerReactiveRule = {
   __typename?: 'FlowTriggerReactiveRule';
+  /** How to react when an input's history is rewritten */
   forBreakingChange: FlowTriggerBreakingChangeRule;
+  /** How new input data is batched before the flow runs */
   forNewData: FlowTriggerBatchingRule;
 };
 
+/** Rule that defines when a flow runs automatically */
 export type FlowTriggerRuleInput =
+  /** Run in reaction to changes of inputs */
   { reactive: FlowTriggerRuleReactiveInput; schedule?: never; }
-  |  { reactive?: never; schedule: FlowTriggerRuleScheduleInput; };
+  |  /** Run on a schedule */
+  { reactive?: never; schedule: FlowTriggerRuleScheduleInput; };
 
+/** Rule that runs a flow in reaction to changes of its inputs */
 export type FlowTriggerRuleReactiveInput = {
+  /** How to react when an input's history is rewritten */
   forBreakingChange: FlowTriggerBreakingChangeRule;
+  /** How new input data is batched before the flow runs */
   forNewData: FlowTriggerBatchingRuleInput;
 };
 
+/** Schedule of a trigger: a fixed interval or a cron expression */
 export type FlowTriggerRuleScheduleInput =
   /** Supported CRON syntax: min hour dayOfMonth month dayOfWeek */
   { cron5ComponentExpression: Scalars['String']['input']; timeDelta?: never; }
-  |  { cron5ComponentExpression?: never; timeDelta: TimeDeltaInput; };
+  |  /** Run at a fixed interval */
+  { cron5ComponentExpression?: never; timeDelta: TimeDeltaInput; };
 
+/** Schedule of a trigger: a fixed interval or a cron expression */
 export type FlowTriggerScheduleRule = Cron5ComponentExpression | TimeDelta;
 
+/** When a trigger stops itself after failed runs */
 export type FlowTriggerStopPolicy = FlowTriggerStopPolicyAfterConsecutiveFailures | FlowTriggerStopPolicyNever;
 
+/** Trigger stops after a number of failed runs in a row */
 export type FlowTriggerStopPolicyAfterConsecutiveFailures = {
   __typename?: 'FlowTriggerStopPolicyAfterConsecutiveFailures';
+  /** Number of failed runs in a row that stops the trigger */
   maxFailures: Scalars['Int']['output'];
 };
 
+/** Trigger stops after a number of failed runs in a row */
 export type FlowTriggerStopPolicyAfterConsecutiveFailuresInput = {
+  /** Number of failed runs in a row that stops the trigger, from 1 to 10 */
   maxFailures: Scalars['Int']['input'];
 };
 
+/** When a trigger stops itself after failed runs */
 export type FlowTriggerStopPolicyInput =
+  /** Stop the trigger after a number of failed runs in a row */
   { afterConsecutiveFailures: FlowTriggerStopPolicyAfterConsecutiveFailuresInput; never?: never; }
-  |  { afterConsecutiveFailures?: never; never: FlowTriggerStopPolicyNeverInput; };
+  |  /** Never stop the trigger because of failures */
+  { afterConsecutiveFailures?: never; never: FlowTriggerStopPolicyNeverInput; };
 
+/** Trigger never stops because of failures */
 export type FlowTriggerStopPolicyNever = {
   __typename?: 'FlowTriggerStopPolicyNever';
+  /** Placeholder without meaning, always true */
   dummy: Scalars['Boolean']['output'];
 };
 
+/** Trigger never stops because of failures */
 export type FlowTriggerStopPolicyNeverInput = {
+  /** Placeholder without meaning, the value is ignored */
   dummy: Scalars['Boolean']['input'];
 };
 
+/** Flow type is not supported for this operation */
 export type FlowTypeIsNotSupported = SetFlowTriggerResult & {
   __typename?: 'FlowTypeIsNotSupported';
+  /** Human-readable error message */
   message: Scalars['String']['output'];
 };
 
+/** Fragment of a field that matched a full-text search */
 export type FullTextSearchHighlight = {
   __typename?: 'FullTextSearchHighlight';
+  /** Most relevant fragment of the field with the matches highlighted */
   bestFragment: Scalars['String']['output'];
+  /** Name of the matching field */
   field: Scalars['String']['output'];
 };
 
+/** Object matching a full-text search */
 export type FullTextSearchHit = {
   __typename?: 'FullTextSearchHit';
+  /** Fragments of the fields that matched the prompt, if any */
   highlights?: Maybe<Array<FullTextSearchHighlight>>;
+  /** Identifier of the matching object */
   id: Scalars['String']['output'];
+  /**
+   * Name of the search schema the object belongs to, e.g. datasets or
+   * accounts
+   */
   schemaName: Scalars['String']['output'];
+  /** Relevance score, null when results are not ranked */
   score?: Maybe<Scalars['Float']['output']>;
+  /** Indexed document of the object as JSON */
   source: Scalars['JSON']['output'];
 };
 
+/** Results of a full-text search */
 export type FullTextSearchResponse = {
   __typename?: 'FullTextSearchResponse';
+  /** Matching objects on the requested page */
   hits: Array<FullTextSearchHit>;
+  /** Whether the search timed out and returned partial results */
   timeout: Scalars['Boolean']['output'];
+  /** Time the search engine spent on the request, in milliseconds */
   tookMs: Scalars['Int']['output'];
+  /** Total number of matching objects across all pages */
   totalHits: Scalars['Int']['output'];
 };
 
+/** Outcome of looking up a flow */
 export type GetFlowResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Flow was found */
 export type GetFlowSuccess = GetFlowResult & {
   __typename?: 'GetFlowSuccess';
+  /** Flow that was requested */
   flow: Flow;
+  /** Human-readable success message */
   message: Scalars['String']['output'];
 };
 
+/** Selects flows by who started them */
 export type InitiatorFilterInput =
+  /** Flows started by any of these accounts */
   { accounts: Array<Scalars['AccountID']['input']>; system?: never; }
-  |  { accounts?: never; system: Scalars['Boolean']['input']; };
+  |  /** Flows started by the system, the value is ignored */
+  { accounts?: never; system: Scalars['Boolean']['input']; };
 
+/** JDBC connection details */
 export type JdbcDesc = {
   __typename?: 'JdbcDesc';
+  /** JDBC connection URL for the Arrow Flight SQL driver */
   url: Scalars['String']['output'];
 };
 
+/** Kafka protocol endpoint */
 export type KafkaProtocolDesc = {
   __typename?: 'KafkaProtocolDesc';
+  /** Kafka connection URL */
   url: Scalars['String']['output'];
 };
 
-/** Represents base64-encoded binary data using standard encoding */
+/** Key-value pair of strings */
 export type KeyValue = {
   __typename?: 'KeyValue';
+  /** Key of the pair */
   key: Scalars['String']['output'];
+  /** Value of the pair */
   value: Scalars['String']['output'];
 };
 
+/** Link to a dataset page in the web UI */
 export type LinkProtocolDesc = {
   __typename?: 'LinkProtocolDesc';
+  /** URL of the dataset page */
   url: Scalars['String']['output'];
 };
 
+/** Result of a successful login */
 export type LoginResponse = {
   __typename?: 'LoginResponse';
+  /** Access token to authenticate subsequent requests */
   accessToken: Scalars['String']['output'];
+  /** Account that logged in */
   account: Account;
 };
 
+/** Filters narrowing a name lookup */
 export type LookupFilters = {
+  /** Filters applied to accounts */
   byAccount?: InputMaybe<AccountLookupFilter>;
 };
 
 /**
- * Merge strategy determines how newly ingested data should be combined with
- * the data that already exists in the dataset.
+ * Merge strategy determines how newly ingested data should be combined with the data that already
+ * exists in the dataset.
  *
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/MergeStrategy
  */
@@ -3261,8 +4197,8 @@ export type MergeStrategy = MergeStrategyAppend | MergeStrategyChangelogStream |
 /**
  * Append merge strategy.
  *
- * Under this strategy new data will be appended to the dataset in its
- * entirety, without any deduplication.
+ * Under this strategy new data will be appended to the dataset in its entirety, without any
+ * deduplication.
  *
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/MergeStrategy#/$defs/Append
  */
@@ -3274,108 +4210,89 @@ export type MergeStrategyAppend = {
 /**
  * Changelog stream merge strategy.
  *
- * This is the native stream format for ODF that accurately describes the
- * evolution of all event records including appends, retractions, and
- * corrections as per RFC-015. No pre-processing except for format validation
- * is done.
+ * This is the native stream format for ODF that accurately describes the evolution of all event
+ * records including appends, retractions, and corrections as per RFC-015. No pre-processing except
+ * for format validation is done.
  *
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/MergeStrategy#/$defs/ChangelogStream
  */
 export type MergeStrategyChangelogStream = {
   __typename?: 'MergeStrategyChangelogStream';
-  /**
-   * Names of the columns that uniquely identify the record throughout its
-   * lifetime
-   */
+  /** Names of the columns that uniquely identify the record throughout its lifetime */
   primaryKey: Array<Scalars['String']['output']>;
 };
 
 /**
  * Ledger merge strategy.
  *
- * This strategy should be used for data sources containing ledgers of events.
- * Currently this strategy will only perform deduplication of events using
- * user-specified primary key columns. This means that the source data can
- * contain partially overlapping set of records and only those records that
- * were not previously seen will be appended.
+ * This strategy should be used for data sources containing ledgers of events. Currently this
+ * strategy will only perform deduplication of events using user-specified primary key columns.
+ * This means that the source data can contain partially overlapping set of records and only those
+ * records that were not previously seen will be appended.
  *
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/MergeStrategy#/$defs/Ledger
  */
 export type MergeStrategyLedger = {
   __typename?: 'MergeStrategyLedger';
-  /**
-   * Names of the columns that uniquely identify the record throughout its
-   * lifetime
-   */
+  /** Names of the columns that uniquely identify the record throughout its lifetime */
   primaryKey: Array<Scalars['String']['output']>;
 };
 
 /**
  * Snapshot merge strategy.
  *
- * This strategy can be used for data state snapshots that are taken
- * periodically and contain only the latest state of the observed entity or
- * system. Over time such snapshots can have new rows added, and old rows
- * either removed or modified.
+ * This strategy can be used for data state snapshots that are taken periodically and contain only
+ * the latest state of the observed entity or system. Over time such snapshots can have new rows
+ * added, and old rows either removed or modified.
  *
- * This strategy transforms snapshot data into an append-only event stream
- * where data already added is immutable. It does so by performing Change Data
- * Capture - essentially diffing the current state of data against the
- * reconstructed previous state and recording differences as retractions or
- * corrections. The Operation Type "op" column will contain:
+ * This strategy transforms snapshot data into an append-only event stream where data already added
+ * is immutable. It does so by performing Change Data Capture - essentially diffing the current
+ * state of data against the reconstructed previous state and recording differences as retractions
+ * or corrections. The Operation Type "op" column will contain:
  * - append (`+A`) when a row appears for the first time
  * - retraction (`-D`) when row disappears
- * - correction (`-C`, `+C`) when row data has changed, with `-C` event
- * carrying the old value of the row and `+C` carrying the new value.
+ * - correction (`-C`, `+C`) when row data has changed, with `-C` event carrying the old value of
+ * the row and `+C` carrying the new value.
  *
- * To correctly associate rows between old and new snapshots this strategy
- * relies on user-specified primary key columns.
+ * To correctly associate rows between old and new snapshots this strategy relies on user-specified
+ * primary key columns.
  *
- * To identify whether a row has changed this strategy will compare all other
- * columns one by one. If the data contains a column that is guaranteed to
- * change whenever any of the data columns changes (for example a last
- * modification timestamp, an incremental version, or a data hash), then it can
- * be specified in `compareColumns` property to speed up the detection of
- * modified rows.
+ * To identify whether a row has changed this strategy will compare all other columns one by one.
+ * If the data contains a column that is guaranteed to change whenever any of the data columns
+ * changes (for example a last modification timestamp, an incremental version, or a data hash),
+ * then it can be specified in `compareColumns` property to speed up the detection of modified
+ * rows.
  *
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/MergeStrategy#/$defs/Snapshot
  */
 export type MergeStrategySnapshot = {
   __typename?: 'MergeStrategySnapshot';
-  /**
-   * Names of the columns to compared to determine if a row has changed
-   * between two snapshots.
-   */
+  /** Names of the columns to compared to determine if a row has changed between two snapshots. */
   compareColumns?: Maybe<Array<Scalars['String']['output']>>;
-  /**
-   * Names of the columns that uniquely identify the record throughout its
-   * lifetime.
-   */
+  /** Names of the columns that uniquely identify the record throughout its lifetime. */
   primaryKey: Array<Scalars['String']['output']>;
 };
 
 /**
  * Upsert stream merge strategy.
  *
- * This strategy should be used for data sources containing ledgers of
- * insert-or-update and delete events. Unlike ChangelogStream the
- * insert-or-update events only carry the new values, so this strategy will use
- * primary key to re-classify the events into an append or a correction from/to
+ * This strategy should be used for data sources containing ledgers of insert-or-update and delete
+ * events. Unlike ChangelogStream the insert-or-update events only carry the new values, so this
+ * strategy will use primary key to re-classify the events into an append or a correction from/to
  * pair, looking up the previous values.
  *
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/MergeStrategy#/$defs/UpsertStream
  */
 export type MergeStrategyUpsertStream = {
   __typename?: 'MergeStrategyUpsertStream';
-  /**
-   * Names of the columns that uniquely identify the record throughout its
-   * lifetime
-   */
+  /** Names of the columns that uniquely identify the record throughout its lifetime */
   primaryKey: Array<Scalars['String']['output']>;
 };
 
+/** A page of `MetadataBlockExtended` items */
 export type MetadataBlockConnection = {
   __typename?: 'MetadataBlockConnection';
+  /** Items of this page, each wrapped in an edge */
   edges: Array<MetadataBlockEdge>;
   /** A shorthand for `edges { node { ... } }` */
   nodes: Array<MetadataBlockExtended>;
@@ -3385,27 +4302,39 @@ export type MetadataBlockConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** An edge wrapping a single `MetadataBlockExtended` item */
 export type MetadataBlockEdge = {
   __typename?: 'MetadataBlockEdge';
+  /** The item itself */
   node: MetadataBlockExtended;
 };
 
+/** Metadata block with its hash and author */
 export type MetadataBlockExtended = {
   __typename?: 'MetadataBlockExtended';
+  /** Author of the block, reported as the dataset owner */
   author: Account;
+  /** Hash of this block */
   blockHash: Scalars['Multihash']['output'];
+  /** Block serialized in the requested format */
   encoded?: Maybe<EncodedBlock>;
+  /** Metadata event recorded in this block */
   event: MetadataEvent;
+  /** Hash of the preceding block, null for the first block */
   prevBlockHash?: Maybe<Scalars['Multihash']['output']>;
+  /** Position of this block in the chain, starting from zero */
   sequenceNumber: Scalars['Int']['output'];
+  /** System time when this block was created */
   systemTime: Scalars['DateTime']['output'];
 };
 
 
+/** Metadata block with its hash and author */
 export type MetadataBlockExtendedEncodedArgs = {
   encoding: MetadataManifestFormat;
 };
 
+/** Chain of metadata blocks of a dataset */
 export type MetadataChain = {
   __typename?: 'MetadataChain';
   /** Returns a metadata block corresponding to the specified hash */
@@ -3422,22 +4351,26 @@ export type MetadataChain = {
 };
 
 
+/** Chain of metadata blocks of a dataset */
 export type MetadataChainBlockByHashArgs = {
   hash: Scalars['Multihash']['input'];
 };
 
 
+/** Chain of metadata blocks of a dataset */
 export type MetadataChainBlockByHashEncodedArgs = {
   format: MetadataManifestFormat;
   hash: Scalars['Multihash']['input'];
 };
 
 
+/** Chain of metadata blocks of a dataset */
 export type MetadataChainBlocksArgs = {
   page?: InputMaybe<Scalars['Int']['input']>;
   perPage?: InputMaybe<Scalars['Int']['input']>;
 };
 
+/** Mutations of the dataset metadata chain */
 export type MetadataChainMut = {
   __typename?: 'MetadataChainMut';
   /** Commits new event to the metadata chain */
@@ -3445,6 +4378,7 @@ export type MetadataChainMut = {
 };
 
 
+/** Mutations of the dataset metadata chain */
 export type MetadataChainMutCommitEventArgs = {
   event: Scalars['String']['input'];
   eventFormat: MetadataManifestFormat;
@@ -3457,45 +4391,69 @@ export type MetadataChainMutCommitEventArgs = {
  */
 export type MetadataEvent = AddData | AddPushSource | DisablePollingSource | DisablePushSource | ExecuteTransform | Seed | SetAttachments | SetDataSchema | SetInfo | SetLicense | SetPollingSource | SetTransform | SetVocab;
 
+/** Type of a metadata event */
 export enum MetadataEventType {
+  /** Event that adds a source data can be pushed into */
   AddPushSource = 'ADD_PUSH_SOURCE',
+  /** Event that establishes the identity of a dataset */
   Seed = 'SEED',
+  /** Event that sets attached files */
   SetAttachments = 'SET_ATTACHMENTS',
+  /** Event that sets the schema of the data */
   SetDataSchema = 'SET_DATA_SCHEMA',
+  /** Event that sets the description, keywords and similar info */
   SetInfo = 'SET_INFO',
+  /** Event that sets the license */
   SetLicense = 'SET_LICENSE',
+  /** Event that defines a source polled for new data */
   SetPollingSource = 'SET_POLLING_SOURCE',
+  /** Event that defines how a derivative dataset is computed */
   SetTransform = 'SET_TRANSFORM',
+  /** Event that defines column names with special meaning */
   SetVocab = 'SET_VOCAB'
 }
 
+/** Serialization format of metadata manifests */
 export enum MetadataManifestFormat {
+  /** YAML manifest */
   Yaml = 'YAML'
 }
 
+/** Manifest could not be parsed */
 export type MetadataManifestMalformed = CommitResult & CreateDatasetFromSnapshotResult & {
   __typename?: 'MetadataManifestMalformed';
+  /** Always false */
   isSuccess: Scalars['Boolean']['output'];
+  /** Description of the problem */
   message: Scalars['String']['output'];
 };
 
+/** Manifest version is not supported by this node */
 export type MetadataManifestUnsupportedVersion = CommitResult & CreateDatasetFromSnapshotResult & {
   __typename?: 'MetadataManifestUnsupportedVersion';
+  /** Always false */
   isSuccess: Scalars['Boolean']['output'];
+  /** Description of the problem with the supported version range */
   message: Scalars['String']['output'];
 };
 
+/** Outcome of changing an account password */
 export type ModifyPasswordResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Password was changed */
 export type ModifyPasswordSuccess = ModifyPasswordResult & {
   __typename?: 'ModifyPasswordSuccess';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Password was not changed: the old password is wrong */
 export type ModifyPasswordWrongOldPassword = ModifyPasswordResult & {
   __typename?: 'ModifyPasswordWrongOldPassword';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
@@ -3527,6 +4485,7 @@ export type MqttTopicSubscription = {
   qos?: Maybe<MqttQos>;
 };
 
+/** Root of all mutations */
 export type Mutation = {
   __typename?: 'Mutation';
   /**
@@ -3557,10 +4516,13 @@ export type Mutation = {
   resources: ResourcesMut;
 };
 
+/** Object found by a name lookup */
 export type NameLookupResult = Account;
 
+/** A page of `NameLookupResult` items */
 export type NameLookupResultConnection = {
   __typename?: 'NameLookupResultConnection';
+  /** Items of this page, each wrapped in an edge */
   edges: Array<NameLookupResultEdge>;
   /** A shorthand for `edges { node { ... } }` */
   nodes: Array<NameLookupResult>;
@@ -3570,20 +4532,28 @@ export type NameLookupResultConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** An edge wrapping a single `NameLookupResult` item */
 export type NameLookupResultEdge = {
   __typename?: 'NameLookupResultEdge';
+  /** The item itself */
   node: NameLookupResult;
 };
 
+/** Request did not change the dataset */
 export type NoChanges = CommitResult & UpdateReadmeResult & {
   __typename?: 'NoChanges';
+  /** Always true */
   isSuccess: Scalars['Boolean']['output'];
+  /** Explanation of why nothing changed */
   message: Scalars['String']['output'];
 };
 
+/** `OData` API endpoints for a dataset */
 export type OdataProtocolDesc = {
   __typename?: 'OdataProtocolDesc';
+  /** URL of the `OData` collection of the dataset */
   collectionUrl: Scalars['String']['output'];
+  /** URL of the `OData` service of the dataset owner */
   serviceUrl: Scalars['String']['output'];
 };
 
@@ -3600,11 +4570,15 @@ export type OffsetInterval = {
   start: Scalars['Uint64']['output'];
 };
 
+/** Sort direction */
 export enum OrderingDirection {
+  /** Ascending, smallest first */
   Asc = 'ASC',
+  /** Descending, largest first */
   Desc = 'DESC'
 }
 
+/** Position of a page within a page-based listing */
 export type PageBasedInfo = {
   __typename?: 'PageBasedInfo';
   /** Index of the current page */
@@ -3620,24 +4594,34 @@ export type PageBasedInfo = {
   totalPages?: Maybe<Scalars['Int']['output']>;
 };
 
+/** Outcome of pausing a webhook subscription */
 export type PauseWebhookSubscriptionResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Webhook subscription was paused */
 export type PauseWebhookSubscriptionResultSuccess = PauseWebhookSubscriptionResult & {
   __typename?: 'PauseWebhookSubscriptionResultSuccess';
+  /** Human-readable success message */
   message: Scalars['String']['output'];
+  /** Always true */
   paused: Scalars['Boolean']['output'];
 };
 
+/** Operation is not allowed in the current subscription status */
 export type PauseWebhookSubscriptionResultUnexpected = PauseWebhookSubscriptionResult & {
   __typename?: 'PauseWebhookSubscriptionResultUnexpected';
+  /** Human-readable error message */
   message: Scalars['String']['output'];
+  /** Current status of the subscription */
   status: WebhookSubscriptionStatus;
 };
 
+/** PostgreSQL protocol endpoint */
 export type PostgreSqlDesl = {
   __typename?: 'PostgreSqlDesl';
+  /** PostgreSQL connection URL */
   url: Scalars['String']['output'];
 };
 
@@ -3657,10 +4641,7 @@ export type PrepStepDecompress = {
   __typename?: 'PrepStepDecompress';
   /** Name of a compression algorithm used on data. */
   format: CompressionFormat;
-  /**
-   * Path to a data file within a multi-file archive. Can contain glob
-   * patterns.
-   */
+  /** Path to a data file within a multi-file archive. Can contain glob patterns. */
   subPath?: Maybe<Scalars['String']['output']>;
 };
 
@@ -3675,24 +4656,33 @@ export type PrepStepPipe = {
   command: Array<Scalars['String']['output']>;
 };
 
+/** Dataset is visible only to its owner and collaborators */
 export type PrivateDatasetVisibility = {
   __typename?: 'PrivateDatasetVisibility';
+  /** Placeholder field without meaning, always null */
   dummy?: Maybe<Scalars['String']['output']>;
 };
 
+/** Dataset is visible only to its owner and collaborators */
 export type PrivateDatasetVisibilityInput = {
+  /** Placeholder field without meaning, always null */
   dummy?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Dataset is readable by all authenticated users */
 export type PublicDatasetVisibility = {
   __typename?: 'PublicDatasetVisibility';
+  /** Whether anonymous (unauthenticated) users can read the dataset too */
   anonymousAvailable: Scalars['Boolean']['output'];
 };
 
+/** Dataset is readable by all authenticated users */
 export type PublicDatasetVisibilityInput = {
+  /** Whether anonymous (unauthenticated) users can read the dataset too */
   anonymousAvailable: Scalars['Boolean']['input'];
 };
 
+/** Root of all read-only queries */
 export type Query = {
   __typename?: 'Query';
   /**
@@ -3732,26 +4722,39 @@ export type Query = {
   webhooks: Webhooks;
 };
 
+/** Query language and dialect */
 export enum QueryDialect {
+  /** Apache `DataFusion` SQL */
   SqlDataFusion = 'SQL_DATA_FUSION',
+  /** Apache Flink SQL */
   SqlFlink = 'SQL_FLINK',
+  /** `RisingWave` SQL */
   SqlRisingWave = 'SQL_RISING_WAVE',
+  /** Apache Spark SQL */
   SqlSpark = 'SQL_SPARK'
 }
 
+/** Outcome of reactivating a webhook subscription */
 export type ReactivateWebhookSubscriptionResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Webhook subscription was reactivated */
 export type ReactivateWebhookSubscriptionResultSuccess = ReactivateWebhookSubscriptionResult & {
   __typename?: 'ReactivateWebhookSubscriptionResultSuccess';
+  /** Human-readable success message */
   message: Scalars['String']['output'];
+  /** Always true */
   reactivated: Scalars['Boolean']['output'];
 };
 
+/** Operation is not allowed in the current subscription status */
 export type ReactivateWebhookSubscriptionResultUnexpected = ReactivateWebhookSubscriptionResult & {
   __typename?: 'ReactivateWebhookSubscriptionResultUnexpected';
+  /** Human-readable error message */
   message: Scalars['String']['output'];
+  /** Current status of the subscription */
   status: WebhookSubscriptionStatus;
 };
 
@@ -3897,10 +4900,9 @@ export type ReadStepEsriShapefileSchemaArgs = {
 };
 
 /**
- * Reader for GeoJSON files. It expects one `FeatureCollection` object in the
- * root and will create a record per each `Feature` inside it extracting the
- * properties into individual columns and leaving the feature geometry in its
- * own column.
+ * Reader for GeoJSON files. It expects one `FeatureCollection` object in the root and will create
+ * a record per each `Feature` inside it extracting the properties into individual columns and
+ * leaving the feature geometry in its own column.
  *
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/ReadStep#/$defs/GeoJson
  */
@@ -3917,10 +4919,9 @@ export type ReadStepGeoJson = ReadStep & {
 
 
 /**
- * Reader for GeoJSON files. It expects one `FeatureCollection` object in the
- * root and will create a record per each `Feature` inside it extracting the
- * properties into individual columns and leaving the feature geometry in its
- * own column.
+ * Reader for GeoJSON files. It expects one `FeatureCollection` object in the root and will create
+ * a record per each `Feature` inside it extracting the properties into individual columns and
+ * leaving the feature geometry in its own column.
  *
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/ReadStep#/$defs/GeoJson
  */
@@ -3982,9 +4983,9 @@ export type ReadStepJsonSchemaArgs = {
 };
 
 /**
- * Reader for Newline-delimited GeoJSON files. It is similar to `GeoJson`
- * format but instead of `FeatureCollection` object in the root it expects
- * every individual feature object to appear on its own line.
+ * Reader for Newline-delimited GeoJSON files. It is similar to `GeoJson` format but instead of
+ * `FeatureCollection` object in the root it expects every individual feature object to appear on
+ * its own line.
  *
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/ReadStep#/$defs/NdGeoJson
  */
@@ -4001,9 +5002,9 @@ export type ReadStepNdGeoJson = ReadStep & {
 
 
 /**
- * Reader for Newline-delimited GeoJSON files. It is similar to `GeoJson`
- * format but instead of `FeatureCollection` object in the root it expects
- * every individual feature object to appear on its own line.
+ * Reader for Newline-delimited GeoJSON files. It is similar to `GeoJson` format but instead of
+ * `FeatureCollection` object in the root it expects every individual feature object to appear on
+ * its own line.
  *
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/ReadStep#/$defs/NdGeoJson
  */
@@ -4012,8 +5013,7 @@ export type ReadStepNdGeoJsonSchemaArgs = {
 };
 
 /**
- * Reader for files containing multiple newline-delimited JSON objects with the
- * same schema.
+ * Reader for files containing multiple newline-delimited JSON objects with the same schema.
  *
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/ReadStep#/$defs/NdJson
  */
@@ -4051,8 +5051,7 @@ export type ReadStepNdJson = ReadStep & {
 
 
 /**
- * Reader for files containing multiple newline-delimited JSON objects with the
- * same schema.
+ * Reader for files containing multiple newline-delimited JSON objects with the same schema.
  *
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/ReadStep#/$defs/NdJson
  */
@@ -4086,51 +5085,75 @@ export type ReadStepParquetSchemaArgs = {
   format?: InputMaybe<DataSchemaFormat>;
 };
 
+/** Outcome of removing a webhook subscription */
 export type RemoveWebhookSubscriptionResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Webhook subscription was removed */
 export type RemoveWebhookSubscriptionResultSuccess = RemoveWebhookSubscriptionResult & {
   __typename?: 'RemoveWebhookSubscriptionResultSuccess';
+  /** Human-readable success message */
   message: Scalars['String']['output'];
+  /** Always true */
   removed: Scalars['Boolean']['output'];
 };
 
+/** Account was not renamed: the new name is already taken */
 export type RenameAccountNameNotUnique = RenameAccountResult & {
   __typename?: 'RenameAccountNameNotUnique';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Outcome of renaming an account */
 export type RenameAccountResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Account was renamed */
 export type RenameAccountSuccess = RenameAccountResult & {
   __typename?: 'RenameAccountSuccess';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
+  /** New name of the account */
   newName: Scalars['String']['output'];
 };
 
+/** Outcome of renaming a dataset */
 export type RenameResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Another dataset with the requested name already exists */
 export type RenameResultNameCollision = RenameResult & {
   __typename?: 'RenameResultNameCollision';
+  /** Alias of the existing dataset that holds the name */
   collidingAlias: Scalars['DatasetAlias']['output'];
+  /** Human-readable error message */
   message: Scalars['String']['output'];
 };
 
+/** New name equals the current one, nothing was changed */
 export type RenameResultNoChanges = RenameResult & {
   __typename?: 'RenameResultNoChanges';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
+  /** Current name of the dataset */
   preservedName: Scalars['DatasetName']['output'];
 };
 
+/** Dataset was renamed */
 export type RenameResultSuccess = RenameResult & {
   __typename?: 'RenameResultSuccess';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
+  /** Name of the dataset after the rename */
   newName: Scalars['DatasetName']['output'];
+  /** Name of the dataset before the rename */
   oldName: Scalars['DatasetName']['output'];
 };
 
@@ -4148,9 +5171,8 @@ export type RequestHeader = {
 };
 
 /**
- * Top-level container for canonical representation of a resource that
- * specifies the type and version of the resource, carries identity, ownership,
- * and status information.
+ * Top-level container for canonical representation of a resource that specifies the type and
+ * version of the resource, carries identity, ownership, and status information.
  *
  * Schema: https://opendatafabric.org/schemas/resources/v1alpha1/Resource
  */
@@ -4175,52 +5197,78 @@ export type Resource = {
  */
 export type ResourceAccountResolutionProblem = {
   __typename?: 'ResourceAccountResolutionProblem';
+  /** Reason the account could not be resolved */
   code: ResourceAccountResolutionProblemCode;
+  /** Human-readable description of the problem */
   message: Scalars['String']['output'];
 };
 
+/** Reason an account reference could not be resolved */
 export enum ResourceAccountResolutionProblemCode {
+  /** No account exists with the given DID */
   AccountNotFoundById = 'ACCOUNT_NOT_FOUND_BY_ID',
+  /** No account exists with the given name */
   AccountNotFoundByName = 'ACCOUNT_NOT_FOUND_BY_NAME',
+  /** The reference has neither a DID nor a name to look up by */
   EmptySelector = 'EMPTY_SELECTOR',
+  /** The resolved account does not match the other given fields */
   SelectorMismatch = 'SELECTOR_MISMATCH'
 }
 
+/** Outcome of applying one manifest of a batch */
 export type ResourceApplyManifestItemResult = {
   __typename?: 'ResourceApplyManifestItemResult';
+  /** Result of applying this manifest */
   outcome: ResourceApplyOutcome;
+  /** Zero-based position of the manifest in the request */
   requestIndex: Scalars['Int']['output'];
 };
 
+/** All manifests of the batch were accepted */
 export type ResourceApplyManifestsResult = {
   __typename?: 'ResourceApplyManifestsResult';
+  /** Outcome for each manifest of the batch */
   items: Array<ResourceApplyManifestItemResult>;
 };
 
+/** Effect of an accepted apply on the resource */
 export enum ResourceApplyOperation {
+  /** A new resource was created */
   Created = 'CREATED',
+  /** The manifest matched the existing resource, nothing changed */
   Untouched = 'UNTOUCHED',
+  /** An existing resource's spec or headers changed */
   Updated = 'UPDATED'
 }
 
+/** Result of applying one manifest: success, rejection or a validation problem */
 export type ResourceApplyOutcome = ResourceAccountResolutionProblem | ResourceApplyParseManifestProblem | ResourceApplyRejection | ResourceApplySuccess | ResourceInvalidHeaderProblem | ResourceInvalidSpecProblem | ResourceUnsupportedDescriptorProblem;
 
 /** The manifest text could not be parsed (malformed JSON/YAML). */
 export type ResourceApplyParseManifestProblem = {
   __typename?: 'ResourceApplyParseManifestProblem';
+  /** Human-readable description of the parse error */
   message: Scalars['String']['output'];
 };
 
+/** The resource type refused the requested change */
 export type ResourceApplyRejection = {
   __typename?: 'ResourceApplyRejection';
+  /** Kind of rule the change violated */
   category: ResourceApplyRejectionCategory;
+  /** Human-readable reason for the rejection */
   message: Scalars['String']['output'];
 };
 
+/** Reason a resource manifest was rejected */
 export enum ResourceApplyRejectionCategory {
+  /** The spec violates a rule of the resource type */
   BusinessValidationFailed = 'BUSINESS_VALIDATION_FAILED',
+  /** The manifest changes a field that cannot be modified after creation */
   ImmutableFieldChanged = 'IMMUTABLE_FIELD_CHANGED',
+  /** The change conflicts with the resource's current lifecycle state */
   LifecycleRuleConflict = 'LIFECYCLE_RULE_CONFLICT',
+  /** The spec refers to an object that does not exist */
   ReferencedObjectMissing = 'REFERENCED_OBJECT_MISSING'
 }
 
@@ -4240,20 +5288,29 @@ export type ResourceApplySuccess = {
    * created.
    */
   before?: Maybe<Scalars['JSON']['output']>;
+  /** Whether the resource was created, updated or left unchanged */
   operation: ResourceApplyOperation;
+  /** Resource as it is (or would be, on a dry run) after the apply */
   resource: Resource;
+  /** Non-fatal issues found in the manifest */
   warnings: Array<ResourceApplyWarning>;
 };
 
+/** Non-fatal issue found while applying a manifest */
 export type ResourceApplyWarning = {
   __typename?: 'ResourceApplyWarning';
+  /** Machine-readable warning code, e.g. `missing_description` */
   code: Scalars['String']['output'];
+  /** Human-readable description of the warning */
   message: Scalars['String']['output'];
+  /** Dotted path to the manifest field concerned, null if not field-specific */
   path?: Maybe<Scalars['String']['output']>;
 };
 
+/** A page of `ResourceSummary` items */
 export type ResourceConnection = {
   __typename?: 'ResourceConnection';
+  /** Items of this page, each wrapped in an edge */
   edges: Array<ResourceEdge>;
   /** A shorthand for `edges { node { ... } }` */
   nodes: Array<ResourceSummary>;
@@ -4263,28 +5320,38 @@ export type ResourceConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** Result of deleting resources by reference */
 export type ResourceDeleteOutcome = ResourceAccountResolutionProblem | ResourceDeleteResult | ResourceUnsupportedSelectorProblem;
 
+/** Resources deleted and references that could not be resolved */
 export type ResourceDeleteResult = {
   __typename?: 'ResourceDeleteResult';
+  /** References that could not be resolved */
   problems: Array<BatchResourceProblem>;
+  /** Resources that were deleted */
   resources: Array<ResourceDeleteSuccess>;
 };
 
+/** Resource deleted for one reference of a batch */
 export type ResourceDeleteSuccess = {
   __typename?: 'ResourceDeleteSuccess';
+  /** Zero-based position of the reference in the request */
   requestIndex: Scalars['Int']['output'];
+  /** Unique identifier of the deleted resource */
   resourceId: Scalars['ResourceID']['output'];
 };
 
+/** An edge wrapping a single `ResourceSummary` item */
 export type ResourceEdge = {
   __typename?: 'ResourceEdge';
+  /** The item itself */
   node: ResourceSummary;
 };
 
 /** A reference that named neither an id nor a name. */
 export type ResourceEmptyRefProblem = {
   __typename?: 'ResourceEmptyRefProblem';
+  /** Human-readable description of the problem */
   message: Scalars['String']['output'];
 };
 
@@ -4307,8 +5374,10 @@ export type ResourceHandle = {
   type: Scalars['TypeUri']['output'];
 };
 
+/** A page of `ResourceHandle` items */
 export type ResourceHandleConnection = {
   __typename?: 'ResourceHandleConnection';
+  /** Items of this page, each wrapped in an edge */
   edges: Array<ResourceHandleEdge>;
   /** A shorthand for `edges { node { ... } }` */
   nodes: Array<ResourceHandle>;
@@ -4318,21 +5387,36 @@ export type ResourceHandleConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** An edge wrapping a single `ResourceHandle` item */
 export type ResourceHandleEdge = {
   __typename?: 'ResourceHandleEdge';
+  /** The item itself */
   node: ResourceHandle;
 };
 
+/** Result of listing resource handles by selectors */
 export type ResourceHandleListOutcome = ResourceAccountResolutionProblem | ResourceHandleConnection | ResourceInvalidLabelFilterProblem | ResourceUnsupportedSelectorProblem;
 
+/** Kind of resource header validation failure */
 export enum ResourceHeaderValidationProblemCode {
+  /** The same annotation key appears more than once */
   DuplicateAnnotationKey = 'DUPLICATE_ANNOTATION_KEY',
+  /** The same label key appears more than once */
   DuplicateLabelKey = 'DUPLICATE_LABEL_KEY',
+  /** Resource name is empty */
   EmptyName = 'EMPTY_NAME',
+  /** Resource name has an invalid format */
   InvalidName = 'INVALID_NAME',
+  /** Resource name exceeds the maximum length */
   NameTooLong = 'NAME_TOO_LONG',
+  /**
+   * A label or annotation key could not be resolved to a registered
+   * extension schema, or its value is invalid for it
+   */
   ResourceExtensionSchema = 'RESOURCE_EXTENSION_SCHEMA',
+  /** Number of annotations exceeds the maximum */
   TooManyAnnotations = 'TOO_MANY_ANNOTATIONS',
+  /** Number of labels exceeds the maximum */
   TooManyLabels = 'TOO_MANY_LABELS'
 }
 
@@ -4346,9 +5430,9 @@ export type ResourceHeaders = {
   /** Link to the account that owns the resource. */
   account: AccountHandle;
   /**
-   * Annotations is a key value map stored with a resource that may be set by
-   * external tools to store and retrieve arbitrary metadata. Unlike labels,
-   * annotations are not indexed and cannot be queried by.
+   * Annotations is a key value map stored with a resource that may be set by external tools to
+   * store and retrieve arbitrary metadata. Unlike labels, annotations are not indexed and
+   * cannot be queried by.
    */
   annotations: Scalars['ResourceAnnotations']['output'];
   /** Time when the resource was first applied and assigned an identity. */
@@ -4356,68 +5440,73 @@ export type ResourceHeaders = {
   /** Time when the resource was deleted. */
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   /**
-   * A sequential number that changes every time the resource header and spec
-   * are updated. Does not increment on status changes, thus signifying
-   * changes to the desired state. Populated by the system. Starts with `1`.
+   * A sequential number that changes every time the resource header and spec are updated. Does
+   * not increment on status changes, thus signifying changes to the desired state. Populated by
+   * the system. Starts with `1`.
    */
   generation: Scalars['Uint64']['output'];
   /**
-   * Unique identifier of a resource within entire ODF node. Automatically
-   * assigned upon resource creation.
+   * Unique identifier of a resource within entire ODF node. Automatically assigned upon
+   * resource creation.
    */
   id: Scalars['ResourceID']['output'];
   /**
-   * Map of string keys and values that can be used to organize, categorize,
-   * and query resources.
+   * Map of string keys and values that can be used to organize, categorize, and query
+   * resources.
    */
   labels: Scalars['ResourceLabels']['output'];
-  /**
-   * Symbolic name of a resource that identifies it within a scope of an
-   * onwing account.
-   */
+  /** Symbolic name of a resource that identifies it within a scope of an onwing account. */
   name: Scalars['ResourceName']['output'];
   /**
-   * References to resources that created this resource. Used for lineage
-   * tracking and cascading cleanup.
+   * References to resources that created this resource. Used for lineage tracking and cascading
+   * cleanup.
    */
   ownerReferences?: Maybe<Array<ResourceHandle>>;
-  /**
-   * Time when the resource was last updated, including header, spec, and
-   * status updates.
-   */
+  /** Time when the resource was last updated, including header, spec, and status updates. */
   updatedAt: Scalars['DateTime']['output'];
 };
 
+/** No resource exists with the referenced ID */
 export type ResourceIdNotFoundProblem = {
   __typename?: 'ResourceIDNotFoundProblem';
+  /** ID that was not found */
   id: Scalars['ResourceID']['output'];
+  /** Human-readable description of the problem */
   message: Scalars['String']['output'];
 };
 
 /** A header field value (e.g. name, label key) failed validation. */
 export type ResourceInvalidHeaderProblem = {
   __typename?: 'ResourceInvalidHeaderProblem';
+  /** Which header rule was violated */
   code: ResourceHeaderValidationProblemCode;
+  /** Human-readable description of the violation */
   message: Scalars['String']['output'];
 };
 
 /** A selector's `labels` could not be resolved into a matchable filter. */
 export type ResourceInvalidLabelFilterProblem = {
   __typename?: 'ResourceInvalidLabelFilterProblem';
+  /** Reason the label filter was rejected */
   code: ResourceLabelFilterProblemCode;
+  /** Human-readable description of the problem */
   message: Scalars['String']['output'];
 };
 
 /** The `spec` field failed domain validation. */
 export type ResourceInvalidSpecProblem = {
   __typename?: 'ResourceInvalidSpecProblem';
+  /** Human-readable description of the validation failure */
   message: Scalars['String']['output'];
+  /** Schema URI of the resource type whose spec was rejected */
   schema: Scalars['TypeUri']['output'];
 };
 
 /** One authored `key = value` label predicate. */
 export type ResourceLabelFilterEntryInput = {
+  /** Label key to match */
   key: Scalars['String']['input'];
+  /** Required label value, must be a string */
   value: Scalars['JSON']['input'];
 };
 
@@ -4426,50 +5515,82 @@ export type ResourceLabelFilterEntryInput = {
  * A list preserves duplicate keys for validation.
  */
 export type ResourceLabelFilterInput = {
+  /** Predicates that must all hold, each key at most once */
   entries: Array<ResourceLabelFilterEntryInput>;
 };
 
+/** Reason a label filter was rejected */
 export enum ResourceLabelFilterProblemCode {
+  /** Two different keys resolve to the same canonical label */
   DuplicateAfterCanonicalization = 'DUPLICATE_AFTER_CANONICALIZATION',
+  /** A label key could not be parsed */
   InvalidKey = 'INVALID_KEY',
+  /** A label value is not a string */
   NonStringValue = 'NON_STRING_VALUE',
+  /**
+   * A label key could not be resolved to a registered extension schema
+   * applicable to the resource type, or its value is invalid for it
+   */
   ResourceExtensionSchema = 'RESOURCE_EXTENSION_SCHEMA',
+  /** The filter uses an expression that is not supported */
   UnsupportedExpression = 'UNSUPPORTED_EXPRESSION'
 }
 
+/** Data type of a list column's values */
 export enum ResourceListColumnDataType {
+  /** Boolean value, read from `boolValue` */
   Bool = 'BOOL',
+  /** Text value, read from `stringValue` */
   String = 'STRING',
+  /** Unsigned 64-bit integer, read from `uint64Value` */
   UInt_64 = 'U_INT_64'
 }
 
+/** Type-specific column to show when listing resources */
 export type ResourceListColumnDescriptor = {
   __typename?: 'ResourceListColumnDescriptor';
+  /** Data type of the column's values */
   dataType: ResourceListColumnDataType;
+  /** Column title to display */
   header: Scalars['String']['output'];
+  /** Column key, matching `ResourceListColumnValueView.key` */
   key: Scalars['String']['output'];
+  /** When the column is shown */
   visibility: ResourceListColumnVisibility;
 };
 
+/** Value of one list column for a resource; exactly one value field is set */
 export type ResourceListColumnValueView = {
   __typename?: 'ResourceListColumnValueView';
+  /** Value of a `BOOL` column, null otherwise */
   boolValue?: Maybe<Scalars['Boolean']['output']>;
+  /** Key of the column this value belongs to */
   key: Scalars['String']['output'];
+  /** Value of a `STRING` column, null otherwise */
   stringValue?: Maybe<Scalars['String']['output']>;
+  /** Value of a `U_INT_64` column, null otherwise */
   uint64Value?: Maybe<Scalars['Uint64']['output']>;
 };
 
+/** When a list column is shown */
 export enum ResourceListColumnVisibility {
+  /** Shown in every listing */
   Default = 'DEFAULT',
+  /** Shown only in the wide listing */
   WideOnly = 'WIDE_ONLY'
 }
 
+/** Result of listing resources by selectors */
 export type ResourceListOutcome = ResourceAccountResolutionProblem | ResourceConnection | ResourceInvalidLabelFilterProblem | ResourceUnsupportedSelectorProblem;
 
+/** Reason a resource reference could not be resolved */
 export type ResourceLookupProblem = ResourceEmptyRefProblem | ResourceIdNotFoundProblem | ResourceNameMismatchProblem | ResourceNameNotFoundProblem | ResourceSchemaMismatchProblem | ResourceUntypedNameProblem;
 
+/** Text format of a resource manifest */
 export enum ResourceManifestFormat {
+  /** JSON document */
   Json = 'JSON',
+  /** YAML document */
   Yaml = 'YAML'
 }
 
@@ -4480,16 +5601,24 @@ export enum ResourceManifestFormat {
  */
 export type ResourceNameMismatchProblem = {
   __typename?: 'ResourceNameMismatchProblem';
+  /** Actual name of the resource with that ID */
   actualName: Scalars['ResourceName']['output'];
+  /** Name given in the reference */
   expectedName: Scalars['ResourceName']['output'];
+  /** ID given in the reference */
   id: Scalars['ResourceID']['output'];
+  /** Human-readable description of the problem */
   message: Scalars['String']['output'];
 };
 
+/** No resource of the referenced type has the referenced name */
 export type ResourceNameNotFoundProblem = {
   __typename?: 'ResourceNameNotFoundProblem';
+  /** Human-readable description of the problem */
   message: Scalars['String']['output'];
+  /** Name that was not found */
   name: Scalars['ResourceName']['output'];
+  /** Resource type that was searched */
   typeName: Scalars['TypeName']['output'];
 };
 
@@ -4506,12 +5635,18 @@ export enum ResourcePhase {
   Reconciling = 'RECONCILING'
 }
 
+/** Number of resources in each reconciliation phase */
 export type ResourcePhaseCounts = {
   __typename?: 'ResourcePhaseCounts';
+  /** Resources whose last reconcile failed after an earlier success */
   degraded: Scalars['Uint64']['output'];
+  /** Resources that failed and were never reconciled */
   failed: Scalars['Uint64']['output'];
+  /** Resources waiting to be reconciled */
   pending: Scalars['Uint64']['output'];
+  /** Resources whose latest generation is reconciled */
   ready: Scalars['Uint64']['output'];
+  /** Resources being reconciled */
   reconciling: Scalars['Uint64']['output'];
 };
 
@@ -4532,7 +5667,9 @@ export type ResourcePhaseCounts = {
  * type, while a ref names exactly one.
  */
 export type ResourceRefInput = {
+  /** Account owning the resource, defaults to the calling account */
   account?: InputMaybe<AccountRefInput>;
+  /** Unique identifier of the resource */
   id?: InputMaybe<Scalars['ResourceID']['input']>;
   /** Exact name. Never a pattern; use a selector for pattern matching. */
   name?: InputMaybe<Scalars['ResourceName']['input']>;
@@ -4547,17 +5684,25 @@ export type ResourceRefInput = {
   type?: InputMaybe<ResourceTypeSelectorInput>;
 };
 
+/** Resource rendered as a manifest document */
 export type ResourceRenderManifestResult = {
   __typename?: 'ResourceRenderManifestResult';
+  /** Format the manifest text is in */
   format: ResourceManifestFormat;
+  /** Manifest text */
   manifest: Scalars['String']['output'];
 };
 
+/** The resource with the referenced ID is of a different type than requested */
 export type ResourceSchemaMismatchProblem = {
   __typename?: 'ResourceSchemaMismatchProblem';
+  /** Schema URI of the resource's actual type */
   actualSchema: Scalars['TypeUri']['output'];
+  /** Schema URI of the requested type */
   expectedSchema: Scalars['TypeUri']['output'];
+  /** ID of the resource found */
   id: Scalars['ResourceID']['output'];
+  /** Human-readable description of the problem */
   message: Scalars['String']['output'];
 };
 
@@ -4579,6 +5724,7 @@ export type ResourceSelectorInput = {
    * a per-selector override within a query extends beyond that.
    */
   account?: InputMaybe<AccountRefInput>;
+  /** Matches only the resource with this ID */
   id?: InputMaybe<Scalars['ResourceID']['input']>;
   /**
    * Labels this selector requires, all of which must be present. Applies to
@@ -4606,74 +5752,93 @@ export type ResourceSelectorInput = {
  */
 export type ResourceStatus = {
   __typename?: 'ResourceStatus';
-  /**
-   * Detailed conditions describing the state of the resource that are added
-   * by controllers.
-   */
+  /** Detailed conditions describing the state of the resource that are added by controllers. */
   conditions: Scalars['ResourceConditions']['output'];
-  /**
-   * Time when the controller seen the resource state as defined in
-   * `observedGeneration`.
-   */
+  /** Time when the controller seen the resource state as defined in `observedGeneration`. */
   observedAt?: Maybe<Scalars['DateTime']['output']>;
   /** Resource generation that was last seen by the main resource controller. */
   observedGeneration?: Maybe<Scalars['Uint64']['output']>;
-  /**
-   * Represents the reconciliation phase of a resource as seen by the main
-   * resource controller.
-   */
+  /** Represents the reconciliation phase of a resource as seen by the main resource controller. */
   phase: ResourcePhase;
   /**
-   * Time when the controller last reconciled the desired resource state as
-   * defined in `reconciledGeneration`.
+   * Time when the controller last reconciled the desired resource state as defined in
+   * `reconciledGeneration`.
    */
   reconciledAt?: Maybe<Scalars['DateTime']['output']>;
-  /**
-   * Resource generation that was last successfully reconciled by the main
-   * resource controller.
-   */
+  /** Resource generation that was last successfully reconciled by the main resource controller. */
   reconciledGeneration?: Maybe<Scalars['Uint64']['output']>;
 };
 
+/** Condensed reconciliation status of a resource */
 export type ResourceStatusSummary = {
   __typename?: 'ResourceStatusSummary';
+  /** Time the controller observed `observedGeneration` */
   observedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Generation last seen by the controller, null if never observed */
   observedGeneration?: Maybe<Scalars['Uint64']['output']>;
+  /** Current reconciliation phase */
   phase?: Maybe<ResourcePhase>;
+  /** Time `reconciledGeneration` was reconciled */
   reconciledAt?: Maybe<Scalars['DateTime']['output']>;
+  /** Generation last successfully reconciled, null if never reconciled */
   reconciledGeneration?: Maybe<Scalars['Uint64']['output']>;
 };
 
+/** Condensed view of a resource for listings */
 export type ResourceSummary = {
   __typename?: 'ResourceSummary';
+  /** Time the resource was created */
   createdAt: Scalars['DateTime']['output'];
+  /** Description from the resource annotations, null if not set */
   description?: Maybe<Scalars['String']['output']>;
+  /** Revision of the desired state, bumped on each spec or headers change */
   generation: Scalars['Uint64']['output'];
+  /** Unique and stable identifier of the resource */
   id: Scalars['ResourceID']['output'];
+  /** Values of the type-specific list columns */
   listValues: Array<ResourceListColumnValueView>;
+  /** Name of the resource, unique within its type and account */
   name: Scalars['ResourceName']['output'];
+  /** Schema URI of the resource type */
   schema: Scalars['TypeUri']['output'];
+  /** Reconciliation status, null if not yet recorded */
   status?: Maybe<ResourceStatusSummary>;
+  /** Time the resource was last updated */
   updatedAt: Scalars['DateTime']['output'];
 };
 
+/** Resource counts for one resource type */
 export type ResourceTypeCountSummary = {
   __typename?: 'ResourceTypeCountSummary';
+  /** Number of resources of this type in each phase */
   phaseCounts: ResourcePhaseCounts;
+  /** Schema URI of the resource type */
   schema: Scalars['TypeUri']['output'];
+  /** Number of resources of this type */
   totalCount: Scalars['Uint64']['output'];
+  /** ODF type name of the resource type, e.g. `VariableSet` */
   typeName: Scalars['TypeName']['output'];
 };
 
+/** Registered resource type with its selectors and list columns */
 export type ResourceTypeDescriptor = {
   __typename?: 'ResourceTypeDescriptor';
+  /** Main selector name of the type, e.g. `variablesets` */
   canonicalSelector: Scalars['ResourceSelectorName']['output'];
+  /** Type-specific columns to show when listing resources */
   listColumns: Array<ResourceListColumnDescriptor>;
+  /** Schema URI identifying the type */
   schema: Scalars['TypeUri']['output'];
+  /** Short alternative selector names, e.g. `vs` */
   selectorAliases: Array<Scalars['ResourceSelectorName']['output']>;
 };
 
+/** Identifies a resource type by selector, alias, ODF type name or schema URI */
 export type ResourceTypeSelectorInput = {
+  /**
+   * Canonical selector (`variablesets`), alias (`vs`), ODF type name
+   * (`VariableSet`), or full schema URI
+   */
   selector: Scalars['ResourceTypeSelectorRaw']['input'];
 };
 
@@ -4686,7 +5851,9 @@ export type ResourceTypeSelectorInput = {
  */
 export type ResourceUnsupportedDescriptorProblem = {
   __typename?: 'ResourceUnsupportedDescriptorProblem';
+  /** Human-readable description of the problem */
   message: Scalars['String']['output'];
+  /** Schema URI that matched no registered type */
   schema: Scalars['TypeUri']['output'];
 };
 
@@ -4698,7 +5865,9 @@ export type ResourceUnsupportedDescriptorProblem = {
  */
 export type ResourceUnsupportedSelectorProblem = {
   __typename?: 'ResourceUnsupportedSelectorProblem';
+  /** Human-readable description of the problem */
   message: Scalars['String']['output'];
+  /** Selector as supplied by the caller */
   selector: Scalars['ResourceTypeSelectorRaw']['output'];
 };
 
@@ -4708,9 +5877,11 @@ export type ResourceUnsupportedSelectorProblem = {
  */
 export type ResourceUntypedNameProblem = {
   __typename?: 'ResourceUntypedNameProblem';
+  /** Human-readable description of the problem */
   message: Scalars['String']['output'];
 };
 
+/** Queries over declarative resources and their types */
 export type Resources = {
   __typename?: 'Resources';
   /** Returns resources by refs */
@@ -4736,12 +5907,14 @@ export type Resources = {
 };
 
 
+/** Queries over declarative resources and their types */
 export type ResourcesByRefsArgs = {
   opts?: SpecViewOptsInput;
   resourceRefs: Array<ResourceRefInput>;
 };
 
 
+/** Queries over declarative resources and their types */
 export type ResourcesBySelectorsArgs = {
   page?: InputMaybe<Scalars['Int']['input']>;
   perPage?: InputMaybe<Scalars['Int']['input']>;
@@ -4749,11 +5922,13 @@ export type ResourcesBySelectorsArgs = {
 };
 
 
+/** Queries over declarative resources and their types */
 export type ResourcesHandlesByRefsArgs = {
   resourceRefs: Array<ResourceRefInput>;
 };
 
 
+/** Queries over declarative resources and their types */
 export type ResourcesHandlesBySelectorsArgs = {
   page?: InputMaybe<Scalars['Int']['input']>;
   perPage?: InputMaybe<Scalars['Int']['input']>;
@@ -4761,6 +5936,7 @@ export type ResourcesHandlesBySelectorsArgs = {
 };
 
 
+/** Queries over declarative resources and their types */
 export type ResourcesRenderManifestsArgs = {
   format: ResourceManifestFormat;
   opts?: SpecViewOptsInput;
@@ -4768,18 +5944,30 @@ export type ResourcesRenderManifestsArgs = {
 };
 
 
+/** Queries over declarative resources and their types */
 export type ResourcesSummaryArgs = {
   account?: InputMaybe<AccountRefInput>;
 };
 
+/** Mutations that create, update and delete declarative resources */
 export type ResourcesMut = {
   __typename?: 'ResourcesMut';
+  /**
+   * Creates or updates a resource from a manifest, or only plans the
+   * change when `dryRun` is set
+   */
   applyManifest: ResourceApplyOutcome;
+  /**
+   * Applies several manifests atomically: if any item fails, the whole
+   * request is rolled back and returned as an error
+   */
   applyManifests: ResourceApplyManifestsResult;
+  /** Deletes the resources identified by the given references */
   delete: ResourceDeleteOutcome;
 };
 
 
+/** Mutations that create, update and delete declarative resources */
 export type ResourcesMutApplyManifestArgs = {
   dryRun?: InputMaybe<Scalars['Boolean']['input']>;
   format: ResourceManifestFormat;
@@ -4787,72 +5975,103 @@ export type ResourcesMutApplyManifestArgs = {
 };
 
 
+/** Mutations that create, update and delete declarative resources */
 export type ResourcesMutApplyManifestsArgs = {
   dryRun?: InputMaybe<Scalars['Boolean']['input']>;
   manifests: Array<ApplyManifestInput>;
 };
 
 
+/** Mutations that create, update and delete declarative resources */
 export type ResourcesMutDeleteArgs = {
   resourceRefs: Array<ResourceRefInput>;
 };
 
+/** Resource counts of an account, per type */
 export type ResourcesSummary = {
   __typename?: 'ResourcesSummary';
+  /** Counts for each resource type */
   resourceCounts: Array<ResourceTypeCountSummary>;
 };
 
+/** Result of computing the resources summary of an account */
 export type ResourcesSummaryOutcome = ResourceAccountResolutionProblem | ResourcesSummary;
 
+/** REST API endpoints for a dataset */
 export type RestProtocolDesc = {
   __typename?: 'RestProtocolDesc';
+  /** URL of the endpoint that ingests data into the dataset */
   pushUrl: Scalars['String']['output'];
+  /** Example URL of the SQL query endpoint */
   queryUrl: Scalars['String']['output'];
+  /** Example URL fetching the latest records of the dataset */
   tailUrl: Scalars['String']['output'];
 };
 
+/** Outcome of resuming a webhook subscription */
 export type ResumeWebhookSubscriptionResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Webhook subscription was resumed */
 export type ResumeWebhookSubscriptionResultSuccess = ResumeWebhookSubscriptionResult & {
   __typename?: 'ResumeWebhookSubscriptionResultSuccess';
+  /** Human-readable success message */
   message: Scalars['String']['output'];
+  /** Always true */
   resumed: Scalars['Boolean']['output'];
 };
 
+/** Operation is not allowed in the current subscription status */
 export type ResumeWebhookSubscriptionResultUnexpected = ResumeWebhookSubscriptionResult & {
   __typename?: 'ResumeWebhookSubscriptionResultUnexpected';
+  /** Human-readable error message */
   message: Scalars['String']['output'];
+  /** Current status of the subscription */
   status: WebhookSubscriptionStatus;
 };
 
+/** Outcome of revoking an access token */
 export type RevokeResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Access token was already revoked earlier */
 export type RevokeResultAlreadyRevoked = RevokeResult & {
   __typename?: 'RevokeResultAlreadyRevoked';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
+  /** Identifier of the token */
   tokenId: Scalars['AccessTokenID']['output'];
 };
 
+/** Access token was revoked */
 export type RevokeResultSuccess = RevokeResult & {
   __typename?: 'RevokeResultSuccess';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
+  /** Identifier of the revoked token */
   tokenId: Scalars['AccessTokenID']['output'];
 };
 
+/** Outcome of rotating a webhook subscription secret */
 export type RotateWebhookSubscriptionSecretResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Subscription secret was rotated */
 export type RotateWebhookSubscriptionSecretSuccess = RotateWebhookSubscriptionSecretResult & {
   __typename?: 'RotateWebhookSubscriptionSecretSuccess';
+  /** Human-readable success message */
   message: Scalars['String']['output'];
+  /** New secret for verifying delivery signatures, returned only once */
   newSecret: Scalars['String']['output'];
 };
 
+/** Search over datasets and other objects managed by the node */
 export type Search = {
   __typename?: 'Search';
   /**
@@ -4866,6 +6085,10 @@ export type Search = {
    * versatile interface to the user consisting of just one input field.
    */
   query: SearchResultConnection;
+  /**
+   * Full-text search over datasets and accounts, listing all of them
+   * sorted by title when the prompt is empty
+   */
   queryFullText: FullTextSearchResponse;
   /**
    * Searches for datasets and other objects managed by the
@@ -4881,6 +6104,7 @@ export type Search = {
 };
 
 
+/** Search over datasets and other objects managed by the node */
 export type SearchNameLookupArgs = {
   filters: LookupFilters;
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -4889,6 +6113,7 @@ export type SearchNameLookupArgs = {
 };
 
 
+/** Search over datasets and other objects managed by the node */
 export type SearchQueryArgs = {
   page?: InputMaybe<Scalars['Int']['input']>;
   perPage?: InputMaybe<Scalars['Int']['input']>;
@@ -4896,6 +6121,7 @@ export type SearchQueryArgs = {
 };
 
 
+/** Search over datasets and other objects managed by the node */
 export type SearchQueryFullTextArgs = {
   page?: InputMaybe<Scalars['Int']['input']>;
   perPage?: InputMaybe<Scalars['Int']['input']>;
@@ -4903,19 +6129,24 @@ export type SearchQueryFullTextArgs = {
 };
 
 
+/** Search over datasets and other objects managed by the node */
 export type SearchQueryHybridArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   prompt: Scalars['String']['input'];
 };
 
 
+/** Search over datasets and other objects managed by the node */
 export type SearchQueryNaturalLanguageArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   prompt: Scalars['String']['input'];
 };
 
+/** Kind of entity indexed for search */
 export enum SearchEntityName {
+  /** Account search index */
   Accounts = 'ACCOUNTS',
+  /** Dataset search index */
   Datasets = 'DATASETS'
 }
 
@@ -4937,10 +6168,13 @@ export type SearchResourcesInput = {
   selectors?: InputMaybe<Array<ResourceSelectorInput>>;
 };
 
+/** Object found by a search */
 export type SearchResult = Dataset;
 
+/** A page of `SearchResult` items */
 export type SearchResultConnection = {
   __typename?: 'SearchResultConnection';
+  /** Items of this page, each wrapped in an edge */
   edges: Array<SearchResultEdge>;
   /** A shorthand for `edges { node { ... } }` */
   nodes: Array<SearchResult>;
@@ -4950,19 +6184,26 @@ export type SearchResultConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** An edge wrapping a single `SearchResult` item */
 export type SearchResultEdge = {
   __typename?: 'SearchResultEdge';
+  /** The item itself */
   node: SearchResult;
 };
 
+/** Object found by a search, with its relevance score */
 export type SearchResultEx = {
   __typename?: 'SearchResultEx';
+  /** Found object */
   item: SearchResult;
+  /** Relevance score, higher is more relevant */
   score: Scalars['Float']['output'];
 };
 
+/** A page of `SearchResultEx` items */
 export type SearchResultExConnection = {
   __typename?: 'SearchResultExConnection';
+  /** Items of this page, each wrapped in an edge */
   edges: Array<SearchResultExEdge>;
   /** A shorthand for `edges { node { ... } }` */
   nodes: Array<SearchResultEx>;
@@ -4972,14 +6213,15 @@ export type SearchResultExConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** An edge wrapping a single `SearchResultEx` item */
 export type SearchResultExEdge = {
   __typename?: 'SearchResultExEdge';
+  /** The item itself */
   node: SearchResultEx;
 };
 
 /**
- * Establishes the identity of the dataset. Always the first metadata event in
- * the chain.
+ * Establishes the identity of the dataset. Always the first metadata event in the chain.
  *
  * Schema: https://opendatafabric.org/schemas/datasets/v1alpha1/Seed
  */
@@ -4991,28 +6233,41 @@ export type Seed = {
   datasetKind: DatasetKind;
 };
 
+/** New quota values of an account */
 export type SetAccountQuotasInput = {
+  /** Storage quotas to set */
   storage?: InputMaybe<SetAccountQuotasStorageInput>;
 };
 
+/** Outcome of setting account quotas */
 export type SetAccountQuotasResult = {
+  /** Whether the quotas were set */
   isSuccess: Scalars['Boolean']['output'];
+  /** Human-readable outcome message, empty on success */
   message: Scalars['String']['output'];
 };
 
+/** Account quotas were not set: the input is invalid */
 export type SetAccountQuotasResultInvalidInput = SetAccountQuotasResult & {
   __typename?: 'SetAccountQuotasResultInvalidInput';
+  /** Always false */
   isSuccess: Scalars['Boolean']['output'];
+  /** Description of what is wrong with the input */
   message: Scalars['String']['output'];
 };
 
+/** Account quotas were set */
 export type SetAccountQuotasResultSuccess = SetAccountQuotasResult & {
   __typename?: 'SetAccountQuotasResultSuccess';
+  /** Always true */
   isSuccess: Scalars['Boolean']['output'];
+  /** Human-readable outcome message, empty on success */
   message: Scalars['String']['output'];
 };
 
+/** Storage quota values of an account */
 export type SetAccountQuotasStorageInput = {
+  /** Maximum total size of stored data in bytes; required */
   limitTotalBytes?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -5037,32 +6292,46 @@ export type SetDataSchemaSchemaArgs = {
   format?: InputMaybe<DataSchemaFormat>;
 };
 
+/** Outcome of changing dataset visibility */
 export type SetDatasetVisibilityResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Dataset visibility was changed */
 export type SetDatasetVisibilityResultSuccess = SetDatasetVisibilityResult & {
   __typename?: 'SetDatasetVisibilityResultSuccess';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Outcome of setting a flow configuration */
 export type SetFlowConfigResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Flow configuration was set */
 export type SetFlowConfigSuccess = SetFlowConfigResult & {
   __typename?: 'SetFlowConfigSuccess';
+  /** Configuration that is now in effect */
   config: FlowConfiguration;
+  /** Human-readable success message */
   message: Scalars['String']['output'];
 };
 
+/** Outcome of setting a flow trigger */
 export type SetFlowTriggerResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Flow trigger was set */
 export type SetFlowTriggerSuccess = SetFlowTriggerResult & {
   __typename?: 'SetFlowTriggerSuccess';
+  /** Human-readable success message */
   message: Scalars['String']['output'];
+  /** Trigger that is now in effect */
   trigger: FlowTrigger;
 };
 
@@ -5097,8 +6366,7 @@ export type SetLicense = {
 };
 
 /**
- * Contains information on how externally-hosted data can be ingested into the
- * root dataset.
+ * Contains information on how externally-hosted data can be ingested into the root dataset.
  *
  * Schema: https://opendatafabric.org/schemas/legacy/v0/SetPollingSource
  */
@@ -5106,10 +6374,7 @@ export type SetPollingSource = {
   __typename?: 'SetPollingSource';
   /** Determines where data is sourced from. */
   fetch: FetchStep;
-  /**
-   * Determines how newly-ingested data should be merged with existing
-   * history.
-   */
+  /** Determines how newly-ingested data should be merged with existing history. */
   merge: MergeStrategy;
   /** Defines how raw data is prepared before reading. */
   prepare?: Maybe<Array<PrepStep>>;
@@ -5119,12 +6384,16 @@ export type SetPollingSource = {
   read: ReadStep;
 };
 
+/** Outcome of granting a dataset role to an account */
 export type SetRoleResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Role was granted */
 export type SetRoleResultSuccess = SetRoleResult & {
   __typename?: 'SetRoleResultSuccess';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
@@ -5158,23 +6427,32 @@ export type SetVocab = {
   systemTimeColumn?: Maybe<Scalars['String']['output']>;
 };
 
+/** Watermark cannot be set manually on a derivative dataset */
 export type SetWatermarkIsDerivative = SetWatermarkResult & {
   __typename?: 'SetWatermarkIsDerivative';
+  /** Human-readable error message */
   message: Scalars['String']['output'];
 };
 
+/** Outcome of advancing the dataset watermark */
 export type SetWatermarkResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Watermark already had the requested value */
 export type SetWatermarkUpToDate = SetWatermarkResult & {
   __typename?: 'SetWatermarkUpToDate';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Watermark was advanced */
 export type SetWatermarkUpdated = SetWatermarkResult & {
   __typename?: 'SetWatermarkUpdated';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
+  /** Hash of the new metadata chain head */
   newHead: Scalars['Multihash']['output'];
 };
 
@@ -5212,10 +6490,7 @@ export enum SourceOrdering {
  */
 export type SourceState = {
   __typename?: 'SourceState';
-  /**
-   * Identifies the type of the state. Standard types include: `odf/etag`,
-   * `odf/last-modified`.
-   */
+  /** Identifies the type of the state. Standard types include: `odf/etag`, `odf/last-modified`. */
   kind: Scalars['String']['output'];
   /** Identifies the source that the state corresponds to. */
   sourceName: Scalars['String']['output'];
@@ -5244,39 +6519,55 @@ export type SpecViewOptsInput = {
 export type SqlQueryStep = {
   __typename?: 'SqlQueryStep';
   /**
-   * Name of the temporary view that will be created from result of the
-   * query. Step without this alias will be treated as an output of the
-   * transformation.
+   * Name of the temporary view that will be created from result of the query. Step without this
+   * alias will be treated as an output of the transformation.
    */
   alias?: Maybe<Scalars['String']['output']>;
   /** SQL query the result of which will be exposed under the alias. */
   query: Scalars['String']['output'];
 };
 
+/** File is larger than the upload size limit */
 export type StartUploadVersionErrorTooLarge = StartUploadVersionResult & {
   __typename?: 'StartUploadVersionErrorTooLarge';
+  /** Always false */
   isSuccess: Scalars['Boolean']['output'];
+  /** Human-readable error message */
   message: Scalars['String']['output'];
+  /** Maximum allowed upload size, in bytes */
   uploadLimit: Scalars['Int']['output'];
+  /** Size of the file, in bytes */
   uploadSize: Scalars['Int']['output'];
 };
 
+/** Outcome of starting a direct file upload */
 export type StartUploadVersionResult = {
+  /** Whether the operation succeeded */
   isSuccess: Scalars['Boolean']['output'];
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Upload was started; describes how to send the content */
 export type StartUploadVersionSuccess = StartUploadVersionResult & {
   __typename?: 'StartUploadVersionSuccess';
+  /** HTTP headers to include in the upload request */
   headers: Array<KeyValue>;
+  /** Always true */
   isSuccess: Scalars['Boolean']['output'];
+  /** Always empty */
   message: Scalars['String']['output'];
+  /** HTTP method to use for the upload */
   method: Scalars['String']['output'];
+  /** Token to pass to `finishUploadNewVersion` once the upload completes */
   uploadToken: Scalars['String']['output'];
+  /** URL to send the file content to */
   url: Scalars['String']['output'];
+  /** Whether the content must be sent as a multipart form */
   useMultipart: Scalars['Boolean']['output'];
 };
 
+/** Unit of work executed on behalf of a flow */
 export type Task = {
   __typename?: 'Task';
   /** Whether the task was ordered to be cancelled */
@@ -5300,41 +6591,57 @@ export type Task = {
   taskId: Scalars['TaskID']['output'];
 };
 
+/** Cause of a task failure */
 export type TaskFailureReason = TaskFailureReasonGeneral | TaskFailureReasonInputDatasetCompacted | TaskFailureReasonWebhookDeliveryProblem;
 
+/** Task failed for a reason without a dedicated type */
 export type TaskFailureReasonGeneral = {
   __typename?: 'TaskFailureReasonGeneral';
+  /** Human-readable description of the failure */
   message: Scalars['String']['output'];
+  /** Whether the failure is transient and the task may be retried */
   recoverable: Scalars['Boolean']['output'];
 };
 
+/** Transform failed because an input dataset was compacted */
 export type TaskFailureReasonInputDatasetCompacted = {
   __typename?: 'TaskFailureReasonInputDatasetCompacted';
+  /** Input dataset that was compacted */
   inputDataset: Dataset;
+  /** Human-readable description of the failure */
   message: Scalars['String']['output'];
 };
 
+/** Webhook could not be delivered to its target */
 export type TaskFailureReasonWebhookDeliveryProblem = {
   __typename?: 'TaskFailureReasonWebhookDeliveryProblem';
+  /** Description of the delivery problem */
   message: Scalars['String']['output'];
+  /** URL the delivery was sent to */
   targetUrl: Scalars['Url']['output'];
 };
 
 /** Describes a certain final outcome of the task */
 export type TaskOutcome = TaskOutcomeCancelled | TaskOutcomeFailed | TaskOutcomeSuccess;
 
+/** Task was cancelled before completing */
 export type TaskOutcomeCancelled = {
   __typename?: 'TaskOutcomeCancelled';
+  /** Human-readable cancellation message */
   message: Scalars['String']['output'];
 };
 
+/** Task failed */
 export type TaskOutcomeFailed = {
   __typename?: 'TaskOutcomeFailed';
+  /** Why the task failed */
   reason: TaskFailureReason;
 };
 
+/** Task completed successfully */
 export type TaskOutcomeSuccess = {
   __typename?: 'TaskOutcomeSuccess';
+  /** Human-readable success message */
   message: Scalars['String']['output'];
 };
 
@@ -5349,8 +6656,7 @@ export enum TaskStatus {
 }
 
 /**
- * Temporary Flink-specific extension for creating temporal tables from
- * streams.
+ * Temporary Flink-specific extension for creating temporal tables from streams.
  *
  * Schema: https://opendatafabric.org/schemas/datasets/v1alpha1/TemporalTable
  */
@@ -5362,31 +6668,49 @@ export type TemporalTable = {
   primaryKey: Array<Scalars['String']['output']>;
 };
 
+/** Time interval expressed as a number of units */
 export type TimeDelta = {
   __typename?: 'TimeDelta';
+  /** Number of units in the interval */
   every: Scalars['Int']['output'];
+  /** Unit of the interval */
   unit: TimeUnit;
 };
 
+/** Time interval expressed as a number of units */
 export type TimeDeltaInput = {
+  /** Number of units in the interval */
   every: Scalars['Int']['input'];
+  /** Unit of the interval */
   unit: TimeUnit;
 };
 
+/** Unit of a time interval */
 export enum TimeUnit {
+  /** Days */
   Days = 'DAYS',
+  /** Hours */
   Hours = 'HOURS',
+  /** Minutes */
   Minutes = 'MINUTES',
+  /** Weeks */
   Weeks = 'WEEKS'
 }
 
+/** Storage usage summed over a set of datasets */
 export type TotalDatasetsStatistic = {
   __typename?: 'TotalDatasetsStatistic';
+  /** Size of checkpoint files in bytes */
   totalCheckpointsSizeBytes: Scalars['Int']['output'];
+  /** Size of data files in bytes */
   totalDataSizeBytes: Scalars['Int']['output'];
+  /** Size of linked objects in bytes */
   totalLinkedObjectsSizeBytes: Scalars['Int']['output'];
+  /** Number of linked objects */
   totalNumLinkedObjects: Scalars['Int']['output'];
+  /** Number of data records */
   totalRecords: Scalars['Int']['output'];
+  /** Size of data, checkpoints and linked objects together in bytes */
   totalSizeBytes: Scalars['Int']['output'];
 };
 
@@ -5438,119 +6762,180 @@ export type TransformSql = {
   version?: Maybe<Scalars['String']['output']>;
 };
 
+/** Outcome of manually triggering a flow */
 export type TriggerFlowResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Flow was triggered */
 export type TriggerFlowSuccess = TriggerFlowResult & {
   __typename?: 'TriggerFlowSuccess';
+  /** Flow that was scheduled to run */
   flow: Flow;
+  /** Human-readable success message */
   message: Scalars['String']['output'];
 };
 
+/** Outcome of revoking dataset roles from accounts */
 export type UnsetRoleResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Roles were revoked */
 export type UnsetRoleResultSuccess = UnsetRoleResult & {
   __typename?: 'UnsetRoleResultSuccess';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Email was not updated: it is already used by another account */
 export type UpdateEmailNonUnique = UpdateEmailResult & {
   __typename?: 'UpdateEmailNonUnique';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Outcome of updating an account email */
 export type UpdateEmailResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Account email was updated */
 export type UpdateEmailSuccess = UpdateEmailResult & {
   __typename?: 'UpdateEmailSuccess';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
+  /** New email of the account */
   newEmail: Scalars['String']['output'];
 };
 
+/** Outcome of updating the dataset readme */
 export type UpdateReadmeResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Dataset head did not match the expected one, likely due to a concurrent update */
 export type UpdateVersionErrorCasFailed = UpdateVersionResult & {
   __typename?: 'UpdateVersionErrorCasFailed';
+  /** Current head block hash of the dataset */
   actualHead: Scalars['Multihash']['output'];
+  /** Head block hash the caller expected */
   expectedHead: Scalars['Multihash']['output'];
+  /** Always false */
   isSuccess: Scalars['Boolean']['output'];
+  /** Human-readable error message */
   message: Scalars['String']['output'];
 };
 
+/** Extra data does not match the dataset schema */
 export type UpdateVersionErrorInvalidExtraData = UpdateVersionResult & {
   __typename?: 'UpdateVersionErrorInvalidExtraData';
+  /** Always false */
   isSuccess: Scalars['Boolean']['output'];
+  /** Reason the extra data was rejected */
   message: Scalars['String']['output'];
 };
 
+/** Update would exceed the storage quota of the account */
 export type UpdateVersionErrorQuotaExceeded = UpdateVersionResult & {
   __typename?: 'UpdateVersionErrorQuotaExceeded';
+  /** Size of the rejected content, in bytes; null if no quota is configured */
   incoming?: Maybe<Scalars['Int']['output']>;
+  /** Always false */
   isSuccess: Scalars['Boolean']['output'];
+  /** Storage limit, in bytes; null if no quota is configured */
   limit?: Maybe<Scalars['Int']['output']>;
+  /** Human-readable error message */
   message: Scalars['String']['output'];
+  /** Storage already used, in bytes; null if no quota is configured */
   used?: Maybe<Scalars['Int']['output']>;
 };
 
+/** Outcome of creating a new file version */
 export type UpdateVersionResult = {
+  /** Whether the operation succeeded */
   isSuccess: Scalars['Boolean']['output'];
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** New file version was created */
 export type UpdateVersionSuccess = UpdateVersionResult & {
   __typename?: 'UpdateVersionSuccess';
+  /** Hash of the file content of the new version */
   contentHash: Scalars['Multihash']['output'];
+  /** Always true */
   isSuccess: Scalars['Boolean']['output'];
+  /** Always empty */
   message: Scalars['String']['output'];
+  /** Hash of the metadata chain head after the update */
   newHead: Scalars['Multihash']['output'];
+  /** Number of the created version */
   newVersion: Scalars['Int']['output'];
+  /** Hash of the metadata chain head before the update */
   oldHead: Scalars['Multihash']['output'];
 };
 
+/** Outcome of updating a webhook subscription */
 export type UpdateWebhookSubscriptionResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Webhook subscription was updated */
 export type UpdateWebhookSubscriptionResultSuccess = UpdateWebhookSubscriptionResult & {
   __typename?: 'UpdateWebhookSubscriptionResultSuccess';
+  /** Human-readable success message */
   message: Scalars['String']['output'];
+  /** Always true */
   updated: Scalars['Boolean']['output'];
 };
 
+/** Operation is not allowed in the current subscription status */
 export type UpdateWebhookSubscriptionResultUnexpected = UpdateWebhookSubscriptionResult & {
   __typename?: 'UpdateWebhookSubscriptionResultUnexpected';
+  /** Human-readable error message */
   message: Scalars['String']['output'];
+  /** Current status of the subscription */
   status: WebhookSubscriptionStatus;
 };
 
+/** Outcome of creating or updating an environment variable */
 export type UpsertDatasetEnvVarResult = {
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Environment variable was created */
 export type UpsertDatasetEnvVarResultCreated = UpsertDatasetEnvVarResult & {
   __typename?: 'UpsertDatasetEnvVarResultCreated';
+  /** Created environment variable */
   envVar: ViewDatasetEnvVar;
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Environment variable was updated */
 export type UpsertDatasetEnvVarResultUpdated = UpsertDatasetEnvVarResult & {
   __typename?: 'UpsertDatasetEnvVarResultUpdated';
+  /** Updated environment variable */
   envVar: ViewDatasetEnvVar;
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Environment variable already had the requested value */
 export type UpsertDatasetEnvVarUpToDate = UpsertDatasetEnvVarResult & {
   __typename?: 'UpsertDatasetEnvVarUpToDate';
+  /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
+/** Versioned file archetype view of a dataset, where each version is a file */
 export type VersionedFile = {
   __typename?: 'VersionedFile';
   /** Returns the specified entry by block or version number */
@@ -5562,18 +6947,21 @@ export type VersionedFile = {
 };
 
 
+/** Versioned file archetype view of a dataset, where each version is a file */
 export type VersionedFileAsOfArgs = {
   blockHash?: InputMaybe<Scalars['Multihash']['input']>;
   version?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
+/** Versioned file archetype view of a dataset, where each version is a file */
 export type VersionedFileVersionsArgs = {
   maxVersion?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
   perPage?: InputMaybe<Scalars['Int']['input']>;
 };
 
+/** Information needed to download file content directly from storage */
 export type VersionedFileContentDownload = {
   __typename?: 'VersionedFileContentDownload';
   /** Download URL expiration timestamp */
@@ -5584,6 +6972,7 @@ export type VersionedFileContentDownload = {
   url: Scalars['String']['output'];
 };
 
+/** Single version of a versioned file */
 export type VersionedFileEntry = {
   __typename?: 'VersionedFileEntry';
   /**
@@ -5609,8 +6998,10 @@ export type VersionedFileEntry = {
   version: Scalars['Int']['output'];
 };
 
+/** A page of `VersionedFileEntry` items */
 export type VersionedFileEntryConnection = {
   __typename?: 'VersionedFileEntryConnection';
+  /** Items of this page, each wrapped in an edge */
   edges: Array<VersionedFileEntryEdge>;
   /** A shorthand for `edges { node { ... } }` */
   nodes: Array<VersionedFileEntry>;
@@ -5620,11 +7011,14 @@ export type VersionedFileEntryConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** An edge wrapping a single `VersionedFileEntry` item */
 export type VersionedFileEntryEdge = {
   __typename?: 'VersionedFileEntryEdge';
+  /** The item itself */
   node: VersionedFileEntry;
 };
 
+/** Mutations of a versioned file dataset */
 export type VersionedFileMut = {
   __typename?: 'VersionedFileMut';
   /**
@@ -5650,6 +7044,7 @@ export type VersionedFileMut = {
 };
 
 
+/** Mutations of a versioned file dataset */
 export type VersionedFileMutFinishUploadNewVersionArgs = {
   expectedHead?: InputMaybe<Scalars['Multihash']['input']>;
   extraData?: InputMaybe<Scalars['ExtraData']['input']>;
@@ -5657,18 +7052,21 @@ export type VersionedFileMutFinishUploadNewVersionArgs = {
 };
 
 
+/** Mutations of a versioned file dataset */
 export type VersionedFileMutStartUploadNewVersionArgs = {
   contentLength: Scalars['Int']['input'];
   contentType?: InputMaybe<Scalars['String']['input']>;
 };
 
 
+/** Mutations of a versioned file dataset */
 export type VersionedFileMutUpdateExtraDataArgs = {
   expectedHead?: InputMaybe<Scalars['Multihash']['input']>;
   extraData: Scalars['ExtraData']['input'];
 };
 
 
+/** Mutations of a versioned file dataset */
 export type VersionedFileMutUploadNewVersionArgs = {
   content: Scalars['Base64Usnp']['input'];
   contentType?: InputMaybe<Scalars['String']['input']>;
@@ -5676,6 +7074,7 @@ export type VersionedFileMutUploadNewVersionArgs = {
   extraData?: InputMaybe<Scalars['ExtraData']['input']>;
 };
 
+/** Access token as seen when listing tokens, without its secret value */
 export type ViewAccessToken = {
   __typename?: 'ViewAccessToken';
   /** Access token account owner */
@@ -5690,10 +7089,12 @@ export type ViewAccessToken = {
   revokedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
+/** Environment variable of a dataset */
 export type ViewDatasetEnvVar = {
   __typename?: 'ViewDatasetEnvVar';
   /** Date of the dataset environment variable creation */
   createdAt: Scalars['DateTime']['output'];
+  /** Whether the value is stored encrypted and hidden from listings */
   isSecret: Scalars['Boolean']['output'];
   /** Key of the dataset environment variable */
   key: Scalars['String']['output'];
@@ -5701,8 +7102,10 @@ export type ViewDatasetEnvVar = {
   value?: Maybe<Scalars['String']['output']>;
 };
 
+/** A page of `ViewDatasetEnvVar` items */
 export type ViewDatasetEnvVarConnection = {
   __typename?: 'ViewDatasetEnvVarConnection';
+  /** Items of this page, each wrapped in an edge */
   edges: Array<ViewDatasetEnvVarEdge>;
   /** A shorthand for `edges { node { ... } }` */
   nodes: Array<ViewDatasetEnvVar>;
@@ -5712,26 +7115,37 @@ export type ViewDatasetEnvVarConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** An edge wrapping a single `ViewDatasetEnvVar` item */
 export type ViewDatasetEnvVarEdge = {
   __typename?: 'ViewDatasetEnvVarEdge';
+  /** The item itself */
   node: ViewDatasetEnvVar;
 };
 
+/** WebSocket endpoint */
 export type WebSocketProtocolDesc = {
   __typename?: 'WebSocketProtocolDesc';
+  /** WebSocket connection URL */
   url: Scalars['String']['output'];
 };
 
+/** Webhook delivery process of a single subscription */
 export type WebhookFlowSubProcess = {
   __typename?: 'WebhookFlowSubProcess';
+  /** Identifier of the webhook subscription */
   id: Scalars['WebhookSubscriptionID']['output'];
+  /** Subscription label, or its target URL when the label is empty */
   name: Scalars['String']['output'];
+  /** Dataset the subscription belongs to, null for non-dataset subscriptions */
   parentDataset?: Maybe<Dataset>;
+  /** Current state summary of the delivery process */
   summary: FlowProcessSummary;
 };
 
+/** A page of `WebhookFlowSubProcess` items */
 export type WebhookFlowSubProcessConnection = {
   __typename?: 'WebhookFlowSubProcessConnection';
+  /** Items of this page, each wrapped in an edge */
   edges: Array<WebhookFlowSubProcessEdge>;
   /** A shorthand for `edges { node { ... } }` */
   nodes: Array<WebhookFlowSubProcess>;
@@ -5741,17 +7155,23 @@ export type WebhookFlowSubProcessConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+/** An edge wrapping a single `WebhookFlowSubProcess` item */
 export type WebhookFlowSubProcessEdge = {
   __typename?: 'WebhookFlowSubProcessEdge';
+  /** The item itself */
   node: WebhookFlowSubProcess;
 };
 
+/** Webhook delivery processes of a dataset */
 export type WebhookFlowSubProcessGroup = {
   __typename?: 'WebhookFlowSubProcessGroup';
+  /** Aggregated state counts across the dataset's webhook processes */
   rollup: FlowProcessGroupRollup;
+  /** Webhook delivery processes of the dataset, ordered by name */
   subprocesses: Array<WebhookFlowSubProcess>;
 };
 
+/** Subscription that delivers dataset events to a target URL */
 export type WebhookSubscription = {
   __typename?: 'WebhookSubscription';
   /**
@@ -5771,53 +7191,81 @@ export type WebhookSubscription = {
   targetUrl: Scalars['String']['output'];
 };
 
+/** Another subscription of the dataset already uses this label */
 export type WebhookSubscriptionDuplicateLabel = CreateWebhookSubscriptionResult & UpdateWebhookSubscriptionResult & {
   __typename?: 'WebhookSubscriptionDuplicateLabel';
+  /** Label that is already taken */
   label: Scalars['String']['output'];
+  /** Human-readable error message */
   message: Scalars['String']['output'];
 };
 
+/** Settings of a webhook subscription */
 export type WebhookSubscriptionInput = {
+  /** Event types to deliver, at least one is required */
   eventTypes: Array<Scalars['WebhookEventType']['input']>;
+  /** Label to identify the subscription, unique within the dataset */
   label: Scalars['WebhookSubscriptionLabel']['input'];
+  /** URL that receives webhook deliveries */
   targetUrl: Scalars['URL']['input'];
 };
 
+/** Target URL is not acceptable for webhook delivery */
 export type WebhookSubscriptionInvalidTargetUrl = CreateWebhookSubscriptionResult & UpdateWebhookSubscriptionResult & {
   __typename?: 'WebhookSubscriptionInvalidTargetUrl';
+  /** Explanation of why the URL was rejected */
   innerMessage: Scalars['String']['output'];
+  /** Human-readable error message */
   message: Scalars['String']['output'];
 };
 
+/** Mutations of a single webhook subscription */
 export type WebhookSubscriptionMut = {
   __typename?: 'WebhookSubscriptionMut';
+  /** Pauses deliveries of an enabled subscription */
   pause: PauseWebhookSubscriptionResult;
+  /** Re-enables a subscription that was marked unreachable */
   reactivate: ReactivateWebhookSubscriptionResult;
+  /** Removes the subscription */
   remove: RemoveWebhookSubscriptionResult;
+  /** Resumes deliveries of a paused subscription */
   resume: ResumeWebhookSubscriptionResult;
+  /** Generates a new signing secret, replacing the current one */
   rotateSecret: RotateWebhookSubscriptionSecretResult;
+  /** Replaces the target URL, event types and label of the subscription */
   update: UpdateWebhookSubscriptionResult;
 };
 
 
+/** Mutations of a single webhook subscription */
 export type WebhookSubscriptionMutUpdateArgs = {
   input: WebhookSubscriptionInput;
 };
 
+/** No event types were provided for the subscription */
 export type WebhookSubscriptionNoEventTypesProvided = CreateWebhookSubscriptionResult & UpdateWebhookSubscriptionResult & {
   __typename?: 'WebhookSubscriptionNoEventTypesProvided';
+  /** Human-readable error message */
   message: Scalars['String']['output'];
+  /** Number of event types provided, always zero */
   numEventTypes: Scalars['Int']['output'];
 };
 
+/** Lifecycle status of a webhook subscription */
 export enum WebhookSubscriptionStatus {
+  /** Events are being delivered */
   Enabled = 'ENABLED',
+  /** Deliveries were paused by a user */
   Paused = 'PAUSED',
+  /** Subscription was removed */
   Removed = 'REMOVED',
+  /** Deliveries kept failing, reactivation is required to resume them */
   Unreachable = 'UNREACHABLE',
+  /** Created but not yet enabled */
   Unverified = 'UNVERIFIED'
 }
 
+/** Global webhook information */
 export type Webhooks = {
   __typename?: 'Webhooks';
   /** List of supported event types */

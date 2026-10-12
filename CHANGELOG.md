@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.71.0] - 2026-10-12
 ### Added
 - Account settings: a Storage tab shows how much of the storage quota the account uses and how much is left, split into data, checkpoints and linked files, with a warning when the quota is nearly or fully used; accounts without a limit see "Unlimited"
 - Flow history: a "Retry policy was modified" event shows the new retry policy that a waiting flow picked up from a configuration change before its first attempt, or that retries were disabled

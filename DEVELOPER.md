@@ -20,14 +20,15 @@
 
 ### Technologies
 
-- [TypeScript](https://www.typescriptlang.org/), version: 5.8.3;
-- [Node.js](https://nodejs.org/en/download/releases/), version: 24.13.1;
-- [Angular CLI](https://github.com/angular/angular-cli), version 19.2.19.
+- [TypeScript](https://www.typescriptlang.org/)
+- [Node.js](https://nodejs.org/en/download/releases/), the version [`.nvmrc`](.nvmrc) pins
+- [Angular CLI](https://github.com/angular/angular-cli)
+
+Versions are the ones [`package.json`](package.json) declares.
 
 ### Libraries
 
 - [Angular Material Design](https://material.angular.io/)
-- [Angular Service Worker](https://www.npmjs.com/package/@angular/service-worker)
 - [Apollo Angular (GQL client)](https://apollo-angular.com/docs/)
 - [GraphQL](https://www.npmjs.com/package/graphql)
 - [Bootstrap](https://www.npmjs.com/package/bootstrap)

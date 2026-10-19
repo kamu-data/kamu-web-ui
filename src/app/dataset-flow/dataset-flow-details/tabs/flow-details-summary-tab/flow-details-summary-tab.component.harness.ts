@@ -9,6 +9,8 @@
 
 import { ComponentHarness } from "@angular/cdk/testing";
 
+import { MaybeNull } from "@interface/app.types";
+
 /**
  * Test harness for FlowDetailsSummaryTabComponent that provides a clean API
  * for accessing and testing component elements without direct DOM manipulation.
@@ -112,7 +114,7 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
      * Gets outcome information
      * @returns Object with outcome text and CSS classes, or null if outcome element doesn't exist
      */
-    public async getOutcome(): Promise<{ text: string; cssClasses: string[] } | null> {
+    public async getOutcome(): Promise<MaybeNull<{ text: string; cssClasses: string[] }>> {
         const element = await this.locatorFlowOutcome();
         if (!element) {
             return null;
@@ -140,7 +142,7 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
      * Gets retry attempts information
      * @returns The retry attempts text or null if retry section doesn't exist
      */
-    public async getRetryAttempts(): Promise<string | null> {
+    public async getRetryAttempts(): Promise<MaybeNull<string>> {
         const element = await this.locatorFlowRetryAttempts();
         if (!element) {
             return null;
@@ -161,7 +163,7 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
      * Gets finished time information
      * @returns The finished time text or null if finished time element doesn't exist
      */
-    public async getFinishedTime(): Promise<string | null> {
+    public async getFinishedTime(): Promise<MaybeNull<string>> {
         const element = await this.locatorFlowFinishedTime();
         if (!element) {
             return null;

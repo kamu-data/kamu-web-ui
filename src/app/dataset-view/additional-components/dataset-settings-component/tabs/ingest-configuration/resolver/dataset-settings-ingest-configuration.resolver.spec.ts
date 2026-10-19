@@ -20,6 +20,7 @@ import {
     TimeUnit,
 } from "@api/kamu.graphql.interface";
 import { mockIngestGetDatasetFlowConfigsSuccess } from "@api/mock/dataset-flow.mock";
+import { MaybeNull } from "@interface/app.types";
 
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -45,10 +46,10 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
 
     let permissionsChangesSpy: jasmine.Spy;
 
-    const executeResolver: ResolveFn<DatasetSettingsIngestConfigurationTabData | null> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<MaybeNull<DatasetSettingsIngestConfigurationTabData>> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => datasetSettingsIngestConfigurationResolverFn(...resolverParameters));
 
-    type ResolverObservable = Observable<DatasetSettingsIngestConfigurationTabData | null>;
+    type ResolverObservable = Observable<MaybeNull<DatasetSettingsIngestConfigurationTabData>>;
 
     // Mock data for different scenarios
     const mockFlowConfigWithRetryPolicy: GetDatasetFlowConfigsQuery = {
@@ -188,7 +189,7 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
 
         const resolverSubscription$ = (resolver$ as ResolverObservable)
             .pipe(first())
-            .subscribe((data: DatasetSettingsIngestConfigurationTabData | null) => {
+            .subscribe((data: MaybeNull<DatasetSettingsIngestConfigurationTabData>) => {
                 expect(data).toBeNull();
             });
 
@@ -207,7 +208,7 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
 
         const resolverSubscription$ = (resolver$ as ResolverObservable)
             .pipe(first())
-            .subscribe((data: DatasetSettingsIngestConfigurationTabData | null) => {
+            .subscribe((data: MaybeNull<DatasetSettingsIngestConfigurationTabData>) => {
                 expect(data).toEqual({
                     datasetBasics: mockDatasetBasicsRootFragment,
                     datasetPermissions: mockFullPowerDatasetPermissionsFragment,
@@ -236,7 +237,7 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
 
         const resolverSubscription$ = (resolver$ as ResolverObservable)
             .pipe(first())
-            .subscribe((data: DatasetSettingsIngestConfigurationTabData | null) => {
+            .subscribe((data: MaybeNull<DatasetSettingsIngestConfigurationTabData>) => {
                 expect(data).toEqual({
                     datasetBasics: mockDatasetBasicsRootFragment,
                     datasetPermissions: mockFullPowerDatasetPermissionsFragment,
@@ -268,7 +269,7 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
 
         const resolverSubscription$ = (resolver$ as ResolverObservable)
             .pipe(first())
-            .subscribe((data: DatasetSettingsIngestConfigurationTabData | null) => {
+            .subscribe((data: MaybeNull<DatasetSettingsIngestConfigurationTabData>) => {
                 expect(data).toEqual({
                     datasetBasics: mockDatasetBasicsRootFragment,
                     datasetPermissions: mockFullPowerDatasetPermissionsFragment,
@@ -289,7 +290,7 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
 
         const resolverSubscription$ = (resolver$ as ResolverObservable)
             .pipe(first())
-            .subscribe((data: DatasetSettingsIngestConfigurationTabData | null) => {
+            .subscribe((data: MaybeNull<DatasetSettingsIngestConfigurationTabData>) => {
                 expect(data).toEqual({
                     datasetBasics: mockDatasetBasicsRootFragment,
                     datasetPermissions: mockFullPowerDatasetPermissionsFragment,
@@ -311,7 +312,7 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
         expect(resolver$).not.toBeNull();
 
         const resolverSubscription$ = (resolver$ as ResolverObservable).pipe(first()).subscribe({
-            next: (data: DatasetSettingsIngestConfigurationTabData | null) => {
+            next: (data: MaybeNull<DatasetSettingsIngestConfigurationTabData>) => {
                 fail("Expected an error, but got data: " + JSON.stringify(data));
             },
             error: (error: Error) => {
@@ -332,7 +333,7 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
         expect(resolver$).not.toBeNull();
 
         const resolverSubscription$ = (resolver$ as ResolverObservable).pipe(first()).subscribe({
-            next: (data: DatasetSettingsIngestConfigurationTabData | null) => {
+            next: (data: MaybeNull<DatasetSettingsIngestConfigurationTabData>) => {
                 fail("Expected an error, but got data: " + JSON.stringify(data));
             },
             error: (error: Error) => {

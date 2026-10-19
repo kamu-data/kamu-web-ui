@@ -9,6 +9,8 @@
 
 import { ComponentHarness, TestElement } from "@angular/cdk/testing";
 
+import { MaybeNull } from "@interface/app.types";
+
 import { StorageUsageSegment } from "src/app/account/settings/tabs/storage-tab/storage-tab.model";
 
 export class StorageTabHarness extends ComponentHarness {
@@ -50,7 +52,7 @@ export class StorageTabHarness extends ComponentHarness {
     }
 
     /** `null` when the quota is unlimited */
-    public async getRemaining(): Promise<string | null> {
+    public async getRemaining(): Promise<MaybeNull<string>> {
         const remaining = await this.locatorRemaining();
         return remaining ? StorageTabHarness.normalizedText(remaining) : null;
     }
@@ -68,13 +70,13 @@ export class StorageTabHarness extends ComponentHarness {
     }
 
     /** `null` when the quota is not exhausted */
-    public async getQuotaExhaustedMessage(): Promise<string | null> {
+    public async getQuotaExhaustedMessage(): Promise<MaybeNull<string>> {
         const alert = await this.locatorQuotaReached();
         return alert ? StorageTabHarness.normalizedText(alert) : null;
     }
 
     /** The `mailto:` target of the support link, `null` when no link is shown */
-    public async getSupportLink(): Promise<string | null> {
+    public async getSupportLink(): Promise<MaybeNull<string>> {
         const link = await this.locatorSupportLink();
         return link ? link.getAttribute("href") : null;
     }

@@ -86,6 +86,7 @@ import {
     VersionedFileContentUrlGQL,
     VersionedFileContentUrlQuery,
 } from "@api/kamu.graphql.interface";
+import { MaybeUndefined } from "@interface/app.types";
 import { DatasetRequestBySql } from "@interface/dataset.interface";
 
 import { DatasetAsVersionedFileByBlockHashGQL, DatasetAsVersionedFileGQL } from "./kamu.graphql.interface";
@@ -753,7 +754,7 @@ export class DatasetApi {
             );
     }
 
-    public static generateDatasetKeyFragment(ownerRef: string | undefined, datasetId: string): StoreObject {
+    public static generateDatasetKeyFragment(ownerRef: MaybeUndefined<string>, datasetId: string): StoreObject {
         return {
             __typename: "Dataset",
             owner: {

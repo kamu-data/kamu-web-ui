@@ -11,23 +11,24 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular
 import { map, Observable, of, switchMap } from "rxjs";
 
 import { DatasetFlowType, GetDatasetFlowTriggerQuery } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
 import { datasetSettingsGeneralTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/resolver/dataset-settings-general-tab.resolver";
 import { DatasetSettingsSchedulingTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.data";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
-export const datasetSettingsSchedulingTabResolverFn: ResolveFn<DatasetSettingsSchedulingTabData | null> = (
+export const datasetSettingsSchedulingTabResolverFn: ResolveFn<MaybeNull<DatasetSettingsSchedulingTabData>> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ) => {
     const datasetFlowTriggerService = inject(DatasetFlowTriggerService);
 
     return (
-        datasetSettingsGeneralTabResolverFn(route, state) as Observable<DatasetSettingsSchedulingTabData | null>
+        datasetSettingsGeneralTabResolverFn(route, state) as Observable<MaybeNull<DatasetSettingsSchedulingTabData>>
     ).pipe(
         // We can safely cast here because the resolver is used in a context where the type is DatasetSettingsIngestConfigurationTabData
-        switchMap((data: DatasetViewData | null) => {
+        switchMap((data: MaybeNull<DatasetViewData>) => {
             if (data === null) {
                 return of(null);
             }

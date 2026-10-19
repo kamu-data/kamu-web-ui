@@ -6,6 +6,7 @@
  */
 
 import { DatasetArchetype } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 import { OverviewTabMode } from "src/app/dataset-view/dataset-view.interface";
 
@@ -13,7 +14,7 @@ export interface ViewModeButtonsOptions {
     value: OverviewTabMode;
     icon: string;
     tooltip: string;
-    archetype: DatasetArchetype | null;
+    archetype: MaybeNull<DatasetArchetype>;
 }
 
 export const VIEW_MODE_BUTTONS_OPTIONS: ViewModeButtonsOptions[] = [

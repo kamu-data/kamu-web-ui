@@ -9,6 +9,8 @@
 
 import { ComponentHarness } from "@angular/cdk/testing";
 
+import { MaybeNull } from "@interface/app.types";
+
 export class CronExpressionFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-cron-expression-form";
 
@@ -46,7 +48,7 @@ export class CronExpressionFormHarness extends ComponentHarness {
         return input.hasClass("ng-untouched");
     }
 
-    public async getErrorMessage(): Promise<string | null> {
+    public async getErrorMessage(): Promise<MaybeNull<string>> {
         const errorElement = await this.errorMessage();
         if (errorElement) {
             const message = await errorElement.text();
@@ -55,7 +57,7 @@ export class CronExpressionFormHarness extends ComponentHarness {
         return null;
     }
 
-    public async getNextTime(): Promise<string | null> {
+    public async getNextTime(): Promise<MaybeNull<string>> {
         const nextTime = await this.nextTime();
         if (nextTime) {
             return nextTime.text();

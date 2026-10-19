@@ -10,6 +10,8 @@
 import { ComponentHarness } from "@angular/cdk/testing";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 
+import { MaybeNull } from "@interface/app.types";
+
 import { FlowTriggerStopPolicyType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { FlowStopPolicyFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.types";
 
@@ -57,7 +59,7 @@ export class FlowStopPolicyFormHarness extends ComponentHarness {
         }
     }
 
-    public async getStopPolicyType(): Promise<FlowTriggerStopPolicyType | null> {
+    public async getStopPolicyType(): Promise<MaybeNull<FlowTriggerStopPolicyType>> {
         const neverRadio = await this.locatorStopPolicyTypeNeverRadio();
         const isNeverSelected = await neverRadio.isChecked();
 
@@ -90,7 +92,7 @@ export class FlowStopPolicyFormHarness extends ComponentHarness {
         return Number(value) || 0;
     }
 
-    public async getErrorMessage(): Promise<string | null> {
+    public async getErrorMessage(): Promise<MaybeNull<string>> {
         const errorElement = await this.locatorError();
         if (errorElement) {
             const message = await errorElement.text();

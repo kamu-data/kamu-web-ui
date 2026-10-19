@@ -12,6 +12,7 @@ import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 
 import { TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
 import { FlowTriggerBreakingChangeRule } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 import { BatchingRuleType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { BufferingBatchingRuleFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/buffering-batching-rule-form/buffering-batching-rule-form.harness";
@@ -101,7 +102,7 @@ export class TransformTriggerFormHarness extends ComponentHarness {
         await bufferingForm.setMaxBatchingInterval(maxBatchingInterval);
     }
 
-    public async getBatchingRuleType(): Promise<BatchingRuleType | null> {
+    public async getBatchingRuleType(): Promise<MaybeNull<BatchingRuleType>> {
         const immediateRadio = await this.locatorBatchingRuleImmediateRadio();
         const isImmediateSelected = await immediateRadio.isChecked();
 
@@ -116,7 +117,7 @@ export class TransformTriggerFormHarness extends ComponentHarness {
         return null;
     }
 
-    public async getBreakingChangeRule(): Promise<FlowTriggerBreakingChangeRule | null> {
+    public async getBreakingChangeRule(): Promise<MaybeNull<FlowTriggerBreakingChangeRule>> {
         const noActionRadio = await this.locatorBreakingChangeNoActionRadio();
         const isNoActionSelected = await noActionRadio.isChecked();
 
@@ -131,7 +132,7 @@ export class TransformTriggerFormHarness extends ComponentHarness {
         return null;
     }
 
-    public async getBufferingFormValue(): Promise<BufferingBatchingRuleFormValue | null> {
+    public async getBufferingFormValue(): Promise<MaybeNull<BufferingBatchingRuleFormValue>> {
         const bufferingForm = await this.locatorBufferingForm();
         if (!bufferingForm) {
             return null;

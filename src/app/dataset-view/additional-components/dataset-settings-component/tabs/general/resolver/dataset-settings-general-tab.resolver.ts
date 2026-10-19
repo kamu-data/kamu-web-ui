@@ -11,6 +11,7 @@ import { ResolveFn } from "@angular/router";
 import { combineLatest, map } from "rxjs";
 
 import { DatasetMetadata } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { isSettingsTabAccessibleHelper } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.helpers";
@@ -21,7 +22,7 @@ import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscr
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
-export const datasetSettingsGeneralTabResolverFn: ResolveFn<DatasetViewData | null> = (route) => {
+export const datasetSettingsGeneralTabResolverFn: ResolveFn<MaybeNull<DatasetViewData>> = (route) => {
     const datasetService = inject(DatasetService);
     const datasetSubService = inject(DatasetSubscriptionsService);
     const navigationService = inject(NavigationService);

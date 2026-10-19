@@ -15,6 +15,7 @@ import { provideToastr } from "ngx-toastr";
 
 import { DatasetFlowType } from "@api/kamu.graphql.interface";
 import { mockCronSchedule, mockGetDatasetFlowTriggerCronQuery } from "@api/mock/dataset-flow.mock";
+import { MaybeNull } from "@interface/app.types";
 
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -40,10 +41,10 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
 
     let permissionsChangesSpy: jasmine.Spy;
 
-    const executeResolver: ResolveFn<DatasetSettingsSchedulingTabData | null> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<MaybeNull<DatasetSettingsSchedulingTabData>> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => datasetSettingsSchedulingTabResolverFn(...resolverParameters));
 
-    type ResolverObservable = Observable<DatasetSettingsSchedulingTabData | null>;
+    type ResolverObservable = Observable<MaybeNull<DatasetSettingsSchedulingTabData>>;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -85,7 +86,7 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
 
         const resolverSubscription$ = (resolver$ as ResolverObservable)
             .pipe(first())
-            .subscribe((data: DatasetSettingsSchedulingTabData | null) => {
+            .subscribe((data: MaybeNull<DatasetSettingsSchedulingTabData>) => {
                 expect(data).toBeNull();
             });
 
@@ -123,7 +124,7 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
 
         const resolverSubscription$ = (resolver$ as ResolverObservable)
             .pipe(first())
-            .subscribe((data: DatasetSettingsSchedulingTabData | null) => {
+            .subscribe((data: MaybeNull<DatasetSettingsSchedulingTabData>) => {
                 expect(data).toEqual({
                     datasetBasics: mockDatasetBasicsRootFragment,
                     datasetPermissions: mockFullPowerDatasetPermissionsFragment,
@@ -154,7 +155,7 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
 
         const resolverSubscription$ = (resolver$ as ResolverObservable)
             .pipe(first())
-            .subscribe((data: DatasetSettingsSchedulingTabData | null) => {
+            .subscribe((data: MaybeNull<DatasetSettingsSchedulingTabData>) => {
                 expect(data).toEqual({
                     datasetBasics: mockDatasetBasicsRootFragment,
                     datasetPermissions: mockFullPowerDatasetPermissionsFragment,
@@ -190,7 +191,7 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
 
         const resolverSubscription$ = (resolver$ as ResolverObservable)
             .pipe(first())
-            .subscribe((data: DatasetSettingsSchedulingTabData | null) => {
+            .subscribe((data: MaybeNull<DatasetSettingsSchedulingTabData>) => {
                 expect(data).toEqual({
                     datasetBasics: mockDatasetBasicsRootFragment,
                     datasetPermissions: mockFullPowerDatasetPermissionsFragment,
@@ -210,7 +211,7 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
         expect(resolver$).not.toBeNull();
 
         const resolverSubscription$ = (resolver$ as ResolverObservable).pipe(first()).subscribe({
-            next: (data: DatasetSettingsSchedulingTabData | null) => {
+            next: (data: MaybeNull<DatasetSettingsSchedulingTabData>) => {
                 fail("Expected an error, but got data: " + JSON.stringify(data));
             },
             error: (error: Error) => {

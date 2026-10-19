@@ -9,15 +9,17 @@
 
 import { ComponentHarness } from "@angular/cdk/testing";
 
+import { MaybeNull } from "@interface/app.types";
+
 export interface DownstreamFlowRow {
     icon: string;
     iconClasses: string[];
     flowLabel: string;
-    flowHref: string | null;
-    status: string | null;
-    datasetLabel: string | null;
-    datasetHref: string | null;
-    unavailableDataset: string | null;
+    flowHref: MaybeNull<string>;
+    status: MaybeNull<string>;
+    datasetLabel: MaybeNull<string>;
+    datasetHref: MaybeNull<string>;
+    unavailableDataset: MaybeNull<string>;
 }
 
 /**
@@ -39,7 +41,7 @@ export class FlowDetailsDownstreamFlowsHarness extends ComponentHarness {
     /**
      * Gets the list title, or null when nothing is rendered
      */
-    public async getTitle(): Promise<string | null> {
+    public async getTitle(): Promise<MaybeNull<string>> {
         const title = await this.locatorTitle();
         if (!title) {
             return null;

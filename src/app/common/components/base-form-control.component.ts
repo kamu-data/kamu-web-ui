@@ -10,6 +10,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AbstractControl, ControlValueAccessor, FormGroup, ValidationErrors, Validator } from "@angular/forms";
 
 import { BaseComponent } from "@common/components/base.component";
+import { MaybeNull } from "@interface/app.types";
 
 /**
  * Abstract base class for form components that implement ControlValueAccessor.
@@ -104,7 +105,7 @@ export abstract class BaseFormControlComponent<TValue>
         this.cdr.markForCheck();
     }
 
-    public validate(_: AbstractControl): ValidationErrors | null {
+    public validate(_: AbstractControl): MaybeNull<ValidationErrors> {
         if (this.form.valid) return null;
 
         const errors: ValidationErrors = {};

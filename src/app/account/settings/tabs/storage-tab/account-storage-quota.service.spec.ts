@@ -14,6 +14,7 @@ import { Apollo } from "apollo-angular";
 import { AccountApi } from "@api/account.api";
 import { mockAccountStorageQuotaQuery } from "@api/mock/account.mock";
 import { TEST_ACCOUNT_NAME } from "@api/mock/dataset.mock";
+import { MaybeUndefined } from "@interface/app.types";
 
 import { AccountStorageQuotaService } from "src/app/account/settings/tabs/storage-tab/account-storage-quota.service";
 import { AccountStorageQuota } from "src/app/account/settings/tabs/storage-tab/storage-tab.model";
@@ -38,7 +39,7 @@ describe("AccountStorageQuotaService", () => {
         const fetchSpy = spyOn(accountApi, "fetchAccountStorageQuota").and.returnValue(
             of(mockAccountStorageQuotaQuery),
         );
-        let result: AccountStorageQuota | undefined;
+        let result: MaybeUndefined<AccountStorageQuota>;
         service.fetchStorageQuota(TEST_ACCOUNT_NAME).subscribe((quota) => (result = quota));
 
         expect(fetchSpy).toHaveBeenCalledOnceWith(TEST_ACCOUNT_NAME);
@@ -57,7 +58,7 @@ describe("AccountStorageQuotaService", () => {
             unlimitedQuery.accounts.byName.quotas.user.storage.limitTotalBytes = null;
         }
         spyOn(accountApi, "fetchAccountStorageQuota").and.returnValue(of(unlimitedQuery));
-        let result: AccountStorageQuota | undefined;
+        let result: MaybeUndefined<AccountStorageQuota>;
         service.fetchStorageQuota(TEST_ACCOUNT_NAME).subscribe((quota) => (result = quota));
 
         expect(result?.limitBytes).toBeNull();

@@ -8,10 +8,11 @@
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { MaybeNull } from "@interface/app.types";
 
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 
-export const flowDetailsSummaryResolverFn: ResolveFn<DatasetFlowByIdResponse | null> = (
+export const flowDetailsSummaryResolverFn: ResolveFn<MaybeNull<DatasetFlowByIdResponse>> = (
     route: ActivatedRouteSnapshot,
 ) => {
     const flowByIdResponse = route.parent?.data?.[RoutingResolvers.FLOW_DETAILS_KEY] as DatasetFlowByIdResponse;

@@ -10,6 +10,7 @@ import {
     DynamicTableDataRow,
 } from "@common/components/dynamic-table/dynamic-table.interface";
 import { removeAllLineBreaks } from "@common/helpers/app.helpers";
+import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
 import {
     DataSchemaField,
     DataSchemaTypeField,
@@ -91,7 +92,9 @@ export function schemaAsDataRows(schema: DataSchemaField[]): DynamicTableDataRow
  *  - the ODF object form `{ fields: DataSchemaField[] }`, or
  *  - a bare `DataSchemaField[]` (already normalized — idempotent).
  */
-export function normalizeSchemaFields(input: DatasetSchema | DataSchemaField[] | null | undefined): DataSchemaField[] {
+export function normalizeSchemaFields(
+    input: MaybeNullOrUndefined<DatasetSchema | DataSchemaField[]>,
+): DataSchemaField[] {
     if (!input) {
         return [];
     }
@@ -112,7 +115,7 @@ export function schemaFieldsToObjectForm(fields: DataSchemaField[]): DatasetSche
  * or empty so callers never receive `null`/`undefined`.
  */
 export function extractSchemaFromReadStep(
-    readStep: { schema?: { content: string } | null } | null | undefined,
+    readStep: MaybeNullOrUndefined<{ schema?: MaybeNull<{ content: string }> }>,
 ): DataSchemaField[] {
     const content = readStep?.schema?.content;
     if (!content) return [];

@@ -16,6 +16,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { NgSelectComponent } from "@ng-select/ng-select";
 
 import { findComponentInstance, findElement, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { MaybeNull } from "@interface/app.types";
 import { DataSchemaField, DataSchemaListField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { TypeEditorComponent } from "./components/type-editor/type-editor.component";
@@ -37,7 +38,7 @@ class TestHostComponent {
     @Input() public fields: DataSchemaField[] = [];
     @Output() public fieldsChange = new EventEmitter<DataSchemaField[]>();
 
-    public lastEmitted: DataSchemaField[] | null = null;
+    public lastEmitted: MaybeNull<DataSchemaField[]> = null;
 
     public onFieldsChange(fields: DataSchemaField[]): void {
         this.fields = fields;
@@ -285,7 +286,7 @@ describe("EditSchemaTableComponent", () => {
             ngSelect.open();
             fixture.detectChanges();
             const item = ngSelect.itemsList.items.find(
-                (i) => (i.value as { value?: OdfTypes } | null)?.value === OdfTypes.Int64,
+                (i) => (i.value as MaybeNull<{ value?: OdfTypes }>)?.value === OdfTypes.Int64,
             );
             if (!item) throw new Error("Int64 option not found in kind ng-select");
             ngSelect.select(item);

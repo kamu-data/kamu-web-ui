@@ -10,6 +10,7 @@
 import { ComponentHarness } from "@angular/cdk/testing";
 
 import { TimeUnit } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 export class TimeDeltaFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-time-delta-form";
@@ -51,7 +52,7 @@ export class TimeDeltaFormHarness extends ComponentHarness {
         return units;
     }
 
-    public async setTimeDelta(every: number | "" | null, unit: TimeUnit | null): Promise<void> {
+    public async setTimeDelta(every: MaybeNull<number | "">, unit: MaybeNull<TimeUnit>): Promise<void> {
         const input = await this.locatorEveryInput();
         const select = await this.locatorUnitSelect();
 
@@ -98,7 +99,7 @@ export class TimeDeltaFormHarness extends ComponentHarness {
         return input.hasClass("ng-untouched");
     }
 
-    public async getErrorMessage(): Promise<string | null> {
+    public async getErrorMessage(): Promise<MaybeNull<string>> {
         const errorElement = await this.locatorError();
         if (errorElement) {
             const message = await errorElement.text();

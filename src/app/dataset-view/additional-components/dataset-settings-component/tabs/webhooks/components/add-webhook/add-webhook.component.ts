@@ -54,7 +54,7 @@ export class AddWebhookComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.WEBHOOKS_ADD_NEW_KEY) public datasetBasics: DatasetBasicsFragment;
 
     public dropdownList$: Observable<SubscribedEventType[]>;
-    private secret$ = new BehaviorSubject<string | undefined>(undefined);
+    private secret$ = new BehaviorSubject<MaybeUndefined<string>>(undefined);
 
     private fb = inject(NonNullableFormBuilder);
     private webhooksService = inject(WebhooksService);

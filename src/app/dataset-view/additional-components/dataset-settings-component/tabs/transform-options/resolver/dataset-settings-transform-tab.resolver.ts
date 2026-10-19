@@ -18,17 +18,19 @@ import { datasetSettingsGeneralTabResolverFn } from "src/app/dataset-view/additi
 import { DatasetSettingsTransformOptionsTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.data";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
-export const datasetSettingsTransformTabResolverFn: ResolveFn<DatasetSettingsTransformOptionsTabData | null> = (
+export const datasetSettingsTransformTabResolverFn: ResolveFn<MaybeNull<DatasetSettingsTransformOptionsTabData>> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ) => {
     const datasetFlowTriggerService = inject(DatasetFlowTriggerService);
 
     return (
-        datasetSettingsGeneralTabResolverFn(route, state) as Observable<DatasetSettingsTransformOptionsTabData | null>
+        datasetSettingsGeneralTabResolverFn(route, state) as Observable<
+            MaybeNull<DatasetSettingsTransformOptionsTabData>
+        >
     ).pipe(
         // We can safely cast here because the resolver is used in a context where the type is DatasetSettingsIngestConfigurationTabData
-        switchMap((data: DatasetViewData | null) => {
+        switchMap((data: MaybeNull<DatasetViewData>) => {
             if (data === null) {
                 return of(null);
             }

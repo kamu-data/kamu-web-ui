@@ -9,6 +9,8 @@
 
 import { ComponentHarness } from "@angular/cdk/testing";
 
+import { MaybeNull } from "@interface/app.types";
+
 /**
  * Test harness for FlowDetailsHistoryTabComponent that provides a clean API
  * for accessing and testing component elements without direct DOM manipulation.
@@ -46,7 +48,7 @@ export class FlowDetailsHistoryTabHarness extends ComponentHarness {
     /**
      * Gets the event description for a specific history item
      */
-    public async getHistoryItemDescription(index: number): Promise<string | null> {
+    public async getHistoryItemDescription(index: number): Promise<MaybeNull<string>> {
         const descriptionElement = await this.locatorForOptional(
             `[data-test-id="${FlowDetailsHistoryTabHarness.HISTORY_ITEM_TEST_ID_PREFIX}${index}-description"]`,
         )();
@@ -60,7 +62,7 @@ export class FlowDetailsHistoryTabHarness extends ComponentHarness {
     /**
      * Gets the event sub-message for a specific history item
      */
-    public async getHistoryItemSubMessage(index: number): Promise<string | null> {
+    public async getHistoryItemSubMessage(index: number): Promise<MaybeNull<string>> {
         const subMessageElement = await this.locatorForOptional(
             `[data-test-id="${FlowDetailsHistoryTabHarness.HISTORY_ITEM_TEST_ID_PREFIX}${index}-submessage"]`,
         )();
@@ -74,7 +76,7 @@ export class FlowDetailsHistoryTabHarness extends ComponentHarness {
     /**
      * Gets the event time for a specific history item
      */
-    public async getHistoryItemTime(index: number): Promise<string | null> {
+    public async getHistoryItemTime(index: number): Promise<MaybeNull<string>> {
         const timeElement = await this.locatorForOptional(
             `[data-test-id="${FlowDetailsHistoryTabHarness.HISTORY_ITEM_TEST_ID_PREFIX}${index}-time"]`,
         )();
@@ -88,7 +90,7 @@ export class FlowDetailsHistoryTabHarness extends ComponentHarness {
     /**
      * Gets the duration for a specific history item
      */
-    public async getHistoryItemDuration(index: number): Promise<string | null> {
+    public async getHistoryItemDuration(index: number): Promise<MaybeNull<string>> {
         const durationElement = await this.locatorForOptional(
             `[data-test-id="${FlowDetailsHistoryTabHarness.HISTORY_ITEM_TEST_ID_PREFIX}${index}-duration"]`,
         )();
@@ -112,7 +114,7 @@ export class FlowDetailsHistoryTabHarness extends ComponentHarness {
     /**
      * Gets the icon information for a specific history item
      */
-    public async getHistoryItemIcon(index: number): Promise<{ icon: string; cssClasses: string[] } | null> {
+    public async getHistoryItemIcon(index: number): Promise<MaybeNull<{ icon: string; cssClasses: string[] }>> {
         const iconElement = await this.locatorForOptional(
             `[data-test-id="${FlowDetailsHistoryTabHarness.HISTORY_ITEM_TEST_ID_PREFIX}${index}-icon"]`,
         )();
@@ -139,7 +141,7 @@ export class FlowDetailsHistoryTabHarness extends ComponentHarness {
     /**
      * Gets the animation image source if it exists
      */
-    public async getAnimationImageSrc(): Promise<string | null> {
+    public async getAnimationImageSrc(): Promise<MaybeNull<string>> {
         const element = await this.locatorAnimationImage();
         return element ? await element.getAttribute("src") : null;
     }
@@ -158,11 +160,11 @@ export class FlowDetailsHistoryTabHarness extends ComponentHarness {
     public async getAllHistoryItems(): Promise<
         Array<{
             index: number;
-            description: string | null;
-            subMessage: string | null;
-            time: string | null;
-            duration: string | null;
-            icon: { icon: string; cssClasses: string[] } | null;
+            description: MaybeNull<string>;
+            subMessage: MaybeNull<string>;
+            time: MaybeNull<string>;
+            duration: MaybeNull<string>;
+            icon: MaybeNull<{ icon: string; cssClasses: string[] }>;
         }>
     > {
         const count = await this.getHistoryItemsCount();

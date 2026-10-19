@@ -18,6 +18,7 @@ import {
     mockBufferingBatchingReactiveRule,
     mockGetDatasetFlowTriggersBatchingQuery,
 } from "@api/mock/dataset-flow.mock";
+import { MaybeNull } from "@interface/app.types";
 
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -43,10 +44,10 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
 
     let permissionsChangesSpy: jasmine.Spy;
 
-    const executeResolver: ResolveFn<DatasetSettingsTransformOptionsTabData | null> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<MaybeNull<DatasetSettingsTransformOptionsTabData>> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => datasetSettingsTransformTabResolverFn(...resolverParameters));
 
-    type ResolverObservable = Observable<DatasetSettingsTransformOptionsTabData | null>;
+    type ResolverObservable = Observable<MaybeNull<DatasetSettingsTransformOptionsTabData>>;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -94,7 +95,7 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
 
         const resolverSubscription$ = (resolver$ as ResolverObservable)
             .pipe(first())
-            .subscribe((data: DatasetSettingsTransformOptionsTabData | null) => {
+            .subscribe((data: MaybeNull<DatasetSettingsTransformOptionsTabData>) => {
                 expect(data).toBeNull();
             });
 
@@ -131,7 +132,7 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
 
         const resolverSubscription$ = (resolver$ as ResolverObservable)
             .pipe(first())
-            .subscribe((data: DatasetSettingsTransformOptionsTabData | null) => {
+            .subscribe((data: MaybeNull<DatasetSettingsTransformOptionsTabData>) => {
                 expect(data).toEqual({
                     datasetBasics: mockDatasetBasicsDerivedFragment,
                     datasetPermissions: mockFullPowerDatasetPermissionsFragment,
@@ -162,7 +163,7 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
 
         const resolverSubscription$ = (resolver$ as ResolverObservable)
             .pipe(first())
-            .subscribe((data: DatasetSettingsTransformOptionsTabData | null) => {
+            .subscribe((data: MaybeNull<DatasetSettingsTransformOptionsTabData>) => {
                 expect(data).toEqual({
                     datasetBasics: mockDatasetBasicsDerivedFragment,
                     datasetPermissions: mockFullPowerDatasetPermissionsFragment,
@@ -199,7 +200,7 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
 
         const resolverSubscription$ = (resolver$ as ResolverObservable)
             .pipe(first())
-            .subscribe((data: DatasetSettingsTransformOptionsTabData | null) => {
+            .subscribe((data: MaybeNull<DatasetSettingsTransformOptionsTabData>) => {
                 expect(data).toEqual({
                     datasetBasics: mockDatasetBasicsDerivedFragment,
                     datasetPermissions: mockFullPowerDatasetPermissionsFragment,
@@ -219,7 +220,7 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
         expect(resolver$).not.toBeNull();
 
         const resolverSubscription$ = (resolver$ as ResolverObservable).pipe(first()).subscribe({
-            next: (data: DatasetSettingsTransformOptionsTabData | null) => {
+            next: (data: MaybeNull<DatasetSettingsTransformOptionsTabData>) => {
                 fail("Expected an error, but got data: " + JSON.stringify(data));
             },
             error: (error: Error) => {

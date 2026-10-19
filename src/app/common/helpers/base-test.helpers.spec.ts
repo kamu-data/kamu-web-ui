@@ -13,7 +13,7 @@ import { ActivatedRoute, RouterEvent } from "@angular/router";
 
 import { ReplaySubject } from "rxjs";
 
-import { MaybeNull } from "@interface/app.types";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import ProjectLinks from "src/app/project-links";
 
@@ -34,7 +34,7 @@ export function emitClickOnElementByDataTestId<T>(fixture: ComponentFixture<T>, 
     (debugElement.nativeElement as HTMLElement).click();
 }
 
-export function findElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): HTMLElement | undefined {
+export function findElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): MaybeUndefined<HTMLElement> {
     const debugElement: MaybeNull<DebugElement> = fixture.debugElement.query(By.css(`[data-test-id="${id}"]`));
     if (debugElement) {
         return debugElement.nativeElement as HTMLElement;
@@ -44,7 +44,7 @@ export function findElementByDataTestId<T>(fixture: ComponentFixture<T>, id: str
 }
 
 export function getElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): HTMLElement {
-    const element: HTMLElement | undefined = findElementByDataTestId(fixture, id);
+    const element: MaybeUndefined<HTMLElement> = findElementByDataTestId(fixture, id);
     if (element) {
         return element;
     }
@@ -52,7 +52,7 @@ export function getElementByDataTestId<T>(fixture: ComponentFixture<T>, id: stri
 }
 
 export function checkVisible<T>(fixture: ComponentFixture<T>, dataTestId: string, visible: boolean): void {
-    const element: HTMLElement | undefined = findElementByDataTestId(fixture, dataTestId);
+    const element: MaybeUndefined<HTMLElement> = findElementByDataTestId(fixture, dataTestId);
     if (visible) {
         expect(element).toBeTruthy();
     } else {
@@ -79,13 +79,13 @@ export function setFieldValue<T>(fixture: ComponentFixture<T>, dataTestId: strin
 }
 
 export function checkInputDisabled<T>(fixture: ComponentFixture<T>, dataTestId: string, isDisabled: boolean): void {
-    const element: HTMLInputElement | null = getElementByDataTestId(fixture, dataTestId) as HTMLInputElement;
+    const element: MaybeNull<HTMLInputElement> = getElementByDataTestId(fixture, dataTestId) as HTMLInputElement;
     expect(element).not.toBeNull();
     expect(element.disabled).toEqual(isDisabled);
 }
 
 export function checkButtonDisabled<T>(fixture: ComponentFixture<T>, dataTestId: string, isDisabled: boolean): void {
-    const element: HTMLButtonElement | null = getElementByDataTestId(fixture, dataTestId) as HTMLButtonElement;
+    const element: MaybeNull<HTMLButtonElement> = getElementByDataTestId(fixture, dataTestId) as HTMLButtonElement;
     expect(element).not.toBeNull();
     expect(element.disabled).toEqual(isDisabled);
 }

@@ -13,6 +13,7 @@ import { Observable, of } from "rxjs";
 import { Apollo } from "apollo-angular";
 
 import AppValues from "@common/values/app.values";
+import { MaybeNull } from "@interface/app.types";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
@@ -31,7 +32,7 @@ describe("datasetSettingsGeneralTabResolverFn", () => {
     let navigationService: NavigationService;
     let appConfigService: AppConfigService;
 
-    const executeResolver: ResolveFn<DatasetViewData | null> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<MaybeNull<DatasetViewData>> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => datasetSettingsGeneralTabResolverFn(...resolverParameters));
 
     beforeEach(() => {

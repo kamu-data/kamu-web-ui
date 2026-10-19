@@ -9,6 +9,7 @@
 
 import { ComponentHarness, HarnessPredicate, TestKey } from "@angular/cdk/testing";
 
+import { MaybeNull } from "@interface/app.types";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 export class EditSchemaTableHarness extends ComponentHarness {
@@ -264,7 +265,7 @@ export class EditSchemaTableHarness extends ComponentHarness {
     }
 
     /** Returns the matTooltip text on the error icon, or null if absent. */
-    public async errorTooltipFor(fieldName: string): Promise<string | null> {
+    public async errorTooltipFor(fieldName: string): Promise<MaybeNull<string>> {
         const icon = await this.locatorForOptional(
             `${this.sel(EditSchemaTableHarness.FIELD_NAME_VERB, fieldName)} mat-icon.text-danger`,
         )();
@@ -280,7 +281,7 @@ export class EditSchemaTableHarness extends ComponentHarness {
     }
 
     /** Returns the matTooltip text on the warning icon, or null if absent. */
-    public async warningTooltipFor(fieldName: string): Promise<string | null> {
+    public async warningTooltipFor(fieldName: string): Promise<MaybeNull<string>> {
         const icon = await this.locatorForOptional(
             `${this.sel(EditSchemaTableHarness.FIELD_NAME_VERB, fieldName)} mat-icon.text-warning`,
         )();

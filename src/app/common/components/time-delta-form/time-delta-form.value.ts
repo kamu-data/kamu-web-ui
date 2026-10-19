@@ -11,8 +11,8 @@ import { TimeUnit } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 export interface TimeDeltaFormValue {
-    every: number | null;
-    unit: TimeUnit | null;
+    every: MaybeNull<number>;
+    unit: MaybeNull<TimeUnit>;
 }
 
 export interface TimeDeltaFormType {

@@ -19,7 +19,7 @@ import {
 } from "@common/components/dynamic-table/dynamic-table.interface";
 import { convertSecondsToHumanReadableFormat } from "@common/helpers/app.helpers";
 import { DataQueryResultSuccessViewFragment, MetadataBlockFragment, TimeUnit } from "@api/kamu.graphql.interface";
-import { MaybeUndefined } from "@interface/app.types";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { SliceUnit } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
@@ -320,7 +320,7 @@ export const noCacheFetchPolicy: {
 };
 
 export const noWhitespaceValidator = (): ValidatorFn => {
-    return (control: AbstractControl): ValidationErrors | null => {
+    return (control: AbstractControl): MaybeNull<ValidationErrors> => {
         const isSpace = ((control.value as string) || "").match(/\s/g);
         return isSpace ? { whitespace: true } : null;
     };
@@ -399,7 +399,7 @@ export function setOperationColumnClass(value: number): DynamicTableColumnClassE
 
 export function getAllRouteParams(route: ActivatedRouteSnapshot): Record<string, string> {
     let params: Record<string, string> = {};
-    let currentRoute: ActivatedRouteSnapshot | null = route;
+    let currentRoute: MaybeNull<ActivatedRouteSnapshot> = route;
 
     while (currentRoute) {
         params = { ...params, ...currentRoute.params };
@@ -409,7 +409,7 @@ export function getAllRouteParams(route: ActivatedRouteSnapshot): Record<string,
 }
 
 export function matchFieldsValidator(controlName: string, matchingControlName: string): ValidatorFn {
-    return (formGroup: AbstractControl): ValidationErrors | null => {
+    return (formGroup: AbstractControl): MaybeNull<ValidationErrors> => {
         const control = formGroup.get(controlName);
         const matchingControl = formGroup.get(matchingControlName);
 

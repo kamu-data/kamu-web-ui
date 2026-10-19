@@ -14,6 +14,7 @@ import { NgSelectComponent } from "@ng-select/ng-select";
 
 import { ValidationError, ValidationErrorTuple } from "@common/directives/form-validation-errors.types";
 import AppValues from "@common/values/app.values";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 @Directive({
     selector: "[appFieldError]",
@@ -22,16 +23,16 @@ import AppValues from "@common/values/app.values";
 export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnInit {
     @Input({ required: true }) public appFieldError:
         ValidationError | ValidationError[] | ValidationErrorTuple | ValidationErrorTuple[];
-    @Input() public input: HTMLInputElement | NgSelectComponent | HTMLSelectElement | undefined;
+    @Input() public input: MaybeUndefined<HTMLInputElement | NgSelectComponent | HTMLSelectElement>;
     @Input({ required: true }) public group: FormGroup | FormArray;
-    @Input() public fieldControl: AbstractControl | null;
-    @Input() public fieldLabel: string | undefined;
+    @Input() public fieldControl: MaybeNull<AbstractControl>;
+    @Input() public fieldLabel: MaybeUndefined<string>;
     @Input() public dataTestId: string = "";
 
     private readonly nativeElement: HTMLElement;
-    private controlSubscription: Subscription | undefined;
-    private ngSelectStatusSubscription: Subscription | undefined;
-    private ngSelectBlurSubscription: Subscription | undefined;
+    private controlSubscription: MaybeUndefined<Subscription>;
+    private ngSelectStatusSubscription: MaybeUndefined<Subscription>;
+    private ngSelectBlurSubscription: MaybeUndefined<Subscription>;
     private readonly MIN_REQUIRED_LENGTH = 2;
     private readonly MAX_REQUIRED_LENGTH = 100;
 

@@ -17,8 +17,14 @@
                             id="alias-query"
                             [(ngModel)]="queries[i].alias"
                             [disabled]="isLastQuery(i)"
+                            attr.data-test-id="query-alias-{{ i }}"
                         />
-                        <span *ngIf="isLastQuery(i)" class="ms-4 badge bg-success">output</span>
+                        <span
+                            *ngIf="isLastQuery(i)"
+                            class="ms-4 badge bg-success"
+                            attr.data-test-id="query-output-badge-{{ i }}"
+                            >output</span
+                        >
                     </div>
                 </div>
                 <div class="pt-4" *ngIf="!isLastQuery(i)">

@@ -21,7 +21,7 @@ ul {
         }
 
         .mat-mdc-standard-chip {
-            --mdc-chip-elevated-container-color: #f6f8fa;
+            --mat-chip-elevated-container-color: #f6f8fa;
 
             .mdc-evolution-chip__text-label {
                 color: #0969da !important;
@@ -33,7 +33,7 @@ ul {
 }
 
 .mat-mdc-checkbox {
-    --mdc-checkbox-state-layer-size: 25px;
+    --mat-checkbox-state-layer-size: 25px;
 
     .mdc-checkbox__background {
         width: 16px;

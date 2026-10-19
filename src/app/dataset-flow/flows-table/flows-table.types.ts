@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
+import { AngularMultiSelect } from "angular2-multiselect-dropdown";
 
 import {
     AccountFragment,
@@ -47,6 +47,9 @@ export interface FilterStatusType {
     id: string;
     status: string;
 }
+
+// The library's package exports do not expose its DropdownSettings interface
+export type DropdownSettings = AngularMultiSelect["settings"];
 
 const dropdownSetting: DropdownSettings = {
     enableCheckAll: true,

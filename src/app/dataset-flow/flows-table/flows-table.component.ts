@@ -28,7 +28,6 @@ import { MatTable, MatTableDataSource, MatTableModule } from "@angular/material/
 import { RouterLink } from "@angular/router";
 
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
-import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
 import { ToastrService } from "ngx-toastr";
 
 import { BaseComponent } from "@common/components/base.component";
@@ -54,6 +53,7 @@ import {
     CancelFlowArgs,
     DROPDOWN_DATASET_SETTINGS,
     DROPDOWN_STATUS_SETTINGS,
+    DropdownSettings,
     FlowsTableFiltersOptions,
     FlowsTableOptions,
 } from "src/app/dataset-flow/flows-table/flows-table.types";

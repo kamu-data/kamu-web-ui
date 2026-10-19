@@ -526,7 +526,7 @@ export const MOCK_NODES: Node[] = [
         transform: "translate(428.9427490234375, 20)",
     },
     {
-        id: "didodfz4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
+        id: "didodfz4k88e8rpDWw3gTvq1bNkCJ4m6UyXfGhZsLa2HdE9RtKjVcYoMnB",
         label: "covid19.canada.case-details",
         data: {
             kind: LineageGraphNodeKind.DatasetNotAccessable,

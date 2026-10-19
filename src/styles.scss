@@ -5,7 +5,8 @@
 @use "bootstrap/scss/bootstrap";
 @use "@danielmoncada/angular-datetime-picker/assets/style/picker.min.css";
 @use "components/index";
-@include mat.core;
+@include mat.elevation-classes;
+@include mat.app-background;
 
 $custom-font-family: '"Roboto", "Helvetica Neue", sans-serif';
 $light-theme: mat.m2-define-light-theme(
@@ -1659,22 +1660,22 @@ pre.language-sql {
 }
 
 .order-direction-toggle {
-    --mdc-switch-unselected-handle-color: #3949ab;
-    --mdc-switch-unselected-pressed-handle-color: #3949ab;
-    --mdc-switch-unselected-pressed-state-layer-color: #3949ab;
-    --mdc-switch-unselected-hover-state-layer-color: #3949ab;
-    --mdc-switch-unselected-hover-handle-color: #3949ab;
-    --mdc-switch-unselected-focus-state-layer-color: #3949ab;
-    --mdc-switch-unselected-focus-handle-color: #3949ab;
-    --mdc-switch-unselected-pressed-track-color: #7986cb;
-    --mdc-switch-unselected-hover-track-color: #7986cb;
-    --mdc-switch-unselected-focus-track-color: #7986cb;
-    --mdc-switch-unselected-track-color: #7986cb;
+    --mat-slide-toggle-unselected-handle-color: #3949ab;
+    --mat-slide-toggle-unselected-pressed-handle-color: #3949ab;
+    --mat-slide-toggle-unselected-pressed-state-layer-color: #3949ab;
+    --mat-slide-toggle-unselected-hover-state-layer-color: #3949ab;
+    --mat-slide-toggle-unselected-hover-handle-color: #3949ab;
+    --mat-slide-toggle-unselected-focus-state-layer-color: #3949ab;
+    --mat-slide-toggle-unselected-focus-handle-color: #3949ab;
+    --mat-slide-toggle-unselected-pressed-track-color: #7986cb;
+    --mat-slide-toggle-unselected-hover-track-color: #7986cb;
+    --mat-slide-toggle-unselected-focus-track-color: #7986cb;
+    --mat-slide-toggle-unselected-track-color: #7986cb;
 
     &:hover {
-        --mdc-switch-unselected-pressed-track-color: #7986cb;
-        --mdc-switch-unselected-hover-track-color: #7986cb;
-        --mdc-switch-unselected-focus-track-color: #7986cb;
-        --mdc-switch-unselected-track-color: #7986cb;
+        --mat-slide-toggle-unselected-pressed-track-color: #7986cb;
+        --mat-slide-toggle-unselected-hover-track-color: #7986cb;
+        --mat-slide-toggle-unselected-focus-track-color: #7986cb;
+        --mat-slide-toggle-unselected-track-color: #7986cb;
     }
 }

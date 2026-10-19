@@ -1,15 +1,13 @@
-# This file is used by the build system to adjust CSS and JS output to support the specified browsers below.
-# For additional information regarding the format and rule options, please see:
-# https://github.com/browserslist/browserslist#queries
+# Browsers the build targets for JS and CSS output (esbuild and autoprefixer).
+# This is Angular 20's browser support policy; browsers outside it are ignored by the build with a warning,
+# so raise these minimums together with Angular majors (see node_modules/@angular/build/.browserslistrc).
+#
+# To list the browsers these queries select: npx browserslist
 
-# You can see what browsers were selected by your queries by running:
-#   npx browserslist
-
-> 0.5%
-last 2 versions
-Firefox ESR
-not dead
-not IE 9-11 # For IE 9-11 support, remove 'not'.
-not OperaMobile <= 50
-not KaiOS <= 100
-not op_mini all
+Chrome >= 107
+ChromeAndroid >= 107
+Edge >= 107
+Firefox >= 104
+FirefoxAndroid >= 104
+Safari >= 16
+iOS >= 16

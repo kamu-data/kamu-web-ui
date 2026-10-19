@@ -5,7 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { Directive, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from "@angular/core";
+import {
+    Directive,
+    ElementRef,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    OutputRefSubscription,
+    SimpleChanges,
+} from "@angular/core";
 import { AbstractControl, FormArray, FormGroup, ValidationErrors } from "@angular/forms";
 
 import { Subscription, tap } from "rxjs";
@@ -32,7 +41,7 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnIn
     private readonly nativeElement: HTMLElement;
     private controlSubscription: MaybeUndefined<Subscription>;
     private ngSelectStatusSubscription: MaybeUndefined<Subscription>;
-    private ngSelectBlurSubscription: MaybeUndefined<Subscription>;
+    private ngSelectBlurSubscription: MaybeUndefined<OutputRefSubscription>;
     private readonly MIN_REQUIRED_LENGTH = 2;
     private readonly MAX_REQUIRED_LENGTH = 100;
 

@@ -9,8 +9,8 @@ import { MiniMapPosition } from "@swimlane/ngx-graph";
 
 export const LINEAGE_CONFIG: LineageGraphConfig = {
     layout: "dagre",
-    draggingEnabled: false,
-    panningEnabled: true,
+    enableDrag: false,
+    enablePan: true,
     zoomEnabled: true,
     zoomSpeed: 0.03,
     minZoomLevel: 0.3,
@@ -25,8 +25,8 @@ export const LINEAGE_CONFIG: LineageGraphConfig = {
 
 export interface LineageGraphConfig {
     layout: string;
-    draggingEnabled: boolean;
-    panningEnabled: boolean;
+    enableDrag: boolean;
+    enablePan: boolean;
     zoomEnabled: boolean;
     zoomSpeed: number;
     minZoomLevel: number;

@@ -21,7 +21,7 @@ import {
 } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
-import { GraphModule, Node } from "@swimlane/ngx-graph";
+import { GraphComponent, LayoutService, Node } from "@swimlane/ngx-graph";
 
 import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
 import { LINEAGE_CONFIG, LineageGraphConfig } from "@common/components/lineage-graph/ligeage-graph.settings";
@@ -44,13 +44,15 @@ import { SessionStorageService } from "src/app/services/session-storage.service"
     templateUrl: "./lineage-graph.component.html",
     styleUrls: ["./lineage-graph.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    // GraphComponent injects LayoutService, but ngx-graph provides it only through its deprecated GraphModule
+    providers: [LayoutService],
     imports: [
         //-----//
         DecimalPipe,
         NgIf,
         TitleCasePipe,
         //-----//
-        GraphModule,
+        GraphComponent,
         MatIconModule,
         //-----//
         DisplayTimeComponent,

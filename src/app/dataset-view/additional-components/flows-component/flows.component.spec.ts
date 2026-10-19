@@ -494,9 +494,7 @@ describe("FlowsComponent", () => {
         );
     });
 
-    // TODO
-    // eslint-disable-next-line jasmine/no-disabled-tests
-    xit("should check set ProcessTypeFilter with webhookId", fakeAsync(() => {
+    it("should check set ProcessTypeFilter with webhookId", fakeAsync(() => {
         const mockWebhookId = "d20a935e-0ccb-4844-b1bb-f4b5b9b0279a,d20a935e-0ccb-4844-b1bb-f4b5b9b0279b";
         component.setWebhookId = mockWebhookId;
         fixture.detectChanges();
@@ -514,9 +512,7 @@ describe("FlowsComponent", () => {
         discardPeriodicTasks();
     }));
 
-    // TODO
-    // eslint-disable-next-line jasmine/no-disabled-tests
-    xit("should check set ProcessTypeFilter with `webhooks` category", fakeAsync(() => {
+    it("should check set ProcessTypeFilter with `webhooks` category", fakeAsync(() => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const setWebhooksCategorySpy = spyOn(serviceInComponent, "setWebhooksCategory");
         const mockStates = `${FlowProcessEffectiveState.Active},${FlowProcessEffectiveState.Failing}`;

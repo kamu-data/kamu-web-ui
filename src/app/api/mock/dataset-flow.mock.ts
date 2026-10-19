@@ -9,6 +9,7 @@ import {
     AccountProvider,
     AccountType,
     CancelFlowRunMutation,
+    DatasetBasicsFragment,
     DatasetFlowsInitiatorsQuery,
     DatasetFlowsProcessesQuery,
     DatasetFlowType,
@@ -979,7 +980,11 @@ export const mockFlowsTableData: FlowsTableData = {
     connectionDataForTable: mockGetDatasetListFlowsQuery.datasets.byId?.flows.runs.table as FlowConnectionDataFragment,
     connectionDataForWidget: mockGetDatasetListFlowsQuery.datasets.byId?.flows.runs
         .tiles as FlowConnectionWidgetDataFragment,
-    involvedDatasets: [],
+    // Every dataset the table rows reference, as the service provides them; the template reads their owners
+    involvedDatasets: [
+        mockGetDatasetListFlowsQuery.datasets.byId as DatasetBasicsFragment,
+        { ...mockDatasetBasicsDerivedFragment, id: mockDatasetMainDataId },
+    ],
 };
 
 export const mockDatasetTriggerIngestFlowMutation: DatasetTriggerIngestFlowMutation = {

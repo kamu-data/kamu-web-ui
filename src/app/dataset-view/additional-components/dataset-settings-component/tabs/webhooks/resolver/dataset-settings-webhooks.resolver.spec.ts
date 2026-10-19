@@ -15,6 +15,7 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import AppValues from "@common/values/app.values";
+import { MaybeNull } from "@interface/app.types";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
@@ -35,7 +36,7 @@ describe("datasetSettingsWebhooksResolver", () => {
     let appConfigService: AppConfigService;
     let datasetWebhooksService: DatasetWebhooksService;
 
-    const executeResolver: ResolveFn<DatasetSettingsWebhookTabData | null> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<MaybeNull<DatasetSettingsWebhookTabData>> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => datasetSettingsWebhooksResolverFn(...resolverParameters));
 
     beforeEach(() => {

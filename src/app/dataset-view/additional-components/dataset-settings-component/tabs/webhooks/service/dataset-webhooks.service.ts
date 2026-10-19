@@ -25,6 +25,7 @@ import {
     WebhookSubscriptionInput,
 } from "@api/kamu.graphql.interface";
 import { WebhooksApi } from "@api/webhooks.api";
+import { MaybeNull } from "@interface/app.types";
 
 import { CreateWebhookSubscriptionSuccess } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
 
@@ -46,7 +47,7 @@ export class DatasetWebhooksService {
     public datasetWebhookCreateSubscription(
         datasetId: string,
         input: WebhookSubscriptionInput,
-    ): Observable<CreateWebhookSubscriptionSuccess | null> {
+    ): Observable<MaybeNull<CreateWebhookSubscriptionSuccess>> {
         return this.webhooksApi.datasetWebhookCreateSubscription(datasetId, input).pipe(
             map((data: DatasetWebhookCreateSubscriptionMutation) => {
                 if (

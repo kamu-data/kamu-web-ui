@@ -128,7 +128,7 @@ export function changeCopyIcon(event: MouseEvent): void {
     }
 }
 
-export function addMarkdownRunButton(sqlQueries: RegExpMatchArray | null, path: string): void {
+export function addMarkdownRunButton(sqlQueries: MaybeNull<RegExpMatchArray>, path: string): void {
     const containerRunButtonElement: HTMLCollectionOf<Element> =
         document.getElementsByClassName("container-run-button");
 

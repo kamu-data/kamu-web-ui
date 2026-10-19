@@ -9,15 +9,17 @@
 
 import { ComponentHarness } from "@angular/cdk/testing";
 
+import { MaybeNull } from "@interface/app.types";
+
 export interface DownstreamFlowRow {
     icon: string;
     iconClasses: string[];
     flowLabel: string;
-    flowHref: string | null;
-    status: string | null;
-    datasetLabel: string | null;
-    datasetHref: string | null;
-    unavailableDataset: string | null;
+    flowHref: MaybeNull<string>;
+    status: MaybeNull<string>;
+    datasetLabel: MaybeNull<string>;
+    datasetHref: MaybeNull<string>;
+    unavailableDataset: MaybeNull<string>;
 }
 
 /**
@@ -26,25 +28,37 @@ export interface DownstreamFlowRow {
 export class FlowDetailsDownstreamFlowsHarness extends ComponentHarness {
     public static readonly hostSelector = "app-flow-details-downstream-flows";
 
-    private readonly locatorTitle = this.locatorForOptional('[data-test-id="downstream-flows-title"]');
-    private readonly locatorRows = this.locatorForAll('li[data-test-id^="downstream-flow-"]');
+    private static readonly TITLE_TEST_ID = "downstream-flows-title";
+    private static readonly ROW_TEST_ID_PREFIX = "downstream-flow-";
+
+    private readonly locatorTitle = this.locatorForOptional(
+        `[data-test-id="${FlowDetailsDownstreamFlowsHarness.TITLE_TEST_ID}"]`,
+    );
+    private readonly locatorRows = this.locatorForAll(
+        `li[data-test-id^="${FlowDetailsDownstreamFlowsHarness.ROW_TEST_ID_PREFIX}"]`,
+    );
 
     /**
      * Gets the list title, or null when nothing is rendered
      */
-    public async getTitle(): Promise<string | null> {
+    public async getTitle(): Promise<MaybeNull<string>> {
         const title = await this.locatorTitle();
-        return title ? (await title.text()).trim() : null;
+        if (!title) {
+            return null;
+        }
+        const text = await title.text();
+        return text.trim();
     }
 
     /**
      * Gets all rendered downstream flow rows
      */
     public async getRows(): Promise<DownstreamFlowRow[]> {
-        const count = (await this.locatorRows()).length;
+        const rowElements = await this.locatorRows();
+        const count = rowElements.length;
         const rows: DownstreamFlowRow[] = [];
         for (let i = 0; i < count; i++) {
-            const prefix = `downstream-flow-${i}`;
+            const prefix = `${FlowDetailsDownstreamFlowsHarness.ROW_TEST_ID_PREFIX}${i}`;
             const icon = await this.locatorFor(`[data-test-id="${prefix}"] mat-icon`)();
             const flowLink = await this.locatorForOptional(`[data-test-id="${prefix}-link"]`)();
             const flowId = await this.locatorForOptional(`[data-test-id="${prefix}-id"]`)();
@@ -52,15 +66,23 @@ export class FlowDetailsDownstreamFlowsHarness extends ComponentHarness {
             const dataset = await this.locatorForOptional(`[data-test-id="${prefix}-dataset"]`)();
             const unavailable = await this.locatorForOptional(`[data-test-id="${prefix}-unavailable-dataset"]`)();
             const flowElement = flowLink ?? flowId;
+            const iconText = await icon.text();
+            const iconClasses = await icon.getAttribute("class");
+            const flowText = flowElement ? await flowElement.text() : "";
+            const flowHref = flowLink ? await flowLink.getAttribute("href") : null;
+            const statusText = status ? await status.text() : null;
+            const datasetText = dataset ? await dataset.text() : null;
+            const datasetHref = dataset ? await dataset.getAttribute("href") : null;
+            const unavailableText = unavailable ? await unavailable.text() : null;
             rows.push({
-                icon: (await icon.text()).trim(),
-                iconClasses: ((await icon.getAttribute("class")) ?? "").split(" ").filter((cls) => cls.length > 0),
-                flowLabel: flowElement ? (await flowElement.text()).trim() : "",
-                flowHref: flowLink ? await flowLink.getAttribute("href") : null,
-                status: status ? (await status.text()).trim() : null,
-                datasetLabel: dataset ? (await dataset.text()).trim() : null,
-                datasetHref: dataset ? await dataset.getAttribute("href") : null,
-                unavailableDataset: unavailable ? (await unavailable.text()).trim() : null,
+                icon: iconText.trim(),
+                iconClasses: (iconClasses ?? "").split(" ").filter((cls) => cls.length > 0),
+                flowLabel: flowText.trim(),
+                flowHref,
+                status: statusText?.trim() ?? null,
+                datasetLabel: datasetText?.trim() ?? null,
+                datasetHref,
+                unavailableDataset: unavailableText?.trim() ?? null,
             });
         }
         return rows;

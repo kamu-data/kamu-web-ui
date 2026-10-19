@@ -33,6 +33,7 @@ import {
     mockWebhookSubscriptionInput,
 } from "@api/mock/webhooks.mock";
 import { WebhooksApi } from "@api/webhooks.api";
+import { MaybeNull } from "@interface/app.types";
 
 import { CreateWebhookSubscriptionSuccess } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
@@ -94,7 +95,7 @@ describe("DatasetWebhooksService", () => {
 
         service
             .datasetWebhookCreateSubscription(DATASET_ID, mockWebhookSubscriptionInput)
-            .subscribe((result: CreateWebhookSubscriptionSuccess | null) => {
+            .subscribe((result: MaybeNull<CreateWebhookSubscriptionSuccess>) => {
                 expect(result?.input).toEqual(mockWebhookSubscriptionInput);
             });
 
@@ -110,7 +111,7 @@ describe("DatasetWebhooksService", () => {
 
         service
             .datasetWebhookCreateSubscription(DATASET_ID, mockWebhookSubscriptionInput)
-            .subscribe((result: CreateWebhookSubscriptionSuccess | null) => {
+            .subscribe((result: MaybeNull<CreateWebhookSubscriptionSuccess>) => {
                 expect(result).toEqual(null);
                 expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
             });

@@ -8,18 +8,19 @@
 import { Injectable } from "@angular/core";
 
 import AppValues from "@common/values/app.values";
+import { MaybeNull } from "@interface/app.types";
 
 @Injectable({ providedIn: "root" })
 export class LocalStorageService {
-    public get accessToken(): string | null {
+    public get accessToken(): MaybeNull<string> {
         return localStorage.getItem(AppValues.LOCAL_STORAGE_ACCESS_TOKEN);
     }
 
-    public get loginDeviceCode(): string | null {
+    public get loginDeviceCode(): MaybeNull<string> {
         return localStorage.getItem(AppValues.LOCAL_STORAGE_LOGIN_DEVICE_CODE);
     }
 
-    public setAccessToken(token: string | null) {
+    public setAccessToken(token: MaybeNull<string>) {
         if (token) {
             localStorage.setItem(AppValues.LOCAL_STORAGE_ACCESS_TOKEN, token);
         } else {
@@ -27,7 +28,7 @@ export class LocalStorageService {
         }
     }
 
-    public setDeviceCode(code: string | null) {
+    public setDeviceCode(code: MaybeNull<string>) {
         if (code) {
             localStorage.setItem(AppValues.LOCAL_STORAGE_LOGIN_DEVICE_CODE, code);
         } else {

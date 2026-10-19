@@ -70,19 +70,28 @@ specs written with the DOM helpers stay as they are until they are rewritten for
   export class TimeDeltaFormHarness extends ComponentHarness {
       public static readonly hostSelector = "app-time-delta-form";
 
-      private readonly locatorEveryInput = this.locatorFor('[data-test-id="time-delta-every"]');
-      private readonly locatorError = this.locatorForOptional('[data-test-id="time-delta-error-message"]');
+      private static readonly EVERY_INPUT_TEST_ID = "time-delta-every";
+      private static readonly ERROR_TEST_ID = "time-delta-error-message";
+
+      private readonly locatorEveryInput = this.locatorFor(`[data-test-id="${TimeDeltaFormHarness.EVERY_INPUT_TEST_ID}"]`);
+      private readonly locatorError = this.locatorForOptional(`[data-test-id="${TimeDeltaFormHarness.ERROR_TEST_ID}"]`);
 
       public async setTimeDelta(every: number, unit: TimeUnit): Promise<void> { ... }
       public async isEveryInputInvalid(): Promise<boolean> { ... }
   }
   ```
 
-  Locators select by `data-test-id`; public methods speak the component's domain
+  Locators select by `data-test-id`. The harness declares each id it reads once, as a
+  `private static readonly` constant (a prefix constant for ids built per item), and builds every
+  selector from it; the template keeps the literal. Specs never write `data-test-id` selectors for
+  a component that has a harness, they call its methods. Existing harnesses with inline selector
+  literals switch to constants when they are next edited. Public methods speak the component's domain
   (`setTimeDelta`, `getAvailableUnits`), never return raw elements, and compose child harnesses
   (`EditSchemaTableHarness` uses `TypeEditorHarness`). References:
   `common/components/time-delta-form/time-delta-form.harness.ts`,
-  `common/components/edit-schema-table/edit-schema-table.harness.ts`.
+  `common/components/edit-schema-table/edit-schema-table.harness.ts`, and for id constants,
+  per-item ids and a menu rendered in the CDK overlay,
+  `common/components/search-additional-buttons/search-additional-buttons-nav.harness.ts`.
 - A new component with anything to assert beyond "it renders" gets its own harness; extend an
   existing harness when the component already has one.
 - Load a child's harness with `TestbedHarnessEnvironment.loader(fixture)` then

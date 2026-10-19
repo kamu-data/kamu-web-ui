@@ -12,6 +12,7 @@ import { map, Observable, of, switchMap } from "rxjs";
 
 import { isNil } from "@common/helpers/app.helpers";
 import { DatasetFlowType, GetDatasetFlowConfigsQuery } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 import { DatasetFlowConfigService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-config.service";
 import { datasetSettingsGeneralTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/resolver/dataset-settings-general-tab.resolver";
@@ -19,13 +20,13 @@ import { DatasetSettingsIngestConfigurationTabData } from "src/app/dataset-view/
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
 export const datasetSettingsIngestConfigurationResolverFn: ResolveFn<
-    DatasetSettingsIngestConfigurationTabData | null
+    MaybeNull<DatasetSettingsIngestConfigurationTabData>
 > = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
     const datasetFlowConfigService = inject(DatasetFlowConfigService);
 
-    return (datasetSettingsGeneralTabResolverFn(route, state) as Observable<DatasetViewData | null>).pipe(
+    return (datasetSettingsGeneralTabResolverFn(route, state) as Observable<MaybeNull<DatasetViewData>>).pipe(
         // We can safely cast here because the resolver is used in a context where the type is DatasetSettingsIngestConfigurationTabData
-        switchMap((data: DatasetViewData | null) => {
+        switchMap((data: MaybeNull<DatasetViewData>) => {
             if (data === null) {
                 return of(null);
             }

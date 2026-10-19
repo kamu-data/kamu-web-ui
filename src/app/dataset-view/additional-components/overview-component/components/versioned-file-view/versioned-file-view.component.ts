@@ -32,7 +32,7 @@ import { ToastrService } from "ngx-toastr";
 import { BaseComponent } from "@common/components/base.component";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import { DatasetViewTypeEnum, VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -74,10 +74,10 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
 
     public fileInfo$: Observable<VersionedFileView>;
     public loadingFileDetails$: Observable<boolean>;
-    public contentText$: Observable<undefined | object | string>;
+    public contentText$: Observable<MaybeUndefined<object | string>>;
 
     public urlContentPath: SafeUrl;
-    public pdfComponent: Type<PdfViewerContentComponent> | null = null;
+    public pdfComponent: MaybeNull<Type<PdfViewerContentComponent>> = null;
     public fileLatestVersion: number;
 
     private isRedirectToLatestVersion = false;

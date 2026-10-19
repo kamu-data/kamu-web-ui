@@ -63,6 +63,8 @@ sub-agent prompts.
 ## CHANGELOG wording
 
 - Write for end users: what changed in the UI for them. Leave out how it was implemented.
+- Notable changes only, one short line each. No entries for mechanical steps a user never sees:
+  schema refreshes, codegen, renamed GraphQL types, tests, refactorings.
 - Prefix with the area when it helps the reader find it: `Account flows: …`, `Lineage tab: …`.
 - One entry per user-visible change, under `### Added` / `### Changed` / `### Fixed`; nested
   bullets for the parts of one larger feature.

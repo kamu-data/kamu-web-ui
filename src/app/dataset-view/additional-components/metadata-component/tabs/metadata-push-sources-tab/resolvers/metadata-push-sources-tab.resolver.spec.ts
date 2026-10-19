@@ -12,6 +12,8 @@ import { Observable } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
+import { MaybeNull } from "@interface/app.types";
+
 import { mockMetadataRootUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
 import { metadataPushSourcesTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-push-sources-tab/resolvers/metadata-push-sources-tab.resolver";
@@ -29,7 +31,7 @@ describe("metadataPushSourcesTabComponentResolver", () => {
     let datasetSubsService: DatasetSubscriptionsService;
     let navigationService: NavigationService;
 
-    const executeResolver: ResolveFn<MetadataTabData | null> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<MaybeNull<MetadataTabData>> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => metadataPushSourcesTabResolverFn(...resolverParameters));
 
     beforeEach(() => {

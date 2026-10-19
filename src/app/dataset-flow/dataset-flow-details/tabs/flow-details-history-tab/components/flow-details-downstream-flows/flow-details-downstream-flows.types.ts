@@ -5,15 +5,17 @@
  * included in the LICENSE file.
  */
 
+import { MaybeNull } from "@interface/app.types";
+
 export interface DownstreamFlowItem {
     flowId: string;
     icon: { icon: string; class: string };
     // Set only when the downstream flow is visible to the user
-    flowLink: string[] | null;
-    flowStatusDescription: string | null;
+    flowLink: MaybeNull<string[]>;
+    flowStatusDescription: MaybeNull<string>;
     // Set only when the downstream dataset is readable by the user
-    datasetLink: string[] | null;
-    datasetAlias: string | null;
+    datasetLink: MaybeNull<string[]>;
+    datasetAlias: MaybeNull<string>;
     // Set when the downstream dataset was deleted or is not readable by the user
-    unavailableDatasetId: string | null;
+    unavailableDatasetId: MaybeNull<string>;
 }

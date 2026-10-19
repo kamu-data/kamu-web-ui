@@ -6,10 +6,11 @@
  */
 
 import { FlowConfigRuleIngest, FlowRetryPolicy } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
 export interface DatasetSettingsIngestConfigurationTabData extends DatasetViewData {
     ingestionRule: FlowConfigRuleIngest;
-    retryPolicy: FlowRetryPolicy | null;
+    retryPolicy: MaybeNull<FlowRetryPolicy>;
 }

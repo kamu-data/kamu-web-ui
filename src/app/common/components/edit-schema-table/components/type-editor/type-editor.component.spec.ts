@@ -13,6 +13,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { NgSelectComponent } from "@ng-select/ng-select";
 
 import { findElement, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { MaybeNull } from "@interface/app.types";
 import {
     DataSchemaListField,
     DataSchemaMapField,
@@ -41,7 +42,7 @@ class TestHostComponent implements OnChanges {
     @Input() public typePath: string = "root:type:field";
     @Output() public typeChange = new EventEmitter<DataSchemaTypeField>();
 
-    public lastEmitted: DataSchemaTypeField | null = null;
+    public lastEmitted: MaybeNull<DataSchemaTypeField> = null;
 
     public onTypeChange(t: DataSchemaTypeField): void {
         this.lastEmitted = t;
@@ -414,7 +415,7 @@ describe("TypeEditorComponent", () => {
             ngSelect.open();
             fixture.detectChanges();
             const item = ngSelect.itemsList.items.find(
-                (i) => (i.value as { value?: OdfTypes } | null)?.value === kindValue,
+                (i) => (i.value as MaybeNull<{ value?: OdfTypes }>)?.value === kindValue,
             );
             if (!item) throw new Error(`ng-select kind option not found: ${kindValue}`);
             ngSelect.select(item);
@@ -495,7 +496,7 @@ describe("TypeEditorComponent", () => {
             it("selecting a unit from the Timestamp unit dropdown emits the new unit via typeChange", () => {
                 selectFromNgSelectByDataTestId(
                     "root:type:ts:unit",
-                    (v) => (v as { value?: string } | null)?.value === "Second",
+                    (v) => (v as MaybeNull<{ value?: string }>)?.value === "Second",
                 );
                 const emitted = host.lastEmitted as DataSchemaTimeField;
                 expect(emitted).not.toBeNull();
@@ -507,7 +508,7 @@ describe("TypeEditorComponent", () => {
                 // fire (change) and reach typeChange — proving the binding exists at all.
                 selectFromNgSelectByDataTestId(
                     "root:type:ts:timezone",
-                    (v) => (v as { value?: string } | null)?.value === "UTC",
+                    (v) => (v as MaybeNull<{ value?: string }>)?.value === "UTC",
                 );
                 const emitted = host.lastEmitted as DataSchemaTimeField;
                 expect(emitted).not.toBeNull();

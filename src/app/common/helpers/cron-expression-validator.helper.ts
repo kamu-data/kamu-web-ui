@@ -7,7 +7,9 @@
 
 import { AbstractControl, ValidationErrors } from "@angular/forms";
 
-export function cronValidator(control: AbstractControl): ValidationErrors | null {
+import { MaybeNull } from "@interface/app.types";
+
+export function cronValidator(control: AbstractControl): MaybeNull<ValidationErrors> {
     const cron = (control.value as string)?.trim();
 
     if (!cron) {
@@ -125,7 +127,7 @@ function validatePart(part: string, min: number, max: number, label: string, err
     });
 }
 
-function parseCronValue(input: string, namedMap: Record<string, number>): number | null {
+function parseCronValue(input: string, namedMap: Record<string, number>): MaybeNull<number> {
     const upper = input.toUpperCase();
 
     if (namedMap[upper]) return namedMap[upper];

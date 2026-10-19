@@ -14,7 +14,7 @@ import { Apollo } from "apollo-angular";
 import { DatasetApi } from "@api/dataset.api";
 import { DatasetBlocksSchemaByEventTypeQuery, MetadataEventType } from "@api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery, TEST_BLOCK_HASH } from "@api/mock/dataset.mock";
-import { MaybeUndefined } from "@interface/app.types";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
@@ -47,6 +47,10 @@ describe("BlockService", () => {
                     expect(result.blockAsYaml).toEqual(
                         mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHashEncoded as string,
                     );
+                    expect(result.downstreamsCount).toEqual(
+                        mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata
+                            .currentDownstreamDependenciesCount as number,
+                    );
                 }
             });
 
@@ -61,7 +65,7 @@ describe("BlockService", () => {
             ],
         });
 
-        function mockProjection(schemaContent: string | null): DatasetBlocksSchemaByEventTypeQuery {
+        function mockProjection(schemaContent: MaybeNull<string>): DatasetBlocksSchemaByEventTypeQuery {
             return {
                 datasets: {
                     byOwnerAndName: {
@@ -152,7 +156,7 @@ describe("BlockService", () => {
             fields: [{ name: "amount", type: { kind: "Float64" } }],
         });
 
-        function mockPushProjection(schemaContent: string | null): DatasetBlocksSchemaByEventTypeQuery {
+        function mockPushProjection(schemaContent: MaybeNull<string>): DatasetBlocksSchemaByEventTypeQuery {
             return {
                 datasets: {
                     byOwnerAndName: {

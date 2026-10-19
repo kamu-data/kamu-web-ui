@@ -31,7 +31,7 @@ describe("metadataTransformationTabResolver", () => {
     let datasetSubsService: DatasetSubscriptionsService;
     let navigationService: NavigationService;
 
-    const executeResolver: ResolveFn<MaybeNullOrUndefined<DatasetOverviewTabData | null>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<MaybeNullOrUndefined<DatasetOverviewTabData>> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => metadataTransformationTabResolverFn(...resolverParameters));
 
     beforeEach(() => {

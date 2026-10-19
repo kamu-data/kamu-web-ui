@@ -9,6 +9,8 @@
 
 import { ComponentHarness } from "@angular/cdk/testing";
 
+import { MaybeNull } from "@interface/app.types";
+
 /**
  * Test harness for FlowDetailsHistoryTabComponent that provides a clean API
  * for accessing and testing component elements without direct DOM manipulation.
@@ -16,8 +18,15 @@ import { ComponentHarness } from "@angular/cdk/testing";
 export class FlowDetailsHistoryTabHarness extends ComponentHarness {
     public static readonly hostSelector = ".container";
 
-    private readonly locatorHistoryItems = this.locatorForAll('ul li[data-test-id^="history-item-"]');
-    private readonly locatorAnimationImage = this.locatorForOptional('[data-test-id="animation-image"]');
+    private static readonly HISTORY_ITEM_TEST_ID_PREFIX = "history-item-";
+    private static readonly ANIMATION_IMAGE_TEST_ID = "animation-image";
+
+    private readonly locatorHistoryItems = this.locatorForAll(
+        `ul li[data-test-id^="${FlowDetailsHistoryTabHarness.HISTORY_ITEM_TEST_ID_PREFIX}"]`,
+    );
+    private readonly locatorAnimationImage = this.locatorForOptional(
+        `[data-test-id="${FlowDetailsHistoryTabHarness.ANIMATION_IMAGE_TEST_ID}"]`,
+    );
 
     /**
      * Gets the total number of history items rendered
@@ -31,59 +40,88 @@ export class FlowDetailsHistoryTabHarness extends ComponentHarness {
      * Gets a specific history item by index
      */
     private locatorHistoryItem(index: number) {
-        return this.locatorForOptional(`[data-test-id="history-item-${index}"]`);
+        return this.locatorForOptional(
+            `[data-test-id="${FlowDetailsHistoryTabHarness.HISTORY_ITEM_TEST_ID_PREFIX}${index}"]`,
+        );
     }
 
     /**
      * Gets the event description for a specific history item
      */
-    public async getHistoryItemDescription(index: number): Promise<string | null> {
+    public async getHistoryItemDescription(index: number): Promise<MaybeNull<string>> {
         const descriptionElement = await this.locatorForOptional(
-            `[data-test-id="history-item-${index}-description"]`,
+            `[data-test-id="${FlowDetailsHistoryTabHarness.HISTORY_ITEM_TEST_ID_PREFIX}${index}-description"]`,
         )();
-        return descriptionElement ? (await descriptionElement.text()).trim() : null;
+        if (!descriptionElement) {
+            return null;
+        }
+        const text = await descriptionElement.text();
+        return text.trim();
     }
 
     /**
      * Gets the event sub-message for a specific history item
      */
-    public async getHistoryItemSubMessage(index: number): Promise<string | null> {
-        const subMessageElement = await this.locatorForOptional(`[data-test-id="history-item-${index}-submessage"]`)();
-        return subMessageElement ? (await subMessageElement.text()).trim() : null;
+    public async getHistoryItemSubMessage(index: number): Promise<MaybeNull<string>> {
+        const subMessageElement = await this.locatorForOptional(
+            `[data-test-id="${FlowDetailsHistoryTabHarness.HISTORY_ITEM_TEST_ID_PREFIX}${index}-submessage"]`,
+        )();
+        if (!subMessageElement) {
+            return null;
+        }
+        const text = await subMessageElement.text();
+        return text.trim();
     }
 
     /**
      * Gets the event time for a specific history item
      */
-    public async getHistoryItemTime(index: number): Promise<string | null> {
-        const timeElement = await this.locatorForOptional(`[data-test-id="history-item-${index}-time"]`)();
-        return timeElement ? (await timeElement.text()).trim() : null;
+    public async getHistoryItemTime(index: number): Promise<MaybeNull<string>> {
+        const timeElement = await this.locatorForOptional(
+            `[data-test-id="${FlowDetailsHistoryTabHarness.HISTORY_ITEM_TEST_ID_PREFIX}${index}-time"]`,
+        )();
+        if (!timeElement) {
+            return null;
+        }
+        const text = await timeElement.text();
+        return text.trim();
     }
 
     /**
      * Gets the duration for a specific history item
      */
-    public async getHistoryItemDuration(index: number): Promise<string | null> {
-        const durationElement = await this.locatorForOptional(`[data-test-id="history-item-${index}-duration"]`)();
-        return durationElement ? (await durationElement.text()).trim() : null;
+    public async getHistoryItemDuration(index: number): Promise<MaybeNull<string>> {
+        const durationElement = await this.locatorForOptional(
+            `[data-test-id="${FlowDetailsHistoryTabHarness.HISTORY_ITEM_TEST_ID_PREFIX}${index}-duration"]`,
+        )();
+        if (!durationElement) {
+            return null;
+        }
+        const text = await durationElement.text();
+        return text.trim();
     }
 
     /**
      * Checks if a duration element exists for a specific history item
      */
     public async hasHistoryItemDuration(index: number): Promise<boolean> {
-        const durationElement = await this.locatorForOptional(`[data-test-id="history-item-${index}-duration"]`)();
+        const durationElement = await this.locatorForOptional(
+            `[data-test-id="${FlowDetailsHistoryTabHarness.HISTORY_ITEM_TEST_ID_PREFIX}${index}-duration"]`,
+        )();
         return durationElement !== null;
     }
 
     /**
      * Gets the icon information for a specific history item
      */
-    public async getHistoryItemIcon(index: number): Promise<{ icon: string; cssClasses: string[] } | null> {
-        const iconElement = await this.locatorForOptional(`[data-test-id="history-item-${index}-icon"]`)();
+    public async getHistoryItemIcon(index: number): Promise<MaybeNull<{ icon: string; cssClasses: string[] }>> {
+        const iconElement = await this.locatorForOptional(
+            `[data-test-id="${FlowDetailsHistoryTabHarness.HISTORY_ITEM_TEST_ID_PREFIX}${index}-icon"]`,
+        )();
         if (!iconElement) return null;
 
-        const icon = (await iconElement.text()).trim();
+        const iconText = await iconElement.text();
+        const icon = iconText.trim();
         const cssClasses = await iconElement.getAttribute("class");
 
         return {
@@ -103,7 +141,7 @@ export class FlowDetailsHistoryTabHarness extends ComponentHarness {
     /**
      * Gets the animation image source if it exists
      */
-    public async getAnimationImageSrc(): Promise<string | null> {
+    public async getAnimationImageSrc(): Promise<MaybeNull<string>> {
         const element = await this.locatorAnimationImage();
         return element ? await element.getAttribute("src") : null;
     }
@@ -122,11 +160,11 @@ export class FlowDetailsHistoryTabHarness extends ComponentHarness {
     public async getAllHistoryItems(): Promise<
         Array<{
             index: number;
-            description: string | null;
-            subMessage: string | null;
-            time: string | null;
-            duration: string | null;
-            icon: { icon: string; cssClasses: string[] } | null;
+            description: MaybeNull<string>;
+            subMessage: MaybeNull<string>;
+            time: MaybeNull<string>;
+            duration: MaybeNull<string>;
+            icon: MaybeNull<{ icon: string; cssClasses: string[] }>;
         }>
     > {
         const count = await this.getHistoryItemsCount();

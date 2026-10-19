@@ -31,6 +31,7 @@ import { AuthApi } from "@api/auth.api";
 import { PasswordLoginCredentials } from "@api/auth.api.model";
 import { AccountProvider } from "@api/kamu.graphql.interface";
 import { mockPasswordLoginResponse, TEST_LOGIN, TEST_PASSWORD } from "@api/mock/auth.mock";
+import { MaybeUndefined } from "@interface/app.types";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { LoginMethodsService } from "src/app/auth/login-methods.service";
@@ -219,7 +220,10 @@ describe("LoginComponent", () => {
                 [Elements.INPUT_PASSWORD, Elements.INPUT_PASSWORD_ERROR_REQUIRED],
             ].forEach(([inputElementName, inputErrorElementName]: Elements[]) => {
                 it(`Test touching element '${Elements.INPUT_LOGIN}' creates required error`, () => {
-                    const element: HTMLElement | undefined = findElementByDataTestId(fixture, inputErrorElementName);
+                    const element: MaybeUndefined<HTMLElement> = findElementByDataTestId(
+                        fixture,
+                        inputErrorElementName,
+                    );
                     expect(element?.textContent?.trim()).toEqual("");
 
                     setFieldValue(fixture, inputElementName, "");

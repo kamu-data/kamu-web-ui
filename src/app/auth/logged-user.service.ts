@@ -53,7 +53,7 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
     }
 
     public initializeCompletes(): Observable<void> {
-        const loginInstructions: AppLoginInstructions | null = this.appConfigService.loginInstructions;
+        const loginInstructions: MaybeNull<AppLoginInstructions> = this.appConfigService.loginInstructions;
         if (loginInstructions) {
             return this.loginService.genericLogin(
                 loginInstructions.loginMethod,
@@ -101,7 +101,7 @@ export class LoggedUserService extends UnsubscribeDestroyRefAdapter {
     }
 
     private attemptPreviousAuthenticationCompletes(): Observable<void> {
-        const accessToken: string | null = this.localStorageService.accessToken;
+        const accessToken: MaybeNull<string> = this.localStorageService.accessToken;
         if (typeof accessToken === "string" && !this.isAuthenticated) {
             return this.loginService.fetchAccountFromAccessToken(accessToken).pipe(
                 first(),

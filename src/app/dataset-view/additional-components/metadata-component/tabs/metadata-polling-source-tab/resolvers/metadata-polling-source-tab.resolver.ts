@@ -11,6 +11,7 @@ import { ResolveFn } from "@angular/router";
 import { combineLatest, map } from "rxjs";
 
 import { DatasetKind } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -18,7 +19,7 @@ import { MetadataSchemaUpdate } from "src/app/dataset-view/dataset.subscriptions
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { NavigationService } from "src/app/services/navigation.service";
 
-export const metadataPollingSourceTabResolverFn: ResolveFn<MetadataTabData | null> = () => {
+export const metadataPollingSourceTabResolverFn: ResolveFn<MaybeNull<MetadataTabData>> = () => {
     const datasetService = inject(DatasetService);
     const datasetSubsService = inject(DatasetSubscriptionsService);
     const navigationService = inject(NavigationService);

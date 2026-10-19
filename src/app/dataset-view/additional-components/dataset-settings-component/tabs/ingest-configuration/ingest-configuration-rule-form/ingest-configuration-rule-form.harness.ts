@@ -15,12 +15,19 @@ import { IngestConfigurationRuleFormValue } from "src/app/dataset-view/additiona
 export class IngestConfigurationRuleFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-ingest-configuration-rule-form";
 
+    private static readonly FETCH_UNCACHEABLE_TEST_ID = "ingest-config-fetch-uncacheable";
+    private static readonly FETCH_NEXT_ITERATION_TEST_ID = "ingest-config-fetch-next-iteration";
+
     private readonly locatorFetchUncacheableCheckbox = this.locatorFor(
-        MatCheckboxHarness.with({ selector: '[data-test-id="ingest-config-fetch-uncacheable"]' }),
+        MatCheckboxHarness.with({
+            selector: `[data-test-id="${IngestConfigurationRuleFormHarness.FETCH_UNCACHEABLE_TEST_ID}"]`,
+        }),
     );
 
     private readonly locatorFetchNextIterationCheckbox = this.locatorFor(
-        MatCheckboxHarness.with({ selector: '[data-test-id="ingest-config-fetch-next-iteration"]' }),
+        MatCheckboxHarness.with({
+            selector: `[data-test-id="${IngestConfigurationRuleFormHarness.FETCH_NEXT_ITERATION_TEST_ID}"]`,
+        }),
     );
 
     public async enableFetchUncacheable(): Promise<void> {

@@ -10,14 +10,23 @@
 import { ComponentHarness } from "@angular/cdk/testing";
 
 import { TimeUnit } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 export class TimeDeltaFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-time-delta-form";
 
-    private readonly locatorEveryInput = this.locatorFor('[data-test-id="time-delta-every"]');
-    private readonly locatorUnitSelect = this.locatorFor('[data-test-id="time-delta-unit"]');
+    private static readonly EVERY_INPUT_TEST_ID = "time-delta-every";
+    private static readonly UNIT_SELECT_TEST_ID = "time-delta-unit";
+    private static readonly ERROR_TEST_ID = "time-delta-error-message";
 
-    private readonly locatorError = this.locatorForOptional('[data-test-id="time-delta-error-message"]');
+    private readonly locatorEveryInput = this.locatorFor(
+        `[data-test-id="${TimeDeltaFormHarness.EVERY_INPUT_TEST_ID}"]`,
+    );
+    private readonly locatorUnitSelect = this.locatorFor(
+        `[data-test-id="${TimeDeltaFormHarness.UNIT_SELECT_TEST_ID}"]`,
+    );
+
+    private readonly locatorError = this.locatorForOptional(`[data-test-id="${TimeDeltaFormHarness.ERROR_TEST_ID}"]`);
 
     private static readonly DEFAULT_UNIT_ORDER: TimeUnit[] = [
         TimeUnit.Minutes,
@@ -26,7 +35,9 @@ export class TimeDeltaFormHarness extends ComponentHarness {
         TimeUnit.Weeks,
     ];
 
-    private readonly locatorOptionElements = this.locatorForAll('[data-test-id="time-delta-unit"] option');
+    private readonly locatorOptionElements = this.locatorForAll(
+        `[data-test-id="${TimeDeltaFormHarness.UNIT_SELECT_TEST_ID}"] option`,
+    );
 
     public async getAvailableUnits(): Promise<TimeUnit[]> {
         const optionElements = await this.locatorOptionElements();
@@ -41,7 +52,7 @@ export class TimeDeltaFormHarness extends ComponentHarness {
         return units;
     }
 
-    public async setTimeDelta(every: number | "" | null, unit: TimeUnit | null): Promise<void> {
+    public async setTimeDelta(every: MaybeNull<number | "">, unit: MaybeNull<TimeUnit>): Promise<void> {
         const input = await this.locatorEveryInput();
         const select = await this.locatorUnitSelect();
 
@@ -88,7 +99,7 @@ export class TimeDeltaFormHarness extends ComponentHarness {
         return input.hasClass("ng-untouched");
     }
 
-    public async getErrorMessage(): Promise<string | null> {
+    public async getErrorMessage(): Promise<MaybeNull<string>> {
         const errorElement = await this.locatorError();
         if (errorElement) {
             const message = await errorElement.text();

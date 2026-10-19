@@ -10,6 +10,8 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { PDFDocumentProxy, PdfViewerModule } from "ng2-pdf-viewer";
 
+import { MaybeUndefined } from "@interface/app.types";
+
 @Component({
     selector: "app-pdf-viewer-content",
     imports: [
@@ -25,7 +27,7 @@ import { PDFDocumentProxy, PdfViewerModule } from "ng2-pdf-viewer";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PdfViewerContentComponent {
-    @Input({ required: true }) public safePdfUrl: string | undefined;
+    @Input({ required: true }) public safePdfUrl: MaybeUndefined<string>;
     public page: number = 1;
     public totalPages: number = 0;
     public zoom: number = 1.0;

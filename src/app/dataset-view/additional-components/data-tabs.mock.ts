@@ -1048,6 +1048,7 @@ export const mockMetadataRootUpdate: MetadataSchemaUpdate = {
         __typename: "Dataset",
         metadata: {
             __typename: "DatasetMetadata",
+            currentDownstreamDependenciesCount: 0,
             currentDownstreamDependencies: [],
             currentPollingSource: {
                 __typename: "SetPollingSource",
@@ -1242,6 +1243,7 @@ export const mockMetadataRootPushSourceUpdate: MetadataSchemaUpdate = {
             __typename: "DatasetMetadata",
             currentPollingSource: null,
             currentTransform: null,
+            currentDownstreamDependenciesCount: 0,
             currentDownstreamDependencies: [],
             currentPushSources: [
                 {
@@ -1456,6 +1458,7 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
                 ],
             },
             currentPushSources: [],
+            currentDownstreamDependenciesCount: 0,
             currentDownstreamDependencies: [],
             currentLicense: {
                 __typename: "SetLicense",
@@ -1908,6 +1911,7 @@ export const datasetMetadataDerivativeDataset: DatasetMetadata = {
     },
     currentReadme: null,
     currentUpstreamDependencies: [],
+    currentDownstreamDependenciesCount: 0,
     currentDownstreamDependencies: [],
     chain: {
         __typename: undefined,
@@ -2022,6 +2026,7 @@ export const datasetMetadataRootDataset: DatasetMetadata = {
         },
         refs: [],
     },
+    currentDownstreamDependenciesCount: 0,
     currentDownstreamDependencies: [],
     currentUpstreamDependencies: [],
     pushSyncStatuses: {

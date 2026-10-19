@@ -2307,6 +2307,11 @@ export type DatasetMetadata = {
   currentArchetype?: Maybe<DatasetArchetype>;
   /** Current downstream dependencies of a dataset */
   currentDownstreamDependencies: Array<DatasetAccessResult>;
+  /**
+   * Number of direct downstream dependencies. Includes inaccessible ones only
+   * for accounts that can maintain the dataset
+   */
+  currentDownstreamDependenciesCount: Scalars['Int']['output'];
   /** Current descriptive information about the dataset */
   currentInfo: SetInfo;
   /** Current license associated with the dataset */
@@ -9105,7 +9110,7 @@ export type DatasetStreamLineageBasicsFragment = (
 );
 
 export type DatasetMetadataSummaryFragment = (
-  { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentWatermark?: string | null, chain: { __typename?: 'MetadataChain', refs: Array<{ __typename?: 'BlockRef', name: string, blockHash: string }> }, currentInfo: (
+  { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentDownstreamDependenciesCount: number, chain: { __typename?: 'MetadataChain', refs: Array<{ __typename?: 'BlockRef', name: string, blockHash: string }> }, currentInfo: (
       { __typename?: 'SetInfo' }
       & DatasetCurrentInfoFragment
     ), currentLicense?: (
@@ -9245,7 +9250,7 @@ export type GetMetadataBlockQueryVariables = Exact<{
 
 
 export type GetMetadataBlockQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byOwnerAndName?: (
-      { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', chain: { __typename?: 'MetadataChain', blockByHashEncoded?: string | null, blockByHash?: (
+      { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentDownstreamDependenciesCount: number, chain: { __typename?: 'MetadataChain', blockByHashEncoded?: string | null, blockByHash?: (
             { __typename?: 'MetadataBlockExtended' }
             & MetadataBlockFragment
           ) | null }, currentDownstreamDependencies: Array<
@@ -10963,6 +10968,7 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
     currentPushSources {
       ...AddPushSourceEvent
     }
+    currentDownstreamDependenciesCount
     currentDownstreamDependencies {
       ... on DatasetAccessResultNotAccessible {
         __typename
@@ -13651,6 +13657,7 @@ export const GetMetadataBlockDocument = gql`
             ...MetadataBlock
           }
         }
+        currentDownstreamDependenciesCount
         currentDownstreamDependencies {
           ... on DatasetAccessResultNotAccessible {
             __typename

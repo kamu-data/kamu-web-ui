@@ -382,6 +382,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                 currentTransform: null,
                 currentArchetype: null,
                 currentPushSources: [],
+                currentDownstreamDependenciesCount: 3,
                 currentDownstreamDependencies: [],
                 currentInfo: {
                     __typename: "SetInfo",

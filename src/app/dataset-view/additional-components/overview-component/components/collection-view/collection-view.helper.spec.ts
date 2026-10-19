@@ -5,13 +5,15 @@
  * included in the LICENSE file.
  */
 
+import { MaybeNullOrUndefined } from "@interface/app.types";
+
 import { mockCollectionEntryConnection } from "src/app/search/mock.data";
 
 import { getCollectionValueHelper, resolveEntryIconHelper, sortCollectionEntryData } from "./collection-view.helper";
 import { CollectionEntryViewType, CollectionViewNode } from "./collection-view.model";
 
 type TestCase = {
-    case: string | string[] | null | undefined;
+    case: MaybeNullOrUndefined<string | string[]>;
     expected: string;
 };
 

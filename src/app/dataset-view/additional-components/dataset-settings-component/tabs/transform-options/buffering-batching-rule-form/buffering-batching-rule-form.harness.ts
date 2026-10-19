@@ -11,20 +11,26 @@ import { ComponentHarness } from "@angular/cdk/testing";
 
 import { TimeDeltaFormHarness } from "@common/components/time-delta-form/time-delta-form.harness";
 import { TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
+import { MaybeNull } from "@interface/app.types";
 
 import { BufferingBatchingRuleFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/buffering-batching-rule-form/buffering-batching-rule-form.types";
 
 export class BufferingBatchingRuleFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-buffering-batching-rule-form";
 
-    private readonly locatorMinRecordsInput = this.locatorFor('[data-test-id="batching-min-records"]');
+    private static readonly MIN_RECORDS_INPUT_TEST_ID = "batching-min-records";
+    private static readonly MIN_RECORDS_ERROR_TEST_ID = "min-records-error-message";
+
+    private readonly locatorMinRecordsInput = this.locatorFor(
+        `[data-test-id="${BufferingBatchingRuleFormHarness.MIN_RECORDS_INPUT_TEST_ID}"]`,
+    );
     private readonly locatorMinRecordsErrorMessage = this.locatorForOptional(
-        '[data-test-id="min-records-error-message"]',
+        `[data-test-id="${BufferingBatchingRuleFormHarness.MIN_RECORDS_ERROR_TEST_ID}"]`,
     );
 
     private readonly locatorTimeDeltaForm = this.locatorForOptional(TimeDeltaFormHarness);
 
-    public async setMinRecordsToAwait(value: number | "" | null): Promise<void> {
+    public async setMinRecordsToAwait(value: MaybeNull<number | "">): Promise<void> {
         const input = await this.locatorMinRecordsInput();
         await input.clear();
         if (value === "") {
@@ -45,7 +51,7 @@ export class BufferingBatchingRuleFormHarness extends ComponentHarness {
         await timeDeltaForm.setTimeDelta(timeDelta.every, timeDelta.unit);
     }
 
-    public async getMinRecordsToAwait(): Promise<number | null> {
+    public async getMinRecordsToAwait(): Promise<MaybeNull<number>> {
         const input = await this.locatorMinRecordsInput();
         const value = await input.getProperty<string>("value");
         if (value == null || value === "") {
@@ -64,7 +70,7 @@ export class BufferingBatchingRuleFormHarness extends ComponentHarness {
         return input.hasClass("ng-untouched");
     }
 
-    public async getMinRecordsErrorMessage(): Promise<string | null> {
+    public async getMinRecordsErrorMessage(): Promise<MaybeNull<string>> {
         const errorElement = await this.locatorMinRecordsErrorMessage();
         if (errorElement) {
             const message = await errorElement.text();

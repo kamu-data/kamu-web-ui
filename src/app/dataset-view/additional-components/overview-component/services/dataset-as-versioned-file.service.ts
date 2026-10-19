@@ -22,7 +22,7 @@ import {
     VersionedFileContentUrlQuery,
     VersionedFileEntryDataFragment,
 } from "@api/kamu.graphql.interface";
-import { MaybeNullOrUndefined } from "@interface/app.types";
+import { MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
 
 import { VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
 
@@ -118,7 +118,7 @@ export class DatasetAsVersionedFileService {
         );
     }
 
-    public requestFileAsJson(url: string): Observable<object | undefined> {
+    public requestFileAsJson(url: string): Observable<MaybeUndefined<object>> {
         return this.http.get(url).pipe(
             catchError(() => {
                 this.toastrService.error(`Error loading file`);
@@ -127,7 +127,7 @@ export class DatasetAsVersionedFileService {
         );
     }
 
-    public requestFileAsText(url: string): Observable<string | undefined> {
+    public requestFileAsText(url: string): Observable<MaybeUndefined<string>> {
         return this.http.get(url, { responseType: "text" }).pipe(
             catchError(() => {
                 this.toastrService.error(`Error loading file`);

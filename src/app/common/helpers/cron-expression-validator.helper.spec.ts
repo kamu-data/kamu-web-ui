@@ -8,6 +8,7 @@
 import { FormControl, ValidationErrors } from "@angular/forms";
 
 import { cronValidator } from "@common/helpers/cron-expression-validator.helper";
+import { MaybeNull } from "@interface/app.types";
 
 describe("Cron expression validator", () => {
     [
@@ -113,7 +114,7 @@ describe("Cron expression validator", () => {
             },
         },
         { expression: "30 9 3 * MON", expectedResult: null },
-    ].forEach((item: { expression: string; expectedResult: ValidationErrors | null }) => {
+    ].forEach((item: { expression: string; expectedResult: MaybeNull<ValidationErrors> }) => {
         it(`should check value with ${item.expression}`, () => {
             const control = new FormControl(item.expression);
             expect(cronValidator(control)).toEqual(item.expectedResult);

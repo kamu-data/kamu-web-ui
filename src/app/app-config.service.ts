@@ -9,7 +9,7 @@ import { Injectable } from "@angular/core";
 
 import { environment } from "@env/environment";
 import AppValues from "@common/values/app.values";
-import { MaybeUndefined } from "@interface/app.types";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import {
     AppLoginInstructions,
@@ -48,7 +48,7 @@ export class AppConfigService {
         return this.appRuntimeConfig.githubClientId;
     }
 
-    public get grafanaLogs(): GrafanaLogsConfiguration | null {
+    public get grafanaLogs(): MaybeNull<GrafanaLogsConfiguration> {
         return this.appRuntimeConfig.grafanaLogs ?? null;
     }
 
@@ -56,7 +56,7 @@ export class AppConfigService {
         return this.appRuntimeConfig.supportEmail;
     }
 
-    public get loginInstructions(): AppLoginInstructions | null {
+    public get loginInstructions(): MaybeNull<AppLoginInstructions> {
         if (this.appRuntimeConfig.loginInstructions) {
             return this.appRuntimeConfig.loginInstructions;
         } else {
@@ -64,7 +64,7 @@ export class AppConfigService {
         }
     }
 
-    public get featuresRuntimeConfig(): FeaturesRuntimeConfig | null {
+    public get featuresRuntimeConfig(): MaybeNull<FeaturesRuntimeConfig> {
         if (this.appRuntimeConfig.features) {
             return this.appRuntimeConfig.features;
         } else {

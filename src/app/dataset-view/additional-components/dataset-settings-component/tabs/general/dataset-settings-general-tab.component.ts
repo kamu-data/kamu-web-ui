@@ -40,6 +40,7 @@ import {
     DatasetVisibilityInput,
     DatasetVisibilityOutput,
 } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 import { DatasetSettingsService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-settings.service";
 import {
@@ -118,12 +119,14 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
             this.renameDatasetForm.disable();
         }
 
-        this.activatedRoute.fragment.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((fragment: string | null) => {
-            if (fragment) this.jumpToSection(fragment);
-        });
+        this.activatedRoute.fragment
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((fragment: MaybeNull<string>) => {
+                if (fragment) this.jumpToSection(fragment);
+            });
     }
 
-    public jumpToSection(section: string | null) {
+    public jumpToSection(section: MaybeNull<string>) {
         if (section) document.getElementById(section)?.scrollIntoView({ behavior: "smooth" });
     }
 

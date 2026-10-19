@@ -19,6 +19,7 @@
                 <button
                     class="additional-options-btn mat-menu-trigger starred rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center mat-button mat-icon-button mat-button-base"
                     [matMenuTriggerFor]="menu2"
+                    [attr.data-test-id]="'additional-options-trigger-' + searchAdditionalData.value"
                     [disabled]="searchAdditionalData.additionalOptions.disabled"
                     (menuOpened)="menuOpened(searchAdditionalData.value)"
                     (menuClosed)="menuClosed(searchAdditionalData.value)"
@@ -65,6 +66,14 @@
                                     </div>
                                 </button>
                             </ng-template>
+                        </div>
+
+                        <div
+                            *ngIf="!loadingListDownsreams && searchAdditionalData.additionalOptions.footnote"
+                            class="text-small color-fg-muted px-3 py-2"
+                            data-test-id="additional-options-footnote"
+                        >
+                            {{ searchAdditionalData.additionalOptions.footnote }}
                         </div>
 
                         <ng-template #loadingAdditionalOptions>

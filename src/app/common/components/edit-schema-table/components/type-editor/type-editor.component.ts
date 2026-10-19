@@ -21,6 +21,7 @@ import { FormsModule } from "@angular/forms";
 
 import { NgSelectModule } from "@ng-select/ng-select";
 
+import { MaybeUndefined } from "@interface/app.types";
 import {
     DataSchemaField,
     DataSchemaListField,
@@ -123,18 +124,18 @@ export class TypeEditorComponent {
                 timezone: "UTC",
             };
         } else if (kind === OdfTypes.List) {
-            nextValue = (this.complexCache.get(OdfTypes.List) as DataSchemaListField | undefined) ?? {
+            nextValue = (this.complexCache.get(OdfTypes.List) as MaybeUndefined<DataSchemaListField>) ?? {
                 kind,
                 itemType: { kind: OdfTypes.String },
             };
         } else if (kind === OdfTypes.Map) {
-            nextValue = (this.complexCache.get(OdfTypes.Map) as DataSchemaMapField | undefined) ?? {
+            nextValue = (this.complexCache.get(OdfTypes.Map) as MaybeUndefined<DataSchemaMapField>) ?? {
                 kind,
                 keyType: { kind: OdfTypes.String },
                 valueType: { kind: OdfTypes.String },
             };
         } else if (kind === OdfTypes.Struct) {
-            nextValue = (this.complexCache.get(OdfTypes.Struct) as DataSchemaStructField | undefined) ?? {
+            nextValue = (this.complexCache.get(OdfTypes.Struct) as MaybeUndefined<DataSchemaStructField>) ?? {
                 kind,
                 fields: [],
             };

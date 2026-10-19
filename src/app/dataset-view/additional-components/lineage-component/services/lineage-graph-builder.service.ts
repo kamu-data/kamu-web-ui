@@ -19,7 +19,7 @@ import {
     DatasetLineageBasicsFragment,
     FetchStep,
 } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import {
     LineageGraph,
@@ -185,7 +185,7 @@ export class LineageGraphBuilderService {
                     const datasetId = this.sanitizeID(dataset.id);
                     sourceNodeLabel = pushSource.sourceName;
 
-                    let sourceNode: Node | undefined = sourceNodesByLabel.get(sourceNodeLabel);
+                    let sourceNode: MaybeUndefined<Node> = sourceNodesByLabel.get(sourceNodeLabel);
                     if (isNil(sourceNode)) {
                         sourceNode = {
                             id: `source-node-${sourceNodeLabel}`,
@@ -225,7 +225,7 @@ export class LineageGraphBuilderService {
                 const datasetId = this.sanitizeID(dataset.id);
                 sourceNodeLabel = this.buildSourceNodeLabel(dataset.metadata.currentPollingSource?.fetch as FetchStep);
 
-                let sourceNode: Node | undefined = sourceNodesByLabel.get(sourceNodeLabel);
+                let sourceNode: MaybeUndefined<Node> = sourceNodesByLabel.get(sourceNodeLabel);
                 if (isNil(sourceNode)) {
                     sourceNode = {
                         id: `source-node-${datasetId}`,

@@ -10,6 +10,7 @@ import { Injectable } from "@angular/core";
 import { IDBPDatabase, openDB } from "idb";
 
 import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { MaybeUndefined } from "@interface/app.types";
 
 export interface DatasetEntry {
     query: string;
@@ -67,8 +68,8 @@ export class QueryMicroDbTrackerService {
     }
 
     /* istanbul ignore next */
-    public async getQuery(alias: string): Promise<DatasetEntry | undefined> {
+    public async getQuery(alias: string): Promise<MaybeUndefined<DatasetEntry>> {
         const db = await this.dbPromise;
-        return db.get(this.STORE_NAME, alias) as Promise<DatasetEntry | undefined>;
+        return db.get(this.STORE_NAME, alias) as Promise<MaybeUndefined<DatasetEntry>>;
     }
 }

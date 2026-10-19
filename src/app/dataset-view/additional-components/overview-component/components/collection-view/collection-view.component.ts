@@ -86,7 +86,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     public maxDepth: number;
     public entriesTotalCount: number;
     public isAllDataLoaded: boolean = false;
-    public selectedRow: CollectionEntryViewType | null = null;
+    public selectedRow: MaybeNull<CollectionEntryViewType> = null;
     public readonly perPage: number = 20;
     public readonly INITIAL_DISPLAYED_COLUMNS: string[] = ["name", "systemTime", "owner", "hash", "size"];
     public readonly HIDDEN_EXTRA_DATA_COLUMNS = ["hash", "size"];

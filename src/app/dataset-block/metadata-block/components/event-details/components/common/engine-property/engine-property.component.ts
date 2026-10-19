@@ -9,6 +9,7 @@ import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { DataHelpers } from "@common/helpers/data.helpers";
+import { MaybeUndefined } from "@interface/app.types";
 
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 
@@ -22,7 +23,7 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
 export class EnginePropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;
 
-    public get engineLogo(): string | undefined {
+    public get engineLogo(): MaybeUndefined<string> {
         return DataHelpers.descriptionForEngine(this.data).url_logo;
     }
 

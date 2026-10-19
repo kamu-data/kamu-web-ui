@@ -14,6 +14,7 @@ import { provideToastr } from "ngx-toastr";
 
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
+import { MaybeNull } from "@interface/app.types";
 
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { flowDetailsSummaryResolverFn } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-summary-tab/resolver/flow-details-summary.resolver";
@@ -21,7 +22,7 @@ import { flowDetailsSummaryResolverFn } from "src/app/dataset-flow/dataset-flow-
 describe("flowDetailsSummaryResolverFn", () => {
     const mockState = {} as RouterStateSnapshot;
 
-    const executeResolver: ResolveFn<DatasetFlowByIdResponse | null> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<MaybeNull<DatasetFlowByIdResponse>> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => flowDetailsSummaryResolverFn(...resolverParameters));
 
     beforeEach(() => {

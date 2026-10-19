@@ -27,7 +27,7 @@ import * as monaco from "monaco-editor";
 import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 
 import AppValues from "@common/values/app.values";
-import { MaybeNull } from "@interface/app.types";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import { BaseEditorComponent } from "src/app/editor/components/base-editor/base-editor.component";
 import { getSqlError } from "src/app/editor/helpers/editor-error-formatter";
@@ -76,13 +76,13 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnInit, O
     private readonly INITIAL_EDITOR_HEIGHT = 200;
     private readonly EDITOR_VERTICAL_PADDINGS = 30;
 
-    private rectOld: DOMRect | undefined;
+    private rectOld: MaybeUndefined<DOMRect>;
     private origin: {
         x: number;
         y: number;
     };
-    private moveSubscription: Subscription | undefined;
-    private div: HTMLElement | null;
+    private moveSubscription: MaybeUndefined<Subscription>;
+    private div: MaybeNull<HTMLElement>;
     private alive: boolean = true;
     private selectedText: string;
 

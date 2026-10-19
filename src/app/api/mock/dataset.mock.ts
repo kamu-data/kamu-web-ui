@@ -452,6 +452,7 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                         },
                     },
                 },
+                currentDownstreamDependenciesCount: 3,
                 currentDownstreamDependencies: [],
             },
             id: "did:odf:z4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",

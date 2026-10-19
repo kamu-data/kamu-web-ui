@@ -15,6 +15,7 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import { MaybeNull } from "@interface/app.types";
 
 import { FlowTriggerStopPolicyType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { FlowStopPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.component";
@@ -74,7 +75,7 @@ describe("FlowStopPolicyFormComponent", () => {
 
     // Helper function to validate form state
     function expectFormValueToEqual(expectedValue: {
-        stopPolicyType: FlowTriggerStopPolicyType | null;
+        stopPolicyType: MaybeNull<FlowTriggerStopPolicyType>;
         maxFailures: number;
     }): void {
         expect(component.form.getRawValue()).toEqual(expectedValue);

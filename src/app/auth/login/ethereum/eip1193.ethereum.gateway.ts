@@ -67,7 +67,8 @@ export class Eip1193EthereumGateway implements EthereumGateway {
     }
 
     public async createSiweMessage(address: string, statement: string, nonce: string): Promise<string> {
-        const chainId = Number((await this.provider.getNetwork()).chainId);
+        const network = await this.provider.getNetwork();
+        const chainId = Number(network.chainId);
         const now = new Date();
         const minutes_15_in_milliseconds = 15 * 60 * 1000;
 

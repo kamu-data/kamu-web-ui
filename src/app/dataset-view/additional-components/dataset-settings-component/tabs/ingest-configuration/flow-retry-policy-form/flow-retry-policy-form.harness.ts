@@ -13,21 +13,32 @@ import { MatSlideToggleHarness } from "@angular/material/slide-toggle/testing";
 import { TimeDeltaFormHarness } from "@common/components/time-delta-form/time-delta-form.harness";
 import { TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
 import { FlowRetryBackoffType, TimeUnit } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 import { FlowRetryPolicyFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/flow-retry-policy-form/flow-retry-policy-form.types";
 
 export class FlowRetryPolicyFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-flow-retry-policy-form";
 
+    private static readonly ENABLED_TOGGLE_TEST_ID = "retry-policy-enabled-toggle";
+    private static readonly MAX_ATTEMPTS_INPUT_TEST_ID = "retry-policy-max-attempts-input";
+    private static readonly BACKOFF_SELECT_TEST_ID = "retry-policy-backoff-select";
+
     private readonly locatorRetriesEnabledToggle = this.locatorFor(
-        MatSlideToggleHarness.with({ selector: '[data-test-id="retry-policy-enabled-toggle"]' }),
+        MatSlideToggleHarness.with({
+            selector: `[data-test-id="${FlowRetryPolicyFormHarness.ENABLED_TOGGLE_TEST_ID}"]`,
+        }),
     );
 
-    private readonly locatorMaxAttemptsInput = this.locatorFor('[data-test-id="retry-policy-max-attempts-input"]');
+    private readonly locatorMaxAttemptsInput = this.locatorFor(
+        `[data-test-id="${FlowRetryPolicyFormHarness.MAX_ATTEMPTS_INPUT_TEST_ID}"]`,
+    );
 
     private readonly locatorMinDelayForm = this.locatorForOptional(TimeDeltaFormHarness);
 
-    private readonly locatorBackoffSelect = this.locatorFor('[data-test-id="retry-policy-backoff-select"]');
+    private readonly locatorBackoffSelect = this.locatorFor(
+        `[data-test-id="${FlowRetryPolicyFormHarness.BACKOFF_SELECT_TEST_ID}"]`,
+    );
 
     private static readonly BACKOFF_TYPE_INDEX: Record<FlowRetryBackoffType, number> = {
         [FlowRetryBackoffType.Fixed]: 0,
@@ -94,7 +105,7 @@ export class FlowRetryPolicyFormHarness extends ComponentHarness {
         return minDelayForm.getTimeDelta();
     }
 
-    public async getMinDelayValidationError(): Promise<string | null> {
+    public async getMinDelayValidationError(): Promise<MaybeNull<string>> {
         const minDelayForm = await this.locatorMinDelayForm();
         if (!minDelayForm) {
             return null;

@@ -9,6 +9,8 @@
 
 import { ComponentHarness } from "@angular/cdk/testing";
 
+import { MaybeNull } from "@interface/app.types";
+
 /**
  * Test harness for FlowDetailsSummaryTabComponent that provides a clean API
  * for accessing and testing component elements without direct DOM manipulation.
@@ -16,22 +18,51 @@ import { ComponentHarness } from "@angular/cdk/testing";
 export class FlowDetailsSummaryTabHarness extends ComponentHarness {
     public static readonly hostSelector = ".container"; // Use a more generic selector since we're testing within the component
 
-    private readonly locatorFlowType = this.locatorFor('[data-test-id="flow-type"]');
-    private readonly locatorFlowStatus = this.locatorFor('[data-test-id="flow-status"]');
-    private readonly locatorFlowInitiator = this.locatorFor('[data-test-id="flow-initiator"]');
-    private readonly locatorFlowInitiatedTime = this.locatorFor('[data-test-id="flow-initiated-time"]');
-    private readonly locatorFlowRunDuration = this.locatorFor('[data-test-id="flow-run-duration"]');
-    private readonly locatorFlowTotalTime = this.locatorFor('[data-test-id="flow-total-time"]');
-    private readonly locatorFlowOutcome = this.locatorForOptional('[data-test-id="flow-outcome"]');
-    private readonly locatorFlowRetryAttempts = this.locatorForOptional('[data-test-id="flow-retry-attempts"]');
-    private readonly locatorFlowFinishedTime = this.locatorForOptional('[data-test-id="flow-finished-time"]');
+    private static readonly FLOW_TYPE_TEST_ID = "flow-type";
+    private static readonly FLOW_STATUS_TEST_ID = "flow-status";
+    private static readonly FLOW_INITIATOR_TEST_ID = "flow-initiator";
+    private static readonly FLOW_INITIATED_TIME_TEST_ID = "flow-initiated-time";
+    private static readonly FLOW_RUN_DURATION_TEST_ID = "flow-run-duration";
+    private static readonly FLOW_TOTAL_TIME_TEST_ID = "flow-total-time";
+    private static readonly FLOW_OUTCOME_TEST_ID = "flow-outcome";
+    private static readonly FLOW_RETRY_ATTEMPTS_TEST_ID = "flow-retry-attempts";
+    private static readonly FLOW_FINISHED_TIME_TEST_ID = "flow-finished-time";
+
+    private readonly locatorFlowType = this.locatorFor(
+        `[data-test-id="${FlowDetailsSummaryTabHarness.FLOW_TYPE_TEST_ID}"]`,
+    );
+    private readonly locatorFlowStatus = this.locatorFor(
+        `[data-test-id="${FlowDetailsSummaryTabHarness.FLOW_STATUS_TEST_ID}"]`,
+    );
+    private readonly locatorFlowInitiator = this.locatorFor(
+        `[data-test-id="${FlowDetailsSummaryTabHarness.FLOW_INITIATOR_TEST_ID}"]`,
+    );
+    private readonly locatorFlowInitiatedTime = this.locatorFor(
+        `[data-test-id="${FlowDetailsSummaryTabHarness.FLOW_INITIATED_TIME_TEST_ID}"]`,
+    );
+    private readonly locatorFlowRunDuration = this.locatorFor(
+        `[data-test-id="${FlowDetailsSummaryTabHarness.FLOW_RUN_DURATION_TEST_ID}"]`,
+    );
+    private readonly locatorFlowTotalTime = this.locatorFor(
+        `[data-test-id="${FlowDetailsSummaryTabHarness.FLOW_TOTAL_TIME_TEST_ID}"]`,
+    );
+    private readonly locatorFlowOutcome = this.locatorForOptional(
+        `[data-test-id="${FlowDetailsSummaryTabHarness.FLOW_OUTCOME_TEST_ID}"]`,
+    );
+    private readonly locatorFlowRetryAttempts = this.locatorForOptional(
+        `[data-test-id="${FlowDetailsSummaryTabHarness.FLOW_RETRY_ATTEMPTS_TEST_ID}"]`,
+    );
+    private readonly locatorFlowFinishedTime = this.locatorForOptional(
+        `[data-test-id="${FlowDetailsSummaryTabHarness.FLOW_FINISHED_TIME_TEST_ID}"]`,
+    );
 
     /**
      * Gets the flow type text
      */
     public async getFlowType(): Promise<string> {
         const element = await this.locatorFlowType();
-        return (await element.text()).trim();
+        const text = await element.text();
+        return text.trim();
     }
 
     /**
@@ -39,7 +70,8 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
      */
     public async getFlowStatus(): Promise<string> {
         const element = await this.locatorFlowStatus();
-        return (await element.text()).trim();
+        const text = await element.text();
+        return text.trim();
     }
 
     /**
@@ -47,7 +79,8 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
      */
     public async getFlowInitiator(): Promise<string> {
         const element = await this.locatorFlowInitiator();
-        return (await element.text()).trim();
+        const text = await element.text();
+        return text.trim();
     }
 
     /**
@@ -55,7 +88,8 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
      */
     public async getFlowInitiatedTime(): Promise<string> {
         const element = await this.locatorFlowInitiatedTime();
-        return (await element.text()).trim();
+        const text = await element.text();
+        return text.trim();
     }
 
     /**
@@ -63,7 +97,8 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
      */
     public async getFlowRunDuration(): Promise<string> {
         const element = await this.locatorFlowRunDuration();
-        return (await element.text()).trim();
+        const text = await element.text();
+        return text.trim();
     }
 
     /**
@@ -71,20 +106,22 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
      */
     public async getFlowTotalTime(): Promise<string> {
         const element = await this.locatorFlowTotalTime();
-        return (await element.text()).trim();
+        const text = await element.text();
+        return text.trim();
     }
 
     /**
      * Gets outcome information
      * @returns Object with outcome text and CSS classes, or null if outcome element doesn't exist
      */
-    public async getOutcome(): Promise<{ text: string; cssClasses: string[] } | null> {
+    public async getOutcome(): Promise<MaybeNull<{ text: string; cssClasses: string[] }>> {
         const element = await this.locatorFlowOutcome();
         if (!element) {
             return null;
         }
 
-        const text = (await element.text()).trim();
+        const rawText = await element.text();
+        const text = rawText.trim();
         const cssClasses = await element.getAttribute("class");
 
         return {
@@ -105,9 +142,13 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
      * Gets retry attempts information
      * @returns The retry attempts text or null if retry section doesn't exist
      */
-    public async getRetryAttempts(): Promise<string | null> {
+    public async getRetryAttempts(): Promise<MaybeNull<string>> {
         const element = await this.locatorFlowRetryAttempts();
-        return element ? (await element.text()).trim() : null;
+        if (!element) {
+            return null;
+        }
+        const text = await element.text();
+        return text.trim();
     }
 
     /**
@@ -122,9 +163,13 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
      * Gets finished time information
      * @returns The finished time text or null if finished time element doesn't exist
      */
-    public async getFinishedTime(): Promise<string | null> {
+    public async getFinishedTime(): Promise<MaybeNull<string>> {
         const element = await this.locatorFlowFinishedTime();
-        return element ? (await element.text()).trim() : null;
+        if (!element) {
+            return null;
+        }
+        const text = await element.text();
+        return text.trim();
     }
 
     /**

@@ -20,6 +20,7 @@ import {
     FlowSummaryDataFragment,
     TaskStatus,
 } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { FlowDetailsDownstreamFlowsComponent } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/components/flow-details-downstream-flows/flow-details-downstream-flows.component";
@@ -81,7 +82,7 @@ export class FlowDetailsHistoryTabComponent {
         return DatasetFlowDetailsHelpers.flowEventDescription(flowEvent, flowDetails);
     }
 
-    public downstreamFlows(flowEvent: FlowHistoryDataFragment): FlowDownstreamLinkDataFragment[] | null {
+    public downstreamFlows(flowEvent: FlowHistoryDataFragment): MaybeNull<FlowDownstreamLinkDataFragment[]> {
         return flowEvent.__typename === "FlowEventCompleted" ? flowEvent.downstreamFlows : null;
     }
 

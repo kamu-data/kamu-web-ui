@@ -8,11 +8,13 @@
 import { TestBed } from "@angular/core/testing";
 import { ResolveFn } from "@angular/router";
 
+import { MaybeNull } from "@interface/app.types";
+
 import { datasetSettingsAccessTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/resolver/dataset-settings-access-tab.resolver";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
 describe("datasetSettingsAccessTabResolverFn", () => {
-    const executeResolver: ResolveFn<DatasetViewData | null> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<MaybeNull<DatasetViewData>> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => datasetSettingsAccessTabResolverFn(...resolverParameters));
 
     beforeEach(() => {

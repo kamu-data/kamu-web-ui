@@ -41,7 +41,7 @@ export class BlockService {
                 if (data.datasets.byOwnerAndName) {
                     const block = data.datasets.byOwnerAndName.metadata.chain.blockByHash as MetadataBlockFragment;
                     const blockAsYaml = data.datasets.byOwnerAndName.metadata.chain.blockByHashEncoded as string;
-                    const downstreamsCount = data.datasets.byOwnerAndName.metadata.currentDownstreamDependencies.length;
+                    const downstreamsCount = data.datasets.byOwnerAndName.metadata.currentDownstreamDependenciesCount;
                     return { block, blockAsYaml, downstreamsCount };
                 }
             }),

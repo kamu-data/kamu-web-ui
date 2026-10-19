@@ -69,6 +69,13 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
   them, `private destroyRef = inject(DestroyRef)`.
 - API observables complete after one value (`first()`), so one-shot calls need no teardown.
 
+### Promises and `await`
+
+- One `await` per expression, never used as the operand of another: no `await (await x()).y()`
+  and no `(await x()).y`. Assign each awaited value to a `const` first, then use it on the
+  next line. A single `await` passed as an argument, as in `expect(await harness.getTitle())`,
+  is fine.
+
 ### Base classes (`src/app/common/components/`)
 
 | Class | Gives you | Extend when |
@@ -86,9 +93,15 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
   updated through `emitXxxChanged(value)` methods. No NgRx, no component-level stores.
 - Components never inject generated `XxxGQL` classes; they go through an `*.api.ts` class
   (owned by `kamu-ui-graphql-api`) or a domain `*.service.ts` above it.
-- Nullable values use `MaybeNull<T>` / `MaybeUndefined<T>` / `MaybeNullOrUndefined<T>` from
-  `@interface/app.types`; unwrap guaranteed values with `requireValue()` from
-  `@common/helpers/app.helpers`, not with `!`.
+
+### Nullable types
+
+- Write a nullable type as `MaybeNull<T>`, `MaybeUndefined<T>` or `MaybeNullOrUndefined<T>` from
+  `@interface/app.types`, never as an inline `T | null` / `T | undefined` union. This applies
+  everywhere a type is written: fields, parameters, return types (`Promise<MaybeNull<string>>`),
+  generics, and in specs and harnesses as much as in app code.
+- An optional interface property stays `name?: T`.
+- Unwrap guaranteed values with `requireValue()` from `@common/helpers/app.helpers`, not with `!`.
 
 ### Files, names and constants
 

@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
@@ -14,6 +15,7 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 
 import { ModalService } from "@common/components/modal/modal.service";
+import { SearchAdditionalButtonsNavHarness } from "@common/components/search-additional-buttons/search-additional-buttons-nav.harness";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
@@ -81,6 +83,39 @@ describe("DatasetViewHeaderComponent", () => {
             } else {
                 expect(requestListDownstreamsSpy).toHaveBeenCalledTimes(0);
             }
+        });
+    });
+
+    describe("Derive from menu footnote", () => {
+        let nav: SearchAdditionalButtonsNavHarness;
+
+        beforeEach(async () => {
+            nav = await TestbedHarnessEnvironment.loader(fixture).getHarness(SearchAdditionalButtonsNavHarness);
+        });
+
+        it("should show a footnote when the counter is higher than the accessible downstreams", async () => {
+            spyOn(datasetService, "requestListDownstreams").and.returnValue(of([]));
+            await nav.openMenu(SearchAdditionalButtonsEnum.DeriveFrom);
+
+            expect(await nav.getMenuFootnote()).toEqual("+1 private dataset you cannot view");
+        });
+
+        it("should not show a footnote when all downstreams are accessible", async () => {
+            spyOn(datasetService, "requestListDownstreams").and.returnValue(of(["accountName/datasetName"]));
+            await nav.openMenu(SearchAdditionalButtonsEnum.DeriveFrom);
+
+            expect(await nav.getMenuFootnote()).toBeNull();
+        });
+
+        it("should drop the footnote when reopened after all downstreams became accessible", async () => {
+            const requestListDownstreamsSpy = spyOn(datasetService, "requestListDownstreams").and.returnValue(of([]));
+            await nav.openMenu(SearchAdditionalButtonsEnum.DeriveFrom);
+            await nav.closeMenu(SearchAdditionalButtonsEnum.DeriveFrom);
+
+            requestListDownstreamsSpy.and.returnValue(of(["accountName/datasetName"]));
+            await nav.openMenu(SearchAdditionalButtonsEnum.DeriveFrom);
+
+            expect(await nav.getMenuFootnote()).toBeNull();
         });
     });
 });

@@ -21,6 +21,10 @@ load the skill, never route around it through another tool. Hook setup and limit
   history-altering command unless the user asks for it in that specific instance. Approval to
   commit once is not standing approval; commit steps in a plan are checkpoints, not permission.
   Leave finished work in the working tree, report, and stop.
+- **Never create or switch a branch without explicit approval.** Work on the branch the session
+  is on. `git switch`, `git checkout <branch>` / `-b`, `git branch <name>` and
+  `git worktree add` need the user's approval for that specific instance, including when a task,
+  a skill or [Branches](#branches) seems to call for a new branch. Propose the name and ask.
 - **Never discard uncommitted work.** `git checkout <path>`, `git restore <path>`,
   `git reset --hard`, `git stash` and `git clean` destroy working-tree changes irreversibly. Do not
   run them on a file with uncommitted changes unless the user explicitly asked to throw those
@@ -94,7 +98,8 @@ the generated files line by line or flag their size.
 Name a branch `<type>/<issue>-<slug>`: `type` is `feature`, `fix` or `chore`, `issue` is the
 GitHub issue number the work closes, and `slug` is a few kebab-case words
 (`feature/874-storage-quota-panel`). This matches kamu-cli. Leave out the number only when no
-issue exists. When a request has no issue yet, file one first.
+issue exists. When a request has no issue yet, file one first. These rules name a branch the
+user approved; they never start one on their own (see Hard rules).
 
 ## Pull requests
 

@@ -36,6 +36,7 @@ class CodexTest(unittest.TestCase):
         self.assertIsNone(codex_decision(decide("npm install lodash")))
         self.assertIsNone(codex_decision(decide("npm run release-patch")))
         self.assertIsNone(codex_decision(decide("git commit -m x")))
+        self.assertIsNone(codex_decision(decide("git switch main")))
         self.assertIsNone(codex_decision(decide("git status")))
 
     def test_move_checks_both_paths_and_attributes_added_lines_to_destination(self):

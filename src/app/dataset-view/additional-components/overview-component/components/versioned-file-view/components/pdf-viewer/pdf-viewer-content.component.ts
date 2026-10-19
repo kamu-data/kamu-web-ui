@@ -21,7 +21,6 @@ import { MaybeUndefined } from "@interface/app.types";
         //-----//
         PdfViewerModule,
     ],
-    standalone: true,
     templateUrl: "./pdf-viewer-content.component.html",
     styleUrl: "./pdf-viewer-content.component.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,

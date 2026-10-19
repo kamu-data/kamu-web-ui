@@ -11,6 +11,5 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
     selector: "app-admin-dashboard",
     templateUrl: "./admin-dashboard.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
 })
 export class AdminDashboardComponent {}

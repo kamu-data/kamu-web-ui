@@ -9,8 +9,6 @@ import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
-import { NGX_MONACO_EDITOR_CONFIG } from "ngx-monaco-editor-v2";
-
 import { BaseComponent } from "@common/components/base.component";
 import { MaybeNull } from "@interface/app.types";
 
@@ -34,12 +32,6 @@ import { EditPollingSourceService } from "src/app/dataset-view/additional-compon
         //-----//
         EngineSectionComponent,
         QueriesSectionComponent,
-    ],
-    providers: [
-        {
-            provide: NGX_MONACO_EDITOR_CONFIG,
-            useValue: {},
-        },
     ],
 })
 export class PreprocessStepComponent extends BaseComponent implements OnInit {

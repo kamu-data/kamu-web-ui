@@ -11,7 +11,6 @@ import { AccountProvider } from "@api/kamu.graphql.interface";
 
 @Pipe({
     name: "displayAccountName",
-    standalone: true,
 })
 export class DisplayAccountNamePipe implements PipeTransform {
     public transform(name: string, provider: AccountProvider): string {

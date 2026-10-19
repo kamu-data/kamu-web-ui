@@ -65,4 +65,26 @@ describe("ModalComponent", () => {
         component._close(true);
         expect(locationSpy).toHaveBeenCalledTimes(1);
     });
+
+    it("should keep a single keydown listener across opened modals", () => {
+        const processSpy = spyOn(component, "_processKDB");
+        component._execute(MOCK_COMMAND_INTERFACE);
+        component._execute(MOCK_COMMAND_INTERFACE);
+
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+        expect(processSpy).toHaveBeenCalledTimes(1);
+
+        component._close();
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+        expect(processSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should remove the keydown listener on destroy", () => {
+        const processSpy = spyOn(component, "_processKDB");
+        component._execute(MOCK_COMMAND_INTERFACE);
+        fixture.destroy();
+
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+        expect(processSpy).not.toHaveBeenCalled();
+    });
 });

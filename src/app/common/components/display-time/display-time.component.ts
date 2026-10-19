@@ -17,7 +17,6 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     selector: "app-display-time",
     templateUrl: "./display-time.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
 })
 export class DisplayTimeComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

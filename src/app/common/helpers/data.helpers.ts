@@ -9,16 +9,14 @@ import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@ang
 import { ActivatedRouteSnapshot } from "@angular/router";
 
 import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
-import { RxwebValidators } from "@rxweb/reactive-form-validators";
 import { differenceInSeconds } from "date-fns";
-import { Network } from "ethers";
 
 import {
     DynamicTableColumnClassEnum,
     DynamicTableDataRow,
 } from "@common/components/dynamic-table/dynamic-table.interface";
 import { convertSecondsToHumanReadableFormat } from "@common/helpers/app.helpers";
-import { DataQueryResultSuccessViewFragment, MetadataBlockFragment, TimeUnit } from "@api/kamu.graphql.interface";
+import { DataQueryResultSuccessViewFragment, MetadataBlockFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
@@ -288,29 +286,6 @@ export const MY_MOMENT_FORMATS = {
     monthYearA11yLabel: "MMMM YYYY",
 };
 
-export const everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = {
-    [TimeUnit.Minutes]: RxwebValidators.range({
-        minimumNumber: 1,
-        maximumNumber: 60,
-        message: "Value should be between 1 to 60",
-    }),
-    [TimeUnit.Hours]: RxwebValidators.range({
-        minimumNumber: 1,
-        maximumNumber: 24,
-        message: "Value should be between 1 to 24",
-    }),
-    [TimeUnit.Days]: RxwebValidators.range({
-        minimumNumber: 1,
-        maximumNumber: 31,
-        message: "Value should be between 1 to 31",
-    }),
-    [TimeUnit.Weeks]: RxwebValidators.range({
-        minimumNumber: 1,
-        maximumNumber: 51,
-        message: "Value should be between 1 to 51",
-    }),
-};
-
 export const noCacheFetchPolicy: {
     fetchPolicy?: MaybeUndefined<WatchQueryFetchPolicy>;
     errorPolicy?: MaybeUndefined<ErrorPolicy>;
@@ -434,16 +409,6 @@ export function eventTypesMapper(name: string): SubscribedEventType {
         /* istanbul ignore next */
         default:
             return { value: "Unknown event type", name: "Unknown label" };
-    }
-}
-
-export function chainNameFromId(chainId: number): string {
-    try {
-        // Returns an ethers Network object for known chains
-        const net = Network.from(chainId);
-        return net.name; // e.g. "mainnet", "sepolia"
-    } catch {
-        return "unknown";
     }
 }
 

@@ -105,7 +105,8 @@ that:
 2. the initial chunk total did not grow by the size of the feature;
 3. no other lazy chunk grew unexpectedly, which would mean a shared static import.
 
-For a deeper look, `npm run build-prod:stats` writes `dist/**/stats.json` for a bundle analyzer.
+For a deeper look, `npm run build-prod:stats` writes the esbuild metafile `dist/kamu-platform/stats.json`,
+and `npm run analyze` renders it as a treemap of every chunk's modules in `dist/kamu-platform/stats.html`.
 The dev build (`npm run build`) does not optimize and its chunk sizes are not representative.
 
 ## Rejected approaches

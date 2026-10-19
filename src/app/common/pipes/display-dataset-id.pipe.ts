@@ -9,7 +9,6 @@ import { Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
     name: "displayDatasetId",
-    standalone: true,
 })
 export class DisplayDatasetIdPipe implements PipeTransform {
     public transform(id: string): string {

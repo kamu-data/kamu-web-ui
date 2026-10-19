@@ -6,12 +6,11 @@ import {
     withInterceptorsFromDi,
 } from "@angular/common/http";
 import {
-    enableProdMode,
     ErrorHandler,
-    importProvidersFrom,
     inject,
     Injector,
     provideAppInitializer,
+    provideBrowserGlobalErrorListeners,
     SecurityContext,
 } from "@angular/core";
 import { MAT_RIPPLE_GLOBAL_OPTIONS } from "@angular/material/core";
@@ -26,10 +25,9 @@ import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import { onError } from "@apollo/client/link/error";
 import { Apollo, provideApollo } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
-import { MarkdownModule } from "ngx-markdown";
+import { provideMarkdown } from "ngx-markdown";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
-import { environment } from "@env/environment";
 import { SpinnerInterceptor } from "@common/components/spinner/spinner.interceptor";
 import { SpinnerService } from "@common/components/spinner/spinner.service";
 import { apolloCache } from "@common/helpers/apollo-cache.helper";
@@ -78,18 +76,13 @@ const Services = [
     },
 ];
 
-if (environment.production) {
-    enableProdMode();
-}
-
 bootstrapApplication(AppComponent, {
     providers: [
-        importProvidersFrom(
-            MarkdownModule.forRoot({
-                loader: HttpClient,
-                sanitize: SecurityContext.NONE,
-            }),
-        ),
+        provideBrowserGlobalErrorListeners(),
+        provideMarkdown({
+            loader: HttpClient,
+            sanitize: SecurityContext.NONE,
+        }),
         { provide: UrlSerializer, useClass: KamuUrlSerializer },
         provideAnimations(),
         provideHttpClient(withInterceptorsFromDi()),

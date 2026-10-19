@@ -74,6 +74,8 @@ describe("AppComponent", () => {
 
         component = fixture.componentInstance;
         routerMockEventSubject.next(new NavigationEnd(1, ProjectLinks.URL_LOGIN, ""));
+        // Silences the version banner ngOnInit prints to the console
+        spyOn(console, "info");
         fixture.detectChanges();
     });
 

@@ -4,22 +4,24 @@
 module.exports = function (config) {
   config.set({
     basePath: "",
-    frameworks: ["jasmine", "@angular-devkit/build-angular"],
+    frameworks: ["jasmine"],
     plugins: [
       require("karma-jasmine"),
       require("karma-chrome-launcher"),
       require("karma-firefox-launcher"),
       require("karma-jasmine-html-reporter"),
       require("karma-coverage-istanbul-reporter"),
-      require("@angular-devkit/build-angular/plugins/karma"),
     ],
+    // Stylesheets load from /base/, while the builder serves their fonts from /media/
+    proxies: {
+      "/base/media/": "/media/",
+    },
     client: {
       clearContext: false, // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
       dir: require("path").join(__dirname, "./coverage/kamu-platform"),
       reports: ["html", "lcovonly", "text-summary"],
-      fixWebpackSourcePaths: true,
     },
     reporters: ["progress", "kjhtml", "coverage-istanbul"],
     port: 9876,

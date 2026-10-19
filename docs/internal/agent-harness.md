@@ -38,7 +38,7 @@ Python 3 on a POSIX host. Formatting runs the repository's own `node_modules/.bi
 
 | Hook | Behaviour |
 |---|---|
-| Command guard | For sub-agents and Codex, when the machine's default Node differs from `.nvmrc`, denies Node tools (`npm`, `npx`, `ng`, `node`, linters) on a line that does not first select the pinned version with `nvm use`. Denies commands that discard uncommitted work (`git reset --hard`, `git checkout -- <path>`, `git restore`, `git stash`, `git clean -f`) and build/test/lint output piped into `head`/`tail`. Claude asks for approval on `git commit`/`push`/`merge`/`rebase`/`tag`, `npm version`/`npm run release-*`/`npm publish`, and `npm install <package>`/`uninstall`/`update`; Codex follows `AGENTS.md` for those semantic approvals. |
+| Command guard | For sub-agents and Codex, when the machine's default Node differs from `.nvmrc`, denies Node tools (`npm`, `npx`, `ng`, `node`, linters) on a line that does not first select the pinned version with `nvm use`. Denies commands that discard uncommitted work (`git reset --hard`, `git checkout -- <path>`, `git restore`, `git stash`, `git clean -f`) and build/test/lint output piped into `head`/`tail`. Claude asks for approval on `git commit`/`push`/`merge`/`rebase`/`tag`, on creating or switching a branch (`git switch`, `git checkout` other than the denied forms, `git branch <name>`, `git worktree add`), on `npm version`/`npm run release-*`/`npm publish`, and on `npm install <package>`/`uninstall`/`update`; Codex follows `AGENTS.md` for those semantic approvals. |
 | Edit guard | Refuses hand edits to generated files (naming the regeneration command) and edits under a guarded path until the session has loaded the governing skill. Claude asks before writes to agent memory; Codex follows `AGENTS.md` for that semantic approval. |
 | Post-edit | Runs prettier on an edited `.ts`/`.html`/`.scss`/`.js` file — the set `npm run prettier` covers — then checks only the added lines: focused or disabled specs, `console.log`, `eslint-disable`, `standalone: true`, constructor injection, plan/ticket citations and change narration in comments, the license header on new `src/app` files. Reminds about `npm run gql-codegen` after `.graphql` changes, `npm run build-prod` after route loading changes, and `npm install` after `package.json` changes. |
 | Post-shell | The same pass over every file a shell command changed (`sed -i`, heredocs, scripts), judged against its committed version. Changed files are found by fingerprinting the working tree before and after the command; files brought in by git commands that rewrite the tree (`switch`, `pull`, `stash`, `rebase`, …) are left alone. A guarded path changed without its skill gets a reminder. |
@@ -57,14 +57,16 @@ The rules in `AGENTS.md` still apply where the hooks cannot see:
   refuse them: a guarded path written that way gets a reminder instead of a refusal, and a
   hand-edited generated file is not told apart from a regenerated one. A command run in the
   background is compared when it is handed off, not when it finishes.
-- `git checkout <path>` without `--` is indistinguishable from a branch switch and passes the
-  guard.
+- `git checkout <path>` without `--` is indistinguishable from a branch switch, so the guard asks
+  for it as for a switch instead of denying it.
+- Claude's `EnterWorktree` tool switches the working directory without a shell command, so the
+  command guard does not see it; the branch rule in `AGENTS.md` covers it.
 - Commands assembled at runtime (variables, generated scripts) are not inspected; dependency
   edits made directly in `package.json` are left to `AGENTS.md`.
 - Prettier skips gitignored files, so a file under a gitignored directory is checked but not
   formatted.
 - Codex PreToolUse hooks cannot ask for semantic user authorization. Dependency changes, commits,
-  releases and memory writes therefore remain governed by `AGENTS.md`.
+  branch changes, releases and memory writes therefore remain governed by `AGENTS.md`.
 - Claude's documentation does not say whether a sub-agent's shell sources the session's
   `CLAUDE_ENV_FILE`, so the main session relies on it and sub-agents are held to selecting the
   Node version per command line instead. A Node tool started indirectly (a script, a `Makefile`

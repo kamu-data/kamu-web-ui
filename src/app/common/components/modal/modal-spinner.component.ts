@@ -16,6 +16,5 @@ import { DynamicComponent } from "@common/components/modal/dynamic.component";
             <div data-test-id="spinner" class="loader">Loading...</div>
         </div>
     `,
-    standalone: true,
 })
 export class ModalSpinnerComponent extends DynamicComponent {}

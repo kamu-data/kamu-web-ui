@@ -5,9 +5,9 @@ from launchers (`env`, `timeout`, `xargs`, `bash -c '...'`, ...) and judged on i
 A deny anywhere on the line wins over an ask, so an approved first command can never carry
 a destructive second one through.
 
-What this cannot see: commands built at runtime (`$(...)`, variables holding commands),
-scripts the command runs, and `git checkout <path>` written without `--` (indistinguishable
-from a branch switch). AGENTS.md still forbids those.
+What this cannot see: commands built at runtime (`$(...)`, variables holding commands) and
+scripts the command runs. `git checkout <path>` written without `--` cannot be told from a
+branch switch, so it asks like one. AGENTS.md still forbids discarding work that way.
 """
 
 from __future__ import annotations
@@ -54,6 +54,18 @@ APPROVAL_REASON = (
     "`git {sub}` alters history or publishes and needs explicit user approval for this specific "
     "instance (AGENTS.md, 'Hard rules')."
 )
+BRANCH_REASON = (
+    "`{cmd}` creates or switches a branch and needs explicit user approval for this specific "
+    "instance (AGENTS.md, 'Hard rules'). Work on the current branch unless the user asked for "
+    "another one. `git checkout <path>` asks too: the guard cannot tell it from a branch switch."
+)
+BRANCH_LISTING = {
+    "-a", "--all", "-r", "--remotes", "-l", "--list", "-v", "-vv", "--verbose", "--show-current",
+    "--contains", "--no-contains", "--merged", "--no-merged", "--points-at", "--sort", "--format",
+    "--column", "--no-column", "--color", "--no-color", "-u", "--set-upstream-to",
+    "--unset-upstream", "--edit-description",
+}
+BRANCH_CREATE = {"-c", "-C", "--copy", "-t", "--track", "--no-track"}
 
 
 @dataclass(frozen=True)
@@ -199,17 +211,31 @@ def judge_git(args: list[str]) -> Verdict | None:
     def discard() -> Verdict:
         return Verdict(("deny", DISCARD_REASON.format(cmd=" ".join(["git", sub, *rest]))), "discard")
 
+    def branch_change() -> Verdict:
+        return Verdict(("ask", BRANCH_REASON.format(cmd=" ".join(["git", sub, *rest]))), "approval")
+
     if sub == "reset" and "--hard" in flags:
         return discard()
     if sub == "clean" and (short("f") or "--force" in flags) and not (short("n") or "--dry-run" in flags):
         return discard()
     if sub == "checkout":
         if flags & {"-b", "-B", "--orphan"}:
-            return None
+            return branch_change()
         if "--" in flags or "." in flags or flags & {"-f", "--force"}:
             return discard()
-    if sub == "switch" and flags & {"-f", "--force", "--discard-changes"}:
-        return discard()
+        if rest:
+            return branch_change()
+    if sub == "switch":
+        if flags & {"-f", "--force", "--discard-changes"}:
+            return discard()
+        return branch_change()
+    if sub == "worktree" and rest[:1] == ["add"]:
+        return branch_change()
+    if sub == "branch" and not flags & {"-D", "-d", "--delete", "-f", "--force", "-m", "-M"}:
+        creates = flags & BRANCH_CREATE or (
+            not flags & BRANCH_LISTING and any(not a.startswith("-") for a in rest)
+        )
+        return branch_change() if creates else None
     if sub == "restore":
         staged = bool(flags & {"--staged", "-S"})
         worktree = bool(flags & {"--worktree", "-W"})
@@ -346,6 +372,8 @@ def fallback(command: str) -> list[Verdict]:
         found.append(Verdict(("deny", DISCARD_REASON.format(cmd="git ...")), "discard"))
     if re.search(r"\bgit\s+(commit|push|merge|rebase)\b", command):
         found.append(Verdict(("ask", APPROVAL_REASON.format(sub="...")), "approval"))
+    if re.search(r"\bgit\s+(switch|checkout|branch|worktree\s+add)\b", command):
+        found.append(Verdict(("ask", BRANCH_REASON.format(cmd="git ...")), "approval"))
     return found
 
 

@@ -51,6 +51,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
     private modalService = inject(ModalService);
     private cdr = inject(ChangeDetectorRef);
     private location = inject(Location);
+    private readonly keydownListener = (e: KeyboardEvent) => this._processKDB(e);
 
     public ngOnInit() {
         this.modalService
@@ -60,6 +61,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
                 this._execute(command);
                 this.cdr.markForCheck();
             });
+        this.destroyRef.onDestroy(() => document.removeEventListener("keydown", this.keydownListener));
     }
 
     public _execute(command: ModalCommandInterface) {
@@ -91,7 +93,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
     public _handleKBD(type?: string) {
         this.isVisible = true;
         this.type = type;
-        document.addEventListener("keydown", this._processKDB.bind(this));
+        document.addEventListener("keydown", this.keydownListener);
     }
 
     public _close(location?: boolean) {
@@ -102,7 +104,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
         this.isVisible = false;
         this.container.remove();
 
-        document.removeEventListener("keydown", this._processKDB.bind(this));
+        document.removeEventListener("keydown", this.keydownListener);
     }
 
     /* istanbul ignore next */

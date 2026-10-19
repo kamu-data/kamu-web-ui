@@ -35,8 +35,6 @@ class DiscardTest(unittest.TestCase):
         for command in [
             "git status",
             "git diff HEAD -- src",
-            "git checkout main",
-            "git checkout -b feature/860-x",
             "git restore --staged src/app/app.component.ts",
             "git stash list",
             "git stash pop",
@@ -86,6 +84,23 @@ class ApprovalTest(unittest.TestCase):
                         "npm publish"]:
             with self.subTest(command=command):
                 self.assertEqual(verdict(command), ("ask", "approval"))
+
+    def test_creating_or_switching_a_branch_asks(self):
+        for command in ["git switch master", "git switch -c chore/1-x", "git switch -", "git checkout main",
+                        "git checkout -b feature/860-x", "git checkout -B x origin/x", "git checkout --orphan x",
+                        "git checkout src/app/app.component.ts", "git branch chore/1-x", "git branch x origin/master",
+                        "git branch -c x y", "git branch --track x origin/x", "git worktree add ../wt master",
+                        "git worktree add -b x ../wt", "git fetch && git switch -c x origin/master",
+                        "git switch 'unterminated", "git branch 'unterminated"]:
+            with self.subTest(command=command):
+                self.assertEqual(verdict(command), ("ask", "approval"))
+
+    def test_reading_branches_and_tracking_pass(self):
+        for command in ["git branch", "git branch -a", "git branch --show-current", "git branch -vv",
+                        "git branch --list 'chore/*'", "git branch --contains HEAD", "git branch --unset-upstream",
+                        "git branch -u origin/x", "git worktree list", "git checkout"]:
+            with self.subTest(command=command):
+                self.assertIsNone(verdict(command))
 
     def test_reading_the_version_passes(self):
         self.assertIsNone(verdict("npm version"))

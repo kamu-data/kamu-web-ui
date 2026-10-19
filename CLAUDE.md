@@ -22,8 +22,9 @@ one: [`DEVELOPER.md`](DEVELOPER.md#running-with-local-gql-server).
 
 [`.claude/settings.json`](.claude/settings.json) wires the hooks in `scripts/agents/`:
 
-- a command guard (destructive git forms denied; commit/push/merge/rebase/tag, releases and
-  dependency changes ask; build/test output piped into `head`/`tail` denied);
+- a command guard (destructive git forms denied; commit/push/merge/rebase/tag, creating or
+  switching a branch, releases and dependency changes ask; build/test output piped into
+  `head`/`tail` denied);
 - an edit guard (generated files denied; guarded paths refused until their skill is loaded);
 - a post-edit pass on `.ts`, `.html`, `.scss` and `.js` files, whether an edit or a shell command
   wrote them (prettier on that file, then checks on the added text);

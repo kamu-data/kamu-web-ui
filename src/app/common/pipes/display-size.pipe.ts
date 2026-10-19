@@ -9,7 +9,6 @@ import { Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
     name: "displaySize",
-    standalone: true,
 })
 export class DisplaySizePipe implements PipeTransform {
     public transform(value: number, decimalPlaces = 1): string {

@@ -11,7 +11,6 @@ import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
-import { DropdownSettings } from "angular2-multiselect-dropdown/lib/multiselect.interface";
 
 import { AccountFragment, DatasetBasicsFragment, FlowStatus } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
@@ -20,6 +19,7 @@ import {
     DROPDOWN_ACCOUNT_SETTINGS,
     DROPDOWN_DATASET_SETTINGS,
     DROPDOWN_STATUS_SETTINGS,
+    DropdownSettings,
     FilterStatusType,
     FlowsTableFiltersOptions,
 } from "src/app/dataset-flow/flows-table/flows-table.types";

@@ -1,8 +1,8 @@
 <div #containerRef class="position-relative" *ngIf="graph.nodes.length">
     <ngx-graph
         class="chart-container"
-        [draggingEnabled]="LINEAGE_CONFIG.draggingEnabled"
-        [panningEnabled]="LINEAGE_CONFIG.panningEnabled"
+        [enableDrag]="LINEAGE_CONFIG.enableDrag"
+        [enablePan]="LINEAGE_CONFIG.enablePan"
         [enableZoom]="LINEAGE_CONFIG.zoomEnabled"
         [zoomSpeed]="LINEAGE_CONFIG.zoomSpeed"
         [minZoomLevel]="LINEAGE_CONFIG.minZoomLevel"

@@ -15,7 +15,6 @@ import { Router, ROUTES } from "@angular/router";
 
 import { of } from "rxjs";
 
-import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
@@ -58,7 +57,7 @@ describe("Router", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             schemas: [NO_ERRORS_SCHEMA],
-            imports: [ApolloTestingModule, NgxGraphModule, PageNotFoundComponent, LoginComponent],
+            imports: [ApolloTestingModule, PageNotFoundComponent, LoginComponent],
             providers: [
                 Apollo,
                 {
@@ -162,18 +161,17 @@ describe("Router", () => {
             flush();
         }));
 
-        it(`Route to ${url} lands on the component with active login`, fakeAsync(() => {
+        // A real await, because fakeAsync's tick() cannot wait for the lazy chunk of a loadComponent route
+        it(`Route to ${url} lands on the component with active login`, async () => {
             spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
             spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-            promiseWithCatch(router.navigate([url]));
-            tick();
+            await router.navigate([url]);
             if (url === ProjectLinks.URL_SETTINGS) {
                 expect(location.path()).toBe("/" + url + "/access-tokens");
             } else {
                 expect(location.path()).toBe("/" + url);
             }
-            flush();
-        }));
+        });
 
         it("should navigate to QueryExplainer component", async () => {
             await router.navigate([ProjectLinks.URL_QUERY_EXPLAINER]);

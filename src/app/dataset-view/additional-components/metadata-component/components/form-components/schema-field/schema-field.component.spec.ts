@@ -13,6 +13,10 @@ import { FormControl, FormGroup } from "@angular/forms";
 
 import { EditSchemaTableHarness } from "@common/components/edit-schema-table/edit-schema-table.harness";
 import { ORDER_SCHEMA } from "@common/components/edit-schema-table/schema-editor.fixtures.spec";
+import {
+    SchemaValidationErrorCode,
+    SchemaWarningCode,
+} from "@common/components/edit-schema-table/validation/schema-validation.types";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
@@ -88,6 +92,7 @@ describe("SchemaFieldComponent", () => {
             const table = await harness.rootTable();
             // The second "city" has a duplicate-name error
             expect(await table.hasErrorIcon("city")).toBeTrue();
+            expect(await table.errorTooltipFor("city")).toEqual(SchemaValidationErrorCode.DUPLICATE_NAME);
         });
 
         it("empty field name makes the control invalid", () => {
@@ -187,6 +192,8 @@ describe("SchemaFieldComponent", () => {
 
             const table = await harness.rootTable();
             expect(await table.hasWarningIcon("event_time")).toBeTrue();
+            expect(await table.warningTooltipFor("event_time")).toEqual(SchemaWarningCode.SYSTEM_COLUMN_NAME);
+            expect(await table.errorTooltipFor("event_time")).toBeNull();
         });
 
         it("a SQL keyword ('select') shows a warning icon but control stays valid", async () => {

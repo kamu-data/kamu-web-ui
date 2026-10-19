@@ -131,9 +131,11 @@ describe("CollectionViewComponent", () => {
         const isHeadHashBlockChangedSpy = spyOn(datasetService, "isHeadHashBlockChanged").and.returnValue(
             of(true).pipe(),
         );
+        const windowOpenSpy = spyOn(window, "open");
 
         component.dbClickTableRow(row);
         expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(0);
+        expect(windowOpenSpy).toHaveBeenCalledOnceWith("/account/test-file", "_blank");
     });
 
     it("should check to select table row", () => {
@@ -155,28 +157,6 @@ describe("CollectionViewComponent", () => {
         component.clickTableRow(row);
         component.onCellEventClick("test", CollectionViewNode.File);
         expect(component.selectedRow).toEqual(row);
-    });
-
-    it("should check double click on file row", () => {
-        const row: CollectionEntryViewType = {
-            displayName: "test-file",
-            nodeType: CollectionViewNode.File,
-            alias: "account/test-file",
-            systemTime: "2025-11-12T12:22:04.577+00:00",
-            hash: "ewqeqwdsd1sl5l3lfdsfdsf",
-            size: 255548,
-            owner: {
-                accountName: "twest",
-            },
-            contentType: "application/pdf",
-            extraData: {},
-        };
-        const isHeadHashBlockChangedSpy = spyOn(datasetService, "isHeadHashBlockChanged").and.returnValue(
-            of(true).pipe(),
-        );
-
-        component.dbClickTableRow(row);
-        expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(0);
     });
 
     it("should check go up from folder", () => {

@@ -14,7 +14,6 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     templateUrl: "./link-property.component.html",
     styleUrls: ["./link-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
 })
 export class LinkPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

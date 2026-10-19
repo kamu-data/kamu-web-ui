@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 
 import { environment } from "@env/environment";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
@@ -19,7 +19,9 @@ import { AppConfigService } from "src/app/app-config.service";
 export class FeatureFlagsService {
     public features: Feature[];
 
-    public constructor(private appConfigService: AppConfigService) {
+    private appConfigService = inject(AppConfigService);
+
+    public constructor() {
         const request = new XMLHttpRequest();
         request.open("GET", environment.feature_flags_file, false);
         request.send(null);

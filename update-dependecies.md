@@ -14,3 +14,5 @@
 
 - "ng2-pdf-viewer": "^9.1.5" (these versions work correctly in pairs - touch only when absolutely necessary)
 - "pdfjs-dist": "^2.16.105"   
+
+- "jasmine-core": "~4.6.1", "@types/jasmine": "~4.6.6" (pinned to the jasmine-core major that karma-jasmine 5.1 bundles and runs; karma is deprecated at 6.4.4, so these move only when the test runner is replaced)

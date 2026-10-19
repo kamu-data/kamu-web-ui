@@ -8,7 +8,7 @@
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { of, tap } from "rxjs";
+import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
@@ -66,38 +66,36 @@ describe("VersionedFileViewComponent", () => {
     });
 
     it("should check ngOnInit", () => {
-        component.version$.next(0);
-        fixture.detectChanges();
         const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("text/plain");
         const requestDatasetAsVersionedFileSpy = spyOn(
             datasetAsVersionedFileService,
             "requestDatasetAsVersionedFile",
-        ).and.returnValue(of(mockVersionedFileView).pipe(tap()));
+        ).and.returnValue(of(mockVersionedFileView));
         spyOn(component, "setPreviewFileStrategy").and.returnValue(Promise.resolve());
 
-        component.ngOnInit();
-        component.fileInfo$.subscribe(() => {
-            expect(requestDatasetAsVersionedFileSpy).toHaveBeenCalledTimes(1);
-        });
+        component.version$.next(0);
+        fixture.detectChanges();
+
+        expect(requestDatasetAsVersionedFileSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check ngOnInit with version", () => {
-        component.version$.next(2);
-        fixture.detectChanges();
         const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("text/plain");
-        spyOn(datasetAsVersionedFileService, "requestDatasetAsVersionedFile").and.returnValue(
-            of(mockVersionedFileView).pipe(tap()),
-        );
+        const requestDatasetAsVersionedFileSpy = spyOn(
+            datasetAsVersionedFileService,
+            "requestDatasetAsVersionedFile",
+        ).and.returnValue(of(mockVersionedFileView));
         const requestDatasetAsVersionedFileByVersionSpy = spyOn(
             datasetAsVersionedFileService,
             "requestDatasetAsVersionedFileByVersion",
-        ).and.returnValue(of(mockVersionedFileView).pipe(tap()));
+        ).and.returnValue(of(mockVersionedFileView));
         spyOn(component, "setPreviewFileStrategy").and.returnValue(Promise.resolve());
 
-        component.ngOnInit();
-        component.fileInfo$.subscribe(() => {
-            expect(requestDatasetAsVersionedFileByVersionSpy).toHaveBeenCalledTimes(1);
-        });
+        component.version$.next(2);
+        fixture.detectChanges();
+
+        expect(requestDatasetAsVersionedFileByVersionSpy).toHaveBeenCalledTimes(1);
+        expect(requestDatasetAsVersionedFileSpy).not.toHaveBeenCalled();
     });
 
     it("should check setPreviewFileStrategy method for pdf file", async () => {

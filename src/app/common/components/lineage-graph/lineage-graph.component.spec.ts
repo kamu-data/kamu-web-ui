@@ -43,6 +43,11 @@ describe("LineageGraphComponent", () => {
         fixture.detectChanges();
     });
 
+    // ngx-graph schedules its first layout pass on a timer it does not cancel on destroy
+    afterEach(async () => {
+        await fixture.whenStable();
+    });
+
     beforeAll(() => {
         timekeeper.freeze(FROZEN_TIME);
     });

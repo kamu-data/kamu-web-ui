@@ -133,7 +133,12 @@
             "assets": [
               "src/assets/svg",
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/monaco-editor",
+                "output": "/assets/monaco-0.52.2/"
+              }
             ],
             "stylePreprocessorOptions": {
               "includePaths": [

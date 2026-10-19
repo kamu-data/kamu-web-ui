@@ -15,6 +15,9 @@ import { OdfTypes } from "@interface/dataset-schema.interface";
 export class TypeEditorHarness extends ComponentHarness {
     public static readonly hostSelector = "app-type-editor";
 
+    private static readonly KIND_SUFFIX = "kind";
+    private static readonly KIND_OPTION_SUFFIX = "kind-option";
+
     // ng-select renders the chosen value inside this span
     private readonly locatorValueLabel = this.locatorForOptional(".ng-value-label");
 
@@ -36,6 +39,10 @@ export class TypeEditorHarness extends ComponentHarness {
             throw new Error("TypeEditorHarness: host has no data-test-id — cannot derive kind select id");
         }
 
-        await selectNgOption(this.documentRootLocatorFactory(), `${typePath}:kind`, `${typePath}:kind-option:${kind}`);
+        await selectNgOption(
+            this.documentRootLocatorFactory(),
+            `${typePath}:${TypeEditorHarness.KIND_SUFFIX}`,
+            `${typePath}:${TypeEditorHarness.KIND_OPTION_SUFFIX}:${kind}`,
+        );
     }
 }

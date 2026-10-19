@@ -20,12 +20,17 @@ import { IngestTriggerFormValue } from "src/app/dataset-view/additional-componen
 export class IngestTriggerFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-ingest-trigger-form";
 
+    private static readonly TIME_DELTA_RADIO_TEST_ID = "trigger-time-delta";
+    private static readonly CRON_RADIO_TEST_ID = "trigger-cron";
+
     private readonly locatorScheduleTypeTimeDeltaRadio = this.locatorFor(
-        MatRadioButtonHarness.with({ selector: '[data-test-id="trigger-time-delta"]' }),
+        MatRadioButtonHarness.with({
+            selector: `[data-test-id="${IngestTriggerFormHarness.TIME_DELTA_RADIO_TEST_ID}"]`,
+        }),
     );
 
     private readonly locatorScheduleTypeCronRadio = this.locatorFor(
-        MatRadioButtonHarness.with({ selector: '[data-test-id="trigger-cron"]' }),
+        MatRadioButtonHarness.with({ selector: `[data-test-id="${IngestTriggerFormHarness.CRON_RADIO_TEST_ID}"]` }),
     );
 
     private readonly locatorTimeDeltaForm = this.locatorForOptional(TimeDeltaFormHarness);

@@ -21,22 +21,35 @@ import { TransformTriggerFormValue } from "src/app/dataset-view/additional-compo
 export class TransformTriggerFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-transform-trigger-form";
 
+    private static readonly BATCHING_RULE_IMMEDIATE_TEST_ID = "batching-rule-immediate";
+    private static readonly BATCHING_RULE_BUFFERING_TEST_ID = "batching-rule-buffering";
+    private static readonly BREAKING_CHANGE_NO_ACTION_TEST_ID = "breaking-change-no-action";
+    private static readonly BREAKING_CHANGE_RECOVER_TEST_ID = "breaking-change-recover";
+
     private readonly locatorBatchingRuleImmediateRadio = this.locatorFor(
-        MatRadioButtonHarness.with({ selector: '[data-test-id="batching-rule-immediate"]' }),
+        MatRadioButtonHarness.with({
+            selector: `[data-test-id="${TransformTriggerFormHarness.BATCHING_RULE_IMMEDIATE_TEST_ID}"]`,
+        }),
     );
 
     private readonly locatorBatchingRuleBufferingRadio = this.locatorFor(
-        MatRadioButtonHarness.with({ selector: '[data-test-id="batching-rule-buffering"]' }),
+        MatRadioButtonHarness.with({
+            selector: `[data-test-id="${TransformTriggerFormHarness.BATCHING_RULE_BUFFERING_TEST_ID}"]`,
+        }),
     );
 
     private readonly locatorBufferingForm = this.locatorForOptional(BufferingBatchingRuleFormHarness);
 
     private readonly locatorBreakingChangeNoActionRadio = this.locatorFor(
-        MatRadioButtonHarness.with({ selector: '[data-test-id="breaking-change-no-action"]' }),
+        MatRadioButtonHarness.with({
+            selector: `[data-test-id="${TransformTriggerFormHarness.BREAKING_CHANGE_NO_ACTION_TEST_ID}"]`,
+        }),
     );
 
     private readonly locatorBreakingChangeRecoverRadio = this.locatorFor(
-        MatRadioButtonHarness.with({ selector: '[data-test-id="breaking-change-recover"]' }),
+        MatRadioButtonHarness.with({
+            selector: `[data-test-id="${TransformTriggerFormHarness.BREAKING_CHANGE_RECOVER_TEST_ID}"]`,
+        }),
     );
 
     public async setSelectedBatchingRuleType(batchingRuleType: BatchingRuleType): Promise<void> {

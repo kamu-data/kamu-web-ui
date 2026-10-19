@@ -26,8 +26,15 @@ export interface DownstreamFlowRow {
 export class FlowDetailsDownstreamFlowsHarness extends ComponentHarness {
     public static readonly hostSelector = "app-flow-details-downstream-flows";
 
-    private readonly locatorTitle = this.locatorForOptional('[data-test-id="downstream-flows-title"]');
-    private readonly locatorRows = this.locatorForAll('li[data-test-id^="downstream-flow-"]');
+    private static readonly TITLE_TEST_ID = "downstream-flows-title";
+    private static readonly ROW_TEST_ID_PREFIX = "downstream-flow-";
+
+    private readonly locatorTitle = this.locatorForOptional(
+        `[data-test-id="${FlowDetailsDownstreamFlowsHarness.TITLE_TEST_ID}"]`,
+    );
+    private readonly locatorRows = this.locatorForAll(
+        `li[data-test-id^="${FlowDetailsDownstreamFlowsHarness.ROW_TEST_ID_PREFIX}"]`,
+    );
 
     /**
      * Gets the list title, or null when nothing is rendered
@@ -44,7 +51,7 @@ export class FlowDetailsDownstreamFlowsHarness extends ComponentHarness {
         const count = (await this.locatorRows()).length;
         const rows: DownstreamFlowRow[] = [];
         for (let i = 0; i < count; i++) {
-            const prefix = `downstream-flow-${i}`;
+            const prefix = `${FlowDetailsDownstreamFlowsHarness.ROW_TEST_ID_PREFIX}${i}`;
             const icon = await this.locatorFor(`[data-test-id="${prefix}"] mat-icon`)();
             const flowLink = await this.locatorForOptional(`[data-test-id="${prefix}-link"]`)();
             const flowId = await this.locatorForOptional(`[data-test-id="${prefix}-id"]`)();

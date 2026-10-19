@@ -14,6 +14,16 @@ import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 export class EditSchemaTableHarness extends ComponentHarness {
     public static readonly hostSelector = "app-edit-schema-table";
 
+    private static readonly EDIT_FIELD_VERB = "edit-field";
+    private static readonly DELETE_FIELD_VERB = "delete-field";
+    private static readonly ADD_FIELD_VERB = "add-field";
+    private static readonly NAME_INPUT_VERB = "name-input";
+    private static readonly SAVE_FIELD_VERB = "save-field";
+    private static readonly CANCEL_EDIT_VERB = "cancel-edit";
+    private static readonly DRAG_HANDLE_VERB = "drag-handle";
+    private static readonly FIELD_NAME_VERB = "field-name";
+    private static readonly ROW_VERB = "row";
+
     // Set by withPath(); falls back to "root" which is the default tablePath in the component.
     private _tablePath: string = "root";
 
@@ -83,7 +93,9 @@ export class EditSchemaTableHarness extends ComponentHarness {
 
     /** Returns the visible field name labels in display order. */
     public async getFieldNames(): Promise<string[]> {
-        const spans = await this.locatorForAll(`[data-test-id^="${this._tablePath}:field-name:"]`)();
+        const spans = await this.locatorForAll(
+            `[data-test-id^="${this._tablePath}:${EditSchemaTableHarness.FIELD_NAME_VERB}:"]`,
+        )();
         const names: string[] = [];
         for (const span of spans) {
             const testId = await span.getAttribute("data-test-id");
@@ -96,7 +108,9 @@ export class EditSchemaTableHarness extends ComponentHarness {
 
     /** Returns the number of data rows currently rendered (including any provisional add row). */
     public async getRowCount(): Promise<number> {
-        const rows = await this.locatorForAll(`[data-test-id^="${this._tablePath}:row:"]`)();
+        const rows = await this.locatorForAll(
+            `[data-test-id^="${this._tablePath}:${EditSchemaTableHarness.ROW_VERB}:"]`,
+        )();
         return rows.length;
     }
 
@@ -106,22 +120,22 @@ export class EditSchemaTableHarness extends ComponentHarness {
 
     /** Clicks the edit (pencil) button for a field identified by name. */
     public async editField(name: string): Promise<void> {
-        await (await this.locatorFor(this.sel("edit-field", name))()).click();
+        await (await this.locatorFor(this.sel(EditSchemaTableHarness.EDIT_FIELD_VERB, name))()).click();
     }
 
     /** Clicks the edit button for a field identified by row index (0-based). */
     public async editFieldByIndex(index: number): Promise<void> {
-        await (await this.locatorFor(this.sel("edit-field", index))()).click();
+        await (await this.locatorFor(this.sel(EditSchemaTableHarness.EDIT_FIELD_VERB, index))()).click();
     }
 
     /** Clicks the delete button for a field identified by name. */
     public async deleteField(name: string): Promise<void> {
-        await (await this.locatorFor(this.sel("delete-field", name))()).click();
+        await (await this.locatorFor(this.sel(EditSchemaTableHarness.DELETE_FIELD_VERB, name))()).click();
     }
 
     /** Clicks the delete button for a field identified by row index (0-based). */
     public async deleteFieldByIndex(index: number): Promise<void> {
-        await (await this.locatorFor(this.sel("delete-field", index))()).click();
+        await (await this.locatorFor(this.sel(EditSchemaTableHarness.DELETE_FIELD_VERB, index))()).click();
     }
 
     // ---------------------------------------------------------------------------
@@ -130,36 +144,36 @@ export class EditSchemaTableHarness extends ComponentHarness {
 
     /** Clicks the "Add field" button to open a new provisional row. */
     public async startAddField(): Promise<void> {
-        await (await this.locatorFor(this.sel("add-field"))()).click();
+        await (await this.locatorFor(this.sel(EditSchemaTableHarness.ADD_FIELD_VERB))()).click();
     }
 
     /** Sets the value of the name input (only present while a row is being edited). */
     public async setNameInput(value: string): Promise<void> {
-        const input = await this.locatorFor(this.sel("name-input"))();
+        const input = await this.locatorFor(this.sel(EditSchemaTableHarness.NAME_INPUT_VERB))();
         await input.clear();
         await input.sendKeys(value);
     }
 
     /** Sends the Enter key to the name input, triggering save if the name is non-blank. */
     public async pressEnter(): Promise<void> {
-        const input = await this.locatorFor(this.sel("name-input"))();
+        const input = await this.locatorFor(this.sel(EditSchemaTableHarness.NAME_INPUT_VERB))();
         await input.sendKeys(TestKey.ENTER);
     }
 
     /** Sends the Escape key to the name input, triggering cancel. */
     public async pressEscape(): Promise<void> {
-        const input = await this.locatorFor(this.sel("name-input"))();
+        const input = await this.locatorFor(this.sel(EditSchemaTableHarness.NAME_INPUT_VERB))();
         await input.sendKeys(TestKey.ESCAPE);
     }
 
     /** Clicks the save (check) button. */
     public async save(): Promise<void> {
-        await (await this.locatorFor(this.sel("save-field"))()).click();
+        await (await this.locatorFor(this.sel(EditSchemaTableHarness.SAVE_FIELD_VERB))()).click();
     }
 
     /** Clicks the cancel (×) button. */
     public async cancel(): Promise<void> {
-        await (await this.locatorFor(this.sel("cancel-edit"))()).click();
+        await (await this.locatorFor(this.sel(EditSchemaTableHarness.CANCEL_EDIT_VERB))()).click();
     }
 
     /**
@@ -168,7 +182,7 @@ export class EditSchemaTableHarness extends ComponentHarness {
      * non-null when Angular sets `[disabled]="!editingRow?.name"` to true.
      */
     public async isSaveDisabled(): Promise<boolean> {
-        const btn = await this.locatorForOptional(this.sel("save-field"))();
+        const btn = await this.locatorForOptional(this.sel(EditSchemaTableHarness.SAVE_FIELD_VERB))();
         if (!btn) return true;
         const attr = await btn.getAttribute("disabled");
         return attr !== null;
@@ -180,7 +194,7 @@ export class EditSchemaTableHarness extends ComponentHarness {
      * non-null when Angular sets `[disabled]="disabledAddFieldButton"` to true.
      */
     public async isAddFieldDisabled(): Promise<boolean> {
-        const btn = await this.locatorForOptional(this.sel("add-field"))();
+        const btn = await this.locatorForOptional(this.sel(EditSchemaTableHarness.ADD_FIELD_VERB))();
         if (!btn) return true;
         const attr = await btn.getAttribute("disabled");
         return attr !== null;
@@ -188,7 +202,7 @@ export class EditSchemaTableHarness extends ComponentHarness {
 
     /** Returns true if a drag handle is rendered for the field identified by name (absent while that row is in edit mode). */
     public async hasDragHandle(name: string): Promise<boolean> {
-        const handle = await this.locatorForOptional(this.sel("drag-handle", name))();
+        const handle = await this.locatorForOptional(this.sel(EditSchemaTableHarness.DRAG_HANDLE_VERB, name))();
         return handle !== null;
     }
 
@@ -236,31 +250,41 @@ export class EditSchemaTableHarness extends ComponentHarness {
 
     /** Returns true if the error icon (close/red) is present next to the named field. */
     public async hasErrorIcon(fieldName: string): Promise<boolean> {
-        const icon = await this.locatorForOptional(`${this.sel("field-name", fieldName)} mat-icon.text-danger`)();
+        const icon = await this.locatorForOptional(
+            `${this.sel(EditSchemaTableHarness.FIELD_NAME_VERB, fieldName)} mat-icon.text-danger`,
+        )();
         return icon !== null;
     }
 
     /** Returns the matTooltip text on the error icon, or null if absent. */
     public async errorTooltipFor(fieldName: string): Promise<string | null> {
-        const icon = await this.locatorForOptional(`${this.sel("field-name", fieldName)} mat-icon.text-danger`)();
+        const icon = await this.locatorForOptional(
+            `${this.sel(EditSchemaTableHarness.FIELD_NAME_VERB, fieldName)} mat-icon.text-danger`,
+        )();
         return icon ? icon.getAttribute("ng-reflect-message") : null;
     }
 
     /** Returns true if the warning icon (warning/yellow) is present next to the named field. */
     public async hasWarningIcon(fieldName: string): Promise<boolean> {
-        const icon = await this.locatorForOptional(`${this.sel("field-name", fieldName)} mat-icon.text-warning`)();
+        const icon = await this.locatorForOptional(
+            `${this.sel(EditSchemaTableHarness.FIELD_NAME_VERB, fieldName)} mat-icon.text-warning`,
+        )();
         return icon !== null;
     }
 
     /** Returns the matTooltip text on the warning icon, or null if absent. */
     public async warningTooltipFor(fieldName: string): Promise<string | null> {
-        const icon = await this.locatorForOptional(`${this.sel("field-name", fieldName)} mat-icon.text-warning`)();
+        const icon = await this.locatorForOptional(
+            `${this.sel(EditSchemaTableHarness.FIELD_NAME_VERB, fieldName)} mat-icon.text-warning`,
+        )();
         return icon ? icon.getAttribute("ng-reflect-message") : null;
     }
 
     /** Returns true if the empty-Struct warning icon is present next to the named field. */
     public async hasEmptyStructIcon(fieldName: string): Promise<boolean> {
-        const icon = await this.locatorForOptional(`${this.sel("field-name", fieldName)} mat-icon.empty-struct-icon`)();
+        const icon = await this.locatorForOptional(
+            `${this.sel(EditSchemaTableHarness.FIELD_NAME_VERB, fieldName)} mat-icon.empty-struct-icon`,
+        )();
         return icon !== null;
     }
 }

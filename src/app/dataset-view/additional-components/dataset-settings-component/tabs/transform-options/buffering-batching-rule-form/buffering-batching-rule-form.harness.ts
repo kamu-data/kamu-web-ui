@@ -17,9 +17,14 @@ import { BufferingBatchingRuleFormValue } from "src/app/dataset-view/additional-
 export class BufferingBatchingRuleFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-buffering-batching-rule-form";
 
-    private readonly locatorMinRecordsInput = this.locatorFor('[data-test-id="batching-min-records"]');
+    private static readonly MIN_RECORDS_INPUT_TEST_ID = "batching-min-records";
+    private static readonly MIN_RECORDS_ERROR_TEST_ID = "min-records-error-message";
+
+    private readonly locatorMinRecordsInput = this.locatorFor(
+        `[data-test-id="${BufferingBatchingRuleFormHarness.MIN_RECORDS_INPUT_TEST_ID}"]`,
+    );
     private readonly locatorMinRecordsErrorMessage = this.locatorForOptional(
-        '[data-test-id="min-records-error-message"]',
+        `[data-test-id="${BufferingBatchingRuleFormHarness.MIN_RECORDS_ERROR_TEST_ID}"]`,
     );
 
     private readonly locatorTimeDeltaForm = this.locatorForOptional(TimeDeltaFormHarness);

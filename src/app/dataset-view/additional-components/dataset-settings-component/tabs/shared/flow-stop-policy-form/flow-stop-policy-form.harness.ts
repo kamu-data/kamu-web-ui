@@ -16,17 +16,28 @@ import { FlowStopPolicyFormValue } from "src/app/dataset-view/additional-compone
 export class FlowStopPolicyFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-flow-stop-policy-form";
 
+    private static readonly NEVER_RADIO_TEST_ID = "stop-policy-never";
+    private static readonly AFTER_CONSECUTIVE_FAILURES_RADIO_TEST_ID = "stop-policy-after-consecutive-failures";
+    private static readonly MAX_FAILURES_ERROR_TEST_ID = "stop-policy-max-failures-error-message";
+    private static readonly MAX_FAILURES_INPUT_TEST_ID = "stop-policy-max-failures-input";
+
     private readonly locatorStopPolicyTypeNeverRadio = this.locatorFor(
-        MatRadioButtonHarness.with({ selector: '[data-test-id="stop-policy-never"]' }),
+        MatRadioButtonHarness.with({ selector: `[data-test-id="${FlowStopPolicyFormHarness.NEVER_RADIO_TEST_ID}"]` }),
     );
 
     private readonly locatorStopPolicyTypeAfterConsecutiveFailuresRadio = this.locatorFor(
-        MatRadioButtonHarness.with({ selector: '[data-test-id="stop-policy-after-consecutive-failures"]' }),
+        MatRadioButtonHarness.with({
+            selector: `[data-test-id="${FlowStopPolicyFormHarness.AFTER_CONSECUTIVE_FAILURES_RADIO_TEST_ID}"]`,
+        }),
     );
 
-    private readonly locatorError = this.locatorForOptional('[data-test-id="stop-policy-max-failures-error-message"]');
+    private readonly locatorError = this.locatorForOptional(
+        `[data-test-id="${FlowStopPolicyFormHarness.MAX_FAILURES_ERROR_TEST_ID}"]`,
+    );
 
-    private readonly locatorMaxFailuresInput = this.locatorFor('[data-test-id="stop-policy-max-failures-input"]');
+    private readonly locatorMaxFailuresInput = this.locatorFor(
+        `[data-test-id="${FlowStopPolicyFormHarness.MAX_FAILURES_INPUT_TEST_ID}"]`,
+    );
 
     public async setSelectedStopPolicyType(stopPolicyType: FlowTriggerStopPolicyType): Promise<void> {
         const neverRadio = await this.locatorStopPolicyTypeNeverRadio();

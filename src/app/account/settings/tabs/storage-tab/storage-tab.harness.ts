@@ -14,13 +14,32 @@ import { StorageUsageSegment } from "src/app/account/settings/tabs/storage-tab/s
 export class StorageTabHarness extends ComponentHarness {
     public static readonly hostSelector = "app-storage-tab";
 
-    private readonly locatorExplanation = this.locatorFor('[data-test-id="storage-explanation"]');
-    private readonly locatorSummary = this.locatorFor('[data-test-id="storage-summary"]');
-    private readonly locatorRemaining = this.locatorForOptional('[data-test-id="storage-remaining"]');
-    private readonly locatorUnlimited = this.locatorForOptional('[data-test-id="storage-unlimited"]');
-    private readonly locatorNearQuota = this.locatorForOptional('[data-test-id="storage-near-quota"]');
-    private readonly locatorQuotaReached = this.locatorForOptional('[data-test-id="storage-quota-reached"]');
-    private readonly locatorSupportLink = this.locatorForOptional('[data-test-id="storage-support-link"]');
+    private static readonly EXPLANATION_TEST_ID = "storage-explanation";
+    private static readonly SUMMARY_TEST_ID = "storage-summary";
+    private static readonly REMAINING_TEST_ID = "storage-remaining";
+    private static readonly UNLIMITED_TEST_ID = "storage-unlimited";
+    private static readonly NEAR_QUOTA_TEST_ID = "storage-near-quota";
+    private static readonly QUOTA_REACHED_TEST_ID = "storage-quota-reached";
+    private static readonly SUPPORT_LINK_TEST_ID = "storage-support-link";
+    private static readonly SEGMENT_TEST_ID_PREFIX = "storage-segment-";
+
+    private readonly locatorExplanation = this.locatorFor(`[data-test-id="${StorageTabHarness.EXPLANATION_TEST_ID}"]`);
+    private readonly locatorSummary = this.locatorFor(`[data-test-id="${StorageTabHarness.SUMMARY_TEST_ID}"]`);
+    private readonly locatorRemaining = this.locatorForOptional(
+        `[data-test-id="${StorageTabHarness.REMAINING_TEST_ID}"]`,
+    );
+    private readonly locatorUnlimited = this.locatorForOptional(
+        `[data-test-id="${StorageTabHarness.UNLIMITED_TEST_ID}"]`,
+    );
+    private readonly locatorNearQuota = this.locatorForOptional(
+        `[data-test-id="${StorageTabHarness.NEAR_QUOTA_TEST_ID}"]`,
+    );
+    private readonly locatorQuotaReached = this.locatorForOptional(
+        `[data-test-id="${StorageTabHarness.QUOTA_REACHED_TEST_ID}"]`,
+    );
+    private readonly locatorSupportLink = this.locatorForOptional(
+        `[data-test-id="${StorageTabHarness.SUPPORT_LINK_TEST_ID}"]`,
+    );
 
     public async getExplanation(): Promise<string> {
         return StorageTabHarness.normalizedText(await this.locatorExplanation());
@@ -62,7 +81,9 @@ export class StorageTabHarness extends ComponentHarness {
 
     /** Width of a usage bar segment, in percent of the bar */
     public async getSegmentWidthPercent(segmentId: StorageUsageSegment["id"]): Promise<number> {
-        const segment = await this.locatorFor(`[data-test-id="storage-segment-${segmentId}"]`)();
+        const segment = await this.locatorFor(
+            `[data-test-id="${StorageTabHarness.SEGMENT_TEST_ID_PREFIX}${segmentId}"]`,
+        )();
         const style = (await segment.getAttribute("style")) ?? "";
         const width = /width:\s*([\d.]+)%/.exec(style);
         if (!width) {

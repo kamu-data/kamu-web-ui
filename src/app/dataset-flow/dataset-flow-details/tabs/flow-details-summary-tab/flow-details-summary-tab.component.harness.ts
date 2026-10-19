@@ -16,15 +16,43 @@ import { ComponentHarness } from "@angular/cdk/testing";
 export class FlowDetailsSummaryTabHarness extends ComponentHarness {
     public static readonly hostSelector = ".container"; // Use a more generic selector since we're testing within the component
 
-    private readonly locatorFlowType = this.locatorFor('[data-test-id="flow-type"]');
-    private readonly locatorFlowStatus = this.locatorFor('[data-test-id="flow-status"]');
-    private readonly locatorFlowInitiator = this.locatorFor('[data-test-id="flow-initiator"]');
-    private readonly locatorFlowInitiatedTime = this.locatorFor('[data-test-id="flow-initiated-time"]');
-    private readonly locatorFlowRunDuration = this.locatorFor('[data-test-id="flow-run-duration"]');
-    private readonly locatorFlowTotalTime = this.locatorFor('[data-test-id="flow-total-time"]');
-    private readonly locatorFlowOutcome = this.locatorForOptional('[data-test-id="flow-outcome"]');
-    private readonly locatorFlowRetryAttempts = this.locatorForOptional('[data-test-id="flow-retry-attempts"]');
-    private readonly locatorFlowFinishedTime = this.locatorForOptional('[data-test-id="flow-finished-time"]');
+    private static readonly FLOW_TYPE_TEST_ID = "flow-type";
+    private static readonly FLOW_STATUS_TEST_ID = "flow-status";
+    private static readonly FLOW_INITIATOR_TEST_ID = "flow-initiator";
+    private static readonly FLOW_INITIATED_TIME_TEST_ID = "flow-initiated-time";
+    private static readonly FLOW_RUN_DURATION_TEST_ID = "flow-run-duration";
+    private static readonly FLOW_TOTAL_TIME_TEST_ID = "flow-total-time";
+    private static readonly FLOW_OUTCOME_TEST_ID = "flow-outcome";
+    private static readonly FLOW_RETRY_ATTEMPTS_TEST_ID = "flow-retry-attempts";
+    private static readonly FLOW_FINISHED_TIME_TEST_ID = "flow-finished-time";
+
+    private readonly locatorFlowType = this.locatorFor(
+        `[data-test-id="${FlowDetailsSummaryTabHarness.FLOW_TYPE_TEST_ID}"]`,
+    );
+    private readonly locatorFlowStatus = this.locatorFor(
+        `[data-test-id="${FlowDetailsSummaryTabHarness.FLOW_STATUS_TEST_ID}"]`,
+    );
+    private readonly locatorFlowInitiator = this.locatorFor(
+        `[data-test-id="${FlowDetailsSummaryTabHarness.FLOW_INITIATOR_TEST_ID}"]`,
+    );
+    private readonly locatorFlowInitiatedTime = this.locatorFor(
+        `[data-test-id="${FlowDetailsSummaryTabHarness.FLOW_INITIATED_TIME_TEST_ID}"]`,
+    );
+    private readonly locatorFlowRunDuration = this.locatorFor(
+        `[data-test-id="${FlowDetailsSummaryTabHarness.FLOW_RUN_DURATION_TEST_ID}"]`,
+    );
+    private readonly locatorFlowTotalTime = this.locatorFor(
+        `[data-test-id="${FlowDetailsSummaryTabHarness.FLOW_TOTAL_TIME_TEST_ID}"]`,
+    );
+    private readonly locatorFlowOutcome = this.locatorForOptional(
+        `[data-test-id="${FlowDetailsSummaryTabHarness.FLOW_OUTCOME_TEST_ID}"]`,
+    );
+    private readonly locatorFlowRetryAttempts = this.locatorForOptional(
+        `[data-test-id="${FlowDetailsSummaryTabHarness.FLOW_RETRY_ATTEMPTS_TEST_ID}"]`,
+    );
+    private readonly locatorFlowFinishedTime = this.locatorForOptional(
+        `[data-test-id="${FlowDetailsSummaryTabHarness.FLOW_FINISHED_TIME_TEST_ID}"]`,
+    );
 
     /**
      * Gets the flow type text

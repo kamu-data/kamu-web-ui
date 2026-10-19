@@ -19,15 +19,25 @@ import { FlowRetryPolicyFormValue } from "src/app/dataset-view/additional-compon
 export class FlowRetryPolicyFormHarness extends ComponentHarness {
     public static readonly hostSelector = "app-flow-retry-policy-form";
 
+    private static readonly ENABLED_TOGGLE_TEST_ID = "retry-policy-enabled-toggle";
+    private static readonly MAX_ATTEMPTS_INPUT_TEST_ID = "retry-policy-max-attempts-input";
+    private static readonly BACKOFF_SELECT_TEST_ID = "retry-policy-backoff-select";
+
     private readonly locatorRetriesEnabledToggle = this.locatorFor(
-        MatSlideToggleHarness.with({ selector: '[data-test-id="retry-policy-enabled-toggle"]' }),
+        MatSlideToggleHarness.with({
+            selector: `[data-test-id="${FlowRetryPolicyFormHarness.ENABLED_TOGGLE_TEST_ID}"]`,
+        }),
     );
 
-    private readonly locatorMaxAttemptsInput = this.locatorFor('[data-test-id="retry-policy-max-attempts-input"]');
+    private readonly locatorMaxAttemptsInput = this.locatorFor(
+        `[data-test-id="${FlowRetryPolicyFormHarness.MAX_ATTEMPTS_INPUT_TEST_ID}"]`,
+    );
 
     private readonly locatorMinDelayForm = this.locatorForOptional(TimeDeltaFormHarness);
 
-    private readonly locatorBackoffSelect = this.locatorFor('[data-test-id="retry-policy-backoff-select"]');
+    private readonly locatorBackoffSelect = this.locatorFor(
+        `[data-test-id="${FlowRetryPolicyFormHarness.BACKOFF_SELECT_TEST_ID}"]`,
+    );
 
     private static readonly BACKOFF_TYPE_INDEX: Record<FlowRetryBackoffType, number> = {
         [FlowRetryBackoffType.Fixed]: 0,

@@ -47,6 +47,10 @@ describe("BlockService", () => {
                     expect(result.blockAsYaml).toEqual(
                         mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHashEncoded as string,
                     );
+                    expect(result.downstreamsCount).toEqual(
+                        mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata
+                            .currentDownstreamDependenciesCount as number,
+                    );
                 }
             });
 

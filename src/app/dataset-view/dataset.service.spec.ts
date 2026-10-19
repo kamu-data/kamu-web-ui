@@ -33,7 +33,7 @@ import {
     TEST_DATASET_ID,
     TEST_DATASET_NAME,
 } from "@api/mock/dataset.mock";
-import { MaybeNull } from "@interface/app.types";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import {
@@ -111,6 +111,22 @@ describe("AppDatasetService", () => {
         expect(datasetChangesSubscription$.closed).toBeTrue();
         expect(datasetOverviewSubscription$.closed).toBeTrue();
         expect(metadataSchemaSubscription$.closed).toBeTrue();
+    });
+
+    it("should check get main data from api emits the downstreams count", () => {
+        spyOn(datasetApi, "getDatasetMainData").and.returnValue(of(mockDatasetMainDataResponse));
+
+        let downstreamsCount: MaybeUndefined<number>;
+        const downstreamsCountSubscription$ = service.downstreamsCountChanges
+            .pipe(first())
+            .subscribe((count: number) => (downstreamsCount = count));
+
+        service.requestDatasetMainData(mockDatasetInfo).subscribe();
+
+        expect(downstreamsCountSubscription$.closed).toBeTrue();
+        expect(downstreamsCount).toEqual(
+            mockDatasetMainDataResponse.datasets.byOwnerAndName?.metadata.currentDownstreamDependenciesCount,
+        );
     });
 
     it("should check get main data from api nullifies history and lineage", () => {

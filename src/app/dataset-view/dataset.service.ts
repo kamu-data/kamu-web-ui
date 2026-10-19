@@ -102,7 +102,7 @@ export class DatasetService {
                         this.setHeadBlockHash(data.datasets.byOwnerAndName.metadata.chain.refs);
 
                         this.emitDownstreamsCountChanged(
-                            data.datasets.byOwnerAndName.metadata.currentDownstreamDependencies.length,
+                            data.datasets.byOwnerAndName.metadata.currentDownstreamDependenciesCount,
                         );
                     } else {
                         throw new SqlExecutionError(dataTail.errorMessage);

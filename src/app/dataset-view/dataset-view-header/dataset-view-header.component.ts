@@ -29,7 +29,10 @@ import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
 
-import { SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS } from "src/app/dataset-view/dataset-view-header/dataset-view-header.model";
+import {
+    hiddenDownstreamsFootnote,
+    SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS,
+} from "src/app/dataset-view/dataset-view-header/dataset-view-header.model";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
@@ -148,6 +151,7 @@ export class DatasetViewHeaderComponent extends BaseComponent {
         const menuItem = this.searchAdditionalButtonsData.find((item) => item.value === value);
         if (menuItem && menuItem.value === SearchAdditionalButtonsEnum.DeriveFrom) {
             menuItem.additionalOptions.options.splice(0, menuItem.additionalOptions.options.length - 1);
+            menuItem.additionalOptions.footnote = undefined;
         }
     }
 
@@ -173,6 +177,10 @@ export class DatasetViewHeaderComponent extends BaseComponent {
                         action: SearchAdditionalHeaderButtonMenuAction.NavigateToDataset,
                     }));
                     menuItem.additionalOptions.options = [...options, ...menuItem.additionalOptions.options];
+
+                    const hiddenCount = menuItem.counter - list.length;
+                    menuItem.additionalOptions.footnote =
+                        hiddenCount > 0 ? hiddenDownstreamsFootnote(hiddenCount) : undefined;
                 });
         }
     }

@@ -9,8 +9,13 @@ import {
     SearchAdditionalHeaderButtonInterface,
     SearchAdditionalHeaderButtonMenuAction,
 } from "@common/components/search-additional-buttons/search-additional-buttons.interface";
+import { pluralize } from "@common/helpers/app.helpers";
 
 import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
+
+export function hiddenDownstreamsFootnote(hiddenCount: number): string {
+    return `+${hiddenCount} private ${pluralize("dataset", hiddenCount)} you cannot view`;
+}
 
 export const SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS: SearchAdditionalHeaderButtonInterface[] = [
     {

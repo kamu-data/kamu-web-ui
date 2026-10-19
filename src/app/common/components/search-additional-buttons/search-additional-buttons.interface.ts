@@ -23,6 +23,7 @@ export interface SearchAdditionalHeaderButtonInterface {
     additionalOptions: {
         title: string;
         disabled: boolean;
+        footnote?: string;
         options: {
             title: string;
             text: string;

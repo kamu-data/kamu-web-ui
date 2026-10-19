@@ -24,7 +24,11 @@ export class TypeEditorHarness extends ComponentHarness {
     /** Returns the text currently shown in the kind ng-select container (the selected label). */
     public async getDisplayedKind(): Promise<string> {
         const label = await this.locatorValueLabel();
-        return label ? (await label.text()).trim() : "";
+        if (!label) {
+            return "";
+        }
+        const text = await label.text();
+        return text.trim();
     }
 
     /**

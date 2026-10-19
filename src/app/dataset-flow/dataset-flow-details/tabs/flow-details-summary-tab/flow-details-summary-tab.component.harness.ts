@@ -59,7 +59,8 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
      */
     public async getFlowType(): Promise<string> {
         const element = await this.locatorFlowType();
-        return (await element.text()).trim();
+        const text = await element.text();
+        return text.trim();
     }
 
     /**
@@ -67,7 +68,8 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
      */
     public async getFlowStatus(): Promise<string> {
         const element = await this.locatorFlowStatus();
-        return (await element.text()).trim();
+        const text = await element.text();
+        return text.trim();
     }
 
     /**
@@ -75,7 +77,8 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
      */
     public async getFlowInitiator(): Promise<string> {
         const element = await this.locatorFlowInitiator();
-        return (await element.text()).trim();
+        const text = await element.text();
+        return text.trim();
     }
 
     /**
@@ -83,7 +86,8 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
      */
     public async getFlowInitiatedTime(): Promise<string> {
         const element = await this.locatorFlowInitiatedTime();
-        return (await element.text()).trim();
+        const text = await element.text();
+        return text.trim();
     }
 
     /**
@@ -91,7 +95,8 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
      */
     public async getFlowRunDuration(): Promise<string> {
         const element = await this.locatorFlowRunDuration();
-        return (await element.text()).trim();
+        const text = await element.text();
+        return text.trim();
     }
 
     /**
@@ -99,7 +104,8 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
      */
     public async getFlowTotalTime(): Promise<string> {
         const element = await this.locatorFlowTotalTime();
-        return (await element.text()).trim();
+        const text = await element.text();
+        return text.trim();
     }
 
     /**
@@ -112,7 +118,8 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
             return null;
         }
 
-        const text = (await element.text()).trim();
+        const rawText = await element.text();
+        const text = rawText.trim();
         const cssClasses = await element.getAttribute("class");
 
         return {
@@ -135,7 +142,11 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
      */
     public async getRetryAttempts(): Promise<string | null> {
         const element = await this.locatorFlowRetryAttempts();
-        return element ? (await element.text()).trim() : null;
+        if (!element) {
+            return null;
+        }
+        const text = await element.text();
+        return text.trim();
     }
 
     /**
@@ -152,7 +163,11 @@ export class FlowDetailsSummaryTabHarness extends ComponentHarness {
      */
     public async getFinishedTime(): Promise<string | null> {
         const element = await this.locatorFlowFinishedTime();
-        return element ? (await element.text()).trim() : null;
+        if (!element) {
+            return null;
+        }
+        const text = await element.text();
+        return text.trim();
     }
 
     /**

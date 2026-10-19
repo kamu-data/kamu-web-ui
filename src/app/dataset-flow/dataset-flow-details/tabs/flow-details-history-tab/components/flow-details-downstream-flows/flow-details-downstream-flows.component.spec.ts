@@ -51,7 +51,8 @@ describe("FlowDetailsDownstreamFlowsComponent", () => {
     it("should link a visible downstream flow and its dataset", async () => {
         await setupComponent(mockFlowDownstreamLinks);
 
-        const row = (await harness.getRows())[0];
+        const rows = await harness.getRows();
+        const row = rows[0];
         expect(row.icon).toEqual("check_circle");
         expect(row.iconClasses).toContain("completed-status");
         expect(row.flowHref).toEqual("/kamu/mockNameDerived/flow-details/10/history");
@@ -64,7 +65,8 @@ describe("FlowDetailsDownstreamFlowsComponent", () => {
     it("should not link a downstream flow hidden from the user, but link its dataset", async () => {
         await setupComponent(mockFlowDownstreamLinks);
 
-        const row = (await harness.getRows())[1];
+        const rows = await harness.getRows();
+        const row = rows[1];
         expect(row.icon).toEqual("radio_button_unchecked");
         expect(row.flowHref).toBeNull();
         expect(row.status).toBeNull();
@@ -74,7 +76,8 @@ describe("FlowDetailsDownstreamFlowsComponent", () => {
     it("should show only the ID of an unavailable downstream dataset", async () => {
         await setupComponent(mockFlowDownstreamLinks);
 
-        const row = (await harness.getRows())[2];
+        const rows = await harness.getRows();
+        const row = rows[2];
         expect(row.icon).toEqual("help_outline");
         expect(row.flowHref).toBeNull();
         expect(row.status).toBeNull();
@@ -85,7 +88,8 @@ describe("FlowDetailsDownstreamFlowsComponent", () => {
     it("should not show a dataset for a downstream flow without one", async () => {
         await setupComponent([{ ...mockFlowDownstreamLinks[0], datasetId: null, dataset: null }]);
 
-        const row = (await harness.getRows())[0];
+        const rows = await harness.getRows();
+        const row = rows[0];
         expect(row.flowLabel).toEqual("Flow #12");
         expect(row.datasetHref).toBeNull();
         expect(row.unavailableDataset).toBeNull();

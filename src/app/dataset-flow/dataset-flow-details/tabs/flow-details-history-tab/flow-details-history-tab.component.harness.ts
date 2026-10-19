@@ -50,7 +50,11 @@ export class FlowDetailsHistoryTabHarness extends ComponentHarness {
         const descriptionElement = await this.locatorForOptional(
             `[data-test-id="${FlowDetailsHistoryTabHarness.HISTORY_ITEM_TEST_ID_PREFIX}${index}-description"]`,
         )();
-        return descriptionElement ? (await descriptionElement.text()).trim() : null;
+        if (!descriptionElement) {
+            return null;
+        }
+        const text = await descriptionElement.text();
+        return text.trim();
     }
 
     /**
@@ -60,7 +64,11 @@ export class FlowDetailsHistoryTabHarness extends ComponentHarness {
         const subMessageElement = await this.locatorForOptional(
             `[data-test-id="${FlowDetailsHistoryTabHarness.HISTORY_ITEM_TEST_ID_PREFIX}${index}-submessage"]`,
         )();
-        return subMessageElement ? (await subMessageElement.text()).trim() : null;
+        if (!subMessageElement) {
+            return null;
+        }
+        const text = await subMessageElement.text();
+        return text.trim();
     }
 
     /**
@@ -70,7 +78,11 @@ export class FlowDetailsHistoryTabHarness extends ComponentHarness {
         const timeElement = await this.locatorForOptional(
             `[data-test-id="${FlowDetailsHistoryTabHarness.HISTORY_ITEM_TEST_ID_PREFIX}${index}-time"]`,
         )();
-        return timeElement ? (await timeElement.text()).trim() : null;
+        if (!timeElement) {
+            return null;
+        }
+        const text = await timeElement.text();
+        return text.trim();
     }
 
     /**
@@ -80,7 +92,11 @@ export class FlowDetailsHistoryTabHarness extends ComponentHarness {
         const durationElement = await this.locatorForOptional(
             `[data-test-id="${FlowDetailsHistoryTabHarness.HISTORY_ITEM_TEST_ID_PREFIX}${index}-duration"]`,
         )();
-        return durationElement ? (await durationElement.text()).trim() : null;
+        if (!durationElement) {
+            return null;
+        }
+        const text = await durationElement.text();
+        return text.trim();
     }
 
     /**
@@ -102,7 +118,8 @@ export class FlowDetailsHistoryTabHarness extends ComponentHarness {
         )();
         if (!iconElement) return null;
 
-        const icon = (await iconElement.text()).trim();
+        const iconText = await iconElement.text();
+        const icon = iconText.trim();
         const cssClasses = await iconElement.getAttribute("class");
 
         return {

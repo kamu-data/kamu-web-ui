@@ -93,6 +93,7 @@ export class StorageTabHarness extends ComponentHarness {
     }
 
     private static async normalizedText(element: TestElement): Promise<string> {
-        return (await element.text()).replace(/\s+/g, " ").trim();
+        const text = await element.text();
+        return text.replace(/\s+/g, " ").trim();
     }
 }

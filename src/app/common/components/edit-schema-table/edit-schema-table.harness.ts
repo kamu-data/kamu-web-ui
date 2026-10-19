@@ -120,22 +120,26 @@ export class EditSchemaTableHarness extends ComponentHarness {
 
     /** Clicks the edit (pencil) button for a field identified by name. */
     public async editField(name: string): Promise<void> {
-        await (await this.locatorFor(this.sel(EditSchemaTableHarness.EDIT_FIELD_VERB, name))()).click();
+        const button = await this.locatorFor(this.sel(EditSchemaTableHarness.EDIT_FIELD_VERB, name))();
+        await button.click();
     }
 
     /** Clicks the edit button for a field identified by row index (0-based). */
     public async editFieldByIndex(index: number): Promise<void> {
-        await (await this.locatorFor(this.sel(EditSchemaTableHarness.EDIT_FIELD_VERB, index))()).click();
+        const button = await this.locatorFor(this.sel(EditSchemaTableHarness.EDIT_FIELD_VERB, index))();
+        await button.click();
     }
 
     /** Clicks the delete button for a field identified by name. */
     public async deleteField(name: string): Promise<void> {
-        await (await this.locatorFor(this.sel(EditSchemaTableHarness.DELETE_FIELD_VERB, name))()).click();
+        const button = await this.locatorFor(this.sel(EditSchemaTableHarness.DELETE_FIELD_VERB, name))();
+        await button.click();
     }
 
     /** Clicks the delete button for a field identified by row index (0-based). */
     public async deleteFieldByIndex(index: number): Promise<void> {
-        await (await this.locatorFor(this.sel(EditSchemaTableHarness.DELETE_FIELD_VERB, index))()).click();
+        const button = await this.locatorFor(this.sel(EditSchemaTableHarness.DELETE_FIELD_VERB, index))();
+        await button.click();
     }
 
     // ---------------------------------------------------------------------------
@@ -144,7 +148,8 @@ export class EditSchemaTableHarness extends ComponentHarness {
 
     /** Clicks the "Add field" button to open a new provisional row. */
     public async startAddField(): Promise<void> {
-        await (await this.locatorFor(this.sel(EditSchemaTableHarness.ADD_FIELD_VERB))()).click();
+        const button = await this.locatorFor(this.sel(EditSchemaTableHarness.ADD_FIELD_VERB))();
+        await button.click();
     }
 
     /** Sets the value of the name input (only present while a row is being edited). */
@@ -168,12 +173,14 @@ export class EditSchemaTableHarness extends ComponentHarness {
 
     /** Clicks the save (check) button. */
     public async save(): Promise<void> {
-        await (await this.locatorFor(this.sel(EditSchemaTableHarness.SAVE_FIELD_VERB))()).click();
+        const button = await this.locatorFor(this.sel(EditSchemaTableHarness.SAVE_FIELD_VERB))();
+        await button.click();
     }
 
     /** Clicks the cancel (×) button. */
     public async cancel(): Promise<void> {
-        await (await this.locatorFor(this.sel(EditSchemaTableHarness.CANCEL_EDIT_VERB))()).click();
+        const button = await this.locatorFor(this.sel(EditSchemaTableHarness.CANCEL_EDIT_VERB))();
+        await button.click();
     }
 
     /**

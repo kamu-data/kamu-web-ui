@@ -14,7 +14,6 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     templateUrl: "./command-property.component.html",
     styleUrls: ["./command-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
 })
 export class CommandPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string[];

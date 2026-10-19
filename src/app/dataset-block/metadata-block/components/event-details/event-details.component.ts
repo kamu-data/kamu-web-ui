@@ -42,7 +42,6 @@ import { SupportedEvents } from "src/app/dataset-block/metadata-block/components
     selector: "app-event-details",
     templateUrl: "./event-details.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
 })
 export class EventDetailsComponent implements AfterViewInit, OnChanges {
     @Input({ required: true }) public block: MetadataBlockFragment;

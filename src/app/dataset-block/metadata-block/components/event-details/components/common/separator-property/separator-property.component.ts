@@ -13,7 +13,6 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     selector: "app-separator-property",
     templateUrl: "./separator-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
 })
 export class SeparatorPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

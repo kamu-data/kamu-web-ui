@@ -11,6 +11,5 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
     selector: "app-data-access-code-tab",
     templateUrl: "./data-access-code-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
 })
 export class DataAccessCodeTabComponent {}

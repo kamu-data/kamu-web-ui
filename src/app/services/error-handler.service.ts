@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ErrorHandler, Inject, Injectable, Injector, NgZone } from "@angular/core";
+import { ErrorHandler, inject, Injectable, Injector, NgZone } from "@angular/core";
 
 import { logError } from "@common/helpers/app.helpers";
 import { KamuError, KamuErrorHandler } from "@common/values/errors";
@@ -17,14 +17,11 @@ import { NavigationService } from "src/app/services/navigation.service";
     providedIn: "root",
 })
 export class ErrorHandlerService implements ErrorHandler {
+    private injector = inject(Injector);
+    private navigationService = inject(NavigationService);
+    private loggedUserService = inject(LoggedUserService);
+    private ngZone = inject(NgZone);
     private kamuHandlerError = new KamuErrorHandler(this.injector, this.navigationService, this.loggedUserService);
-
-    public constructor(
-        @Inject(Injector) private injector: Injector,
-        private navigationService: NavigationService,
-        private loggedUserService: LoggedUserService,
-        private ngZone: NgZone,
-    ) {}
 
     public handleError(error: unknown): void {
         if (error instanceof KamuError) {

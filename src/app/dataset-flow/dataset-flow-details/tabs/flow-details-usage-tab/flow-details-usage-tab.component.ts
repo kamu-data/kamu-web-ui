@@ -11,6 +11,5 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
     selector: "app-flow-details-usage-tab",
     templateUrl: "./flow-details-usage-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
 })
 export class FlowDetailsUsageTabComponent {}

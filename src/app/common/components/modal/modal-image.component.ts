@@ -24,6 +24,5 @@ import { DynamicComponent } from "@common/components/modal/dynamic.component";
             </div>
         </div>
     `,
-    standalone: true,
 })
 export class ModalImageComponent extends DynamicComponent {}

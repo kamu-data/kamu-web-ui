@@ -8,6 +8,7 @@
 import {
     Directive,
     ElementRef,
+    inject,
     Input,
     OnChanges,
     OnDestroy,
@@ -27,7 +28,6 @@ import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 @Directive({
     selector: "[appFieldError]",
-    standalone: true,
 })
 export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnInit {
     @Input({ required: true }) public appFieldError:
@@ -38,16 +38,12 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnIn
     @Input() public fieldLabel: MaybeUndefined<string>;
     @Input() public dataTestId: string = "";
 
-    private readonly nativeElement: HTMLElement;
+    private readonly nativeElement = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
     private controlSubscription: MaybeUndefined<Subscription>;
     private ngSelectStatusSubscription: MaybeUndefined<Subscription>;
     private ngSelectBlurSubscription: MaybeUndefined<OutputRefSubscription>;
     private readonly MIN_REQUIRED_LENGTH = 2;
     private readonly MAX_REQUIRED_LENGTH = 100;
-
-    public constructor(private el: ElementRef) {
-        this.nativeElement = this.el.nativeElement as HTMLElement;
-    }
 
     public ngOnInit(): void {
         this.nativeElement.setAttribute("data-test-id", this.dataTestId);

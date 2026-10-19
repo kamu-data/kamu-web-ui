@@ -11,7 +11,6 @@ import { FlowProcessEffectiveState, WebhookFlowSubProcess } from "@api/kamu.grap
 
 @Pipe({
     name: "subprocessStatusFilter",
-    standalone: true,
 })
 export class SubprocessStatusFilterPipe implements PipeTransform {
     public transform(

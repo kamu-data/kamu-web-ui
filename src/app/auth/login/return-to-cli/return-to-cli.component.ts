@@ -16,7 +16,6 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
     templateUrl: "./return-to-cli.component.html",
     styleUrls: ["./return-to-cli.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
 })
 export class ReturnToCliComponent implements OnInit {
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;

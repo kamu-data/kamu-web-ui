@@ -11,7 +11,6 @@ export type MarkdownSupportedFormats = "yaml" | "sql" | "json";
 
 @Pipe({
     name: "markdownFormat",
-    standalone: true,
 })
 export class MarkdownFormatPipe implements PipeTransform {
     public transform(value: string | object, format: MarkdownSupportedFormats): string {

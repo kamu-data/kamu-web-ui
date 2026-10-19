@@ -17,7 +17,6 @@ import { NavigationService } from "src/app/services/navigation.service";
     selector: "app-github-callback",
     template: "",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
 })
 export class GithubCallbackComponent extends BaseComponent implements OnInit {
     @Input(ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL) public redirectUrl: string;

@@ -14,7 +14,6 @@ import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
 
 @Component({
     selector: "app-attributes-schema-modal",
-    standalone: true,
     imports: [
         //-----//
         MarkdownModule,

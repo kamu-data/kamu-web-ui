@@ -8,6 +8,7 @@
 /* istanbul ignore file */
 
 import { ComponentHarness, HarnessPredicate, TestKey } from "@angular/cdk/testing";
+import { MatTooltipHarness } from "@angular/material/tooltip/testing";
 
 import { MaybeNull } from "@interface/app.types";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
@@ -79,6 +80,17 @@ export class EditSchemaTableHarness extends ComponentHarness {
     // ---------------------------------------------------------------------------
     // Selector helpers (synchronous — _tablePath is always set before use)
     // ---------------------------------------------------------------------------
+
+    private async tooltipTextFor(selector: string): Promise<MaybeNull<string>> {
+        const tooltip = await this.locatorForOptional(MatTooltipHarness.with({ selector }))();
+        if (!tooltip) {
+            return null;
+        }
+        await tooltip.show();
+        const text = await tooltip.getTooltipText();
+        await tooltip.hide();
+        return text;
+    }
 
     private sel(verb: string, nameOrIndex?: string | number): string {
         if (nameOrIndex === undefined) {
@@ -266,10 +278,9 @@ export class EditSchemaTableHarness extends ComponentHarness {
 
     /** Returns the matTooltip text on the error icon, or null if absent. */
     public async errorTooltipFor(fieldName: string): Promise<MaybeNull<string>> {
-        const icon = await this.locatorForOptional(
-            `${this.sel(EditSchemaTableHarness.FIELD_NAME_VERB, fieldName)} mat-icon.text-danger`,
-        )();
-        return icon ? icon.getAttribute("ng-reflect-message") : null;
+        return this.tooltipTextFor(
+            `${this.sel(EditSchemaTableHarness.FIELD_NAME_VERB, fieldName)} mat-icon.text-danger:not(.empty-struct-icon)`,
+        );
     }
 
     /** Returns true if the warning icon (warning/yellow) is present next to the named field. */
@@ -282,10 +293,9 @@ export class EditSchemaTableHarness extends ComponentHarness {
 
     /** Returns the matTooltip text on the warning icon, or null if absent. */
     public async warningTooltipFor(fieldName: string): Promise<MaybeNull<string>> {
-        const icon = await this.locatorForOptional(
+        return this.tooltipTextFor(
             `${this.sel(EditSchemaTableHarness.FIELD_NAME_VERB, fieldName)} mat-icon.text-warning`,
-        )();
-        return icon ? icon.getAttribute("ng-reflect-message") : null;
+        );
     }
 
     /** Returns true if the empty-Struct warning icon is present next to the named field. */

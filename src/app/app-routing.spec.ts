@@ -15,7 +15,6 @@ import { Router, ROUTES } from "@angular/router";
 
 import { of } from "rxjs";
 
-import { NgxGraphModule } from "@swimlane/ngx-graph";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
@@ -58,7 +57,7 @@ describe("Router", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             schemas: [NO_ERRORS_SCHEMA],
-            imports: [ApolloTestingModule, NgxGraphModule, PageNotFoundComponent, LoginComponent],
+            imports: [ApolloTestingModule, PageNotFoundComponent, LoginComponent],
             providers: [
                 Apollo,
                 {

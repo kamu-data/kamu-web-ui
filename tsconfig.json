@@ -24,7 +24,7 @@
     "target": "ES2022",
     "module": "esnext",
     "skipLibCheck": true,
-    "lib": ["es2018", "dom"],
+    "lib": ["es2022", "dom"],
     "resolveJsonModule": true,
     "useDefineForClassFields": false
   },
@@ -32,6 +32,11 @@
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "strictTemplates": true,
+    "strictStandalone": true,
+    "typeCheckHostBindings": true,
+    "extendedDiagnostics": {
+      "defaultCategory": "error"
+    }
   }
 }

@@ -12,7 +12,7 @@ import { map, Observable } from "rxjs";
 import { Edge, Node } from "@swimlane/ngx-graph";
 
 import { isNil } from "@common/helpers/app.helpers";
-import { chainNameFromId } from "@common/helpers/data.helpers";
+import { chainNameFromId } from "@common/helpers/ethereum.helpers";
 import {
     DatasetAccessResultNotAccessible,
     DatasetKind,

@@ -10,12 +10,36 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, O
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from "@angular/forms";
 
+import { RxwebValidators } from "@rxweb/reactive-form-validators";
+
 import { BaseComponent } from "@common/components/base.component";
 import { TimeDeltaFormType } from "@common/components/time-delta-form/time-delta-form.value";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
-import { everyTimeMapperValidators } from "@common/helpers/data.helpers";
 import { TimeUnit } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
+
+const everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = {
+    [TimeUnit.Minutes]: RxwebValidators.range({
+        minimumNumber: 1,
+        maximumNumber: 60,
+        message: "Value should be between 1 to 60",
+    }),
+    [TimeUnit.Hours]: RxwebValidators.range({
+        minimumNumber: 1,
+        maximumNumber: 24,
+        message: "Value should be between 1 to 24",
+    }),
+    [TimeUnit.Days]: RxwebValidators.range({
+        minimumNumber: 1,
+        maximumNumber: 31,
+        message: "Value should be between 1 to 31",
+    }),
+    [TimeUnit.Weeks]: RxwebValidators.range({
+        minimumNumber: 1,
+        maximumNumber: 51,
+        message: "Value should be between 1 to 51",
+    }),
+};
 
 @Component({
     selector: "app-time-delta-form",

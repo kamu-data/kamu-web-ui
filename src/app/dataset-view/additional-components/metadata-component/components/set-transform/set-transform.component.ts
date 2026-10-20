@@ -14,9 +14,7 @@ import { catchError, forkJoin, from, map, of, take } from "rxjs";
 
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 
-import { parseCurrentSchema } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import AppValues from "@common/values/app.values";
 import { DatasetKind, GetDatasetSchemaQuery, SqlQueryStep } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
@@ -26,6 +24,7 @@ import { EngineSectionComponent } from "src/app/dataset-view/additional-componen
 import { QueriesSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/queries-section/queries-section.component";
 import { SearchSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/search-section/search-section.component";
 import { EditSetTransformService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/edit-set-transform..service";
+import { datasetNodeFromSchemaQuery } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
 import {
     DatasetNode,
     SetTransformYamlType,
@@ -62,7 +61,6 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     public dataSource = new MatTreeNestedDataSource<DatasetNode>();
     public inputsViewModel: DatasetNode[] = [];
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
-    private readonly UNAVAILABLE_INPUT_LABEL: string = AppValues.SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL;
 
     private editService = inject(EditSetTransformService);
 
@@ -104,23 +102,10 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
         const requests$ = inputs
             .filter((item) => !!item.datasetRef)
             .map((item) => {
-                return this.datasetService.requestDatasetSchema(item.datasetRef).pipe(
-                    map((data: GetDatasetSchemaQuery) => {
-                        const schema = parseCurrentSchema(data.datasets.byId?.metadata.currentSchema);
-                        const datasetInfo = item.alias.split("/");
+                this.inputDatasets.add(JSON.stringify({ datasetRef: item.datasetRef, alias: item.alias }));
 
-                        return schema?.fields.length
-                            ? {
-                                  name: datasetInfo.length > 1 ? datasetInfo[1] : item.alias,
-                                  schema: schema?.fields || [],
-                                  owner: datasetInfo.length > 1 ? datasetInfo[0] : AppValues.DEFAULT_ADMIN_ACCOUNT_NAME,
-                              }
-                            : {
-                                  name: this.UNAVAILABLE_INPUT_LABEL,
-                                  schema: [],
-                                  owner: "",
-                              };
-                    }),
+                return this.datasetService.requestDatasetSchema(item.datasetRef).pipe(
+                    map((data: GetDatasetSchemaQuery) => datasetNodeFromSchemaQuery(item.alias, data)),
                     catchError(() => {
                         throw new Error("TransformInput without an 'datasetRef' is unexpected");
                     }),

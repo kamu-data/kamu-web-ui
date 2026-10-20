@@ -10,13 +10,14 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { SimpleChanges } from "@angular/core";
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatTableHarness } from "@angular/material/table/testing";
 
 import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
+import timekeeper from "timekeeper";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
@@ -39,6 +40,14 @@ describe("FlowsTableComponent", () => {
     let modalService: ModalService;
     let datasetFlowsService: DatasetFlowsService;
     let toastService: ToastrService;
+
+    beforeAll(() => {
+        timekeeper.freeze("2024-03-14T11:22:29+00:00");
+    });
+
+    afterAll(() => {
+        timekeeper.reset();
+    });
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -158,7 +167,7 @@ describe("FlowsTableComponent", () => {
         expect(component.showForceUpdateLink(mockFlowSummaryDataFragmentShowForceLink)).toEqual(true);
     });
 
-    it("should check trigger flow with force update option", fakeAsync(() => {
+    it("should check trigger flow with force update option", async () => {
         const datasetTriggerIngestFlowSpy = spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(
             of(true),
         );
@@ -171,11 +180,10 @@ describe("FlowsTableComponent", () => {
         component.onForceUpdate(mockFlowSummaryDataFragmentShowForceLink);
 
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
 
         expect(forceUpdateModalSpy).toHaveBeenCalledTimes(1);
         expect(datasetTriggerIngestFlowSpy).toHaveBeenCalledTimes(1);
         expect(toastrServiceSuccessSpy).toHaveBeenCalledWith("Force update started");
-        flush();
-    }));
+    });
 });

@@ -81,6 +81,10 @@ describe("Flows badge messages helper", () => {
         timekeeper.freeze(FROZEN_TIME);
     });
 
+    afterAll(() => {
+        timekeeper.reset();
+    });
+
     [
         {
             case: {
@@ -325,6 +329,10 @@ describe("nextTimeRangeHelper helper", () => {
         timekeeper.freeze(FROZEN_TIME);
     });
 
+    afterAll(() => {
+        timekeeper.reset();
+    });
+
     [
         {
             case: RangeLastAttempt.NEXT_5_MINUTES,
@@ -397,6 +405,10 @@ describe("lastTimeRangeHelper helper", () => {
     beforeAll(() => {
         const FROZEN_TIME = new Date("2025-12-02 12:00:00");
         timekeeper.freeze(FROZEN_TIME);
+    });
+
+    afterAll(() => {
+        timekeeper.reset();
     });
 
     [

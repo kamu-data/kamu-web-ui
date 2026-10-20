@@ -13,9 +13,9 @@ const defaultSeverity = 8;
 
 export function getSqlError(error: string): EditorError {
     const lineMatch = error.match(/Line: (\d+)/);
-    const colMath = error.match(/Column (\d+)/);
+    const colMatch = error.match(/Column: (\d+)/);
     const line = lineMatch ? Number(lineMatch[1]) : undefined;
-    const col = colMath ? Number(colMath[1]) : undefined;
+    const col = colMatch ? Number(colMatch[1]) : undefined;
 
     return {
         message: error,

@@ -6,7 +6,7 @@
  */
 
 import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { FormArray, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatStepperModule } from "@angular/material/stepper";
 import { RouterLink } from "@angular/router";
@@ -20,6 +20,7 @@ import {
     FetchKind,
     SetPollingSourceSection,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { EditPollingSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/edit-polling-source.service";
 import { FETCH_STEP_RADIO_CONTROLS } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/form-control.source";
 import { SourcesSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
 import { BaseStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/base-step/base-step.component";
@@ -81,6 +82,8 @@ export class AddPollingSourceComponent extends BaseSourceEventComponent implemen
         }),
     });
 
+    private editService = inject(EditPollingSourceService);
+
     public get fetchForm(): FormGroup {
         return this.pollingSourceForm.get(SetPollingSourceSection.FETCH) as FormGroup;
     }
@@ -99,6 +102,9 @@ export class AddPollingSourceComponent extends BaseSourceEventComponent implemen
 
     public ngOnInit(): void {
         super.ngOnInit();
+        if (this.eventYamlByHash) {
+            this.showPreprocessStep = Boolean(this.editService.parseEventFromYaml(this.eventYamlByHash).preprocess);
+        }
     }
 
     public changeStep(step: SourcesSection): void {

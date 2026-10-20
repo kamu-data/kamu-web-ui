@@ -142,4 +142,33 @@ describe("UpcomingScheduledFiltersViewComponent", () => {
         expect(component.dashboardFilters.nextPlannedAfterDate).toBeDefined();
         expect(component.dashboardFilters.nextPlannedBeforeDate).toBeDefined();
     });
+
+    describe("current time limit of the date pickers", () => {
+        afterEach(() => {
+            timekeeper.freeze("2024-03-14T11:30:00+00:00");
+        });
+
+        it("should check opening a date picker refreshes the current time limit", () => {
+            fixture.detectChanges();
+            timekeeper.freeze("2030-01-02T03:04:05+00:00");
+
+            emitClickOnElementByDataTestId(fixture, "nextPlannedAfterDatepicker");
+
+            expect(component.currentDateTime).toEqual("2030-01-02T03:04:05.000Z");
+        });
+
+        it("should check a quick range starts at the refreshed current time limit", () => {
+            fixture.detectChanges();
+            timekeeper.freeze("2030-01-02T03:04:05+00:00");
+
+            component.onQuickRangeNextAttempt({
+                id: 1,
+                label: "Next 5 minutes",
+                value: RangeLastAttempt.NEXT_5_MINUTES,
+            });
+
+            expect(component.currentDateTime).toEqual("2030-01-02T03:04:05.000Z");
+            expect(component.dashboardFilters.nextPlannedAfterDate?.toISOString()).toEqual(component.currentDateTime);
+        });
+    });
 });

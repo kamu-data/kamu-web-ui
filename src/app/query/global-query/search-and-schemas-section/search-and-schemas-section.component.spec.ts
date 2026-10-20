@@ -7,6 +7,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 
 import { of } from "rxjs";
 
@@ -66,6 +67,19 @@ describe("SearchAndSchemasSectionComponent", () => {
         component.removeDataset("dataset2");
         expect(component.searchResult.length).toEqual(1);
         expect(component.searchResult).toEqual([{ datasetAlias: "dataset1", schema: null }]);
+        expect([...component.inputDatasets]).toEqual(["dataset1"]);
+    });
+
+    it("should check a removed dataset can be picked again", () => {
+        const selectEvent = {
+            item: { dataset: mockDatasetBasicsDerivedFragment, __typename: TypeNames.datasetType },
+        } as NgbTypeaheadSelectItemEvent;
+        component.onSelectItem(selectEvent);
+
+        component.removeDataset(mockDatasetBasicsDerivedFragment.alias);
+        component.onSelectItem(selectEvent);
+
+        expect(requestDatasetSchemaSpy).toHaveBeenCalledTimes(2);
     });
 
     it("should activate search API and update view", fakeAsync(() => {
@@ -120,5 +134,31 @@ describe("SearchAndSchemasSectionComponent", () => {
         ];
         expect(component.sortedSearchResult[0].datasetAlias).toEqual("dataset1");
         expect(component.sortedSearchResult[1].datasetAlias).toEqual("dataset2");
+    });
+
+    it("should check running the query again keeps the schema panels", () => {
+        fixture.detectChanges();
+        const panelsBefore = fixture.debugElement.queryAll(By.css('[data-test-id="schema-panel"]'));
+        expect(panelsBefore.length).toBeGreaterThan(0);
+
+        sqlQueryService.emitSqlQueryResponseChanged(mockSqlQueryResponseState);
+        fixture.detectChanges();
+
+        const panelsAfter = fixture.debugElement.queryAll(By.css('[data-test-id="schema-panel"]'));
+        expect(panelsAfter.map((panel) => panel.nativeElement as HTMLElement)).toEqual(
+            panelsBefore.map((panel) => panel.nativeElement as HTMLElement),
+        );
+    });
+
+    it("should check picking a dataset that is already shown keeps one schema panel for it", () => {
+        fixture.detectChanges();
+        const panelCount = fixture.debugElement.queryAll(By.css('[data-test-id="schema-panel"]')).length;
+
+        component.onSelectItem({
+            item: { dataset: mockDatasetBasicsDerivedFragment, __typename: TypeNames.datasetType },
+        } as NgbTypeaheadSelectItemEvent);
+        fixture.detectChanges();
+
+        expect(fixture.debugElement.queryAll(By.css('[data-test-id="schema-panel"]')).length).toEqual(panelCount);
     });
 });

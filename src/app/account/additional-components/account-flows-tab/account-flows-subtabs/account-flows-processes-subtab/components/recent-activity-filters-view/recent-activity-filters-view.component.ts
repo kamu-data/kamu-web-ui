@@ -50,6 +50,8 @@ export class RecentActivityFiltersViewComponent implements OnInit {
 
     public readonly RANGE_LAST_ATTEMPT_LIST = RANGE_LAST_ATTEMPT_LIST;
 
+    public currentDateTime = new Date().toISOString();
+
     public ngOnInit(): void {
         this.dashboardFilters.isFirstInitialization = true;
         this.dashboardFilters.selectedFlowProcessStates = [
@@ -64,8 +66,8 @@ export class RecentActivityFiltersViewComponent implements OnInit {
         this.applyFilterEmitter.next();
     }
 
-    public get currentDateTime(): string {
-        return new Date().toISOString();
+    public refreshCurrentDateTime(now: Date = new Date()): void {
+        this.currentDateTime = now.toISOString();
     }
 
     public get orderDirection(): OrderingDirection {
@@ -89,8 +91,10 @@ export class RecentActivityFiltersViewComponent implements OnInit {
     }
 
     public onQuickRangeLastAttempt(e: RangeLastAttemptOption): void {
+        const now = new Date();
+        this.refreshCurrentDateTime(now);
         this.dashboardFilters.fromFilterDate = lastTimeRangeHelper(e.value);
-        this.dashboardFilters.toFilterDate = new Date();
+        this.dashboardFilters.toFilterDate = now;
         this.applyFilterEmitter.next();
     }
 }

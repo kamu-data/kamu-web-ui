@@ -114,12 +114,12 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
     ): Observable<GlobalQuerySearchItem[]> {
         return combineLatest(schemaResponses).pipe(
             map((datasets: GetDatasetSchemaQuery[]) => {
-                const result = datasets.map((item: GetDatasetSchemaQuery) => {
-                    const datasetAlias = item.datasets.byId?.alias;
-                    const schema = parseCurrentSchema(item.datasets.byId?.metadata.currentSchema);
-                    return { datasetAlias, schema } as GlobalQuerySearchItem;
+                return datasets.flatMap((item: GetDatasetSchemaQuery): GlobalQuerySearchItem[] => {
+                    const dataset = item.datasets.byId;
+                    return dataset
+                        ? [{ datasetAlias: dataset.alias, schema: parseCurrentSchema(dataset.metadata.currentSchema) }]
+                        : [];
                 });
-                return result;
             }),
         );
     }
@@ -132,11 +132,7 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
         this.searchResult = this.searchResult.filter(
             (item: GlobalQuerySearchItem) => item.datasetAlias !== datasetAlias,
         );
-        this.inputDatasets.forEach((item) => {
-            if (item.includes(datasetAlias)) {
-                this.inputDatasets.delete(item);
-            }
-        });
+        this.inputDatasets.delete(datasetAlias);
     }
 
     public search: OperatorFunction<string, readonly DatasetAutocompleteItem[]> = (text$: Observable<string>) => {
@@ -153,18 +149,13 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
 
     public onSelectItem(event: NgbTypeaheadSelectItemEvent): void {
         const value = event.item as DatasetAutocompleteItem;
-        const id = value.dataset.id;
-        const name = value.dataset.name;
+        const alias = value.dataset.alias;
         if (!this.inputDatasets.size) {
-            this.sqlQueryEmit.emit(`${this.SQL_DEFAULT_TEMPLATE} '${value.dataset.alias}'`);
+            this.sqlQueryEmit.emit(`${this.SQL_DEFAULT_TEMPLATE} '${alias}'`);
         }
-        const inputDataset = JSON.stringify({
-            datasetRef: id,
-            alias: name,
-        });
-        if (value.__typename !== TypeNames.allDataType && !this.inputDatasets.has(inputDataset)) {
-            this.inputDatasets.add(inputDataset);
-            this.requestDatasetSchemaById(id);
+        if (value.__typename !== TypeNames.allDataType && !this.inputDatasets.has(alias)) {
+            this.inputDatasets.add(alias);
+            this.requestDatasetSchemaById(value.dataset.id);
         }
     }
 
@@ -187,7 +178,12 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
                         data.datasets.byId.metadata.currentSchema,
                     );
 
-                    this.searchResult = [...this.searchResult, { datasetAlias, schema }];
+                    this.searchResult = [
+                        ...this.searchResult.filter(
+                            (item: GlobalQuerySearchItem) => item.datasetAlias !== datasetAlias,
+                        ),
+                        { datasetAlias, schema },
+                    ];
                     this.cdr.detectChanges();
                 }
             });

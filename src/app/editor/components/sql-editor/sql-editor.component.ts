@@ -17,7 +17,6 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    ViewChild,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
@@ -68,8 +67,7 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnInit, O
     public getErrorDetails = getSqlError;
     @Output() public onRunSql = new EventEmitter<MaybeNull<string>>();
     @Input() public placeholder = AppValues.DEFAULT_MONACO_EDITOR_PLACEHOLDER;
-    @ViewChild("monacoEditor") private monaco: monaco.editor.IStandaloneCodeEditor;
-
+    private editor: MaybeUndefined<monaco.editor.IStandaloneCodeEditor>;
     private cdr = inject(ChangeDetectorRef);
     private ngZone = inject(NgZone);
     private readonly INITIAL_EDITOR_HEIGHT = 200;
@@ -131,6 +129,7 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnInit, O
 
     public onInitEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
         super.onInitEditor(editor);
+        this.editor = editor;
 
         const runQueryFn = () => {
             this.ngZone.run(() => {
@@ -193,7 +192,7 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnInit, O
     }
 
     public clickPlaceholder(): void {
-        this.monaco.focus();
+        this.editor?.focus();
     }
 
     public ngOnDestroy() {

@@ -88,6 +88,7 @@ export class AddPushSourceComponent extends BaseSourceEventComponent implements 
     public initEditForm(): void {
         if (this.eventYamlByHash) {
             const currentPushSourceEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
+            this.showPreprocessStep = Boolean(currentPushSourceEvent.preprocess);
             this.addPushSourceForm.patchValue({
                 sourceName: this.queryParamName ? currentPushSourceEvent.sourceName : "",
             });

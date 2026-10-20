@@ -6,7 +6,6 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 import { of } from "rxjs";
 
@@ -38,7 +37,7 @@ describe("AccessTokenService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo, provideAnimations(), provideToastr()],
+            providers: [Apollo, provideToastr()],
         });
         service = TestBed.inject(AccessTokenService);
         accessTokenApi = TestBed.inject(AccessTokenApi);

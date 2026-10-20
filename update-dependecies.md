@@ -9,7 +9,7 @@
 - **ngx-markdown** depends on **@angular/common**
 - **marked** depends on **ngx-markdown**
 - **monaco-editor** depends on **@angular/common**
-- **ngx-monaco-editor-v2** depends on **@angular/common**
+- **ngx-monaco-editor-v2** depends on **@angular/common**, and each of its releases peers on one **monaco-editor** minor (21.1 → ^0.55.1); move the two together
 - **ngx-infinite-scroll** depends on **@angular/common**
 
 - "ng2-pdf-viewer": "^9.1.5" (these versions work correctly in pairs - touch only when absolutely necessary)

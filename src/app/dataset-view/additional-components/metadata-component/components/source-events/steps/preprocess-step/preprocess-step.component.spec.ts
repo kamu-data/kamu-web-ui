@@ -78,4 +78,18 @@ describe("PreprocessStepComponent", () => {
         fixture.detectChanges();
         expect(component.preprocessValue.queries.length).toEqual(1);
     });
+
+    it("should check the stored engine of an existing preprocess step is selected", () => {
+        component.eventYamlByHash = mockSetPollingSourceEventYaml;
+        component.preprocessValue = { engine: "", queries: [] };
+        fixture.detectChanges();
+        expect(component.preprocessValue.engine).toEqual("spark");
+    });
+
+    it("should check an engine already chosen in the editor is kept", () => {
+        component.eventYamlByHash = mockSetPollingSourceEventYaml;
+        component.preprocessValue = { engine: "flink", queries: [] };
+        fixture.detectChanges();
+        expect(component.preprocessValue.engine).toEqual("flink");
+    });
 });

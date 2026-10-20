@@ -9,7 +9,6 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ActivatedRoute } from "@angular/router";
 
 import { from, of } from "rxjs";
@@ -24,7 +23,10 @@ import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
-import { mockAddPushSourceYaml } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import {
+    mockAddPushSourceYaml,
+    mockAddPushSourceYamlWithPreprocess,
+} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import {
     MergeKind,
     ReadKind,
@@ -73,7 +75,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
                 provideHttpClient(withInterceptorsFromDi()),
                 provideHttpClientTesting(),
             ],
-            imports: [ApolloTestingModule, BrowserAnimationsModule, AddPushSourceComponent],
+            imports: [ApolloTestingModule, AddPushSourceComponent],
         }).compileComponents();
 
         registerMatSvgIcons();
@@ -133,6 +135,12 @@ describe("AddPushSourceComponent with query parameter name", () => {
         expect(component.showPreprocessStep).toEqual(true);
     });
 
+    it("should check an existing preprocess step is shown when the editor opens", () => {
+        component.eventYamlByHash = mockAddPushSourceYamlWithPreprocess;
+        component.ngOnInit();
+        expect(component.showPreprocessStep).toEqual(true);
+    });
+
     it("should check open edit modal", () => {
         component.ngOnInit();
         const openModalSpy = spyOn(modalService, "open").and.returnValue(modalRef);
@@ -168,7 +176,7 @@ describe("AddPushSourceComponent without query parameter name", () => {
                 provideHttpClient(withInterceptorsFromDi()),
                 provideHttpClientTesting(),
             ],
-            imports: [ApolloTestingModule, BrowserAnimationsModule, AddPushSourceComponent],
+            imports: [ApolloTestingModule, AddPushSourceComponent],
         }).compileComponents();
 
         registerMatSvgIcons();

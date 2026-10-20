@@ -9,7 +9,6 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { importProvidersFrom } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 import { of } from "rxjs";
 
@@ -48,7 +47,6 @@ describe("DatasetSettingsService", () => {
             providers: [
                 Apollo,
                 importProvidersFrom(ApolloTestingModule),
-                provideAnimations(),
                 provideToastr(),
                 provideHttpClient(withInterceptorsFromDi()),
                 provideHttpClientTesting(),

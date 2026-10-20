@@ -20,6 +20,7 @@
                         <owl-date-time #fromdatepicker />
                         <span
                             [owlDateTimeTrigger]="fromdatepicker"
+                            (click)="refreshCurrentDateTime()"
                             id="from-datepicker"
                             data-test-id="fromdatepicker"
                             class="trigger ms-2"
@@ -68,6 +69,7 @@
                     <owl-date-time #todatepicker />
                     <span
                         [owlDateTimeTrigger]="todatepicker"
+                        (click)="refreshCurrentDateTime()"
                         id="to-datepicker"
                         data-test-id="todatepicker"
                         class="trigger ms-2"
@@ -151,6 +153,7 @@
                             <owl-date-time #nextPlannedAfterDatepicker />
                             <span
                                 [owlDateTimeTrigger]="nextPlannedAfterDatepicker"
+                                (click)="refreshCurrentDateTime()"
                                 data-test-id="nextPlannedAfterDatepicker"
                                 id="next-planned-after-datepicker"
                                 class="trigger ms-2"
@@ -179,6 +182,7 @@
                             <owl-date-time #nextPlannedBeforeDatepicker />
                             <span
                                 [owlDateTimeTrigger]="nextPlannedBeforeDatepicker"
+                                (click)="refreshCurrentDateTime()"
                                 id="next-planned-before-datepicker"
                                 data-test-id="nextPlannedBeforeDatepicker"
                                 class="trigger ms-2"
@@ -235,6 +239,7 @@
                     <owl-date-time #lastFailureDatepicker />
                     <span
                         [owlDateTimeTrigger]="lastFailureDatepicker"
+                        (click)="refreshCurrentDateTime()"
                         id="last-failure-datepicker"
                         data-test-id="lastFailureDatepicker"
                         class="trigger ms-2"

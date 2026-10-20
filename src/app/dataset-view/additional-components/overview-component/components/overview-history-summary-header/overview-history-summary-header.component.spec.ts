@@ -45,8 +45,7 @@ describe("OverviewHistorySummaryHeaderComponent", () => {
     });
 
     it("should check default values", () => {
-        component.metadataBlockFragment = undefined;
-
+        fixture.componentRef.setInput("metadataBlockFragment", undefined);
         fixture.detectChanges();
 
         expect(component.descriptionForMetadataBlock).toBe("");

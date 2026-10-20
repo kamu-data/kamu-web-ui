@@ -6,7 +6,6 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 import { of } from "rxjs";
 
@@ -31,7 +30,7 @@ describe("AccountEmailService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo, provideAnimations(), provideToastr()],
+            providers: [Apollo, provideToastr()],
         });
         accountApi = TestBed.inject(AccountApi);
         toastrService = TestBed.inject(ToastrService);

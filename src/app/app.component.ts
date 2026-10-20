@@ -43,7 +43,7 @@ import ProjectLinks from "src/app/project-links";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { NavigationService } from "src/app/services/navigation.service";
 
-import packageFile from "../../package.json";
+import { version } from "../../package.json";
 
 export const ALL_URLS_WITHOUT_HEADER: string[] = [
     ProjectLinks.URL_LOGIN,
@@ -252,7 +252,7 @@ export class AppComponent extends BaseComponent implements OnInit {
 
     private outputAppVersion(): void {
         // eslint-disable-next-line no-console
-        console.info(`%c Kamu UI v${packageFile.version} `, "background-color: rgb(105, 228, 187); font-size: 18px;");
+        console.info(`%c Kamu UI v${version} `, "background-color: rgb(105, 228, 187); font-size: 18px;");
     }
 
     public onSelectedDataset(item: DatasetAutocompleteItem): void {

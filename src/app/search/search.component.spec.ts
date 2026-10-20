@@ -16,6 +16,7 @@ import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockSearchOverviewResponse } from "@api/mock/search.mock";
 import { SearchApi } from "@api/search.api";
 
+import ProjectLinks from "src/app/project-links";
 import { mockDatasetSearchResult } from "src/app/search/mock.data";
 import { SearchComponent } from "src/app/search/search.component";
 import { SearchService } from "src/app/search/search.service";
@@ -90,7 +91,7 @@ describe("SearchComponent", () => {
     it("should check search results update the dataset table", fakeAsync(() => {
         spyOn(searchApi, "overviewDatasetSearch").and.returnValue(of(mockSearchOverviewResponse));
         const testSearchQuery = "test";
-        component.page = 1;
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_PAGE, 1);
 
         searchService.searchDatasets(testSearchQuery);
         tick();

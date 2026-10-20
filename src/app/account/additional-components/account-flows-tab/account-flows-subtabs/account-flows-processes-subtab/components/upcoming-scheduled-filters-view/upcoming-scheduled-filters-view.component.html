@@ -22,6 +22,7 @@
                             <owl-date-time #nextPlannedAfterDatepicker />
                             <span
                                 [owlDateTimeTrigger]="nextPlannedAfterDatepicker"
+                                (click)="refreshCurrentDateTime()"
                                 data-test-id="nextPlannedAfterDatepicker"
                                 id="next-planned-after-datepicker"
                                 class="trigger ms-2"
@@ -50,6 +51,7 @@
                             <owl-date-time #nextPlannedBeforeDatepicker />
                             <span
                                 [owlDateTimeTrigger]="nextPlannedBeforeDatepicker"
+                                (click)="refreshCurrentDateTime()"
                                 id="next-planned-before-datepicker"
                                 data-test-id="nextPlannedBeforeDatepicker"
                                 class="trigger ms-2"

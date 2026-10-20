@@ -11,13 +11,14 @@ describe("editor error formatter", () => {
     // monaco.MarkerSeverity.Error, which the formatter also falls back to when Monaco is not loaded
     const ERROR_SEVERITY = 8;
 
-    it("should check SQL error keeps the message and reads the line", () => {
-        const message = "sql parser error: Expected: an SQL statement, found: selec at Line: 3, Column: 1";
+    it("should check SQL error keeps the message and reads the line and column", () => {
+        const message = "sql parser error: Expected: end of statement, found: frm at Line: 3, Column: 17";
 
         const error = getSqlError(message);
 
         expect(error.message).toEqual(message);
         expect(error.line).toEqual(3);
+        expect(error.col).toEqual(17);
         expect(error.severity).toEqual(ERROR_SEVERITY);
     });
 

@@ -21,6 +21,7 @@ import {
     findElementByDataTestId,
     getInputElementByDataTestId,
 } from "@common/helpers/base-test.helpers.spec";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
@@ -109,21 +110,34 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         expect(component.renameDatasetForm.disabled).toEqual(false);
     });
 
+    function setDatasetPermissions(general: { canDelete?: boolean; canRename?: boolean }): void {
+        const datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
+        Object.assign(datasetPermissions.permissions.general, general);
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_SETTINGS_GENERAL_KEY, {
+            datasetBasics: mockDatasetBasicsDerivedFragment,
+            datasetPermissions,
+        });
+    }
+
     it("should check missing canDelete permission", () => {
-        component.datasetPermissions.permissions.general.canDelete = false;
+        setDatasetPermissions({ canDelete: false });
         fixture.detectChanges();
 
         expect(component.isAllowedToDeleteDataset).toEqual(false);
+        expect(findElementByDataTestId(fixture, Elements.DeleteDatasetButton)).toBeUndefined();
         expect(component.renameDatasetForm.disabled).toEqual(false);
     });
 
     it("should check missing rename permission", () => {
-        component.datasetPermissions.permissions.general.canRename = false;
+        setDatasetPermissions({ canRename: false });
         component.ngOnInit();
         fixture.detectChanges();
 
         expect(component.isAllowedToDeleteDataset).toEqual(true);
         expect(component.renameDatasetForm.disabled).toEqual(true);
+        expect((findElementByDataTestId(fixture, Elements.RenameDatasetButton) as HTMLButtonElement).disabled).toEqual(
+            true,
+        );
     });
 
     it("should check rename dataset", () => {

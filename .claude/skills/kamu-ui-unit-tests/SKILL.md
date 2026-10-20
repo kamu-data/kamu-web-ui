@@ -43,7 +43,14 @@ beforeEach(async () => {
   component or a base class reads the route. Provide only what the component's dependency tree
   needs: `provideToastr()`, `provideHttpClient(withInterceptorsFromDi())` +
   `provideHttpClientTesting()`, `Apollo` or `ApolloTestingModule` for anything reaching an api
-  class, `provideAnimations()` for Material overlays.
+  class. Material overlays need no animations provider.
+- TestBed runs with zone-based change detection, like the app, and with exhaustive
+  `checkNoChanges` (`src/test.ts`). `fixture.detectChanges()` does not re-render an OnPush
+  component whose state a test changed after the first render, and the exhaustive check fails such
+  a spec with NG0100. Set inputs with `fixture.componentRef.setInput()`; after changing internal
+  state, call `fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck()`.
+- The same NG0100 also flags a template value that differs on every evaluation, such as a getter
+  returning `new Date()`: give the component a field it updates at a defined moment instead.
 - Mock collaborators with `spyOn(service, "method").and.returnValue(of(...))` on the real
   injected service rather than hand-written fakes.
 - A component with required inputs or content projection is tested through a small host
@@ -143,6 +150,9 @@ One case per api method: assert the variables sent, flush a fixture typed with t
   harness tests.
 - Freeze the clock with `timekeeper.freeze("2024-03-14T11:22:29+00:00")` and
   `timekeeper.reset()` in `afterEach` for anything that renders relative or current time.
+- `fakeAsync` swaps in its own `Date`, which ignores timekeeper. A component rendered with
+  relative time outside `fakeAsync` and re-checked inside it shows two different clocks; use an
+  `async` test with `await fixture.whenStable()` there instead.
 
 ## Rejected approaches
 

@@ -23,7 +23,6 @@
         <div class="col-lg-4 ps-4">
             <div class="container-engine">
                 <app-engine-section
-                    [currentSetTransformEvent]="setPollingSourceEvent?.preprocess"
                     [selectedEngine]="preprocessValue.engine"
                     (onEmitSelectedEngine)="onSelectEngine($event)"
                 />

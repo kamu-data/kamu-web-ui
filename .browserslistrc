@@ -1,13 +1,14 @@
 # Browsers the build targets for JS and CSS output (esbuild and autoprefixer).
-# This is Angular 20's browser support policy; browsers outside it are ignored by the build with a warning,
-# so raise these minimums together with Angular majors (see node_modules/@angular/build/.browserslistrc).
+# This is Angular 21's browser support policy, "baseline widely available" on the date in
+# node_modules/@angular/build/src/utils/supported-browsers.js; browsers outside it are ignored by the
+# build with a warning, so raise these minimums together with Angular majors.
 #
 # To list the browsers these queries select: npx browserslist
 
-Chrome >= 107
-ChromeAndroid >= 107
-Edge >= 107
-Firefox >= 104
-FirefoxAndroid >= 104
-Safari >= 16
-iOS >= 16
+Chrome >= 111
+ChromeAndroid >= 111
+Edge >= 111
+Firefox >= 112
+FirefoxAndroid >= 112
+Safari >= 16.4
+iOS >= 16.4

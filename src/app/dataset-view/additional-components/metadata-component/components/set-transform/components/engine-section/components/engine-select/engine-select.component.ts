@@ -13,7 +13,6 @@ import {
     HostListener,
     inject,
     Input,
-    OnInit,
     Output,
     Renderer2,
     ViewChild,
@@ -30,7 +29,7 @@ import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/componen
     styleUrls: ["./engine-select.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EngineSelectComponent implements OnInit {
+export class EngineSelectComponent {
     @ViewChild("input", { static: true }) public input: ElementRef;
     @ViewChild("dropdown", { static: true })
     private dropdown: ElementRef<HTMLDivElement>;
@@ -48,13 +47,6 @@ export class EngineSelectComponent implements OnInit {
     public clickOut(event: Event) {
         if (!this.dropdown.nativeElement.contains(event.target as Element)) {
             this.showDropdown = false;
-        }
-    }
-
-    public ngOnInit(): void {
-        const defaultEngine = this.data.find((item: EngineDesc) => item.name === this.engine);
-        if (defaultEngine) {
-            this.clickShowDropdown(defaultEngine);
         }
     }
 

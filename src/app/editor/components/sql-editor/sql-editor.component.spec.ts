@@ -10,7 +10,11 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import type * as monaco from "monaco-editor";
 
-import { checkVisible, findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import {
+    checkVisible,
+    emitClickOnElementByDataTestId,
+    findElementByDataTestId,
+} from "@common/helpers/base-test.helpers.spec";
 
 import {
     BaseEditorComponentTestEnvironment,
@@ -184,6 +188,24 @@ describe("SqlEditorComponent", () => {
             fixture.detectChanges();
 
             checkVisible(fixture, "sql-editor-placeholder", false);
+        });
+
+        it("should check clicking the placeholder focuses the editor", () => {
+            const focusSpy = jasmine.createSpy("focus");
+            component.onInitEditor({ ...editorMock, focus: focusSpy });
+            fixture.componentRef.setInput("template", "");
+            fixture.detectChanges();
+
+            emitClickOnElementByDataTestId(fixture, "sql-editor-placeholder");
+
+            expect(focusSpy).toHaveBeenCalledOnceWith();
+        });
+
+        it("should check clicking the placeholder before the editor loads does nothing", () => {
+            fixture.componentRef.setInput("template", "");
+            fixture.detectChanges();
+
+            expect(() => emitClickOnElementByDataTestId(fixture, "sql-editor-placeholder")).not.toThrow();
         });
     });
 });

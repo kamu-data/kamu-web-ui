@@ -49,8 +49,9 @@
 
         @if (sortedSearchResult.length) {
             <cdk-accordion [multi]="true" class="example-accordion mt-4">
-                @for (item of sortedSearchResult; track item; let index = $index) {
+                @for (item of sortedSearchResult; track item.datasetAlias; let index = $index) {
                     <cdk-accordion-item
+                        data-test-id="schema-panel"
                         #accordionItem="cdkAccordionItem"
                         class="example-accordion-item"
                         role="button"

@@ -92,5 +92,18 @@ describe("TriageFiltersViewComponent", () => {
 
             expect(component.currentDateTime).toEqual("2030-01-02T03:04:05.000Z");
         });
+
+        it("should check a quick range refreshes the current time limit", () => {
+            fixture.detectChanges();
+            timekeeper.freeze("2030-01-02T03:04:05+00:00");
+
+            component.onQuickRangeLastFailure({
+                id: 1,
+                label: "Last 5 minutes",
+                value: RangeLastAttempt.LAST_5_MINUTES,
+            });
+
+            expect(component.currentDateTime).toEqual("2030-01-02T03:04:05.000Z");
+        });
     });
 });

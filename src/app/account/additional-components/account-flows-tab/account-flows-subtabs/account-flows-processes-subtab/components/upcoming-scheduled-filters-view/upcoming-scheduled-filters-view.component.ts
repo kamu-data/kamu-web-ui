@@ -66,8 +66,8 @@ export class UpcomingScheduledFiltersViewComponent implements OnInit {
         this.applyFilterEmitter.next();
     }
 
-    public refreshCurrentDateTime(): void {
-        this.currentDateTime = new Date().toISOString();
+    public refreshCurrentDateTime(now: Date = new Date()): void {
+        this.currentDateTime = now.toISOString();
     }
 
     public get orderDirection(): OrderingDirection {
@@ -80,7 +80,9 @@ export class UpcomingScheduledFiltersViewComponent implements OnInit {
     }
 
     public onQuickRangeNextAttempt(e: RangeLastAttemptOption): void {
-        this.dashboardFilters.nextPlannedAfterDate = new Date();
+        const now = new Date();
+        this.refreshCurrentDateTime(now);
+        this.dashboardFilters.nextPlannedAfterDate = now;
         this.dashboardFilters.nextPlannedBeforeDate = nextTimeRangeHelper(e.value);
         this.applyFilterEmitter.next();
     }

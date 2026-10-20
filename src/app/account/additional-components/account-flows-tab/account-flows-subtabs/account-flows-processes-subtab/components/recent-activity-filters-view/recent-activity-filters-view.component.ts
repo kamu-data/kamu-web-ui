@@ -66,8 +66,8 @@ export class RecentActivityFiltersViewComponent implements OnInit {
         this.applyFilterEmitter.next();
     }
 
-    public refreshCurrentDateTime(): void {
-        this.currentDateTime = new Date().toISOString();
+    public refreshCurrentDateTime(now: Date = new Date()): void {
+        this.currentDateTime = now.toISOString();
     }
 
     public get orderDirection(): OrderingDirection {
@@ -91,8 +91,10 @@ export class RecentActivityFiltersViewComponent implements OnInit {
     }
 
     public onQuickRangeLastAttempt(e: RangeLastAttemptOption): void {
+        const now = new Date();
+        this.refreshCurrentDateTime(now);
         this.dashboardFilters.fromFilterDate = lastTimeRangeHelper(e.value);
-        this.dashboardFilters.toFilterDate = new Date();
+        this.dashboardFilters.toFilterDate = now;
         this.applyFilterEmitter.next();
     }
 }

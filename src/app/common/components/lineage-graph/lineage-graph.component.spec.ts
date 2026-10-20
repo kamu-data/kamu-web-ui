@@ -51,6 +51,10 @@ describe("LineageGraphComponent", () => {
         timekeeper.freeze(FROZEN_TIME);
     });
 
+    afterAll(() => {
+        timekeeper.reset();
+    });
+
     it("should create", () => {
         expect(component).toBeTruthy();
     });

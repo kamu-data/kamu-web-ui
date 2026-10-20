@@ -75,6 +75,7 @@ export class TriageFiltersViewComponent implements OnInit {
     }
 
     public onQuickRangeLastFailure(e: RangeLastAttemptOption): void {
+        this.refreshCurrentDateTime();
         this.dashboardFilters.lastFailureDate = lastTimeRangeHelper(e.value);
         this.applyFilterEmitter.next();
     }

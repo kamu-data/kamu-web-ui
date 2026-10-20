@@ -67,6 +67,19 @@ describe("SearchAndSchemasSectionComponent", () => {
         component.removeDataset("dataset2");
         expect(component.searchResult.length).toEqual(1);
         expect(component.searchResult).toEqual([{ datasetAlias: "dataset1", schema: null }]);
+        expect([...component.inputDatasets]).toEqual(["dataset1"]);
+    });
+
+    it("should check a removed dataset can be picked again", () => {
+        const selectEvent = {
+            item: { dataset: mockDatasetBasicsDerivedFragment, __typename: TypeNames.datasetType },
+        } as NgbTypeaheadSelectItemEvent;
+        component.onSelectItem(selectEvent);
+
+        component.removeDataset(mockDatasetBasicsDerivedFragment.alias);
+        component.onSelectItem(selectEvent);
+
+        expect(requestDatasetSchemaSpy).toHaveBeenCalledTimes(2);
     });
 
     it("should activate search API and update view", fakeAsync(() => {

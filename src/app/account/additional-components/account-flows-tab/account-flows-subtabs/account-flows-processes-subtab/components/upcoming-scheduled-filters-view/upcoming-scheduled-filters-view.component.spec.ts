@@ -156,5 +156,19 @@ describe("UpcomingScheduledFiltersViewComponent", () => {
 
             expect(component.currentDateTime).toEqual("2030-01-02T03:04:05.000Z");
         });
+
+        it("should check a quick range starts at the refreshed current time limit", () => {
+            fixture.detectChanges();
+            timekeeper.freeze("2030-01-02T03:04:05+00:00");
+
+            component.onQuickRangeNextAttempt({
+                id: 1,
+                label: "Next 5 minutes",
+                value: RangeLastAttempt.NEXT_5_MINUTES,
+            });
+
+            expect(component.currentDateTime).toEqual("2030-01-02T03:04:05.000Z");
+            expect(component.dashboardFilters.nextPlannedAfterDate?.toISOString()).toEqual(component.currentDateTime);
+        });
     });
 });

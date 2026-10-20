@@ -45,6 +45,7 @@ export class PreprocessStepComponent extends BaseComponent implements OnInit {
         if (this.eventYamlByHash) {
             this.setPollingSourceEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
             if (this.setPollingSourceEvent.preprocess) {
+                this.initExistingEngine();
                 this.initExistingQueries();
             } else {
                 this.initDefaultQueriesSection();
@@ -68,6 +69,12 @@ export class PreprocessStepComponent extends BaseComponent implements OnInit {
             this.preprocessValue.queries.push({
                 query,
             });
+        }
+    }
+
+    private initExistingEngine(): void {
+        if (!this.preprocessValue.engine && this.setPollingSourceEvent?.preprocess?.engine) {
+            this.preprocessValue.engine = this.setPollingSourceEvent.preprocess.engine;
         }
     }
 

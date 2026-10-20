@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Polling source editor: the preprocess step's SQL editor shows the query again instead of an empty box
 - SQL editor: clicking the placeholder text puts the cursor in the editor instead of doing nothing
 - SQL editor: a query error is marked from the column kamu-cli reports instead of from the start of the line
+- Polling source editor: an existing preprocess step opens with its stored engine instead of DataFusion, so saving no longer switches it
 
 ## [0.71.0] - 2026-10-12
 ### Added

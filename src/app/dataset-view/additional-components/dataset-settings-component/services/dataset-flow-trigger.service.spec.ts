@@ -6,7 +6,6 @@
  */
 
 import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 import { of } from "rxjs";
 
@@ -66,7 +65,7 @@ describe("DatasetFlowTriggerService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo, provideAnimations(), provideToastr()],
+            providers: [Apollo, provideToastr()],
             imports: [ApolloTestingModule],
         });
         service = TestBed.inject(DatasetFlowTriggerService);

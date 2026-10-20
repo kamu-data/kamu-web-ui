@@ -10,7 +10,6 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
-import { provideAnimations } from "@angular/platform-browser/animations";
 import { Router, ROUTES } from "@angular/router";
 
 import { of } from "rxjs";
@@ -73,7 +72,6 @@ describe("Router", () => {
                 },
                 provideConditionalGuardedRoutes(),
                 provideCatchAllRoute(),
-                provideAnimations(),
                 provideToastr(),
                 {
                     provide: accountSettingsAccessTokensResolverFn,

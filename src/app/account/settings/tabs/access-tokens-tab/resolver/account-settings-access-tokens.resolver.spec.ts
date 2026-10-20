@@ -8,7 +8,6 @@
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
-import { provideAnimations } from "@angular/platform-browser/animations";
 import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, Router } from "@angular/router";
 
 import { Apollo } from "apollo-angular";
@@ -35,7 +34,6 @@ describe("accountSettingsAccessTokensResolverFn", () => {
             imports: [],
             providers: [
                 Apollo,
-                provideAnimations(),
                 provideToastr(),
                 provideHttpClient(withInterceptorsFromDi()),
                 provideHttpClientTesting(),

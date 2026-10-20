@@ -11,11 +11,11 @@ import {
     Injector,
     provideAppInitializer,
     provideBrowserGlobalErrorListeners,
+    provideZoneChangeDetection,
     SecurityContext,
 } from "@angular/core";
 import { MAT_RIPPLE_GLOBAL_OPTIONS } from "@angular/material/core";
 import { bootstrapApplication } from "@angular/platform-browser";
-import { provideAnimations } from "@angular/platform-browser/animations";
 import { provideRouter, UrlSerializer, withComponentInputBinding, withRouterConfig } from "@angular/router";
 
 import { firstValueFrom } from "rxjs";
@@ -25,7 +25,7 @@ import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import { onError } from "@apollo/client/link/error";
 import { Apollo, provideApollo } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
-import { provideMarkdown } from "ngx-markdown";
+import { provideMarkdown, SANITIZE } from "ngx-markdown";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
 import { SpinnerInterceptor } from "@common/components/spinner/spinner.interceptor";
@@ -78,13 +78,13 @@ const Services = [
 
 bootstrapApplication(AppComponent, {
     providers: [
+        provideZoneChangeDetection(),
         provideBrowserGlobalErrorListeners(),
         provideMarkdown({
             loader: HttpClient,
-            sanitize: SecurityContext.NONE,
+            sanitize: { provide: SANITIZE, useValue: SecurityContext.NONE },
         }),
         { provide: UrlSerializer, useClass: KamuUrlSerializer },
-        provideAnimations(),
         provideHttpClient(withInterceptorsFromDi()),
 
         // 3-phase routing table:

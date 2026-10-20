@@ -6,7 +6,6 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 import { provideToastr, ToastrService } from "ngx-toastr";
 
@@ -39,7 +38,6 @@ describe("ErrorHandlerService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
-                provideAnimations(),
                 provideToastr(),
                 ModalService,
                 NavigationService,

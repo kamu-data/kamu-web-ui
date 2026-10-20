@@ -8,7 +8,6 @@
 import { HttpErrorResponse, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
-import { provideAnimations } from "@angular/platform-browser/animations";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
@@ -32,7 +31,6 @@ describe("QueryExplainerService", () => {
             imports: [],
             providers: [
                 Apollo,
-                provideAnimations(),
                 provideToastr(),
                 provideHttpClient(withInterceptorsFromDi()),
                 provideHttpClientTesting(),

@@ -7,7 +7,6 @@
 
 import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import timekeeper from "timekeeper";
 
@@ -28,7 +27,7 @@ describe("LineageGraphComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [BrowserAnimationsModule, SharedTestModule, LineageGraphComponent],
+            imports: [SharedTestModule, LineageGraphComponent],
         })
             .overrideComponent(LineageGraphComponent, {
                 set: { changeDetection: ChangeDetectionStrategy.Default },

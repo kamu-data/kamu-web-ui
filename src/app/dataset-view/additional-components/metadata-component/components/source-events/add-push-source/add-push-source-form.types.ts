@@ -5,8 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { Transform } from "stream";
-
+import { Transform } from "@api/kamu.graphql.interface";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import {

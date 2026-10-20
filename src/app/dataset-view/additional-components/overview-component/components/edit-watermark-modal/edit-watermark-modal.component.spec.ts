@@ -9,7 +9,6 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { of } from "rxjs";
 
@@ -43,7 +42,6 @@ describe("EditWatermarkModalComponent", () => {
                 OwlMomentDateTimeModule,
                 SharedTestModule,
                 EditWatermarkModalComponent,
-                BrowserAnimationsModule,
             ],
             providers: [
                 Apollo,

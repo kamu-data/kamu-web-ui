@@ -6,7 +6,6 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { provideAnimations } from "@angular/platform-browser/animations";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
 import { Observable, of } from "rxjs";
@@ -28,7 +27,7 @@ describe("rotateSecretWebhookResolverFn", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo, provideAnimations(), provideToastr()],
+            providers: [Apollo, provideToastr()],
         });
 
         datasetService = TestBed.inject(DatasetService);

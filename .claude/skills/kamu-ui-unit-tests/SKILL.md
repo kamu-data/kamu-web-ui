@@ -43,7 +43,10 @@ beforeEach(async () => {
   component or a base class reads the route. Provide only what the component's dependency tree
   needs: `provideToastr()`, `provideHttpClient(withInterceptorsFromDi())` +
   `provideHttpClientTesting()`, `Apollo` or `ApolloTestingModule` for anything reaching an api
-  class, `provideAnimations()` for Material overlays.
+  class. Material overlays need no animations provider.
+- TestBed runs with zone-based change detection, like the app (`src/test.ts` overrides Angular's
+  zoneless test default), so `fixture.detectChanges()` does not re-render an OnPush component
+  whose fields a test changed: set inputs with `fixture.componentRef.setInput()` instead.
 - Mock collaborators with `spyOn(service, "method").and.returnValue(of(...))` on the real
   injected service rather than hand-written fakes.
 - A component with required inputs or content projection is tested through a small host

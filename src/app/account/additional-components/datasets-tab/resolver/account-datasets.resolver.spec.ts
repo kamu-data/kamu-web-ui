@@ -6,7 +6,6 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { provideAnimations } from "@angular/platform-browser/animations";
 import { ActivatedRoute, ActivatedRouteSnapshot, convertToParamMap, ResolveFn, Router } from "@angular/router";
 
 import { of } from "rxjs";
@@ -33,7 +32,6 @@ describe("accountDatasetsResolverFn", () => {
         TestBed.configureTestingModule({
             providers: [
                 Apollo,
-                provideAnimations(),
                 provideToastr(),
                 {
                     provide: ActivatedRoute,

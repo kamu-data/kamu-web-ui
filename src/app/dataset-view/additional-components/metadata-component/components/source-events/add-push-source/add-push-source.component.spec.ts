@@ -9,7 +9,6 @@ import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ActivatedRoute } from "@angular/router";
 
 import { from, of } from "rxjs";
@@ -73,7 +72,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
                 provideHttpClient(withInterceptorsFromDi()),
                 provideHttpClientTesting(),
             ],
-            imports: [ApolloTestingModule, BrowserAnimationsModule, AddPushSourceComponent],
+            imports: [ApolloTestingModule, AddPushSourceComponent],
         }).compileComponents();
 
         registerMatSvgIcons();
@@ -168,7 +167,7 @@ describe("AddPushSourceComponent without query parameter name", () => {
                 provideHttpClient(withInterceptorsFromDi()),
                 provideHttpClientTesting(),
             ],
-            imports: [ApolloTestingModule, BrowserAnimationsModule, AddPushSourceComponent],
+            imports: [ApolloTestingModule, AddPushSourceComponent],
         }).compileComponents();
 
         registerMatSvgIcons();

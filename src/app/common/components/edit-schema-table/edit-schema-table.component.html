@@ -131,7 +131,7 @@
                             }
                         </div>
                     </div>
-                    @for (nestedTable of element.nestedTables; track trackByNestedStructPath($index, nestedTable)) {
+                    @for (nestedTable of element.nestedTables; track trackByNestedStructPath(nestedTable)) {
                         <div class="nested-struct-container mb-2">
                             <app-edit-schema-table
                                 #nestedEditSchemaTable

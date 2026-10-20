@@ -1,10 +1,6 @@
 <div [id]="idTable" style="width: 100%; overflow: auto" class="dynamic-table">
     <table mat-table [dataSource]="dataSource">
-        @for (
-            columnDescriptor of columnDescriptors;
-            track trackByColumn(colIndex, columnDescriptor);
-            let colIndex = $index
-        ) {
+        @for (columnDescriptor of columnDescriptors; track columnDescriptor.columnName; let colIndex = $index) {
             <ng-container matColumnDef="{{ columnDescriptor.columnName }}">
                 <th mat-header-cell *matHeaderCellDef [attr.data-test-id]="'column-header-name-' + colIndex">
                     {{ columnDescriptor.columnName }}

@@ -219,7 +219,7 @@ export class EditSchemaTableComponent implements OnChanges {
         this.emitEditingState();
     }
 
-    public trackByNestedStructPath(_index: number, table: NestedStructTable): string {
+    public trackByNestedStructPath(table: NestedStructTable): string {
         return table.path.join(".");
     }
 

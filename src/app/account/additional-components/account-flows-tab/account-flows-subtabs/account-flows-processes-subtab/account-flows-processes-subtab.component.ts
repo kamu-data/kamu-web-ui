@@ -299,7 +299,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
         this.refreshNow();
     }
 
-    public trackByCardId(index: number, item: AccountFlowProcessCard): string {
+    public trackByCardId(item: AccountFlowProcessCard): string {
         if ("dataset" in item) {
             return item.dataset.id;
         } else {

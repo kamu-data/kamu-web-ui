@@ -1,5 +1,5 @@
 @if (pushSources?.length) {
-    @for (source of pushSources; track source; let i = $index) {
+    @for (source of pushSources; track source.sourceName; let i = $index) {
         <div class="position-relative border border-1 p-4 rounded-3 mb-4">
             <span class="position-absolute text-muted group-box-label text-uppercase"
                 >#{{ i + 1 }} Push source &lt;

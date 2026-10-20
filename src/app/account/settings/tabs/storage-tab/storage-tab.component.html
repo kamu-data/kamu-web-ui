@@ -40,7 +40,7 @@
     [class.storage-bar--quota-reached]="state === StorageQuotaState.QUOTA_REACHED"
     data-test-id="storage-bar"
 >
-    @for (segment of segments; track trackBySegmentId($index, segment)) {
+    @for (segment of segments; track segment.id) {
         <div
             [class]="'storage-bar__segment storage-bar__segment--' + segment.id"
             [style.width.%]="segment.percent"
@@ -51,7 +51,7 @@
 </div>
 
 <ul class="storage-legend mt-2" data-test-id="storage-legend">
-    @for (segment of segments; track trackBySegmentId($index, segment)) {
+    @for (segment of segments; track segment.id) {
         <li class="storage-legend__item">
             <span [class]="'storage-legend__swatch storage-bar__segment--' + segment.id"></span>
             {{ segment.label }}

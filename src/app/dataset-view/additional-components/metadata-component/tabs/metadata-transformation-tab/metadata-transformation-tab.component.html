@@ -13,7 +13,7 @@
 }
 
 @if (transformation) {
-    @for (input of transformation.inputs; track input; let i = $index) {
+    @for (input of transformation.inputs; track input.alias; let i = $index) {
         <div class="position-relative border border-1 p-2 rounded-3 mb-4">
             @if (input.inputDataset.__typename === "TransformInputDatasetAccessible") {
                 <span class="position-absolute text-muted group-box-label text-uppercase">Input {{ i + 1 }}</span>

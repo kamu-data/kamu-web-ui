@@ -52,10 +52,16 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
   with an `EventEmitter` — matching the rest of the codebase. Do not migrate to signal inputs,
   `input()`/`output()` or signals unless the user asks for that migration.
 - Templates use the built-in control flow: `@if` / `@else`, `@for` and `@switch`. Never
-  `*ngIf`, `*ngFor` or `[ngSwitch]`, which Angular deprecates for removal. A new `@for` over
-  data that can be re-fetched tracks a stable key (`track item.id`, `track row.name`), so a
-  refreshed list keeps its DOM; `track item` and `track $index` fit static lists and lists with
-  no key.
+  `*ngIf`, `*ngFor` or `[ngSwitch]`, which Angular deprecates for removal. Pick the `@for`
+  `track` expression by where the list comes from:
+  - API data, which a re-fetch or poll replaces with new objects: its unique key
+    (`dataset.id`, `block.blockHash`, `flow.flowId`, `event.eventId`);
+  - constant option lists, `FormArray` controls and lists edited in place: the item itself
+    (`track item`), since the object is the identity;
+  - unique strings: the value; `$index` only for content with no identity at all.
+
+  Write the key inline; keep a method only when choosing the key needs logic, and give it just
+  the item.
 - Every element a test needs gets a `data-test-id="..."` attribute; tests select on it, never on
   CSS classes.
 

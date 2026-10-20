@@ -4,7 +4,7 @@
             <h5>Datasets list is empty</h5>
         </div>
     }
-    @for (row of accountResolverResponse.datasetsResponse.datasets; track row; let rowIndex = $index) {
+    @for (row of accountResolverResponse.datasetsResponse.datasets; track row.id; let rowIndex = $index) {
         <div>
             <app-dataset-list-item
                 [row]="row"

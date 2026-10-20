@@ -39,7 +39,7 @@
                     datasetHistory.history | eventTypeFilter: eventTypeFiltersSelected | blockHashFilter: searchHash;
                     as result
                 ) {
-                    @for (block of result; track block) {
+                    @for (block of result; track block.blockHash) {
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="flex-grow-1 no-wrap d-flex flex-row">
                                 <div class="number-width d-inline-block">

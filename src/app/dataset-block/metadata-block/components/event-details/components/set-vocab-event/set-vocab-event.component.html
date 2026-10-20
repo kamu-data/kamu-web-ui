@@ -1,7 +1,7 @@
 @if (event) {
     <div class="position-relative border border-1 p-2 rounded-3">
         <span class="position-absolute text-muted group-box-label text-uppercase">Information</span>
-        @for (property of event | keyvalue; track property) {
+        @for (property of event | keyvalue; track property.key) {
             @if (property.value && property.key !== "__typename") {
                 <div class="mx-4">
                     <app-block-row-data

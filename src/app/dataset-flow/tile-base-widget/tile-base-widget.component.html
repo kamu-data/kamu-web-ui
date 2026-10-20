@@ -1,5 +1,5 @@
 <div class="content">
-    @for (node of nodes | slice: 0 : LAST_RUNS_COUNT; track node; let i = $index) {
+    @for (node of nodes | slice: 0 : LAST_RUNS_COUNT; track node.flowId; let i = $index) {
         <a
             class="tile-item"
             [ngbPopover]="popContent"

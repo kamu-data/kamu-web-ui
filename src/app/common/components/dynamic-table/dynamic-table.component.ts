@@ -67,10 +67,6 @@ export class DynamicTableComponent implements OnInit, OnChanges {
         }
     }
 
-    public trackByColumn(index: number, item: DynamicTableColumnDescriptor): string {
-        return item.columnName;
-    }
-
     private displayTable(): void {
         // Corner case - no columns, nothing to display
         if (this.displayedColumns.length === 0) {

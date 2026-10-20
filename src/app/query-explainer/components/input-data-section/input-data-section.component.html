@@ -41,7 +41,7 @@
         </div>
         <div class="my-4">
             <div class="fw-semibold mx-4">Datasets:</div>
-            @for (dataset of inputData.sqlQueryExplainerResponse.input.datasets; track dataset; let i = $index) {
+            @for (dataset of inputData.sqlQueryExplainerResponse.input.datasets; track dataset.id; let i = $index) {
                 <div class="mt-2">
                     <div class="dataset-box p-2 mx-2 my-4 rounded-3">
                         <div class="px-2 py-3">

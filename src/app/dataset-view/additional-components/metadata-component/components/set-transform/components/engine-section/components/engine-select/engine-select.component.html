@@ -13,7 +13,7 @@
     </div>
     @if (showDropdown) {
         <div class="option" #option>
-            @for (item of data; track item; let i = $index) {
+            @for (item of data; track item.name; let i = $index) {
                 <button
                     (click)="clickShowDropdown(item)"
                     [disabled]="disabledOptionsMode && item.name !== 'DataFusion'"

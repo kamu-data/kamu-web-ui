@@ -70,10 +70,6 @@ export class StorageTabComponent {
         return Math.max(100 - Math.round(this.usedPercent), 0);
     }
 
-    public trackBySegmentId(_index: number, segment: StorageUsageSegment): string {
-        return segment.id;
-    }
-
     private static usedPercent(quota: AccountStorageQuota): number {
         if (quota.limitBytes === null) {
             return 0;

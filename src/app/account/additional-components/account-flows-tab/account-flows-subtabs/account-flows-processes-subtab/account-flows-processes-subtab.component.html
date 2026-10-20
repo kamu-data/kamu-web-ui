@@ -102,7 +102,7 @@
                 class="cards mt-4"
                 data-test-id="cards"
             >
-                @for (card of cardsData.nodes; track trackByCardId($index, card)) {
+                @for (card of cardsData.nodes; track trackByCardId(card)) {
                     @if (card.__typename === "DatasetFlowProcess") {
                         <div>
                             <app-dataset-flow-process-card

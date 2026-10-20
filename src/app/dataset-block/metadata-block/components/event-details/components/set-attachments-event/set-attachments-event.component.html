@@ -1,4 +1,4 @@
-@for (item of event.attachments.items; track item; let i = $index) {
+@for (item of event.attachments.items; track item.path; let i = $index) {
     <div class="position-relative border border-1 p-2 rounded-3">
         <span class="position-absolute text-muted group-box-label text-uppercase">Attachment#{{ i + 1 }} </span>
         <div class="mx-4">

@@ -2,7 +2,7 @@
     <div class="ms-2" data-test-id="downstream-flows">
         <div class="fs-12" data-test-id="downstream-flows-title">{{ title }}</div>
         <ul class="list-unstyled mb-0">
-            @for (item of items; track item; let i = $index) {
+            @for (item of items; track item.flowId; let i = $index) {
                 <li class="d-flex align-items-center" [attr.data-test-id]="'downstream-flow-' + i">
                     <mat-icon class="icon-status me-1" [ngClass]="item.icon.class">{{ item.icon.icon }}</mat-icon>
                     @if (item.flowLink) {

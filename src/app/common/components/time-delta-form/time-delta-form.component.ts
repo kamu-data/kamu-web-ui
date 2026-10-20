@@ -83,10 +83,6 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit, OnC
         this.availableUnits = allUnits.filter((unit) => !this.excludeUnits.includes(unit.value));
     }
 
-    public trackByUnit(index: number, item: { value: TimeUnit; label: string }): TimeUnit {
-        return item.value;
-    }
-
     private everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = everyTimeMapperValidators;
 
     public static buildForm(): FormGroup<TimeDeltaFormType> {

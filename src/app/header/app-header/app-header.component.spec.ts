@@ -7,7 +7,6 @@
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { ActivatedRoute, NavigationEnd } from "@angular/router";
 
@@ -26,7 +25,7 @@ import {
     routerMockEventSubject,
 } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
-import { AccountFragment, AccountProvider, AccountType } from "@api/kamu.graphql.interface";
+import { AccountProvider, AccountType } from "@api/kamu.graphql.interface";
 import { SearchApi } from "@api/search.api";
 import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface";
 
@@ -59,46 +58,42 @@ describe("AppHeaderComponent", () => {
                 provideHttpClient(withInterceptorsFromDi()),
                 provideHttpClientTesting(),
             ],
-        })
-            .overrideComponent(AppHeaderComponent, {
-                set: { changeDetection: ChangeDetectionStrategy.Default },
-            })
-            .compileComponents();
+        }).compileComponents();
 
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(AppHeaderComponent);
         component = fixture.componentInstance;
-        component.loggedAccount = {
+        fixture.componentRef.setInput("loggedAccount", {
             id: "",
             accountName: "",
             displayName: AppValues.DEFAULT_USER_DISPLAY_NAME,
             accountType: AccountType.User,
             isAdmin: false,
             accountProvider: AccountProvider.Password,
-        };
-        component.featureFlags = {
+        });
+        fixture.componentRef.setInput("featureFlags", {
             enableLogout: true,
             enableScheduling: true,
             enableDatasetEnvVarsManagement: true,
             enableTermsOfService: true,
             allowAnonymous: true,
-        };
-        component.loginMethods = [AccountProvider.OauthGithub, AccountProvider.Password];
-        component.isVisible = true;
-        component.isMobileView = false;
+        });
+        fixture.componentRef.setInput("loginMethods", [AccountProvider.OauthGithub, AccountProvider.Password]);
+        fixture.componentRef.setInput("isVisible", true);
+        fixture.componentRef.setInput("isMobileView", false);
         fixture.detectChanges();
         searchApi = TestBed.inject(SearchApi);
         navigationService = TestBed.inject(NavigationService);
     });
 
     function loginUser(): void {
-        component.loggedAccount = {
+        fixture.componentRef.setInput("loggedAccount", {
             id: "someId",
             accountName: "ssss",
             displayName: "testName",
             accountType: AccountType.User,
-        } as AccountFragment;
+        });
         fixture.detectChanges();
     }
 
@@ -179,10 +174,10 @@ describe("AppHeaderComponent", () => {
 
     it("no Log Out link when feature disabled", () => {
         loginUser();
-        component.featureFlags = {
+        fixture.componentRef.setInput("featureFlags", {
             ...component.featureFlags,
             enableLogout: false,
-        };
+        });
         fixture.detectChanges();
 
         const link = findElementByDataTestId(fixture, "openLogoutHeader");
@@ -280,10 +275,10 @@ describe("AppHeaderComponent", () => {
 
         it("no Log Out link menu when feature disabled", () => {
             loginUser();
-            component.featureFlags = {
+            fixture.componentRef.setInput("featureFlags", {
                 ...component.featureFlags,
                 enableLogout: false,
-            };
+            });
             fixture.detectChanges();
 
             const link = findElementByDataTestId(fixture, "openLogout");
@@ -353,7 +348,7 @@ describe("AppHeaderComponent", () => {
     }));
 
     it("should check search method triggers menu click on mobile view", fakeAsync(() => {
-        component.isMobileView = true;
+        fixture.componentRef.setInput("isMobileView", true);
         const triggerMenuClickSpy = spyOn(component, "triggerMenuClick").and.callThrough();
 
         const navigateToSearchSpy = spyOn(navigationService, "navigateToSearch");

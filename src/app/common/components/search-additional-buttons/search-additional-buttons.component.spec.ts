@@ -7,7 +7,6 @@
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { SearchAdditionalButtonsComponent } from "@common/components/search-additional-buttons/search-additional-buttons.component";
@@ -22,11 +21,7 @@ describe("SearchAdditionalButtonsComponent", () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule],
             providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
-        })
-            .overrideComponent(SearchAdditionalButtonsComponent, {
-                set: { changeDetection: ChangeDetectionStrategy.Default },
-            })
-            .compileComponents();
+        }).compileComponents();
 
         registerMatSvgIcons();
 

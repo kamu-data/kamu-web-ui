@@ -9,7 +9,7 @@ import { SimpleChanges } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { MarkdownModule } from "ngx-markdown";
+import { provideMarkdown } from "ngx-markdown";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
 import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
@@ -24,8 +24,8 @@ describe("DynamicTableComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [DynamicTableComponent, MarkdownModule.forRoot()],
-            providers: [provideToastr()],
+            imports: [DynamicTableComponent],
+            providers: [provideMarkdown(), provideToastr()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DynamicTableComponent);

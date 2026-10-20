@@ -6,8 +6,7 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { Router } from "@angular/router";
-import { RouterTestingModule } from "@angular/router/testing";
+import { provideRouter, Router } from "@angular/router";
 
 import { FlowStatus } from "@api/kamu.graphql.interface";
 import {
@@ -37,7 +36,7 @@ describe("NavigationService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
+            providers: [provideRouter([])],
         });
         service = TestBed.inject(NavigationService);
         router = TestBed.inject(Router);

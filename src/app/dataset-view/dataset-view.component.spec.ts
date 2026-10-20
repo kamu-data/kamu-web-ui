@@ -7,7 +7,6 @@
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
@@ -17,6 +16,7 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 import { MOCK_DATASET_INFO } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import { DatasetViewComponent } from "src/app/dataset-view/dataset-view.component";
@@ -69,11 +69,7 @@ describe("DatasetViewComponent", () => {
                 provideHttpClient(withInterceptorsFromDi()),
                 provideHttpClientTesting(),
             ],
-        })
-            .overrideComponent(DatasetViewComponent, {
-                set: { changeDetection: ChangeDetectionStrategy.Default },
-            })
-            .compileComponents();
+        }).compileComponents();
 
         // Note: for some reason this icon is not loaded when activating Settings tab, so stub it
         registerMatSvgIcons();
@@ -82,16 +78,17 @@ describe("DatasetViewComponent", () => {
         datasetSubsServices.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
         datasetService = TestBed.inject(DatasetService);
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsDerivedFragment));
+        spyOn(datasetService, "isHeadHashBlockChanged").and.returnValue(of(false));
 
         fixture = TestBed.createComponent(DatasetViewComponent);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        component.datasetViewType = DatasetViewTypeEnum.Overview;
-        component.datasetViewData = {
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_ACTIVE_TAB_KEY, DatasetViewTypeEnum.Overview);
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_KEY, {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-        };
-        component.datasetInfo = MOCK_DATASET_INFO;
+        });
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_INFO_KEY, MOCK_DATASET_INFO);
     });
 
     it("should create", () => {

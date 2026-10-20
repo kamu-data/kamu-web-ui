@@ -5,10 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { MarkdownModule } from "ngx-markdown";
+import { provideMarkdown } from "ngx-markdown";
 
 import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { metadataBlockSetVocab } from "@common/helpers/data.helpers.spec";
@@ -25,14 +24,9 @@ describe("YamlViewSectionComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedTestModule, YamlViewSectionComponent, MarkdownModule.forRoot(), MarkdownFormatPipe],
-            providers: [],
-        })
-            .overrideComponent(YamlViewSectionComponent, {
-                set: { changeDetection: ChangeDetectionStrategy.Default },
-            })
-
-            .compileComponents();
+            imports: [SharedTestModule, YamlViewSectionComponent, MarkdownFormatPipe],
+            providers: [provideMarkdown()],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(YamlViewSectionComponent);
         component = fixture.componentInstance;
@@ -43,8 +37,8 @@ describe("YamlViewSectionComponent", () => {
     });
 
     it("should check yaml event viewer  visible ", () => {
-        component.block = metadataBlockSetVocab;
-        component.blockAsYaml = mockAddPushSourceYaml;
+        fixture.componentRef.setInput("block", metadataBlockSetVocab);
+        fixture.componentRef.setInput("blockAsYaml", mockAddPushSourceYaml);
         fixture.detectChanges();
 
         const eventViewer = findElementByDataTestId(fixture, "yaml-event-viewer");

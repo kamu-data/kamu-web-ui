@@ -13,7 +13,7 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
-import { MarkdownModule } from "ngx-markdown";
+import { provideMarkdown } from "ngx-markdown";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
 import {
@@ -42,8 +42,9 @@ describe("QueryAndResultSectionsComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [EditorModule, SharedTestModule, QueryAndResultSectionsComponent, MarkdownModule.forRoot()],
+            imports: [EditorModule, SharedTestModule, QueryAndResultSectionsComponent],
             providers: [
+                provideMarkdown(),
                 Apollo,
                 provideToastr(),
                 provideHttpClient(withInterceptorsFromDi()),

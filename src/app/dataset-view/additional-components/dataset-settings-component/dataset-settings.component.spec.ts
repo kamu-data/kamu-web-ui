@@ -7,7 +7,6 @@
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
@@ -17,6 +16,7 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 import {
     mockMetadataRootUpdate,
@@ -63,18 +63,14 @@ describe("DatasetSettingsComponent", () => {
                 provideHttpClient(withInterceptorsFromDi()),
                 provideHttpClientTesting(),
             ],
-        })
-            .overrideComponent(DatasetSettingsComponent, {
-                set: { changeDetection: ChangeDetectionStrategy.Default },
-            })
-            .compileComponents();
+        }).compileComponents();
 
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(DatasetSettingsComponent);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        component.datasetSettingsTabData = {
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_SETTINGS_KEY, {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: {
@@ -83,7 +79,7 @@ describe("DatasetSettingsComponent", () => {
                 overview: structuredClone(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
                 size: mockOverviewDataUpdate.size,
             } as OverviewUpdate,
-        };
+        });
         fixture.detectChanges();
     });
 
@@ -92,7 +88,10 @@ describe("DatasetSettingsComponent", () => {
     });
 
     it("should check navigate to action list item", () => {
-        component.activeTab = SettingsTabsEnum.SCHEDULING;
+        fixture.componentRef.setInput(
+            RoutingResolvers.DATASET_VIEW_SETTINGS_ACTIVE_SECTION_KEY,
+            SettingsTabsEnum.SCHEDULING,
+        );
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         spyOn(component, "visibilitySettingsMenuItem").and.returnValue(true);
         fixture.detectChanges();
@@ -101,7 +100,10 @@ describe("DatasetSettingsComponent", () => {
             jasmine.objectContaining({ section: SettingsTabsEnum.SCHEDULING }),
         );
 
-        component.activeTab = SettingsTabsEnum.GENERAL;
+        fixture.componentRef.setInput(
+            RoutingResolvers.DATASET_VIEW_SETTINGS_ACTIVE_SECTION_KEY,
+            SettingsTabsEnum.GENERAL,
+        );
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, `action-list-${SettingsTabsEnum.GENERAL}-tab`);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(

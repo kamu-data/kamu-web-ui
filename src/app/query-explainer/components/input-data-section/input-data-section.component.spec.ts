@@ -12,7 +12,7 @@ import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
-import { MarkdownModule } from "ngx-markdown";
+import { provideMarkdown } from "ngx-markdown";
 import { provideToastr } from "ngx-toastr";
 
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
@@ -35,8 +35,9 @@ describe("InputDataSectionComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [MarkdownModule.forRoot(), InputDataSectionComponent, MarkdownFormatPipe],
+            imports: [InputDataSectionComponent, MarkdownFormatPipe],
             providers: [
+                provideMarkdown(),
                 provideToastr(),
                 {
                     provide: ActivatedRoute,

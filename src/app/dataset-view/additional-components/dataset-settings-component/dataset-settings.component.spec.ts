@@ -24,6 +24,7 @@ import {
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { DatasetSettingsComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.component";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -79,7 +80,7 @@ describe("DatasetSettingsComponent", () => {
                 overview: structuredClone(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
                 size: mockOverviewDataUpdate.size,
             } as OverviewUpdate,
-        });
+        } satisfies DatasetOverviewTabData);
         fixture.detectChanges();
     });
 

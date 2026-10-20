@@ -20,7 +20,7 @@ import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 import { MOCK_DATASET_INFO } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import { DatasetViewComponent } from "src/app/dataset-view/dataset-view.component";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
@@ -87,7 +87,7 @@ describe("DatasetViewComponent", () => {
         fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_KEY, {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-        });
+        } satisfies DatasetViewData);
         fixture.componentRef.setInput(RoutingResolvers.DATASET_INFO_KEY, MOCK_DATASET_INFO);
     });
 

@@ -42,6 +42,7 @@ import {
 import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { OverviewComponent } from "src/app/dataset-view/additional-components/overview-component/overview.component";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
@@ -113,7 +114,7 @@ describe("OverviewComponent", () => {
                 overview: structuredClone(mockOverviewDataUpdate.overview),
                 size: mockOverviewDataUpdate.size,
             } as OverviewUpdate,
-        });
+        } satisfies DatasetOverviewTabData);
         fixture.detectChanges();
     });
 

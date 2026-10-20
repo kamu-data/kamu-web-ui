@@ -18,6 +18,7 @@ import AppValues from "@common/values/app.values";
 import { MOCK_LINKS, MOCK_NODES } from "@api/mock/dataset.mock";
 
 import { mockGraphNode } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { LineageGraph } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 
 describe("LineageGraphComponent", () => {
     let component: LineageGraphComponent;
@@ -33,7 +34,7 @@ describe("LineageGraphComponent", () => {
         fixture = TestBed.createComponent(LineageGraphComponent);
         component = fixture.componentInstance;
         widgetHeightService = TestBed.inject(WidgetHeightService);
-        fixture.componentRef.setInput("graph", { links: MOCK_LINKS, nodes: MOCK_NODES });
+        fixture.componentRef.setInput("graph", { links: MOCK_LINKS, nodes: MOCK_NODES } satisfies LineageGraph);
         fixture.componentRef.setInput("currentDataset", mockGraphNode);
         fixture.detectChanges();
     });

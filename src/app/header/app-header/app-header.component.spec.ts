@@ -25,10 +25,11 @@ import {
     routerMockEventSubject,
 } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
-import { AccountProvider, AccountType } from "@api/kamu.graphql.interface";
+import { AccountFragment, AccountProvider, AccountType } from "@api/kamu.graphql.interface";
 import { SearchApi } from "@api/search.api";
 import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface";
 
+import { AppUIConfigFeatureFlags } from "src/app/app-config.model";
 import { AppHeaderComponent } from "src/app/header/app-header/app-header.component";
 import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
@@ -71,14 +72,14 @@ describe("AppHeaderComponent", () => {
             accountType: AccountType.User,
             isAdmin: false,
             accountProvider: AccountProvider.Password,
-        });
+        } satisfies AccountFragment);
         fixture.componentRef.setInput("featureFlags", {
             enableLogout: true,
             enableScheduling: true,
             enableDatasetEnvVarsManagement: true,
             enableTermsOfService: true,
             allowAnonymous: true,
-        });
+        } satisfies AppUIConfigFeatureFlags);
         fixture.componentRef.setInput("loginMethods", [AccountProvider.OauthGithub, AccountProvider.Password]);
         fixture.componentRef.setInput("isVisible", true);
         fixture.componentRef.setInput("isMobileView", false);
@@ -93,7 +94,8 @@ describe("AppHeaderComponent", () => {
             accountName: "ssss",
             displayName: "testName",
             accountType: AccountType.User,
-        });
+            accountProvider: AccountProvider.Password,
+        } satisfies AccountFragment);
         fixture.detectChanges();
     }
 
@@ -177,7 +179,7 @@ describe("AppHeaderComponent", () => {
         fixture.componentRef.setInput("featureFlags", {
             ...component.featureFlags,
             enableLogout: false,
-        });
+        } satisfies AppUIConfigFeatureFlags);
         fixture.detectChanges();
 
         const link = findElementByDataTestId(fixture, "openLogoutHeader");
@@ -278,7 +280,7 @@ describe("AppHeaderComponent", () => {
             fixture.componentRef.setInput("featureFlags", {
                 ...component.featureFlags,
                 enableLogout: false,
-            });
+            } satisfies AppUIConfigFeatureFlags);
             fixture.detectChanges();
 
             const link = findElementByDataTestId(fixture, "openLogout");

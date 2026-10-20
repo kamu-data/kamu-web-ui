@@ -1,20 +1,18 @@
-<div
-    class="container-main custom-container"
-    id="dataset-view-history"
-    *ngIf="datasetHistoryTabData$ | async as datasetHistoryTabData"
->
-    <div id="history-block">
-        <ng-template [ngIf]="datasetHistoryTabData.history.length > 0">
-            <app-timeline
-                [datasetName]="datasetInfo.datasetName"
-                [history]="datasetHistoryTabData.history"
-                [pageInfo]="datasetHistoryTabData.pageInfo"
-            />
-            <app-pagination
-                [currentPage]="datasetHistoryTabData.pageInfo.currentPage + 1"
-                [pageInfo]="datasetHistoryTabData.pageInfo"
-                (pageChangeEvent)="onPageChange($event)"
-            />
-        </ng-template>
+@if (datasetHistoryTabData$ | async; as datasetHistoryTabData) {
+    <div class="container-main custom-container" id="dataset-view-history">
+        <div id="history-block">
+            @if (datasetHistoryTabData.history.length > 0) {
+                <app-timeline
+                    [datasetName]="datasetInfo.datasetName"
+                    [history]="datasetHistoryTabData.history"
+                    [pageInfo]="datasetHistoryTabData.pageInfo"
+                />
+                <app-pagination
+                    [currentPage]="datasetHistoryTabData.pageInfo.currentPage + 1"
+                    [pageInfo]="datasetHistoryTabData.pageInfo"
+                    (pageChangeEvent)="onPageChange($event)"
+                />
+            }
+        </div>
     </div>
-</div>
+}

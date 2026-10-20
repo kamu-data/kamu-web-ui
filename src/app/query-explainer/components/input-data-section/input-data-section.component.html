@@ -7,15 +7,14 @@
                 <markdown clipboard class="variable-binding" [data]="this.sqlCode | markdownFormat: 'sql'" />
             </div>
         </div>
-        <div
-            class="my-4 mx-4 d-flex flex-row justify-content-between"
-            *ngIf="inputData.sqlQueryExplainerResponse.input.queryDialect"
-        >
-            <div class="fw-semibold">Query dialect:</div>
-            <div data-test-id="input-query-dialect">
-                {{ inputData.sqlQueryExplainerResponse.input.queryDialect }}
+        @if (inputData.sqlQueryExplainerResponse.input.queryDialect) {
+            <div class="my-4 mx-4 d-flex flex-row justify-content-between">
+                <div class="fw-semibold">Query dialect:</div>
+                <div data-test-id="input-query-dialect">
+                    {{ inputData.sqlQueryExplainerResponse.input.queryDialect }}
+                </div>
             </div>
-        </div>
+        }
         <div class="my-4 mx-4 d-flex flex-row justify-content-between">
             <div class="fw-semibold">Data format:</div>
             <div data-test-id="input-data-format">
@@ -42,24 +41,26 @@
         </div>
         <div class="my-4">
             <div class="fw-semibold mx-4">Datasets:</div>
-            <ng-container *ngFor="let dataset of inputData.sqlQueryExplainerResponse.input.datasets; let i = index">
+            @for (dataset of inputData.sqlQueryExplainerResponse.input.datasets; track dataset; let i = $index) {
                 <div class="mt-2">
                     <div class="dataset-box p-2 mx-2 my-4 rounded-3">
                         <div class="px-2 py-3">
                             <div class="fw-500">ID:</div>
-                            <div class="mt-2 text-break" *ngIf="datasetInfoObservables$[i] | async as datasetInfo">
-                                <a
-                                    [class.error-color]="
-                                        isDatasetNotFoundError(inputData.sqlQueryVerify?.error, dataset.id)
-                                    "
-                                    routerLink="/{{ datasetInfo.accountName }}/{{ datasetInfo.datasetName }}"
-                                    target="_blank"
-                                    class="font-monospace"
-                                    attr.data-test-id="input-dataset-id-{{ i }}"
-                                >
-                                    {{ dataset.id }}
-                                </a>
-                            </div>
+                            @if (datasetInfoObservables$[i] | async; as datasetInfo) {
+                                <div class="mt-2 text-break">
+                                    <a
+                                        [class.error-color]="
+                                            isDatasetNotFoundError(inputData.sqlQueryVerify?.error, dataset.id)
+                                        "
+                                        routerLink="/{{ datasetInfo.accountName }}/{{ datasetInfo.datasetName }}"
+                                        target="_blank"
+                                        class="font-monospace"
+                                        attr.data-test-id="input-dataset-id-{{ i }}"
+                                    >
+                                        {{ dataset.id }}
+                                    </a>
+                                </div>
+                            }
                         </div>
                         <div class="px-2 py-3">
                             <div class="fw-500">Alias:</div>
@@ -84,7 +85,7 @@
                         </div>
                     </div>
                 </div>
-            </ng-container>
+            }
         </div>
     </div>
 </div>

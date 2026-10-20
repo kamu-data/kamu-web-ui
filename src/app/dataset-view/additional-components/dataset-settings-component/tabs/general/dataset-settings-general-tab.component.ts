@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
@@ -62,7 +62,6 @@ import { NavigationService } from "src/app/services/navigation.service";
         //-----//
         AsyncPipe,
         FormsModule,
-        NgIf,
         ReactiveFormsModule,
         //-----//
         MatCheckboxModule,

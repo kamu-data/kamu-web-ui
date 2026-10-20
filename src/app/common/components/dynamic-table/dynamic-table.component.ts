@@ -6,7 +6,7 @@
  */
 
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import { NgClass, NgFor, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
@@ -30,8 +30,6 @@ import { MaybeUndefined } from "@interface/app.types";
     imports: [
         //-----//
         NgClass,
-        NgFor,
-        NgIf,
         //-----//
         MatIconModule,
         MatTableModule,

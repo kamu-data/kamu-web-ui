@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor } from "@angular/common";
 import { Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
@@ -34,7 +33,6 @@ import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-even
     imports: [
         //-----//
         FormsModule,
-        NgFor,
         //-----//
         MatDividerModule,
         MatIconModule,

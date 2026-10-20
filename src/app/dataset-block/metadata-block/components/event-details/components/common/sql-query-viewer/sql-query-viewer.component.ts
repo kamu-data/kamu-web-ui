@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { Highlight } from "ngx-highlightjs";
@@ -19,9 +18,6 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     templateUrl: "./sql-query-viewer.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        //-----//
-        NgFor,
-        NgIf,
         //-----//
         Highlight,
     ],

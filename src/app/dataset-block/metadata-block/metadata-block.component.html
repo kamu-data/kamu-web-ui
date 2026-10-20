@@ -1,61 +1,59 @@
-<div
-    class="app-main-container"
-    role="main"
-    data-test-id="metadata-block-view"
-    id="metadata-block-view"
-    *ngIf="datasetInfo$ | async as datasetInfo"
->
-    <div class="app-content mt-4">
-        <ng-container *ngIf="datasetBasics$ | async as datasetBasics">
-            <app-dataset-view-header
-                [datasetBasics]="datasetBasics"
-                [datasetInfo]="datasetInfo"
-                (showOwnerPageEmit)="showOwnerPage(datasetInfo.accountName)"
-            />
-        </ng-container>
-    </div>
-
-    <div class="app-content" *ngIf="datasetPermissions$ | async as datasetPermissions">
-        <div id="dataset-viewer" *ngIf="datasetBasics$ | async as datasetBasics">
-            <app-dataset-view-menu
-                [datasetViewType]="HISTORY_TYPE"
-                [datasetBasics]="datasetBasics"
-                [datasetPermissions]="datasetPermissions"
-            />
-        </div>
-    </div>
-
-    <div class="container-main row">
-        <div class="col-md-7">
-            <div class="container-content mb-4">
-                <mat-slide-toggle
-                    data-test-id="yaml-toggle"
-                    color="primary"
-                    class="mat-elevation-z0"
-                    (change)="toggleYamlView($event)"
-                >
-                    <span class="ps-2">Show as YAML</span>
-                </mat-slide-toggle>
-                <ng-container *ngIf="blockView === BlockView.PROPERTIES">
-                    <app-block-header [block]="metadata.block" [datasetInfo]="datasetInfo" />
-                    <app-event-details [block]="metadata.block" [datasetInfo]="datasetInfo" />
-                </ng-container>
-                <app-yaml-view-section
-                    *ngIf="blockView === BlockView.YAML"
-                    [blockAsYaml]="metadata.blockAsYaml"
-                    [block]="metadata.block"
-                />
-            </div>
-        </div>
-        <div class="col-md-5">
-            <div class="container-content mb-4" *ngIf="datasetHistoryUpdate$ | async as datasetHistory">
-                <app-block-navigation
-                    [datasetHistory]="datasetHistory"
-                    [currentBlockHash]="blockHash"
+@if (datasetInfo$ | async; as datasetInfo) {
+    <div class="app-main-container" role="main" data-test-id="metadata-block-view" id="metadata-block-view">
+        <div class="app-content mt-4">
+            @if (datasetBasics$ | async; as datasetBasics) {
+                <app-dataset-view-header
+                    [datasetBasics]="datasetBasics"
                     [datasetInfo]="datasetInfo"
-                    (onPageChangeEmit)="onPageChange($event)"
+                    (showOwnerPageEmit)="showOwnerPage(datasetInfo.accountName)"
                 />
+            }
+        </div>
+        @if (datasetPermissions$ | async; as datasetPermissions) {
+            <div class="app-content">
+                @if (datasetBasics$ | async; as datasetBasics) {
+                    <div id="dataset-viewer">
+                        <app-dataset-view-menu
+                            [datasetViewType]="HISTORY_TYPE"
+                            [datasetBasics]="datasetBasics"
+                            [datasetPermissions]="datasetPermissions"
+                        />
+                    </div>
+                }
+            </div>
+        }
+        <div class="container-main row">
+            <div class="col-md-7">
+                <div class="container-content mb-4">
+                    <mat-slide-toggle
+                        data-test-id="yaml-toggle"
+                        color="primary"
+                        class="mat-elevation-z0"
+                        (change)="toggleYamlView($event)"
+                    >
+                        <span class="ps-2">Show as YAML</span>
+                    </mat-slide-toggle>
+                    @if (blockView === BlockView.PROPERTIES) {
+                        <app-block-header [block]="metadata.block" [datasetInfo]="datasetInfo" />
+                        <app-event-details [block]="metadata.block" [datasetInfo]="datasetInfo" />
+                    }
+                    @if (blockView === BlockView.YAML) {
+                        <app-yaml-view-section [blockAsYaml]="metadata.blockAsYaml" [block]="metadata.block" />
+                    }
+                </div>
+            </div>
+            <div class="col-md-5">
+                @if (datasetHistoryUpdate$ | async; as datasetHistory) {
+                    <div class="container-content mb-4">
+                        <app-block-navigation
+                            [datasetHistory]="datasetHistory"
+                            [currentBlockHash]="blockHash"
+                            [datasetInfo]="datasetInfo"
+                            (onPageChangeEmit)="onPageChange($event)"
+                        />
+                    </div>
+                }
             </div>
         </div>
     </div>
-</div>
+}

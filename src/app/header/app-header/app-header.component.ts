@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -53,7 +52,6 @@ import { SessionStorageService } from "src/app/services/session-storage.service"
     styleUrls: ["./app-header.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        NgIf,
         RouterLink,
         MatProgressSpinnerModule,
         NgbTypeahead,

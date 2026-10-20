@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
@@ -30,7 +30,6 @@ import { NavigationService } from "src/app/services/navigation.service";
         //-----//
         AsyncPipe,
         FormsModule,
-        NgIf,
         ReactiveFormsModule,
         //-----//
         MatDividerModule,

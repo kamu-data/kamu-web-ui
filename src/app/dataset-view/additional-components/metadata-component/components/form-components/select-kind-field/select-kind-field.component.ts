@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
@@ -26,7 +25,6 @@ import { RadioControlType } from "src/app/dataset-view/additional-components/met
     imports: [
         //-----//
         FormsModule,
-        NgFor,
         ReactiveFormsModule,
         //-----//
         MatIconModule,

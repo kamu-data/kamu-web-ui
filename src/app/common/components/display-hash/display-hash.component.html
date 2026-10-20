@@ -1,28 +1,32 @@
-<ng-container *ngIf="value">
-    <a
-        *ngIf="navigationTargetDataset"
-        [title]="value"
-        [class]="'font-monospace ' + class"
-        data-test-id="navigableValue"
-        [routerLink]="['/', navigationTargetDataset.accountName, navigationTargetDataset.datasetName, URL_BLOCK, value]"
-        >{{ value | slice: -8 }}</a
-    >
-
-    <span
-        *ngIf="!navigationTargetDataset"
-        class="mr-1 font-monospace"
-        [title]="value"
-        data-test-id="notNavigableValue"
-        >{{ value | slice: -8 }}</span
-    >
-
-    <button
-        *ngIf="showCopyButton"
-        (click)="copyToClipboard(value)"
-        class="btn btn-sm btn-gray clipboard-btn d-inline-flex align-items-center justify-content-center"
-        role="button"
-        data-test-id="copyToClipboardButton"
-    >
-        <mat-icon class="mat-icon" svgIcon="copy" />
-    </button>
-</ng-container>
+@if (value) {
+    @if (navigationTargetDataset) {
+        <a
+            [title]="value"
+            [class]="'font-monospace ' + class"
+            data-test-id="navigableValue"
+            [routerLink]="[
+                '/',
+                navigationTargetDataset.accountName,
+                navigationTargetDataset.datasetName,
+                URL_BLOCK,
+                value,
+            ]"
+            >{{ value | slice: -8 }}</a
+        >
+    }
+    @if (!navigationTargetDataset) {
+        <span class="mr-1 font-monospace" [title]="value" data-test-id="notNavigableValue">{{
+            value | slice: -8
+        }}</span>
+    }
+    @if (showCopyButton) {
+        <button
+            (click)="copyToClipboard(value)"
+            class="btn btn-sm btn-gray clipboard-btn d-inline-flex align-items-center justify-content-center"
+            role="button"
+            data-test-id="copyToClipboardButton"
+        >
+            <mat-icon class="mat-icon" svgIcon="copy" />
+        </button>
+    }
+}

@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import {
     ControlContainer,
@@ -40,8 +39,6 @@ import { EditPollingSourceService } from "src/app/dataset-view/additional-compon
     imports: [
         //-----//
         FormsModule,
-        NgFor,
-        NgIf,
         ReactiveFormsModule,
         //-----//
         MatIconModule,

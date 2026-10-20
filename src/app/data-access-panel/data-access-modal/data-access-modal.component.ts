@@ -6,7 +6,7 @@
  */
 
 import { Clipboard } from "@angular/cdk/clipboard";
-import { AsyncPipe, NgFor, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
@@ -46,9 +46,7 @@ import { ProtocolsService } from "src/app/services/protocols.service";
     imports: [
         //-----//
         AsyncPipe,
-        NgIf,
         RouterLink,
-        NgFor,
         //-----//
         MatIconModule,
         //-----//

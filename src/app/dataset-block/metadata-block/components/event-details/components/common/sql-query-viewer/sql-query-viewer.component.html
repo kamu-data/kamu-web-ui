@@ -1,4 +1,8 @@
-<div *ngFor="let query of data" class="mb-4">
-    <p *ngIf="query.alias">Alias: {{ query.alias }}</p>
-    <pre><code [highlight]="query.query" language="sql"  [attr.data-test-id]="dataTestId"></code></pre>
-</div>
+@for (query of data; track query) {
+    <div class="mb-4">
+        @if (query.alias) {
+            <p>Alias: {{ query.alias }}</p>
+        }
+        <pre><code [highlight]="query.query" language="sql"  [attr.data-test-id]="dataTestId"></code></pre>
+    </div>
+}

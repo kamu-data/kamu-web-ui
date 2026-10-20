@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { Router, RouterOutlet } from "@angular/router";
 
@@ -26,7 +25,6 @@ import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/datas
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        NgIf,
         RouterOutlet,
         //-----//
         DatasetViewHeaderComponent,

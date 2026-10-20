@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf, ViewportScroller } from "@angular/common";
+import { ViewportScroller } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
@@ -22,8 +22,6 @@ import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-edi
     imports: [
         //-----//
         FormsModule,
-        NgIf,
-        NgFor,
         //-----//
         MatIconModule,
         //-----//

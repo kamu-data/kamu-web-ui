@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, NgClass, NgIf } from "@angular/common";
+import { AsyncPipe, NgClass } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -70,7 +70,6 @@ import { ProcessDatasetCardInteractionService } from "src/app/services/process-d
         AsyncPipe,
         FormsModule,
         NgClass,
-        NgIf,
         RouterLink,
         //-----//
         MatMenuModule,

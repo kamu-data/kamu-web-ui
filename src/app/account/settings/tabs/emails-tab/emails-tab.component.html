@@ -34,7 +34,9 @@
         [appFieldError]="['required', 'email']"
         [group]="changeEmailForm"
     ></div>
-    <div *ngIf="changeEmailError$ | async as changeEmailError">
-        <div class="error-block" data-test-id="change-email-error">{{ changeEmailError }}</div>
-    </div>
+    @if (changeEmailError$ | async; as changeEmailError) {
+        <div>
+            <div class="error-block" data-test-id="change-email-error">{{ changeEmailError }}</div>
+        </div>
+    }
 </form>

@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, numberAttribute, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatCheckboxModule } from "@angular/material/checkbox";
@@ -27,8 +26,6 @@ import { NavigationService } from "src/app/services/navigation.service";
     imports: [
         //-----//
         FormsModule,
-        NgFor,
-        NgIf,
         //-----//
         MatCheckboxModule,
         //-----//

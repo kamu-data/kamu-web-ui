@@ -1,55 +1,57 @@
-<div class="d-flex justify-content-start mb-4" *ngIf="canEditSchema">
-    <button
-        appFeatureFlag="dataset.panel.metadata.editSchema"
-        class="border-1 bg-light border edit-pschema-btn rounded-2 me-3 btn btn-sm justify-content-between align-items-center"
-        data-test-id="'edit-schema'"
-        (click)="onEditSchema()"
-    >
-        <mat-icon class="mat-icon-svg-size me-2 text-muted" svgIcon="pencil" />
-        <span class="fs-12 me-2">Edit schema</span>
-    </button>
-</div>
-
-<div
-    class="position-relative border border-1 px-2 pt-2 container-bottom-padding rounded-3"
-    *ngIf="schema; else noSchema"
->
-    <div class="mx-4">
-        <app-block-row-data
-            [tooltip]="'A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.'"
-            [label]="'Schema:'"
-            [rowClass]="'d-flex justify-content-end'"
+@if (canEditSchema) {
+    <div class="d-flex justify-content-start mb-4">
+        <button
+            appFeatureFlag="dataset.panel.metadata.editSchema"
+            class="border-1 bg-light border edit-pschema-btn rounded-2 me-3 btn btn-sm justify-content-between align-items-center"
+            data-test-id="'edit-schema'"
+            (click)="onEditSchema()"
         >
-            <mat-slide-toggle
-                data-test-id="schema-yaml-toggle"
-                color="primary"
-                class="mat-elevation-z0 mb-4"
-                (change)="toggleYamlView($event)"
-            >
-                <span class="ps-2">Show as YAML</span>
-            </mat-slide-toggle>
-        </app-block-row-data>
-
-        <app-dynamic-table
-            *ngIf="viewMode === SchemaViewMode.TABLE"
-            class="mb-2"
-            [hasTableHeader]="true"
-            [columnDescriptors]="[
-                { columnName: 'name' },
-                { columnName: 'type', showMoreBadge: { extraElementKey: 'extraKeys' } },
-                { columnName: 'description' },
-            ]"
-            [dataRows]="schemaData(schema.fields)"
-            [idTable]="'schema-block-table'"
-            tableClass="font-monospace"
-        />
-
-        <markdown
-            *ngIf="viewMode === SchemaViewMode.YAML"
-            clipboard
-            class="variable-binding"
-            [data]="convertToYaml(schema.fields) | markdownFormat: 'yaml'"
-        />
+            <mat-icon class="mat-icon-svg-size me-2 text-muted" svgIcon="pencil" />
+            <span class="fs-12 me-2">Edit schema</span>
+        </button>
     </div>
-</div>
-<ng-template #noSchema>There is no schema</ng-template>
+}
+
+@if (schema) {
+    <div class="position-relative border border-1 px-2 pt-2 container-bottom-padding rounded-3">
+        <div class="mx-4">
+            <app-block-row-data
+                [tooltip]="'A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.'"
+                [label]="'Schema:'"
+                [rowClass]="'d-flex justify-content-end'"
+            >
+                <mat-slide-toggle
+                    data-test-id="schema-yaml-toggle"
+                    color="primary"
+                    class="mat-elevation-z0 mb-4"
+                    (change)="toggleYamlView($event)"
+                >
+                    <span class="ps-2">Show as YAML</span>
+                </mat-slide-toggle>
+            </app-block-row-data>
+            @if (viewMode === SchemaViewMode.TABLE) {
+                <app-dynamic-table
+                    class="mb-2"
+                    [hasTableHeader]="true"
+                    [columnDescriptors]="[
+                        { columnName: 'name' },
+                        { columnName: 'type', showMoreBadge: { extraElementKey: 'extraKeys' } },
+                        { columnName: 'description' },
+                    ]"
+                    [dataRows]="schemaData(schema.fields)"
+                    [idTable]="'schema-block-table'"
+                    tableClass="font-monospace"
+                />
+            }
+            @if (viewMode === SchemaViewMode.YAML) {
+                <markdown
+                    clipboard
+                    class="variable-binding"
+                    [data]="convertToYaml(schema.fields) | markdownFormat: 'yaml'"
+                />
+            }
+        </div>
+    </div>
+} @else {
+    There is no schema
+}

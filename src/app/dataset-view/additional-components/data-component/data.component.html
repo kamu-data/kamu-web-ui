@@ -11,9 +11,9 @@
         >
             <p class="search-result-container__content mt-4">
                 The current dataset does not contain any data. Need to
-                <a class="add-link" *ngIf="dataTabData.overviewUpdate" (click)="addData(dataTabData.overviewUpdate)">
-                    add data</a
-                >
+                @if (dataTabData.overviewUpdate) {
+                    <a class="add-link" (click)="addData(dataTabData.overviewUpdate)"> add data</a>
+                }
             </p>
         </app-query-and-result-sections>
     </div>

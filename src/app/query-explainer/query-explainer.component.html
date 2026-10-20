@@ -1,8 +1,7 @@
-<ng-container *ngIf="commitmentUploadToken; else commitmentInputTemplate">
-    <ng-container *ngIf="componentData$ | async as componentData">
+@if (commitmentUploadToken) {
+    @if (componentData$ | async; as componentData) {
         <app-verify-result-section [verifyResponse]="componentData.sqlQueryVerify" />
-
-        <ng-container *ngIf="componentData">
+        @if (componentData) {
             <div class="row">
                 <div class="col-md-6">
                     <app-input-data-section
@@ -15,15 +14,14 @@
                     <app-commitment-data-section [commitmentData]="componentData" />
                 </div>
             </div>
-
-            <div class="margin-top margin-bottom" *ngIf="componentData.sqlQueryExplainerResponse.output">
-                <app-reproduced-result-section [dataJsonAoS]="componentData.sqlQueryExplainerResponse.output" />
-            </div>
-        </ng-container>
-    </ng-container>
-</ng-container>
-
-<ng-template #commitmentInputTemplate>
+            @if (componentData.sqlQueryExplainerResponse.output) {
+                <div class="margin-top margin-bottom">
+                    <app-reproduced-result-section [dataJsonAoS]="componentData.sqlQueryExplainerResponse.output" />
+                </div>
+            }
+        }
+    }
+} @else {
     <div class="m-4 p-4 d-flex align-items-center flex-column justify-content-center">
         <div class="w-50">
             <div class="textarea-header p-2">Commitment</div>
@@ -49,4 +47,4 @@
             </div>
         </div>
     </div>
-</ng-template>
+}

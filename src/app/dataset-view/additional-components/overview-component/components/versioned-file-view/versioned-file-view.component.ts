@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, JsonPipe, NgComponentOutlet, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from "@angular/common";
+import { AsyncPipe, JsonPipe, NgComponentOutlet } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -45,10 +45,6 @@ import { PreviewFileTypePipe } from "./pipes/preview-file-type.pipe";
     selector: "app-versioned-file-view",
     imports: [
         AsyncPipe,
-        NgIf,
-        NgSwitch,
-        NgSwitchCase,
-        NgSwitchDefault,
         NgComponentOutlet,
         JsonPipe,
         //-----//

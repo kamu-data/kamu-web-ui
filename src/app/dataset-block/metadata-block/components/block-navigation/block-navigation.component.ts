@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
@@ -31,8 +30,6 @@ import ProjectLinks from "src/app/project-links";
     imports: [
         //-----//
         FormsModule,
-        NgIf,
-        NgFor,
         RouterLink,
         //-----//
         MatIconModule,

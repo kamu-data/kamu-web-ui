@@ -1,3 +1,5 @@
-<div class="overlay" *ngIf="isLoading$ | async">
-    <mat-progress-bar data-test-id="global-progress-bar" mode="indeterminate" />
-</div>
+@if (isLoading$ | async) {
+    <div class="overlay">
+        <mat-progress-bar data-test-id="global-progress-bar" mode="indeterminate" />
+    </div>
+}

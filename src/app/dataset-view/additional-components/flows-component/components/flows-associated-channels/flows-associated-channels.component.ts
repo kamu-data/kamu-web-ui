@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { NgClass, NgFor, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatButtonToggleChange, MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -36,8 +36,6 @@ import {
         //-----//
         FormsModule,
         NgClass,
-        NgIf,
-        NgFor,
         //-----//
         MatIconModule,
         MatTableModule,

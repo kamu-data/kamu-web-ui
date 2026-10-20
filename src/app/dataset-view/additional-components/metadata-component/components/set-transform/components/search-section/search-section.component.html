@@ -23,8 +23,12 @@
     <div class="d-flex flex-row justify-content-between" [style.width.px]="searchDatasets.clientWidth - 28">
         <div class="search-result-item">
             <i class="bi bi-journal-album mr-2"></i>
-            <ngb-highlight *ngIf="!r.dummy" [result]="r.dataset.owner.accountName + '/' + r.dataset.name" [term]="t" />
-            <ngb-highlight *ngIf="r.dummy" [result]="r.dataset.name" [term]="t" />
+            @if (!r.dummy) {
+                <ngb-highlight [result]="r.dataset.owner.accountName + '/' + r.dataset.name" [term]="t" />
+            }
+            @if (r.dummy) {
+                <ngb-highlight [result]="r.dataset.name" [term]="t" />
+            }
         </div>
         <div class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 f6 button-add color-text-tertiary ml-1">
             Add
@@ -34,81 +38,88 @@
 </ng-template>
 <div class="mt-4">
     <div>
-        <cdk-accordion [multi]="true" class="example-accordion mt-4" *ngIf="inputsViewModel.length; else emptyTemplate">
-            <cdk-accordion-item
-                *ngFor="let input of inputsViewModel; let index = index"
-                #accordionItem="cdkAccordionItem"
-                class="example-accordion-item"
-                role="button"
-                tabindex="0"
-                [expanded]="false"
-            >
-                <div class="datatab-expanding-row">
-                    <div class="datatab-expanding-row-header" (click)="accordionItem.toggle()">
-                        <div class="datatab-expanding-row-header-content pt-1">
-                            <div class="node-link" *ngIf="input.owner; else unavailableDatasetTemplate">
-                                <a
-                                    class="node-name"
-                                    (click)="$event.stopPropagation()"
-                                    [routerLink]="['/', input.owner]"
-                                    target="_blank"
-                                >
-                                    {{ input.owner }} </a
-                                >/
-                                <a
-                                    class="node-name"
-                                    (click)="$event.stopPropagation()"
-                                    [routerLink]="['/', input.owner, input.name]"
-                                    target="_blank"
-                                >
-                                    {{ input.name }}</a
+        @if (inputsViewModel.length) {
+            <cdk-accordion [multi]="true" class="example-accordion mt-4">
+                @for (input of inputsViewModel; track input; let index = $index) {
+                    <cdk-accordion-item
+                        #accordionItem="cdkAccordionItem"
+                        class="example-accordion-item"
+                        role="button"
+                        tabindex="0"
+                        [expanded]="false"
+                    >
+                        <div class="datatab-expanding-row">
+                            <div class="datatab-expanding-row-header" (click)="accordionItem.toggle()">
+                                <div class="datatab-expanding-row-header-content pt-1">
+                                    @if (input.owner) {
+                                        <div class="node-link">
+                                            <a
+                                                class="node-name"
+                                                (click)="$event.stopPropagation()"
+                                                [routerLink]="['/', input.owner]"
+                                                target="_blank"
+                                            >
+                                                {{ input.owner }} </a
+                                            >/
+                                            <a
+                                                class="node-name"
+                                                (click)="$event.stopPropagation()"
+                                                [routerLink]="['/', input.owner, input.name]"
+                                                target="_blank"
+                                            >
+                                                {{ input.name }}</a
+                                            >
+                                        </div>
+                                    } @else {
+                                        <span> {{ input.name }}</span>
+                                    }
+                                </div>
+                                @if (!accordionItem.expanded) {
+                                    <mat-icon>keyboard_arrow_down</mat-icon>
+                                }
+                                @if (accordionItem.expanded) {
+                                    <mat-icon>keyboard_arrow_up</mat-icon>
+                                }
+                                <mat-icon
+                                    (click)="$event.stopPropagation(); deleteInputDataset(input.owner!, input.name)"
+                                    title="Delete input dataset"
+                                    class="fs-5 hover mt-1 ms-1"
+                                    >delete</mat-icon
                                 >
                             </div>
-                            <ng-template #unavailableDatasetTemplate>
-                                <span> {{ input.name }}</span>
-                            </ng-template>
+                            <div
+                                class="example-accordion-item-body"
+                                role="region"
+                                [style.display]="accordionItem.expanded ? '' : 'none'"
+                                [attr.id]="'accordion-body-' + index"
+                                [attr.aria-labelledby]="'accordion-header-' + index"
+                            >
+                                @if (input.schema) {
+                                    <div>
+                                        <app-dynamic-table
+                                            [hasTableHeader]="true"
+                                            [idTable]="'schema-block-table'"
+                                            [columnDescriptors]="[
+                                                {
+                                                    columnName: 'name',
+                                                    showInfoBadge: { extraElementKey: 'description' },
+                                                },
+                                                { columnName: 'type' },
+                                            ]"
+                                            [dataRows]="schemaData(input.schema)"
+                                            tableClass="font-monospace"
+                                        />
+                                    </div>
+                                } @else {
+                                    <p class="mt-3 text-center">No schema</p>
+                                }
+                            </div>
                         </div>
-                        <ng-template [ngIf]="!accordionItem.expanded">
-                            <mat-icon>keyboard_arrow_down</mat-icon>
-                        </ng-template>
-                        <ng-template [ngIf]="accordionItem.expanded">
-                            <mat-icon>keyboard_arrow_up</mat-icon>
-                        </ng-template>
-                        <mat-icon
-                            (click)="$event.stopPropagation(); deleteInputDataset(input.owner!, input.name)"
-                            title="Delete input dataset"
-                            class="fs-5 hover mt-1 ms-1"
-                            >delete</mat-icon
-                        >
-                    </div>
-                    <div
-                        class="example-accordion-item-body"
-                        role="region"
-                        [style.display]="accordionItem.expanded ? '' : 'none'"
-                        [attr.id]="'accordion-body-' + index"
-                        [attr.aria-labelledby]="'accordion-header-' + index"
-                    >
-                        <div *ngIf="input.schema; else emptySchemaTemplate">
-                            <app-dynamic-table
-                                [hasTableHeader]="true"
-                                [idTable]="'schema-block-table'"
-                                [columnDescriptors]="[
-                                    { columnName: 'name', showInfoBadge: { extraElementKey: 'description' } },
-                                    { columnName: 'type' },
-                                ]"
-                                [dataRows]="schemaData(input.schema)"
-                                tableClass="font-monospace"
-                            />
-                        </div>
-                        <ng-template #emptySchemaTemplate>
-                            <p class="mt-3 text-center">No schema</p>
-                        </ng-template>
-                    </div>
-                </div>
-            </cdk-accordion-item>
-        </cdk-accordion>
-        <ng-template #emptyTemplate>
+                    </cdk-accordion-item>
+                }
+            </cdk-accordion>
+        } @else {
             <p class="mt-4">No datasets selected</p>
-        </ng-template>
+        }
     </div>
 </div>

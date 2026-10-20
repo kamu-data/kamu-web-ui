@@ -1,18 +1,9 @@
-<div class="mx-4 mt-4 p-responsive clearfix" *ngIf="user$ | async as user">
-    <div class="custom-container">
-        <div class="container-sidebar">
-            <div class="d-flex mb-3 justify-content-center align-items-center">
-                <a *ngIf="isLoggedUser; else notLoggedUserLink">
-                    <img
-                        alt="avatar"
-                        width="260"
-                        height="260"
-                        class="avatar avatar-user border color-bg-default"
-                        [src]="avatarLink(user)"
-                    />
-                </a>
-                <ng-template #notLoggedUserLink>
-                    <a [href]="avatarLink(user)">
+@if (user$ | async; as user) {
+    <div class="mx-4 mt-4 p-responsive clearfix">
+        <div class="custom-container">
+            <div class="container-sidebar">
+                <div class="d-flex mb-3 justify-content-center align-items-center">
+                    <a>
                         <img
                             alt="avatar"
                             width="260"
@@ -21,167 +12,165 @@
                             [src]="avatarLink(user)"
                         />
                     </a>
-                </ng-template>
-            </div>
-            <span class="vcard-fullname d-block p-2 overflow-hidden" [title]="user.displayName">
-                {{ user.displayName | displayAccountName: user.accountProvider }}
-            </span>
-
-            <span class="vcard-username d-block px-2 overflow-hidden">
-                {{ user.accountName }}
-            </span>
-            <div class="text-center me-4 d-flex align-items-center justify-content-between">
-                <span class="d-block px-2 overflow-hidden text-muted"> {{ user.id | displayDatasetId }} </span>
-                <div class="input-group-button ms-1">
-                    <app-copy-to-clipboard [text]="user.id" [dataTestId]="'copyToClipboard-accountId'" />
+                </div>
+                <span class="vcard-fullname d-block p-2 overflow-hidden" [title]="user.displayName">
+                    {{ user.displayName | displayAccountName: user.accountProvider }}
+                </span>
+                <span class="vcard-username d-block px-2 overflow-hidden">
+                    {{ user.accountName }}
+                </span>
+                <div class="text-center me-4 d-flex align-items-center justify-content-between">
+                    <span class="d-block px-2 overflow-hidden text-muted"> {{ user.id | displayDatasetId }} </span>
+                    <div class="input-group-button ms-1">
+                        <app-copy-to-clipboard [text]="user.id" [dataTestId]="'copyToClipboard-accountId'" />
+                    </div>
+                </div>
+                <div class="my-3 text-center me-4">
+                    <button
+                        appFeatureFlag="profile.edit"
+                        name="button"
+                        type="button"
+                        class="btn btn-outline-secondary w-100 btn-custom"
+                        (click)="isLoggedUser(user) ? onEditProfile() : onFollow()"
+                    >
+                        {{ isLoggedUser(user) ? "Edit profile" : "Follow" }}
+                    </button>
+                </div>
+                <mat-divider class="w-90 mt-30px"></mat-divider>
+                <div appFeatureFlag="profile.companies" class="mt-2 me-4">
+                    <h3 class="text-start pt-3 px-3 organization">Organizations</h3>
+                    <div class="d-flex flex-row gap-2 text-start px-3">
+                        <img
+                            src="https://avatars.githubusercontent.com/u/50896974?s=64&amp;v=4"
+                            alt="@kamu-data"
+                            size="32"
+                            height="32"
+                            width="32"
+                            data-view-component="true"
+                            class="avatar"
+                        />
+                    </div>
                 </div>
             </div>
-
-            <div class="my-3 text-center me-4">
-                <button
-                    appFeatureFlag="profile.edit"
-                    name="button"
-                    type="button"
-                    class="btn btn-outline-secondary w-100 btn-custom"
-                    (click)="isLoggedUser(user) ? onEditProfile() : onFollow()"
-                >
-                    {{ isLoggedUser(user) ? "Edit profile" : "Follow" }}
-                </button>
-            </div>
-
-            <mat-divider class="w-90 mt-30px"></mat-divider>
-            <div appFeatureFlag="profile.companies" class="mt-2 me-4">
-                <h3 class="text-start pt-3 px-3 organization">Organizations</h3>
-                <div class="d-flex flex-row gap-2 text-start px-3">
-                    <img
-                        src="https://avatars.githubusercontent.com/u/50896974?s=64&amp;v=4"
-                        alt="@kamu-data"
-                        size="32"
-                        height="32"
-                        width="32"
-                        data-view-component="true"
-                        class="avatar"
-                    />
+            <div class="container-content px-4 overflow-unset mb-4">
+                <div id="account-tabs">
+                    <mat-button-toggle-group
+                        name="activeTab"
+                        aria-label="Account View Type"
+                        class="mat-button-toggle-group"
+                        [value]="activeTab"
+                    >
+                        <mat-button-toggle
+                            appFeatureFlag="profile.overview"
+                            class="menu-link"
+                            data-test-id="navigateToOverview"
+                            [class.active-link]="activeTab === AccountTabs.OVERVIEW"
+                            [value]="AccountTabs.OVERVIEW"
+                            [disabled]="true"
+                        >
+                            <div class="d-flex align-items-center">
+                                <mat-icon class="fs-4 d-block me-1">my_library_books</mat-icon>
+                                <span class="d-block">Overview</span>
+                            </div>
+                        </mat-button-toggle>
+                        <mat-button-toggle
+                            appFeatureFlag="profile.datasets"
+                            data-test-id="account-datasets-tab"
+                            [class.active-link]="activeTab === AccountTabs.DATASETS"
+                            [value]="AccountTabs.DATASETS"
+                        >
+                            <a
+                                [routerLink]="['/', user.accountName, URL_ACCOUNT_SELECT, AccountTabs.DATASETS]"
+                                data-test-id="link-account-datasets-tab"
+                                class="menu-link"
+                            >
+                                <div class="d-flex align-items-center">
+                                    <mat-icon class="fs-4 d-block me-1">book</mat-icon>
+                                    <span class="d-block me-2">Datasets</span>
+                                    <span title="1" data-view-component="true" class="counter">{{
+                                        datasetTotalCount$ | async
+                                    }}</span>
+                                </div>
+                            </a>
+                        </mat-button-toggle>
+                        @if (showFlows(user)) {
+                            <mat-button-toggle
+                                appFeatureFlag="profile.flows"
+                                data-test-id="account-flows-tab"
+                                [class.active-link]="activeTab === AccountTabs.FLOWS"
+                                [value]="AccountTabs.FLOWS"
+                            >
+                                <a
+                                    [routerLink]="['/', user.accountName, URL_ACCOUNT_SELECT, AccountTabs.FLOWS]"
+                                    data-test-id="link-account-flows-tab"
+                                    class="menu-link"
+                                >
+                                    <div class="d-flex align-items-center">
+                                        <mat-icon class="fs-4 d-block me-1">add_task</mat-icon>
+                                        <span class="d-block ms-1">Flows</span>
+                                    </div>
+                                </a>
+                            </mat-button-toggle>
+                        }
+                        <mat-button-toggle
+                            appFeatureFlag="profile.organizations"
+                            data-test-id="account-organizations-tab"
+                            [class.active-link]="activeTab === AccountTabs.ORGANIZATIONS"
+                            [value]="AccountTabs.ORGANIZATIONS"
+                            [disabled]="true"
+                            class="menu-link"
+                        >
+                            <mat-icon class="text-muted fs-4">people</mat-icon>
+                            <span class="mx-2">Organizations </span>
+                            <span title="1" data-view-component="true" class="counter">2</span>
+                        </mat-button-toggle>
+                        <mat-button-toggle
+                            appFeatureFlag="profile.inbox"
+                            data-test-id="account-inbox-tab"
+                            [class.active-link]="activeTab === AccountTabs.INBOX"
+                            [value]="AccountTabs.INBOX"
+                            [disabled]="true"
+                            class="menu-link"
+                        >
+                            <mat-icon class="text-muted fs-4">inbox</mat-icon>
+                            <span class="mx-2">Inbox</span>
+                            <span title="1" data-view-component="true" class="counter">2</span>
+                        </mat-button-toggle>
+                        <mat-button-toggle
+                            appFeatureFlag="profile.stars"
+                            data-test-id="account-stars-tab"
+                            [class.active-link]="activeTab === AccountTabs.STARS"
+                            [value]="AccountTabs.STARS"
+                            [disabled]="true"
+                            class="menu-link"
+                        >
+                            <mat-icon class="text-muted fs-4">star_border</mat-icon>
+                            <span class="mx-2">Stars</span>
+                            <span title="1" data-view-component="true" class="counter">2</span>
+                        </mat-button-toggle>
+                        @if (showSettings(user)) {
+                            <mat-button-toggle
+                                appFeatureFlag="profile.settings"
+                                data-test-id="account-settings-tab"
+                                [class.active-link]="activeTab === AccountTabs.SETTINGS"
+                                [value]="AccountTabs.SETTINGS"
+                            >
+                                <a
+                                    [routerLink]="['/', user.accountName, URL_ACCOUNT_SELECT, AccountTabs.SETTINGS]"
+                                    data-test-id="link-account-datasets-tab"
+                                    class="menu-link"
+                                >
+                                    <div class="d-flex align-items-center">
+                                        <mat-icon class="fs-4 d-block me-1">settings</mat-icon>
+                                        <span class="d-block me-2">Settings</span>
+                                    </div>
+                                </a>
+                            </mat-button-toggle>
+                        }
+                    </mat-button-toggle-group>
                 </div>
+                <router-outlet></router-outlet>
             </div>
-        </div>
-        <div class="container-content px-4 overflow-unset mb-4">
-            <div id="account-tabs">
-                <mat-button-toggle-group
-                    name="activeTab"
-                    aria-label="Account View Type"
-                    class="mat-button-toggle-group"
-                    [value]="activeTab"
-                >
-                    <mat-button-toggle
-                        appFeatureFlag="profile.overview"
-                        class="menu-link"
-                        data-test-id="navigateToOverview"
-                        [class.active-link]="activeTab === AccountTabs.OVERVIEW"
-                        [value]="AccountTabs.OVERVIEW"
-                        [disabled]="true"
-                    >
-                        <div class="d-flex align-items-center">
-                            <mat-icon class="fs-4 d-block me-1">my_library_books</mat-icon>
-                            <span class="d-block">Overview</span>
-                        </div>
-                    </mat-button-toggle>
-                    <mat-button-toggle
-                        appFeatureFlag="profile.datasets"
-                        data-test-id="account-datasets-tab"
-                        [class.active-link]="activeTab === AccountTabs.DATASETS"
-                        [value]="AccountTabs.DATASETS"
-                    >
-                        <a
-                            [routerLink]="['/', user.accountName, URL_ACCOUNT_SELECT, AccountTabs.DATASETS]"
-                            data-test-id="link-account-datasets-tab"
-                            class="menu-link"
-                        >
-                            <div class="d-flex align-items-center">
-                                <mat-icon class="fs-4 d-block me-1">book</mat-icon>
-                                <span class="d-block me-2">Datasets</span>
-                                <span title="1" data-view-component="true" class="counter">{{
-                                    datasetTotalCount$ | async
-                                }}</span>
-                            </div>
-                        </a>
-                    </mat-button-toggle>
-                    <mat-button-toggle
-                        *ngIf="showFlows(user)"
-                        appFeatureFlag="profile.flows"
-                        data-test-id="account-flows-tab"
-                        [class.active-link]="activeTab === AccountTabs.FLOWS"
-                        [value]="AccountTabs.FLOWS"
-                    >
-                        <a
-                            [routerLink]="['/', user.accountName, URL_ACCOUNT_SELECT, AccountTabs.FLOWS]"
-                            data-test-id="link-account-flows-tab"
-                            class="menu-link"
-                        >
-                            <div class="d-flex align-items-center">
-                                <mat-icon class="fs-4 d-block me-1">add_task</mat-icon>
-                                <span class="d-block ms-1">Flows</span>
-                            </div>
-                        </a>
-                    </mat-button-toggle>
-                    <mat-button-toggle
-                        appFeatureFlag="profile.organizations"
-                        data-test-id="account-organizations-tab"
-                        [class.active-link]="activeTab === AccountTabs.ORGANIZATIONS"
-                        [value]="AccountTabs.ORGANIZATIONS"
-                        [disabled]="true"
-                        class="menu-link"
-                    >
-                        <mat-icon class="text-muted fs-4">people</mat-icon>
-                        <span class="mx-2">Organizations </span>
-                        <span title="1" data-view-component="true" class="counter">2</span>
-                    </mat-button-toggle>
-
-                    <mat-button-toggle
-                        appFeatureFlag="profile.inbox"
-                        data-test-id="account-inbox-tab"
-                        [class.active-link]="activeTab === AccountTabs.INBOX"
-                        [value]="AccountTabs.INBOX"
-                        [disabled]="true"
-                        class="menu-link"
-                    >
-                        <mat-icon class="text-muted fs-4">inbox</mat-icon>
-                        <span class="mx-2">Inbox</span>
-                        <span title="1" data-view-component="true" class="counter">2</span>
-                    </mat-button-toggle>
-                    <mat-button-toggle
-                        appFeatureFlag="profile.stars"
-                        data-test-id="account-stars-tab"
-                        [class.active-link]="activeTab === AccountTabs.STARS"
-                        [value]="AccountTabs.STARS"
-                        [disabled]="true"
-                        class="menu-link"
-                    >
-                        <mat-icon class="text-muted fs-4">star_border</mat-icon>
-                        <span class="mx-2">Stars</span>
-                        <span title="1" data-view-component="true" class="counter">2</span>
-                    </mat-button-toggle>
-                    <mat-button-toggle
-                        *ngIf="showSettings(user)"
-                        appFeatureFlag="profile.settings"
-                        data-test-id="account-settings-tab"
-                        [class.active-link]="activeTab === AccountTabs.SETTINGS"
-                        [value]="AccountTabs.SETTINGS"
-                    >
-                        <a
-                            [routerLink]="['/', user.accountName, URL_ACCOUNT_SELECT, AccountTabs.SETTINGS]"
-                            data-test-id="link-account-datasets-tab"
-                            class="menu-link"
-                        >
-                            <div class="d-flex align-items-center">
-                                <mat-icon class="fs-4 d-block me-1">settings</mat-icon>
-                                <span class="d-block me-2">Settings</span>
-                            </div>
-                        </a>
-                    </mat-button-toggle>
-                </mat-button-toggle-group>
-            </div>
-            <router-outlet></router-outlet>
         </div>
     </div>
-</div>
+}

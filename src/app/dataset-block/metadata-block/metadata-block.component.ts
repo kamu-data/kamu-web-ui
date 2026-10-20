@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
@@ -35,7 +35,6 @@ import ProjectLinks from "src/app/project-links";
     imports: [
         //-----//
         AsyncPipe,
-        NgIf,
         //-----//
         MatSlideToggleModule,
         //-----//

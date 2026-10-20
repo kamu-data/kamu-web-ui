@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -39,7 +38,6 @@ import { DatasetPermissionsService } from "src/app/dataset-view/dataset.permissi
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        NgIf,
         RouterLink,
         //-----//
         MatButtonToggleModule,

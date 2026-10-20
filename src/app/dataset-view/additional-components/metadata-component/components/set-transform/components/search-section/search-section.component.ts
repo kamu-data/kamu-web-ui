@@ -6,7 +6,6 @@
  */
 
 import { CdkAccordionModule } from "@angular/cdk/accordion";
-import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
@@ -44,8 +43,6 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
         //-----//
         CdkAccordionModule,
         FormsModule,
-        NgIf,
-        NgFor,
         RouterLink,
         //-----//
         MatIconModule,

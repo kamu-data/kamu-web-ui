@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 
 import AppValues from "@common/values/app.values";
@@ -18,7 +17,7 @@ import { NavigationService } from "src/app/services/navigation.service";
     templateUrl: "./page-not-found.component.html",
     styleUrls: ["./page-not-found.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf],
+    imports: [],
 })
 export class PageNotFoundComponent {
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;

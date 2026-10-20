@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DatePipe, NgClass, NgFor, NgIf, SlicePipe } from "@angular/common";
+import { DatePipe, NgClass, SlicePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
@@ -26,9 +26,7 @@ import ProjectLinks from "src/app/project-links";
     imports: [
         //-----//
         DatePipe,
-        NgFor,
         NgClass,
-        NgIf,
         SlicePipe,
         //-----//
         NgbPopover,

@@ -11,12 +11,17 @@
         />
         <img class="selectedImage" [src]="getLogo(engine).url_logo" #selectedImage />
     </div>
-    <div class="option" #option *ngIf="showDropdown">
-        <ng-container *ngFor="let item of data; let i = index">
-            <button (click)="clickShowDropdown(item)" [disabled]="disabledOptionsMode && item.name !== 'DataFusion'">
-                <img [src]="getLogo(item.name).url_logo" alt="logo" />
-                {{ getLogo(item.name).label }}
-            </button>
-        </ng-container>
-    </div>
+    @if (showDropdown) {
+        <div class="option" #option>
+            @for (item of data; track item; let i = $index) {
+                <button
+                    (click)="clickShowDropdown(item)"
+                    [disabled]="disabledOptionsMode && item.name !== 'DataFusion'"
+                >
+                    <img [src]="getLogo(item.name).url_logo" alt="logo" />
+                    {{ getLogo(item.name).label }}
+                </button>
+            }
+        </div>
+    }
 </div>

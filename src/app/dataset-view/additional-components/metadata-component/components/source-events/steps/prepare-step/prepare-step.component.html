@@ -9,97 +9,101 @@
     </p>
 </div>
 <div [formArrayName]="sectionName">
-    <div *ngFor="let item of sectionForm.controls; index as i">
-        <ng-container *ngIf="item.value.kind === prepareKind.PIPE" [formGroupName]="i">
-            <div class="p-4 border rounded-3 m-4 w-50 mx-auto position-relative">
-                <h3 class="text-center">Pipe</h3>
-                <div>
-                    <label class="form-label"> Command <span class="text-danger">*</span> </label>
-                </div>
-                <input class="form-control" formControlName="command" required #command />
-
-                <div
-                    class="text-danger fs-12"
-                    [input]="command"
-                    [fieldLabel]="'Command'"
-                    [fieldControl]="sectionForm.controls[i].get('command')"
-                    [appFieldError]="['required']"
-                    [group]="sectionForm"
-                ></div>
-
-                <div class="buttons-section d-flex flex-row">
-                    <button
-                        class="no-button"
-                        title="Move down"
-                        attr.data-test-id="move-down-item-{{ i }}"
-                        (click)="swap(i, 1)"
-                        [disabled]="isLastItem(i)"
-                    >
-                        <mat-icon class="fs-4 hover">expand_more</mat-icon>
-                    </button>
-                    <button
-                        class="no-button"
-                        title="Move up"
-                        attr.data-test-id="move-up-item-{{ i }}"
-                        (click)="swap(i, -1)"
-                        [disabled]="isFirstItem(i)"
-                    >
-                        <mat-icon class="fs-4 mx-2 hover">expand_less</mat-icon>
-                    </button>
-                    <button
-                        class="no-button"
-                        title="Delete item"
-                        attr.data-test-id="remove-item-{{ i }}"
-                        (click)="delete(i)"
-                    >
-                        <mat-icon class="fs-4 hover">delete</mat-icon>
-                    </button>
-                </div>
-            </div>
-        </ng-container>
-        <ng-container *ngIf="item.value.kind === prepareKind.DECOMPRESS" [formGroupName]="i">
-            <div class="p-4 border rounded-3 m-4 w-50 mx-auto position-relative">
-                <h3 class="text-center">Decompress</h3>
-                <div class="mb-3">
-                    <label class="form-label">Format </label>
-                    <select class="form-select" formControlName="format">
-                        <option value="zip">ZIP</option>
-                        <option value="gzip">GZIP</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Path</label>
-                    <input class="form-control" formControlName="subPath" />
-                </div>
-                <div class="buttons-section d-flex flex-row">
-                    <button
-                        class="no-button"
-                        title="Move down"
-                        attr.data-test-id="move-down-item-{{ i }}"
-                        (click)="swap(i, 1)"
-                        [disabled]="isLastItem(i)"
-                    >
-                        <mat-icon class="fs-4 hover">expand_more</mat-icon>
-                    </button>
-                    <button
-                        class="no-button"
-                        title="Move up"
-                        attr.data-test-id="move-up-item-{{ i }}"
-                        (click)="swap(i, -1)"
-                        [disabled]="isFirstItem(i)"
-                    >
-                        <mat-icon class="fs-4 mx-2 hover">expand_less</mat-icon>
-                    </button>
-                    <button
-                        class="no-button"
-                        title="Delete item"
-                        attr.data-test-id="remove-item-{{ i }}"
-                        (click)="delete(i)"
-                    >
-                        <mat-icon class="fs-4 hover">delete</mat-icon>
-                    </button>
-                </div>
-            </div>
-        </ng-container>
-    </div>
+    @for (item of sectionForm.controls; track item; let i = $index) {
+        <div>
+            @if (item.value.kind === prepareKind.PIPE) {
+                <ng-container [formGroupName]="i">
+                    <div class="p-4 border rounded-3 m-4 w-50 mx-auto position-relative">
+                        <h3 class="text-center">Pipe</h3>
+                        <div>
+                            <label class="form-label"> Command <span class="text-danger">*</span> </label>
+                        </div>
+                        <input class="form-control" formControlName="command" required #command />
+                        <div
+                            class="text-danger fs-12"
+                            [input]="command"
+                            [fieldLabel]="'Command'"
+                            [fieldControl]="sectionForm.controls[i].get('command')"
+                            [appFieldError]="['required']"
+                            [group]="sectionForm"
+                        ></div>
+                        <div class="buttons-section d-flex flex-row">
+                            <button
+                                class="no-button"
+                                title="Move down"
+                                attr.data-test-id="move-down-item-{{ i }}"
+                                (click)="swap(i, 1)"
+                                [disabled]="isLastItem(i)"
+                            >
+                                <mat-icon class="fs-4 hover">expand_more</mat-icon>
+                            </button>
+                            <button
+                                class="no-button"
+                                title="Move up"
+                                attr.data-test-id="move-up-item-{{ i }}"
+                                (click)="swap(i, -1)"
+                                [disabled]="isFirstItem(i)"
+                            >
+                                <mat-icon class="fs-4 mx-2 hover">expand_less</mat-icon>
+                            </button>
+                            <button
+                                class="no-button"
+                                title="Delete item"
+                                attr.data-test-id="remove-item-{{ i }}"
+                                (click)="delete(i)"
+                            >
+                                <mat-icon class="fs-4 hover">delete</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </ng-container>
+            }
+            @if (item.value.kind === prepareKind.DECOMPRESS) {
+                <ng-container [formGroupName]="i">
+                    <div class="p-4 border rounded-3 m-4 w-50 mx-auto position-relative">
+                        <h3 class="text-center">Decompress</h3>
+                        <div class="mb-3">
+                            <label class="form-label">Format </label>
+                            <select class="form-select" formControlName="format">
+                                <option value="zip">ZIP</option>
+                                <option value="gzip">GZIP</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Path</label>
+                            <input class="form-control" formControlName="subPath" />
+                        </div>
+                        <div class="buttons-section d-flex flex-row">
+                            <button
+                                class="no-button"
+                                title="Move down"
+                                attr.data-test-id="move-down-item-{{ i }}"
+                                (click)="swap(i, 1)"
+                                [disabled]="isLastItem(i)"
+                            >
+                                <mat-icon class="fs-4 hover">expand_more</mat-icon>
+                            </button>
+                            <button
+                                class="no-button"
+                                title="Move up"
+                                attr.data-test-id="move-up-item-{{ i }}"
+                                (click)="swap(i, -1)"
+                                [disabled]="isFirstItem(i)"
+                            >
+                                <mat-icon class="fs-4 mx-2 hover">expand_less</mat-icon>
+                            </button>
+                            <button
+                                class="no-button"
+                                title="Delete item"
+                                attr.data-test-id="remove-item-{{ i }}"
+                                (click)="delete(i)"
+                            >
+                                <mat-icon class="fs-4 hover">delete</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </ng-container>
+            }
+        </div>
+    }
 </div>

@@ -6,46 +6,52 @@
                     <nav class="navbar navbar-expand">
                         <div>
                             <h3 class="search-result-container__navbar__title">Filters</h3>
-                            <div *ngFor="let filter of filters">
-                                <span class="example-list-section">
-                                    {{ filter.name }}
-                                </span>
-                                <span class="example-list-section">
-                                    <ul class="list-unstyled">
-                                        <li *ngFor="let subtask of filter.subtasks">
-                                            <ng-template [ngIf]="!subtask.isTitle">
-                                                <mat-checkbox
-                                                    [(ngModel)]="subtask.completed"
-                                                    [color]="subtask.color"
-                                                    [disabled]="subtask.disabled"
-                                                    (ngModelChange)="updateAllComplete()"
-                                                >
-                                                    {{ subtask.name }}
-                                                </mat-checkbox>
-                                            </ng-template>
-                                            <ng-template [ngIf]="subtask.isTitle">
-                                                <span class="example-list-section">
-                                                    {{ subtask.name }}
-                                                </span>
-                                            </ng-template>
-                                            <ng-template [ngIf]="subtask.subtasks && subtask.subtasks.length > 0">
-                                                <ul class="list-unstyled">
-                                                    <li *ngFor="let sub_subtask of subtask.subtasks">
+                            @for (filter of filters; track filter) {
+                                <div>
+                                    <span class="example-list-section">
+                                        {{ filter.name }}
+                                    </span>
+                                    <span class="example-list-section">
+                                        <ul class="list-unstyled">
+                                            @for (subtask of filter.subtasks; track subtask) {
+                                                <li>
+                                                    @if (!subtask.isTitle) {
                                                         <mat-checkbox
-                                                            [(ngModel)]="sub_subtask.completed"
-                                                            [color]="sub_subtask.color"
+                                                            [(ngModel)]="subtask.completed"
+                                                            [color]="subtask.color"
                                                             [disabled]="subtask.disabled"
                                                             (ngModelChange)="updateAllComplete()"
                                                         >
-                                                            {{ sub_subtask.name }}
+                                                            {{ subtask.name }}
                                                         </mat-checkbox>
-                                                    </li>
-                                                </ul>
-                                            </ng-template>
-                                        </li>
-                                    </ul>
-                                </span>
-                            </div>
+                                                    }
+                                                    @if (subtask.isTitle) {
+                                                        <span class="example-list-section">
+                                                            {{ subtask.name }}
+                                                        </span>
+                                                    }
+                                                    @if (subtask.subtasks && subtask.subtasks.length > 0) {
+                                                        <ul class="list-unstyled">
+                                                            @for (sub_subtask of subtask.subtasks; track sub_subtask) {
+                                                                <li>
+                                                                    <mat-checkbox
+                                                                        [(ngModel)]="sub_subtask.completed"
+                                                                        [color]="sub_subtask.color"
+                                                                        [disabled]="subtask.disabled"
+                                                                        (ngModelChange)="updateAllComplete()"
+                                                                    >
+                                                                        {{ sub_subtask.name }}
+                                                                    </mat-checkbox>
+                                                                </li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                </li>
+                                            }
+                                        </ul>
+                                    </span>
+                                </div>
+                            }
                         </div>
                     </nav>
                 </div>
@@ -61,14 +67,14 @@
                         data-test-id="dataset-list"
                     />
 
-                    <ng-template [ngIf]="data.datasets.length > 0 && data.pageInfo">
+                    @if (data.datasets.length > 0 && data.pageInfo) {
                         <app-pagination
                             [currentPage]="currentPage"
                             [pageInfo]="data.pageInfo"
                             (pageChangeEvent)="onPageChange($event)"
                             data-test-id="pagination"
                         />
-                    </ng-template>
+                    }
                 </div>
             </div>
         </div>

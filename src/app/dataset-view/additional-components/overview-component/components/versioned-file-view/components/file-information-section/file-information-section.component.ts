@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, DatePipe, NgIf } from "@angular/common";
+import { AsyncPipe, DatePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
@@ -26,7 +26,6 @@ import { DatasetAsVersionedFileService } from "../../../../services/dataset-as-v
     selector: "app-file-information-section",
     imports: [
         AsyncPipe,
-        NgIf,
         DatePipe,
         //-----//
         MatIconModule,

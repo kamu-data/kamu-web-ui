@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { NgIf, PercentPipe } from "@angular/common";
+import { PercentPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { PDFDocumentProxy, PdfViewerModule } from "ng2-pdf-viewer";
@@ -16,7 +16,6 @@ import { MaybeUndefined } from "@interface/app.types";
     selector: "app-pdf-viewer-content",
     imports: [
         //-----//
-        NgIf,
         PercentPipe,
         //-----//
         PdfViewerModule,

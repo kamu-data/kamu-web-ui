@@ -1,334 +1,339 @@
-<div #containerRef class="position-relative" *ngIf="graph.nodes.length">
-    <ngx-graph
-        class="chart-container"
-        [enableDrag]="LINEAGE_CONFIG.enableDrag"
-        [enablePan]="LINEAGE_CONFIG.enablePan"
-        [enableZoom]="LINEAGE_CONFIG.zoomEnabled"
-        [zoomSpeed]="LINEAGE_CONFIG.zoomSpeed"
-        [minZoomLevel]="LINEAGE_CONFIG.minZoomLevel"
-        [maxZoomLevel]="LINEAGE_CONFIG.maxZoomLevel"
-        [panOnZoom]="LINEAGE_CONFIG.panOnZoom"
-        [autoCenter]="LINEAGE_CONFIG.autoCenter"
-        [autoZoom]="LINEAGE_CONFIG.autoZoom"
-        [showMiniMap]="LINEAGE_CONFIG.showMiniMap"
-        [miniMapPosition]="LINEAGE_CONFIG.miniMapPosition"
-        [links]="graph.links"
-        [nodes]="graph.nodes"
-        [view]="view"
-        [layout]="LINEAGE_CONFIG.layout"
-        [nodeHeight]="LINEAGE_CONFIG.nodeHeight"
-    >
-        <ng-template #defsTemplate>
-            <svg:marker
-                id="arrow"
-                viewBox="0 -5 10 10"
-                refX="12"
-                refY="0"
-                markerWidth="8"
-                markerHeight="4"
-                orient="auto-start-reverse"
-            >
-                <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
-            </svg:marker>
-        </ng-template>
-
-        <ng-template #nodeTemplate let-node>
-            <svg:g class="node" *ngIf="node.data.kind === LineageGraphNodeKind.Dataset">
-                <svg:rect
-                    [attr.width]="node.dimension.width + 18"
-                    [attr.height]="node.dimension.height"
-                    [attr.rx]="5"
-                    [attr.fill]="node.data.dataObject.kind === DatasetKind.Root ? '#FFCBA6' : '#BDDEF1'"
-                    [attr.cursor]="'pointer'"
-                    [attr.stroke]="
-                        node.data.dataObject.isCurrent
-                            ? node.data.dataObject.kind === DatasetKind.Root
-                                ? '#FF842B'
-                                : '#6095C6'
-                            : 'black'
-                    "
-                    [attr.stroke-width]="node.data.dataObject.isCurrent ? 3 : 0"
-                    (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
-                />
-                <svg:text
-                    alignment-baseline="central"
-                    [attr.x]="10"
-                    [attr.y]="node.dimension.height * 0.6"
-                    [attr.font-weight]="'600'"
-                    [attr.cursor]="'pointer'"
-                    (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
+@if (graph.nodes.length) {
+    <div #containerRef class="position-relative">
+        <ngx-graph
+            class="chart-container"
+            [enableDrag]="LINEAGE_CONFIG.enableDrag"
+            [enablePan]="LINEAGE_CONFIG.enablePan"
+            [enableZoom]="LINEAGE_CONFIG.zoomEnabled"
+            [zoomSpeed]="LINEAGE_CONFIG.zoomSpeed"
+            [minZoomLevel]="LINEAGE_CONFIG.minZoomLevel"
+            [maxZoomLevel]="LINEAGE_CONFIG.maxZoomLevel"
+            [panOnZoom]="LINEAGE_CONFIG.panOnZoom"
+            [autoCenter]="LINEAGE_CONFIG.autoCenter"
+            [autoZoom]="LINEAGE_CONFIG.autoZoom"
+            [showMiniMap]="LINEAGE_CONFIG.showMiniMap"
+            [miniMapPosition]="LINEAGE_CONFIG.miniMapPosition"
+            [links]="graph.links"
+            [nodes]="graph.nodes"
+            [view]="view"
+            [layout]="LINEAGE_CONFIG.layout"
+            [nodeHeight]="LINEAGE_CONFIG.nodeHeight"
+        >
+            <ng-template #defsTemplate>
+                <svg:marker
+                    id="arrow"
+                    viewBox="0 -5 10 10"
+                    refX="12"
+                    refY="0"
+                    markerWidth="8"
+                    markerHeight="4"
+                    orient="auto-start-reverse"
                 >
-                    {{ node.label }}
-                </svg:text>
-                <image
-                    [attr.x]="10"
-                    [attr.y]="10"
-                    [attr.width]="18"
-                    [attr.height]="18"
-                    attr.data-test-id="account-avatar-{{ node.label }}"
-                    [attr.xlink:href]="node.data.dataObject.avatarUrl || DEFAULT_AVATAR_URL"
-                    (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
-                />
-                <svg:text
-                    alignment-baseline="central"
-                    (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
-                    [attr.x]="35"
-                    [attr.y]="18"
-                    [attr.font-weight]="'normal'"
-                >
-                    {{ node.data.dataObject.accountName }}
-                </svg:text>
-            </svg:g>
-            <svg:g
-                [attr.transform]="'translate(' + node.dimension.width + ', 0)'"
-                *ngIf="node.data && node.data.dataObject && node.data.dataObject.access === LineageNodeAccess.PRIVATE"
-            >
-                <image
-                    [attr.x]="5"
-                    [attr.y]="-12"
-                    [attr.width]="20"
-                    [attr.height]="20"
-                    [attr.href]="'../assets/images/private.png'"
-                />
-            </svg:g>
-            <svg:g class="node" *ngIf="node.data.kind === LineageGraphNodeKind.Source">
-                <svg:rect
-                    [attr.width]="node.dimension.width * 1.1"
-                    [attr.height]="50"
-                    [attr.rx]="5"
-                    [attr.fill]="'#FFF'"
-                    [attr.cursor]="'pointer'"
-                />
-                <image
-                    [attr.x]="2"
-                    [attr.y]="(node.dimension.height * 1.1) / 2 - 20"
-                    [attr.width]="30"
-                    [attr.height]="30"
-                    [attr.href]="'../assets/images/world.png'"
-                />
-
-                <svg:text
-                    alignment-baseline="central"
-                    [attr.x]="33"
-                    [attr.y]="node.dimension.height / 2"
-                    [attr.font-weight]="'normal'"
-                    [attr.cursor]="'pointer'"
-                >
-                    {{ node.label }}
-                </svg:text>
-            </svg:g>
-            <svg:g class="node" *ngIf="node.data.kind === LineageGraphNodeKind.Mqtt">
-                <svg:rect
-                    [attr.width]="node.dimension.width * 1.1"
-                    [attr.height]="50"
-                    [attr.rx]="5"
-                    [attr.fill]="'#FFF'"
-                    [attr.cursor]="'pointer'"
-                />
-                <image
-                    [attr.x]="2"
-                    [attr.y]="(node.dimension.height * 1.1) / 2 - 20"
-                    [attr.width]="30"
-                    [attr.height]="30"
-                    [attr.href]="'../assets/images/mqtt-5.jpg'"
-                />
-
-                <svg:text
-                    alignment-baseline="central"
-                    [attr.x]="35"
-                    [attr.y]="node.dimension.height / 2"
-                    [attr.font-weight]="'normal'"
-                    [attr.cursor]="'pointer'"
-                >
-                    {{ node.label }}
-                </svg:text>
-            </svg:g>
-
-            <svg:g class="node" *ngIf="node.data.kind === LineageGraphNodeKind.EthereumLogs">
-                <svg:rect
-                    [attr.width]="node.dimension.width"
-                    [attr.height]="50"
-                    [attr.rx]="5"
-                    [attr.fill]="'#FFF'"
-                    [attr.cursor]="'pointer'"
-                />
-                <image
-                    [attr.x]="-45"
-                    [attr.y]="node.dimension.height / 2 - 20"
-                    [attr.width]="50"
-                    [attr.height]="40"
-                    [attr.href]="'../assets/images/ethereum-logo.jpg'"
-                />
-
-                <svg:text
-                    alignment-baseline="central"
-                    [attr.x]="0"
-                    [attr.y]="node.dimension.height / 2"
-                    [attr.font-weight]="'normal'"
-                    [attr.cursor]="'pointer'"
-                >
-                    {{ node.label }}
-                </svg:text>
-            </svg:g>
-
-            <svg:g class="node" *ngIf="node.data.kind === LineageGraphNodeKind.DatasetNotAccessable">
-                <svg:rect
-                    [attr.width]="node.dimension.width + 12"
-                    [attr.height]="node.dimension.height"
-                    [attr.rx]="5"
-                    [attr.fill]="'#d6D6D6'"
-                    [attr.cursor]="'pointer'"
-                    (click)="onClickPrivateNode(node)"
-                />
-
-                <svg:text
-                    alignment-baseline="central"
-                    [attr.x]="node.dimension.width * 0.12"
-                    [attr.y]="node.dimension.height / 2"
-                    [attr.font-weight]="'600'"
-                    [attr.cursor]="'pointer'"
-                    (click)="onClickPrivateNode(node)"
-                >
-                    {{ node.label | displayDatasetId }}
-                </svg:text>
-                <svg:g [attr.transform]="'translate(' + (node.dimension.width - 15) + ', 0)'">
-                    <image
-                        [attr.x]="17"
-                        [attr.y]="-12"
-                        [attr.width]="20"
-                        [attr.height]="20"
-                        [attr.href]="'../assets/images/question-mark.png'"
-                    />
+                    <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+                </svg:marker>
+            </ng-template>
+            <ng-template #nodeTemplate let-node>
+                @if (node.data.kind === LineageGraphNodeKind.Dataset) {
+                    <svg:g class="node">
+                        <svg:rect
+                            [attr.width]="node.dimension.width + 18"
+                            [attr.height]="node.dimension.height"
+                            [attr.rx]="5"
+                            [attr.fill]="node.data.dataObject.kind === DatasetKind.Root ? '#FFCBA6' : '#BDDEF1'"
+                            [attr.cursor]="'pointer'"
+                            [attr.stroke]="
+                                node.data.dataObject.isCurrent
+                                    ? node.data.dataObject.kind === DatasetKind.Root
+                                        ? '#FF842B'
+                                        : '#6095C6'
+                                    : 'black'
+                            "
+                            [attr.stroke-width]="node.data.dataObject.isCurrent ? 3 : 0"
+                            (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
+                        />
+                        <svg:text
+                            alignment-baseline="central"
+                            [attr.x]="10"
+                            [attr.y]="node.dimension.height * 0.6"
+                            [attr.font-weight]="'600'"
+                            [attr.cursor]="'pointer'"
+                            (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
+                        >
+                            {{ node.label }}
+                        </svg:text>
+                        <image
+                            [attr.x]="10"
+                            [attr.y]="10"
+                            [attr.width]="18"
+                            [attr.height]="18"
+                            attr.data-test-id="account-avatar-{{ node.label }}"
+                            [attr.xlink:href]="node.data.dataObject.avatarUrl || DEFAULT_AVATAR_URL"
+                            (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
+                        />
+                        <svg:text
+                            alignment-baseline="central"
+                            (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
+                            [attr.x]="35"
+                            [attr.y]="18"
+                            [attr.font-weight]="'normal'"
+                        >
+                            {{ node.data.dataObject.accountName }}
+                        </svg:text>
+                    </svg:g>
+                }
+                @if (node.data && node.data.dataObject && node.data.dataObject.access === LineageNodeAccess.PRIVATE) {
+                    <svg:g [attr.transform]="'translate(' + node.dimension.width + ', 0)'">
+                        <image
+                            [attr.x]="5"
+                            [attr.y]="-12"
+                            [attr.width]="20"
+                            [attr.height]="20"
+                            [attr.href]="'../assets/images/private.png'"
+                        />
+                    </svg:g>
+                }
+                @if (node.data.kind === LineageGraphNodeKind.Source) {
+                    <svg:g class="node">
+                        <svg:rect
+                            [attr.width]="node.dimension.width * 1.1"
+                            [attr.height]="50"
+                            [attr.rx]="5"
+                            [attr.fill]="'#FFF'"
+                            [attr.cursor]="'pointer'"
+                        />
+                        <image
+                            [attr.x]="2"
+                            [attr.y]="(node.dimension.height * 1.1) / 2 - 20"
+                            [attr.width]="30"
+                            [attr.height]="30"
+                            [attr.href]="'../assets/images/world.png'"
+                        />
+                        <svg:text
+                            alignment-baseline="central"
+                            [attr.x]="33"
+                            [attr.y]="node.dimension.height / 2"
+                            [attr.font-weight]="'normal'"
+                            [attr.cursor]="'pointer'"
+                        >
+                            {{ node.label }}
+                        </svg:text>
+                    </svg:g>
+                }
+                @if (node.data.kind === LineageGraphNodeKind.Mqtt) {
+                    <svg:g class="node">
+                        <svg:rect
+                            [attr.width]="node.dimension.width * 1.1"
+                            [attr.height]="50"
+                            [attr.rx]="5"
+                            [attr.fill]="'#FFF'"
+                            [attr.cursor]="'pointer'"
+                        />
+                        <image
+                            [attr.x]="2"
+                            [attr.y]="(node.dimension.height * 1.1) / 2 - 20"
+                            [attr.width]="30"
+                            [attr.height]="30"
+                            [attr.href]="'../assets/images/mqtt-5.jpg'"
+                        />
+                        <svg:text
+                            alignment-baseline="central"
+                            [attr.x]="35"
+                            [attr.y]="node.dimension.height / 2"
+                            [attr.font-weight]="'normal'"
+                            [attr.cursor]="'pointer'"
+                        >
+                            {{ node.label }}
+                        </svg:text>
+                    </svg:g>
+                }
+                @if (node.data.kind === LineageGraphNodeKind.EthereumLogs) {
+                    <svg:g class="node">
+                        <svg:rect
+                            [attr.width]="node.dimension.width"
+                            [attr.height]="50"
+                            [attr.rx]="5"
+                            [attr.fill]="'#FFF'"
+                            [attr.cursor]="'pointer'"
+                        />
+                        <image
+                            [attr.x]="-45"
+                            [attr.y]="node.dimension.height / 2 - 20"
+                            [attr.width]="50"
+                            [attr.height]="40"
+                            [attr.href]="'../assets/images/ethereum-logo.jpg'"
+                        />
+                        <svg:text
+                            alignment-baseline="central"
+                            [attr.x]="0"
+                            [attr.y]="node.dimension.height / 2"
+                            [attr.font-weight]="'normal'"
+                            [attr.cursor]="'pointer'"
+                        >
+                            {{ node.label }}
+                        </svg:text>
+                    </svg:g>
+                }
+                @if (node.data.kind === LineageGraphNodeKind.DatasetNotAccessable) {
+                    <svg:g class="node">
+                        <svg:rect
+                            [attr.width]="node.dimension.width + 12"
+                            [attr.height]="node.dimension.height"
+                            [attr.rx]="5"
+                            [attr.fill]="'#d6D6D6'"
+                            [attr.cursor]="'pointer'"
+                            (click)="onClickPrivateNode(node)"
+                        />
+                        <svg:text
+                            alignment-baseline="central"
+                            [attr.x]="node.dimension.width * 0.12"
+                            [attr.y]="node.dimension.height / 2"
+                            [attr.font-weight]="'600'"
+                            [attr.cursor]="'pointer'"
+                            (click)="onClickPrivateNode(node)"
+                        >
+                            {{ node.label | displayDatasetId }}
+                        </svg:text>
+                        <svg:g [attr.transform]="'translate(' + (node.dimension.width - 15) + ', 0)'">
+                            <image
+                                [attr.x]="17"
+                                [attr.y]="-12"
+                                [attr.width]="20"
+                                [attr.height]="20"
+                                [attr.href]="'../assets/images/question-mark.png'"
+                            />
+                        </svg:g>
+                    </svg:g>
+                }
+                @if (node.data.kind === LineageGraphNodeKind.PushSource) {
+                    <svg:g class="node">
+                        <svg:rect
+                            [attr.width]="node.dimension.width"
+                            [attr.height]="50"
+                            [attr.rx]="5"
+                            [attr.fill]="'#FFF'"
+                            [attr.cursor]="'pointer'"
+                        />
+                        <image
+                            [attr.x]="-45"
+                            [attr.y]="node.dimension.height / 2 - 20"
+                            [attr.width]="50"
+                            [attr.height]="40"
+                            [attr.href]="'../assets/images/add-push-source.png'"
+                        />
+                        <svg:text
+                            alignment-baseline="central"
+                            [attr.x]="5"
+                            [attr.y]="node.dimension.height / 2"
+                            [attr.font-weight]="'normal'"
+                            [attr.cursor]="'pointer'"
+                        >
+                            {{ node.label }}
+                        </svg:text>
+                    </svg:g>
+                }
+            </ng-template>
+            <ng-template #linkTemplate let-link>
+                <svg:g class="edge" [style.opacity]="link.data?.isHidden ? 0 : 1">
+                    <path class="line" stroke-width="2" [attr.d]="link.line" marker-end="url(#arrow)"></path>
                 </svg:g>
-            </svg:g>
-
-            <svg:g class="node" *ngIf="node.data.kind === LineageGraphNodeKind.PushSource">
-                <svg:rect
-                    [attr.width]="node.dimension.width"
-                    [attr.height]="50"
-                    [attr.rx]="5"
-                    [attr.fill]="'#FFF'"
-                    [attr.cursor]="'pointer'"
-                />
-                <image
-                    [attr.x]="-45"
-                    [attr.y]="node.dimension.height / 2 - 20"
-                    [attr.width]="50"
-                    [attr.height]="40"
-                    [attr.href]="'../assets/images/add-push-source.png'"
-                />
-
-                <svg:text
-                    alignment-baseline="central"
-                    [attr.x]="5"
-                    [attr.y]="node.dimension.height / 2"
-                    [attr.font-weight]="'normal'"
-                    [attr.cursor]="'pointer'"
-                >
-                    {{ node.label }}
-                </svg:text>
-            </svg:g>
-        </ng-template>
-
-        <ng-template #linkTemplate let-link>
-            <svg:g class="edge" [style.opacity]="link.data?.isHidden ? 0 : 1">
-                <path class="line" stroke-width="2" [attr.d]="link.line" marker-end="url(#arrow)"></path>
-            </svg:g>
-        </ng-template>
-    </ngx-graph>
-
-    <div class="information-button">
-        <button (click)="onClickInfo()" data-test-id="info-button">
-            <img src="assets/images/information.png" alt="" width="25" height="25" />
-        </button>
-    </div>
-    <div class="side-panel" *ngIf="showSidePanel && currentDataset">
-        <div class="side-panel__title d-flex fw-bold">
-            <div class="account-avatar">
-                <img [src]="currentDataset.owner.avatarUrl" data-test-id="side-panel-avatar" />
+            </ng-template>
+        </ngx-graph>
+        <div class="information-button">
+            <button (click)="onClickInfo()" data-test-id="info-button">
+                <img src="assets/images/information.png" alt="" width="25" height="25" />
+            </button>
+        </div>
+        @if (showSidePanel && currentDataset) {
+            <div class="side-panel">
+                <div class="side-panel__title d-flex fw-bold">
+                    <div class="account-avatar">
+                        <img [src]="currentDataset.owner.avatarUrl" data-test-id="side-panel-avatar" />
+                    </div>
+                    <div class="dataset-name">
+                        <span
+                            [title]="currentDataset.owner.accountName + ' / ' + currentDataset.name"
+                            data-test-id="side-panel-dataset"
+                        >
+                            {{ currentDataset.owner.accountName }}
+                            / {{ currentDataset.name }}
+                        </span>
+                    </div>
+                </div>
+                <div class="side-panel__permissions mt-1">
+                    <span class="badge-access">{{ isPrivateVisibility ? "Private" : "Public" }}</span>
+                    <span class="badge-verified">Verified</span>
+                </div>
+                <div class="mt-3 info d-flex align-items-center">
+                    <mat-icon class="fs-4 mr-2">account_tree</mat-icon>
+                    <span data-test-id="side-panel-dataset-kind"> {{ currentDataset.kind | titlecase }} </span>
+                </div>
+                <div class="mt-1 info d-flex align-items-center">
+                    <mat-icon class="fs-4 mr-2">star_border</mat-icon> <span> 4 stars </span>
+                </div>
+                <div class="mt-1 info d-flex align-items-center">
+                    <mat-icon class="fs-4 mr-2">folder_open</mat-icon>
+                    <span data-test-id="side-panel-dataset-size">
+                        {{
+                            currentDataset.data.estimatedSizeBytes
+                                ? (currentDataset.data.estimatedSizeBytes | displaySize)
+                                : 0
+                        }}
+                        estimated size
+                    </span>
+                </div>
+                <div class="mt-1 info d-flex align-items-center">
+                    <mat-icon class="fs-4 mr-3"> format_line_spacing </mat-icon>
+                    <span data-test-id="side-panel-dataset-records">
+                        {{ currentDataset.data.numRecordsTotal || 0 | number: "1.0-0" }} records
+                    </span>
+                </div>
+                <div class="mt-1 info d-flex align-items-center">
+                    <mat-icon class="fs-4 mr-3"> receipt_long </mat-icon>
+                    <span data-test-id="side-panel-dataset-license">
+                        {{ currentDataset.metadata.currentLicense?.shortName ?? "No " }}
+                        license</span
+                    >
+                </div>
+                <div class="mt-1 info d-flex align-items-start">
+                    <mat-icon class="fs-4 mr-2">more_time</mat-icon>
+                    <span class="d-flex align-items-center mb-2">
+                        <span class="updated"> Created </span>
+                        <app-display-time
+                            [title]="currentDataset.createdAt"
+                            [data]="currentDataset.createdAt"
+                            [dataTestId]="'side-panel-dataset-created'"
+                        ></app-display-time>
+                    </span>
+                </div>
+                <div class="info d-flex align-items-start">
+                    <mat-icon class="fs-4 mr-2">update</mat-icon>
+                    <span class="d-flex align-items-center mb-2">
+                        <span class="updated"> Updated </span>
+                        <app-display-time
+                            class="time"
+                            [title]="currentDataset.lastUpdatedAt"
+                            [data]="currentDataset.lastUpdatedAt"
+                            [dataTestId]="'side-panel-dataset-updated'"
+                        />
+                    </span>
+                </div>
+                <div class="info d-flex align-items-start">
+                    <mat-icon class="fs-4 mr-2">timeline</mat-icon>
+                    <span class="d-flex align-items-center mb-2">
+                        @if (currentDataset.metadata.currentWatermark) {
+                            <span class="updated"> Watermark </span>
+                            <app-display-time
+                                class="time"
+                                [title]="currentDataset.metadata.currentWatermark"
+                                [data]="currentDataset.metadata.currentWatermark"
+                                [dataTestId]="'side-panel-dataset-watermark'"
+                            />
+                        } @else {
+                            <span> No watermark</span>
+                        }
+                    </span>
+                </div>
             </div>
-            <div class="dataset-name">
-                <span
-                    [title]="currentDataset.owner.accountName + ' / ' + currentDataset.name"
-                    data-test-id="side-panel-dataset"
-                >
-                    {{ currentDataset.owner.accountName }}
-                    / {{ currentDataset.name }}
-                </span>
-            </div>
-        </div>
-        <div class="side-panel__permissions mt-1">
-            <span class="badge-access">{{ isPrivateVisibility ? "Private" : "Public" }}</span>
-            <span class="badge-verified">Verified</span>
-        </div>
-        <div class="mt-3 info d-flex align-items-center">
-            <mat-icon class="fs-4 mr-2">account_tree</mat-icon>
-            <span data-test-id="side-panel-dataset-kind"> {{ currentDataset.kind | titlecase }} </span>
-        </div>
-        <div class="mt-1 info d-flex align-items-center">
-            <mat-icon class="fs-4 mr-2">star_border</mat-icon> <span> 4 stars </span>
-        </div>
-        <div class="mt-1 info d-flex align-items-center">
-            <mat-icon class="fs-4 mr-2">folder_open</mat-icon>
-            <span data-test-id="side-panel-dataset-size">
-                {{
-                    currentDataset.data.estimatedSizeBytes ? (currentDataset.data.estimatedSizeBytes | displaySize) : 0
-                }}
-                estimated size
-            </span>
-        </div>
-        <div class="mt-1 info d-flex align-items-center">
-            <mat-icon class="fs-4 mr-3"> format_line_spacing </mat-icon>
-            <span data-test-id="side-panel-dataset-records">
-                {{ currentDataset.data.numRecordsTotal || 0 | number: "1.0-0" }} records
-            </span>
-        </div>
-        <div class="mt-1 info d-flex align-items-center">
-            <mat-icon class="fs-4 mr-3"> receipt_long </mat-icon>
-            <span data-test-id="side-panel-dataset-license">
-                {{ currentDataset.metadata.currentLicense?.shortName ?? "No " }}
-                license</span
-            >
-        </div>
-        <div class="mt-1 info d-flex align-items-start">
-            <mat-icon class="fs-4 mr-2">more_time</mat-icon>
-            <span class="d-flex align-items-center mb-2">
-                <span class="updated"> Created </span>
-                <app-display-time
-                    [title]="currentDataset.createdAt"
-                    [data]="currentDataset.createdAt"
-                    [dataTestId]="'side-panel-dataset-created'"
-                ></app-display-time>
-            </span>
-        </div>
-        <div class="info d-flex align-items-start">
-            <mat-icon class="fs-4 mr-2">update</mat-icon>
-            <span class="d-flex align-items-center mb-2">
-                <span class="updated"> Updated </span>
-                <app-display-time
-                    class="time"
-                    [title]="currentDataset.lastUpdatedAt"
-                    [data]="currentDataset.lastUpdatedAt"
-                    [dataTestId]="'side-panel-dataset-updated'"
-                />
-            </span>
-        </div>
-        <div class="info d-flex align-items-start">
-            <mat-icon class="fs-4 mr-2">timeline</mat-icon>
-            <span class="d-flex align-items-center mb-2">
-                <ng-container *ngIf="currentDataset.metadata.currentWatermark; else noWatermark">
-                    <span class="updated"> Watermark </span>
-                    <app-display-time
-                        class="time"
-                        [title]="currentDataset.metadata.currentWatermark"
-                        [data]="currentDataset.metadata.currentWatermark"
-                        [dataTestId]="'side-panel-dataset-watermark'"
-                    />
-                </ng-container>
-                <ng-template #noWatermark>
-                    <span> No watermark</span>
-                </ng-template>
-            </span>
-        </div>
+        }
     </div>
-</div>
+}

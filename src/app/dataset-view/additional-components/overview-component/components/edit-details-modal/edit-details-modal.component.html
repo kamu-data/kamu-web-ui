@@ -26,12 +26,14 @@
         <label for="keywords" class="form-label mb-3">Keywords</label>
 
         <mat-chip-grid #chipList>
-            <mat-chip-row *ngFor="let keyword of keywords" (removed)="removeKeyword(keyword)">
-                {{ keyword }}
-                <button matChipRemove>
-                    <mat-icon>cancel</mat-icon>
-                </button>
-            </mat-chip-row>
+            @for (keyword of keywords; track keyword) {
+                <mat-chip-row (removed)="removeKeyword(keyword)">
+                    {{ keyword }}
+                    <button matChipRemove>
+                        <mat-icon>cancel</mat-icon>
+                    </button>
+                </mat-chip-row>
+            }
         </mat-chip-grid>
 
         <div class="mt-3">

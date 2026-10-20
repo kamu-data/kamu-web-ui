@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
@@ -34,8 +33,6 @@ import { NavigationService } from "src/app/services/navigation.service";
 @Component({
     selector: "app-metadata-polling-source-tab",
     imports: [
-        //-----//
-        NgIf,
         //-----//
         MatIconModule,
         //-----//
@@ -69,8 +66,8 @@ export class MetadataPollingSourceTabComponent {
     }
 
     public get headers(): EnvVar[] {
-        return (this.datasetMetadataTabData.metadataSummary.metadata.currentPollingSource?.fetch as FetchStepUrl)
-            .headers as EnvVar[];
+        return ((this.datasetMetadataTabData.metadataSummary.metadata.currentPollingSource?.fetch as FetchStepUrl)
+            .headers ?? []) as EnvVar[];
     }
 
     public get canEditSetPollingSource(): boolean {

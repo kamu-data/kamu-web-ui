@@ -1,28 +1,27 @@
 <ng-container>
     <div class="d-flex flex-column gap-4 mt-4">
-        <div class="position-relative border border-1 p-2 rounded-3" *ngFor="let section of eventSections">
-            <span class="position-absolute text-muted group-box-label text-uppercase">{{ section.title }}</span>
-            <div class="mx-4">
-                <ng-container *ngFor="let row of section.rows">
-                    <app-block-row-data
-                        *ngIf="!row.descriptor.separateRowForValue; else templateSeparateRow"
-                        [tooltip]="row.descriptor.tooltip"
-                        [label]="row.descriptor.label"
-                    >
-                        <ng-template #container></ng-template>
-                    </app-block-row-data>
-                    <ng-template #templateSeparateRow>
-                        <app-block-row-data [tooltip]="row.descriptor.tooltip" [label]="row.descriptor.label" />
-                        <ng-template #container></ng-template>
-                    </ng-template>
-                </ng-container>
-                <ng-container *ngIf="!section.rows.length">
-                    <p class="text-center mt-2" data-test-id="unsupported-section">
-                        <mat-icon class="text-danger align-middle">block</mat-icon>
-                        <span>Unsupported section</span>
-                    </p>
-                </ng-container>
+        @for (section of eventSections; track $index) {
+            <div class="position-relative border border-1 p-2 rounded-3">
+                <span class="position-absolute text-muted group-box-label text-uppercase">{{ section.title }}</span>
+                <div class="mx-4">
+                    @for (row of section.rows; track $index) {
+                        @if (!row.descriptor.separateRowForValue) {
+                            <app-block-row-data [tooltip]="row.descriptor.tooltip" [label]="row.descriptor.label">
+                                <ng-template #container></ng-template>
+                            </app-block-row-data>
+                        } @else {
+                            <app-block-row-data [tooltip]="row.descriptor.tooltip" [label]="row.descriptor.label" />
+                            <ng-template #container></ng-template>
+                        }
+                    }
+                    @if (!section.rows.length) {
+                        <p class="text-center mt-2" data-test-id="unsupported-section">
+                            <mat-icon class="text-danger align-middle">block</mat-icon>
+                            <span>Unsupported section</span>
+                        </p>
+                    }
+                </div>
             </div>
-        </div>
+        }
     </div>
 </ng-container>

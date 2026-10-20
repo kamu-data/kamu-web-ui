@@ -22,7 +22,6 @@ which the post-edit hook runs on each edited file; `npm run lint` (typescript-es
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        NgFor,
         ReactiveFormsModule,
         //-----//
         FormValidationErrorsDirective,
@@ -43,14 +42,20 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
   outside an input or an `async` pipe, call `cdr.markForCheck()`.
 - Selector prefix `app-`; separate `templateUrl` / `styleUrls` (SCSS) files, no inline templates
   outside test host components.
-- `imports` is grouped by `//-----//` separators: Angular building blocks, then Material and
-  third-party modules, then app components, directives and pipes. Import `NgIf`, `NgFor`,
-  `AsyncPipe` individually, not `CommonModule`.
+- `imports` is written one entry per line, in groups, each group opened by a `//-----//` line:
+  Angular building blocks (`AsyncPipe`, `NgClass`, `RouterLink`, forms modules), then Material
+  and third-party modules, then app components, directives and pipes. The opening separator also
+  keeps prettier from folding the array onto one line. When an edit or an automated migration
+  empties a group, drop that group's separator but keep the others; never collapse the array.
+  Import `AsyncPipe`, `NgClass` and the like individually, not `CommonModule`.
 - Inputs and outputs use the decorators — `@Input({ required: true })`, `@Input()`, `@Output()`
   with an `EventEmitter` — matching the rest of the codebase. Do not migrate to signal inputs,
   `input()`/`output()` or signals unless the user asks for that migration.
-- Templates use `*ngIf` / `*ngFor` (with `trackBy` for lists that re-render) like every other
-  template; do not introduce `@if` / `@for` control flow piecemeal.
+- Templates use the built-in control flow: `@if` / `@else`, `@for` and `@switch`. Never
+  `*ngIf`, `*ngFor` or `[ngSwitch]`, which Angular deprecates for removal. A new `@for` over
+  data that can be re-fetched tracks a stable key (`track item.id`, `track row.name`), so a
+  refreshed list keeps its DOM; `track item` and `track $index` fit static lists and lists with
+  no key.
 - Every element a test needs gets a `data-test-id="..."` attribute; tests select on it, never on
   CSS classes.
 
@@ -131,7 +136,8 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
 
 | Approach | Why rejected |
 |---|---|
-| Migrating touched components to signals / `input()` / `@if` as part of an unrelated change | Mixed idioms in one feature make it harder to read; a migration is its own change, done when asked |
+| Migrating touched components to signals / `input()` as part of an unrelated change | Mixed idioms in one feature make it harder to read; a migration is its own change, done when asked |
+| `*ngIf` / `*ngFor` / `[ngSwitch]` | Deprecated in Angular 20 with removal intended in v22; every template uses block control flow, which also needs no directive imports |
 | Constructor injection | Inconsistent with the rest of the codebase; `inject()` works in base classes and field initializers |
 | Default change detection on new components | Every feature is built for `OnPush`; Default hides missing `markForCheck` calls until a parent switches |
 | Component-level `Subject` + `ngOnDestroy` teardown | `takeUntilDestroyed(this.destroyRef)` does the same with less code and cannot be forgotten in `ngOnDestroy` |

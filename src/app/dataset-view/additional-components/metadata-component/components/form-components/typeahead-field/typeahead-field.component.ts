@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, ViewChild } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
@@ -27,7 +26,6 @@ import { BaseField } from "src/app/dataset-view/additional-components/metadata-c
     imports: [
         //-----//
         FormsModule,
-        NgIf,
         ReactiveFormsModule,
         //-----//
         NgbTypeahead,

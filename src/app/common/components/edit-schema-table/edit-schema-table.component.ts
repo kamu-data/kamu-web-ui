@@ -6,7 +6,6 @@
  */
 
 import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
-import { NgFor, NgIf } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -44,8 +43,6 @@ import { schemaNameWarnings, SchemaValidationError } from "./validation/schema-v
     selector: "app-edit-schema-table",
     imports: [
         //-----//
-        NgFor,
-        NgIf,
         FormsModule,
         //-----//
         MatIconModule,

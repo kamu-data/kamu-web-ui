@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgForOf, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
@@ -24,10 +23,7 @@ import { GrafanaLogsService } from "src/app/services/grafana-logs.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        NgIf,
-        //-----//
         MatIconModule,
-        NgForOf,
     ],
 })
 export class FlowDetailsLogsTabComponent {

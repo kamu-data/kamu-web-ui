@@ -7,9 +7,11 @@
             <div class="w-25">
                 <label for="owner" class="fs-12">Owner </label><span class="text-danger">*</span><br />
                 <select [title]="owner?.value" class="form-select custom-form-control d-inline" formControlName="owner">
-                    <option [ngValue]="owner" *ngFor="let owner of owners">
-                        {{ owner }}
-                    </option>
+                    @for (owner of owners; track owner) {
+                        <option [ngValue]="owner">
+                            {{ owner }}
+                        </option>
+                    }
                 </select>
             </div>
             <span class="mx-2 fs-3 align-self-start divider">/</span>
@@ -123,7 +125,7 @@
         </div>
         <mat-divider />
 
-        <ng-container *ngIf="isAccountProviderMultiMode">
+        @if (isAccountProviderMultiMode) {
             <div class="margin-storage-control select-storage-width">
                 <label for="select-storage" class="fs-12 mb-1">Storage </label><br />
                 <ng-select
@@ -137,12 +139,14 @@
                     <ng-template ng-option-tmp let-item="item" let-index="index" let-disabled="disabled">
                         <img [class]="item.iconClass" class="ms-2" [src]="item.image" />
                         <label class="fs-14 inline-block"> {{ item.storageName }} </label>
-                        <span *ngIf="item.disabled" class="badge-comming-soon">coming soon</span>
+                        @if (item.disabled) {
+                            <span class="badge-comming-soon">coming soon</span>
+                        }
                     </ng-template>
                 </ng-select>
             </div>
             <mat-divider />
-        </ng-container>
+        }
     </form>
 
     <div class="my-4">
@@ -158,7 +162,7 @@
             <span class="fs-16 ms-2">Initialize from YAML snapshot</span>
         </label>
     </div>
-    <ng-container *ngIf="showMonacoEditor">
+    @if (showMonacoEditor) {
         <div class="container-monaco border border-1 mt-4 ps-2 pe-2 pt-4 rounded-3">
             <app-yaml-editor [(template)]="yamlTemplate" height="400px" data-test-id="monaco-editor"></app-yaml-editor>
         </div>
@@ -175,7 +179,7 @@
                 Upload from file
             </button>
         </div>
-    </ng-container>
+    }
     <mat-divider />
     <div class="my-4 d-flex align-items-center text-muted">
         <mat-icon class="mat-icon-svg-size me-2" svgIcon="information" />
@@ -187,10 +191,12 @@
             Create dataset
         </button>
     </div>
-    <div *ngIf="errorMessage$ | async as errorMessage" class="alert alert-danger" role="alert">
-        <p class="text-danger fs-6">
-            Error:<br />
-            <span class="fs-6" data-test-id="create-error-message">{{ errorMessage }}</span>
-        </p>
-    </div>
+    @if (errorMessage$ | async; as errorMessage) {
+        <div class="alert alert-danger" role="alert">
+            <p class="text-danger fs-6">
+                Error:<br />
+                <span class="fs-6" data-test-id="create-error-message">{{ errorMessage }}</span>
+            </p>
+        </div>
+    }
 </div>

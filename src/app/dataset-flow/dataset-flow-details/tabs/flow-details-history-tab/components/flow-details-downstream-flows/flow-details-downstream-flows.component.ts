@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { NgClass, NgFor, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
@@ -27,8 +27,6 @@ import ProjectLinks from "src/app/project-links";
     imports: [
         //-----//
         NgClass,
-        NgFor,
-        NgIf,
         RouterLink,
         //-----//
         MatIconModule,

@@ -1,24 +1,26 @@
 <div class="container-content mt-4">
-    <div *ngIf="accountResolverResponse.datasetsResponse.datasets.length === 0" class="text-center">
-        <h5>Datasets list is empty</h5>
-    </div>
-    <div *ngFor="let row of accountResolverResponse.datasetsResponse.datasets; let rowIndex = index">
-        <app-dataset-list-item
-            [row]="row"
-            [rowIndex]="rowIndex"
-            [isClickableRow]="isClickableRow"
-        ></app-dataset-list-item>
-    </div>
-    <ng-template
-        [ngIf]="
-            accountResolverResponse.datasetsResponse.datasets.length > 0 &&
-            accountResolverResponse.datasetsResponse.pageInfo
-        "
-    >
+    @if (accountResolverResponse.datasetsResponse.datasets.length === 0) {
+        <div class="text-center">
+            <h5>Datasets list is empty</h5>
+        </div>
+    }
+    @for (row of accountResolverResponse.datasetsResponse.datasets; track row; let rowIndex = $index) {
+        <div>
+            <app-dataset-list-item
+                [row]="row"
+                [rowIndex]="rowIndex"
+                [isClickableRow]="isClickableRow"
+            ></app-dataset-list-item>
+        </div>
+    }
+    @if (
+        accountResolverResponse.datasetsResponse.datasets.length > 0 &&
+        accountResolverResponse.datasetsResponse.pageInfo
+    ) {
         <app-pagination
             [currentPage]="currentPage"
             [pageInfo]="accountResolverResponse.datasetsResponse.pageInfo"
             (pageChangeEvent)="onPageChange($event)"
         ></app-pagination>
-    </ng-template>
+    }
 </div>

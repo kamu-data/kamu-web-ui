@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
@@ -24,8 +23,6 @@ import { QueryExplainerOutputType } from "src/app/query-explainer/query-explaine
     templateUrl: "./reproduced-result-section.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        //-----//
-        NgIf,
         //-----//
         DynamicTableComponent,
     ],

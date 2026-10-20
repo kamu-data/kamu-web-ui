@@ -37,9 +37,11 @@
         [group]="renameDatasetForm"
         [dataTestId]="'rename-dataset-error'"
     ></div>
-    <div *ngIf="renameError$ | async as renameError">
-        <div class="error-block" data-test-id="rename-dataset-error-custom">{{ renameError }}</div>
-    </div>
+    @if (renameError$ | async; as renameError) {
+        <div>
+            <div class="error-block" data-test-id="rename-dataset-error-custom">{{ renameError }}</div>
+        </div>
+    }
 </form>
 <div class="mt-2 margin-bottom">
     <h2>Danger Zone</h2>
@@ -94,20 +96,21 @@
         </button>
     </div>
 
-    <div
-        *ngIf="isAllowedToDeleteDataset"
-        appFeatureFlag="dataset.panel.settings.general.delete"
-        class="danger-zone__content d-flex justify-content-between align-items-center mt-4"
-    >
-        <div class="danger-zone__description">
-            <p class="description">Delete this dataset</p>
-            <p class="hint mt-2">
-                Removes the dataset from the node, potentially losing all data and history. Note that the dataset may
-                still remain replicated or cached by other nodes in the network.
-            </p>
+    @if (isAllowedToDeleteDataset) {
+        <div
+            appFeatureFlag="dataset.panel.settings.general.delete"
+            class="danger-zone__content d-flex justify-content-between align-items-center mt-4"
+        >
+            <div class="danger-zone__description">
+                <p class="description">Delete this dataset</p>
+                <p class="hint mt-2">
+                    Removes the dataset from the node, potentially losing all data and history. Note that the dataset
+                    may still remain replicated or cached by other nodes in the network.
+                </p>
+            </div>
+            <button type="button" (click)="deleteDataset()" data-test-id="delete-dataset-button">
+                Delete this dataset
+            </button>
         </div>
-        <button type="button" (click)="deleteDataset()" data-test-id="delete-dataset-button">
-            Delete this dataset
-        </button>
-    </div>
+    }
 </div>

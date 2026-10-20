@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
@@ -17,7 +16,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-account-whitelist-not-found",
-    imports: [NgIf, MatIconModule],
+    imports: [MatIconModule],
     templateUrl: "./account-whitelist-not-found.component.html",
     styleUrls: ["./account-whitelist-not-found.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,

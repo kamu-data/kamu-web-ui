@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { NavigationEnd, Router } from "@angular/router";
@@ -34,7 +34,6 @@ import { NavigationService } from "src/app/services/navigation.service";
     imports: [
         //-----//
         AsyncPipe,
-        NgIf,
         //-----//
         TimelineComponent,
         PaginationComponent,

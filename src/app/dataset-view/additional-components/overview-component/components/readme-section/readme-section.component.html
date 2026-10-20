@@ -1,62 +1,67 @@
-<div id="file-readme-dataset-template-md" class="file my-4" *ngIf="currentReadme || editingInProgress">
-    <div class="file-header d-flex align-items-center">
-        <div class="file-info pr-4 d-flex flex-order-1 flex-auto align-items-center">
-            <span class="mr-2 mt-1">
-                <mat-icon class="mat-icon-svg-size" svgIcon="code-square" />
-            </span>
-            <h2 class="box-title align-items-center m-0">
-                <a data-view-component="true" class="link--primary">README.md</a>
-            </h2>
+@if (currentReadme || editingInProgress) {
+    <div id="file-readme-dataset-template-md" class="file my-4">
+        <div class="file-header d-flex align-items-center">
+            <div class="file-info pr-4 d-flex flex-order-1 flex-auto align-items-center">
+                <span class="mr-2 mt-1">
+                    <mat-icon class="mat-icon-svg-size" svgIcon="code-square" />
+                </span>
+                <h2 class="box-title align-items-center m-0">
+                    <a data-view-component="true" class="link--primary">README.md</a>
+                </h2>
+            </div>
+            @if (editable) {
+                <button
+                    class="starred rounded-2 btn-sm btn btn-roup-item custom-edit d-flex justify-content-center align-items-center"
+                    aria-label="Edit this file"
+                    data-test-id="show-edit-tabs"
+                    (click)="showEditTabs()"
+                >
+                    <mat-icon class="mat-icon-svg-size" svgIcon="pencil" />
+                </button>
+            }
         </div>
-        <button
-            class="starred rounded-2 btn-sm btn btn-roup-item custom-edit d-flex justify-content-center align-items-center"
-            aria-label="Edit this file"
-            data-test-id="show-edit-tabs"
-            (click)="showEditTabs()"
-            *ngIf="editable"
-        >
-            <mat-icon class="mat-icon-svg-size" svgIcon="pencil" />
-        </button>
-    </div>
-    <div *ngIf="editingInProgress" class="edit-title d-flex align-items-center justify-content-between">
-        <div class="left-part">
-            <button
-                class="edit-button"
-                [class.active]="isEditView"
-                data-test-id="select-edit-tab"
-                (click)="selectMode(editMode.Edit)"
-            >
-                Edit
-            </button>
-            <button
-                class="edit-button"
-                [class.active]="isPreviewView"
-                data-test-id="select-preview-tab"
-                (click)="selectMode(editMode.Preview)"
-            >
-                Preview
-            </button>
+        @if (editingInProgress) {
+            <div class="edit-title d-flex align-items-center justify-content-between">
+                <div class="left-part">
+                    <button
+                        class="edit-button"
+                        [class.active]="isEditView"
+                        data-test-id="select-edit-tab"
+                        (click)="selectMode(editMode.Edit)"
+                    >
+                        Edit
+                    </button>
+                    <button
+                        class="edit-button"
+                        [class.active]="isPreviewView"
+                        data-test-id="select-preview-tab"
+                        (click)="selectMode(editMode.Preview)"
+                    >
+                        Preview
+                    </button>
+                </div>
+                <div class="right-part d-flex">
+                    <button class="button-changes mr-4" data-test-id="cancel-changes" (click)="onCancelChanges()">
+                        Cancel changes
+                    </button>
+                    <button
+                        class="button-changes"
+                        data-test-id="save-changes"
+                        [disabled]="!readmeChanged"
+                        (click)="saveChanges()"
+                    >
+                        Save changes...
+                    </button>
+                </div>
+            </div>
+        }
+        <div class="file-content">
+            @if (isEditView && editingInProgress) {
+                <textarea class="variable-textarea" [(ngModel)]="readmeState"></textarea>
+            }
+            @if (!isEditView || !editingInProgress) {
+                <markdown clipboard class="variable-binding" [data]="readmeState" />
+            }
         </div>
-        <div class="right-part d-flex">
-            <button class="button-changes mr-4" data-test-id="cancel-changes" (click)="onCancelChanges()">
-                Cancel changes
-            </button>
-            <button
-                class="button-changes"
-                data-test-id="save-changes"
-                [disabled]="!readmeChanged"
-                (click)="saveChanges()"
-            >
-                Save changes...
-            </button>
-        </div>
     </div>
-    <div class="file-content">
-        <ng-template [ngIf]="isEditView && editingInProgress">
-            <textarea class="variable-textarea" [(ngModel)]="readmeState"></textarea>
-        </ng-template>
-        <ng-template [ngIf]="!isEditView || !editingInProgress">
-            <markdown clipboard class="variable-binding" [data]="readmeState" />
-        </ng-template>
-    </div>
-</div>
+}

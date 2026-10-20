@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
@@ -43,7 +42,6 @@ import { EditorModule } from "src/app/editor/editor.module";
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        NgIf,
         RouterLink,
         //-----//
         EditorModule,

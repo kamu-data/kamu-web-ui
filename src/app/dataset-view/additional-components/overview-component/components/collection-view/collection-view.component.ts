@@ -6,7 +6,7 @@
  */
 
 import { Clipboard } from "@angular/cdk/clipboard";
-import { AsyncPipe, DatePipe, NgFor, NgIf, SlicePipe } from "@angular/common";
+import { AsyncPipe, DatePipe, SlicePipe } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -52,8 +52,6 @@ import { CollectionEntriesResult, CollectionEntryViewType, CollectionViewNode } 
         //-----//
         AsyncPipe,
         DatePipe,
-        NgIf,
-        NgFor,
         SlicePipe,
 
         //-----//

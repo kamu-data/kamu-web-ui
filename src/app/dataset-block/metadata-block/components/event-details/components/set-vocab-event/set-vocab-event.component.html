@@ -1,13 +1,17 @@
-<div *ngIf="event" class="position-relative border border-1 p-2 rounded-3">
-    <span class="position-absolute text-muted group-box-label text-uppercase">Information</span>
-    <ng-container *ngFor="let property of event | keyvalue">
-        <div class="mx-4" *ngIf="property.value && property.key !== '__typename'">
-            <app-block-row-data
-                [tooltip]="viewDataMapper[property.key].tooltip"
-                [label]="viewDataMapper[property.key].label"
-            >
-                <app-cards-property [data]="[property.value]" />
-            </app-block-row-data>
-        </div>
-    </ng-container>
-</div>
+@if (event) {
+    <div class="position-relative border border-1 p-2 rounded-3">
+        <span class="position-absolute text-muted group-box-label text-uppercase">Information</span>
+        @for (property of event | keyvalue; track property) {
+            @if (property.value && property.key !== "__typename") {
+                <div class="mx-4">
+                    <app-block-row-data
+                        [tooltip]="viewDataMapper[property.key].tooltip"
+                        [label]="viewDataMapper[property.key].label"
+                    >
+                        <app-cards-property [data]="[property.value]" />
+                    </app-block-row-data>
+                </div>
+            }
+        }
+    </div>
+}

@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
@@ -28,9 +27,6 @@ import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
     styleUrls: ["./search-additional-buttons.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        //-----//
-        NgFor,
-        NgIf,
         //-----//
         MatIconModule,
         MatMenuModule,

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf, TitleCasePipe } from "@angular/common";
+import { TitleCasePipe } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
@@ -54,8 +54,6 @@ import { SourcesSection } from "src/app/dataset-view/additional-components/metad
     viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
     imports: [
         //-----//
-        NgIf,
-        NgFor,
         FormsModule,
         ReactiveFormsModule,
         TitleCasePipe,

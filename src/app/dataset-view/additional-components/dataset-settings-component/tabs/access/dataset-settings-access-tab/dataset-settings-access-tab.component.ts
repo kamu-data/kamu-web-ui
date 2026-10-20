@@ -6,7 +6,7 @@
  */
 
 import { SelectionModel } from "@angular/cdk/collections";
-import { NgIf, TitleCasePipe } from "@angular/common";
+import { TitleCasePipe } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
@@ -45,7 +45,6 @@ import { NavigationService } from "src/app/services/navigation.service";
     imports: [
         //-----//
         FormsModule,
-        NgIf,
         TitleCasePipe,
         RouterLink,
         //-----//

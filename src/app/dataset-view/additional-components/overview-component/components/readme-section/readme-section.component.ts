@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import {
     AfterViewChecked,
     ChangeDetectionStrategy,
@@ -43,7 +42,6 @@ import { NavigationService } from "src/app/services/navigation.service";
     imports: [
         //-----//
         FormsModule,
-        NgIf,
         //-----//
         MatIconModule,
         MarkdownModule,

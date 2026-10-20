@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, NgClass, NgFor, NgIf } from "@angular/common";
+import { AsyncPipe, NgClass } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
@@ -38,8 +38,6 @@ import ProjectLinks from "src/app/project-links";
         //-----//
         AsyncPipe,
         NgClass,
-        NgIf,
-        NgFor,
         RouterLink,
         RouterLinkActive,
         RouterOutlet,

@@ -11,12 +11,14 @@
         />
         <label class="form-check-label"> Use Preprocess step </label>
     </div>
-    <div *ngIf="!showPreprocessStep" class="text-muted text-center fs-6 mt-2">
-        Enable preprocessing query, if you would like to transform your data during the ingestion process
-    </div>
+    @if (!showPreprocessStep) {
+        <div class="text-muted text-center fs-6 mt-2">
+            Enable preprocessing query, if you would like to transform your data during the ingestion process
+        </div>
+    }
 </div>
 
-<ng-container *ngIf="showPreprocessStep">
+@if (showPreprocessStep) {
     <div class="row">
         <div class="col-lg-4 ps-4">
             <div class="container-engine">
@@ -33,4 +35,4 @@
             </div>
         </div>
     </div>
-</ng-container>
+}

@@ -1,17 +1,17 @@
-<div class="app-main-container" role="main" data-test-id="dataset-view" id="dataset-view" *ngIf="datasetBasics">
-    <div class="app-content mt-4">
-        <app-dataset-view-header [datasetBasics]="datasetBasics" [datasetInfo]="datasetInfo" />
-    </div>
-
-    <div class="app-content">
-        <div id="dataset-viewer">
-            <app-dataset-view-menu
-                [datasetBasics]="datasetBasics"
-                [datasetPermissions]="datasetPermissions"
-                [datasetViewType]="datasetViewType"
-            />
-
-            <router-outlet></router-outlet>
+@if (datasetBasics) {
+    <div class="app-main-container" role="main" data-test-id="dataset-view" id="dataset-view">
+        <div class="app-content mt-4">
+            <app-dataset-view-header [datasetBasics]="datasetBasics" [datasetInfo]="datasetInfo" />
+        </div>
+        <div class="app-content">
+            <div id="dataset-viewer">
+                <app-dataset-view-menu
+                    [datasetBasics]="datasetBasics"
+                    [datasetPermissions]="datasetPermissions"
+                    [datasetViewType]="datasetViewType"
+                />
+                <router-outlet></router-outlet>
+            </div>
         </div>
     </div>
-</div>
+}

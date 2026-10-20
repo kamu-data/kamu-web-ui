@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, DatePipe, NgFor, NgIf } from "@angular/common";
+import { AsyncPipe, DatePipe } from "@angular/common";
 import { AfterViewChecked, ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { RouterLink } from "@angular/router";
 
@@ -39,8 +39,6 @@ import {
         //-----//
         AsyncPipe,
         DatePipe,
-        NgIf,
-        NgFor,
         RouterLink,
         //-----//
         MarkdownModule,

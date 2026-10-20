@@ -4,10 +4,12 @@
         <div class="d-flex fs-12 align-items-center justify-content-between">
             <div>
                 <span class="label label--secondary v-align-middle webhook">Webhook</span>
-                <img *ngIf="summary.runningSince" [src]="'assets/images/gear.gif'" class="dynamic-icon ms-2" />
-                <span class="ms-1 fs-12 text-muted" *ngIf="summary.runningSince">{{
-                    durationProcessRunning(summary.runningSince)
-                }}</span>
+                @if (summary.runningSince) {
+                    <img [src]="'assets/images/gear.gif'" class="dynamic-icon ms-2" />
+                }
+                @if (summary.runningSince) {
+                    <span class="ms-1 fs-12 text-muted">{{ durationProcessRunning(summary.runningSince) }}</span>
+                }
             </div>
             <a
                 [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name, DatasetViewTypeEnum.Flows]"
@@ -90,14 +92,18 @@
             </div>
 
             <div class="mt-2">
-                <span class="text-muted fs-12" *ngIf="summary.lastSuccessAt"
-                    >Last success: {{ summary.lastSuccessAt | date: DISPLAY_TIME_FORMAT }}</span
-                >
+                @if (summary.lastSuccessAt) {
+                    <span class="text-muted fs-12"
+                        >Last success: {{ summary.lastSuccessAt | date: DISPLAY_TIME_FORMAT }}</span
+                    >
+                }
             </div>
             <div>
-                <span class="text-muted fs-12" *ngIf="summary.lastFailureAt"
-                    >Last failure: {{ summary.lastFailureAt | date: DISPLAY_TIME_FORMAT }}</span
-                >
+                @if (summary.lastFailureAt) {
+                    <span class="text-muted fs-12"
+                        >Last failure: {{ summary.lastFailureAt | date: DISPLAY_TIME_FORMAT }}</span
+                    >
+                }
             </div>
         </div>
     </div>

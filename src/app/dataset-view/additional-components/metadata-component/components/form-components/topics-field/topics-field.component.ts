@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
@@ -26,8 +25,6 @@ import { KeyValueFormType } from "src/app/dataset-view/additional-components/met
     imports: [
         //-----//
         FormsModule,
-        NgIf,
-        NgFor,
         ReactiveFormsModule,
         //-----//
         NgxTrimDirectiveModule,

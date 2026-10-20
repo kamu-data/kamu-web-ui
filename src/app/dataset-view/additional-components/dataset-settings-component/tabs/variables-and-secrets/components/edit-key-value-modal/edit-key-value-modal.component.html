@@ -58,17 +58,21 @@
                     data-test-id="value"
                     #value
                 />
-                <div class="input-group-addon pt-2 px-2 eye-icon" *ngIf="row?.isSecret">
-                    <a *ngIf="exposedValue; else visibilityOff" (click)="toggleExposedValue()">
-                        <mat-icon *ngIf="exposedValue" class="text-muted fs-4">visibility</mat-icon></a
-                    >
-
-                    <ng-template #visibilityOff>
-                        <a (click)="toggleExposedValue()">
-                            <mat-icon class="text-muted fs-4">visibility_off</mat-icon></a
-                        >
-                    </ng-template>
-                </div>
+                @if (row?.isSecret) {
+                    <div class="input-group-addon pt-2 px-2 eye-icon">
+                        @if (exposedValue) {
+                            <a (click)="toggleExposedValue()">
+                                @if (exposedValue) {
+                                    <mat-icon class="text-muted fs-4">visibility</mat-icon>
+                                }
+                            </a>
+                        } @else {
+                            <a (click)="toggleExposedValue()">
+                                <mat-icon class="text-muted fs-4">visibility_off</mat-icon></a
+                            >
+                        }
+                    </div>
+                }
             </div>
             <div
                 class="text-danger fs-12"

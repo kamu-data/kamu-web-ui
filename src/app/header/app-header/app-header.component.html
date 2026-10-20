@@ -1,337 +1,345 @@
-<nav
-    *ngIf="isVisible"
-    class="navbar navbar-expand-lg navbar-dark bg-dark details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap"
-    id="app-header"
->
-    <div class="header-item mt-n1 mb-n1 d-none d-md-flex">
-        <div [classList]="'app-brand'" id="app-header-logo">
-            <a [routerLink]="[HOME_LINK]" data-test-id="appLogo">
-                <img [src]="APP_LOGO" alt="Application logo" />
-            </a>
-        </div>
-    </div>
-    <div class="header-item d-md-none">
-        <button
-            #appHeaderMenuButton
-            id="app-header-menu-button"
-            class="navbar-toggler"
-            data-test-id="appHeaderMenuButton"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbar-nav-dropdown"
-            (click)="toggleAppHeaderMenu()"
-            aria-controls="navbar-nav-dropdown"
-            [attr.aria-expanded]="isCollapsedAppHeaderMenu"
-            aria-label="Toggle navigation"
-        >
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-    <div
-        class="header-item header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 details-content--hidden-not-important d-md-flex"
+@if (isVisible) {
+    <nav
+        class="navbar navbar-expand-lg navbar-dark bg-dark details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap"
+        id="app-header"
     >
-        <div
-            class="header-search flex-auto position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3"
-        >
-            <div class="position-relative">
-                <div class="collapse show navbar-collapse" id="navbar-nav-dropdown">
-                    <ul class="navbar-nav">
-                        <li class="nav-item search-input-container" [class.active-search-input]="isSearchActive">
-                            <div
-                                class="input-group flex-nowrap flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 js-jump-to"
-                                id="search-input"
-                            >
-                                <div *ngIf="searching" class="container-spinner">
-                                    <mat-spinner [diameter]="20" color="warn" mode="indeterminate" />
-                                </div>
-                                <input
-                                    type="text"
-                                    data-test-id="searchInput"
-                                    class="form-control"
-                                    id="typeahead-http"
-                                    [ngbTypeahead]="search"
-                                    [resultTemplate]="rt"
-                                    placeholder="Search or jump to..."
-                                    [inputFormatter]="formatter"
-                                    [(ngModel)]="searchQuery"
-                                    aria-label="Search"
-                                    aria-describedby="addon-wrapping"
-                                    (click)="onClickInput()"
-                                    (selectItem)="onSelectItem($event)"
-                                    (keyup.enter)="onSearch($event)"
-                                    (focusin)="onFocus($event)"
-                                />
-                            </div>
-                            <ng-template #rt let-r="result" let-t="term" let-index="index">
-                                <div class="result-container d-flex align-items-center">
-                                    {{ index }}
-                                    <i *ngIf="r.__typename === TypeNames.allDataType" class="bi bi-eye-fill mr-2"></i>
-                                    <i
-                                        *ngIf="r.__typename === TypeNames.datasetType"
-                                        class="bi bi-journal-album mr-2"
-                                    ></i>
-                                    <ngb-highlight
-                                        *ngIf="!r.dummy"
-                                        [result]="r.dataset.owner.accountName + '/' + r.dataset.name"
-                                        [term]="t"
-                                    />
-                                    <ngb-highlight *ngIf="r.dummy" [result]="r.dataset.name" [term]="t" />
-                                </div>
-                                <div
-                                    class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 f6 color-text-tertiary ml-1 jump-to-badge-jump"
-                                >
-                                    {{ isDatasetType(r["__typename"]) ? "Jump to" : "All Kamu" }}
-                                    <span class="d-inline-block ml-1 v-align-middle"
-                                        ><i class="bi bi-arrow-return-left"></i
-                                    ></span>
-                                </div>
-                            </ng-template>
-                        </li>
-                    </ul>
-                </div>
+        <div class="header-item mt-n1 mb-n1 d-none d-md-flex">
+            <div [classList]="'app-brand'" id="app-header-logo">
+                <a [routerLink]="[HOME_LINK]" data-test-id="appLogo">
+                    <img [src]="APP_LOGO" alt="Application logo" />
+                </a>
             </div>
         </div>
-
-        <nav
-            class="d-flex flex-column align-items-center flex-md-row flex-self-stretch flex-md-self-auto width-full justify-content-between"
-            aria-label="Global"
+        <div class="header-item d-md-none">
+            <button
+                #appHeaderMenuButton
+                id="app-header-menu-button"
+                class="navbar-toggler"
+                data-test-id="appHeaderMenuButton"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbar-nav-dropdown"
+                (click)="toggleAppHeaderMenu()"
+                aria-controls="navbar-nav-dropdown"
+                [attr.aria-expanded]="isCollapsedAppHeaderMenu"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div
+            class="header-item header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 details-content--hidden-not-important d-md-flex"
         >
-            <div class="d-flex flex-column flex-md-row flex-self-stretch flex-md-self-auto">
-                <ng-template [ngIf]="!isUserLoggedIn()">
-                    <a
-                        class="header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
-                        data-test-id="loginHeader"
-                        (click)="onLogin()"
-                        >Login</a
-                    >
-                </ng-template>
-
-                <a
-                    class="header-link d-flex align-items-center py-2 py-md-3 mr-4 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
-                    [routerLink]="[URL_QUERY]"
-                >
-                    <mat-icon class="fs-4">query_stats</mat-icon>
-                    <span> Query</span>
-                </a>
-
-                <ng-template [ngIf]="isUserLoggedIn()">
+            <div
+                class="header-search flex-auto position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3"
+            >
+                <div class="position-relative">
+                    <div class="collapse show navbar-collapse" id="navbar-nav-dropdown">
+                        <ul class="navbar-nav">
+                            <li class="nav-item search-input-container" [class.active-search-input]="isSearchActive">
+                                <div
+                                    class="input-group flex-nowrap flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 js-jump-to"
+                                    id="search-input"
+                                >
+                                    @if (searching) {
+                                        <div class="container-spinner">
+                                            <mat-spinner [diameter]="20" color="warn" mode="indeterminate" />
+                                        </div>
+                                    }
+                                    <input
+                                        type="text"
+                                        data-test-id="searchInput"
+                                        class="form-control"
+                                        id="typeahead-http"
+                                        [ngbTypeahead]="search"
+                                        [resultTemplate]="rt"
+                                        placeholder="Search or jump to..."
+                                        [inputFormatter]="formatter"
+                                        [(ngModel)]="searchQuery"
+                                        aria-label="Search"
+                                        aria-describedby="addon-wrapping"
+                                        (click)="onClickInput()"
+                                        (selectItem)="onSelectItem($event)"
+                                        (keyup.enter)="onSearch($event)"
+                                        (focusin)="onFocus($event)"
+                                    />
+                                </div>
+                                <ng-template #rt let-r="result" let-t="term" let-index="index">
+                                    <div class="result-container d-flex align-items-center">
+                                        {{ index }}
+                                        @if (r.__typename === TypeNames.allDataType) {
+                                            <i class="bi bi-eye-fill mr-2"></i>
+                                        }
+                                        @if (r.__typename === TypeNames.datasetType) {
+                                            <i class="bi bi-journal-album mr-2"></i>
+                                        }
+                                        @if (!r.dummy) {
+                                            <ngb-highlight
+                                                [result]="r.dataset.owner.accountName + '/' + r.dataset.name"
+                                                [term]="t"
+                                            />
+                                        }
+                                        @if (r.dummy) {
+                                            <ngb-highlight [result]="r.dataset.name" [term]="t" />
+                                        }
+                                    </div>
+                                    <div
+                                        class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 f6 color-text-tertiary ml-1 jump-to-badge-jump"
+                                    >
+                                        {{ isDatasetType(r["__typename"]) ? "Jump to" : "All Kamu" }}
+                                        <span class="d-inline-block ml-1 v-align-middle"
+                                            ><i class="bi bi-arrow-return-left"></i
+                                        ></span>
+                                    </div>
+                                </ng-template>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <nav
+                class="d-flex flex-column align-items-center flex-md-row flex-self-stretch flex-md-self-auto width-full justify-content-between"
+                aria-label="Global"
+            >
+                <div class="d-flex flex-column flex-md-row flex-self-stretch flex-md-self-auto">
+                    @if (!isUserLoggedIn()) {
+                        <a
+                            class="header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                            data-test-id="loginHeader"
+                            (click)="onLogin()"
+                            >Login</a
+                        >
+                    }
                     <a
                         class="header-link d-flex align-items-center py-2 py-md-3 mr-4 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
-                        data-ga-click="Header, click, Nav menu - item:dashboard:user"
-                        data-test-id="userDatasetsHeader"
-                        aria-label="Dashboard"
-                        [routerLink]="['/', loggedAccount.accountName, URL_ACCOUNT_SELECT, AccountTabs.DATASETS]"
+                        [routerLink]="[URL_QUERY]"
                     >
-                        <mat-icon class="fs-4">book</mat-icon>
-                        <span>Your Datasets </span>
+                        <mat-icon class="fs-4">query_stats</mat-icon>
+                        <span> Query</span>
                     </a>
-
-                    <a
-                        appFeatureFlag="dashboard"
-                        class="header-link align-items-center py-2 py-md-3 mr-4 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
-                        (click)="onDashboard()"
-                        *ngIf="isAdmin"
-                    >
-                        <mat-icon class="fs-4">dashboard</mat-icon>
-                        <span> Dashboard</span>
-                    </a>
-
-                    <a
-                        class="header-link d-block d-md-none py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
-                        [routerLink]="[URL_DATASET_CREATE]"
-                        data-test-id="addNewDatasetHeader"
-                    >
-                        Add New Dataset
-                    </a>
-                    <a
-                        class="header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
-                        data-test-id="openUserProfileHeader"
-                        [routerLink]="['/', loggedAccount.accountName]"
-                        >Your profile</a
-                    >
-                    <a
-                        appFeatureFlag="billing"
-                        class="header-link d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
-                        data-test-id="openBillingPlanHeader"
-                        (click)="onBilling()"
-                        >Account & Billing</a
-                    >
-                    <a
-                        appFeatureFlag="analytics"
-                        class="header-link d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
-                        data-test-id="openAnalyticsHeader"
-                        (click)="onAnalytics()"
-                        >Analytics</a
-                    >
-                    <a
-                        class="header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
-                        data-test-id="openSettingsHeader"
-                        [routerLink]="[URL_SETTINGS, AccountSettingsTabs.ACCESS_TOKENS]"
-                        >Settings</a
-                    >
-                    <a
-                        class="header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
-                        data-test-id="userNameHeader"
-                        href="/{{ loggedAccount.accountName }}"
-                    >
-                        <img
-                            class="avatar avatar-user"
-                            loading="lazy"
-                            decoding="async"
-                            [src]="
-                                isUserLoggedIn() && loggedAccount.avatarUrl
-                                    ? loggedAccount.avatarUrl
-                                    : DEFAULT_AVATAR_URL
-                            "
-                            width="20"
-                            height="20"
-                        />
-                        {{ isUserLoggedIn() ? loggedAccount.displayName : DEFAULT_USER_DISPLAY_NAME }}
-                    </a>
-                    <ng-container *ngIf="featureFlags.enableLogout">
-                        <button
-                            class="header-link d-flex align-items-center header-signout-btn d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-md-top-0 border-white-fade"
-                            data-test-id="openLogoutHeader"
-                            (click)="onLogout()"
-                        >
-                            <mat-icon class="logout-icon me-1" svgIcon="sign-out" />
-                            <span class="d-inline-block">Log out</span>
-                        </button>
-                    </ng-container>
-                </ng-template>
-                <a
-                    appFeatureFlag="help"
-                    class="header-link d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
-                    data-test-id="openHelpHeader"
-                    (click)="onHelp()"
-                    >Help</a
-                >
-            </div>
-            <div id="app-header-additional-block" class="app-header__right-column">
-                <div
-                    appFeatureFlag="notifications"
-                    class="d-sm-none justify-content-center notification-indicator-container align-items-center m-2"
-                >
-                    <app-notification-indicator />
-                </div>
-                <ng-container *ngIf="isUserLoggedIn()">
-                    <a
-                        class="app-header__right-column__addnew-block header-link d-block d-sm-none d-md-flex m-2"
-                        [routerLink]="[URL_DATASET_CREATE]"
-                        data-test-id="addNewBlock"
-                    >
-                        <span><i class="bi bi-plus-circle"></i></span>
-                        <span class="app-header__right-column__label">New</span>
-                    </a>
-                </ng-container>
-                <div class="position-relative">
-                    <button
-                        class="button-round m-2"
-                        data-test-id="openUserInfoBlock"
-                        mat-button
-                        [matMenuTriggerFor]="menu"
-                    >
-                        <img
-                            [src]="
-                                isUserLoggedIn() && loggedAccount.avatarUrl
-                                    ? loggedAccount.avatarUrl
-                                    : DEFAULT_AVATAR_URL
-                            "
-                            (click)="onOpenUserInfo()"
-                            data-test-id="openUserInfoImage"
-                            alt="User icon"
-                            width="47"
-                            height="47"
-                            class="avatar-icon"
-                        />
-                    </button>
-                    <mat-icon class="admin-icon" *ngIf="isAdmin"> admin_panel_settings</mat-icon>
-                    <mat-icon class="wallet-icon" *ngIf="isWeb3Wallet" svgIcon="ethereum-2" />
-                </div>
-
-                <mat-menu #menu="matMenu" class="app-header__user-menu">
-                    <p id="matmenu-signed-in-name">
-                        Signed in as
-                        <strong data-test-id="userName" [title]="loggedAccount.displayName">{{
-                            isUserLoggedIn()
-                                ? (loggedAccount.displayName | displayAccountName: loggedAccount.accountProvider)
-                                : DEFAULT_USER_DISPLAY_NAME
-                        }}</strong>
-                    </p>
-
-                    <button appFeatureFlag="help" mat-menu-item data-test-id="openHelp" (click)="onHelp()">Help</button>
-
-                    <div role="none" class="dropdown-divider"></div>
-
-                    <ng-template [ngIf]="!isUserLoggedIn()">
-                        <button mat-menu-item data-test-id="openLogin" (click)="onLogin()">Login</button>
-                    </ng-template>
-
-                    <ng-template [ngIf]="isUserLoggedIn()">
-                        <a mat-menu-item data-test-id="openUserProfile" [routerLink]="['/', loggedAccount.accountName]">
-                            Your profile
-                        </a>
+                    @if (isUserLoggedIn()) {
                         <a
-                            mat-menu-item
-                            data-test-id="openUserDatasets"
+                            class="header-link d-flex align-items-center py-2 py-md-3 mr-4 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
+                            data-ga-click="Header, click, Nav menu - item:dashboard:user"
+                            data-test-id="userDatasetsHeader"
+                            aria-label="Dashboard"
                             [routerLink]="['/', loggedAccount.accountName, URL_ACCOUNT_SELECT, AccountTabs.DATASETS]"
                         >
-                            Your datasets
+                            <mat-icon class="fs-4">book</mat-icon>
+                            <span>Your Datasets </span>
                         </a>
-
-                        <div role="none" class="dropdown-divider"></div>
-
-                        <button
-                            appFeatureFlag="billing"
-                            mat-menu-item
-                            data-test-id="openBillingPlan"
-                            (click)="onBilling()"
-                        >
-                            Account & Billing
-                        </button>
-                        <button
-                            appFeatureFlag="analytics"
-                            mat-menu-item
-                            data-test-id="openAnalytics"
-                            (click)="onAnalytics()"
-                        >
-                            Analytics
-                        </button>
-                        <a
-                            mat-menu-item
-                            data-test-id="openSettings"
-                            [routerLink]="[URL_SETTINGS, AccountSettingsTabs.ACCESS_TOKENS]"
-                        >
-                            Settings
-                        </a>
-
-                        <div role="none" class="dropdown-divider"></div>
-
-                        <ng-container *ngIf="featureFlags.enableLogout">
+                        @if (isAdmin) {
                             <a
-                                mat-menu-item
-                                data-test-id="openLogout"
-                                class="d-flex align-items-center"
+                                appFeatureFlag="dashboard"
+                                class="header-link align-items-center py-2 py-md-3 mr-4 mr-md-3 border-sm-top border-md-top-0 border-white-fade"
+                                (click)="onDashboard()"
+                            >
+                                <mat-icon class="fs-4">dashboard</mat-icon>
+                                <span> Dashboard</span>
+                            </a>
+                        }
+                        <a
+                            class="header-link d-block d-md-none py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                            [routerLink]="[URL_DATASET_CREATE]"
+                            data-test-id="addNewDatasetHeader"
+                        >
+                            Add New Dataset
+                        </a>
+                        <a
+                            class="header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                            data-test-id="openUserProfileHeader"
+                            [routerLink]="['/', loggedAccount.accountName]"
+                            >Your profile</a
+                        >
+                        <a
+                            appFeatureFlag="billing"
+                            class="header-link d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                            data-test-id="openBillingPlanHeader"
+                            (click)="onBilling()"
+                            >Account & Billing</a
+                        >
+                        <a
+                            appFeatureFlag="analytics"
+                            class="header-link d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                            data-test-id="openAnalyticsHeader"
+                            (click)="onAnalytics()"
+                            >Analytics</a
+                        >
+                        <a
+                            class="header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                            data-test-id="openSettingsHeader"
+                            [routerLink]="[URL_SETTINGS, AccountSettingsTabs.ACCESS_TOKENS]"
+                            >Settings</a
+                        >
+                        <a
+                            class="header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                            data-test-id="userNameHeader"
+                            href="/{{ loggedAccount.accountName }}"
+                        >
+                            <img
+                                class="avatar avatar-user"
+                                loading="lazy"
+                                decoding="async"
+                                [src]="
+                                    isUserLoggedIn() && loggedAccount.avatarUrl
+                                        ? loggedAccount.avatarUrl
+                                        : DEFAULT_AVATAR_URL
+                                "
+                                width="20"
+                                height="20"
+                            />
+                            {{ isUserLoggedIn() ? loggedAccount.displayName : DEFAULT_USER_DISPLAY_NAME }}
+                        </a>
+                        @if (featureFlags.enableLogout) {
+                            <button
+                                class="header-link d-flex align-items-center header-signout-btn d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-md-top-0 border-white-fade"
+                                data-test-id="openLogoutHeader"
                                 (click)="onLogout()"
                             >
                                 <mat-icon class="logout-icon me-1" svgIcon="sign-out" />
-                                <span class="d-inline-block"> Log out</span>
+                                <span class="d-inline-block">Log out</span>
+                            </button>
+                        }
+                    }
+                    <a
+                        appFeatureFlag="help"
+                        class="header-link d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
+                        data-test-id="openHelpHeader"
+                        (click)="onHelp()"
+                        >Help</a
+                    >
+                </div>
+                <div id="app-header-additional-block" class="app-header__right-column">
+                    <div
+                        appFeatureFlag="notifications"
+                        class="d-sm-none justify-content-center notification-indicator-container align-items-center m-2"
+                    >
+                        <app-notification-indicator />
+                    </div>
+                    @if (isUserLoggedIn()) {
+                        <a
+                            class="app-header__right-column__addnew-block header-link d-block d-sm-none d-md-flex m-2"
+                            [routerLink]="[URL_DATASET_CREATE]"
+                            data-test-id="addNewBlock"
+                        >
+                            <span><i class="bi bi-plus-circle"></i></span>
+                            <span class="app-header__right-column__label">New</span>
+                        </a>
+                    }
+                    <div class="position-relative">
+                        <button
+                            class="button-round m-2"
+                            data-test-id="openUserInfoBlock"
+                            mat-button
+                            [matMenuTriggerFor]="menu"
+                        >
+                            <img
+                                [src]="
+                                    isUserLoggedIn() && loggedAccount.avatarUrl
+                                        ? loggedAccount.avatarUrl
+                                        : DEFAULT_AVATAR_URL
+                                "
+                                (click)="onOpenUserInfo()"
+                                data-test-id="openUserInfoImage"
+                                alt="User icon"
+                                width="47"
+                                height="47"
+                                class="avatar-icon"
+                            />
+                        </button>
+                        @if (isAdmin) {
+                            <mat-icon class="admin-icon"> admin_panel_settings</mat-icon>
+                        }
+                        @if (isWeb3Wallet) {
+                            <mat-icon class="wallet-icon" svgIcon="ethereum-2" />
+                        }
+                    </div>
+                    <mat-menu #menu="matMenu" class="app-header__user-menu">
+                        <p id="matmenu-signed-in-name">
+                            Signed in as
+                            <strong data-test-id="userName" [title]="loggedAccount.displayName">{{
+                                isUserLoggedIn()
+                                    ? (loggedAccount.displayName | displayAccountName: loggedAccount.accountProvider)
+                                    : DEFAULT_USER_DISPLAY_NAME
+                            }}</strong>
+                        </p>
+                        <button appFeatureFlag="help" mat-menu-item data-test-id="openHelp" (click)="onHelp()">
+                            Help
+                        </button>
+                        <div role="none" class="dropdown-divider"></div>
+                        @if (!isUserLoggedIn()) {
+                            <button mat-menu-item data-test-id="openLogin" (click)="onLogin()">Login</button>
+                        }
+                        @if (isUserLoggedIn()) {
+                            <a
+                                mat-menu-item
+                                data-test-id="openUserProfile"
+                                [routerLink]="['/', loggedAccount.accountName]"
+                            >
+                                Your profile
                             </a>
-                        </ng-container>
-                    </ng-template>
-                </mat-menu>
-            </div>
-        </nav>
-    </div>
-
-    <div class="d-block d-md-none">
-        <div [classList]="'app-brand'">
-            <a [routerLink]="[HOME_LINK]" data-test-id="appLogo">
-                <img [src]="APP_LOGO" alt="Application logo" />
-            </a>
+                            <a
+                                mat-menu-item
+                                data-test-id="openUserDatasets"
+                                [routerLink]="[
+                                    '/',
+                                    loggedAccount.accountName,
+                                    URL_ACCOUNT_SELECT,
+                                    AccountTabs.DATASETS,
+                                ]"
+                            >
+                                Your datasets
+                            </a>
+                            <div role="none" class="dropdown-divider"></div>
+                            <button
+                                appFeatureFlag="billing"
+                                mat-menu-item
+                                data-test-id="openBillingPlan"
+                                (click)="onBilling()"
+                            >
+                                Account & Billing
+                            </button>
+                            <button
+                                appFeatureFlag="analytics"
+                                mat-menu-item
+                                data-test-id="openAnalytics"
+                                (click)="onAnalytics()"
+                            >
+                                Analytics
+                            </button>
+                            <a
+                                mat-menu-item
+                                data-test-id="openSettings"
+                                [routerLink]="[URL_SETTINGS, AccountSettingsTabs.ACCESS_TOKENS]"
+                            >
+                                Settings
+                            </a>
+                            <div role="none" class="dropdown-divider"></div>
+                            @if (featureFlags.enableLogout) {
+                                <a
+                                    mat-menu-item
+                                    data-test-id="openLogout"
+                                    class="d-flex align-items-center"
+                                    (click)="onLogout()"
+                                >
+                                    <mat-icon class="logout-icon me-1" svgIcon="sign-out" />
+                                    <span class="d-inline-block"> Log out</span>
+                                </a>
+                            }
+                        }
+                    </mat-menu>
+                </div>
+            </nav>
         </div>
-    </div>
-    <div class="d-flex d-md-none justify-content-center notification-indicator-container align-items-center m-0">
-        <app-notification-indicator />
-    </div>
-</nav>
+        <div class="d-block d-md-none">
+            <div [classList]="'app-brand'">
+                <a [routerLink]="[HOME_LINK]" data-test-id="appLogo">
+                    <img [src]="APP_LOGO" alt="Application logo" />
+                </a>
+            </div>
+        </div>
+        <div class="d-flex d-md-none justify-content-center notification-indicator-container align-items-center m-0">
+            <app-notification-indicator />
+        </div>
+    </nav>
+}

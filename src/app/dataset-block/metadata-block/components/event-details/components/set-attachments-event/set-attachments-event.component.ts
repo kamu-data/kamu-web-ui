@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { MarkdownModule } from "ngx-markdown";
@@ -19,8 +18,6 @@ import { SetAttachments } from "@api/kamu.graphql.interface";
     templateUrl: "./set-attachments-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        //-----//
-        NgFor,
         //-----//
         MarkdownModule,
         //-----//

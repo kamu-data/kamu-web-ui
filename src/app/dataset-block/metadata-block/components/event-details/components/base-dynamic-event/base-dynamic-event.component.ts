@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf } from "@angular/common";
 import {
     AfterViewChecked,
     ChangeDetectionStrategy,
@@ -34,9 +33,6 @@ import {
     templateUrl: "./base-dynamic-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        //-----//
-        NgFor,
-        NgIf,
         //-----//
         MatIconModule,
         //-----//

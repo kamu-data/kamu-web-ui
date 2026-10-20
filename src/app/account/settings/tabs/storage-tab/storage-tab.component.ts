@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DecimalPipe, NgFor, NgIf, NgTemplateOutlet } from "@angular/common";
+import { DecimalPipe, NgTemplateOutlet } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -29,8 +29,6 @@ import { AppConfigService } from "src/app/app-config.service";
     imports: [
         //-----//
         DecimalPipe,
-        NgFor,
-        NgIf,
         NgTemplateOutlet,
         //-----//
         MatDividerModule,

@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatStepperModule } from "@angular/material/stepper";
@@ -20,8 +19,6 @@ import { SourcesSection } from "src/app/dataset-view/additional-components/metad
     styleUrls: ["./stepper-navigation.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        //-----//
-        NgIf,
         //-----//
         MatButtonModule,
         MatStepperModule,

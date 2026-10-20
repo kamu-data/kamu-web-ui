@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
@@ -20,9 +19,6 @@ import { SECTION_BUILDERS_BY_EVENT_TYPE } from "src/app/dataset-block/metadata-b
     templateUrl: "../base-dynamic-event/base-dynamic-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        //-----//
-        NgFor,
-        NgIf,
         //-----//
         MatIconModule,
         //-----//

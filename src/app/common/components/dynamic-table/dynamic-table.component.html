@@ -1,57 +1,62 @@
 <div [id]="idTable" style="width: 100%; overflow: auto" class="dynamic-table">
     <table mat-table [dataSource]="dataSource">
-        <ng-container
-            *ngFor="let columnDescriptor of columnDescriptors; trackBy: trackByColumn; let colIndex = index"
-            matColumnDef="{{ columnDescriptor.columnName }}"
-        >
-            <th mat-header-cell *matHeaderCellDef [attr.data-test-id]="'column-header-name-' + colIndex">
-                {{ columnDescriptor.columnName }}
-            </th>
-            <td
-                mat-cell
-                [title]="
-                    shouldShowInfoBadge(columnDescriptor, element) || shouldShowMoreBadge(columnDescriptor, element)
-                        ? ''
-                        : element[columnDescriptor.columnName].value
-                "
-                [ngClass]="[colIndex < 2 ? tableClass : '', element[columnDescriptor.columnName].cssClass]"
-                [class]="'truncate-cell copyable-cell'"
-                *matCellDef="let element; index as rowIndex"
-                [attr.data-test-id]="'column-name-' + columnDescriptor.columnName + '-' + rowIndex"
-                [cdkCopyToClipboard]="element[columnDescriptor.columnName].value"
-                (cdkCopyToClipboardCopied)="showCopyMessage()"
-            >
-                <div class="d-flex align-items-center justify-content-between">
-                    <div class="cell-content truncate-cell">{{ element[columnDescriptor.columnName].value }}</div>
-                    <div
-                        class="cell-content ms-1 position-relative"
-                        *ngIf="shouldShowMoreBadge(columnDescriptor, element)"
-                    >
-                        <span
-                            [attr.data-test-id]="'show-more-' + columnDescriptor.columnName + '-' + rowIndex"
-                            (click)="
-                                $event.stopPropagation();
-                                showMoreModal(element, columnDescriptor.showMoreBadge?.extraElementKey)
-                            "
-                            class="badge-more"
-                        ></span>
+        @for (
+            columnDescriptor of columnDescriptors;
+            track trackByColumn(colIndex, columnDescriptor);
+            let colIndex = $index
+        ) {
+            <ng-container matColumnDef="{{ columnDescriptor.columnName }}">
+                <th mat-header-cell *matHeaderCellDef [attr.data-test-id]="'column-header-name-' + colIndex">
+                    {{ columnDescriptor.columnName }}
+                </th>
+                <td
+                    mat-cell
+                    [title]="
+                        shouldShowInfoBadge(columnDescriptor, element) || shouldShowMoreBadge(columnDescriptor, element)
+                            ? ''
+                            : element[columnDescriptor.columnName].value
+                    "
+                    [ngClass]="[colIndex < 2 ? tableClass : '', element[columnDescriptor.columnName].cssClass]"
+                    [class]="'truncate-cell copyable-cell'"
+                    *matCellDef="let element; index as rowIndex"
+                    [attr.data-test-id]="'column-name-' + columnDescriptor.columnName + '-' + rowIndex"
+                    [cdkCopyToClipboard]="element[columnDescriptor.columnName].value"
+                    (cdkCopyToClipboardCopied)="showCopyMessage()"
+                >
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="cell-content truncate-cell">{{ element[columnDescriptor.columnName].value }}</div>
+                        @if (shouldShowMoreBadge(columnDescriptor, element)) {
+                            <div class="cell-content ms-1 position-relative">
+                                <span
+                                    [attr.data-test-id]="'show-more-' + columnDescriptor.columnName + '-' + rowIndex"
+                                    (click)="
+                                        $event.stopPropagation();
+                                        showMoreModal(element, columnDescriptor.showMoreBadge?.extraElementKey)
+                                    "
+                                    class="badge-more"
+                                ></span>
+                            </div>
+                        }
+                        @if (shouldShowInfoBadge(columnDescriptor, element)) {
+                            <div
+                                [matTooltip]="
+                                    extraDescription(element, columnDescriptor.showInfoBadge?.extraElementKey)
+                                "
+                                [matTooltipPosition]="'after'"
+                                class="cell-content ms-1 mt-1 position-relative"
+                                [attr.data-test-id]="'show-info-' + columnDescriptor.columnName + '-' + rowIndex"
+                            >
+                                <mat-icon class="info-badge text-muted">help_outline</mat-icon>
+                            </div>
+                        }
                     </div>
-                    <div
-                        [matTooltip]="extraDescription(element, columnDescriptor.showInfoBadge?.extraElementKey)"
-                        [matTooltipPosition]="'after'"
-                        class="cell-content ms-1 mt-1 position-relative"
-                        *ngIf="shouldShowInfoBadge(columnDescriptor, element)"
-                        [attr.data-test-id]="'show-info-' + columnDescriptor.columnName + '-' + rowIndex"
-                    >
-                        <mat-icon class="info-badge text-muted">help_outline</mat-icon>
-                    </div>
-                </div>
-            </td>
-        </ng-container>
+                </td>
+            </ng-container>
+        }
 
-        <ng-container *ngIf="hasTableHeader">
+        @if (hasTableHeader) {
             <tr class="table-header-background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        </ng-container>
+        }
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
 </div>

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, NgZone, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatIconModule } from "@angular/material/icon";
@@ -54,7 +54,6 @@ import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/t
     imports: [
         //-----//
         AsyncPipe,
-        NgIf,
         //-----//
         MatIconModule,
         MatProgressBarModule,

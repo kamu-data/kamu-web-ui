@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -36,7 +35,6 @@ import { EngineService } from "src/app/dataset-view/additional-components/metada
     imports: [
         //-----//
         FormsModule,
-        NgIf,
         //-----//
         MatDividerModule,
         //-----//

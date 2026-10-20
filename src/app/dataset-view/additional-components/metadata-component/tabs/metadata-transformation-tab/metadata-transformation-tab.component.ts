@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
@@ -29,8 +28,6 @@ import { NavigationService } from "src/app/services/navigation.service";
     selector: "app-metadata-transformation-tab",
     imports: [
         //-----//
-        NgIf,
-        NgFor,
         RouterLink,
         //-----//
         MatIconModule,

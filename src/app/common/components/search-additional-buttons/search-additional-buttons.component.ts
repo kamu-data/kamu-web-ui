@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -37,8 +36,6 @@ import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
     styleUrls: ["./search-additional-buttons.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        //-----//
-        NgIf,
         //-----//
         MatButtonModule,
         MatIconModule,

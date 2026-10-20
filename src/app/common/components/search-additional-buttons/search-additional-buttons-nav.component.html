@@ -1,5 +1,5 @@
 <ul class="nav search-additional-buttons__nav">
-    <ng-container *ngFor="let searchAdditionalData of searchAdditionalButtonsData">
+    @for (searchAdditionalData of searchAdditionalButtonsData; track searchAdditionalData.value) {
         <li class="nav-item mr-2 pt-2" [appFeatureFlag]="searchAdditionalData.id">
             <div class="btn-group-parent nav">
                 <button
@@ -11,11 +11,9 @@
                     "
                 >
                     <mat-icon class="mat-icon-svg-size" [svgIcon]="searchAdditionalData.icon"></mat-icon>
-
                     <span class="d-inline mr-2">{{ searchAdditionalData.textButton }}</span>
                     <span class="counter">{{ searchAdditionalData.counter }}</span>
                 </button>
-
                 <button
                     class="additional-options-btn mat-menu-trigger starred rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center mat-button mat-icon-button mat-button-base"
                     [matMenuTriggerFor]="menu2"
@@ -36,54 +34,46 @@
                                 <mat-icon class="fs-4"> close</mat-icon>
                             </button>
                         </header>
-
-                        <div class="select-menu-list" *ngIf="!loadingListDownsreams; else loadingAdditionalOptions">
-                            <ng-template ngFor let-option [ngForOf]="searchAdditionalData.additionalOptions.options">
-                                <button
-                                    class="select-menu-item flex-items-start"
-                                    (click)="onClickMenuItem(option.action, option.value)"
-                                    [attr.aria-checked]="option.isSelected"
-                                >
-                                    <span class="f5 mr-1">
-                                        <mat-icon
-                                            *ngIf="!option.isSelected"
-                                            class="mat-icon-svg-size"
-                                            svgIcon="notifications-checked"
-                                        />
-                                        <mat-icon
-                                            *ngIf="option.isSelected"
-                                            class="mat-icon-svg-size"
-                                            svgIcon="notifications-checked"
-                                        />
-                                    </span>
-                                    <div>
-                                        <div class="fs-12 text-bold text-break">
-                                            {{ option.title }}
+                        @if (!loadingListDownsreams) {
+                            <div class="select-menu-list">
+                                @for (option of searchAdditionalData.additionalOptions.options; track option) {
+                                    <button
+                                        class="select-menu-item flex-items-start"
+                                        (click)="onClickMenuItem(option.action, option.value)"
+                                        [attr.aria-checked]="option.isSelected"
+                                    >
+                                        <span class="f5 mr-1">
+                                            @if (!option.isSelected) {
+                                                <mat-icon class="mat-icon-svg-size" svgIcon="notifications-checked" />
+                                            }
+                                            @if (option.isSelected) {
+                                                <mat-icon class="mat-icon-svg-size" svgIcon="notifications-checked" />
+                                            }
+                                        </span>
+                                        <div>
+                                            <div class="fs-12 text-bold text-break">
+                                                {{ option.title }}
+                                            </div>
+                                            <div class="text-small color-fg-muted text-normal pb-1">
+                                                {{ option.text }}
+                                            </div>
                                         </div>
-                                        <div class="text-small color-fg-muted text-normal pb-1">
-                                            {{ option.text }}
-                                        </div>
-                                    </div>
-                                </button>
-                            </ng-template>
-                        </div>
-
-                        <div
-                            *ngIf="!loadingListDownsreams && searchAdditionalData.additionalOptions.footnote"
-                            class="text-small color-fg-muted px-3 py-2"
-                            data-test-id="additional-options-footnote"
-                        >
-                            {{ searchAdditionalData.additionalOptions.footnote }}
-                        </div>
-
-                        <ng-template #loadingAdditionalOptions>
+                                    </button>
+                                }
+                            </div>
+                        } @else {
                             <div>
                                 <mat-spinner [diameter]="25" class="mx-auto mt-2"></mat-spinner>
                             </div>
-                        </ng-template>
+                        }
+                        @if (!loadingListDownsreams && searchAdditionalData.additionalOptions.footnote) {
+                            <div class="text-small color-fg-muted px-3 py-2" data-test-id="additional-options-footnote">
+                                {{ searchAdditionalData.additionalOptions.footnote }}
+                            </div>
+                        }
                     </div>
                 </mat-menu>
             </div>
         </li>
-    </ng-container>
+    }
 </ul>

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, NgIf, NgTemplateOutlet } from "@angular/common";
+import { AsyncPipe, NgTemplateOutlet } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
@@ -39,7 +39,6 @@ import { NavigationService } from "src/app/services/navigation.service";
         //-----//
         AsyncPipe,
         FormsModule,
-        NgIf,
         NgTemplateOutlet,
         ReactiveFormsModule,
         //-----//

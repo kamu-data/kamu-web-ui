@@ -80,113 +80,113 @@ describe("SetTransformComponent", () => {
         loggedUserService = TestBed.inject(LoggedUserService);
         modalService = TestBed.inject(NgbModal);
 
+        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+    });
+
+    function createComponent(eventYamlByHash: string): void {
         fixture = TestBed.createComponent(SetTransformComponent);
         component = fixture.componentInstance;
         component.selectedEngine = "Spark";
-        component.eventYamlByHash = mockSetTransformEventYaml;
+        component.eventYamlByHash = eventYamlByHash;
         component.datasetInfo = mockDatasetInfo;
         component.dataSource = new MatTreeNestedDataSource<DatasetNode>();
         component.inputDatasets = new Set<string>([
             '{"id":"did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX","name":"account.tokens.portfolio.usd"}',
         ]);
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         fixture.detectChanges();
-    });
+    }
 
-    it("should create", () => {
-        expect(component).toBeTruthy();
-    });
+    describe("editing an existing transform", () => {
+        beforeEach(() => createComponent(mockSetTransformEventYaml));
 
-    it("check dataset editability passes for derived dataset with full permissions", () => {
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
-        const clonePermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
-        clonePermissions.permissions.metadata.canCommit = true;
-        datasetService.emitDatasetChanged(mockDatasetBasicsDerivedFragment);
-        datasetSubsService.emitPermissionsChanged(clonePermissions);
+        it("should create", () => {
+            expect(component).toBeTruthy();
+        });
 
-        expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
-    });
+        it("check dataset editability passes for derived dataset with full permissions", () => {
+            const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
+            const clonePermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
+            clonePermissions.permissions.metadata.canCommit = true;
+            datasetService.emitDatasetChanged(mockDatasetBasicsDerivedFragment);
+            datasetSubsService.emitPermissionsChanged(clonePermissions);
 
-    it("check dataset editability fails without commit permission", () => {
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
+            expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
+        });
 
-        datasetService.emitDatasetChanged(mockDatasetBasicsDerivedFragment);
-        datasetSubsService.emitPermissionsChanged({
-            permissions: {
-                ...mockFullPowerDatasetPermissionsFragment.permissions,
-                ...{
-                    metadata: {
-                        canCommit: false,
+        it("check dataset editability fails without commit permission", () => {
+            const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
+
+            datasetService.emitDatasetChanged(mockDatasetBasicsDerivedFragment);
+            datasetSubsService.emitPermissionsChanged({
+                permissions: {
+                    ...mockFullPowerDatasetPermissionsFragment.permissions,
+                    ...{
+                        metadata: {
+                            canCommit: false,
+                        },
                     },
                 },
-            },
+            });
+
+            expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
+                accountName: mockDatasetBasicsDerivedFragment.owner.accountName,
+                datasetName: mockDatasetBasicsDerivedFragment.name,
+                tab: DatasetViewTypeEnum.Overview,
+            });
         });
 
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
-            accountName: mockDatasetBasicsDerivedFragment.owner.accountName,
-            datasetName: mockDatasetBasicsDerivedFragment.name,
-            tab: DatasetViewTypeEnum.Overview,
+        it("check dataset editability fails upon root dataset", () => {
+            const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
+
+            datasetService.emitDatasetChanged(mockDatasetBasicsRootFragment);
+            datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
+
+            expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
+                accountName: mockDatasetBasicsRootFragment.owner.accountName,
+                datasetName: mockDatasetBasicsRootFragment.name,
+                tab: DatasetViewTypeEnum.Overview,
+            });
+        });
+
+        it("should check select engine", () => {
+            const engine = "Flink";
+            component.onSelectEngine(engine);
+
+            expect(component.selectedEngine).toEqual(engine);
+        });
+
+        it("should check save event", () => {
+            const commitEventToDatasetSpy = spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(of());
+            component.onSaveEvent();
+            expect(commitEventToDatasetSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it("should check open modal window to edit event", () => {
+            const modalServiceOpenSpy = spyOn(modalService, "open").and.callThrough();
+            component.onEditYaml();
+            expect(modalServiceOpenSpy).toHaveBeenCalledTimes(1);
         });
     });
 
-    it("check dataset editability fails upon root dataset", () => {
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
+    describe("loading input schemas", () => {
+        beforeEach(() => {
+            spyOn(datasetService, "requestDatasetSchema").and.callFake(() => of(mockGetDatasetSchemaQuery));
+            createComponent(mockSetTransformEventYaml);
+        });
 
-        datasetService.emitDatasetChanged(mockDatasetBasicsRootFragment);
-        datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
-
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
-            accountName: mockDatasetBasicsRootFragment.owner.accountName,
-            datasetName: mockDatasetBasicsRootFragment.name,
-            tab: DatasetViewTypeEnum.Overview,
+        it("should init the inputs and queries from the event", () => {
+            expect(component.currentSetTransformEvent).toEqual(mockParseSetTransformYamlType);
+            expect(component.inputsViewModel.length).toBe(2);
+            expect(component.queries.length).toBe(4);
+            expect(component.queries[0].query).toBeDefined();
         });
     });
 
-    it("should check select engine", () => {
-        const engine = "Flink";
-        component.onSelectEngine(engine);
+    describe("creating a new transform", () => {
+        beforeEach(() => createComponent(""));
 
-        expect(component.selectedEngine).toEqual(engine);
-    });
-
-    it("should check save event", () => {
-        const commitEventToDatasetSpy = spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(of());
-        component.onSaveEvent();
-        expect(commitEventToDatasetSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it("should check init queries section with queries", () => {
-        spyOn(datasetService, "requestDatasetSchema").and.callFake(() => of(mockGetDatasetSchemaQuery));
-        component.ngOnInit();
-        expect(component.currentSetTransformEvent).toEqual(mockParseSetTransformYamlType);
-        expect(component.inputsViewModel.length).toBe(2);
-    });
-
-    it("should check init queries section when event is not null", () => {
-        spyOn(datasetService, "requestDatasetSchema").and.callFake(() => of(mockGetDatasetSchemaQuery));
-        component.ngOnInit();
-
-        expect(component.queries.length).toBe(4);
-        expect(component.queries[0].query).toBeDefined();
-    });
-
-    it("should check init default queries section when event is  null", () => {
-        component.eventYamlByHash = "";
-        component.ngOnInit();
-
-        expect(component.queries.length).toBe(5);
-    });
-
-    it("should check edit yaml", () => {
-        component.eventYamlByHash = "";
-        component.ngOnInit();
-
-        expect(component.queries.length).toBe(5);
-    });
-
-    it("should check open modal window to edit event", () => {
-        const modalServiceOpenSpy = spyOn(modalService, "open").and.callThrough();
-        component.onEditYaml();
-        expect(modalServiceOpenSpy).toHaveBeenCalledTimes(1);
+        it("should start with a single empty query", () => {
+            expect(component.queries).toEqual([{ query: "" }]);
+        });
     });
 });

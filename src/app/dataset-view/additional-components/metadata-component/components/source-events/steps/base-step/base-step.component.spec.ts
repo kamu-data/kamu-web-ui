@@ -6,7 +6,7 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormArray, FormBuilder, FormControl, FormGroupDirective } from "@angular/forms";
+import { FormGroupDirective } from "@angular/forms";
 
 import { Apollo } from "apollo-angular";
 
@@ -20,16 +20,8 @@ import {
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { FETCH_STEP_RADIO_CONTROLS } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/form-control.source";
 import { BaseStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/base-step/base-step.component";
+import { createSourceEventFormGroupDirective } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/base-step/base-step.mock";
 import { FETCH_FORM_DATA } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/data/fetch-form-data";
-
-const fb = new FormBuilder();
-export const formGroupDirective = new FormGroupDirective([], []);
-formGroupDirective.form = fb.group({
-    fetch: fb.group({
-        kind: new FormControl(FetchKind.URL),
-    }),
-    prepare: new FormArray([]),
-});
 
 describe("BaseStepComponent", () => {
     let component: BaseStepComponent;
@@ -38,7 +30,7 @@ describe("BaseStepComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, BaseStepComponent],
-            providers: [Apollo, { provide: FormGroupDirective, useValue: formGroupDirective }],
+            providers: [Apollo, { provide: FormGroupDirective, useFactory: createSourceEventFormGroupDirective }],
         }).compileComponents();
 
         fixture = TestBed.createComponent(BaseStepComponent);

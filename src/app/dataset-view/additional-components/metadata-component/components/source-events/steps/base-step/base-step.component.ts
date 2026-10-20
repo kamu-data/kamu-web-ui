@@ -99,6 +99,10 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
         return this.parentForm.get(this.sectionName) as FormGroup;
     }
 
+    public get currentKind(): string {
+        return this.sectionForm.get(this.KIND_NAME_CONTROL)?.value as string;
+    }
+
     public ngOnInit(): void {
         this.parentForm = this.rootFormGroupDirective.form;
         this.initForm(this.sectionForm.get(this.KIND_NAME_CONTROL)?.value as string);

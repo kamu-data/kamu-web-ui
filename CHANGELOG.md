@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SQL editor: a query error is marked from the column kamu-cli reports instead of from the start of the line
 - Polling source editor: an existing preprocess step opens with its stored engine instead of DataFusion, so saving no longer switches it
 - Query and Data pages: running a query again keeps the dataset schema panels as they were, adding a dataset whose schema is already shown no longer shows it twice, and a removed schema panel can be added again
+- Transformation editor: saving keeps the existing inputs, deleting an input removes only that input (also in single-tenant mode), inputs without data yet show "No schema" instead of "Dataset is unavailable", and the edited dataset is no longer offered as its own input
 
 ## [0.71.0] - 2026-10-12
 ### Added

@@ -90,9 +90,6 @@ describe("SetTransformComponent", () => {
         component.eventYamlByHash = eventYamlByHash;
         component.datasetInfo = mockDatasetInfo;
         component.dataSource = new MatTreeNestedDataSource<DatasetNode>();
-        component.inputDatasets = new Set<string>([
-            '{"id":"did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX","name":"account.tokens.portfolio.usd"}',
-        ]);
         fixture.detectChanges();
     }
 
@@ -179,6 +176,24 @@ describe("SetTransformComponent", () => {
             expect(component.inputsViewModel.length).toBe(2);
             expect(component.queries.length).toBe(4);
             expect(component.queries[0].query).toBeDefined();
+        });
+
+        it("should keep the event's inputs when saving without changes", () => {
+            const commitEventToDatasetSpy = spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(of());
+
+            component.onSaveEvent();
+
+            const event = commitEventToDatasetSpy.calls.mostRecent().args[0].event;
+            mockParseSetTransformYamlType.inputs.forEach((input) => {
+                expect(event).toContain(input.datasetRef);
+                expect(event).toContain(input.alias);
+            });
+        });
+
+        it("should key each input by the alias stored in the event", () => {
+            expect(component.inputsViewModel.map((item) => item.alias)).toEqual(
+                mockParseSetTransformYamlType.inputs.map((input) => input.alias),
+            );
         });
     });
 

@@ -28,4 +28,6 @@ export interface DatasetNode {
     name: string;
     schema?: DataSchemaField[];
     owner: string;
+    // Alias as stored in the event's inputs, with or without an account prefix
+    alias: string;
 }

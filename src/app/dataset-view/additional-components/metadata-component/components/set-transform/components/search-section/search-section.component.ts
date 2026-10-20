@@ -21,16 +21,15 @@ import { NgbHighlight, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-boo
 import { BaseComponent } from "@common/components/base.component";
 import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
 import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
-import { parseCurrentSchema } from "@common/helpers/app.helpers";
 import { odfType2String, schemaAsDataRows } from "@common/helpers/data-schema.helpers";
 import AppValues from "@common/values/app.values";
-import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "@api/kamu.graphql.interface";
+import { DatasetBasicsFragment, GetDatasetSchemaQuery, TransformInput } from "@api/kamu.graphql.interface";
 import { SearchApi } from "@api/search.api";
-import { MaybeNull } from "@interface/app.types";
-import { DataSchemaField, DataSchemaTypeField, DatasetSchema, OdfTypes } from "@interface/dataset-schema.interface";
+import { DataSchemaField, DataSchemaTypeField } from "@interface/dataset-schema.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
 import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface";
 
+import { datasetNodeFromSchemaQuery } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
 import { DatasetNode } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 
@@ -76,7 +75,7 @@ export class SearchSectionComponent extends BaseComponent {
                     map((autoCompleteItems: DatasetAutocompleteItem[]) => {
                         return autoCompleteItems.filter(
                             (autoCompleteItem: DatasetAutocompleteItem) =>
-                                !this.involvedDatasets.some((item) => item === `${autoCompleteItem.dataset.alias}`),
+                                !this.isInvolvedDataset(autoCompleteItem.dataset),
                         );
                     }),
                 );
@@ -84,10 +83,11 @@ export class SearchSectionComponent extends BaseComponent {
         );
     };
 
-    private get involvedDatasets(): string[] {
-        return this.inputsViewModel
-            .map((item: DatasetNode) => `${item.owner}/${item.name}`)
-            .concat(`${this.datasetInfo.accountName}/${this.datasetInfo.datasetName}`);
+    // Aliases have no account prefix in single-tenant mode, so the edited dataset is matched by owner and name
+    private isInvolvedDataset(dataset: DatasetBasicsFragment): boolean {
+        const isEditedDataset =
+            dataset.owner.accountName === this.datasetInfo.accountName && dataset.name === this.datasetInfo.datasetName;
+        return isEditedDataset || this.inputsViewModel.some((item: DatasetNode) => item.alias === dataset.alias);
     }
 
     public formatter(x: DatasetAutocompleteItem | string): string {
@@ -109,31 +109,8 @@ export class SearchSectionComponent extends BaseComponent {
                 .requestDatasetSchema(id)
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe((data: GetDatasetSchemaQuery) => {
-                    if (data.datasets.byId) {
-                        const owner = (data.datasets.byId as DatasetBasicsFragment).owner.accountName;
-                        const schema: MaybeNull<DatasetSchema> = parseCurrentSchema(
-                            data.datasets.byId.metadata.currentSchema,
-                        );
-
-                        this.inputsViewModel = [
-                            ...this.inputsViewModel,
-                            {
-                                name: value.dataset.name,
-                                schema: schema?.fields.length
-                                    ? schema.fields
-                                    : [
-                                          {
-                                              name: "No schema",
-                                              type: {
-                                                  kind: OdfTypes.String,
-                                              },
-                                          },
-                                      ],
-                                owner,
-                            },
-                        ];
-                        this.cdr.detectChanges();
-                    }
+                    this.inputsViewModel = [...this.inputsViewModel, datasetNodeFromSchemaQuery(alias, data)];
+                    this.cdr.detectChanges();
                 });
         }
     }
@@ -142,14 +119,12 @@ export class SearchSectionComponent extends BaseComponent {
         this.searchDataset = "";
     }
 
-    public deleteInputDataset(owner: string, name: string): void {
-        const alias = `${owner}/${name}`;
-        this.inputsViewModel = this.inputsViewModel.filter(
-            (item: DatasetNode) => `${item.owner}/${item.name}` !== alias,
-        );
+    public deleteInputDataset(alias: string): void {
+        this.inputsViewModel = this.inputsViewModel.filter((item: DatasetNode) => item.alias !== alias);
 
         this.inputDatasets.forEach((item) => {
-            if (item.includes(alias)) {
+            const input = JSON.parse(item) as TransformInput;
+            if (input.alias === alias) {
                 this.inputDatasets.delete(item);
             }
         });

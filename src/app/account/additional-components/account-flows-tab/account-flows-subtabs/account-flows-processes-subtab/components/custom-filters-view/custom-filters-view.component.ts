@@ -59,6 +59,8 @@ export class CustomFiltersViewComponent implements OnInit {
 
     public readonly FLOW_PROCESS_STATE_LIST = FLOW_PROCESS_STATE_LIST;
 
+    public currentDateTime = new Date().toISOString();
+
     public ngOnInit(): void {
         this.dashboardFilters.selectedFlowProcessStates = [
             FlowProcessEffectiveState.Active,
@@ -83,8 +85,8 @@ export class CustomFiltersViewComponent implements OnInit {
         this.applyFilterEmitter.next();
     }
 
-    public get currentDateTime(): string {
-        return new Date().toISOString();
+    public refreshCurrentDateTime(): void {
+        this.currentDateTime = new Date().toISOString();
     }
 
     public get orderDirection(): OrderingDirection {

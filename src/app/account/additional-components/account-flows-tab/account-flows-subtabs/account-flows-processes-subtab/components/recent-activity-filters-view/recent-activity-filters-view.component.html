@@ -20,6 +20,7 @@
                         <owl-date-time #fromdatepicker />
                         <span
                             [owlDateTimeTrigger]="fromdatepicker"
+                            (click)="refreshCurrentDateTime()"
                             id="from-datepicker"
                             data-test-id="fromdatepicker"
                             class="trigger ms-2"
@@ -69,6 +70,7 @@
                     <owl-date-time #todatepicker />
                     <span
                         [owlDateTimeTrigger]="todatepicker"
+                        (click)="refreshCurrentDateTime()"
                         id="to-datepicker"
                         data-test-id="todatepicker"
                         class="trigger ms-2"

@@ -65,14 +65,12 @@
                                     </div>
                                     <div
                                         [innerHTML]="highlightHash(block.blockHash, searchHash)"
+                                        data-test-id="block-hash"
                                         class="ml-11 mt-1 fs-12 text-muted font-monospace"
                                         [class.fw-bold]="currentBlockHash === block.blockHash"
                                     ></div>
                                 </div>
                             </div>
-                            <!-- <div class="align-self-baseline" *ngIf="currentBlockHash === block.blockHash">
-                    <span class="badge bg-success">current</span>
-                  </div> -->
                         </div>
                     }
                     @if (result.length === 0) {

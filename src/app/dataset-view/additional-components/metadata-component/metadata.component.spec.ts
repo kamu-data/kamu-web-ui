@@ -7,6 +7,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ChangeDetectorRef } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { RouterModule } from "@angular/router";
 
@@ -84,6 +85,7 @@ describe("MetadataComponent", () => {
     it("should check #ngOnInit and associated properties for root dataset", () => {
         component.currentState = mockMetadataRootUpdate;
         component.datasetMetadataTabData.datasetBasics = mockDatasetBasicsRootFragment;
+        fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
         fixture.detectChanges();
 
         expect(component.currentTransform).toBeFalsy();
@@ -92,6 +94,7 @@ describe("MetadataComponent", () => {
 
     it("should check default values for properties and permissions when no state is defined yet", () => {
         component.currentState = undefined;
+        fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
         fixture.detectChanges();
 
         expect(component.currentPage).toEqual(1);

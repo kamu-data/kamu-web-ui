@@ -45,6 +45,8 @@ export class UpcomingScheduledFiltersViewComponent implements OnInit {
 
     public readonly RANGE_NEXT_ATTEMPT_LIST = RANGE_NEXT_ATTEMPT_LIST;
 
+    public currentDateTime = new Date().toISOString();
+
     public ngOnInit(): void {
         this.dashboardFilters.selectedFlowProcessStates = [
             FlowProcessEffectiveState.Active,
@@ -64,8 +66,8 @@ export class UpcomingScheduledFiltersViewComponent implements OnInit {
         this.applyFilterEmitter.next();
     }
 
-    public get currentDateTime(): string {
-        return new Date().toISOString();
+    public refreshCurrentDateTime(): void {
+        this.currentDateTime = new Date().toISOString();
     }
 
     public get orderDirection(): OrderingDirection {

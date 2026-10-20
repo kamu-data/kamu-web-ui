@@ -20,6 +20,7 @@ import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
+import { mockSetPollingSourceEventYamlWithoutPreprocess } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import {
     EventTimeSourceKind,
     FetchKind,
@@ -234,6 +235,12 @@ describe("AddPollingSourceComponent", () => {
     it("should check change showPreprocessStep property", () => {
         expect(component.showPreprocessStep).toEqual(true);
         component.onShowPreprocessStep(false);
+        expect(component.showPreprocessStep).toEqual(false);
+    });
+
+    it("should check the preprocess step is hidden when the source has none", () => {
+        component.eventYamlByHash = mockSetPollingSourceEventYamlWithoutPreprocess;
+        component.ngOnInit();
         expect(component.showPreprocessStep).toEqual(false);
     });
 });

@@ -45,7 +45,6 @@ export class PreprocessStepComponent extends BaseComponent implements OnInit {
         if (this.eventYamlByHash) {
             this.setPollingSourceEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
             if (this.setPollingSourceEvent.preprocess) {
-                this.showPreprocessStepEmitter.emit(true);
                 this.initExistingQueries();
             } else {
                 this.initDefaultQueriesSection();

@@ -8,6 +8,7 @@
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 
 import { provideToastr } from "ngx-toastr";
 
@@ -55,14 +56,21 @@ describe("BlockNavigationComponent", () => {
         expect(component.searchHash).toBe("");
     });
 
-    it("should check calls highlightHash method", () => {
+    it("should check search highlights the matching part of each block hash", () => {
         const testSearchHash = "zW1";
-        const highlightHashSpy = spyOn(component, "highlightHash").and.callThrough();
-        component.datasetHistory = mockHistoryUpdate;
+        fixture.componentRef.setInput("datasetHistory", mockHistoryUpdate);
 
         dispatchInputEvent(fixture, "searchHash", testSearchHash);
 
-        expect(highlightHashSpy).toHaveBeenCalledTimes(2);
+        const blockHashes = fixture.debugElement
+            .queryAll(By.css('[data-test-id="block-hash"]'))
+            .map((element) => element.nativeElement as HTMLElement);
+        const matchingBlocks = mockHistoryUpdate.history.filter((block) => block.blockHash.includes(testSearchHash));
+        expect(matchingBlocks.length).toBeGreaterThan(0);
+        expect(blockHashes.length).toEqual(matchingBlocks.length);
+        blockHashes.forEach((blockHash) => {
+            expect(blockHash.querySelector("span.bg-warning")?.textContent).toEqual(testSearchHash);
+        });
     });
 
     it("should check change page number ", () => {

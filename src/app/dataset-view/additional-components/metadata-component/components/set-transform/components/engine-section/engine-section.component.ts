@@ -82,19 +82,11 @@ export class EngineSectionComponent extends BaseComponent implements OnInit {
                 if (!this.selectedEngine) {
                     this.selectedEngine = AppValues.DEFAULT_ENGINE_NAME;
                     this.selectedImage = AppValues.DEFAULT_ENGINE_IMAGE;
-                    this.initCurrentEngine();
                 } else {
                     this.onSelectType(this.selectedEngine);
                 }
                 this.onEmitSelectedEngine.emit(this.selectedEngine);
                 this.cdr.detectChanges();
             });
-    }
-
-    private initCurrentEngine(): void {
-        if (this.currentSetTransformEvent?.engine) {
-            this.selectedEngine = this.currentSetTransformEvent.engine;
-            this.onSelectType(this.selectedEngine.toUpperCase().toLowerCase());
-        }
     }
 }

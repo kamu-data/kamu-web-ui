@@ -18,6 +18,7 @@
                     <owl-date-time #lastFailureDatepicker />
                     <span
                         [owlDateTimeTrigger]="lastFailureDatepicker"
+                        (click)="refreshCurrentDateTime()"
                         id="last-failure-datepicker"
                         data-test-id="lastFailureDatepicker"
                         class="trigger ms-2"

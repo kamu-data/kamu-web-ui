@@ -23,7 +23,10 @@ import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
-import { mockAddPushSourceYaml } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import {
+    mockAddPushSourceYaml,
+    mockAddPushSourceYamlWithPreprocess,
+} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import {
     MergeKind,
     ReadKind,
@@ -129,6 +132,12 @@ describe("AddPushSourceComponent with query parameter name", () => {
     it("should check change showPreprocessStep property", () => {
         expect(component.showPreprocessStep).toEqual(false);
         component.onShowPreprocessStep(true);
+        expect(component.showPreprocessStep).toEqual(true);
+    });
+
+    it("should check an existing preprocess step is shown when the editor opens", () => {
+        component.eventYamlByHash = mockAddPushSourceYamlWithPreprocess;
+        component.ngOnInit();
         expect(component.showPreprocessStep).toEqual(true);
     });
 

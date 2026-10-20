@@ -47,6 +47,8 @@ export class TriageFiltersViewComponent implements OnInit {
     public readonly RANGE_LAST_ATTEMPT_LIST = RANGE_LAST_ATTEMPT_LIST;
     public readonly ORDER_BY_FIELD_LIST_TRIAGE = ORDER_BY_FIELD_LIST_TRIAGE;
 
+    public currentDateTime = new Date().toISOString();
+
     public ngOnInit(): void {
         this.dashboardFilters.selectedFlowProcessStates = [
             FlowProcessEffectiveState.Failing,
@@ -54,8 +56,8 @@ export class TriageFiltersViewComponent implements OnInit {
         ];
     }
 
-    public get currentDateTime(): string {
-        return new Date().toISOString();
+    public refreshCurrentDateTime(): void {
+        this.currentDateTime = new Date().toISOString();
     }
 
     public get orderDirection(): OrderingDirection {

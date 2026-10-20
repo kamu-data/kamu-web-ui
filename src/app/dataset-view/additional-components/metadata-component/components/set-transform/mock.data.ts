@@ -154,3 +154,8 @@ export const mockSetPollingSourceEventYamlWithoutPreprocess =
 
 export const mockAddPushSourceYaml =
     "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2025-03-03T19:50:34.264304224Z\n  prevBlockHash: f1620bda57668ffb76225887f605e0191f0af3c9898b512ba2cc3dffac96cd4036087\n  sequenceNumber: 1\n  event:\n    kind: AddPushSource\n    sourceName: dsadasdsfsdfsdf\n    read:\n      kind: Csv\n      separator: ','\n      encoding: utf8\n      quote: '\"'\n      escape: \\\n      dateFormat: rfc3339\n      timestampFormat: rfc3339\n      schema:\n      fileds: []\n    merge:\n      kind: Append\n";
+
+export const mockAddPushSourceYamlWithPreprocess = mockAddPushSourceYaml.replace(
+    "    merge:\n",
+    "    preprocess:\n      kind: Sql\n      engine: datafusion\n      query: select * from input\n    merge:\n",
+);

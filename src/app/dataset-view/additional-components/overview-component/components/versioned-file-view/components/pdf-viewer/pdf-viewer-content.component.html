@@ -12,23 +12,19 @@
 }
 @if (safePdfUrl) {
     <div class="mt-4">
-        @if (safePdfUrl) {
-            <pdf-viewer
-                [src]="safePdfUrl"
-                [render-text]="true"
-                [original-size]="false"
-                [autoresize]="true"
-                [show-borders]="true"
-                [external-link-target]="'top'"
-                [(page)]="page"
-                [zoom]="zoom"
-                [zoom-scale]="'page-width'"
-                (after-load-complete)="afterLoadComplete($event)"
-                style="width: 100%; height: 800px"
-            ></pdf-viewer>
-        } @else {
-            <p class="mt-4">The PDF document cannot be displayed.</p>
-        }
+        <pdf-viewer
+            [src]="safePdfUrl"
+            [render-text]="true"
+            [original-size]="false"
+            [autoresize]="true"
+            [show-borders]="true"
+            [external-link-target]="'top'"
+            [(page)]="page"
+            [zoom]="zoom"
+            [zoom-scale]="'page-width'"
+            (after-load-complete)="afterLoadComplete($event)"
+            style="width: 100%; height: 800px"
+        ></pdf-viewer>
     </div>
 } @else {
     <p class="mt-4">The PDF document cannot be displayed.</p>

@@ -40,7 +40,7 @@
     <div>
         @if (inputsViewModel.length) {
             <cdk-accordion [multi]="true" class="example-accordion mt-4">
-                @for (input of inputsViewModel; track input.owner + "/" + input.name; let index = $index) {
+                @for (input of inputsViewModel; track input; let index = $index) {
                     <cdk-accordion-item
                         #accordionItem="cdkAccordionItem"
                         class="example-accordion-item"

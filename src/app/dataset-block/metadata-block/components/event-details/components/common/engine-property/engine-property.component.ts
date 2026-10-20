@@ -17,7 +17,6 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     templateUrl: "./engine-property.component.html",
     styleUrls: ["./engine-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [],
 })
 export class EnginePropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

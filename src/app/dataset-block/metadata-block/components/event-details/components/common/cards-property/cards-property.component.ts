@@ -14,7 +14,6 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     templateUrl: "./cards-property.component.html",
     styleUrls: ["./cards-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [],
 })
 export class CardsPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string[];

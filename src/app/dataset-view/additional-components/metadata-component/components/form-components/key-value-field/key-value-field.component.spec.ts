@@ -36,6 +36,11 @@ describe("KeyValueFieldComponent", () => {
         expect(component).toBeTruthy();
     });
 
+    it("should name the missing form array", () => {
+        component.controlName = "missing";
+        expect(() => component.items).toThrowError(`Form array "missing" is missing from the parent form`);
+    });
+
     it("should check add new item to array", () => {
         expect(component.items.length).toBe(0);
         emitClickOnElementByDataTestId(fixture, "add-button");

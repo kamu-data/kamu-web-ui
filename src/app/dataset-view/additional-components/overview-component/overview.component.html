@@ -16,7 +16,7 @@
                                 @for (
                                     keyword of datasetOverviewTabData.overviewUpdate.overview.metadata.currentInfo
                                         .keywords;
-                                    track keyword
+                                    track $index
                                 ) {
                                     <div>
                                         <mat-chip appFeatureFlag="dataset.panel.overview.keywords">{{

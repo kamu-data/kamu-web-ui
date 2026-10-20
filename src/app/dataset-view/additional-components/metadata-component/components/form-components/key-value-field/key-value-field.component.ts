@@ -12,6 +12,7 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import { requireValue } from "@common/helpers/app.helpers";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 import { KeyValueForm } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/key-value-field/key-value-field.types";
@@ -38,7 +39,10 @@ export class KeyValueFieldComponent extends BaseField {
     private fb = inject(FormBuilder);
 
     public get items(): FormArray {
-        return this.form.get(this.controlName) as FormArray;
+        return requireValue(
+            this.form.get(this.controlName),
+            `Form array "${this.controlName}" is missing from the parent form`,
+        ) as FormArray;
     }
 
     public get keyValueForm(): FormGroup<KeyValueForm> {

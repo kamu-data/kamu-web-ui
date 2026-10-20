@@ -22,7 +22,6 @@ import { NavigationService } from "src/app/services/navigation.service";
     templateUrl: "./offset-interval-property.component.html",
     styleUrls: ["./offset-interval-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [],
 })
 export class OffsetIntervalPropertyComponent extends BasePropertyComponent implements OnInit {
     @Input({ required: true }) public data: {

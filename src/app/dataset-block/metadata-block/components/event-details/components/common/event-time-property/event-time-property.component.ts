@@ -15,7 +15,6 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     selector: "app-event-time-property",
     templateUrl: "./event-time-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [],
 })
 export class EventTimePropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: EventTimeSource;

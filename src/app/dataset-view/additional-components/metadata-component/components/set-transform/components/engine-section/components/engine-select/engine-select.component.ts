@@ -29,7 +29,6 @@ import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/componen
     templateUrl: "./engine-select.component.html",
     styleUrls: ["./engine-select.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [],
 })
 export class EngineSelectComponent implements OnInit {
     @ViewChild("input", { static: true }) public input: ElementRef;

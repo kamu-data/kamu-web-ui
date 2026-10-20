@@ -84,7 +84,7 @@
         </p>
         <div class="app-mat-chip">
             <mat-chip-set aria-label="Tags selection">
-                @for (keyword of row.metadata.currentInfo.keywords; track keyword) {
+                @for (keyword of row.metadata.currentInfo.keywords; track $index) {
                     <div>
                         <mat-chip appFeatureFlag="search.keywords">{{ keyword }}</mat-chip>
                     </div>

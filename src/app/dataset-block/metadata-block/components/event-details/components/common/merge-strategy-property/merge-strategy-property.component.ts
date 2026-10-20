@@ -17,7 +17,6 @@ import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/componen
     templateUrl: "./merge-strategy-property.component.html",
     styleUrls: ["./merge-strategy-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [],
 })
 export class MergeStrategyPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

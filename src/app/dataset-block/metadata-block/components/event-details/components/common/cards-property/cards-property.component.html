@@ -1,6 +1,6 @@
 @if (data.length && data.length > 0) {
     <ul>
-        @for (key of data; track key; let i = $index) {
+        @for (key of data; track $index; let i = $index) {
             <li>
                 <span [attr.data-test-id]="dataTestId + '-' + i">{{ key }} </span>
             </li>

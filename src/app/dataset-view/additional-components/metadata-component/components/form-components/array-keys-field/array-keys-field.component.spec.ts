@@ -33,6 +33,11 @@ describe("ArrayKeysFieldComponent", () => {
         expect(component).toBeTruthy();
     });
 
+    it("should name the missing form array", () => {
+        component.controlName = "missing";
+        expect(() => component.items).toThrowError(`Form array "missing" is missing from the parent form`);
+    });
+
     it("should check add key and remove key", () => {
         expect(component.items.length).toBe(0);
 

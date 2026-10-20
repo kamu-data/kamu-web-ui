@@ -48,7 +48,7 @@
     "@ng-select/ng-select": "^21.8.2",
     "@popperjs/core": "^2.11.8",
     "@rxweb/reactive-form-validators": "^13.0.1",
-    "@schematics/angular": "^20.3.40",
+    "@schematics/angular": "^21.2.27",
     "@swimlane/ngx-graph": "^13.0.0",
     "@types/file-saver": "^2.0.7",
     "angular2-multiselect-dropdown": "^10.0.0",
@@ -69,7 +69,6 @@
     "jwt-decode": "^4.0.0",
     "marked": "^17.0.6",
     "monaco-editor": "^0.55.1",
-    "ng-multiselect-dropdown": "^1.0.0",
     "ng2-pdf-viewer": "^9.1.5",
     "ngx-highlightjs": "^14.0.1",
     "ngx-infinite-scroll": "^21.0.0",
@@ -83,7 +82,7 @@
     "siwe": "^3.0.0",
     "tslib": "^2.0.0",
     "yaml": "^2.9.1",
-    "zone.js": "^0.15.1"
+    "zone.js": "^0.16.3"
   },
   "overrides": {
     "d3-selection": "3.0.0"

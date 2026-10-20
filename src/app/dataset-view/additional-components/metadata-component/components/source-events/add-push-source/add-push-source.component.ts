@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatStepperModule } from "@angular/material/stepper";
@@ -37,7 +36,6 @@ import ProjectLinks from "src/app/project-links";
     imports: [
         //-----//
         FormsModule,
-        NgIf,
         ReactiveFormsModule,
         RouterLink,
         //-----//

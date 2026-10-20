@@ -4,26 +4,29 @@
             <div>
                 <nav>
                     <ul role="list" class="action-list d-flex flex-column gap-1">
-                        <ng-container *ngFor="let navItem of DATASET_SETTINGS_SIDE_PANEL_DATA">
-                            <li
-                                [appFeatureFlag]="'dataset.panel.settings.' + navItem.id"
-                                [class.action-list-item--nav-active]="activeTab === navItem.activeTab"
-                                class="action-list-item"
-                                *ngIf="visibilitySettingsMenuItem(navItem)"
-                            >
-                                <a
-                                    class="action-list-content align-items-center"
-                                    (click)="navigateToSection(navItem.activeTab)"
-                                    attr.data-test-id="action-list-{{ navItem.activeTab }}-tab"
+                        @for (navItem of DATASET_SETTINGS_SIDE_PANEL_DATA; track navItem) {
+                            @if (visibilitySettingsMenuItem(navItem)) {
+                                <li
+                                    [appFeatureFlag]="'dataset.panel.settings.' + navItem.id"
+                                    [class.action-list-item--nav-active]="activeTab === navItem.activeTab"
+                                    class="action-list-item"
                                 >
-                                    <span class="text-muted" [class]="navItem.iconClassName">
-                                        <mat-icon class="mat-icon-svg-size" [svgIcon]="navItem.iconName" />
-                                    </span>
-                                    <span class="action-list-item-label"> {{ navItem.name }} </span>
-                                </a>
-                            </li>
-                            <mat-divider *ngIf="navItem.showDivider" class="my-1" />
-                        </ng-container>
+                                    <a
+                                        class="action-list-content align-items-center"
+                                        (click)="navigateToSection(navItem.activeTab)"
+                                        attr.data-test-id="action-list-{{ navItem.activeTab }}-tab"
+                                    >
+                                        <span class="text-muted" [class]="navItem.iconClassName">
+                                            <mat-icon class="mat-icon-svg-size" [svgIcon]="navItem.iconName" />
+                                        </span>
+                                        <span class="action-list-item-label"> {{ navItem.name }} </span>
+                                    </a>
+                                </li>
+                            }
+                            @if (navItem.showDivider) {
+                                <mat-divider class="my-1" />
+                            }
+                        }
                     </ul>
                 </nav>
             </div>

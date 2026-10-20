@@ -8,7 +8,9 @@
         (ngModelChange)="modelChange()"
     />
     <div class="cell-border-bottom"></div>
-    <div *ngIf="!template" class="placeholder-class" (click)="clickPlaceholder()" data-test-id="sql-editor-placeholder">
-        {{ placeholder }}
-    </div>
+    @if (!template) {
+        <div class="placeholder-class" (click)="clickPlaceholder()" data-test-id="sql-editor-placeholder">
+            {{ placeholder }}
+        </div>
+    }
 </div>

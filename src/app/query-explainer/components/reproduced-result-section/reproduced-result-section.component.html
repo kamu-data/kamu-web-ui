@@ -1,16 +1,16 @@
 <div class="box p-4 mx-4">
     <div class="fw-semibold">Reproduced result:</div>
     <div class="mt-4">
-        <app-dynamic-table
-            *ngIf="tableSource(dataJsonAoS).length; else emptyResult"
-            [hasTableHeader]="true"
-            [idTable]="'query-explainer-table'"
-            [dataRows]="tableSource(dataJsonAoS)"
-            [attr.data-test-id]="'query-explainer-table'"
-            [columnDescriptors]="inferTableSchema(schemaFields(dataJsonAoS))"
-        />
-        <ng-template #emptyResult>
+        @if (tableSource(dataJsonAoS).length) {
+            <app-dynamic-table
+                [hasTableHeader]="true"
+                [idTable]="'query-explainer-table'"
+                [dataRows]="tableSource(dataJsonAoS)"
+                [attr.data-test-id]="'query-explainer-table'"
+                [columnDescriptors]="inferTableSchema(schemaFields(dataJsonAoS))"
+            />
+        } @else {
             <p data-test-id="emptyResult">0 records</p>
-        </ng-template>
+        }
     </div>
 </div>

@@ -1,128 +1,131 @@
-<div [formGroupName]="sectionName" *ngIf="sectionForm">
-    <h2 class="text-center">
-        {{ sectionName | titlecase }}
-    </h2>
-    <p class="text-center mb-4">{{ description }}</p>
-    <app-select-kind-field [form]="sectionForm" [data]="sectionStepRadioData" />
-    <div class="row">
-        <ng-container *ngFor="let control of sectionFormData[sectionForm.get(KIND_NAME_CONTROL)?.value]?.controls">
-            <div class="col-md-8 offset-md-2 mt-4">
-                <ng-container *ngIf="control.type === controlType.TEXT">
-                    <app-input-field
-                        [form]="sectionForm"
-                        [controlName]="control.name"
-                        [label]="control.label"
-                        [value]="control.value"
-                        [requiredField]="control.validators.required"
-                        [placeholder]="control.placeholder"
-                        [tooltip]="control.tooltip!"
-                    />
-                </ng-container>
-                <ng-container *ngIf="control.type === controlType.ARRAY_KEY_VALUE">
-                    <app-key-value-field
-                        [form]="sectionForm"
-                        [controlName]="control.options?.formArrayName!"
-                        [label]="control.label!"
-                        [buttonText]="control.options?.buttonText!"
-                        [tooltip]="control.tooltip!"
-                    />
-                </ng-container>
-                <ng-container *ngIf="control.type === controlType.ARRAY_KEY">
-                    <app-array-keys-field
-                        [form]="sectionForm"
-                        [controlName]="control.name"
-                        [label]="control.label"
-                        [buttonText]="control.options?.buttonText!"
-                        [placeholder]="control.placeholder!"
-                        [tooltip]="control.tooltip!"
-                    />
-                </ng-container>
-                <ng-container *ngIf="control.type === controlType.CHECKBOX">
-                    <app-checkbox-field
-                        [form]="sectionForm"
-                        [controlName]="control.name"
-                        [label]="control.label"
-                        [checked]="control.value"
-                        [dataTestId]="control.dataTestId"
-                        [tooltip]="control.tooltip!"
-                    />
-                </ng-container>
-                <ng-container *ngIf="control.type === controlType.SCHEMA">
-                    <app-schema-field
-                        [form]="sectionForm"
-                        [controlName]="control.name"
-                        [label]="control.label"
-                        [tooltip]="control.tooltip!"
-                    />
-                </ng-container>
-                <ng-container *ngIf="control.type === controlType.EVENT_TIME">
-                    <app-select-date-format-field
-                        [form]="sectionForm"
-                        [controlName]="control.name"
-                        [label]="control.label"
-                        [tooltip]="control.tooltip!"
-                        [innerTooltips]="control.options?.innerTooltips!"
-                    />
-                </ng-container>
-                <ng-container *ngIf="control.type === controlType.CACHE">
-                    <app-cache-field
-                        [form]="sectionForm"
-                        [controlName]="control.name"
-                        [label]="control.label"
-                        [tooltip]="control.tooltip!"
-                    />
-                </ng-container>
-                <ng-container *ngIf="control.type === controlType.ORDER">
-                    <app-order-field
-                        [form]="sectionForm"
-                        [controlName]="control.name"
-                        [label]="control.label"
-                        [tooltip]="control.tooltip!"
-                    />
-                </ng-container>
-                <ng-container *ngIf="control.type === controlType.TYPEAHEAD">
-                    <app-typeahead-field
-                        [form]="sectionForm"
-                        [controlName]="control.name"
-                        [label]="control.label"
-                        [placeholder]="control.placeholder!"
-                        [data]="control.list!"
-                        [tooltip]="control.tooltip!"
-                        [maxLength]="control.validators.maxLength"
-                    />
-                </ng-container>
-                <ng-container *ngIf="control.type === controlType.JSON_KIND">
-                    <app-json-kind-field
-                        [form]="sectionForm"
-                        [controlName]="control.name"
-                        [label]="control.label"
-                        [tooltip]="control.tooltip!"
-                        [controlDescriptors]="control.readFormatDescriptors!"
-                    />
-                </ng-container>
-                <ng-container *ngIf="control.type === controlType.NUMBER">
-                    <app-number-field
-                        [form]="sectionForm"
-                        [controlName]="control.name"
-                        [label]="control.label"
-                        [value]="control.value"
-                        [requiredField]="control.validators.required"
-                        [placeholder]="control.placeholder"
-                        [tooltip]="control.tooltip!"
-                    />
-                </ng-container>
-                <ng-container *ngIf="control.type === controlType.TOPICS">
-                    <app-topics-field
-                        [form]="sectionForm"
-                        [controlName]="control.options?.formArrayName!"
-                        [label]="control.label!"
-                        [buttonText]="control.options?.buttonText!"
-                        [requiredField]="control.validators.required"
-                        [tooltip]="control.tooltip!"
-                    />
-                </ng-container>
-            </div>
-        </ng-container>
-        <ng-content></ng-content>
+@if (sectionForm) {
+    <div [formGroupName]="sectionName">
+        <h2 class="text-center">
+            {{ sectionName | titlecase }}
+        </h2>
+        <p class="text-center mb-4">{{ description }}</p>
+        <app-select-kind-field [form]="sectionForm" [data]="sectionStepRadioData" />
+        <div class="row">
+            <!-- Each kind has its own field set; keying by kind rebuilds the fields when the kind changes -->
+            @for (control of sectionFormData[currentKind]?.controls; track currentKind + "." + control.name) {
+                <div class="col-md-8 offset-md-2 mt-4">
+                    @if (control.type === controlType.TEXT) {
+                        <app-input-field
+                            [form]="sectionForm"
+                            [controlName]="control.name"
+                            [label]="control.label"
+                            [value]="control.value"
+                            [requiredField]="control.validators.required"
+                            [placeholder]="control.placeholder"
+                            [tooltip]="control.tooltip!"
+                        />
+                    }
+                    @if (control.type === controlType.ARRAY_KEY_VALUE) {
+                        <app-key-value-field
+                            [form]="sectionForm"
+                            [controlName]="control.options?.formArrayName!"
+                            [label]="control.label!"
+                            [buttonText]="control.options?.buttonText!"
+                            [tooltip]="control.tooltip!"
+                        />
+                    }
+                    @if (control.type === controlType.ARRAY_KEY) {
+                        <app-array-keys-field
+                            [form]="sectionForm"
+                            [controlName]="control.name"
+                            [label]="control.label"
+                            [buttonText]="control.options?.buttonText!"
+                            [placeholder]="control.placeholder!"
+                            [tooltip]="control.tooltip!"
+                        />
+                    }
+                    @if (control.type === controlType.CHECKBOX) {
+                        <app-checkbox-field
+                            [form]="sectionForm"
+                            [controlName]="control.name"
+                            [label]="control.label"
+                            [checked]="control.value"
+                            [dataTestId]="control.dataTestId"
+                            [tooltip]="control.tooltip!"
+                        />
+                    }
+                    @if (control.type === controlType.SCHEMA) {
+                        <app-schema-field
+                            [form]="sectionForm"
+                            [controlName]="control.name"
+                            [label]="control.label"
+                            [tooltip]="control.tooltip!"
+                        />
+                    }
+                    @if (control.type === controlType.EVENT_TIME) {
+                        <app-select-date-format-field
+                            [form]="sectionForm"
+                            [controlName]="control.name"
+                            [label]="control.label"
+                            [tooltip]="control.tooltip!"
+                            [innerTooltips]="control.options?.innerTooltips!"
+                        />
+                    }
+                    @if (control.type === controlType.CACHE) {
+                        <app-cache-field
+                            [form]="sectionForm"
+                            [controlName]="control.name"
+                            [label]="control.label"
+                            [tooltip]="control.tooltip!"
+                        />
+                    }
+                    @if (control.type === controlType.ORDER) {
+                        <app-order-field
+                            [form]="sectionForm"
+                            [controlName]="control.name"
+                            [label]="control.label"
+                            [tooltip]="control.tooltip!"
+                        />
+                    }
+                    @if (control.type === controlType.TYPEAHEAD) {
+                        <app-typeahead-field
+                            [form]="sectionForm"
+                            [controlName]="control.name"
+                            [label]="control.label"
+                            [placeholder]="control.placeholder!"
+                            [data]="control.list!"
+                            [tooltip]="control.tooltip!"
+                            [maxLength]="control.validators.maxLength"
+                        />
+                    }
+                    @if (control.type === controlType.JSON_KIND) {
+                        <app-json-kind-field
+                            [form]="sectionForm"
+                            [controlName]="control.name"
+                            [label]="control.label"
+                            [tooltip]="control.tooltip!"
+                            [controlDescriptors]="control.readFormatDescriptors!"
+                        />
+                    }
+                    @if (control.type === controlType.NUMBER) {
+                        <app-number-field
+                            [form]="sectionForm"
+                            [controlName]="control.name"
+                            [label]="control.label"
+                            [value]="control.value"
+                            [requiredField]="control.validators.required"
+                            [placeholder]="control.placeholder"
+                            [tooltip]="control.tooltip!"
+                        />
+                    }
+                    @if (control.type === controlType.TOPICS) {
+                        <app-topics-field
+                            [form]="sectionForm"
+                            [controlName]="control.options?.formArrayName!"
+                            [label]="control.label!"
+                            [buttonText]="control.options?.buttonText!"
+                            [requiredField]="control.validators.required"
+                            [tooltip]="control.tooltip!"
+                        />
+                    }
+                </div>
+            }
+            <ng-content></ng-content>
+        </div>
     </div>
-</div>
+}

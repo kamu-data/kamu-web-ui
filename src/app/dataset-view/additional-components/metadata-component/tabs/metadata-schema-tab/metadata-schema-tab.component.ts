@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
@@ -30,8 +29,6 @@ import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interf
 @Component({
     selector: "app-metadata-schema-tab",
     imports: [
-        //-----//
-        NgIf,
         //-----//
         MatIconModule,
         MatSlideToggleModule,

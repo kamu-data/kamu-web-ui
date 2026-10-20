@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
@@ -28,7 +27,6 @@ import { EditPollingSourceService } from "src/app/dataset-view/additional-compon
     imports: [
         //-----//
         FormsModule,
-        NgIf,
         //-----//
         EngineSectionComponent,
         QueriesSectionComponent,

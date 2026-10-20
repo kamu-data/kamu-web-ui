@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatDividerModule } from "@angular/material/divider";
@@ -40,7 +40,6 @@ import ProjectLinks from "src/app/project-links";
     imports: [
         //-----//
         AsyncPipe,
-        NgIf,
         RouterLink,
         RouterOutlet,
         //-----//

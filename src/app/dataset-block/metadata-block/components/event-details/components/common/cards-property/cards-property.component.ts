@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
@@ -15,7 +14,6 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     templateUrl: "./cards-property.component.html",
     styleUrls: ["./cards-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, NgFor],
 })
 export class CardsPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string[];

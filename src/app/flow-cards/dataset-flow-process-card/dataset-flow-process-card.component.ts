@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
@@ -31,12 +31,10 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
     selector: "app-dataset-flow-process-card",
     imports: [
         //-----//
-        NgIf,
         NgClass,
         RouterLink,
         //-----//
         MatIconModule,
-        //-----//
     ],
     templateUrl: "./dataset-flow-process-card.component.html",
     styleUrls: ["./dataset-flow-process-card.component.scss"],

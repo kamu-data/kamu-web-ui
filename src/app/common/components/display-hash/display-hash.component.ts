@@ -6,7 +6,7 @@
  */
 
 import { Clipboard } from "@angular/cdk/clipboard";
-import { NgIf, SlicePipe } from "@angular/common";
+import { SlicePipe } from "@angular/common";
 import { Component, inject, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
@@ -23,7 +23,6 @@ import ProjectLinks from "src/app/project-links";
     styleUrls: ["./display-hash.component.scss"],
     imports: [
         //-----//
-        NgIf,
         RouterLink,
         SlicePipe,
         //-----//

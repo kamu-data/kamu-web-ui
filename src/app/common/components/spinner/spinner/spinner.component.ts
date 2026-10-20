@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 
@@ -19,7 +19,6 @@ import { SpinnerService } from "@common/components/spinner/spinner.service";
     imports: [
         //-----//
         AsyncPipe,
-        NgIf,
         //-----//
         MatProgressBarModule,
     ],

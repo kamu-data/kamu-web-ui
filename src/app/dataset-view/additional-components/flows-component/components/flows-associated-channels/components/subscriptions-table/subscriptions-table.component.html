@@ -40,21 +40,20 @@
                 <span class="text-dark">actions</span>
             </th>
             <td mat-cell *matCellDef="let element" class="action-cell">
-                <mat-icon
-                    *ngIf="element.summary.effectiveState === FlowProcessEffectiveState.Active"
-                    (click)="pauseWebhook(element.id)"
-                    class="mat-icon-size text-muted mt-1"
-                    [title]="'pause'"
-                    >pause</mat-icon
-                >
+                @if (element.summary.effectiveState === FlowProcessEffectiveState.Active) {
+                    <mat-icon (click)="pauseWebhook(element.id)" class="mat-icon-size text-muted mt-1" [title]="'pause'"
+                        >pause</mat-icon
+                    >
+                }
 
-                <mat-icon
-                    *ngIf="element.summary.effectiveState !== FlowProcessEffectiveState.Active"
-                    class="mat-icon-size text-muted mt-1"
-                    [title]="'resume'"
-                    (click)="resumeWebhook(element.id)"
-                    >play_arrow</mat-icon
-                >
+                @if (element.summary.effectiveState !== FlowProcessEffectiveState.Active) {
+                    <mat-icon
+                        class="mat-icon-size text-muted mt-1"
+                        [title]="'resume'"
+                        (click)="resumeWebhook(element.id)"
+                        >play_arrow</mat-icon
+                    >
+                }
 
                 <mat-icon
                     class="mat-icon-size ms-2 text-muted mt-1"

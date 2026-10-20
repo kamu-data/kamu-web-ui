@@ -1,23 +1,25 @@
-<div class="mt-4" *ngIf="knownEngines">
-    <p class="fs-6">Engine</p>
-    <mat-divider class="w-350"></mat-divider>
+@if (knownEngines) {
     <div class="mt-4">
-        <label for="engine-type" class="form-label">Type</label>
-        <app-engine-select
-            [data]="knownEngines"
-            [engine]="selectedEngine"
-            (selectedEngineEmitter)="onSelectType($event)"
-        ></app-engine-select>
+        <p class="fs-6">Engine</p>
+        <mat-divider class="w-350"></mat-divider>
+        <div class="mt-4">
+            <label for="engine-type" class="form-label">Type</label>
+            <app-engine-select
+                [data]="knownEngines"
+                [engine]="selectedEngine"
+                (selectedEngineEmitter)="onSelectType($event)"
+            ></app-engine-select>
+        </div>
+        <div class="mt-4">
+            <label for="engine-image" class="form-label">Image</label>
+            <input
+                class="form-control w-350"
+                id="engine-image"
+                data-test-id="engine-image"
+                [(ngModel)]="selectedImage"
+                [title]="selectedImage"
+                disabled
+            />
+        </div>
     </div>
-    <div class="mt-4">
-        <label for="engine-image" class="form-label">Image</label>
-        <input
-            class="form-control w-350"
-            id="engine-image"
-            data-test-id="engine-image"
-            [(ngModel)]="selectedImage"
-            [title]="selectedImage"
-            disabled
-        />
-    </div>
-</div>
+}

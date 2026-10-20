@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
@@ -13,6 +12,7 @@ import { RxReactiveFormsModule, RxwebValidators } from "@rxweb/reactive-form-val
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import { requireValue } from "@common/helpers/app.helpers";
 import { MqttQos } from "@api/kamu.graphql.interface";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
@@ -26,8 +26,6 @@ import { KeyValueFormType } from "src/app/dataset-view/additional-components/met
     imports: [
         //-----//
         FormsModule,
-        NgIf,
-        NgFor,
         ReactiveFormsModule,
         //-----//
         NgxTrimDirectiveModule,
@@ -44,7 +42,10 @@ export class TopicsFieldComponent extends BaseField {
     private fb = inject(FormBuilder);
 
     public get items(): FormArray {
-        return this.form.get(this.controlName) as FormArray;
+        return requireValue(
+            this.form.get(this.controlName),
+            `Form array "${this.controlName}" is missing from the parent form`,
+        ) as FormArray;
     }
 
     public get keyValueForm(): FormGroup<KeyValueFormType> {

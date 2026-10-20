@@ -81,34 +81,36 @@
                     <span class="d-block">Discussions</span>
                 </div>
             </mat-button-toggle>
-            <mat-button-toggle
-                appFeatureFlag="dataset.panel.flows"
-                data-test-id="navigateToFlows"
-                value="flows"
-                [class.active-link]="isDatasetViewTypeFlows"
-                *ngIf="shouldAllowFlowsTab"
-            >
-                <a [routerLink]="[datasetLink, DatasetViewTypeEnum.Flows]" class="menu-link">
-                    <div class="d-flex align-items-center">
-                        <mat-icon class="fs-4 d-block me-1">add_task</mat-icon>
-                        <span class="d-block">Flows</span>
-                    </div>
-                </a>
-            </mat-button-toggle>
-            <mat-button-toggle
-                appFeatureFlag="dataset.panel.settings"
-                data-test-id="navigateToSettings"
-                value="settings"
-                [class.active-link]="isDatasetViewTypeSettings"
-                *ngIf="shouldAllowSettingsTab"
-            >
-                <a [routerLink]="[datasetLink, DatasetViewTypeEnum.Settings]" class="menu-link">
-                    <div class="d-flex align-items-center">
-                        <mat-icon class="settings-icon me-1" svgIcon="account" />
-                        <span class="d-block">Settings</span>
-                    </div>
-                </a>
-            </mat-button-toggle>
+            @if (shouldAllowFlowsTab) {
+                <mat-button-toggle
+                    appFeatureFlag="dataset.panel.flows"
+                    data-test-id="navigateToFlows"
+                    value="flows"
+                    [class.active-link]="isDatasetViewTypeFlows"
+                >
+                    <a [routerLink]="[datasetLink, DatasetViewTypeEnum.Flows]" class="menu-link">
+                        <div class="d-flex align-items-center">
+                            <mat-icon class="fs-4 d-block me-1">add_task</mat-icon>
+                            <span class="d-block">Flows</span>
+                        </div>
+                    </a>
+                </mat-button-toggle>
+            }
+            @if (shouldAllowSettingsTab) {
+                <mat-button-toggle
+                    appFeatureFlag="dataset.panel.settings"
+                    data-test-id="navigateToSettings"
+                    value="settings"
+                    [class.active-link]="isDatasetViewTypeSettings"
+                >
+                    <a [routerLink]="[datasetLink, DatasetViewTypeEnum.Settings]" class="menu-link">
+                        <div class="d-flex align-items-center">
+                            <mat-icon class="settings-icon me-1" svgIcon="account" />
+                            <span class="d-block">Settings</span>
+                        </div>
+                    </a>
+                </mat-button-toggle>
+            }
         </mat-button-toggle-group>
     </div>
 </div>

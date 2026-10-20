@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
@@ -23,7 +22,6 @@ import { NavigationService } from "src/app/services/navigation.service";
     templateUrl: "./offset-interval-property.component.html",
     styleUrls: ["./offset-interval-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf],
 })
 export class OffsetIntervalPropertyComponent extends BasePropertyComponent implements OnInit {
     @Input({ required: true }) public data: {

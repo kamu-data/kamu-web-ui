@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
@@ -22,8 +21,6 @@ import { SearchMode } from "@interface/search.interface";
     imports: [
         //-----//
         FormsModule,
-        NgFor,
-        NgIf,
         //-----//
         FeatureFlagDirective,
         DatasetListItemComponent,

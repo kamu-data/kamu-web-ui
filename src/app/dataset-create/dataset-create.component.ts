@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, NgFor, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
@@ -45,8 +45,6 @@ import { EditorModule } from "src/app/editor/editor.module";
     imports: [
         //-----//
         AsyncPipe,
-        NgFor,
-        NgIf,
         FormsModule,
         ReactiveFormsModule,
         //-----//

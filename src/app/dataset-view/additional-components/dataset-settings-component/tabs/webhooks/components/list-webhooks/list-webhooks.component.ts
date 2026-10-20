@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, NgClass, NgIf } from "@angular/common";
+import { AsyncPipe, NgClass } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -32,7 +32,6 @@ import { NavigationService } from "src/app/services/navigation.service";
         //-----//
         AsyncPipe,
         NgClass,
-        NgIf,
         //-----//
         MatDividerModule,
         MatIconModule,

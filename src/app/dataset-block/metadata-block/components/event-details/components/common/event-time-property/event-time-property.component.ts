@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { EventTimeSource } from "@api/kamu.graphql.interface";
@@ -16,7 +15,6 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     selector: "app-event-time-property",
     templateUrl: "./event-time-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf],
 })
 export class EventTimePropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: EventTimeSource;

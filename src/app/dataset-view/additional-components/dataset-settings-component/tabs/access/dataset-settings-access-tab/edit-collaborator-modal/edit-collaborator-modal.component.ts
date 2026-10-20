@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
@@ -26,7 +25,6 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        NgFor,
         FormsModule,
         //-----//
         MatDividerModule,

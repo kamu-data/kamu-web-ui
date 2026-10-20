@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { NgIf, NgStyle } from "@angular/common";
+import { NgStyle } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -57,7 +57,6 @@ const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        NgIf,
         NgStyle,
         FormsModule,
         //-----//

@@ -1,60 +1,57 @@
 <div class="content">
-    <a
-        *ngFor="let node of nodes | slice: 0 : LAST_RUNS_COUNT; let i = index"
-        class="tile-item"
-        [ngbPopover]="popContent"
-        triggers="mouseenter:mouseleave"
-        [openDelay]="300"
-        [ngClass]="tileWidgetClass(node)"
-        target="_blank"
-        [attr.data-test-id]="'tile-element-' + i"
-        [href]="getTileItemLink(node)"
-    >
-        <ng-template #popContent>
-            <div class="fs-12 text-muted">
-                <span class="fs-12 fw-bold">Initiator:</span>
-                <span class="fs-12">
-                    {{ node.initiator ? node.initiator.accountName : DEFAULT_FLOW_INITIATOR }}
-                </span>
-                <br />
-
-                <ng-container *ngIf="displayAlias">
-                    <span class="fs-12 fw-bold">Alias:</span>
+    @for (node of nodes | slice: 0 : LAST_RUNS_COUNT; track node.flowId; let i = $index) {
+        <a
+            class="tile-item"
+            [ngbPopover]="popContent"
+            triggers="mouseenter:mouseleave"
+            [openDelay]="300"
+            [ngClass]="tileWidgetClass(node)"
+            target="_blank"
+            [attr.data-test-id]="'tile-element-' + i"
+            [href]="getTileItemLink(node)"
+        >
+            <ng-template #popContent>
+                <div class="fs-12 text-muted">
+                    <span class="fs-12 fw-bold">Initiator:</span>
                     <span class="fs-12">
-                        {{ datasetAliasByDescription(node) }}
+                        {{ node.initiator ? node.initiator.accountName : DEFAULT_FLOW_INITIATOR }}
                     </span>
                     <br />
-                </ng-container>
-
-                <span class="fs-12 fw-bold">Run Duration:</span>
-                <span class="fs-12">
-                    {{ flowRunDuration(node) }}
-                </span>
-                <br />
-
-                <span class="fs-12 fw-bold">Total Time:</span>
-                <span class="fs-12">
-                    {{ flowTotalDuration(node) }}
-                </span>
-                <br />
-
-                <span class="fs-12 fw-bold">Outcome:</span>
-                <span class="fs-12">
-                    {{ tileOutcomeMessage(node) }}
-                </span>
-                <br />
-
-                <span class="fs-12 fw-bold">Finish time:</span>
-                <span class="fs-12 no-wrap" *ngIf="node.outcome; else emptyBlock">
-                    {{ node.timing.lastAttemptFinishedAt | date: "M/d/yy, h:mm:ss a" }}
-                </span>
-                <ng-template #emptyBlock>
-                    <span class="fs-12"> - </span>
-                </ng-template>
-                <br />
-            </div>
-        </ng-template>
-    </a>
+                    @if (displayAlias) {
+                        <span class="fs-12 fw-bold">Alias:</span>
+                        <span class="fs-12">
+                            {{ datasetAliasByDescription(node) }}
+                        </span>
+                        <br />
+                    }
+                    <span class="fs-12 fw-bold">Run Duration:</span>
+                    <span class="fs-12">
+                        {{ flowRunDuration(node) }}
+                    </span>
+                    <br />
+                    <span class="fs-12 fw-bold">Total Time:</span>
+                    <span class="fs-12">
+                        {{ flowTotalDuration(node) }}
+                    </span>
+                    <br />
+                    <span class="fs-12 fw-bold">Outcome:</span>
+                    <span class="fs-12">
+                        {{ tileOutcomeMessage(node) }}
+                    </span>
+                    <br />
+                    <span class="fs-12 fw-bold">Finish time:</span>
+                    @if (node.outcome) {
+                        <span class="fs-12 no-wrap">
+                            {{ node.timing.lastAttemptFinishedAt | date: "M/d/yy, h:mm:ss a" }}
+                        </span>
+                    } @else {
+                        <span class="fs-12"> - </span>
+                    }
+                    <br />
+                </div>
+            </ng-template>
+        </a>
+    }
 </div>
 <div class="mt-1">
     <span class="fs-12 text-muted"> Showing last {{ LAST_RUNS_COUNT }} runs</span>

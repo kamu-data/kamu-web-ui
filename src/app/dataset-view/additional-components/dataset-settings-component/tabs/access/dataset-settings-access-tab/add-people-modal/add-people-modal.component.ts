@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
@@ -35,8 +34,6 @@ import { DatasetCollaborationsService } from "src/app/dataset-view/additional-co
     imports: [
         //-----//
         FormsModule,
-        NgIf,
-        NgFor,
         //-----//
         MatDividerModule,
         MatProgressSpinnerModule,

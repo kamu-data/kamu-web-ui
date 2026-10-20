@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -26,7 +25,6 @@ import { SubprocessStatusFilterPipe } from "src/app/dataset-view/additional-comp
     imports: [
         //-----//
         FormsModule,
-        NgIf,
         //-----//
         MatMenuModule,
         MatIconModule,

@@ -1,4 +1,4 @@
-<ng-container *ngIf="!selectedLoginMethod || selectedLoginMethod === AccountProvider.Web3Wallet">
+@if (!selectedLoginMethod || selectedLoginMethod === AccountProvider.Web3Wallet) {
     <div class="d-flex flex-column align-items-center login-container__buttons" data-test-id="method-selection-block">
         <img [src]="APP_LOGO" class="logo" alt="Application logo" />
         <h1 class="text-center text-muted mt-4">Select your Login Method</h1>
@@ -30,88 +30,88 @@
             >
                 Login with Password
             </button>
-
-            <ng-container *ngIf="enableTermsOfService">
+            @if (enableTermsOfService) {
                 <ng-container *ngTemplateOutlet="termsOfServiceFragment"></ng-container>
-            </ng-container>
+            }
         </div>
     </div>
-</ng-container>
-<div
-    *ngIf="selectedLoginMethod == AccountProvider.OauthGithub"
-    class="d-flex justify-content-center align-items-center"
->
-    <app-spinner data-test-id="github-spinner" />
-</div>
-<div
-    *ngIf="selectedLoginMethod == AccountProvider.Password"
-    class="d-flex justify-content-center flex-column container-form"
-    data-test-id="password-method-block"
->
-    <img [src]="APP_LOGO" class="logo" alt="Application logo" />
-    <h1 class="text-center text-muted mt-4">Login to Kamu</h1>
-    <form [formGroup]="passwordLoginForm">
-        <div>
-            <label for="login" class="fs-12" [class.error-color]="passwordLoginError$ | async">Login</label>
-            <span class="text-danger">*</span><br />
-            <input
-                formControlName="login"
-                type="text"
-                class="form-control d-inline"
-                id="login"
-                data-test-id="input-login"
-                (keyup)="onChangeInputField($event)"
-                autofocus
-                [class.error-border-color]="passwordLoginError$ | async"
-                #login
-            />
-            <div
-                class="text-danger fs-12"
-                [input]="login"
-                [fieldLabel]="'Login'"
-                [appFieldError]="['required']"
-                [group]="passwordLoginForm"
-                [dataTestId]="'input-login-error-required'"
-            ></div>
-        </div>
-        <div class="mt-4">
-            <label for="password" class="fs-12" [class.error-color]="passwordLoginError$ | async">Password</label>
-            <span class="text-danger">*</span><br />
-            <input
-                formControlName="password"
-                type="password"
-                class="form-control d-inline"
-                id="password"
-                data-test-id="input-password"
-                (keyup)="onChangeInputField($event)"
-                [class.error-border-color]="passwordLoginError$ | async"
-                #password
-            />
-            <div
-                class="text-danger fs-12"
-                [input]="password"
-                [fieldLabel]="'Password'"
-                [appFieldError]="['required']"
-                [group]="passwordLoginForm"
-                [dataTestId]="'input-password-error-required'"
-            ></div>
-        </div>
-        <button
-            [disabled]="passwordLoginForm.invalid"
-            data-test-id="submit-password"
-            (click)="onPasswordLogin()"
-            class="button-sign-in mt-4"
-        >
-            Login
-        </button>
-        <div *ngIf="passwordLoginError$ | async as passwordLoginError" class="mt-2">
-            <div class="error-block" data-test-id="password-method-error">{{ passwordLoginError }}</div>
-        </div>
-        <div class="mt-30" *ngIf="enableTermsOfService">
-            <ng-container *ngTemplateOutlet="termsOfServiceFragment"></ng-container>
-        </div>
-    </form>
-</div>
+}
+@if (selectedLoginMethod == AccountProvider.OauthGithub) {
+    <div class="d-flex justify-content-center align-items-center">
+        <app-spinner data-test-id="github-spinner" />
+    </div>
+}
+@if (selectedLoginMethod == AccountProvider.Password) {
+    <div class="d-flex justify-content-center flex-column container-form" data-test-id="password-method-block">
+        <img [src]="APP_LOGO" class="logo" alt="Application logo" />
+        <h1 class="text-center text-muted mt-4">Login to Kamu</h1>
+        <form [formGroup]="passwordLoginForm">
+            <div>
+                <label for="login" class="fs-12" [class.error-color]="passwordLoginError$ | async">Login</label>
+                <span class="text-danger">*</span><br />
+                <input
+                    formControlName="login"
+                    type="text"
+                    class="form-control d-inline"
+                    id="login"
+                    data-test-id="input-login"
+                    (keyup)="onChangeInputField($event)"
+                    autofocus
+                    [class.error-border-color]="passwordLoginError$ | async"
+                    #login
+                />
+                <div
+                    class="text-danger fs-12"
+                    [input]="login"
+                    [fieldLabel]="'Login'"
+                    [appFieldError]="['required']"
+                    [group]="passwordLoginForm"
+                    [dataTestId]="'input-login-error-required'"
+                ></div>
+            </div>
+            <div class="mt-4">
+                <label for="password" class="fs-12" [class.error-color]="passwordLoginError$ | async">Password</label>
+                <span class="text-danger">*</span><br />
+                <input
+                    formControlName="password"
+                    type="password"
+                    class="form-control d-inline"
+                    id="password"
+                    data-test-id="input-password"
+                    (keyup)="onChangeInputField($event)"
+                    [class.error-border-color]="passwordLoginError$ | async"
+                    #password
+                />
+                <div
+                    class="text-danger fs-12"
+                    [input]="password"
+                    [fieldLabel]="'Password'"
+                    [appFieldError]="['required']"
+                    [group]="passwordLoginForm"
+                    [dataTestId]="'input-password-error-required'"
+                ></div>
+            </div>
+            <button
+                [disabled]="passwordLoginForm.invalid"
+                data-test-id="submit-password"
+                (click)="onPasswordLogin()"
+                class="button-sign-in mt-4"
+            >
+                Login
+            </button>
+            @if (passwordLoginError$ | async; as passwordLoginError) {
+                <div class="mt-2">
+                    <div class="error-block" data-test-id="password-method-error">{{ passwordLoginError }}</div>
+                </div>
+            }
+            @if (enableTermsOfService) {
+                <div class="mt-30">
+                    <ng-container *ngTemplateOutlet="termsOfServiceFragment"></ng-container>
+                </div>
+            }
+        </form>
+    </div>
+}
 
 <ng-template #termsOfServiceFragment>
     <p class="text-center fs-12">

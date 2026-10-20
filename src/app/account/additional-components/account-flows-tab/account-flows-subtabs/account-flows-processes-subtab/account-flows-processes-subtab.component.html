@@ -17,117 +17,126 @@
 <div class="my-4 d-flex flex-row align-items-center">
     <span class="fw-500 me-4">View:</span>
     <mat-button-toggle-group [(ngModel)]="accountFlowsData.datasetsFiltersMode" (change)="onChangeFiltersMode($event)">
-        <mat-button-toggle *ngFor="let item of CARD_FILTERS_MODE_OPTIONS" [value]="item.value">
-            <mat-icon aria-hidden="true" class="fs-4 mr-2px">{{ item.iconName }}</mat-icon
-            >{{ item.label }}</mat-button-toggle
-        >
+        @for (item of CARD_FILTERS_MODE_OPTIONS; track item) {
+            <mat-button-toggle [value]="item.value">
+                <mat-icon aria-hidden="true" class="fs-4 mr-2px">{{ item.iconName }}</mat-icon
+                >{{ item.label }}</mat-button-toggle
+            >
+        }
     </mat-button-toggle-group>
 </div>
 
-<div class="my-4 d-flex flex-row align-items-center ml-55px" *ngIf="activeRollup">
-    <mat-button-toggle-group
-        [(ngModel)]="dashboardFiltersState.selectedFlowProcessStates"
-        (change)="onToggleRollup()"
-        multiple
-        class="me-4"
-    >
-        <ng-container *ngFor="let item of ROLLUP_OPTIONS; let i = index">
-            <mat-button-toggle
-                [value]="item.state"
-                *ngIf="rollupAvailabilityMapper(accountFlowsData.datasetsFiltersMode, item.state)"
-            >
-                <mat-icon aria-hidden="true" [class]="'fs-4 mr-2px mt-2px ' + item.iconClass">{{
-                    item.iconName
-                }}</mat-icon
-                >{{ item.label }} {{ activeRollup[item.valueKey] }}</mat-button-toggle
-            >
-        </ng-container>
-    </mat-button-toggle-group>
-    <span *ngIf="accountFlowsData.datasetsFiltersMode !== ProcessCardFilterMode.PAUSED" class="fw-500 me-4"
-        >Total: {{ totalProcessesCountByMode(accountFlowsData.datasetsFiltersMode, activeRollup) }}</span
-    >
-</div>
-
-<div class="my-4" [ngSwitch]="accountFlowsData.datasetsFiltersMode">
-    <app-recent-activity-filters-view
-        *ngSwitchCase="ProcessCardFilterMode.RECENT_ACTIVITY"
-        [dashboardFilters]="dashboardFiltersState"
-        (applyFilterEmitter)="applyFilters()"
-    >
-    </app-recent-activity-filters-view>
-
-    <app-triage-filters-view
-        *ngSwitchCase="ProcessCardFilterMode.TRIAGE"
-        [dashboardFilters]="dashboardFiltersState"
-        (applyFilterEmitter)="applyFilters()"
-    >
-    </app-triage-filters-view>
-
-    <app-upcoming-scheduled-filters-view
-        *ngSwitchCase="ProcessCardFilterMode.UPCOMING_SCHEDULED"
-        [dashboardFilters]="dashboardFiltersState"
-        (applyFilterEmitter)="applyFilters()"
-    >
-    </app-upcoming-scheduled-filters-view>
-
-    <app-custom-filters-view
-        *ngSwitchCase="ProcessCardFilterMode.CUSTOM"
-        [dashboardFilters]="dashboardFiltersState"
-        (applyFilterEmitter)="applyFilters()"
-    >
-        <div class="d-flex justify-content-end mt-4 mb-2">
-            <button
-                (click)="resetFilters()"
-                class="border-1 bg-light border me-4 rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
-            >
-                <mat-icon class="text-muted fs-4 d-block">restart_alt</mat-icon>
-                <span class="fs-12 me-2 d-block"> Reset filters</span>
-            </button>
-        </div>
-    </app-custom-filters-view>
-</div>
-
-<ng-container *ngIf="accountFlowsCardsData$ | async as cardsData">
-    <div *ngIf="cardsData.nodes.length; else noCardsBlock">
-        <div class="d-flex justify-content-end mt-4 mb-2 fw-500">Total processes: {{ cardsData.totalCount }}</div>
-
-        <div
-            infiniteScroll
-            [infiniteScrollDistance]="1"
-            [infiniteScrollThrottle]="150"
-            [alwaysCallback]="true"
-            (scrolled)="onScroll()"
-            class="cards mt-4"
-            data-test-id="cards"
+@if (activeRollup) {
+    <div class="my-4 d-flex flex-row align-items-center ml-55px">
+        <mat-button-toggle-group
+            [(ngModel)]="dashboardFiltersState.selectedFlowProcessStates"
+            (change)="onToggleRollup()"
+            multiple
+            class="me-4"
         >
-            <ng-container *ngFor="let card of cardsData.nodes; trackBy: trackByCardId">
-                <div *ngIf="card.__typename === 'DatasetFlowProcess'">
-                    <app-dataset-flow-process-card
-                        [datasetBasics]="itemToBasics(card.dataset)"
-                        [summary]="card.summary"
-                        [showFlowsHistoryLink]="true"
-                        (updateNowEmitter)="updateNow($event)"
-                        (toggleStateDatasetCardEmitter)="toggleStateDatasetCard($event)"
-                    />
-                </div>
-                <div *ngIf="card.__typename === 'WebhookFlowSubProcess'">
-                    <app-webhook-flow-process-card
-                        *ngIf="card.parentDataset"
-                        [datasetBasics]="itemToBasics(card.parentDataset)"
-                        [summary]="card.summary"
-                        [subscriptionId]="card.id"
-                        [subscriptionName]="card.name"
-                        (toggleWebhookCardStateEmitter)="toggleWebhookCardState($event)"
-                    />
-                </div>
-            </ng-container>
-        </div>
-        <div *ngIf="loadingCards$ | async" class="mt-4">
-            <mat-progress-bar data-test-id="init-progress-bar" mode="indeterminate" />
-            <div class="text-center pt-4">Loading...</div>
-        </div>
+            @for (item of ROLLUP_OPTIONS; track item; let i = $index) {
+                @if (rollupAvailabilityMapper(accountFlowsData.datasetsFiltersMode, item.state)) {
+                    <mat-button-toggle [value]="item.state">
+                        <mat-icon aria-hidden="true" [class]="'fs-4 mr-2px mt-2px ' + item.iconClass">{{
+                            item.iconName
+                        }}</mat-icon
+                        >{{ item.label }} {{ activeRollup[item.valueKey] }}</mat-button-toggle
+                    >
+                }
+            }
+        </mat-button-toggle-group>
+        @if (accountFlowsData.datasetsFiltersMode !== ProcessCardFilterMode.PAUSED) {
+            <span class="fw-500 me-4"
+                >Total: {{ totalProcessesCountByMode(accountFlowsData.datasetsFiltersMode, activeRollup) }}</span
+            >
+        }
     </div>
-    <ng-template #noCardsBlock>
+}
+
+<div class="my-4">
+    @switch (accountFlowsData.datasetsFiltersMode) {
+        @case (ProcessCardFilterMode.RECENT_ACTIVITY) {
+            <app-recent-activity-filters-view
+                [dashboardFilters]="dashboardFiltersState"
+                (applyFilterEmitter)="applyFilters()"
+            >
+            </app-recent-activity-filters-view>
+        }
+        @case (ProcessCardFilterMode.TRIAGE) {
+            <app-triage-filters-view [dashboardFilters]="dashboardFiltersState" (applyFilterEmitter)="applyFilters()">
+            </app-triage-filters-view>
+        }
+        @case (ProcessCardFilterMode.UPCOMING_SCHEDULED) {
+            <app-upcoming-scheduled-filters-view
+                [dashboardFilters]="dashboardFiltersState"
+                (applyFilterEmitter)="applyFilters()"
+            >
+            </app-upcoming-scheduled-filters-view>
+        }
+        @case (ProcessCardFilterMode.CUSTOM) {
+            <app-custom-filters-view [dashboardFilters]="dashboardFiltersState" (applyFilterEmitter)="applyFilters()">
+                <div class="d-flex justify-content-end mt-4 mb-2">
+                    <button
+                        (click)="resetFilters()"
+                        class="border-1 bg-light border me-4 rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
+                    >
+                        <mat-icon class="text-muted fs-4 d-block">restart_alt</mat-icon>
+                        <span class="fs-12 me-2 d-block"> Reset filters</span>
+                    </button>
+                </div>
+            </app-custom-filters-view>
+        }
+    }
+</div>
+
+@if (accountFlowsCardsData$ | async; as cardsData) {
+    @if (cardsData.nodes.length) {
+        <div>
+            <div class="d-flex justify-content-end mt-4 mb-2 fw-500">Total processes: {{ cardsData.totalCount }}</div>
+            <div
+                infiniteScroll
+                [infiniteScrollDistance]="1"
+                [infiniteScrollThrottle]="150"
+                [alwaysCallback]="true"
+                (scrolled)="onScroll()"
+                class="cards mt-4"
+                data-test-id="cards"
+            >
+                @for (card of cardsData.nodes; track trackByCardId(card)) {
+                    @if (card.__typename === "DatasetFlowProcess") {
+                        <div>
+                            <app-dataset-flow-process-card
+                                [datasetBasics]="itemToBasics(card.dataset)"
+                                [summary]="card.summary"
+                                [showFlowsHistoryLink]="true"
+                                (updateNowEmitter)="updateNow($event)"
+                                (toggleStateDatasetCardEmitter)="toggleStateDatasetCard($event)"
+                            />
+                        </div>
+                    }
+                    @if (card.__typename === "WebhookFlowSubProcess") {
+                        <div>
+                            @if (card.parentDataset) {
+                                <app-webhook-flow-process-card
+                                    [datasetBasics]="itemToBasics(card.parentDataset)"
+                                    [summary]="card.summary"
+                                    [subscriptionId]="card.id"
+                                    [subscriptionName]="card.name"
+                                    (toggleWebhookCardStateEmitter)="toggleWebhookCardState($event)"
+                                />
+                            }
+                        </div>
+                    }
+                }
+            </div>
+            @if (loadingCards$ | async) {
+                <div class="mt-4">
+                    <mat-progress-bar data-test-id="init-progress-bar" mode="indeterminate" />
+                    <div class="text-center pt-4">Loading...</div>
+                </div>
+            }
+        </div>
+    } @else {
         <div class="mt-4" data-test-id="empty-cards-block"><span class="fw-bold fs-16">Result: </span>No Matches</div>
-    </ng-template>
-</ng-container>
+    }
+}

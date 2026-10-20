@@ -1,74 +1,80 @@
 <div class="search-result-container__content mb-20 container-main">
-    <ng-container *ngIf="flowConnectionData$ | async as flowConnectionData; else loading">
-        <ng-container *ngIf="flowConnectionData.flowsData.connectionDataForWidget.nodes.length; else noRuns">
+    @if (flowConnectionData$ | async; as flowConnectionData) {
+        @if (flowConnectionData.flowsData.connectionDataForWidget.nodes.length) {
             <div>
                 <div class="mt-4">
-                    <div class="box p-4 w-100" *ngIf="flowConnectionData.flowProcesses">
-                        <div
-                            class="d-flex flex-row"
-                            [ngClass]="{
-                                'justify-content-between': showPanelButtons,
-                                'justify-content-end': !showPanelButtons,
-                            }"
-                        >
-                            <div *ngIf="showPanelButtons" class="mt-4 ms-4">
-                                <app-dataset-flow-process-card
-                                    [datasetBasics]="flowsData.datasetBasics"
-                                    [summary]="flowConnectionData.flowProcesses.primary.summary"
-                                    (updateNowEmitter)="updateNow()"
-                                    (toggleStateDatasetCardEmitter)="toggleStateDatasetFlowConfigs($event)"
-                                />
-                            </div>
-                            <div class="d-flex align-items-start p-4">
-                                <app-flows-block-actions
-                                    [flowProcess]="flowConnectionData.flowProcesses.primary"
-                                    [datasetBasics]="flowsData.datasetBasics"
-                                    [hasPushSources]="hasPushSources"
-                                    (updateEmitter)="updateNow()"
-                                    (refreshEmitter)="refreshFlow()"
-                                />
-                            </div>
-                        </div>
-                        <div class="mt-4 ms-4">
-                            <mat-chip-listbox
-                                [(ngModel)]="flowsSelectionState.flowsCategory"
-                                (change)="onSelectionFlowsChange($event)"
+                    @if (flowConnectionData.flowProcesses) {
+                        <div class="box p-4 w-100">
+                            <div
+                                class="d-flex flex-row"
+                                [ngClass]="{
+                                    'justify-content-between': showPanelButtons,
+                                    'justify-content-end': !showPanelButtons,
+                                }"
                             >
-                                <mat-chip-option [value]="'all'">All flows</mat-chip-option>
-                                <mat-chip-option *ngIf="!hasPushSources" [value]="'updates'"
-                                    >{{ isRoot ? "Ingest" : "Transform" }}
-                                </mat-chip-option>
-                            </mat-chip-listbox>
+                                @if (showPanelButtons) {
+                                    <div class="mt-4 ms-4">
+                                        <app-dataset-flow-process-card
+                                            [datasetBasics]="flowsData.datasetBasics"
+                                            [summary]="flowConnectionData.flowProcesses.primary.summary"
+                                            (updateNowEmitter)="updateNow()"
+                                            (toggleStateDatasetCardEmitter)="toggleStateDatasetFlowConfigs($event)"
+                                        />
+                                    </div>
+                                }
+                                <div class="d-flex align-items-start p-4">
+                                    <app-flows-block-actions
+                                        [flowProcess]="flowConnectionData.flowProcesses.primary"
+                                        [datasetBasics]="flowsData.datasetBasics"
+                                        [hasPushSources]="hasPushSources"
+                                        (updateEmitter)="updateNow()"
+                                        (refreshEmitter)="refreshFlow()"
+                                    />
+                                </div>
+                            </div>
+                            <div class="mt-4 ms-4">
+                                <mat-chip-listbox
+                                    [(ngModel)]="flowsSelectionState.flowsCategory"
+                                    (change)="onSelectionFlowsChange($event)"
+                                >
+                                    <mat-chip-option [value]="'all'">All flows</mat-chip-option>
+                                    @if (!hasPushSources) {
+                                        <mat-chip-option [value]="'updates'"
+                                            >{{ isRoot ? "Ingest" : "Transform" }}
+                                        </mat-chip-option>
+                                    }
+                                </mat-chip-listbox>
+                            </div>
+                            @if (flowConnectionData.flowProcesses.webhooks.rollup.total) {
+                                <div class="mt-4">
+                                    <app-flows-associated-channels
+                                        [flowsSelectionState]="flowsSelectionState"
+                                        [webhooksData]="flowConnectionData.flowProcesses.webhooks"
+                                        [datasetBasics]="flowsData.datasetBasics"
+                                        (webhookSettingsClicked)="navigateToWebhookSettings($event)"
+                                        (subcriptionClicked)="navigateToSubscription($event)"
+                                        (pauseWebhookClicked)="pauseWebhook($event)"
+                                        (resumeWebhookClicked)="resumeWebhook($event)"
+                                        (selectionWebhooksClicked)="onSelectionWebhooksChange($event)"
+                                        (toggleWebhookFilterClicked)="
+                                            onToggleWebhookFilter(
+                                                $event,
+                                                flowConnectionData.flowProcesses.webhooks.subprocesses
+                                            )
+                                        "
+                                        (removeSelectedWebhookClicked)="
+                                            removeSelectedWebhook(
+                                                $event,
+                                                flowConnectionData.flowProcesses.webhooks.subprocesses
+                                            )
+                                        "
+                                    />
+                                </div>
+                            }
                         </div>
-
-                        <div class="mt-4" *ngIf="flowConnectionData.flowProcesses.webhooks.rollup.total">
-                            <app-flows-associated-channels
-                                [flowsSelectionState]="flowsSelectionState"
-                                [webhooksData]="flowConnectionData.flowProcesses.webhooks"
-                                [datasetBasics]="flowsData.datasetBasics"
-                                (webhookSettingsClicked)="navigateToWebhookSettings($event)"
-                                (subcriptionClicked)="navigateToSubscription($event)"
-                                (pauseWebhookClicked)="pauseWebhook($event)"
-                                (resumeWebhookClicked)="resumeWebhook($event)"
-                                (selectionWebhooksClicked)="onSelectionWebhooksChange($event)"
-                                (toggleWebhookFilterClicked)="
-                                    onToggleWebhookFilter(
-                                        $event,
-                                        flowConnectionData.flowProcesses.webhooks.subprocesses
-                                    )
-                                "
-                                (removeSelectedWebhookClicked)="
-                                    removeSelectedWebhook(
-                                        $event,
-                                        flowConnectionData.flowProcesses.webhooks.subprocesses
-                                    )
-                                "
-                            />
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
-
             <div class="search-result-container__content mt-4 mb-4">
                 <app-tile-base-widget
                     [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
@@ -76,8 +82,7 @@
                     [displayAlias]="false"
                 />
             </div>
-
-            <ng-container *ngIf="flowConnectionData">
+            @if (flowConnectionData) {
                 <app-flow-table-panel-filters
                     [accountFlowInitiators]="flowConnectionData.flowInitiators"
                     [onlySystemFlows]="onlySystemFlows"
@@ -117,63 +122,67 @@
                         (pageChangeEvent)="onPageChange($event)"
                     />
                 </div>
-            </ng-container>
-        </ng-container>
-    </ng-container>
-    <ng-template #noRuns>
-        <p class="ps-2 pt-2" data-test-id="empty-flow-runs-block">
-            <ng-container *ngIf="!isSetTransformEmpty && !isSetPollingSourceEmpty && !hasPushSources">
-                No flow runs.
-                <span *ngIf="canRunFlows">
-                    You can
+            }
+        } @else {
+            <p class="ps-2 pt-2" data-test-id="empty-flow-runs-block">
+                @if (!isSetTransformEmpty && !isSetPollingSourceEmpty && !hasPushSources) {
+                    No flow runs.
+                    @if (canRunFlows) {
+                        <span>
+                            You can
+                            <a
+                                class="text-decoration-none"
+                                [routerLink]="[
+                                    '/',
+                                    flowsData.datasetBasics.owner.accountName,
+                                    flowsData.datasetBasics.name,
+                                    DatasetViewTypeEnum.Settings,
+                                    redirectSection,
+                                ]"
+                                >update configuration settings</a
+                            >
+                            or
+                            <a class="text-decoration-none" (click)="updateNow()" data-test-id="update-now-link"
+                                >update now</a
+                            >
+                        </span>
+                    }
+                }
+                @if (isSetPollingSourceEmpty) {
+                    No flow runs.To set the configuration you first need to
                     <a
                         class="text-decoration-none"
                         [routerLink]="[
                             '/',
                             flowsData.datasetBasics.owner.accountName,
                             flowsData.datasetBasics.name,
-                            DatasetViewTypeEnum.Settings,
-                            redirectSection,
+                            URL_PARAM_ADD_POLLING_SOURCE,
                         ]"
-                        >update configuration settings</a
-                    >
-                    or
-                    <a class="text-decoration-none" (click)="updateNow()" data-test-id="update-now-link">update now</a>
-                </span>
-            </ng-container>
-            <ng-container *ngIf="isSetPollingSourceEmpty">
-                No flow runs.To set the configuration you first need to
-                <a
-                    class="text-decoration-none"
-                    [routerLink]="[
-                        '/',
-                        flowsData.datasetBasics.owner.accountName,
-                        flowsData.datasetBasics.name,
-                        URL_PARAM_ADD_POLLING_SOURCE,
-                    ]"
-                    >add data polling source
-                </a>
-            </ng-container>
-            <ng-container *ngIf="isSetTransformEmpty">
-                No flow runs.To set the configuration you first need to
-                <a
-                    class="text-decoration-none"
-                    [routerLink]="[
-                        '/',
-                        flowsData.datasetBasics.owner.accountName,
-                        flowsData.datasetBasics.name,
-                        URL_PARAM_SET_TRANSFORM,
-                    ]"
-                    >add transformation
-                </a>
-            </ng-container>
-            <ng-container *ngIf="hasPushSources"> No flow runs. </ng-container>
-        </p>
-    </ng-template>
-    <ng-template #loading>
+                        >add data polling source
+                    </a>
+                }
+                @if (isSetTransformEmpty) {
+                    No flow runs.To set the configuration you first need to
+                    <a
+                        class="text-decoration-none"
+                        [routerLink]="[
+                            '/',
+                            flowsData.datasetBasics.owner.accountName,
+                            flowsData.datasetBasics.name,
+                            URL_PARAM_SET_TRANSFORM,
+                        ]"
+                        >add transformation
+                    </a>
+                }
+                @if (hasPushSources) {
+                    No flow runs.
+                }
+            </p>
+        }
+    } @else {
         <div class="position-relative">
             <mat-progress-bar data-test-id="init-progress-bar" class="position-absolute" mode="indeterminate" />
         </div>
         <div class="text-center mt-4">Loading...</div>
-    </ng-template>
+    }
 </div>

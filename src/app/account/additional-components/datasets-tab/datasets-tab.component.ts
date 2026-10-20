@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 
 import { DatasetListItemComponent } from "@common/components/dataset-list-component/dataset-list-item/dataset-list-item.component";
@@ -22,9 +21,6 @@ import { NavigationService } from "src/app/services/navigation.service";
     templateUrl: "./datasets-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        //-----//
-        NgIf,
-        NgFor,
         //-----//
         DatasetListItemComponent,
         PaginationComponent,

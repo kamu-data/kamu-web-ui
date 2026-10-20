@@ -17,7 +17,7 @@
             </ng-template>
         </ng-select>
 
-        <ng-container *ngIf="selectedKind === 'Timestamp'">
+        @if (selectedKind === "Timestamp") {
             <span class="text-muted gap-2">&nbsp;&lt;&nbsp;</span>
             <ng-select
                 class="width-110"
@@ -50,8 +50,8 @@
                 </ng-template>
             </ng-select>
             <span class="text-muted">&nbsp;&gt;</span>
-        </ng-container>
-        <ng-container *ngIf="selectedKind === OdfTypes.Time || selectedKind === OdfTypes.Duration">
+        }
+        @if (selectedKind === OdfTypes.Time || selectedKind === OdfTypes.Duration) {
             <span class="text-muted gap-2">&nbsp;&lt;&nbsp;</span>
             <ng-select
                 class="width-110"
@@ -67,9 +67,8 @@
                     <label class="fs-14 inline-block"> {{ item.value }} </label>
                 </ng-template>
             </ng-select>
-
             <span class="text-muted">&nbsp;&gt;</span>
-        </ng-container>
+        }
         <button
             type="button"
             class="optional-toggle ms-2"
@@ -84,7 +83,7 @@
         </button>
     </div>
 
-    <ng-container *ngIf="selectedKind === OdfTypes.List">
+    @if (selectedKind === OdfTypes.List) {
         <div class="d-flex flex-column mt-2" [class.ms-2]="depth > 0">
             <span class="text-muted fs-12 d-block">Item Type</span>
             <div>
@@ -97,8 +96,8 @@
                 />
             </div>
         </div>
-    </ng-container>
-    <ng-container *ngIf="selectedKind === OdfTypes.Map">
+    }
+    @if (selectedKind === OdfTypes.Map) {
         <div class="d-flex flex-column mt-2" [class.ms-2]="depth > 0">
             <span class="text-muted fs-12 d-block">Key Type</span>
             <div>
@@ -123,8 +122,8 @@
                 />
             </div>
         </div>
-    </ng-container>
-    <ng-container *ngIf="selectedKind === OdfTypes.Struct">
+    }
+    @if (selectedKind === OdfTypes.Struct) {
         <div class="nested-struct-editor mt-2" [class.ms-2]="depth > 0">
             <app-edit-schema-table
                 #nestedEditSchemaTable
@@ -134,5 +133,5 @@
                 (fieldsChange)="typeStructFieldsChange($event)"
             />
         </div>
-    </ng-container>
+    }
 </div>

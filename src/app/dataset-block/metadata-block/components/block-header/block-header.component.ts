@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -25,8 +24,6 @@ import { DatasetInfo } from "@interface/navigation.interface";
     styleUrls: ["./block-header.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        //-----//
-        NgIf,
         //-----//
         MatIconModule,
         MatDividerModule,

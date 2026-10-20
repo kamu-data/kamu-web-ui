@@ -6,7 +6,7 @@
  */
 
 import { Clipboard } from "@angular/cdk/clipboard";
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 
 import { Observable, switchMap } from "rxjs";
@@ -37,7 +37,6 @@ import { NavigationService } from "src/app/services/navigation.service";
     imports: [
         //-----//
         AsyncPipe,
-        NgIf,
         //-----//
         LineageGraphComponent,
     ],

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, NgClass, NgIf } from "@angular/common";
+import { AsyncPipe, NgClass } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatIconModule } from "@angular/material/icon";
@@ -39,7 +39,6 @@ import ProjectLinks from "src/app/project-links";
     imports: [
         //-----//
         AsyncPipe,
-        NgIf,
         NgClass,
         RouterLinkActive,
         RouterLink,

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DatePipe, NgClass, NgFor, NgIf } from "@angular/common";
+import { DatePipe, NgClass } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -33,8 +33,6 @@ import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-det
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        NgFor,
-        NgIf,
         NgClass,
         DatePipe,
         //-----//

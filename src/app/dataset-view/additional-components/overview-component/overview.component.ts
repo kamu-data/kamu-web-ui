@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, DecimalPipe, NgFor, NgIf, TitleCasePipe } from "@angular/common";
+import { AsyncPipe, DecimalPipe, TitleCasePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit, SimpleChanges } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
@@ -81,8 +81,6 @@ import {
         AsyncPipe,
         DecimalPipe,
         TitleCasePipe,
-        NgIf,
-        NgFor,
         RouterLink,
         //-----//
         FormsModule,

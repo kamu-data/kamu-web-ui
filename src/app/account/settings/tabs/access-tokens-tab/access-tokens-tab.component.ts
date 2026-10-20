@@ -6,7 +6,7 @@
  */
 
 import { Clipboard } from "@angular/cdk/clipboard";
-import { DatePipe, NgIf, NgTemplateOutlet } from "@angular/common";
+import { DatePipe, NgTemplateOutlet } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, ViewChild } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
@@ -41,7 +41,6 @@ import { NavigationService } from "src/app/services/navigation.service";
     imports: [
         //-----//
         FormsModule,
-        NgIf,
         NgTemplateOutlet,
         ReactiveFormsModule,
         DatePipe,

@@ -6,7 +6,7 @@
  */
 
 import { Clipboard } from "@angular/cdk/clipboard";
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -67,7 +67,6 @@ import { NavigationService } from "src/app/services/navigation.service";
     imports: [
         //-----//
         AsyncPipe,
-        NgIf,
         FormsModule,
         //-----//
         MatIconModule,

@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
@@ -27,8 +26,6 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        NgFor,
-        NgIf,
         FormsModule,
         ReactiveFormsModule,
         //-----//

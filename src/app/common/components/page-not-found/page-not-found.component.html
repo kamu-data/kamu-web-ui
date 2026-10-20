@@ -10,16 +10,18 @@
                         <span><i class="bi bi-house-door icon-home"></i></span>Take me home
                     </button>
                 </div>
-                <div class="text-center mt-3" *ngIf="!isAuthenticated">
-                    <button
-                        type="button"
-                        class="btn btn-link"
-                        (click)="navigateToLogin()"
-                        data-test-id="navigate-to-login-btn"
-                    >
-                        Try signing in
-                    </button>
-                </div>
+                @if (!isAuthenticated) {
+                    <div class="text-center mt-3">
+                        <button
+                            type="button"
+                            class="btn btn-link"
+                            (click)="navigateToLogin()"
+                            data-test-id="navigate-to-login-btn"
+                        >
+                            Try signing in
+                        </button>
+                    </div>
+                }
             </div>
         </div>
     </div>

@@ -41,7 +41,7 @@
                 <label class="form-check-label" for=""> From path </label>
                 <app-tooltip-icon [tooltip]="innerTooltips.fromPath" />
             </div>
-            <ng-container *ngIf="currentSource === EventTimeSourceKind.FROM_PATH">
+            @if (currentSource === EventTimeSourceKind.FROM_PATH) {
                 <div class="mt-3">
                     <app-input-field
                         [form]="eventTimeGroup"
@@ -62,7 +62,7 @@
                         [tooltip]="TIMESTAMP_TOOLTIP"
                     />
                 </div>
-            </ng-container>
+            }
         </div>
     </ng-container>
 </div>

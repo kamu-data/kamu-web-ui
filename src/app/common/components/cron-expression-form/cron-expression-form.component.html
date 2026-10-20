@@ -11,13 +11,9 @@
         #expession
     />
 
-    <span
-        *ngIf="cronExpressionControl?.valid && cronExpressionControl?.value"
-        class="fs-12 ms-4"
-        data-test-id="cron-expression-next-time"
-    >
-        {{ NEXT_TIME_LABEL }}: {{ nextTime }}</span
-    >
+    @if (cronExpressionControl.valid && cronExpressionControl.value) {
+        <span class="fs-12 ms-4" data-test-id="cron-expression-next-time"> {{ NEXT_TIME_LABEL }}: {{ nextTime }}</span>
+    }
 
     <span
         class="text-danger fs-12"

@@ -84,9 +84,11 @@
         </p>
         <div class="app-mat-chip">
             <mat-chip-set aria-label="Tags selection">
-                <div *ngFor="let keyword of row.metadata.currentInfo.keywords">
-                    <mat-chip appFeatureFlag="search.keywords">{{ keyword }}</mat-chip>
-                </div>
+                @for (keyword of row.metadata.currentInfo.keywords; track $index) {
+                    <div>
+                        <mat-chip appFeatureFlag="search.keywords">{{ keyword }}</mat-chip>
+                    </div>
+                }
             </mat-chip-set>
         </div>
         <div class="dataset-list-container-additional-block mt-1">
@@ -109,9 +111,11 @@
                 {{ row.metadata.currentDownstreamDependencies.length }}
                 Downstream
             </p>
-            <p class="text-small mr-3" *ngIf="row.metadata.currentLicense">
-                {{ row.metadata.currentLicense.shortName }}
-            </p>
+            @if (row.metadata.currentLicense) {
+                <p class="text-small mr-3">
+                    {{ row.metadata.currentLicense.shortName }}
+                </p>
+            }
         </div>
     </div>
 </div>

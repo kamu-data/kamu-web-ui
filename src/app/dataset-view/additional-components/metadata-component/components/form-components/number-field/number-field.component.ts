@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
@@ -22,7 +21,6 @@ import { BaseField } from "src/app/dataset-view/additional-components/metadata-c
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        NgIf,
         FormsModule,
         ReactiveFormsModule,
         //-----//

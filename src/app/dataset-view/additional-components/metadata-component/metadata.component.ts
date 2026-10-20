@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { NgClass, NgFor, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatIconModule } from "@angular/material/icon";
@@ -45,8 +45,6 @@ import ProjectLinks from "src/app/project-links";
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        NgIf,
-        NgFor,
         RouterLink,
         RouterOutlet,
         NgClass,

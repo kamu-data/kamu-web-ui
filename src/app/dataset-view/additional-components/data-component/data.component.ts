@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, Location, NgIf } from "@angular/common";
+import { AsyncPipe, Location } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
@@ -43,7 +43,6 @@ import { SqlQueryService } from "src/app/services/sql-query.service";
     imports: [
         //-----//
         AsyncPipe,
-        NgIf,
         //-----//
         EditorModule,
         SearchAndSchemasSectionComponent,

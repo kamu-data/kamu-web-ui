@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DatePipe, NgClass, NgIf } from "@angular/common";
+import { DatePipe, NgClass } from "@angular/common";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
@@ -32,7 +32,6 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
     selector: "app-webhook-flow-process-card",
     imports: [
         //-----//
-        NgIf,
         NgClass,
         RouterLink,
         //-----//

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf, TitleCasePipe } from "@angular/common";
+import { TitleCasePipe } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
@@ -54,8 +54,6 @@ import { SourcesSection } from "src/app/dataset-view/additional-components/metad
     viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
     imports: [
         //-----//
-        NgIf,
-        NgFor,
         FormsModule,
         ReactiveFormsModule,
         TitleCasePipe,
@@ -99,6 +97,10 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
 
     public get sectionForm(): FormGroup {
         return this.parentForm.get(this.sectionName) as FormGroup;
+    }
+
+    public get currentKind(): string {
+        return this.sectionForm.get(this.KIND_NAME_CONTROL)?.value as string;
     }
 
     public ngOnInit(): void {

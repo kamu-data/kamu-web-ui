@@ -1,50 +1,52 @@
 <div class="container container-main">
     <div id="metadata-block">
-        <div appFeatureFlag="dataset.panel.metadata.pagination" id="pagination-block" *ngIf="currentState">
-            <app-custom-pagination
-                [hash]="latestBlockHash"
-                [date]="latestBlockSystemTime"
-                [pageIndex]="currentPage"
-                [limit]="5"
-                [total]="totalPages"
-                (pageChange)="onPageChange($event)"
-            />
-        </div>
-
-        <div
-            class="container-details"
-            *ngIf="
-                !(!currentTransform && datasetMetadataTabData.datasetBasics.kind === 'DERIVATIVE') &&
-                !(hasAnySource() && datasetMetadataTabData.datasetBasics.kind === 'ROOT')
-            "
-        >
-            <div class="sidebar mt-3">
-                <ul class="action-list">
-                    <ng-container *ngFor="let menuItem of METADATA_MENU_DESCRIPTORS">
-                        <li
-                            class="action-list-item"
-                            [ngClass]="{
-                                'action-list-item__nav-active': activeTab === menuItem.activeTab,
-                            }"
-                            *ngIf="getVisibilityMenuItem(menuItem.activeTab)"
-                        >
-                            <a routerLinkActive="active" [routerLink]="getRouteLink(menuItem.activeTab)">
-                                <span class="action-list-item__label d-flex align-items-center">
-                                    <mat-icon class="text-muted me-2" [svgIcon]="menuItem.iconName" />
-                                    {{ menuItem.label }}</span
-                                ></a
-                            >
-                        </li>
-                    </ng-container>
-                </ul>
+        @if (currentState) {
+            <div appFeatureFlag="dataset.panel.metadata.pagination" id="pagination-block">
+                <app-custom-pagination
+                    [hash]="latestBlockHash"
+                    [date]="latestBlockSystemTime"
+                    [pageIndex]="currentPage"
+                    [limit]="5"
+                    [total]="totalPages"
+                    (pageChange)="onPageChange($event)"
+                />
             </div>
-            <div class="content sidebar my-4">
-                <div>
-                    <router-outlet></router-outlet>
+        }
+
+        @if (
+            !(!currentTransform && datasetMetadataTabData.datasetBasics.kind === "DERIVATIVE") &&
+            !(hasAnySource() && datasetMetadataTabData.datasetBasics.kind === "ROOT")
+        ) {
+            <div class="container-details">
+                <div class="sidebar mt-3">
+                    <ul class="action-list">
+                        @for (menuItem of METADATA_MENU_DESCRIPTORS; track menuItem) {
+                            @if (getVisibilityMenuItem(menuItem.activeTab)) {
+                                <li
+                                    class="action-list-item"
+                                    [ngClass]="{
+                                        'action-list-item__nav-active': activeTab === menuItem.activeTab,
+                                    }"
+                                >
+                                    <a routerLinkActive="active" [routerLink]="getRouteLink(menuItem.activeTab)">
+                                        <span class="action-list-item__label d-flex align-items-center">
+                                            <mat-icon class="text-muted me-2" [svgIcon]="menuItem.iconName" />
+                                            {{ menuItem.label }}</span
+                                        ></a
+                                    >
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <div class="content sidebar my-4">
+                    <div>
+                        <router-outlet></router-outlet>
+                    </div>
                 </div>
             </div>
-        </div>
-        <ng-container *ngIf="hasAnySource() && datasetMetadataTabData.datasetBasics.kind === 'ROOT'">
+        }
+        @if (hasAnySource() && datasetMetadataTabData.datasetBasics.kind === "ROOT") {
             <h3 class="text-center mt-4">
                 There is no metadata. Need to add
                 <a
@@ -71,8 +73,8 @@
                     Push source event</a
                 >
             </h3>
-        </ng-container>
-        <ng-container *ngIf="!currentTransform && datasetMetadataTabData.datasetBasics.kind === 'DERIVATIVE'">
+        }
+        @if (!currentTransform && datasetMetadataTabData.datasetBasics.kind === "DERIVATIVE") {
             <h3 class="text-center">
                 There is no metadata. Need to add
                 <a
@@ -87,6 +89,6 @@
                     SetTransform event</a
                 >
             </h3>
-        </ng-container>
+        }
     </div>
 </div>

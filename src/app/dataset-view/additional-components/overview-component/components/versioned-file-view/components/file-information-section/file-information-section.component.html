@@ -1,90 +1,90 @@
-<ng-container *ngIf="fileInfo$ | async as fileDetails">
+@if (fileInfo$ | async; as fileDetails) {
     <div class="card--row card--title d-flex align-items-center justify-content-between border-top">
         <div class="pt-3">
             <h2>File details</h2>
         </div>
     </div>
     <div class="card--row dataset-info mb-3">
-        <div class="dataset-info--block" *ngIf="fileDetails?.fileInfo?.version">
-            <div class="dataset-info--sub-block d-flex align-items-center">
-                <mat-icon class="fs-4 mr-2">preview</mat-icon>
-                <h2 class="dataset-info--subtitle">Version:</h2>
+        @if (fileDetails?.fileInfo?.version) {
+            <div class="dataset-info--block">
+                <div class="dataset-info--sub-block d-flex align-items-center">
+                    <mat-icon class="fs-4 mr-2">preview</mat-icon>
+                    <h2 class="dataset-info--subtitle">Version:</h2>
+                </div>
+                <div class="dataset-info--sub-block d-flex flex-row align-items-center">
+                    <button
+                        class="change-version-btn"
+                        (click)="navigateToAdjacentVersion(fileDetails, -1)"
+                        [disabled]="previousVersionBtnDisabled(fileDetails)"
+                    >
+                        &#9664;
+                    </button>
+                    @if (fileDetails?.fileInfo?.version) {
+                        <span data-test-id="file-version" class="d-block">
+                            {{ version ? version : fileDetails?.fileInfo?.version }}</span
+                        >
+                    }
+                    <button
+                        class="change-version-btn"
+                        (click)="navigateToAdjacentVersion(fileDetails, 1)"
+                        [disabled]="nextVersionBtnDisabled(fileDetails)"
+                    >
+                        &#9654;
+                    </button>
+                </div>
             </div>
-
-            <div class="dataset-info--sub-block d-flex flex-row align-items-center">
-                <button
-                    class="change-version-btn"
-                    (click)="navigateToAdjacentVersion(fileDetails, -1)"
-                    [disabled]="previousVersionBtnDisabled(fileDetails)"
-                >
-                    &#9664;
-                </button>
-                <span *ngIf="fileDetails?.fileInfo?.version" data-test-id="file-version" class="d-block">
-                    {{ version ? version : fileDetails?.fileInfo?.version }}</span
-                >
-                <button
-                    class="change-version-btn"
-                    (click)="navigateToAdjacentVersion(fileDetails, 1)"
-                    [disabled]="nextVersionBtnDisabled(fileDetails)"
-                >
-                    &#9654;
-                </button>
-            </div>
-        </div>
-
+        }
         <div class="dataset-info--block">
             <div class="dataset-info--sub-block d-flex align-items-center">
                 <mat-icon class="fs-4 mr-2">calendar_today</mat-icon>
                 <h2 class="dataset-info--subtitle">Created:</h2>
             </div>
-
             <div data-test-id="file-event-time" class="dataset-info--sub-block">
                 {{ (fileDetails?.fileInfo?.eventTime | date: DISPLAY_TIME_FORMAT) ?? "-" }}
             </div>
         </div>
-
         <div class="dataset-info--block">
             <div class="dataset-info--sub-block d-flex align-items-center">
                 <mat-icon class="fs-4 mr-2">chrome_reader_mode</mat-icon>
                 <h2 class="dataset-info--subtitle">Content Type:</h2>
             </div>
-
             <div data-test-id="file-content-type" class="dataset-info--sub-block">
                 {{ fileDetails?.fileInfo?.contentType ?? "-" }}
             </div>
         </div>
-
-        <div class="dataset-info--block" *ngIf="fileDetails?.fileInfo">
-            <div class="dataset-info--sub-block d-flex align-items-center">
-                <mat-icon class="fs-4 mr-2">folder_open</mat-icon>
-                <h2 class="dataset-info--subtitle">Size:</h2>
+        @if (fileDetails?.fileInfo) {
+            <div class="dataset-info--block">
+                <div class="dataset-info--sub-block d-flex align-items-center">
+                    <mat-icon class="fs-4 mr-2">folder_open</mat-icon>
+                    <h2 class="dataset-info--subtitle">Size:</h2>
+                </div>
+                <div class="dataset-info--sub-block">
+                    <p data-test-id="file-content-length" class="dataset-info--text">
+                        {{
+                            fileDetails?.fileInfo?.contentLength
+                                ? (fileDetails?.fileInfo?.contentLength! | displaySize)
+                                : "-"
+                        }}
+                    </p>
+                </div>
             </div>
-            <div class="dataset-info--sub-block">
-                <p data-test-id="file-content-length" class="dataset-info--text">
-                    {{
-                        fileDetails?.fileInfo?.contentLength
-                            ? (fileDetails?.fileInfo?.contentLength! | displaySize)
-                            : "-"
-                    }}
-                </p>
-            </div>
-        </div>
-
+        }
         <div class="dataset-info--block">
             <div class="dataset-info--sub-block d-flex align-items-center">
                 <mat-icon class="fs-4 mr-2">numbers</mat-icon>
                 <h2 class="dataset-info--subtitle">Content Hash:</h2>
             </div>
-
             <div data-test-id="file-content-hash" class="dataset-info--sub-block">
-                <app-display-hash
-                    *ngIf="fileDetails && fileDetails.fileInfo && fileDetails.fileInfo.contentHash; else noContentHash"
-                    [value]="fileDetails.fileInfo.contentHash"
-                    [showCopyButton]="true"
-                    [class]="'text-decoration-none text-dark mr-4 hashBlock'"
-                />
-                <ng-template #noContentHash>-</ng-template>
+                @if (fileDetails && fileDetails.fileInfo && fileDetails.fileInfo.contentHash) {
+                    <app-display-hash
+                        [value]="fileDetails.fileInfo.contentHash"
+                        [showCopyButton]="true"
+                        [class]="'text-decoration-none text-dark mr-4 hashBlock'"
+                    />
+                } @else {
+                    -
+                }
             </div>
         </div>
     </div>
-</ng-container>
+}

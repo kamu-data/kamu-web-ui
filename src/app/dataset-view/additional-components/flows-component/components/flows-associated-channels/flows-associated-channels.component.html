@@ -17,44 +17,49 @@
             multiple
             [disabled]="!isWebhookCategoryActive"
         >
-            <ng-container *ngFor="let item of WEBHOOKS_FILTERS_OPTIONS">
+            @for (item of WEBHOOKS_FILTERS_OPTIONS; track item) {
                 <mat-button-toggle [value]="item.state"
                     >{{ item.label }} {{ webhooksData.rollup[item.valueKey] }}</mat-button-toggle
                 >
-            </ng-container>
+            }
         </mat-button-toggle-group>
     </div>
 </div>
 
-<div class="d-inline-block mt-2 d-flex flex-row align-items-center" *ngIf="flowsSelectionState.subscriptions.length">
-    Selected subscriptions:
-    <mat-chip-set class="ms-2">
-        <mat-chip *ngFor="let webhook of flowsSelectionState.subscriptions">
-            {{ webhook }}
-            <button matChipRemove (click)="removeSelectedWebhook(webhook)">
-                <mat-icon>cancel</mat-icon>
-            </button>
-        </mat-chip>
-    </mat-chip-set>
-</div>
-
-<div
-    class="mt-4"
-    *ngIf="showSubprocessesTable"
-    [ngClass]="{
-        'mt-2': flowsSelectionState.subscriptions.length,
-        'mt-4': !flowsSelectionState.subscriptions.length,
-    }"
->
-    <div class="w-75">
-        <app-subscriptions-table
-            [subprocesses]="webhooksData.subprocesses"
-            [webhookTableFilters]="flowsSelectionState.webhookFilterButtons"
-            [datasetBasics]="datasetBasics"
-            (webhookSettingsClicked)="navigateToWebhookSettings($event)"
-            (subscriptionClicked)="navigateToSubscription($event)"
-            (pauseWebhookClicked)="pauseWebhook($event)"
-            (resumeWebhookClicked)="resumeWebhook($event)"
-        />
+@if (flowsSelectionState.subscriptions.length) {
+    <div class="d-inline-block mt-2 d-flex flex-row align-items-center">
+        Selected subscriptions:
+        <mat-chip-set class="ms-2">
+            @for (webhook of flowsSelectionState.subscriptions; track webhook) {
+                <mat-chip>
+                    {{ webhook }}
+                    <button matChipRemove (click)="removeSelectedWebhook(webhook)">
+                        <mat-icon>cancel</mat-icon>
+                    </button>
+                </mat-chip>
+            }
+        </mat-chip-set>
     </div>
-</div>
+}
+
+@if (showSubprocessesTable) {
+    <div
+        class="mt-4"
+        [ngClass]="{
+            'mt-2': flowsSelectionState.subscriptions.length,
+            'mt-4': !flowsSelectionState.subscriptions.length,
+        }"
+    >
+        <div class="w-75">
+            <app-subscriptions-table
+                [subprocesses]="webhooksData.subprocesses"
+                [webhookTableFilters]="flowsSelectionState.webhookFilterButtons"
+                [datasetBasics]="datasetBasics"
+                (webhookSettingsClicked)="navigateToWebhookSettings($event)"
+                (subscriptionClicked)="navigateToSubscription($event)"
+                (pauseWebhookClicked)="pauseWebhook($event)"
+                (resumeWebhookClicked)="resumeWebhook($event)"
+            />
+        </div>
+    </div>
+}

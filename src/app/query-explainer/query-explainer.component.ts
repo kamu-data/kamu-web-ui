@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
@@ -48,7 +48,6 @@ export interface QueryExplainerComponentData {
         //-----//
         AsyncPipe,
         FormsModule,
-        NgIf,
         //-----//
         VerifyResultSectionComponent,
         InputDataSectionComponent,

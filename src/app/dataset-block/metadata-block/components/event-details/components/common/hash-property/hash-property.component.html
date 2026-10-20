@@ -1,2 +1,5 @@
-<app-display-hash [value]="data" [showCopyButton]="true" *ngIf="data; else noData" />
-<ng-template #noData>-</ng-template>
+@if (data) {
+    <app-display-hash [value]="data" [showCopyButton]="true" />
+} @else {
+    -
+}

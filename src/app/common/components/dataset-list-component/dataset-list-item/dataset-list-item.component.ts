@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf } from "@angular/common";
 import { Component, inject, Input } from "@angular/core";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
@@ -31,8 +30,6 @@ import { NavigationService } from "src/app/services/navigation.service";
     styleUrls: ["./dataset-list-item.component.scss"],
     imports: [
         //-----//
-        NgFor,
-        NgIf,
         RouterLink,
         //-----//
         MatChipsModule,

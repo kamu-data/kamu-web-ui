@@ -35,6 +35,11 @@ describe("TopicsFieldComponent", () => {
         expect(component).toBeTruthy();
     });
 
+    it("should name the missing form array", () => {
+        component.controlName = "missing";
+        expect(() => component.items).toThrowError(`Form array "missing" is missing from the parent form`);
+    });
+
     it("should check add item", () => {
         component.addItem();
         expect(component.items.length).toEqual(1);

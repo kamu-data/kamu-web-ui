@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
@@ -38,7 +37,6 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        NgIf,
         ReactiveFormsModule,
         //-----//
         MatSlideToggleModule,

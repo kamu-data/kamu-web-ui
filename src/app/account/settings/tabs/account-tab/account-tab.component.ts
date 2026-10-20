@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
@@ -41,7 +40,6 @@ import { NavigationService } from "src/app/services/navigation.service";
         //-----//
         FormsModule,
         ReactiveFormsModule,
-        NgIf,
         //-----//
         MatDividerModule,
         //-----//

@@ -6,7 +6,7 @@
         [disabled]="(hasSecret$ | async)!"
     />
 
-    <ng-container *ngIf="secretChanges | async as secret; else noSecret">
+    @if (secretChanges | async; as secret) {
         <div class="d-flex flex-column secret-container">
             <label for="" class="form-label">Secret </label>
             <div class="d-flex flex-row">
@@ -27,9 +27,7 @@
         <div class="d-flex flex-wrap justify-content-end mt-4 mb-3">
             <button class="btn btn-success" (click)="navigateToListWebhooks()" type="button">Ok</button>
         </div>
-    </ng-container>
-
-    <ng-template #noSecret>
+    } @else {
         <div class="d-flex flex-wrap justify-content-end my-3">
             <button class="btn btn-light me-4" (click)="navigateToListWebhooks()" type="button">Cancel</button>
             <button
@@ -41,5 +39,5 @@
                 Add subscription
             </button>
         </div>
-    </ng-template>
+    }
 </div>

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DecimalPipe, NgIf, TitleCasePipe } from "@angular/common";
+import { DecimalPipe, TitleCasePipe } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -49,7 +49,6 @@ import { SessionStorageService } from "src/app/services/session-storage.service"
     imports: [
         //-----//
         DecimalPipe,
-        NgIf,
         TitleCasePipe,
         //-----//
         GraphComponent,

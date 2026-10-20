@@ -5,14 +5,15 @@
             tooltip="A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types."
             label="Schema:"
         >
-            <app-dynamic-table
-                *ngIf="datasetSchema"
-                [hasTableHeader]="true"
-                [idTable]="'set-data-schema-event'"
-                [columnDescriptors]="[{ columnName: 'name' }, { columnName: 'type' }]"
-                [dataRows]="schemaData(datasetSchema.fields)"
-                tableClass="font-monospace"
-            />
+            @if (datasetSchema) {
+                <app-dynamic-table
+                    [hasTableHeader]="true"
+                    [idTable]="'set-data-schema-event'"
+                    [columnDescriptors]="[{ columnName: 'name' }, { columnName: 'type' }]"
+                    [dataRows]="schemaData(datasetSchema.fields)"
+                    tableClass="font-monospace"
+                />
+            }
         </app-block-row-data>
     </div>
 </div>

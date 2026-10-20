@@ -17,20 +17,22 @@
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Name</th>
             <td mat-cell *matCellDef="let element; let rowIndex = index" class="font-monospace">
-                <div *ngIf="editingIndex === rowIndex; else viewName">
-                    <input
-                        appAutofocus
-                        [placeholder]="'Enter name'"
-                        *ngIf="editingRow"
-                        [(ngModel)]="editingRow.name"
-                        type="text"
-                        class="form-control"
-                        [attr.data-test-id]="tablePath + ':name-input'"
-                        (keydown.enter)="saveEditing(rowIndex)"
-                        (keydown.escape)="cancelEditing()"
-                    />
-                </div>
-                <ng-template #viewName>
+                @if (editingIndex === rowIndex) {
+                    <div>
+                        @if (editingRow) {
+                            <input
+                                appAutofocus
+                                [placeholder]="'Enter name'"
+                                [(ngModel)]="editingRow.name"
+                                type="text"
+                                class="form-control"
+                                [attr.data-test-id]="tablePath + ':name-input'"
+                                (keydown.enter)="saveEditing(rowIndex)"
+                                (keydown.escape)="cancelEditing()"
+                            />
+                        }
+                    </div>
+                } @else {
                     <span
                         class="field-name pt-2 d-flex align-items-center w-100"
                         [class.text-danger]="element.leafErrors.length > 0"
@@ -38,67 +40,63 @@
                     >
                         <span class="truncate-cell-name">
                             {{ element.field.name }}
-
-                            <mat-icon
-                                *ngIf="element.leafErrors.length > 0"
-                                class="inline-icon text-danger"
-                                [matTooltip]="element.errorTooltip"
-                                >warning</mat-icon
-                            >
-                            <mat-icon
-                                *ngIf="element.warnings.length > 0"
-                                class="inline-icon text-warning"
-                                [matTooltip]="element.warningTooltip"
-                                >warning</mat-icon
-                            >
-                            <mat-icon
-                                *ngIf="isEmptyStruct(element.field)"
-                                class="inline-icon text-danger empty-struct-icon"
-                                matTooltip="Structure has no fields"
-                                >warning</mat-icon
-                            >
+                            @if (element.leafErrors.length > 0) {
+                                <mat-icon class="inline-icon text-danger" [matTooltip]="element.errorTooltip"
+                                    >warning</mat-icon
+                                >
+                            }
+                            @if (element.warnings.length > 0) {
+                                <mat-icon class="inline-icon text-warning" [matTooltip]="element.warningTooltip"
+                                    >warning</mat-icon
+                                >
+                            }
+                            @if (isEmptyStruct(element.field)) {
+                                <mat-icon
+                                    class="inline-icon text-danger empty-struct-icon"
+                                    matTooltip="Structure has no fields"
+                                    >warning</mat-icon
+                                >
+                            }
                         </span>
                     </span>
-                </ng-template>
+                }
             </td>
         </ng-container>
 
         <ng-container matColumnDef="type">
             <th mat-header-cell *matHeaderCellDef>Type</th>
             <td mat-cell *matCellDef="let element; let rowIndex = index" class="font-monospace">
-                <div
-                    *ngIf="editingIndex === rowIndex; else viewType"
-                    class="d-flex justify-content-between py-3 type-editor-row"
-                >
-                    <div class="type-editor-slot">
-                        <app-type-editor
-                            #typeEditor
-                            *ngIf="editingRow?.type"
-                            [value]="editingRow!.type"
-                            [typePath]="tablePath + ':type:' + (editingRow!.name || '#' + rowIndex)"
-                            (typeChange)="typeChangeHandle($event)"
-                        />
+                @if (editingIndex === rowIndex) {
+                    <div class="d-flex justify-content-between py-3 type-editor-row">
+                        <div class="type-editor-slot">
+                            @if (editingRow?.type) {
+                                <app-type-editor
+                                    #typeEditor
+                                    [value]="editingRow!.type"
+                                    [typePath]="tablePath + ':type:' + (editingRow!.name || '#' + rowIndex)"
+                                    (typeChange)="typeChangeHandle($event)"
+                                />
+                            }
+                        </div>
+                        <div class="action-buttons d-flex ms-2 align-items-center">
+                            <button
+                                class="d-flex align-items-center justify-content-center edit-button mt-1"
+                                (click)="saveEditing(rowIndex)"
+                                [disabled]="!editingRow?.name"
+                                [attr.data-test-id]="tablePath + ':save-field'"
+                            >
+                                <mat-icon class="action-button text-muted" svgIcon="check" />
+                            </button>
+                            <button
+                                class="d-flex align-items-center justify-content-center delete-button mt-1"
+                                (click)="cancelEditing()"
+                                [attr.data-test-id]="tablePath + ':cancel-edit'"
+                            >
+                                <mat-icon class="action-button text-muted" svgIcon="close"></mat-icon>
+                            </button>
+                        </div>
                     </div>
-                    <div class="action-buttons d-flex ms-2 align-items-center">
-                        <button
-                            class="d-flex align-items-center justify-content-center edit-button mt-1"
-                            (click)="saveEditing(rowIndex)"
-                            [disabled]="!editingRow?.name"
-                            [attr.data-test-id]="tablePath + ':save-field'"
-                        >
-                            <mat-icon class="action-button text-muted" svgIcon="check" />
-                        </button>
-                        <button
-                            class="d-flex align-items-center justify-content-center delete-button mt-1"
-                            (click)="cancelEditing()"
-                            [attr.data-test-id]="tablePath + ':cancel-edit'"
-                        >
-                            <mat-icon class="action-button text-muted" svgIcon="close"></mat-icon>
-                        </button>
-                    </div>
-                </div>
-
-                <ng-template #viewType>
+                } @else {
                     <div class="d-flex align-items-center justify-content-between type-view-row pt-1">
                         <div class="truncate-cell-type">{{ odfType2String(element.field) }}</div>
                         <div class="action-buttons d-flex">
@@ -120,35 +118,35 @@
                             >
                                 <mat-icon class="action-button text-muted" svgIcon="delete"></mat-icon>
                             </button>
-                            <mat-icon
-                                *ngIf="editingIndex !== rowIndex"
-                                class="drag-handle text-muted drag-margin"
-                                [class.drag-handle-disabled]="dragDisabled"
-                                cdkDragHandle
-                                [attr.data-test-id]="
-                                    tablePath + ':drag-handle:' + (element.field.name || '#' + rowIndex)
-                                "
-                                >drag_indicator</mat-icon
-                            >
+                            @if (editingIndex !== rowIndex) {
+                                <mat-icon
+                                    class="drag-handle text-muted drag-margin"
+                                    [class.drag-handle-disabled]="dragDisabled"
+                                    cdkDragHandle
+                                    [attr.data-test-id]="
+                                        tablePath + ':drag-handle:' + (element.field.name || '#' + rowIndex)
+                                    "
+                                    >drag_indicator</mat-icon
+                                >
+                            }
                         </div>
                     </div>
-                    <div
-                        *ngFor="let nestedTable of element.nestedTables; trackBy: trackByNestedStructPath"
-                        class="nested-struct-container mb-2"
-                    >
-                        <app-edit-schema-table
-                            #nestedEditSchemaTable
-                            [fields]="nestedTable.fields"
-                            [depth]="depth + 1"
-                            [tablePath]="nestedTable.tablePath"
-                            [parentDragDisabled]="dragDisabled"
-                            [editingCoordinator]="activeEditingCoordinator"
-                            [errors]="nestedTable.errors"
-                            (fieldsChange)="onNestedFieldsChange(rowIndex, nestedTable.path, $event)"
-                            (editingStateChange)="onNestedEditingStateChange(nestedTable.tablePath, $event)"
-                        />
-                    </div>
-                </ng-template>
+                    @for (nestedTable of element.nestedTables; track trackByNestedStructPath(nestedTable)) {
+                        <div class="nested-struct-container mb-2">
+                            <app-edit-schema-table
+                                #nestedEditSchemaTable
+                                [fields]="nestedTable.fields"
+                                [depth]="depth + 1"
+                                [tablePath]="nestedTable.tablePath"
+                                [parentDragDisabled]="dragDisabled"
+                                [editingCoordinator]="activeEditingCoordinator"
+                                [errors]="nestedTable.errors"
+                                (fieldsChange)="onNestedFieldsChange(rowIndex, nestedTable.path, $event)"
+                                (editingStateChange)="onNestedEditingStateChange(nestedTable.tablePath, $event)"
+                            />
+                        </div>
+                    }
+                }
             </td>
         </ng-container>
 

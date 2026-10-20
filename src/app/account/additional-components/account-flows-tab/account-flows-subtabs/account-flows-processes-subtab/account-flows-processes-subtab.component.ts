@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatButtonToggleChange, MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -77,10 +77,6 @@ import { ProcessDatasetCardInteractionService } from "src/app/services/process-d
         //-----//
         AsyncPipe,
         FormsModule,
-        NgIf,
-        NgFor,
-        NgSwitch,
-        NgSwitchCase,
         //-----//
         MatIconModule,
         MatButtonToggleModule,
@@ -303,7 +299,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
         this.refreshNow();
     }
 
-    public trackByCardId(index: number, item: AccountFlowProcessCard): string {
+    public trackByCardId(item: AccountFlowProcessCard): string {
         if ("dataset" in item) {
             return item.dataset.id;
         } else {

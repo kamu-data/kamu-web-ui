@@ -1,24 +1,31 @@
-<div [formGroup]="form" *ngIf="form">
-    <div class="d-flex">
-        <app-tooltip-icon [tooltip]="tooltip" />
-        <label class="form-label">{{ label }} <span *ngIf="requiredField" class="text-danger">*</span></label>
+@if (form) {
+    <div [formGroup]="form">
+        <div class="d-flex">
+            <app-tooltip-icon [tooltip]="tooltip" />
+            <label class="form-label"
+                >{{ label }}
+                @if (requiredField) {
+                    <span class="text-danger">*</span>
+                }
+            </label>
+        </div>
+        <input
+            class="form-control"
+            [placeholder]="placeholder"
+            [formControlName]="controlName"
+            [attr.data-test-id]="dataTestId"
+            [value]="value"
+            trim
+            #control
+        />
+        <div
+            class="text-danger fs-12"
+            [input]="control"
+            [fieldControl]="form.get(controlName)"
+            [fieldLabel]="label"
+            [appFieldError]="['required', 'pattern', 'maxlength', 'noneOf']"
+            [group]="form"
+            [dataTestId]="'error-message'"
+        ></div>
     </div>
-    <input
-        class="form-control"
-        [placeholder]="placeholder"
-        [formControlName]="controlName"
-        [attr.data-test-id]="dataTestId"
-        [value]="value"
-        trim
-        #control
-    />
-    <div
-        class="text-danger fs-12"
-        [input]="control"
-        [fieldControl]="form.get(controlName)"
-        [fieldLabel]="label"
-        [appFieldError]="['required', 'pattern', 'maxlength', 'noneOf']"
-        [group]="form"
-        [dataTestId]="'error-message'"
-    ></div>
-</div>
+}

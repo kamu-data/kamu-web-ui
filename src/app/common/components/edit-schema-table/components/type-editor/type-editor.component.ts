@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -45,7 +44,7 @@ import {
 
 @Component({
     selector: "app-type-editor",
-    imports: [NgIf, FormsModule, NgSelectModule, TypeEditorComponent, forwardRef(() => EditSchemaTableComponent)],
+    imports: [FormsModule, NgSelectModule, TypeEditorComponent, forwardRef(() => EditSchemaTableComponent)],
     templateUrl: "./type-editor.component.html",
     styleUrl: "./type-editor.component.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,

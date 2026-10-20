@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
@@ -36,7 +36,6 @@ import { WebhooksService } from "src/app/services/webhooks.service";
     imports: [
         //-----//
         AsyncPipe,
-        NgIf,
         FormsModule,
         ReactiveFormsModule,
         //-----//

@@ -6,7 +6,6 @@
  */
 
 import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { FormArray, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatStepperModule } from "@angular/material/stepper";
@@ -45,7 +44,6 @@ import { EditorModule } from "src/app/editor/editor.module";
     imports: [
         //-----//
         FormsModule,
-        NgIf,
         ReactiveFormsModule,
         RouterLink,
         //-----//

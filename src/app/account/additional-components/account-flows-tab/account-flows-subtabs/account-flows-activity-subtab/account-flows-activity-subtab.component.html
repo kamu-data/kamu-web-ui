@@ -1,158 +1,161 @@
-<div *ngIf="flowConnectionData$ | async as flowConnectionData; else loading">
-    <ng-container *ngIf="flowConnectionData.flowsData.connectionDataForWidget.nodes.length">
-        <div class="d-flex justify-content-between">
-            <div class="mt-4">
-                <h2 class="title">
-                    {{ flowConnectionData.flowsData.connectionDataForWidget.totalCount }} Account flow run(s)
-                </h2>
-                <div>
-                    <span class="text-muted"> Compute work associated with datasets belonging to this account </span>
+@if (flowConnectionData$ | async; as flowConnectionData) {
+    <div>
+        @if (flowConnectionData.flowsData.connectionDataForWidget.nodes.length) {
+            <div class="d-flex justify-content-between">
+                <div class="mt-4">
+                    <h2 class="title">
+                        {{ flowConnectionData.flowsData.connectionDataForWidget.totalCount }} Account flow run(s)
+                    </h2>
+                    <div>
+                        <span class="text-muted">
+                            Compute work associated with datasets belonging to this account
+                        </span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="search-result-container__content my-4">
-            <app-tile-base-widget
-                [nodes]="flowConnectionData.flowsData.connectionDataForWidget.nodes"
-                [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
-                [displayAlias]="true"
-            ></app-tile-base-widget>
-        </div>
-        <div>
-            <app-flow-table-panel-filters
-                [accountFlowInitiators]="flowConnectionData.flowInitiators"
-                [onlySystemFlows]="onlySystemFlows"
-                [hasDatasetColumn]="true"
-                [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
-                [selectedDatasetItems]="selectedDatasetItems"
-                [selectedAccountItems]="selectedAccountItems"
-                [selectedStatusItems]="selectedStatusItems"
-                (searchByFiltersChange)="onSearchByFiltersChange($event)"
-                (resetFiltersChange)="onResetFilters()"
-            />
-        </div>
-
-        <div class="mt-2">
-            <ul
-                ngbNav
-                #navStatus="ngbNav"
-                [(activeId)]="accountFlowsData.flowGroup[0]"
-                (navChange)="onNavStatusChange($event)"
-                class="nav-tabs"
-            >
-                <li [ngbNavItem]="FlowStatus.Finished">
-                    <button ngbNavLink>Finished</button>
-                    <ng-template ngbNavContent>
-                        <div *ngIf="loadingFlows$ | async" class="mt-4 w-50 mx-auto">
-                            <mat-progress-bar data-test-id="loading-progress-bar" mode="indeterminate" />
-                            <div class="text-center pt-4">Loading...</div>
-                        </div>
-                        <app-flows-table
-                            [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
-                            [filterByStatus]="filterByStatus"
-                            [onlySystemFlows]="onlySystemFlows"
-                            [searchByDataset]="searchByDataset"
-                            [searchByAccount]="searchByAccount"
-                            [tableOptions]="{
-                                displayColumns: DISPLAY_COLUMNS,
-                            }"
-                            [totalCount]="flowConnectionData.flowsData.connectionDataForTable.totalCount"
-                            [accountFlowInitiators]="flowConnectionData.flowInitiators"
-                            [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
-                            (abortFlowChange)="onAbortFlow($event)"
-                        ></app-flows-table>
-                        <div class="mt-50px">
-                            <app-pagination
-                                [currentPage]="
-                                    flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1
-                                "
-                                [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
-                                (pageChangeEvent)="onPageChange($event)"
-                            ></app-pagination>
-                        </div>
-                    </ng-template>
-                </li>
-                <li [ngbNavItem]="FlowStatus.Running">
-                    <button ngbNavLink>Running</button>
-                    <ng-template ngbNavContent>
-                        <div *ngIf="loadingFlows$ | async" class="mt-4 w-50 mx-auto">
-                            <mat-progress-bar data-test-id="loading-progress-bar" mode="indeterminate" />
-                            <div class="text-center pt-4">Loading...</div>
-                        </div>
-                        <app-flows-table
-                            [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
-                            [filterByStatus]="filterByStatus"
-                            [onlySystemFlows]="onlySystemFlows"
-                            [searchByDataset]="searchByDataset"
-                            [searchByAccount]="searchByAccount"
-                            [tableOptions]="{
-                                displayColumns: DISPLAY_COLUMNS,
-                            }"
-                            [totalCount]="flowConnectionData.flowsData.connectionDataForTable.totalCount"
-                            [accountFlowInitiators]="flowConnectionData.flowInitiators"
-                            [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
-                            (searchByFiltersChange)="onSearchByFiltersChange($event)"
-                            (abortFlowChange)="onAbortFlow($event)"
-                        ></app-flows-table>
-                        <div class="mt-50px">
-                            <app-pagination
-                                [currentPage]="
-                                    flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1
-                                "
-                                [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
-                                (pageChangeEvent)="onPageChange($event)"
-                            ></app-pagination>
-                        </div>
-                    </ng-template>
-                </li>
-                <li [ngbNavItem]="FlowStatus.Waiting">
-                    <button ngbNavLink>Waiting</button>
-                    <ng-template ngbNavContent>
-                        <div *ngIf="loadingFlows$ | async" class="mt-4 w-50 mx-auto">
-                            <mat-progress-bar data-test-id="loading-progress-bar" mode="indeterminate" />
-                            <div class="text-center pt-4">Loading...</div>
-                        </div>
-                        <app-flows-table
-                            [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
-                            [filterByStatus]="filterByStatus"
-                            [onlySystemFlows]="onlySystemFlows"
-                            [searchByDataset]="searchByDataset"
-                            [searchByAccount]="searchByAccount"
-                            [tableOptions]="{
-                                displayColumns: DISPLAY_COLUMNS,
-                            }"
-                            [totalCount]="flowConnectionData.flowsData.connectionDataForTable.totalCount"
-                            [accountFlowInitiators]="flowConnectionData.flowInitiators"
-                            [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
-                            (searchByFiltersChange)="onSearchByFiltersChange($event)"
-                            (abortFlowChange)="onAbortFlow($event)"
-                        ></app-flows-table>
-                        <div class="mt-50px">
-                            <app-pagination
-                                [currentPage]="
-                                    flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1
-                                "
-                                [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
-                                (pageChangeEvent)="onPageChange($event)"
-                            ></app-pagination>
-                        </div>
-                    </ng-template>
-                </li>
-            </ul>
-            <div [ngbNavOutlet]="navStatus" class="mt-2"></div>
-        </div>
-    </ng-container>
-
-    <div
-        class="mt-4"
-        data-test-id="empty-block"
-        *ngIf="!flowConnectionData.flowsData.connectionDataForWidget.nodes.length"
-    >
-        No flows yet in datasets belonging to this account
+            <div class="search-result-container__content my-4">
+                <app-tile-base-widget
+                    [nodes]="flowConnectionData.flowsData.connectionDataForWidget.nodes"
+                    [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
+                    [displayAlias]="true"
+                ></app-tile-base-widget>
+            </div>
+            <div>
+                <app-flow-table-panel-filters
+                    [accountFlowInitiators]="flowConnectionData.flowInitiators"
+                    [onlySystemFlows]="onlySystemFlows"
+                    [hasDatasetColumn]="true"
+                    [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
+                    [selectedDatasetItems]="selectedDatasetItems"
+                    [selectedAccountItems]="selectedAccountItems"
+                    [selectedStatusItems]="selectedStatusItems"
+                    (searchByFiltersChange)="onSearchByFiltersChange($event)"
+                    (resetFiltersChange)="onResetFilters()"
+                />
+            </div>
+            <div class="mt-2">
+                <ul
+                    ngbNav
+                    #navStatus="ngbNav"
+                    [(activeId)]="accountFlowsData.flowGroup[0]"
+                    (navChange)="onNavStatusChange($event)"
+                    class="nav-tabs"
+                >
+                    <li [ngbNavItem]="FlowStatus.Finished">
+                        <button ngbNavLink>Finished</button>
+                        <ng-template ngbNavContent>
+                            @if (loadingFlows$ | async) {
+                                <div class="mt-4 w-50 mx-auto">
+                                    <mat-progress-bar data-test-id="loading-progress-bar" mode="indeterminate" />
+                                    <div class="text-center pt-4">Loading...</div>
+                                </div>
+                            }
+                            <app-flows-table
+                                [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
+                                [filterByStatus]="filterByStatus"
+                                [onlySystemFlows]="onlySystemFlows"
+                                [searchByDataset]="searchByDataset"
+                                [searchByAccount]="searchByAccount"
+                                [tableOptions]="{
+                                    displayColumns: DISPLAY_COLUMNS,
+                                }"
+                                [totalCount]="flowConnectionData.flowsData.connectionDataForTable.totalCount"
+                                [accountFlowInitiators]="flowConnectionData.flowInitiators"
+                                [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
+                                (abortFlowChange)="onAbortFlow($event)"
+                            ></app-flows-table>
+                            <div class="mt-50px">
+                                <app-pagination
+                                    [currentPage]="
+                                        flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1
+                                    "
+                                    [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
+                                    (pageChangeEvent)="onPageChange($event)"
+                                ></app-pagination>
+                            </div>
+                        </ng-template>
+                    </li>
+                    <li [ngbNavItem]="FlowStatus.Running">
+                        <button ngbNavLink>Running</button>
+                        <ng-template ngbNavContent>
+                            @if (loadingFlows$ | async) {
+                                <div class="mt-4 w-50 mx-auto">
+                                    <mat-progress-bar data-test-id="loading-progress-bar" mode="indeterminate" />
+                                    <div class="text-center pt-4">Loading...</div>
+                                </div>
+                            }
+                            <app-flows-table
+                                [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
+                                [filterByStatus]="filterByStatus"
+                                [onlySystemFlows]="onlySystemFlows"
+                                [searchByDataset]="searchByDataset"
+                                [searchByAccount]="searchByAccount"
+                                [tableOptions]="{
+                                    displayColumns: DISPLAY_COLUMNS,
+                                }"
+                                [totalCount]="flowConnectionData.flowsData.connectionDataForTable.totalCount"
+                                [accountFlowInitiators]="flowConnectionData.flowInitiators"
+                                [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
+                                (searchByFiltersChange)="onSearchByFiltersChange($event)"
+                                (abortFlowChange)="onAbortFlow($event)"
+                            ></app-flows-table>
+                            <div class="mt-50px">
+                                <app-pagination
+                                    [currentPage]="
+                                        flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1
+                                    "
+                                    [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
+                                    (pageChangeEvent)="onPageChange($event)"
+                                ></app-pagination>
+                            </div>
+                        </ng-template>
+                    </li>
+                    <li [ngbNavItem]="FlowStatus.Waiting">
+                        <button ngbNavLink>Waiting</button>
+                        <ng-template ngbNavContent>
+                            @if (loadingFlows$ | async) {
+                                <div class="mt-4 w-50 mx-auto">
+                                    <mat-progress-bar data-test-id="loading-progress-bar" mode="indeterminate" />
+                                    <div class="text-center pt-4">Loading...</div>
+                                </div>
+                            }
+                            <app-flows-table
+                                [nodes]="flowConnectionData.flowsData.connectionDataForTable.nodes"
+                                [filterByStatus]="filterByStatus"
+                                [onlySystemFlows]="onlySystemFlows"
+                                [searchByDataset]="searchByDataset"
+                                [searchByAccount]="searchByAccount"
+                                [tableOptions]="{
+                                    displayColumns: DISPLAY_COLUMNS,
+                                }"
+                                [totalCount]="flowConnectionData.flowsData.connectionDataForTable.totalCount"
+                                [accountFlowInitiators]="flowConnectionData.flowInitiators"
+                                [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
+                                (searchByFiltersChange)="onSearchByFiltersChange($event)"
+                                (abortFlowChange)="onAbortFlow($event)"
+                            ></app-flows-table>
+                            <div class="mt-50px">
+                                <app-pagination
+                                    [currentPage]="
+                                        flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1
+                                    "
+                                    [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
+                                    (pageChangeEvent)="onPageChange($event)"
+                                ></app-pagination>
+                            </div>
+                        </ng-template>
+                    </li>
+                </ul>
+                <div [ngbNavOutlet]="navStatus" class="mt-2"></div>
+            </div>
+        }
+        @if (!flowConnectionData.flowsData.connectionDataForWidget.nodes.length) {
+            <div class="mt-4" data-test-id="empty-block">No flows yet in datasets belonging to this account</div>
+        }
     </div>
-</div>
-<ng-template #loading>
+} @else {
     <div class="position-relative mb-4">
         <mat-progress-bar data-test-id="init-progress-bar" class="position-absolute" mode="indeterminate" />
     </div>
     <div class="text-center pt-4">Loading...</div>
-</ng-template>
+}

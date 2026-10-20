@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     Component,
@@ -67,7 +67,6 @@ import ProjectLinks from "src/app/project-links";
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        NgIf,
         NgClass,
         RouterLink,
         FormsModule,

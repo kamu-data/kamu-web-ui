@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { BaseComponent } from "@common/components/base.component";
@@ -19,8 +18,6 @@ import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/com
     templateUrl: "./set-info-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        //-----//
-        NgIf,
         //-----//
         BlockRowDataComponent,
         CardsPropertyComponent,

@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
@@ -28,7 +27,6 @@ import {
     selector: "app-flow-table-panel-filters",
     imports: [
         //-----//
-        NgIf,
         FormsModule,
         //-----//
         AngularMultiSelectModule,

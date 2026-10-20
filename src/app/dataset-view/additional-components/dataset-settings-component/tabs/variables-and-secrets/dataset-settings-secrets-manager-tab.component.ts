@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit, ViewChild } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
@@ -53,7 +52,6 @@ export interface EnvVariableElement {
     imports: [
         //-----//
         FormsModule,
-        NgIf,
         //-----//
         MatDividerModule,
         MatIconModule,

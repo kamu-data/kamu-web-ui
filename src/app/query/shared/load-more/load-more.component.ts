@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf } from "@angular/common";
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
@@ -21,8 +20,6 @@ import AppValues from "@common/values/app.values";
     imports: [
         //-----//
         FormsModule,
-        NgIf,
-        NgFor,
         //-----//
         MatButtonModule,
         MatIconModule,

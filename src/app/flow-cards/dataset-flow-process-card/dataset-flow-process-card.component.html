@@ -4,18 +4,21 @@
         <div class="d-flex fs-12 align-items-center justify-content-between">
             <div>
                 <span class="label label--secondary v-align-middle dataset">Dataset</span>
-                <img *ngIf="summary.runningSince" [src]="'assets/images/gear.gif'" class="dynamic-icon ms-2" />
-                <span class="ms-1 fs-12 text-muted" *ngIf="summary.runningSince">{{
-                    durationProcessRunning(summary.runningSince)
-                }}</span>
+                @if (summary.runningSince) {
+                    <img [src]="'assets/images/gear.gif'" class="dynamic-icon ms-2" />
+                }
+                @if (summary.runningSince) {
+                    <span class="ms-1 fs-12 text-muted">{{ durationProcessRunning(summary.runningSince) }}</span>
+                }
             </div>
 
-            <a
-                *ngIf="showFlowsHistoryLink"
-                [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name, DatasetViewTypeEnum.Flows]"
-                [queryParams]="{ category: 'updates' }"
-                >See flows</a
-            >
+            @if (showFlowsHistoryLink) {
+                <a
+                    [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name, DatasetViewTypeEnum.Flows]"
+                    [queryParams]="{ category: 'updates' }"
+                    >See flows</a
+                >
+            }
         </div>
         <div class="mt-3 mb-2 d-flex flex-row gap-3 align-items-center">
             <div>

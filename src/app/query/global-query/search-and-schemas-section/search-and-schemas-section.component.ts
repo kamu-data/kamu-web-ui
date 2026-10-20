@@ -6,7 +6,6 @@
  */
 
 import { CdkAccordionModule } from "@angular/cdk/accordion";
-import { NgFor, NgIf } from "@angular/common";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -60,8 +59,6 @@ import { SqlQueryService } from "src/app/services/sql-query.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        NgIf,
-        NgFor,
         FormsModule,
         CdkAccordionModule,
         //-----//

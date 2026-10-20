@@ -3,26 +3,30 @@
         <app-tooltip-icon [tooltip]="tooltip" />
         <label class="form-label">{{ label }} </label>
     </div>
-    <div class="ms-4" *ngFor="let control of controlDescriptors">
-        <div class="form-check">
-            <input
-                [id]="controlName + '-' + control.value"
-                class="form-check-input"
-                type="radio"
-                [formControlName]="controlName"
-                [name]="controlName"
-                [value]="control.value"
-            />
-            <label class="form-check-label" [for]="controlName + '-' + control.value"> {{ control.label }} </label>
+    @for (control of controlDescriptors; track control) {
+        <div class="ms-4">
+            <div class="form-check">
+                <input
+                    [id]="controlName + '-' + control.value"
+                    class="form-check-input"
+                    type="radio"
+                    [formControlName]="controlName"
+                    [name]="controlName"
+                    [value]="control.value"
+                />
+                <label class="form-check-label" [for]="controlName + '-' + control.value"> {{ control.label }} </label>
+            </div>
         </div>
-    </div>
-    <div class="mt-3" *ngIf="currentJsonKind === ReadKind.JSON">
-        <app-input-field
-            [form]="form"
-            [controlName]="READ_SUB_PATH_CONTROL"
-            [label]="READ_SUB_PATH_TOOLTIP"
-            [placeholder]="READ_SUB_PATH_PLACEHOLDER"
-            [tooltip]="TOOLTIP_SUB_PATH"
-        />
-    </div>
+    }
+    @if (currentJsonKind === ReadKind.JSON) {
+        <div class="mt-3">
+            <app-input-field
+                [form]="form"
+                [controlName]="READ_SUB_PATH_CONTROL"
+                [label]="READ_SUB_PATH_TOOLTIP"
+                [placeholder]="READ_SUB_PATH_PLACEHOLDER"
+                [tooltip]="TOOLTIP_SUB_PATH"
+            />
+        </div>
+    }
 </div>

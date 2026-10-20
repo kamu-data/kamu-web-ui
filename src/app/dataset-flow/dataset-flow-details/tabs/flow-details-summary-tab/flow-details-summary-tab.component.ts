@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DatePipe, NgIf, TitleCasePipe, UpperCasePipe } from "@angular/common";
+import { DatePipe, TitleCasePipe, UpperCasePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
@@ -20,7 +20,7 @@ import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.h
     selector: "app-flow-details-summary-tab",
     templateUrl: "./flow-details-summary-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, UpperCasePipe, TitleCasePipe, DatePipe],
+    imports: [UpperCasePipe, TitleCasePipe, DatePipe],
 })
 export class FlowDetailsSummaryTabComponent {
     @Input(RoutingResolvers.FLOW_DETAILS_SUMMARY_KEY) public response: DatasetFlowByIdResponse;

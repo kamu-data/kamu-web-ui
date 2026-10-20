@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { DataHelpers } from "@common/helpers/data.helpers";
@@ -18,7 +17,6 @@ import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/componen
     templateUrl: "./merge-strategy-property.component.html",
     styleUrls: ["./merge-strategy-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf],
 })
 export class MergeStrategyPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

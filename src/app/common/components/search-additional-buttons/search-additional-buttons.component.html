@@ -1,4 +1,4 @@
-<ng-template [ngIf]="shouldMinimizeSearchAdditionalButtons">
+@if (shouldMinimizeSearchAdditionalButtons) {
     <div class="search-additional-buttons-block">
         <button
             mat-icon-button
@@ -16,8 +16,7 @@
             [loadingListDownsreams]="loadingListDownsreams"
         ></app-search-additional-buttons-nav>
     </mat-menu>
-</ng-template>
-<ng-template [ngIf]="!shouldMinimizeSearchAdditionalButtons" id="bigSearchAdditionalButtons">
+} @else {
     <app-search-additional-buttons-nav
         [datasetBasics]="datasetBasics"
         (searchAdditionalButtonsMethod)="onClick($event)"
@@ -27,4 +26,4 @@
         [searchAdditionalButtonsData]="searchAdditionalButtonsData"
         [loadingListDownsreams]="loadingListDownsreams"
     ></app-search-additional-buttons-nav>
-</ng-template>
+}

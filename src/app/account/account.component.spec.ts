@@ -99,6 +99,18 @@ describe("AccountComponent", () => {
         expect(component.isLoggedUser(mockAccountDetails)).toEqual(true);
     });
 
+    it("should link the avatar image for a visitor", () => {
+        fixture.detectChanges();
+        const avatarLink = findElementByDataTestId(fixture, "account-avatar-link") as HTMLLinkElement;
+        expect(avatarLink.href).toEqual(TEST_AVATAR_URL);
+    });
+
+    it("should not link the avatar image for the account owner", () => {
+        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        fixture.detectChanges();
+        expect(findElementByDataTestId(fixture, "account-avatar-link")).toBeUndefined();
+    });
+
     it("should check API calls when account is found", () => {
         fixture.detectChanges();
         expect(fetchAccountByNameSpy).toHaveBeenCalledOnceWith(mockAccountDetails.accountName);

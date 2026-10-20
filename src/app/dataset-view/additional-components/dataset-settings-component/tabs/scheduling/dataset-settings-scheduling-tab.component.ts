@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -41,7 +40,6 @@ import { FlowStopPolicyFormValue } from "src/app/dataset-view/additional-compone
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        NgIf,
         FormsModule,
         ReactiveFormsModule,
         //-----//

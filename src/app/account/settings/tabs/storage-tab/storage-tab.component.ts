@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DecimalPipe, NgFor, NgIf, NgTemplateOutlet } from "@angular/common";
+import { DecimalPipe, NgTemplateOutlet } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -29,8 +29,6 @@ import { AppConfigService } from "src/app/app-config.service";
     imports: [
         //-----//
         DecimalPipe,
-        NgFor,
-        NgIf,
         NgTemplateOutlet,
         //-----//
         MatDividerModule,
@@ -70,10 +68,6 @@ export class StorageTabComponent {
     /** Complements the rounded used percentage, so that both always add up to 100% */
     public get remainingPercent(): number {
         return Math.max(100 - Math.round(this.usedPercent), 0);
-    }
-
-    public trackBySegmentId(_index: number, segment: StorageUsageSegment): string {
-        return segment.id;
     }
 
     private static usedPercent(quota: AccountStorageQuota): number {

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { NgClass, NgFor, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { Component } from "@angular/core";
 import { MatDividerModule } from "@angular/material/divider";
 
@@ -30,43 +30,45 @@ import { DynamicComponent } from "@common/components/modal/dynamic.component";
                         {{ context && context.title }}
                     </h2>
 
-                    <p
-                        *ngIf="context && context.description"
-                        style="text-align:left; font-size:12px;"
-                        class="modal__msg"
-                        data-test-id="modalDescription"
-                    >
-                        <img
-                            style="padding-bottom:2px"
-                            src="assets/images/information.png"
-                            alt=""
-                            width="14"
-                            height="14"
-                        />
-                        {{ context.description }}
-                    </p>
+                    @if (context && context.description) {
+                        <p style="text-align:left; font-size:12px;" class="modal__msg" data-test-id="modalDescription">
+                            <img
+                                style="padding-bottom:2px"
+                                src="assets/images/information.png"
+                                alt=""
+                                width="14"
+                                height="14"
+                            />
+                            {{ context.description }}
+                        </p>
+                    }
 
-                    <p
-                        *ngIf="context && context.warningText"
-                        style="text-align:center; font-size:12px; color:red;"
-                        class="modal__msg"
-                        data-test-id="modalWarning"
-                    >
-                        {{ context.warningText }}
-                    </p>
+                    @if (context && context.warningText) {
+                        <p
+                            style="text-align:center; font-size:12px; color:red;"
+                            class="modal__msg"
+                            data-test-id="modalWarning"
+                        >
+                            {{ context.warningText }}
+                        </p>
+                    }
 
-                    <p *ngIf="context && context.message" class="modal__msg mt-4" data-test-id="modalMessage">
-                        {{ context.message }}
-                    </p>
+                    @if (context && context.message) {
+                        <p class="modal__msg mt-4" data-test-id="modalMessage">
+                            {{ context.message }}
+                        </p>
+                    }
 
-                    <ng-container *ngIf="context && context.listDescription">
+                    @if (context && context.listDescription) {
                         <mat-divider class="mb-4" />
                         <ul>
-                            <li *ngFor="let item of context.listDescription" style="text-align:left" class="mb-1">
-                                <span class="fs-12 text-muted"> {{ item }}</span>
-                            </li>
+                            @for (item of context.listDescription; track item) {
+                                <li style="text-align:left" class="mb-1">
+                                    <span class="fs-12 text-muted"> {{ item }}</span>
+                                </li>
+                            }
                         </ul>
-                    </ng-container>
+                    }
                 </div>
                 <div
                     class="modal__dialog__footer-block"
@@ -76,47 +78,47 @@ import { DynamicComponent } from "@common/components/modal/dynamic.component";
                         alignItems: 'center',
                     }"
                 >
-                    <button
-                        [class]="
-                            context.lastButtonText || context.tooLastButtonText
-                                ? 'modal__btn modal__btn-first'
-                                : 'modal__btn'
-                        "
-                        data-test-id="yesButton"
-                        *ngIf="context && context.yesButtonText"
-                        (click)="onClick(true, context.locationBack)"
-                    >
-                        {{ context.yesButtonText }}
-                    </button>
+                    @if (context && context.yesButtonText) {
+                        <button
+                            [class]="
+                                context.lastButtonText || context.tooLastButtonText
+                                    ? 'modal__btn modal__btn-first'
+                                    : 'modal__btn'
+                            "
+                            data-test-id="yesButton"
+                            (click)="onClick(true, context.locationBack)"
+                        >
+                            {{ context.yesButtonText }}
+                        </button>
+                    }
 
-                    <button
-                        [class]="
-                            context.lastButtonText || context.tooLastButtonText
-                                ? 'modal__btn modal__btn-last'
-                                : 'modal__btn'
-                        "
-                        data-test-id="noButton"
-                        *ngIf="context && context.noButtonText"
-                        (click)="onClick(false)"
-                    >
-                        {{ context.noButtonText }}
-                    </button>
-                    <button
-                        class="modal__btn modal__btn-last"
-                        data-test-id="lastButton"
-                        *ngIf="context && context.lastButtonText"
-                        (click)="onClick('last')"
-                    >
-                        {{ context.lastButtonText }}
-                    </button>
-                    <button
-                        class="modal__btn modal__btn-last"
-                        data-test-id="tooLastButtonText"
-                        *ngIf="context && context.tooLastButtonText"
-                        (click)="onClick('tooLast')"
-                    >
-                        {{ context.tooLastButtonText }}
-                    </button>
+                    @if (context && context.noButtonText) {
+                        <button
+                            [class]="
+                                context.lastButtonText || context.tooLastButtonText
+                                    ? 'modal__btn modal__btn-last'
+                                    : 'modal__btn'
+                            "
+                            data-test-id="noButton"
+                            (click)="onClick(false)"
+                        >
+                            {{ context.noButtonText }}
+                        </button>
+                    }
+                    @if (context && context.lastButtonText) {
+                        <button class="modal__btn modal__btn-last" data-test-id="lastButton" (click)="onClick('last')">
+                            {{ context.lastButtonText }}
+                        </button>
+                    }
+                    @if (context && context.tooLastButtonText) {
+                        <button
+                            class="modal__btn modal__btn-last"
+                            data-test-id="tooLastButtonText"
+                            (click)="onClick('tooLast')"
+                        >
+                            {{ context.tooLastButtonText }}
+                        </button>
+                    }
                 </div>
             </div>
         </div>
@@ -124,8 +126,6 @@ import { DynamicComponent } from "@common/components/modal/dynamic.component";
     imports: [
         //-----//
         NgClass,
-        NgFor,
-        NgIf,
         //-----//
         MatDividerModule,
     ],

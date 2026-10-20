@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
@@ -22,8 +21,6 @@ import { SqlQueryViewerComponent } from "src/app/dataset-block/metadata-block/co
 @Component({
     selector: "app-source-event-common-data",
     imports: [
-        //-----//
-        NgIf,
         //-----//
         BlockRowDataComponent,
         CardsPropertyComponent,

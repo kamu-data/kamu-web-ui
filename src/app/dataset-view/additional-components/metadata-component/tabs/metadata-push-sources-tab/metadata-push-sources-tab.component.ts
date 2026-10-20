@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor, NgIf } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
@@ -23,9 +22,6 @@ import { NavigationService } from "src/app/services/navigation.service";
 @Component({
     selector: "app-metadata-push-sources-tab",
     imports: [
-        //-----//
-        NgIf,
-        NgFor,
         //-----//
         MatIconModule,
         //-----//

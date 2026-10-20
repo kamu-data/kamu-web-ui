@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
@@ -28,7 +27,6 @@ import ProjectLinks from "src/app/project-links";
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        NgFor,
         RouterLink,
         //-----//
         MatIconModule,

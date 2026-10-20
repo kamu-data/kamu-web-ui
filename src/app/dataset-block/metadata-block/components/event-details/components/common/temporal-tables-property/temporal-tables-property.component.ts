@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { NgFor } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { TemporalTable } from "@api/kamu.graphql.interface";
@@ -18,8 +17,6 @@ import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/com
     templateUrl: "./temporal-tables-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        //-----//
-        NgFor,
         //-----//
         CardsPropertyComponent,
     ],

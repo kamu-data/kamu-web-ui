@@ -70,11 +70,13 @@
                         <option [value]="FlowRetryBackoffType.ExponentialWithJitter">Exponential with jitter</option>
                     </select>
                 </div>
-                <div *ngIf="backoffType.value" class="ms-1 px-2 pb-2">
-                    <small class="text-muted">
-                        {{ BACKOFF_EXPLANATIONS[backoffType.value] }}
-                    </small>
-                </div>
+                @if (backoffType.value) {
+                    <div class="ms-1 px-2 pb-2">
+                        <small class="text-muted">
+                            {{ BACKOFF_EXPLANATIONS[backoffType.value] }}
+                        </small>
+                    </div>
+                }
             </div>
         </div>
     </form>

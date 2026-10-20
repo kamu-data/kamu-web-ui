@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { MarkdownModule } from "ngx-markdown";
+import { provideMarkdown } from "ngx-markdown";
 
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
@@ -20,7 +20,8 @@ describe("SetAttachmentsEventComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedTestModule, MarkdownModule.forRoot(), SetAttachmentsEventComponent],
+            imports: [SharedTestModule, SetAttachmentsEventComponent],
+            providers: [provideMarkdown()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SetAttachmentsEventComponent);

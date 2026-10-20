@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { MarkdownModule } from "ngx-markdown";
+import { provideMarkdown } from "ngx-markdown";
 
 import { AttributesSchemaModalComponent } from "@common/components/dynamic-table/components/attributes-schema-modal/attributes-schema-modal.component";
 import { OdfTypes } from "@interface/dataset-schema.interface";
@@ -18,7 +18,8 @@ describe("AttributesSchemaModalComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [AttributesSchemaModalComponent, MarkdownModule.forRoot()],
+            imports: [AttributesSchemaModalComponent],
+            providers: [provideMarkdown()],
         });
         fixture = TestBed.createComponent(AttributesSchemaModalComponent);
         component = fixture.componentInstance;

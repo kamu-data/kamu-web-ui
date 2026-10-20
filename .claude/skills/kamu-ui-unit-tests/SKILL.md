@@ -32,12 +32,12 @@ beforeEach(async () => {
     fixture = TestBed.createComponent(FlowsTableComponent);
     component = fixture.componentInstance;
     loader = TestbedHarnessEnvironment.loader(fixture);
-    component.nodes = mockFlowSummaryDataFragments;   // inputs set directly
+    fixture.componentRef.setInput("nodes", mockFlowSummaryDataFragments);
     fixture.detectChanges();
 });
 ```
 
-(Abridged from `dataset-flow/flows-table/flows-table.component.spec.ts`.)
+(Adapted from `dataset-flow/flows-table/flows-table.component.spec.ts`.)
 
 - Import the standalone component itself; add `SharedTestModule` (route snapshot mock) when the
   component or a base class reads the route. Provide only what the component's dependency tree
@@ -49,6 +49,10 @@ beforeEach(async () => {
   component whose state a test changed after the first render, and the exhaustive check fails such
   a spec with NG0100. Set inputs with `fixture.componentRef.setInput()`; after changing internal
   state, call `fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck()`.
+- `setInput()` takes the value as `unknown`, so an object literal passed to it is not checked
+  against the input's type. Add `satisfies <InputType>` to the literal
+  (`setInput("featureFlags", { ... } satisfies AppUIConfigFeatureFlags)`) so a misspelled or
+  missing property fails to compile. Do not use `as`, which hides both.
 - The same NG0100 also flags a template value that differs on every evaluation, such as a getter
   returning `new Date()`: give the component a field it updates at a defined moment instead.
 - Mock collaborators with `spyOn(service, "method").and.returnValue(of(...))` on the real

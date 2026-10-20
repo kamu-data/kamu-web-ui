@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 
@@ -23,21 +22,20 @@ describe("InputFieldComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, InputFieldComponent, FormValidationErrorsDirective],
-        })
-            .overrideComponent(InputFieldComponent, {
-                set: { changeDetection: ChangeDetectionStrategy.Default },
-            })
-            .compileComponents();
+        }).compileComponents();
 
         fixture = TestBed.createComponent(InputFieldComponent);
         component = fixture.componentInstance;
 
-        component.form = new FormGroup({
-            test: new FormControl("", [Validators.required, Validators.pattern(AppValues.URL_PATTERN)]),
-        });
-        component.controlName = "test";
-        component.dataTestId = "input";
-        component.label = "Input";
+        fixture.componentRef.setInput(
+            "form",
+            new FormGroup({
+                test: new FormControl("", [Validators.required, Validators.pattern(AppValues.URL_PATTERN)]),
+            }),
+        );
+        fixture.componentRef.setInput("controlName", "test");
+        fixture.componentRef.setInput("dataTestId", "input");
+        fixture.componentRef.setInput("label", "Input");
     });
 
     it("should create", () => {
@@ -53,9 +51,12 @@ describe("InputFieldComponent", () => {
     });
 
     it("should check maxLength validation error", () => {
-        component.form = new FormGroup({
-            test: new FormControl("", [Validators.maxLength(1)]),
-        });
+        fixture.componentRef.setInput(
+            "form",
+            new FormGroup({
+                test: new FormControl("", [Validators.maxLength(1)]),
+            }),
+        );
         fixture.detectChanges();
 
         dispatchInputEvent(fixture, "input", "mock");

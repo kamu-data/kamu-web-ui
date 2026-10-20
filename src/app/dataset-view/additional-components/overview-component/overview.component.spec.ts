@@ -7,7 +7,6 @@
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
 import { of } from "rxjs";
@@ -16,7 +15,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angul
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
-import { MarkdownModule } from "ngx-markdown";
+import { provideMarkdown } from "ngx-markdown";
 import { provideToastr } from "ngx-toastr";
 
 import {
@@ -25,6 +24,7 @@ import {
     registerMatSvgIcons,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import {
     AccountProvider,
@@ -42,6 +42,7 @@ import {
 import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { OverviewComponent } from "src/app/dataset-view/additional-components/overview-component/overview.component";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
@@ -63,24 +64,15 @@ describe("OverviewComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                MarkdownModule.forRoot(),
-                OwlDateTimeModule,
-                OwlNativeDateTimeModule,
-                OwlMomentDateTimeModule,
-                SharedTestModule,
-            ],
+            imports: [OwlDateTimeModule, OwlNativeDateTimeModule, OwlMomentDateTimeModule, SharedTestModule],
             providers: [
+                provideMarkdown(),
                 Apollo,
                 provideToastr(),
                 provideHttpClient(withInterceptorsFromDi()),
                 provideHttpClientTesting(),
             ],
-        })
-            .overrideComponent(OverviewComponent, {
-                set: { changeDetection: ChangeDetectionStrategy.Default },
-            })
-            .compileComponents();
+        }).compileComponents();
 
         registerMatSvgIcons();
 
@@ -101,7 +93,7 @@ describe("OverviewComponent", () => {
         fixture = TestBed.createComponent(OverviewComponent);
         component = fixture.componentInstance;
         spyOn(datasetCollaborationsService, "getRoleByDatasetId").and.returnValue(of(null));
-        component.datasetOverviewTabData = {
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_OVERVIEW_KEY, {
             datasetBasics: {
                 id: mockOverviewDataUpdate.overview.id,
                 kind: mockOverviewDataUpdate.overview.kind,
@@ -115,16 +107,26 @@ describe("OverviewComponent", () => {
                 },
                 visibility: mockPublicDatasetVisibility,
             },
-            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            datasetPermissions: structuredClone(mockFullPowerDatasetPermissionsFragment),
             overviewUpdate: {
                 schema: mockMetadataDerivedUpdate.schema,
                 content: mockOverviewDataUpdate.content,
                 overview: structuredClone(mockOverviewDataUpdate.overview),
                 size: mockOverviewDataUpdate.size,
             } as OverviewUpdate,
-        };
+        } satisfies DatasetOverviewTabData);
         fixture.detectChanges();
     });
+
+    // Tests change the tab data in place and stub getters; the resolver delivers a new object instead,
+    // so pass a fresh copy through the input to re-render the OnPush view.
+    function updateView(): void {
+        fixture.componentRef.setInput(
+            RoutingResolvers.DATASET_VIEW_OVERVIEW_KEY,
+            structuredClone(component.datasetOverviewTabData),
+        );
+        fixture.detectChanges();
+    }
 
     function currentOverview(): DatasetOverviewFragment {
         if (component.datasetOverviewTabData) {
@@ -183,7 +185,7 @@ describe("OverviewComponent", () => {
 
     it("should check Update now button is not visible", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
-        fixture.detectChanges();
+        updateView();
         const updateButton = findElementByDataTestId(fixture, "refresh-now-button");
         expect(updateButton).toBe(undefined);
     });
@@ -191,7 +193,7 @@ describe("OverviewComponent", () => {
     it("should check Update now button is not visible when enableScheduling flag equal false", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
         spyOnProperty(component, "enableScheduling", "get").and.returnValue(false);
-        fixture.detectChanges();
+        updateView();
         const updateButton = findElementByDataTestId(fixture, "refresh-now-button");
         expect(updateButton).toBe(undefined);
     });
@@ -216,7 +218,7 @@ describe("OverviewComponent", () => {
 
     it("should check visibility 'Get Data' button", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        fixture.detectChanges();
+        updateView();
         const buttonElement = findElementByDataTestId(fixture, "get-data-button");
         expect(buttonElement).toBeDefined();
     });
@@ -230,7 +232,7 @@ describe("OverviewComponent", () => {
         const datasetTriggerIngestFlowSpy = spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(
             of(true),
         );
-        fixture.detectChanges();
+        updateView();
 
         emitClickOnElementByDataTestId(fixture, "refresh-now-button");
 
@@ -252,21 +254,21 @@ describe("OverviewComponent", () => {
 
         it("cannot add set polling source when no permissions", () => {
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = false;
-            fixture.detectChanges();
+            updateView();
 
             expect(component.canAddSetPollingSource).toBeFalse();
         });
 
         it("cannot add set polling source when having a derived dataset", () => {
             component.datasetOverviewTabData.datasetBasics.kind = DatasetKind.Derivative;
-            fixture.detectChanges();
+            updateView();
 
             expect(component.canAddSetPollingSource).toBeFalse();
         });
 
         it("cannot add set polling source if polling source already exists", () => {
             currentOverview().metadata.currentPollingSource = { __typename: "SetPollingSource" };
-            fixture.detectChanges();
+            updateView();
 
             expect(component.canAddSetPollingSource).toBeFalse();
         });
@@ -274,7 +276,7 @@ describe("OverviewComponent", () => {
         it("should check refresh button is disabled when currentPollingSource=undefined=null ", () => {
             currentOverview().metadata.currentPollingSource = null;
             spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-            fixture.detectChanges();
+            updateView();
 
             const refreshButton = findElementByDataTestId(fixture, "refresh-now-button") as HTMLButtonElement;
             expect(refreshButton.disabled).toBeTrue();
@@ -284,14 +286,14 @@ describe("OverviewComponent", () => {
             currentOverview().metadata.currentPollingSource = null;
             spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
-            fixture.detectChanges();
+            updateView();
 
             expect(component.showAddDataButton).toEqual(true);
         });
 
         it("should check don't show Add data button with currentPollingSource", () => {
             spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-            fixture.detectChanges();
+            updateView();
 
             expect(component.showAddDataButton).toEqual(false);
         });
@@ -301,7 +303,7 @@ describe("OverviewComponent", () => {
         beforeEach(() => {
             component.datasetOverviewTabData.datasetBasics.kind = DatasetKind.Derivative;
             currentOverview().metadata.currentTransform = undefined;
-            fixture.detectChanges();
+            updateView();
         });
 
         it("should be possible to add transform for derived dataset and with commit permissions", () => {
@@ -312,21 +314,21 @@ describe("OverviewComponent", () => {
 
         it("cannot add set transform when no permissions", () => {
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = false;
-            fixture.detectChanges();
+            updateView();
 
             expect(component.canAddSetTransform).toBeFalse();
         });
 
         it("cannot add set transform source when having a root dataset", () => {
             component.datasetOverviewTabData.datasetBasics.kind = DatasetKind.Root;
-            fixture.detectChanges();
+            updateView();
 
             expect(component.canAddSetTransform).toBeFalse();
         });
 
         it("cannot add set transform if transform already exists", () => {
             currentOverview().metadata.currentTransform = { __typename: "SetTransform" };
-            fixture.detectChanges();
+            updateView();
 
             expect(component.canAddSetTransform).toBeFalse();
         });
@@ -335,7 +337,7 @@ describe("OverviewComponent", () => {
             currentOverview().metadata.currentTransform = null;
             currentOverview().metadata.currentPollingSource = null;
             spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-            fixture.detectChanges();
+            updateView();
 
             const refreshButton = findElementByDataTestId(fixture, "refresh-now-button") as HTMLButtonElement;
             expect(refreshButton.disabled).toBeTrue();
@@ -345,7 +347,7 @@ describe("OverviewComponent", () => {
             component.datasetOverviewTabData.datasetBasics = mockDatasetBasicsDerivedFragment;
             currentOverview().metadata.currentTransform = { __typename: "SetTransform" };
             spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-            fixture.detectChanges();
+            updateView();
 
             expect(component.showAddDataButton).toEqual(false);
         });
@@ -365,7 +367,7 @@ describe("OverviewComponent", () => {
 
         it("cannot add or edit dataset info without commit permissions and without existing info", () => {
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = false;
-            fixture.detectChanges();
+            updateView();
             expect(component.canAddDatasetInfo).toBeFalse();
             expect(component.canEditDatasetInfo).toBeFalse();
         });
@@ -373,7 +375,7 @@ describe("OverviewComponent", () => {
         it("cannot add or edit dataset info without commit permissions, but with existing info", () => {
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = false;
             currentInfo().description = "someDescription";
-            fixture.detectChanges();
+            updateView();
             expect(component.canAddDatasetInfo).toBeFalse();
             expect(component.canEditDatasetInfo).toBeFalse();
         });
@@ -381,7 +383,7 @@ describe("OverviewComponent", () => {
         it("cannot add dataset info, if info description is available, but can edit", () => {
             currentInfo().description = "someDescription";
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
-            fixture.detectChanges();
+            updateView();
             expect(component.hasDatasetInfo).toBeTrue();
             expect(component.canAddDatasetInfo).toBeFalse();
             expect(component.canEditDatasetInfo).toBeTrue();
@@ -390,7 +392,7 @@ describe("OverviewComponent", () => {
         it("cannot add dataset info, if a keyword is defined, but can edit", () => {
             currentInfo().keywords = ["keyword"];
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
-            fixture.detectChanges();
+            updateView();
             expect(component.hasDatasetInfo).toBeTrue();
             expect(component.canAddDatasetInfo).toBeFalse();
             expect(component.canEditDatasetInfo).toBeTrue();
@@ -399,7 +401,7 @@ describe("OverviewComponent", () => {
         it("can add dataset info, if a keywords array is empty, but can't edit", () => {
             currentInfo().keywords = [];
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
-            fixture.detectChanges();
+            updateView();
             expect(component.hasDatasetInfo).toBeFalse();
             expect(component.canAddDatasetInfo).toBeTrue();
             expect(component.canEditDatasetInfo).toBeFalse();
@@ -426,7 +428,7 @@ describe("OverviewComponent", () => {
 
         it("cannot add or edit readme without commit permissions and without existing readme", () => {
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = false;
-            fixture.detectChanges();
+            updateView();
 
             expect(component.canAddReadme).toBeFalse();
             expect(component.canEditReadme).toBeFalse();
@@ -435,7 +437,7 @@ describe("OverviewComponent", () => {
         it("cannot add readme, if readme is available, but can edit", () => {
             currentOverview().metadata.currentReadme = "some readme";
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
-            fixture.detectChanges();
+            updateView();
 
             expect(component.canAddReadme).toBeFalse();
             expect(component.canEditReadme).toBeTrue();
@@ -454,7 +456,7 @@ describe("OverviewComponent", () => {
 
         it("cannot add or edit license without commit permissions and without existing license", () => {
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = false;
-            fixture.detectChanges();
+            updateView();
             expect(component.canAddLicense).toBeFalse();
             expect(component.canEditLicense).toBeFalse();
         });
@@ -462,7 +464,7 @@ describe("OverviewComponent", () => {
         it("cannot add license, if license is available, but can edit", () => {
             currentOverview().metadata.currentLicense = mockSetLicense;
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
-            fixture.detectChanges();
+            updateView();
             expect(component.canAddLicense).toBeFalse();
             expect(component.canEditLicense).toBeTrue();
         });
@@ -482,29 +484,29 @@ describe("OverviewComponent", () => {
         it("can add watermark, but not edit it, with full permissions, root dataset, and no watermark predefined", () => {
             currentOverview().metadata.currentWatermark = undefined;
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
-            fixture.detectChanges();
+            updateView();
             expect(component.canAddWatermark).toBeTrue();
             expect(component.canEditWatermark).toBeFalse();
         });
 
         it("cannot add or edit watermark without commit permissions", () => {
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = false;
-            fixture.detectChanges();
+            updateView();
             expect(component.canAddWatermark).toBeFalse();
             expect(component.canEditWatermark).toBeFalse();
             currentOverview().metadata.currentWatermark = undefined;
-            fixture.detectChanges();
+            updateView();
             expect(component.canAddWatermark).toBeFalse();
             expect(component.canEditWatermark).toBeFalse();
         });
 
         it("cannot add or edit watermark with derived dataset", () => {
             component.datasetOverviewTabData.datasetBasics.kind = DatasetKind.Derivative;
-            fixture.detectChanges();
+            updateView();
             expect(component.canAddWatermark).toBeFalse();
             expect(component.canEditWatermark).toBeFalse();
             currentOverview().metadata.currentWatermark = undefined;
-            fixture.detectChanges();
+            updateView();
             expect(component.canAddWatermark).toBeFalse();
             expect(component.canEditWatermark).toBeFalse();
         });

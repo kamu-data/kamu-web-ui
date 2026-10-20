@@ -7,7 +7,6 @@
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
@@ -41,17 +40,13 @@ describe("AddDataEventComponent", () => {
                 provideHttpClient(withInterceptorsFromDi()),
                 provideHttpClientTesting(),
             ],
-        })
-            .overrideComponent(AddDataEventComponent, {
-                set: { changeDetection: ChangeDetectionStrategy.Default },
-            })
-            .compileComponents();
+        }).compileComponents();
 
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(AddDataEventComponent);
         component = fixture.componentInstance;
-        component.event = mockAddData;
+        fixture.componentRef.setInput("event", mockAddData);
         fixture.detectChanges();
     });
 

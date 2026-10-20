@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy } from "@angular/core";
+import { ChangeDetectorRef } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import timekeeper from "timekeeper";
@@ -18,6 +18,7 @@ import AppValues from "@common/values/app.values";
 import { MOCK_LINKS, MOCK_NODES } from "@api/mock/dataset.mock";
 
 import { mockGraphNode } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { LineageGraph } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 
 describe("LineageGraphComponent", () => {
     let component: LineageGraphComponent;
@@ -28,17 +29,13 @@ describe("LineageGraphComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, LineageGraphComponent],
-        })
-            .overrideComponent(LineageGraphComponent, {
-                set: { changeDetection: ChangeDetectionStrategy.Default },
-            })
-            .compileComponents();
+        }).compileComponents();
 
         fixture = TestBed.createComponent(LineageGraphComponent);
         component = fixture.componentInstance;
         widgetHeightService = TestBed.inject(WidgetHeightService);
-        component.graph = { links: MOCK_LINKS, nodes: MOCK_NODES };
-        component.currentDataset = mockGraphNode;
+        fixture.componentRef.setInput("graph", { links: MOCK_LINKS, nodes: MOCK_NODES } satisfies LineageGraph);
+        fixture.componentRef.setInput("currentDataset", mockGraphNode);
         fixture.detectChanges();
     });
 
@@ -94,6 +91,7 @@ describe("LineageGraphComponent", () => {
 
     it("should check side panel content", () => {
         component.showSidePanel = true;
+        fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
         fixture.detectChanges();
 
         const avatarUrl = findElementByDataTestId(fixture, "side-panel-avatar") as HTMLImageElement;

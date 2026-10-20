@@ -7,7 +7,6 @@
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
 import { of } from "rxjs";
@@ -34,11 +33,7 @@ describe("DatasetCreateComponent", () => {
         await TestBed.configureTestingModule({
             imports: [ApolloTestingModule, SharedTestModule, DatasetCreateComponent],
             providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
-        })
-            .overrideComponent(DatasetCreateComponent, {
-                set: { changeDetection: ChangeDetectionStrategy.Default },
-            })
-            .compileComponents();
+        }).compileComponents();
 
         registerMatSvgIcons();
 

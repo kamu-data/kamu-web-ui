@@ -8,7 +8,7 @@
 import { HttpHeaders, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
-import { RouterTestingModule } from "@angular/router/testing";
+import { provideRouter } from "@angular/router";
 
 import { first, of } from "rxjs";
 
@@ -36,11 +36,13 @@ describe("FileUploadService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                SharedTestModule,
-                RouterTestingModule.withRoutes([{ path: "kamu/mockNameRoot", component: DatasetViewComponent }]),
+            imports: [SharedTestModule],
+            providers: [
+                Apollo,
+                provideRouter([{ path: "kamu/mockNameRoot", component: DatasetViewComponent }]),
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
             ],
-            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         });
         service = TestBed.inject(FileUploadService);
         protocolsService = TestBed.inject(ProtocolsService);

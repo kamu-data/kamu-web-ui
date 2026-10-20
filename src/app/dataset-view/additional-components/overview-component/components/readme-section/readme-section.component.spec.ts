@@ -13,7 +13,7 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
-import { MarkdownModule } from "ngx-markdown";
+import { provideMarkdown } from "ngx-markdown";
 
 import {
     emitClickOnElementByDataTestId,
@@ -39,8 +39,13 @@ describe("ReadmeSectionComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedTestModule, MarkdownModule.forRoot(), ReadmeSectionComponent],
-            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+            imports: [SharedTestModule, ReadmeSectionComponent],
+            providers: [
+                provideMarkdown(),
+                Apollo,
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
         }).compileComponents();
 
         registerMatSvgIcons();

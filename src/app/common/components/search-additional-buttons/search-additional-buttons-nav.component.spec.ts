@@ -8,7 +8,6 @@
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { SearchAdditionalButtonsNavComponent } from "@common/components/search-additional-buttons/search-additional-buttons-nav.component";
@@ -28,18 +27,14 @@ describe("SearchAdditionalButtonsNavComponent", () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, SearchAdditionalButtonsNavComponent],
             providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
-        })
-            .overrideComponent(SearchAdditionalButtonsNavComponent, {
-                set: { changeDetection: ChangeDetectionStrategy.Default },
-            })
-            .compileComponents();
+        }).compileComponents();
 
         registerMatSvgIcons();
 
         fixture = TestBed.createComponent(SearchAdditionalButtonsNavComponent);
         component = fixture.componentInstance;
-        component.searchAdditionalButtonsData = SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS;
-        component.loadingListDownsreams = false;
+        fixture.componentRef.setInput("searchAdditionalButtonsData", SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS);
+        fixture.componentRef.setInput("loadingListDownsreams", false);
 
         fixture.detectChanges();
     });
@@ -52,10 +47,13 @@ describe("SearchAdditionalButtonsNavComponent", () => {
         let harness: SearchAdditionalButtonsNavHarness;
 
         function setDeriveFromFootnote(footnote: MaybeUndefined<string>): void {
-            component.searchAdditionalButtonsData = SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS.map((item) =>
-                item.value === SearchAdditionalButtonsEnum.DeriveFrom
-                    ? { ...item, additionalOptions: { ...item.additionalOptions, footnote } }
-                    : item,
+            fixture.componentRef.setInput(
+                "searchAdditionalButtonsData",
+                SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS.map((item) =>
+                    item.value === SearchAdditionalButtonsEnum.DeriveFrom
+                        ? { ...item, additionalOptions: { ...item.additionalOptions, footnote } }
+                        : item,
+                ),
             );
         }
 

@@ -114,12 +114,12 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
     ): Observable<GlobalQuerySearchItem[]> {
         return combineLatest(schemaResponses).pipe(
             map((datasets: GetDatasetSchemaQuery[]) => {
-                const result = datasets.map((item: GetDatasetSchemaQuery) => {
-                    const datasetAlias = item.datasets.byId?.alias;
-                    const schema = parseCurrentSchema(item.datasets.byId?.metadata.currentSchema);
-                    return { datasetAlias, schema } as GlobalQuerySearchItem;
+                return datasets.flatMap((item: GetDatasetSchemaQuery): GlobalQuerySearchItem[] => {
+                    const dataset = item.datasets.byId;
+                    return dataset
+                        ? [{ datasetAlias: dataset.alias, schema: parseCurrentSchema(dataset.metadata.currentSchema) }]
+                        : [];
                 });
-                return result;
             }),
         );
     }
@@ -187,7 +187,12 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
                         data.datasets.byId.metadata.currentSchema,
                     );
 
-                    this.searchResult = [...this.searchResult, { datasetAlias, schema }];
+                    this.searchResult = [
+                        ...this.searchResult.filter(
+                            (item: GlobalQuerySearchItem) => item.datasetAlias !== datasetAlias,
+                        ),
+                        { datasetAlias, schema },
+                    ];
                     this.cdr.detectChanges();
                 }
             });

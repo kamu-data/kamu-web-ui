@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
@@ -38,12 +38,7 @@ describe("DatasetAsVersionedFileService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [
-                Apollo,
-                provideToastr(),
-                provideHttpClient(withInterceptorsFromDi()),
-                provideHttpClientTesting(),
-            ],
+            providers: [Apollo, provideToastr(), provideHttpClient(), provideHttpClientTesting()],
         });
         service = TestBed.inject(DatasetAsVersionedFileService);
         toastService = TestBed.inject(ToastrService);

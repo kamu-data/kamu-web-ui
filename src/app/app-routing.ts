@@ -16,9 +16,9 @@ import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { accountGuard } from "src/app/account/guards/account.guard";
 import { AdminDashboardComponent } from "src/app/admin-view/admin-dashboard/admin-dashboard.component";
 import { AppConfigService } from "src/app/app-config.service";
-import { AdminGuard } from "src/app/auth/guards/admin.guard";
-import { AuthenticatedGuard } from "src/app/auth/guards/authenticated.guard";
-import { LoginGuard } from "src/app/auth/guards/login.guard";
+import { adminGuard } from "src/app/auth/guards/admin.guard";
+import { authenticatedGuard } from "src/app/auth/guards/authenticated.guard";
+import { loginGuard } from "src/app/auth/guards/login.guard";
 import { GithubCallbackComponent } from "src/app/auth/login/github-callback/github.callback";
 import { LoginComponent } from "src/app/auth/login/login.component";
 import { ReturnToCliComponent } from "src/app/auth/login/return-to-cli/return-to-cli.component";
@@ -40,7 +40,7 @@ export const PUBLIC_ROUTES: Routes = [
     {
         path: ProjectLinks.URL_LOGIN,
         component: LoginComponent,
-        canActivate: [LoginGuard],
+        canActivate: [loginGuard],
     },
     {
         path: ProjectLinks.URL_GITHUB_CALLBACK,
@@ -60,7 +60,7 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
         runGuardsAndResolvers: "always",
     },
     {
-        canActivate: [AuthenticatedGuard],
+        canActivate: [authenticatedGuard],
         path: ProjectLinks.URL_DATASET_CREATE,
         loadComponent: () =>
             import(
@@ -85,13 +85,20 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
     },
     {
         path: `${ProjectLinks.URL_SETTINGS}`,
-        canActivate: [AuthenticatedGuard],
+        canActivate: [authenticatedGuard],
         runGuardsAndResolvers: "always",
         loadChildren: () =>
             import(
                 /* webpackChunkName: "account-settings" */
                 "./account/settings/account-settings-routing"
             ).then((m) => m.ACCOUNT_SETTINGS_ROUTES),
+    },
+    {
+        canActivate: [adminGuard],
+        path: ProjectLinks.URL_ADMIN_DASHBOARD,
+        // In future, we might want to lazy load this component
+        // Listed before ":accountName", which would otherwise match this two-segment URL first
+        component: AdminDashboardComponent,
     },
     {
         path: `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}`,
@@ -131,7 +138,7 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
             },
             {
                 path: `${ProjectLinks.URL_FLOW_DETAILS}/:${ProjectLinks.URL_PARAM_FLOW_ID}`,
-                canActivate: [AuthenticatedGuard],
+                canActivate: [authenticatedGuard],
                 loadChildren: () =>
                     import(
                         /* webpackChunkName: "flow-details" */
@@ -140,7 +147,7 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
             },
             {
                 path: "",
-                canActivate: [AuthenticatedGuard],
+                canActivate: [authenticatedGuard],
                 loadChildren: () =>
                     import(
                         /* webpackChunkName: "dataset-source-events" */
@@ -148,12 +155,6 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
                     ).then((m) => m.SOURCE_EVENTS_ROUTES),
             },
         ],
-    },
-    {
-        canActivate: [AdminGuard],
-        path: ProjectLinks.URL_ADMIN_DASHBOARD,
-        // In future, we might want to lazy load this component
-        component: AdminDashboardComponent,
     },
 ];
 

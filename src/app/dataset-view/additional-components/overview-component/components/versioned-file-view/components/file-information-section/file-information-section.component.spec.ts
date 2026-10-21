@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
@@ -37,7 +37,7 @@ describe("FileInformationSectionComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [FileInformationSectionComponent],
-            providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi())],
+            providers: [Apollo, provideToastr(), provideHttpClient()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FileInformationSectionComponent);

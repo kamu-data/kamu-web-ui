@@ -5,30 +5,19 @@
  * included in the LICENSE file.
  */
 
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
-
-import { Observable } from "rxjs";
+import { HttpInterceptorFn } from "@angular/common/http";
+import { inject } from "@angular/core";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 
-@Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-    private localStorageService = inject(LocalStorageService);
-    private appConfigService = inject(AppConfigService);
+export const authInterceptor: HttpInterceptorFn = (request, next) => {
+    const localStorageService = inject(LocalStorageService);
+    const appConfigService = inject(AppConfigService);
 
-    public intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-        const accessToken = this.localStorageService.accessToken;
-        if (accessToken && request.url.startsWith(this.appConfigService.apiServerHttpUrl)) {
-            const authReq = request.clone({
-                setHeaders: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            });
-            return next.handle(authReq);
-        }
-
-        return next.handle(request);
+    const accessToken = localStorageService.accessToken;
+    if (accessToken && request.url.startsWith(appConfigService.apiServerHttpUrl)) {
+        return next(request.clone({ setHeaders: { Authorization: `Bearer ${accessToken}` } }));
     }
-}
+    return next(request);
+};

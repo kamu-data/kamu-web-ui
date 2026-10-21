@@ -1,10 +1,4 @@
-import {
-    HTTP_INTERCEPTORS,
-    HttpClient,
-    HttpHeaders,
-    provideHttpClient,
-    withInterceptorsFromDi,
-} from "@angular/common/http";
+import { HttpClient, HttpHeaders, provideHttpClient, withInterceptors } from "@angular/common/http";
 import {
     ErrorHandler,
     inject,
@@ -28,12 +22,11 @@ import { HttpLink } from "apollo-angular/http";
 import { provideMarkdown, SANITIZE } from "ngx-markdown";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
-import { SpinnerInterceptor } from "@common/components/spinner/spinner.interceptor";
-import { SpinnerService } from "@common/components/spinner/spinner.service";
+import { spinnerInterceptor } from "@common/components/spinner/spinner.interceptor";
 import { apolloCache } from "@common/helpers/apollo-cache.helper";
 import { HIGHLIGHT_OPTIONS_PROVIDER, isAccessTokenExpired, logError } from "@common/helpers/app.helpers";
 import { KamuUrlSerializer } from "@common/helpers/kamu-url-serializer";
-import { AuthInterceptor } from "@common/interceptors/auth.interceptor";
+import { authInterceptor } from "@common/interceptors/auth.interceptor";
 import AppValues from "@common/values/app.values";
 import { ErrorTexts } from "@common/values/errors.text";
 
@@ -49,18 +42,6 @@ import { NavigationService } from "src/app/services/navigation.service";
 
 const Services = [
     Apollo,
-    {
-        provide: HTTP_INTERCEPTORS,
-        useClass: SpinnerInterceptor,
-        multi: true,
-        deps: [SpinnerService],
-    },
-    {
-        provide: HTTP_INTERCEPTORS,
-        useClass: AuthInterceptor,
-        multi: true,
-        deps: [LocalStorageService],
-    },
     {
         provide: ErrorHandler,
         useClass: ErrorHandlerService,
@@ -85,7 +66,7 @@ bootstrapApplication(AppComponent, {
             sanitize: { provide: SANITIZE, useValue: SecurityContext.NONE },
         }),
         { provide: UrlSerializer, useClass: KamuUrlSerializer },
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withInterceptors([spinnerInterceptor, authInterceptor])),
 
         // 3-phase routing table:
         //  1. Public routes (no guards)

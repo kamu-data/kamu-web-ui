@@ -5,16 +5,18 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
-import { first, Observable, of, throwError } from "rxjs";
+import { firstValueFrom, Observable, of, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
+import { DatasetNotFoundError } from "@common/values/errors";
 import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 import { MaybeNull } from "@interface/app.types";
@@ -36,23 +38,14 @@ describe("flowDetailsResolverFn", () => {
     const executeResolver: ResolveFn<MaybeNull<DatasetFlowByIdResponse>> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => flowDetailsResolverFn(...resolverParameters));
 
-    type ResolverObservable = Observable<MaybeNull<DatasetFlowByIdResponse>>;
-
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [],
-            providers: [
-                Apollo,
-                provideToastr(),
-                provideHttpClient(withInterceptorsFromDi()),
-                provideHttpClientTesting(),
-            ],
+            providers: [Apollo, provideToastr(), provideHttpClient(), provideHttpClientTesting()],
         });
 
         datasetService = TestBed.inject(DatasetService);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
 
-        // Setup default property spy for datasetChanges
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
     });
 
@@ -70,41 +63,30 @@ describe("flowDetailsResolverFn", () => {
         } as ActivatedRouteSnapshot;
     }
 
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
-    });
+    function resolve(mockRoute: ActivatedRouteSnapshot = createMockRoute()): Promise<unknown> {
+        return firstValueFrom(executeResolver(mockRoute, mockRouterStateSnapshot) as Observable<unknown>);
+    }
 
-    it("should call services with correct parameters and return flow data", () => {
+    it("should call services with correct parameters and return flow data", async () => {
         const requestDatasetBasicDataWithPermissionsSpy = spyOn(
             datasetService,
             "requestDatasetBasicDataWithPermissions",
         ).and.returnValue(of(undefined));
-
         const datasetFlowByIdSpy = spyOn(datasetFlowsService, "datasetFlowById").and.returnValue(
             of(mockDatasetFlowByIdResponse),
         );
 
-        const mockRoute = createMockRoute();
-        const resolver$ = executeResolver(mockRoute, mockRouterStateSnapshot);
-        expect(resolver$).not.toBeNull();
+        const data = await resolve();
 
-        const resolverSubscription$ = (resolver$ as ResolverObservable)
-            .pipe(first())
-            .subscribe((data: MaybeNull<DatasetFlowByIdResponse>) => {
-                expect(data).toEqual(mockDatasetFlowByIdResponse);
-            });
-
-        expect(requestDatasetBasicDataWithPermissionsSpy).toHaveBeenCalledWith({
+        expect(requestDatasetBasicDataWithPermissionsSpy).toHaveBeenCalledOnceWith({
             accountName: TEST_ACCOUNT_NAME,
             datasetName: TEST_DATASET_NAME,
         });
-
-        expect(datasetFlowByIdSpy).toHaveBeenCalledWith({
+        expect(datasetFlowByIdSpy).toHaveBeenCalledOnceWith({
             datasetId: mockDatasetBasicsRootFragment.id,
             flowId: TEST_FLOW_ID,
         });
-
-        expect(resolverSubscription$.closed).toBeTrue();
+        expect(data).toEqual(mockDatasetFlowByIdResponse);
     });
 
     describe("should handle different route parameters correctly", () => {
@@ -130,80 +112,59 @@ describe("flowDetailsResolverFn", () => {
         ];
 
         testCases.forEach(({ description, accountName, datasetName, flowId }) => {
-            it(`when ${description}`, () => {
+            it(`when ${description}`, async () => {
                 const requestDatasetBasicDataWithPermissionsSpy = spyOn(
                     datasetService,
                     "requestDatasetBasicDataWithPermissions",
                 ).and.returnValue(of(undefined));
-
                 const datasetFlowByIdSpy = spyOn(datasetFlowsService, "datasetFlowById").and.returnValue(
                     of(mockDatasetFlowByIdResponse),
                 );
 
-                const mockRoute = createMockRoute(accountName, datasetName, flowId);
-                const resolver$ = executeResolver(mockRoute, mockRouterStateSnapshot);
+                const data = await resolve(createMockRoute(accountName, datasetName, flowId));
 
-                const resolverSubscription$ = (resolver$ as ResolverObservable).pipe(first()).subscribe(() => {
-                    expect(requestDatasetBasicDataWithPermissionsSpy).toHaveBeenCalledWith({
-                        accountName,
-                        datasetName,
-                    });
-
-                    expect(datasetFlowByIdSpy).toHaveBeenCalledWith({
-                        datasetId: mockDatasetBasicsRootFragment.id,
-                        flowId,
-                    });
+                expect(requestDatasetBasicDataWithPermissionsSpy).toHaveBeenCalledOnceWith({
+                    accountName,
+                    datasetName,
                 });
-
-                expect(resolverSubscription$.closed).toBeTrue();
+                expect(datasetFlowByIdSpy).toHaveBeenCalledOnceWith({
+                    datasetId: mockDatasetBasicsRootFragment.id,
+                    flowId,
+                });
+                expect(data).toEqual(mockDatasetFlowByIdResponse);
             });
         });
     });
 
-    it("should handle errors from requestDatasetBasicDataWithPermissions", () => {
+    it("should redirect to page not found when the dataset does not exist", async () => {
+        spyOn(datasetService, "requestDatasetBasicDataWithPermissions").and.returnValue(
+            throwError(() => new DatasetNotFoundError()),
+        );
+        const datasetFlowByIdSpy = spyOn(datasetFlowsService, "datasetFlowById").and.stub();
+
+        const data = await resolve();
+
+        expectPageNotFoundRedirect(data);
+        expect(datasetFlowByIdSpy).not.toHaveBeenCalled();
+    });
+
+    it("should handle errors from requestDatasetBasicDataWithPermissions", async () => {
         const errorMessage = "Failed to fetch dataset permissions";
         spyOn(datasetService, "requestDatasetBasicDataWithPermissions").and.returnValue(
             throwError(() => new Error(errorMessage)),
         );
-
         const datasetFlowByIdSpy = spyOn(datasetFlowsService, "datasetFlowById").and.stub();
 
-        const mockRoute = createMockRoute();
-        const resolver$ = executeResolver(mockRoute, mockRouterStateSnapshot);
-        expect(resolver$).not.toBeNull();
-
-        const resolverSubscription$ = (resolver$ as ResolverObservable).pipe(first()).subscribe({
-            next: (data: MaybeNull<DatasetFlowByIdResponse>) => {
-                fail("Expected an error, but got data: " + JSON.stringify(data));
-            },
-            error: (error: Error) => {
-                expect(error.message).toEqual(errorMessage);
-                expect(datasetFlowByIdSpy).not.toHaveBeenCalled();
-            },
-        });
-
-        expect(resolverSubscription$.closed).toBeTrue();
+        await expectAsync(resolve()).toBeRejectedWithError(errorMessage);
+        expect(datasetFlowByIdSpy).not.toHaveBeenCalled();
     });
 
-    it("should handle errors from datasetFlowById", () => {
+    it("should handle errors from datasetFlowById", async () => {
         const errorMessage = "Failed to fetch flow details";
         spyOn(datasetService, "requestDatasetBasicDataWithPermissions").and.returnValue(of(undefined));
         spyOn(datasetFlowsService, "datasetFlowById").and.returnValue(throwError(() => new Error(errorMessage)));
 
-        const mockRoute = createMockRoute();
-        const resolver$ = executeResolver(mockRoute, mockRouterStateSnapshot);
-        expect(resolver$).not.toBeNull();
-
-        const resolverSubscription$ = (resolver$ as ResolverObservable).pipe(first()).subscribe({
-            next: (data: MaybeNull<DatasetFlowByIdResponse>) => {
-                fail("Expected an error, but got data: " + JSON.stringify(data));
-            },
-            error: (error: Error) => {
-                expect(error.message).toEqual(errorMessage);
-            },
-        });
-
-        expect(resolverSubscription$.closed).toBeTrue();
+        await expectAsync(resolve()).toBeRejectedWithError(errorMessage);
     });
 
     describe("should handle missing route parameters", () => {
@@ -232,25 +193,20 @@ describe("flowDetailsResolverFn", () => {
         ];
 
         testCases.forEach(({ description, paramMap }) => {
-            it(`when ${description}`, () => {
+            it(`when ${description}`, async () => {
                 const requestDatasetBasicDataWithPermissionsSpy = spyOn(
                     datasetService,
                     "requestDatasetBasicDataWithPermissions",
                 ).and.returnValue(of(undefined));
-
                 const datasetFlowByIdSpy = spyOn(datasetFlowsService, "datasetFlowById").and.returnValue(
                     of(mockDatasetFlowByIdResponse),
                 );
 
-                const mockRoute = { paramMap } as ActivatedRouteSnapshot;
-                const resolver$ = executeResolver(mockRoute, mockRouterStateSnapshot);
+                const data = await resolve({ paramMap } as ActivatedRouteSnapshot);
 
-                const resolverSubscription$ = (resolver$ as ResolverObservable).pipe(first()).subscribe(() => {
-                    expect(requestDatasetBasicDataWithPermissionsSpy).toHaveBeenCalledTimes(1);
-                    expect(datasetFlowByIdSpy).toHaveBeenCalledTimes(1);
-                });
-
-                expect(resolverSubscription$.closed).toBeTrue();
+                expect(requestDatasetBasicDataWithPermissionsSpy).toHaveBeenCalledTimes(1);
+                expect(datasetFlowByIdSpy).toHaveBeenCalledTimes(1);
+                expect(data).toEqual(mockDatasetFlowByIdResponse);
             });
         });
     });

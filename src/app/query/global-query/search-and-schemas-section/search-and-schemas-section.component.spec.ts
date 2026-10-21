@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
@@ -38,7 +38,7 @@ describe("SearchAndSchemasSectionComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [SharedTestModule, SearchAndSchemasSectionComponent],
-            providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi())],
+            providers: [Apollo, provideToastr(), provideHttpClient()],
         });
         fixture = TestBed.createComponent(SearchAndSchemasSectionComponent);
         component = fixture.componentInstance;

@@ -19,7 +19,7 @@ import { DatasetsTabComponent } from "src/app/account/additional-components/data
 import { accountDatasetsResolverFn } from "src/app/account/additional-components/datasets-tab/resolver/account-datasets.resolver";
 import { SettingsTabComponent } from "src/app/account/additional-components/settings-tab/settings-tab.component";
 import { accountActiveTabResolverFn } from "src/app/account/resolver/account-active-tab.resolver";
-import { AuthenticatedGuard } from "src/app/auth/guards/authenticated.guard";
+import { authenticatedGuard } from "src/app/auth/guards/authenticated.guard";
 import ProjectLinks from "src/app/project-links";
 
 export const ACCOUNT_SELECT_ROUTES: Routes = [
@@ -53,7 +53,7 @@ export const ACCOUNT_SELECT_ROUTES: Routes = [
                         },
                         resolve: { [RoutingResolvers.ACCOUNT_FLOWS_KEY]: accountFlowsResolverFn },
                         runGuardsAndResolvers: "always",
-                        canActivate: [AuthenticatedGuard],
+                        canActivate: [authenticatedGuard],
                         component: AccountFlowsTabComponent,
                     },
                     {
@@ -61,7 +61,7 @@ export const ACCOUNT_SELECT_ROUTES: Routes = [
                         data: {
                             [ProjectLinks.URL_PARAM_TAB]: AccountTabs.SETTINGS,
                         },
-                        canActivate: [AuthenticatedGuard],
+                        canActivate: [authenticatedGuard],
                         component: SettingsTabComponent,
                     },
                 ],

@@ -6,7 +6,7 @@
  */
 
 import { inject } from "@angular/core";
-import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
 import { map, Observable, of, switchMap } from "rxjs";
 
@@ -18,21 +18,17 @@ import { datasetSettingsGeneralTabResolverFn } from "src/app/dataset-view/additi
 import { DatasetSettingsTransformOptionsTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.data";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
-export const datasetSettingsTransformTabResolverFn: ResolveFn<MaybeNull<DatasetSettingsTransformOptionsTabData>> = (
+export const datasetSettingsTransformTabResolverFn: ResolveFn<DatasetSettingsTransformOptionsTabData> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ) => {
     const datasetFlowTriggerService = inject(DatasetFlowTriggerService);
 
-    return (
-        datasetSettingsGeneralTabResolverFn(route, state) as Observable<
-            MaybeNull<DatasetSettingsTransformOptionsTabData>
-        >
-    ).pipe(
-        // We can safely cast here because the resolver is used in a context where the type is DatasetSettingsIngestConfigurationTabData
-        switchMap((data: MaybeNull<DatasetViewData>) => {
-            if (data === null) {
-                return of(null);
+    // The general tab resolver always returns an Observable
+    return (datasetSettingsGeneralTabResolverFn(route, state) as Observable<DatasetViewData | RedirectCommand>).pipe(
+        switchMap((data) => {
+            if (data instanceof RedirectCommand) {
+                return of(data);
             }
             return datasetFlowTriggerService
                 .fetchDatasetFlowTrigger(data.datasetBasics.id, DatasetFlowType.ExecuteTransform)

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
@@ -31,12 +31,7 @@ describe("RotateSecretWebhookComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [RotateSecretWebhookComponent, SharedTestModule],
-            providers: [
-                Apollo,
-                provideToastr(),
-                provideHttpClient(withInterceptorsFromDi()),
-                provideHttpClientTesting(),
-            ],
+            providers: [Apollo, provideToastr(), provideHttpClient(), provideHttpClientTesting()],
         });
         registerMatSvgIcons();
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);

@@ -6,7 +6,7 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot, UrlTree } from "@angular/router";
 
 import { Apollo } from "apollo-angular";
 
@@ -14,11 +14,11 @@ import { forbidAnonymousAccessGuardFn } from "@common/guards/forbid-anonymous-ac
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { NavigationService } from "src/app/services/navigation.service";
+import ProjectLinks from "src/app/project-links";
 
 describe("forbidAnonymousAccessGuardFn", () => {
     let loggedUserService: LoggedUserService;
-    let navigationService: NavigationService;
+    let router: Router;
 
     const mockRouterStateSnapshot = {} as RouterStateSnapshot;
     const mockActivatedRouteSnapshot = {} as ActivatedRouteSnapshot;
@@ -31,7 +31,7 @@ describe("forbidAnonymousAccessGuardFn", () => {
             providers: [Apollo],
         });
         loggedUserService = TestBed.inject(LoggedUserService);
-        navigationService = TestBed.inject(NavigationService);
+        router = TestBed.inject(Router);
     });
 
     it("should be created", () => {
@@ -44,27 +44,23 @@ describe("forbidAnonymousAccessGuardFn", () => {
             "maybeCurrentlyLoggedInUser",
             "get",
         ).and.returnValue(mockAccountDetails);
-        const navigateSpy: jasmine.Spy = spyOn(navigationService, "navigateToLogin").and.stub();
 
         const result = executeGuard(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
 
         expect(result).toBe(true);
         expect(maybeCurrentlyLoggedInUserSpy).toHaveBeenCalledTimes(1);
-        expect(navigateSpy).not.toHaveBeenCalled();
     });
 
-    it("should return false when user is not logged in", () => {
+    it("should redirect to login when user is not logged in", () => {
         const maybeCurrentlyLoggedInUserSpy: jasmine.Spy = spyOnProperty(
             loggedUserService,
             "maybeCurrentlyLoggedInUser",
             "get",
         ).and.returnValue(null);
-        const navigateSpy: jasmine.Spy = spyOn(navigationService, "navigateToLogin").and.stub();
 
         const result = executeGuard(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
 
-        expect(result).toBe(false);
+        expect(router.serializeUrl(result as UrlTree)).toEqual(`/${ProjectLinks.URL_LOGIN}`);
         expect(maybeCurrentlyLoggedInUserSpy).toHaveBeenCalledTimes(1);
-        expect(navigateSpy).toHaveBeenCalledTimes(1);
     });
 });

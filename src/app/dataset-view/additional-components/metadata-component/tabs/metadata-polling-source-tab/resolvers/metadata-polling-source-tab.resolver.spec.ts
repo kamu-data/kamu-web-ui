@@ -8,11 +8,12 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
-import { Observable } from "rxjs";
+import { firstValueFrom, Observable, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
-import { MaybeNull } from "@interface/app.types";
+import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
+import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 
 import {
     mockMetadataDerivedUpdate,
@@ -21,20 +22,22 @@ import {
 import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
 import { metadataPollingSourceTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-polling-source-tab/resolvers/metadata-polling-source-tab.resolver";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { MetadataSchemaUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
 
-describe("metadataPollingSourceTabResolver", () => {
+describe("metadataPollingSourceTabResolverFn", () => {
     let datasetService: DatasetService;
     let datasetSubsService: DatasetSubscriptionsService;
-    let navigationService: NavigationService;
 
-    const executeResolver: ResolveFn<MaybeNull<MetadataTabData>> = (...resolverParameters) =>
+    const routeSnapshot = {} as ActivatedRouteSnapshot;
+    const mockState = {} as RouterStateSnapshot;
+
+    const executeResolver: ResolveFn<MetadataTabData> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => metadataPollingSourceTabResolverFn(...resolverParameters));
 
     beforeEach(() => {
@@ -43,41 +46,30 @@ describe("metadataPollingSourceTabResolver", () => {
         });
         datasetService = TestBed.inject(DatasetService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        navigationService = TestBed.inject(NavigationService);
+        spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
+            of(mockFullPowerDatasetPermissionsFragment),
+        );
     });
 
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
-    });
+    function resolve(datasetBasics: DatasetBasicsFragment, metadataUpdate: MetadataSchemaUpdate): Promise<unknown> {
+        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(datasetBasics));
+        spyOnProperty(datasetSubsService, "metadataSchemaChanges", "get").and.returnValue(of(metadataUpdate));
+        return firstValueFrom(executeResolver(routeSnapshot, mockState) as Observable<unknown>);
+    }
 
-    it("should check resolver", () => {
-        datasetService.emitDatasetChanged(mockDatasetBasicsRootFragment);
-        datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
-        datasetSubsService.emitMetadataSchemaChanged(mockMetadataRootUpdate);
-        const routeSnapshot = {} as ActivatedRouteSnapshot;
-        const mockState = {} as RouterStateSnapshot;
+    it("should resolve the metadata summary for a root dataset", async () => {
+        const data = await resolve(mockDatasetBasicsRootFragment, mockMetadataRootUpdate);
 
-        const result = executeResolver(routeSnapshot, mockState) as Observable<MetadataTabData>;
-        result.subscribe((data: MetadataTabData) => {
-            expect(data).toEqual({
-                datasetBasics: mockDatasetBasicsRootFragment,
-                datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                metadataSummary: mockMetadataRootUpdate.metadataSummary,
-            });
+        expect(data).toEqual({
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            metadataSummary: mockMetadataRootUpdate.metadataSummary,
         });
     });
 
-    it("should check to navigate to 'page-not-found' route", () => {
-        const navigateToPageNotFoundSpy = spyOn(navigationService, "navigateToPageNotFound");
-        datasetService.emitDatasetChanged(mockDatasetBasicsDerivedFragment);
-        datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
-        datasetSubsService.emitMetadataSchemaChanged(mockMetadataDerivedUpdate);
-        const routeSnapshot = {} as ActivatedRouteSnapshot;
-        const mockState = {} as RouterStateSnapshot;
+    it("should redirect to page not found for a derivative dataset", async () => {
+        const data = await resolve(mockDatasetBasicsDerivedFragment, mockMetadataDerivedUpdate);
 
-        const result = executeResolver(routeSnapshot, mockState) as Observable<MetadataTabData>;
-        result.subscribe(() => {
-            expect(navigateToPageNotFoundSpy).toHaveBeenCalledTimes(1);
-        });
+        expectPageNotFoundRedirect(data);
     });
 });

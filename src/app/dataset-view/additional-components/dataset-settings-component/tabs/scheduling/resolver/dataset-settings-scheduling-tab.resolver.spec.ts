@@ -8,14 +8,14 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
-import { first, Observable, of } from "rxjs";
+import { firstValueFrom, Observable, of } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
+import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
 import { DatasetFlowType } from "@api/kamu.graphql.interface";
 import { mockCronSchedule, mockGetDatasetFlowTriggerCronQuery } from "@api/mock/dataset-flow.mock";
-import { MaybeNull } from "@interface/app.types";
 
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -29,7 +29,6 @@ import {
     mockFullPowerDatasetPermissionsFragment,
     mockReadonlyDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
 
 describe("datasetSettingsSchedulingTabResolverFn", () => {
     const mockActivatedRouteSnapshot = new ActivatedRouteSnapshot();
@@ -37,14 +36,17 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
 
     let datasetSubsService: DatasetSubscriptionsService;
     let datasetFlowTriggerService: DatasetFlowTriggerService;
-    let navigationService: NavigationService;
 
     let permissionsChangesSpy: jasmine.Spy;
 
-    const executeResolver: ResolveFn<MaybeNull<DatasetSettingsSchedulingTabData>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<DatasetSettingsSchedulingTabData> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => datasetSettingsSchedulingTabResolverFn(...resolverParameters));
 
-    type ResolverObservable = Observable<MaybeNull<DatasetSettingsSchedulingTabData>>;
+    function resolve(): Promise<unknown> {
+        return firstValueFrom(
+            executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot) as Observable<unknown>,
+        );
+    }
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -65,40 +67,20 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
         );
 
         datasetFlowTriggerService = TestBed.inject(DatasetFlowTriggerService);
-        navigationService = TestBed.inject(NavigationService);
     });
 
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
-    });
-
-    it("should return null when datasetSettingsGeneralTabResolverFn returns null", () => {
+    it("should pass the redirect through without fetching flow triggers when the tab is not accessible", async () => {
         permissionsChangesSpy.and.returnValue(of(mockReadonlyDatasetPermissionsFragment));
-        spyOn(navigationService, "navigateToPageNotFound").and.stub();
+        const fetchDatasetFlowTriggerSpy = spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger");
 
-        const fetchDatasetFlowTriggerSpy: jasmine.Spy = spyOn(
-            datasetFlowTriggerService,
-            "fetchDatasetFlowTrigger",
-        ).and.stub();
+        const data = await resolve();
 
-        const resolver$ = executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
-        expect(resolver$).not.toBeNull();
-
-        const resolverSubscription$ = (resolver$ as ResolverObservable)
-            .pipe(first())
-            .subscribe((data: MaybeNull<DatasetSettingsSchedulingTabData>) => {
-                expect(data).toBeNull();
-            });
-
+        expectPageNotFoundRedirect(data);
         expect(fetchDatasetFlowTriggerSpy).not.toHaveBeenCalled();
-        expect(resolverSubscription$.closed).toBeTrue();
     });
 
-    it("should call fetchDatasetFlowTrigger with correct parameters", () => {
-        const fetchDatasetFlowTriggerSpy: jasmine.Spy = spyOn(
-            datasetFlowTriggerService,
-            "fetchDatasetFlowTrigger",
-        ).and.returnValue(
+    it("should call fetchDatasetFlowTrigger with correct parameters", async () => {
+        const fetchDatasetFlowTriggerSpy = spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").and.returnValue(
             of({
                 datasets: {
                     byId: {
@@ -119,58 +101,44 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
             }),
         );
 
-        const resolver$ = executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
-        expect(resolver$).not.toBeNull();
+        const data = await resolve();
 
-        const resolverSubscription$ = (resolver$ as ResolverObservable)
-            .pipe(first())
-            .subscribe((data: MaybeNull<DatasetSettingsSchedulingTabData>) => {
-                expect(data).toEqual({
-                    datasetBasics: mockDatasetBasicsRootFragment,
-                    datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                    schedule: null,
-                    stopPolicy: {
-                        __typename: "FlowTriggerStopPolicyNever",
-                        dummy: false,
-                    },
-                    paused: true,
-                });
-            });
-
-        expect(fetchDatasetFlowTriggerSpy).toHaveBeenCalledWith(
+        expect(fetchDatasetFlowTriggerSpy).toHaveBeenCalledOnceWith(
             mockDatasetBasicsRootFragment.id,
             DatasetFlowType.Ingest,
         );
-
-        expect(resolverSubscription$.closed).toBeTrue();
+        expect(data).toEqual({
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            schedule: null,
+            stopPolicy: {
+                __typename: "FlowTriggerStopPolicyNever",
+                dummy: false,
+            },
+            paused: true,
+        });
     });
 
-    it("should correctly map flowTriggers to paused and schedule", () => {
+    it("should correctly map flowTriggers to paused and schedule", async () => {
         spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").and.returnValue(
             of(mockGetDatasetFlowTriggerCronQuery),
         );
 
-        const resolver$ = executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
-        expect(resolver$).not.toBeNull();
+        const data = await resolve();
 
-        const resolverSubscription$ = (resolver$ as ResolverObservable)
-            .pipe(first())
-            .subscribe((data: MaybeNull<DatasetSettingsSchedulingTabData>) => {
-                expect(data).toEqual({
-                    datasetBasics: mockDatasetBasicsRootFragment,
-                    datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                    schedule: mockCronSchedule,
-                    paused: mockGetDatasetFlowTriggerCronQuery.datasets.byId?.flows.triggers.byType?.paused || false,
-                    stopPolicy: {
-                        __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
-                        maxFailures: 1,
-                    },
-                });
-            });
-        expect(resolverSubscription$.closed).toBeTrue();
+        expect(data).toEqual({
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            schedule: mockCronSchedule,
+            paused: mockGetDatasetFlowTriggerCronQuery.datasets.byId?.flows.triggers.byType?.paused || false,
+            stopPolicy: {
+                __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+                maxFailures: 1,
+            },
+        });
     });
 
-    it("should correctly map flowTriggers when no data is defined", () => {
+    it("should correctly map flowTriggers when no data is defined", async () => {
         spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").and.returnValue(
             of({
                 datasets: {
@@ -186,39 +154,21 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
             }),
         );
 
-        const resolver$ = executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
-        expect(resolver$).not.toBeNull();
+        const data = await resolve();
 
-        const resolverSubscription$ = (resolver$ as ResolverObservable)
-            .pipe(first())
-            .subscribe((data: MaybeNull<DatasetSettingsSchedulingTabData>) => {
-                expect(data).toEqual({
-                    datasetBasics: mockDatasetBasicsRootFragment,
-                    datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                    schedule: null,
-                    stopPolicy: null,
-                    paused: true,
-                });
-            });
-        expect(resolverSubscription$.closed).toBeTrue();
+        expect(data).toEqual({
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            schedule: null,
+            stopPolicy: null,
+            paused: true,
+        });
     });
 
-    it("should handle errors from fetchDatasetFlowTrigger", () => {
+    it("should handle errors from fetchDatasetFlowTrigger", async () => {
         const errorMessage = "Failed to fetch flow triggers";
         spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").and.throwError(errorMessage);
 
-        const resolver$ = executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
-        expect(resolver$).not.toBeNull();
-
-        const resolverSubscription$ = (resolver$ as ResolverObservable).pipe(first()).subscribe({
-            next: (data: MaybeNull<DatasetSettingsSchedulingTabData>) => {
-                fail("Expected an error, but got data: " + JSON.stringify(data));
-            },
-            error: (error: Error) => {
-                expect(error.message).toEqual(errorMessage);
-            },
-        });
-
-        expect(resolverSubscription$.closed).toBeTrue();
+        await expectAsync(resolve()).toBeRejectedWithError(errorMessage);
     });
 });

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
@@ -27,7 +27,7 @@ describe("accountSettingsPasswordAndAuthenticationResolver", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [],
-            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+            providers: [Apollo, provideHttpClient(), provideHttpClientTesting()],
         });
 
         loggedUserService = TestBed.inject(LoggedUserService);

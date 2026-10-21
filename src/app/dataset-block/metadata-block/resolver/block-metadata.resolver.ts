@@ -8,7 +8,7 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
-import { catchError, EMPTY, map } from "rxjs";
+import { catchError, map, of } from "rxjs";
 
 import { DatasetInfo } from "@interface/navigation.interface";
 
@@ -22,6 +22,7 @@ export const blockMetadataResolverFn: ResolveFn<MetadataBlockInfo> = (route: Act
     const blockService = inject(BlockService);
     const navigationService = inject(NavigationService);
     const datasetService = inject(DatasetService);
+
     const blockHash = route.paramMap.get(ProjectLinks.URL_PARAM_BLOCK_HASH) as string;
     const datasetInfo = {
         accountName: route.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),
@@ -34,9 +35,6 @@ export const blockMetadataResolverFn: ResolveFn<MetadataBlockInfo> = (route: Act
             datasetService.emitDownstreamsCountChanged(metadaDataBlockInfo.downstreamsCount);
             return metadaDataBlockInfo;
         }),
-        catchError(() => {
-            navigationService.navigateToPageNotFound();
-            return EMPTY;
-        }),
+        catchError(() => of(navigationService.pageNotFoundRedirect())),
     );
 };

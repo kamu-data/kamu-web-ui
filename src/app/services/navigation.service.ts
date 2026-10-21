@@ -6,7 +6,7 @@
  */
 
 import { inject, Injectable } from "@angular/core";
-import { Router } from "@angular/router";
+import { RedirectCommand, Router, UrlTree } from "@angular/router";
 
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { FlowStatus } from "@api/kamu.graphql.interface";
@@ -40,6 +40,10 @@ export class NavigationService {
 
     public navigateToHome(): void {
         promiseWithCatch(this.router.navigate([ProjectLinks.URL_HOME]));
+    }
+
+    public homeUrlTree(): UrlTree {
+        return this.router.createUrlTree([ProjectLinks.URL_HOME]);
     }
 
     public navigateToPath(url: string): void {
@@ -162,6 +166,14 @@ export class NavigationService {
         );
     }
 
+    public loginUrlTree(redirectUrl?: string): UrlTree {
+        return this.router.createUrlTree([ProjectLinks.URL_LOGIN], {
+            queryParams: {
+                [ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL]: redirectUrl,
+            },
+        });
+    }
+
     public navigateToOwnerView(
         ownerName: string,
         tab?: AccountTabs,
@@ -182,12 +194,26 @@ export class NavigationService {
         );
     }
 
+    public ownerViewUrlTree(ownerName: string, tab: AccountTabs): UrlTree {
+        return this.router.createUrlTree([ownerName, ProjectLinks.URL_ACCOUNT_SELECT, tab]);
+    }
+
     public navigateToPageNotFound(): void {
         promiseWithCatch(
             this.router.navigate([ProjectLinks.URL_PAGE_NOT_FOUND], {
                 skipLocationChange: true,
             }),
         );
+    }
+
+    /**
+     * Shows the page-not-found view from a resolver, as part of the navigation being resolved,
+     * and keeps the requested URL in the address bar.
+     */
+    public pageNotFoundRedirect(): RedirectCommand {
+        return new RedirectCommand(this.router.createUrlTree([ProjectLinks.URL_PAGE_NOT_FOUND]), {
+            skipLocationChange: true,
+        });
     }
 
     public navigateToReturnToCli(): void {

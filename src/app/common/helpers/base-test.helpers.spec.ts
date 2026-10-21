@@ -9,7 +9,7 @@ import { DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatIconRegistry } from "@angular/material/icon";
 import { By, DomSanitizer } from "@angular/platform-browser";
-import { ActivatedRoute, RouterEvent } from "@angular/router";
+import { ActivatedRoute, RedirectCommand, Router, RouterEvent } from "@angular/router";
 
 import { ReplaySubject } from "rxjs";
 
@@ -242,4 +242,15 @@ export function registerMatSvgIcons(): void {
     icons.forEach((icon: string) => {
         matIconRegistry.addSvgIcon(icon, domSanitizer.bypassSecurityTrustResourceUrl(`/assets/svg/${icon}.svg`));
     });
+}
+
+/**
+ * Asserts that a resolver result redirects to the page-not-found view without changing the URL.
+ */
+export function expectPageNotFoundRedirect(result: unknown): void {
+    expect(result).toBeInstanceOf(RedirectCommand);
+    const command = result as RedirectCommand;
+    const redirectUrl = TestBed.inject(Router).serializeUrl(command.redirectTo);
+    expect(redirectUrl).toEqual(`/${ProjectLinks.URL_PAGE_NOT_FOUND}`);
+    expect(command.navigationBehaviorOptions?.skipLocationChange).toBeTrue();
 }

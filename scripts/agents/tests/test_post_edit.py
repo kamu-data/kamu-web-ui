@@ -32,6 +32,24 @@ class AddedTextTest(unittest.TestCase):
             with self.subTest(line=line):
                 self.assertFalse(flagged(line, "src/app/x.component.spec.ts"))
 
+    def test_guards_and_resolvers_must_not_navigate(self):
+        for rel in ["src/app/auth/guards/admin.guard.ts", "src/app/dataset-view/resolvers/dataset-view.resolver.ts"]:
+            for line in ["        navigationService.navigateToPageNotFound();", "    this.navigationService.navigateToHome();",
+                         "    void router.navigate([ProjectLinks.URL_HOME]);", "    router.navigateByUrl(url);"]:
+                with self.subTest(rel=rel, line=line):
+                    self.assertTrue(flagged(line, rel))
+        for line in ["        return navigationService.pageNotFoundRedirect();", "    return navigationService.homeUrlTree();"]:
+            with self.subTest(line=line):
+                self.assertFalse(flagged(line, "src/app/dataset-view/resolvers/dataset-view.resolver.ts"))
+        self.assertFalse(flagged("        navigationService.navigateToHome();", "src/app/x.component.ts"))
+        self.assertFalse(flagged("        navigationService.navigateToHome();", "src/app/auth/guards/admin.guard.spec.ts"))
+
+    def test_class_interceptors_are_flagged(self):
+        for line in ["    provideHttpClient(withInterceptorsFromDi()),", "    { provide: HTTP_INTERCEPTORS, useClass: X, multi: true },"]:
+            with self.subTest(line=line):
+                self.assertTrue(flagged(line, "src/app/x.component.spec.ts"))
+        self.assertFalse(flagged("    provideHttpClient(withInterceptors([authInterceptor])),", "src/main.ts"))
+
     def test_comments_must_not_cite_plans_or_narrate_history(self):
         for line in ["// see plan 7 item 3", "// fixes KAMU-123", "    // per issue #860",
                      " * This used to be a Subject", "// renamed from DatasetsComponent", "// this change adds retries",

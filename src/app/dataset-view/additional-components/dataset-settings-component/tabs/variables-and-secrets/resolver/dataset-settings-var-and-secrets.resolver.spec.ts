@@ -8,13 +8,12 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
-import { Observable, of } from "rxjs";
+import { firstValueFrom, Observable, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
-import { provideToastr } from "ngx-toastr";
 
+import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
-import { MaybeNull } from "@interface/app.types";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
@@ -25,73 +24,49 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
 
 describe("datasetSettingsVarAndSecretsResolverFn", () => {
-    let datasetService: DatasetService;
-    let datasetSubService: DatasetSubscriptionsService;
-    let navigationService: NavigationService;
-    let appConfigService: AppConfigService;
-
-    const executeResolver: ResolveFn<MaybeNull<DatasetViewData>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<DatasetViewData> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => datasetSettingsVarAndSecretsResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo, provideToastr()],
+            providers: [Apollo],
         });
-        datasetService = TestBed.inject(DatasetService);
-        datasetSubService = TestBed.inject(DatasetSubscriptionsService);
-        navigationService = TestBed.inject(NavigationService);
-        appConfigService = TestBed.inject(AppConfigService);
-        spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue(
+        spyOnProperty(TestBed.inject(AppConfigService), "featureFlags", "get").and.returnValue(
             AppValues.DEFAULT_UI_CONFIGURATION.featureFlags,
         );
-    });
-
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
-    });
-
-    it("should check resolver with error", () => {
-        const navigateToPageNotFoundSpy = spyOn(navigationService, "navigateToPageNotFound");
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
+        spyOnProperty(TestBed.inject(DatasetService), "datasetChanges", "get").and.returnValue(
+            of(mockDatasetBasicsRootFragment),
+        );
+        const datasetSubService = TestBed.inject(DatasetSubscriptionsService);
         spyOnProperty(datasetSubService, "overviewChanges", "get").and.returnValue(of(mockOverviewUpdate));
         spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(
             of(mockFullPowerDatasetPermissionsFragment),
         );
+    });
+
+    function resolve(tab: string): Promise<unknown> {
         const mockRoute = {
             data: {
-                [ProjectLinks.URL_PARAM_TAB]: "wrongTab",
+                [ProjectLinks.URL_PARAM_TAB]: tab,
             },
-        } as ActivatedRouteSnapshot;
-        const mockState = {} as RouterStateSnapshot;
-        const result = executeResolver(mockRoute, mockState) as Observable<DatasetViewData>;
-        result.subscribe({
-            complete: () => {
-                expect(navigateToPageNotFoundSpy).toHaveBeenCalledTimes(1);
-            },
+        } as unknown as ActivatedRouteSnapshot;
+        return firstValueFrom(executeResolver(mockRoute, {} as RouterStateSnapshot) as Observable<unknown>);
+    }
+
+    it("should resolve the dataset for the variables and secrets tab", async () => {
+        const data = await resolve(SettingsTabsEnum.VARIABLES_AND_SECRETS);
+
+        expect(data).toEqual({
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
         });
     });
 
-    it("should check resolver ", () => {
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
-        spyOnProperty(datasetSubService, "overviewChanges", "get").and.returnValue(of(mockOverviewUpdate));
-        spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(
-            of(mockFullPowerDatasetPermissionsFragment),
-        );
-        const mockRoute = {
-            data: {
-                [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.VARIABLES_AND_SECRETS,
-            },
-        } as ActivatedRouteSnapshot;
-        const mockState = {} as RouterStateSnapshot;
-        const result = executeResolver(mockRoute, mockState) as Observable<DatasetViewData>;
-        result.subscribe((data) => {
-            expect(data).toEqual({
-                datasetBasics: mockDatasetBasicsRootFragment,
-                datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            });
-        });
+    it("should redirect to page not found for an unknown tab", async () => {
+        const data = await resolve("wrongTab");
+
+        expectPageNotFoundRedirect(data);
     });
 });

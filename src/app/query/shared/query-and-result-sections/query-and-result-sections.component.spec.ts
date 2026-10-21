@@ -6,7 +6,7 @@
  */
 
 import { Clipboard } from "@angular/cdk/clipboard";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
@@ -43,13 +43,7 @@ describe("QueryAndResultSectionsComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [EditorModule, SharedTestModule, QueryAndResultSectionsComponent],
-            providers: [
-                provideMarkdown(),
-                Apollo,
-                provideToastr(),
-                provideHttpClient(withInterceptorsFromDi()),
-                provideHttpClientTesting(),
-            ],
+            providers: [provideMarkdown(), Apollo, provideToastr(), provideHttpClient(), provideHttpClientTesting()],
         });
         fixture = TestBed.createComponent(QueryAndResultSectionsComponent);
         component = fixture.componentInstance;

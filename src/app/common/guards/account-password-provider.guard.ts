@@ -16,11 +16,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 export const accountPasswordProviderGuard: CanActivateFn = () => {
     const loggedUserService = inject(LoggedUserService);
     const navigationService = inject(NavigationService);
-    const accountProvider = loggedUserService.currentlyLoggedInUser.accountProvider;
-    if (accountProvider === AccountProvider.Password) {
-        return true;
-    } else {
-        navigationService.navigateToHome();
-        return false;
-    }
+
+    const accountProvider = loggedUserService.maybeCurrentlyLoggedInUser?.accountProvider;
+    return accountProvider === AccountProvider.Password || navigationService.homeUrlTree();
 };

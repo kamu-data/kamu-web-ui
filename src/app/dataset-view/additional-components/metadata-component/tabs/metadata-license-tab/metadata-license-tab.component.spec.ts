@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatIconModule } from "@angular/material/icon";
@@ -37,7 +37,7 @@ describe("MetadataLicenseTabComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [MetadataLicenseTabComponent, MatIconModule, SharedTestModule],
-            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+            providers: [Apollo, provideHttpClient(), provideHttpClientTesting()],
         });
         registerMatSvgIcons();
 

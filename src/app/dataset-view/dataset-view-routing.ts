@@ -12,7 +12,7 @@ import { Routes } from "@angular/router";
 import { datasetInfoResolverFn } from "@common/resolvers/dataset-info.resolver";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
-import { AuthenticatedGuard } from "src/app/auth/guards/authenticated.guard";
+import { authenticatedGuard } from "src/app/auth/guards/authenticated.guard";
 import { DataComponent } from "src/app/dataset-view/additional-components/data-component/data.component";
 import { datasetDataTabResolverFn } from "src/app/dataset-view/additional-components/data-component/resolver/dataset-data-tab.resolver";
 import { FlowsComponent } from "src/app/dataset-view/additional-components/flows-component/flows.component";
@@ -114,12 +114,12 @@ export const DATASET_VIEW_ROUTES: Routes = [
                     [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Flows,
                 },
                 resolve: { [RoutingResolvers.DATASET_VIEW_FLOWS_KEY]: datasetFlowsTabResolverFn },
-                canActivate: [AuthenticatedGuard],
+                canActivate: [authenticatedGuard],
             },
             {
                 path: DatasetViewTypeEnum.Settings,
                 runGuardsAndResolvers: "always",
-                canActivate: [AuthenticatedGuard],
+                canActivate: [authenticatedGuard],
                 data: {
                     [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Settings,
                 },

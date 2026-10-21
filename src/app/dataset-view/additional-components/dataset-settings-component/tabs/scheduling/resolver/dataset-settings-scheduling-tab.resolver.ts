@@ -6,31 +6,28 @@
  */
 
 import { inject } from "@angular/core";
-import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
 import { map, Observable, of, switchMap } from "rxjs";
 
 import { DatasetFlowType, GetDatasetFlowTriggerQuery } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
 
 import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
 import { datasetSettingsGeneralTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/resolver/dataset-settings-general-tab.resolver";
 import { DatasetSettingsSchedulingTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.data";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
-export const datasetSettingsSchedulingTabResolverFn: ResolveFn<MaybeNull<DatasetSettingsSchedulingTabData>> = (
+export const datasetSettingsSchedulingTabResolverFn: ResolveFn<DatasetSettingsSchedulingTabData> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ) => {
     const datasetFlowTriggerService = inject(DatasetFlowTriggerService);
 
-    return (
-        datasetSettingsGeneralTabResolverFn(route, state) as Observable<MaybeNull<DatasetSettingsSchedulingTabData>>
-    ).pipe(
-        // We can safely cast here because the resolver is used in a context where the type is DatasetSettingsIngestConfigurationTabData
-        switchMap((data: MaybeNull<DatasetViewData>) => {
-            if (data === null) {
-                return of(null);
+    // The general tab resolver always returns an Observable
+    return (datasetSettingsGeneralTabResolverFn(route, state) as Observable<DatasetViewData | RedirectCommand>).pipe(
+        switchMap((data) => {
+            if (data instanceof RedirectCommand) {
+                return of(data);
             }
             return datasetFlowTriggerService
                 .fetchDatasetFlowTrigger(data.datasetBasics.id, DatasetFlowType.Ingest)

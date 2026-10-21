@@ -8,13 +8,13 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
-import { Observable, of } from "rxjs";
+import { firstValueFrom, Observable, of, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
-import { MaybeNull } from "@interface/app.types";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
@@ -26,16 +26,14 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
 
-describe("datasetSettingsWebhooksResolver", () => {
+describe("datasetSettingsWebhooksResolverFn", () => {
     let datasetService: DatasetService;
     let datasetSubService: DatasetSubscriptionsService;
-    let navigationService: NavigationService;
     let appConfigService: AppConfigService;
     let datasetWebhooksService: DatasetWebhooksService;
 
-    const executeResolver: ResolveFn<MaybeNull<DatasetSettingsWebhookTabData>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<DatasetSettingsWebhookTabData> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => datasetSettingsWebhooksResolverFn(...resolverParameters));
 
     beforeEach(() => {
@@ -45,60 +43,56 @@ describe("datasetSettingsWebhooksResolver", () => {
 
         datasetService = TestBed.inject(DatasetService);
         datasetSubService = TestBed.inject(DatasetSubscriptionsService);
-        navigationService = TestBed.inject(NavigationService);
         appConfigService = TestBed.inject(AppConfigService);
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);
         spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue(
             AppValues.DEFAULT_UI_CONFIGURATION.featureFlags,
         );
-    });
-
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
-    });
-
-    it("should check resolver", () => {
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
         spyOnProperty(datasetSubService, "overviewChanges", "get").and.returnValue(of(mockOverviewUpdate));
         spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(
             of(mockFullPowerDatasetPermissionsFragment),
         );
-        spyOn(datasetWebhooksService, "datasetWebhookSubscriptions").and.returnValue(of([]));
+    });
+
+    function resolve(tab: string): Promise<unknown> {
         const mockRoute = {
             data: {
-                [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.WEBHOOKS,
+                [ProjectLinks.URL_PARAM_TAB]: tab,
             },
-        } as ActivatedRouteSnapshot;
-        const mockState = {} as RouterStateSnapshot;
-        const result = executeResolver(mockRoute, mockState) as Observable<DatasetSettingsWebhookTabData>;
-        result.subscribe((data) => {
-            expect(data).toEqual({
-                datasetBasics: mockDatasetBasicsRootFragment,
-                datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                subscriptions: [],
-            });
+        } as unknown as ActivatedRouteSnapshot;
+        return firstValueFrom(executeResolver(mockRoute, {} as RouterStateSnapshot) as Observable<unknown>);
+    }
+
+    it("should resolve the dataset with its webhook subscriptions", async () => {
+        const datasetWebhookSubscriptionsSpy = spyOn(
+            datasetWebhooksService,
+            "datasetWebhookSubscriptions",
+        ).and.returnValue(of([]));
+
+        const data = await resolve(SettingsTabsEnum.WEBHOOKS);
+
+        expect(datasetWebhookSubscriptionsSpy).toHaveBeenCalledOnceWith(mockDatasetBasicsRootFragment.id);
+        expect(data).toEqual({
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            subscriptions: [],
         });
     });
 
-    it("should check resolver with wrong tab", () => {
-        const navigateToPageNotFoundSpy = spyOn(navigationService, "navigateToPageNotFound");
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
-        spyOnProperty(datasetSubService, "overviewChanges", "get").and.returnValue(of(mockOverviewUpdate));
-        spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(
-            of(mockFullPowerDatasetPermissionsFragment),
-        );
+    it("should redirect to page not found for an unknown tab", async () => {
         spyOn(datasetWebhooksService, "datasetWebhookSubscriptions").and.returnValue(of([]));
-        const mockRoute = {
-            data: {
-                [ProjectLinks.URL_PARAM_TAB]: "wrongTab",
-            },
-        } as ActivatedRouteSnapshot;
-        const mockState = {} as RouterStateSnapshot;
-        const result = executeResolver(mockRoute, mockState) as Observable<DatasetSettingsWebhookTabData>;
-        result.subscribe({
-            complete: () => {
-                expect(navigateToPageNotFoundSpy).toHaveBeenCalledTimes(1);
-            },
-        });
+
+        const data = await resolve("wrongTab");
+
+        expectPageNotFoundRedirect(data);
+    });
+
+    it("should fail when the webhook subscriptions cannot be loaded", async () => {
+        spyOn(datasetWebhooksService, "datasetWebhookSubscriptions").and.returnValue(
+            throwError(() => new Error("failed")),
+        );
+
+        await expectAsync(resolve(SettingsTabsEnum.WEBHOOKS)).toBeRejectedWithError("failed");
     });
 });

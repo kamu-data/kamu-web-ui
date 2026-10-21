@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 
@@ -28,12 +28,7 @@ describe("DatasetAsCollectionService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [
-                Apollo,
-                provideToastr(),
-                provideHttpClient(withInterceptorsFromDi()),
-                provideHttpClientTesting(),
-            ],
+            providers: [Apollo, provideToastr(), provideHttpClient(), provideHttpClientTesting()],
         });
         service = TestBed.inject(DatasetAsCollectionService);
         datasetApi = TestBed.inject(DatasetApi);

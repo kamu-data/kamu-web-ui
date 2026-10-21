@@ -6,7 +6,7 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { provideRouter, Router } from "@angular/router";
+import { provideRouter, RedirectCommand, Router } from "@angular/router";
 
 import { FlowStatus } from "@api/kamu.graphql.interface";
 import {
@@ -52,6 +52,38 @@ describe("NavigationService", () => {
         expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_HOME]);
     });
 
+    it("should build the home URL", () => {
+        expect(router.serializeUrl(service.homeUrlTree())).toEqual("/");
+    });
+
+    it("should build the login URL with and without a redirect URL", () => {
+        expect(router.serializeUrl(service.loginUrlTree())).toEqual(`/${ProjectLinks.URL_LOGIN}`);
+        expect(router.serializeUrl(service.loginUrlTree("/kamu"))).toEqual(
+            `/${ProjectLinks.URL_LOGIN}?${ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL}=%2Fkamu`,
+        );
+    });
+
+    it("should build the owner view URL", () => {
+        expect(router.serializeUrl(service.ownerViewUrlTree("kamu", AccountTabs.DATASETS))).toEqual(
+            `/kamu/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.DATASETS}`,
+        );
+    });
+
+    it("should build a page-not-found redirect that keeps the URL", () => {
+        const command = service.pageNotFoundRedirect();
+        expect(command).toBeInstanceOf(RedirectCommand);
+        expect(router.serializeUrl(command.redirectTo)).toEqual(`/${ProjectLinks.URL_PAGE_NOT_FOUND}`);
+        expect(command.navigationBehaviorOptions).toEqual({ skipLocationChange: true });
+    });
+
+    it("should test navigate to login with a redirect URL", () => {
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
+        service.navigateToLogin("/kamu");
+        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_LOGIN], {
+            queryParams: { redirectUrl: "/kamu" },
+        });
+    });
+
     it("should test navigate to login", () => {
         const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
         service.navigateToLogin();
@@ -94,6 +126,22 @@ describe("NavigationService", () => {
         service.navigateToOwnerView(mockOwnerName, AccountTabs.OVERVIEW);
         expect(routerSpy).toHaveBeenCalledWith([mockOwnerName, ProjectLinks.URL_ACCOUNT_SELECT, AccountTabs.OVERVIEW], {
             queryParams: { page: undefined, nav: undefined, status: undefined, mode: undefined },
+        });
+    });
+
+    it("should join several flow statuses in the owner page URL", () => {
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
+        service.navigateToOwnerView("kamu", AccountTabs.FLOWS, undefined, undefined, [
+            FlowStatus.Finished,
+            FlowStatus.Running,
+        ]);
+        expect(routerSpy).toHaveBeenCalledWith(["kamu", ProjectLinks.URL_ACCOUNT_SELECT, AccountTabs.FLOWS], {
+            queryParams: {
+                page: undefined,
+                nav: undefined,
+                status: `${FlowStatus.Finished},${FlowStatus.Running}`,
+                mode: undefined,
+            },
         });
     });
 

@@ -8,7 +8,7 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
-import { catchError, EMPTY, map, switchMap } from "rxjs";
+import { catchError, map, of, switchMap } from "rxjs";
 
 import { DatasetBasicsFragment, WebhookSubscription } from "@api/kamu.graphql.interface";
 
@@ -19,10 +19,12 @@ import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
 export const editWebhookResolverFn: ResolveFn<EditWebhooksType> = (route: ActivatedRouteSnapshot) => {
-    const webhookId = route.paramMap.get(ProjectLinks.URL_PARAM_WEBHOOK_ID) as string;
     const datasetService = inject(DatasetService);
     const datasetWebhooksService = inject(DatasetWebhooksService);
     const navigationService = inject(NavigationService);
+
+    const webhookId = route.paramMap.get(ProjectLinks.URL_PARAM_WEBHOOK_ID) as string;
+
     return datasetService.datasetChanges.pipe(
         switchMap((datasetBasics: DatasetBasicsFragment) =>
             datasetWebhooksService.datasetWebhookSubscriptionById({ datasetId: datasetBasics.id, id: webhookId }).pipe(
@@ -32,10 +34,7 @@ export const editWebhookResolverFn: ResolveFn<EditWebhooksType> = (route: Activa
                         subscription,
                     };
                 }),
-                catchError(() => {
-                    navigationService.navigateToPageNotFound();
-                    return EMPTY;
-                }),
+                catchError(() => of(navigationService.pageNotFoundRedirect())),
             ),
         ),
     );

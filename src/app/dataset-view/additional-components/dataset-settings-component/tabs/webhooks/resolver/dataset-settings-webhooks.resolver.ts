@@ -11,7 +11,6 @@ import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 import { combineLatest, map, switchMap } from "rxjs";
 
 import { DatasetMetadata, WebhookSubscription } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { isSettingsTabAccessibleHelper } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.helpers";
@@ -23,7 +22,7 @@ import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscr
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
-export const datasetSettingsWebhooksResolverFn: ResolveFn<MaybeNull<DatasetSettingsWebhookTabData>> = (
+export const datasetSettingsWebhooksResolverFn: ResolveFn<DatasetSettingsWebhookTabData> = (
     route: ActivatedRouteSnapshot,
 ) => {
     const datasetService = inject(DatasetService);
@@ -31,6 +30,7 @@ export const datasetSettingsWebhooksResolverFn: ResolveFn<MaybeNull<DatasetSetti
     const navigationService = inject(NavigationService);
     const appConfigService = inject(AppConfigService);
     const datasetWebhooksService = inject(DatasetWebhooksService);
+
     const activeTab = route.data[ProjectLinks.URL_PARAM_TAB] as SettingsTabsEnum;
 
     return combineLatest([
@@ -62,8 +62,7 @@ export const datasetSettingsWebhooksResolverFn: ResolveFn<MaybeNull<DatasetSetti
                             subscriptions,
                         };
                     } else {
-                        navigationService.navigateToPageNotFound();
-                        return null;
+                        return navigationService.pageNotFoundRedirect();
                     }
                 }),
             ),

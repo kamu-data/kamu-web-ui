@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 
@@ -21,7 +21,7 @@ describe("FeatureFlagsService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [],
-            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+            providers: [provideHttpClient(), provideHttpClientTesting()],
         });
         service = TestBed.inject(FeatureFlagsService);
         appConfigService = TestBed.inject(AppConfigService);

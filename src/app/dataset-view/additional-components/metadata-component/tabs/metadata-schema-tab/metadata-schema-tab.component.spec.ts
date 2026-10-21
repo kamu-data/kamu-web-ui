@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
@@ -29,7 +29,7 @@ describe("MetadataSchemaTabComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [MetadataSchemaTabComponent],
-            providers: [provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+            providers: [provideToastr(), provideHttpClient(), provideHttpClientTesting()],
         });
         registerMatSvgIcons();
         fixture = TestBed.createComponent(MetadataSchemaTabComponent);

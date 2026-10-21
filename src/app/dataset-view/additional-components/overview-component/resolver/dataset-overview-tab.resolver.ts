@@ -8,7 +8,7 @@
 import { inject } from "@angular/core";
 import { ResolveFn } from "@angular/router";
 
-import { catchError, combineLatest, EMPTY, map } from "rxjs";
+import { catchError, combineLatest, map, of } from "rxjs";
 
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -32,9 +32,6 @@ export const datasetOverviewTabResolverFn: ResolveFn<DatasetOverviewTabData> = (
                 overviewUpdate,
             };
         }),
-        catchError(() => {
-            navigationService.navigateToPageNotFound();
-            return EMPTY;
-        }),
+        catchError(() => of(navigationService.pageNotFoundRedirect())),
     );
 };

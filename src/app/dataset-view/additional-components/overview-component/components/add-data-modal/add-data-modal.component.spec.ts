@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
@@ -36,7 +36,7 @@ describe("AddDataModalComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, AddDataModalComponent],
-            providers: [Apollo, NgbActiveModal, provideHttpClient(withInterceptorsFromDi())],
+            providers: [Apollo, NgbActiveModal, provideHttpClient()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AddDataModalComponent);

@@ -11,17 +11,17 @@ import { ResolveFn } from "@angular/router";
 import { combineLatest, map } from "rxjs";
 
 import { DatasetKind } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
 
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { NavigationService } from "src/app/services/navigation.service";
 
-export const metadataTransformationTabResolverFn: ResolveFn<MaybeNull<DatasetOverviewTabData>> = () => {
+export const metadataTransformationTabResolverFn: ResolveFn<DatasetOverviewTabData> = () => {
     const datasetService = inject(DatasetService);
     const datasetSubsService = inject(DatasetSubscriptionsService);
     const navigationService = inject(NavigationService);
+
     return combineLatest([
         datasetService.datasetChanges,
         datasetSubsService.permissionsChanges,
@@ -29,8 +29,7 @@ export const metadataTransformationTabResolverFn: ResolveFn<MaybeNull<DatasetOve
     ]).pipe(
         map(([datasetBasics, datasetPermissions, overviewUpdate]) => {
             if (datasetBasics.kind === DatasetKind.Root) {
-                navigationService.navigateToPageNotFound();
-                return null;
+                return navigationService.pageNotFoundRedirect();
             }
             return {
                 datasetBasics,

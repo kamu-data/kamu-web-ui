@@ -32,7 +32,6 @@ import {
 import { BaseMainEventComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/base-main-event.component";
 import { StepperNavigationComponent } from "src/app/dataset-view/additional-components/metadata-component/components/stepper-navigation/stepper-navigation.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { EditorModule } from "src/app/editor/editor.module";
 
 @Component({
     selector: "app-set-transform",
@@ -43,7 +42,6 @@ import { EditorModule } from "src/app/editor/editor.module";
         //-----//
         RouterLink,
         //-----//
-        EditorModule,
         EngineSectionComponent,
         QueriesSectionComponent,
         SearchSectionComponent,

@@ -1,12 +1,9 @@
-@use "@angular/material" as mat;
 @use "@angular/material/prebuilt-themes/indigo-pink.css";
 @use "var" as *;
 @use "bootstrap-icons/font/bootstrap-icons.css";
 @use "bootstrap/scss/bootstrap";
 @use "@danielmoncada/angular-datetime-picker/assets/style/picker.min.css";
 @use "components/index";
-@include mat.elevation-classes;
-@include mat.app-background;
 
 body {
     font-size: 14px;

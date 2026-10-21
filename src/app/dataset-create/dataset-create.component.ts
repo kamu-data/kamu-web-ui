@@ -35,7 +35,6 @@ import {
     STORAGE_LIST,
 } from "src/app/dataset-create/dataset-create.types";
 import { YamlEditorComponent } from "src/app/editor/components/yaml-editor/yaml-editor.component";
-import { EditorModule } from "src/app/editor/editor.module";
 
 @Component({
     selector: "app-dataset-create",
@@ -55,7 +54,6 @@ import { EditorModule } from "src/app/editor/editor.module";
         //-----//
         FormValidationErrorsDirective,
         YamlEditorComponent,
-        EditorModule,
     ],
 })
 export class DatasetCreateComponent extends BaseComponent {

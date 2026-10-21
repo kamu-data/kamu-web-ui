@@ -22,7 +22,6 @@ import {
     sharedBasedEditorComponentTest,
 } from "src/app/editor/components/base-editor/base-editor.component.spec";
 import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
-import { EditorModule } from "src/app/editor/editor.module";
 import { editorMock } from "src/app/editor/mock/editor.mock";
 import { MonacoService } from "src/app/editor/services/monaco.service";
 
@@ -32,7 +31,7 @@ describe("SqlEditorComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [EditorModule, SqlEditorComponent],
+            imports: [SqlEditorComponent],
             providers: [MonacoService],
         }).compileComponents();
 

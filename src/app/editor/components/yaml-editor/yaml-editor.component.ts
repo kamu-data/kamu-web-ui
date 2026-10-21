@@ -10,9 +10,10 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
 import * as monaco from "monaco-editor";
-import { MonacoEditorModule } from "ngx-monaco-editor-v2";
+import { EditorComponent } from "ngx-monaco-editor-v2";
 
 import { BaseEditorComponent } from "src/app/editor/components/base-editor/base-editor.component";
+import { MONACO_EDITOR_CONFIG_PROVIDER } from "src/app/editor/editor.providers";
 
 const YAML_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
     theme: "vs",
@@ -33,8 +34,9 @@ const YAML_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = 
         FormsModule,
         NgStyle,
         //-----//
-        MonacoEditorModule,
+        EditorComponent,
     ],
+    providers: [MONACO_EDITOR_CONFIG_PROVIDER],
 })
 export class YamlEditorComponent extends BaseEditorComponent {
     public readonly YAML_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = YAML_EDITOR_OPTIONS;

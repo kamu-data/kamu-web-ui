@@ -26,8 +26,7 @@
     "release-minor": "npm version minor -m \"Release v%s\"",
     "release-major": "npm version major -m \"Release v%s\"",
     "version": "node update-changelog.js && git add CHANGELOG.md LICENSE.txt",
-    "postinstall": "node scripts/set-monaco-version.js",
-    "prebuild": "node scripts/set-monaco-version.js"
+    "postinstall": "node scripts/set-monaco-version.js"
   },
   "private": true,
   "dependencies": {
@@ -37,7 +36,7 @@
     "@angular/compiler": "^21.2.25",
     "@angular/core": "^21.2.25",
     "@angular/forms": "^21.2.25",
-    "@angular/localize": "21.2.25",
+    "@angular/localize": "^21.2.25",
     "@angular/material": "^21.2.14",
     "@angular/platform-browser": "^21.2.25",
     "@angular/router": "^21.2.25",
@@ -49,7 +48,6 @@
     "@popperjs/core": "^2.11.8",
     "@rxweb/reactive-form-validators": "^13.0.1",
     "@swimlane/ngx-graph": "^13.0.0",
-    "@types/file-saver": "^2.0.7",
     "angular2-multiselect-dropdown": "^10.0.0",
     "apollo-angular": "^14.2.0",
     "bootstrap": "^5.3.3",
@@ -94,6 +92,7 @@
     "@graphql-codegen/typescript-apollo-angular": "^4.0.1",
     "@graphql-codegen/typescript-operations": "^5.1.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
+    "@types/file-saver": "^2.0.7",
     "@types/jasmine": "~4.6.6",
     "@typescript-eslint/eslint-plugin": "^8.71.2",
     "@typescript-eslint/parser": "^8.71.2",

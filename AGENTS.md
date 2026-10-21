@@ -164,7 +164,7 @@ change invalidates what it says.
 | `CHANGELOG.md` | User-visible changes under `Unreleased`; see [Changelog review context](#changelog-review-context). |
 | `resources/schema.graphql` | Generated — `npm run gql-update-schema`. |
 | `src/app/api/kamu.graphql.interface.ts` | Generated — `npm run gql-codegen`. |
-| `src/app/editor/generated/` | Generated (gitignored) — `node scripts/set-monaco-version.js`, run as `postinstall` and `prebuild`. |
+| `src/app/editor/generated/` | Generated (gitignored) — `node scripts/set-monaco-version.js`, run as `postinstall`. |
 | `package-lock.json` | Generated — `npm install`. |
 | `.spec/` | Gitignored local working material (plans, audits); nothing else tracked links to or cites it. |
 

@@ -25,7 +25,6 @@ import { DatasetFlowsService } from "src/app/dataset-view/additional-components/
 import { AddDataModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/add-data-modal/add-data-modal.component";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DataSqlErrorUpdate, OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import { EditorModule } from "src/app/editor/editor.module";
 import ProjectLinks from "src/app/project-links";
 import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
 import { SearchAndSchemasSectionComponent } from "src/app/query/global-query/search-and-schemas-section/search-and-schemas-section.component";
@@ -44,7 +43,6 @@ import { SqlQueryService } from "src/app/services/sql-query.service";
         //-----//
         AsyncPipe,
         //-----//
-        EditorModule,
         SearchAndSchemasSectionComponent,
         QueryAndResultSectionsComponent,
     ],

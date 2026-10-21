@@ -15,7 +15,6 @@ import {
 } from "@common/helpers/base-test.helpers.spec";
 
 import { QueriesSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/queries-section/queries-section.component";
-import { EditorModule } from "src/app/editor/editor.module";
 
 describe("QueriesSectionComponent", () => {
     let component: QueriesSectionComponent;
@@ -23,7 +22,7 @@ describe("QueriesSectionComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [QueriesSectionComponent, EditorModule],
+            imports: [QueriesSectionComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(QueriesSectionComponent);

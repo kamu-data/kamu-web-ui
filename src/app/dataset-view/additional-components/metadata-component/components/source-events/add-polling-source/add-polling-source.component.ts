@@ -30,7 +30,6 @@ import { PrepareStepComponent } from "src/app/dataset-view/additional-components
 import { PreprocessStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/preprocess-step/preprocess-step.component";
 import { StepperNavigationComponent } from "src/app/dataset-view/additional-components/metadata-component/components/stepper-navigation/stepper-navigation.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { EditorModule } from "src/app/editor/editor.module";
 
 @Component({
     selector: "app-add-polling-source",
@@ -50,7 +49,6 @@ import { EditorModule } from "src/app/editor/editor.module";
         RouterLink,
         //-----//
         MatStepperModule,
-        EditorModule,
         //-----//
         BaseStepComponent,
         PrepareStepComponent,

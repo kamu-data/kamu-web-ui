@@ -119,10 +119,6 @@
           "configurations": {
             "production": {
               "buildTarget": "kamu-platform:build:production"
-            },
-            "development": {
-              "liveReload": false,
-              "hmr": false
             }
           }
         },

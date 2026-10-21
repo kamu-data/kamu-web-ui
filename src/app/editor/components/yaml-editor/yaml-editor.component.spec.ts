@@ -12,7 +12,6 @@ import {
     sharedBasedEditorComponentTest,
 } from "src/app/editor/components/base-editor/base-editor.component.spec";
 import { YamlEditorComponent } from "src/app/editor/components/yaml-editor/yaml-editor.component";
-import { EditorModule } from "src/app/editor/editor.module";
 import { MonacoService } from "src/app/editor/services/monaco.service";
 
 describe("YamlEditorComponent", () => {
@@ -20,7 +19,7 @@ describe("YamlEditorComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [EditorModule, YamlEditorComponent],
+            imports: [YamlEditorComponent],
             providers: [MonacoService],
         }).compileComponents();
 

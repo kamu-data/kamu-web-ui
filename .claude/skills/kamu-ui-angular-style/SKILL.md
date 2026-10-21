@@ -85,6 +85,11 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
   };
   ```
 
+- The SQL and YAML editor components carry their own Monaco config
+  (`MONACO_EDITOR_CONFIG_PROVIDER` in `src/app/editor/editor.providers.ts`), so a page, modal or
+  spec that hosts one adds no editor provider. Keep it there: in `main.ts` the config pulls
+  ngx-monaco-editor-v2 into the initial bundle (a 4.4 kB initial chunk in a production build).
+
 ### Subscriptions and lifetimes
 
 - Prefer the `async` pipe in templates over manual subscriptions.

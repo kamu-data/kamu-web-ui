@@ -18,7 +18,6 @@ import { DatasetInfo } from "@interface/navigation.interface";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { YamlEditorComponent } from "src/app/editor/components/yaml-editor/yaml-editor.component";
-import { EditorModule } from "src/app/editor/editor.module";
 
 @Component({
     selector: "app-final-yaml-modal",
@@ -27,8 +26,6 @@ import { EditorModule } from "src/app/editor/editor.module";
     imports: [
         //-----//
         YamlEditorComponent,
-        //-----//
-        EditorModule,
     ],
 })
 export class FinalYamlModalComponent extends BaseComponent {

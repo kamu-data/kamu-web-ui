@@ -28,7 +28,6 @@ import { DatasetRequestBySql } from "@interface/dataset.interface";
 import { mockSqlErrorUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-import { EditorModule } from "src/app/editor/editor.module";
 import { QueryAndResultSectionsComponent } from "src/app/query/shared/query-and-result-sections/query-and-result-sections.component";
 import { FileUploadService } from "src/app/services/file-upload.service";
 
@@ -42,7 +41,7 @@ describe("QueryAndResultSectionsComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [EditorModule, SharedTestModule, QueryAndResultSectionsComponent],
+            imports: [SharedTestModule, QueryAndResultSectionsComponent],
             providers: [provideMarkdown(), Apollo, provideToastr(), provideHttpClient(), provideHttpClientTesting()],
         });
         fixture = TestBed.createComponent(QueryAndResultSectionsComponent);

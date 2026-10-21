@@ -7338,13 +7338,6 @@ export type AccountChangeEmailMutation = { __typename?: 'Mutation', accounts: { 
         | { __typename?: 'UpdateEmailSuccess', newEmail: string, message: string }
        } | null } };
 
-export type AccountDatasetFlowsPausedQueryVariables = Exact<{
-  accountName: Scalars['AccountName']['input'];
-}>;
-
-
-export type AccountDatasetFlowsPausedQuery = { __typename?: 'Query', accounts: { __typename?: 'Accounts', byName?: { __typename?: 'Account', flows: { __typename?: 'AccountFlows', triggers: { __typename?: 'AccountFlowTriggers', allPaused: boolean } } } | null } };
-
 export type AccountFlowsAsCardsQueryVariables = Exact<{
   name: Scalars['AccountName']['input'];
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -7390,13 +7383,6 @@ export type AccountListFlowsQuery = { __typename?: 'Query', accounts: { __typena
             & FlowConnectionWidgetDataFragment
           ) } } } | null } };
 
-export type AccountPauseFlowsMutationVariables = Exact<{
-  accountName: Scalars['AccountName']['input'];
-}>;
-
-
-export type AccountPauseFlowsMutation = { __typename?: 'Mutation', accounts: { __typename?: 'AccountsMut', byName?: { __typename?: 'AccountMut', flows: { __typename?: 'AccountFlowsMut', triggers: { __typename?: 'AccountFlowTriggersMut', pauseAccountDatasetFlows: boolean } } } | null } };
-
 export type AccountPrimaryCardsQueryVariables = Exact<{
   name: Scalars['AccountName']['input'];
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -7413,13 +7399,6 @@ export type AccountPrimaryCardsQuery = { __typename?: 'Query', accounts: { __typ
             { __typename?: 'FlowProcessGroupRollup' }
             & FlowProcessGroupRollupDataFragment
           ) } } } | null } };
-
-export type AccountResumeFlowsMutationVariables = Exact<{
-  accountName: Scalars['AccountName']['input'];
-}>;
-
-
-export type AccountResumeFlowsMutation = { __typename?: 'Mutation', accounts: { __typename?: 'AccountsMut', byName?: { __typename?: 'AccountMut', flows: { __typename?: 'AccountFlowsMut', triggers: { __typename?: 'AccountFlowTriggersMut', resumeAccountDatasetFlows: boolean } } } | null } };
 
 export type AccountStorageQuotaQueryVariables = Exact<{
   accountName: Scalars['AccountName']['input'];
@@ -11258,30 +11237,6 @@ export const AccountChangeEmailDocument = gql`
       super(apollo);
     }
   }
-export const AccountDatasetFlowsPausedDocument = gql`
-    query accountDatasetFlowsPaused($accountName: AccountName!) {
-  accounts {
-    byName(name: $accountName) {
-      flows {
-        triggers {
-          allPaused
-        }
-      }
-    }
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class AccountDatasetFlowsPausedGQL extends Apollo.Query<AccountDatasetFlowsPausedQuery, AccountDatasetFlowsPausedQueryVariables> {
-    document = AccountDatasetFlowsPausedDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
 export const AccountFlowsAsCardsDocument = gql`
     query accountFlowsAsCards($name: AccountName!, $page: Int, $perPage: Int, $filters: FlowProcessFilters, $ordering: FlowProcessOrdering) {
   accounts {
@@ -11377,30 +11332,6 @@ ${FlowConnectionWidgetDataFragmentDoc}`;
       super(apollo);
     }
   }
-export const AccountPauseFlowsDocument = gql`
-    mutation accountPauseFlows($accountName: AccountName!) {
-  accounts {
-    byName(accountName: $accountName) {
-      flows {
-        triggers {
-          pauseAccountDatasetFlows
-        }
-      }
-    }
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class AccountPauseFlowsGQL extends Apollo.Mutation<AccountPauseFlowsMutation, AccountPauseFlowsMutationVariables> {
-    document = AccountPauseFlowsDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
 export const AccountPrimaryCardsDocument = gql`
     query accountPrimaryCards($name: AccountName!, $page: Int, $perPage: Int, $filters: FlowProcessFilters, $ordering: FlowProcessOrdering) {
   accounts {
@@ -11431,30 +11362,6 @@ ${FlowProcessGroupRollupDataFragmentDoc}`;
   })
   export class AccountPrimaryCardsGQL extends Apollo.Query<AccountPrimaryCardsQuery, AccountPrimaryCardsQueryVariables> {
     document = AccountPrimaryCardsDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const AccountResumeFlowsDocument = gql`
-    mutation accountResumeFlows($accountName: AccountName!) {
-  accounts {
-    byName(accountName: $accountName) {
-      flows {
-        triggers {
-          resumeAccountDatasetFlows
-        }
-      }
-    }
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class AccountResumeFlowsGQL extends Apollo.Mutation<AccountResumeFlowsMutation, AccountResumeFlowsMutationVariables> {
-    document = AccountResumeFlowsDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

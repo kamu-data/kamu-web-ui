@@ -60,7 +60,7 @@
                 <textarea class="variable-textarea" [(ngModel)]="readmeState"></textarea>
             }
             @if (!isEditView || !editingInProgress) {
-                <markdown clipboard class="variable-binding" [data]="readmeState" />
+                <markdown clipboard class="variable-binding" [data]="readmeState" (ready)="onMarkdownReady()" />
             }
         </div>
     </div>

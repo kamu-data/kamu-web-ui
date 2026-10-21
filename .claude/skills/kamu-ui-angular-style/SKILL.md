@@ -1,6 +1,6 @@
 ---
 name: kamu-ui-angular-style
-description: Angular and TypeScript coding style for Kamu Web UI — component anatomy, dependency injection with inject(), OnPush change detection, subscriptions and DestroyRef, base component classes, state in RxJS services, templates, file naming, constants and UI strings, path aliases and the license header. Use before writing or editing any TypeScript, template or style under src/app; the edit hook requires it for every such file.
+description: Angular and TypeScript coding style for Kamu Web UI — component anatomy, dependency injection with inject(), OnPush change detection, subscriptions and DestroyRef, render hooks, DOM access and timers, base component classes, state in RxJS services, templates, file naming, constants and UI strings, path aliases and the license header. Use before writing or editing any TypeScript, template or style under src/app; the edit hook requires it for every such file.
 ---
 
 # Kamu Angular Style
@@ -80,6 +80,31 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
   them, `private destroyRef = inject(DestroyRef)`.
 - API observables complete after one value (`first()`), so one-shot calls need no teardown.
 
+### Render timing, DOM access and timers
+
+Write code that works without zone.js. Angular re-renders after a template event, an `async`
+pipe emission, a navigation or `markForCheck()` (see Component anatomy); a timer, a listener the
+code added itself, or a third-party callback triggers none of them.
+
+| Need | Use | Not |
+|---|---|---|
+| Touch the DOM once a change has rendered: focus, scroll, mark invalid inputs touched | `afterNextRender(() => ...)` in a constructor, or with `{ injector }` from a method | `setTimeout(fn)`, `setTimeout(fn, 50)` |
+| Read layout: `clientHeight`, `offsetTop`, `getBoundingClientRect()` | `afterNextRender({ read: () => ... })` | measuring in `ngOnInit` or `ngAfterViewInit` |
+| Post-process what a library rendered, such as Run buttons on markdown | the library's completion output, e.g. ngx-markdown `(ready)` | DOM work in `ngAfterViewChecked`, `ngDoCheck` or `afterEveryRender` |
+| Create components in `@ViewChildren` containers | `ngAfterViewInit`, plus `QueryList.changes` through `takeUntilDestroyed` | recreating them in `ngAfterViewChecked` |
+| Wait a fixed time for the backend, then refresh or navigate | `timer(ms).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(...)` | a bare `setTimeout`, which outlives the component |
+| Change template state from a timer, `fromEvent`, `addEventListener` or third-party callback | `this.cdr.markForCheck()` after the change, or emit into a subject the template reads with `async` | relying on zone.js to notice |
+
+- DOM queries start from the component's own element (`ElementRef`,
+  `@ViewChild(X, { read: ElementRef })`), never `document.querySelector*` or `getElementById`:
+  a document-wide query reaches other components' DOM.
+- `afterNextRender` runs only after a render happens. A template event handler or a navigation
+  produces one; from anywhere else, also call `markForCheck()`.
+- `setTimeout` is acceptable only when its callback changes nothing a template shows: a pure DOM
+  effect (resetting a copy icon), waiting out the browser's default action for the current event
+  (refocusing after Tab), or a delay in a root service whose callback navigates or hands control
+  back to a component that notifies Angular itself.
+
 ### Promises and `await`
 
 - One `await` per expression, never used as the operand of another: no `await (await x()).y()`
@@ -147,6 +172,8 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
 | Constructor injection | Inconsistent with the rest of the codebase; `inject()` works in base classes and field initializers |
 | Default change detection on new components | Every feature is built for `OnPush`; Default hides missing `markForCheck` calls until a parent switches |
 | Component-level `Subject` + `ngOnDestroy` teardown | `takeUntilDestroyed(this.destroyRef)` does the same with less code and cannot be forgotten in `ngOnDestroy` |
+| `setTimeout(fn, N)` to wait until the view has rendered | Guesses the timing: too short on a slow machine, wasted time on a fast one, and without zone.js it triggers no change detection; `afterNextRender` runs exactly after the render |
+| DOM work in `ngAfterViewChecked` | Runs after every change detection pass in the app: the markdown Run-button helper queried the whole document on each pass, and the dynamic event view recreated all its property components each time |
 
 ## What lives elsewhere
 

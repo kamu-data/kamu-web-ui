@@ -8,14 +8,11 @@
 import {
     AccountByNameQuery,
     AccountChangeEmailMutation,
-    AccountDatasetFlowsPausedQuery,
     AccountFlowsAsCardsQuery,
     AccountListDatasetsWithFlowsQuery,
     AccountListFlowsQuery,
-    AccountPauseFlowsMutation,
     AccountPrimaryCardsQuery,
     AccountProvider,
-    AccountResumeFlowsMutation,
     AccountStorageQuotaQuery,
     AccountType,
     AccountWebhookCardsQuery,
@@ -271,86 +268,6 @@ export const mockAccountListDatasetsWithFlowsQuery: AccountListDatasetsWithFlows
             __typename: "Account",
         },
         __typename: "Accounts",
-    },
-};
-
-export const mockAccountDatasetFlowsPausedQuery: AccountDatasetFlowsPausedQuery = {
-    accounts: {
-        byName: {
-            flows: {
-                triggers: {
-                    allPaused: true,
-                    __typename: "AccountFlowTriggers",
-                },
-                __typename: "AccountFlows",
-            },
-            __typename: "Account",
-        },
-        __typename: "Accounts",
-    },
-};
-
-export const mockAccountPauseFlowsMutationSuccess: AccountPauseFlowsMutation = {
-    accounts: {
-        byName: {
-            flows: {
-                triggers: {
-                    pauseAccountDatasetFlows: true,
-                    __typename: "AccountFlowTriggersMut",
-                },
-                __typename: "AccountFlowsMut",
-            },
-            __typename: "AccountMut",
-        },
-        __typename: "AccountsMut",
-    },
-};
-
-export const mockAccountPauseFlowsMutationError: AccountPauseFlowsMutation = {
-    accounts: {
-        byName: {
-            flows: {
-                triggers: {
-                    pauseAccountDatasetFlows: false,
-                    __typename: "AccountFlowTriggersMut",
-                },
-                __typename: "AccountFlowsMut",
-            },
-            __typename: "AccountMut",
-        },
-        __typename: "AccountsMut",
-    },
-};
-
-export const mockAccountResumeFlowsMutationSuccess: AccountResumeFlowsMutation = {
-    accounts: {
-        byName: {
-            flows: {
-                triggers: {
-                    resumeAccountDatasetFlows: true,
-                    __typename: "AccountFlowTriggersMut",
-                },
-                __typename: "AccountFlowsMut",
-            },
-            __typename: "AccountMut",
-        },
-        __typename: "AccountsMut",
-    },
-};
-
-export const mockAccountResumeFlowsMutationError: AccountResumeFlowsMutation = {
-    accounts: {
-        byName: {
-            flows: {
-                triggers: {
-                    resumeAccountDatasetFlows: false,
-                    __typename: "AccountFlowTriggersMut",
-                },
-                __typename: "AccountFlowsMut",
-            },
-            __typename: "AccountMut",
-        },
-        __typename: "AccountsMut",
     },
 };
 

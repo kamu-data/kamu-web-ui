@@ -53,6 +53,7 @@ export class RequestTimerComponent extends BaseComponent implements OnChanges, O
                 if (this.sqlLoading) {
                     this.stopTimer();
                     this.resetTimer();
+                    this.cdr.markForCheck();
                 }
             });
     }

@@ -6,7 +6,7 @@
  */
 
 import { AsyncPipe } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { afterNextRender, ChangeDetectionStrategy, Component, inject, Injector, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
     AbstractControl,
@@ -21,7 +21,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatRadioModule } from "@angular/material/radio";
 
-import { Observable, shareReplay } from "rxjs";
+import { Observable, shareReplay, timer } from "rxjs";
 
 import { BaseComponent } from "@common/components/base.component";
 import { DatasetVisibilityComponent } from "@common/components/dataset-visibility/dataset-visibility.component";
@@ -92,6 +92,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     private datasetFlowsService = inject(DatasetFlowsService);
     private navigationService = inject(NavigationService);
     private datasetService = inject(DatasetService);
+    private injector = inject(Injector);
 
     public get datasetBasics(): DatasetBasicsFragment {
         return this.generalTabData.datasetBasics;
@@ -126,7 +127,12 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     }
 
     public jumpToSection(section: MaybeNull<string>) {
-        if (section) document.getElementById(section)?.scrollIntoView({ behavior: "smooth" });
+        if (section) {
+            afterNextRender(
+                { read: () => document.getElementById(section)?.scrollIntoView({ behavior: "smooth" }) },
+                { injector: this.injector },
+            );
+        }
     }
 
     public get datasetNameControl(): AbstractControl {
@@ -225,13 +231,15 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                                     .pipe(takeUntilDestroyed(this.destroyRef))
                                     .subscribe((result: boolean) => {
                                         if (result) {
-                                            setTimeout(() => {
-                                                this.navigationService.navigateToDatasetView({
-                                                    accountName: this.datasetBasics.owner.accountName,
-                                                    datasetName: this.datasetBasics.name,
-                                                    tab: DatasetViewTypeEnum.Flows,
+                                            timer(AppValues.SIMULATION_START_CONDITION_DELAY_MS)
+                                                .pipe(takeUntilDestroyed(this.destroyRef))
+                                                .subscribe(() => {
+                                                    this.navigationService.navigateToDatasetView({
+                                                        accountName: this.datasetBasics.owner.accountName,
+                                                        datasetName: this.datasetBasics.name,
+                                                        tab: DatasetViewTypeEnum.Flows,
+                                                    });
                                                 });
-                                            }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
                                         }
                                     });
                                 break;
@@ -244,13 +252,15 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                                     .pipe(takeUntilDestroyed(this.destroyRef))
                                     .subscribe((result: boolean) => {
                                         if (result) {
-                                            setTimeout(() => {
-                                                this.navigationService.navigateToDatasetView({
-                                                    accountName: this.datasetBasics.owner.accountName,
-                                                    datasetName: this.datasetBasics.name,
-                                                    tab: DatasetViewTypeEnum.Flows,
+                                            timer(AppValues.SIMULATION_START_CONDITION_DELAY_MS)
+                                                .pipe(takeUntilDestroyed(this.destroyRef))
+                                                .subscribe(() => {
+                                                    this.navigationService.navigateToDatasetView({
+                                                        accountName: this.datasetBasics.owner.accountName,
+                                                        datasetName: this.datasetBasics.name,
+                                                        tab: DatasetViewTypeEnum.Flows,
+                                                    });
                                                 });
-                                            }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
                                         }
                                     });
                                 break;

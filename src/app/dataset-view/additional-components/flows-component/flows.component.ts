@@ -7,6 +7,7 @@
 
 import { AsyncPipe, NgClass } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
@@ -247,10 +248,11 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             .pipe(take(1))
             .subscribe((result: boolean) => {
                 if (result) {
-                    setTimeout(() => {
-                        this.refreshFlow();
-                        this.cdr.detectChanges();
-                    }, AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS);
+                    timer(AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS)
+                        .pipe(takeUntilDestroyed(this.destroyRef))
+                        .subscribe(() => {
+                            this.refreshFlow();
+                        });
                 }
             });
     }
@@ -261,10 +263,11 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             .pipe(take(1))
             .subscribe((result: boolean) => {
                 if (result) {
-                    setTimeout(() => {
-                        this.refreshFlow();
-                        this.cdr.detectChanges();
-                    }, AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS);
+                    timer(AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS)
+                        .pipe(takeUntilDestroyed(this.destroyRef))
+                        .subscribe(() => {
+                            this.refreshFlow();
+                        });
                 }
             });
     }

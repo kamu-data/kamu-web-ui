@@ -16,7 +16,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { RouterLink } from "@angular/router";
 
-import { catchError, from, Observable, of, take } from "rxjs";
+import { catchError, from, Observable, of, take, timer } from "rxjs";
 
 import { NgbModal, NgbModalRef, NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
 
@@ -407,13 +407,15 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
 
         datasetTrigger$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((success: boolean) => {
             if (success) {
-                setTimeout(() => {
-                    this.navigationService.navigateToDatasetView({
-                        accountName: this.datasetOverviewTabData.datasetBasics.owner.accountName,
-                        datasetName: this.datasetOverviewTabData.datasetBasics.name,
-                        tab: DatasetViewTypeEnum.Flows,
+                timer(AppValues.SIMULATION_START_CONDITION_DELAY_MS)
+                    .pipe(takeUntilDestroyed(this.destroyRef))
+                    .subscribe(() => {
+                        this.navigationService.navigateToDatasetView({
+                            accountName: this.datasetOverviewTabData.datasetBasics.owner.accountName,
+                            datasetName: this.datasetOverviewTabData.datasetBasics.name,
+                            tab: DatasetViewTypeEnum.Flows,
+                        });
                     });
-                }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
             }
         });
     }

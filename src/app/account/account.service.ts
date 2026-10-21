@@ -15,15 +15,12 @@ import { ToastrService } from "ngx-toastr";
 import { AccountApi } from "@api/account.api";
 import { DatasetApi } from "@api/dataset.api";
 import {
-    AccountDatasetFlowsPausedQuery,
     AccountFlowFilters,
     AccountFlowProcessCardConnectionDataFragment,
     AccountFlowsAsCardsQuery,
     AccountFragment,
     AccountListDatasetsWithFlowsQuery,
-    AccountPauseFlowsMutation,
     AccountPrimaryCardsQuery,
-    AccountResumeFlowsMutation,
     AccountWebhookCardsQuery,
     ChangeAccountUsernameMutation,
     ChangeAdminPasswordMutation,
@@ -40,7 +37,7 @@ import {
     FlowProcessOrdering,
     FlowRunOrder,
 } from "@api/kamu.graphql.interface";
-import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { MaybeNull } from "@interface/app.types";
 import { DatasetsAccountResponse } from "@interface/dataset.interface";
 
 import { CardsStrategyResult } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
@@ -181,40 +178,6 @@ export class AccountService {
                     if (a.name > b.name) return 1;
                     return 0;
                 }) as Dataset[];
-            }),
-        );
-    }
-
-    public accountAllFlowsPaused(accountName: string): Observable<MaybeUndefined<boolean>> {
-        return this.accountApi.accountFlowsPaused(accountName).pipe(
-            map((data: AccountDatasetFlowsPausedQuery) => {
-                return data.accounts.byName?.flows?.triggers.allPaused;
-            }),
-        );
-    }
-
-    public accountPauseFlows(accountName: string): Observable<void> {
-        return this.accountApi.accountPauseFlows(accountName).pipe(
-            map((data: AccountPauseFlowsMutation) => {
-                const result = data.accounts.byName?.flows.triggers.pauseAccountDatasetFlows;
-                if (result) {
-                    this.toastrService.success("Flows paused");
-                } else {
-                    this.toastrService.error("Error, flows not paused");
-                }
-            }),
-        );
-    }
-
-    public accountResumeFlows(accountName: string): Observable<void> {
-        return this.accountApi.accountResumeFlows(accountName).pipe(
-            map((data: AccountResumeFlowsMutation) => {
-                const result = data.accounts.byName?.flows.triggers.resumeAccountDatasetFlows;
-                if (result) {
-                    this.toastrService.success("Flows resumed");
-                } else {
-                    this.toastrService.error("Error, flows not resumed");
-                }
             }),
         );
     }

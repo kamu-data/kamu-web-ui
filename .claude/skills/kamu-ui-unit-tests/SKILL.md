@@ -1,6 +1,6 @@
 ---
 name: kamu-ui-unit-tests
-description: Unit test conventions for Kamu Web UI — Karma + Jasmine specs next to their source, TestBed setup, CDK component harnesses (Material and custom *.harness.ts), data-test-id selectors and the shared DOM helpers, Apollo testing for api classes, mock fixtures, fake async and frozen time, and running a narrowed test set. Use before writing or editing any *.spec.ts, *.harness.ts or mock file.
+description: Unit test conventions for Kamu Web UI — Karma + Jasmine specs next to their source, TestBed setup, CDK component harnesses (Material and custom *.harness.ts), data-test-id selectors and the shared DOM helpers, Apollo testing for api classes, mock fixtures, fake async and frozen time, render hooks and timers in specs, and running a narrowed test set. Use before writing or editing any *.spec.ts, *.harness.ts or mock file.
 ---
 
 # Kamu UI Unit Tests
@@ -157,6 +157,17 @@ One case per api method: assert the variables sent, flush a fixture typed with t
 - `fakeAsync` swaps in its own `Date`, which ignores timekeeper. A component rendered with
   relative time outside `fakeAsync` and re-checked inside it shows two different clocks; use an
   `async` test with `await fixture.whenStable()` there instead.
+- A render hook (`afterNextRender`) registered by a component is queued when that component's
+  view refreshes and runs at the end of an `ApplicationRef` tick. `fixture.detectChanges()`
+  alone does not run it reliably, so follow it with `TestBed.inject(ApplicationRef).tick()`
+  before asserting. Spy on DOM methods (`spyOn(HTMLElement.prototype, "scrollIntoView")`) before
+  the render and assert after the tick; a focus check compares `document.activeElement`, which
+  works because the fixture is attached to the document. A host component in the spec covers a
+  directive (`common/directives/auto-focus.directive.spec.ts`).
+- An RxJS `timer(ms)` in the code under test advances with `tick(ms)` inside `fakeAsync`, the
+  same as `setTimeout`.
+- ngx-markdown renders asynchronously: `await fixture.whenStable()` before asserting on what it
+  rendered or on DOM added from its `(ready)` output.
 
 ## Rejected approaches
 
@@ -166,6 +177,7 @@ One case per api method: assert the variables sent, flush a fixture typed with t
 | Raw `nativeElement` clicks inside Material components | Depends on Material's internal DOM; the Material harnesses are the supported API |
 | Hand-built Apollo response objects inline in specs | Not reusable and not type-checked against codegen; fixtures go to `api/mock/` |
 | Testing private methods through `component["method"]` | Tests the implementation; drive the public inputs, outputs and DOM instead |
+| Asserting a render hook's effect right after `fixture.detectChanges()` | The hook runs at the end of an application tick that zone.js schedules afterwards; whether that tick happens depends on what earlier specs left behind, so such a spec passed alone and failed in random-order full runs |
 | DOM helpers for a new display-only component ("nothing to click, so no harness") | Assertions on texts, states and widths are as tied to DOM structure as clicks are, and the next spec that hosts the component has no API to reuse |
 
 ## What lives elsewhere

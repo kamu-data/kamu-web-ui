@@ -18,8 +18,6 @@ import {
     AccountByNameQuery,
     AccountChangeEmailGQL,
     AccountChangeEmailMutation,
-    AccountDatasetFlowsPausedGQL,
-    AccountDatasetFlowsPausedQuery,
     AccountFlowFilters,
     AccountFlowsAsCardsGQL,
     AccountFlowsAsCardsQuery,
@@ -28,12 +26,8 @@ import {
     AccountListDatasetsWithFlowsQuery,
     AccountListFlowsGQL,
     AccountListFlowsQuery,
-    AccountPauseFlowsGQL,
-    AccountPauseFlowsMutation,
     AccountPrimaryCardsGQL,
     AccountPrimaryCardsQuery,
-    AccountResumeFlowsGQL,
-    AccountResumeFlowsMutation,
     AccountStorageQuotaGQL,
     AccountStorageQuotaQuery,
     AccountWebhookCardsGQL,
@@ -59,9 +53,6 @@ export class AccountApi {
     private accountByNameGql = inject(AccountByNameGQL);
     private accountListFlowsGql = inject(AccountListFlowsGQL);
     private accountListDatasetsWithFlowsGql = inject(AccountListDatasetsWithFlowsGQL);
-    private accountDatasetFlowsPausedGql = inject(AccountDatasetFlowsPausedGQL);
-    private accountPauseFlowsGql = inject(AccountPauseFlowsGQL);
-    private accountResumeFlowsGql = inject(AccountResumeFlowsGQL);
     private accountWithEmailGql = inject(AccountWithEmailGQL);
     private accountStorageQuotaGql = inject(AccountStorageQuotaGQL);
     private accountChangeEmailGQL = inject(AccountChangeEmailGQL);
@@ -310,53 +301,6 @@ export class AccountApi {
                 onlyCompleteData(),
                 map((result: ObservableQuery.Result<AccountListDatasetsWithFlowsQuery>) => {
                     return result.data as AccountListDatasetsWithFlowsQuery;
-                }),
-            );
-    }
-
-    public accountFlowsPaused(accountName: string): Observable<AccountDatasetFlowsPausedQuery> {
-        return this.accountDatasetFlowsPausedGql
-            .watch({
-                variables: { accountName },
-                ...noCacheFetchPolicy,
-                context: {
-                    skipLoading: true,
-                },
-            })
-            .valueChanges.pipe(
-                onlyCompleteData(),
-                map((result: ObservableQuery.Result<AccountDatasetFlowsPausedQuery>) => {
-                    return result.data as AccountDatasetFlowsPausedQuery;
-                }),
-            );
-    }
-
-    public accountPauseFlows(accountName: string): Observable<AccountPauseFlowsMutation> {
-        return this.accountPauseFlowsGql
-            .mutate({
-                variables: {
-                    accountName,
-                },
-            })
-            .pipe(
-                first(),
-                map((result: ApolloLink.Result<AccountPauseFlowsMutation>) => {
-                    return result.data as AccountPauseFlowsMutation;
-                }),
-            );
-    }
-
-    public accountResumeFlows(accountName: string): Observable<AccountResumeFlowsMutation> {
-        return this.accountResumeFlowsGql
-            .mutate({
-                variables: {
-                    accountName,
-                },
-            })
-            .pipe(
-                first(),
-                map((result: ApolloLink.Result<AccountResumeFlowsMutation>) => {
-                    return result.data as AccountResumeFlowsMutation;
                 }),
             );
     }

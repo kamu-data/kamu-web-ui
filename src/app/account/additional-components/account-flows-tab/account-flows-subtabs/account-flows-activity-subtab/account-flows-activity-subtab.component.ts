@@ -28,7 +28,7 @@ import {
     FlowSummaryDataFragment,
     InitiatorFilterInput,
 } from "@api/kamu.graphql.interface";
-import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { MaybeNull } from "@interface/app.types";
 
 import { AccountTabs } from "src/app/account/account.constants";
 import { AccountService } from "src/app/account/account.service";
@@ -73,7 +73,6 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
 
     public flowConnectionData$: Observable<{
         flowsData: FlowsTableData;
-        allFlowsPaused?: MaybeUndefined<boolean>;
         flowInitiators: AccountFragment[];
     }>;
 
@@ -157,17 +156,6 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
         );
     }
 
-    public toggleStateAccountFlowConfigs(paused: boolean): void {
-        if (!paused) {
-            this.accountService.accountPauseFlows(this.accountName).subscribe();
-        } else {
-            this.accountService.accountResumeFlows(this.accountName).subscribe();
-        }
-        setTimeout(() => {
-            this.refreshNow();
-        }, this.TIMEOUT_REFRESH_FLOW);
-    }
-
     private setAccountFilters(filters: AccountFlowFilters): AccountFlowFilters {
         const { byProcessType, byStatus, byInitiator, byDatasetIds } = filters;
         if (byStatus) {
@@ -198,9 +186,11 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((success: boolean) => {
                 if (success) {
-                    setTimeout(() => {
-                        this.refreshNow();
-                    }, this.TIMEOUT_REFRESH_FLOW);
+                    timer(this.TIMEOUT_REFRESH_FLOW)
+                        .pipe(takeUntilDestroyed(this.destroyRef))
+                        .subscribe(() => {
+                            this.refreshNow();
+                        });
                 }
             });
     }
@@ -286,6 +276,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             this.selectedDatasetItems.map((x) => x.id),
             this.getFlowRunOrder(),
         );
+        this.cdr.markForCheck();
     }
 
     private getFlowRunOrder(): FlowRunOrder {

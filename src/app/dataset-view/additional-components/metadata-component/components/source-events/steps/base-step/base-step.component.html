@@ -18,6 +18,7 @@
                             [requiredField]="control.validators.required"
                             [placeholder]="control.placeholder"
                             [tooltip]="control.tooltip!"
+                            [dataTestId]="sectionName + '-' + control.name"
                         />
                     }
                     @if (control.type === controlType.ARRAY_KEY_VALUE) {

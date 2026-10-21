@@ -92,4 +92,22 @@ describe("DatasetSettingsCompactingTabComponent", () => {
         expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
         flush();
     }));
+
+    it("should navigate to flows after compaction only once the delay passes, and not after destroy", fakeAsync(() => {
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        spyOn(datasetFlowsService, "datasetTriggerCompactionFlow").and.returnValue(of(true));
+        spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
+            options.handler?.call(undefined, true);
+            return Promise.resolve("");
+        });
+        emitClickOnElementByDataTestId(fixture, "run-compaction-btn");
+
+        tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS - 1);
+        expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
+
+        fixture.destroy();
+        tick(1);
+        expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
+        flush();
+    }));
 });

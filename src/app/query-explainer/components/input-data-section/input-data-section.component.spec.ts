@@ -96,6 +96,17 @@ describe("InputDataSectionComponent", () => {
         expect(datasetAliasElem?.innerText.trim()).toEqual("account.tokens.portfolio");
     });
 
+    it("should add a Run button to the rendered query", async () => {
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const runButton = findElementByDataTestId(fixture, "markdown-run-button");
+        expect(runButton?.getAttribute("href")).toEqual(
+            `/${ProjectLinks.URL_QUERY}?${ProjectLinks.URL_QUERY_PARAM_SQL_QUERY}=` +
+                encodeURI(mockQueryExplainerResponse.input.query),
+        );
+    });
+
     it("should check DatasetBlockNotFoundError error is exist", () => {
         component.inputData = {
             sqlQueryExplainerResponse: mockQueryExplainerResponse,

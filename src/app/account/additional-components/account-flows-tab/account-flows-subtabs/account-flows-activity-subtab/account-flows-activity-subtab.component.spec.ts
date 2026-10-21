@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
@@ -153,28 +153,6 @@ describe("AccountFlowsActivitySubtabComponent", () => {
         discardPeriodicTasks();
     }));
 
-    it("should check toggle state for account configurations with pause=true", fakeAsync(() => {
-        const accountResumeFlowsSpy = spyOn(accountService, "accountResumeFlows").and.returnValue(of());
-        const mockPause = true;
-        const refreshNowSpy = spyOn(component, "refreshNow");
-        component.toggleStateAccountFlowConfigs(mockPause);
-        tick(component.TIMEOUT_REFRESH_FLOW);
-        expect(accountResumeFlowsSpy).toHaveBeenCalledOnceWith(MOCK_ACCOUNT_NAME);
-        expect(refreshNowSpy).toHaveBeenCalledTimes(1);
-        flush();
-    }));
-
-    it("should check toggle state for account configurations with pause=false", fakeAsync(() => {
-        const accountPauseFlowsSpy = spyOn(accountService, "accountPauseFlows").and.returnValue(of());
-        const mockPause = false;
-        const refreshNowSpy = spyOn(component, "refreshNow");
-        component.toggleStateAccountFlowConfigs(mockPause);
-        tick(component.TIMEOUT_REFRESH_FLOW);
-        expect(accountPauseFlowsSpy).toHaveBeenCalledOnceWith(MOCK_ACCOUNT_NAME);
-        expect(refreshNowSpy).toHaveBeenCalledTimes(1);
-        flush();
-    }));
-
     it("should check search by filters with filters=null", () => {
         component.searchByAccount = mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators
             .nodes as Account[];
@@ -288,4 +266,18 @@ describe("AccountFlowsActivitySubtabComponent", () => {
             [FlowStatus.Running, FlowStatus.Retrying],
         );
     });
+
+    it("should refresh after an abort only once the delay passes, and not after destroy", fakeAsync(() => {
+        spyOn(datasetFlowsService, "cancelFlowRun").and.returnValue(of(true));
+        const refreshNowSpy = spyOn(component, "refreshNow");
+        component.onAbortFlow({ flowId: MOCK_FLOW_ID, datasetId: mockDatasetMainDataId });
+
+        tick(component.TIMEOUT_REFRESH_FLOW - 1);
+        expect(refreshNowSpy).not.toHaveBeenCalled();
+
+        fixture.destroy();
+        tick(1);
+        expect(refreshNowSpy).not.toHaveBeenCalled();
+        discardPeriodicTasks();
+    }));
 });

@@ -10,6 +10,7 @@ import { fakeAsync, flush, tick } from "@angular/core/testing";
 import { subDays } from "date-fns";
 
 import {
+    addMarkdownRunButton,
     isEqual,
     isNil,
     isNull,
@@ -122,6 +123,47 @@ describe("AppHelpers", () => {
     ].forEach((item: { testValue1: unknown; testValue2: unknown; expectation: boolean }) => {
         it(`should check isEqual method with test case1 = ${item.testValue1?.toString()} and test case2 = ${item.testValue2?.toString()}`, () => {
             expect(isEqual(item.testValue1, item.testValue2)).toEqual(item.expectation);
+        });
+    });
+
+    describe("addMarkdownRunButton", () => {
+        const RUN_BUTTON_SELECTOR = '[data-test-id="markdown-run-button"]';
+
+        function createMarkdownContainer(): HTMLElement {
+            const container = document.createElement("div");
+            const pre = document.createElement("pre");
+            pre.classList.add("language-sql");
+            container.appendChild(pre);
+            return container;
+        }
+
+        it("should add a Run button only inside the given container", () => {
+            const target = createMarkdownContainer();
+            const other = createMarkdownContainer();
+
+            addMarkdownRunButton(target, ["select 1"], "/query?sqlQuery");
+
+            const runButtons = target.querySelectorAll<HTMLAnchorElement>(RUN_BUTTON_SELECTOR);
+            expect(runButtons.length).toEqual(1);
+            expect(runButtons[0].getAttribute("href")).toEqual("/query?sqlQuery=select%201");
+            expect(other.querySelectorAll(RUN_BUTTON_SELECTOR).length).toEqual(0);
+        });
+
+        it("should not add a second Run button when called again for the same render", () => {
+            const target = createMarkdownContainer();
+
+            addMarkdownRunButton(target, ["select 1"], "/query?sqlQuery");
+            addMarkdownRunButton(target, ["select 1"], "/query?sqlQuery");
+
+            expect(target.querySelectorAll(RUN_BUTTON_SELECTOR).length).toEqual(1);
+        });
+
+        it("should add no Run button without SQL queries", () => {
+            const target = createMarkdownContainer();
+
+            addMarkdownRunButton(target, null, "/query?sqlQuery");
+
+            expect(target.querySelectorAll(RUN_BUTTON_SELECTOR).length).toEqual(0);
         });
     });
 });

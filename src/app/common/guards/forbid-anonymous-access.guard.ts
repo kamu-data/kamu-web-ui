@@ -9,11 +9,18 @@ import { inject } from "@angular/core";
 import { CanActivateFn } from "@angular/router";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { LoginMethodsService } from "src/app/auth/login-methods.service";
 import { NavigationService } from "src/app/services/navigation.service";
 
 export const forbidAnonymousAccessGuardFn: CanActivateFn = () => {
     const loggedUserService = inject(LoggedUserService);
+    const loginMethodsService = inject(LoginMethodsService);
     const navigationService = inject(NavigationService);
 
-    return Boolean(loggedUserService.maybeCurrentlyLoggedInUser) || navigationService.loginUrlTree();
+    if (loggedUserService.maybeCurrentlyLoggedInUser) {
+        return true;
+    }
+    return loginMethodsService.loginMethods.length > 0
+        ? navigationService.loginUrlTree()
+        : navigationService.loginUnavailableUrlTree();
 };

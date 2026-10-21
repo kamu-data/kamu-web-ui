@@ -186,6 +186,10 @@ export class NavigationService {
         promiseWithCatch(this.router.navigateByUrl(this.loginUrlTree(redirectUrl)));
     }
 
+    public loginUnavailableUrlTree(): UrlTree {
+        return this.router.createUrlTree([ProjectLinks.URL_LOGIN_UNAVAILABLE]);
+    }
+
     public loginUrlTree(redirectUrl?: string): UrlTree {
         return this.router.createUrlTree([ProjectLinks.URL_LOGIN], {
             queryParams: {

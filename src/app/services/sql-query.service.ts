@@ -15,6 +15,7 @@ import { ToastrService } from "ngx-toastr";
 import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
 import { extractSchemaFieldsFromData } from "@common/helpers/data-schema.helpers";
 import { parseDataFromJsonAoSFormat } from "@common/helpers/data.helpers";
+import { httpErrorServerMessage, requestErrorText } from "@common/helpers/http-error.helpers";
 import AppValues from "@common/values/app.values";
 import { MaybeNull } from "@interface/app.types";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
@@ -142,16 +143,24 @@ export class SqlQueryService {
                 this.emitSqlQueryResponseChanged(sqlQueryResponse);
                 this.resetSqlError();
             }),
-            catchError((e: HttpErrorResponse) => {
-                if (e.error && e.status === 400) {
-                    this.emitSqlErrorOccurred({
-                        error: (e.error as { message: string }).message,
-                    });
-                } else {
-                    this.toastrService.error(`Unable to resolve/connect to host: ${e.url}`);
-                }
+            catchError((e: unknown) => {
+                this.showRequestError(e);
                 return EMPTY;
             }),
         );
+    }
+
+    // A 400 is an error in the query itself and goes to the SQL editor as a marker; other failures are toasts
+    private showRequestError(e: unknown): void {
+        const serverMessage = httpErrorServerMessage(e);
+        if (serverMessage && e instanceof HttpErrorResponse && e.status === 400) {
+            this.emitSqlErrorOccurred({ error: serverMessage });
+        } else if (serverMessage) {
+            this.toastrService.error(serverMessage);
+        } else if (e instanceof HttpErrorResponse) {
+            this.toastrService.error(`Unable to resolve/connect to host: ${e.url}`);
+        } else {
+            this.toastrService.error(requestErrorText(e));
+        }
     }
 }

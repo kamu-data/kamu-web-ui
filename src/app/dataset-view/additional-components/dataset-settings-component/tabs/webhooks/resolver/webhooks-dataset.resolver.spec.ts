@@ -19,7 +19,7 @@ import { DatasetBasicsFragment, DatasetPermissionsFragment } from "@api/kamu.gra
 
 import { AppConfigService } from "src/app/app-config.service";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
-import { addWebhookResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/add-webhook/resolvers/add-webhook.resolver";
+import { webhooksDatasetResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/resolver/webhooks-dataset.resolver";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
@@ -28,13 +28,13 @@ import {
     mockNoWebhooksDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 
-describe("addWebhookResolverFn", () => {
+describe("webhooksDatasetResolverFn", () => {
     let datasetService: DatasetService;
     let datasetSubService: DatasetSubscriptionsService;
     let appConfigService: AppConfigService;
 
     const executeResolver: ResolveFn<DatasetBasicsFragment> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => addWebhookResolverFn(...resolverParameters));
+        TestBed.runInInjectionContext(() => webhooksDatasetResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({

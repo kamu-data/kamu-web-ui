@@ -17,16 +17,17 @@ import {
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { RouterLink } from "@angular/router";
 
-import { distinctUntilChanged, Subject, switchMap, tap } from "rxjs";
+import { Subject } from "rxjs";
 
 import { DatasetKindComponent } from "@common/components/dataset-kind/dataset-kind.component";
 import { DatasetVisibilityComponent } from "@common/components/dataset-visibility/dataset-visibility.component";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import AppValues from "@common/values/app.values";
-import { DatasetBasicsFragment, DatasetByIdQuery } from "@api/kamu.graphql.interface";
-import { MaybeUndefined } from "@interface/app.types";
+import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+import { datasetByIdChanges } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.helpers";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 
 @Component({
@@ -55,18 +56,12 @@ export class DatasetNameByIdPropertyComponent extends BasePropertyComponent impl
 
     public constructor() {
         super();
-        this.datasetIdChanges$
-            .pipe(
-                distinctUntilChanged(),
-                tap(() => {
-                    this.datasetBasics = undefined;
-                    this.cdr.markForCheck();
-                }),
-                switchMap((datasetId: string) => this.datasetService.requestDatasetInfoById(datasetId)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe((dataset: DatasetByIdQuery) => {
-                this.datasetBasics = dataset.datasets.byId ?? undefined;
+        datasetByIdChanges(this.datasetIdChanges$, (datasetId: string) =>
+            this.datasetService.requestDatasetInfoById(datasetId),
+        )
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((datasetBasics: MaybeNull<DatasetBasicsFragment>) => {
+                this.datasetBasics = datasetBasics ?? undefined;
                 this.cdr.markForCheck();
             });
     }

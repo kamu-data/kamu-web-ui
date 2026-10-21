@@ -16,6 +16,7 @@ import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
+import { parseInputDatasetKey } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
 import {
     EditSetTransformParseType,
     SetTransformYamlType,
@@ -34,7 +35,7 @@ export class EditSetTransformService {
     }
 
     public parseInputDatasets(datasets: Set<string>): TransformSelectedInput[] {
-        return Array.from(datasets).map((item) => JSON.parse(item) as TransformSelectedInput);
+        return Array.from(datasets).map((item) => parseInputDatasetKey(item));
     }
 
     public getEventAsYaml(info: DatasetInfo): Observable<MaybeNull<string>> {

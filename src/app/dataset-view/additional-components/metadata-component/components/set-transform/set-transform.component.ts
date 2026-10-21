@@ -24,7 +24,10 @@ import { EngineSectionComponent } from "src/app/dataset-view/additional-componen
 import { QueriesSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/queries-section/queries-section.component";
 import { SearchSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/search-section/search-section.component";
 import { EditSetTransformService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/edit-set-transform..service";
-import { datasetNodeFromSchemaQuery } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
+import {
+    datasetNodeFromSchemaQuery,
+    inputDatasetKey,
+} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
 import {
     DatasetNode,
     SetTransformYamlType,
@@ -99,7 +102,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
         const requests$ = inputs
             .filter((item) => !!item.datasetRef)
             .map((item) => {
-                this.inputDatasets.add(JSON.stringify({ datasetRef: item.datasetRef, alias: item.alias }));
+                this.inputDatasets.add(inputDatasetKey(item));
 
                 return this.datasetService.requestDatasetSchema(item.datasetRef).pipe(
                     map((data: GetDatasetSchemaQuery) => datasetNodeFromSchemaQuery(item.alias, data)),

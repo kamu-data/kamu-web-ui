@@ -14,7 +14,7 @@ import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { resolveSettingsTabAccess } from "src/app/dataset-view/additional-components/dataset-settings-component/resolvers/settings-tab-access.helpers";
 
-export const addWebhookResolverFn: ResolveFn<DatasetBasicsFragment> = () => {
+export const webhooksDatasetResolverFn: ResolveFn<DatasetBasicsFragment> = () => {
     return resolveSettingsTabAccess(SettingsTabsEnum.WEBHOOKS).pipe(
         map((data) => (data instanceof RedirectCommand ? data : data.datasetBasics)),
     );

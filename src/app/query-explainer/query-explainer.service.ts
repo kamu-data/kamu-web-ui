@@ -12,8 +12,7 @@ import { catchError, EMPTY, map, Observable, of, ReplaySubject, Subject, tap } f
 
 import { ToastrService } from "ngx-toastr";
 
-import { ErrorTexts } from "@common/values/errors.text";
-import { MaybeNull } from "@interface/app.types";
+import { requestErrorText } from "@common/helpers/http-error.helpers";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -110,23 +109,9 @@ export class QueryExplainerService {
     }
 
     private showRequestError(e: unknown): Observable<never> {
-        this.toastrService.error("", QueryExplainerService.requestErrorText(e), {
+        this.toastrService.error("", requestErrorText(e), {
             disableTimeOut: "timeOut",
         });
         return EMPTY;
-    }
-
-    // The server answers with a JSON `{ message }` body, or with plain text for errors raised
-    // before the handler runs, such as a 422 for a body that fails to deserialize.
-    private static requestErrorText(e: unknown): string {
-        if (e instanceof HttpErrorResponse) {
-            const body: unknown = e.error;
-            if (typeof body === "string" && body) return body;
-            const message: unknown = (body as MaybeNull<{ message?: unknown }>)?.message;
-            if (typeof message === "string" && message) return message;
-        } else if (e instanceof Error && e.message) {
-            return e.message;
-        }
-        return ErrorTexts.ERROR_TITLE_REQUEST_FAILED;
     }
 }

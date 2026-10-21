@@ -29,11 +29,12 @@ import { DataSchemaField, DataSchemaTypeField } from "@interface/dataset-schema.
 import { DatasetInfo } from "@interface/navigation.interface";
 import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface";
 
-import { datasetNodeFromSchemaQuery } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
 import {
-    DatasetNode,
-    TransformSelectedInput,
-} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
+    datasetNodeFromSchemaQuery,
+    inputDatasetKey,
+    parseInputDatasetKey,
+} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
+import { DatasetNode } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 
 @Component({
@@ -99,10 +100,7 @@ export class SearchSectionComponent extends BaseComponent {
         const value = event.item as DatasetAutocompleteItem;
         const id = value.dataset.id;
         const alias = value.dataset.alias;
-        const inputDataset = JSON.stringify({
-            datasetRef: id,
-            alias,
-        });
+        const inputDataset = inputDatasetKey({ datasetRef: id, alias });
         if (value.__typename !== TypeNames.allDataType && !this.inputDatasets.has(inputDataset)) {
             this.inputDatasets.add(inputDataset);
 
@@ -124,8 +122,7 @@ export class SearchSectionComponent extends BaseComponent {
         this.inputsViewModel = this.inputsViewModel.filter((item: DatasetNode) => item.alias !== alias);
 
         this.inputDatasets.forEach((item) => {
-            const input = JSON.parse(item) as TransformSelectedInput;
-            if (input.alias === alias) {
+            if (parseInputDatasetKey(item).alias === alias) {
                 this.inputDatasets.delete(item);
             }
         });

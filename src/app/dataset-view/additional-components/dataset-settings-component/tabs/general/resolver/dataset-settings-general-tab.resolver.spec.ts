@@ -68,14 +68,21 @@ describe("datasetSettingsGeneralTabResolverFn", () => {
         spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(of(permissions));
     }
 
-    it("should resolve the dataset for an accessible tab", async () => {
-        mockDataset();
+    [
+        SettingsTabsEnum.GENERAL,
+        SettingsTabsEnum.ACCESS,
+        SettingsTabsEnum.COMPACTION,
+        SettingsTabsEnum.VARIABLES_AND_SECRETS,
+    ].forEach((tab) => {
+        it(`should resolve the dataset for the ${tab} tab`, async () => {
+            mockDataset();
 
-        const data = await resolve(SettingsTabsEnum.GENERAL);
+            const data = await resolve(tab);
 
-        expect(data).toEqual({
-            datasetBasics: mockDatasetBasicsRootFragment,
-            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            expect(data).toEqual({
+                datasetBasics: mockDatasetBasicsRootFragment,
+                datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            });
         });
     });
 

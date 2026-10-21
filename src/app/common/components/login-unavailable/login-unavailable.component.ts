@@ -7,7 +7,7 @@
 
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 
-import AppValues from "@common/values/app.values";
+import { ErrorPageLayoutComponent } from "@common/components/error-page-layout/error-page-layout.component";
 import { MaybeUndefined } from "@interface/app.types";
 
 import { AppConfigService } from "src/app/app-config.service";
@@ -15,11 +15,13 @@ import { AppConfigService } from "src/app/app-config.service";
 @Component({
     selector: "app-login-unavailable",
     templateUrl: "./login-unavailable.component.html",
-    styleUrls: ["./login-unavailable.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        //-----//
+        ErrorPageLayoutComponent,
+    ],
 })
 export class LoginUnavailableComponent {
-    public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;
     private appConfigService = inject(AppConfigService);
 
     public get supportEmail(): MaybeUndefined<string> {

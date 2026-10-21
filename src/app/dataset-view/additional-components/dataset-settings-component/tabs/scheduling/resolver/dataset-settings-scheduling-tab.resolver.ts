@@ -5,46 +5,19 @@
  * included in the LICENSE file.
  */
 
-import { inject } from "@angular/core";
-import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn } from "@angular/router";
+import { ResolveFn } from "@angular/router";
 
-import { map, of, switchMap } from "rxjs";
-
-import { DatasetFlowType, GetDatasetFlowTriggerQuery } from "@api/kamu.graphql.interface";
+import { DatasetFlowType } from "@api/kamu.graphql.interface";
 
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
-import { resolveSettingsTabAccess } from "src/app/dataset-view/additional-components/dataset-settings-component/resolvers/settings-tab-access.helpers";
-import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
+import { requestFlowTriggerTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/resolvers/flow-trigger-tab.helpers";
 import { DatasetSettingsSchedulingTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.data";
 import ProjectLinks from "src/app/project-links";
 
-export const datasetSettingsSchedulingTabResolverFn: ResolveFn<DatasetSettingsSchedulingTabData> = (
-    route: ActivatedRouteSnapshot,
-) => {
-    const datasetFlowTriggerService = inject(DatasetFlowTriggerService);
-
-    return resolveSettingsTabAccess(route.data[ProjectLinks.URL_PARAM_TAB] as SettingsTabsEnum).pipe(
-        switchMap((data) => {
-            if (data instanceof RedirectCommand) {
-                return of(data);
-            }
-            return datasetFlowTriggerService
-                .fetchDatasetFlowTrigger(data.datasetBasics.id, DatasetFlowType.Ingest)
-                .pipe(
-                    map((query: GetDatasetFlowTriggerQuery) => {
-                        const flowTriggers = query.datasets.byId?.flows.triggers.byType;
-                        const paused = flowTriggers?.paused ?? true;
-                        const schedule = flowTriggers?.schedule ?? null;
-                        const stopPolicy = flowTriggers?.stopPolicy ?? null;
-                        return {
-                            datasetBasics: data.datasetBasics,
-                            datasetPermissions: data.datasetPermissions,
-                            schedule,
-                            paused,
-                            stopPolicy,
-                        };
-                    }),
-                );
-        }),
+export const datasetSettingsSchedulingTabResolverFn: ResolveFn<DatasetSettingsSchedulingTabData> = (route) => {
+    return requestFlowTriggerTabData(
+        route.data[ProjectLinks.URL_PARAM_TAB] as SettingsTabsEnum,
+        DatasetFlowType.Ingest,
+        (trigger) => ({ schedule: trigger?.schedule ?? null }),
     );
 };

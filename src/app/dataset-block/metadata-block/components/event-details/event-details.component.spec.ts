@@ -21,6 +21,7 @@ import { mockGetMetadataBlockQuery } from "@api/mock/dataset.mock";
 import { AddDataEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/add-data-event/add-data-event.component";
 import { BaseDynamicEventHarness } from "src/app/dataset-block/metadata-block/components/event-details/components/base-dynamic-event/base-dynamic-event.harness";
 import { ExecuteTransformEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/execute-transform-event/execute-transform-event.component";
+import { UnsupportedEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/unsupported-event/unsupported-event.component";
 import { EventDetailsComponent } from "src/app/dataset-block/metadata-block/components/event-details/event-details.component";
 import { mockAddData } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
@@ -79,5 +80,15 @@ describe("EventDetailsComponent", () => {
         fixture.componentRef.setInput("block", { ...mockBlock, event: nextEvent });
 
         expect(await harness.getPropertyText(offsetEndTestId)).toEqual("600000");
+    });
+
+    it("should render the unsupported event view for an event type without its own view", () => {
+        fixture.componentRef.setInput("block", {
+            ...mockBlock,
+            event: { __typename: "DisablePollingSource" },
+        } satisfies MetadataBlockFragment);
+        fixture.detectChanges();
+
+        expect(findComponentInstance(fixture, UnsupportedEventComponent, () => true)).toBeTruthy();
     });
 });

@@ -5,8 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+
+import { distinctUntilChanged, filter, Subject, switchMap } from "rxjs";
 
 import { DatasetByIdQuery, OffsetInterval } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
@@ -23,7 +25,7 @@ import { NavigationService } from "src/app/services/navigation.service";
     styleUrls: ["./offset-interval-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OffsetIntervalPropertyComponent extends BasePropertyComponent implements OnInit {
+export class OffsetIntervalPropertyComponent extends BasePropertyComponent implements OnChanges {
     @Input({ required: true }) public data: {
         block: MaybeNull<OffsetInterval>;
         datasetId: MaybeNull<string>;
@@ -32,17 +34,30 @@ export class OffsetIntervalPropertyComponent extends BasePropertyComponent imple
     private navigationService = inject(NavigationService);
     private datasetService = inject(DatasetService);
 
-    public ngOnInit(): void {
-        if (this.data.datasetId) {
-            this.datasetService
-                .requestDatasetInfoById(this.data.datasetId)
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe((dataset: DatasetByIdQuery) => {
-                    if (dataset.datasets.byId) {
-                        this.datasetInfo.accountName = dataset.datasets.byId.owner.accountName;
-                        this.datasetInfo.datasetName = dataset.datasets.byId.name;
-                    }
-                });
+    private readonly datasetIdChanges$ = new Subject<MaybeNull<string>>();
+
+    public constructor() {
+        super();
+        this.datasetIdChanges$
+            .pipe(
+                distinctUntilChanged(),
+                filter((datasetId: MaybeNull<string>): datasetId is string => datasetId !== null),
+                switchMap((datasetId: string) => this.datasetService.requestDatasetInfoById(datasetId)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe((dataset: DatasetByIdQuery) => {
+                if (dataset.datasets.byId) {
+                    this.datasetInfo = {
+                        accountName: dataset.datasets.byId.owner.accountName,
+                        datasetName: dataset.datasets.byId.name,
+                    };
+                }
+            });
+    }
+
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes.data) {
+            this.datasetIdChanges$.next(this.data.datasetId);
         }
     }
 

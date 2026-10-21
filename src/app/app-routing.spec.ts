@@ -24,6 +24,7 @@ import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { AccessTokenConnection, AccountProvider } from "@api/kamu.graphql.interface";
 import { mockListAccessTokensQuery } from "@api/mock/access-token.mock";
 import { mockAccountDetails } from "@api/mock/auth.mock";
+import { MaybeUndefined } from "@interface/app.types";
 
 import { accountSettingsAccessTokensResolverFn } from "src/app/account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
 import { AppConfigService } from "src/app/app-config.service";
@@ -312,5 +313,26 @@ describe("Router", () => {
             expect(location.path()).toBe("/" + ProjectLinks.URL_PAGE_NOT_FOUND);
             flush();
         }));
+
+        describe("and no login method", () => {
+            beforeEach(() => {
+                spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([]);
+            });
+
+            ["", ProjectLinks.URL_SEARCH, ProjectLinks.URL_LOGIN].forEach((url: string) => {
+                it(`navigation to "/${url}" settles on the login-unavailable page`, fakeAsync(() => {
+                    let navigated: MaybeUndefined<boolean>;
+                    router.navigate([url]).then(
+                        (result) => (navigated = result),
+                        () => (navigated = false),
+                    );
+                    tick();
+
+                    expect(navigated).toBeTrue();
+                    expect(location.path()).toBe("/" + ProjectLinks.URL_LOGIN_UNAVAILABLE);
+                    flush();
+                }));
+            });
+        });
     });
 });

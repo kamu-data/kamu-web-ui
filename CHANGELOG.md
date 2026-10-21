@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Transformation editor: saving keeps the existing inputs, deleting an input removes only that input (also in single-tenant mode), inputs without data yet show "No schema" instead of "Dataset is unavailable", and the edited dataset is no longer offered as its own input
 - Dataset pages: a link to a settings section scrolls to it, and leaving the page right after starting an update, compaction or reset no longer jumps back to Flows
 - Query explainer: a commitment the server rejects shows the server's error message instead of an empty one, and the page returns to the commitment form with the pasted text instead of going blank
+- Sign-in: when the node requires signing in but has no sign-in method enabled, visitors see a "Sign-in is unavailable" page instead of a browser tab that hangs
 
 ## [0.71.0] - 2026-10-12
 ### Added

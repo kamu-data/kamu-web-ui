@@ -1,0 +1,17 @@
+.error-template {
+    padding: 80px 15px;
+    text-align: center;
+}
+
+.error-block {
+    width: 500px;
+    max-width: 100%;
+
+    .title {
+        font-size: 1.5rem;
+    }
+
+    .description {
+        line-height: 150%;
+    }
+}

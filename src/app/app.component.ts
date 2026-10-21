@@ -49,6 +49,7 @@ export const ALL_URLS_WITHOUT_HEADER: string[] = [
     ProjectLinks.URL_LOGIN,
     ProjectLinks.URL_GITHUB_CALLBACK,
     ProjectLinks.URL_ACCOUNT_WHITELIST_PAGE_NOT_FOUND,
+    ProjectLinks.URL_LOGIN_UNAVAILABLE,
 ];
 
 @Component({

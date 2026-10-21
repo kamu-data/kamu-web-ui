@@ -14,6 +14,7 @@ import { RedirectUrlTestModule } from "@common/modules/redirect-url-test.module"
 import { AccountProvider } from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "@interface/app.types";
 
+import { AppConfigService } from "src/app/app-config.service";
 import { loginGuard } from "src/app/auth/guards/login.guard";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { LoginMethodsService } from "src/app/auth/login-methods.service";
@@ -22,6 +23,7 @@ import ProjectLinks from "src/app/project-links";
 describe("loginGuard", () => {
     let loginMethodsService: LoginMethodsService;
     let loggedUserService: LoggedUserService;
+    let appConfigService: AppConfigService;
     let router: Router;
 
     const executeGuard: CanActivateFn = (...guardParameters) =>
@@ -33,6 +35,7 @@ describe("loginGuard", () => {
         });
         loginMethodsService = TestBed.inject(LoginMethodsService);
         loggedUserService = TestBed.inject(LoggedUserService);
+        appConfigService = TestBed.inject(AppConfigService);
         router = TestBed.inject(Router);
     });
 
@@ -41,6 +44,7 @@ describe("loginGuard", () => {
         url: string;
         loginMethods: AccountProvider[];
         isAuthenticated: boolean;
+        allowAnonymous: boolean;
         expectedRedirect: MaybeUndefined<string>;
     }
 
@@ -50,6 +54,7 @@ describe("loginGuard", () => {
             url: `/${ProjectLinks.URL_LOGIN}`,
             loginMethods: [AccountProvider.Password],
             isAuthenticated: false,
+            allowAnonymous: true,
             expectedRedirect: undefined,
         },
         {
@@ -57,6 +62,7 @@ describe("loginGuard", () => {
             url: `/${ProjectLinks.URL_LOGIN}?${ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL}=%2Fkamu`,
             loginMethods: [AccountProvider.Password],
             isAuthenticated: false,
+            allowAnonymous: true,
             expectedRedirect: undefined,
         },
         {
@@ -64,6 +70,7 @@ describe("loginGuard", () => {
             url: `/${ProjectLinks.URL_LOGIN}`,
             loginMethods: [],
             isAuthenticated: false,
+            allowAnonymous: true,
             expectedRedirect: "/",
         },
         {
@@ -71,6 +78,7 @@ describe("loginGuard", () => {
             url: `/${ProjectLinks.URL_LOGIN}?${ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL}=%2Fkamu`,
             loginMethods: [],
             isAuthenticated: false,
+            allowAnonymous: true,
             expectedRedirect: "/",
         },
         {
@@ -78,12 +86,39 @@ describe("loginGuard", () => {
             url: `/${ProjectLinks.URL_LOGIN}`,
             loginMethods: [AccountProvider.Password],
             isAuthenticated: true,
+            allowAnonymous: true,
             expectedRedirect: "/",
+        },
+        {
+            description:
+                "redirect to the login-unavailable page when there are no login methods and anonymous access is forbidden",
+            url: `/${ProjectLinks.URL_LOGIN}`,
+            loginMethods: [],
+            isAuthenticated: false,
+            allowAnonymous: false,
+            expectedRedirect: `/${ProjectLinks.URL_LOGIN_UNAVAILABLE}`,
+        },
+        {
+            description: "redirect home an authenticated user when anonymous access is forbidden",
+            url: `/${ProjectLinks.URL_LOGIN}`,
+            loginMethods: [],
+            isAuthenticated: true,
+            allowAnonymous: false,
+            expectedRedirect: "/",
+        },
+        {
+            description: "allow an anonymous user when login methods exist and anonymous access is forbidden",
+            url: `/${ProjectLinks.URL_LOGIN}`,
+            loginMethods: [AccountProvider.Password],
+            isAuthenticated: false,
+            allowAnonymous: false,
+            expectedRedirect: undefined,
         },
     ].forEach((testCase: TestCase) => {
         it(`should ${testCase.description}`, () => {
             spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue(testCase.loginMethods);
             spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(testCase.isAuthenticated);
+            spyOnProperty(appConfigService, "allowAnonymous", "get").and.returnValue(testCase.allowAnonymous);
 
             const result = executeGuard({} as ActivatedRouteSnapshot, { url: testCase.url } as RouterStateSnapshot);
 

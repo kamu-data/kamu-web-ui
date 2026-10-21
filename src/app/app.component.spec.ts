@@ -7,15 +7,16 @@
 
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ActivatedRoute, NavigationEnd } from "@angular/router";
+import { ActivatedRoute, provideRouter, Router } from "@angular/router";
 
 import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
 import { isMobileView } from "@common/helpers/app.helpers";
-import { registerMatSvgIcons, routerMock, routerMockEventSubject } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, routerMock } from "@common/helpers/base-test.helpers.spec";
 import { FetchAccountDetailsGQL } from "@api/kamu.graphql.interface";
 import { mockAccountFromAccessToken } from "@api/mock/auth.mock";
 
@@ -26,6 +27,13 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 import ProjectLinks from "src/app/project-links";
 import { mockAutocompleteItems } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
+
+@Component({
+    selector: "app-empty-route",
+    template: "",
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class EmptyRouteComponent {}
 
 describe("AppComponent", () => {
     let component: AppComponent;
@@ -57,6 +65,7 @@ describe("AppComponent", () => {
                         queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
                     },
                 },
+                provideRouter([{ path: "**", component: EmptyRouteComponent }]),
                 provideHttpClient(),
                 provideHttpClientTesting(),
             ],
@@ -73,7 +82,6 @@ describe("AppComponent", () => {
         fetchAccountDetailsGQL = TestBed.inject(FetchAccountDetailsGQL);
 
         component = fixture.componentInstance;
-        routerMockEventSubject.next(new NavigationEnd(1, ProjectLinks.URL_LOGIN, ""));
         // Silences the version banner ngOnInit prints to the console
         spyOn(console, "info");
         fixture.detectChanges();
@@ -119,10 +127,16 @@ describe("AppComponent", () => {
     });
 
     ProjectLinks.ALL_URLS.filter((url) => !ALL_URLS_WITHOUT_HEADER.includes(url)).forEach((url: string) => {
-        it(`should show header when going to ${url} page`, () => {
-            routerMockEventSubject.next(new NavigationEnd(1, url, ""));
-            fixture.detectChanges();
+        it(`should show header when going to ${url} page`, async () => {
+            await TestBed.inject(Router).navigateByUrl(url);
             expect(component.isHeaderVisible).toBeTrue();
+        });
+    });
+
+    ALL_URLS_WITHOUT_HEADER.forEach((url: string) => {
+        it(`should hide header when going to ${url} page`, async () => {
+            await TestBed.inject(Router).navigateByUrl(`/${url}`);
+            expect(component.isHeaderVisible).toBeFalse();
         });
     });
 

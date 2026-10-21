@@ -6,7 +6,7 @@
  */
 
 import {
-    AfterViewChecked,
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -17,6 +17,7 @@ import {
     ViewChildren,
     ViewContainerRef,
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatIconModule } from "@angular/material/icon";
 
 import { BaseComponent } from "@common/components/base.component";
@@ -39,7 +40,7 @@ import {
         BlockRowDataComponent,
     ],
 })
-export class BaseDynamicEventComponent<TEvent extends object> extends BaseComponent implements AfterViewChecked {
+export class BaseDynamicEventComponent<TEvent extends object> extends BaseComponent implements AfterViewInit {
     @Input({ required: true }) public event: TEvent;
     @ViewChildren("container", { read: ViewContainerRef })
     private container: QueryList<ViewContainerRef>;
@@ -47,7 +48,14 @@ export class BaseDynamicEventComponent<TEvent extends object> extends BaseCompon
 
     protected cdr = inject(ChangeDetectorRef);
 
-    public ngAfterViewChecked(): void {
+    public ngAfterViewInit(): void {
+        this.renderPropertyComponents();
+        this.container.changes
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.renderPropertyComponents());
+    }
+
+    private renderPropertyComponents(): void {
         let componentRef: ComponentRef<BasePropertyComponent>;
         const rows: EventRow[] = [];
         this.eventSections

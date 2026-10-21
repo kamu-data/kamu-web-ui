@@ -6,7 +6,7 @@
  */
 
 import { AsyncPipe } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { afterNextRender, ChangeDetectionStrategy, Component, inject, Injector, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
     AbstractControl,
@@ -92,6 +92,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     private datasetFlowsService = inject(DatasetFlowsService);
     private navigationService = inject(NavigationService);
     private datasetService = inject(DatasetService);
+    private injector = inject(Injector);
 
     public get datasetBasics(): DatasetBasicsFragment {
         return this.generalTabData.datasetBasics;
@@ -126,7 +127,12 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     }
 
     public jumpToSection(section: MaybeNull<string>) {
-        if (section) document.getElementById(section)?.scrollIntoView({ behavior: "smooth" });
+        if (section) {
+            afterNextRender(
+                { read: () => document.getElementById(section)?.scrollIntoView({ behavior: "smooth" }) },
+                { injector: this.injector },
+            );
+        }
     }
 
     public get datasetNameControl(): AbstractControl {

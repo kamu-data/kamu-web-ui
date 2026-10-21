@@ -6,7 +6,7 @@
  */
 
 import {
-    AfterViewInit,
+    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
@@ -29,7 +29,6 @@ import { DatasetBasicsFragment, DatasetPermissionsFragment } from "@api/kamu.gra
 
 import { AppConfigService } from "src/app/app-config.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetPermissionsService } from "src/app/dataset-view/dataset.permissions.service";
 
 @Component({
     selector: "app-dataset-view-menu",
@@ -46,7 +45,7 @@ import { DatasetPermissionsService } from "src/app/dataset-view/dataset.permissi
         FeatureFlagDirective,
     ],
 })
-export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
+export class DatasetViewMenuComponent implements OnInit {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
     @ViewChild("menuTrigger") public trigger: ElementRef;
     @ViewChild("datasetViewMenu") public datasetViewMenuComponent: ElementRef<HTMLDivElement>;
@@ -59,15 +58,18 @@ export class DatasetViewMenuComponent implements OnInit, AfterViewInit {
 
     private sideNavHelper: SideNavHelper;
 
-    private datasetPermissionsServices = inject(DatasetPermissionsService);
     private widgetHeightService = inject(WidgetHeightService);
     private configService = inject(AppConfigService);
 
-    public ngAfterViewInit(): void {
-        this.widgetHeightService.setWidgetOffsetTop(
-            this.datasetViewMenuComponent.nativeElement.clientHeight +
-                this.datasetViewMenuComponent.nativeElement.offsetTop,
-        );
+    public constructor() {
+        afterNextRender({
+            read: () => {
+                this.widgetHeightService.setWidgetOffsetTop(
+                    this.datasetViewMenuComponent.nativeElement.clientHeight +
+                        this.datasetViewMenuComponent.nativeElement.offsetTop,
+                );
+            },
+        });
     }
 
     public ngOnInit(): void {

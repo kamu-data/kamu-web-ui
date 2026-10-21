@@ -105,6 +105,16 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         expect(component).toBeTruthy();
     });
 
+    it("should scroll to the section from the URL fragment once the view is rendered", () => {
+        const scrollSpy = spyOn(HTMLElement.prototype, "scrollIntoView");
+
+        component.jumpToSection("visibility");
+        expect(scrollSpy).not.toHaveBeenCalled();
+
+        fixture.detectChanges();
+        expect(scrollSpy).toHaveBeenCalledOnceWith({ behavior: "smooth" });
+    });
+
     it("should check default state of properties", () => {
         expect(component.isAllowedToDeleteDataset).toEqual(true);
         expect(component.renameDatasetForm.disabled).toEqual(false);

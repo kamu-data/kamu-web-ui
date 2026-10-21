@@ -91,7 +91,8 @@ code added itself, or a third-party callback triggers none of them.
 | Touch the DOM once a change has rendered: focus, scroll, mark invalid inputs touched | `afterNextRender(() => ...)` in a constructor, or with `{ injector }` from a method | `setTimeout(fn)`, `setTimeout(fn, 50)` |
 | Read layout: `clientHeight`, `offsetTop`, `getBoundingClientRect()` | `afterNextRender({ read: () => ... })` | measuring in `ngOnInit` or `ngAfterViewInit` |
 | Post-process what a library rendered, such as Run buttons on markdown | the library's completion output, e.g. ngx-markdown `(ready)` | DOM work in `ngAfterViewChecked`, `ngDoCheck` or `afterEveryRender` |
-| Create components in `@ViewChildren` containers | `ngAfterViewInit`, plus `QueryList.changes` through `takeUntilDestroyed` | recreating them in `ngAfterViewChecked` |
+| Render a component chosen at runtime from data, such as a row's presentation component | `*ngComponentOutlet="type; inputs: { ... }"` in the template, which follows input changes | `ViewContainerRef.createComponent` in `ngAfterViewInit` or `ngAfterViewChecked` |
+| Open a component from code, such as the modal host on a service command | `ViewContainerRef.createComponent(Type)` | `ComponentFactoryResolver`, deprecated |
 | Wait a fixed time for the backend, then refresh or navigate | `timer(ms).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(...)` | a bare `setTimeout`, which outlives the component |
 | Change template state from a timer, `fromEvent`, `addEventListener` or third-party callback | `this.cdr.markForCheck()` after the change, or emit into a subject the template reads with `async` | relying on zone.js to notice |
 
@@ -174,6 +175,7 @@ code added itself, or a third-party callback triggers none of them.
 | Component-level `Subject` + `ngOnDestroy` teardown | `takeUntilDestroyed(this.destroyRef)` does the same with less code and cannot be forgotten in `ngOnDestroy` |
 | `setTimeout(fn, N)` to wait until the view has rendered | Guesses the timing: too short on a slow machine, wasted time on a fast one, and without zone.js it triggers no change detection; `afterNextRender` runs exactly after the render |
 | DOM work in `ngAfterViewChecked` | Runs after every change detection pass in the app: the markdown Run-button helper queried the whole document on each pass, and the dynamic event view recreated all its property components each time |
+| Creating data-driven components into `@ViewChildren` containers in `ngAfterViewInit` | Runs once: when the input changed, the metadata event rows kept showing the previous event's values. `NgComponentOutlet` re-applies its `inputs` on every change and recreates the component when the type or the tracked item changes |
 
 ## What lives elsewhere
 

@@ -59,11 +59,12 @@ BRANCH_REASON = (
     "instance (AGENTS.md, 'Hard rules'). Work on the current branch unless the user asked for "
     "another one. `git checkout <path>` asks too: the guard cannot tell it from a branch switch."
 )
+# Flags that make `git branch <name>` act on the name instead of creating it. Output modifiers
+# such as `-v`, `--color`, `--sort` or `--format` are not here: with a name, git still creates it.
 BRANCH_LISTING = {
-    "-a", "--all", "-r", "--remotes", "-l", "--list", "-v", "-vv", "--verbose", "--show-current",
-    "--contains", "--no-contains", "--merged", "--no-merged", "--points-at", "--sort", "--format",
-    "--column", "--no-column", "--color", "--no-color", "-u", "--set-upstream-to",
-    "--unset-upstream", "--edit-description",
+    "-a", "--all", "-r", "--remotes", "-l", "--list", "--show-current",
+    "--contains", "--no-contains", "--merged", "--no-merged", "--points-at",
+    "-u", "--set-upstream-to", "--unset-upstream", "--edit-description",
 }
 BRANCH_CREATE = {"-c", "-C", "--copy", "-t", "--track", "--no-track"}
 
@@ -219,10 +220,10 @@ def judge_git(args: list[str]) -> Verdict | None:
     if sub == "clean" and (short("f") or "--force" in flags) and not (short("n") or "--dry-run" in flags):
         return discard()
     if sub == "checkout":
+        if "--" in flags or "." in flags or "--force" in flags or short("f"):
+            return discard()
         if flags & {"-b", "-B", "--orphan"}:
             return branch_change()
-        if "--" in flags or "." in flags or flags & {"-f", "--force"}:
-            return discard()
         if rest:
             return branch_change()
     if sub == "switch":

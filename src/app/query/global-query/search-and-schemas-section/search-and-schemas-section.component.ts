@@ -22,9 +22,11 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 
 import {
+    catchError,
     combineLatest,
     debounceTime,
     distinctUntilChanged,
+    EMPTY,
     map,
     Observable,
     of,
@@ -93,7 +95,8 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
                 switchMap((sqlQueryResponse: MaybeNull<SqlQueryBasicResponse>) => {
                     if (sqlQueryResponse) {
                         const schemaResponses = sqlQueryResponse.involvedDatasetsId.map((id: string) =>
-                            this.datasetService.requestDatasetSchema(id),
+                            // A dataset whose schema fails to load is left out; the error link has reported it
+                            this.datasetService.requestDatasetSchema(id).pipe(catchError(() => of(null))),
                         );
                         return this.processSchemaResponses(schemaResponses);
                     }
@@ -110,12 +113,12 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
     }
 
     private processSchemaResponses(
-        schemaResponses: Observable<GetDatasetSchemaQuery>[],
+        schemaResponses: Observable<MaybeNull<GetDatasetSchemaQuery>>[],
     ): Observable<GlobalQuerySearchItem[]> {
         return combineLatest(schemaResponses).pipe(
-            map((datasets: GetDatasetSchemaQuery[]) => {
-                return datasets.flatMap((item: GetDatasetSchemaQuery): GlobalQuerySearchItem[] => {
-                    const dataset = item.datasets.byId;
+            map((datasets: MaybeNull<GetDatasetSchemaQuery>[]) => {
+                return datasets.flatMap((item: MaybeNull<GetDatasetSchemaQuery>): GlobalQuerySearchItem[] => {
+                    const dataset = item?.datasets.byId;
                     return dataset
                         ? [{ datasetAlias: dataset.alias, schema: parseCurrentSchema(dataset.metadata.currentSchema) }]
                         : [];
@@ -170,7 +173,10 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
     private requestDatasetSchemaById(id: string): void {
         this.datasetService
             .requestDatasetSchema(id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                catchError(() => EMPTY),
+                takeUntilDestroyed(this.destroyRef),
+            )
             .subscribe((data: GetDatasetSchemaQuery) => {
                 if (data.datasets.byId) {
                     const datasetAlias = (data.datasets.byId as DatasetBasicsFragment).alias;

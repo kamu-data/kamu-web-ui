@@ -89,6 +89,12 @@ public datasetWebhookCreateSubscription(datasetId: string, input: WebhookSubscri
 
 - Queries: `.watch(...).valueChanges.pipe(onlyCompleteData(), first(), map(...))` — one complete
   value, then completion. Mutations: `.mutate(...).pipe(first(), map(...))`.
+- Apollo emits a failed query as a result carrying `error`, and `onlyCompleteData()` drops it: the
+  observable then neither emits nor errors, and a caller's `catchError` never runs. A query whose
+  callers react to failure uses `completeDataOrError()` (`@common/helpers/apollo-error.helpers`)
+  in its place (`getDatasetSchema`, `readEnabledLoginMethods`), and every caller handles the
+  error. Cover it with a spec that answers through `ApolloTestingController`'s `graphqlErrors()` /
+  `networkError()`; a mocked `throwError` skips the Apollo path.
 - Data that changes behind the UI's back (flows, statuses, lists the user just modified) uses
   `...noCacheFetchPolicy` from `@common/helpers/data.helpers`; stable data relies on the cache.
 - Background polling and other requests that must not show the global spinner pass

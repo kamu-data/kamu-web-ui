@@ -15,6 +15,7 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
 import { findComponentInstance } from "@common/helpers/base-test.helpers.spec";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -79,9 +80,8 @@ describe("SetTransformComponent", () => {
     function createComponent(eventYamlByHash: string): void {
         fixture = TestBed.createComponent(SetTransformComponent);
         component = fixture.componentInstance;
-        component.selectedEngine = "Spark";
-        component.eventYamlByHash = eventYamlByHash;
-        component.datasetInfo = mockDatasetInfo;
+        fixture.componentRef.setInput(RoutingResolvers.SET_TRANSFORM_KEY, eventYamlByHash);
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_INFO_KEY, mockDatasetInfo);
         fixture.detectChanges();
     }
 
@@ -103,6 +103,16 @@ describe("SetTransformComponent", () => {
             const commitEventToDatasetSpy = spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(of());
             component.onSaveEvent();
             expect(commitEventToDatasetSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it("should save the event's engine while the engine list has not loaded", () => {
+            const commitEventToDatasetSpy = spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(of());
+
+            component.onSaveEvent();
+
+            expect(commitEventToDatasetSpy.calls.mostRecent().args[0].event).toContain(
+                `engine: ${mockParseSetTransformYamlType.transform.engine}`,
+            );
         });
 
         it("should check open modal window to edit event", () => {

@@ -7,9 +7,12 @@
 
 import { inject, Injector } from "@angular/core";
 
-import { ApolloLink } from "@apollo/client/core";
+import { OperatorFunction, pipe, tap } from "rxjs";
+
+import { ApolloLink, ObservableQuery } from "@apollo/client/core";
 import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import { ErrorLink } from "@apollo/client/link/error";
+import { onlyCompleteData } from "apollo-angular";
 import { ToastrService } from "ngx-toastr";
 
 import { isAccessTokenExpired, logError } from "@common/helpers/app.helpers";
@@ -63,4 +66,23 @@ export function createApolloErrorHandler(): (error: unknown) => void {
 export function createApolloErrorLink(): ApolloLink {
     const handleError = createApolloErrorHandler();
     return new ErrorLink(({ error }) => handleError(error));
+}
+
+/**
+ * `onlyCompleteData()` for a query whose caller reacts to failure. Apollo emits a failed request as
+ * a result carrying `error`, which `onlyCompleteData()` drops, leaving the query waiting forever;
+ * here that result errors the observable instead. The error link has already reported it.
+ */
+export function completeDataOrError<TData>(): OperatorFunction<
+    ObservableQuery.Result<TData>,
+    ObservableQuery.Result<TData, "complete">
+> {
+    return pipe(
+        tap((result: ObservableQuery.Result<TData>) => {
+            if (result.error) {
+                throw new Error(result.error.message, { cause: result.error });
+            }
+        }),
+        onlyCompleteData<TData>(),
+    );
 }

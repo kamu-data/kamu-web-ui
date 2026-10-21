@@ -91,7 +91,7 @@ To authenticate user via GitHub you will also need to pass the following environ
 
 We are using [graphql-codegen](https://www.graphql-code-generator.com/) project to generate typed interfaces based on server's GraphQL Schema and the query templates.
 
-The schema file is located in `resources/schema.graphql`. To refresh it with latest schema from a running server using:
+The schema file is located in `resources/schema.graphql`, a copy of `resources/schema.gql` in kamu-cli. To refresh it from kamu-cli's `master` branch on GitHub, use:
 
 ```bash
 npm run gql-update-schema

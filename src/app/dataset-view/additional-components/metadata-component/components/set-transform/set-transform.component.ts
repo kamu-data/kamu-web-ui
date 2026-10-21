@@ -83,6 +83,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     private initQueriesSection(): void {
         if (this.eventYamlByHash) {
             this.currentSetTransformEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
+            this.selectedEngine = this.currentSetTransformEvent.transform.engine;
 
             if (this.currentSetTransformEvent.transform.query) {
                 this.initDefaultQueriesSection(this.currentSetTransformEvent.transform.query);

@@ -18,6 +18,9 @@ class DiscardTest(unittest.TestCase):
             "git checkout -- src/app/app.component.ts",
             "git checkout .",
             "git checkout -f main",
+            "git checkout -f -b feature/audit",
+            "git checkout -fb feature/audit",
+            "git checkout --force -B x origin/x",
             "git switch --discard-changes main",
             "git restore src/app/app.component.ts",
             "git restore --staged --worktree src/app/app.component.ts",
@@ -91,13 +94,15 @@ class ApprovalTest(unittest.TestCase):
                         "git checkout src/app/app.component.ts", "git branch chore/1-x", "git branch x origin/master",
                         "git branch -c x y", "git branch --track x origin/x", "git worktree add ../wt master",
                         "git worktree add -b x ../wt", "git fetch && git switch -c x origin/master",
-                        "git switch 'unterminated", "git branch 'unterminated"]:
+                        "git switch 'unterminated", "git branch 'unterminated", "git branch -v feature/audit",
+                        "git branch --color x", "git branch --sort=refname x", "git branch --format='%(refname)' x",
+                        "git branch --no-column x"]:
             with self.subTest(command=command):
                 self.assertEqual(verdict(command), ("ask", "approval"))
 
     def test_reading_branches_and_tracking_pass(self):
         for command in ["git branch", "git branch -a", "git branch --show-current", "git branch -vv",
-                        "git branch --list 'chore/*'", "git branch --contains HEAD", "git branch --unset-upstream",
+                        "git branch -v --sort=-committerdate", "git branch --list 'chore/*'", "git branch --contains HEAD", "git branch --unset-upstream",
                         "git branch -u origin/x", "git worktree list", "git checkout"]:
             with self.subTest(command=command):
                 self.assertIsNone(verdict(command))

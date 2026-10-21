@@ -9,7 +9,7 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { ignoreElements, of, timer } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
@@ -18,6 +18,8 @@ import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
 import {
     checkButtonDisabled,
     emitClickOnElementByDataTestId,
+    findElementByDataTestId,
+    getElementByDataTestId,
     registerMatSvgIcons,
     setFieldValue,
 } from "@common/helpers/base-test.helpers.spec";
@@ -27,6 +29,7 @@ import { mockDatasetByIdQuery } from "@api/mock/dataset.mock";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { QueryExplainerComponent } from "src/app/query-explainer/query-explainer.component";
 import {
+    mockQueryExplainerOutput,
     mockQueryExplainerResponse,
     mockTextareaCommitment,
     mockVerifyQueryResponseSuccess,
@@ -91,5 +94,28 @@ describe("QueryExplainerComponent", () => {
         setFieldValue(fixture, "input-textarea", mockTextareaCommitment);
         fixture.detectChanges();
         expect(component.commitment).toEqual(mockTextareaCommitment);
+    });
+
+    it("should return to the commitment form with the pasted text when verification fails", async () => {
+        spyOn(queryExplainerService, "processQueryWithSchema").and.returnValue(
+            of({ output: mockQueryExplainerOutput }),
+        );
+        // A failed request completes without a value, after the response arrives
+        (queryExplainerService.verifyQuery as jasmine.Spy).and.returnValue(timer(0).pipe(ignoreElements()));
+        const commitment = JSON.stringify(mockQueryExplainerResponse);
+        setFieldValue(fixture, "input-textarea", commitment);
+        fixture.detectChanges();
+
+        emitClickOnElementByDataTestId(fixture, "verify-commitment-button");
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(findElementByDataTestId(fixture, "input-textarea")).toBeUndefined();
+
+        await fixture.whenStable();
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const textarea = getElementByDataTestId(fixture, "input-textarea") as HTMLTextAreaElement;
+        expect(textarea.value).toEqual(commitment);
     });
 });

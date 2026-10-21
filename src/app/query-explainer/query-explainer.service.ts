@@ -12,6 +12,9 @@ import { catchError, EMPTY, map, Observable, of, ReplaySubject, Subject, tap } f
 
 import { ToastrService } from "ngx-toastr";
 
+import { ErrorTexts } from "@common/values/errors.text";
+import { MaybeNull } from "@interface/app.types";
+
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import {
@@ -73,12 +76,7 @@ export class QueryExplainerService {
                     throw new Error("Unsupported subQueries array");
                 }
             }),
-            catchError((e: HttpErrorResponse) => {
-                this.toastrService.error("", (e.error as { message: string }).message, {
-                    disableTimeOut: "timeOut",
-                });
-                return EMPTY;
-            }),
+            catchError((e: unknown) => this.showRequestError(e)),
         );
     }
 
@@ -89,40 +87,46 @@ export class QueryExplainerService {
             include: ["Schema"],
         };
 
-        return this.http.post<QueryExplainerDataJsonAosResponse>(url.href, body).pipe(
-            catchError((e: HttpErrorResponse) => {
-                this.toastrService.error("", (e.error as { message: string }).message, {
-                    disableTimeOut: "timeOut",
-                });
-                return EMPTY;
-            }),
-        );
+        return this.http
+            .post<QueryExplainerDataJsonAosResponse>(url.href, body)
+            .pipe(catchError((e: unknown) => this.showRequestError(e)));
     }
 
     public verifyQuery(data: QueryExplainerResponse): Observable<VerifyQueryResponse> {
         const url = new URL(`${this.baseUrl}/verify`);
         return this.http.post<VerifyQueryResponse>(url.href, data).pipe(
-            catchError((e: HttpErrorResponse) => {
-                if (e.status === 400) return of(e.error as VerifyQueryResponse);
-                else {
-                    this.toastrService.error("", (e.error as { message: string }).message, {
-                        disableTimeOut: "timeOut",
-                    });
-                    return EMPTY;
-                }
+            catchError((e: unknown) => {
+                if (e instanceof HttpErrorResponse && e.status === 400) return of(e.error as VerifyQueryResponse);
+                return this.showRequestError(e);
             }),
         );
     }
 
     public fetchCommitmentDataByUploadToken(token: string): Observable<QueryExplainerResponse> {
         const url = new URL(`${this.baseUrl}/platform/file/upload/${token}`);
-        return this.http.get<QueryExplainerResponse>(url.href).pipe(
-            catchError((e: HttpErrorResponse) => {
-                this.toastrService.error("", (e.error as { message: string }).message, {
-                    disableTimeOut: "timeOut",
-                });
-                return EMPTY;
-            }),
-        );
+        return this.http
+            .get<QueryExplainerResponse>(url.href)
+            .pipe(catchError((e: unknown) => this.showRequestError(e)));
+    }
+
+    private showRequestError(e: unknown): Observable<never> {
+        this.toastrService.error("", QueryExplainerService.requestErrorText(e), {
+            disableTimeOut: "timeOut",
+        });
+        return EMPTY;
+    }
+
+    // The server answers with a JSON `{ message }` body, or with plain text for errors raised
+    // before the handler runs, such as a 422 for a body that fails to deserialize.
+    private static requestErrorText(e: unknown): string {
+        if (e instanceof HttpErrorResponse) {
+            const body: unknown = e.error;
+            if (typeof body === "string" && body) return body;
+            const message: unknown = (body as MaybeNull<{ message?: unknown }>)?.message;
+            if (typeof message === "string" && message) return message;
+        } else if (e instanceof Error && e.message) {
+            return e.message;
+        }
+        return ErrorTexts.ERROR_TITLE_REQUEST_FAILED;
     }
 }

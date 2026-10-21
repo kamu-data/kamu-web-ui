@@ -12,6 +12,8 @@ import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
+import { ErrorTexts } from "@common/values/errors.text";
+
 import { AppConfigService } from "src/app/app-config.service";
 import {
     mockQueryExplainerResponse,
@@ -124,6 +126,54 @@ describe("QueryExplainerService", () => {
         const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/verify`);
         req.flush(errorMessage, { status: 404, statusText: "Not found" });
         expect(toastrServiceSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should show the plain-text body of a rejected verification", () => {
+        const errorText = "Failed to deserialize the JSON body into the target type: output: unknown field";
+        const toastrServiceSpy = spyOn(toastrService, "error");
+        const nextSpy = jasmine.createSpy("next");
+
+        service.verifyQuery(mockQueryExplainerResponse).subscribe(nextSpy);
+        const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/verify`);
+        req.flush(errorText, { status: 422, statusText: "Unprocessable Entity" });
+
+        expect(nextSpy).not.toHaveBeenCalled();
+        expect(toastrServiceSpy).toHaveBeenCalledOnceWith("", errorText, { disableTimeOut: "timeOut" });
+    });
+
+    it("should show the JSON message of a failed verification", () => {
+        const errorMessage = "Internal error";
+        const toastrServiceSpy = spyOn(toastrService, "error");
+
+        service.verifyQuery(mockQueryExplainerResponse).subscribe();
+        const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/verify`);
+        req.flush({ message: errorMessage }, { status: 500, statusText: "Internal Server Error" });
+
+        expect(toastrServiceSpy).toHaveBeenCalledOnceWith("", errorMessage, { disableTimeOut: "timeOut" });
+    });
+
+    it("should show a generic text when a failed verification has no body", () => {
+        const toastrServiceSpy = spyOn(toastrService, "error");
+
+        service.verifyQuery(mockQueryExplainerResponse).subscribe();
+        const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/verify`);
+        req.flush(null, { status: 502, statusText: "Bad Gateway" });
+
+        expect(toastrServiceSpy).toHaveBeenCalledOnceWith("", ErrorTexts.ERROR_TITLE_REQUEST_FAILED, {
+            disableTimeOut: "timeOut",
+        });
+    });
+
+    it("should show an error for a query with proof that has sub-queries", () => {
+        const toastrServiceSpy = spyOn(toastrService, "error");
+
+        service.processQueryWithProof("select 1").subscribe();
+        const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/query`);
+        req.flush({ ...mockQueryExplainerResponse, subQueries: [mockQueryExplainerResponse] });
+
+        expect(toastrServiceSpy).toHaveBeenCalledOnceWith("", "Unsupported subQueries array", {
+            disableTimeOut: "timeOut",
+        });
     });
 
     it("should upload commitment data by upload token", () => {

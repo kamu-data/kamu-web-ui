@@ -7,10 +7,12 @@
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ApplicationRef } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
 
+import { WidgetHeightService } from "@common/components/lineage-graph/widget-height.service";
 import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
@@ -47,5 +49,22 @@ describe("DatasetViewMenuComponent", () => {
         const navigateToDiscussionsElem = findElementByDataTestId(fixture, "navigateToDiscussions");
         expect(navigateToDiscussionsElem?.hasAttribute("appfeatureflag")).toBeTrue();
         expect(navigateToDiscussionsElem?.getAttribute("appfeatureflag")).toEqual("dataset.panel.discussions");
+    });
+
+    it("should report the menu offset to the widget height service once rendered", () => {
+        const setWidgetOffsetTopSpy = spyOn(TestBed.inject(WidgetHeightService), "setWidgetOffsetTop");
+        const menuFixture = TestBed.createComponent(DatasetViewMenuComponent);
+        menuFixture.componentRef.setInput("datasetBasics", mockDatasetBasicsDerivedFragment);
+        menuFixture.componentRef.setInput("datasetPermissions", mockFullPowerDatasetPermissionsFragment);
+        menuFixture.componentRef.setInput("datasetViewType", DatasetViewTypeEnum.Metadata);
+        expect(setWidgetOffsetTopSpy).not.toHaveBeenCalled();
+
+        menuFixture.detectChanges();
+        TestBed.inject(ApplicationRef).tick();
+
+        const menuElement = findElementByDataTestId(menuFixture, "dataset-view-menu");
+        expect(setWidgetOffsetTopSpy).toHaveBeenCalledOnceWith(
+            (menuElement?.clientHeight ?? 0) + (menuElement?.offsetTop ?? 0),
+        );
     });
 });

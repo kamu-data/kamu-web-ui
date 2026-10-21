@@ -5,8 +5,9 @@
  * included in the LICENSE file.
  */
 
+import { ApplicationRef } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormArray, FormControl, FormGroup } from "@angular/forms";
+import { FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 
 import { from, of } from "rxjs";
@@ -14,6 +15,11 @@ import { from, of } from "rxjs";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { ApolloTestingModule } from "apollo-angular/testing";
 
+import {
+    dispatchInputEvent,
+    emitClickOnElementByDataTestId,
+    getElementByDataTestId,
+} from "@common/helpers/base-test.helpers.spec";
 import { OdfDefaultValues } from "@common/values/app-odf-default.values";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
@@ -242,5 +248,19 @@ describe("AddPollingSourceComponent", () => {
         component.eventYamlByHash = mockSetPollingSourceEventYamlWithoutPreprocess;
         component.ngOnInit();
         expect(component.showPreprocessStep).toEqual(false);
+    });
+
+    it("should focus and blur invalid fields once the view renders after a step header click", () => {
+        component.fetchForm.controls.url.setValidators(Validators.required);
+        dispatchInputEvent(fixture, "fetch-url", "");
+        const urlInput = getElementByDataTestId(fixture, "fetch-url");
+        const blurSpy = spyOn(HTMLInputElement.prototype, "blur").and.callThrough();
+
+        emitClickOnElementByDataTestId(fixture, "stepper-header-overlay-fetch");
+        expect(blurSpy).not.toHaveBeenCalled();
+
+        fixture.detectChanges();
+        TestBed.inject(ApplicationRef).tick();
+        expect(blurSpy.calls.all().some((call) => call.object === urlInput)).toBeTrue();
     });
 });

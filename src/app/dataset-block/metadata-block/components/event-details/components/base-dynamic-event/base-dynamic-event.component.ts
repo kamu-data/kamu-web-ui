@@ -17,7 +17,6 @@ import {
     ViewChildren,
     ViewContainerRef,
 } from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatIconModule } from "@angular/material/icon";
 
 import { BaseComponent } from "@common/components/base.component";
@@ -49,13 +48,6 @@ export class BaseDynamicEventComponent<TEvent extends object> extends BaseCompon
     protected cdr = inject(ChangeDetectorRef);
 
     public ngAfterViewInit(): void {
-        this.renderPropertyComponents();
-        this.container.changes
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.renderPropertyComponents());
-    }
-
-    private renderPropertyComponents(): void {
         let componentRef: ComponentRef<BasePropertyComponent>;
         const rows: EventRow[] = [];
         this.eventSections

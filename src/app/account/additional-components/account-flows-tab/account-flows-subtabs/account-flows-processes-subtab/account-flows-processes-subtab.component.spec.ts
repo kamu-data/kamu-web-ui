@@ -488,4 +488,36 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         expect(getAccountWebhookCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
+
+    it("should refresh cards once the delay after a webhook toggle passes", fakeAsync(() => {
+        spyOn(datasetWebhooksService, "datasetWebhookPauseSubscription").and.returnValue(of(true));
+        const refreshNowSpy = spyOn(component, "refreshNow");
+        component.toggleWebhookCardState({
+            state: FlowProcessEffectiveState.Active,
+            datasetBasics: mockDatasetBasicsRootFragment,
+            subscriptionId: MOCK_SUBSCRIPTION_ID,
+        });
+
+        tick(component.TIMEOUT_REFRESH_FLOW - 1);
+        expect(refreshNowSpy).not.toHaveBeenCalled();
+
+        tick(1);
+        expect(refreshNowSpy).toHaveBeenCalledTimes(1);
+        discardPeriodicTasks();
+    }));
+
+    it("should not refresh cards after a webhook toggle once destroyed", fakeAsync(() => {
+        spyOn(datasetWebhooksService, "datasetWebhookPauseSubscription").and.returnValue(of(true));
+        const refreshNowSpy = spyOn(component, "refreshNow");
+        component.toggleWebhookCardState({
+            state: FlowProcessEffectiveState.Active,
+            datasetBasics: mockDatasetBasicsRootFragment,
+            subscriptionId: MOCK_SUBSCRIPTION_ID,
+        });
+
+        fixture.destroy();
+        tick(component.TIMEOUT_REFRESH_FLOW);
+        expect(refreshNowSpy).not.toHaveBeenCalled();
+        discardPeriodicTasks();
+    }));
 });

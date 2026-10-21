@@ -288,4 +288,32 @@ describe("AccountFlowsActivitySubtabComponent", () => {
             [FlowStatus.Running, FlowStatus.Retrying],
         );
     });
+
+    it("should refresh after an abort only once the delay passes, and not after destroy", fakeAsync(() => {
+        spyOn(datasetFlowsService, "cancelFlowRun").and.returnValue(of(true));
+        const refreshNowSpy = spyOn(component, "refreshNow");
+        component.onAbortFlow({ flowId: MOCK_FLOW_ID, datasetId: mockDatasetMainDataId });
+
+        tick(component.TIMEOUT_REFRESH_FLOW - 1);
+        expect(refreshNowSpy).not.toHaveBeenCalled();
+
+        fixture.destroy();
+        tick(1);
+        expect(refreshNowSpy).not.toHaveBeenCalled();
+        discardPeriodicTasks();
+    }));
+
+    it("should refresh after toggling account flows only once the delay passes, and not after destroy", fakeAsync(() => {
+        spyOn(accountService, "accountPauseFlows").and.returnValue(of());
+        const refreshNowSpy = spyOn(component, "refreshNow");
+        component.toggleStateAccountFlowConfigs(false);
+
+        tick(component.TIMEOUT_REFRESH_FLOW - 1);
+        expect(refreshNowSpy).not.toHaveBeenCalled();
+
+        fixture.destroy();
+        tick(1);
+        expect(refreshNowSpy).not.toHaveBeenCalled();
+        discardPeriodicTasks();
+    }));
 });

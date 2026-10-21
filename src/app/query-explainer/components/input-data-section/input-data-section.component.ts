@@ -51,7 +51,7 @@ export class InputDataSectionComponent {
     @Input({ required: true }) public blockHashObservables$: Observable<Date>[];
     @Input({ required: true }) public datasetInfoObservables$: Observable<DatasetInfo>[];
     @Input({ required: true }) public inputData: QueryExplainerComponentData;
-    @ViewChild(MarkdownComponent, { read: ElementRef }) private markdownElement?: ElementRef<HTMLElement>;
+    @ViewChild(MarkdownComponent, { read: ElementRef, static: true }) private markdownElement: ElementRef<HTMLElement>;
 
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
     private markdownFormatPipe = inject(MarkdownFormatPipe);
@@ -75,9 +75,6 @@ export class InputDataSectionComponent {
     }
 
     public onMarkdownReady(): void {
-        if (!this.markdownElement) {
-            return;
-        }
         // Find all sql queries between ```sql and ```
         const sqlQueries = this.markdownFormatPipe
             .transform(this.sqlCode, "sql")

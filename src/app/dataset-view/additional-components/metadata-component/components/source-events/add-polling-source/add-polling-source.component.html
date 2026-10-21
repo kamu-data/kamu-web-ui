@@ -14,7 +14,11 @@
                 <mat-stepper #stepper>
                     <mat-step [stepControl]="fetchForm" errorMessage="Field is required">
                         <ng-template matStepLabel>
-                            <div class="stepper-header-overlay" (click)="onShowErrors()"></div>
+                            <div
+                                class="stepper-header-overlay"
+                                data-test-id="stepper-header-overlay-fetch"
+                                (click)="onShowErrors()"
+                            ></div>
                             Fetch</ng-template
                         >
                         <div class="container-step">
@@ -48,7 +52,11 @@
                     </mat-step>
                     <mat-step [stepControl]="readForm" errorMessage="Field is required">
                         <ng-template matStepLabel>
-                            <div class="stepper-header-overlay" (click)="onShowErrors()"></div>
+                            <div
+                                class="stepper-header-overlay"
+                                data-test-id="stepper-header-overlay-read"
+                                (click)="onShowErrors()"
+                            ></div>
                             Read</ng-template
                         >
                         <div class="container-step">

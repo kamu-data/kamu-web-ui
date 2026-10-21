@@ -511,4 +511,18 @@ describe("OverviewComponent", () => {
             expect(component.canEditWatermark).toBeFalse();
         });
     });
+
+    it("should navigate to flows after 'refresh now' only once the delay passes, and not after destroy", fakeAsync(() => {
+        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
+        component.refreshNow();
+
+        tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS - 1);
+        expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
+
+        fixture.destroy();
+        tick(1);
+        expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
+        flush();
+    }));
 });

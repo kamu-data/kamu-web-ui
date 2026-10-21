@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { ApplicationRef } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
@@ -112,6 +113,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         expect(scrollSpy).not.toHaveBeenCalled();
 
         fixture.detectChanges();
+        TestBed.inject(ApplicationRef).tick();
         expect(scrollSpy).toHaveBeenCalledOnceWith({ behavior: "smooth" });
     });
 
@@ -321,4 +323,22 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
         expect(setVisibilitySpy).toHaveBeenCalledTimes(1);
     });
+
+    it("should navigate to flows after a reset only once the delay passes, and not after destroy", fakeAsync(() => {
+        spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
+            options.handler?.call(undefined, true);
+            return Promise.resolve("");
+        });
+        spyOn(datasetFlowsService, "datasetTriggerResetFlow").and.returnValue(of(true));
+        const navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
+        emitClickOnElementByDataTestId(fixture, Elements.ResetDatasetButton);
+
+        tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS - 1);
+        expect(navigationServiceSpy).not.toHaveBeenCalled();
+
+        fixture.destroy();
+        tick(1);
+        expect(navigationServiceSpy).not.toHaveBeenCalled();
+        flush();
+    }));
 });

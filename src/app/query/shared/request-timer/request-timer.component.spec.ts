@@ -56,4 +56,20 @@ describe("RequestTimerComponent", () => {
         expect(timeElement?.classList).toContain(testClass);
         flush();
     }));
+
+    it("should show a reset time when the tab is hidden during a request", fakeAsync(() => {
+        fixture.componentRef.setInput("class", "mock-class");
+        fixture.componentRef.setInput("sqlLoading", true);
+        fixture.detectChanges();
+        tick(1000);
+        const timeElement = findElementByDataTestId(fixture, "duration-request-time");
+        expect(timeElement?.textContent?.trim()).toEqual("00:00:01.00");
+
+        spyOnProperty(document, "visibilityState").and.returnValue("hidden");
+        document.dispatchEvent(new Event("visibilitychange"));
+        fixture.detectChanges();
+
+        expect(timeElement?.textContent?.trim()).toEqual("00:00:00.00");
+        flush();
+    }));
 });

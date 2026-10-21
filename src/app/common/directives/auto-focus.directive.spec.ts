@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ApplicationRef, ChangeDetectionStrategy, Component } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 
 import { findNativeElement } from "@common/helpers/base-test.helpers.spec";
@@ -23,6 +23,7 @@ describe("AutoFocusDirective", () => {
     it("should focus the element once it is rendered", () => {
         const fixture = TestBed.createComponent(TestHostComponent);
         fixture.detectChanges();
+        TestBed.inject(ApplicationRef).tick();
 
         const input = findNativeElement(fixture, `[data-test-id="autofocus-input"]`);
         expect(document.activeElement).toBe(input);

@@ -552,4 +552,32 @@ describe("FlowsComponent", () => {
         expect(component.selectedAccountItems).toEqual([]);
         expect(component.selectedStatusItems).toEqual([]);
     });
+
+    it("should refresh flows after an abort only once the delay passes, and not after destroy", fakeAsync(() => {
+        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        spyOn(datasetFlowsService, "cancelFlowRun").and.returnValue(of(true));
+        component.onAbortFlow({ flowId: MOCK_FLOW_ID, datasetId: mockDatasetMainDataId });
+
+        tick(component.TIMEOUT_REFRESH_FLOW - 1);
+        expect(refreshFlowSpy).not.toHaveBeenCalled();
+
+        fixture.destroy();
+        tick(1);
+        expect(refreshFlowSpy).not.toHaveBeenCalled();
+        flush();
+    }));
+
+    it("should refresh flows after pausing a webhook only once the delay passes, and not after destroy", fakeAsync(() => {
+        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        spyOn(datasetWebhooksService, "datasetWebhookPauseSubscription").and.returnValue(of(true));
+        component.pauseWebhook("1234-4444-43222");
+
+        tick(AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS - 1);
+        expect(refreshFlowSpy).not.toHaveBeenCalled();
+
+        fixture.destroy();
+        tick(1);
+        expect(refreshFlowSpy).not.toHaveBeenCalled();
+        flush();
+    }));
 });

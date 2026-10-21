@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { ChangeDetectorRef } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { provideToastr } from "ngx-toastr";
@@ -102,5 +103,17 @@ describe("SetPollingSourceEventComponent", () => {
 
         const password = getElementByDataTestId(fixture, "setPollingSource-FetchStepMqtt-password");
         expect(password.innerText).toEqual(fetchStep.password as string);
+    });
+
+    it("should keep the rendered property components on later change detection", () => {
+        component.event = mockSetPollingSourceEvent;
+        fixture.detectChanges();
+        const urlBefore = getElementByDataTestId(fixture, "setPollingSource-fetchStepUrl-url");
+
+        fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
+        fixture.detectChanges();
+
+        const urlAfter = getElementByDataTestId(fixture, "setPollingSource-fetchStepUrl-url");
+        expect(urlAfter).toBe(urlBefore);
     });
 });

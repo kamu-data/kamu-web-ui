@@ -69,12 +69,18 @@ describe("forbidAnonymousAccessGuardFn", () => {
         expect(maybeCurrentlyLoggedInUserSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should redirect to the login-unavailable page when there are no login methods", () => {
-        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(null);
-        spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([]);
+    [
+        { description: "there are no login methods", loadFailed: false },
+        { description: "the login methods could not be loaded", loadFailed: true },
+    ].forEach(({ description, loadFailed }) => {
+        it(`should redirect to the login-unavailable page when ${description}`, () => {
+            spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(null);
+            spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([]);
+            spyOnProperty(loginMethodsService, "loadFailed", "get").and.returnValue(loadFailed);
 
-        const result = executeGuard(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
+            const result = executeGuard(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
 
-        expect(router.serializeUrl(result as UrlTree)).toEqual(`/${ProjectLinks.URL_LOGIN_UNAVAILABLE}`);
+            expect(router.serializeUrl(result as UrlTree)).toEqual(`/${ProjectLinks.URL_LOGIN_UNAVAILABLE}`);
+        });
     });
 });

@@ -7,8 +7,8 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { Observable, of } from "rxjs";
-import { catchError, first, map } from "rxjs/operators";
+import { Observable } from "rxjs";
+import { first, map, tap } from "rxjs/operators";
 
 import { ApolloLink, ObservableQuery } from "@apollo/client/core";
 import { onlyCompleteData } from "apollo-angular";
@@ -41,15 +41,19 @@ export class AuthApi {
     private fetchAccountDetailsGQL = inject(FetchAccountDetailsGQL);
     private loginWeb3WalletGQL = inject(LoginWeb3WalletGQL);
 
+    /** Errors when the request fails, so that a failure is not mistaken for "no method enabled" */
     public readEnabledLoginMethods(): Observable<AccountProvider[]> {
         return this.getEnabledLoginMethodsGQL.watch().valueChanges.pipe(
+            // Apollo emits a failed request as a result carrying `error`; `onlyCompleteData()` would drop it and never complete
+            tap((result: ObservableQuery.Result<GetEnabledLoginMethodsQuery>) => {
+                if (result.error) {
+                    throw new Error(result.error.message, { cause: result.error });
+                }
+            }),
             onlyCompleteData(),
             first(),
             map((result: ObservableQuery.Result<GetEnabledLoginMethodsQuery>) => {
                 return result.data?.auth?.enabledProviders ?? [];
-            }),
-            catchError(() => {
-                return of([]);
             }),
         );
     }

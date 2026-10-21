@@ -11,6 +11,10 @@ import { ErrorPageLayoutComponent } from "@common/components/error-page-layout/e
 import { MaybeUndefined } from "@interface/app.types";
 
 import { AppConfigService } from "src/app/app-config.service";
+import { LoginMethodsService } from "src/app/auth/login-methods.service";
+import { NavigationService } from "src/app/services/navigation.service";
+
+import { LoginUnavailableTexts } from "./login-unavailable.text";
 
 @Component({
     selector: "app-login-unavailable",
@@ -22,9 +26,22 @@ import { AppConfigService } from "src/app/app-config.service";
     ],
 })
 export class LoginUnavailableComponent {
+    public readonly TEXTS = LoginUnavailableTexts;
+
     private appConfigService = inject(AppConfigService);
+    private loginMethodsService = inject(LoginMethodsService);
+    private navigationService = inject(NavigationService);
 
     public get supportEmail(): MaybeUndefined<string> {
         return this.appConfigService.supportEmail;
+    }
+
+    public get loadFailed(): boolean {
+        return this.loginMethodsService.loadFailed;
+    }
+
+    // The methods are loaded only at startup, so trying again means starting the app anew
+    public tryAgain(): void {
+        this.navigationService.reloadPage();
     }
 }

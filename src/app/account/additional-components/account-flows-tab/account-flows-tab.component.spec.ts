@@ -88,7 +88,6 @@ describe("AccountFlowsTabComponent", () => {
     it("should empty block is visible", fakeAsync(() => {
         fixture.detectChanges();
         mockFlowsTableData.connectionDataForWidget.nodes = [];
-        spyOn(accountService, "accountAllFlowsPaused").and.returnValue(of(false));
         spyOn(accountService, "getAccountListFlows").and.returnValue(of(mockFlowsTableData));
         tick();
         fixture.detectChanges();

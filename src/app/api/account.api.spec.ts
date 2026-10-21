@@ -18,8 +18,6 @@ import {
     AccountByNameQuery,
     AccountChangeEmailDocument,
     AccountChangeEmailMutation,
-    AccountDatasetFlowsPausedDocument,
-    AccountDatasetFlowsPausedQuery,
     AccountFlowFilters,
     AccountFlowsAsCardsDocument,
     AccountFlowsAsCardsQuery,
@@ -28,12 +26,8 @@ import {
     AccountListDatasetsWithFlowsQuery,
     AccountListFlowsDocument,
     AccountListFlowsQuery,
-    AccountPauseFlowsDocument,
-    AccountPauseFlowsMutation,
     AccountPrimaryCardsDocument,
     AccountPrimaryCardsQuery,
-    AccountResumeFlowsDocument,
-    AccountResumeFlowsMutation,
     AccountStorageQuotaDocument,
     AccountStorageQuotaQuery,
     AccountWebhookCardsDocument,
@@ -59,14 +53,11 @@ import {
     mockAccountByNameNotFoundResponse,
     mockAccountByNameResponse,
     mockAccountChangeEmailMutationSuccess,
-    mockAccountDatasetFlowsPausedQuery,
     mockAccountFlowsAsCardsQuery,
     mockAccountFlowsPrimaryCardsQuery,
     mockAccountFlowsWebhookCardsQuery,
     mockAccountListDatasetsWithFlowsQuery,
     mockAccountListFlowsQuery,
-    mockAccountPauseFlowsMutationSuccess,
-    mockAccountResumeFlowsMutationSuccess,
     mockAccountStorageQuotaQuery,
     mockAccountWithEmailQuery,
     mockChangeAccountUsernameMutation,
@@ -187,51 +178,6 @@ describe("AccountApi", () => {
 
         op.flush({
             data: mockAccountListDatasetsWithFlowsQuery,
-        });
-    });
-
-    it("should check account flows paused", () => {
-        service.accountFlowsPaused(ACCOUNT_NAME).subscribe((state: AccountDatasetFlowsPausedQuery) => {
-            expect(state.accounts.byName?.flows?.triggers.allPaused).toEqual(
-                mockAccountDatasetFlowsPausedQuery.accounts.byName?.flows?.triggers.allPaused,
-            );
-        });
-
-        const op = controller.expectOne(AccountDatasetFlowsPausedDocument);
-        expect(op.operation.variables.accountName).toEqual(ACCOUNT_NAME);
-
-        op.flush({
-            data: mockAccountDatasetFlowsPausedQuery,
-        });
-    });
-
-    it("should check account pause flows", () => {
-        service.accountPauseFlows(ACCOUNT_NAME).subscribe((state: AccountPauseFlowsMutation) => {
-            expect(state.accounts.byName?.flows.triggers.pauseAccountDatasetFlows).toEqual(
-                mockAccountPauseFlowsMutationSuccess.accounts.byName?.flows.triggers.pauseAccountDatasetFlows,
-            );
-        });
-
-        const op = controller.expectOne(AccountPauseFlowsDocument);
-        expect(op.operation.variables.accountName).toEqual(ACCOUNT_NAME);
-
-        op.flush({
-            data: mockAccountPauseFlowsMutationSuccess,
-        });
-    });
-
-    it("should check account resume flows", () => {
-        service.accountResumeFlows(ACCOUNT_NAME).subscribe((state: AccountResumeFlowsMutation) => {
-            expect(state.accounts.byName?.flows.triggers.resumeAccountDatasetFlows).toEqual(
-                mockAccountResumeFlowsMutationSuccess.accounts.byName?.flows.triggers.resumeAccountDatasetFlows,
-            );
-        });
-
-        const op = controller.expectOne(AccountResumeFlowsDocument);
-        expect(op.operation.variables.accountName).toEqual(ACCOUNT_NAME);
-
-        op.flush({
-            data: mockAccountResumeFlowsMutationSuccess,
         });
     });
 

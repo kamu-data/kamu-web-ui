@@ -28,7 +28,6 @@ export interface DatasetFlowByIdResponse {
 export interface ViewMenuData {
     datasetBasics: DatasetBasicsFragment;
     datasetPermissions: DatasetPermissionsFragment;
-    allFlowsPaused?: boolean;
 }
 
 export interface GrafanaFieldDescriptor {

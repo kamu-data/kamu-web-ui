@@ -10,7 +10,7 @@ import { TestBed } from "@angular/core/testing";
 import { first, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
-import { provideToastr, ToastrService } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 
 import { AccountApi } from "@api/account.api";
 import { DatasetApi } from "@api/dataset.api";
@@ -23,16 +23,11 @@ import {
     OrderingDirection,
 } from "@api/kamu.graphql.interface";
 import {
-    mockAccountDatasetFlowsPausedQuery,
     mockAccountFlowsAsCardsQuery,
     mockAccountFlowsPrimaryCardsQuery,
     mockAccountFlowsWebhookCardsQuery,
     mockAccountListDatasetsWithFlowsQuery,
     mockAccountListFlowsQuery,
-    mockAccountPauseFlowsMutationError,
-    mockAccountPauseFlowsMutationSuccess,
-    mockAccountResumeFlowsMutationError,
-    mockAccountResumeFlowsMutationSuccess,
     mockChangeAccountUsernameMutation,
     mockChangeAccountUsernameMutationError,
     mockChangeAdminPasswordMutation,
@@ -43,7 +38,7 @@ import {
 } from "@api/mock/account.mock";
 import { mockAccountDetails, TEST_LOGIN, TEST_PAGE_NUMBER } from "@api/mock/auth.mock";
 import { mockDatasetsByAccountNameQuery } from "@api/mock/dataset.mock";
-import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { MaybeNull } from "@interface/app.types";
 import { DatasetsAccountResponse } from "@interface/dataset.interface";
 
 import { AccountService } from "src/app/account/account.service";
@@ -55,7 +50,6 @@ describe("AccountService", () => {
     let service: AccountService;
     let accountApi: AccountApi;
     let datasetApi: DatasetApi;
-    let toastService: ToastrService;
     const NEW_PASSWORD = "new-password";
     const OLD_PASSWORD = "old-password";
     const ACCOUNT_NAME = "accountName";
@@ -74,7 +68,6 @@ describe("AccountService", () => {
             providers: [Apollo, provideToastr()],
         });
         service = TestBed.inject(AccountService);
-        toastService = TestBed.inject(ToastrService);
         accountApi = TestBed.inject(AccountApi);
         datasetApi = TestBed.inject(DatasetApi);
     });
@@ -151,60 +144,6 @@ describe("AccountService", () => {
             });
 
         expect(accountDatasetsWithFlowsSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
-    });
-
-    it("should resumed all flows for account with success", () => {
-        spyOn(accountApi, "accountResumeFlows").and.returnValue(of(mockAccountResumeFlowsMutationSuccess));
-        const toastrServiceSuccessSpy = spyOn(toastService, "success");
-
-        const subscription$ = service.accountResumeFlows(TEST_LOGIN).subscribe(() => {
-            expect(toastrServiceSuccessSpy).toHaveBeenCalledWith("Flows resumed");
-        });
-
-        expect(subscription$.closed).toBeTrue();
-    });
-
-    it("should resume all flows for account with error", () => {
-        spyOn(accountApi, "accountResumeFlows").and.returnValue(of(mockAccountResumeFlowsMutationError));
-        const toastrServiceErrorSpy = spyOn(toastService, "error");
-
-        const subscription$ = service.accountResumeFlows(TEST_LOGIN).subscribe(() => {
-            expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error, flows not resumed");
-        });
-
-        expect(subscription$.closed).toBeTrue();
-    });
-
-    it("should pause all flows for account with success", () => {
-        spyOn(accountApi, "accountPauseFlows").and.returnValue(of(mockAccountPauseFlowsMutationSuccess));
-        const toastrServiceSuccessSpy = spyOn(toastService, "success");
-
-        const subscription$ = service.accountPauseFlows(TEST_LOGIN).subscribe(() => {
-            expect(toastrServiceSuccessSpy).toHaveBeenCalledWith("Flows paused");
-        });
-
-        expect(subscription$.closed).toBeTrue();
-    });
-
-    it("should pause all flows for account with error", () => {
-        spyOn(accountApi, "accountPauseFlows").and.returnValue(of(mockAccountPauseFlowsMutationError));
-        const toastrServiceErrorSpy = spyOn(toastService, "error");
-
-        const subscription$ = service.accountPauseFlows(TEST_LOGIN).subscribe(() => {
-            expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error, flows not paused");
-        });
-
-        expect(subscription$.closed).toBeTrue();
-    });
-
-    it("should check state for all flows for account paused", () => {
-        spyOn(accountApi, "accountFlowsPaused").and.returnValue(of(mockAccountDatasetFlowsPausedQuery));
-
-        const subscription$ = service.accountAllFlowsPaused(TEST_LOGIN).subscribe((paused: MaybeUndefined<boolean>) => {
-            expect(paused).toEqual(true);
-        });
-
         expect(subscription$.closed).toBeTrue();
     });
 

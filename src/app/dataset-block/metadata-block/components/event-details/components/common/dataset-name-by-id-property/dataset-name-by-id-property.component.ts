@@ -17,12 +17,13 @@ import {
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { RouterLink } from "@angular/router";
 
-import { distinctUntilChanged, Subject, switchMap } from "rxjs";
+import { distinctUntilChanged, Subject, switchMap, tap } from "rxjs";
 
 import { DatasetKindComponent } from "@common/components/dataset-kind/dataset-kind.component";
 import { DatasetVisibilityComponent } from "@common/components/dataset-visibility/dataset-visibility.component";
 import AppValues from "@common/values/app.values";
 import { DatasetBasicsFragment, DatasetByIdQuery } from "@api/kamu.graphql.interface";
+import { MaybeUndefined } from "@interface/app.types";
 
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -42,7 +43,7 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 })
 export class DatasetNameByIdPropertyComponent extends BasePropertyComponent implements OnChanges {
     @Input({ required: true }) public data: string;
-    public datasetBasics: DatasetBasicsFragment;
+    public datasetBasics: MaybeUndefined<DatasetBasicsFragment>;
 
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     private datasetService = inject(DatasetService);
@@ -55,14 +56,16 @@ export class DatasetNameByIdPropertyComponent extends BasePropertyComponent impl
         this.datasetIdChanges$
             .pipe(
                 distinctUntilChanged(),
+                tap(() => {
+                    this.datasetBasics = undefined;
+                    this.cdr.markForCheck();
+                }),
                 switchMap((datasetId: string) => this.datasetService.requestDatasetInfoById(datasetId)),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe((dataset: DatasetByIdQuery) => {
-                if (dataset.datasets.byId) {
-                    this.datasetBasics = dataset.datasets.byId;
-                    this.cdr.markForCheck();
-                }
+                this.datasetBasics = dataset.datasets.byId ?? undefined;
+                this.cdr.markForCheck();
             });
     }
 

@@ -11,7 +11,7 @@ import { of, Subject } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
 
-import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { findElementByDataTestId, getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetByIdQuery } from "@api/kamu.graphql.interface";
 import { mockDatasetByIdQuery, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
@@ -31,6 +31,7 @@ describe("DatasetNameByIdPropertyComponent", () => {
     const mockOtherDatasetByIdQuery: DatasetByIdQuery = {
         datasets: { __typename: "Datasets", byId: mockDatasetMainDataResponse.datasets.byOwnerAndName },
     };
+    const mockMissingDatasetByIdQuery: DatasetByIdQuery = { datasets: { __typename: "Datasets", byId: null } };
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -78,10 +79,32 @@ describe("DatasetNameByIdPropertyComponent", () => {
 
         secondResponse$.next(mockOtherDatasetByIdQuery);
         fixture.detectChanges();
-        expect(datasetNameText()).toContain("/" + TEST_DATASET_NAME);
+        expect(findElementByDataTestId(fixture, "dataset-name-property")).toBeUndefined();
 
         thirdResponse$.next(mockOtherDatasetByIdQuery);
         fixture.detectChanges();
         expect(datasetNameText()).toContain("/" + OTHER_DATASET_NAME);
+    });
+
+    it("should not show the previous dataset while the dataset for a new id loads", () => {
+        const secondResponse$ = new Subject<DatasetByIdQuery>();
+        requestDatasetInfoByIdSpy.and.returnValue(secondResponse$);
+
+        fixture.componentRef.setInput("data", SECOND_DATASET_ID);
+        fixture.detectChanges();
+        expect(findElementByDataTestId(fixture, "dataset-name-property")).toBeUndefined();
+
+        secondResponse$.next(mockOtherDatasetByIdQuery);
+        fixture.detectChanges();
+        expect(datasetNameText()).toContain("/" + OTHER_DATASET_NAME);
+    });
+
+    it("should show no dataset when the new id does not resolve to one", () => {
+        requestDatasetInfoByIdSpy.and.returnValue(of(mockMissingDatasetByIdQuery));
+
+        fixture.componentRef.setInput("data", SECOND_DATASET_ID);
+        fixture.detectChanges();
+
+        expect(findElementByDataTestId(fixture, "dataset-name-property")).toBeUndefined();
     });
 });

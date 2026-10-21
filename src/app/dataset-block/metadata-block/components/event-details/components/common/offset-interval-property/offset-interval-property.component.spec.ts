@@ -7,18 +7,24 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { of, Subject } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 
-import { emitClickOnElementByDataTestId, findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import {
+    checkButtonDisabled,
+    emitClickOnElementByDataTestId,
+    findElementByDataTestId,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import { DatasetByIdQuery } from "@api/kamu.graphql.interface";
 import { mockDatasetByIdQuery, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 
 import { OffsetIntervalPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/offset-interval-property/offset-interval-property.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { mockDatasetMainDataResponse } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 
 describe("OffsetIntervalPropertyComponent", () => {
@@ -29,6 +35,11 @@ describe("OffsetIntervalPropertyComponent", () => {
 
     const DATASET_ID = "did:odf:dataset";
     const DATA_TEST_ID = "interval";
+    const OTHER_DATASET_ID = "did:odf:other";
+    const OTHER_DATASET_NAME = "alberta.case-details";
+    const mockOtherDatasetByIdQuery: DatasetByIdQuery = {
+        datasets: { __typename: "Datasets", byId: mockDatasetMainDataResponse.datasets.byOwnerAndName },
+    };
     const mockData = {
         block: { __typename: "OffsetInterval" as const, start: 0, end: 596125 },
         datasetId: DATASET_ID,
@@ -93,5 +104,39 @@ describe("OffsetIntervalPropertyComponent", () => {
         fixture.detectChanges();
 
         expect(findElementByDataTestId(fixture, "empty-block")?.textContent).toEqual("-");
+    });
+
+    it("should keep See data disabled until the dataset for a new id loads, then open that dataset", () => {
+        fixture.componentRef.setInput("data", mockData);
+        fixture.detectChanges();
+        const otherResponse$ = new Subject<DatasetByIdQuery>();
+        requestDatasetInfoByIdSpy.and.returnValue(otherResponse$);
+        const navigateSpy = spyOn(navigationService, "navigateToDatasetView");
+
+        fixture.componentRef.setInput("data", { ...mockData, datasetId: OTHER_DATASET_ID });
+        fixture.detectChanges();
+        checkButtonDisabled(fixture, "see-data", true);
+        component.navigateToQuery();
+        expect(navigateSpy).not.toHaveBeenCalled();
+
+        otherResponse$.next(mockOtherDatasetByIdQuery);
+        fixture.detectChanges();
+        checkButtonDisabled(fixture, "see-data", false);
+        emitClickOnElementByDataTestId(fixture, "see-data");
+        expect(navigateSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ datasetName: OTHER_DATASET_NAME }));
+    });
+
+    it("should not open any dataset when the new id does not resolve to one", () => {
+        fixture.componentRef.setInput("data", mockData);
+        fixture.detectChanges();
+        requestDatasetInfoByIdSpy.and.returnValue(of({ datasets: { __typename: "Datasets", byId: null } }));
+        const navigateSpy = spyOn(navigationService, "navigateToDatasetView");
+
+        fixture.componentRef.setInput("data", { ...mockData, datasetId: OTHER_DATASET_ID });
+        fixture.detectChanges();
+        checkButtonDisabled(fixture, "see-data", true);
+        component.navigateToQuery();
+
+        expect(navigateSpy).not.toHaveBeenCalled();
     });
 });

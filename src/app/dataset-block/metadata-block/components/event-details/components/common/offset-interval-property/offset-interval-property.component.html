@@ -16,6 +16,7 @@
                 type="button"
                 placement="left"
                 data-test-id="see-data"
+                [disabled]="!isQueryTargetKnown"
                 (click)="navigateToQuery()"
                 class="signed-commit-badge verified signed-commit-badge-small"
             >

@@ -20,19 +20,11 @@ one: [`DEVELOPER.md`](DEVELOPER.md#running-with-local-gql-server).
 
 ## Hooks
 
-[`.claude/settings.json`](.claude/settings.json) wires the hooks in `scripts/agents/`:
-
-- a command guard (destructive git forms denied; commit/push/merge/rebase/tag, creating or
-  switching a branch, releases and dependency changes ask; build/test output piped into
-  `head`/`tail` denied);
-- an edit guard (generated files denied; guarded paths refused until their skill is loaded);
-- a post-edit pass on `.ts`, `.html`, `.scss` and `.js` files, whether an edit or a shell command
-  wrote them (prettier on that file, then checks on the added text);
-- a session-start contract and a stop-time reminder when TypeScript changed since the last green
-  `npm run lint`.
+[`.claude/settings.json`](.claude/settings.json) wires the hooks in `scripts/agents/`; what each
+one checks, and how the harness is built and tested, is in
+[`docs/internal/agent-harness.md`](docs/internal/agent-harness.md#what-the-hooks-do).
 
 A refusal names the rule and the fix. Load skills with the `Skill` tool; a subagent loads its own.
-How the harness is built and tested: [`docs/internal/agent-harness.md`](docs/internal/agent-harness.md).
 
 ## Memory
 

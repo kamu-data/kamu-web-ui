@@ -133,7 +133,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 2. Create PR, wait for tests, then merge
 3. Checkout and pull master
 4. Run `npm run release-{major,minor,patch}` - this will increment the version in all places, update LICENSE.txt and CHANGELOG.md, commit the changes and create a new git tag
-5. Push the version change and the tag: `git push`
+5. Push the version change and the tag: `git push --follow-tags` (a plain `git push` leaves the tag behind, and the release workflow runs only on tags)
 6. GitHub Actions will pick up the new tag and create a new GitHub release from it
 
 ## Agent Harness

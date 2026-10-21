@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SQL editor:
   - clicking the placeholder text puts the cursor in the editor instead of doing nothing
   - a query error is marked from the column kamu-cli reports instead of from the start of the line
+  - a failed query shows the server's error message instead of "Unable to resolve/connect to host"
 - Query and Data pages, dataset schema panels:
   - running a query again keeps them as they were
   - adding a dataset whose schema is already shown no longer shows it twice
@@ -27,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - deleting an input removes only that input, also in single-tenant mode
   - inputs without data yet show "No schema" instead of "Dataset is unavailable"
   - the edited dataset is no longer offered as its own input
+  - an input whose dataset cannot be loaded shows as unavailable instead of hiding all the other inputs
 - Dataset settings: a link to a settings section scrolls to it
 - Dataset pages: leaving the page right after starting an update, compaction or reset no longer jumps back to Flows
 - Dataset header: on narrow screens, the buttons in the "more" menu respond instead of doing nothing
@@ -40,8 +42,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Admin dashboard: `/v/admin-dashboard` opens the dashboard instead of a dataset page
 - Sign-in:
   - when the node requires signing in but has no sign-in method enabled, visitors see a "Sign-in is unavailable" page instead of a browser tab that hangs
+  - when the sign-in options cannot be loaded, the "Sign-in is unavailable" page says the server could not be reached and offers "Try again"
   - the access token is sent only to the configured API server, not to other hosts whose address starts the same way
 - Loading indicator stays until the last pending request finishes
+- App start: when the server cannot be reached, the app opens and reports the connection problem instead of staying on the loading logo
 
 ## [0.71.0] - 2026-10-12
 ### Added

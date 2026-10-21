@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 
@@ -26,7 +26,6 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        FormsModule,
         ReactiveFormsModule,
         //-----//
         RxReactiveFormsModule,

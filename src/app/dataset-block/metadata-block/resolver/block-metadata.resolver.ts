@@ -31,9 +31,11 @@ export const blockMetadataResolverFn: ResolveFn<MetadataBlockInfo> = (route: Act
 
     return blockService.requestMetadataBlock(datasetInfo, blockHash).pipe(
         map((data) => {
-            const metadaDataBlockInfo = data as MetadataBlockInfo;
-            datasetService.emitDownstreamsCountChanged(metadaDataBlockInfo.downstreamsCount);
-            return metadaDataBlockInfo;
+            if (!data) {
+                return navigationService.pageNotFoundRedirect();
+            }
+            datasetService.emitDownstreamsCountChanged(data.downstreamsCount);
+            return data;
         }),
         catchError(() => of(navigationService.pageNotFoundRedirect())),
     );

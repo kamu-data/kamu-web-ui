@@ -7,7 +7,6 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatDividerModule } from "@angular/material/divider";
 
 import { NgSelectModule } from "@ng-select/ng-select";
 
@@ -26,7 +25,6 @@ import {
         FormsModule,
         ReactiveFormsModule,
         //-----//
-        MatDividerModule,
         NgSelectModule,
         //-----//
         FormValidationErrorsDirective,

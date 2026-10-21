@@ -12,7 +12,10 @@ import { DatasetKind } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-dataset-kind",
-    imports: [NgClass],
+    imports: [
+        //-----//
+        NgClass,
+    ],
     templateUrl: "./dataset-kind.component.html",
     styleUrls: ["./dataset-kind.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,

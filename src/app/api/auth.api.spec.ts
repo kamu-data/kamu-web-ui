@@ -7,6 +7,7 @@
 
 import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
+import { firstValueFrom } from "rxjs";
 import { first } from "rxjs/operators";
 
 import { CombinedGraphQLErrors } from "@apollo/client/errors";
@@ -81,6 +82,22 @@ describe("AuthApi", () => {
 
         flush();
     }));
+
+    it("should fail reading login methods on a network error", async () => {
+        const result = firstValueFrom(service.readEnabledLoginMethods());
+
+        controller.expectOne(GetEnabledLoginMethodsDocument).networkError(new Error("Server unreachable"));
+
+        await expectAsync(result).toBeRejectedWithError("Server unreachable");
+    });
+
+    it("should fail reading login methods on a GraphQL error", async () => {
+        const result = firstValueFrom(service.readEnabledLoginMethods());
+
+        controller.expectOne(GetEnabledLoginMethodsDocument).graphqlErrors([{ message: "Internal error" }]);
+
+        await expectAsync(result).toBeRejected();
+    });
 
     it("should check full login password success", () => {
         service

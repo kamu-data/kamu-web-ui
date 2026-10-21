@@ -6,9 +6,6 @@
  */
 
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatIconModule } from "@angular/material/icon";
-import { MatTableModule } from "@angular/material/table";
 import { RouterOutlet } from "@angular/router";
 
 @Component({
@@ -18,10 +15,6 @@ import { RouterOutlet } from "@angular/router";
     imports: [
         //-----//
         RouterOutlet,
-        //-----//
-        MatDividerModule,
-        MatIconModule,
-        MatTableModule,
     ],
 })
 export class DatasetSettingsWebhooksTabComponent {}

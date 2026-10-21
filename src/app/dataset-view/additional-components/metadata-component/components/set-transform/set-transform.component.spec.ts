@@ -6,25 +6,31 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { ActivatedRoute } from "@angular/router";
 
-import { of } from "rxjs";
+import { of, throwError } from "rxjs";
 
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
+import { findComponentInstance } from "@common/helpers/base-test.helpers.spec";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { SearchSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/search-section/search-section.component";
 import {
     mockGetDatasetSchemaQuery,
     mockParseSetTransformYamlType,
     mockSetTransformEventYaml,
 } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import { SetTransformComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.component";
-import { DatasetNode } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
+import {
+    datasetNodeFromSchemaQuery,
+    inputDatasetKey,
+    unavailableDatasetNode,
+} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockDatasetInfo } from "src/app/search/mock.data";
@@ -74,10 +80,8 @@ describe("SetTransformComponent", () => {
     function createComponent(eventYamlByHash: string): void {
         fixture = TestBed.createComponent(SetTransformComponent);
         component = fixture.componentInstance;
-        component.selectedEngine = "Spark";
-        component.eventYamlByHash = eventYamlByHash;
-        component.datasetInfo = mockDatasetInfo;
-        component.dataSource = new MatTreeNestedDataSource<DatasetNode>();
+        fixture.componentRef.setInput(RoutingResolvers.SET_TRANSFORM_KEY, eventYamlByHash);
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_INFO_KEY, mockDatasetInfo);
         fixture.detectChanges();
     }
 
@@ -99,6 +103,16 @@ describe("SetTransformComponent", () => {
             const commitEventToDatasetSpy = spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(of());
             component.onSaveEvent();
             expect(commitEventToDatasetSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it("should save the event's engine while the engine list has not loaded", () => {
+            const commitEventToDatasetSpy = spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(of());
+
+            component.onSaveEvent();
+
+            expect(commitEventToDatasetSpy.calls.mostRecent().args[0].event).toContain(
+                `engine: ${mockParseSetTransformYamlType.transform.engine}`,
+            );
         });
 
         it("should check open modal window to edit event", () => {
@@ -137,6 +151,41 @@ describe("SetTransformComponent", () => {
             expect(component.inputsViewModel.map((item) => item.alias)).toEqual(
                 mockParseSetTransformYamlType.inputs.map((input) => input.alias),
             );
+        });
+    });
+
+    describe("when one input's schema fails to load", () => {
+        const [failedInput, loadedInput] = mockParseSetTransformYamlType.inputs;
+
+        beforeEach(() => {
+            spyOn(datasetService, "requestDatasetSchema").and.callFake((datasetRef: string) =>
+                datasetRef === failedInput.datasetRef
+                    ? throwError(() => new Error("request failed"))
+                    : of(mockGetDatasetSchemaQuery),
+            );
+            createComponent(mockSetTransformEventYaml);
+        });
+
+        it("should show both inputs in their original order, the failed one as unavailable", () => {
+            expect(component.inputsViewModel).toEqual([
+                unavailableDatasetNode(failedInput.alias),
+                datasetNodeFromSchemaQuery(loadedInput.alias, mockGetDatasetSchemaQuery),
+            ]);
+        });
+
+        it("should keep every input of the event in the selected inputs", () => {
+            expect([...component.inputDatasets]).toEqual(
+                mockParseSetTransformYamlType.inputs.map((input) => inputDatasetKey(input)),
+            );
+        });
+
+        it("should delete the failed input by its alias", () => {
+            const searchSection = findComponentInstance(fixture, SearchSectionComponent);
+
+            searchSection.deleteInputDataset(failedInput.alias);
+
+            expect(searchSection.inputsViewModel.map((item) => item.alias)).toEqual([loadedInput.alias]);
+            expect([...component.inputDatasets]).toEqual([inputDatasetKey(loadedInput)]);
         });
     });
 

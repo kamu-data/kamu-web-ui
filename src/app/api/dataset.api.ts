@@ -15,6 +15,7 @@ import { ApolloLink, ObservableQuery } from "@apollo/client/core";
 import { onlyCompleteData } from "apollo-angular";
 
 import { resetCacheHelper, updateCacheHelper } from "@common/helpers/apollo-cache.helper";
+import { completeDataOrError } from "@common/helpers/apollo-error.helpers";
 import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import AppValues from "@common/values/app.values";
 import {
@@ -306,7 +307,7 @@ export class DatasetApi {
                 },
             })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
                 first(),
                 map((result: ObservableQuery.Result<GetDatasetSchemaQuery>) => {
                     return result.data as GetDatasetSchemaQuery;

@@ -5,10 +5,29 @@
  * included in the LICENSE file.
  */
 
-import { SetTransform, TransformInput } from "@api/kamu.graphql.interface";
+import { SqlQueryStep, TransformInput } from "@api/kamu.graphql.interface";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
-export type TransformSelectedInput = Omit<TransformInput, "__typename" | "dataset">;
+/** A transformation input as the editor keeps it and as a `SetTransform` event holds it */
+export type TransformSelectedInput = Pick<TransformInput, "datasetRef" | "alias">;
+
+/** A SQL query step as a `SetTransform` event holds it */
+export type TransformQueryStep = Omit<SqlQueryStep, "__typename">;
+
+/**
+ * A `SetTransform` event in the shape its YAML holds, which the editor reads from a block and
+ * writes back. Unlike the GraphQL `SetTransform`, its inputs carry no resolved dataset.
+ */
+export interface SetTransformEvent {
+    inputs: TransformSelectedInput[];
+    transform: {
+        kind: string;
+        engine: string;
+        queries?: TransformQueryStep[];
+        // A single-step transform may carry one `query` instead of `queries`
+        query?: string;
+    };
+}
 
 export interface EditSetTransformParseType {
     content: {
@@ -16,12 +35,8 @@ export interface EditSetTransformParseType {
     };
 }
 
-export type SetTransformYamlType = Omit<SetTransform, "__typename"> & {
+export type SetTransformYamlType = SetTransformEvent & {
     kind: string;
-    transform: {
-        kind: string;
-        query?: string;
-    };
 };
 
 export interface DatasetNode {

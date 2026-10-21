@@ -5,13 +5,21 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { ChangeDetectorRef } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { MatMenuHarness } from "@angular/material/menu/testing";
 
+import { SearchAdditionalButtonsNavHarness } from "@common/components/search-additional-buttons/search-additional-buttons-nav.harness";
 import { SearchAdditionalButtonsComponent } from "@common/components/search-additional-buttons/search-additional-buttons.component";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+
+import { SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS } from "src/app/dataset-view/dataset-view-header/dataset-view-header.model";
+import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
 
 describe("SearchAdditionalButtonsComponent", () => {
     let component: SearchAdditionalButtonsComponent;
@@ -27,6 +35,12 @@ describe("SearchAdditionalButtonsComponent", () => {
 
         fixture = TestBed.createComponent(SearchAdditionalButtonsComponent);
         component = fixture.componentInstance;
+        fixture.componentRef.setInput(
+            "searchAdditionalButtonsData",
+            structuredClone(SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS),
+        );
+        fixture.componentRef.setInput("loadingListDownsreams", false);
+        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
         fixture.detectChanges();
     });
 
@@ -39,5 +53,21 @@ describe("SearchAdditionalButtonsComponent", () => {
         window.dispatchEvent(new Event("resize"));
         fixture.detectChanges();
         expect(spyOnResize).toHaveBeenCalledWith();
+    });
+
+    it("should pass on a menu opened from the minimized buttons", async () => {
+        const menuOpenSpy = spyOn(component.searchAdditionalButtonsMenuOpen, "emit");
+        component.shouldMinimizeSearchAdditionalButtons = true;
+        fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
+
+        const rootLoader = TestbedHarnessEnvironment.documentRootLoader(fixture);
+        const moreMenu = await rootLoader.getHarness(
+            MatMenuHarness.with({ selector: '[data-test-id="searchAdditionalButtons"]' }),
+        );
+        await moreMenu.open();
+        const nav = await rootLoader.getHarness(SearchAdditionalButtonsNavHarness);
+        await nav.openMenu(SearchAdditionalButtonsEnum.DeriveFrom);
+
+        expect(menuOpenSpy).toHaveBeenCalledOnceWith(SearchAdditionalButtonsEnum.DeriveFrom);
     });
 });

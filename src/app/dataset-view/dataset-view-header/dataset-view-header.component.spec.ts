@@ -21,6 +21,7 @@ import { SharedTestModule } from "@common/modules/shared-test.module";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
 import { DatasetViewHeaderComponent } from "src/app/dataset-view/dataset-view-header/dataset-view-header.component";
+import { hiddenDownstreamsFootnote } from "src/app/dataset-view/dataset-view-header/dataset-view-header.model";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockDatasetBasicsRootFragment, mockDatasetInfo } from "src/app/search/mock.data";
 import { SearchAdditionalButtonsEnum } from "src/app/search/search.interface";
@@ -98,6 +99,10 @@ describe("DatasetViewHeaderComponent", () => {
             await nav.openMenu(SearchAdditionalButtonsEnum.DeriveFrom);
 
             expect(await nav.getMenuFootnote()).toEqual("+1 private dataset you cannot view");
+        });
+
+        it("should count several hidden downstreams in the plural", () => {
+            expect(hiddenDownstreamsFootnote(2)).toEqual("+2 private datasets you cannot view");
         });
 
         it("should not show a footnote when all downstreams are accessible", async () => {

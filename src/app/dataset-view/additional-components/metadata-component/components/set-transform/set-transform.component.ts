@@ -7,7 +7,6 @@
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { RouterLink } from "@angular/router";
 
 import { catchError, forkJoin, from, map, of, take } from "rxjs";
@@ -16,7 +15,7 @@ import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { GetDatasetSchemaQuery, SqlQueryStep } from "@api/kamu.graphql.interface";
+import { GetDatasetSchemaQuery } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
@@ -25,15 +24,19 @@ import { EngineSectionComponent } from "src/app/dataset-view/additional-componen
 import { QueriesSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/queries-section/queries-section.component";
 import { SearchSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/search-section/search-section.component";
 import { EditSetTransformService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/edit-set-transform..service";
-import { datasetNodeFromSchemaQuery } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
+import {
+    datasetNodeFromSchemaQuery,
+    inputDatasetKey,
+    unavailableDatasetNode,
+} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
 import {
     DatasetNode,
     SetTransformYamlType,
+    TransformQueryStep,
 } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
 import { BaseMainEventComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/base-main-event.component";
 import { StepperNavigationComponent } from "src/app/dataset-view/additional-components/metadata-component/components/stepper-navigation/stepper-navigation.component";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { EditorModule } from "src/app/editor/editor.module";
 
 @Component({
     selector: "app-set-transform",
@@ -44,7 +47,6 @@ import { EditorModule } from "src/app/editor/editor.module";
         //-----//
         RouterLink,
         //-----//
-        EditorModule,
         EngineSectionComponent,
         QueriesSectionComponent,
         SearchSectionComponent,
@@ -59,8 +61,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     public inputDatasets = new Set<string>();
     public selectedEngine: string;
     public currentSetTransformEvent: MaybeNull<SetTransformYamlType>;
-    public queries: Omit<SqlQueryStep, "__typename">[] = [];
-    public dataSource = new MatTreeNestedDataSource<DatasetNode>();
+    public queries: TransformQueryStep[] = [];
     public inputsViewModel: DatasetNode[] = [];
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
@@ -82,11 +83,12 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     private initQueriesSection(): void {
         if (this.eventYamlByHash) {
             this.currentSetTransformEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
+            this.selectedEngine = this.currentSetTransformEvent.transform.engine;
 
             if (this.currentSetTransformEvent.transform.query) {
                 this.initDefaultQueriesSection(this.currentSetTransformEvent.transform.query);
             } else {
-                this.queries = this.currentSetTransformEvent.transform.queries;
+                this.queries = this.currentSetTransformEvent.transform.queries ?? [];
             }
             this.getInputDatasetsInfo();
         } else {
@@ -103,13 +105,12 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
         const requests$ = inputs
             .filter((item) => !!item.datasetRef)
             .map((item) => {
-                this.inputDatasets.add(JSON.stringify({ datasetRef: item.datasetRef, alias: item.alias }));
+                this.inputDatasets.add(inputDatasetKey(item));
 
                 return this.datasetService.requestDatasetSchema(item.datasetRef).pipe(
                     map((data: GetDatasetSchemaQuery) => datasetNodeFromSchemaQuery(item.alias, data)),
-                    catchError(() => {
-                        throw new Error("TransformInput without an 'datasetRef' is unexpected");
-                    }),
+                    // The global Apollo error link has already reported the failure
+                    catchError(() => of(unavailableDatasetNode(item.alias))),
                 );
             });
 

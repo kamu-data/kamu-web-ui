@@ -1,23 +1,9 @@
-@use "@angular/material" as mat;
 @use "@angular/material/prebuilt-themes/indigo-pink.css";
 @use "var" as *;
 @use "bootstrap-icons/font/bootstrap-icons.css";
 @use "bootstrap/scss/bootstrap";
 @use "@danielmoncada/angular-datetime-picker/assets/style/picker.min.css";
 @use "components/index";
-@include mat.elevation-classes;
-@include mat.app-background;
-
-$custom-font-family: '"Roboto", "Helvetica Neue", sans-serif';
-$light-theme: mat.m2-define-light-theme(
-    (
-        color: (
-            primary: mat.m2-define-palette(mat.$m2-indigo-palette),
-            accent: mat.m2-define-palette(mat.$m2-blue-grey-palette),
-        ),
-        density: -2,
-    )
-);
 
 body {
     font-size: 14px;

@@ -260,12 +260,12 @@ export class DatasetService {
     public requestListDownstreams(datasetId: string): Observable<string[]> {
         return this.datasetApi.datasetListDownstreams(datasetId).pipe(
             map((data) => {
-                const list = data.datasets.byId?.metadata.currentDownstreamDependencies.map((downstream) => {
-                    if (downstream.__typename === "DatasetAccessResultAccessible") {
-                        return `${downstream.dataset.owner.accountName}/${downstream.dataset.name}`;
-                    }
-                });
-                return list as string[];
+                const downstreams = data.datasets.byId?.metadata.currentDownstreamDependencies ?? [];
+                return downstreams.flatMap((downstream) =>
+                    downstream.__typename === "DatasetAccessResultAccessible"
+                        ? [`${downstream.dataset.owner.accountName}/${downstream.dataset.name}`]
+                        : [],
+                );
             }),
         );
     }

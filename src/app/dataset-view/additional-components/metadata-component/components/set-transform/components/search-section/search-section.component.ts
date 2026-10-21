@@ -9,12 +9,11 @@ import { CdkAccordionModule } from "@angular/cdk/accordion";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
-import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
 
-import { Observable, OperatorFunction } from "rxjs";
-import { debounceTime, distinctUntilChanged, map, switchMap } from "rxjs/operators";
+import { Observable, of, OperatorFunction } from "rxjs";
+import { catchError, debounceTime, distinctUntilChanged, map, switchMap } from "rxjs/operators";
 
 import { NgbHighlight, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 
@@ -24,13 +23,18 @@ import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-ta
 import { odfType2String, schemaAsDataRows } from "@common/helpers/data-schema.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import AppValues from "@common/values/app.values";
-import { DatasetBasicsFragment, GetDatasetSchemaQuery, TransformInput } from "@api/kamu.graphql.interface";
+import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "@api/kamu.graphql.interface";
 import { SearchApi } from "@api/search.api";
 import { DataSchemaField, DataSchemaTypeField } from "@interface/dataset-schema.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
 import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface";
 
-import { datasetNodeFromSchemaQuery } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
+import {
+    datasetNodeFromSchemaQuery,
+    inputDatasetKey,
+    parseInputDatasetKey,
+    unavailableDatasetNode,
+} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
 import { DatasetNode } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 
@@ -46,10 +50,8 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
         RouterLink,
         //-----//
         MatIconModule,
-        MatButtonModule,
         NgbTypeahead,
         NgbHighlight,
-
         //-----//
         DynamicTableComponent,
         DatasetLinkPipe,
@@ -62,7 +64,6 @@ export class SearchSectionComponent extends BaseComponent {
     @Input({ required: true }) public datasetInfo: DatasetInfo;
     @Input({ required: true }) public inputsViewModel: DatasetNode[];
 
-    public readonly UNAVAILABLE_INPUT_LABEL: string = AppValues.SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL;
     public readonly cdr = inject(ChangeDetectorRef);
 
     private appSearchAPI = inject(SearchApi);
@@ -100,18 +101,19 @@ export class SearchSectionComponent extends BaseComponent {
         const value = event.item as DatasetAutocompleteItem;
         const id = value.dataset.id;
         const alias = value.dataset.alias;
-        const inputDataset = JSON.stringify({
-            datasetRef: id,
-            alias,
-        });
+        const inputDataset = inputDatasetKey({ datasetRef: id, alias });
         if (value.__typename !== TypeNames.allDataType && !this.inputDatasets.has(inputDataset)) {
             this.inputDatasets.add(inputDataset);
 
             this.datasetService
                 .requestDatasetSchema(id)
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe((data: GetDatasetSchemaQuery) => {
-                    this.inputsViewModel = [...this.inputsViewModel, datasetNodeFromSchemaQuery(alias, data)];
+                .pipe(
+                    map((data: GetDatasetSchemaQuery) => datasetNodeFromSchemaQuery(alias, data)),
+                    catchError(() => of(unavailableDatasetNode(alias))),
+                    takeUntilDestroyed(this.destroyRef),
+                )
+                .subscribe((node: DatasetNode) => {
+                    this.inputsViewModel = [...this.inputsViewModel, node];
                     this.cdr.detectChanges();
                 });
         }
@@ -125,8 +127,7 @@ export class SearchSectionComponent extends BaseComponent {
         this.inputsViewModel = this.inputsViewModel.filter((item: DatasetNode) => item.alias !== alias);
 
         this.inputDatasets.forEach((item) => {
-            const input = JSON.parse(item) as TransformInput;
-            if (input.alias === alias) {
+            if (parseInputDatasetKey(item).alias === alias) {
                 this.inputDatasets.delete(item);
             }
         });

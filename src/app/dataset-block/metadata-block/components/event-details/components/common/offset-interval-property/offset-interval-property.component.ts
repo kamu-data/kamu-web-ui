@@ -16,13 +16,14 @@ import {
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
-import { distinctUntilChanged, filter, Subject, switchMap, tap } from "rxjs";
+import { Subject } from "rxjs";
 
-import { DatasetByIdQuery, OffsetInterval } from "@api/kamu.graphql.interface";
+import { DatasetBasicsFragment, OffsetInterval } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+import { datasetByIdChanges } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.helpers";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -47,20 +48,14 @@ export class OffsetIntervalPropertyComponent extends BasePropertyComponent imple
 
     public constructor() {
         super();
-        this.datasetIdChanges$
-            .pipe(
-                distinctUntilChanged(),
-                tap(() => {
-                    this.datasetInfo = null;
-                    this.cdr.markForCheck();
-                }),
-                filter((datasetId: MaybeNull<string>): datasetId is string => datasetId !== null),
-                switchMap((datasetId: string) => this.datasetService.requestDatasetInfoById(datasetId)),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe((dataset: DatasetByIdQuery) => {
-                const byId = dataset.datasets.byId;
-                this.datasetInfo = byId ? { accountName: byId.owner.accountName, datasetName: byId.name } : null;
+        datasetByIdChanges(this.datasetIdChanges$, (datasetId: string) =>
+            this.datasetService.requestDatasetInfoById(datasetId),
+        )
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((dataset: MaybeNull<DatasetBasicsFragment>) => {
+                this.datasetInfo = dataset
+                    ? { accountName: dataset.owner.accountName, datasetName: dataset.name }
+                    : null;
                 this.cdr.markForCheck();
             });
     }

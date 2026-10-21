@@ -9,13 +9,8 @@ import { AsyncPipe, NgClass } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
-import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatIconModule } from "@angular/material/icon";
-import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { MatTableModule } from "@angular/material/table";
 import { RouterLink } from "@angular/router";
 
 import { combineLatest, map, Observable, of, switchMap, take, tap, timer } from "rxjs";
@@ -75,12 +70,7 @@ import { ProcessDatasetCardInteractionService } from "src/app/services/process-d
         NgClass,
         RouterLink,
         //-----//
-        MatMenuModule,
-        MatIconModule,
-        MatTableModule,
-        MatDividerModule,
         MatProgressBarModule,
-        MatButtonToggleModule,
         MatChipsModule,
         //-----//
         FlowsTableComponent,
@@ -378,7 +368,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public updateNow(): void {
         this.datasetCardService.handleTrigger(this.flowsData.datasetBasics, () => {
             this.refreshFlow();
-            this.cdr.detectChanges();
         });
     }
 
@@ -391,7 +380,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             datasetBasics: params.datasetBasics,
             onSuccess: () => {
                 this.refreshFlow();
-                this.cdr.detectChanges();
             },
             confirmModal: true,
         });

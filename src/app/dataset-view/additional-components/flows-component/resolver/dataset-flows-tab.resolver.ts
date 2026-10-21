@@ -6,25 +6,16 @@
  */
 
 import { inject } from "@angular/core";
-import { RedirectCommand, ResolveFn } from "@angular/router";
+import { ResolveFn } from "@angular/router";
 
-import { map, Observable } from "rxjs";
-
-import { datasetOverviewTabResolverFn } from "src/app/dataset-view/additional-components/overview-component/resolver/dataset-overview-tab.resolver";
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetPermissionsService } from "src/app/dataset-view/dataset.permissions.service";
-import { NavigationService } from "src/app/services/navigation.service";
+import { pageNotFoundIf, requestOverviewTabData } from "src/app/dataset-view/resolvers/dataset-tab-data.helpers";
 
-export const datasetFlowsTabResolverFn: ResolveFn<DatasetOverviewTabData> = (route, state) => {
+export const datasetFlowsTabResolverFn: ResolveFn<DatasetOverviewTabData> = () => {
     const datasetPermissionsService = inject(DatasetPermissionsService);
-    const navigationService = inject(NavigationService);
 
-    // The overview tab resolver always returns an Observable
-    return (datasetOverviewTabResolverFn(route, state) as Observable<DatasetOverviewTabData | RedirectCommand>).pipe(
-        map((data) =>
-            data instanceof RedirectCommand || datasetPermissionsService.shouldAllowFlowsTab(data.datasetPermissions)
-                ? data
-                : navigationService.pageNotFoundRedirect(),
-        ),
+    return requestOverviewTabData().pipe(
+        pageNotFoundIf((data) => !datasetPermissionsService.shouldAllowFlowsTab(data.datasetPermissions)),
     );
 };

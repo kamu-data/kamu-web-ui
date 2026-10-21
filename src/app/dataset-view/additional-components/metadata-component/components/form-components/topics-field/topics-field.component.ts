@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 
 import { RxReactiveFormsModule, RxwebValidators } from "@rxweb/reactive-form-validators";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
@@ -25,7 +25,6 @@ import { KeyValueFormType } from "src/app/dataset-view/additional-components/met
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        FormsModule,
         ReactiveFormsModule,
         //-----//
         NgxTrimDirectiveModule,

@@ -17,7 +17,6 @@ import {
     SimpleChanges,
     Type,
 } from "@angular/core";
-import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
@@ -26,7 +25,6 @@ import { BehaviorSubject, combineLatest, Observable } from "rxjs";
 import { switchMap, tap } from "rxjs/operators";
 
 import { NgbAlert } from "@ng-bootstrap/ng-bootstrap";
-import { MarkdownModule } from "ngx-markdown";
 import { ToastrService } from "ngx-toastr";
 
 import { BaseComponent } from "@common/components/base.component";
@@ -44,13 +42,12 @@ import { PreviewFileTypePipe } from "./pipes/preview-file-type.pipe";
 @Component({
     selector: "app-versioned-file-view",
     imports: [
+        //-----//
         AsyncPipe,
         NgComponentOutlet,
         JsonPipe,
         //-----//
-        MatButtonModule,
         MatIconModule,
-        MarkdownModule,
         MatProgressBarModule,
         NgbAlert,
         //-----//

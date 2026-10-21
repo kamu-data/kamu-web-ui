@@ -7,7 +7,7 @@
 
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { of, throwError } from "rxjs";
 
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
@@ -21,6 +21,7 @@ import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface"
 
 import { SearchSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/search-section/search-section.component";
 import { mockGetDatasetSchemaQuery } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { unavailableDatasetNode } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockDatasetBasicsDerivedFragment, mockDatasetInfo } from "src/app/search/mock.data";
 
@@ -116,7 +117,23 @@ describe("SearchSectionComponent", () => {
 
         expect(component.inputDatasets.size).toBe(1);
         expect(component.inputsViewModel.length).toBe(1);
+        expect(component.inputsViewModel[0].alias).toEqual(mockDatasetBasicsDerivedFragment.alias);
         expect(requestDatasetSchemaSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should list a selected input as unavailable when its schema fails to load", () => {
+        const mockNgbTypeaheadSelectItemEvent = {
+            item: {
+                dataset: mockDatasetBasicsDerivedFragment,
+                __typename: TypeNames.datasetType,
+            },
+        } as NgbTypeaheadSelectItemEvent;
+        spyOn(datasetService, "requestDatasetSchema").and.returnValue(throwError(() => new Error("fail")));
+
+        component.onSelectItem(mockNgbTypeaheadSelectItemEvent);
+
+        expect(component.inputDatasets.size).toBe(1);
+        expect(component.inputsViewModel).toEqual([unavailableDatasetNode(mockDatasetBasicsDerivedFragment.alias)]);
     });
 
     it("should check delete input dataset", () => {

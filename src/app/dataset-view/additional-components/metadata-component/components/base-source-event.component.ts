@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { afterNextRender, inject, Injectable, Injector, OnInit } from "@angular/core";
+import { afterNextRender, Directive, ElementRef, inject, Injector, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, FormGroup } from "@angular/forms";
 
@@ -35,11 +35,12 @@ import { READ_FORM_DATA } from "src/app/dataset-view/additional-components/metad
 import { ProcessFormService } from "src/app/dataset-view/additional-components/metadata-component/services/process-form.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 
-@Injectable()
+@Directive()
 export abstract class BaseSourceEventComponent extends BaseMainEventComponent implements OnInit {
     protected fb = inject(FormBuilder);
     protected processFormService = inject(ProcessFormService);
     private injector = inject(Injector);
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     public showPreprocessStep = false;
     public preprocessStepValue: PreprocessStepValue = {
         engine: "",
@@ -65,7 +66,7 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
     public onShowErrors(): void {
         afterNextRender(
             () => {
-                const elems = document.querySelectorAll<HTMLInputElement>("input.ng-invalid");
+                const elems = this.elementRef.nativeElement.querySelectorAll<HTMLInputElement>("input.ng-invalid");
                 elems.forEach((element: HTMLInputElement) => {
                     element.focus();
                     element.blur();

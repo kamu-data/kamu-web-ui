@@ -7,12 +7,12 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { Observable, of } from "rxjs";
-import { catchError, first, map } from "rxjs/operators";
+import { Observable } from "rxjs";
+import { first, map } from "rxjs/operators";
 
 import { ApolloLink, ObservableQuery } from "@apollo/client/core";
-import { onlyCompleteData } from "apollo-angular";
 
+import { completeDataOrError } from "@common/helpers/apollo-error.helpers";
 import {
     GithubLoginCredentials,
     LoginResponseType,
@@ -41,15 +41,13 @@ export class AuthApi {
     private fetchAccountDetailsGQL = inject(FetchAccountDetailsGQL);
     private loginWeb3WalletGQL = inject(LoginWeb3WalletGQL);
 
+    /** Errors when the request fails, so that a failure is not mistaken for "no method enabled" */
     public readEnabledLoginMethods(): Observable<AccountProvider[]> {
         return this.getEnabledLoginMethodsGQL.watch().valueChanges.pipe(
-            onlyCompleteData(),
+            completeDataOrError(),
             first(),
             map((result: ObservableQuery.Result<GetEnabledLoginMethodsQuery>) => {
                 return result.data?.auth?.enabledProviders ?? [];
-            }),
-            catchError(() => {
-                return of([]);
             }),
         );
     }

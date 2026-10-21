@@ -9,7 +9,7 @@ import { provideHttpClient } from "@angular/common/http";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
-import { of } from "rxjs";
+import { of, throwError } from "rxjs";
 
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
@@ -148,6 +148,18 @@ describe("SearchAndSchemasSectionComponent", () => {
         expect(panelsAfter.map((panel) => panel.nativeElement as HTMLElement)).toEqual(
             panelsBefore.map((panel) => panel.nativeElement as HTMLElement),
         );
+    });
+
+    it("should show schemas of the next query after a schema request fails", () => {
+        requestDatasetSchemaSpy.and.returnValue(throwError(() => new Error("request failed")));
+        fixture.detectChanges();
+        expect(component.searchResult).toEqual([]);
+
+        requestDatasetSchemaSpy.and.returnValue(of(mockGetDatasetSchemaQuery));
+        sqlQueryService.emitSqlQueryResponseChanged(mockSqlQueryResponseState);
+        fixture.detectChanges();
+
+        expect(component.searchResult.length).toBeGreaterThan(0);
     });
 
     it("should check picking a dataset that is already shown keeps one schema panel for it", () => {

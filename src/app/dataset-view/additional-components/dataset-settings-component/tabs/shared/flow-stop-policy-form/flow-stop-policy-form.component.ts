@@ -9,7 +9,6 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatRadioModule } from "@angular/material/radio";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 import { BaseComponent } from "@common/components/base.component";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
@@ -35,7 +34,6 @@ import {
         ReactiveFormsModule,
         //-----//
         MatRadioModule,
-        MatSlideToggleModule,
         //-----//
         FormValidationErrorsDirective,
         TooltipIconComponent,

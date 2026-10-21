@@ -11,19 +11,20 @@ import { firstValueFrom, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { DatasetApi } from "@api/dataset.api";
 import {
     DatasetBlocksEncodedByEventTypeQuery,
     DatasetBlocksSchemaByEventTypeQuery,
+    MetadataBlockFragment,
     MetadataEventType,
     MetadataManifestFormat,
 } from "@api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery, TEST_BLOCK_HASH } from "@api/mock/dataset.mock";
-import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
+import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
-import { MetadataBlockInfo } from "src/app/dataset-block/metadata-block/metadata-block.types";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 
 describe("BlockService", () => {
@@ -42,24 +43,37 @@ describe("BlockService", () => {
         expect(service).toBeTruthy();
     });
 
-    it("should check get block from api", () => {
+    it("should check get block from api", async () => {
         spyOn(datasetApi, "getBlockByHash").and.returnValue(of(mockGetMetadataBlockQuery));
+        const metadata = requireValue(mockGetMetadataBlockQuery.datasets.byOwnerAndName ?? null).metadata;
 
-        const metadataBlock$ = service
-            .requestMetadataBlock(mockDatasetInfo, TEST_BLOCK_HASH)
-            .subscribe((result: MaybeUndefined<MetadataBlockInfo>) => {
-                if (result) {
-                    expect(result.blockAsYaml).toEqual(
-                        mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHashEncoded as string,
-                    );
-                    expect(result.downstreamsCount).toEqual(
-                        mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata
-                            .currentDownstreamDependenciesCount as number,
-                    );
-                }
-            });
+        const result = await firstValueFrom(service.requestMetadataBlock(mockDatasetInfo, TEST_BLOCK_HASH));
 
-        expect(metadataBlock$.closed).toBeTrue();
+        expect(result).toEqual({
+            block: metadata.chain.blockByHash as MetadataBlockFragment,
+            blockAsYaml: metadata.chain.blockByHashEncoded as string,
+            downstreamsCount: metadata.currentDownstreamDependenciesCount,
+        });
+    });
+
+    it("should emit nothing usable for a block hash the dataset does not have", async () => {
+        const dataset = requireValue(mockGetMetadataBlockQuery.datasets.byOwnerAndName ?? null);
+        spyOn(datasetApi, "getBlockByHash").and.returnValue(
+            of({
+                ...mockGetMetadataBlockQuery,
+                datasets: {
+                    ...mockGetMetadataBlockQuery.datasets,
+                    byOwnerAndName: {
+                        ...dataset,
+                        metadata: { ...dataset.metadata, chain: { ...dataset.metadata.chain, blockByHash: null } },
+                    },
+                },
+            }),
+        );
+
+        const result = await firstValueFrom(service.requestMetadataBlock(mockDatasetInfo, TEST_BLOCK_HASH));
+
+        expect(result).toBeUndefined();
     });
 
     describe("getPollingSourceSchemaFields", () => {

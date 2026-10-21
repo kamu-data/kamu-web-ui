@@ -14,7 +14,6 @@ import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 import { authenticatedGuard } from "src/app/auth/guards/authenticated.guard";
 import { DataComponent } from "src/app/dataset-view/additional-components/data-component/data.component";
-import { datasetDataTabResolverFn } from "src/app/dataset-view/additional-components/data-component/resolver/dataset-data-tab.resolver";
 import { FlowsComponent } from "src/app/dataset-view/additional-components/flows-component/flows.component";
 import { datasetFlowsTabResolverFn } from "src/app/dataset-view/additional-components/flows-component/resolver/dataset-flows-tab.resolver";
 import { OverviewComponent } from "src/app/dataset-view/additional-components/overview-component/overview.component";
@@ -62,7 +61,7 @@ export const DATASET_VIEW_ROUTES: Routes = [
                 data: {
                     [ProjectLinks.URL_PARAM_TAB]: DatasetViewTypeEnum.Data,
                 },
-                resolve: { [RoutingResolvers.DATASET_VIEW_DATA_KEY]: datasetDataTabResolverFn },
+                resolve: { [RoutingResolvers.DATASET_VIEW_DATA_KEY]: datasetOverviewTabResolverFn },
             },
             {
                 path: DatasetViewTypeEnum.Metadata,

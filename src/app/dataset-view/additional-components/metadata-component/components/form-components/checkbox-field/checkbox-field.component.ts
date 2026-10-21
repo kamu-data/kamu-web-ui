@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { ReactiveFormsModule } from "@angular/forms";
 
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 
@@ -20,7 +20,6 @@ import { BaseField } from "src/app/dataset-view/additional-components/metadata-c
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        FormsModule,
         ReactiveFormsModule,
         //-----//
         RxReactiveFormsModule,

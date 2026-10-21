@@ -13,14 +13,11 @@ import { MatButtonToggleChange, MatButtonToggleModule } from "@angular/material/
 import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 import { BehaviorSubject, debounceTime, map, Observable, startWith, Subject, switchMap, take, tap, timer } from "rxjs";
 
-import { DateTimeAdapter, OWL_DATE_TIME_FORMATS, OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
-import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
-import { NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
-import { NgSelectModule } from "@ng-select/ng-select";
+import { DateTimeAdapter, OWL_DATE_TIME_FORMATS } from "@danielmoncada/angular-datetime-picker";
+import { MomentDateTimeAdapter } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { InfiniteScrollDirective } from "ngx-infinite-scroll";
 import { ToastrService } from "ngx-toastr";
 
@@ -82,12 +79,7 @@ import { ProcessDatasetCardInteractionService } from "src/app/services/process-d
         MatIconModule,
         MatButtonToggleModule,
         MatChipsModule,
-        MatSlideToggleModule,
         MatProgressBarModule,
-        NgbNavModule,
-        NgSelectModule,
-        OwlDateTimeModule,
-        OwlMomentDateTimeModule,
         InfiniteScrollDirective,
         //-----//
         DatasetFlowProcessCardComponent,

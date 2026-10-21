@@ -10,10 +10,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { FormsModule } from "@angular/forms";
 import { MatButtonToggleChange, MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
-import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { MatTableModule } from "@angular/material/table";
 
 import {
     DatasetBasicsFragment,
@@ -38,9 +35,6 @@ import {
         NgClass,
         //-----//
         MatIconModule,
-        MatTableModule,
-        MatDividerModule,
-        MatProgressBarModule,
         MatButtonToggleModule,
         MatChipsModule,
         //-----//

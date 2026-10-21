@@ -1049,7 +1049,6 @@ export const mockMetadataRootUpdate: MetadataSchemaUpdate = {
         metadata: {
             __typename: "DatasetMetadata",
             currentDownstreamDependenciesCount: 0,
-            currentDownstreamDependencies: [],
             currentPollingSource: {
                 __typename: "SetPollingSource",
                 fetch: {
@@ -1244,7 +1243,6 @@ export const mockMetadataRootPushSourceUpdate: MetadataSchemaUpdate = {
             currentPollingSource: null,
             currentTransform: null,
             currentDownstreamDependenciesCount: 0,
-            currentDownstreamDependencies: [],
             currentPushSources: [
                 {
                     __typename: "AddPushSource",
@@ -1459,7 +1457,6 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
             },
             currentPushSources: [],
             currentDownstreamDependenciesCount: 0,
-            currentDownstreamDependencies: [],
             currentLicense: {
                 __typename: "SetLicense",
                 shortName: "OGL-Canada-2.0",

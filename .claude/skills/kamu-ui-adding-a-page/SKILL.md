@@ -17,12 +17,12 @@ no GraphQL), but decide that explicitly.
 | 4 | Api methods | `src/app/api/<domain>.api.ts` | `kamu-ui-graphql-api` | Methods return operation data types |
 | 5 | Response fixtures + api specs | `src/app/api/mock/<domain>.mock.ts`, `<domain>.api.spec.ts` | `kamu-ui-unit-tests` | `npm test -- --include src/app/api/<domain>.api.spec.ts` passes |
 | 6 | Domain service (when state or mapping is needed) | `<feature>/<name>.service.ts` + spec | `kamu-ui-angular-style` | Spec passes |
-| 7 | Resolver and key | `<feature>/resolver/<name>.resolver.ts`, `RoutingResolvers` | `kamu-ui-routing` | Resolver spec passes; a missing entity redirects with a `RedirectCommand` |
-| 8 | Guard (when access differs from the parent) | functional `CanActivateFn` | `kamu-ui-routing` | Guard spec passes; a refusal returns a `UrlTree` |
+| 7 | Resolver and key | `<name>.resolver.ts` in the feature's resolver folder, `RoutingResolvers` | `kamu-ui-routing` | Resolver spec passes; a missing entity redirects with a `RedirectCommand` |
+| 8 | Access rule (when access differs from the parent) | a dataset page: in its resolver, on the dataset access helpers; a rule needing no dataset data: a functional `CanActivateFn` guard | `kamu-ui-routing` | Resolver or guard spec covers the refusal and where it redirects |
 | 9 | Component | `.component.ts/.html/.scss`, resolver value as `@Input(RoutingResolvers.KEY)` | `kamu-ui-angular-style` | OnPush, `data-test-id` on everything a test touches |
 | 10 | Routes | new `<feature>-routing.ts` with `loadChildren`, or `loadComponent` | `kamu-ui-routing` | `npm run build-prod` lists the new lazy chunk; initial chunks unchanged |
-| 11 | Harness and component spec | `<name>.harness.ts` for reusable form or composite parts, `<name>.component.spec.ts` | `kamu-ui-unit-tests` | Spec passes |
-| 12 | Navigation entry | `NavigationService` method, links or menu item | `kamu-ui-angular-style` | Reachable from the UI |
+| 11 | Harness and component spec | `<name>.harness.ts` (for any component with more to assert than that it renders), `<name>.component.spec.ts` | `kamu-ui-unit-tests` | Spec passes, driving the component through its harness |
+| 12 | Navigation entry | `NavigationService` `…UrlTree()` builder (and link pipe), links or menu item | `kamu-ui-routing` | Reachable from the UI |
 | 13 | Feature flag (unfinished or staged features) | `appFeatureFlag` on the entry point | `kamu-ui-angular-style` | Hidden when the flag is off |
 | 14 | Hand-back validation | — | — | `npm run lint`, `npm run stylelint`, `npm test`, `npm run build-prod` all green |
 

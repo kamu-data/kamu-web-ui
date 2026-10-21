@@ -29,6 +29,7 @@ import { NavigationService } from "../services/navigation.service";
     styleUrls: ["./data-access-panel.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
+        //-----//
         NgClass,
         //-----//
         MatIconModule,

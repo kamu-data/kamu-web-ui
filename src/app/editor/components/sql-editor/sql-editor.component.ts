@@ -23,12 +23,13 @@ import { FormsModule } from "@angular/forms";
 import { filter, fromEvent, Subscription, take, takeWhile } from "rxjs";
 
 import * as monaco from "monaco-editor";
-import { MonacoEditorModule } from "ngx-monaco-editor-v2";
+import { EditorComponent } from "ngx-monaco-editor-v2";
 
 import AppValues from "@common/values/app.values";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import { BaseEditorComponent } from "src/app/editor/components/base-editor/base-editor.component";
+import { MONACO_EDITOR_CONFIG_PROVIDER } from "src/app/editor/editor.providers";
 import { getSqlError } from "src/app/editor/helpers/editor-error-formatter";
 import { getMonacoNamespace } from "src/app/editor/services/monaco.service";
 
@@ -59,8 +60,9 @@ const SQL_EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = {
         NgStyle,
         FormsModule,
         //-----//
-        MonacoEditorModule,
+        EditorComponent,
     ],
+    providers: [MONACO_EDITOR_CONFIG_PROVIDER],
 })
 export class SqlEditorComponent extends BaseEditorComponent implements OnInit, OnDestroy {
     public readonly EDITOR_OPTIONS: monaco.editor.IStandaloneEditorConstructionOptions = SQL_EDITOR_OPTIONS;

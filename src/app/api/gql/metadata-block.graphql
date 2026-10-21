@@ -11,15 +11,6 @@ query getMetadataBlock($accountName: AccountName!, $datasetName: DatasetName!, $
         }
 
         currentDownstreamDependenciesCount
-        currentDownstreamDependencies {
-          ... on DatasetAccessResultNotAccessible {
-            __typename
-          }
-
-          ... on DatasetAccessResultAccessible {
-            __typename
-          }
-        }
       }
     }
   }

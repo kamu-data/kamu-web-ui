@@ -18,7 +18,6 @@ import {
     SimpleChanges,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
@@ -53,15 +52,12 @@ import { CollectionEntriesResult, CollectionEntryViewType, CollectionViewNode } 
         AsyncPipe,
         DatePipe,
         SlicePipe,
-
         //-----//
         InfiniteScrollDirective,
-        MatButtonModule,
         MatIconModule,
         MatProgressBarModule,
         MatTableModule,
         MatProgressSpinnerModule,
-
         //-----//
         DisplaySizePipe,
         DisplayDatasetIdPipe,

@@ -15,13 +15,13 @@ import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
 } from "@common/helpers/base-test.helpers.spec";
+import { MaybeUndefined } from "@interface/app.types";
 
 import {
     BaseEditorComponentTestEnvironment,
     sharedBasedEditorComponentTest,
 } from "src/app/editor/components/base-editor/base-editor.component.spec";
 import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
-import { EditorModule } from "src/app/editor/editor.module";
 import { editorMock } from "src/app/editor/mock/editor.mock";
 import { MonacoService } from "src/app/editor/services/monaco.service";
 
@@ -31,7 +31,7 @@ describe("SqlEditorComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [EditorModule, SqlEditorComponent],
+            imports: [SqlEditorComponent],
             providers: [MonacoService],
         }).compileComponents();
 
@@ -83,7 +83,7 @@ describe("SqlEditorComponent", () => {
 
     describe("run actions", () => {
         const windowWithMonaco = window as typeof window & { monaco?: typeof monaco };
-        let originalMonaco: typeof monaco | undefined;
+        let originalMonaco: MaybeUndefined<typeof monaco>;
         let actions: monaco.editor.IActionDescriptor[];
         let selectionListener: (e: monaco.editor.ICursorSelectionChangedEvent) => void;
         let hasSelectionValues: boolean[];

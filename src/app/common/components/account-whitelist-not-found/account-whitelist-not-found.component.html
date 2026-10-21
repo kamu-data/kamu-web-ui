@@ -1,24 +1,15 @@
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="error-template">
-                <div class="box p-4 mx-auto error-block">
-                    <img [src]="APP_LOGO" alt="Application logo" />
-                    <p class="mt-4 description">
-                        Access to the Kamu platform is currently granted by invitation. We were unable to locate an
-                        account associated with your credentials. However, you are welcome to explore our
-                        <a class="" href="https://platform.demo.kamu.dev/" target="_blank">demonstration environment</a>
-                        to experience the platform's features.
-                        @if (supportEmail) {
-                            Should you require access to a production-grade environment, please do not hesitate to
-                            <a [href]="'mailto:' + supportEmail" data-test-id="whitelist-support-link">contact us</a>.
-                        }
-                    </p>
-                    <button class="app-active-button mx-auto my-4" (click)="navigateToLogin()">
-                        Back to login page
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<app-error-page-layout>
+    <p class="mt-4">
+        Access to the Kamu platform is currently granted by invitation. We were unable to locate an account associated
+        with your credentials. However, you are welcome to explore our
+        <a class="" href="https://platform.demo.kamu.dev/" target="_blank">demonstration environment</a>
+        to experience the platform's features.
+        @if (supportEmail) {
+            Should you require access to a production-grade environment, please do not hesitate to
+            <a [href]="'mailto:' + supportEmail" data-test-id="whitelist-support-link">contact us</a>.
+        }
+    </p>
+    <button errorPageActions class="app-active-button mx-auto my-4" (click)="navigateToLogin()">
+        Back to login page
+    </button>
+</app-error-page-layout>

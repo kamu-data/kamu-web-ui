@@ -17,7 +17,7 @@ as bundle changes.
 
 | Phase | Defined in `src/app/app-routing.ts` | Holds |
 |---|---|---|
-| 1 | `PUBLIC_ROUTES` (passed to `provideRouter`) | Home redirect, login, GitHub callback, return-to-CLI, not-found pages — reachable by anyone |
+| 1 | `PUBLIC_ROUTES` (passed to `provideRouter`) | Home redirect, login, sign-in unavailable (`URL_LOGIN_UNAVAILABLE`), GitHub callback, return-to-CLI, not-found pages — reachable by anyone |
 | 2 | `ANONYMOUS_GUARDED_ROUTES` via `provideConditionalGuardedRoutes()` | Everything else; wrapped in `forbidAnonymousAccessGuardFn` unless the runtime config sets `allowAnonymous` |
 | 3 | `provideCatchAllRoute()` | `**` → `PageNotFoundComponent`; must stay last |
 
@@ -80,8 +80,9 @@ its own routes file:
   constants for segments, `URL_PARAM_*` for `:params`. No string literals in routes or
   `router.navigate` calls.
 - Data-dependent pages load through resolver functions — `export const xxxResolverFn:
-  ResolveFn<T> = (route) => { const s = inject(S); return s.fetch(...); };` in a `resolver/`
-  folder beside the component. Register them under a key from `RoutingResolvers`
+  ResolveFn<T> = (route) => { const s = inject(S); return s.fetch(...); };` in a `resolver/` or
+  `resolvers/` folder beside the component (both names are in use; follow the neighbouring
+  features). Register them under a key from `RoutingResolvers`
   (`src/app/common/resolvers/routing-resolvers.ts`), and receive the value as an input:
   `@Input(RoutingResolvers.FLOW_DETAILS_LOGS_KEY) public flowDetails: DatasetFlowByIdResponse;`.
 - A resolver that cannot produce its data redirects by emitting a `RedirectCommand`, usually

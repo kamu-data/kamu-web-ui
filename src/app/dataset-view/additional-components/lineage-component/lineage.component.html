@@ -7,8 +7,7 @@
                 (onClickNodeEvent)="onClickNode($event)"
                 (onClickPrivateNodeEvent)="onClickPrivateNode($event)"
             />
-        }
-        @if (!lineageGraphUpdate.graph.nodes.length) {
+        } @else {
             <p>The current dataset is derivative. Not enough data to build the graph.</p>
         }
     </div>

@@ -41,6 +41,7 @@ describe("accountGuard", () => {
     [
         `/${TEST_ACCOUNT_NAME}/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.FLOWS}`,
         `/${TEST_ACCOUNT_NAME}/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.DATASETS}?page=2`,
+        `/${TEST_ACCOUNT_NAME}/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.FLOWS}#top`,
     ].forEach((url) => {
         it(`should allow the tab URL ${url}`, () => {
             const result = executeGuard(routeSnapshot, { url } as RouterStateSnapshot);
@@ -48,7 +49,12 @@ describe("accountGuard", () => {
         });
     });
 
-    [`/${TEST_ACCOUNT_NAME}`, `/${TEST_ACCOUNT_NAME}?page=2`, `/${TEST_ACCOUNT_NAME}/`].forEach((url) => {
+    [
+        `/${TEST_ACCOUNT_NAME}`,
+        `/${TEST_ACCOUNT_NAME}?page=2`,
+        `/${TEST_ACCOUNT_NAME}/`,
+        `/${TEST_ACCOUNT_NAME}#/${AccountTabs.FLOWS}`,
+    ].forEach((url) => {
         it(`should redirect ${url} to the datasets tab`, () => {
             const result = executeGuard(routeSnapshot, { url } as RouterStateSnapshot);
             expect(router.serializeUrl(result as UrlTree)).toEqual(datasetsTabUrl);

@@ -57,7 +57,7 @@ IGNORED_UPPER_TOKENS = re.compile(
 TS = ["**/*.ts"]
 SPEC = ["**/*.spec.ts"]
 COMMENTED = ["**/*.ts", "**/*.html", "**/*.scss", "**/*.js", "**/*.mjs"]
-GUARD_OR_RESOLVER = ["src/app/**/*.guard.ts", "src/app/**/*.resolver.ts"]
+GUARD_OR_RESOLVER = ["src/app/**/*.guard.ts", "src/app/**/*.resolver.ts", "src/app/**/resolvers/*.helpers.ts"]
 
 RULES: list[tuple[re.Pattern[str], str, bool, list[str]]] = [
     # (pattern, message, applies to comment text only, files it applies to)

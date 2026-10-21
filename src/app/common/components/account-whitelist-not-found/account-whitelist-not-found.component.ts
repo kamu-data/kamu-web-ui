@@ -6,9 +6,8 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { MatIconModule } from "@angular/material/icon";
 
-import AppValues from "@common/values/app.values";
+import { ErrorPageLayoutComponent } from "@common/components/error-page-layout/error-page-layout.component";
 import { MaybeUndefined } from "@interface/app.types";
 
 import { AppConfigService } from "src/app/app-config.service";
@@ -16,13 +15,14 @@ import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-account-whitelist-not-found",
-    imports: [MatIconModule],
     templateUrl: "./account-whitelist-not-found.component.html",
-    styleUrls: ["./account-whitelist-not-found.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        //-----//
+        ErrorPageLayoutComponent,
+    ],
 })
 export class AccountWhitelistNotFoundComponent {
-    public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;
     private appConfigService = inject(AppConfigService);
     private navigationService = inject(NavigationService);
 

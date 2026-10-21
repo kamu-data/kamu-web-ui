@@ -14,7 +14,12 @@ import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-ic
     selector: "app-block-row-data",
     templateUrl: "./block-row-data.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TooltipIconComponent, NgClass],
+    imports: [
+        //-----//
+        NgClass,
+        //-----//
+        TooltipIconComponent,
+    ],
 })
 export class BlockRowDataComponent {
     @Input({ required: true }) public label: string;

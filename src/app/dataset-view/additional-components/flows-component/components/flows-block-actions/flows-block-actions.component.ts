@@ -6,7 +6,6 @@
  */
 
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
-import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 
 import { BaseComponent } from "@common/components/base.component";
@@ -24,8 +23,6 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 @Component({
     selector: "app-flows-block-actions",
     imports: [
-        //-----//
-        FormsModule,
         //-----//
         MatIconModule,
     ],

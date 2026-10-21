@@ -19,7 +19,10 @@ import { VerifyQueryError, VerifyQueryKindError } from "src/app/query-explainer/
     templateUrl: "./commitment-data-section.component.html",
     styleUrls: ["./commitment-data-section.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CopyToClipboardComponent],
+    imports: [
+        //-----//
+        CopyToClipboardComponent,
+    ],
 })
 export class CommitmentDataSectionComponent {
     private clipboard = inject(Clipboard);

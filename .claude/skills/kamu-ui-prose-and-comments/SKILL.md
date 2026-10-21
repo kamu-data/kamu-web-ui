@@ -66,9 +66,10 @@ sub-agent prompts.
 - Notable changes only, one short line each. No entries for mechanical steps a user never sees:
   schema refreshes, codegen, renamed GraphQL types, tests, refactorings.
 - Prefix with the area when it helps the reader find it: `Account flows: …`, `Lineage tab: …`.
-- One entry per user-visible change, under `### Added` / `### Changed` / `### Fixed`; nested
-  bullets for the parts of one larger feature.
-- Structure and timing are owned by `kamu-ui-release-dependency-workflows`.
+
+This section owns how an entry is worded. Sections, entry granularity and the `## [Unreleased]`
+heading are owned by `kamu-ui-release-dependency-workflows` ("Changelog"); when an entry is added
+or reviewed, by [AGENTS.md, "Changelog review context"](../../../AGENTS.md#changelog-review-context).
 
 ## Re-read pass before handing back
 
@@ -85,4 +86,4 @@ Read every comment and doc line you added, as a newcomer would, and check:
 ## What lives elsewhere
 
 - Code style other than comments: `kamu-ui-angular-style`.
-- Changelog structure and the release flow: `kamu-ui-release-dependency-workflows`.
+- The release flow: `kamu-ui-release-dependency-workflows`.

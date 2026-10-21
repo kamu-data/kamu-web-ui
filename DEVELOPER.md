@@ -28,7 +28,7 @@ Versions are the ones [`package.json`](package.json) declares.
 
 ### Libraries
 
-- [Angular Material Design](https://material.angular.io/)
+- [Angular Material Design](https://material.angular.dev/)
 - [Apollo Angular (GQL client)](https://apollo-angular.com/docs/)
 - [GraphQL](https://www.npmjs.com/package/graphql)
 - [Bootstrap](https://www.npmjs.com/package/bootstrap)
@@ -38,13 +38,13 @@ Versions are the ones [`package.json`](package.json) declares.
 - [Prettier](https://www.npmjs.com/package/prettier)
 - [ngx-markdown](https://www.npmjs.com/package/ngx-markdown)
 - [Karma](https://www.npmjs.com/package/karma)
-- [Jasmine](https://www.npmjs.com/package/jasmine)
+- [Jasmine](https://jasmine.github.io/)
 
 ### Steps for running
 
 1. Do it once:
 
-   - download and install [Node.js](https://nodejs.org/en/download/releases/), version: 24.13.1 
+   - download and install [Node.js](https://nodejs.org/en/download/releases/), the version in [`.nvmrc`](./.nvmrc)
 
    or
 
@@ -52,7 +52,7 @@ Versions are the ones [`package.json`](package.json) declares.
 
      Using `nvm` (Node.js Version Manager) makes it easier to install and manage multiple versions of Node.js on a single local environment.
 
-     To install a specific version of node: `nvm install 24.13.1`
+     To install the version from `.nvmrc`, run `nvm install` in the repository root
 
 2. Install packages that project depends on: `npm ci`
 3. Run application locally: `ng serve` or `npm run start`
@@ -91,7 +91,7 @@ To authenticate user via GitHub you will also need to pass the following environ
 
 We are using [graphql-codegen](https://www.graphql-code-generator.com/) project to generate typed interfaces based on server's GraphQL Schema and the query templates.
 
-The schema file is located in `resources/schema.graphql`. To refresh it with latest schema from a running server using:
+The schema file is located in `resources/schema.graphql`, a copy of `resources/schema.gql` in kamu-cli. To refresh it from kamu-cli's `master` branch on GitHub, use:
 
 ```bash
 npm run gql-update-schema
@@ -103,19 +103,17 @@ To regenerate types and query stubs use:
 npm run gql-codegen
 ```
 
-> Note: There is currently an issue with codegen where it generates outdated import `import { gql } from 'apollo-angular';`. To fix it we manually revert this line to `import { gql } from '@apollo/client/core';`.
-
 ### Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ### Code formatter
 
-Run `npm run prettier` for enforce consistent style by parsing your code and re-printing it with its own rules that take the maximum line length into account, wrapping code when necessary.
+Run `npm run prettier` to enforce a consistent style by parsing your code and re-printing it with its own rules that take the maximum line length into account, wrapping code when necessary.
 
 ### Code scaffolding
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum`.
 
 ### Build:
 
@@ -127,15 +125,15 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 ### Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/cli) page.
 
 ### Release procedure
 
-1. While on the feature branch, create a `CHANGELOG` entry for the new version
+1. While on the feature branch, add the `CHANGELOG.md` entries under `## [Unreleased]`; the release script turns that heading into the version and date
 2. Create PR, wait for tests, then merge
 3. Checkout and pull master
-4. Run `npm run release-{major,minor,patch}` - this will increment the version in all places, commit the changes and crate a new git tag, update LICENSE.txt and CHANGELOG.md files
-5. Push the version change and the tag: `git push`
+4. Run `npm run release-{major,minor,patch}` - this will increment the version in all places, update LICENSE.txt and CHANGELOG.md, commit the changes and create a new git tag
+5. Push the version change and the tag: `git push --follow-tags` (a plain `git push` leaves the tag behind, and the release workflow runs only on tags)
 6. GitHub Actions will pick up the new tag and create a new GitHub release from it
 
 ## Agent Harness

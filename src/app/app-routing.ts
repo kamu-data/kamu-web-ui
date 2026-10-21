@@ -101,7 +101,6 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
     {
         canActivate: [adminGuard],
         path: ProjectLinks.URL_ADMIN_DASHBOARD,
-        // In future, we might want to lazy load this component
         // Listed before ":accountName", which would otherwise match this two-segment URL first
         component: AdminDashboardComponent,
     },

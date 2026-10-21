@@ -123,7 +123,7 @@ export const mockParseSetTransformYamlType = {
             },
         ],
     },
-} as SetTransformYamlType;
+} satisfies SetTransformYamlType;
 
 export const mockPreprocessStepValue: PreprocessStepValue = {
     engine: "SPARK",

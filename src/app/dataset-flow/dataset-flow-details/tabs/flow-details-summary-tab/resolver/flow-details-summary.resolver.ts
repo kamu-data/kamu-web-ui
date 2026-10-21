@@ -7,14 +7,12 @@
 
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { MaybeNull } from "@interface/app.types";
 
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 
-export const flowDetailsSummaryResolverFn: ResolveFn<MaybeNull<DatasetFlowByIdResponse>> = (
-    route: ActivatedRouteSnapshot,
-) => {
-    const flowByIdResponse = route.parent?.data?.[RoutingResolvers.FLOW_DETAILS_KEY] as DatasetFlowByIdResponse;
-    return flowByIdResponse ?? null;
+export const flowDetailsSummaryResolverFn: ResolveFn<DatasetFlowByIdResponse> = (route: ActivatedRouteSnapshot) => {
+    // The parent resolver either provides the flow or redirects, so the parent data always holds it
+    return requireValue(route.parent).data[RoutingResolvers.FLOW_DETAILS_KEY] as DatasetFlowByIdResponse;
 };

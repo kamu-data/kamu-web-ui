@@ -7,11 +7,8 @@
 
 import { Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { MatDividerModule } from "@angular/material/divider";
+import { FormGroup, NonNullableFormBuilder, Validators } from "@angular/forms";
 import { RouterOutlet } from "@angular/router";
-
-import { NgSelectModule } from "@ng-select/ng-select";
 
 import { BaseComponent } from "@common/components/base.component";
 import { eventTypesMapper } from "@common/helpers/data.helpers";
@@ -32,12 +29,7 @@ import { NavigationService } from "src/app/services/navigation.service";
     selector: "app-edit-webhook",
     imports: [
         //-----//
-        FormsModule,
-        ReactiveFormsModule,
         RouterOutlet,
-        //-----//
-        MatDividerModule,
-        NgSelectModule,
         //-----//
         WebhookFormComponent,
     ],

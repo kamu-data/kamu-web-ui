@@ -43,6 +43,7 @@ describe("loginGuard", () => {
         description: string;
         url: string;
         loginMethods: AccountProvider[];
+        loadFailed?: boolean;
         isAuthenticated: boolean;
         allowAnonymous: boolean;
         expectedRedirect: MaybeUndefined<string>;
@@ -99,6 +100,25 @@ describe("loginGuard", () => {
             expectedRedirect: `/${ProjectLinks.URL_LOGIN_UNAVAILABLE}`,
         },
         {
+            description:
+                "redirect to the login-unavailable page when the login methods could not be loaded and anonymous access is forbidden",
+            url: `/${ProjectLinks.URL_LOGIN}`,
+            loginMethods: [],
+            loadFailed: true,
+            isAuthenticated: false,
+            allowAnonymous: false,
+            expectedRedirect: `/${ProjectLinks.URL_LOGIN_UNAVAILABLE}`,
+        },
+        {
+            description: "redirect home when the login methods could not be loaded and anonymous access is allowed",
+            url: `/${ProjectLinks.URL_LOGIN}`,
+            loginMethods: [],
+            loadFailed: true,
+            isAuthenticated: false,
+            allowAnonymous: true,
+            expectedRedirect: "/",
+        },
+        {
             description: "redirect home an authenticated user when anonymous access is forbidden",
             url: `/${ProjectLinks.URL_LOGIN}`,
             loginMethods: [],
@@ -117,6 +137,7 @@ describe("loginGuard", () => {
     ].forEach((testCase: TestCase) => {
         it(`should ${testCase.description}`, () => {
             spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue(testCase.loginMethods);
+            spyOnProperty(loginMethodsService, "loadFailed", "get").and.returnValue(testCase.loadFailed ?? false);
             spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(testCase.isAuthenticated);
             spyOnProperty(appConfigService, "allowAnonymous", "get").and.returnValue(testCase.allowAnonymous);
 

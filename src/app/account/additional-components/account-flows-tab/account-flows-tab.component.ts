@@ -6,8 +6,6 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { MatIconModule } from "@angular/material/icon";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 
 import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
@@ -35,8 +33,6 @@ import { NavigationService } from "src/app/services/navigation.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        MatIconModule,
-        MatProgressBarModule,
         NgbNavModule,
         //-----//
         AccountFlowsActivitySubtabComponent,

@@ -16,8 +16,7 @@
         >
             Next
         </button>
-    }
-    @if (!nextStep) {
+    } @else {
         <button
             type="button"
             (click)="saveEvent()"

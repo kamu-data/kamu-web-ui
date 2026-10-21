@@ -6,7 +6,6 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { FormsModule } from "@angular/forms";
 
 import { DatasetListItemComponent } from "@common/components/dataset-list-component/dataset-list-item/dataset-list-item.component";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
@@ -19,8 +18,6 @@ import { SearchMode } from "@interface/search.interface";
     styleUrls: ["./dataset-list.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        //-----//
-        FormsModule,
         //-----//
         FeatureFlagDirective,
         DatasetListItemComponent,

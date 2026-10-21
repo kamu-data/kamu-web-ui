@@ -76,15 +76,19 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
   in the logic part, not inline as `inject(X).value`:
 
   ```ts
-  export const loginGuard: CanActivateFn = () => {
-      const loginMethodsService = inject(LoginMethodsService);
+  export const accountPasswordProviderGuard: CanActivateFn = () => {
       const loggedUserService = inject(LoggedUserService);
       const navigationService = inject(NavigationService);
 
-      const canLogin = loginMethodsService.loginMethods.length > 0 && !loggedUserService.isAuthenticated;
-      return canLogin || navigationService.homeUrlTree();
+      const accountProvider = loggedUserService.maybeCurrentlyLoggedInUser?.accountProvider;
+      return accountProvider === AccountProvider.Password || navigationService.homeUrlTree();
   };
   ```
+
+- The SQL and YAML editor components carry their own Monaco config
+  (`MONACO_EDITOR_CONFIG_PROVIDER` in `src/app/editor/editor.providers.ts`), so a page, modal or
+  spec that hosts one adds no editor provider. Keep it there: in `main.ts` the config pulls
+  ngx-monaco-editor-v2 into the initial bundle (a 4.4 kB initial chunk in a production build).
 
 ### Subscriptions and lifetimes
 

@@ -16,5 +16,6 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 export const accountSettingsEmailResolverFn: ResolveFn<AccountWithEmailFragment> = () => {
     const accountEmailService = inject(AccountEmailService);
     const loggedUserService = inject(LoggedUserService);
+
     return accountEmailService.fetchAccountWithEmail(loggedUserService.currentlyLoggedInUser.accountName);
 };

@@ -1,4 +1,4 @@
-// This file is required by karma.conf.js and loads recursively all the .spec and framework files
+// Test entry point (the `main` option of the angular.json test target); the builder finds the specs itself.
 
 import "zone.js/testing";
 

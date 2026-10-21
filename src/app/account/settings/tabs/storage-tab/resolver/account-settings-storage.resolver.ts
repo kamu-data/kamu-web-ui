@@ -15,5 +15,6 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 export const accountSettingsStorageResolverFn: ResolveFn<AccountStorageQuota> = () => {
     const accountStorageQuotaService = inject(AccountStorageQuotaService);
     const loggedUserService = inject(LoggedUserService);
+
     return accountStorageQuotaService.fetchStorageQuota(loggedUserService.currentlyLoggedInUser.accountName);
 };

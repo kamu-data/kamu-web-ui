@@ -69,6 +69,16 @@ describe("blockMetadataResolverFn", () => {
         expect(data).toEqual(mockBlockInfo);
     });
 
+    it("should redirect to page not found when the dataset or the block does not exist", async () => {
+        spyOn(blockService, "requestMetadataBlock").and.returnValue(of(undefined));
+        const emitDownstreamsCountChangedSpy = spyOn(datasetService, "emitDownstreamsCountChanged");
+
+        const data = await firstValueFrom(executeResolver(routeSnapshot, mockState) as Observable<unknown>);
+
+        expectPageNotFoundRedirect(data);
+        expect(emitDownstreamsCountChangedSpy).not.toHaveBeenCalled();
+    });
+
     it("should redirect to page not found when the block cannot be loaded", async () => {
         spyOn(blockService, "requestMetadataBlock").and.returnValue(throwError(() => new Error("fail")));
         const emitDownstreamsCountChangedSpy = spyOn(datasetService, "emitDownstreamsCountChanged");

@@ -8,7 +8,7 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
-import { firstValueFrom, Observable, of } from "rxjs";
+import { firstValueFrom, Observable, of, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
@@ -65,6 +65,14 @@ describe("metadataTransformationTabResolverFn", () => {
 
     it("should redirect to page not found for a root dataset", async () => {
         const data = await resolve(mockDatasetBasicsRootFragment);
+
+        expectPageNotFoundRedirect(data);
+    });
+
+    it("should redirect to page not found when the dataset cannot be loaded", async () => {
+        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(throwError(() => new Error("fail")));
+
+        const data = await firstValueFrom(executeResolver(routeSnapshot, mockState) as Observable<unknown>);
 
         expectPageNotFoundRedirect(data);
     });

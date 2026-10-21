@@ -17,7 +17,9 @@ import { provideMarkdown } from "ngx-markdown";
 
 import {
     emitClickOnElementByDataTestId,
+    findElementByDataTestId,
     findNativeElement,
+    getElementByDataTestId,
     registerMatSvgIcons,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
@@ -129,8 +131,7 @@ describe("ReadmeSectionComponent", () => {
         const copyButtonElement = findNativeElement(fixture, `.markdown-clipboard-button`);
         expect(copyButtonElement).toBeDefined();
 
-        const runButtonElement = findNativeElement(fixture, `.markdown-run-button`);
-        expect(runButtonElement).toBeDefined();
+        expect(findElementByDataTestId(fixture, "markdown-run-button")).toBeDefined();
     });
 
     it("should check Run button navigate to Data tab", async () => {
@@ -141,7 +142,7 @@ describe("ReadmeSectionComponent", () => {
         await fixture.whenStable();
         fixture.detectChanges();
 
-        const runButtonElement = findNativeElement(fixture, `.markdown-run-button`) as HTMLLinkElement;
+        const runButtonElement = getElementByDataTestId(fixture, "markdown-run-button") as HTMLLinkElement;
         expect(
             runButtonElement.href.includes(
                 "kamu/mockNameDerived/data?sqlQuery=select%20*%20from%20%27account.tokens.portfolio.market-value%27",
@@ -157,7 +158,7 @@ describe("ReadmeSectionComponent", () => {
         await fixture.whenStable();
         fixture.detectChanges();
 
-        const runButtonElement = findNativeElement(fixture, `.markdown-run-button`) as HTMLLinkElement;
+        const runButtonElement = getElementByDataTestId(fixture, "markdown-run-button") as HTMLLinkElement;
         expect(
             runButtonElement.href.includes(
                 "kamu/mockNameDerived/data?sqlQuery=select%0A*%0Afrom%20%27account.tokens.portfolio.market-value%27",

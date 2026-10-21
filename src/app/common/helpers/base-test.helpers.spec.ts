@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DebugElement } from "@angular/core";
+import { DebugElement, Type } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatIconRegistry } from "@angular/material/icon";
 import { By, DomSanitizer } from "@angular/platform-browser";
@@ -98,16 +98,6 @@ export const routerMock = {
     url: "/",
 };
 
-export const activeRouteMockQueryParamMap = new Map<string, string>();
-
-export const activeRouteMock = {
-    snapshot: {
-        queryParamMap: {
-            get: (key: string) => activeRouteMockQueryParamMap.get(key),
-        },
-    },
-};
-
 export const snapshotParamMapMock = {
     provide: ActivatedRoute,
     useValue: {
@@ -147,20 +137,27 @@ export function getInputElementByDataTestId<T>(fixture: ComponentFixture<T>, id:
 }
 
 /**
- * Finds the instance of a directive/component class matching a predicate, e.g. to
+ * Every rendered instance of a component or directive class in the fixture, in DOM order;
+ * an empty array when none is rendered.
+ */
+export function findComponentInstances<T, C>(fixture: ComponentFixture<T>, directive: Type<C>): C[] {
+    return fixture.debugElement.queryAll(By.directive(directive)).map((el) => el.injector.get(directive));
+}
+
+/**
+ * Finds the instance of a component or directive class matching a predicate, e.g. to
  * disambiguate between multiple instances of the same component (by an @Input value)
  * when CSS/data-test-id selectors can't reach the component instance itself.
- * Throws with a descriptive message if no match is found.
+ * Without a predicate, the first instance. Throws with a descriptive message if no match is found.
  */
 export function findComponentInstance<T, C>(
     fixture: ComponentFixture<T>,
-    directive: new (...args: never[]) => C,
-    predicate: (instance: C) => boolean,
+    directive: Type<C>,
+    predicate: (instance: C) => boolean = () => true,
 ): C {
-    const debugElements = fixture.debugElement.queryAll(By.directive(directive));
-    const match = debugElements.find((el) => predicate(el.componentInstance as C));
+    const match = findComponentInstances(fixture, directive).find(predicate);
     if (!match) throw new Error(`No instance of ${directive.name} matching the given predicate was found`);
-    return match.componentInstance as C;
+    return match;
 }
 
 export function dispatchInputEvent<T>(fixture: ComponentFixture<T>, id: string, value: string): void {

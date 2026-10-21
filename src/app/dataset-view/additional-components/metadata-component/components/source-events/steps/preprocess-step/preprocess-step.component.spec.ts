@@ -20,7 +20,6 @@ import {
     mockSetPollingSourceEventYamlWithQuery,
 } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import { PreprocessStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/preprocess-step/preprocess-step.component";
-import { EditorModule } from "src/app/editor/editor.module";
 import { mockPreprocessStepValue } from "src/app/search/mock.data";
 
 describe("PreprocessStepComponent", () => {
@@ -30,7 +29,7 @@ describe("PreprocessStepComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [Apollo],
-            imports: [SharedTestModule, PreprocessStepComponent, EditorModule, ApolloTestingModule],
+            imports: [SharedTestModule, PreprocessStepComponent, ApolloTestingModule],
         }).compileComponents();
 
         fixture = TestBed.createComponent(PreprocessStepComponent);

@@ -17,8 +17,8 @@ import { NavigationService } from "src/app/services/navigation.service";
 export const accountGuard: CanActivateFn = (route, state) => {
     const navigationService = inject(NavigationService);
 
-    const pathWithoutQuery = state.url.split("?")[0];
-    const routeSegments = pathWithoutQuery.split("/").filter(Boolean);
+    const path = state.url.split(/[?#]/)[0];
+    const routeSegments = path.split("/").filter(Boolean);
     const lastSegment = routeSegments[routeSegments.length - 1] as AccountTabs;
     if (Object.values(AccountTabs).includes(lastSegment)) {
         return true;

@@ -89,6 +89,12 @@ public datasetWebhookCreateSubscription(datasetId: string, input: WebhookSubscri
 
 - Queries: `.watch(...).valueChanges.pipe(onlyCompleteData(), first(), map(...))` — one complete
   value, then completion. Mutations: `.mutate(...).pipe(first(), map(...))`.
+- Apollo emits a failed query as a result carrying `error`, and `onlyCompleteData()` drops it: the
+  observable then neither emits nor errors, and a caller's `catchError` never runs. A query whose
+  callers react to failure uses `completeDataOrError()` (`@common/helpers/apollo-error.helpers`)
+  in its place (`getDatasetSchema`, `readEnabledLoginMethods`), and every caller handles the
+  error. Cover it with a spec that answers through `ApolloTestingController`'s `graphqlErrors()` /
+  `networkError()`; a mocked `throwError` skips the Apollo path.
 - Data that changes behind the UI's back (flows, statuses, lists the user just modified) uses
   `...noCacheFetchPolicy` from `@common/helpers/data.helpers`; stable data relies on the cache.
 - Background polling and other requests that must not show the global spinner pass
@@ -98,8 +104,9 @@ public datasetWebhookCreateSubscription(datasetId: string, input: WebhookSubscri
   `merge`) live in `apolloCache()` in the same file — `Dataset` is keyed by `owner` and `id`.
 - Domain logic, result mapping into view models and subject-based state belong in a domain
   service (`*.service.ts`) on top of the api class, not in the api class.
-- GraphQL and network errors are handled globally by the error link in `src/main.ts` (toast,
-  redirect on token errors). Result unions (`... Success` / `... Error` typenames) are domain
+- GraphQL and network errors are handled globally by the error link from
+  `createApolloErrorLink` (`src/app/common/helpers/apollo-error.helpers.ts`), which `src/main.ts`
+  adds to the Apollo link chain (toast, redirect on token errors). Result unions (`... Success` / `... Error` typenames) are domain
   outcomes and are handled by the caller.
 
 ### Tests

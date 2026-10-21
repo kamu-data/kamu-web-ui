@@ -78,7 +78,7 @@ describe("DatasetAsVersionedFileService", () => {
         });
 
         const req = httpMock.expectOne(testUrl);
-        req.error(new ErrorEvent("Network error"));
+        req.error(new ProgressEvent("error"));
     });
 
     it("should check #requestFileAsJson with success", () => {
@@ -105,7 +105,7 @@ describe("DatasetAsVersionedFileService", () => {
         });
 
         const req = httpMock.expectOne(testUrl);
-        req.error(new ErrorEvent("Network error"));
+        req.error(new ProgressEvent("error"));
     });
 
     it("should check #requestDatasetAsVersionedFile method", () => {

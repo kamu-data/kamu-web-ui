@@ -7,7 +7,7 @@
 
 import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
-import { first, Observable } from "rxjs";
+import { first, firstValueFrom, Observable } from "rxjs";
 
 import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
@@ -364,6 +364,22 @@ describe("DatasetApi", () => {
 
         flush();
     }));
+
+    it("should fail reading a dataset schema on a GraphQL error", async () => {
+        const result = firstValueFrom(service.getDatasetSchema(TEST_DATASET_ID));
+
+        controller.expectOne(GetDatasetSchemaDocument).graphqlErrors([{ message: "Internal error" }]);
+
+        await expectAsync(result).toBeRejectedWithError("Internal error");
+    });
+
+    it("should fail reading a dataset schema on a network error", async () => {
+        const result = firstValueFrom(service.getDatasetSchema(TEST_DATASET_ID));
+
+        controller.expectOne(GetDatasetSchemaDocument).networkError(new Error("Server unreachable"));
+
+        await expectAsync(result).toBeRejectedWithError("Server unreachable");
+    });
 
     it("should extract datasets by account name", fakeAsync(() => {
         const subscription$ = service

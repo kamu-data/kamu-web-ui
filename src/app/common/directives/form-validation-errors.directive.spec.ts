@@ -5,12 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { Component, DebugElement } from "@angular/core";
+import { Component } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { By } from "@angular/platform-browser";
 
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { findComponentInstance } from "@common/helpers/base-test.helpers.spec";
 
 @Component({
     template: `
@@ -44,8 +44,7 @@ describe("FormValidationErrorsDirective", () => {
         fixture = TestBed.createComponent(TestHostComponent);
         fixture.detectChanges();
 
-        const debugElement: DebugElement = fixture.debugElement.query(By.directive(FormValidationErrorsDirective));
-        directiveInstance = debugElement.injector.get(FormValidationErrorsDirective);
+        directiveInstance = findComponentInstance(fixture, FormValidationErrorsDirective);
     });
 
     it("should create the directive instance", () => {

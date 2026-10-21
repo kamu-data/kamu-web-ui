@@ -34,7 +34,7 @@
             multiple
             class="me-4"
         >
-            @for (item of ROLLUP_OPTIONS; track item; let i = $index) {
+            @for (item of ROLLUP_OPTIONS; track item) {
                 @if (rollupAvailabilityMapper(accountFlowsData.datasetsFiltersMode, item.state)) {
                     <mat-button-toggle [value]="item.state">
                         <mat-icon aria-hidden="true" [class]="'fs-4 mr-2px mt-2px ' + item.iconClass">{{

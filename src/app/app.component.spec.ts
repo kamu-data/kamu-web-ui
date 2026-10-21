@@ -16,7 +16,7 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 
 import { isMobileView } from "@common/helpers/app.helpers";
-import { registerMatSvgIcons, routerMock } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { FetchAccountDetailsGQL } from "@api/kamu.graphql.interface";
 import { mockAccountFromAccessToken } from "@api/mock/auth.mock";
 
@@ -72,8 +72,6 @@ describe("AppComponent", () => {
         }).compileComponents();
 
         registerMatSvgIcons();
-
-        routerMock.url = ProjectLinks.URL_HOME;
 
         fixture = TestBed.createComponent(AppComponent);
         navigationService = TestBed.inject(NavigationService);

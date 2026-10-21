@@ -10,9 +10,10 @@ import { Injectable } from "@angular/core";
 import { stringify } from "yaml";
 
 import { schemaFieldsToObjectForm } from "@common/helpers/data-schema.helpers";
-import { SetLicense, SetTransform } from "@api/kamu.graphql.interface";
+import { SetLicense } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
+import { SetTransformEvent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
 import {
     AddPollingSourceEditFormType,
     PreprocessKind,
@@ -139,7 +140,7 @@ export class TemplatesYamlEventsService {
         return stringify(this.initialTemplate);
     }
 
-    public buildYamlSetTransformEvent(params: Omit<SetTransform, "__typename">): string {
+    public buildYamlSetTransformEvent(params: SetTransformEvent): string {
         this.initialTemplate.content = {
             kind: "SetTransform",
             ...params,

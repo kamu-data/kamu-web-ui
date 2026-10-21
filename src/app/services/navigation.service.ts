@@ -38,6 +38,11 @@ export class NavigationService {
         window.open(url, "_blank");
     }
 
+    /** Reloads the whole app, re-running the startup requests */
+    public reloadPage(): void {
+        window.location.reload();
+    }
+
     public navigateToHome(): void {
         promiseWithCatch(this.router.navigateByUrl(this.homeUrlTree()));
     }

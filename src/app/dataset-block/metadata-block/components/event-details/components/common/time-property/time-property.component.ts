@@ -15,7 +15,10 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     selector: "app-time-property",
     templateUrl: "./time-property.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [DisplayTimeComponent],
+    imports: [
+        //-----//
+        DisplayTimeComponent,
+    ],
 })
 export class TimePropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

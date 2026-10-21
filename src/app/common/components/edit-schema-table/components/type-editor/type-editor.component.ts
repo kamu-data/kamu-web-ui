@@ -44,7 +44,15 @@ import {
 
 @Component({
     selector: "app-type-editor",
-    imports: [FormsModule, NgSelectModule, TypeEditorComponent, forwardRef(() => EditSchemaTableComponent)],
+    imports: [
+        //-----//
+        FormsModule,
+        //-----//
+        NgSelectModule,
+        //-----//
+        TypeEditorComponent,
+        forwardRef(() => EditSchemaTableComponent),
+    ],
     templateUrl: "./type-editor.component.html",
     styleUrl: "./type-editor.component.scss",
     changeDetection: ChangeDetectionStrategy.OnPush,

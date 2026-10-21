@@ -27,6 +27,7 @@ import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockDatasetByIdQuery } from "@api/mock/dataset.mock";
 
 import { DatasetService } from "src/app/dataset-view/dataset.service";
+import ProjectLinks from "src/app/project-links";
 import { QueryExplainerComponent } from "src/app/query-explainer/query-explainer.component";
 import {
     mockQueryExplainerOutput,
@@ -89,11 +90,40 @@ describe("QueryExplainerComponent", () => {
         expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Impossible to parse the commitment");
     });
 
+    it("should keep the commitment form when the pasted JSON is not a commitment", async () => {
+        const toastrServiceErrorSpy = spyOn(toastrService, "error");
+        setFieldValue(fixture, "input-textarea", "{}");
+        fixture.detectChanges();
+
+        emitClickOnElementByDataTestId(fixture, "verify-commitment-button");
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Impossible to parse the commitment");
+        expect(findElementByDataTestId(fixture, "input-textarea")).toBeDefined();
+    });
+
     it("should check text area is not empty", () => {
         fixture.detectChanges();
         setFieldValue(fixture, "input-textarea", mockTextareaCommitment);
         fixture.detectChanges();
         expect(component.commitment).toEqual(mockTextareaCommitment);
+    });
+
+    it("should show the commitment form when the uploaded commitment cannot be loaded", async () => {
+        // A failed request completes without a value, after the response arrives
+        (queryExplainerService.fetchCommitmentDataByUploadToken as jasmine.Spy).and.returnValue(
+            timer(0).pipe(ignoreElements()),
+        );
+        fixture = TestBed.createComponent(QueryExplainerComponent);
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN, "uploaded-token");
+        fixture.detectChanges();
+        expect(findElementByDataTestId(fixture, "input-textarea")).toBeUndefined();
+
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(findElementByDataTestId(fixture, "input-textarea")).toBeDefined();
     });
 
     it("should return to the commitment form with the pasted text when verification fails", async () => {

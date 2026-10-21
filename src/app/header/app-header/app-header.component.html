@@ -78,8 +78,7 @@
                                                 [result]="r.dataset.owner.accountName + '/' + r.dataset.name"
                                                 [term]="t"
                                             />
-                                        }
-                                        @if (r.dummy) {
+                                        } @else {
                                             <ngb-highlight [result]="r.dataset.name" [term]="t" />
                                         }
                                     </div>
@@ -269,8 +268,7 @@
                         <div role="none" class="dropdown-divider"></div>
                         @if (!isUserLoggedIn()) {
                             <button mat-menu-item data-test-id="openLogin" (click)="onLogin()">Login</button>
-                        }
-                        @if (isUserLoggedIn()) {
+                        } @else {
                             <a
                                 mat-menu-item
                                 data-test-id="openUserProfile"

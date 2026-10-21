@@ -54,6 +54,12 @@ describe("NavigationService", () => {
         expect(router.serializeUrl(service.homeUrlTree())).toEqual("/");
     });
 
+    it("should build the sign-in unavailable URL", () => {
+        expect(router.serializeUrl(service.loginUnavailableUrlTree())).toEqual(
+            `/${ProjectLinks.URL_LOGIN_UNAVAILABLE}`,
+        );
+    });
+
     it("should build the login URL with and without a redirect URL", () => {
         expect(router.serializeUrl(service.loginUrlTree())).toEqual(`/${ProjectLinks.URL_LOGIN}`);
         expect(router.serializeUrl(service.loginUrlTree("/kamu"))).toEqual(

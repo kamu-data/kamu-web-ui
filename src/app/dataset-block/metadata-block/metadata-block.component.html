@@ -35,7 +35,7 @@
                     </mat-slide-toggle>
                     @if (blockView === BlockView.PROPERTIES) {
                         <app-block-header [block]="metadata.block" [datasetInfo]="datasetInfo" />
-                        <app-event-details [block]="metadata.block" [datasetInfo]="datasetInfo" />
+                        <app-event-details [block]="metadata.block" />
                     }
                     @if (blockView === BlockView.YAML) {
                         <app-yaml-view-section [blockAsYaml]="metadata.blockAsYaml" [block]="metadata.block" />

@@ -8,7 +8,6 @@
 import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, NgZone, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 import { BehaviorSubject, combineLatest, map, Observable, of, startWith, Subject, switchMap, tap, timer } from "rxjs";
@@ -55,7 +54,6 @@ import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/t
         //-----//
         AsyncPipe,
         //-----//
-        MatIconModule,
         MatProgressBarModule,
         NgbNavModule,
         //-----//

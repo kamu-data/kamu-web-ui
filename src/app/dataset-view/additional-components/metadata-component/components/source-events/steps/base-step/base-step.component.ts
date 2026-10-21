@@ -8,14 +8,7 @@
 import { TitleCasePipe } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import {
-    ControlContainer,
-    FormBuilder,
-    FormGroup,
-    FormGroupDirective,
-    FormsModule,
-    ReactiveFormsModule,
-} from "@angular/forms";
+import { ControlContainer, FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
 
 import { BaseComponent } from "@common/components/base.component";
 import { getValidators } from "@common/helpers/data.helpers";
@@ -54,7 +47,6 @@ import { SourcesSection } from "src/app/dataset-view/additional-components/metad
     viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
     imports: [
         //-----//
-        FormsModule,
         ReactiveFormsModule,
         TitleCasePipe,
         //-----//

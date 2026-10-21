@@ -12,7 +12,6 @@ import {
     FormBuilder,
     FormGroup,
     FormGroupDirective,
-    FormsModule,
     ReactiveFormsModule,
     Validators,
 } from "@angular/forms";
@@ -38,7 +37,6 @@ import { EditPollingSourceService } from "src/app/dataset-view/additional-compon
     viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
     imports: [
         //-----//
-        FormsModule,
         ReactiveFormsModule,
         //-----//
         MatIconModule,

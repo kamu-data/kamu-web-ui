@@ -6,11 +6,10 @@
  */
 
 import { Location, NgClass } from "@angular/common";
-import { ChangeDetectorRef, Component, ComponentRef, inject, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
+import { ChangeDetectorRef, Component, inject, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { BaseComponent } from "@common/components/base.component";
-import { DynamicComponent } from "@common/components/modal/dynamic.component";
 import { ModalDialogComponent } from "@common/components/modal/modal-dialog.component";
 import { ModalImageComponent } from "@common/components/modal/modal-image.component";
 import { ModalSpinnerComponent } from "@common/components/modal/modal-spinner.component";
@@ -31,7 +30,6 @@ export class ModalComponent extends BaseComponent implements OnInit {
     public isVisible: boolean;
     public type: MaybeUndefined<string>;
 
-    private componentRef: ComponentRef<unknown>;
     private mappings: ModalMappingsComponent = {
         dialog: ModalDialogComponent,
         image: ModalImageComponent,
@@ -65,9 +63,9 @@ export class ModalComponent extends BaseComponent implements OnInit {
     public _renderModal(command: ModalCommandInterface) {
         const componentType = this._getComponentType(command.type);
 
-        this.componentRef = this.container.createComponent(componentType);
+        const componentRef = this.container.createComponent(componentType);
 
-        const instance = this.componentRef.instance as DynamicComponent;
+        const instance = componentRef.instance;
         instance.context = Object.assign(command.context, {
             _close: this._close.bind(this),
         });

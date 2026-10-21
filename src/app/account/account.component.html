@@ -3,27 +3,14 @@
         <div class="custom-container">
             <div class="container-sidebar">
                 <div class="d-flex mb-3 justify-content-center align-items-center">
-                    @if (isLoggedUser(user)) {
-                        <a>
-                            <img
-                                alt="avatar"
-                                width="260"
-                                height="260"
-                                class="avatar avatar-user border color-bg-default"
-                                [src]="avatarLink(user)"
-                            />
-                        </a>
-                    } @else {
-                        <a [href]="avatarLink(user)" data-test-id="account-avatar-link">
-                            <img
-                                alt="avatar"
-                                width="260"
-                                height="260"
-                                class="avatar avatar-user border color-bg-default"
-                                [src]="avatarLink(user)"
-                            />
-                        </a>
-                    }
+                    <img
+                        alt="avatar"
+                        width="260"
+                        height="260"
+                        class="avatar avatar-user border color-bg-default"
+                        data-test-id="account-avatar"
+                        [src]="avatarLink(user)"
+                    />
                 </div>
                 <span class="vcard-fullname d-block p-2 overflow-hidden" [title]="user.displayName">
                     {{ user.displayName | displayAccountName: user.accountProvider }}

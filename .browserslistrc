@@ -1,7 +1,7 @@
-# Browsers the build targets for JS and CSS output (esbuild and autoprefixer).
-# This is Angular 21's browser support policy, "baseline widely available" on the date in
-# node_modules/@angular/build/src/utils/supported-browsers.js; browsers outside it are ignored by the
-# build with a warning, so raise these minimums together with Angular majors.
+# Browsers the build targets: @angular/build turns these queries into esbuild targets for JS and CSS.
+# They follow Angular 21's browser support policy, "baseline widely available" on the date in
+# node_modules/@angular/build/src/utils/supported-browsers.js. The build warns about a browser outside
+# that policy but still targets it, so raise these minimums together with Angular majors.
 #
 # To list the browsers these queries select: npx browserslist
 

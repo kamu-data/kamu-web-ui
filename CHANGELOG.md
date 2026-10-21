@@ -9,17 +9,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dataset header: "Derive from" counter includes private derived datasets for maintainers
 - Upgraded to Angular 21 and the libraries that depend on it
 - Minimum supported browsers raised to Angular 21's: Chrome and Edge 111, Firefox 112, Safari 16.4
-- Smaller initial download: unused math, emoji and code-listing add-ons are no longer loaded on every page
+- Smaller initial download: unused math, emoji and code-listing add-ons are no longer loaded on every page, and the wallet and form-validation libraries load only on the pages that use them
+- Dataset and account pages: tabs, editors and flow details that are hidden from the menu for lack of permission can no longer be opened by URL
 ### Fixed
-- Polling source editor: the preprocess step's SQL editor shows the query again instead of an empty box
-- SQL editor: clicking the placeholder text puts the cursor in the editor instead of doing nothing
-- SQL editor: a query error is marked from the column kamu-cli reports instead of from the start of the line
-- Polling source editor: an existing preprocess step opens with its stored engine instead of DataFusion, so saving no longer switches it
-- Query and Data pages: running a query again keeps the dataset schema panels as they were, adding a dataset whose schema is already shown no longer shows it twice, and a removed schema panel can be added again
-- Transformation editor: saving keeps the existing inputs, deleting an input removes only that input (also in single-tenant mode), inputs without data yet show "No schema" instead of "Dataset is unavailable", and the edited dataset is no longer offered as its own input
-- Dataset pages: a link to a settings section scrolls to it, and leaving the page right after starting an update, compaction or reset no longer jumps back to Flows
-- Query explainer: a commitment the server rejects shows the server's error message instead of an empty one, and the page returns to the commitment form with the pasted text instead of going blank
-- Sign-in: when the node requires signing in but has no sign-in method enabled, visitors see a "Sign-in is unavailable" page instead of a browser tab that hangs
+- Polling source editor:
+  - the preprocess step's SQL editor shows the query again instead of an empty box
+  - an existing preprocess step opens with its stored engine instead of DataFusion, so saving no longer switches it
+- SQL editor:
+  - clicking the placeholder text puts the cursor in the editor instead of doing nothing
+  - a query error is marked from the column kamu-cli reports instead of from the start of the line
+  - a failed query shows the server's error message instead of "Unable to resolve/connect to host"
+- Query and Data pages, dataset schema panels:
+  - running a query again keeps them as they were
+  - adding a dataset whose schema is already shown no longer shows it twice
+  - a removed panel can be added again
+- Transformation editor:
+  - saving keeps the existing inputs
+  - deleting an input removes only that input, also in single-tenant mode
+  - inputs without data yet show "No schema" instead of "Dataset is unavailable"
+  - the edited dataset is no longer offered as its own input
+  - an input whose dataset cannot be loaded shows as unavailable instead of hiding all the other inputs
+- Dataset settings: a link to a settings section scrolls to it
+- Dataset pages: leaving the page right after starting an update, compaction or reset no longer jumps back to Flows
+- Dataset header: on narrow screens, the buttons in the "more" menu respond instead of doing nothing
+- Query explainer:
+  - a commitment the server rejects shows the server's error message instead of an empty one
+  - when verifying a commitment or loading an uploaded one fails, or the pasted text is not a commitment, the page returns to the commitment form instead of going blank
+- Metadata block page:
+  - event details show the values of the selected block instead of the previously viewed one
+  - an unknown block hash shows the "page not found" page instead of an empty block
+- Flow details and webhooks: an unknown flow or webhook ID shows the "page not found" page instead of a broken page
+- Admin dashboard: `/v/admin-dashboard` opens the dashboard instead of a dataset page
+- Sign-in:
+  - when the node requires signing in but has no sign-in method enabled, visitors see a "Sign-in is unavailable" page instead of a browser tab that hangs
+  - when the sign-in options cannot be loaded, the "Sign-in is unavailable" page says the server could not be reached and offers "Try again"
+  - the access token is sent only to the configured API server, not to other hosts whose address starts the same way
+- Loading indicator stays until the last pending request finishes
+- App start: when the server cannot be reached, the app opens and reports the connection problem instead of staying on the loading logo
 
 ## [0.71.0] - 2026-10-12
 ### Added

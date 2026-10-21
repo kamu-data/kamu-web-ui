@@ -6,7 +6,16 @@
  */
 
 import { AsyncPipe } from "@angular/common";
-import { afterNextRender, ChangeDetectionStrategy, Component, inject, Injector, Input, OnInit } from "@angular/core";
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    inject,
+    Injector,
+    Input,
+    OnInit,
+} from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
     AbstractControl,
@@ -17,7 +26,6 @@ import {
     ReactiveFormsModule,
     Validators,
 } from "@angular/forms";
-import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatRadioModule } from "@angular/material/radio";
 
@@ -64,7 +72,6 @@ import { NavigationService } from "src/app/services/navigation.service";
         FormsModule,
         ReactiveFormsModule,
         //-----//
-        MatCheckboxModule,
         MatDividerModule,
         MatRadioModule,
         //-----//
@@ -93,6 +100,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     private navigationService = inject(NavigationService);
     private datasetService = inject(DatasetService);
     private injector = inject(Injector);
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     public get datasetBasics(): DatasetBasicsFragment {
         return this.generalTabData.datasetBasics;
@@ -129,7 +137,10 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     public jumpToSection(section: MaybeNull<string>) {
         if (section) {
             afterNextRender(
-                { read: () => document.getElementById(section)?.scrollIntoView({ behavior: "smooth" }) },
+                () =>
+                    this.elementRef.nativeElement
+                        .querySelector<HTMLElement>(`#${CSS.escape(section)}`)
+                        ?.scrollIntoView({ behavior: "smooth" }),
                 { injector: this.injector },
             );
         }

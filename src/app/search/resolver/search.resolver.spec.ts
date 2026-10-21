@@ -8,9 +8,9 @@
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
+import { ActivatedRouteSnapshot, Params, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
-import { Observable, of } from "rxjs";
+import { firstValueFrom, Observable, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
@@ -24,8 +24,8 @@ import { searchResolverFn } from "src/app/search/resolver/search.resolver";
 import { SearchService } from "src/app/search/search.service";
 
 describe("searchResolverFn", () => {
-    let routeSnapshot: ActivatedRouteSnapshot;
-    let router: Router;
+    const mockRouterStateSnapshot = {} as RouterStateSnapshot;
+
     let searchService: SearchService;
     let appConfigService: AppConfigService;
     let searchDatasetsSpy: jasmine.Spy;
@@ -33,27 +33,28 @@ describe("searchResolverFn", () => {
     const MOCK_PAGE = 2;
     const MOCK_QUERY = "mock-query";
 
-    const executeResolver: ResolveFn<Observable<DatasetSearchResult>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<DatasetSearchResult> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => searchResolverFn(...resolverParameters));
+
+    function resolve(queryParams: Params): Promise<DatasetSearchResult> {
+        const routeSnapshot = new ActivatedRouteSnapshot();
+        routeSnapshot.queryParams = queryParams;
+        return firstValueFrom(
+            executeResolver(routeSnapshot, mockRouterStateSnapshot) as Observable<DatasetSearchResult>,
+        );
+    }
+
+    function emptySearchResult(): DatasetSearchResult {
+        const result = structuredClone(mockDatasetSearchResult);
+        result.datasets = [];
+        return result;
+    }
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [],
-            providers: [
-                provideToastr(),
-                Apollo,
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        queryParamMap: {},
-                    },
-                },
-                provideHttpClient(),
-                provideHttpClientTesting(),
-            ],
+            providers: [provideToastr(), Apollo, provideHttpClient(), provideHttpClientTesting()],
         });
         searchService = TestBed.inject(SearchService);
-        router = TestBed.inject(Router);
         appConfigService = TestBed.inject(AppConfigService);
         searchDatasetsSpy = spyOn(searchService, "searchDatasets").and.returnValue(of(mockDatasetSearchResult));
         semanticSearchDatasetsSpy = spyOn(searchService, "semanticSearchDatasets").and.returnValue(
@@ -61,97 +62,61 @@ describe("searchResolverFn", () => {
         );
     });
 
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
-    });
-
-    it("should check default state for resolver", async () => {
-        routeSnapshot = new ActivatedRouteSnapshot();
-        routeSnapshot.queryParams = {};
-        const result$ = (await executeResolver(
-            routeSnapshot,
-            router.routerState.snapshot,
-        )) as Observable<DatasetSearchResult>;
+    it("should search the first page with an empty query when no query parameters are given", async () => {
+        const data = await resolve({});
 
         expect(searchDatasetsSpy).toHaveBeenCalledOnceWith("", 0);
-        result$.subscribe((data) => {
-            expect(data).toEqual(mockDatasetSearchResult);
-        });
+        expect(data).toEqual(mockDatasetSearchResult);
     });
 
-    it("should check default state for resolver with empty query", async () => {
-        routeSnapshot = new ActivatedRouteSnapshot();
-        const mockDatasetSearchResultCopy = structuredClone(mockDatasetSearchResult);
-        mockDatasetSearchResultCopy.datasets = [];
-        routeSnapshot.queryParams = {
+    it("should not fall back to semantic search for an empty query", async () => {
+        const emptyResult = emptySearchResult();
+        searchDatasetsSpy.and.returnValue(of(emptyResult));
+
+        const data = await resolve({
             [ProjectLinks.URL_QUERY_PARAM_PAGE]: 1,
             [ProjectLinks.URL_QUERY_PARAM_QUERY]: "",
-        };
-        searchDatasetsSpy = searchDatasetsSpy.and.returnValue(of(mockDatasetSearchResultCopy).pipe());
-        const result$ = (await executeResolver(
-            routeSnapshot,
-            router.routerState.snapshot,
-        )) as Observable<DatasetSearchResult>;
+        });
 
         expect(searchDatasetsSpy).toHaveBeenCalledOnceWith("", 0);
-        result$.subscribe((data) => {
-            expect(data).toEqual(mockDatasetSearchResultCopy);
-        });
+        expect(semanticSearchDatasetsSpy).not.toHaveBeenCalled();
+        expect(data).toEqual(emptyResult);
     });
 
-    it("should check default state for resolver with non available option", async () => {
-        routeSnapshot = new ActivatedRouteSnapshot();
-        const mockDatasetSearchResultCopy = structuredClone(mockDatasetSearchResult);
-        mockDatasetSearchResultCopy.datasets = [];
+    it("should not fall back to semantic search when the configuration does not enable it", async () => {
+        const emptyResult = emptySearchResult();
         spyOnProperty(appConfigService, "semanticSearchThresholdScore", "get").and.returnValue(undefined);
-        routeSnapshot.queryParams = {
+        searchDatasetsSpy.and.returnValue(of(emptyResult));
+
+        const data = await resolve({
             [ProjectLinks.URL_QUERY_PARAM_PAGE]: 2,
             [ProjectLinks.URL_QUERY_PARAM_QUERY]: "dd",
-        };
-        searchDatasetsSpy = searchDatasetsSpy.and.returnValue(of(mockDatasetSearchResultCopy));
-        const result$ = (await executeResolver(
-            routeSnapshot,
-            router.routerState.snapshot,
-        )) as Observable<DatasetSearchResult>;
+        });
 
         expect(searchDatasetsSpy).toHaveBeenCalledOnceWith("dd", 1);
-        result$.subscribe((data) => {
-            expect(data).toEqual(mockDatasetSearchResultCopy);
-        });
+        expect(semanticSearchDatasetsSpy).not.toHaveBeenCalled();
+        expect(data).toEqual(emptyResult);
     });
 
-    it("should check state for resolver with semantic search", async () => {
-        routeSnapshot = new ActivatedRouteSnapshot();
-        const mockDatasetSearchResultCopy = structuredClone(mockDatasetSearchResult);
-        mockDatasetSearchResultCopy.datasets = [];
+    it("should fall back to semantic search when the text search finds nothing", async () => {
         spyOnProperty(appConfigService, "semanticSearchThresholdScore", "get").and.returnValue(0.5);
-        routeSnapshot.queryParams = {
+        searchDatasetsSpy.and.returnValue(of(emptySearchResult()));
+
+        const data = await resolve({
             [ProjectLinks.URL_QUERY_PARAM_PAGE]: 2,
             [ProjectLinks.URL_QUERY_PARAM_QUERY]: "dd",
-        };
-
-        searchDatasetsSpy = searchDatasetsSpy.and.returnValue(of(mockDatasetSearchResultCopy).pipe());
-        semanticSearchDatasetsSpy = semanticSearchDatasetsSpy.and.returnValue(of(mockDatasetSearchResultCopy));
-
-        const result$ = (await executeResolver(
-            routeSnapshot,
-            router.routerState.snapshot,
-        )) as Observable<DatasetSearchResult>;
-
-        result$.subscribe((data) => {
-            expect(semanticSearchDatasetsSpy).toHaveBeenCalledTimes(1);
-            expect(data).toEqual(mockDatasetSearchResultCopy);
         });
+
+        expect(semanticSearchDatasetsSpy).toHaveBeenCalledOnceWith("dd");
+        expect(data).toEqual(mockDatasetSearchResult);
     });
 
-    it("should check query parameters state for resolver", async () => {
-        routeSnapshot = new ActivatedRouteSnapshot();
-        routeSnapshot.queryParams = {
+    it("should pass the page and query from the query parameters to the search", async () => {
+        await resolve({
             [ProjectLinks.URL_QUERY_PARAM_PAGE]: MOCK_PAGE.toString(),
             [ProjectLinks.URL_QUERY_PARAM_QUERY]: MOCK_QUERY,
-        };
+        });
 
-        await executeResolver(routeSnapshot, router.routerState.snapshot);
         expect(searchDatasetsSpy).toHaveBeenCalledOnceWith(MOCK_QUERY, MOCK_PAGE - 1);
     });
 });

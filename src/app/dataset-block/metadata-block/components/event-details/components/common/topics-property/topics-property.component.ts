@@ -24,7 +24,10 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     templateUrl: "./topics-property.component.html",
     styleUrls: ["./topics-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [DynamicTableComponent],
+    imports: [
+        //-----//
+        DynamicTableComponent,
+    ],
 })
 export class TopicsPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: MqttTopicSubscription[];

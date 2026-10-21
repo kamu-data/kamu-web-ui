@@ -19,6 +19,7 @@ export const accountSettingsAccessTokensResolverFn: ResolveFn<AccessTokenConnect
 ) => {
     const accessTokenService = inject(AccessTokenService);
     const loggedUserService = inject(LoggedUserService);
+
     const PER_PAGE = 15;
     const page = Number(route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE) ?? 1);
     return accessTokenService.listAccessTokens({

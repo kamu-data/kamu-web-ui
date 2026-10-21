@@ -13,9 +13,8 @@ import { RouterLink } from "@angular/router";
 
 import { ToastrService } from "ngx-toastr";
 
+import { MetadataBlockLinkPipe } from "@common/pipes/metadata-block-link.pipe";
 import { DatasetInfo } from "@interface/navigation.interface";
-
-import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-display-hash",
@@ -27,6 +26,8 @@ import ProjectLinks from "src/app/project-links";
         SlicePipe,
         //-----//
         MatIconModule,
+        //-----//
+        MetadataBlockLinkPipe,
     ],
 })
 export class DisplayHashComponent {
@@ -34,7 +35,6 @@ export class DisplayHashComponent {
     @Input() public navigationTargetDataset?: DatasetInfo;
     @Input() public showCopyButton = false;
     @Input() public class = "mr-1 hashBlock";
-    public readonly URL_BLOCK = ProjectLinks.URL_BLOCK;
 
     private clipboard = inject(Clipboard);
     private toastr = inject(ToastrService);

@@ -12,7 +12,9 @@
             </a>
         </div>
         <a
-            [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name]"
+            [routerLink]="
+                { accountName: datasetBasics.owner.accountName, datasetName: datasetBasics.name } | datasetLink
+            "
             data-test-id="dataset-name-property"
         >
             {{ datasetBasics.owner.accountName }}/{{ datasetBasics.name }}

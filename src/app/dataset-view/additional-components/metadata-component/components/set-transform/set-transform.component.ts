@@ -14,8 +14,9 @@ import { catchError, forkJoin, from, map, of, take } from "rxjs";
 
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 
+import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { DatasetKind, GetDatasetSchemaQuery, SqlQueryStep } from "@api/kamu.graphql.interface";
+import { GetDatasetSchemaQuery, SqlQueryStep } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
@@ -48,6 +49,7 @@ import { EditorModule } from "src/app/editor/editor.module";
         QueriesSectionComponent,
         SearchSectionComponent,
         StepperNavigationComponent,
+        DatasetLinkPipe,
     ],
 })
 export class SetTransformComponent extends BaseMainEventComponent implements OnInit {
@@ -65,7 +67,6 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     private editService = inject(EditSetTransformService);
 
     public ngOnInit(): void {
-        this.checkDatasetEditability(DatasetKind.Derivative);
         this.initQueriesSection();
         this.subscribeErrorMessage();
     }

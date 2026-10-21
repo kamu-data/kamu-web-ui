@@ -9,7 +9,7 @@ import { AsyncPipe, NgClass } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatIconModule } from "@angular/material/icon";
-import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
+import { RouterLink, RouterLinkActive, RouterOutlet, UrlTree } from "@angular/router";
 
 import { combineLatest, map, Observable, shareReplay, skip, Subscription, takeWhile, tap, timer } from "rxjs";
 
@@ -80,10 +80,8 @@ export class DatasetFlowDetailsComponent extends BaseDatasetDataComponent implem
         this.startTimer();
     }
 
-    public getRouteLink(tab: FlowDetailsTabs): string {
-        return `/${this.getDatasetInfoFromUrl().accountName}/${this.getDatasetInfoFromUrl().datasetName}/${
-            ProjectLinks.URL_FLOW_DETAILS
-        }/${this.flowId}/${tab}`;
+    public getRouteLink(tab: FlowDetailsTabs): UrlTree {
+        return this.navigationService.flowDetailsUrlTree({ ...this.getDatasetInfoFromUrl(), flowId: this.flowId, tab });
     }
 
     private startTimer(): void {

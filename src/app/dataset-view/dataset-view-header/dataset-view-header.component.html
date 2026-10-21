@@ -11,7 +11,9 @@
             <span class="mr-2 flex-self-stretch author">
                 <a
                     class="fw-bold"
-                    [routerLink]="['/', datasetInfo.accountName, datasetInfo.datasetName]"
+                    [routerLink]="
+                        { accountName: datasetInfo.accountName, datasetName: datasetInfo.datasetName } | datasetLink
+                    "
                     data-test-id="show-dataset-link"
                     >{{ datasetInfo.datasetName }}</a
                 >

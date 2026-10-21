@@ -28,7 +28,17 @@
                                         'action-list-item__nav-active': activeTab === menuItem.activeTab,
                                     }"
                                 >
-                                    <a routerLinkActive="active" [routerLink]="getRouteLink(menuItem.activeTab)">
+                                    <a
+                                        routerLinkActive="active"
+                                        [routerLink]="
+                                            {
+                                                accountName: datasetMetadataTabData.datasetBasics.owner.accountName,
+                                                datasetName: datasetMetadataTabData.datasetBasics.name,
+                                                tab: DatasetViewTypeEnum.Metadata,
+                                                section: menuItem.activeTab,
+                                            } | datasetLink
+                                        "
+                                    >
                                         <span class="action-list-item__label d-flex align-items-center">
                                             <mat-icon class="text-muted me-2" [svgIcon]="menuItem.iconName" />
                                             {{ menuItem.label }}</span
@@ -51,24 +61,24 @@
                 There is no metadata. Need to add
                 <a
                     class="add-link"
-                    [routerLink]="[
-                        '/',
-                        datasetMetadataTabData.datasetBasics.owner.accountName,
-                        datasetMetadataTabData.datasetBasics.name,
-                        URL_PARAM_ADD_POLLING_SOURCE,
-                    ]"
+                    [routerLink]="
+                        {
+                            accountName: datasetMetadataTabData.datasetBasics.owner.accountName,
+                            datasetName: datasetMetadataTabData.datasetBasics.name,
+                        } | sourceEventEditorLink: SourceEventEditor.AddPollingSource
+                    "
                 >
                     Polling source event</a
                 >
                 or
                 <a
                     class="add-link"
-                    [routerLink]="[
-                        '/',
-                        datasetMetadataTabData.datasetBasics.owner.accountName,
-                        datasetMetadataTabData.datasetBasics.name,
-                        URL_PARAM_ADD_PUSH_SOURCE,
-                    ]"
+                    [routerLink]="
+                        {
+                            accountName: datasetMetadataTabData.datasetBasics.owner.accountName,
+                            datasetName: datasetMetadataTabData.datasetBasics.name,
+                        } | sourceEventEditorLink: SourceEventEditor.AddPushSource
+                    "
                 >
                     Push source event</a
                 >
@@ -79,12 +89,12 @@
                 There is no metadata. Need to add
                 <a
                     class="add-link"
-                    [routerLink]="[
-                        '/',
-                        datasetMetadataTabData.datasetBasics.owner.accountName,
-                        datasetMetadataTabData.datasetBasics.name,
-                        URL_PARAM_SET_TRANSFORM,
-                    ]"
+                    [routerLink]="
+                        {
+                            accountName: datasetMetadataTabData.datasetBasics.owner.accountName,
+                            datasetName: datasetMetadataTabData.datasetBasics.name,
+                        } | sourceEventEditorLink: SourceEventEditor.SetTransform
+                    "
                 >
                     SetTransform event</a
                 >

@@ -14,8 +14,14 @@
 
             @if (showFlowsHistoryLink) {
                 <a
-                    [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name, DatasetViewTypeEnum.Flows]"
-                    [queryParams]="{ category: 'updates' }"
+                    [routerLink]="
+                        {
+                            accountName: datasetBasics.owner.accountName,
+                            datasetName: datasetBasics.name,
+                            tab: DatasetViewTypeEnum.Flows,
+                            category: 'updates',
+                        } | datasetLink
+                    "
                     >See flows</a
                 >
             }
@@ -31,7 +37,10 @@
                     <a
                         [title]="datasetBasics.owner.accountName + '/' + datasetBasics.name"
                         class="truncate"
-                        [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name]"
+                        [routerLink]="
+                            { accountName: datasetBasics.owner.accountName, datasetName: datasetBasics.name }
+                                | datasetLink
+                        "
                     >
                         {{ datasetBasics.owner.accountName }}/ {{ datasetBasics.name }}
                     </a>
@@ -70,13 +79,14 @@
                 </button>
 
                 <a
-                    [routerLink]="[
-                        '/',
-                        datasetBasics.owner.accountName,
-                        datasetBasics.name,
-                        DatasetViewTypeEnum.Settings,
-                        redirectSection(datasetBasics.kind),
-                    ]"
+                    [routerLink]="
+                        {
+                            accountName: datasetBasics.owner.accountName,
+                            datasetName: datasetBasics.name,
+                            tab: DatasetViewTypeEnum.Settings,
+                            section: redirectSection(datasetBasics.kind),
+                        } | datasetLink
+                    "
                     class="badge-button border-1 link-underline link-underline-opacity-0 bg-light border rounded-2 px-2 btn btn-sm"
                 >
                     <mat-icon class="text-muted fs-4 d-block">settings</mat-icon>

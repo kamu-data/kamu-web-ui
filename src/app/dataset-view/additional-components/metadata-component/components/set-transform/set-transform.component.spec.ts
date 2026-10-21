@@ -26,16 +26,8 @@ import {
 import { SetTransformComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.component";
 import { DatasetNode } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import {
-    mockDatasetBasicsDerivedFragment,
-    mockDatasetBasicsRootFragment,
-    mockDatasetInfo,
-    mockFullPowerDatasetPermissionsFragment,
-} from "src/app/search/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
+import { mockDatasetInfo } from "src/app/search/mock.data";
 
 describe("SetTransformComponent", () => {
     let component: SetTransformComponent;
@@ -43,8 +35,6 @@ describe("SetTransformComponent", () => {
 
     let datasetCommitService: DatasetCommitService;
     let datasetService: DatasetService;
-    let datasetSubsService: DatasetSubscriptionsService;
-    let navigationService: NavigationService;
     let loggedUserService: LoggedUserService;
     let modalService: NgbModal;
 
@@ -73,10 +63,8 @@ describe("SetTransformComponent", () => {
             ],
         }).compileComponents();
 
-        navigationService = TestBed.inject(NavigationService);
         datasetCommitService = TestBed.inject(DatasetCommitService);
         datasetService = TestBed.inject(DatasetService);
-        datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         loggedUserService = TestBed.inject(LoggedUserService);
         modalService = TestBed.inject(NgbModal);
 
@@ -98,51 +86,6 @@ describe("SetTransformComponent", () => {
 
         it("should create", () => {
             expect(component).toBeTruthy();
-        });
-
-        it("check dataset editability passes for derived dataset with full permissions", () => {
-            const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
-            const clonePermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
-            clonePermissions.permissions.metadata.canCommit = true;
-            datasetService.emitDatasetChanged(mockDatasetBasicsDerivedFragment);
-            datasetSubsService.emitPermissionsChanged(clonePermissions);
-
-            expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
-        });
-
-        it("check dataset editability fails without commit permission", () => {
-            const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
-
-            datasetService.emitDatasetChanged(mockDatasetBasicsDerivedFragment);
-            datasetSubsService.emitPermissionsChanged({
-                permissions: {
-                    ...mockFullPowerDatasetPermissionsFragment.permissions,
-                    ...{
-                        metadata: {
-                            canCommit: false,
-                        },
-                    },
-                },
-            });
-
-            expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
-                accountName: mockDatasetBasicsDerivedFragment.owner.accountName,
-                datasetName: mockDatasetBasicsDerivedFragment.name,
-                tab: DatasetViewTypeEnum.Overview,
-            });
-        });
-
-        it("check dataset editability fails upon root dataset", () => {
-            const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
-
-            datasetService.emitDatasetChanged(mockDatasetBasicsRootFragment);
-            datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
-
-            expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
-                accountName: mockDatasetBasicsRootFragment.owner.accountName,
-                datasetName: mockDatasetBasicsRootFragment.name,
-                tab: DatasetViewTypeEnum.Overview,
-            });
         });
 
         it("should check select engine", () => {

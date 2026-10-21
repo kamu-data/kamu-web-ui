@@ -132,13 +132,14 @@
                             You can
                             <a
                                 class="text-decoration-none"
-                                [routerLink]="[
-                                    '/',
-                                    flowsData.datasetBasics.owner.accountName,
-                                    flowsData.datasetBasics.name,
-                                    DatasetViewTypeEnum.Settings,
-                                    redirectSection,
-                                ]"
+                                [routerLink]="
+                                    {
+                                        accountName: flowsData.datasetBasics.owner.accountName,
+                                        datasetName: flowsData.datasetBasics.name,
+                                        tab: DatasetViewTypeEnum.Settings,
+                                        section: redirectSection,
+                                    } | datasetLink
+                                "
                                 >update configuration settings</a
                             >
                             or
@@ -152,12 +153,12 @@
                     No flow runs.To set the configuration you first need to
                     <a
                         class="text-decoration-none"
-                        [routerLink]="[
-                            '/',
-                            flowsData.datasetBasics.owner.accountName,
-                            flowsData.datasetBasics.name,
-                            URL_PARAM_ADD_POLLING_SOURCE,
-                        ]"
+                        [routerLink]="
+                            {
+                                accountName: flowsData.datasetBasics.owner.accountName,
+                                datasetName: flowsData.datasetBasics.name,
+                            } | sourceEventEditorLink: SourceEventEditor.AddPollingSource
+                        "
                         >add data polling source
                     </a>
                 }
@@ -165,12 +166,12 @@
                     No flow runs.To set the configuration you first need to
                     <a
                         class="text-decoration-none"
-                        [routerLink]="[
-                            '/',
-                            flowsData.datasetBasics.owner.accountName,
-                            flowsData.datasetBasics.name,
-                            URL_PARAM_SET_TRANSFORM,
-                        ]"
+                        [routerLink]="
+                            {
+                                accountName: flowsData.datasetBasics.owner.accountName,
+                                datasetName: flowsData.datasetBasics.name,
+                            } | sourceEventEditorLink: SourceEventEditor.SetTransform
+                        "
                         >add transformation
                     </a>
                 }

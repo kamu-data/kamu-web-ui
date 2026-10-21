@@ -15,17 +15,20 @@ import { provideToastr } from "ngx-toastr";
 
 import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
+import { DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
-import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { DatasetSettingsWebhookTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
 import { datasetSettingsWebhooksResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/resolver/dataset-settings-webhooks.resolver";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import ProjectLinks from "src/app/project-links";
-import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import {
+    mockDatasetBasicsRootFragment,
+    mockFullPowerDatasetPermissionsFragment,
+    mockNoWebhooksDatasetPermissionsFragment,
+} from "src/app/search/mock.data";
 
 describe("datasetSettingsWebhooksResolverFn", () => {
     let datasetService: DatasetService;
@@ -50,18 +53,15 @@ describe("datasetSettingsWebhooksResolverFn", () => {
         );
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
         spyOnProperty(datasetSubService, "overviewChanges", "get").and.returnValue(of(mockOverviewUpdate));
-        spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(
-            of(mockFullPowerDatasetPermissionsFragment),
-        );
     });
 
-    function resolve(tab: string): Promise<unknown> {
-        const mockRoute = {
-            data: {
-                [ProjectLinks.URL_PARAM_TAB]: tab,
-            },
-        } as unknown as ActivatedRouteSnapshot;
-        return firstValueFrom(executeResolver(mockRoute, {} as RouterStateSnapshot) as Observable<unknown>);
+    function resolve(
+        permissions: DatasetPermissionsFragment = mockFullPowerDatasetPermissionsFragment,
+    ): Promise<unknown> {
+        spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(of(permissions));
+        return firstValueFrom(
+            executeResolver({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot) as Observable<unknown>,
+        );
     }
 
     it("should resolve the dataset with its webhook subscriptions", async () => {
@@ -70,7 +70,7 @@ describe("datasetSettingsWebhooksResolverFn", () => {
             "datasetWebhookSubscriptions",
         ).and.returnValue(of([]));
 
-        const data = await resolve(SettingsTabsEnum.WEBHOOKS);
+        const data = await resolve();
 
         expect(datasetWebhookSubscriptionsSpy).toHaveBeenCalledOnceWith(mockDatasetBasicsRootFragment.id);
         expect(data).toEqual({
@@ -80,12 +80,13 @@ describe("datasetSettingsWebhooksResolverFn", () => {
         });
     });
 
-    it("should redirect to page not found for an unknown tab", async () => {
-        spyOn(datasetWebhooksService, "datasetWebhookSubscriptions").and.returnValue(of([]));
+    it("should redirect to page not found without loading subscriptions when the user may not view webhooks", async () => {
+        const datasetWebhookSubscriptionsSpy = spyOn(datasetWebhooksService, "datasetWebhookSubscriptions").and.stub();
 
-        const data = await resolve("wrongTab");
+        const data = await resolve(mockNoWebhooksDatasetPermissionsFragment);
 
         expectPageNotFoundRedirect(data);
+        expect(datasetWebhookSubscriptionsSpy).not.toHaveBeenCalled();
     });
 
     it("should fail when the webhook subscriptions cannot be loaded", async () => {
@@ -93,6 +94,6 @@ describe("datasetSettingsWebhooksResolverFn", () => {
             throwError(() => new Error("failed")),
         );
 
-        await expectAsync(resolve(SettingsTabsEnum.WEBHOOKS)).toBeRejectedWithError("failed");
+        await expectAsync(resolve()).toBeRejectedWithError("failed");
     });
 });

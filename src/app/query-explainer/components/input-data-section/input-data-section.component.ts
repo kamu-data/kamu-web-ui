@@ -15,6 +15,7 @@ import { MarkdownComponent, MarkdownModule } from "ngx-markdown";
 
 import { DisplayHashComponent } from "@common/components/display-hash/display-hash.component";
 import { addMarkdownRunButton } from "@common/helpers/app.helpers";
+import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
 import AppValues from "@common/values/app.values";
 import { MaybeUndefined } from "@interface/app.types";
@@ -45,6 +46,7 @@ import {
         //-----//
         DisplayHashComponent,
         MarkdownFormatPipe,
+        DatasetLinkPipe,
     ],
 })
 export class InputDataSectionComponent {

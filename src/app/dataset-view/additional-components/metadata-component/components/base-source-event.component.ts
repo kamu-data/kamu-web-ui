@@ -13,8 +13,6 @@ import { catchError, combineLatest, from, of, take } from "rxjs";
 
 import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 
-import { DatasetKind } from "@api/kamu.graphql.interface";
-
 import {
     SourcesEvents,
     SupportedEvents,
@@ -58,7 +56,6 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
 
     public ngOnInit(): void {
         this.subscribeErrorMessage();
-        this.checkDatasetEditability(DatasetKind.Root);
     }
 
     public onShowPreprocessStep(showPreprocessStep: boolean): void {

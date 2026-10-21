@@ -8,18 +8,13 @@
 import { ChangeDetectorRef, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
-import { combineLatest } from "rxjs";
-
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { BaseComponent } from "@common/components/base.component";
-import { DatasetBasicsFragment, DatasetKind, DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
-import { DatasetInfo } from "@interface/navigation.interface";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -44,24 +39,6 @@ export abstract class BaseMainEventComponent extends BaseComponent {
             .subscribe((message: string) => {
                 this.errorMessage = message;
                 this.cdr.detectChanges();
-            });
-    }
-
-    protected checkDatasetEditability(expectedKind: DatasetKind): void {
-        const datasetInfo: DatasetInfo = this.getDatasetInfoFromUrl();
-
-        this.datasetService.requestDatasetBasicDataWithPermissions(datasetInfo).subscribe();
-
-        combineLatest([this.datasetSubsService.permissionsChanges, this.datasetService.datasetChanges])
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(([datasetPermissions, datasetBasics]: [DatasetPermissionsFragment, DatasetBasicsFragment]) => {
-                if (!datasetPermissions.permissions.metadata.canCommit || datasetBasics.kind !== expectedKind) {
-                    this.navigationServices.navigateToDatasetView({
-                        accountName: datasetBasics.owner.accountName,
-                        datasetName: datasetBasics.name,
-                        tab: DatasetViewTypeEnum.Overview,
-                    });
-                }
             });
     }
 

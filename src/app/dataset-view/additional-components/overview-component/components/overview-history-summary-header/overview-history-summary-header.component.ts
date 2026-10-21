@@ -12,12 +12,13 @@ import { RouterLink } from "@angular/router";
 import { DisplayHashComponent } from "@common/components/display-hash/display-hash.component";
 import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
 import { DataHelpers } from "@common/helpers/data.helpers";
+import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
+import { MetadataBlockLinkPipe } from "@common/pipes/metadata-block-link.pipe";
 import AppValues from "@common/values/app.values";
 import { AccountBasicsFragment, AccountProvider, MetadataBlockFragment } from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "@interface/app.types";
 
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-overview-history-summary-header",
@@ -32,6 +33,8 @@ import ProjectLinks from "src/app/project-links";
         //-----//
         DisplayHashComponent,
         DisplayTimeComponent,
+        DatasetLinkPipe,
+        MetadataBlockLinkPipe,
     ],
 })
 export class OverviewHistorySummaryHeaderComponent {
@@ -40,7 +43,6 @@ export class OverviewHistorySummaryHeaderComponent {
     @Input({ required: true }) public datasetName: string;
 
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
-    public readonly URL_BLOCK = ProjectLinks.URL_BLOCK;
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
     public get systemTime(): string {

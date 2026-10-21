@@ -14,6 +14,8 @@ import { RouterLink, RouterOutlet } from "@angular/router";
 import { BaseComponent } from "@common/components/base.component";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { momentConvertDateToLocalWithFormat } from "@common/helpers/app.helpers";
+import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
+import { SourceEventEditorLinkPipe } from "@common/pipes/source-event-editor-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import {
@@ -36,7 +38,7 @@ import {
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { MetadataSchemaUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import ProjectLinks from "src/app/project-links";
+import { SourceEventEditor } from "src/app/project-links";
 
 @Component({
     selector: "app-metadata",
@@ -53,6 +55,8 @@ import ProjectLinks from "src/app/project-links";
         //-----//
         CommitNavigatorComponent,
         FeatureFlagDirective,
+        SourceEventEditorLinkPipe,
+        DatasetLinkPipe,
     ],
 })
 export class MetadataComponent extends BaseComponent implements OnInit {
@@ -62,6 +66,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
 
     public readonly METADATA_MENU_DESCRIPTORS: MetadataMenuItem[] = METADATA_TAB_MENU_ITEMS;
     public readonly MetadataTabs: typeof MetadataTabs = MetadataTabs;
+    public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
     public currentState?: {
         schema: MaybeNull<DatasetSchema>;
@@ -69,9 +74,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         pageInfo: PageBasedInfo;
     };
 
-    public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
-    public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
-    public readonly URL_PARAM_ADD_PUSH_SOURCE = ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE;
+    public readonly SourceEventEditor: typeof SourceEventEditor = SourceEventEditor;
 
     private datasetSubsService = inject(DatasetSubscriptionsService);
 
@@ -85,10 +88,6 @@ export class MetadataComponent extends BaseComponent implements OnInit {
                     pageInfo: schemaUpdate.pageInfo,
                 };
             });
-    }
-
-    public getRouteLink(tab: MetadataTabs): string {
-        return `/${this.datasetMetadataTabData.datasetBasics.owner.accountName}/${this.datasetMetadataTabData.datasetBasics.name}/${DatasetViewTypeEnum.Metadata}/${tab}`;
     }
 
     public getVisibilityMenuItem(tab: MetadataTabs): boolean {

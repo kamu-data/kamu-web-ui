@@ -21,6 +21,7 @@ import { distinctUntilChanged, Subject, switchMap, tap } from "rxjs";
 
 import { DatasetKindComponent } from "@common/components/dataset-kind/dataset-kind.component";
 import { DatasetVisibilityComponent } from "@common/components/dataset-visibility/dataset-visibility.component";
+import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import AppValues from "@common/values/app.values";
 import { DatasetBasicsFragment, DatasetByIdQuery } from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "@interface/app.types";
@@ -39,6 +40,7 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
         //-----//
         DatasetVisibilityComponent,
         DatasetKindComponent,
+        DatasetLinkPipe,
     ],
 })
 export class DatasetNameByIdPropertyComponent extends BasePropertyComponent implements OnChanges {

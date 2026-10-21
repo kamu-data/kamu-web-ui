@@ -13,6 +13,7 @@ import { RouterLink } from "@angular/router";
 import { NgSelectModule } from "@ng-select/ng-select";
 
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+import { MetadataBlockLinkPipe } from "@common/pipes/metadata-block-link.pipe";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
@@ -20,7 +21,6 @@ import { BlockHashFilterPipe } from "src/app/dataset-block/metadata-block/compon
 import { EventTypeFilterPipe } from "src/app/dataset-block/metadata-block/components/block-navigation/pipes/event-type-filter.pipe";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-block-navigation",
@@ -38,6 +38,7 @@ import ProjectLinks from "src/app/project-links";
         BlockHashFilterPipe,
         EventTypeFilterPipe,
         PaginationComponent,
+        MetadataBlockLinkPipe,
     ],
 })
 export class BlockNavigationComponent {
@@ -47,7 +48,6 @@ export class BlockNavigationComponent {
     @Output() public onPageChangeEmit = new EventEmitter<number>();
     public searchHash = "";
     public currentPage = 1;
-    public readonly URL_BLOCK = ProjectLinks.URL_BLOCK;
 
     public dropdownList = Object.entries(SupportedEvents).map(([key]) => {
         return { id: key, value: key };

@@ -15,13 +15,13 @@
                             <div class="d-flex align-items-center ms-1">
                                 <mat-icon class="text-muted me-1">{{ setTimelineItemIcon(block) }}</mat-icon>
                                 <a
-                                    [routerLink]="[
-                                        '/',
-                                        block.author.accountName,
-                                        datasetName,
-                                        URL_BLOCK,
-                                        block.blockHash,
-                                    ]"
+                                    [routerLink]="
+                                        {
+                                            accountName: block.author.accountName,
+                                            datasetName: datasetName,
+                                            blockHash: block.blockHash,
+                                        } | metadataBlockLink
+                                    "
                                     data-test-id="navigate-to-block"
                                     >{{ descriptionForMetadataBlock(block) }}
                                 </a>

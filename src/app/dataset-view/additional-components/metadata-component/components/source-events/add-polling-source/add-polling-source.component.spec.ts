@@ -36,16 +36,7 @@ import {
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { AddPollingSourceComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source.component";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import {
-    mockDatasetBasicsDerivedFragment,
-    mockDatasetBasicsRootFragment,
-    mockDatasetInfo,
-    mockFullPowerDatasetPermissionsFragment,
-} from "src/app/search/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
+import { mockDatasetInfo } from "src/app/search/mock.data";
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;
@@ -54,9 +45,6 @@ describe("AddPollingSourceComponent", () => {
     let modalRef: NgbModalRef;
 
     let datasetCommitService: DatasetCommitService;
-    let datasetService: DatasetService;
-    let datasetSubsService: DatasetSubscriptionsService;
-    let navigationService: NavigationService;
     let loggedUserService: LoggedUserService;
 
     const MOCK_EVENT_YAML =
@@ -87,10 +75,7 @@ describe("AddPollingSourceComponent", () => {
 
         fixture = TestBed.createComponent(AddPollingSourceComponent);
         modalService = TestBed.inject(NgbModal);
-        datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         datasetCommitService = TestBed.inject(DatasetCommitService);
-        datasetService = TestBed.inject(DatasetService);
-        navigationService = TestBed.inject(NavigationService);
         loggedUserService = TestBed.inject(LoggedUserService);
 
         modalRef = modalService.open(FinalYamlModalComponent);
@@ -137,51 +122,6 @@ describe("AddPollingSourceComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
-    });
-
-    it("check dataset editability passes for root dataset with full permissions", () => {
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
-        const clonePermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
-        clonePermissions.permissions.metadata.canCommit = true;
-        datasetService.emitDatasetChanged(mockDatasetBasicsRootFragment);
-        datasetSubsService.emitPermissionsChanged(clonePermissions);
-
-        expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
-    });
-
-    it("check dataset editability fails without commit permission", () => {
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
-
-        datasetService.emitDatasetChanged(mockDatasetBasicsRootFragment);
-        datasetSubsService.emitPermissionsChanged({
-            permissions: {
-                ...mockFullPowerDatasetPermissionsFragment.permissions,
-                ...{
-                    metadata: {
-                        canCommit: false,
-                    },
-                },
-            },
-        });
-
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
-            accountName: mockDatasetBasicsRootFragment.owner.accountName,
-            datasetName: mockDatasetBasicsRootFragment.name,
-            tab: DatasetViewTypeEnum.Overview,
-        });
-    });
-
-    it("check dataset editability fails upon derived dataset", () => {
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.stub();
-
-        datasetService.emitDatasetChanged(mockDatasetBasicsDerivedFragment);
-        datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
-
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
-            accountName: mockDatasetBasicsDerivedFragment.owner.accountName,
-            datasetName: mockDatasetBasicsDerivedFragment.name,
-            tab: DatasetViewTypeEnum.Overview,
-        });
     });
 
     it("should check open edit modal", () => {

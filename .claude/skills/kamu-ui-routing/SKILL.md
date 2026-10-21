@@ -90,6 +90,12 @@ its own routes file:
   `RedirectCommand` to the component. A resolver built on another one passes its
   `RedirectCommand` through (`if (data instanceof RedirectCommand) return of(data);`) before its
   own follow-up fetch.
+- Access to a dataset page is decided in its resolver, not by hiding the menu link: the menu only
+  mirrors the rule. Build on `requestDatasetWithPermissions` / `requestEditableDataset`
+  (`dataset-view/resolvers/dataset-access.helpers.ts`) for pages outside the dataset view, and
+  `resolveSettingsTabAccess` (`dataset-settings-component/resolvers/settings-tab-access.helpers.ts`)
+  for settings tabs and their sub-pages. A rule that needs no dataset data, such as who may open
+  an account's settings tab, is a guard (`accountSettingsTabGuard`).
 - Tabs are child routes: an empty-path `redirectTo` the default tab with `pathMatch: "full"`,
   then one child per tab with `data: { [ProjectLinks.URL_PARAM_TAB]: XxxTabs.SOME_TAB }` and an
   `xxxActiveTabResolverFn` on the parent.
@@ -103,6 +109,13 @@ its own routes file:
   `navigateTo…()` methods serve components and handlers that run outside any navigation (the
   Apollo error link, `ErrorHandlerService`); guards and resolvers use its `…UrlTree()` and
   `…Redirect()` builders, so the redirect happens inside the navigation being checked.
+- Every URL of a dataset page or sub-page comes from a `NavigationService` builder
+  (`datasetViewUrlTree`, `metadataBlockUrlTree`, `flowDetailsUrlTree`, `webhooksUrlTree`,
+  `sourceEventEditorUrlTree`); its `navigateTo…()` twin navigates to the same tree. Templates
+  reach the builders through the pure pipes in `common/pipes/` (`datasetLink`,
+  `metadataBlockLink`, `flowDetailsLink`, `webhooksLink`, `sourceEventEditorLink`), never through
+  hand-built `['/', account, dataset, …]` arrays. Query parameters and the fragment go into the
+  builder's params: `routerLink` ignores `[queryParams]` and `fragment` when given a `UrlTree`.
 
 ### Proving the chunk split
 

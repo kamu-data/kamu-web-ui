@@ -19,7 +19,11 @@ import { datasetFlowsTabResolverFn } from "src/app/dataset-view/additional-compo
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import {
+    mockDatasetBasicsRootFragment,
+    mockFullPowerDatasetPermissionsFragment,
+    mockReadonlyDatasetPermissionsFragment,
+} from "src/app/search/mock.data";
 
 describe("datasetFlowsTabResolverFn", () => {
     let datasetService: DatasetService;
@@ -37,13 +41,13 @@ describe("datasetFlowsTabResolverFn", () => {
         });
         datasetService = TestBed.inject(DatasetService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
-            of(mockFullPowerDatasetPermissionsFragment),
-        );
         spyOnProperty(datasetSubsService, "overviewChanges", "get").and.returnValue(of(mockOverviewUpdate));
     });
 
     it("should resolve the dataset, its permissions and the overview", async () => {
+        spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
+            of(mockFullPowerDatasetPermissionsFragment),
+        );
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
 
         const data = await firstValueFrom(executeResolver(routeSnapshot, mockState) as Observable<unknown>);
@@ -55,7 +59,21 @@ describe("datasetFlowsTabResolverFn", () => {
         });
     });
 
+    it("should redirect to page not found when the user may not view flows", async () => {
+        spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
+            of(mockReadonlyDatasetPermissionsFragment),
+        );
+        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
+
+        const data = await firstValueFrom(executeResolver(routeSnapshot, mockState) as Observable<unknown>);
+
+        expectPageNotFoundRedirect(data);
+    });
+
     it("should redirect to page not found when the dataset cannot be loaded", async () => {
+        spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
+            of(mockFullPowerDatasetPermissionsFragment),
+        );
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(throwError(() => new Error("fail")));
 
         const data = await firstValueFrom(executeResolver(routeSnapshot, mockState) as Observable<unknown>);

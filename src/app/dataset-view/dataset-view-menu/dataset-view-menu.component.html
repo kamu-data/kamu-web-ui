@@ -12,7 +12,12 @@
                 [class.active-link]="isDatasetViewTypeOverview"
                 value="overview"
             >
-                <a [routerLink]="[datasetLink]" class="menu-link">
+                <a
+                    [routerLink]="
+                        { accountName: datasetBasics.owner.accountName, datasetName: datasetBasics.name } | datasetLink
+                    "
+                    class="menu-link"
+                >
                     <div class="d-flex align-items-center">
                         <mat-icon class="fs-4 d-block me-1">visibility</mat-icon>
                         <span class="d-block">Overview</span>
@@ -25,7 +30,16 @@
                 [class.active-link]="isDatasetViewTypeData"
                 value="data"
             >
-                <a [routerLink]="[datasetLink, DatasetViewTypeEnum.Data]" class="menu-link">
+                <a
+                    [routerLink]="
+                        {
+                            accountName: datasetBasics.owner.accountName,
+                            datasetName: datasetBasics.name,
+                            tab: DatasetViewTypeEnum.Data,
+                        } | datasetLink
+                    "
+                    class="menu-link"
+                >
                     <div class="d-flex align-items-center">
                         <mat-icon class="fs-4 d-block me-1">dataset</mat-icon>
                         <span class="d-block">Data</span>
@@ -38,7 +52,16 @@
                 [class.active-link]="isDatasetViewTypeMetadata"
                 value="metadata"
             >
-                <a [routerLink]="[datasetLink, DatasetViewTypeEnum.Metadata]" class="menu-link">
+                <a
+                    [routerLink]="
+                        {
+                            accountName: datasetBasics.owner.accountName,
+                            datasetName: datasetBasics.name,
+                            tab: DatasetViewTypeEnum.Metadata,
+                        } | datasetLink
+                    "
+                    class="menu-link"
+                >
                     <div class="d-flex align-items-center">
                         <mat-icon class="fs-4 d-block me-1">dataset_linked</mat-icon>
                         <span class="d-block">Metadata</span>
@@ -51,7 +74,16 @@
                 [class.active-link]="isDatasetViewTypeHistory"
                 value="history"
             >
-                <a [routerLink]="[datasetLink, DatasetViewTypeEnum.History]" class="menu-link">
+                <a
+                    [routerLink]="
+                        {
+                            accountName: datasetBasics.owner.accountName,
+                            datasetName: datasetBasics.name,
+                            tab: DatasetViewTypeEnum.History,
+                        } | datasetLink
+                    "
+                    class="menu-link"
+                >
                     <div class="d-flex align-items-center">
                         <mat-icon class="fs-4 d-block me-1">manage_history</mat-icon>
                         <span class="d-block">History</span>
@@ -64,7 +96,16 @@
                 [class.active-link]="isDatasetViewTypeLineage"
                 value="lineage"
             >
-                <a [routerLink]="[datasetLink, DatasetViewTypeEnum.Lineage]" class="menu-link">
+                <a
+                    [routerLink]="
+                        {
+                            accountName: datasetBasics.owner.accountName,
+                            datasetName: datasetBasics.name,
+                            tab: DatasetViewTypeEnum.Lineage,
+                        } | datasetLink
+                    "
+                    class="menu-link"
+                >
                     <div class="d-flex align-items-center">
                         <mat-icon class="fs-4 d-block me-1">account_tree</mat-icon>
                         <span class="d-block">Lineage</span>
@@ -89,7 +130,16 @@
                     value="flows"
                     [class.active-link]="isDatasetViewTypeFlows"
                 >
-                    <a [routerLink]="[datasetLink, DatasetViewTypeEnum.Flows]" class="menu-link">
+                    <a
+                        [routerLink]="
+                            {
+                                accountName: datasetBasics.owner.accountName,
+                                datasetName: datasetBasics.name,
+                                tab: DatasetViewTypeEnum.Flows,
+                            } | datasetLink
+                        "
+                        class="menu-link"
+                    >
                         <div class="d-flex align-items-center">
                             <mat-icon class="fs-4 d-block me-1">add_task</mat-icon>
                             <span class="d-block">Flows</span>
@@ -104,7 +154,16 @@
                     value="settings"
                     [class.active-link]="isDatasetViewTypeSettings"
                 >
-                    <a [routerLink]="[datasetLink, DatasetViewTypeEnum.Settings]" class="menu-link">
+                    <a
+                        [routerLink]="
+                            {
+                                accountName: datasetBasics.owner.accountName,
+                                datasetName: datasetBasics.name,
+                                tab: DatasetViewTypeEnum.Settings,
+                            } | datasetLink
+                        "
+                        class="menu-link"
+                    >
                         <div class="d-flex align-items-center">
                             <mat-icon class="settings-icon me-1" svgIcon="account" />
                             <span class="d-block">Settings</span>

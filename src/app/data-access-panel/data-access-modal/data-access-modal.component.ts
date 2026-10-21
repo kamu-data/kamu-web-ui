@@ -16,6 +16,7 @@ import { Observable } from "rxjs";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import { DatasetBasicsFragment, DatasetEndpoints, DatasetKind } from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "@interface/app.types";
 
@@ -59,6 +60,7 @@ import { ProtocolsService } from "src/app/services/protocols.service";
         DataAccessOdataTabComponent,
         DataAccessExportTabComponent,
         FeatureFlagDirective,
+        DatasetLinkPipe,
     ],
 })
 export class DataAccessModalComponent implements OnInit {

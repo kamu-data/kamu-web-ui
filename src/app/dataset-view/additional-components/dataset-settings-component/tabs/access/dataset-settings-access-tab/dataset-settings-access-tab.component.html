@@ -16,14 +16,15 @@
         <div class="ms-auto mt-auto">
             <a
                 class="manage-button"
-                [routerLink]="[
-                    '/',
-                    datasetBasics.owner.accountName,
-                    datasetBasics.name,
-                    DatasetViewTypeEnum.Settings,
-                    SettingsTabsEnum.GENERAL,
-                ]"
-                fragment="visibility"
+                [routerLink]="
+                    {
+                        accountName: datasetBasics.owner.accountName,
+                        datasetName: datasetBasics.name,
+                        tab: DatasetViewTypeEnum.Settings,
+                        section: SettingsTabsEnum.GENERAL,
+                        fragment: 'visibility',
+                    } | datasetLink
+                "
                 >Manage</a
             >
         </div>

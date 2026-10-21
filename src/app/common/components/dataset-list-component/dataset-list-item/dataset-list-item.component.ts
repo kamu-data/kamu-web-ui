@@ -19,6 +19,7 @@ import { DisplayTimeComponent } from "@common/components/display-time/display-ti
 import { ModalService } from "@common/components/modal/modal.service";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import AppValues from "@common/values/app.values";
 import { DatasetKind, DatasetSearchOverviewFragment } from "@api/kamu.graphql.interface";
 
@@ -42,6 +43,7 @@ import { NavigationService } from "src/app/services/navigation.service";
         DatasetKindComponent,
         DisplayTimeComponent,
         FeatureFlagDirective,
+        DatasetLinkPipe,
     ],
 })
 export class DatasetListItemComponent {

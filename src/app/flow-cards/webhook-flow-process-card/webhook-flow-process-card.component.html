@@ -12,8 +12,14 @@
                 }
             </div>
             <a
-                [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name, DatasetViewTypeEnum.Flows]"
-                [queryParams]="{ category: 'webhooks' }"
+                [routerLink]="
+                    {
+                        accountName: datasetBasics.owner.accountName,
+                        datasetName: datasetBasics.name,
+                        tab: DatasetViewTypeEnum.Flows,
+                        category: 'webhooks',
+                    } | datasetLink
+                "
                 >See flows</a
             >
         </div>
@@ -27,14 +33,13 @@
             <div class="d-flex flex-column">
                 <div class="dataset-list-container-title-row-dataset-name d-flex align-items-center">
                     <a
-                        [routerLink]="[
-                            '/',
-                            datasetBasics.owner.accountName,
-                            datasetBasics.name,
-                            DatasetViewTypeEnum.Settings,
-                            SettingsTabsEnum.WEBHOOKS,
-                            subscriptionId,
-                        ]"
+                        [routerLink]="
+                            {
+                                accountName: datasetBasics.owner.accountName,
+                                datasetName: datasetBasics.name,
+                                webhookId: subscriptionId,
+                            } | webhooksLink
+                        "
                         class="dataset-list-container-title mb-1 pl-0 truncate"
                     >
                         {{ subscriptionName }}
@@ -65,14 +70,13 @@
                     >
                 </button>
                 <a
-                    [routerLink]="[
-                        '/',
-                        datasetBasics.owner.accountName,
-                        datasetBasics.name,
-                        DatasetViewTypeEnum.Settings,
-                        SettingsTabsEnum.WEBHOOKS,
-                        subscriptionId,
-                    ]"
+                    [routerLink]="
+                        {
+                            accountName: datasetBasics.owner.accountName,
+                            datasetName: datasetBasics.name,
+                            webhookId: subscriptionId,
+                        } | webhooksLink
+                    "
                     class="badge-button border-1 link-underline link-underline-opacity-0 bg-light border rounded-2 px-2 btn btn-sm"
                 >
                     <mat-icon class="text-muted fs-4 d-block">settings</mat-icon>
@@ -84,7 +88,9 @@
             <div class="mt-2">
                 <span class="fw-500">Parent dataset:</span>
                 <a
-                    [routerLink]="['/', datasetBasics.owner.accountName, datasetBasics.name]"
+                    [routerLink]="
+                        { accountName: datasetBasics.owner.accountName, datasetName: datasetBasics.name } | datasetLink
+                    "
                     class="dataset-list-container-title mb-1 pl-0"
                 >
                     {{ datasetBasics.owner.accountName }}/{{ datasetBasics.name }}

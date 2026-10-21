@@ -4,13 +4,14 @@
             <div class="select-menu-title text-bold d-flex align-item-center d-flex align-items-center">Protocols</div>
             @if (showApiTokensLink) {
                 <a
-                    [routerLink]="[
-                        '/',
-                        datasetBasics.owner.accountName,
-                        datasetBasics.name,
-                        datasetViewType.Settings,
-                        datasetSettingsTabsEnum.VARIABLES_AND_SECRETS,
-                    ]"
+                    [routerLink]="
+                        {
+                            accountName: datasetBasics.owner.accountName,
+                            datasetName: datasetBasics.name,
+                            tab: datasetViewType.Settings,
+                            section: datasetSettingsTabsEnum.VARIABLES_AND_SECRETS,
+                        } | datasetLink
+                    "
                     class="fs-12"
                     (keydown.esc)="activeModal.close()"
                     (click)="activeModal.close()"

@@ -67,6 +67,8 @@ BRANCH_LISTING = {
     "-u", "--set-upstream-to", "--unset-upstream", "--edit-description",
 }
 BRANCH_CREATE = {"-c", "-C", "--copy", "-t", "--track", "--no-track"}
+# Output options of `git branch` whose value may follow as a separate argument.
+BRANCH_OUTPUT_VALUE_OPTIONS = {"--sort", "--format"}
 
 
 @dataclass(frozen=True)
@@ -200,6 +202,34 @@ def git_subcommand(args: list[str]) -> tuple[str, list[str]] | None:
     return args[i], args[i + 1 :]
 
 
+def short_letters(args: list[str], value_letters: str) -> set[str]:
+    """Letters of the short-option clusters in `args`; a letter in `value_letters` takes the rest of its cluster as its value."""
+    letters: set[str] = set()
+    for a in args:
+        if a == "--":
+            break
+        if a.startswith("-") and not a.startswith("--"):
+            for ch in a[1:]:
+                letters.add(ch)
+                if ch in value_letters:
+                    break
+    return letters
+
+
+def positional(args: list[str], value_options: set[str]) -> list[str]:
+    """Arguments that are not options, skipping the separate value of each option in `value_options`."""
+    found: list[str] = []
+    skip = False
+    for a in args:
+        if skip:
+            skip = False
+        elif a in value_options:
+            skip = True
+        elif not a.startswith("-"):
+            found.append(a)
+    return found
+
+
 def judge_git(args: list[str]) -> Verdict | None:
     if (invocation := git_subcommand(args)) is None:
         return None
@@ -220,7 +250,7 @@ def judge_git(args: list[str]) -> Verdict | None:
     if sub == "clean" and (short("f") or "--force" in flags) and not (short("n") or "--dry-run" in flags):
         return discard()
     if sub == "checkout":
-        if "--" in flags or "." in flags or "--force" in flags or short("f"):
+        if "--" in flags or "." in flags or "--force" in flags or "f" in short_letters(rest, "bB"):
             return discard()
         if flags & {"-b", "-B", "--orphan"}:
             return branch_change()
@@ -234,7 +264,7 @@ def judge_git(args: list[str]) -> Verdict | None:
         return branch_change()
     if sub == "branch" and not flags & {"-D", "-d", "--delete", "-f", "--force", "-m", "-M"}:
         creates = flags & BRANCH_CREATE or (
-            not flags & BRANCH_LISTING and any(not a.startswith("-") for a in rest)
+            not flags & BRANCH_LISTING and positional(rest, BRANCH_OUTPUT_VALUE_OPTIONS)
         )
         return branch_change() if creates else None
     if sub == "restore":

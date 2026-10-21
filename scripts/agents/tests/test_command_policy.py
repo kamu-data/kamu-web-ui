@@ -96,13 +96,15 @@ class ApprovalTest(unittest.TestCase):
                         "git worktree add -b x ../wt", "git fetch && git switch -c x origin/master",
                         "git switch 'unterminated", "git branch 'unterminated", "git branch -v feature/audit",
                         "git branch --color x", "git branch --sort=refname x", "git branch --format='%(refname)' x",
-                        "git branch --no-column x"]:
+                        "git branch --no-column x", "git branch --sort refname x", "git checkout -bfeature/audit",
+                        "git checkout -Bfix/x origin/x"]:
             with self.subTest(command=command):
                 self.assertEqual(verdict(command), ("ask", "approval"))
 
     def test_reading_branches_and_tracking_pass(self):
         for command in ["git branch", "git branch -a", "git branch --show-current", "git branch -vv",
-                        "git branch -v --sort=-committerdate", "git branch --list 'chore/*'", "git branch --contains HEAD", "git branch --unset-upstream",
+                        "git branch -v --sort=-committerdate", "git branch --sort refname",
+                        "git branch --format '%(refname)'", "git branch --list 'chore/*'", "git branch --contains HEAD", "git branch --unset-upstream",
                         "git branch -u origin/x", "git worktree list", "git checkout"]:
             with self.subTest(command=command):
                 self.assertIsNone(verdict(command))

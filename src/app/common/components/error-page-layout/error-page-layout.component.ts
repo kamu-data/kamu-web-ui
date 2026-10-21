@@ -5,13 +5,13 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import AppValues from "@common/values/app.values";
 
 /**
- * Centered box with the application logo for a full-page error. The page projects its content
- * and marks its heading with the `title` class and its text with the `description` class.
+ * Centered box with the application logo for a full-page error: an optional `title`, then the
+ * page's projected text, then the elements it marks `errorPageActions`, such as buttons.
  */
 @Component({
     selector: "app-error-page-layout",
@@ -20,5 +20,7 @@ import AppValues from "@common/values/app.values";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ErrorPageLayoutComponent {
+    @Input() public title?: string;
+
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;
 }

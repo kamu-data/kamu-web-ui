@@ -1,5 +1,5 @@
 <app-error-page-layout>
-    <p class="mt-4 description">
+    <p class="mt-4">
         Access to the Kamu platform is currently granted by invitation. We were unable to locate an account associated
         with your credentials. However, you are welcome to explore our
         <a class="" href="https://platform.demo.kamu.dev/" target="_blank">demonstration environment</a>
@@ -9,5 +9,7 @@
             <a [href]="'mailto:' + supportEmail" data-test-id="whitelist-support-link">contact us</a>.
         }
     </p>
-    <button class="app-active-button mx-auto my-4" (click)="navigateToLogin()">Back to login page</button>
+    <button errorPageActions class="app-active-button mx-auto my-4" (click)="navigateToLogin()">
+        Back to login page
+    </button>
 </app-error-page-layout>

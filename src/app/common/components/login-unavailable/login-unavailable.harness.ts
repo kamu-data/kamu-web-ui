@@ -14,7 +14,7 @@ import { MaybeNull } from "@interface/app.types";
 export class LoginUnavailableHarness extends ComponentHarness {
     public static readonly hostSelector = "app-login-unavailable";
 
-    private static readonly TITLE_TEST_ID = "login-unavailable-title";
+    private static readonly TITLE_TEST_ID = "error-page-title";
     private static readonly DESCRIPTION_TEST_ID = "login-unavailable-description";
     private static readonly SUPPORT_LINK_TEST_ID = "login-unavailable-support-link";
     private static readonly TRY_AGAIN_BUTTON_TEST_ID = "login-unavailable-try-again-button";

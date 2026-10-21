@@ -13,8 +13,9 @@ import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 
 @Component({
-    template: `<app-error-page-layout>
-        <p class="description" data-test-id="projected-message">Something went wrong</p>
+    template: `<app-error-page-layout title="Page unavailable">
+        <p data-test-id="projected-message">Something went wrong</p>
+        <button errorPageActions data-test-id="projected-action">Retry</button>
     </app-error-page-layout>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [ErrorPageLayoutComponent],
@@ -39,5 +40,15 @@ describe("ErrorPageLayoutComponent", () => {
         expect(getElementByDataTestId(fixture, "projected-message").textContent?.trim()).toEqual(
             "Something went wrong",
         );
+    });
+
+    it("should render the title", () => {
+        expect(getElementByDataTestId(fixture, "error-page-title").textContent?.trim()).toEqual("Page unavailable");
+    });
+
+    it("should keep the actions out of the text block", () => {
+        const description = getElementByDataTestId(fixture, "error-page-description");
+        expect(description.contains(getElementByDataTestId(fixture, "projected-message"))).toBeTrue();
+        expect(description.contains(getElementByDataTestId(fixture, "projected-action"))).toBeFalse();
     });
 });

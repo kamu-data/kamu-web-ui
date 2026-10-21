@@ -1,6 +1,5 @@
-<app-error-page-layout>
-    <h1 class="mt-4 title" data-test-id="login-unavailable-title">{{ TEXTS.TITLE }}</h1>
-    <p class="mt-3 description" data-test-id="login-unavailable-description">
+<app-error-page-layout [title]="TEXTS.TITLE">
+    <p class="mt-3" data-test-id="login-unavailable-description">
         @if (loadFailed) {
             {{ TEXTS.LOAD_FAILED }}
             {{ TEXTS.LOAD_FAILED_CONTACT_LEAD }}
@@ -19,6 +18,7 @@
     </p>
     @if (loadFailed) {
         <button
+            errorPageActions
             type="button"
             class="app-active-button mx-auto my-4"
             data-test-id="login-unavailable-try-again-button"

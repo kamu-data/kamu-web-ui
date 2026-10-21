@@ -4,7 +4,13 @@
             <div class="error-template">
                 <div class="box p-4 mx-auto error-block">
                     <img [src]="APP_LOGO" alt="Application logo" data-test-id="error-page-logo" />
-                    <ng-content />
+                    @if (title) {
+                        <h1 class="mt-4 title" data-test-id="error-page-title">{{ title }}</h1>
+                    }
+                    <div class="description" data-test-id="error-page-description">
+                        <ng-content />
+                    </div>
+                    <ng-content select="[errorPageActions]" />
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 ---
 name: kamu-ui-unit-tests
-description: Unit test conventions for Kamu Web UI — Karma + Jasmine specs next to their source, TestBed setup, CDK component harnesses (Material and custom *.harness.ts), data-test-id selectors and the shared DOM helpers, Apollo testing for api classes, mock fixtures, fake async and frozen time, and running a narrowed test set. Use before writing or editing any *.spec.ts, *.harness.ts or mock file.
+description: Unit test conventions for Kamu Web UI — Karma + Jasmine specs next to their source, TestBed setup, CDK component harnesses (Material and custom *.harness.ts), data-test-id selectors and the shared DOM helpers, Apollo testing for api classes, mock fixtures, fake async and frozen time, render hooks and timers in specs, and running a narrowed test set. Use before writing or editing any *.spec.ts, *.harness.ts or mock file.
 ---
 
 # Kamu UI Unit Tests
@@ -157,6 +157,15 @@ One case per api method: assert the variables sent, flush a fixture typed with t
 - `fakeAsync` swaps in its own `Date`, which ignores timekeeper. A component rendered with
   relative time outside `fakeAsync` and re-checked inside it shows two different clocks; use an
   `async` test with `await fixture.whenStable()` there instead.
+- Render hooks (`afterNextRender`) run inside `fixture.detectChanges()`. Spy on DOM methods
+  before it (`spyOn(HTMLElement.prototype, "scrollIntoView")`) and assert after it; a focus
+  check compares `document.activeElement`, which works because the fixture is attached to the
+  document. A host component in the spec covers a directive
+  (`common/directives/auto-focus.directive.spec.ts`).
+- An RxJS `timer(ms)` in the code under test advances with `tick(ms)` inside `fakeAsync`, the
+  same as `setTimeout`.
+- ngx-markdown renders asynchronously: `await fixture.whenStable()` before asserting on what it
+  rendered or on DOM added from its `(ready)` output.
 
 ## Rejected approaches
 

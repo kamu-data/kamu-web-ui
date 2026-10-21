@@ -15,7 +15,10 @@ import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
     selector: "app-unsupported-event",
     templateUrl: "./unsupported-event.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatIconModule],
+    imports: [
+        //-----//
+        MatIconModule,
+    ],
 })
 export class UnsupportedEventComponent extends BaseComponent {
     @Input() public event?: MetadataBlockFragment["event"];

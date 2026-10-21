@@ -11,9 +11,13 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 
-import { findComponentInstance, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import {
+    findComponentInstance,
+    findComponentInstances,
+    registerMatSvgIcons,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { AddDataEventFragment, MetadataBlockFragment } from "@api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "@api/mock/dataset.mock";
@@ -34,8 +38,8 @@ describe("EventDetailsComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedTestModule, EventDetailsComponent, ToastrModule.forRoot()],
-            providers: [Apollo, provideHttpClient(), provideHttpClientTesting()],
+            imports: [SharedTestModule, EventDetailsComponent],
+            providers: [Apollo, provideToastr(), provideHttpClient(), provideHttpClientTesting()],
         }).compileComponents();
 
         registerMatSvgIcons();
@@ -43,7 +47,6 @@ describe("EventDetailsComponent", () => {
         fixture = TestBed.createComponent(EventDetailsComponent);
         component = fixture.componentInstance;
         fixture.componentRef.setInput("block", mockBlock);
-        fixture.componentRef.setInput("datasetInfo", { accountName: "accountName", datasetName: "datasetName" });
         fixture.detectChanges();
     });
 
@@ -52,13 +55,13 @@ describe("EventDetailsComponent", () => {
     });
 
     it("should render the component for the block's event type", () => {
-        expect(findComponentInstance(fixture, ExecuteTransformEventComponent, () => true)).toBeTruthy();
+        expect(findComponentInstance(fixture, ExecuteTransformEventComponent)).toBeTruthy();
 
         fixture.componentRef.setInput("block", { ...mockBlock, event: mockAddData });
         fixture.detectChanges();
 
-        expect(findComponentInstance(fixture, AddDataEventComponent, () => true)).toBeTruthy();
-        expect(() => findComponentInstance(fixture, ExecuteTransformEventComponent, () => true)).toThrowError();
+        expect(findComponentInstance(fixture, AddDataEventComponent)).toBeTruthy();
+        expect(findComponentInstances(fixture, ExecuteTransformEventComponent)).toEqual([]);
     });
 
     it("should show the new values when switching between blocks of the same event type", async () => {
@@ -89,6 +92,6 @@ describe("EventDetailsComponent", () => {
         } satisfies MetadataBlockFragment);
         fixture.detectChanges();
 
-        expect(findComponentInstance(fixture, UnsupportedEventComponent, () => true)).toBeTruthy();
+        expect(findComponentInstance(fixture, UnsupportedEventComponent)).toBeTruthy();
     });
 });

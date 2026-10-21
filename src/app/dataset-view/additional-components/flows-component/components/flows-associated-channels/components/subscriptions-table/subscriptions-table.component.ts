@@ -6,13 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { MatButtonToggleModule } from "@angular/material/button-toggle";
-import { MatChipsModule } from "@angular/material/chips";
-import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
-import { MatMenuModule } from "@angular/material/menu";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTableModule } from "@angular/material/table";
 
 import { DatasetBasicsFragment, FlowProcessEffectiveState, WebhookFlowSubProcess } from "@api/kamu.graphql.interface";
@@ -24,15 +18,8 @@ import { SubprocessStatusFilterPipe } from "src/app/dataset-view/additional-comp
     selector: "app-subscriptions-table",
     imports: [
         //-----//
-        FormsModule,
-        //-----//
-        MatMenuModule,
         MatIconModule,
         MatTableModule,
-        MatDividerModule,
-        MatProgressBarModule,
-        MatButtonToggleModule,
-        MatChipsModule,
         //-----//
         SubprocessStatusFilterPipe,
     ],

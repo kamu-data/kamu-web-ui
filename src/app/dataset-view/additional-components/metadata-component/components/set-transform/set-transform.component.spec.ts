@@ -6,7 +6,6 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
@@ -24,7 +23,6 @@ import {
     mockSetTransformEventYaml,
 } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import { SetTransformComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.component";
-import { DatasetNode } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockDatasetInfo } from "src/app/search/mock.data";
@@ -77,7 +75,6 @@ describe("SetTransformComponent", () => {
         component.selectedEngine = "Spark";
         component.eventYamlByHash = eventYamlByHash;
         component.datasetInfo = mockDatasetInfo;
-        component.dataSource = new MatTreeNestedDataSource<DatasetNode>();
         fixture.detectChanges();
     }
 

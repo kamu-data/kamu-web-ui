@@ -25,11 +25,12 @@ import { DatasetAsVersionedFileService } from "../../../../services/dataset-as-v
 @Component({
     selector: "app-file-information-section",
     imports: [
+        //-----//
         AsyncPipe,
         DatePipe,
         //-----//
         MatIconModule,
-        //-----//,
+        //-----//
         DisplayHashComponent,
         DisplaySizePipe,
     ],

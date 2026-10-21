@@ -18,11 +18,11 @@ import { AddPollingSourceComponent } from "src/app/dataset-view/additional-compo
 import { addPollingSourceResolverFn } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/resolver/add-polling-source.resolver";
 import { AddPushSourceComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
 import { addPushSourceResolverFn } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/resolver/add-push-source.resolver";
-import ProjectLinks from "src/app/project-links";
+import { SourceEventEditor } from "src/app/project-links";
 
 export const SOURCE_EVENTS_ROUTES: Routes = [
     {
-        path: `${ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE}`,
+        path: SourceEventEditor.AddPollingSource,
         component: AddPollingSourceComponent,
         resolve: {
             [RoutingResolvers.ADD_POLLING_SOURCE_KEY]: addPollingSourceResolverFn,
@@ -30,7 +30,7 @@ export const SOURCE_EVENTS_ROUTES: Routes = [
         },
     },
     {
-        path: `${ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE}`,
+        path: SourceEventEditor.AddPushSource,
         component: AddPushSourceComponent,
         resolve: {
             [RoutingResolvers.ADD_PUSH_SOURCE_KEY]: addPushSourceResolverFn,
@@ -38,7 +38,7 @@ export const SOURCE_EVENTS_ROUTES: Routes = [
         },
     },
     {
-        path: `${ProjectLinks.URL_PARAM_SET_TRANSFORM}`,
+        path: SourceEventEditor.SetTransform,
         component: SetTransformComponent,
         resolve: {
             [RoutingResolvers.SET_TRANSFORM_KEY]: setTransformResolverFn,

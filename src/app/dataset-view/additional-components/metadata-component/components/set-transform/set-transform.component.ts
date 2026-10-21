@@ -7,7 +7,6 @@
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { RouterLink } from "@angular/router";
 
 import { catchError, forkJoin, from, map, of, take } from "rxjs";
@@ -60,7 +59,6 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     public selectedEngine: string;
     public currentSetTransformEvent: MaybeNull<SetTransformYamlType>;
     public queries: Omit<SqlQueryStep, "__typename">[] = [];
-    public dataSource = new MatTreeNestedDataSource<DatasetNode>();
     public inputsViewModel: DatasetNode[] = [];
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 

@@ -20,14 +20,12 @@ import {
     ViewChild,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatTable, MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { RouterLink } from "@angular/router";
 
-import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 import { ToastrService } from "ngx-toastr";
 
 import { BaseComponent } from "@common/components/base.component";
@@ -70,9 +68,7 @@ import { DatasetFlowsService } from "src/app/dataset-view/additional-components/
         //-----//
         NgClass,
         RouterLink,
-        FormsModule,
         //-----//
-        AngularMultiSelectModule,
         MatIconModule,
         MatTableModule,
         MatMenuModule,

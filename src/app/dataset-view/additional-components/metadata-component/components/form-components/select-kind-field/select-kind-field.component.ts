@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 
 import { NgbTooltip, NgbTooltipConfig } from "@ng-bootstrap/ng-bootstrap";
@@ -24,7 +24,6 @@ import { RadioControlType } from "src/app/dataset-view/additional-components/met
     providers: [NgbTooltipConfig],
     imports: [
         //-----//
-        FormsModule,
         ReactiveFormsModule,
         //-----//
         MatIconModule,

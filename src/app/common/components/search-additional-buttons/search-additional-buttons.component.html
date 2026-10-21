@@ -12,6 +12,10 @@
     <mat-menu #menu="matMenu" class="search-additional-buttons-minimize-block">
         <app-search-additional-buttons-nav
             [datasetBasics]="datasetBasics"
+            (searchAdditionalButtonsMethod)="onClick($event)"
+            (searchAdditionalButtonsMenuOpen)="onMenuOpen($event)"
+            (searchAdditionalButtonsMenuClose)="onMenuClose($event)"
+            (searchAdditionalButtonsMenuItemClick)="onClickMenuItem($event)"
             [searchAdditionalButtonsData]="searchAdditionalButtonsData"
             [loadingListDownsreams]="loadingListDownsreams"
         ></app-search-additional-buttons-nav>

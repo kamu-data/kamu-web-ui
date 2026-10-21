@@ -19,6 +19,7 @@ export const accountDatasetsResolverFn: ResolveFn<DatasetsAccountResolverRespons
     route: ActivatedRouteSnapshot,
 ) => {
     const accountService = inject(AccountService);
+
     const accountName = route.parent?.parent?.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME) as string;
     const page = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE) ?? 1;
     return accountService.getDatasetsByAccountName(accountName, Number(page) - 1).pipe(

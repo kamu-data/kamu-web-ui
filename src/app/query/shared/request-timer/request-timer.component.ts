@@ -37,7 +37,7 @@ export class RequestTimerComponent extends BaseComponent implements OnChanges, O
     private ms: number = 0;
     private hh: number = 0;
     private isRunning: boolean = false;
-    private timeout: NodeJS.Timeout;
+    private timeout: ReturnType<typeof setInterval>;
 
     private cdr = inject(ChangeDetectorRef);
     private cancelRequestService = inject(CancelRequestService);

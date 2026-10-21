@@ -393,7 +393,6 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                 currentArchetype: null,
                 currentPushSources: [],
                 currentDownstreamDependenciesCount: 3,
-                currentDownstreamDependencies: [],
                 currentInfo: {
                     __typename: "SetInfo",
                     description: "Confirmed positive cases of COVID-19 in Alberta.",

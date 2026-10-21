@@ -1,41 +1,39 @@
-<ng-container>
-    <div class="d-flex flex-column gap-4 mt-4">
-        @for (section of eventSections; track $index) {
-            <div class="position-relative border border-1 p-2 rounded-3">
-                <span
-                    class="position-absolute text-muted group-box-label text-uppercase"
-                    data-test-id="event-section-title"
-                    >{{ section.title }}</span
-                >
-                <div class="mx-4">
-                    @for (row of section.rows; track $index) {
-                        @if (!row.descriptor.separateRowForValue) {
-                            <app-block-row-data [tooltip]="row.descriptor.tooltip" [label]="row.descriptor.label">
-                                <ng-container
-                                    *ngComponentOutlet="
-                                        row.descriptor.presentationComponent;
-                                        inputs: { data: row.value, dataTestId: row.descriptor.dataTestId }
-                                    "
-                                />
-                            </app-block-row-data>
-                        } @else {
-                            <app-block-row-data [tooltip]="row.descriptor.tooltip" [label]="row.descriptor.label" />
+<div class="d-flex flex-column gap-4 mt-4">
+    @for (section of eventSections; track $index) {
+        <div class="position-relative border border-1 p-2 rounded-3">
+            <span
+                class="position-absolute text-muted group-box-label text-uppercase"
+                data-test-id="event-section-title"
+                >{{ section.title }}</span
+            >
+            <div class="mx-4">
+                @for (row of section.rows; track $index) {
+                    @if (!row.descriptor.separateRowForValue) {
+                        <app-block-row-data [tooltip]="row.descriptor.tooltip" [label]="row.descriptor.label">
                             <ng-container
                                 *ngComponentOutlet="
                                     row.descriptor.presentationComponent;
                                     inputs: { data: row.value, dataTestId: row.descriptor.dataTestId }
                                 "
                             />
-                        }
+                        </app-block-row-data>
+                    } @else {
+                        <app-block-row-data [tooltip]="row.descriptor.tooltip" [label]="row.descriptor.label" />
+                        <ng-container
+                            *ngComponentOutlet="
+                                row.descriptor.presentationComponent;
+                                inputs: { data: row.value, dataTestId: row.descriptor.dataTestId }
+                            "
+                        />
                     }
-                    @if (!section.rows.length) {
-                        <p class="text-center mt-2" data-test-id="unsupported-section">
-                            <mat-icon class="text-danger align-middle">block</mat-icon>
-                            <span>Unsupported section</span>
-                        </p>
-                    }
-                </div>
+                }
+                @if (!section.rows.length) {
+                    <p class="text-center mt-2" data-test-id="unsupported-section">
+                        <mat-icon class="text-danger align-middle">block</mat-icon>
+                        <span>Unsupported section</span>
+                    </p>
+                }
             </div>
-        }
-    </div>
-</ng-container>
+        </div>
+    }
+</div>

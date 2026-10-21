@@ -11,7 +11,7 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
-import { ToastrModule, ToastrService } from "ngx-toastr";
+import { provideToastr, ToastrService } from "ngx-toastr";
 
 import { DatasetFlowApi } from "@api/dataset-flow.api";
 import {
@@ -51,8 +51,8 @@ describe("DatasetFlowConfigService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [Apollo],
-            imports: [ApolloTestingModule, ToastrModule.forRoot()],
+            providers: [Apollo, provideToastr()],
+            imports: [ApolloTestingModule],
         });
         service = TestBed.inject(DatasetFlowConfigService);
         datasetFlowApi = TestBed.inject(DatasetFlowApi);

@@ -74,33 +74,29 @@
                             <ng-container matColumnDef="owner">
                                 <th mat-header-cell *matHeaderCellDef>owner</th>
                                 <td mat-cell *matCellDef="let el" class="copy-on-hover">
-                                    <ng-container>
-                                        @if (el.nodeType !== CollectionViewNode.Folder) {
-                                            <div class="d-flex align-items-center">
-                                                @if (el.nodeType !== CollectionViewNode.Broken) {
-                                                    <div class="d-flex align-items-center">
-                                                        <img
-                                                            class="img-creator"
-                                                            [src]="el.owner.avatarUrl ?? DEFAULT_AVATAR_URL"
-                                                        />
-                                                        <span class="ms-2 truncate-path d-block">{{
-                                                            el.owner.accountName
-                                                        }}</span>
-                                                        <mat-icon
-                                                            class="copy-icon ms-2"
-                                                            (click)="
-                                                                onCellEventClick(el.owner.accountName, el.nodeType)
-                                                            "
-                                                            >content_copy</mat-icon
-                                                        >
-                                                    </div>
-                                                }
-                                                @if (el.nodeType === CollectionViewNode.Broken) {
-                                                    <div>-</div>
-                                                }
-                                            </div>
-                                        }
-                                    </ng-container>
+                                    @if (el.nodeType !== CollectionViewNode.Folder) {
+                                        <div class="d-flex align-items-center">
+                                            @if (el.nodeType !== CollectionViewNode.Broken) {
+                                                <div class="d-flex align-items-center">
+                                                    <img
+                                                        class="img-creator"
+                                                        [src]="el.owner.avatarUrl ?? DEFAULT_AVATAR_URL"
+                                                    />
+                                                    <span class="ms-2 truncate-path d-block">{{
+                                                        el.owner.accountName
+                                                    }}</span>
+                                                    <mat-icon
+                                                        class="copy-icon ms-2"
+                                                        (click)="onCellEventClick(el.owner.accountName, el.nodeType)"
+                                                        >content_copy</mat-icon
+                                                    >
+                                                </div>
+                                            }
+                                            @if (el.nodeType === CollectionViewNode.Broken) {
+                                                <div>-</div>
+                                            }
+                                        </div>
+                                    }
                                 </td>
                             </ng-container>
                             <!-- Column: Content Hash -->
@@ -187,7 +183,6 @@
                 <p class="mb-0">Collection is empty</p>
             </div>
         }
-        <!-- Empty state template -->
     </div>
 }
 

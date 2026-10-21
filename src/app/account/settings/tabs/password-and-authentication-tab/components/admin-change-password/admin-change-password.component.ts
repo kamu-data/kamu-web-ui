@@ -21,7 +21,13 @@ import { AppConfigService } from "src/app/app-config.service";
     templateUrl: "./admin-change-password.component.html",
     styleUrls: ["./admin-change-password.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormsModule, ReactiveFormsModule, FormValidationErrorsDirective],
+    imports: [
+        //-----//
+        FormsModule,
+        ReactiveFormsModule,
+        //-----//
+        FormValidationErrorsDirective,
+    ],
 })
 export class AdminChangePasswordComponent implements OnInit {
     @Input({ required: true }) public accountName: string;

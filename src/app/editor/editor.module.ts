@@ -5,9 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import { FormsModule } from "@angular/forms";
 
 import { MonacoEditorModule } from "ngx-monaco-editor-v2";
 
@@ -17,8 +15,6 @@ import { MONACO_VERSION } from "src/app/editor/generated/monaco-version";
 
 @NgModule({
     imports: [
-        CommonModule,
-        FormsModule,
         MonacoEditorModule.forRoot({ baseUrl: `./assets/monaco-${MONACO_VERSION}/min/vs` }),
         SqlEditorComponent,
         YamlEditorComponent,

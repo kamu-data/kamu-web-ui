@@ -60,17 +60,11 @@
                 />
                 @if (row?.isSecret) {
                     <div class="input-group-addon pt-2 px-2 eye-icon">
-                        @if (exposedValue) {
-                            <a (click)="toggleExposedValue()">
-                                @if (exposedValue) {
-                                    <mat-icon class="text-muted fs-4">visibility</mat-icon>
-                                }
-                            </a>
-                        } @else {
-                            <a (click)="toggleExposedValue()">
-                                <mat-icon class="text-muted fs-4">visibility_off</mat-icon></a
-                            >
-                        }
+                        <a (click)="toggleExposedValue()">
+                            <mat-icon class="text-muted fs-4">{{
+                                exposedValue ? "visibility" : "visibility_off"
+                            }}</mat-icon>
+                        </a>
                     </div>
                 }
             </div>

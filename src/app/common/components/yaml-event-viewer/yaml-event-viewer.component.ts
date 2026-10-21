@@ -15,7 +15,10 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     selector: "app-yaml-event-viewer",
     templateUrl: "./yaml-event-viewer.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [Highlight],
+    imports: [
+        //-----//
+        Highlight,
+    ],
 })
 export class YamlEventViewerComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;

@@ -93,10 +93,15 @@ describe("OffsetIntervalPropertyComponent", () => {
         fixture.detectChanges();
         const navigateSpy = spyOn(navigationService, "navigateToDatasetView");
 
-        component.navigateToQuery();
+        emitClickOnElementByDataTestId(fixture, "see-data");
 
         expect(requestDatasetInfoByIdSpy).not.toHaveBeenCalled();
-        expect(navigateSpy).toHaveBeenCalledTimes(1);
+        expect(navigateSpy).toHaveBeenCalledOnceWith({
+            accountName: "accountName",
+            datasetName: "datasetName",
+            tab: DatasetViewTypeEnum.Data,
+            state: { start: 0, end: 596125 },
+        });
     });
 
     it("should show a dash when there is no interval", () => {

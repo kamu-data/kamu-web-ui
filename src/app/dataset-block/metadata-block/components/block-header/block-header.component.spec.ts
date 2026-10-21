@@ -10,7 +10,7 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
@@ -25,8 +25,8 @@ describe("BlockHeaderComponent", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedTestModule, BlockHeaderComponent, ToastrModule.forRoot()],
-            providers: [Apollo, provideHttpClient(), provideHttpClientTesting()],
+            imports: [SharedTestModule, BlockHeaderComponent],
+            providers: [Apollo, provideToastr(), provideHttpClient(), provideHttpClientTesting()],
         }).compileComponents();
 
         registerMatSvgIcons();

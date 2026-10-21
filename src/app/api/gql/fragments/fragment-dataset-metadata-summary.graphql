@@ -31,15 +31,6 @@ fragment DatasetMetadataSummary on Dataset {
     }
 
     currentDownstreamDependenciesCount
-    currentDownstreamDependencies {
-      ... on DatasetAccessResultNotAccessible {
-        __typename
-      }
-
-      ... on DatasetAccessResultAccessible {
-        __typename
-      }
-    }
   }
   ...DatasetReadme
   ...DatasetLastUpdate

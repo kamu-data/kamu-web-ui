@@ -7,7 +7,29 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "scss",
+          "type": "component"
+        },
+        "@schematics/angular:directive": {
+          "type": "directive"
+        },
+        "@schematics/angular:service": {
+          "type": "service"
+        },
+        "@schematics/angular:guard": {
+          "typeSeparator": "."
+        },
+        "@schematics/angular:interceptor": {
+          "typeSeparator": "."
+        },
+        "@schematics/angular:module": {
+          "typeSeparator": "."
+        },
+        "@schematics/angular:pipe": {
+          "typeSeparator": "."
+        },
+        "@schematics/angular:resolver": {
+          "typeSeparator": "."
         }
       },
       "root": "",
@@ -18,12 +40,9 @@
           "builder": "@angular/build:application",
           "options": {
             "allowedCommonJsDependencies": [
-              "zen-observable",
               "dagre",
               "webcola",
-              "fast-json-stable-stringify",
               "moment",
-              "marked",
               "cron-parser",
               "@tweenjs/tween.js",
               "siwe",
@@ -40,7 +59,6 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/assets/svg",
               "src/favicon.ico",
               "src/assets",
               {
@@ -124,7 +142,6 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": [
-              "src/assets/svg",
               "src/favicon.ico",
               "src/assets",
               {
@@ -156,31 +173,5 @@
   },
   "cli": {
     "analytics": "dbc9d1ba-d851-4f85-b1fe-a749b743ca20"
-  },
-  "schematics": {
-    "@schematics/angular:component": {
-      "type": "component"
-    },
-    "@schematics/angular:directive": {
-      "type": "directive"
-    },
-    "@schematics/angular:service": {
-      "type": "service"
-    },
-    "@schematics/angular:guard": {
-      "typeSeparator": "."
-    },
-    "@schematics/angular:interceptor": {
-      "typeSeparator": "."
-    },
-    "@schematics/angular:module": {
-      "typeSeparator": "."
-    },
-    "@schematics/angular:pipe": {
-      "typeSeparator": "."
-    },
-    "@schematics/angular:resolver": {
-      "typeSeparator": "."
-    }
   }
 }

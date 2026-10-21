@@ -13,7 +13,7 @@ import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { MatTooltipModule } from "@angular/material/tooltip";
 
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { ToastrModule, ToastrService } from "ngx-toastr";
+import { ToastrService } from "ngx-toastr";
 
 import { AttributesSchemaModalComponent } from "@common/components/dynamic-table/components/attributes-schema-modal/attributes-schema-modal.component";
 import {
@@ -35,7 +35,6 @@ import { MaybeUndefined } from "@interface/app.types";
         MatTableModule,
         MatTooltipModule,
         ClipboardModule,
-        ToastrModule,
     ],
 })
 export class DynamicTableComponent implements OnInit, OnChanges {

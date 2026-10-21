@@ -6,25 +6,24 @@
  */
 
 import { inject } from "@angular/core";
-import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn } from "@angular/router";
 
-import { map, Observable, of, switchMap } from "rxjs";
+import { map, of, switchMap } from "rxjs";
 
 import { DatasetFlowType, GetDatasetFlowTriggerQuery } from "@api/kamu.graphql.interface";
 
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { resolveSettingsTabAccess } from "src/app/dataset-view/additional-components/dataset-settings-component/resolvers/settings-tab-access.helpers";
 import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
-import { datasetSettingsGeneralTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/resolver/dataset-settings-general-tab.resolver";
 import { DatasetSettingsTransformOptionsTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.data";
-import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
+import ProjectLinks from "src/app/project-links";
 
 export const datasetSettingsTransformTabResolverFn: ResolveFn<DatasetSettingsTransformOptionsTabData> = (
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot,
 ) => {
     const datasetFlowTriggerService = inject(DatasetFlowTriggerService);
 
-    // The general tab resolver always returns an Observable
-    return (datasetSettingsGeneralTabResolverFn(route, state) as Observable<DatasetViewData | RedirectCommand>).pipe(
+    return resolveSettingsTabAccess(route.data[ProjectLinks.URL_PARAM_TAB] as SettingsTabsEnum).pipe(
         switchMap((data) => {
             if (data instanceof RedirectCommand) {
                 return of(data);

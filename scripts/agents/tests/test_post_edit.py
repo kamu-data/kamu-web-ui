@@ -33,7 +33,8 @@ class AddedTextTest(unittest.TestCase):
                 self.assertFalse(flagged(line, "src/app/x.component.spec.ts"))
 
     def test_guards_and_resolvers_must_not_navigate(self):
-        for rel in ["src/app/auth/guards/admin.guard.ts", "src/app/dataset-view/resolvers/dataset-view.resolver.ts"]:
+        for rel in ["src/app/auth/guards/admin.guard.ts", "src/app/dataset-view/resolvers/dataset-view.resolver.ts",
+                    "src/app/dataset-view/resolvers/dataset-access.helpers.ts"]:
             for line in ["        navigationService.navigateToPageNotFound();", "    this.navigationService.navigateToHome();",
                          "    void router.navigate([ProjectLinks.URL_HOME]);", "    router.navigateByUrl(url);"]:
                 with self.subTest(rel=rel, line=line):
@@ -42,6 +43,7 @@ class AddedTextTest(unittest.TestCase):
             with self.subTest(line=line):
                 self.assertFalse(flagged(line, "src/app/dataset-view/resolvers/dataset-view.resolver.ts"))
         self.assertFalse(flagged("        navigationService.navigateToHome();", "src/app/x.component.ts"))
+        self.assertFalse(flagged("        navigationService.navigateToHome();", "src/app/common/helpers/app.helpers.ts"))
         self.assertFalse(flagged("        navigationService.navigateToHome();", "src/app/auth/guards/admin.guard.spec.ts"))
 
     def test_class_interceptors_are_flagged(self):

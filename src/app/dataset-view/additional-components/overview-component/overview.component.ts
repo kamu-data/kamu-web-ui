@@ -12,7 +12,6 @@ import { FormsModule } from "@angular/forms";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatIconModule } from "@angular/material/icon";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { RouterLink } from "@angular/router";
 
@@ -86,7 +85,6 @@ import {
         //-----//
         FormsModule,
         MatButtonToggleModule,
-        MatProgressBarModule,
         MatChipsModule,
         MatIconModule,
         MatTooltipModule,
@@ -103,7 +101,6 @@ import {
         DisplayHashComponent,
         DisplaySizePipe,
         DisplayTimeComponent,
-
         VersionedFileViewComponent,
         SourceEventEditorLinkPipe,
     ],

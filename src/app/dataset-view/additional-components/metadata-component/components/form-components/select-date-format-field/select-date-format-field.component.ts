@@ -7,7 +7,7 @@
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 
 import { RxReactiveFormsModule, RxwebValidators } from "@rxweb/reactive-form-validators";
 
@@ -24,7 +24,6 @@ import { EventTimeSourceKind } from "src/app/dataset-view/additional-components/
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        FormsModule,
         ReactiveFormsModule,
         //-----//
         RxReactiveFormsModule,

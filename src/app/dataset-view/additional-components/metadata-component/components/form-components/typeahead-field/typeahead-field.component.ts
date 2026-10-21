@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input, ViewChild } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { ReactiveFormsModule } from "@angular/forms";
 
 import { merge, Observable, OperatorFunction, Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged, filter, map } from "rxjs/operators";
@@ -25,7 +25,6 @@ import { BaseField } from "src/app/dataset-view/additional-components/metadata-c
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        FormsModule,
         ReactiveFormsModule,
         //-----//
         NgbTypeahead,

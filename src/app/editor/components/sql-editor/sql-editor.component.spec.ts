@@ -15,6 +15,7 @@ import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
 } from "@common/helpers/base-test.helpers.spec";
+import { MaybeUndefined } from "@interface/app.types";
 
 import {
     BaseEditorComponentTestEnvironment,
@@ -83,7 +84,7 @@ describe("SqlEditorComponent", () => {
 
     describe("run actions", () => {
         const windowWithMonaco = window as typeof window & { monaco?: typeof monaco };
-        let originalMonaco: typeof monaco | undefined;
+        let originalMonaco: MaybeUndefined<typeof monaco>;
         let actions: monaco.editor.IActionDescriptor[];
         let selectionListener: (e: monaco.editor.ICursorSelectionChangedEvent) => void;
         let hasSelectionValues: boolean[];

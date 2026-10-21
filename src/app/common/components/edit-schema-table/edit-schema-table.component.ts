@@ -23,8 +23,6 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { MatTooltipModule } from "@angular/material/tooltip";
 
-import { NgSelectModule } from "@ng-select/ng-select";
-
 import { AutoFocusDirective } from "@common/directives/auto-focus.directive";
 import { odfType2String } from "@common/helpers/data-schema.helpers";
 import { MaybeNull } from "@interface/app.types";
@@ -48,7 +46,6 @@ import { schemaNameWarnings, SchemaValidationError } from "./validation/schema-v
         MatIconModule,
         MatTableModule,
         MatTooltipModule,
-        NgSelectModule,
         //-----//
         CdkDropList,
         CdkDrag,

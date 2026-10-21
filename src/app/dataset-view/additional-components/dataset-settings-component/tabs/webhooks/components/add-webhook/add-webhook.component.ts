@@ -7,12 +7,9 @@
 
 import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { MatDividerModule } from "@angular/material/divider";
+import { FormGroup, FormsModule, NonNullableFormBuilder, Validators } from "@angular/forms";
 
 import { BehaviorSubject, map, Observable } from "rxjs";
-
-import { NgSelectModule } from "@ng-select/ng-select";
 
 import { BaseComponent } from "@common/components/base.component";
 import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
@@ -37,10 +34,6 @@ import { WebhooksService } from "src/app/services/webhooks.service";
         //-----//
         AsyncPipe,
         FormsModule,
-        ReactiveFormsModule,
-        //-----//
-        MatDividerModule,
-        NgSelectModule,
         //-----//
         CopyToClipboardComponent,
         WebhookFormComponent,

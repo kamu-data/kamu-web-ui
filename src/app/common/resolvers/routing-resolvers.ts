@@ -33,8 +33,6 @@ export default class RoutingResolvers {
     public static readonly DATASET_VIEW_OVERVIEW_KEY = "datasetViewOverviewData";
     public static readonly DATASET_VIEW_DATA_KEY = "datasetViewDataData";
     public static readonly DATASET_VIEW_METADATA_KEY = "datasetViewMetadataData";
-    public static readonly DATASET_VIEW_HISTORY_KEY = "datasetViewHistoryData";
-    public static readonly DATASET_VIEW_LINEAGE_KEY = "datasetViewLineageData";
     public static readonly DATASET_VIEW_FLOWS_KEY = "datasetViewFlowsData";
     public static readonly DATASET_VIEW_SETTINGS_KEY = "datasetViewSettingsData";
     public static readonly DATASET_VIEW_SETTINGS_ACTIVE_SECTION_KEY = "datasetViewSettingsActiveSectionData";

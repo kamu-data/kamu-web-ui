@@ -98,8 +98,9 @@ public datasetWebhookCreateSubscription(datasetId: string, input: WebhookSubscri
   `merge`) live in `apolloCache()` in the same file — `Dataset` is keyed by `owner` and `id`.
 - Domain logic, result mapping into view models and subject-based state belong in a domain
   service (`*.service.ts`) on top of the api class, not in the api class.
-- GraphQL and network errors are handled globally by the error link in `src/main.ts` (toast,
-  redirect on token errors). Result unions (`... Success` / `... Error` typenames) are domain
+- GraphQL and network errors are handled globally by the error link from
+  `createApolloErrorLink` (`src/app/common/helpers/apollo-error.helpers.ts`), which `src/main.ts`
+  adds to the Apollo link chain (toast, redirect on token errors). Result unions (`... Success` / `... Error` typenames) are domain
   outcomes and are handled by the caller.
 
 ### Tests

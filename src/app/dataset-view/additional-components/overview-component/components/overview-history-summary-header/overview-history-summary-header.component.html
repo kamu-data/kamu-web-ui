@@ -52,25 +52,23 @@
                             …
                         </button>
                     </span>
-                    @if (metadataBlockFragment) {
-                        <div class="d-flex flex-auto justify-content-end ml-3 align-items-baseline">
-                            <app-display-hash
-                                [value]="metadataBlockFragment.blockHash"
-                                [navigationTargetDataset]="{
-                                    accountName: metadataBlockFragment.author.accountName,
-                                    datasetName: this.datasetName,
-                                }"
-                                [class]="'f4 link--secondary text-mono ml-2 d-none d-lg-inline'"
+                    <div class="d-flex flex-auto justify-content-end ml-3 align-items-baseline">
+                        <app-display-hash
+                            [value]="metadataBlockFragment.blockHash"
+                            [navigationTargetDataset]="{
+                                accountName: metadataBlockFragment.author.accountName,
+                                datasetName: this.datasetName,
+                            }"
+                            [class]="'f4 link--secondary text-mono ml-2 d-none d-lg-inline'"
+                        />
+                        <a class="link--secondary ml-3">
+                            <app-display-time
+                                [data]="systemTime"
+                                class="no-wrap"
+                                [dataTestId]="'time-overview-history-summary'"
                             />
-                            <a class="link--secondary ml-3">
-                                <app-display-time
-                                    [data]="systemTime"
-                                    class="no-wrap"
-                                    [dataTestId]="'time-overview-history-summary'"
-                                />
-                            </a>
-                        </div>
-                    }
+                        </a>
+                    </div>
                 </div>
                 <div class="flex-shrink-0">
                     <h2 class="sr-only">Git stats</h2>

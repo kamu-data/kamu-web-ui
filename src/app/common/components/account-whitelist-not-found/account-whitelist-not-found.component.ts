@@ -6,7 +6,6 @@
  */
 
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { MatIconModule } from "@angular/material/icon";
 
 import AppValues from "@common/values/app.values";
 import { MaybeUndefined } from "@interface/app.types";
@@ -16,7 +15,6 @@ import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
     selector: "app-account-whitelist-not-found",
-    imports: [MatIconModule],
     templateUrl: "./account-whitelist-not-found.component.html",
     styleUrls: ["./account-whitelist-not-found.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,

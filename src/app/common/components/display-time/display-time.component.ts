@@ -21,7 +21,6 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
 export class DisplayTimeComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;
     @Input() public class?: string;
-    @Input() public dataTestId: string;
 
     public get relativeTime(): string {
         return this.dateTime(this.data);

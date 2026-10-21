@@ -75,13 +75,13 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
     /* istanbul ignore next */
     public ngOnInit(): void {
         if (this.commitmentUploadToken) {
-            this.componentData$ = this.queryExplainerService
-                .fetchCommitmentDataByUploadToken(this.commitmentUploadToken)
-                .pipe(
+            this.componentData$ = this.withFormFallback(
+                this.queryExplainerService.fetchCommitmentDataByUploadToken(this.commitmentUploadToken).pipe(
                     switchMap((uploadedCommitment: QueryExplainerResponse) => {
                         return this.combineQueryExplainerResponse(uploadedCommitment);
                     }),
-                );
+                ),
+            );
         }
     }
 
@@ -109,17 +109,24 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
     public async verifyCommitment(): Promise<void> {
         try {
             const parsedCommitment = (await JSON.parse(this.commitment)) as QueryExplainerResponse;
+            this.componentData$ = this.withFormFallback(this.combineQueryExplainerResponse(parsedCommitment));
+            // Set only once the parsed JSON proved to be a commitment, so a malformed one keeps the form
             this.commitmentUploadToken = "simulated-token";
-            // A failed request has already shown its toast and completes empty: bring back the form
-            this.componentData$ = this.combineQueryExplainerResponse(parsedCommitment).pipe(
-                defaultIfEmpty(null),
-                tap((data: MaybeNull<QueryExplainerComponentData>) => {
-                    if (!data) this.commitmentUploadToken = null;
-                }),
-            );
         } catch {
             this.toastrService.error("Impossible to parse the commitment");
         }
+    }
+
+    // A failed request has already shown its toast and completes empty: bring back the form
+    private withFormFallback(
+        data$: Observable<QueryExplainerComponentData>,
+    ): Observable<MaybeNull<QueryExplainerComponentData>> {
+        return data$.pipe(
+            defaultIfEmpty(null),
+            tap((data: MaybeNull<QueryExplainerComponentData>) => {
+                if (!data) this.commitmentUploadToken = null;
+            }),
+        );
     }
 
     /* istanbul ignore next */

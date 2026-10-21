@@ -8,7 +8,7 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
-import { Observable, of, switchMap } from "rxjs";
+import { of, switchMap } from "rxjs";
 
 import { DatasetSearchResult } from "@interface/search.interface";
 
@@ -16,9 +16,10 @@ import { AppConfigService } from "src/app/app-config.service";
 import ProjectLinks from "src/app/project-links";
 import { SearchService } from "src/app/search/search.service";
 
-export const searchResolverFn: ResolveFn<Observable<DatasetSearchResult>> = (route: ActivatedRouteSnapshot) => {
+export const searchResolverFn: ResolveFn<DatasetSearchResult> = (route: ActivatedRouteSnapshot) => {
     const searchService = inject(SearchService);
     const appConfigService = inject(AppConfigService);
+
     const isSemanticSearchAvailable =
         appConfigService.semanticSearchThresholdScore !== undefined &&
         appConfigService.semanticSearchThresholdScore >= 0;

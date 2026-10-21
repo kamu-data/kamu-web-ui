@@ -11,7 +11,6 @@ import { ChangeDetectionStrategy, Component, Input, Type } from "@angular/core";
 import { BaseComponent } from "@common/components/base.component";
 import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "@interface/app.types";
-import { DatasetInfo } from "@interface/navigation.interface";
 
 import { AddDataEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/add-data-event/add-data-event.component";
 import { AddPushSourceEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/add-push-source-event/add-push-source-event.component";
@@ -38,7 +37,6 @@ import { SupportedEvents } from "src/app/dataset-block/metadata-block/components
 })
 export class EventDetailsComponent {
     @Input({ required: true }) public block: MetadataBlockFragment;
-    @Input({ required: true }) public datasetInfo: DatasetInfo;
 
     public get eventComponent(): Type<BaseComponent> {
         return (

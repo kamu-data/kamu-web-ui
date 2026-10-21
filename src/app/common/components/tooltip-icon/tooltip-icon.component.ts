@@ -16,7 +16,11 @@ import AppValues from "@common/values/app.values";
     selector: "app-tooltip-icon",
     templateUrl: "./tooltip-icon.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatIconModule, NgbTooltip],
+    imports: [
+        //-----//
+        MatIconModule,
+        NgbTooltip,
+    ],
 })
 export class TooltipIconComponent {
     @Input({ required: true }) public tooltip: string;

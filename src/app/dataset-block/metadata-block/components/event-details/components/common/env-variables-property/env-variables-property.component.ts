@@ -24,7 +24,10 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     templateUrl: "./env-variables-property.component.html",
     styleUrls: ["./env-variables-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [DynamicTableComponent],
+    imports: [
+        //-----//
+        DynamicTableComponent,
+    ],
 })
 export class EnvVariablesPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: EnvVar[];

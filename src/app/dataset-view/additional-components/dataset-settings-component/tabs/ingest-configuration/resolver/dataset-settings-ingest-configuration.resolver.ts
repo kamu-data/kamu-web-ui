@@ -6,26 +6,25 @@
  */
 
 import { inject } from "@angular/core";
-import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn } from "@angular/router";
 
-import { map, Observable, of, switchMap } from "rxjs";
+import { map, of, switchMap } from "rxjs";
 
 import { isNil } from "@common/helpers/app.helpers";
 import { DatasetFlowType, GetDatasetFlowConfigsQuery } from "@api/kamu.graphql.interface";
 
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { resolveSettingsTabAccess } from "src/app/dataset-view/additional-components/dataset-settings-component/resolvers/settings-tab-access.helpers";
 import { DatasetFlowConfigService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-config.service";
-import { datasetSettingsGeneralTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/resolver/dataset-settings-general-tab.resolver";
 import { DatasetSettingsIngestConfigurationTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.data";
-import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
+import ProjectLinks from "src/app/project-links";
 
 export const datasetSettingsIngestConfigurationResolverFn: ResolveFn<DatasetSettingsIngestConfigurationTabData> = (
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot,
 ) => {
     const datasetFlowConfigService = inject(DatasetFlowConfigService);
 
-    // The general tab resolver always returns an Observable
-    return (datasetSettingsGeneralTabResolverFn(route, state) as Observable<DatasetViewData | RedirectCommand>).pipe(
+    return resolveSettingsTabAccess(route.data[ProjectLinks.URL_PARAM_TAB] as SettingsTabsEnum).pipe(
         switchMap((data) => {
             if (data instanceof RedirectCommand) {
                 return of(data);

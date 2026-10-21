@@ -53,15 +53,18 @@ import { SessionStorageService } from "src/app/services/session-storage.service"
     styleUrls: ["./app-header.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        RouterLink,
-        MatProgressSpinnerModule,
-        NgbTypeahead,
+        //-----//
         FormsModule,
-        NgbHighlight,
+        RouterLink,
+        //-----//
         MatIconModule,
+        MatMenuModule,
+        MatProgressSpinnerModule,
+        NgbHighlight,
+        NgbTypeahead,
+        //-----//
         FeatureFlagDirective,
         NotificationIndicatorComponent,
-        MatMenuModule,
         DisplayAccountNamePipe,
         AccountSettingsLinkPipe,
     ],

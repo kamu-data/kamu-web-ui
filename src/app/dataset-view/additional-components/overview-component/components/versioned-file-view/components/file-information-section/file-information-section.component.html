@@ -19,11 +19,9 @@
                     >
                         &#9664;
                     </button>
-                    @if (fileDetails?.fileInfo?.version) {
-                        <span data-test-id="file-version" class="d-block">
-                            {{ version ? version : fileDetails?.fileInfo?.version }}</span
-                        >
-                    }
+                    <span data-test-id="file-version" class="d-block">
+                        {{ version ? version : fileDetails?.fileInfo?.version }}</span
+                    >
                     <button
                         class="change-version-btn"
                         (click)="navigateToAdjacentVersion(fileDetails, 1)"

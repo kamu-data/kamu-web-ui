@@ -9,7 +9,7 @@ import { inject, Injector } from "@angular/core";
 
 import { ApolloLink } from "@apollo/client/core";
 import { CombinedGraphQLErrors } from "@apollo/client/errors";
-import { onError } from "@apollo/client/link/error";
+import { ErrorLink } from "@apollo/client/link/error";
 import { ToastrService } from "ngx-toastr";
 
 import { isAccessTokenExpired, logError } from "@common/helpers/app.helpers";
@@ -62,5 +62,5 @@ export function createApolloErrorHandler(): (error: unknown) => void {
 /** The Apollo link that passes every operation error to `createApolloErrorHandler`. Create it in an injection context. */
 export function createApolloErrorLink(): ApolloLink {
     const handleError = createApolloErrorHandler();
-    return onError(({ error }) => handleError(error));
+    return new ErrorLink(({ error }) => handleError(error));
 }

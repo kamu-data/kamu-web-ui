@@ -11,7 +11,7 @@ import { Observable } from "rxjs";
 
 import { parse } from "yaml";
 
-import { MetadataManifestFormat, SetTransform, SqlQueryStep, TransformInput } from "@api/kamu.graphql.interface";
+import { MetadataManifestFormat, SetTransform, SqlQueryStep } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
@@ -19,6 +19,7 @@ import { BlockService } from "src/app/dataset-block/metadata-block/block.service
 import {
     EditSetTransformParseType,
     SetTransformYamlType,
+    TransformSelectedInput,
 } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
 
 @Injectable({
@@ -32,8 +33,8 @@ export class EditSetTransformService {
         return editFormParseValue.content.event;
     }
 
-    public parseInputDatasets(datasets: Set<string>): TransformInput[] {
-        return Array.from(datasets).map((item) => JSON.parse(item) as TransformInput);
+    public parseInputDatasets(datasets: Set<string>): TransformSelectedInput[] {
+        return Array.from(datasets).map((item) => JSON.parse(item) as TransformSelectedInput);
     }
 
     public getEventAsYaml(info: DatasetInfo): Observable<MaybeNull<string>> {
@@ -54,13 +55,4 @@ export class EditSetTransformService {
             },
         } as Omit<SetTransform, "__typename">;
     }
-
-    // private transformInputsDatasets(
-    //     inputs: TransformInput[],
-    //     owners: string[],
-    // ): TransformInput[] {
-    //     return inputs.map((item: TransformInput, index: number) => {
-    //         return { ...item, name: `${owners[index]}/${item.name as string}` };
-    //     });
-    // }
 }

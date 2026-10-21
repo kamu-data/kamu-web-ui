@@ -76,13 +76,12 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
   in the logic part, not inline as `inject(X).value`:
 
   ```ts
-  export const loginGuard: CanActivateFn = () => {
-      const loginMethodsService = inject(LoginMethodsService);
+  export const accountPasswordProviderGuard: CanActivateFn = () => {
       const loggedUserService = inject(LoggedUserService);
       const navigationService = inject(NavigationService);
 
-      const canLogin = loginMethodsService.loginMethods.length > 0 && !loggedUserService.isAuthenticated;
-      return canLogin || navigationService.homeUrlTree();
+      const accountProvider = loggedUserService.maybeCurrentlyLoggedInUser?.accountProvider;
+      return accountProvider === AccountProvider.Password || navigationService.homeUrlTree();
   };
   ```
 

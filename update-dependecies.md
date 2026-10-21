@@ -1,18 +1,20 @@
-- **@angular/material** depends on **@angular/common**
-- **apollo-angular** depends on **@apollo/client**
-- **@danielmoncada/angular-datetime-picker** depends on **@angular/common**
-- **@danielmoncada/angular-datetime-picker-moment-adapter** depends on **@danielmoncada/angular-datetime-picker**
-- **@ng-bootstrap/ng-bootstrap** depends on **@angular/common**
-- **bootstrap** depends on **@angular/common**
-- **@ng-select/ng-select** depends on **@angular/common**
-- **@schematics/angular** depends on **@angular/common**
-- **ngx-markdown** depends on **@angular/common**
-- **marked** depends on **ngx-markdown**
-- **monaco-editor** depends on **@angular/common**
-- **ngx-monaco-editor-v2** depends on **@angular/common**, and each of its releases peers on one **monaco-editor** minor (21.1 → ^0.55.1); move the two together
-- **ngx-infinite-scroll** depends on **@angular/common**
+Packages that constrain each other through `peerDependencies`. The Angular framework, build tooling and CDK/Material groups are listed in [`kamu-ui-release-dependency-workflows`](.claude/skills/kamu-ui-release-dependency-workflows/SKILL.md#dependencies).
 
-- "ng2-pdf-viewer": "^9.1.5" (these versions work correctly in pairs - touch only when absolutely necessary)
-- "pdfjs-dist": "^2.16.105"   
+- **zone.js** stays in the range **@angular/core** and **ngx-markdown** peer on (`~0.15.0 || ~0.16.0`)
+- **typescript** must satisfy **@angular/build** (`>=5.9 <6.0`), **@angular/compiler-cli** (`>=5.9 <6.1`) and **@typescript-eslint/\*** (`<6.1.0`)
+- Libraries that peer on one Angular major and move with each Angular upgrade: **@ng-bootstrap/ng-bootstrap**, **@ng-select/ng-select**, **ngx-toastr**, **ngx-markdown**, **ngx-infinite-scroll**, **ngx-monaco-editor-v2** (`^21.1.4`), **@danielmoncada/angular-datetime-picker** (also **@angular/cdk**), **@danielmoncada/angular-datetime-picker-moment-adapter**
+- Libraries whose **@angular/core** range spans several majors: **apollo-angular** (`<23`), **@swimlane/ngx-graph** (`<23`, also **@angular/cdk**); **ngx-highlightjs** (also **@angular/cdk**) and **ngx-trim-directive** have no upper bound, so npm accepts them on any Angular major
+- **@ng-bootstrap/ng-bootstrap** also peers on **@angular/localize** and **@popperjs/core**
+- **bootstrap** peers on **@popperjs/core**
+- **apollo-angular** peers on **@apollo/client** (`^4.2.3`), **graphql** and **rxjs** (`^7.8.0`)
+- **graphql**: **@apollo/client** and **apollo-angular** accept 17, the **@graphql-codegen/\*** packages only up to 16
+- **highlight.js** stays in the range **ngx-highlightjs** peers on (`^11.11.1`); the app also imports its core, languages and a theme directly
+- **marked** stays in the range **ngx-markdown** peers on (`^17.0.0 || ^18.0.0`)
+- **ngx-monaco-editor-v2**: each release peers on one **monaco-editor** minor (21.1 → `^0.55.1`); move the two together
+- **@danielmoncada/angular-datetime-picker-moment-adapter** peers on **moment** (`^2.30.1`), which npm installs as a peer, not from `package.json`
+- **date-fns-tz** peers on **date-fns**; **siwe** peers on **ethers**
+- **@typescript-eslint/\*** and **eslint-plugin-license-header** peer on **eslint**; **stylelint-scss** and **stylelint-config-standard-scss** peer on **stylelint**
+
+- "ng2-pdf-viewer": "^9.1.5" (touch only when absolutely necessary). It brings its own **pdfjs-dist** `~2.14.305` as a dependency, so `package.json` does not declare pdfjs-dist
 
 - "jasmine-core": "~4.6.1", "@types/jasmine": "~4.6.6" (pinned to the jasmine-core major that karma-jasmine 5.1 bundles and runs; karma is deprecated at 6.4.4, so these move only when the test runner is replaced)

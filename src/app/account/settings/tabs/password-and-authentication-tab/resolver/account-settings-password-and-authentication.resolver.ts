@@ -14,5 +14,6 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 export const accountSettingsPasswordAndAuthenticationResolverFn: ResolveFn<AccountFragment> = () => {
     const loggedUserService = inject(LoggedUserService);
+
     return loggedUserService.currentlyLoggedInUser;
 };

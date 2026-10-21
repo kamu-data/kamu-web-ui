@@ -16,7 +16,10 @@ import { changeCopyIcon } from "@common/helpers/app.helpers";
     templateUrl: "./copy-to-clipboard.component.html",
     styleUrls: ["./copy-to-clipboard.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatIconModule],
+    imports: [
+        //-----//
+        MatIconModule,
+    ],
 })
 export class CopyToClipboardComponent {
     @Input({ required: true }) public text: string;

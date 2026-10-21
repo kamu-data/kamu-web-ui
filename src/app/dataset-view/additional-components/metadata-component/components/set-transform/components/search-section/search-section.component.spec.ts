@@ -116,6 +116,7 @@ describe("SearchSectionComponent", () => {
 
         expect(component.inputDatasets.size).toBe(1);
         expect(component.inputsViewModel.length).toBe(1);
+        expect(component.inputsViewModel[0].alias).toEqual(mockDatasetBasicsDerivedFragment.alias);
         expect(requestDatasetSchemaSpy).toHaveBeenCalledTimes(1);
     });
 

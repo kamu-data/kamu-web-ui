@@ -402,22 +402,6 @@ export type AccountFlowRunsListFlowsArgs = {
   perPage?: InputMaybe<Scalars['Int']['input']>;
 };
 
-/** Flow trigger queries across datasets owned by an account */
-export type AccountFlowTriggers = {
-  __typename?: 'AccountFlowTriggers';
-  /** Checks if all triggers of all datasets in account are disabled */
-  allPaused: Scalars['Boolean']['output'];
-};
-
-/** Flow trigger mutations across all datasets owned by an account */
-export type AccountFlowTriggersMut = {
-  __typename?: 'AccountFlowTriggersMut';
-  /** Pauses flow triggers of all datasets owned by the account */
-  pauseAccountDatasetFlows: Scalars['Boolean']['output'];
-  /** Resumes flow triggers of all datasets owned by the account */
-  resumeAccountDatasetFlows: Scalars['Boolean']['output'];
-};
-
 /** Flow queries scoped to an account */
 export type AccountFlows = {
   __typename?: 'AccountFlows';
@@ -425,30 +409,6 @@ export type AccountFlows = {
   processes: AccountFlowProcesses;
   /** Returns interface for flow runs queries */
   runs: AccountFlowRuns;
-  /** Returns interface for flow triggers queries */
-  triggers: AccountFlowTriggers;
-};
-
-/** Flow mutations scoped to an account */
-export type AccountFlowsMut = {
-  __typename?: 'AccountFlowsMut';
-  /** Flow trigger mutations for the account's datasets */
-  triggers: AccountFlowTriggersMut;
-};
-
-/**
- * Link to an account.
- *
- * Schema: https://opendatafabric.org/schemas/auth/v1alpha1/AccountHandle
- */
-export type AccountHandle = {
-  __typename?: 'AccountHandle';
-  /** DID of the account. */
-  did: Scalars['AccountID']['output'];
-  /** ID of the account resource. */
-  id: Scalars['ResourceID']['output'];
-  /** Name of the account. */
-  name: Scalars['AccountName']['output'];
 };
 
 /** Filters narrowing an account name lookup */
@@ -472,11 +432,6 @@ export type AccountMut = {
    * Allowed only to the account itself and to administrators.
    */
   delete: DeleteAccountResult;
-  /**
-   * Access to the mutable flow configurations of this account.
-   * Available only to the account itself.
-   */
-  flows: AccountFlowsMut;
   /**
    * Reset password for a selected account.
    * Allowed only to the account itself and to administrators.
@@ -574,21 +529,6 @@ export type AccountQuotasUsageStorage = {
    * account is unlimited.
    */
   limitTotalBytes?: Maybe<Scalars['Int']['output']>;
-};
-
-/**
- * Reference to an account, mirroring the ODF `auth/v1alpha1/AccountRef`.
- *
- * Resolves by `did` if given, else by `name`; any other field present is then
- * checked for agreement, so a mismatch is reported rather than ignored.
- */
-export type AccountRefInput = {
-  /** Account DID, used for lookup when given */
-  did?: InputMaybe<Scalars['AccountID']['input']>;
-  /** Resource ID of the account, only checked for agreement */
-  id?: InputMaybe<Scalars['ResourceID']['input']>;
-  /** Account name, used for lookup when `did` is absent */
-  name?: InputMaybe<Scalars['AccountName']['input']>;
 };
 
 /** Kind of account */
@@ -973,7 +913,10 @@ export type BatchResourceHandlesOutcome = BatchResourceHandlesResult | ResourceA
 /** Resource handles found and references that could not be resolved */
 export type BatchResourceHandlesResult = {
   __typename?: 'BatchResourceHandlesResult';
-  /** Handles found, one per resolved reference */
+  /**
+   * Handles found, one per resolved reference; with `includeDeleting` a
+   * name may match several, which share its `requestIndex`
+   */
   handles: Array<BatchResourceHandleSuccess>;
   /** References that could not be resolved */
   problems: Array<BatchResourceProblem>;
@@ -994,7 +937,10 @@ export type BatchResourceManifestsOutcome = BatchResourceManifestsResult | Resou
 /** Rendered manifests and references that could not be resolved */
 export type BatchResourceManifestsResult = {
   __typename?: 'BatchResourceManifestsResult';
-  /** Manifests rendered, one per resolved reference */
+  /**
+   * Manifests rendered, one per resolved reference; with `includeDeleting`
+   * a name may match several, which share its `requestIndex`
+   */
   manifests: Array<BatchResourceManifestSuccess>;
   /** References that could not be resolved */
   problems: Array<BatchResourceProblem>;
@@ -1026,7 +972,10 @@ export type BatchResourcesResult = {
   __typename?: 'BatchResourcesResult';
   /** References that could not be resolved */
   problems: Array<BatchResourceProblem>;
-  /** Resources found, one per resolved reference */
+  /**
+   * Resources found, one per resolved reference; with `includeDeleting` a
+   * name may match several, which share its `requestIndex`
+   */
   resources: Array<BatchResourceSuccess>;
 };
 
@@ -4255,7 +4204,7 @@ export type MergeStrategyLedger = {
  * state of data against the reconstructed previous state and recording differences as retractions
  * or corrections. The Operation Type "op" column will contain:
  * - append (`+A`) when a row appears for the first time
- * - retraction (`-D`) when row disappears
+ * - retraction (`-R`) when row disappears
  * - correction (`-C`, `+C`) when row data has changed, with `-C` event carrying the old value of
  * the row and `+C` carrying the new value.
  *
@@ -5185,7 +5134,7 @@ export type Resource = {
   __typename?: 'Resource';
   /** Container for identity and ownership information of a resource. */
   headers: ResourceHeaders;
-  /** Identifies the controlling entity, a bounded context that this resource belongs to, and the version. Url should follow the pattern `{base-url}/{context}/{version}/{name}.json` e.g. `https://opendatafabric.org/schemas/datasets/v1/Dataset.json`. */
+  /** Identifies the controlling entity, a bounded context that this resource belongs to, and the version. Url should follow the pattern `{base-url}/{context}/{version}/{name}` e.g. `https://opendatafabric.org/schemas/datasets/v1/Dataset`. */
   schema: Scalars['TypeUri']['output'];
   /** Specifies the desired state of a resource. */
   spec: Scalars['JSON']['output'];
@@ -5328,21 +5277,26 @@ export type ResourceConnection = {
 /** Result of deleting resources by reference */
 export type ResourceDeleteOutcome = ResourceAccountResolutionProblem | ResourceDeleteResult | ResourceUnsupportedSelectorProblem;
 
-/** Resources deleted and references that could not be resolved */
+/**
+ * Resources whose deletion was requested and references that could not be
+ * resolved
+ */
 export type ResourceDeleteResult = {
   __typename?: 'ResourceDeleteResult';
   /** References that could not be resolved */
   problems: Array<BatchResourceProblem>;
-  /** Resources that were deleted */
+  /** Resources whose deletion was requested */
   resources: Array<ResourceDeleteSuccess>;
 };
 
-/** Resource deleted for one reference of a batch */
+/** Resource whose deletion was requested for one reference of a batch */
 export type ResourceDeleteSuccess = {
   __typename?: 'ResourceDeleteSuccess';
+  /** `DELETING` while controllers clean up, `DELETED` once they finished */
+  phase: ResourcePhase;
   /** Zero-based position of the reference in the request */
   requestIndex: Scalars['Int']['output'];
-  /** Unique identifier of the deleted resource */
+  /** Unique identifier of the resource */
   resourceId: Scalars['ResourceID']['output'];
 };
 
@@ -5368,7 +5322,7 @@ export type ResourceEmptyRefProblem = {
 export type ResourceHandle = {
   __typename?: 'ResourceHandle';
   /** Account that owns the target resource. */
-  account: AccountHandle;
+  account: ResourceOwnerHandle;
   /** DID of the resource, if applicable. */
   did?: Maybe<Scalars['Did']['output']>;
   /** ID of the resource within a node. */
@@ -5433,7 +5387,7 @@ export enum ResourceHeaderValidationProblemCode {
 export type ResourceHeaders = {
   __typename?: 'ResourceHeaders';
   /** Link to the account that owns the resource. */
-  account: AccountHandle;
+  account: ResourceOwnerHandle;
   /**
    * Annotations is a key value map stored with a resource that may be set by external tools to
    * store and retrieve arbitrary metadata. Unlike labels, annotations are not indexed and
@@ -5444,6 +5398,11 @@ export type ResourceHeaders = {
   createdAt: Scalars['DateTime']['output'];
   /** Time when the resource was deleted. */
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  /**
+   * Time when deletion of the resource was requested. The resource remains visible until its
+   * controllers finish cleaning up and the deletion completes.
+   */
+  deletionRequestedAt?: Maybe<Scalars['DateTime']['output']>;
   /**
    * A sequential number that changes every time the resource header and spec are updated. Does
    * not increment on status changes, thus signifying changes to the desired state. Populated by
@@ -5467,6 +5426,12 @@ export type ResourceHeaders = {
    * cleanup.
    */
   ownerReferences?: Maybe<Array<ResourceHandle>>;
+  /**
+   * A sequential number that changes every time the resource status is updated. Can be passed
+   * back as a precondition of a status update to make sure the status was not modified since it
+   * was read. Populated by the system. Starts with `1`.
+   */
+  statusGeneration: Scalars['Uint64']['output'];
   /** Time when the resource was last updated, including header, spec, and status updates. */
   updatedAt: Scalars['DateTime']['output'];
 };
@@ -5628,23 +5593,57 @@ export type ResourceNameNotFoundProblem = {
 };
 
 /**
- * Represents the reconciliation phase of a resource.
+ * Link to a resolved account that can own resources: `User`, `Organization`, or `Node`.
+ *
+ * Schema: https://opendatafabric.org/schemas/auth/v1alpha1/ResourceOwnerHandle
+ */
+export type ResourceOwnerHandle = {
+  __typename?: 'ResourceOwnerHandle';
+  /** DID of the account. */
+  did: Scalars['AccountID']['output'];
+  /** ID of the account resource. */
+  id: Scalars['ResourceID']['output'];
+  /** Name of the account. */
+  name: Scalars['AccountName']['output'];
+};
+
+/**
+ * Reference to an account, mirroring the ODF `auth/v1alpha1/ResourceOwnerRef`.
+ *
+ * Resolves by `did` if given, else by `name`; any other field present is then
+ * checked for agreement, so a mismatch is reported rather than ignored.
+ */
+export type ResourceOwnerRefInput = {
+  /** Account DID, used for lookup when given */
+  did?: InputMaybe<Scalars['AccountID']['input']>;
+  /** Resource ID of the account, only checked for agreement */
+  id?: InputMaybe<Scalars['ResourceID']['input']>;
+  /** Account name, used for lookup when `did` is absent */
+  name?: InputMaybe<Scalars['AccountName']['input']>;
+};
+
+/**
+ * Represents the reconciliation or deletion phase of a resource.
  *
  * Schema: https://opendatafabric.org/schemas/resources/v1alpha1/ResourcePhase
  */
 export enum ResourcePhase {
   Degraded = 'DEGRADED',
+  Deleted = 'DELETED',
+  Deleting = 'DELETING',
   Failed = 'FAILED',
   Pending = 'PENDING',
   Ready = 'READY',
   Reconciling = 'RECONCILING'
 }
 
-/** Number of resources in each reconciliation phase */
+/** Number of resources in each phase */
 export type ResourcePhaseCounts = {
   __typename?: 'ResourcePhaseCounts';
   /** Resources whose last reconcile failed after an earlier success */
   degraded: Scalars['Uint64']['output'];
+  /** Resources whose deletion waits for their controllers to clean up */
+  deleting: Scalars['Uint64']['output'];
   /** Resources that failed and were never reconciled */
   failed: Scalars['Uint64']['output'];
   /** Resources waiting to be reconciled */
@@ -5656,7 +5655,9 @@ export type ResourcePhaseCounts = {
 };
 
 /**
- * Reference to exactly one resource, mirroring the ODF `ResourceRef`.
+ * Reference to one resource, mirroring the ODF `ResourceRef`. A name matches
+ * the live resource holding it; with `includeDeleting` it also matches
+ * resources being deleted, so it may resolve to several.
  *
  * A resource is addressed either by `id`, or by `type` **and** `name` — ODF's
  * uniqueness key is `(account, type, name)`, and resources of different types
@@ -5669,11 +5670,11 @@ export type ResourcePhaseCounts = {
  *
  * To match resources *without* knowing their type, use a selector
  * (`bySelectors`): selectors ask which resources match and may span every
- * type, while a ref names exactly one.
+ * type, while a ref names one resource.
  */
 export type ResourceRefInput = {
   /** Account owning the resource, defaults to the calling account */
-  account?: InputMaybe<AccountRefInput>;
+  account?: InputMaybe<ResourceOwnerRefInput>;
   /** Unique identifier of the resource */
   id?: InputMaybe<Scalars['ResourceID']['input']>;
   /** Exact name. Never a pattern; use a selector for pattern matching. */
@@ -5728,7 +5729,7 @@ export type ResourceSelectorInput = {
    * § Selectors), which have no call to inherit an account from; using it as
    * a per-selector override within a query extends beyond that.
    */
-  account?: InputMaybe<AccountRefInput>;
+  account?: InputMaybe<ResourceOwnerRefInput>;
   /** Matches only the resource with this ID */
   id?: InputMaybe<Scalars['ResourceID']['input']>;
   /**
@@ -5914,6 +5915,7 @@ export type Resources = {
 
 /** Queries over declarative resources and their types */
 export type ResourcesByRefsArgs = {
+  includeDeleting?: Scalars['Boolean']['input'];
   opts?: SpecViewOptsInput;
   resourceRefs: Array<ResourceRefInput>;
 };
@@ -5929,6 +5931,7 @@ export type ResourcesBySelectorsArgs = {
 
 /** Queries over declarative resources and their types */
 export type ResourcesHandlesByRefsArgs = {
+  includeDeleting?: Scalars['Boolean']['input'];
   resourceRefs: Array<ResourceRefInput>;
 };
 
@@ -5944,6 +5947,7 @@ export type ResourcesHandlesBySelectorsArgs = {
 /** Queries over declarative resources and their types */
 export type ResourcesRenderManifestsArgs = {
   format: ResourceManifestFormat;
+  includeDeleting?: Scalars['Boolean']['input'];
   opts?: SpecViewOptsInput;
   resourceRefs: Array<ResourceRefInput>;
 };
@@ -5951,7 +5955,7 @@ export type ResourcesRenderManifestsArgs = {
 
 /** Queries over declarative resources and their types */
 export type ResourcesSummaryArgs = {
-  account?: InputMaybe<AccountRefInput>;
+  account?: InputMaybe<ResourceOwnerRefInput>;
 };
 
 /** Mutations that create, update and delete declarative resources */
@@ -5967,7 +5971,11 @@ export type ResourcesMut = {
    * request is rolled back and returned as an error
    */
   applyManifests: ResourceApplyManifestsResult;
-  /** Deletes the resources identified by the given references */
+  /**
+   * Requests deletion of the resources identified by the given references.
+   * Names match live resources only; an id also matches a resource being
+   * deleted, which retries its cleanup
+   */
   delete: ResourceDeleteOutcome;
 };
 
@@ -6165,6 +6173,8 @@ export enum SearchEntityName {
  * that exactly equivalent.
  */
 export type SearchResourcesInput = {
+  /** Also match resources whose deletion is in progress */
+  includeDeleting?: Scalars['Boolean']['input'];
   /**
    * Several selectors act as a logical OR, while the fields within one are a
    * conjunction. Omitted spans every type; an empty list matches nothing — a
@@ -9110,10 +9120,7 @@ export type DatasetMetadataSummaryFragment = (
     ) | null, currentPushSources: Array<(
       { __typename?: 'AddPushSource' }
       & AddPushSourceEventFragment
-    )>, currentDownstreamDependencies: Array<
-      | { __typename: 'DatasetAccessResultAccessible' }
-      | { __typename: 'DatasetAccessResultNotAccessible' }
-    > } }
+    )> } }
   & DatasetReadmeFragment
   & DatasetLastUpdateFragment
 );
@@ -9232,10 +9239,7 @@ export type GetMetadataBlockQuery = { __typename?: 'Query', datasets: { __typena
       { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentDownstreamDependenciesCount: number, chain: { __typename?: 'MetadataChain', blockByHashEncoded?: string | null, blockByHash?: (
             { __typename?: 'MetadataBlockExtended' }
             & MetadataBlockFragment
-          ) | null }, currentDownstreamDependencies: Array<
-          | { __typename: 'DatasetAccessResultAccessible' }
-          | { __typename: 'DatasetAccessResultNotAccessible' }
-        > } }
+          ) | null } } }
       & DatasetBasicsFragment
     ) | null } };
 
@@ -10948,14 +10952,6 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
       ...AddPushSourceEvent
     }
     currentDownstreamDependenciesCount
-    currentDownstreamDependencies {
-      ... on DatasetAccessResultNotAccessible {
-        __typename
-      }
-      ... on DatasetAccessResultAccessible {
-        __typename
-      }
-    }
   }
   ...DatasetReadme
   ...DatasetLastUpdate
@@ -13565,14 +13561,6 @@ export const GetMetadataBlockDocument = gql`
           }
         }
         currentDownstreamDependenciesCount
-        currentDownstreamDependencies {
-          ... on DatasetAccessResultNotAccessible {
-            __typename
-          }
-          ... on DatasetAccessResultAccessible {
-            __typename
-          }
-        }
       }
     }
   }

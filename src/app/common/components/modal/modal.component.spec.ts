@@ -13,7 +13,7 @@ import { of } from "rxjs";
 import { ModalDialogComponent } from "@common/components/modal/modal-dialog.component";
 import { ModalComponent } from "@common/components/modal/modal.component";
 import { ModalService } from "@common/components/modal/modal.service";
-import { findComponentInstance } from "@common/helpers/base-test.helpers.spec";
+import { findComponentInstance, findComponentInstances } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { ModalCommandInterface } from "@interface/modal.interface";
 
@@ -65,8 +65,17 @@ describe("ModalComponent", () => {
     it("should render the component for the command type with its context", () => {
         component._execute(MOCK_COMMAND_INTERFACE);
 
-        const dialog = findComponentInstance(fixture, ModalDialogComponent, () => true);
+        const dialog = findComponentInstance(fixture, ModalDialogComponent);
         expect(dialog.context.message).toEqual("Mock message");
+    });
+
+    it("should replace the open modal with the next one and remove it on close", () => {
+        component._execute(MOCK_COMMAND_INTERFACE);
+        component._execute(MOCK_COMMAND_INTERFACE);
+        expect(findComponentInstances(fixture, ModalDialogComponent).length).toEqual(1);
+
+        component._close();
+        expect(findComponentInstances(fixture, ModalDialogComponent)).toEqual([]);
     });
 
     it("should check _close", () => {

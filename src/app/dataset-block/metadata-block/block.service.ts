@@ -16,7 +16,6 @@ import {
     AddPushSource,
     GetMetadataBlockQuery,
     MetadataBlockExtended,
-    MetadataBlockFragment,
     MetadataEventType,
     MetadataManifestFormat,
 } from "@api/kamu.graphql.interface";
@@ -36,11 +35,14 @@ export class BlockService {
     public requestMetadataBlock(info: DatasetInfo, blockHash: string): Observable<MaybeUndefined<MetadataBlockInfo>> {
         return this.datasetApi.getBlockByHash({ ...info, blockHash }).pipe(
             map((data: GetMetadataBlockQuery) => {
-                if (data.datasets.byOwnerAndName) {
-                    const block = data.datasets.byOwnerAndName.metadata.chain.blockByHash as MetadataBlockFragment;
-                    const blockAsYaml = data.datasets.byOwnerAndName.metadata.chain.blockByHashEncoded as string;
-                    const downstreamsCount = data.datasets.byOwnerAndName.metadata.currentDownstreamDependenciesCount;
-                    return { block, blockAsYaml, downstreamsCount };
+                const metadata = data.datasets.byOwnerAndName?.metadata;
+                const block = metadata?.chain.blockByHash;
+                if (metadata && block) {
+                    return {
+                        block,
+                        blockAsYaml: metadata.chain.blockByHashEncoded as string,
+                        downstreamsCount: metadata.currentDownstreamDependenciesCount,
+                    };
                 }
             }),
         );

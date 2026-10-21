@@ -69,9 +69,10 @@ export class DatasetViewHeaderComponent extends BaseComponent {
 
     public loadingListDownsreams = false;
 
-    public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[] = [
-        ...SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS,
-    ];
+    // A deep copy: opening and closing the menus rewrites counters, options and footnotes in place
+    public searchAdditionalButtonsData: SearchAdditionalHeaderButtonInterface[] = structuredClone(
+        SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS,
+    );
 
     public get searchAdditionalButtonsData$(): Observable<SearchAdditionalHeaderButtonInterface[]> {
         return this.datasetService.downstreamsCountChanges.pipe(

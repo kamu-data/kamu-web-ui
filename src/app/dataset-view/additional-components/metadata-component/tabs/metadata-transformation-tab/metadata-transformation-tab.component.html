@@ -22,44 +22,40 @@
                         <span class="font-monospace">{{ input.inputDataset.dataset.id }}</span>
                     </app-block-row-data>
                 </div>
-                @if (input.inputDataset.__typename === "TransformInputDatasetAccessible") {
-                    <div class="mx-4">
-                        <app-block-row-data [tooltip]="'Summary of the dataset.'" [label]="'Dataset:'">
-                            <div class="d-flex flex-row">
-                                <div class="me-2 mb-1">
-                                    <a [routerLink]="['/', input.inputDataset.dataset.owner.accountName]">
-                                        <img
-                                            [src]="input.inputDataset.dataset.owner.avatarUrl || DEFAULT_AVATAR_URL"
-                                            width="20"
-                                            height="20"
-                                            [alt]="'@' + input.inputDataset.dataset.owner.accountName"
-                                            [attr.data-test-id]="'user-avatar'"
-                                        />
-                                    </a>
-                                </div>
-                                <a
-                                    [routerLink]="
-                                        {
-                                            accountName: input.inputDataset.dataset.owner.accountName,
-                                            datasetName: input.inputDataset.dataset.name,
-                                        } | datasetLink
-                                    "
-                                    attr.data-test-id="dataset-name-button-{{ i }}"
-                                    class="dataset-list-container-title mb-1 pl-0"
-                                >
-                                    {{ input.inputDataset.dataset.owner.accountName }}/{{
-                                        input.inputDataset.dataset.name
-                                    }}
+                <div class="mx-4">
+                    <app-block-row-data [tooltip]="'Summary of the dataset.'" [label]="'Dataset:'">
+                        <div class="d-flex flex-row">
+                            <div class="me-2 mb-1">
+                                <a [routerLink]="['/', input.inputDataset.dataset.owner.accountName]">
+                                    <img
+                                        [src]="input.inputDataset.dataset.owner.avatarUrl || DEFAULT_AVATAR_URL"
+                                        width="20"
+                                        height="20"
+                                        [alt]="'@' + input.inputDataset.dataset.owner.accountName"
+                                        [attr.data-test-id]="'user-avatar'"
+                                    />
                                 </a>
-                                <app-dataset-visibility
-                                    class="ms-2"
-                                    [datasetVisibility]="input.inputDataset.dataset.visibility"
-                                />
-                                <app-dataset-kind [kind]="input.inputDataset.dataset.kind" />
                             </div>
-                        </app-block-row-data>
-                    </div>
-                }
+                            <a
+                                [routerLink]="
+                                    {
+                                        accountName: input.inputDataset.dataset.owner.accountName,
+                                        datasetName: input.inputDataset.dataset.name,
+                                    } | datasetLink
+                                "
+                                attr.data-test-id="dataset-name-button-{{ i }}"
+                                class="dataset-list-container-title mb-1 pl-0"
+                            >
+                                {{ input.inputDataset.dataset.owner.accountName }}/{{ input.inputDataset.dataset.name }}
+                            </a>
+                            <app-dataset-visibility
+                                class="ms-2"
+                                [datasetVisibility]="input.inputDataset.dataset.visibility"
+                            />
+                            <app-dataset-kind [kind]="input.inputDataset.dataset.kind" />
+                        </div>
+                    </app-block-row-data>
+                </div>
                 <div class="mx-4">
                     <app-block-row-data [tooltip]="'Query alias of the dataset.'" [label]="'Query alias:'">
                         <span>{{ input.alias }}</span>

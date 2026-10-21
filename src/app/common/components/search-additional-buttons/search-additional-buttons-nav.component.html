@@ -43,12 +43,7 @@
                                         [attr.aria-checked]="option.isSelected"
                                     >
                                         <span class="f5 mr-1">
-                                            @if (!option.isSelected) {
-                                                <mat-icon class="mat-icon-svg-size" svgIcon="notifications-checked" />
-                                            }
-                                            @if (option.isSelected) {
-                                                <mat-icon class="mat-icon-svg-size" svgIcon="notifications-checked" />
-                                            }
+                                            <mat-icon class="mat-icon-svg-size" svgIcon="notifications-checked" />
                                         </span>
                                         <div>
                                             <div class="fs-12 text-bold text-break">
@@ -61,14 +56,17 @@
                                     </button>
                                 }
                             </div>
+                            @if (searchAdditionalData.additionalOptions.footnote) {
+                                <div
+                                    class="text-small color-fg-muted px-3 py-2"
+                                    data-test-id="additional-options-footnote"
+                                >
+                                    {{ searchAdditionalData.additionalOptions.footnote }}
+                                </div>
+                            }
                         } @else {
                             <div>
                                 <mat-spinner [diameter]="25" class="mx-auto mt-2"></mat-spinner>
-                            </div>
-                        }
-                        @if (!loadingListDownsreams && searchAdditionalData.additionalOptions.footnote) {
-                            <div class="text-small color-fg-muted px-3 py-2" data-test-id="additional-options-footnote">
-                                {{ searchAdditionalData.additionalOptions.footnote }}
                             </div>
                         }
                     </div>

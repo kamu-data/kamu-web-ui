@@ -16,7 +16,7 @@ beside it. Tests run in Karma with Jasmine in headless Chrome; `karma.conf.js` s
 | Whole suite, as CI runs it | `npm test` |
 | One spec file or folder | `npm test -- --include src/app/api/webhooks.api.spec.ts` (a glob or directory works too) |
 
-Run on the Node `.nvmrc` pins (AGENTS.md, "Validation"). Do not pipe the output into
+Run on the Node `.nvmrc` pins (AGENTS.md, "Node version"). Do not pipe the output into
 `head`/`tail`; delegate a long run to the `ng-tester` sub-agent, which reports only failures.
 Never commit `fdescribe`/`fit`/`xdescribe`/`xit` — eslint and the edit hook reject them.
 
@@ -117,9 +117,14 @@ present or absent, with no harness to extend), the helpers in
 `@common/helpers/base-test.helpers.spec` select by `data-test-id`:
 `getElementByDataTestId`, `findElementByDataTestId`, `emitClickOnElementByDataTestId`,
 `checkVisible`, `setFieldValue`, `dispatchInputEvent`, `checkButtonDisabled`,
-`checkInputDisabled`, `findComponentInstance`, plus `routerMock`, `activeRouteMock`,
+`checkInputDisabled`, `findComponentInstance`, `findComponentInstances`, plus `routerMock`,
 `snapshotParamMapMock` and `registerMatSvgIcons()`. Add an attribute to the template rather
 than selecting by CSS class or element structure.
+
+A spec does not query `fixture.debugElement` inline (`query(By.directive(...))`,
+`queryAll(...)`): rendered components and directives are reached through
+`findComponentInstance` / `findComponentInstances`, and a query no helper covers yet becomes a
+new helper in `base-test.helpers.spec.ts`.
 
 ## API class tests
 
@@ -145,8 +150,8 @@ One case per api method: assert the variables sent, flush a fixture typed with t
   `const executeGuard: CanActivateFn = (...p) => TestBed.runInInjectionContext(() => adminGuard(...p));`.
   Stub the services it injects with `spyOn` / `spyOnProperty`.
 - A guard redirect is asserted by where it leads, not by `false`:
-  `expect(router.serializeUrl(result as UrlTree)).toEqual("/v/login")`
-  (`auth/guards/login.guard.spec.ts`).
+  `` expect(router.serializeUrl(result as UrlTree)).toEqual(`/${ProjectLinks.URL_LOGIN}`) ``
+  (`common/guards/forbid-anonymous-access.guard.spec.ts`).
 - Collect a resolver's value with `await firstValueFrom(executeResolver(route, state) as Observable<T>)`
   in an `async` test, and an expected error with
   `await expectAsync(firstValueFrom(...)).toBeRejectedWithError(...)`. A redirect is checked with

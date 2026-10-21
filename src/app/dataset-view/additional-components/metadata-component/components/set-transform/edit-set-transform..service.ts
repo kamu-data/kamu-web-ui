@@ -11,7 +11,7 @@ import { Observable } from "rxjs";
 
 import { parse } from "yaml";
 
-import { MetadataManifestFormat, SetTransform, SqlQueryStep } from "@api/kamu.graphql.interface";
+import { MetadataManifestFormat } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
@@ -19,7 +19,9 @@ import { BlockService } from "src/app/dataset-block/metadata-block/block.service
 import { parseInputDatasetKey } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
 import {
     EditSetTransformParseType,
+    SetTransformEvent,
     SetTransformYamlType,
+    TransformQueryStep,
     TransformSelectedInput,
 } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
 
@@ -45,8 +47,8 @@ export class EditSetTransformService {
     public transformEventAsObject(
         inputDatasets: Set<string>,
         engine: string,
-        queries: Omit<SqlQueryStep, "__typename">[],
-    ): Omit<SetTransform, "__typename"> {
+        queries: TransformQueryStep[],
+    ): SetTransformEvent {
         return {
             inputs: this.parseInputDatasets(inputDatasets),
             transform: {
@@ -54,6 +56,6 @@ export class EditSetTransformService {
                 engine: engine.toLowerCase(),
                 queries,
             },
-        } as Omit<SetTransform, "__typename">;
+        };
     }
 }

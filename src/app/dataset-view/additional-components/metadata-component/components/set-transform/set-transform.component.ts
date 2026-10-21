@@ -15,7 +15,7 @@ import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { GetDatasetSchemaQuery, SqlQueryStep } from "@api/kamu.graphql.interface";
+import { GetDatasetSchemaQuery } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
@@ -32,6 +32,7 @@ import {
 import {
     DatasetNode,
     SetTransformYamlType,
+    TransformQueryStep,
 } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
 import { BaseMainEventComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/base-main-event.component";
 import { StepperNavigationComponent } from "src/app/dataset-view/additional-components/metadata-component/components/stepper-navigation/stepper-navigation.component";
@@ -60,7 +61,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     public inputDatasets = new Set<string>();
     public selectedEngine: string;
     public currentSetTransformEvent: MaybeNull<SetTransformYamlType>;
-    public queries: Omit<SqlQueryStep, "__typename">[] = [];
+    public queries: TransformQueryStep[] = [];
     public inputsViewModel: DatasetNode[] = [];
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
@@ -86,7 +87,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
             if (this.currentSetTransformEvent.transform.query) {
                 this.initDefaultQueriesSection(this.currentSetTransformEvent.transform.query);
             } else {
-                this.queries = this.currentSetTransformEvent.transform.queries;
+                this.queries = this.currentSetTransformEvent.transform.queries ?? [];
             }
             this.getInputDatasetsInfo();
         } else {

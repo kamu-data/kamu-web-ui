@@ -38,7 +38,7 @@ export function unavailableDatasetNode(alias: string): DatasetNode {
  * Key of a transform input in the set of selected inputs. It holds only `datasetRef` and `alias`,
  * always in that order, so the same input gives the same key wherever it was built.
  */
-export function inputDatasetKey(input: Pick<TransformSelectedInput, "datasetRef" | "alias">): string {
+export function inputDatasetKey(input: TransformSelectedInput): string {
     return JSON.stringify({ datasetRef: input.datasetRef, alias: input.alias });
 }
 

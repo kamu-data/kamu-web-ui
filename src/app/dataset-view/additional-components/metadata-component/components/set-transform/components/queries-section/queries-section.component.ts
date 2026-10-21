@@ -10,8 +10,7 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 
-import { SqlQueryStep } from "@api/kamu.graphql.interface";
-
+import { TransformQueryStep } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
 import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
 
 @Component({
@@ -29,7 +28,7 @@ import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-edi
     ],
 })
 export class QueriesSectionComponent {
-    @Input({ required: true }) public queries: Omit<SqlQueryStep, "__typename">[];
+    @Input({ required: true }) public queries: TransformQueryStep[];
 
     private scroll = inject(ViewportScroller);
 

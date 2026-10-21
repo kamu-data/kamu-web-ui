@@ -9,14 +9,17 @@ import { TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
 
-import { SqlQueryStep, TransformInput } from "@api/kamu.graphql.interface";
-
 import { Engine } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine-section.types";
 import { EditSetTransformService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/edit-set-transform..service";
 import {
     mockParseSetTransformYamlType,
     mockSetTransformEventYaml,
 } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import {
+    SetTransformEvent,
+    TransformQueryStep,
+    TransformSelectedInput,
+} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
 
 describe("EditSetTransformService", () => {
     let service: EditSetTransformService;
@@ -41,19 +44,24 @@ describe("EditSetTransformService", () => {
                 datasetRef: "did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX",
                 alias: "account.tokens.portfolio.usd",
             },
-        ] as TransformInput[];
+        ] satisfies TransformSelectedInput[];
 
         expect(service.parseInputDatasets(inputDatasets)).toEqual(result);
     });
 
     it("should check #transformEventAsObject() method", () => {
         const inputDatasets = new Set<string>([
-            '{"id":"did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX","name":"account.tokens.portfolio.usd"}',
+            '{"datasetRef":"did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX","alias":"account.tokens.portfolio.usd"}',
         ]);
         const engine = Engine.Spark;
-        const queries = [{ alias: "alias1", query: "query1" }] as Omit<SqlQueryStep, "__typename">[];
-        const result = {
-            inputs: service.parseInputDatasets(inputDatasets),
+        const queries: TransformQueryStep[] = [{ alias: "alias1", query: "query1" }];
+        const result: SetTransformEvent = {
+            inputs: [
+                {
+                    datasetRef: "did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX",
+                    alias: "account.tokens.portfolio.usd",
+                },
+            ],
             transform: {
                 kind: "sql",
                 engine: engine.toLowerCase(),

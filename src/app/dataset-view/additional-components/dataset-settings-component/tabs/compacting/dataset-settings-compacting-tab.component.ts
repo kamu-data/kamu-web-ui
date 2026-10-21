@@ -10,6 +10,8 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 
+import { timer } from "rxjs";
+
 import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
@@ -104,13 +106,15 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent {
                             .pipe(takeUntilDestroyed(this.destroyRef))
                             .subscribe((result: boolean) => {
                                 if (result) {
-                                    setTimeout(() => {
-                                        this.navigationService.navigateToDatasetView({
-                                            accountName: this.datasetBasics.owner.accountName,
-                                            datasetName: this.datasetBasics.name,
-                                            tab: DatasetViewTypeEnum.Flows,
+                                    timer(AppValues.SIMULATION_START_CONDITION_DELAY_MS)
+                                        .pipe(takeUntilDestroyed(this.destroyRef))
+                                        .subscribe(() => {
+                                            this.navigationService.navigateToDatasetView({
+                                                accountName: this.datasetBasics.owner.accountName,
+                                                datasetName: this.datasetBasics.name,
+                                                tab: DatasetViewTypeEnum.Flows,
+                                            });
                                         });
-                                    }, AppValues.SIMULATION_START_CONDITION_DELAY_MS);
                                 }
                             });
                     }

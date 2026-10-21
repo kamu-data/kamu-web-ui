@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { inject, Injectable, OnInit } from "@angular/core";
+import { afterNextRender, inject, Injectable, Injector, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, FormGroup } from "@angular/forms";
 
@@ -41,6 +41,7 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 export abstract class BaseSourceEventComponent extends BaseMainEventComponent implements OnInit {
     protected fb = inject(FormBuilder);
     protected processFormService = inject(ProcessFormService);
+    private injector = inject(Injector);
     public showPreprocessStep = false;
     public preprocessStepValue: PreprocessStepValue = {
         engine: "",
@@ -65,13 +66,16 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
     }
 
     public onShowErrors(): void {
-        const elems = document.querySelectorAll<HTMLInputElement>("input.ng-invalid");
-        elems.forEach((element: HTMLInputElement) => {
-            setTimeout(() => {
-                element.focus();
-                element.blur();
-            });
-        });
+        afterNextRender(
+            () => {
+                const elems = document.querySelectorAll<HTMLInputElement>("input.ng-invalid");
+                elems.forEach((element: HTMLInputElement) => {
+                    element.focus();
+                    element.blur();
+                });
+            },
+            { injector: this.injector },
+        );
     }
 
     public editSourceYaml(form: FormGroup, sourceEvent: SourcesEvents): void {

@@ -6,12 +6,12 @@
  */
 
 import { AsyncPipe, DatePipe } from "@angular/common";
-import { AfterViewChecked, ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ElementRef, inject, Input, ViewChild } from "@angular/core";
 import { RouterLink } from "@angular/router";
 
 import { Observable } from "rxjs";
 
-import { MarkdownModule } from "ngx-markdown";
+import { MarkdownComponent, MarkdownModule } from "ngx-markdown";
 
 import { DisplayHashComponent } from "@common/components/display-hash/display-hash.component";
 import { addMarkdownRunButton } from "@common/helpers/app.helpers";
@@ -47,17 +47,14 @@ import {
         MarkdownFormatPipe,
     ],
 })
-export class InputDataSectionComponent implements AfterViewChecked {
+export class InputDataSectionComponent {
     @Input({ required: true }) public blockHashObservables$: Observable<Date>[];
     @Input({ required: true }) public datasetInfoObservables$: Observable<DatasetInfo>[];
     @Input({ required: true }) public inputData: QueryExplainerComponentData;
+    @ViewChild(MarkdownComponent, { read: ElementRef }) private markdownElement?: ElementRef<HTMLElement>;
 
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
     private markdownFormatPipe = inject(MarkdownFormatPipe);
-
-    public ngAfterViewChecked(): void {
-        this.addDynamicRunButton();
-    }
 
     public isDatasetBlockNotFoundError(error: MaybeUndefined<VerifyQueryError>, blockHash: string): boolean {
         return (
@@ -77,11 +74,18 @@ export class InputDataSectionComponent implements AfterViewChecked {
         return this.inputData.sqlQueryExplainerResponse.input.query;
     }
 
-    private addDynamicRunButton(): void {
+    public onMarkdownReady(): void {
+        if (!this.markdownElement) {
+            return;
+        }
         // Find all sql queries between ```sql and ```
         const sqlQueries = this.markdownFormatPipe
             .transform(this.sqlCode, "sql")
             .match(/(?<=```sql\s+).*?(?=\s+```)/gs);
-        addMarkdownRunButton(sqlQueries, `/${ProjectLinks.URL_QUERY}?${ProjectLinks.URL_QUERY_PARAM_SQL_QUERY}`);
+        addMarkdownRunButton(
+            this.markdownElement.nativeElement,
+            sqlQueries,
+            `/${ProjectLinks.URL_QUERY}?${ProjectLinks.URL_QUERY_PARAM_SQL_QUERY}`,
+        );
     }
 }

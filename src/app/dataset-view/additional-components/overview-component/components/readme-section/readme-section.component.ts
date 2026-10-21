@@ -6,21 +6,22 @@
  */
 
 import {
-    AfterViewChecked,
     ChangeDetectionStrategy,
     Component,
+    ElementRef,
     EventEmitter,
     inject,
     Input,
     OnChanges,
     Output,
     SimpleChanges,
+    ViewChild,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 
-import { MarkdownModule } from "ngx-markdown";
+import { MarkdownComponent, MarkdownModule } from "ngx-markdown";
 
 import { BaseComponent } from "@common/components/base.component";
 import { addMarkdownRunButton } from "@common/helpers/app.helpers";
@@ -47,12 +48,13 @@ import { NavigationService } from "src/app/services/navigation.service";
         MarkdownModule,
     ],
 })
-export class ReadmeSectionComponent extends BaseComponent implements OnChanges, AfterViewChecked {
+export class ReadmeSectionComponent extends BaseComponent implements OnChanges {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public currentReadme?: MaybeNull<string>;
     @Input({ required: true }) public editingInProgress = false;
     @Input({ required: true }) public editable = true;
     @Output() public editViewShowEmitter = new EventEmitter<boolean>();
+    @ViewChild(MarkdownComponent, { read: ElementRef }) private markdownElement?: ElementRef<HTMLElement>;
 
     public editMode: typeof EditMode = EditMode;
     public viewMode = EditMode.Edit;
@@ -71,10 +73,6 @@ export class ReadmeSectionComponent extends BaseComponent implements OnChanges, 
             this.readmeState = changes.currentReadme.currentValue as string;
             this.editingInProgress = false;
         }
-    }
-
-    public ngAfterViewChecked(): void {
-        this.addDynamicRunButton();
     }
 
     public get isEditView(): boolean {
@@ -113,20 +111,21 @@ export class ReadmeSectionComponent extends BaseComponent implements OnChanges, 
             });
     }
 
-    private reset(): void {
-        this.viewMode = EditMode.Edit;
-        this.editingInProgress = false;
-        this.editViewShowEmitter.emit(this.editingInProgress);
-    }
-
-    private addDynamicRunButton(): void {
-        if (this.readmeState) {
+    public onMarkdownReady(): void {
+        if (this.markdownElement && this.readmeState) {
             // Find all sql queries between ```sql and ```
             const sqlQueries = this.readmeState.match(/(?<=```sql\s+).*?(?=\s+```)/gs);
             addMarkdownRunButton(
+                this.markdownElement.nativeElement,
                 sqlQueries,
                 `/${this.datasetBasics.owner.accountName}/${this.datasetBasics.name}/${DatasetViewTypeEnum.Data}?${ProjectLinks.URL_QUERY_PARAM_SQL_QUERY}`,
             );
         }
+    }
+
+    private reset(): void {
+        this.viewMode = EditMode.Edit;
+        this.editingInProgress = false;
+        this.editViewShowEmitter.emit(this.editingInProgress);
     }
 }

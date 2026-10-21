@@ -5,17 +5,26 @@
  * included in the LICENSE file.
  */
 
-import { ElementRef, EnvironmentInjector, runInInjectionContext } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
+
+import { findNativeElement } from "@common/helpers/base-test.helpers.spec";
 
 import { AutoFocusDirective } from "./auto-focus.directive";
 
+@Component({
+    template: `<input appAutofocus data-test-id="autofocus-input" />`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [AutoFocusDirective],
+})
+class TestHostComponent {}
+
 describe("AutoFocusDirective", () => {
-    it("should create an instance", () => {
-        TestBed.configureTestingModule({
-            providers: [{ provide: ElementRef, useValue: new ElementRef(document.createElement("input")) }],
-        });
-        const directive = runInInjectionContext(TestBed.inject(EnvironmentInjector), () => new AutoFocusDirective());
-        expect(directive).toBeTruthy();
+    it("should focus the element once it is rendered", () => {
+        const fixture = TestBed.createComponent(TestHostComponent);
+        fixture.detectChanges();
+
+        const input = findNativeElement(fixture, `[data-test-id="autofocus-input"]`);
+        expect(document.activeElement).toBe(input);
     });
 });

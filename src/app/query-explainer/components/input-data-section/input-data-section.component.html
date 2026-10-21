@@ -4,7 +4,12 @@
         <div class="mt-4 mx-4">
             <div class="fw-semibold">Query:</div>
             <div class="mt-2">
-                <markdown clipboard class="variable-binding" [data]="this.sqlCode | markdownFormat: 'sql'" />
+                <markdown
+                    clipboard
+                    class="variable-binding"
+                    [data]="this.sqlCode | markdownFormat: 'sql'"
+                    (ready)="onMarkdownReady()"
+                />
             </div>
         </div>
         @if (inputData.sqlQueryExplainerResponse.input.queryDialect) {

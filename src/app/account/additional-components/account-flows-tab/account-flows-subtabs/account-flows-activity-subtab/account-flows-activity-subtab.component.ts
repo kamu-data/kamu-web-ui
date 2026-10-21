@@ -163,9 +163,11 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
         } else {
             this.accountService.accountResumeFlows(this.accountName).subscribe();
         }
-        setTimeout(() => {
-            this.refreshNow();
-        }, this.TIMEOUT_REFRESH_FLOW);
+        timer(this.TIMEOUT_REFRESH_FLOW)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.refreshNow();
+            });
     }
 
     private setAccountFilters(filters: AccountFlowFilters): AccountFlowFilters {
@@ -198,9 +200,11 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((success: boolean) => {
                 if (success) {
-                    setTimeout(() => {
-                        this.refreshNow();
-                    }, this.TIMEOUT_REFRESH_FLOW);
+                    timer(this.TIMEOUT_REFRESH_FLOW)
+                        .pipe(takeUntilDestroyed(this.destroyRef))
+                        .subscribe(() => {
+                            this.refreshNow();
+                        });
                 }
             });
     }
@@ -286,6 +290,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             this.selectedDatasetItems.map((x) => x.id),
             this.getFlowRunOrder(),
         );
+        this.cdr.markForCheck();
     }
 
     private getFlowRunOrder(): FlowRunOrder {

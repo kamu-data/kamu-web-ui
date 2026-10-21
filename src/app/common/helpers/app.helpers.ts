@@ -128,12 +128,15 @@ export function changeCopyIcon(event: MouseEvent): void {
     }
 }
 
-export function addMarkdownRunButton(sqlQueries: MaybeNull<RegExpMatchArray>, path: string): void {
-    const containerRunButtonElement: HTMLCollectionOf<Element> =
-        document.getElementsByClassName("container-run-button");
+export function addMarkdownRunButton(
+    container: HTMLElement,
+    sqlQueries: MaybeNull<RegExpMatchArray>,
+    path: string,
+): void {
+    const containerRunButtonElement: MaybeNull<Element> = container.querySelector(".container-run-button");
 
-    if (sqlQueries?.length && !containerRunButtonElement.length) {
-        const preElements: NodeListOf<Element> = document.querySelectorAll("pre.language-sql");
+    if (sqlQueries?.length && !containerRunButtonElement) {
+        const preElements: NodeListOf<Element> = container.querySelectorAll("pre.language-sql");
         preElements.forEach((preElement: Element, index: number) => {
             const divElement: HTMLDivElement = document.createElement("div");
             divElement.classList.add("container-run-button");
@@ -142,6 +145,7 @@ export function addMarkdownRunButton(sqlQueries: MaybeNull<RegExpMatchArray>, pa
             divElement.style.right = "65px";
             const linkElement = document.createElement("a");
             linkElement.classList.add("markdown-run-button");
+            linkElement.setAttribute("data-test-id", "markdown-run-button");
             linkElement.style.padding = "3.6px 16px";
             linkElement.style.color = "#ffff";
             linkElement.style.fontSize = "13px";

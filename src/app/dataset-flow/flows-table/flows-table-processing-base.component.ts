@@ -8,7 +8,7 @@
 import { ChangeDetectorRef, Directive, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
-import { Observable } from "rxjs";
+import { Observable, timer } from "rxjs";
 
 import { BaseComponent } from "@common/components/base.component";
 import { requireValue } from "@common/helpers/app.helpers";
@@ -72,10 +72,11 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((success: boolean) => {
                 if (success) {
-                    setTimeout(() => {
-                        this.refreshFlow();
-                        this.cdr.detectChanges();
-                    }, this.TIMEOUT_REFRESH_FLOW);
+                    timer(this.TIMEOUT_REFRESH_FLOW)
+                        .pipe(takeUntilDestroyed(this.destroyRef))
+                        .subscribe(() => {
+                            this.refreshFlow();
+                        });
                 }
             });
     }

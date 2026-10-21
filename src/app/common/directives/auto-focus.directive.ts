@@ -5,17 +5,15 @@
  * included in the LICENSE file.
  */
 
-import { AfterViewInit, Directive, ElementRef, inject } from "@angular/core";
+import { afterNextRender, Directive, ElementRef, inject } from "@angular/core";
 
 @Directive({
     selector: "[appAutofocus]",
 })
-export class AutoFocusDirective implements AfterViewInit {
+export class AutoFocusDirective {
     private el = inject<ElementRef<HTMLElement>>(ElementRef);
 
-    public ngAfterViewInit(): void {
-        setTimeout(() => {
-            this.el.nativeElement.focus();
-        }, 50);
+    public constructor() {
+        afterNextRender(() => this.el.nativeElement.focus());
     }
 }

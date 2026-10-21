@@ -9,7 +9,7 @@ import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
-import { combineLatest, map, Observable, of, switchMap, tap } from "rxjs";
+import { combineLatest, defaultIfEmpty, map, Observable, of, switchMap, tap } from "rxjs";
 
 import { ToastrService } from "ngx-toastr";
 
@@ -70,7 +70,7 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
 
     public blockHashObservables$: Observable<Date>[] = [];
     public datasetInfoObservables$: Observable<DatasetInfo>[] = [];
-    public componentData$: Observable<QueryExplainerComponentData>;
+    public componentData$: Observable<MaybeNull<QueryExplainerComponentData>>;
 
     /* istanbul ignore next */
     public ngOnInit(): void {
@@ -110,7 +110,13 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
         try {
             const parsedCommitment = (await JSON.parse(this.commitment)) as QueryExplainerResponse;
             this.commitmentUploadToken = "simulated-token";
-            this.componentData$ = this.combineQueryExplainerResponse(parsedCommitment);
+            // A failed request has already shown its toast and completes empty: bring back the form
+            this.componentData$ = this.combineQueryExplainerResponse(parsedCommitment).pipe(
+                defaultIfEmpty(null),
+                tap((data: MaybeNull<QueryExplainerComponentData>) => {
+                    if (!data) this.commitmentUploadToken = null;
+                }),
+            );
         } catch {
             this.toastrService.error("Impossible to parse the commitment");
         }

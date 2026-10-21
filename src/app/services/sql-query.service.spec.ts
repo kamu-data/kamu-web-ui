@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 
@@ -24,12 +24,7 @@ describe("SqlQueryService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [],
-            providers: [
-                Apollo,
-                provideToastr(),
-                provideHttpClient(withInterceptorsFromDi()),
-                provideHttpClientTesting(),
-            ],
+            providers: [Apollo, provideToastr(), provideHttpClient(), provideHttpClientTesting()],
         });
         service = TestBed.inject(SqlQueryService);
         httpMock = TestBed.inject(HttpTestingController);

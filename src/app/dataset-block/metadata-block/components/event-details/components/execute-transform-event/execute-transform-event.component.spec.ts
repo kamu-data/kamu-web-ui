@@ -6,7 +6,7 @@
  */
 
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
@@ -27,12 +27,7 @@ describe("ExecuteTransformEventComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, ExecuteTransformEventComponent],
-            providers: [
-                Apollo,
-                provideToastr(),
-                provideHttpClient(withInterceptorsFromDi()),
-                provideHttpClientTesting(),
-            ],
+            providers: [Apollo, provideToastr(), provideHttpClient(), provideHttpClientTesting()],
         }).compileComponents();
 
         registerMatSvgIcons();

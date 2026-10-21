@@ -8,22 +8,34 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
-import { Observable, of, Subject, throwError } from "rxjs";
+import { firstValueFrom, Observable, of, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
+import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 
 import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { datasetViewResolverFn } from "src/app/dataset-view/resolvers/dataset-view.resolver";
 import ProjectLinks from "src/app/project-links";
-import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
+import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
 describe("datasetViewResolverFn", () => {
     let datasetService: DatasetService;
-    let navigationService: NavigationService;
+    let datasetSubService: DatasetSubscriptionsService;
+
+    const routeSnapshot = {
+        paramMap: convertToParamMap({
+            [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME,
+            [ProjectLinks.URL_PARAM_DATASET_NAME]: TEST_DATASET_NAME,
+        }),
+        queryParamMap: convertToParamMap({}),
+    } as ActivatedRouteSnapshot;
+    const mockState = {
+        url: `/${TEST_ACCOUNT_NAME}/${TEST_DATASET_NAME}/${DatasetViewTypeEnum.Overview}`,
+    } as RouterStateSnapshot;
 
     const executeResolver: ResolveFn<DatasetViewData> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => datasetViewResolverFn(...resolverParameters));
@@ -33,58 +45,33 @@ describe("datasetViewResolverFn", () => {
             providers: [Apollo],
         });
         datasetService = TestBed.inject(DatasetService);
-        navigationService = TestBed.inject(NavigationService);
+        datasetSubService = TestBed.inject(DatasetSubscriptionsService);
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
-    });
-
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
-    });
-
-    it("should check resolver", async () => {
-        const mockObservable = new Subject<void>();
-        const requestDatasetMainDataSpy = spyOn(datasetService, "requestDatasetMainData").and.returnValue(
-            mockObservable,
+        spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(
+            of(mockFullPowerDatasetPermissionsFragment),
         );
-        const routeSnapshot = {
-            paramMap: convertToParamMap({
-                [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME,
-                [ProjectLinks.URL_PARAM_DATASET_NAME]: TEST_DATASET_NAME,
-            }),
-
-            queryParamMap: convertToParamMap({}),
-        } as ActivatedRouteSnapshot;
-        const mockState = {
-            url: `/kamu/datasetName/${DatasetViewTypeEnum.Overview}`,
-        } as RouterStateSnapshot;
-
-        await executeResolver(routeSnapshot, mockState);
-        expect(requestDatasetMainDataSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check resolver with error", () => {
-        const requestDatasetMainDataSpy = spyOn(datasetService, "requestDatasetMainData").and.returnValue(
-            throwError(() => new Error("failed")),
-        );
-        const navigateToPageNotFoundSpy = spyOn(navigationService, "navigateToPageNotFound");
+    it("should request the dataset from the route and resolve it with permissions", async () => {
+        const requestDatasetMainDataSpy = spyOn(datasetService, "requestDatasetMainData").and.returnValue(of(void 0));
 
-        const routeSnapshot = {
-            paramMap: convertToParamMap({
-                [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME,
-                [ProjectLinks.URL_PARAM_DATASET_NAME]: TEST_DATASET_NAME,
-            }),
+        const data = await firstValueFrom(executeResolver(routeSnapshot, mockState) as Observable<DatasetViewData>);
 
-            queryParamMap: convertToParamMap({}),
-        } as ActivatedRouteSnapshot;
-        const mockState = {
-            url: `/kamu/datasetName/${DatasetViewTypeEnum.Overview}`,
-        } as RouterStateSnapshot;
-
-        (executeResolver(routeSnapshot, mockState) as Observable<DatasetViewData>).subscribe({
-            complete: () => {
-                expect(requestDatasetMainDataSpy).toHaveBeenCalledTimes(1);
-                expect(navigateToPageNotFoundSpy).toHaveBeenCalledTimes(1);
-            },
+        expect(requestDatasetMainDataSpy).toHaveBeenCalledOnceWith({
+            accountName: TEST_ACCOUNT_NAME,
+            datasetName: TEST_DATASET_NAME,
         });
+        expect(data).toEqual({
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+        });
+    });
+
+    it("should redirect to page not found when the dataset cannot be loaded", async () => {
+        spyOn(datasetService, "requestDatasetMainData").and.returnValue(throwError(() => new Error("failed")));
+
+        const data = await firstValueFrom(executeResolver(routeSnapshot, mockState) as Observable<unknown>);
+
+        expectPageNotFoundRedirect(data);
     });
 });

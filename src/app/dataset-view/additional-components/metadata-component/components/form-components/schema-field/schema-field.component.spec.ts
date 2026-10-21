@@ -6,7 +6,7 @@
  */
 
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
@@ -50,7 +50,7 @@ describe("SchemaFieldComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, SchemaFieldComponent],
-            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+            providers: [provideHttpClient(), provideHttpClientTesting()],
         }).compileComponents();
 
         registerMatSvgIcons();

@@ -112,7 +112,6 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         };
         component.transformTabData.stopPolicy = {
             __typename: "FlowTriggerStopPolicyNever",
-            dummy: false,
         };
         component.ngAfterViewInit();
         fixture.detectChanges();
@@ -218,13 +217,11 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         component.transformTabData.reactive = {
             forNewData: {
                 __typename: "FlowTriggerBatchingRuleImmediate",
-                dummy: true,
             },
             forBreakingChange: FlowTriggerBreakingChangeRule.NoAction,
         };
         component.transformTabData.stopPolicy = {
             __typename: "FlowTriggerStopPolicyNever",
-            dummy: false,
         };
         component.ngAfterViewInit();
         fixture.detectChanges();

@@ -6,33 +6,28 @@
  */
 
 import { inject } from "@angular/core";
-import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
 import { map, Observable, of, switchMap } from "rxjs";
 
-import { DatasetFlowType, FlowTriggerStopPolicy, GetDatasetFlowTriggerQuery } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
+import { DatasetFlowType, GetDatasetFlowTriggerQuery } from "@api/kamu.graphql.interface";
 
 import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
 import { datasetSettingsGeneralTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/resolver/dataset-settings-general-tab.resolver";
 import { DatasetSettingsTransformOptionsTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.data";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
-export const datasetSettingsTransformTabResolverFn: ResolveFn<MaybeNull<DatasetSettingsTransformOptionsTabData>> = (
+export const datasetSettingsTransformTabResolverFn: ResolveFn<DatasetSettingsTransformOptionsTabData> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ) => {
     const datasetFlowTriggerService = inject(DatasetFlowTriggerService);
 
-    return (
-        datasetSettingsGeneralTabResolverFn(route, state) as Observable<
-            MaybeNull<DatasetSettingsTransformOptionsTabData>
-        >
-    ).pipe(
-        // We can safely cast here because the resolver is used in a context where the type is DatasetSettingsIngestConfigurationTabData
-        switchMap((data: MaybeNull<DatasetViewData>) => {
-            if (data === null) {
-                return of(null);
+    // The general tab resolver always returns an Observable
+    return (datasetSettingsGeneralTabResolverFn(route, state) as Observable<DatasetViewData | RedirectCommand>).pipe(
+        switchMap((data) => {
+            if (data instanceof RedirectCommand) {
+                return of(data);
             }
             return datasetFlowTriggerService
                 .fetchDatasetFlowTrigger(data.datasetBasics.id, DatasetFlowType.ExecuteTransform)
@@ -42,26 +37,7 @@ export const datasetSettingsTransformTabResolverFn: ResolveFn<MaybeNull<DatasetS
                         const paused = flowTriggers?.paused ?? true;
                         const reactive = flowTriggers?.reactive ?? null;
 
-                        let stopPolicy: MaybeNull<FlowTriggerStopPolicy> = null;
-                        if (flowTriggers?.stopPolicy) {
-                            switch (flowTriggers.stopPolicy.__typename) {
-                                case "FlowTriggerStopPolicyNever":
-                                    stopPolicy = {
-                                        __typename: "FlowTriggerStopPolicyNever",
-                                        dummy: false,
-                                    };
-                                    break;
-                                case "FlowTriggerStopPolicyAfterConsecutiveFailures":
-                                    stopPolicy = {
-                                        __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
-                                        maxFailures: flowTriggers?.stopPolicy.maxFailures,
-                                    };
-                                    break;
-                                /* istanbul ignore next */
-                                default:
-                                    throw new Error("Unknown flow trigger stop policy");
-                            }
-                        }
+                        const stopPolicy = flowTriggers?.stopPolicy ?? null;
 
                         return {
                             datasetBasics: data.datasetBasics,
@@ -69,7 +45,7 @@ export const datasetSettingsTransformTabResolverFn: ResolveFn<MaybeNull<DatasetS
                             reactive,
                             paused,
                             stopPolicy,
-                        } as DatasetSettingsTransformOptionsTabData;
+                        };
                     }),
                 );
         }),

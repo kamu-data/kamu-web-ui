@@ -64,7 +64,9 @@
                                             <a
                                                 class="node-name"
                                                 (click)="$event.stopPropagation()"
-                                                [routerLink]="['/', input.owner, input.name]"
+                                                [routerLink]="
+                                                    { accountName: input.owner, datasetName: input.name } | datasetLink
+                                                "
                                                 target="_blank"
                                             >
                                                 {{ input.name }}</a

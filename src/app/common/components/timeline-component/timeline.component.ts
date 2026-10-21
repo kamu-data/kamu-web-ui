@@ -15,10 +15,9 @@ import { DisplayHashComponent } from "@common/components/display-hash/display-ha
 import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { DataHelpers } from "@common/helpers/data.helpers";
+import { MetadataBlockLinkPipe } from "@common/pipes/metadata-block-link.pipe";
 import AppValues from "@common/values/app.values";
 import { MetadataBlockFragment, PageBasedInfo } from "@api/kamu.graphql.interface";
-
-import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-timeline",
@@ -35,6 +34,7 @@ import ProjectLinks from "src/app/project-links";
         DisplayTimeComponent,
         DisplayHashComponent,
         FeatureFlagDirective,
+        MetadataBlockLinkPipe,
     ],
 })
 export class TimelineComponent {
@@ -42,7 +42,6 @@ export class TimelineComponent {
     @Input({ required: true }) public pageInfo: PageBasedInfo;
     @Input({ required: true }) public datasetName: string;
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
-    public readonly URL_BLOCK = ProjectLinks.URL_BLOCK;
 
     public descriptionForMetadataBlock(block: MetadataBlockFragment): string {
         return DataHelpers.descriptionForMetadataBlock(block);

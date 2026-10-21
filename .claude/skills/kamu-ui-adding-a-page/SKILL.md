@@ -17,8 +17,8 @@ no GraphQL), but decide that explicitly.
 | 4 | Api methods | `src/app/api/<domain>.api.ts` | `kamu-ui-graphql-api` | Methods return operation data types |
 | 5 | Response fixtures + api specs | `src/app/api/mock/<domain>.mock.ts`, `<domain>.api.spec.ts` | `kamu-ui-unit-tests` | `npm test -- --include src/app/api/<domain>.api.spec.ts` passes |
 | 6 | Domain service (when state or mapping is needed) | `<feature>/<name>.service.ts` + spec | `kamu-ui-angular-style` | Spec passes |
-| 7 | Resolver and key | `<feature>/resolver/<name>.resolver.ts`, `RoutingResolvers` | `kamu-ui-routing` | Resolver spec passes |
-| 8 | Guard (when access differs from the parent) | functional `CanActivateFn` | `kamu-ui-routing` | Guard spec passes |
+| 7 | Resolver and key | `<feature>/resolver/<name>.resolver.ts`, `RoutingResolvers` | `kamu-ui-routing` | Resolver spec passes; a missing entity redirects with a `RedirectCommand` |
+| 8 | Guard (when access differs from the parent) | functional `CanActivateFn` | `kamu-ui-routing` | Guard spec passes; a refusal returns a `UrlTree` |
 | 9 | Component | `.component.ts/.html/.scss`, resolver value as `@Input(RoutingResolvers.KEY)` | `kamu-ui-angular-style` | OnPush, `data-test-id` on everything a test touches |
 | 10 | Routes | new `<feature>-routing.ts` with `loadChildren`, or `loadComponent` | `kamu-ui-routing` | `npm run build-prod` lists the new lazy chunk; initial chunks unchanged |
 | 11 | Harness and component spec | `<name>.harness.ts` for reusable form or composite parts, `<name>.component.spec.ts` | `kamu-ui-unit-tests` | Spec passes |
@@ -36,7 +36,7 @@ no GraphQL), but decide that explicitly.
 - **Tab pages** follow the tab pattern (empty-path redirect, `data[URL_PARAM_TAB]`, active-tab
   resolver) — copy the closest existing tab set rather than inventing a new one.
 - **Anonymous access.** Phase-2 routes are reachable anonymously when the runtime config allows
-  it; anything needing a login needs `AuthenticatedGuard` explicitly.
+  it; anything needing a login needs `authenticatedGuard` explicitly.
 
 ## What lives elsewhere
 

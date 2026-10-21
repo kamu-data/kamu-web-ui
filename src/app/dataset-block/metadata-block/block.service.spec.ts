@@ -7,14 +7,19 @@
 
 import { TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { firstValueFrom, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
 import { DatasetApi } from "@api/dataset.api";
-import { DatasetBlocksSchemaByEventTypeQuery, MetadataEventType } from "@api/kamu.graphql.interface";
+import {
+    DatasetBlocksEncodedByEventTypeQuery,
+    DatasetBlocksSchemaByEventTypeQuery,
+    MetadataEventType,
+    MetadataManifestFormat,
+} from "@api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery, TEST_BLOCK_HASH } from "@api/mock/dataset.mock";
-import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
@@ -288,6 +293,77 @@ describe("BlockService", () => {
                 .subscribe((fields) => (result = fields));
 
             expect(result).toEqual([{ name: "b_field", type: { kind: OdfTypes.Int32 } }]);
+        });
+    });
+
+    describe("getAddPushSourceBlock", () => {
+        const mockBlocksEncodedByEventTypeQuery: DatasetBlocksEncodedByEventTypeQuery = {
+            datasets: {
+                byOwnerAndName: {
+                    metadata: {
+                        metadataProjection: [
+                            {
+                                __typename: "MetadataBlockExtended",
+                                encoded: { __typename: "EncodedBlock", content: "kind: AddPushSource # source-a" },
+                                event: { __typename: "AddPushSource", sourceName: "source-a" },
+                            },
+                            {
+                                __typename: "MetadataBlockExtended",
+                                encoded: { __typename: "EncodedBlock", content: "kind: AddPushSource # source-b" },
+                                event: { __typename: "AddPushSource", sourceName: "source-b" },
+                            },
+                        ],
+                    },
+                },
+            },
+        };
+
+        function requestBlock(sourceName: string): Promise<MaybeNullOrUndefined<string>> {
+            return firstValueFrom(
+                service.getAddPushSourceBlock({
+                    accountName: mockDatasetInfo.accountName,
+                    datasetName: mockDatasetInfo.datasetName,
+                    sourceName,
+                    encoding: MetadataManifestFormat.Yaml,
+                }),
+            );
+        }
+
+        let getBlocksByEventTypeSpy: jasmine.Spy;
+
+        beforeEach(() => {
+            getBlocksByEventTypeSpy = spyOn(datasetApi, "getBlocksByEventType").and.returnValue(
+                of(mockBlocksEncodedByEventTypeQuery),
+            );
+        });
+
+        it("should emit the encoded block of the named source", async () => {
+            const result = await requestBlock("source-b");
+
+            expect(getBlocksByEventTypeSpy).toHaveBeenCalledOnceWith(
+                jasmine.objectContaining({
+                    accountName: mockDatasetInfo.accountName,
+                    datasetName: mockDatasetInfo.datasetName,
+                    encoding: MetadataManifestFormat.Yaml,
+                    eventTypes: [MetadataEventType.AddPushSource],
+                }),
+            );
+            expect(result).toEqual("kind: AddPushSource # source-b");
+            expect(service.sourceNames).toEqual(["source-a", "source-b"]);
+        });
+
+        it("should emit undefined for an unknown source name", async () => {
+            const result = await requestBlock("unknown-source");
+
+            expect(result).toBeUndefined();
+            expect(service.sourceNames).toEqual(["source-a", "source-b"]);
+        });
+
+        it("should emit null when no source name is given", async () => {
+            const result = await requestBlock("");
+
+            expect(result).toBeNull();
+            expect(service.sourceNames).toEqual(["source-a", "source-b"]);
         });
     });
 });

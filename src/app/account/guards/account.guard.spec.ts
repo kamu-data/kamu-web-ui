@@ -6,47 +6,52 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, CanActivateFn, convertToParamMap, RouterStateSnapshot } from "@angular/router";
+import {
+    ActivatedRouteSnapshot,
+    CanActivateFn,
+    convertToParamMap,
+    Router,
+    RouterStateSnapshot,
+    UrlTree,
+} from "@angular/router";
 
 import { TEST_ACCOUNT_NAME } from "@api/mock/dataset.mock";
 
 import { AccountTabs } from "src/app/account/account.constants";
 import { accountGuard } from "src/app/account/guards/account.guard";
 import ProjectLinks from "src/app/project-links";
-import { NavigationService } from "src/app/services/navigation.service";
 
 describe("accountGuard", () => {
-    let navigationService: NavigationService;
+    let router: Router;
     const routeSnapshot = {
         paramMap: convertToParamMap({
             [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME,
-            [ProjectLinks.URL_PARAM_DATASET_NAME]: "",
         }),
     } as ActivatedRouteSnapshot;
+    const datasetsTabUrl = `/${TEST_ACCOUNT_NAME}/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.DATASETS}`;
 
     const executeGuard: CanActivateFn = (...guardParameters) =>
         TestBed.runInInjectionContext(() => accountGuard(...guardParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
-
-        navigationService = TestBed.inject(NavigationService);
+        router = TestBed.inject(Router);
     });
 
-    it("should be created", () => {
-        expect(executeGuard).toBeTruthy();
+    [
+        `/${TEST_ACCOUNT_NAME}/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.FLOWS}`,
+        `/${TEST_ACCOUNT_NAME}/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.DATASETS}?page=2`,
+    ].forEach((url) => {
+        it(`should allow the tab URL ${url}`, () => {
+            const result = executeGuard(routeSnapshot, { url } as RouterStateSnapshot);
+            expect(result).toBeTrue();
+        });
     });
 
-    it("should check account guard with true", async () => {
-        const state = { url: `/kamu/${AccountTabs.FLOWS}` } as RouterStateSnapshot;
-        const result = await executeGuard(routeSnapshot, state);
-        expect(result).toEqual(true);
-    });
-
-    it("should check account guard with false", async () => {
-        spyOn(navigationService, "navigateToOwnerView").and.returnValue();
-        const state = { url: `/kamu` } as RouterStateSnapshot;
-        const result = await executeGuard(routeSnapshot, state);
-        expect(result).toEqual(false);
+    [`/${TEST_ACCOUNT_NAME}`, `/${TEST_ACCOUNT_NAME}?page=2`, `/${TEST_ACCOUNT_NAME}/`].forEach((url) => {
+        it(`should redirect ${url} to the datasets tab`, () => {
+            const result = executeGuard(routeSnapshot, { url } as RouterStateSnapshot);
+            expect(router.serializeUrl(result as UrlTree)).toEqual(datasetsTabUrl);
+        });
     });
 });

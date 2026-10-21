@@ -50,13 +50,13 @@
                                         <a
                                             class="ml-11 d-inline-block"
                                             [class.fw-bold]="currentBlockHash === block.blockHash"
-                                            [routerLink]="[
-                                                '/',
-                                                datasetInfo.accountName,
-                                                datasetInfo.datasetName,
-                                                URL_BLOCK,
-                                                block.blockHash,
-                                            ]"
+                                            [routerLink]="
+                                                {
+                                                    accountName: datasetInfo.accountName,
+                                                    datasetName: datasetInfo.datasetName,
+                                                    blockHash: block.blockHash,
+                                                } | metadataBlockLink
+                                            "
                                             >{{ block.event.__typename }}</a
                                         >
                                         @if (currentBlockHash === block.blockHash) {

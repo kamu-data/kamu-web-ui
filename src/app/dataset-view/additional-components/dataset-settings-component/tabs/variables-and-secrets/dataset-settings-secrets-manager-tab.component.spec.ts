@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
@@ -67,7 +67,7 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
                         },
                     },
                 },
-                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClient(),
                 provideHttpClientTesting(),
             ],
         }).compileComponents();

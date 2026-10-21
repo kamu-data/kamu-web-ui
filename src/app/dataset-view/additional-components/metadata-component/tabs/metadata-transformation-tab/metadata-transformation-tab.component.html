@@ -38,11 +38,12 @@
                                     </a>
                                 </div>
                                 <a
-                                    [routerLink]="[
-                                        '/',
-                                        input.inputDataset.dataset.owner.accountName,
-                                        input.inputDataset.dataset.name,
-                                    ]"
+                                    [routerLink]="
+                                        {
+                                            accountName: input.inputDataset.dataset.owner.accountName,
+                                            datasetName: input.inputDataset.dataset.name,
+                                        } | datasetLink
+                                    "
                                     attr.data-test-id="dataset-name-button-{{ i }}"
                                     class="dataset-list-container-title mb-1 pl-0"
                                 >

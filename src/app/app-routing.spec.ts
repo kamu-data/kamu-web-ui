@@ -6,9 +6,10 @@
  */
 
 import { Location } from "@angular/common";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { provideLocationMocks } from "@angular/common/testing";
+import { NO_ERRORS_SCHEMA, Provider } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { Router, ROUTES } from "@angular/router";
 
@@ -53,7 +54,7 @@ describe("Router", () => {
     let loggedUserService: LoggedUserService;
     let loginMethodsService: LoginMethodsService;
 
-    beforeEach(async () => {
+    async function configureRouter(allowAnonymous: boolean, extraProviders: Provider[] = []): Promise<void> {
         await TestBed.configureTestingModule({
             schemas: [NO_ERRORS_SCHEMA],
             imports: [ApolloTestingModule, PageNotFoundComponent, LoginComponent],
@@ -62,7 +63,7 @@ describe("Router", () => {
                 {
                     provide: AppConfigService,
                     useValue: {
-                        allowAnonymous: true,
+                        allowAnonymous,
                     },
                 },
                 {
@@ -115,8 +116,9 @@ describe("Router", () => {
                             }),
                     },
                 },
-                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClient(),
                 provideHttpClientTesting(),
+                ...extraProviders,
             ],
         }).compileComponents();
 
@@ -128,47 +130,53 @@ describe("Router", () => {
         fixture = TestBed.createComponent(PageNotFoundComponent);
         router.initialNavigation();
         fixture.detectChanges();
-    });
+    }
 
-    it("navigate to home redirects you to default URL", fakeAsync(() => {
-        promiseWithCatch(router.navigate([""]));
-        tick();
+    describe("with anonymous access allowed", () => {
+        beforeEach(async () => {
+            await configureRouter(true);
+        });
 
-        expect(location.path()).toBe("/" + ProjectLinks.DEFAULT_URL);
-        flush();
-    }));
-
-    [ProjectLinks.URL_GITHUB_CALLBACK, ProjectLinks.URL_SEARCH, ProjectLinks.URL_PAGE_NOT_FOUND].forEach(
-        (url: string) => {
-            it(`Route to ${url} lands on the component without Login`, fakeAsync(() => {
-                promiseWithCatch(router.navigate([url]));
-                tick();
-
-                expect(location.path()).toBe("/" + url);
-                flush();
-            }));
-        },
-    );
-
-    [ProjectLinks.URL_DATASET_CREATE].forEach((url: string) => {
-        it(`Route to ${url} fails without a login and moves to Home`, fakeAsync(() => {
-            promiseWithCatch(router.navigate([url]));
+        it("navigate to home redirects you to default URL", fakeAsync(() => {
+            promiseWithCatch(router.navigate([""]));
             tick();
 
             expect(location.path()).toBe("/" + ProjectLinks.DEFAULT_URL);
             flush();
         }));
 
-        // A real await, because fakeAsync's tick() cannot wait for the lazy chunk of a loadComponent route
-        it(`Route to ${url} lands on the component with active login`, async () => {
-            spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-            spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-            await router.navigate([url]);
-            if (url === ProjectLinks.URL_SETTINGS) {
-                expect(location.path()).toBe("/" + url + "/access-tokens");
-            } else {
-                expect(location.path()).toBe("/" + url);
-            }
+        [ProjectLinks.URL_GITHUB_CALLBACK, ProjectLinks.URL_SEARCH, ProjectLinks.URL_PAGE_NOT_FOUND].forEach(
+            (url: string) => {
+                it(`Route to ${url} lands on the component without Login`, fakeAsync(() => {
+                    promiseWithCatch(router.navigate([url]));
+                    tick();
+
+                    expect(location.path()).toBe("/" + url);
+                    flush();
+                }));
+            },
+        );
+
+        [ProjectLinks.URL_DATASET_CREATE].forEach((url: string) => {
+            it(`Route to ${url} fails without a login and moves to Home`, fakeAsync(() => {
+                promiseWithCatch(router.navigate([url]));
+                tick();
+
+                expect(location.path()).toBe("/" + ProjectLinks.DEFAULT_URL);
+                flush();
+            }));
+
+            // A real await, because fakeAsync's tick() cannot wait for the lazy chunk of a loadComponent route
+            it(`Route to ${url} lands on the component with active login`, async () => {
+                spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+                spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+                await router.navigate([url]);
+                if (url === ProjectLinks.URL_SETTINGS) {
+                    expect(location.path()).toBe("/" + url + "/access-tokens");
+                } else {
+                    expect(location.path()).toBe("/" + url);
+                }
+            });
         });
 
         it("should navigate to QueryExplainer component", async () => {
@@ -180,37 +188,128 @@ describe("Router", () => {
             await router.navigate([ProjectLinks.URL_QUERY]);
             expect(router.url).toBe("/" + ProjectLinks.URL_QUERY);
         });
+
+        // A real await: two-segment URLs also match ":accountName/:datasetName", whose routes load lazily
+        it("admin dashboard redirects a user who is not an admin to the default page", async () => {
+            spyOnProperty(loggedUserService, "isAdmin", "get").and.returnValue(false);
+
+            await router.navigate([ProjectLinks.URL_ADMIN_DASHBOARD]);
+
+            expect(location.path()).toBe("/" + ProjectLinks.DEFAULT_URL);
+        });
+
+        it("an unknown URL lands on the page-not-found component and keeps the URL", async () => {
+            await router.navigateByUrl("/v/no/such/page/here");
+
+            expect(location.path()).toBe("/v/no/such/page/here");
+            expect(router.routerState.snapshot.root.firstChild?.component).toBe(PageNotFoundComponent);
+        });
+
+        describe("#login routes", () => {
+            it("login redirects to default page when not allowed in configuration", fakeAsync(() => {
+                spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([]);
+
+                promiseWithCatch(router.navigate([ProjectLinks.URL_LOGIN]));
+                tick();
+
+                expect(location.path()).toBe("/" + ProjectLinks.URL_SEARCH);
+                flush();
+            }));
+
+            it("login redirects to default page when user is already logged", fakeAsync(() => {
+                spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+
+                promiseWithCatch(router.navigate([ProjectLinks.URL_LOGIN]));
+                tick();
+
+                expect(location.path()).toBe("/" + ProjectLinks.URL_SEARCH);
+                flush();
+            }));
+
+            it("login with a redirect URL opens Login component when allowed and not logged in", fakeAsync(() => {
+                spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([AccountProvider.Password]);
+                spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
+
+                promiseWithCatch(
+                    router.navigate([ProjectLinks.URL_LOGIN], {
+                        queryParams: { [ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL]: "/kamu" },
+                    }),
+                );
+                tick();
+
+                expect(location.path()).toBe(
+                    `/${ProjectLinks.URL_LOGIN}?${ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL}=%2Fkamu`,
+                );
+                flush();
+            }));
+
+            it("login with a redirect URL redirects to default page when user is already logged", fakeAsync(() => {
+                spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+
+                promiseWithCatch(
+                    router.navigate([ProjectLinks.URL_LOGIN], {
+                        queryParams: { [ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL]: "/kamu" },
+                    }),
+                );
+                tick();
+
+                expect(location.path()).toBe("/" + ProjectLinks.URL_SEARCH);
+                flush();
+            }));
+
+            it("login opens Login component when allowed and not logged in", fakeAsync(() => {
+                spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([AccountProvider.Password]);
+                spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
+
+                promiseWithCatch(router.navigate([ProjectLinks.URL_LOGIN]));
+                tick();
+
+                expect(location.path()).toBe("/" + ProjectLinks.URL_LOGIN);
+                flush();
+            }));
+        });
     });
 
-    describe("#login routes", () => {
-        it("login redirects to default page when not allowed in configuration", fakeAsync(() => {
-            spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([]);
+    describe("browser history", () => {
+        beforeEach(async () => {
+            await configureRouter(true, [provideLocationMocks()]);
+        });
 
-            promiseWithCatch(router.navigate([ProjectLinks.URL_LOGIN]));
+        it("a guard redirect adds no history entry for the refused page", fakeAsync(() => {
+            promiseWithCatch(router.navigate([ProjectLinks.URL_PAGE_NOT_FOUND]));
+            tick();
+            promiseWithCatch(router.navigate([ProjectLinks.URL_DATASET_CREATE]));
+            tick();
+            expect(location.path()).toBe("/" + ProjectLinks.DEFAULT_URL);
+
+            location.back();
             tick();
 
-            expect(location.path()).toBe("/" + ProjectLinks.URL_SEARCH);
+            expect(location.path()).toBe("/" + ProjectLinks.URL_PAGE_NOT_FOUND);
             flush();
         }));
+    });
 
-        it("login redirects to default page when user is already logged", fakeAsync(() => {
-            spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+    describe("with anonymous access forbidden", () => {
+        beforeEach(async () => {
+            await configureRouter(false);
+        });
 
-            promiseWithCatch(router.navigate([ProjectLinks.URL_LOGIN]));
-            tick();
-
-            expect(location.path()).toBe("/" + ProjectLinks.URL_SEARCH);
-            flush();
-        }));
-
-        it("login opens Login component when allowed and not logged in", fakeAsync(() => {
+        it("an anonymous user is redirected to login", fakeAsync(() => {
             spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([AccountProvider.Password]);
-            spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
 
-            promiseWithCatch(router.navigate([ProjectLinks.URL_LOGIN]));
+            promiseWithCatch(router.navigate([ProjectLinks.URL_DATASET_CREATE]));
             tick();
 
             expect(location.path()).toBe("/" + ProjectLinks.URL_LOGIN);
+            flush();
+        }));
+
+        it("public routes stay reachable for an anonymous user", fakeAsync(() => {
+            promiseWithCatch(router.navigate([ProjectLinks.URL_PAGE_NOT_FOUND]));
+            tick();
+
+            expect(location.path()).toBe("/" + ProjectLinks.URL_PAGE_NOT_FOUND);
             flush();
         }));
     });

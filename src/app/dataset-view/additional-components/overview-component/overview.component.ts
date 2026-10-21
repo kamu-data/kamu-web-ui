@@ -29,6 +29,7 @@ import { DragAndDropDirective } from "@common/directives/drag-and-drop.directive
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { isNil, promiseWithCatch } from "@common/helpers/app.helpers";
 import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
+import { SourceEventEditorLinkPipe } from "@common/pipes/source-event-editor-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import {
@@ -60,7 +61,7 @@ import {
     OverviewTabQueryParamsType,
     selectOverviewTabMode,
 } from "src/app/dataset-view/dataset-view.interface";
-import ProjectLinks from "src/app/project-links";
+import { SourceEventEditor } from "src/app/project-links";
 import { FileUploadService } from "src/app/services/file-upload.service";
 
 import { CollectionViewComponent } from "./components/collection-view/collection-view.component";
@@ -104,6 +105,7 @@ import {
         DisplayTimeComponent,
 
         VersionedFileViewComponent,
+        SourceEventEditorLinkPipe,
     ],
 })
 export class OverviewComponent extends BaseDatasetDataComponent implements OnInit {
@@ -115,9 +117,7 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     public role$: Observable<MaybeNull<DatasetAccessRole>>;
     public viewMode: OverviewTabMode = OverviewTabMode.Table;
     public readonly UPLOAD_FILE_IMAGE = AppValues.UPLOAD_FILE_IMAGE;
-    public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
-    public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
-    public readonly URL_PARAM_ADD_PUSH_SOURCE = ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE;
+    public readonly SourceEventEditor: typeof SourceEventEditor = SourceEventEditor;
     public readonly OverviewTabMode: typeof OverviewTabMode = OverviewTabMode;
     public readonly DatasetArchetype: typeof DatasetArchetype = DatasetArchetype;
     public readonly VIEW_MODE_BUTTONS: ViewModeButtonsOptions[] = VIEW_MODE_BUTTONS_OPTIONS;

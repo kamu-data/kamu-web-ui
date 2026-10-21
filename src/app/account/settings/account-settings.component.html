@@ -44,7 +44,7 @@
                                         >
                                             <a
                                                 routerLinkActive="active"
-                                                [routerLink]="getRouteLink(item.activeTab)"
+                                                [routerLink]="item.activeTab | accountSettingsLink"
                                                 [class]="'action-list-content d-flex align-items-center ' + item.class"
                                             >
                                                 <span

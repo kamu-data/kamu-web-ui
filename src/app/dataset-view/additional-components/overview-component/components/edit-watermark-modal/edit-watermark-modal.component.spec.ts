@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
@@ -43,12 +43,7 @@ describe("EditWatermarkModalComponent", () => {
                 SharedTestModule,
                 EditWatermarkModalComponent,
             ],
-            providers: [
-                Apollo,
-                NgbActiveModal,
-                provideHttpClient(withInterceptorsFromDi()),
-                provideHttpClientTesting(),
-            ],
+            providers: [Apollo, NgbActiveModal, provideHttpClient(), provideHttpClientTesting()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(EditWatermarkModalComponent);

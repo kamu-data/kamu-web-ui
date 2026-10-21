@@ -22,6 +22,7 @@ import { BaseComponent } from "@common/components/base.component";
 import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
 import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
 import { odfType2String, schemaAsDataRows } from "@common/helpers/data-schema.helpers";
+import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import AppValues from "@common/values/app.values";
 import { DatasetBasicsFragment, GetDatasetSchemaQuery, TransformInput } from "@api/kamu.graphql.interface";
 import { SearchApi } from "@api/search.api";
@@ -51,6 +52,7 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 
         //-----//
         DynamicTableComponent,
+        DatasetLinkPipe,
     ],
 })
 export class SearchSectionComponent extends BaseComponent {

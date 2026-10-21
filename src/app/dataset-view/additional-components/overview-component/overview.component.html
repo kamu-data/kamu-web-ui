@@ -66,12 +66,12 @@
                     You can
                     <a
                         class="text-decoration-none"
-                        [routerLink]="[
-                            '/',
-                            datasetOverviewTabData.datasetBasics.owner.accountName,
-                            datasetOverviewTabData.datasetBasics.name,
-                            URL_PARAM_ADD_POLLING_SOURCE,
-                        ]"
+                        [routerLink]="
+                            {
+                                accountName: datasetOverviewTabData.datasetBasics.owner.accountName,
+                                datasetName: datasetOverviewTabData.datasetBasics.name,
+                            } | sourceEventEditorLink: SourceEventEditor.AddPollingSource
+                        "
                     >
                         Add data polling source</a
                     >
@@ -85,12 +85,12 @@
                     You can
                     <a
                         class="text-decoration-none"
-                        [routerLink]="[
-                            '/',
-                            datasetOverviewTabData.datasetBasics.owner.accountName,
-                            datasetOverviewTabData.datasetBasics.name,
-                            URL_PARAM_ADD_PUSH_SOURCE,
-                        ]"
+                        [routerLink]="
+                            {
+                                accountName: datasetOverviewTabData.datasetBasics.owner.accountName,
+                                datasetName: datasetOverviewTabData.datasetBasics.name,
+                            } | sourceEventEditorLink: SourceEventEditor.AddPushSource
+                        "
                     >
                         Add data push source</a
                     >
@@ -104,12 +104,12 @@
                     You can
                     <a
                         class="text-decoration-none"
-                        [routerLink]="[
-                            '/',
-                            datasetOverviewTabData.datasetBasics.owner.accountName,
-                            datasetOverviewTabData.datasetBasics.name,
-                            URL_PARAM_SET_TRANSFORM,
-                        ]"
+                        [routerLink]="
+                            {
+                                accountName: datasetOverviewTabData.datasetBasics.owner.accountName,
+                                datasetName: datasetOverviewTabData.datasetBasics.name,
+                            } | sourceEventEditorLink: SourceEventEditor.SetTransform
+                        "
                     >
                         Add transformation</a
                     >

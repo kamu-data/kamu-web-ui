@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
@@ -65,13 +65,7 @@ describe("OverviewComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [OwlDateTimeModule, OwlNativeDateTimeModule, OwlMomentDateTimeModule, SharedTestModule],
-            providers: [
-                provideMarkdown(),
-                Apollo,
-                provideToastr(),
-                provideHttpClient(withInterceptorsFromDi()),
-                provideHttpClientTesting(),
-            ],
+            providers: [provideMarkdown(), Apollo, provideToastr(), provideHttpClient(), provideHttpClientTesting()],
         }).compileComponents();
 
         registerMatSvgIcons();

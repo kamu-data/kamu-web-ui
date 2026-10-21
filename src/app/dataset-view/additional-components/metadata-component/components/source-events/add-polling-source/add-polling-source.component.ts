@@ -11,6 +11,7 @@ import { FormArray, FormGroup, FormsModule, ReactiveFormsModule } from "@angular
 import { MatStepperModule } from "@angular/material/stepper";
 import { RouterLink } from "@angular/router";
 
+import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { DatasetInfo } from "@interface/navigation.interface";
 
@@ -55,6 +56,7 @@ import { EditorModule } from "src/app/editor/editor.module";
         PrepareStepComponent,
         PreprocessStepComponent,
         StepperNavigationComponent,
+        DatasetLinkPipe,
     ],
 })
 export class AddPollingSourceComponent extends BaseSourceEventComponent implements OnInit {

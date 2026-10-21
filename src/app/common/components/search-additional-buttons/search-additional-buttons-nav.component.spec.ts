@@ -6,7 +6,7 @@
  */
 
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
@@ -26,7 +26,7 @@ describe("SearchAdditionalButtonsNavComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, SearchAdditionalButtonsNavComponent],
-            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+            providers: [provideHttpClient(), provideHttpClientTesting()],
         }).compileComponents();
 
         registerMatSvgIcons();

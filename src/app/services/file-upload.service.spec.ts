@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { HttpHeaders, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { HttpHeaders, provideHttpClient } from "@angular/common/http";
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 import { provideRouter } from "@angular/router";
@@ -40,7 +40,7 @@ describe("FileUploadService", () => {
             providers: [
                 Apollo,
                 provideRouter([{ path: "kamu/mockNameRoot", component: DatasetViewComponent }]),
-                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClient(),
                 provideHttpClientTesting(),
             ],
         });

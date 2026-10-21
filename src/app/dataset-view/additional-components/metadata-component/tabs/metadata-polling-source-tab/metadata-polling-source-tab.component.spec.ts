@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatIconModule } from "@angular/material/icon";
@@ -30,12 +30,7 @@ describe("MetadataPollingSourceTabComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [MetadataPollingSourceTabComponent, SharedTestModule, MatIconModule],
-            providers: [
-                HIGHLIGHT_OPTIONS_PROVIDER,
-                provideToastr(),
-                provideHttpClient(withInterceptorsFromDi()),
-                provideHttpClientTesting(),
-            ],
+            providers: [HIGHLIGHT_OPTIONS_PROVIDER, provideToastr(), provideHttpClient(), provideHttpClientTesting()],
         });
         fixture = TestBed.createComponent(MetadataPollingSourceTabComponent);
         navigationService = TestBed.inject(NavigationService);

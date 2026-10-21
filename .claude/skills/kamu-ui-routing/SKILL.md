@@ -49,7 +49,7 @@ its own routes file:
   ```ts
   {
       path: `${ProjectLinks.URL_SETTINGS}`,
-      canActivate: [AuthenticatedGuard],
+      canActivate: [authenticatedGuard],
       runGuardsAndResolvers: "always",
       loadChildren: () =>
           import(
@@ -84,16 +84,39 @@ its own routes file:
   folder beside the component. Register them under a key from `RoutingResolvers`
   (`src/app/common/resolvers/routing-resolvers.ts`), and receive the value as an input:
   `@Input(RoutingResolvers.FLOW_DETAILS_LOGS_KEY) public flowDetails: DatasetFlowByIdResponse;`.
+- A resolver that cannot produce its data redirects by emitting a `RedirectCommand`, usually
+  `navigationService.pageNotFoundRedirect()` from `map` or `catchError`. Keep `MaybeNull` out of
+  `ResolveFn<T>` when `null` would only mean "redirected"; the router never hands a
+  `RedirectCommand` to the component. A resolver built on another one passes its
+  `RedirectCommand` through (`if (data instanceof RedirectCommand) return of(data);`) before its
+  own follow-up fetch.
+- Access to a dataset page is decided in its resolver, not by hiding the menu link: the menu only
+  mirrors the rule. Build on `requestDatasetWithPermissions` / `requestEditableDataset`
+  (`dataset-view/resolvers/dataset-access.helpers.ts`) for pages outside the dataset view, and
+  `resolveSettingsTabAccess` (`dataset-settings-component/resolvers/settings-tab-access.helpers.ts`)
+  for settings tabs and their sub-pages. A rule that needs no dataset data, such as who may open
+  an account's settings tab, is a guard (`accountSettingsTabGuard`).
 - Tabs are child routes: an empty-path `redirectTo` the default tab with `pathMatch: "full"`,
   then one child per tab with `data: { [ProjectLinks.URL_PARAM_TAB]: XxxTabs.SOME_TAB }` and an
   `xxxActiveTabResolverFn` on the parent.
 - Routes whose data must refresh when only query parameters change set
   `runGuardsAndResolvers: "always"`, as their neighbours do.
-- Guards: new guards are functional `CanActivateFn`s (`accountGuard`,
-  `forbidAnonymousAccessGuardFn`). The class guards `AuthenticatedGuard`, `AdminGuard` and
-  `LoginGuard` are referenced as they are.
+- Guards are functional `CanActivateFn`s in a `guards/` folder (`authenticatedGuard`,
+  `adminGuard`, `accountGuard`). A guard returns `true` or the `UrlTree` to redirect to, built by
+  a `NavigationService` `…UrlTree()` method such as `homeUrlTree()` or `loginUrlTree()`.
 - Navigation from code goes through `NavigationService` methods; add a method there for a new
-  destination instead of calling `router.navigate` with assembled segments in components.
+  destination instead of calling `router.navigate` with assembled segments in components. Its
+  `navigateTo…()` methods serve components and handlers that run outside any navigation (the
+  Apollo error link, `ErrorHandlerService`); guards and resolvers use its `…UrlTree()` and
+  `…Redirect()` builders, so the redirect happens inside the navigation being checked.
+- Every URL of a dataset page or sub-page, and of the user's own settings, comes from a
+  `NavigationService` builder (`datasetViewUrlTree`, `metadataBlockUrlTree`, `flowDetailsUrlTree`,
+  `webhooksUrlTree`, `sourceEventEditorUrlTree`, `accountSettingsUrlTree`); its `navigateTo…()`
+  twin, where one exists, navigates to the same tree. Templates reach the builders through the
+  pure pipes in `common/pipes/` (`datasetLink`, `metadataBlockLink`, `flowDetailsLink`,
+  `webhooksLink`, `sourceEventEditorLink`, `accountSettingsLink`), never through hand-built
+  `['/', account, dataset, …]` arrays. Query parameters and the fragment go into the
+  builder's params: `routerLink` ignores `[queryParams]` and `fragment` when given a `UrlTree`.
 
 ### Proving the chunk split
 
@@ -117,6 +140,7 @@ The dev build (`npm run build`) does not optimize and its chunk sizes are not re
 | Statically importing a feature component into a parent routes file "just for one route" | Merges the whole feature, and everything it imports, into the parent chunk |
 | Fetching page data in `ngOnInit` instead of a resolver | The page renders empty first and the data does not refresh with `runGuardsAndResolvers`; resolvers keep loading and navigation in one place |
 | Relying on `webpackChunkName` to name chunks | Ignored by the esbuild builder; the file name decides |
+| A guard or resolver that calls `navigateTo…()` and then returns `false`, `EMPTY` or `null` | Starts a second navigation from inside the first, which the router then cancels. A resolver returning `EMPTY` cancels the navigation on its own, so the 404 page appeared only because the second navigation won. A `UrlTree` or `RedirectCommand` redirects within the same navigation, and a spec can check where it leads |
 
 ## What lives elsewhere
 

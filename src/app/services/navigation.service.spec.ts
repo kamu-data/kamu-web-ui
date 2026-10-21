@@ -6,14 +6,10 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { provideRouter, Router } from "@angular/router";
+import { provideRouter, RedirectCommand, Router, UrlTree } from "@angular/router";
 
 import { FlowStatus } from "@api/kamu.graphql.interface";
-import {
-    DatasetNavigationParams,
-    FlowDetailsNavigationParams,
-    MetadataBlockNavigationParams,
-} from "@interface/navigation.interface";
+import { DatasetNavigationParams } from "@interface/navigation.interface";
 
 import { AccountTabs } from "src/app/account/account.constants";
 import {
@@ -22,8 +18,10 @@ import {
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 import { AccountSettingsTabs } from "src/app/account/settings/account-settings.constants";
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
-import ProjectLinks from "src/app/project-links";
-import { mockDatasetInfo } from "src/app/search/mock.data";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import ProjectLinks, { SourceEventEditor } from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
 describe("NavigationService", () => {
@@ -47,76 +45,127 @@ describe("NavigationService", () => {
     });
 
     it("should test navigate to home", () => {
-        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
+        const routerSpy = spyOn(router, "navigateByUrl").and.resolveTo(true);
         service.navigateToHome();
-        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_HOME]);
+        expect(navigatedUrl(routerSpy)).toEqual("/");
+    });
+
+    it("should build the home URL", () => {
+        expect(router.serializeUrl(service.homeUrlTree())).toEqual("/");
+    });
+
+    it("should build the login URL with and without a redirect URL", () => {
+        expect(router.serializeUrl(service.loginUrlTree())).toEqual(`/${ProjectLinks.URL_LOGIN}`);
+        expect(router.serializeUrl(service.loginUrlTree("/kamu"))).toEqual(
+            `/${ProjectLinks.URL_LOGIN}?${ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL}=%2Fkamu`,
+        );
+    });
+
+    it("should build the owner view URL", () => {
+        expect(router.serializeUrl(service.ownerViewUrlTree("kamu", AccountTabs.DATASETS))).toEqual(
+            `/kamu/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.DATASETS}`,
+        );
+    });
+
+    it("should build a page-not-found redirect that keeps the URL", () => {
+        const command = service.pageNotFoundRedirect();
+        expect(command).toBeInstanceOf(RedirectCommand);
+        expect(router.serializeUrl(command.redirectTo)).toEqual(`/${ProjectLinks.URL_PAGE_NOT_FOUND}`);
+        expect(command.navigationBehaviorOptions).toEqual({ skipLocationChange: true });
+    });
+
+    it("should test navigate to login with a redirect URL", () => {
+        const routerSpy = spyOn(router, "navigateByUrl").and.resolveTo(true);
+        service.navigateToLogin("/kamu");
+        expect(navigatedUrl(routerSpy)).toEqual(
+            `/${ProjectLinks.URL_LOGIN}?${ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL}=%2Fkamu`,
+        );
     });
 
     it("should test navigate to login", () => {
-        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
+        const routerSpy = spyOn(router, "navigateByUrl").and.resolveTo(true);
         service.navigateToLogin();
-        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_LOGIN], {
-            queryParams: { redirectUrl: undefined },
-        });
+        expect(navigatedUrl(routerSpy)).toEqual(`/${ProjectLinks.URL_LOGIN}`);
     });
 
-    it("should test navigate to settings", () => {
-        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
-        service.navigateToSettings();
-        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_SETTINGS, AccountSettingsTabs.PROFILE], {
-            queryParams: {},
-        });
+    it("should navigate to a settings tab, adding the page after the first one", () => {
+        const routerSpy = spyOn(router, "navigateByUrl").and.resolveTo(true);
+        service.navigateToSettings(AccountSettingsTabs.ACCESS_TOKENS);
+        expect(navigatedUrl(routerSpy)).toEqual(`/${ProjectLinks.URL_SETTINGS}/${AccountSettingsTabs.ACCESS_TOKENS}`);
+        service.navigateToSettings(AccountSettingsTabs.ACCESS_TOKENS, 1);
+        expect(navigatedUrl(routerSpy)).toEqual(`/${ProjectLinks.URL_SETTINGS}/${AccountSettingsTabs.ACCESS_TOKENS}`);
+        service.navigateToSettings(AccountSettingsTabs.ACCESS_TOKENS, 2);
+        expect(navigatedUrl(routerSpy)).toEqual(
+            `/${ProjectLinks.URL_SETTINGS}/${AccountSettingsTabs.ACCESS_TOKENS}?page=2`,
+        );
     });
 
-    it("should test navigate to metadata block", () => {
-        const mockParams: MetadataBlockNavigationParams = {
-            accountName: "kamu",
-            datasetName: "test.hm",
-            blockHash: "kkdcswd6782819e12",
-        };
-        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
-        service.navigateToMetadataBlock({
-            accountName: mockParams.accountName,
-            datasetName: mockParams.datasetName,
-            blockHash: mockParams.blockHash,
-        });
-        expect(routerSpy).toHaveBeenCalledWith([
-            mockParams.accountName,
-            mockParams.datasetName,
-            ProjectLinks.URL_BLOCK,
-            mockParams.blockHash,
-        ]);
+    it("should build the metadata block URL", () => {
+        expect(
+            router.serializeUrl(
+                service.metadataBlockUrlTree({ accountName: "kamu", datasetName: "ds", blockHash: "f1620abc" }),
+            ),
+        ).toEqual(`/kamu/ds/${ProjectLinks.URL_BLOCK}/f1620abc`);
+    });
+
+    it("should navigate to a metadata tab, the watermark tab by default", () => {
+        const routerSpy = spyOn(router, "navigateByUrl").and.resolveTo(true);
+        service.navigateToMetadata({ accountName: "kamu", datasetName: "ds" });
+        expect(navigatedUrl(routerSpy)).toEqual(`/kamu/ds/${DatasetViewTypeEnum.Metadata}/${MetadataTabs.Watermark}`);
+        service.navigateToMetadata({ accountName: "kamu", datasetName: "ds" }, MetadataTabs.Schema);
+        expect(navigatedUrl(routerSpy)).toEqual(`/kamu/ds/${DatasetViewTypeEnum.Metadata}/${MetadataTabs.Schema}`);
+    });
+
+    it("should navigate to the webhooks list and to one webhook", () => {
+        const routerSpy = spyOn(router, "navigateByUrl").and.resolveTo(true);
+        const webhooksUrl = `/kamu/ds/${DatasetViewTypeEnum.Settings}/${SettingsTabsEnum.WEBHOOKS}`;
+        service.navigateToWebhooks({ accountName: "kamu", datasetName: "ds" });
+        expect(navigatedUrl(routerSpy)).toEqual(webhooksUrl);
+        service.navigateToWebhooks({ accountName: "kamu", datasetName: "ds", webhookId: "w1" });
+        expect(navigatedUrl(routerSpy)).toEqual(`${webhooksUrl}/w1`);
     });
 
     it("should test navigate to owner page and tab equal overview", () => {
-        const mockOwnerName = "Mock name";
-        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
-        service.navigateToOwnerView(mockOwnerName, AccountTabs.OVERVIEW);
-        expect(routerSpy).toHaveBeenCalledWith([mockOwnerName, ProjectLinks.URL_ACCOUNT_SELECT, AccountTabs.OVERVIEW], {
-            queryParams: { page: undefined, nav: undefined, status: undefined, mode: undefined },
-        });
+        const routerSpy = spyOn(router, "navigateByUrl").and.resolveTo(true);
+        service.navigateToOwnerView("kamu", AccountTabs.OVERVIEW);
+        expect(navigatedUrl(routerSpy)).toEqual(`/kamu/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.OVERVIEW}`);
+    });
+
+    it("should join several flow statuses in the owner page URL", () => {
+        const routerSpy = spyOn(router, "navigateByUrl").and.resolveTo(true);
+        service.navigateToOwnerView("kamu", AccountTabs.FLOWS, undefined, undefined, [
+            FlowStatus.Finished,
+            FlowStatus.Running,
+        ]);
+        expect(navigatedUrl(routerSpy)).toEqual(
+            `/kamu/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.FLOWS}?${ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS}=${FlowStatus.Finished},${FlowStatus.Running}`,
+        );
     });
 
     it("should test navigate to owner page and tab not equal overview", () => {
-        const mockOwnerName = "Mock name";
-        const testPage = 2;
-        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
+        const routerSpy = spyOn(router, "navigateByUrl").and.resolveTo(true);
         service.navigateToOwnerView(
-            mockOwnerName,
+            "kamu",
             AccountTabs.DATASETS,
-            testPage,
+            2,
             AccountFlowsNav.ACTIVITY,
             [FlowStatus.Finished],
             ProcessCardFilterMode.CUSTOM,
         );
-        expect(routerSpy).toHaveBeenCalledWith([mockOwnerName, ProjectLinks.URL_ACCOUNT_SELECT, AccountTabs.DATASETS], {
-            queryParams: {
-                page: testPage,
-                nav: AccountFlowsNav.ACTIVITY,
-                status: FlowStatus.Finished,
-                mode: ProcessCardFilterMode.CUSTOM,
-            },
+        const [path] = navigatedUrl(routerSpy).split("?");
+        expect(path).toEqual(`/kamu/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.DATASETS}`);
+        expect(router.parseUrl(navigatedUrl(routerSpy)).queryParams).toEqual({
+            [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_NAV]: AccountFlowsNav.ACTIVITY,
+            [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS]: FlowStatus.Finished,
+            [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_FILTERS_MODE]: ProcessCardFilterMode.CUSTOM,
+            page: "2",
         });
+    });
+
+    it("should leave the tab out of the owner page URL when none is given", () => {
+        expect(router.serializeUrl(service.ownerViewUrlTree("kamu"))).toEqual(
+            `/kamu/${ProjectLinks.URL_ACCOUNT_SELECT}`,
+        );
     });
 
     it("should test navigate to website", () => {
@@ -163,64 +212,46 @@ describe("NavigationService", () => {
         });
     });
 
-    it("should test navigate to dataset create", () => {
-        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
-        service.navigateToDatasetCreate();
-        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_DATASET_CREATE]);
+    it("should navigate to a dataset tab and pass the navigation state", () => {
+        const routerSpy = spyOn(router, "navigateByUrl").and.resolveTo(true);
+        const state = { from: "test" };
+
+        service.navigateToDatasetView({ accountName: "kamu", datasetName: "ds", tab: "history", page: 2, state });
+
+        const [url, extras] = routerSpy.calls.mostRecent().args;
+        expect(router.serializeUrl(url as UrlTree)).toEqual("/kamu/ds/history?page=2");
+        expect(extras).toEqual({ state });
     });
 
-    it("should test navigate to dataset view to first page", () => {
-        const mockParams: DatasetNavigationParams = {
-            accountName: "mockAccountName",
-            datasetName: "mockDatasetName",
-            tab: "overview",
-            page: 1,
-        };
-        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
-        service.navigateToDatasetView(mockParams);
-        expect(routerSpy).toHaveBeenCalledWith([mockParams.accountName, mockParams.datasetName, mockParams.tab], {
-            queryParams: {
-                sqlQuery: undefined,
-                page: undefined,
-                webhookId: undefined,
-                category: undefined,
-                webhooksState: undefined,
-                pathPrefix: undefined,
-                version: undefined,
-            },
-            state: undefined,
-        });
-    });
-
-    it("should test navigate to dataset view to second page", () => {
-        const mockParams: DatasetNavigationParams = {
-            accountName: "mockAccountName",
-            datasetName: "mockDatasetName",
-            tab: "history",
-            page: 2,
-        };
-        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
-        service.navigateToDatasetView(mockParams);
-        expect(routerSpy).toHaveBeenCalledWith([mockParams.accountName, mockParams.datasetName, mockParams.tab], {
-            queryParams: {
-                page: mockParams.page,
-                sqlQuery: undefined,
-                webhookId: undefined,
-                category: undefined,
-                webhooksState: undefined,
-                pathPrefix: undefined,
-                version: undefined,
-            },
-            state: undefined,
+    [
+        { params: { accountName: "kamu", datasetName: "ds" }, expectedUrl: "/kamu/ds" },
+        {
+            params: { accountName: "kamu", datasetName: "ds", tab: DatasetViewTypeEnum.Overview },
+            expectedUrl: "/kamu/ds",
+        },
+        {
+            params: { accountName: "kamu", datasetName: "ds", tab: "history", page: 1 },
+            expectedUrl: "/kamu/ds/history",
+        },
+        {
+            params: { accountName: "kamu", datasetName: "ds", tab: DatasetViewTypeEnum.Settings, section: "webhooks" },
+            expectedUrl: "/kamu/ds/settings/webhooks",
+        },
+        {
+            params: { accountName: "kamu", datasetName: "ds", tab: DatasetViewTypeEnum.Flows, webhookId: ["a", "b"] },
+            expectedUrl: "/kamu/ds/flows?webhookId=a,b",
+        },
+    ].forEach(({ params, expectedUrl }: { params: DatasetNavigationParams; expectedUrl: string }) => {
+        it(`should build the dataset URL ${expectedUrl}`, () => {
+            expect(router.serializeUrl(service.datasetViewUrlTree(params))).toEqual(expectedUrl);
         });
     });
 
     it("should test navigate to page not found view", () => {
-        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
+        const routerSpy = spyOn(router, "navigateByUrl").and.resolveTo(true);
         service.navigateToPageNotFound();
-        expect(routerSpy).toHaveBeenCalledWith([ProjectLinks.URL_PAGE_NOT_FOUND], {
-            skipLocationChange: true,
-        });
+        expect(navigatedUrl(routerSpy)).toEqual(`/${ProjectLinks.URL_PAGE_NOT_FOUND}`);
+        expect(routerSpy.calls.mostRecent().args[1]).toEqual({ skipLocationChange: true });
     });
 
     it("should test navigate to return to CLI view", () => {
@@ -238,49 +269,65 @@ describe("NavigationService", () => {
     });
 
     it("should test navigate to AddPollingSource view", () => {
-        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
-        service.navigateToAddPollingSource(mockDatasetInfo);
-        expect(routerSpy).toHaveBeenCalledWith([
-            mockDatasetInfo.accountName,
-            mockDatasetInfo.datasetName,
-            ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE,
-        ]);
+        const routerSpy = spyOn(router, "navigateByUrl").and.resolveTo(true);
+        service.navigateToAddPollingSource({ accountName: "kamu", datasetName: "ds" });
+        expect(navigatedUrl(routerSpy)).toEqual(`/kamu/ds/${SourceEventEditor.AddPollingSource}`);
     });
 
     it("should test navigate to AddPushSource view", () => {
-        const MOCK_SOURCE_NAME = "Mock-name";
-        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
-        service.navigateToAddPushSource(mockDatasetInfo, MOCK_SOURCE_NAME);
-        expect(routerSpy).toHaveBeenCalledWith(
-            [mockDatasetInfo.accountName, mockDatasetInfo.datasetName, ProjectLinks.URL_PARAM_ADD_PUSH_SOURCE],
-            { queryParams: { name: MOCK_SOURCE_NAME } },
+        const routerSpy = spyOn(router, "navigateByUrl").and.resolveTo(true);
+        service.navigateToAddPushSource({ accountName: "kamu", datasetName: "ds" }, "Mock-name");
+        expect(navigatedUrl(routerSpy)).toEqual(
+            `/kamu/ds/${SourceEventEditor.AddPushSource}?${ProjectLinks.URL_QUERY_PARAM_PUSH_SOURCE_NAME}=Mock-name`,
         );
     });
 
     it("should test navigate to SetTransform view", () => {
-        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
-        service.navigateToSetTransform(mockDatasetInfo);
-        expect(routerSpy).toHaveBeenCalledWith([
-            mockDatasetInfo.accountName,
-            mockDatasetInfo.datasetName,
-            ProjectLinks.URL_PARAM_SET_TRANSFORM,
-        ]);
+        const routerSpy = spyOn(router, "navigateByUrl").and.resolveTo(true);
+        service.navigateToSetTransform({ accountName: "kamu", datasetName: "ds" });
+        expect(navigatedUrl(routerSpy)).toEqual(`/kamu/ds/${SourceEventEditor.SetTransform}`);
     });
 
-    it("should test navigate to flow details view", () => {
-        const mockParams: FlowDetailsNavigationParams = {
-            accountName: "mockAccountName",
-            datasetName: "mockDatasetName",
+    it("should test navigate to flow details view, the history tab by default", () => {
+        const routerSpy = spyOn(router, "navigateByUrl").and.resolveTo(true);
+        service.navigateToFlowDetails({ accountName: "kamu", datasetName: "ds", flowId: "5" });
+        expect(navigatedUrl(routerSpy)).toEqual(
+            `/kamu/ds/${ProjectLinks.URL_FLOW_DETAILS}/5/${FlowDetailsTabs.HISTORY}`,
+        );
+        service.navigateToFlowDetails({
+            accountName: "kamu",
+            datasetName: "ds",
             flowId: "5",
-        };
-        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
-        service.navigateToFlowDetails(mockParams);
-        expect(routerSpy).toHaveBeenCalledWith([
-            mockParams.accountName,
-            mockParams.datasetName,
-            ProjectLinks.URL_FLOW_DETAILS,
-            mockParams.flowId,
-            FlowDetailsTabs.HISTORY,
-        ]);
+            tab: FlowDetailsTabs.LOGS,
+        });
+        expect(navigatedUrl(routerSpy)).toEqual(`/kamu/ds/${ProjectLinks.URL_FLOW_DETAILS}/5/${FlowDetailsTabs.LOGS}`);
     });
+
+    it("should open the query explainer in a new tab for an upload token", () => {
+        const windowOpenSpy = spyOn(window, "open");
+        service.navigateToQueryExplainer("token-1");
+        expect(windowOpenSpy).toHaveBeenCalledOnceWith(
+            `/${ProjectLinks.URL_QUERY_EXPLAINER}?${ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN}=token-1`,
+            "_blank",
+        );
+    });
+
+    it("should not open the query explainer without an upload token", () => {
+        const windowOpenSpy = spyOn(window, "open");
+        service.navigateToQueryExplainer("");
+        expect(windowOpenSpy).not.toHaveBeenCalled();
+    });
+
+    it("should merge the SQL query into the current query parameters", () => {
+        const routerSpy = spyOn(router, "navigate").and.resolveTo(true);
+        service.navigateWithSqlQuery("select 1");
+        expect(routerSpy).toHaveBeenCalledOnceWith([], {
+            queryParams: { [ProjectLinks.URL_QUERY_PARAM_SQL_QUERY]: "select 1" },
+            queryParamsHandling: "merge",
+        });
+    });
+
+    function navigatedUrl(routerSpy: jasmine.Spy): string {
+        return router.serializeUrl(routerSpy.calls.mostRecent().args[0] as UrlTree);
+    }
 });

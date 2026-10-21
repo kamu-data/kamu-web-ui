@@ -7,7 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { firstValueFrom, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
@@ -15,6 +15,7 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 import { WebhookSubscription } from "@api/kamu.graphql.interface";
 import { TEST_DATASET_ID } from "@api/mock/dataset.mock";
 import {
+    mockDatasetWebhookByIdNotFoundQuery,
     mockDatasetWebhookByIdQuery,
     mockDatasetWebhookCreateSubscriptionMutation,
     mockDatasetWebhookCreateSubscriptionMutationError,
@@ -72,19 +73,30 @@ describe("DatasetWebhooksService", () => {
         expect(datasetWebhookSubscriptionsSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check dataset webhook subscription by Id", () => {
+    it("should check dataset webhook subscription by Id", async () => {
         const datasetWebhookSubscriptionByIdSpy = spyOn(webhooksApi, "datasetWebhookSubscriptionById").and.returnValue(
             of(mockDatasetWebhookByIdQuery),
         );
 
-        service
-            .datasetWebhookSubscriptionById({ datasetId: DATASET_ID, id: MOCK_SUBSCRIPTION_ID })
-            .subscribe((result: WebhookSubscription) => {
-                expect(result.id).toEqual(
-                    mockDatasetWebhookByIdQuery.datasets.byId?.webhooks.subscription?.id as string,
-                );
-            });
-        expect(datasetWebhookSubscriptionByIdSpy).toHaveBeenCalledTimes(1);
+        const result = await firstValueFrom(
+            service.datasetWebhookSubscriptionById({ datasetId: DATASET_ID, id: MOCK_SUBSCRIPTION_ID }),
+        );
+
+        expect(result).toEqual(mockDatasetWebhookByIdQuery.datasets.byId?.webhooks.subscription as WebhookSubscription);
+        expect(datasetWebhookSubscriptionByIdSpy).toHaveBeenCalledOnceWith({
+            datasetId: DATASET_ID,
+            id: MOCK_SUBSCRIPTION_ID,
+        });
+    });
+
+    it("should emit null for a webhook subscription the dataset does not have", async () => {
+        spyOn(webhooksApi, "datasetWebhookSubscriptionById").and.returnValue(of(mockDatasetWebhookByIdNotFoundQuery));
+
+        const result = await firstValueFrom(
+            service.datasetWebhookSubscriptionById({ datasetId: DATASET_ID, id: MOCK_SUBSCRIPTION_ID }),
+        );
+
+        expect(result).toBeNull();
     });
 
     it("should check create dataset webhook subscription with success", () => {

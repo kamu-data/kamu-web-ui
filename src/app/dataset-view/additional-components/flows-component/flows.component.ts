@@ -22,6 +22,8 @@ import { combineLatest, map, Observable, of, switchMap, take, tap, timer } from 
 
 import { environment } from "@env/environment";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
+import { SourceEventEditorLinkPipe } from "@common/pipes/source-event-editor-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import {
@@ -57,7 +59,7 @@ import {
 import { FlowsSelectionStateService } from "src/app/dataset-view/additional-components/flows-component/services/flows-selection-state.service";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.component";
-import ProjectLinks from "src/app/project-links";
+import ProjectLinks, { SourceEventEditor } from "src/app/project-links";
 import { ProcessDatasetCardInteractionService } from "src/app/services/process-dataset-card-interaction.service";
 
 @Component({
@@ -88,6 +90,8 @@ import { ProcessDatasetCardInteractionService } from "src/app/services/process-d
         DatasetFlowProcessCardComponent,
         TileBaseWidgetComponent,
         PaginationComponent,
+        DatasetLinkPipe,
+        SourceEventEditorLinkPipe,
     ],
 })
 export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit {
@@ -125,10 +129,8 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     public readonly DISPLAY_COLUMNS: string[] = ["description", "information", "creator", "options"]; //1
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
-    public readonly SettingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
-    public readonly URL_PARAM_SET_TRANSFORM = ProjectLinks.URL_PARAM_SET_TRANSFORM;
+    public readonly SourceEventEditor: typeof SourceEventEditor = SourceEventEditor;
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
-    public readonly URL_PARAM_ADD_POLLING_SOURCE = ProjectLinks.URL_PARAM_ADD_POLLING_SOURCE;
 
     public ngOnInit(): void {
         this.filterByStatus = null;

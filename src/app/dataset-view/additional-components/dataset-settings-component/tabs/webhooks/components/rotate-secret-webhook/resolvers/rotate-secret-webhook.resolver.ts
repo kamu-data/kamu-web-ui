@@ -5,14 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { inject } from "@angular/core";
-import { ResolveFn } from "@angular/router";
+import { RedirectCommand, ResolveFn } from "@angular/router";
+
+import { map } from "rxjs";
 
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 
-import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
+import { resolveSettingsTabAccess } from "src/app/dataset-view/additional-components/dataset-settings-component/resolvers/settings-tab-access.helpers";
 
 export const rotateSecretWebhookResolverFn: ResolveFn<DatasetBasicsFragment> = () => {
-    const datasetService = inject(DatasetService);
-    return datasetService.datasetChanges;
+    return resolveSettingsTabAccess(SettingsTabsEnum.WEBHOOKS).pipe(
+        map((data) => (data instanceof RedirectCommand ? data : data.datasetBasics)),
+    );
 };

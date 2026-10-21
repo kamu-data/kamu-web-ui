@@ -6,7 +6,7 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot, UrlTree } from "@angular/router";
 
 import { Apollo } from "apollo-angular";
 
@@ -19,6 +19,7 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 describe("accountPasswordProviderGuard", () => {
     let loggedUserService: LoggedUserService;
+    let router: Router;
 
     const mockRouterStateSnapshot = {} as RouterStateSnapshot;
     const mockActivatedRouteSnapshot = {} as ActivatedRouteSnapshot;
@@ -32,26 +33,35 @@ describe("accountPasswordProviderGuard", () => {
             imports: [RedirectUrlTestModule],
         });
         loggedUserService = TestBed.inject(LoggedUserService);
+        router = TestBed.inject(Router);
     });
 
     it("should be created", () => {
         expect(executeGuard).toBeTruthy();
     });
 
-    it("should check to return true", async () => {
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        const result = await executeGuard(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
-        expect(result).toEqual(true);
+    it("should allow an account with a password", () => {
+        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        const result = executeGuard(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
+        expect(result).toBeTrue();
     });
 
-    it("should check to return false", async () => {
+    it("should redirect an account from another provider home", () => {
         const cloneMockAccountDetails = structuredClone(mockAccountDetails);
         cloneMockAccountDetails.accountProvider = AccountProvider.OauthGithub;
 
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(cloneMockAccountDetails);
+        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(cloneMockAccountDetails);
 
-        const result = await executeGuard(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
+        const result = executeGuard(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
 
-        expect(result).toEqual(false);
+        expect(router.serializeUrl(result as UrlTree)).toEqual("/");
+    });
+
+    it("should redirect an anonymous user home", () => {
+        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(null);
+
+        const result = executeGuard(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
+
+        expect(router.serializeUrl(result as UrlTree)).toEqual("/");
     });
 });

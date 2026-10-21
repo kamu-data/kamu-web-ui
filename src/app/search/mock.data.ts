@@ -307,6 +307,16 @@ export const mockReadonlyDatasetPermissionsFragment: DatasetPermissionsFragment 
     },
 };
 
+export const mockNoWebhooksDatasetPermissionsFragment: DatasetPermissionsFragment = {
+    permissions: {
+        ...mockFullPowerDatasetPermissionsFragment.permissions,
+        webhooks: {
+            canUpdate: false,
+            canView: false,
+        },
+    },
+};
+
 export const mockDatasetResponseNotFound: GetDatasetMainDataQuery = {
     datasets: {
         __typename: "Datasets",

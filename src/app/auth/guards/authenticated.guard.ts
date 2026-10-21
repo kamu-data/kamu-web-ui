@@ -5,23 +5,15 @@
  * included in the LICENSE file.
  */
 
-import { inject, Injectable } from "@angular/core";
+import { inject } from "@angular/core";
+import { CanActivateFn } from "@angular/router";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { NavigationService } from "src/app/services/navigation.service";
 
-@Injectable({
-    providedIn: "root",
-})
-export class AuthenticatedGuard {
-    private navigationService = inject(NavigationService);
-    private loggedUserService = inject(LoggedUserService);
+export const authenticatedGuard: CanActivateFn = () => {
+    const loggedUserService = inject(LoggedUserService);
+    const navigationService = inject(NavigationService);
 
-    public canActivate(): boolean {
-        if (!this.loggedUserService.isAuthenticated) {
-            this.navigationService.navigateToHome();
-            return false;
-        }
-        return true;
-    }
-}
+    return loggedUserService.isAuthenticated || navigationService.homeUrlTree();
+};

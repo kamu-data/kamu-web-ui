@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { importProvidersFrom } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
@@ -48,7 +48,7 @@ describe("DatasetSettingsService", () => {
                 Apollo,
                 importProvidersFrom(ApolloTestingModule),
                 provideToastr(),
-                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClient(),
                 provideHttpClientTesting(),
             ],
         });

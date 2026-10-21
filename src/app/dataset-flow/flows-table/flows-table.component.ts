@@ -33,6 +33,8 @@ import { ToastrService } from "ngx-toastr";
 import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
+import { FlowDetailsLinkPipe } from "@common/pipes/flow-details-link.pipe";
 import { SafeHtmlPipe } from "@common/pipes/safe-html.pipe";
 import AppValues from "@common/values/app.values";
 import {
@@ -58,7 +60,6 @@ import {
     FlowsTableOptions,
 } from "src/app/dataset-flow/flows-table/flows-table.types";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
-import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-flows-table",
@@ -78,6 +79,8 @@ import ProjectLinks from "src/app/project-links";
         MatDividerModule,
         //-----//
         SafeHtmlPipe,
+        DatasetLinkPipe,
+        FlowDetailsLinkPipe,
     ],
 })
 export class FlowsTableComponent extends BaseComponent implements OnInit, OnChanges {
@@ -102,7 +105,6 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     public readonly FlowStatus: typeof FlowStatus = FlowStatus;
     public readonly FlowDetailsTabs: typeof FlowDetailsTabs = FlowDetailsTabs;
 
-    public readonly URL_FLOW_DETAILS = ProjectLinks.URL_FLOW_DETAILS;
     public readonly FILTER_DATASET_SETTINGS: DropdownSettings = DROPDOWN_DATASET_SETTINGS;
     public readonly FILTER_STATUS_SETTINGS: DropdownSettings = DROPDOWN_STATUS_SETTINGS;
 

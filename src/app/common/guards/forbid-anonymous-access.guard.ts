@@ -15,11 +15,5 @@ export const forbidAnonymousAccessGuardFn: CanActivateFn = () => {
     const loggedUserService = inject(LoggedUserService);
     const navigationService = inject(NavigationService);
 
-    const loggedUser = loggedUserService.maybeCurrentlyLoggedInUser;
-    if (loggedUser) {
-        return true;
-    } else {
-        navigationService.navigateToLogin();
-        return false;
-    }
+    return Boolean(loggedUserService.maybeCurrentlyLoggedInUser) || navigationService.loginUrlTree();
 };

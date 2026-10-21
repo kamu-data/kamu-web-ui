@@ -11,6 +11,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
 
 import { DataHelpers } from "@common/helpers/data.helpers";
+import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
+import { WebhooksLinkPipe } from "@common/pipes/webhooks-link.pipe";
 import AppValues from "@common/values/app.values";
 import {
     DatasetBasicsFragment,
@@ -19,7 +21,6 @@ import {
     FlowProcessSummary,
 } from "@api/kamu.graphql.interface";
 
-import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import {
     DatasetFlowBadgeHelpers,
     DatasetFlowsBadgeStyle,
@@ -38,6 +39,8 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
         MatIconModule,
         //-----//
         DatePipe,
+        DatasetLinkPipe,
+        WebhooksLinkPipe,
     ],
     templateUrl: "./webhook-flow-process-card.component.html",
     styleUrls: ["./webhook-flow-process-card.component.scss"],
@@ -58,7 +61,6 @@ export class WebhookFlowProcessCardComponent {
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
     public readonly FlowProcessEffectiveState: typeof FlowProcessEffectiveState = FlowProcessEffectiveState;
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
-    public readonly SettingsTabsEnum: typeof SettingsTabsEnum = SettingsTabsEnum;
 
     public badgeStyles(effectiveState: FlowProcessEffectiveState): DatasetFlowsBadgeStyle {
         return DatasetFlowBadgeHelpers.badgeStyles(effectiveState);

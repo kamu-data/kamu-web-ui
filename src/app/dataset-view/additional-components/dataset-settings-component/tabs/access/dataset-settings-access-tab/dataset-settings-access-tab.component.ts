@@ -23,6 +23,7 @@ import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
 import { promiseWithCatch, requireValue } from "@common/helpers/app.helpers";
+import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { AccountWithRole, DatasetAccessRole, DatasetBasicsFragment, PageBasedInfo } from "@api/kamu.graphql.interface";
@@ -53,6 +54,7 @@ import { NavigationService } from "src/app/services/navigation.service";
         MatTableModule,
         //-----//
         PaginationComponent,
+        DatasetLinkPipe,
     ],
 })
 export class DatasetSettingsAccessTabComponent extends BaseComponent implements OnInit {

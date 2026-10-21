@@ -8,34 +8,35 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
-import { Observable, of } from "rxjs";
+import { firstValueFrom, Observable, of, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
-import { MaybeNull } from "@interface/app.types";
+import { DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
-import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { DatasetSettingsWebhookTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
 import { datasetSettingsWebhooksResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/resolver/dataset-settings-webhooks.resolver";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import ProjectLinks from "src/app/project-links";
-import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
+import {
+    mockDatasetBasicsRootFragment,
+    mockFullPowerDatasetPermissionsFragment,
+    mockNoWebhooksDatasetPermissionsFragment,
+} from "src/app/search/mock.data";
 
-describe("datasetSettingsWebhooksResolver", () => {
+describe("datasetSettingsWebhooksResolverFn", () => {
     let datasetService: DatasetService;
     let datasetSubService: DatasetSubscriptionsService;
-    let navigationService: NavigationService;
     let appConfigService: AppConfigService;
     let datasetWebhooksService: DatasetWebhooksService;
 
-    const executeResolver: ResolveFn<MaybeNull<DatasetSettingsWebhookTabData>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<DatasetSettingsWebhookTabData> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => datasetSettingsWebhooksResolverFn(...resolverParameters));
 
     beforeEach(() => {
@@ -45,60 +46,54 @@ describe("datasetSettingsWebhooksResolver", () => {
 
         datasetService = TestBed.inject(DatasetService);
         datasetSubService = TestBed.inject(DatasetSubscriptionsService);
-        navigationService = TestBed.inject(NavigationService);
         appConfigService = TestBed.inject(AppConfigService);
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);
         spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue(
             AppValues.DEFAULT_UI_CONFIGURATION.featureFlags,
         );
-    });
-
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
-    });
-
-    it("should check resolver", () => {
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
         spyOnProperty(datasetSubService, "overviewChanges", "get").and.returnValue(of(mockOverviewUpdate));
-        spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(
-            of(mockFullPowerDatasetPermissionsFragment),
+    });
+
+    function resolve(
+        permissions: DatasetPermissionsFragment = mockFullPowerDatasetPermissionsFragment,
+    ): Promise<unknown> {
+        spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(of(permissions));
+        return firstValueFrom(
+            executeResolver({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot) as Observable<unknown>,
         );
-        spyOn(datasetWebhooksService, "datasetWebhookSubscriptions").and.returnValue(of([]));
-        const mockRoute = {
-            data: {
-                [ProjectLinks.URL_PARAM_TAB]: SettingsTabsEnum.WEBHOOKS,
-            },
-        } as ActivatedRouteSnapshot;
-        const mockState = {} as RouterStateSnapshot;
-        const result = executeResolver(mockRoute, mockState) as Observable<DatasetSettingsWebhookTabData>;
-        result.subscribe((data) => {
-            expect(data).toEqual({
-                datasetBasics: mockDatasetBasicsRootFragment,
-                datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                subscriptions: [],
-            });
+    }
+
+    it("should resolve the dataset with its webhook subscriptions", async () => {
+        const datasetWebhookSubscriptionsSpy = spyOn(
+            datasetWebhooksService,
+            "datasetWebhookSubscriptions",
+        ).and.returnValue(of([]));
+
+        const data = await resolve();
+
+        expect(datasetWebhookSubscriptionsSpy).toHaveBeenCalledOnceWith(mockDatasetBasicsRootFragment.id);
+        expect(data).toEqual({
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            subscriptions: [],
         });
     });
 
-    it("should check resolver with wrong tab", () => {
-        const navigateToPageNotFoundSpy = spyOn(navigationService, "navigateToPageNotFound");
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
-        spyOnProperty(datasetSubService, "overviewChanges", "get").and.returnValue(of(mockOverviewUpdate));
-        spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(
-            of(mockFullPowerDatasetPermissionsFragment),
+    it("should redirect to page not found without loading subscriptions when the user may not view webhooks", async () => {
+        const datasetWebhookSubscriptionsSpy = spyOn(datasetWebhooksService, "datasetWebhookSubscriptions").and.stub();
+
+        const data = await resolve(mockNoWebhooksDatasetPermissionsFragment);
+
+        expectPageNotFoundRedirect(data);
+        expect(datasetWebhookSubscriptionsSpy).not.toHaveBeenCalled();
+    });
+
+    it("should fail when the webhook subscriptions cannot be loaded", async () => {
+        spyOn(datasetWebhooksService, "datasetWebhookSubscriptions").and.returnValue(
+            throwError(() => new Error("failed")),
         );
-        spyOn(datasetWebhooksService, "datasetWebhookSubscriptions").and.returnValue(of([]));
-        const mockRoute = {
-            data: {
-                [ProjectLinks.URL_PARAM_TAB]: "wrongTab",
-            },
-        } as ActivatedRouteSnapshot;
-        const mockState = {} as RouterStateSnapshot;
-        const result = executeResolver(mockRoute, mockState) as Observable<DatasetSettingsWebhookTabData>;
-        result.subscribe({
-            complete: () => {
-                expect(navigateToPageNotFoundSpy).toHaveBeenCalledTimes(1);
-            },
-        });
+
+        await expectAsync(resolve()).toBeRejectedWithError("failed");
     });
 });

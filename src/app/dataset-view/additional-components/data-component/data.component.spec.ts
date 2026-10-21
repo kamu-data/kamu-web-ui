@@ -6,7 +6,7 @@
  */
 
 import { Location } from "@angular/common";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
@@ -81,7 +81,7 @@ describe("DataComponent", () => {
                         },
                     },
                 },
-                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClient(),
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(DataComponent);

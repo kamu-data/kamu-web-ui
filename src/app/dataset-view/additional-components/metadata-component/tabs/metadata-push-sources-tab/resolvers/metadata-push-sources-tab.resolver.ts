@@ -11,7 +11,6 @@ import { ResolveFn } from "@angular/router";
 import { combineLatest, map } from "rxjs";
 
 import { DatasetKind } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
 
 import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -19,10 +18,11 @@ import { MetadataSchemaUpdate } from "src/app/dataset-view/dataset.subscriptions
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { NavigationService } from "src/app/services/navigation.service";
 
-export const metadataPushSourcesTabResolverFn: ResolveFn<MaybeNull<MetadataTabData>> = () => {
+export const metadataPushSourcesTabResolverFn: ResolveFn<MetadataTabData> = () => {
     const datasetService = inject(DatasetService);
     const datasetSubsService = inject(DatasetSubscriptionsService);
     const navigationService = inject(NavigationService);
+
     return combineLatest([
         datasetService.datasetChanges,
         datasetSubsService.permissionsChanges,
@@ -30,8 +30,7 @@ export const metadataPushSourcesTabResolverFn: ResolveFn<MaybeNull<MetadataTabDa
     ]).pipe(
         map(([datasetBasics, datasetPermissions, metadataSummary]) => {
             if (datasetBasics.kind === DatasetKind.Derivative || metadataSummary.metadata.currentPollingSource) {
-                navigationService.navigateToPageNotFound();
-                return null;
+                return navigationService.pageNotFoundRedirect();
             }
             return {
                 datasetBasics,

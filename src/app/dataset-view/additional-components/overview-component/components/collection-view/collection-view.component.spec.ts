@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { SimpleChanges } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
@@ -38,7 +38,7 @@ describe("CollectionViewComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [CollectionViewComponent],
-            providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi())],
+            providers: [Apollo, provideToastr(), provideHttpClient()],
         }).compileComponents();
 
         registerMatSvgIcons();

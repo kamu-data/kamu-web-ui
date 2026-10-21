@@ -8,7 +8,7 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
-import { catchError, combineLatest, EMPTY, map, switchMap } from "rxjs";
+import { catchError, combineLatest, map, of, switchMap } from "rxjs";
 
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -20,8 +20,10 @@ export const datasetViewResolverFn: ResolveFn<DatasetViewData> = (route: Activat
     const datasetService = inject(DatasetService);
     const datasetSubService = inject(DatasetSubscriptionsService);
     const navigationService = inject(NavigationService);
+
     const accountName = route.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME) as string;
     const datasetName = route.paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME) as string;
+
     return datasetService.requestDatasetMainData({ accountName, datasetName }).pipe(
         switchMap(() => {
             return combineLatest([datasetService.datasetChanges, datasetSubService.permissionsChanges]).pipe(
@@ -33,9 +35,6 @@ export const datasetViewResolverFn: ResolveFn<DatasetViewData> = (route: Activat
                 }),
             );
         }),
-        catchError(() => {
-            navigationService.navigateToPageNotFound();
-            return EMPTY;
-        }),
+        catchError(() => of(navigationService.pageNotFoundRedirect())),
     );
 };

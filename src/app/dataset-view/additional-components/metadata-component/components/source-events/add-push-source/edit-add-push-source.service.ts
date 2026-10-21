@@ -14,7 +14,7 @@ import { Observable } from "rxjs";
 import { parse } from "yaml";
 
 import { MetadataManifestFormat } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
+import { MaybeNullOrUndefined } from "@interface/app.types";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
 
@@ -35,7 +35,7 @@ export class EditAddPushSourceService {
         return editFormParseValue.content.event;
     }
 
-    public getEventAsYaml(info: DatasetInfo, sourceName: string): Observable<MaybeNull<string>> {
+    public getEventAsYaml(info: DatasetInfo, sourceName: string): Observable<MaybeNullOrUndefined<string>> {
         return this.blockService.getAddPushSourceBlock({
             ...info,
             sourceName,

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
@@ -72,7 +72,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
             providers: [
                 ...providersSection(mockAddPushSourceYaml),
                 Apollo,
-                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClient(),
                 provideHttpClientTesting(),
             ],
             imports: [ApolloTestingModule, AddPushSourceComponent],
@@ -170,12 +170,7 @@ describe("AddPushSourceComponent without query parameter name", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [
-                providersSection(""),
-                Apollo,
-                provideHttpClient(withInterceptorsFromDi()),
-                provideHttpClientTesting(),
-            ],
+            providers: [providersSection(""), Apollo, provideHttpClient(), provideHttpClientTesting()],
             imports: [ApolloTestingModule, AddPushSourceComponent],
         }).compileComponents();
 

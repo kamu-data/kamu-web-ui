@@ -5,11 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { importProvidersFrom } from "@angular/core";
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 
 import { of, shareReplay } from "rxjs";
 
@@ -68,7 +68,7 @@ describe("DatasetFlowDetailsComponent", () => {
                         },
                     },
                 },
-                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClient(),
                 provideHttpClientTesting(),
             ],
         }).compileComponents();
@@ -150,7 +150,9 @@ describe("DatasetFlowDetailsComponent", () => {
 
     it(`should check created router link`, () => {
         const expectedResult = `/accountName/datasetName/flow-details/${MOCK_FLOW_ID}/history`;
-        expect(component.getRouteLink(FlowDetailsTabs.HISTORY)).toEqual(expectedResult);
+        expect(TestBed.inject(Router).serializeUrl(component.getRouteLink(FlowDetailsTabs.HISTORY))).toEqual(
+            expectedResult,
+        );
     });
 
     it(`should check flow type description`, () => {

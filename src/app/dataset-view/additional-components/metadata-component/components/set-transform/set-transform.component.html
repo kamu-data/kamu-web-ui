@@ -4,7 +4,13 @@
             <a
                 role="button"
                 class="border-1 bg-light border rounded-2 btn back-link"
-                [routerLink]="['/', datasetInfo.accountName, datasetInfo.datasetName, DatasetViewTypeEnum.Metadata]"
+                [routerLink]="
+                    {
+                        accountName: datasetInfo.accountName,
+                        datasetName: datasetInfo.datasetName,
+                        tab: DatasetViewTypeEnum.Metadata,
+                    } | datasetLink
+                "
                 >Back to metadata</a
             >
         </div>

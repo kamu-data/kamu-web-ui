@@ -11,6 +11,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
 
 import { DataHelpers } from "@common/helpers/data.helpers";
+import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import {
     DatasetBasicsFragment,
     DatasetKind,
@@ -35,6 +36,8 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
         RouterLink,
         //-----//
         MatIconModule,
+        //-----//
+        DatasetLinkPipe,
     ],
     templateUrl: "./dataset-flow-process-card.component.html",
     styleUrls: ["./dataset-flow-process-card.component.scss"],

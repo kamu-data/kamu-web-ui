@@ -20,12 +20,11 @@ import {
     MetadataEventType,
     MetadataManifestFormat,
 } from "@api/kamu.graphql.interface";
-import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
 
 import { MetadataBlockInfo } from "src/app/dataset-block/metadata-block/metadata-block.types";
-import { NavigationService } from "src/app/services/navigation.service";
 
 @Injectable({
     providedIn: "root",
@@ -33,7 +32,6 @@ import { NavigationService } from "src/app/services/navigation.service";
 export class BlockService {
     public sourceNames: string[] = [];
     private datasetApi = inject(DatasetApi);
-    private navigationService = inject(NavigationService);
 
     public requestMetadataBlock(info: DatasetInfo, blockHash: string): Observable<MaybeUndefined<MetadataBlockInfo>> {
         return this.datasetApi.getBlockByHash({ ...info, blockHash }).pipe(
@@ -84,25 +82,26 @@ export class BlockService {
         );
     }
 
+    /**
+     * Emits the encoded block of the named push source, `undefined` when the dataset has no
+     * source with that name, and `null` when no name is given.
+     */
     public getAddPushSourceBlock(params: {
         accountName: string;
         datasetName: string;
         sourceName: string;
         encoding: MetadataManifestFormat;
-    }): Observable<MaybeNull<string>> {
+    }): Observable<MaybeNullOrUndefined<string>> {
         return this.datasetApi.getBlocksByEventType({ ...params, eventTypes: [MetadataEventType.AddPushSource] }).pipe(
             map((data) => {
                 const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection as MetadataBlockExtended[];
                 this.sourceNames = blocks.map((item) => (item.event as AddPushSource).sourceName);
                 if (params.sourceName) {
-                    if (!this.sourceNames.includes(params.sourceName)) {
-                        this.navigationService.navigateToPageNotFound();
-                    }
-                    const block = blocks.filter(
+                    const block = blocks.find(
                         (item) =>
                             item.event.__typename === "AddPushSource" && item.event.sourceName === params.sourceName,
-                    )[0];
-                    return block.encoded?.content as string;
+                    );
+                    return block ? block.encoded?.content : undefined;
                 } else {
                     return null;
                 }

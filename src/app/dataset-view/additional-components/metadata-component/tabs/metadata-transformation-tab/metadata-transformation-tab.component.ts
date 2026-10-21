@@ -14,6 +14,7 @@ import { DatasetKindComponent } from "@common/components/dataset-kind/dataset-ki
 import { DatasetVisibilityComponent } from "@common/components/dataset-visibility/dataset-visibility.component";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { isNil } from "@common/helpers/app.helpers";
+import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { DatasetKind, DatasetTransformFragment } from "@api/kamu.graphql.interface";
@@ -38,6 +39,7 @@ import { NavigationService } from "src/app/services/navigation.service";
         EnginePropertyComponent,
         FeatureFlagDirective,
         SqlQueryViewerComponent,
+        DatasetLinkPipe,
     ],
     templateUrl: "./metadata-transformation-tab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

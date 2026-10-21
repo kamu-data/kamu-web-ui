@@ -5,32 +5,18 @@
  * included in the LICENSE file.
  */
 
-import { inject, Injectable } from "@angular/core";
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
+import { inject } from "@angular/core";
+import { CanActivateFn } from "@angular/router";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { LoginMethodsService } from "src/app/auth/login-methods.service";
-import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
-@Injectable({
-    providedIn: "root",
-})
-export class LoginGuard {
-    private navigationService = inject(NavigationService);
-    private loginMethodsService = inject(LoginMethodsService);
-    private loggedUserService = inject(LoggedUserService);
+export const loginGuard: CanActivateFn = () => {
+    const loginMethodsService = inject(LoginMethodsService);
+    const loggedUserService = inject(LoggedUserService);
+    const navigationService = inject(NavigationService);
 
-    public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        // URLs start from /
-        if (state.url.slice(1) === ProjectLinks.URL_LOGIN && !this.canLogin()) {
-            this.navigationService.navigateToHome();
-            return false;
-        }
-        return true;
-    }
-
-    private canLogin(): boolean {
-        return this.loginMethodsService.loginMethods.length > 0 && !this.loggedUserService.isAuthenticated;
-    }
-}
+    const canLogin = loginMethodsService.loginMethods.length > 0 && !loggedUserService.isAuthenticated;
+    return canLogin || navigationService.homeUrlTree();
+};

@@ -13,7 +13,7 @@
  */
 
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { DestroyRef } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
@@ -146,7 +146,7 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, SchemaFieldComponent],
-            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+            providers: [Apollo, provideHttpClient(), provideHttpClientTesting()],
         }).compileComponents();
 
         registerMatSvgIcons();

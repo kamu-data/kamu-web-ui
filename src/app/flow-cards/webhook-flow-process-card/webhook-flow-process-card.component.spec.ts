@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
@@ -27,7 +27,7 @@ describe("WebhookFlowProcessCardComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [WebhookFlowProcessCardComponent, SharedTestModule],
-            providers: [Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+            providers: [Apollo, provideHttpClient(), provideHttpClientTesting()],
         });
 
         registerMatSvgIcons();

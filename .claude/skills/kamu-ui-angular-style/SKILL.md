@@ -71,6 +71,20 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
   injection — the hook flags it.
 - Every member states its accessibility: `public`, `protected` or `private` (eslint
   `explicit-member-accessibility`). Public static constants are `public static readonly`.
+- A functional guard, resolver or interceptor opens with its `inject()` calls as one block, one
+  service per `const`, then a blank line, then the logic. Read values from the injected services
+  in the logic part, not inline as `inject(X).value`:
+
+  ```ts
+  export const loginGuard: CanActivateFn = () => {
+      const loginMethodsService = inject(LoginMethodsService);
+      const loggedUserService = inject(LoggedUserService);
+      const navigationService = inject(NavigationService);
+
+      const canLogin = loginMethodsService.loginMethods.length > 0 && !loggedUserService.isAuthenticated;
+      return canLogin || navigationService.homeUrlTree();
+  };
+  ```
 
 ### Subscriptions and lifetimes
 
@@ -130,6 +144,9 @@ code added itself, or a third-party callback triggers none of them.
   updated through `emitXxxChanged(value)` methods. No NgRx, no component-level stores.
 - Components never inject generated `XxxGQL` classes; they go through an `*.api.ts` class
   (owned by `kamu-ui-graphql-api`) or a domain `*.service.ts` above it.
+- HTTP interceptors are functional `HttpInterceptorFn`s, registered in order in `main.ts` with
+  `provideHttpClient(withInterceptors([...]))`. State that must outlive one request, such as the
+  spinner's pending-request count, lives in a root service the interceptor injects.
 
 ### Nullable types
 
@@ -170,6 +187,7 @@ code added itself, or a third-party callback triggers none of them.
 |---|---|
 | Migrating touched components to signals / `input()` as part of an unrelated change | Mixed idioms in one feature make it harder to read; a migration is its own change, done when asked |
 | `*ngIf` / `*ngFor` / `[ngSwitch]` | Deprecated in Angular 20 with removal intended in v22; every template uses block control flow, which also needs no directive imports |
+| Class interceptors through `HTTP_INTERCEPTORS` and `withInterceptorsFromDi()` | Their order follows provider registration rather than a list, and they need the DI bridge that Angular keeps only for compatibility |
 | Constructor injection | Inconsistent with the rest of the codebase; `inject()` works in base classes and field initializers |
 | Default change detection on new components | Every feature is built for `OnPush`; Default hides missing `markForCheck` calls until a parent switches |
 | Component-level `Subject` + `ngOnDestroy` teardown | `takeUntilDestroyed(this.destroyRef)` does the same with less code and cannot be forgotten in `ngOnDestroy` |

@@ -8,11 +8,12 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
-import { first, Observable, of } from "rxjs";
+import { firstValueFrom, Observable, of } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
+import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
 import {
     DatasetFlowType,
     FlowRetryBackoffType,
@@ -20,7 +21,6 @@ import {
     TimeUnit,
 } from "@api/kamu.graphql.interface";
 import { mockIngestGetDatasetFlowConfigsSuccess } from "@api/mock/dataset-flow.mock";
-import { MaybeNull } from "@interface/app.types";
 
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -34,7 +34,6 @@ import {
     mockFullPowerDatasetPermissionsFragment,
     mockReadonlyDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
 
 describe("datasetSettingsIngestConfigurationResolverFn", () => {
     const mockActivatedRouteSnapshot = new ActivatedRouteSnapshot();
@@ -42,14 +41,17 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
 
     let datasetSubsService: DatasetSubscriptionsService;
     let datasetFlowConfigService: DatasetFlowConfigService;
-    let navigationService: NavigationService;
 
     let permissionsChangesSpy: jasmine.Spy;
 
-    const executeResolver: ResolveFn<MaybeNull<DatasetSettingsIngestConfigurationTabData>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<DatasetSettingsIngestConfigurationTabData> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => datasetSettingsIngestConfigurationResolverFn(...resolverParameters));
 
-    type ResolverObservable = Observable<MaybeNull<DatasetSettingsIngestConfigurationTabData>>;
+    function resolve(): Promise<unknown> {
+        return firstValueFrom(
+            executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot) as Observable<unknown>,
+        );
+    }
 
     // Mock data for different scenarios
     const mockFlowConfigWithRetryPolicy: GetDatasetFlowConfigsQuery = {
@@ -168,179 +170,111 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
         );
 
         datasetFlowConfigService = TestBed.inject(DatasetFlowConfigService);
-        navigationService = TestBed.inject(NavigationService);
     });
 
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
-    });
-
-    it("should return null when datasetSettingsGeneralTabResolverFn returns null", () => {
+    it("should pass the redirect through without fetching flow configs when the tab is not accessible", async () => {
         permissionsChangesSpy.and.returnValue(of(mockReadonlyDatasetPermissionsFragment));
-        spyOn(navigationService, "navigateToPageNotFound").and.stub();
+        const fetchDatasetFlowConfigsSpy = spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs");
 
-        const fetchDatasetFlowConfigsSpy: jasmine.Spy = spyOn(
-            datasetFlowConfigService,
-            "fetchDatasetFlowConfigs",
-        ).and.stub();
+        const data = await resolve();
 
-        const resolver$ = executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
-        expect(resolver$).not.toBeNull();
-
-        const resolverSubscription$ = (resolver$ as ResolverObservable)
-            .pipe(first())
-            .subscribe((data: MaybeNull<DatasetSettingsIngestConfigurationTabData>) => {
-                expect(data).toBeNull();
-            });
-
+        expectPageNotFoundRedirect(data);
         expect(fetchDatasetFlowConfigsSpy).not.toHaveBeenCalled();
-        expect(resolverSubscription$.closed).toBeTrue();
     });
 
-    it("should call fetchDatasetFlowConfigs with correct parameters", () => {
-        const fetchDatasetFlowConfigsSpy: jasmine.Spy = spyOn(
-            datasetFlowConfigService,
-            "fetchDatasetFlowConfigs",
-        ).and.returnValue(of(mockIngestGetDatasetFlowConfigsSuccess));
+    it("should call fetchDatasetFlowConfigs with correct parameters", async () => {
+        const fetchDatasetFlowConfigsSpy = spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").and.returnValue(
+            of(mockIngestGetDatasetFlowConfigsSuccess),
+        );
 
-        const resolver$ = executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
-        expect(resolver$).not.toBeNull();
+        const data = await resolve();
 
-        const resolverSubscription$ = (resolver$ as ResolverObservable)
-            .pipe(first())
-            .subscribe((data: MaybeNull<DatasetSettingsIngestConfigurationTabData>) => {
-                expect(data).toEqual({
-                    datasetBasics: mockDatasetBasicsRootFragment,
-                    datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                    ingestionRule: {
-                        __typename: "FlowConfigRuleIngest",
-                        fetchUncacheable: false,
-                        fetchNextIteration: false,
-                    },
-                    retryPolicy: null,
-                });
-            });
-
-        expect(fetchDatasetFlowConfigsSpy).toHaveBeenCalledWith(
+        expect(fetchDatasetFlowConfigsSpy).toHaveBeenCalledOnceWith(
             mockDatasetBasicsRootFragment.id,
             DatasetFlowType.Ingest,
         );
-
-        expect(resolverSubscription$.closed).toBeTrue();
+        expect(data).toEqual({
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            ingestionRule: {
+                __typename: "FlowConfigRuleIngest",
+                fetchUncacheable: false,
+                fetchNextIteration: false,
+            },
+            retryPolicy: null,
+        });
     });
 
-    it("should correctly map flowConfigs to ingestionRule and retryPolicy", () => {
+    it("should correctly map flowConfigs to ingestionRule and retryPolicy", async () => {
         spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").and.returnValue(of(mockFlowConfigWithRetryPolicy));
 
-        const resolver$ = executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
-        expect(resolver$).not.toBeNull();
+        const data = await resolve();
 
-        const resolverSubscription$ = (resolver$ as ResolverObservable)
-            .pipe(first())
-            .subscribe((data: MaybeNull<DatasetSettingsIngestConfigurationTabData>) => {
-                expect(data).toEqual({
-                    datasetBasics: mockDatasetBasicsRootFragment,
-                    datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                    ingestionRule: {
-                        __typename: "FlowConfigRuleIngest",
-                        fetchUncacheable: false,
-                        fetchNextIteration: false,
-                    },
-                    retryPolicy: {
-                        __typename: "FlowRetryPolicy",
-                        maxAttempts: 3,
-                        backoffType: FlowRetryBackoffType.Fixed,
-                        minDelay: {
-                            __typename: "TimeDelta",
-                            every: 10,
-                            unit: TimeUnit.Minutes,
-                        },
-                    },
-                });
-            });
-        expect(resolverSubscription$.closed).toBeTrue();
+        expect(data).toEqual({
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            ingestionRule: {
+                __typename: "FlowConfigRuleIngest",
+                fetchUncacheable: false,
+                fetchNextIteration: false,
+            },
+            retryPolicy: {
+                __typename: "FlowRetryPolicy",
+                maxAttempts: 3,
+                backoffType: FlowRetryBackoffType.Fixed,
+                minDelay: {
+                    __typename: "TimeDelta",
+                    every: 10,
+                    unit: TimeUnit.Minutes,
+                },
+            },
+        });
     });
 
-    it("should correctly map flowConfigs when no rule is defined (tests isNil branch)", () => {
+    it("should correctly map flowConfigs when no rule is defined (tests isNil branch)", async () => {
         spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").and.returnValue(of(mockFlowConfigWithoutRule));
 
-        const resolver$ = executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
-        expect(resolver$).not.toBeNull();
+        const data = await resolve();
 
-        const resolverSubscription$ = (resolver$ as ResolverObservable)
-            .pipe(first())
-            .subscribe((data: MaybeNull<DatasetSettingsIngestConfigurationTabData>) => {
-                expect(data).toEqual({
-                    datasetBasics: mockDatasetBasicsRootFragment,
-                    datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                    ingestionRule: { fetchUncacheable: false, fetchNextIteration: false },
-                    retryPolicy: null,
-                });
-            });
-        expect(resolverSubscription$.closed).toBeTrue();
+        expect(data).toEqual({
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            ingestionRule: { fetchUncacheable: false, fetchNextIteration: false },
+            retryPolicy: null,
+        });
     });
 
-    it("should correctly map flowConfigs when rule has fetchUncacheable true", () => {
+    it("should correctly map flowConfigs when rule has fetchUncacheable true", async () => {
         spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").and.returnValue(
             of(mockFlowConfigWithFetchUncacheable),
         );
 
-        const resolver$ = executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
-        expect(resolver$).not.toBeNull();
+        const data = await resolve();
 
-        const resolverSubscription$ = (resolver$ as ResolverObservable)
-            .pipe(first())
-            .subscribe((data: MaybeNull<DatasetSettingsIngestConfigurationTabData>) => {
-                expect(data).toEqual({
-                    datasetBasics: mockDatasetBasicsRootFragment,
-                    datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                    ingestionRule: {
-                        __typename: "FlowConfigRuleIngest",
-                        fetchUncacheable: true,
-                        fetchNextIteration: false,
-                    },
-                    retryPolicy: null,
-                });
-            });
-        expect(resolverSubscription$.closed).toBeTrue();
+        expect(data).toEqual({
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            ingestionRule: {
+                __typename: "FlowConfigRuleIngest",
+                fetchUncacheable: true,
+                fetchNextIteration: false,
+            },
+            retryPolicy: null,
+        });
     });
 
-    it("should throw error when rule has unexpected type", () => {
+    it("should throw error when rule has unexpected type", async () => {
         spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").and.returnValue(of(mockFlowConfigWithWrongRuleType));
 
-        const resolver$ = executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
-        expect(resolver$).not.toBeNull();
-
-        const resolverSubscription$ = (resolver$ as ResolverObservable).pipe(first()).subscribe({
-            next: (data: MaybeNull<DatasetSettingsIngestConfigurationTabData>) => {
-                fail("Expected an error, but got data: " + JSON.stringify(data));
-            },
-            error: (error: Error) => {
-                expect(error.message).toEqual(
-                    "Unexpected flow config rule type: FlowConfigRuleCompaction. Expected FlowConfigRuleIngest.",
-                );
-            },
-        });
-
-        expect(resolverSubscription$.closed).toBeTrue();
+        await expectAsync(resolve()).toBeRejectedWithError(
+            "Unexpected flow config rule type: FlowConfigRuleCompaction. Expected FlowConfigRuleIngest.",
+        );
     });
 
-    it("should handle errors from fetchDatasetFlowConfigs", () => {
+    it("should handle errors from fetchDatasetFlowConfigs", async () => {
         const errorMessage = "Failed to fetch flow configs";
         spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").and.throwError(errorMessage);
 
-        const resolver$ = executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
-        expect(resolver$).not.toBeNull();
-
-        const resolverSubscription$ = (resolver$ as ResolverObservable).pipe(first()).subscribe({
-            next: (data: MaybeNull<DatasetSettingsIngestConfigurationTabData>) => {
-                fail("Expected an error, but got data: " + JSON.stringify(data));
-            },
-            error: (error: Error) => {
-                expect(error.message).toEqual(errorMessage);
-            },
-        });
-
-        expect(resolverSubscription$.closed).toBeTrue();
+        await expectAsync(resolve()).toBeRejectedWithError(errorMessage);
     });
 });

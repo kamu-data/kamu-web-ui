@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
@@ -50,7 +50,7 @@ describe("VersionedFileViewComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [VersionedFileViewComponent, SharedTestModule],
-            providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi())],
+            providers: [Apollo, provideToastr(), provideHttpClient()],
         }).compileComponents();
 
         datasetAsVersionedFileService = TestBed.inject(DatasetAsVersionedFileService);

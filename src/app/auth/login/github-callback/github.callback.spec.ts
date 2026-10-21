@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
@@ -32,7 +32,7 @@ describe("GithubCallbackComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, GithubCallbackComponent],
-            providers: [AuthApi, Apollo, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+            providers: [AuthApi, Apollo, provideHttpClient(), provideHttpClientTesting()],
         }).compileComponents();
 
         navigationService = TestBed.inject(NavigationService);

@@ -8,27 +8,40 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
-import { Observable, of, throwError } from "rxjs";
+import { firstValueFrom, Observable, of, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { WebhookSubscription } from "@api/kamu.graphql.interface";
+import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
+import AppValues from "@common/values/app.values";
+import { DatasetPermissionsFragment, WebhookSubscription } from "@api/kamu.graphql.interface";
 import { mockDatasetWebhookByIdQuery } from "@api/mock/webhooks.mock";
 
+import { AppConfigService } from "src/app/app-config.service";
+import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { EditWebhooksType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/edit-webhooks.types";
 import { editWebhookResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/resolvers/edit-webhook.resolver";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import ProjectLinks from "src/app/project-links";
-import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
+import {
+    mockDatasetBasicsRootFragment,
+    mockFullPowerDatasetPermissionsFragment,
+    mockNoWebhooksDatasetPermissionsFragment,
+} from "src/app/search/mock.data";
 
-describe("editWebhookResolver", () => {
+describe("editWebhookResolverFn", () => {
     let datasetService: DatasetService;
+    let datasetSubService: DatasetSubscriptionsService;
+    let appConfigService: AppConfigService;
     let datasetWebhooksService: DatasetWebhooksService;
-    let navigationService: NavigationService;
     const mockWebhookID = "sadasdasdds";
+    const mockRoute = {
+        paramMap: convertToParamMap({ [ProjectLinks.URL_PARAM_WEBHOOK_ID]: mockWebhookID }),
+    } as ActivatedRouteSnapshot;
+    const mockState = {} as RouterStateSnapshot;
 
     const executeResolver: ResolveFn<EditWebhooksType> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => editWebhookResolverFn(...resolverParameters));
@@ -39,49 +52,70 @@ describe("editWebhookResolver", () => {
         });
 
         datasetService = TestBed.inject(DatasetService);
+        datasetSubService = TestBed.inject(DatasetSubscriptionsService);
+        appConfigService = TestBed.inject(AppConfigService);
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);
-        navigationService = TestBed.inject(NavigationService);
+        spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue(
+            AppValues.DEFAULT_UI_CONFIGURATION.featureFlags,
+        );
+        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
+        spyOnProperty(datasetSubService, "overviewChanges", "get").and.returnValue(of(mockOverviewUpdate));
     });
 
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
-    });
+    function resolve(
+        permissions: DatasetPermissionsFragment = mockFullPowerDatasetPermissionsFragment,
+    ): Promise<unknown> {
+        spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(of(permissions));
+        return firstValueFrom(executeResolver(mockRoute, mockState) as Observable<unknown>);
+    }
 
-    it("should check resolver with success", () => {
+    it("should request the webhook from the route and resolve it with the dataset", async () => {
         const mockWebhookSubscription = mockDatasetWebhookByIdQuery.datasets.byId?.webhooks
             .subscription as WebhookSubscription;
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
-        spyOn(datasetWebhooksService, "datasetWebhookSubscriptionById").and.returnValue(of(mockWebhookSubscription));
-        const mockRoute = {
-            paramMap: convertToParamMap({ [ProjectLinks.URL_PARAM_WEBHOOK_ID]: mockWebhookID }),
-        } as ActivatedRouteSnapshot;
-        const mockState = {} as RouterStateSnapshot;
-        const result = executeResolver(mockRoute, mockState) as Observable<EditWebhooksType>;
-        result.subscribe((data) => {
-            expect(data).toEqual({
-                datasetBasics: mockDatasetBasicsRootFragment,
-                subscription: mockWebhookSubscription,
-            });
+        const datasetWebhookSubscriptionByIdSpy = spyOn(
+            datasetWebhooksService,
+            "datasetWebhookSubscriptionById",
+        ).and.returnValue(of(mockWebhookSubscription));
+
+        const data = await resolve();
+
+        expect(datasetWebhookSubscriptionByIdSpy).toHaveBeenCalledOnceWith({
+            datasetId: mockDatasetBasicsRootFragment.id,
+            id: mockWebhookID,
+        });
+        expect(data).toEqual({
+            datasetBasics: mockDatasetBasicsRootFragment,
+            subscription: mockWebhookSubscription,
         });
     });
 
-    it("should check resolver with error", () => {
-        const navigateToPageNotFoundSpy = spyOn(navigationService, "navigateToPageNotFound");
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
+    it("should redirect to page not found when the dataset has no such webhook", async () => {
+        spyOn(datasetWebhooksService, "datasetWebhookSubscriptionById").and.returnValue(of(null));
+
+        const data = await resolve();
+
+        expectPageNotFoundRedirect(data);
+    });
+
+    it("should redirect to page not found when the webhook cannot be loaded", async () => {
         spyOn(datasetWebhooksService, "datasetWebhookSubscriptionById").and.returnValue(
             throwError(() => new Error("fail")),
         );
 
-        const mockRoute = {
-            paramMap: convertToParamMap({ [ProjectLinks.URL_PARAM_WEBHOOK_ID]: mockWebhookID }),
-        } as ActivatedRouteSnapshot;
-        const mockState = {} as RouterStateSnapshot;
+        const data = await resolve();
 
-        const result = executeResolver(mockRoute, mockState) as Observable<EditWebhooksType>;
-        result.subscribe({
-            complete: () => {
-                expect(navigateToPageNotFoundSpy).toHaveBeenCalledTimes(1);
-            },
-        });
+        expectPageNotFoundRedirect(data);
+    });
+
+    it("should redirect to page not found without loading the webhook when the user may not view webhooks", async () => {
+        const datasetWebhookSubscriptionByIdSpy = spyOn(
+            datasetWebhooksService,
+            "datasetWebhookSubscriptionById",
+        ).and.stub();
+
+        const data = await resolve(mockNoWebhooksDatasetPermissionsFragment);
+
+        expectPageNotFoundRedirect(data);
+        expect(datasetWebhookSubscriptionByIdSpy).not.toHaveBeenCalled();
     });
 });

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
@@ -52,7 +52,7 @@ describe("LoginService", () => {
                 AuthApi,
                 Apollo,
                 { provide: EthereumGatewayFactory, useClass: MockEthereumGatewayFactory },
-                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClient(),
                 provideHttpClientTesting(),
             ],
         });

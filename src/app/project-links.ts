@@ -5,6 +5,13 @@
  * included in the LICENSE file.
  */
 
+/** Route segments of the metadata event editors, which hang directly off the dataset URL. */
+export enum SourceEventEditor {
+    AddPollingSource = "add-polling-source",
+    AddPushSource = "add-push-source",
+    SetTransform = "set-transform",
+}
+
 export default class ProjectLinks {
     public static readonly URL_GITHUB_CALLBACK: string = "github_callback";
     public static readonly URL_BLOCK: string = "block";
@@ -46,9 +53,9 @@ export default class ProjectLinks {
     public static readonly URL_PARAM_DATASET_NAME: string = "datasetName";
     public static readonly URL_PARAM_CATEGORY: string = "category";
     public static readonly URL_PARAM_BLOCK_HASH: string = "blockHash";
-    public static readonly URL_PARAM_ADD_POLLING_SOURCE: string = "add-polling-source";
-    public static readonly URL_PARAM_SET_TRANSFORM: string = "set-transform";
-    public static readonly URL_PARAM_ADD_PUSH_SOURCE: string = "add-push-source";
+    public static readonly URL_PARAM_ADD_POLLING_SOURCE: string = SourceEventEditor.AddPollingSource;
+    public static readonly URL_PARAM_SET_TRANSFORM: string = SourceEventEditor.SetTransform;
+    public static readonly URL_PARAM_ADD_PUSH_SOURCE: string = SourceEventEditor.AddPushSource;
     public static readonly URL_PARAM_FLOW_ID: string = "flow-id";
 
     public static readonly URL_PARAM_TAB: string = "tab";

@@ -12,6 +12,7 @@ import { RouterLink } from "@angular/router";
 
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 
+import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { DatasetInfo } from "@interface/navigation.interface";
 
@@ -45,6 +46,7 @@ import ProjectLinks from "src/app/project-links";
         PreprocessStepComponent,
         SourceNameStepComponent,
         StepperNavigationComponent,
+        DatasetLinkPipe,
     ],
 })
 export class AddPushSourceComponent extends BaseSourceEventComponent implements AfterViewInit {

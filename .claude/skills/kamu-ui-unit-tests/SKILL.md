@@ -26,7 +26,7 @@ Never commit `fdescribe`/`fit`/`xdescribe`/`xit` — eslint and the edit hook re
 beforeEach(async () => {
     await TestBed.configureTestingModule({
         imports: [SharedTestModule, FlowsTableComponent],
-        providers: [Apollo, provideToastr(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        providers: [Apollo, provideToastr(), provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FlowsTableComponent);
@@ -41,8 +41,7 @@ beforeEach(async () => {
 
 - Import the standalone component itself; add `SharedTestModule` (route snapshot mock) when the
   component or a base class reads the route. Provide only what the component's dependency tree
-  needs: `provideToastr()`, `provideHttpClient(withInterceptorsFromDi())` +
-  `provideHttpClientTesting()`, `Apollo` or `ApolloTestingModule` for anything reaching an api
+  needs: `provideToastr()`, `provideHttpClient()` + `provideHttpClientTesting()`, `Apollo` or `ApolloTestingModule` for anything reaching an api
   class. Material overlays need no animations provider.
 - TestBed runs with zone-based change detection, like the app, and with exhaustive
   `checkNoChanges` (`src/test.ts`). `fixture.detectChanges()` does not re-render an OnPush
@@ -140,6 +139,29 @@ it("should check get webhooks by id", () => {
 One case per api method: assert the variables sent, flush a fixture typed with the generated
 `XxxQuery` / `XxxMutation`, assert the mapped result.
 
+## Guard, resolver and interceptor tests
+
+- Run a functional guard or resolver inside the TestBed injector:
+  `const executeGuard: CanActivateFn = (...p) => TestBed.runInInjectionContext(() => adminGuard(...p));`.
+  Stub the services it injects with `spyOn` / `spyOnProperty`.
+- A guard redirect is asserted by where it leads, not by `false`:
+  `expect(router.serializeUrl(result as UrlTree)).toEqual("/v/login")`
+  (`auth/guards/login.guard.spec.ts`).
+- Collect a resolver's value with `await firstValueFrom(executeResolver(route, state) as Observable<T>)`
+  in an `async` test, and an expected error with
+  `await expectAsync(firstValueFrom(...)).toBeRejectedWithError(...)`. A redirect is checked with
+  `expectPageNotFoundRedirect(data)` from `@common/helpers/base-test.helpers.spec`; a resolver
+  built on another one also gets a test that the `RedirectCommand` passes through and its own
+  fetch is not called (`dataset-settings-scheduling-tab.resolver.spec.ts`).
+- Interceptors: `provideHttpClient(withInterceptors([fn]))` + `provideHttpClientTesting()`,
+  requests driven through `HttpClient` and answered with `HttpTestingController`; timing runs in
+  `fakeAsync` (`common/components/spinner/spinner.interceptor.spec.ts`).
+- Route wiring is tested end to end in `app-routing.spec.ts` through the real `Router`. The
+  router looks a functional resolver up in the injector before calling it, so
+  `{ provide: someResolverFn, useValue: { resolve: () => of(data) } }` replaces it there. A URL
+  that reaches a `loadChildren` or `loadComponent` route needs an `async` test with `await
+  router.navigate(...)`, since `tick()` does not wait for a lazy chunk.
+
 ## Mocks and fixtures
 
 - GraphQL response fixtures: `src/app/api/mock/<domain>.mock.ts`, named `mock<OperationName>`
@@ -178,6 +200,8 @@ One case per api method: assert the variables sent, flush a fixture typed with t
 | Hand-built Apollo response objects inline in specs | Not reusable and not type-checked against codegen; fixtures go to `api/mock/` |
 | Testing private methods through `component["method"]` | Tests the implementation; drive the public inputs, outputs and DOM instead |
 | Asserting a render hook's effect right after `fixture.detectChanges()` | The hook runs at the end of an application tick that zone.js schedules afterwards; whether that tick happens depends on what earlier specs left behind, so such a spec passed alone and failed in random-order full runs |
+| `expect(...)` inside `subscribe` on a resolver or service observable | Passes without asserting anything when the observable never emits, and `await` on an observable does not subscribe at all: the block-metadata resolver spec checked nothing this way. `firstValueFrom` fails the test instead |
+| Asserting only that a guard returned `false`, or that a `navigateTo…` spy was called | Says nothing about the destination: the account guard built its redirect from the whole URL, query string included, and its spec still passed |
 | DOM helpers for a new display-only component ("nothing to click, so no harness") | Assertions on texts, states and widths are as tied to DOM structure as clicks are, and the next spec that hosts the component has no API to reuse |
 
 ## What lives elsewhere

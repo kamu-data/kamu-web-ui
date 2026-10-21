@@ -23,6 +23,7 @@ export interface DatasetNavigationParams {
     webhooksState?: FlowProcessEffectiveState[];
     pathPrefix?: string;
     version?: string;
+    fragment?: string;
 }
 export interface DatasetInfo {
     accountName: string;

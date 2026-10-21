@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { ActivatedRoute, NavigationEnd } from "@angular/router";
@@ -56,7 +56,7 @@ describe("AppHeaderComponent", () => {
                         queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
                     },
                 },
-                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClient(),
                 provideHttpClientTesting(),
             ],
         }).compileComponents();

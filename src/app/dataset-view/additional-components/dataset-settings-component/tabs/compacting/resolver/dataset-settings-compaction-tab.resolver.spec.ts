@@ -6,22 +6,67 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ResolveFn } from "@angular/router";
+import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
-import { MaybeNull } from "@interface/app.types";
+import { firstValueFrom, Observable, of } from "rxjs";
 
+import { Apollo } from "apollo-angular";
+
+import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
+import AppValues from "@common/values/app.values";
+
+import { AppConfigService } from "src/app/app-config.service";
+import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { datasetSettingsCompactionTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/resolver/dataset-settings-compaction-tab.resolver";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import ProjectLinks from "src/app/project-links";
+import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
 describe("datasetSettingsCompactionTabResolverFn", () => {
-    const executeResolver: ResolveFn<MaybeNull<DatasetViewData>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<DatasetViewData> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => datasetSettingsCompactionTabResolverFn(...resolverParameters));
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            providers: [Apollo],
+        });
+        spyOnProperty(TestBed.inject(AppConfigService), "featureFlags", "get").and.returnValue(
+            AppValues.DEFAULT_UI_CONFIGURATION.featureFlags,
+        );
+        spyOnProperty(TestBed.inject(DatasetService), "datasetChanges", "get").and.returnValue(
+            of(mockDatasetBasicsRootFragment),
+        );
+        const datasetSubService = TestBed.inject(DatasetSubscriptionsService);
+        spyOnProperty(datasetSubService, "overviewChanges", "get").and.returnValue(of(mockOverviewUpdate));
+        spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(
+            of(mockFullPowerDatasetPermissionsFragment),
+        );
     });
 
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
+    function resolve(tab: string): Promise<unknown> {
+        const mockRoute = {
+            data: {
+                [ProjectLinks.URL_PARAM_TAB]: tab,
+            },
+        } as unknown as ActivatedRouteSnapshot;
+        return firstValueFrom(executeResolver(mockRoute, {} as RouterStateSnapshot) as Observable<unknown>);
+    }
+
+    it("should resolve the dataset for the compaction tab", async () => {
+        const data = await resolve(SettingsTabsEnum.COMPACTION);
+
+        expect(data).toEqual({
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+        });
+    });
+
+    it("should redirect to page not found for an unknown tab", async () => {
+        const data = await resolve("wrongTab");
+
+        expectPageNotFoundRedirect(data);
     });
 });

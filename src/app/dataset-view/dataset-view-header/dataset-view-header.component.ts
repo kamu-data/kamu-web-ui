@@ -26,6 +26,7 @@ import {
 } from "@common/components/search-additional-buttons/search-additional-buttons.interface";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
 
@@ -54,6 +55,7 @@ import { NavigationService } from "src/app/services/navigation.service";
         DatasetVisibilityComponent,
         FeatureFlagDirective,
         SearchAdditionalButtonsComponent,
+        DatasetLinkPipe,
     ],
 })
 export class DatasetViewHeaderComponent extends BaseComponent {

@@ -8,9 +8,11 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
-import { Observable, throwError } from "rxjs";
+import { firstValueFrom, Observable, of, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
+
+import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
 
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { datasetOverviewTabResolverFn } from "src/app/dataset-view/additional-components/overview-component/resolver/dataset-overview-tab.resolver";
@@ -18,12 +20,13 @@ import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interf
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
-import { NavigationService } from "src/app/services/navigation.service";
 
 describe("datasetOverviewTabResolverFn", () => {
     let datasetService: DatasetService;
     let datasetSubsService: DatasetSubscriptionsService;
-    let navigationService: NavigationService;
+
+    const routeSnapshot = {} as ActivatedRouteSnapshot;
+    const mockState = {} as RouterStateSnapshot;
 
     const executeResolver: ResolveFn<DatasetOverviewTabData> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => datasetOverviewTabResolverFn(...resolverParameters));
@@ -34,43 +37,43 @@ describe("datasetOverviewTabResolverFn", () => {
         });
         datasetService = TestBed.inject(DatasetService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        navigationService = TestBed.inject(NavigationService);
     });
 
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
-    });
+    function failingStream(): Observable<never> {
+        return throwError(() => new Error("fail"));
+    }
 
-    it("should check resolver", () => {
-        datasetService.emitDatasetChanged(mockDatasetBasicsRootFragment);
-        datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
-        datasetSubsService.emitOverviewChanged(mockOverviewUpdate);
-        const routeSnapshot = {} as ActivatedRouteSnapshot;
-        const mockState = {} as RouterStateSnapshot;
+    function mockStreams(failing?: "datasetChanges" | "permissionsChanges" | "overviewChanges"): void {
+        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(
+            failing === "datasetChanges" ? failingStream() : of(mockDatasetBasicsRootFragment),
+        );
+        spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
+            failing === "permissionsChanges" ? failingStream() : of(mockFullPowerDatasetPermissionsFragment),
+        );
+        spyOnProperty(datasetSubsService, "overviewChanges", "get").and.returnValue(
+            failing === "overviewChanges" ? failingStream() : of(mockOverviewUpdate),
+        );
+    }
 
-        const result = executeResolver(routeSnapshot, mockState) as Observable<DatasetOverviewTabData>;
-        result.subscribe((data: DatasetOverviewTabData) => {
-            expect(data).toEqual({
-                datasetBasics: mockDatasetBasicsRootFragment,
-                datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                overviewUpdate: mockOverviewUpdate,
-            });
+    it("should resolve the dataset, its permissions and the overview", async () => {
+        mockStreams();
+
+        const data = await firstValueFrom(executeResolver(routeSnapshot, mockState) as Observable<unknown>);
+
+        expect(data).toEqual({
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            overviewUpdate: mockOverviewUpdate,
         });
     });
 
-    it("should check resolver with error", () => {
-        const navigateToPageNotFoundSpy = spyOn(navigationService, "navigateToPageNotFound");
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(throwError(() => new Error("fail")));
-        datasetService.emitDatasetChanged(mockDatasetBasicsRootFragment);
-        datasetSubsService.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
-        datasetSubsService.emitOverviewChanged(mockOverviewUpdate);
-        const routeSnapshot = {} as ActivatedRouteSnapshot;
-        const mockState = {} as RouterStateSnapshot;
+    (["datasetChanges", "permissionsChanges", "overviewChanges"] as const).forEach((failing) => {
+        it(`should redirect to page not found when ${failing} fails`, async () => {
+            mockStreams(failing);
 
-        (executeResolver(routeSnapshot, mockState) as Observable<DatasetOverviewTabData>).subscribe({
-            complete: () => {
-                expect(navigateToPageNotFoundSpy).toHaveBeenCalledTimes(1);
-            },
+            const data = await firstValueFrom(executeResolver(routeSnapshot, mockState) as Observable<unknown>);
+
+            expectPageNotFoundRedirect(data);
         });
     });
 });

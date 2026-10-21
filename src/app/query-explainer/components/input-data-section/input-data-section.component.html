@@ -57,7 +57,12 @@
                                         [class.error-color]="
                                             isDatasetNotFoundError(inputData.sqlQueryVerify?.error, dataset.id)
                                         "
-                                        routerLink="/{{ datasetInfo.accountName }}/{{ datasetInfo.datasetName }}"
+                                        [routerLink]="
+                                            {
+                                                accountName: datasetInfo.accountName,
+                                                datasetName: datasetInfo.datasetName,
+                                            } | datasetLink
+                                        "
                                         target="_blank"
                                         class="font-monospace"
                                         attr.data-test-id="input-dataset-id-{{ i }}"

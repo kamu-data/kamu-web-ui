@@ -13,7 +13,7 @@
                 </a>
             </div>
             <a
-                [routerLink]="['/', row.owner.accountName, row.name]"
+                [routerLink]="{ accountName: row.owner.accountName, datasetName: row.name } | datasetLink"
                 attr.data-test-id="dataset-name-button-{{ rowIndex }}"
                 class="dataset-list-container-title mb-1 pl-0"
             >

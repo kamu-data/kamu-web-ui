@@ -13,6 +13,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 import { BaseComponent } from "@common/components/base.component";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import { unexpectedValueError } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
 import { DatasetBasicsFragment, DatasetFlowType, DatasetKind, TimeUnit } from "@api/kamu.graphql.interface";
@@ -135,7 +136,7 @@ export class DatasetSettingsTransformOptionsTabComponent extends BaseComponent i
                 };
 
             default:
-                throw new Error(`Unknown reactive trigger type: ${reactive.forNewData.__typename}`);
+                throw unexpectedValueError(reactive.forNewData, "reactive trigger rule");
         }
     }
 
@@ -160,7 +161,7 @@ export class DatasetSettingsTransformOptionsTabComponent extends BaseComponent i
 
             /* istanbul ignore next */
             default: {
-                throw new Error(`Unknown stop policy type: ${stopPolicy.__typename}`);
+                throw unexpectedValueError(stopPolicy, "stop policy");
             }
         }
     }

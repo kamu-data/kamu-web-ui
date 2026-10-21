@@ -25,6 +25,7 @@ import { WidgetHeightService } from "@common/components/lineage-graph/widget-hei
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { isMobileView, promiseWithCatch } from "@common/helpers/app.helpers";
 import { SideNavHelper } from "@common/helpers/sidenav.helper";
+import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
 
 import { AppConfigService } from "src/app/app-config.service";
@@ -43,6 +44,7 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
         MatIconModule,
         //-----//
         FeatureFlagDirective,
+        DatasetLinkPipe,
     ],
 })
 export class DatasetViewMenuComponent implements OnInit {
@@ -120,10 +122,6 @@ export class DatasetViewMenuComponent implements OnInit {
 
     public get shouldAllowFlowsTab(): boolean {
         return this.datasetPermissions.permissions.flows.canView && this.enableScheduling;
-    }
-
-    public get datasetLink(): string {
-        return `/${this.datasetBasics.owner.accountName}/${this.datasetBasics.name}/`;
     }
 
     @HostListener("window:resize")

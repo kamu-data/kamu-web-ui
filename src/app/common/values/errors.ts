@@ -7,7 +7,6 @@
 
 import { Injector } from "@angular/core";
 
-import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import { GraphQLFormattedError } from "graphql";
 import { ToastrService } from "ngx-toastr";
 
@@ -19,19 +18,6 @@ import { NavigationService } from "src/app/services/navigation.service";
 
 export abstract class KamuError extends Error {
     public abstract accept(visitor: KamuErrorVisitor): void;
-}
-
-export class CustomApolloError extends KamuError {
-    private apolloError: CombinedGraphQLErrors;
-
-    public constructor(apolloError: CombinedGraphQLErrors) {
-        super();
-        this.apolloError = apolloError;
-    }
-
-    public accept(visitor: KamuErrorVisitor): void {
-        visitor.visitApolloError(this.apolloError);
-    }
 }
 
 export class SqlExecutionError extends KamuError {
@@ -99,7 +85,6 @@ interface KamuErrorVisitor {
     visitDatasetNotFoundError(e: DatasetNotFoundError): void;
     visitAccountNotFoundError(e: AccountNotFoundError): void;
     visitDatasetOperationError(e: DatasetOperationError): void;
-    visitApolloError(e: CombinedGraphQLErrors): void;
     visitAuthenticationError(e: AuthenticationError): void;
     visitFileUploadError(e: FileUploadError): void;
 }
@@ -114,12 +99,6 @@ export class KamuErrorHandler implements KamuErrorVisitor {
     // Need to get ToastrService from injector rather than constructor injection to avoid cyclic dependency error
     private get toastrService(): ToastrService {
         return this.injector.get(ToastrService);
-    }
-
-    public visitApolloError(_e: CombinedGraphQLErrors): void {
-        this.toastrService.error("", ErrorTexts.ERROR_TECHNICAL_SUPPORT, {
-            disableTimeOut: "timeOut",
-        });
     }
 
     public visitDatasetNotFoundError(): void {

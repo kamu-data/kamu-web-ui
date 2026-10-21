@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ChangeDetectorRef } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
@@ -40,11 +40,7 @@ describe("MetadataComponent", () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, MetadataComponent, RouterModule],
-            providers: [
-                HIGHLIGHT_OPTIONS_PROVIDER,
-                provideHttpClient(withInterceptorsFromDi()),
-                provideHttpClientTesting(),
-            ],
+            providers: [HIGHLIGHT_OPTIONS_PROVIDER, provideHttpClient(), provideHttpClientTesting()],
         })
 
             .compileComponents();

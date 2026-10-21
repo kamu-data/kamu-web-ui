@@ -279,3 +279,11 @@ export function trackBusy<T>(busy: Subject<boolean>) {
             return source$;
         }).pipe(finalize(() => busy.next(false)));
 }
+
+/**
+ * The error for the `default` branch of an exhaustive `switch`: passing the switched value fails
+ * to compile when a case is missing, and the error names a value the types did not foresee.
+ */
+export function unexpectedValueError(value: never, description: string): Error {
+    return new Error(`Unexpected ${description}: ${JSON.stringify(value)}`);
+}

@@ -6,16 +6,7 @@
  */
 
 import { Location, NgClass } from "@angular/common";
-import {
-    ChangeDetectorRef,
-    Component,
-    ComponentFactoryResolver,
-    ComponentRef,
-    inject,
-    OnInit,
-    ViewChild,
-    ViewContainerRef,
-} from "@angular/core";
+import { ChangeDetectorRef, Component, ComponentRef, inject, OnInit, ViewChild, ViewContainerRef } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { BaseComponent } from "@common/components/base.component";
@@ -47,7 +38,6 @@ export class ModalComponent extends BaseComponent implements OnInit {
         spinner: ModalSpinnerComponent,
     };
 
-    private componentFactoryResolver = inject(ComponentFactoryResolver);
     private modalService = inject(ModalService);
     private cdr = inject(ChangeDetectorRef);
     private location = inject(Location);
@@ -75,8 +65,7 @@ export class ModalComponent extends BaseComponent implements OnInit {
     public _renderModal(command: ModalCommandInterface) {
         const componentType = this._getComponentType(command.type);
 
-        const factory = this.componentFactoryResolver.resolveComponentFactory(componentType);
-        this.componentRef = this.container.createComponent(factory);
+        this.componentRef = this.container.createComponent(componentType);
 
         const instance = this.componentRef.instance as DynamicComponent;
         instance.context = Object.assign(command.context, {

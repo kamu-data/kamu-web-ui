@@ -5,7 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, OnChanges, OnInit, SimpleChanges } from "@angular/core";
+import { NgComponentOutlet } from "@angular/common";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
@@ -20,23 +21,13 @@ import { SECTION_BUILDERS_BY_EVENT_TYPE } from "src/app/dataset-block/metadata-b
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
+        NgComponentOutlet,
+        //-----//
         MatIconModule,
         //-----//
         BlockRowDataComponent,
     ],
 })
-export class AddDataEventComponent extends BaseDynamicEventComponent<AddData> implements OnChanges, OnInit {
-    public ngOnChanges(changes: SimpleChanges): void {
-        if (!changes.event.firstChange) {
-            this.buildSections();
-        }
-    }
-
-    public ngOnInit(): void {
-        this.buildSections();
-    }
-
-    private buildSections(): void {
-        this.eventSections = SECTION_BUILDERS_BY_EVENT_TYPE.AddData.buildEventSections(this.event);
-    }
+export class AddDataEventComponent extends BaseDynamicEventComponent<AddData> {
+    protected readonly sectionBuilder = SECTION_BUILDERS_BY_EVENT_TYPE.AddData;
 }

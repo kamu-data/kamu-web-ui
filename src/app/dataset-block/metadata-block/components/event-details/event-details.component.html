@@ -1,3 +1,3 @@
 <div class="py-4">
-    <ng-template #dynamicContainer></ng-template>
+    <ng-container *ngComponentOutlet="eventComponent; inputs: { event: block.event }" />
 </div>

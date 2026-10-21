@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
@@ -15,6 +16,7 @@ import { provideToastr } from "ngx-toastr";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
+import { BaseDynamicEventHarness } from "src/app/dataset-block/metadata-block/components/event-details/components/base-dynamic-event/base-dynamic-event.harness";
 import { ExecuteTransformEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/execute-transform-event/execute-transform-event.component";
 import { mockExecuteTransform } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
@@ -37,11 +39,23 @@ describe("ExecuteTransformEventComponent", () => {
 
         fixture = TestBed.createComponent(ExecuteTransformEventComponent);
         component = fixture.componentInstance;
-        component.event = mockExecuteTransform;
+        fixture.componentRef.setInput("event", mockExecuteTransform);
         fixture.detectChanges();
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should render the event sections and their property values", async () => {
+        const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, BaseDynamicEventHarness);
+
+        expect(await harness.getSectionTitles()).toEqual([
+            "New data",
+            "New watermark",
+            "Query inputs",
+            "New checkpoint",
+        ]);
+        expect(await harness.getPropertyText("execute-transform-data-slice-offset-interval-end")).toEqual("596125");
     });
 });

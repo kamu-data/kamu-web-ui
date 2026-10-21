@@ -5,8 +5,18 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    inject,
+    Input,
+    OnChanges,
+    SimpleChanges,
+} from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+
+import { distinctUntilChanged, filter, Subject, switchMap, tap } from "rxjs";
 
 import { DatasetByIdQuery, OffsetInterval } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
@@ -23,36 +33,53 @@ import { NavigationService } from "src/app/services/navigation.service";
     styleUrls: ["./offset-interval-property.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OffsetIntervalPropertyComponent extends BasePropertyComponent implements OnInit {
+export class OffsetIntervalPropertyComponent extends BasePropertyComponent implements OnChanges {
     @Input({ required: true }) public data: {
         block: MaybeNull<OffsetInterval>;
         datasetId: MaybeNull<string>;
     };
-    private datasetInfo: DatasetInfo = { accountName: "", datasetName: "" };
+    private datasetInfo: MaybeNull<DatasetInfo> = null;
     private navigationService = inject(NavigationService);
     private datasetService = inject(DatasetService);
+    private cdr = inject(ChangeDetectorRef);
 
-    public ngOnInit(): void {
-        if (this.data.datasetId) {
-            this.datasetService
-                .requestDatasetInfoById(this.data.datasetId)
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe((dataset: DatasetByIdQuery) => {
-                    if (dataset.datasets.byId) {
-                        this.datasetInfo.accountName = dataset.datasets.byId.owner.accountName;
-                        this.datasetInfo.datasetName = dataset.datasets.byId.name;
-                    }
-                });
+    private readonly datasetIdChanges$ = new Subject<MaybeNull<string>>();
+
+    public constructor() {
+        super();
+        this.datasetIdChanges$
+            .pipe(
+                distinctUntilChanged(),
+                tap(() => {
+                    this.datasetInfo = null;
+                    this.cdr.markForCheck();
+                }),
+                filter((datasetId: MaybeNull<string>): datasetId is string => datasetId !== null),
+                switchMap((datasetId: string) => this.datasetService.requestDatasetInfoById(datasetId)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe((dataset: DatasetByIdQuery) => {
+                const byId = dataset.datasets.byId;
+                this.datasetInfo = byId ? { accountName: byId.owner.accountName, datasetName: byId.name } : null;
+                this.cdr.markForCheck();
+            });
+    }
+
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes.data) {
+            this.datasetIdChanges$.next(this.data.datasetId);
         }
     }
 
+    public get isQueryTargetKnown(): boolean {
+        return !this.data.datasetId || this.datasetInfo !== null;
+    }
+
     public navigateToQuery(): void {
-        if (!this.data.datasetId) {
-            this.datasetInfo = this.getDatasetInfoFromUrl();
-        }
-        if (this.data.block) {
+        const target = this.data.datasetId ? this.datasetInfo : this.getDatasetInfoFromUrl();
+        if (this.data.block && target) {
             this.navigationService.navigateToDatasetView({
-                ...this.datasetInfo,
+                ...target,
                 tab: DatasetViewTypeEnum.Data,
                 state: {
                     start: this.data.block.start,

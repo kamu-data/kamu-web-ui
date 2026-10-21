@@ -5,7 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { NgComponentOutlet } from "@angular/common";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
@@ -20,13 +21,13 @@ import { SECTION_BUILDERS_BY_EVENT_TYPE } from "src/app/dataset-block/metadata-b
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
+        NgComponentOutlet,
+        //-----//
         MatIconModule,
         //-----//
         BlockRowDataComponent,
     ],
 })
-export class AddPushSourceEventComponent extends BaseDynamicEventComponent<AddPushSource> implements OnInit {
-    public ngOnInit(): void {
-        this.eventSections = SECTION_BUILDERS_BY_EVENT_TYPE.AddPushSource.buildEventSections(this.event);
-    }
+export class AddPushSourceEventComponent extends BaseDynamicEventComponent<AddPushSource> {
+    protected readonly sectionBuilder = SECTION_BUILDERS_BY_EVENT_TYPE.AddPushSource;
 }

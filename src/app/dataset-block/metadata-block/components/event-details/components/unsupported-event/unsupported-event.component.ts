@@ -5,10 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
 import { BaseComponent } from "@common/components/base.component";
+import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-unsupported-event",
@@ -16,4 +17,6 @@ import { BaseComponent } from "@common/components/base.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [MatIconModule],
 })
-export class UnsupportedEventComponent extends BaseComponent {}
+export class UnsupportedEventComponent extends BaseComponent {
+    @Input() public event?: MetadataBlockFragment["event"];
+}

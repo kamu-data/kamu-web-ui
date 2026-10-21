@@ -5,23 +5,12 @@
  * included in the LICENSE file.
  */
 
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    inject,
-    Input,
-    OnChanges,
-    SimpleChanges,
-    Type,
-    ViewChild,
-    ViewContainerRef,
-} from "@angular/core";
+import { NgComponentOutlet } from "@angular/common";
+import { ChangeDetectionStrategy, Component, Input, Type } from "@angular/core";
 
 import { BaseComponent } from "@common/components/base.component";
 import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
-import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { MaybeUndefined } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
 import { AddDataEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/add-data-event/add-data-event.component";
@@ -42,34 +31,19 @@ import { SupportedEvents } from "src/app/dataset-block/metadata-block/components
     selector: "app-event-details",
     templateUrl: "./event-details.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        //-----//
+        NgComponentOutlet,
+    ],
 })
-export class EventDetailsComponent implements AfterViewInit, OnChanges {
+export class EventDetailsComponent {
     @Input({ required: true }) public block: MetadataBlockFragment;
     @Input({ required: true }) public datasetInfo: DatasetInfo;
-    @ViewChild("dynamicContainer", { read: ViewContainerRef })
-    public dynamicContainer: MaybeNull<ViewContainerRef>;
-    private cdr = inject(ChangeDetectorRef);
 
-    public ngAfterViewInit(): void {
-        this.createView();
-    }
-
-    public ngOnChanges(changes: SimpleChanges): void {
-        if (changes.block && changes.block.currentValue && !changes.block.isFirstChange()) {
-            this.createView();
-        }
-    }
-
-    private createView(): void {
-        if (this.dynamicContainer) {
-            this.dynamicContainer.clear();
-            const componentRef = this.dynamicContainer.createComponent<BaseComponent>(
-                this.componentEventTypeFactory[this.block.event.__typename as SupportedEvents] ??
-                    UnsupportedEventComponent,
-            );
-            componentRef.setInput("event", this.block.event);
-        }
-        this.cdr.detectChanges();
+    public get eventComponent(): Type<BaseComponent> {
+        return (
+            this.componentEventTypeFactory[this.block.event.__typename as SupportedEvents] ?? UnsupportedEventComponent
+        );
     }
 
     private componentEventTypeFactory: { [key in SupportedEvents]: MaybeUndefined<Type<BaseComponent>> } = {

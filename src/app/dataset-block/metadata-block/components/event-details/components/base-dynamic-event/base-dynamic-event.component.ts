@@ -5,62 +5,29 @@
  * included in the LICENSE file.
  */
 
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ComponentRef,
-    inject,
-    Input,
-    QueryList,
-    ViewChildren,
-    ViewContainerRef,
-} from "@angular/core";
-import { MatIconModule } from "@angular/material/icon";
+import { Directive, Input, OnChanges, SimpleChanges } from "@angular/core";
 
 import { BaseComponent } from "@common/components/base.component";
-import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
 
-import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 import {
-    EventRow,
-    EventSection,
-} from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
+    EventSectionBuilder,
+    GenericDynamicEventType,
+} from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/builders/event-section.builder";
+import { EventSection } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
 
-@Component({
-    selector: "app-dynamic-base-event",
-    templateUrl: "./base-dynamic-event.component.html",
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        //-----//
-        MatIconModule,
-        //-----//
-        BlockRowDataComponent,
-    ],
-})
-export class BaseDynamicEventComponent<TEvent extends object> extends BaseComponent implements AfterViewInit {
+@Directive()
+export abstract class BaseDynamicEventComponent<TEvent extends GenericDynamicEventType>
+    extends BaseComponent
+    implements OnChanges
+{
     @Input({ required: true }) public event: TEvent;
-    @ViewChildren("container", { read: ViewContainerRef })
-    private container: QueryList<ViewContainerRef>;
     protected eventSections: EventSection[];
 
-    protected cdr = inject(ChangeDetectorRef);
+    protected abstract readonly sectionBuilder: EventSectionBuilder<GenericDynamicEventType>;
 
-    public ngAfterViewInit(): void {
-        let componentRef: ComponentRef<BasePropertyComponent>;
-        const rows: EventRow[] = [];
-        this.eventSections
-            .map((item) => item.rows)
-            .forEach((item: EventRow[]) => {
-                rows.push(...item);
-            });
-        this.container.forEach((vcr: ViewContainerRef, index: number) => {
-            vcr.clear();
-            componentRef = vcr.createComponent<BasePropertyComponent>(rows[index].descriptor.presentationComponent);
-            componentRef.setInput("data", rows[index].value);
-            componentRef.instance.dataTestId = rows[index].descriptor.dataTestId;
-            componentRef.changeDetectorRef.detectChanges();
-        });
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes.event) {
+            this.eventSections = this.sectionBuilder.buildEventSections(this.event);
+        }
     }
 }

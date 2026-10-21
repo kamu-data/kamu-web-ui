@@ -40,9 +40,12 @@ describe("SetPollingSourceEventComponent", () => {
     });
 
     it("should check render event data", () => {
-        component.event = Object.assign({}, mockSetPollingSourceEvent, {
-            unsupportedKey: { name: "" },
-        });
+        fixture.componentRef.setInput(
+            "event",
+            Object.assign({}, mockSetPollingSourceEvent, {
+                unsupportedKey: { name: "" },
+            }),
+        );
         fixture.detectChanges();
         const url = getElementByDataTestId(fixture, "setPollingSource-fetchStepUrl-url");
         expect(url.innerText).toEqual((mockSetPollingSourceEvent.fetch as FetchStepUrl).url);
@@ -80,9 +83,12 @@ describe("SetPollingSourceEventComponent", () => {
     });
 
     it("should check render unsupported section", () => {
-        component.event = Object.assign({}, mockSetPollingSourceEvent, {
-            unsupportedKey: { name: "" },
-        });
+        fixture.componentRef.setInput(
+            "event",
+            Object.assign({}, mockSetPollingSourceEvent, {
+                unsupportedKey: { name: "" },
+            }),
+        );
         fixture.detectChanges();
         const unsupportedSection = getElementByDataTestId(fixture, "unsupported-section");
         expect(unsupportedSection).toBeDefined();
@@ -90,7 +96,7 @@ describe("SetPollingSourceEventComponent", () => {
 
     it("should check render event data with FetchStepMqtt", () => {
         const fetchStep = mockSetPollingSourceEventWithFetchStepMqtt.fetch as FetchStepMqtt;
-        component.event = mockSetPollingSourceEventWithFetchStepMqtt;
+        fixture.componentRef.setInput("event", mockSetPollingSourceEventWithFetchStepMqtt);
         fixture.detectChanges();
         const host = getElementByDataTestId(fixture, "setPollingSource-FetchStepMqtt-host");
         expect(host.innerText).toEqual(fetchStep.host);
@@ -106,7 +112,7 @@ describe("SetPollingSourceEventComponent", () => {
     });
 
     it("should keep the rendered property components on later change detection", () => {
-        component.event = mockSetPollingSourceEvent;
+        fixture.componentRef.setInput("event", mockSetPollingSourceEvent);
         fixture.detectChanges();
         const urlBefore = getElementByDataTestId(fixture, "setPollingSource-fetchStepUrl-url");
 

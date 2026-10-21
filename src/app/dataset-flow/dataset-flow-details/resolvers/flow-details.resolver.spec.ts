@@ -20,7 +20,6 @@ import { DatasetNotFoundError } from "@common/values/errors";
 import { DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
-import { MaybeNull } from "@interface/app.types";
 
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { flowDetailsResolverFn } from "src/app/dataset-flow/dataset-flow-details/resolvers/flow-details.resolver";
@@ -42,7 +41,7 @@ describe("flowDetailsResolverFn", () => {
     let datasetSubsService: DatasetSubscriptionsService;
     let datasetFlowsService: DatasetFlowsService;
 
-    const executeResolver: ResolveFn<MaybeNull<DatasetFlowByIdResponse>> = (...resolverParameters) =>
+    const executeResolver: ResolveFn<DatasetFlowByIdResponse> = (...resolverParameters) =>
         TestBed.runInInjectionContext(() => flowDetailsResolverFn(...resolverParameters));
 
     beforeEach(() => {
@@ -93,6 +92,16 @@ describe("flowDetailsResolverFn", () => {
             flowId: TEST_FLOW_ID,
         });
         expect(data).toEqual(mockDatasetFlowByIdResponse);
+    });
+
+    it("should redirect to page not found when the dataset has no such flow", async () => {
+        mockPermissions();
+        spyOn(datasetService, "requestDatasetBasicDataWithPermissions").and.returnValue(of(undefined));
+        spyOn(datasetFlowsService, "datasetFlowById").and.returnValue(of(undefined));
+
+        const data = await resolve();
+
+        expectPageNotFoundRedirect(data);
     });
 
     it("should redirect to page not found when the dataset does not exist", async () => {

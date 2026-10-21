@@ -168,10 +168,14 @@ export class DatasetWebhooksService {
         );
     }
 
-    public datasetWebhookSubscriptionById(params: { datasetId: string; id: string }): Observable<WebhookSubscription> {
+    /** Emits `null` when the dataset has no subscription with this ID. */
+    public datasetWebhookSubscriptionById(params: {
+        datasetId: string;
+        id: string;
+    }): Observable<MaybeNull<WebhookSubscription>> {
         return this.webhooksApi.datasetWebhookSubscriptionById(params).pipe(
             map((data: DatasetWebhookByIdQuery) => {
-                return data.datasets.byId?.webhooks.subscription as WebhookSubscription;
+                return data.datasets.byId?.webhooks.subscription ?? null;
             }),
         );
     }

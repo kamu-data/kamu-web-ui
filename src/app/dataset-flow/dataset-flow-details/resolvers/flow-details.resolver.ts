@@ -10,7 +10,6 @@ import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn } from "@angular/rou
 
 import { map, of, switchMap } from "rxjs";
 
-import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
@@ -20,7 +19,7 @@ import { requestDatasetWithPermissions } from "src/app/dataset-view/resolvers/da
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
-export const flowDetailsResolverFn: ResolveFn<MaybeNull<DatasetFlowByIdResponse>> = (route: ActivatedRouteSnapshot) => {
+export const flowDetailsResolverFn: ResolveFn<DatasetFlowByIdResponse> = (route: ActivatedRouteSnapshot) => {
     const datasetFlowsService = inject(DatasetFlowsService);
     const datasetPermissionsService = inject(DatasetPermissionsService);
     const navigationService = inject(NavigationService);
@@ -41,7 +40,7 @@ export const flowDetailsResolverFn: ResolveFn<MaybeNull<DatasetFlowByIdResponse>
             }
             return datasetFlowsService
                 .datasetFlowById({ datasetId: data.datasetBasics.id, flowId })
-                .pipe(map((result) => result as DatasetFlowByIdResponse));
+                .pipe(map((result) => result ?? navigationService.pageNotFoundRedirect()));
         }),
     );
 };

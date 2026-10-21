@@ -302,6 +302,19 @@ export const mockDatasetWebhookByIdQuery: DatasetWebhookByIdQuery = {
     },
 };
 
+export const mockDatasetWebhookByIdNotFoundQuery: DatasetWebhookByIdQuery = {
+    datasets: {
+        byId: {
+            webhooks: {
+                subscription: null,
+                __typename: "DatasetWebhooks",
+            },
+            __typename: "Dataset",
+        },
+        __typename: "Datasets",
+    },
+};
+
 export const mockCreateWebhookSubscriptionSuccess: CreateWebhookSubscriptionSuccess = {
     input: mockWebhookSubscriptionInput,
     subscriptionId: "121231-32232-433434-12sasas",

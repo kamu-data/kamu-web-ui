@@ -89,6 +89,14 @@ describe("editWebhookResolverFn", () => {
         });
     });
 
+    it("should redirect to page not found when the dataset has no such webhook", async () => {
+        spyOn(datasetWebhooksService, "datasetWebhookSubscriptionById").and.returnValue(of(null));
+
+        const data = await resolve();
+
+        expectPageNotFoundRedirect(data);
+    });
+
     it("should redirect to page not found when the webhook cannot be loaded", async () => {
         spyOn(datasetWebhooksService, "datasetWebhookSubscriptionById").and.returnValue(
             throwError(() => new Error("fail")),

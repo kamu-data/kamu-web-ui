@@ -10,8 +10,6 @@ import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn } from "@angular/rou
 
 import { catchError, map, of, switchMap } from "rxjs";
 
-import { WebhookSubscription } from "@api/kamu.graphql.interface";
-
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { resolveSettingsTabAccess } from "src/app/dataset-view/additional-components/dataset-settings-component/resolvers/settings-tab-access.helpers";
 import { EditWebhooksType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/edit-webhooks.types";
@@ -33,7 +31,11 @@ export const editWebhookResolverFn: ResolveFn<EditWebhooksType> = (route: Activa
             return datasetWebhooksService
                 .datasetWebhookSubscriptionById({ datasetId: data.datasetBasics.id, id: webhookId })
                 .pipe(
-                    map((subscription: WebhookSubscription) => ({ datasetBasics: data.datasetBasics, subscription })),
+                    map((subscription) =>
+                        subscription
+                            ? { datasetBasics: data.datasetBasics, subscription }
+                            : navigationService.pageNotFoundRedirect(),
+                    ),
                     catchError(() => of(navigationService.pageNotFoundRedirect())),
                 );
         }),

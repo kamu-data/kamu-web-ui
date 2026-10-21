@@ -59,12 +59,12 @@
                         </div>
                     }
                     @case ("text") {
-                        <div class="mt-4" class="box p-2 bg-light mt-4">
+                        <div class="box p-2 bg-light mt-4">
                             <p>{{ contentText$ | async }}</p>
                         </div>
                     }
                     @case ("video") {
-                        <div class="mt-4" class="box p-2 bg-light mt-4">
+                        <div class="box p-2 bg-light mt-4">
                             <video
                                 controls
                                 preload="auto"
@@ -78,7 +78,7 @@
                         </div>
                     }
                     @case ("audio") {
-                        <div class="mt-4" class="box p-4 bg-light">
+                        <div class="box p-4 bg-light">
                             <audio controls preload="auto" controlsList="nodownload">
                                 <source [src]="urlContentPath" [type]="fileDetails.fileInfo?.contentType" />
                                 Your browser does not support the audio element.

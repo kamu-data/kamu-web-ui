@@ -148,8 +148,7 @@
                 </ul>
                 <div [ngbNavOutlet]="navStatus" class="mt-2"></div>
             </div>
-        }
-        @if (!flowConnectionData.flowsData.connectionDataForWidget.nodes.length) {
+        } @else {
             <div class="mt-4" data-test-id="empty-block">No flows yet in datasets belonging to this account</div>
         }
     </div>

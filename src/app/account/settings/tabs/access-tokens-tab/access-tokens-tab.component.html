@@ -133,8 +133,7 @@
                 <td mat-cell *matCellDef="let element">
                     @if (element.revokedAt) {
                         <span class="badge bg-danger">revoked</span>
-                    }
-                    @if (!element.revokedAt) {
+                    } @else {
                         <span class="badge bg-success">active</span>
                     }
                 </td>

@@ -25,8 +25,7 @@
             <i class="bi bi-journal-album mr-2"></i>
             @if (!r.dummy) {
                 <ngb-highlight [result]="r.dataset.owner.accountName + '/' + r.dataset.name" [term]="t" />
-            }
-            @if (r.dummy) {
+            } @else {
                 <ngb-highlight [result]="r.dataset.name" [term]="t" />
             }
         </div>
@@ -78,8 +77,7 @@
                                 </div>
                                 @if (!accordionItem.expanded) {
                                     <mat-icon>keyboard_arrow_down</mat-icon>
-                                }
-                                @if (accordionItem.expanded) {
+                                } @else {
                                     <mat-icon>keyboard_arrow_up</mat-icon>
                                 }
                                 <mat-icon

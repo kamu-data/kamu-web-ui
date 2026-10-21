@@ -13,8 +13,7 @@
             "
             >{{ value | slice: -8 }}</a
         >
-    }
-    @if (!navigationTargetDataset) {
+    } @else {
         <span class="mr-1 font-monospace" [title]="value" data-test-id="notNavigableValue">{{
             value | slice: -8
         }}</span>

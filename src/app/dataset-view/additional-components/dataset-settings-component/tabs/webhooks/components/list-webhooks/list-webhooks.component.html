@@ -5,20 +5,14 @@
         Webhooks allow you to recieve real time notifications when dataset events occur. Create a webhook subscription
         to start receiving updates
     </p>
-    @if (!(dataSource$ | async)?.length) {
-        <div class="box text-center p-5 mb-100 mt-4">
-            <mat-icon class="webhook-icon" [svgIcon]="'webhook'" />
-            <h3 class="my-3">No webhook subscrpitions configured yet</h3>
-            <button class="btn btn-success" (click)="createWebhook()" type="button">Create webhook</button>
-        </div>
-    }
-    @if ((dataSource$ | async)?.length) {
+    @let dataSource = dataSource$ | async;
+    @if (dataSource?.length) {
         <div class="mb-100 mt-4">
             <div class="d-flex flex-wrap justify-content-end mb-3">
                 <button class="btn btn-success" (click)="createWebhook()" type="button">Add webhook</button>
             </div>
             <div class="border">
-                <table mat-table [dataSource]="(dataSource$ | async)!" [trackBy]="trackByWebhookId" class="w-100">
+                <table mat-table [dataSource]="dataSource!" [trackBy]="trackByWebhookId" class="w-100">
                     <!-- Event Column -->
                     <ng-container matColumnDef="event">
                         <th mat-header-cell *matHeaderCellDef>Event</th>
@@ -114,6 +108,12 @@
                     <tr mat-row *matRowDef="let row; columns: DISPLAY_COLUMNS"></tr>
                 </table>
             </div>
+        </div>
+    } @else {
+        <div class="box text-center p-5 mb-100 mt-4">
+            <mat-icon class="webhook-icon" [svgIcon]="'webhook'" />
+            <h3 class="my-3">No webhook subscriptions configured yet</h3>
+            <button class="btn btn-success" (click)="createWebhook()" type="button">Create webhook</button>
         </div>
     }
 </div>

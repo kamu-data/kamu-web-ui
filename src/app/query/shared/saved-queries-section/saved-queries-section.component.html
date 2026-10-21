@@ -36,8 +36,7 @@
                         </div>
                         @if (!accordionItem.expanded) {
                             <mat-icon>keyboard_arrow_down</mat-icon>
-                        }
-                        @if (accordionItem.expanded) {
+                        } @else {
                             <mat-icon>keyboard_arrow_up</mat-icon>
                         }
                     </div>

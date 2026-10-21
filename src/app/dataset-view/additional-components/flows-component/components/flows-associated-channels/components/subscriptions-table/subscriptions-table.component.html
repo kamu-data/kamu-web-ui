@@ -44,9 +44,7 @@
                     <mat-icon (click)="pauseWebhook(element.id)" class="mat-icon-size text-muted mt-1" [title]="'pause'"
                         >pause</mat-icon
                     >
-                }
-
-                @if (element.summary.effectiveState !== FlowProcessEffectiveState.Active) {
+                } @else {
                     <mat-icon
                         class="mat-icon-size text-muted mt-1"
                         [title]="'resume'"

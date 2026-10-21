@@ -26,8 +26,7 @@
                             "
                         />
                     }
-                }
-                @if (!section.rows.length) {
+                } @empty {
                     <p class="text-center mt-2" data-test-id="unsupported-section">
                         <mat-icon class="text-danger align-middle">block</mat-icon>
                         <span>Unsupported section</span>

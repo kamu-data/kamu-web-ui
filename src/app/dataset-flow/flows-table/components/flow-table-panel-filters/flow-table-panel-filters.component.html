@@ -15,9 +15,7 @@
                 [(ngModel)]="selectedDatasetItems"
             />
         </div>
-    }
-
-    @if (!hasDatasetColumn) {
+    } @else {
         <div class="ms-4">
             <angular2-multiselect
                 [settings]="FILTER_STATUS_SETTINGS"

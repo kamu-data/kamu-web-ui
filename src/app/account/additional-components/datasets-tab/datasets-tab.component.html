@@ -1,9 +1,4 @@
 <div class="container-content mt-4">
-    @if (accountResolverResponse.datasetsResponse.datasets.length === 0) {
-        <div class="text-center">
-            <h5>Datasets list is empty</h5>
-        </div>
-    }
     @for (row of accountResolverResponse.datasetsResponse.datasets; track row.id; let rowIndex = $index) {
         <div>
             <app-dataset-list-item
@@ -11,6 +6,10 @@
                 [rowIndex]="rowIndex"
                 [isClickableRow]="isClickableRow"
             ></app-dataset-list-item>
+        </div>
+    } @empty {
+        <div class="text-center">
+            <h5>Datasets list is empty</h5>
         </div>
     }
     @if (

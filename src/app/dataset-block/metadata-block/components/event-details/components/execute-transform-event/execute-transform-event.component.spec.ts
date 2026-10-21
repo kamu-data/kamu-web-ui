@@ -37,7 +37,7 @@ describe("ExecuteTransformEventComponent", () => {
 
         fixture = TestBed.createComponent(ExecuteTransformEventComponent);
         component = fixture.componentInstance;
-        component.event = mockExecuteTransform;
+        fixture.componentRef.setInput("event", mockExecuteTransform);
         fixture.detectChanges();
     });
 

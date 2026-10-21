@@ -28,9 +28,12 @@ describe("AddPushSourceEventComponent", () => {
 
         fixture = TestBed.createComponent(AddPushSourceEventComponent);
         component = fixture.componentInstance;
-        component.event = Object.assign({}, mockAddPushSource, {
-            unsupportedKey: { name: "" },
-        });
+        fixture.componentRef.setInput(
+            "event",
+            Object.assign({}, mockAddPushSource, {
+                unsupportedKey: { name: "" },
+            }),
+        );
         fixture.detectChanges();
     });
 

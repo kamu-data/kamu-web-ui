@@ -9,7 +9,7 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { firstValueFrom, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
@@ -331,29 +331,26 @@ describe("DatasetFlowsService", () => {
         expect(subscription$.closed).toBeTrue();
     });
 
-    it("should check get flow by id with success", () => {
+    it("should check get flow by id with success", async () => {
         spyOn(datasetFlowApi, "getFlowById").and.returnValue(of(mockGetFlowByIdQuerySuccess));
-        const expectedFlowId = "595";
-        const subscription$ = service
-            .datasetFlowById({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID })
-            .subscribe((result) => {
-                expect(result?.flow.flowId).toEqual(expectedFlowId);
-            });
 
-        expect(subscription$.closed).toBeTrue();
+        const result = await firstValueFrom(
+            service.datasetFlowById({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID }),
+        );
+
+        expect(result?.flow.flowId).toEqual("595");
     });
 
-    it("should check get flow by id with error", () => {
+    it("should resolve an unknown flow to undefined without a toast", async () => {
         spyOn(datasetFlowApi, "getFlowById").and.returnValue(of(mockGetFlowByIdQueryError));
         const toastrServiceErrorSpy = spyOn(toastService, "error");
 
-        const subscription$ = service
-            .datasetFlowById({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID })
-            .subscribe(() => {
-                expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
-            });
+        const result = await firstValueFrom(
+            service.datasetFlowById({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID }),
+        );
 
-        expect(subscription$.closed).toBeTrue();
+        expect(result).toBeUndefined();
+        expect(toastrServiceErrorSpy).not.toHaveBeenCalled();
     });
 
     it("should check flows initiators", () => {

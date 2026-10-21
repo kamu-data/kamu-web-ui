@@ -215,13 +215,12 @@ export class DatasetFlowsService {
     }): Observable<MaybeUndefined<DatasetFlowByIdResponse>> {
         return this.datasetFlowApi.getFlowById(params).pipe(
             map((data: GetFlowByIdQuery) => {
+                // An unknown flow resolves to `undefined`; the flow details resolver shows the 404 page for it
                 if (data.datasets.byId?.flows.runs.getFlow.__typename === "GetFlowSuccess") {
                     return {
                         flow: data.datasets.byId.flows.runs.getFlow.flow,
                         flowHistory: data.datasets.byId.flows.runs.getFlow.flow.history,
                     };
-                } else if (data.datasets.byId?.flows.runs.getFlow.__typename === "FlowNotFound") {
-                    this.toastrService.error(data.datasets.byId.flows.runs.getFlow.message);
                 }
             }),
         );

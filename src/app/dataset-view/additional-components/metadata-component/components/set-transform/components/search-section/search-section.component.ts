@@ -12,8 +12,8 @@ import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
 
-import { Observable, OperatorFunction } from "rxjs";
-import { debounceTime, distinctUntilChanged, map, switchMap } from "rxjs/operators";
+import { Observable, of, OperatorFunction } from "rxjs";
+import { catchError, debounceTime, distinctUntilChanged, map, switchMap } from "rxjs/operators";
 
 import { NgbHighlight, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 
@@ -33,6 +33,7 @@ import {
     datasetNodeFromSchemaQuery,
     inputDatasetKey,
     parseInputDatasetKey,
+    unavailableDatasetNode,
 } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
 import { DatasetNode } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -106,9 +107,13 @@ export class SearchSectionComponent extends BaseComponent {
 
             this.datasetService
                 .requestDatasetSchema(id)
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe((data: GetDatasetSchemaQuery) => {
-                    this.inputsViewModel = [...this.inputsViewModel, datasetNodeFromSchemaQuery(alias, data)];
+                .pipe(
+                    map((data: GetDatasetSchemaQuery) => datasetNodeFromSchemaQuery(alias, data)),
+                    catchError(() => of(unavailableDatasetNode(alias))),
+                    takeUntilDestroyed(this.destroyRef),
+                )
+                .subscribe((node: DatasetNode) => {
+                    this.inputsViewModel = [...this.inputsViewModel, node];
                     this.cdr.detectChanges();
                 });
         }

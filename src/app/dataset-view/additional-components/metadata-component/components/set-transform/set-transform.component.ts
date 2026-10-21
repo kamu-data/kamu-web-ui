@@ -27,6 +27,7 @@ import { EditSetTransformService } from "src/app/dataset-view/additional-compone
 import {
     datasetNodeFromSchemaQuery,
     inputDatasetKey,
+    unavailableDatasetNode,
 } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
 import {
     DatasetNode,
@@ -106,9 +107,8 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
 
                 return this.datasetService.requestDatasetSchema(item.datasetRef).pipe(
                     map((data: GetDatasetSchemaQuery) => datasetNodeFromSchemaQuery(item.alias, data)),
-                    catchError(() => {
-                        throw new Error("TransformInput without an 'datasetRef' is unexpected");
-                    }),
+                    // The global Apollo error link has already reported the failure
+                    catchError(() => of(unavailableDatasetNode(item.alias))),
                 );
             });
 

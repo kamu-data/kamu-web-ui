@@ -13,6 +13,7 @@ import {
     datasetNodeFromSchemaQuery,
     inputDatasetKey,
     parseInputDatasetKey,
+    unavailableDatasetNode,
 } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
 
 describe("datasetNodeFromSchemaQuery", () => {
@@ -45,6 +46,18 @@ describe("datasetNodeFromSchemaQuery", () => {
         const node = datasetNodeFromSchemaQuery(ALIAS, data);
 
         expect(node).toEqual({ name: AppValues.SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL, owner: "", alias: ALIAS });
+    });
+});
+
+describe("unavailableDatasetNode", () => {
+    it("should label the input as unavailable, without owner or schema, and keep its alias", () => {
+        const alias = "kamu/github.stats";
+
+        expect(unavailableDatasetNode(alias)).toEqual({
+            name: AppValues.SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL,
+            owner: "",
+            alias,
+        });
     });
 });
 

@@ -17,7 +17,7 @@ import {
 export function datasetNodeFromSchemaQuery(alias: string, data: GetDatasetSchemaQuery): DatasetNode {
     const dataset = data.datasets.byId;
     if (!dataset) {
-        return { name: AppValues.SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL, owner: "", alias };
+        return unavailableDatasetNode(alias);
     }
 
     const schema = parseCurrentSchema(dataset.metadata.currentSchema);
@@ -27,6 +27,11 @@ export function datasetNodeFromSchemaQuery(alias: string, data: GetDatasetSchema
         alias,
         schema: schema?.fields.length ? schema.fields : undefined,
     };
+}
+
+/** Node of an input whose dataset is missing or could not be loaded; the alias keeps it deletable. */
+export function unavailableDatasetNode(alias: string): DatasetNode {
+    return { name: AppValues.SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL, owner: "", alias };
 }
 
 /**

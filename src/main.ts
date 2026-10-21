@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders, provideHttpClient, withInterceptors } from "@a
 import {
     ErrorHandler,
     inject,
-    Injector,
     provideAppInitializer,
     provideBrowserGlobalErrorListeners,
     provideZoneChangeDetection,
@@ -15,30 +14,26 @@ import { provideRouter, UrlSerializer, withComponentInputBinding, withRouterConf
 import { firstValueFrom } from "rxjs";
 
 import { ApolloLink } from "@apollo/client/core";
-import { CombinedGraphQLErrors } from "@apollo/client/errors";
-import { onError } from "@apollo/client/link/error";
 import { Apollo, provideApollo } from "apollo-angular";
 import { HttpLink } from "apollo-angular/http";
 import { provideMarkdown, SANITIZE } from "ngx-markdown";
-import { provideToastr, ToastrService } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 
 import { spinnerInterceptor } from "@common/components/spinner/spinner.interceptor";
 import { apolloCache } from "@common/helpers/apollo-cache.helper";
-import { HIGHLIGHT_OPTIONS_PROVIDER, isAccessTokenExpired, logError } from "@common/helpers/app.helpers";
+import { createApolloErrorLink } from "@common/helpers/apollo-error.helpers";
+import { HIGHLIGHT_OPTIONS_PROVIDER, logError } from "@common/helpers/app.helpers";
 import { KamuUrlSerializer } from "@common/helpers/kamu-url-serializer";
 import { authInterceptor } from "@common/interceptors/auth.interceptor";
 import AppValues from "@common/values/app.values";
-import { ErrorTexts } from "@common/values/errors.text";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "src/app/app-routing";
 import { AppComponent } from "src/app/app.component";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { LoginMethodsService } from "src/app/auth/login-methods.service";
-import ProjectLinks from "src/app/project-links";
 import { ErrorHandlerService } from "src/app/services/error-handler.service";
 import { LocalStorageService } from "src/app/services/local-storage.service";
-import { NavigationService } from "src/app/services/navigation.service";
 
 const Services = [
     Apollo,
@@ -103,8 +98,6 @@ bootstrapApplication(AppComponent, {
             const httpLink = inject(HttpLink);
             const appConfig = inject(AppConfigService);
             const localStorageService = inject(LocalStorageService);
-            const injector = inject(Injector);
-            const navigationService = inject(NavigationService);
 
             // 1. Main Link
             const httpMainLink = httpLink.create({
@@ -112,37 +105,7 @@ bootstrapApplication(AppComponent, {
             });
 
             // 2. Error Middleware
-            const errorMiddleware = onError((errorOptions) => {
-                const { error } = errorOptions;
-                const toastrService = injector.get(ToastrService);
-
-                // Check if it's a GraphQL error (errors from the GraphQL server)
-                if (CombinedGraphQLErrors.is(error)) {
-                    const graphQLErrors = error.errors;
-                    if (graphQLErrors && graphQLErrors.length > 0) {
-                        const firstMsg = graphQLErrors[0].message;
-                        if (firstMsg === ErrorTexts.ERROR_ACCOUNT_IS_NOT_WHITELISTED) {
-                            navigationService.navigateToPath(ProjectLinks.URL_ACCOUNT_WHITELIST_PAGE_NOT_FOUND);
-                        } else if (firstMsg === ErrorTexts.ERROR_ACCESS_TOKEN) {
-                            const token = localStorageService.accessToken;
-                            if (token) {
-                                toastrService.error(
-                                    isAccessTokenExpired(token) ? ErrorTexts.ERROR_ACCESS_TOKEN_EXPIRED : firstMsg,
-                                );
-                                navigationService.navigateToLogin(window.location.pathname);
-                            }
-                        } else {
-                            graphQLErrors.forEach((err) => toastrService.error(err.message));
-                        }
-                    }
-                } else if (error) {
-                    // Network error (e.g., connection failed, timeout, etc.)
-                    logError(error);
-                    toastrService.error(ErrorTexts.ERROR_NETWORK_DESCRIPTION, "", {
-                        disableTimeOut: true,
-                    });
-                }
-            });
+            const errorMiddleware = createApolloErrorLink();
 
             // 3. Auth Middleware
             const authorizationMiddleware = new ApolloLink((operation, forward) => {

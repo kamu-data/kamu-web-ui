@@ -121,7 +121,6 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
             reactive: null,
             stopPolicy: {
                 __typename: "FlowTriggerStopPolicyNever",
-                dummy: false,
             },
             paused: true,
         });

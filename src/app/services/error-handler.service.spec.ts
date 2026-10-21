@@ -15,6 +15,7 @@ import {
     AuthenticationError,
     DatasetNotFoundError,
     DatasetOperationError,
+    FileUploadError,
     InvalidSqlError,
     SqlExecutionError,
 } from "@common/values/errors";
@@ -94,10 +95,15 @@ describe("ErrorHandlerService", () => {
     });
 
     it("should show modal window when dataset operation fails", () => {
-        const errorText = "Some dataset error";
         const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.callThrough();
-        service.handleError(new DatasetOperationError([new Error(errorText)]));
-        expect(toastrServiceSpy).toHaveBeenCalledTimes(1);
+        service.handleError(new DatasetOperationError([{ message: "First" }, { message: "Second" }]));
+        expect(toastrServiceSpy).toHaveBeenCalledOnceWith("First. Second");
+    });
+
+    it("should show a toast that stays when a file upload fails", () => {
+        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.callThrough();
+        service.handleError(new FileUploadError([{ message: "Upload failed" }]));
+        expect(toastrServiceSpy).toHaveBeenCalledOnceWith("Upload failed", "", { disableTimeOut: "timeOut" });
     });
 
     it("should log authentication errors, terminate session, and show Toastr", () => {

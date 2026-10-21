@@ -15,6 +15,7 @@ import { switchMap } from "rxjs/operators";
 
 import { BaseComponent } from "@common/components/base.component";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { AccountSettingsLinkPipe } from "@common/pipes/account-settings-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { AccountProvider, AccountWithEmailFragment } from "@api/kamu.graphql.interface";
@@ -27,7 +28,6 @@ import {
 } from "src/app/account/settings/account-settings.constants";
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import ProjectLinks from "src/app/project-links";
 
 @Component({
     selector: "app-settings",
@@ -45,6 +45,7 @@ import ProjectLinks from "src/app/project-links";
         MatIconModule,
         //-----//
         FeatureFlagDirective,
+        AccountSettingsLinkPipe,
     ],
 })
 export class AccountSettingsComponent extends BaseComponent implements OnInit {
@@ -60,10 +61,6 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
 
     public ngOnInit(): void {
         this.fetchAccountInfo();
-    }
-
-    public getRouteLink(tab: AccountSettingsTabs): string {
-        return `/${ProjectLinks.URL_SETTINGS}/${tab}`;
     }
 
     public showItem(activeTab: AccountSettingsTabs): boolean {

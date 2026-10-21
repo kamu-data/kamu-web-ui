@@ -109,12 +109,13 @@ its own routes file:
   `navigateTo…()` methods serve components and handlers that run outside any navigation (the
   Apollo error link, `ErrorHandlerService`); guards and resolvers use its `…UrlTree()` and
   `…Redirect()` builders, so the redirect happens inside the navigation being checked.
-- Every URL of a dataset page or sub-page comes from a `NavigationService` builder
-  (`datasetViewUrlTree`, `metadataBlockUrlTree`, `flowDetailsUrlTree`, `webhooksUrlTree`,
-  `sourceEventEditorUrlTree`); its `navigateTo…()` twin navigates to the same tree. Templates
-  reach the builders through the pure pipes in `common/pipes/` (`datasetLink`,
-  `metadataBlockLink`, `flowDetailsLink`, `webhooksLink`, `sourceEventEditorLink`), never through
-  hand-built `['/', account, dataset, …]` arrays. Query parameters and the fragment go into the
+- Every URL of a dataset page or sub-page, and of the user's own settings, comes from a
+  `NavigationService` builder (`datasetViewUrlTree`, `metadataBlockUrlTree`, `flowDetailsUrlTree`,
+  `webhooksUrlTree`, `sourceEventEditorUrlTree`, `accountSettingsUrlTree`); its `navigateTo…()`
+  twin, where one exists, navigates to the same tree. Templates reach the builders through the
+  pure pipes in `common/pipes/` (`datasetLink`, `metadataBlockLink`, `flowDetailsLink`,
+  `webhooksLink`, `sourceEventEditorLink`, `accountSettingsLink`), never through hand-built
+  `['/', account, dataset, …]` arrays. Query parameters and the fragment go into the
   builder's params: `routerLink` ignores `[queryParams]` and `fragment` when given a `UrlTree`.
 
 ### Proving the chunk split

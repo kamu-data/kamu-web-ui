@@ -39,7 +39,7 @@ export class NavigationService {
     }
 
     public navigateToHome(): void {
-        promiseWithCatch(this.router.navigate([ProjectLinks.URL_HOME]));
+        promiseWithCatch(this.router.navigateByUrl(this.homeUrlTree()));
     }
 
     public homeUrlTree(): UrlTree {
@@ -76,16 +76,15 @@ export class NavigationService {
         }
     }
 
-    public navigateToDatasetCreate(): void {
-        promiseWithCatch(this.router.navigate([ProjectLinks.URL_DATASET_CREATE]));
+    public navigateToSettings(tab: AccountSettingsTabs, page?: number): void {
+        promiseWithCatch(this.router.navigateByUrl(this.accountSettingsUrlTree(tab, page)));
     }
 
-    public navigateToSettings(tab?: AccountSettingsTabs, page?: number): void {
-        promiseWithCatch(
-            this.router.navigate([ProjectLinks.URL_SETTINGS, tab ? tab : AccountSettingsTabs.PROFILE], {
-                queryParams: page && page > 1 ? { page } : {},
-            }),
-        );
+    /** The URL of a tab in the logged-in user's own settings; the first page gets no `page` parameter. */
+    public accountSettingsUrlTree(tab: AccountSettingsTabs, page?: number): UrlTree {
+        return this.router.createUrlTree([ProjectLinks.URL_SETTINGS, tab], {
+            queryParams: page && page > 1 ? { page } : {},
+        });
     }
 
     public navigateToMetadata(params: DatasetInfo, tab?: MetadataTabs): void {
@@ -98,10 +97,6 @@ export class NavigationService {
                 }),
             ),
         );
-    }
-
-    public navigateToMetadataBlock(params: MetadataBlockNavigationParams): void {
-        promiseWithCatch(this.router.navigateByUrl(this.metadataBlockUrlTree(params)));
     }
 
     public metadataBlockUrlTree(params: MetadataBlockNavigationParams): UrlTree {
@@ -188,13 +183,7 @@ export class NavigationService {
     }
 
     public navigateToLogin(redirectUrl?: string): void {
-        promiseWithCatch(
-            this.router.navigate([ProjectLinks.URL_LOGIN], {
-                queryParams: {
-                    [ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL]: redirectUrl,
-                },
-            }),
-        );
+        promiseWithCatch(this.router.navigateByUrl(this.loginUrlTree(redirectUrl)));
     }
 
     public loginUrlTree(redirectUrl?: string): UrlTree {
@@ -213,28 +202,30 @@ export class NavigationService {
         status?: FlowStatus[],
         mode?: ProcessCardFilterMode,
     ): void {
-        promiseWithCatch(
-            this.router.navigate([ownerName, ProjectLinks.URL_ACCOUNT_SELECT, tab], {
-                queryParams: {
-                    [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_NAV]: nav,
-                    [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS]: status?.join(","),
-                    [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_FILTERS_MODE]: mode,
-                    page,
-                },
-            }),
-        );
+        promiseWithCatch(this.router.navigateByUrl(this.ownerViewUrlTree(ownerName, tab, page, nav, status, mode)));
     }
 
-    public ownerViewUrlTree(ownerName: string, tab: AccountTabs): UrlTree {
-        return this.router.createUrlTree([ownerName, ProjectLinks.URL_ACCOUNT_SELECT, tab]);
+    public ownerViewUrlTree(
+        ownerName: string,
+        tab?: AccountTabs,
+        page?: number,
+        nav?: AccountFlowsNav,
+        status?: FlowStatus[],
+        mode?: ProcessCardFilterMode,
+    ): UrlTree {
+        return this.router.createUrlTree([ownerName, ProjectLinks.URL_ACCOUNT_SELECT, ...(tab ? [tab] : [])], {
+            queryParams: {
+                [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_NAV]: nav,
+                [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS]: status?.join(","),
+                [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_FILTERS_MODE]: mode,
+                page,
+            },
+        });
     }
 
     public navigateToPageNotFound(): void {
-        promiseWithCatch(
-            this.router.navigate([ProjectLinks.URL_PAGE_NOT_FOUND], {
-                skipLocationChange: true,
-            }),
-        );
+        const redirect = this.pageNotFoundRedirect();
+        promiseWithCatch(this.router.navigateByUrl(redirect.redirectTo, redirect.navigationBehaviorOptions));
     }
 
     /**

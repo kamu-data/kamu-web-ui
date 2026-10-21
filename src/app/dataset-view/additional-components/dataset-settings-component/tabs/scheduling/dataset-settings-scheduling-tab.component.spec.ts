@@ -131,7 +131,6 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         };
         component.schedulingTabData.stopPolicy = {
             __typename: "FlowTriggerStopPolicyNever",
-            dummy: false,
         };
         component.ngAfterViewInit();
         fixture.detectChanges();

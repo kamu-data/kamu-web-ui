@@ -8,7 +8,8 @@
 import { Location } from "@angular/common";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { provideLocationMocks } from "@angular/common/testing";
+import { NO_ERRORS_SCHEMA, Provider } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { Router, ROUTES } from "@angular/router";
 
@@ -53,7 +54,7 @@ describe("Router", () => {
     let loggedUserService: LoggedUserService;
     let loginMethodsService: LoginMethodsService;
 
-    async function configureRouter(allowAnonymous: boolean): Promise<void> {
+    async function configureRouter(allowAnonymous: boolean, extraProviders: Provider[] = []): Promise<void> {
         await TestBed.configureTestingModule({
             schemas: [NO_ERRORS_SCHEMA],
             imports: [ApolloTestingModule, PageNotFoundComponent, LoginComponent],
@@ -117,6 +118,7 @@ describe("Router", () => {
                 },
                 provideHttpClient(),
                 provideHttpClientTesting(),
+                ...extraProviders,
             ],
         }).compileComponents();
 
@@ -266,6 +268,26 @@ describe("Router", () => {
                 flush();
             }));
         });
+    });
+
+    describe("browser history", () => {
+        beforeEach(async () => {
+            await configureRouter(true, [provideLocationMocks()]);
+        });
+
+        it("a guard redirect adds no history entry for the refused page", fakeAsync(() => {
+            promiseWithCatch(router.navigate([ProjectLinks.URL_PAGE_NOT_FOUND]));
+            tick();
+            promiseWithCatch(router.navigate([ProjectLinks.URL_DATASET_CREATE]));
+            tick();
+            expect(location.path()).toBe("/" + ProjectLinks.DEFAULT_URL);
+
+            location.back();
+            tick();
+
+            expect(location.path()).toBe("/" + ProjectLinks.URL_PAGE_NOT_FOUND);
+            flush();
+        }));
     });
 
     describe("with anonymous access forbidden", () => {

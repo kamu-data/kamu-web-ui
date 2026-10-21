@@ -10,8 +10,7 @@ import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn, RouterStateSnapshot
 
 import { map, Observable, of, switchMap } from "rxjs";
 
-import { DatasetFlowType, FlowTriggerStopPolicy, GetDatasetFlowTriggerQuery } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
+import { DatasetFlowType, GetDatasetFlowTriggerQuery } from "@api/kamu.graphql.interface";
 
 import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
 import { datasetSettingsGeneralTabResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/resolver/dataset-settings-general-tab.resolver";
@@ -38,26 +37,7 @@ export const datasetSettingsTransformTabResolverFn: ResolveFn<DatasetSettingsTra
                         const paused = flowTriggers?.paused ?? true;
                         const reactive = flowTriggers?.reactive ?? null;
 
-                        let stopPolicy: MaybeNull<FlowTriggerStopPolicy> = null;
-                        if (flowTriggers?.stopPolicy) {
-                            switch (flowTriggers.stopPolicy.__typename) {
-                                case "FlowTriggerStopPolicyNever":
-                                    stopPolicy = {
-                                        __typename: "FlowTriggerStopPolicyNever",
-                                        dummy: false,
-                                    };
-                                    break;
-                                case "FlowTriggerStopPolicyAfterConsecutiveFailures":
-                                    stopPolicy = {
-                                        __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
-                                        maxFailures: flowTriggers?.stopPolicy.maxFailures,
-                                    };
-                                    break;
-                                /* istanbul ignore next */
-                                default:
-                                    throw new Error("Unknown flow trigger stop policy");
-                            }
-                        }
+                        const stopPolicy = flowTriggers?.stopPolicy ?? null;
 
                         return {
                             datasetBasics: data.datasetBasics,
@@ -65,7 +45,7 @@ export const datasetSettingsTransformTabResolverFn: ResolveFn<DatasetSettingsTra
                             reactive,
                             paused,
                             stopPolicy,
-                        } as DatasetSettingsTransformOptionsTabData;
+                        };
                     }),
                 );
         }),

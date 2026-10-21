@@ -168,7 +168,7 @@
                         <a
                             class="header-link d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-top border-md-top-0 border-white-fade"
                             data-test-id="openSettingsHeader"
-                            [routerLink]="[URL_SETTINGS, AccountSettingsTabs.ACCESS_TOKENS]"
+                            [routerLink]="AccountSettingsTabs.ACCESS_TOKENS | accountSettingsLink"
                             >Settings</a
                         >
                         <a
@@ -310,7 +310,7 @@
                             <a
                                 mat-menu-item
                                 data-test-id="openSettings"
-                                [routerLink]="[URL_SETTINGS, AccountSettingsTabs.ACCESS_TOKENS]"
+                                [routerLink]="AccountSettingsTabs.ACCESS_TOKENS | accountSettingsLink"
                             >
                                 Settings
                             </a>

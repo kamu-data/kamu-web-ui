@@ -43,7 +43,7 @@ export const datasetSettingsSchedulingTabResolverFn: ResolveFn<DatasetSettingsSc
                             schedule,
                             paused,
                             stopPolicy,
-                        } as DatasetSettingsSchedulingTabData;
+                        };
                     }),
                 );
         }),

@@ -16,8 +16,22 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
     const appConfigService = inject(AppConfigService);
 
     const accessToken = localStorageService.accessToken;
-    if (accessToken && request.url.startsWith(appConfigService.apiServerHttpUrl)) {
+    if (accessToken && isApiServerUrl(request.url, appConfigService.apiServerHttpUrl)) {
         return next(request.clone({ setHeaders: { Authorization: `Bearer ${accessToken}` } }));
     }
     return next(request);
 };
+
+/**
+ * Whether `url` points at the API server: the same origin, and a path inside the server's base
+ * path. A plain prefix check would also accept hosts such as `api.example.com.evil.com`.
+ */
+function isApiServerUrl(url: string, apiServerHttpUrl: string): boolean {
+    const target = new URL(url, window.location.origin);
+    const apiServer = new URL(apiServerHttpUrl, window.location.origin);
+    const basePath = apiServer.pathname.replace(/\/+$/, "");
+    return (
+        target.origin === apiServer.origin &&
+        (basePath === "" || target.pathname === basePath || target.pathname.startsWith(`${basePath}/`))
+    );
+}

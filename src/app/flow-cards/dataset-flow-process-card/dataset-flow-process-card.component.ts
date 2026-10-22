@@ -47,6 +47,8 @@ export class DatasetFlowProcessCardComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public summary: FlowProcessSummary;
     @Input() public showFlowsHistoryLink = false;
+    /** Disables the buttons while an action started from them has not shown its result yet */
+    @Input() public actionInProgress = false;
     @Output() public updateNowEmitter = new EventEmitter<DatasetBasicsFragment>();
     @Output() public toggleStateDatasetCardEmitter = new EventEmitter<{
         state: FlowProcessEffectiveState;

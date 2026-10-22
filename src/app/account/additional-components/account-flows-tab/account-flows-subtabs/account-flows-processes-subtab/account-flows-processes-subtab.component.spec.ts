@@ -12,7 +12,7 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from
 import { MatButtonToggleChange } from "@angular/material/button-toggle";
 import { ActivatedRoute } from "@angular/router";
 
-import { of, Subject } from "rxjs";
+import { of, Subject, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
@@ -636,6 +636,8 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             await card.clickToggleState();
 
             expect(resumeSpy).toHaveBeenCalledTimes(1);
+            expect(await card.isToggleStateDisabled()).toBeTrue();
+            expect(await card.isUpdateNowDisabled()).toBeTrue();
             tick(component.TIMEOUT_REFRESH_FLOW);
             expect(refreshNowSpy).toHaveBeenCalledTimes(1);
             discardPeriodicTasks();
@@ -704,4 +706,64 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(refreshNowSpy).not.toHaveBeenCalled();
     }));
+
+    describe("dataset card action in progress", () => {
+        const datasetId = mockDatasetBasicsRootFragment.id;
+
+        it("should last from a toggle until the cards refreshed after the delay arrive", fakeAsync(() => {
+            spyOn(datasetFlowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+            fixture.detectChanges();
+            tick(0);
+            component.toggleStateDatasetCard({
+                state: FlowProcessEffectiveState.Active,
+                datasetBasics: mockDatasetBasicsRootFragment,
+            });
+            expect(component.datasetCardsBusy$.value.has(datasetId)).toBeTrue();
+
+            tick(component.TIMEOUT_REFRESH_FLOW);
+            expect(component.datasetCardsBusy$.value.has(datasetId)).toBeTrue();
+
+            // The refresh request is debounced
+            tick(300);
+            expect(component.datasetCardsBusy$.value.has(datasetId)).toBeFalse();
+            discardPeriodicTasks();
+        }));
+
+        it("should track each dataset's card on its own", () => {
+            const rootTrigger$ = new Subject<boolean>();
+            const derivedTrigger$ = new Subject<boolean>();
+            spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(rootTrigger$);
+            spyOn(datasetFlowsService, "datasetTriggerTransformFlow").and.returnValue(derivedTrigger$);
+            const derivedDataset = { ...mockDatasetBasicsDerivedFragment, id: "derived-dataset-id" };
+            component.updateNow(mockDatasetBasicsRootFragment);
+            component.updateNow(derivedDataset);
+            expect([...component.datasetCardsBusy$.value]).toEqual([datasetId, derivedDataset.id]);
+
+            rootTrigger$.next(true);
+            expect([...component.datasetCardsBusy$.value]).toEqual([derivedDataset.id]);
+        });
+
+        it("should last while 'Update now' is waiting for the trigger", () => {
+            const trigger$ = new Subject<boolean>();
+            spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(trigger$);
+            component.updateNow(mockDatasetBasicsRootFragment);
+            expect(component.datasetCardsBusy$.value.has(datasetId)).toBeTrue();
+
+            trigger$.next(false);
+            expect(component.datasetCardsBusy$.value.has(datasetId)).toBeFalse();
+        });
+
+        it("should end when the toggle request fails, and leave the error to the global handler", fakeAsync(() => {
+            spyOn(datasetFlowsService, "datasetPauseFlows").and.returnValue(
+                throwError(() => new Error("Network failure")),
+            );
+            component.toggleStateDatasetCard({
+                state: FlowProcessEffectiveState.Active,
+                datasetBasics: mockDatasetBasicsRootFragment,
+            });
+
+            expect(component.datasetCardsBusy$.value.has(datasetId)).toBeFalse();
+            expect(() => tick()).toThrowError("Network failure");
+        }));
+    });
 });

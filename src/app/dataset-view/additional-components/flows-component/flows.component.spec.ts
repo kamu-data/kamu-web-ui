@@ -12,7 +12,7 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick
 import { MatChipListboxChange } from "@angular/material/chips";
 import { ActivatedRoute } from "@angular/router";
 
-import { delay, of, Subject } from "rxjs";
+import { delay, of, Subject, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
@@ -692,8 +692,11 @@ describe("FlowsComponent", () => {
             await card.clickUpdateNow();
 
             expect(triggerIngestSpy).toHaveBeenCalledOnceWith({ datasetId: mockDatasetBasicsRootFragment.id });
+            expect(await card.isUpdateNowDisabled()).toBeTrue();
+            expect(await card.isToggleStateDisabled()).toBeTrue();
             tick(component.TIMEOUT_REFRESH_FLOW);
             expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+            expect(await card.isUpdateNowDisabled()).toBeFalse();
             discardPeriodicTasks();
         }));
 
@@ -787,4 +790,61 @@ describe("FlowsComponent", () => {
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(refreshFlowSpy).not.toHaveBeenCalled();
     }));
+
+    describe("dataset card action in progress", () => {
+        it("should last from a toggle until the refresh", fakeAsync(() => {
+            spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+            const refreshFlowSpy = spyOn(component, "refreshFlow");
+            component.toggleStateDatasetFlowConfigs({
+                state: FlowProcessEffectiveState.Failing,
+                datasetBasics: mockDatasetBasicsRootFragment,
+            });
+
+            tick(component.TIMEOUT_REFRESH_FLOW - 1);
+            expect(component.datasetCardBusy$.value).toBeTrue();
+
+            tick(1);
+            expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+            expect(component.datasetCardBusy$.value).toBeFalse();
+        }));
+
+        it("should end when 'Update now' fails to trigger", () => {
+            spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(false));
+            component.updateNow();
+            expect(component.datasetCardBusy$.value).toBeFalse();
+        });
+
+        it("should end when the resume confirmation is cancelled", () => {
+            spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, false);
+                return Promise.resolve("");
+            });
+            component.toggleStateDatasetFlowConfigs({
+                state: FlowProcessEffectiveState.StoppedAuto,
+                datasetBasics: mockDatasetBasicsRootFragment,
+            });
+            expect(component.datasetCardBusy$.value).toBeFalse();
+        });
+
+        it("should end when the page is left before the refresh", fakeAsync(() => {
+            spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+            component.toggleStateDatasetFlowConfigs({
+                state: FlowProcessEffectiveState.Failing,
+                datasetBasics: mockDatasetBasicsRootFragment,
+            });
+
+            fixture.destroy();
+            expect(component.datasetCardBusy$.value).toBeFalse();
+        }));
+
+        it("should end when the request fails, and leave the error to the global handler", fakeAsync(() => {
+            spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(
+                throwError(() => new Error("Network failure")),
+            );
+            component.updateNow();
+
+            expect(component.datasetCardBusy$.value).toBeFalse();
+            expect(() => tick()).toThrowError("Network failure");
+        }));
+    });
 });

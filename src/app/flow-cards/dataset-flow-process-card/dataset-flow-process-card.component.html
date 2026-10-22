@@ -62,6 +62,7 @@
                 <button
                     (click)="updateNow(datasetBasics)"
                     type="button"
+                    [disabled]="actionInProgress"
                     data-test-id="dataset-card-update-now"
                     class="badge-button border-1 bg-light border rounded-2 px-2"
                 >
@@ -71,7 +72,7 @@
                 <button
                     (click)="toggleStateDatasetCard(summary.effectiveState, datasetBasics)"
                     type="button"
-                    [disabled]="summary.effectiveState === FlowProcessEffectiveState.Unconfigured"
+                    [disabled]="actionInProgress || summary.effectiveState === FlowProcessEffectiveState.Unconfigured"
                     data-test-id="dataset-card-toggle-state"
                     class="badge-button border-1 bg-light border rounded-2 px-2 btn btn-sm"
                 >

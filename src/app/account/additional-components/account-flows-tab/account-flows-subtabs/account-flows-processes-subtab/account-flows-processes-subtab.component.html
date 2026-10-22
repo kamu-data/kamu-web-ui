@@ -93,6 +93,7 @@
 
 @if (accountFlowsCardsData$ | async; as cardsData) {
     @if (cardsData.nodes.length) {
+        @let busyDatasetIds = datasetCardsBusy$ | async;
         <div>
             <div class="d-flex justify-content-end mt-4 mb-2 fw-500">Total processes: {{ cardsData.totalCount }}</div>
             <div
@@ -111,6 +112,7 @@
                                 [datasetBasics]="itemToBasics(card.dataset)"
                                 [summary]="card.summary"
                                 [showFlowsHistoryLink]="true"
+                                [actionInProgress]="busyDatasetIds?.has(card.dataset.id) ?? false"
                                 (updateNowEmitter)="updateNow($event)"
                                 (toggleStateDatasetCardEmitter)="toggleStateDatasetCard($event)"
                             />

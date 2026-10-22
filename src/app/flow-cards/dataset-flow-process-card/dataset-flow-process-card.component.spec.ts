@@ -132,4 +132,15 @@ describe("DatasetFlowProcessCardComponent", () => {
             `/${mockDatasetBasicsDerivedFragment.owner.accountName}/${mockDatasetBasicsDerivedFragment.name}/settings/${SettingsTabsEnum.TRANSFORM_SETTINGS}`,
         );
     });
+
+    it("should disable both buttons while an action is in progress", async () => {
+        const card = await createCard(FlowProcessEffectiveState.Active);
+        expect(await card.isUpdateNowDisabled()).toBeFalse();
+        expect(await card.isToggleStateDisabled()).toBeFalse();
+
+        fixture.componentRef.setInput("actionInProgress", true);
+
+        expect(await card.isUpdateNowDisabled()).toBeTrue();
+        expect(await card.isToggleStateDisabled()).toBeTrue();
+    });
 });

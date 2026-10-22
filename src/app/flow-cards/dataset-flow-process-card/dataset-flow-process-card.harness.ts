@@ -50,6 +50,11 @@ export class DatasetFlowProcessCardHarness extends ComponentHarness {
         return text.trim();
     }
 
+    public async isUpdateNowDisabled(): Promise<boolean> {
+        const button = await this.locatorUpdateNowButton();
+        return button.getProperty<boolean>("disabled");
+    }
+
     public async clickUpdateNow(): Promise<void> {
         const button = await this.locatorUpdateNowButton();
         await button.click();

@@ -13,10 +13,11 @@ import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { RouterLink } from "@angular/router";
 
-import { combineLatest, map, Observable, of, switchMap, take, tap, timer } from "rxjs";
+import { BehaviorSubject, combineLatest, filter, map, Observable, of, switchMap, take, tap, timer } from "rxjs";
 
 import { environment } from "@env/environment";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+import { trackBusy } from "@common/helpers/app.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import { SourceEventEditorLinkPipe } from "@common/pipes/source-event-editor-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
@@ -108,6 +109,8 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public selectedDatasetItems: DatasetBasicsFragment[] = [];
     public selectedAccountItems: AccountFragment[] = [];
     public selectedStatusItems: FilterStatusType[] = [];
+    /** The card's label shows the state from before an action until the refresh, so it stays disabled till then */
+    public readonly datasetCardBusy$ = new BehaviorSubject<boolean>(false);
 
     private datasetWebhooksService = inject(DatasetWebhooksService);
     private flowsSelectionStateService = inject(FlowsSelectionStateService);
@@ -366,31 +369,32 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public updateNow(): void {
-        this.datasetCardService.handleTrigger(this.flowsData.datasetBasics).subscribe((success: boolean) => {
-            if (success) {
-                this.refreshFlowAfterDelay();
-            }
-        });
+        this.runDatasetCardAction(
+            this.datasetCardService.handleTrigger(this.flowsData.datasetBasics).pipe(filter(Boolean)),
+        );
     }
 
     public toggleStateDatasetFlowConfigs(params: {
         state: FlowProcessEffectiveState;
         datasetBasics: DatasetBasicsFragment;
     }): void {
-        this.datasetCardService
-            .handleToggleState({
+        this.runDatasetCardAction(
+            this.datasetCardService.handleToggleState({
                 state: params.state,
                 datasetBasics: params.datasetBasics,
                 confirmModal: true,
-            })
-            .subscribe(() => {
-                this.refreshFlowAfterDelay();
-            });
+            }),
+        );
     }
 
-    private refreshFlowAfterDelay(): void {
-        timer(this.TIMEOUT_REFRESH_FLOW)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+    /** `succeeded$` emits once when the action succeeded, and completes without a value otherwise */
+    private runDatasetCardAction(succeeded$: Observable<unknown>): void {
+        succeeded$
+            .pipe(
+                // Only the delayed refresh is tied to the page: the mutation still reports its result after leaving
+                switchMap(() => timer(this.TIMEOUT_REFRESH_FLOW).pipe(takeUntilDestroyed(this.destroyRef))),
+                trackBusy(this.datasetCardBusy$),
+            )
             .subscribe(() => {
                 this.refreshFlow();
             });

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { defer, finalize, Observable, Subject } from "rxjs";
+import { BehaviorSubject, defer, finalize, Observable, Subject } from "rxjs";
 
 import cronParser from "cron-parser";
 import { format, isSameDay, subDays } from "date-fns";
@@ -278,6 +278,21 @@ export function trackBusy<T>(busy: Subject<boolean>) {
             busy.next(true);
             return source$;
         }).pipe(finalize(() => busy.next(false)));
+}
+
+/** `trackBusy` for actions on several items at once: `key` is in `busyKeys` until its action ends */
+export function trackBusyKey<T>(busyKeys: BehaviorSubject<ReadonlySet<string>>, key: string) {
+    return (source$: Observable<T>) =>
+        defer(() => {
+            busyKeys.next(new Set([...busyKeys.value, key]));
+            return source$;
+        }).pipe(
+            finalize(() => {
+                const keys = new Set(busyKeys.value);
+                keys.delete(key);
+                busyKeys.next(keys);
+            }),
+        );
 }
 
 /**

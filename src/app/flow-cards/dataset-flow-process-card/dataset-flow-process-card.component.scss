@@ -35,8 +35,12 @@
     align-items: center;
     justify-content: center;
 
-    &:hover {
+    &:hover:not(:disabled) {
         background: #ebebeb !important;
+    }
+
+    &:disabled {
+        opacity: 0.65;
     }
 }
 

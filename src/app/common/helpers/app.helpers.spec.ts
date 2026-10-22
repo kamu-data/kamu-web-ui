@@ -7,6 +7,8 @@
 
 import { fakeAsync, flush, tick } from "@angular/core/testing";
 
+import { BehaviorSubject, NEVER, Subject, throwError } from "rxjs";
+
 import { subDays } from "date-fns";
 
 import {
@@ -17,6 +19,8 @@ import {
     momentConvertDateToLocalWithFormat,
     promiseWithCatch,
     requireValue,
+    trackBusy,
+    trackBusyKey,
 } from "@common/helpers/app.helpers";
 import AppValues from "@common/values/app.values";
 import { MaybeNullOrUndefined } from "@interface/app.types";
@@ -164,6 +168,73 @@ describe("AppHelpers", () => {
             addMarkdownRunButton(target, null, "/query?sqlQuery");
 
             expect(target.querySelectorAll(RUN_BUTTON_SELECTOR).length).toEqual(0);
+        });
+    });
+
+    describe("trackBusy", () => {
+        it("should be busy from the subscription until the source completes", () => {
+            const busy$ = new BehaviorSubject<boolean>(false);
+            const source$ = new Subject<number>();
+            const tracked$ = source$.pipe(trackBusy(busy$));
+            expect(busy$.value).toBeFalse();
+
+            tracked$.subscribe();
+            expect(busy$.value).toBeTrue();
+
+            source$.next(1);
+            expect(busy$.value).toBeTrue();
+
+            source$.complete();
+            expect(busy$.value).toBeFalse();
+        });
+
+        it("should stop being busy when the source errors, passing the error on", () => {
+            const busy$ = new BehaviorSubject<boolean>(false);
+            let error: unknown;
+
+            throwError(() => new Error("failure"))
+                .pipe(trackBusy(busy$))
+                .subscribe({ error: (e: unknown) => (error = e) });
+
+            expect(busy$.value).toBeFalse();
+            expect(error).toEqual(new Error("failure"));
+        });
+
+        it("should stop being busy on unsubscribe", () => {
+            const busy$ = new BehaviorSubject<boolean>(false);
+            const subscription = NEVER.pipe(trackBusy(busy$)).subscribe();
+            expect(busy$.value).toBeTrue();
+
+            subscription.unsubscribe();
+            expect(busy$.value).toBeFalse();
+        });
+    });
+
+    describe("trackBusyKey", () => {
+        it("should hold each key until its own source completes", () => {
+            const busyKeys$ = new BehaviorSubject<ReadonlySet<string>>(new Set());
+            const first$ = new Subject<void>();
+            const second$ = new Subject<void>();
+
+            first$.pipe(trackBusyKey(busyKeys$, "first")).subscribe();
+            second$.pipe(trackBusyKey(busyKeys$, "second")).subscribe({ error: () => undefined });
+            expect([...busyKeys$.value]).toEqual(["first", "second"]);
+
+            first$.complete();
+            expect([...busyKeys$.value]).toEqual(["second"]);
+
+            second$.error(new Error("failure"));
+            expect([...busyKeys$.value]).toEqual([]);
+        });
+
+        it("should emit a new set on each change", () => {
+            const busyKeys$ = new BehaviorSubject<ReadonlySet<string>>(new Set());
+            const initial = busyKeys$.value;
+
+            NEVER.pipe(trackBusyKey(busyKeys$, "key")).subscribe();
+
+            expect(busyKeys$.value).not.toBe(initial);
+            expect(initial.size).toEqual(0);
         });
     });
 });

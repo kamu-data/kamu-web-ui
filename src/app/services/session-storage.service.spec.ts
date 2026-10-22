@@ -31,4 +31,12 @@ describe("SessionStorageService", () => {
         service.setSidePanelVisible(false);
         expect(service.isSidePanelVisible).toBeFalse();
     });
+
+    it("should hand out the pending GitHub sign-in only once", () => {
+        const pendingLogin = { state: "0123456789abcdef", redirectUrl: "/kamu/dataset?tab=flows" };
+        service.setGithubLoginState(pendingLogin);
+
+        expect(service.takeGithubLoginState()).toEqual(pendingLogin);
+        expect(service.takeGithubLoginState()).toBeNull();
+    });
 });

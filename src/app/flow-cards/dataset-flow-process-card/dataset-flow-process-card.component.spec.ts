@@ -10,14 +10,17 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import timekeeper from "timekeeper";
+
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { FlowProcessEffectiveState, FlowProcessSummary } from "@api/kamu.graphql.interface";
+import { DatasetBasicsFragment, FlowProcessEffectiveState, FlowProcessSummary } from "@api/kamu.graphql.interface";
 import { mockAccountFlowsAsCardsQuery } from "@api/mock/account.mock";
 
+import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.component";
 import { DatasetFlowProcessCardHarness } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.harness";
-import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 
 describe("DatasetFlowProcessCardComponent", () => {
     let component: DatasetFlowProcessCardComponent;
@@ -26,11 +29,18 @@ describe("DatasetFlowProcessCardComponent", () => {
     const mockSummary = mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes.allCards.nodes[0]
         .summary as FlowProcessSummary;
 
-    function createCard(effectiveState: FlowProcessEffectiveState): Promise<DatasetFlowProcessCardHarness> {
+    function createCard(
+        effectiveState: FlowProcessEffectiveState,
+        options: { datasetBasics?: DatasetBasicsFragment; runningSince?: string } = {},
+    ): Promise<DatasetFlowProcessCardHarness> {
         fixture = TestBed.createComponent(DatasetFlowProcessCardComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
-        fixture.componentRef.setInput("summary", { ...mockSummary, effectiveState } satisfies FlowProcessSummary);
+        fixture.componentRef.setInput("datasetBasics", options.datasetBasics ?? mockDatasetBasicsRootFragment);
+        fixture.componentRef.setInput("summary", {
+            ...mockSummary,
+            effectiveState,
+            runningSince: options.runningSince ?? null,
+        } satisfies FlowProcessSummary);
         fixture.detectChanges();
         return TestbedHarnessEnvironment.harnessForFixture(fixture, DatasetFlowProcessCardHarness);
     }
@@ -42,6 +52,11 @@ describe("DatasetFlowProcessCardComponent", () => {
         });
 
         registerMatSvgIcons();
+        timekeeper.freeze("2024-03-14T11:22:29+00:00");
+    });
+
+    afterEach(() => {
+        timekeeper.reset();
     });
 
     it("should create", async () => {
@@ -90,5 +105,31 @@ describe("DatasetFlowProcessCardComponent", () => {
 
         expect(await card.getStateText()).toEqual("UNCONFIGURED");
         expect(await card.isToggleStateDisabled()).toBeTrue();
+    });
+
+    it("should show for how long the running flow has been running", async () => {
+        const card = await createCard(FlowProcessEffectiveState.Active, { runningSince: "2024-03-14T11:20:19+00:00" });
+        expect(await card.getRunningDuration()).toEqual("2 minutes 10 seconds");
+    });
+
+    it("should not show a duration when no flow is running", async () => {
+        const card = await createCard(FlowProcessEffectiveState.Active);
+        expect(await card.getRunningDuration()).toBeNull();
+    });
+
+    it("should link a root dataset to its scheduling settings", async () => {
+        const card = await createCard(FlowProcessEffectiveState.Active);
+        expect(await card.getSettingsLinkHref()).toEqual(
+            `/${mockDatasetBasicsRootFragment.owner.accountName}/${mockDatasetBasicsRootFragment.name}/settings/${SettingsTabsEnum.SCHEDULING}`,
+        );
+    });
+
+    it("should link a derivative dataset to its transform settings", async () => {
+        const card = await createCard(FlowProcessEffectiveState.Active, {
+            datasetBasics: mockDatasetBasicsDerivedFragment,
+        });
+        expect(await card.getSettingsLinkHref()).toEqual(
+            `/${mockDatasetBasicsDerivedFragment.owner.accountName}/${mockDatasetBasicsDerivedFragment.name}/settings/${SettingsTabsEnum.TRANSFORM_SETTINGS}`,
+        );
     });
 });

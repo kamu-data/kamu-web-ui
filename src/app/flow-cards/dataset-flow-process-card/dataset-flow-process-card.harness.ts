@@ -9,13 +9,20 @@
 
 import { ComponentHarness } from "@angular/cdk/testing";
 
+import { MaybeNull } from "@interface/app.types";
+
 export class DatasetFlowProcessCardHarness extends ComponentHarness {
     public static readonly hostSelector = "app-dataset-flow-process-card";
 
+    private static readonly RUNNING_DURATION_TEST_ID = "dataset-card-running-duration";
     private static readonly STATE_TEST_ID = "dataset-card-state";
     private static readonly UPDATE_NOW_TEST_ID = "dataset-card-update-now";
     private static readonly TOGGLE_STATE_TEST_ID = "dataset-card-toggle-state";
+    private static readonly SETTINGS_LINK_TEST_ID = "dataset-card-settings-link";
 
+    private readonly locatorRunningDuration = this.locatorForOptional(
+        `[data-test-id="${DatasetFlowProcessCardHarness.RUNNING_DURATION_TEST_ID}"]`,
+    );
     private readonly locatorState = this.locatorFor(`[data-test-id="${DatasetFlowProcessCardHarness.STATE_TEST_ID}"]`);
     private readonly locatorUpdateNowButton = this.locatorFor(
         `[data-test-id="${DatasetFlowProcessCardHarness.UPDATE_NOW_TEST_ID}"]`,
@@ -23,6 +30,19 @@ export class DatasetFlowProcessCardHarness extends ComponentHarness {
     private readonly locatorToggleStateButton = this.locatorFor(
         `[data-test-id="${DatasetFlowProcessCardHarness.TOGGLE_STATE_TEST_ID}"]`,
     );
+    private readonly locatorSettingsLink = this.locatorFor(
+        `[data-test-id="${DatasetFlowProcessCardHarness.SETTINGS_LINK_TEST_ID}"]`,
+    );
+
+    /** `null` when no flow is running */
+    public async getRunningDuration(): Promise<MaybeNull<string>> {
+        const duration = await this.locatorRunningDuration();
+        if (!duration) {
+            return null;
+        }
+        const text = await duration.text();
+        return text.trim();
+    }
 
     public async getStateText(): Promise<string> {
         const state = await this.locatorState();
@@ -50,5 +70,10 @@ export class DatasetFlowProcessCardHarness extends ComponentHarness {
     public async clickToggleState(): Promise<void> {
         const button = await this.locatorToggleStateButton();
         await button.click();
+    }
+
+    public async getSettingsLinkHref(): Promise<MaybeNull<string>> {
+        const link = await this.locatorSettingsLink();
+        return link.getAttribute("href");
     }
 }

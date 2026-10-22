@@ -8,7 +8,9 @@
                     <img [src]="'assets/images/gear.gif'" class="dynamic-icon ms-2" />
                 }
                 @if (summary.runningSince) {
-                    <span class="ms-1 fs-12 text-muted">{{ durationProcessRunning(summary.runningSince) }}</span>
+                    <span class="ms-1 fs-12 text-muted" data-test-id="dataset-card-running-duration">{{
+                        durationProcessRunning(summary.runningSince)
+                    }}</span>
                 }
             </div>
 
@@ -94,6 +96,7 @@
                         } | datasetLink
                     "
                     class="badge-button border-1 link-underline link-underline-opacity-0 bg-light border rounded-2 px-2 btn btn-sm"
+                    data-test-id="dataset-card-settings-link"
                 >
                     <mat-icon class="text-muted fs-4 d-block">settings</mat-icon>
                     <span class="fs-12 me-2 d-block link-settings">Settings</span>

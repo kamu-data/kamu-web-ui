@@ -42,9 +42,11 @@ import {
     ProcessCardFilterMode,
     ProcessCardGroup,
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { AccountFlowsFiltersService } from "src/app/account/services/account-flows-filters.service";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { DatasetFlowProcessCardComponent } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.component";
+import { DatasetFlowProcessCardHarness } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.harness";
 import { WebhookFlowProcessCardComponent } from "src/app/flow-cards/webhook-flow-process-card/webhook-flow-process-card.component";
 import { mockDatasetBasicsDerivedFragment, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -527,4 +529,117 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         expect(refreshNowSpy).not.toHaveBeenCalled();
         discardPeriodicTasks();
     }));
+
+    it("should count only the paused processes in the paused mode", () => {
+        const rollup = mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
+            .fullRollup as FlowProcessGroupRollupDataFragment;
+        expect(component.totalProcessesCountByMode(ProcessCardFilterMode.PAUSED, rollup)).toEqual(rollup.paused);
+    });
+
+    it("should reject an unsupported filters mode when counting processes", () => {
+        const rollup = mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
+            .fullRollup as FlowProcessGroupRollupDataFragment;
+        expect(() => component.totalProcessesCountByMode("unsupported" as ProcessCardFilterMode, rollup)).toThrowError(
+            "Unsupported process card view mode",
+        );
+    });
+
+    it("should reset the custom filters and reload the cards from the first page", fakeAsync(async () => {
+        const accountFlowsFiltersService = TestBed.inject(AccountFlowsFiltersService);
+        const resetFiltersSpy = spyOn(accountFlowsFiltersService, "resetFilters").and.callThrough();
+        fixture.detectChanges();
+        tick(0);
+        const processesSubtab = await loadHarness();
+        component.processesPerPage = AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE * 3;
+        const refreshNowSpy = spyOn(component, "refreshNow");
+
+        await processesSubtab.clickResetFilters();
+
+        expect(resetFiltersSpy).toHaveBeenCalledOnceWith(ProcessCardFilterMode.CUSTOM);
+        expect(component.processesPerPage).toEqual(AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE);
+        expect(refreshNowSpy).toHaveBeenCalledTimes(1);
+        discardPeriodicTasks();
+    }));
+
+    it("should load the dataset cards only once the 'Datasets' chip is selected", fakeAsync(async () => {
+        const getAccountPrimaryCardsSpy = spyOn(accountService, "getAccountPrimaryCards").and.returnValue(
+            of({
+                cards: mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
+                    .primaryCards as AccountFlowProcessCardConnectionDataFragment,
+                rollup: mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
+                    .primaryRollup as FlowProcessGroupRollupDataFragment,
+            }),
+        );
+        fixture.detectChanges();
+        tick(0);
+        const processesSubtab = await loadHarness();
+
+        await processesSubtab.selectFlowsMode("Datasets");
+        tick(300);
+
+        expect(component.flowsMode).toEqual(ProcessCardGroup.DATASETS);
+        expect(getAccountPrimaryCardsSpy).toHaveBeenCalledTimes(1);
+        discardPeriodicTasks();
+    }));
+
+    it("should reload the cards from 'Refresh now'", fakeAsync(async () => {
+        fixture.detectChanges();
+        tick(0);
+        const processesSubtab = await loadHarness();
+        const fetchCardsDataSpy = spyOn(component, "fetchCardsData");
+
+        await processesSubtab.clickRefreshNow();
+
+        expect(fetchCardsDataSpy).toHaveBeenCalledTimes(1);
+        discardPeriodicTasks();
+    }));
+
+    describe("dataset process card", () => {
+        async function loadFirstDatasetCard(): Promise<DatasetFlowProcessCardHarness> {
+            fixture.detectChanges();
+            tick(0);
+            const processesSubtab = await loadHarness();
+            const cards = await processesSubtab.getDatasetProcessCards();
+            return cards[0];
+        }
+
+        it("should trigger the flow from the card's 'Update now' and report it", fakeAsync(async () => {
+            const toastrSuccessSpy = spyOn(toastrService, "success");
+            const triggerIngestSpy = spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
+            const card = await loadFirstDatasetCard();
+
+            await card.clickUpdateNow();
+
+            expect(triggerIngestSpy).toHaveBeenCalledTimes(1);
+            tick(component.TIMEOUT_REFRESH_FLOW);
+            expect(toastrSuccessSpy).toHaveBeenCalledOnceWith("Flow scheduled");
+            discardPeriodicTasks();
+        }));
+
+        it("should not report a flow that failed to trigger", fakeAsync(async () => {
+            const toastrSuccessSpy = spyOn(toastrService, "success");
+            spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(false));
+            const card = await loadFirstDatasetCard();
+
+            await card.clickUpdateNow();
+            tick(component.TIMEOUT_REFRESH_FLOW);
+
+            expect(toastrSuccessSpy).not.toHaveBeenCalled();
+            discardPeriodicTasks();
+        }));
+
+        it("should resume an auto-stopped process from the card without confirmation and refresh the cards", fakeAsync(async () => {
+            const resumeSpy = spyOn(datasetFlowsService, "datasetResumeFlows").and.returnValue(of(void 0));
+            const card = await loadFirstDatasetCard();
+            const refreshNowSpy = spyOn(component, "refreshNow");
+
+            expect(await card.getToggleStateLabel()).toEqual("Resume updates");
+            await card.clickToggleState();
+
+            expect(resumeSpy).toHaveBeenCalledTimes(1);
+            tick(component.TIMEOUT_REFRESH_FLOW);
+            expect(refreshNowSpy).toHaveBeenCalledTimes(1);
+            discardPeriodicTasks();
+        }));
+    });
 });

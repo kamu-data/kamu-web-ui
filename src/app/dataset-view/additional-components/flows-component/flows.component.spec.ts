@@ -20,7 +20,12 @@ import { provideToastr } from "ngx-toastr";
 import { ModalService } from "@common/components/modal/modal.service";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
-import { DatasetFlowProcesses, FlowProcessEffectiveState, FlowStatus } from "@api/kamu.graphql.interface";
+import {
+    DatasetFlowProcesses,
+    DatasetFlowType,
+    FlowProcessEffectiveState,
+    FlowStatus,
+} from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { mockDatasetFlowsProcessesQuery, mockFlowsTableData } from "@api/mock/dataset-flow.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
@@ -35,6 +40,7 @@ import { FlowsHarness } from "src/app/dataset-view/additional-components/flows-c
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { FlowsSelectionStateService } from "src/app/dataset-view/additional-components/flows-component/services/flows-selection-state.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetFlowProcessCardHarness } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.harness";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
@@ -582,4 +588,132 @@ describe("FlowsComponent", () => {
         expect(refreshFlowSpy).not.toHaveBeenCalled();
         flush();
     }));
+
+    describe("process type filter", () => {
+        let datasetFlowsListSpy: jasmine.Spy;
+
+        beforeEach(() => {
+            spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+                of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+            );
+            datasetFlowsListSpy = spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(
+                of(mockFlowsTableData),
+            );
+            spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
+        });
+
+        it("should request ingest flows only for the `updates` category of a root dataset", fakeAsync(() => {
+            component.setFlowsCategory = "updates";
+            fixture.detectChanges();
+            tick();
+
+            expect(datasetFlowsListSpy).toHaveBeenCalledWith(
+                jasmine.objectContaining({
+                    filters: jasmine.objectContaining({
+                        byProcessType: { primary: { byFlowTypes: [DatasetFlowType.Ingest] }, webhooks: undefined },
+                    }),
+                }),
+            );
+            discardPeriodicTasks();
+        }));
+
+        it("should request transform flows only for the `updates` category of a derivative dataset", fakeAsync(() => {
+            component.flowsData = { ...component.flowsData, datasetBasics: mockDatasetBasicsDerivedFragment };
+            component.setFlowsCategory = "updates";
+            fixture.detectChanges();
+            tick();
+
+            expect(datasetFlowsListSpy).toHaveBeenCalledWith(
+                jasmine.objectContaining({
+                    filters: jasmine.objectContaining({
+                        byProcessType: {
+                            primary: { byFlowTypes: [DatasetFlowType.ExecuteTransform] },
+                            webhooks: undefined,
+                        },
+                    }),
+                }),
+            );
+            discardPeriodicTasks();
+        }));
+
+        it("should request webhook flows only for the `webhooks` category and drop the flows category", fakeAsync(() => {
+            const selectionStateService = fixture.debugElement.injector.get(FlowsSelectionStateService);
+            component.setFlowsCategory = "webhooks";
+            fixture.detectChanges();
+            tick();
+
+            expect(datasetFlowsListSpy).toHaveBeenCalledWith(
+                jasmine.objectContaining({
+                    filters: jasmine.objectContaining({
+                        byProcessType: { primary: undefined, webhooks: { subscriptionIds: [] } },
+                    }),
+                }),
+            );
+            expect(selectionStateService.snapshot.flowsCategory).toBeUndefined();
+            discardPeriodicTasks();
+        }));
+    });
+
+    it("should not ask for a polling source or a transformation when the dataset has push sources", () => {
+        const overviewWithPushSource = structuredClone(mockOverviewUpdate);
+        overviewWithPushSource.overview.metadata.currentPollingSource = null;
+        overviewWithPushSource.overview.metadata.currentTransform = null;
+        overviewWithPushSource.overview.metadata.currentPushSources = [{ __typename: "AddPushSource" }];
+
+        component.flowsData = { ...component.flowsData, overviewUpdate: overviewWithPushSource };
+        expect(component.hasPushSources).toBeTrue();
+        expect(component.isSetPollingSourceEmpty).toBeFalse();
+
+        component.flowsData = { ...component.flowsData, datasetBasics: mockDatasetBasicsDerivedFragment };
+        expect(component.isSetTransformEmpty).toBeFalse();
+    });
+
+    describe("dataset process card", () => {
+        beforeEach(() => {
+            spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+                of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+            );
+            spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData));
+            spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
+        });
+
+        async function loadCard(): Promise<DatasetFlowProcessCardHarness> {
+            fixture.detectChanges();
+            tick();
+            const flows = await TestbedHarnessEnvironment.harnessForFixture(fixture, FlowsHarness);
+            return flows.getDatasetProcessCard();
+        }
+
+        it("should trigger the dataset flow from the card's 'Update now' and refresh the flows", fakeAsync(async () => {
+            const triggerIngestSpy = spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
+            const card = await loadCard();
+            const refreshFlowSpy = spyOn(component, "refreshFlow");
+
+            await card.clickUpdateNow();
+
+            expect(triggerIngestSpy).toHaveBeenCalledOnceWith({ datasetId: mockDatasetBasicsRootFragment.id });
+            tick(component.TIMEOUT_REFRESH_FLOW);
+            expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+            discardPeriodicTasks();
+        }));
+
+        it("should resume an auto-stopped process from the card after confirmation and refresh the flows", fakeAsync(async () => {
+            const modalSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
+            const resumeSpy = spyOn(flowsService, "datasetResumeFlows").and.returnValue(of(void 0));
+            const card = await loadCard();
+            const refreshFlowSpy = spyOn(component, "refreshFlow");
+
+            expect(await card.getToggleStateLabel()).toEqual("Resume updates");
+            await card.clickToggleState();
+
+            expect(modalSpy).toHaveBeenCalledTimes(1);
+            expect(resumeSpy).toHaveBeenCalledOnceWith({ datasetId: mockDatasetBasicsRootFragment.id });
+            tick(component.TIMEOUT_REFRESH_FLOW);
+            expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+            discardPeriodicTasks();
+        }));
+    });
 });

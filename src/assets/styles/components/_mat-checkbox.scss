@@ -1,0 +1,7 @@
+// No token covers the box size.
+.mat-mdc-checkbox.app-checkbox-compact {
+    .mdc-checkbox__background {
+        width: 16px;
+        height: 16px;
+    }
+}

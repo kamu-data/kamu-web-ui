@@ -70,7 +70,7 @@
                         <label for="time-range-next" class="fw-500 quick-next-range-label fs-12">quick ranges</label>
 
                         <ng-select
-                            class="ms-4"
+                            class="ms-4 ng-select-compact"
                             [items]="RANGE_NEXT_ATTEMPT_LIST"
                             [(ngModel)]="dashboardFilters.selectedQuickRangeNextAttempt"
                             (change)="onQuickRangeNextAttempt($event)"

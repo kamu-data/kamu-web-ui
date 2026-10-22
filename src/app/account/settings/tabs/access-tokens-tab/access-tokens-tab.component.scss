@@ -1,13 +1,3 @@
-:host {
-    ::ng-deep {
-        .mat-slide-toggle {
-            .mat-slide-toggle-ripple {
-                position: relative;
-            }
-        }
-    }
-}
-
 .mat-column-name {
     max-width: 350px;
 }

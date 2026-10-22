@@ -1,3 +1,5 @@
+@use "@angular/material" as mat;
+@use "material-overrides" as overrides;
 @use "var" as *;
 
 ul {
@@ -5,40 +7,16 @@ ul {
 }
 
 :host {
-    ::ng-deep {
-        .mat-mdc--checkbox-checked {
-            .mat-mdc-checkbox-background {
-                background-color: $app-navy-blue;
-            }
-        }
-
-        .mdc-checkbox__ripple {
-            position: relative;
-        }
-
-        .mat-mdc-checkbox-disabled {
-            color: $app-disabled;
-        }
-
-        .mat-mdc-standard-chip {
-            --mat-chip-elevated-container-color: #f6f8fa;
-
-            .mdc-evolution-chip__text-label {
-                color: #0969da !important;
-                font-size: 12px;
-                font-weight: 500;
-            }
-        }
-    }
+    @include overrides.checkbox-no-state-layer;
+    @include mat.checkbox-overrides(
+        (
+            state-layer-size: 25px,
+        )
+    );
 }
 
-.mat-mdc-checkbox {
-    --mat-checkbox-state-layer-size: 25px;
-
-    .mdc-checkbox__background {
-        width: 16px;
-        height: 16px;
-    }
+.mat-mdc-checkbox.mat-mdc-checkbox-disabled {
+    color: $app-disabled;
 }
 
 nav {

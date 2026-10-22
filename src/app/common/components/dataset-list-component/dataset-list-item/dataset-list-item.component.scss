@@ -1,17 +1,8 @@
+@use "material-overrides" as overrides;
 @use "var" as *;
 
-:host {
-    ::ng-deep {
-        .mat-mdc-standard-chip {
-            --mat-chip-elevated-container-color: #f6f8fa;
-
-            .mdc-evolution-chip__text-label {
-                color: #0969da !important;
-                font-size: 12px;
-                font-weight: 500;
-            }
-        }
-    }
+mat-chip.mat-mdc-standard-chip {
+    @include overrides.dataset-chip;
 }
 
 .dataset-list-container {

@@ -1,13 +1,5 @@
 @use "var" as *;
 
-:host {
-    ::ng-deep {
-        .mat-radio-label {
-            align-items: start;
-        }
-    }
-}
-
 .content-container {
     padding-bottom: 100px;
 

@@ -1,3 +1,5 @@
+@use "material-overrides" as overrides;
+
 h4 {
     font-weight: 500;
     letter-spacing: normal;
@@ -30,4 +32,8 @@ h4 {
     .form-control-width {
         width: 80px;
     }
+}
+
+mat-radio-button.mat-mdc-radio-button {
+    @include overrides.radio-no-ripple;
 }

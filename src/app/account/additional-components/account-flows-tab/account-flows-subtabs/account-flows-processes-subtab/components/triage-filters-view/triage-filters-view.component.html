@@ -31,7 +31,7 @@
                     <label for="order-by-field-custom" class="fw-500 quick-range-label fs-12">quick ranges</label>
 
                     <ng-select
-                        class="ms-4"
+                        class="ms-4 ng-select-compact"
                         [items]="RANGE_LAST_ATTEMPT_LIST"
                         [(ngModel)]="dashboardFilters.selectedQuickRangeLastFailure"
                         (change)="onQuickRangeLastFailure($event)"
@@ -68,6 +68,7 @@
                 <div class="position-relative container-order">
                     <label for="order-by-field-custom" class="fw-500 from-label fs-12">order by field</label>
                     <ng-select
+                        class="ng-select-compact"
                         [items]="ORDER_BY_FIELD_LIST_TRIAGE"
                         [(ngModel)]="dashboardFilters.selectedOrderField"
                         [clearable]="false"

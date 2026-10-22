@@ -203,6 +203,23 @@ code added itself, or a third-party callback triggers none of them.
 - Feature-gated UI uses the `appFeatureFlag="area.feature"` directive; the flag list comes from
   the runtime app config through `FeatureFlagsService`.
 
+### Component styles
+
+- A component's stylesheet styles only its own template; no `::ng-deep` (stylelint rejects it).
+- Customise Material through its tokens, with the `mat.<component>-overrides(...)` mixins or the
+  shared ones in `src/assets/styles/_material-overrides.scss`. The prebuilt theme sets checkbox,
+  slide-toggle, menu and button-toggle tokens on `html`, so an override under `:host` reaches the
+  subtree; it sets chip and radio tokens on the component element, so include those on the
+  element in the template (`mat-chip.mat-mdc-standard-chip { ... }`).
+- What no token covers (Material internals such as the checkbox box size) and third-party markup
+  (`ngb-pagination`, `ng-select`, `angular2-multiselect`) get a specific global class in
+  `src/assets/styles/components/`, which the template puts on the element.
+- Check that a Material class still exists before styling it, or before deleting a rule as dead:
+  search every bundle in `node_modules/@angular/material/fesm2022`, not only the component's
+  own, since shared chunks set some classes (`mdc-form-field` comes from
+  `_internal-form-field-chunk.mjs`). Pre-MDC names (`.mat-radio-label`,
+  `.mat-slide-toggle-ripple`) match nothing.
+
 ### Lints and suppressions
 
 - No `console.log` (eslint `no-console`); no `eslint-disable` comments — fix the cause, or ask
@@ -222,6 +239,7 @@ code added itself, or a third-party callback triggers none of them.
 | Component-level `Subject` + `ngOnDestroy` teardown | `takeUntilDestroyed(this.destroyRef)` does the same with less code and cannot be forgotten in `ngOnDestroy` |
 | `setTimeout(fn, N)` to wait until the view has rendered | Guesses the timing: too short on a slow machine, wasted time on a fast one, and without zone.js it triggers no change detection; `afterNextRender` runs exactly after the render |
 | DOM work in `ngAfterViewChecked` | Runs after every change detection pass in the app: the markdown Run-button helper queried the whole document on each pass, and the dynamic event view recreated all its property components each time |
+| `::ng-deep` in component styles | Deprecated by Angular, and it turns encapsulation off: a rule not nested under `:host` leaked app-wide once its component loaded (the data-access tab resized every checkbox, the account flows page every `ng-select`), and rules written for pre-MDC class names silently matched nothing in Material 21. Tokens and specific global classes (Component styles) cover every case it was used for |
 | Creating data-driven components into `@ViewChildren` containers in `ngAfterViewInit` | Runs once: when the input changed, the metadata event rows kept showing the previous event's values. `NgComponentOutlet` re-applies its `inputs` on every change and recreates the component when the type or the tracked item changes |
 
 ## What lives elsewhere

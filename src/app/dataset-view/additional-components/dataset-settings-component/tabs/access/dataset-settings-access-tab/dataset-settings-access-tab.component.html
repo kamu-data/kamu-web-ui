@@ -86,6 +86,7 @@
         <div class="box rounded-0 rounded-top-2 border-bottom-0">
             <div class="border-bottom d-flex align-items-center ps-3 py-3">
                 <mat-checkbox
+                    class="app-checkbox-compact"
                     [disabled]="!dataSource.data.length"
                     (change)="masterToggle()"
                     [checked]="selection.hasValue() && isAllSelected()"
@@ -129,7 +130,7 @@
                                     (click)="$event.stopPropagation()"
                                     (change)="selection.toggle(element)"
                                     [checked]="selection.isSelected(element)"
-                                    class="d-blcok"
+                                    class="d-blcok app-checkbox-compact"
                                     color="primary"
                                 >
                                 </mat-checkbox>

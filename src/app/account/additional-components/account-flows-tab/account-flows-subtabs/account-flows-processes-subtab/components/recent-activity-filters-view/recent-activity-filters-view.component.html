@@ -37,7 +37,7 @@
                         <label for="order-by-field-custom" class="fw-500 quick-range-label fs-12">quick ranges</label>
 
                         <ng-select
-                            class="ms-4"
+                            class="ms-4 ng-select-compact"
                             [items]="RANGE_LAST_ATTEMPT_LIST"
                             [(ngModel)]="dashboardFilters.selectedQuickRangeLastAttempt"
                             (change)="onQuickRangeLastAttempt($event)"

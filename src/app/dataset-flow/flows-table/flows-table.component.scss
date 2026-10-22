@@ -1,15 +1,5 @@
 @use "var" as *;
 
-:host {
-    ::ng-deep {
-        .mat-progress-spinner {
-            circle {
-                stroke: #d3c22a;
-            }
-        }
-    }
-}
-
 .mat-mdc-menu-item {
     line-height: 35px;
     height: 35px;
@@ -140,48 +130,6 @@ td.mat-cell {
 
 .select-item-dataset {
     padding: 16px;
-}
-
-::ng-deep .mat-radio-button {
-    .mat-radio-container {
-        .mat-radio-ripple {
-            position: relative;
-        }
-
-        .mat-radio-outer-circle {
-            height: 16px;
-            width: 16px;
-            top: 2px;
-        }
-
-        .mat-radio-inner-circle {
-            height: 16px;
-            width: 16px;
-            top: 2px;
-        }
-    }
-}
-
-::ng-deep {
-    .mat-menu-panel {
-        min-width: fit-content;
-    }
-
-    .cuppa-dropdown {
-        width: 260px;
-        height: 38px;
-
-        .c-label {
-            width: 140px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .list-area {
-            margin-bottom: 20px;
-        }
-    }
 }
 
 .w-500 {

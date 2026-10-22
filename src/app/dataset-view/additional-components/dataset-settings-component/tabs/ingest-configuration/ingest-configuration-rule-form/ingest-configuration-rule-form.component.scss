@@ -1,7 +1,5 @@
+@use "material-overrides" as overrides;
+
 :host {
-    ::ng-deep {
-        .mdc-checkbox__ripple {
-            display: none;
-        }
-    }
+    @include overrides.checkbox-no-state-layer;
 }

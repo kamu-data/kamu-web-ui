@@ -79,6 +79,7 @@ table {
 }
 
 .dynamic-table {
+    min-width: 0;
     overflow: visible !important;
 
     tr {
@@ -202,12 +203,9 @@ table {
 }
 
 .dynamic-table {
-    ::ng-deep {
-        mat-cell,
-        td,
-        tr {
-            overflow: visible !important;
-        }
+    td,
+    tr {
+        overflow: visible !important;
     }
 }
 

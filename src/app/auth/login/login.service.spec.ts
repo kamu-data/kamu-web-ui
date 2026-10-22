@@ -14,7 +14,7 @@ import { first, of, Subscription, throwError } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 
-import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { promiseWithCatch, requireValue } from "@common/helpers/app.helpers";
 import { RedirectUrlTestModule } from "@common/modules/redirect-url-test.module";
 import { AuthenticationError } from "@common/values/errors";
 import { AuthApi } from "@api/auth.api";
@@ -191,25 +191,35 @@ describe("LoginService", () => {
         accountSubscription$.unsubscribe();
     });
 
-    it("should check githubLoginLink method", () => {
-        spyOnProperty(appConfigService, "githubClientId", "get").and.returnValue("mockId");
-        expect(
-            service
-                .githubLoginLink(null)
-                .includes("https://github.com/login/oauth/authorize?scope=user:email&client_id=mockId"),
-        ).toEqual(true);
-    });
-
-    it("should pass the redirect URL to GitHub in state and keep the registered callback URL", () => {
+    it("should start a GitHub sign-in with a random state stored together with the redirect URL", () => {
         spyOnProperty(appConfigService, "githubClientId", "get").and.returnValue("mockId");
         const deepLink = "/kamu/dataset?tab=flows&page=2";
 
-        const githubUrl = new URL(service.githubLoginLink(deepLink));
+        const githubUrl = new URL(service.startGithubLogin(deepLink));
+        const pendingLogin = sessionStorageService.takeGithubLoginState();
 
+        expect(`${githubUrl.origin}${githubUrl.pathname}`).toEqual("https://github.com/login/oauth/authorize");
         expect(githubUrl.searchParams.get("client_id")).toEqual("mockId");
-        expect(githubUrl.searchParams.get(ProjectLinks.URL_QUERY_PARAM_STATE)).toEqual(deepLink);
+        expect(githubUrl.searchParams.get(ProjectLinks.URL_QUERY_PARAM_STATE)).toMatch(/^[0-9a-f]{32}$/);
+        expect(githubUrl.searchParams.get(ProjectLinks.URL_QUERY_PARAM_STATE)).toEqual(pendingLogin?.state ?? null);
+        expect(pendingLogin?.redirectUrl).toEqual(deepLink);
         expect(githubUrl.searchParams.has("redirect_uri")).toBeFalse();
         expect(githubUrl.searchParams.has("page")).toBeFalse();
+    });
+
+    it("should give every GitHub sign-in a new state", () => {
+        spyOnProperty(appConfigService, "githubClientId", "get").and.returnValue("mockId");
+
+        const firstState = new URL(service.startGithubLogin(null)).searchParams.get(ProjectLinks.URL_QUERY_PARAM_STATE);
+        const secondState = new URL(service.startGithubLogin(null)).searchParams.get(
+            ProjectLinks.URL_QUERY_PARAM_STATE,
+        );
+
+        expect(secondState).not.toEqual(firstState);
+        expect(sessionStorageService.takeGithubLoginState()).toEqual({
+            state: requireValue(secondState),
+            redirectUrl: null,
+        });
     });
 
     it("should successfully complete web3 wallet login flow", fakeAsync(() => {

@@ -18,6 +18,11 @@ export interface LoginCallbackResponse {
     backendUrl: string;
 }
 
+export interface GithubLoginState {
+    state: string;
+    redirectUrl: MaybeNull<string>;
+}
+
 export interface LoginFormType {
     login: FormControl<MaybeNull<string>>;
     password: FormControl<MaybeNull<string>>;

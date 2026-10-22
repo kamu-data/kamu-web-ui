@@ -8,6 +8,9 @@
 import { Injectable } from "@angular/core";
 
 import AppValues from "@common/values/app.values";
+import { MaybeNull } from "@interface/app.types";
+
+import { GithubLoginState } from "src/app/auth/login/login.component.model";
 
 @Injectable({
     providedIn: "root",
@@ -20,6 +23,17 @@ export class SessionStorageService {
 
     public setSidePanelVisible(value: boolean): void {
         sessionStorage.setItem(AppValues.SESSION_STORAGE_SIDE_PANEL_VISIBLE, JSON.stringify(value));
+    }
+
+    public setGithubLoginState(value: GithubLoginState): void {
+        sessionStorage.setItem(AppValues.SESSION_STORAGE_GITHUB_LOGIN_STATE, JSON.stringify(value));
+    }
+
+    /** Returns the pending GitHub sign-in and removes it, so a callback can use it only once */
+    public takeGithubLoginState(): MaybeNull<GithubLoginState> {
+        const value = sessionStorage.getItem(AppValues.SESSION_STORAGE_GITHUB_LOGIN_STATE);
+        sessionStorage.removeItem(AppValues.SESSION_STORAGE_GITHUB_LOGIN_STATE);
+        return value ? (JSON.parse(value) as GithubLoginState) : null;
     }
 
     public reset() {

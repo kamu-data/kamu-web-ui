@@ -18,17 +18,22 @@ import { GithubCallbackComponent } from "src/app/auth/login/github-callback/gith
 import { LoginService } from "src/app/auth/login/login.service";
 import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
+import { SessionStorageService } from "src/app/services/session-storage.service";
 
 describe("GithubCallbackComponent", () => {
     let component: GithubCallbackComponent;
     let fixture: ComponentFixture<GithubCallbackComponent>;
     let navigationService: NavigationService;
     let loginService: LoginService;
+    let sessionStorageService: SessionStorageService;
 
     let navigateToHomeSpy: jasmine.Spy;
+    let navigateToLoginSpy: jasmine.Spy;
     let githubLoginSpy: jasmine.Spy;
 
     const GITHUB_TEST_CODE = "11111111";
+    const TEST_STATE = "0123456789abcdef0123456789abcdef";
+    const TEST_REDIRECT_URL = "/kamu/dataset?tab=flows&page=2";
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -38,6 +43,10 @@ describe("GithubCallbackComponent", () => {
 
         navigationService = TestBed.inject(NavigationService);
         navigateToHomeSpy = spyOn(navigationService, "navigateToHome").and.stub();
+        navigateToLoginSpy = spyOn(navigationService, "navigateToLogin").and.stub();
+
+        sessionStorageService = TestBed.inject(SessionStorageService);
+        sessionStorageService.reset();
 
         loginService = TestBed.inject(LoginService);
         githubLoginSpy = spyOn(loginService, "githubLogin");
@@ -46,33 +55,58 @@ describe("GithubCallbackComponent", () => {
         component = fixture.componentInstance;
     });
 
+    afterEach(() => {
+        sessionStorageService.reset();
+    });
+
     it("should create", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should call githubLogin method", () => {
-        component.code = GITHUB_TEST_CODE;
-        fixture.detectChanges();
+    it("should sign in with the code when state matches the pending sign-in", () => {
+        sessionStorageService.setGithubLoginState({ state: TEST_STATE, redirectUrl: TEST_REDIRECT_URL });
+        setCallbackParams({ code: GITHUB_TEST_CODE, state: TEST_STATE });
 
-        expect(githubLoginSpy).toHaveBeenCalledWith({ code: GITHUB_TEST_CODE }, undefined);
-    });
-
-    it("should log in with the code and return to the page carried in state", () => {
-        const navigateToLoginSpy = spyOn(navigationService, "navigateToLogin").and.stub();
-        const redirectUrl = "/kamu/dataset?tab=flows&page=2";
-        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_STATE, redirectUrl);
-        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_CODE, GITHUB_TEST_CODE);
-        fixture.detectChanges();
-
-        expect(githubLoginSpy).toHaveBeenCalledOnceWith({ code: GITHUB_TEST_CODE }, redirectUrl);
+        expect(githubLoginSpy).toHaveBeenCalledOnceWith({ code: GITHUB_TEST_CODE }, TEST_REDIRECT_URL);
         expect(navigateToLoginSpy).not.toHaveBeenCalled();
+        expect(sessionStorageService.takeGithubLoginState()).toBeNull();
     });
 
-    it("should don't call githubLogin method", () => {
-        component.code = "";
-        fixture.detectChanges();
+    [
+        { description: "state does not match the pending sign-in", pendingState: TEST_STATE, state: "forged" },
+        { description: "state is missing", pendingState: TEST_STATE, state: undefined },
+        { description: "both states are empty", pendingState: "", state: "" },
+        { description: "this tab started no sign-in", pendingState: null, state: TEST_STATE },
+    ].forEach(({ description, pendingState, state }) => {
+        it(`should not sign in with the code when ${description}`, () => {
+            if (pendingState !== null) {
+                sessionStorageService.setGithubLoginState({ state: pendingState, redirectUrl: null });
+            }
+            setCallbackParams({ code: GITHUB_TEST_CODE, state });
 
-        expect(githubLoginSpy).toHaveBeenCalledTimes(0);
+            expect(githubLoginSpy).not.toHaveBeenCalled();
+            expect(navigateToHomeSpy).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    it("should return to the login page with the redirect URL when sign-in on GitHub was cancelled", () => {
+        sessionStorageService.setGithubLoginState({ state: TEST_STATE, redirectUrl: TEST_REDIRECT_URL });
+        setCallbackParams({ state: TEST_STATE });
+
+        expect(githubLoginSpy).not.toHaveBeenCalled();
+        expect(navigateToLoginSpy).toHaveBeenCalledOnceWith(TEST_REDIRECT_URL);
+    });
+
+    it("should go home without a code or a pending sign-in", () => {
+        setCallbackParams({});
+
+        expect(githubLoginSpy).not.toHaveBeenCalled();
         expect(navigateToHomeSpy).toHaveBeenCalledTimes(1);
     });
+
+    function setCallbackParams(params: { code?: string; state?: string }): void {
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_CODE, params.code);
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_STATE, params.state);
+        fixture.detectChanges();
+    }
 });

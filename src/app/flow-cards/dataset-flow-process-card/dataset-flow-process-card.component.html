@@ -46,7 +46,11 @@
                     </a>
                 </div>
 
-                <div class="fw-500" [ngClass]="badgeStyles(summary.effectiveState).iconClass">
+                <div
+                    class="fw-500"
+                    [ngClass]="badgeStyles(summary.effectiveState).iconClass"
+                    data-test-id="dataset-card-state"
+                >
                     {{ flowProcessEffectiveStateMapper(summary.effectiveState) }}
                 </div>
             </div>
@@ -56,6 +60,7 @@
                 <button
                     (click)="updateNow(datasetBasics)"
                     type="button"
+                    data-test-id="dataset-card-update-now"
                     class="badge-button border-1 bg-light border rounded-2 px-2"
                 >
                     <mat-icon class="text-muted fs-4 d-block">cached</mat-icon>
@@ -65,6 +70,7 @@
                     (click)="toggleStateDatasetCard(summary.effectiveState, datasetBasics)"
                     type="button"
                     [disabled]="summary.effectiveState === FlowProcessEffectiveState.Unconfigured"
+                    data-test-id="dataset-card-toggle-state"
                     class="badge-button border-1 bg-light border rounded-2 px-2 btn btn-sm"
                 >
                     <mat-icon class="text-muted fs-4 d-block">

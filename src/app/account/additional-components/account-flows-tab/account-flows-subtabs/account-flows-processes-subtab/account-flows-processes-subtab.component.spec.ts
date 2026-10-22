@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
@@ -16,7 +17,7 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
-import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import {
@@ -35,6 +36,7 @@ import {
 
 import { AccountService } from "src/app/account/account.service";
 import { AccountFlowsProcessesSubtabComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/account-flows-processes-subtab.component";
+import { AccountFlowsProcessesSubtabHarness } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/account-flows-processes-subtab.harness";
 import {
     AccountFlowsNav,
     ProcessCardFilterMode,
@@ -59,6 +61,11 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     const MOCK_SUBSCRIPTION_ID = "121223-21212-567788";
 
     let getAccountAllCardsSpy: jasmine.Spy;
+
+    // Tick before loading: the first poll runs on an interval, which the harness's own flush skips
+    function loadHarness(): Promise<AccountFlowsProcessesSubtabHarness> {
+        return TestbedHarnessEnvironment.harnessForFixture(fixture, AccountFlowsProcessesSubtabHarness);
+    }
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -121,7 +128,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should empty block is visible", fakeAsync(() => {
+    it("should empty block is visible", fakeAsync(async () => {
         fixture.detectChanges();
         getAccountAllCardsSpy.and.returnValue(
             of({
@@ -132,14 +139,14 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             }),
         );
         tick(0);
-        fixture.detectChanges();
+        const processesSubtab = await loadHarness();
 
-        const emptyBlock = findElementByDataTestId(fixture, "empty-cards-block");
-        expect(emptyBlock).toBeDefined();
+        expect(await processesSubtab.isEmptyCardsBlockVisible()).toBeTrue();
+        expect(await processesSubtab.isCardsBlockVisible()).toBeFalse();
         discardPeriodicTasks();
     }));
 
-    it("should check cards is visible", fakeAsync(() => {
+    it("should check cards is visible", fakeAsync(async () => {
         fixture.detectChanges();
         getAccountAllCardsSpy.and.returnValue(
             of({
@@ -150,10 +157,10 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             }),
         );
         tick(0);
-        fixture.detectChanges();
+        const processesSubtab = await loadHarness();
 
-        const cardsBlock = findElementByDataTestId(fixture, "cards");
-        expect(cardsBlock).toBeDefined();
+        expect(await processesSubtab.isCardsBlockVisible()).toBeTrue();
+        expect(await processesSubtab.isEmptyCardsBlockVisible()).toBeFalse();
         discardPeriodicTasks();
     }));
 
@@ -250,7 +257,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         expect(navigateToOwnerViewSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check to get cards for ProcessCardFilterMode.CUSTOM mode", fakeAsync(() => {
+    it("should check to get cards for ProcessCardFilterMode.CUSTOM mode", fakeAsync(async () => {
         spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({
             fromFilterDate: new Date(),
             toFilterDate: new Date(),
@@ -269,38 +276,38 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
         fixture.detectChanges();
         tick(0);
-        fixture.detectChanges();
-        const cardsBlock = findElementByDataTestId(fixture, "cards");
-        expect(cardsBlock).toBeDefined();
+        const processesSubtab = await loadHarness();
+
+        expect(await processesSubtab.isCardsBlockVisible()).toBeTrue();
         expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
-    it("should check to get cards for ProcessCardFilterMode.PAUSED mode", fakeAsync(() => {
+    it("should check to get cards for ProcessCardFilterMode.PAUSED mode", fakeAsync(async () => {
         component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.PAUSED;
 
         fixture.detectChanges();
         tick(0);
-        fixture.detectChanges();
-        const cardsBlock = findElementByDataTestId(fixture, "cards");
-        expect(cardsBlock).toBeDefined();
+        const processesSubtab = await loadHarness();
+
+        expect(await processesSubtab.isCardsBlockVisible()).toBeTrue();
         expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
-    it("should check to get cards for ProcessCardFilterMode.UPCOMING_SCHEDULED mode without selectedFlowProcessStates", fakeAsync(() => {
+    it("should check to get cards for ProcessCardFilterMode.UPCOMING_SCHEDULED mode without selectedFlowProcessStates", fakeAsync(async () => {
         component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.UPCOMING_SCHEDULED;
 
         fixture.detectChanges();
         tick(0);
-        fixture.detectChanges();
-        const cardsBlock = findElementByDataTestId(fixture, "cards");
-        expect(cardsBlock).toBeDefined();
+        const processesSubtab = await loadHarness();
+
+        expect(await processesSubtab.isCardsBlockVisible()).toBeTrue();
         expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
-    it("should check to get cards for ProcessCardFilterMode.UPCOMING_SCHEDULED mode with selectedFlowProcessStates", fakeAsync(() => {
+    it("should check to get cards for ProcessCardFilterMode.UPCOMING_SCHEDULED mode with selectedFlowProcessStates", fakeAsync(async () => {
         component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.UPCOMING_SCHEDULED;
         spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({
             fromFilterDate: undefined,
@@ -320,14 +327,14 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
         fixture.detectChanges();
         tick(0);
-        fixture.detectChanges();
-        const cardsBlock = findElementByDataTestId(fixture, "cards");
-        expect(cardsBlock).toBeDefined();
+        const processesSubtab = await loadHarness();
+
+        expect(await processesSubtab.isCardsBlockVisible()).toBeTrue();
         expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
-    it("should check to get cards for ProcessCardFilterMode.TRIAGE mode with minConsecutiveFailures=0 ", fakeAsync(() => {
+    it("should check to get cards for ProcessCardFilterMode.TRIAGE mode with minConsecutiveFailures=0 ", fakeAsync(async () => {
         component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.TRIAGE;
         spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({
             fromFilterDate: undefined,
@@ -347,14 +354,14 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
         fixture.detectChanges();
         tick(0);
-        fixture.detectChanges();
-        const cardsBlock = findElementByDataTestId(fixture, "cards");
-        expect(cardsBlock).toBeDefined();
+        const processesSubtab = await loadHarness();
+
+        expect(await processesSubtab.isCardsBlockVisible()).toBeTrue();
         expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
-    it("should check to get cards for ProcessCardFilterMode.TRIAGE mode with minConsecutiveFailures>1 ", fakeAsync(() => {
+    it("should check to get cards for ProcessCardFilterMode.TRIAGE mode with minConsecutiveFailures>1 ", fakeAsync(async () => {
         component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.TRIAGE;
         spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({
             fromFilterDate: undefined,
@@ -374,14 +381,14 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
         fixture.detectChanges();
         tick(0);
-        fixture.detectChanges();
-        const cardsBlock = findElementByDataTestId(fixture, "cards");
-        expect(cardsBlock).toBeDefined();
+        const processesSubtab = await loadHarness();
+
+        expect(await processesSubtab.isCardsBlockVisible()).toBeTrue();
         expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
-    it("should check to get cards for ProcessCardFilterMode.RECENT_ACTIVITY mode with selectedFlowProcessStates", fakeAsync(() => {
+    it("should check to get cards for ProcessCardFilterMode.RECENT_ACTIVITY mode with selectedFlowProcessStates", fakeAsync(async () => {
         component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.RECENT_ACTIVITY;
         spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({
             fromFilterDate: undefined,
@@ -401,14 +408,14 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
         fixture.detectChanges();
         tick(0);
-        fixture.detectChanges();
-        const cardsBlock = findElementByDataTestId(fixture, "cards");
-        expect(cardsBlock).toBeDefined();
+        const processesSubtab = await loadHarness();
+
+        expect(await processesSubtab.isCardsBlockVisible()).toBeTrue();
         expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
-    it("should check to get cards for ProcessCardFilterMode.RECENT_ACTIVITY mode witout selectedFlowProcessStates", fakeAsync(() => {
+    it("should check to get cards for ProcessCardFilterMode.RECENT_ACTIVITY mode witout selectedFlowProcessStates", fakeAsync(async () => {
         component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.RECENT_ACTIVITY;
         spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({
             fromFilterDate: undefined,
@@ -428,9 +435,9 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
         fixture.detectChanges();
         tick(0);
-        fixture.detectChanges();
-        const cardsBlock = findElementByDataTestId(fixture, "cards");
-        expect(cardsBlock).toBeDefined();
+        const processesSubtab = await loadHarness();
+
+        expect(await processesSubtab.isCardsBlockVisible()).toBeTrue();
         expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));

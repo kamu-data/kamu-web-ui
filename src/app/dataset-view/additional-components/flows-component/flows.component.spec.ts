@@ -5,19 +5,20 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { MatChipListboxChange } from "@angular/material/chips";
 import { ActivatedRoute } from "@angular/router";
 
-import { delay, of } from "rxjs";
+import { delay, of, Subject } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { ModalService } from "@common/components/modal/modal.service";
-import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { DatasetFlowProcesses, FlowProcessEffectiveState, FlowStatus } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
@@ -25,10 +26,12 @@ import { mockDatasetFlowsProcessesQuery, mockFlowsTableData } from "@api/mock/da
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
 import { mockDatasets } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
+import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { FlowsComponent } from "src/app/dataset-view/additional-components/flows-component/flows.component";
+import { FlowsHarness } from "src/app/dataset-view/additional-components/flows-component/flows.harness";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { FlowsSelectionStateService } from "src/app/dataset-view/additional-components/flows-component/services/flows-selection-state.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -52,6 +55,14 @@ describe("FlowsComponent", () => {
     let datasetCardService: ProcessDatasetCardInteractionService;
 
     const MOCK_FLOW_ID = "2";
+
+    // A copy, since `mockFlowsTableData` shares its connections with other fixtures
+    function flowsTableDataWithoutRuns(): FlowsTableData {
+        const data = structuredClone(mockFlowsTableData);
+        data.connectionDataForWidget.nodes = [];
+        data.connectionDataForTable.nodes = [];
+        return data;
+    }
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -119,27 +130,25 @@ describe("FlowsComponent", () => {
         expect(fetchTableDataSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should empty block is visible", fakeAsync(() => {
-        fixture.detectChanges();
-        mockFlowsTableData.connectionDataForWidget.nodes = [];
-        spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData));
+    it("should show the empty block when there are no flow runs", fakeAsync(async () => {
+        spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(flowsTableDataWithoutRuns()));
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
             of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
         );
-        tick();
+        // The first poll runs on an interval, which the harness's own flush skips
         fixture.detectChanges();
+        tick();
+        const flows = await TestbedHarnessEnvironment.harnessForFixture(fixture, FlowsHarness);
 
-        const emptyBlock = findElementByDataTestId(fixture, "empty-flow-runs-block");
-        expect(emptyBlock).toBeDefined();
+        expect(await flows.isEmptyFlowRunsBlockVisible()).toBeTrue();
         discardPeriodicTasks();
     }));
 
     it("should check filter by status during the first request", fakeAsync(() => {
         fixture.detectChanges();
-        mockFlowsTableData.connectionDataForWidget.nodes = [];
         const datasetFlowsListSpy = spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(
-            of(mockFlowsTableData),
+            of(flowsTableDataWithoutRuns()),
         );
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
@@ -264,46 +273,41 @@ describe("FlowsComponent", () => {
         expect(component.redirectSection).toEqual(SettingsTabsEnum.TRANSFORM_SETTINGS);
     });
 
-    it("should check init loading block", fakeAsync(() => {
-        fixture.detectChanges();
-        mockFlowsTableData.connectionDataForWidget.nodes = [];
+    it("should show the init loading block until the flow runs arrive", fakeAsync(async () => {
+        const flowsList$ = new Subject<FlowsTableData>();
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
             of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
         );
-        spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData).pipe(delay(10)));
+        spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(flowsList$);
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
-        tick(5);
         fixture.detectChanges();
-        const progressBarBefore = findElementByDataTestId(fixture, "init-progress-bar");
-        expect(progressBarBefore).toBeDefined();
+        tick();
+        const flows = await TestbedHarnessEnvironment.harnessForFixture(fixture, FlowsHarness);
+        expect(await flows.isInitProgressBarVisible()).toBeTrue();
 
-        tick(10);
-        fixture.detectChanges();
-        const progressBarAfter = findElementByDataTestId(fixture, "init-progress-bar");
-        expect(progressBarAfter).toBeUndefined();
+        flowsList$.next(flowsTableDataWithoutRuns());
+        expect(await flows.isInitProgressBarVisible()).toBeFalse();
         discardPeriodicTasks();
     }));
 
-    it("should check 'update now' link for root dataset with PollingSource", fakeAsync(() => {
-        fixture.detectChanges();
-        mockFlowsTableData.connectionDataForWidget.nodes = [];
-        mockFlowsTableData.connectionDataForTable.nodes = [];
+    it("should check 'update now' link for root dataset with PollingSource", fakeAsync(async () => {
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
             of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
         );
-        spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData).pipe(delay(10)));
+        spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(flowsTableDataWithoutRuns()));
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
-        tick(10);
-        fixture.detectChanges();
         const updateNowClickSpy = spyOn(component, "updateNow");
-        const updateNowLink = findElementByDataTestId(fixture, "update-now-link");
-        expect(updateNowLink).toBeDefined();
-        updateNowLink?.click();
+        fixture.detectChanges();
+        tick();
+        const flows = await TestbedHarnessEnvironment.harnessForFixture(fixture, FlowsHarness);
+
+        await flows.clickUpdateNowLink();
+
         expect(updateNowClickSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
-    it("should check 'update now' link for derivative dataset with SetTransform", fakeAsync(() => {
+    it("should check 'update now' link for derivative dataset with SetTransform", fakeAsync(async () => {
         const copyMockOverviewUpdate = structuredClone(mockOverviewUpdate);
         copyMockOverviewUpdate.overview.metadata.currentPollingSource = null;
         copyMockOverviewUpdate.overview.metadata.currentTransform = {
@@ -314,20 +318,18 @@ describe("FlowsComponent", () => {
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: copyMockOverviewUpdate,
         };
-        fixture.detectChanges();
-        mockFlowsTableData.connectionDataForWidget.nodes = [];
-        mockFlowsTableData.connectionDataForTable.nodes = [];
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
             of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
         );
-        spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData).pipe(delay(10)));
+        spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(flowsTableDataWithoutRuns()));
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
-        tick(10);
-        fixture.detectChanges();
         const updateNowClickSpy = spyOn(component, "updateNow");
-        const updateNowLink = findElementByDataTestId(fixture, "update-now-link");
-        expect(updateNowLink).toBeDefined();
-        updateNowLink?.click();
+        fixture.detectChanges();
+        tick();
+        const flows = await TestbedHarnessEnvironment.harnessForFixture(fixture, FlowsHarness);
+
+        await flows.clickUpdateNowLink();
+
         expect(updateNowClickSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));

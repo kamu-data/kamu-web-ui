@@ -19,23 +19,20 @@ import { NavigationService } from "src/app/services/navigation.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GithubCallbackComponent extends BaseComponent implements OnInit {
-    @Input(ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL) public redirectUrl: string;
-    @Input(ProjectLinks.URL_QUERY_PARAM_CODE) public set code(value: string) {
-        if (value) {
-            this.loginService.githubLogin({ code: value }, this.redirectUrl);
-        }
-    }
+    // GitHub returns the `state` of the authorization request unchanged; it holds the page to return to
+    @Input(ProjectLinks.URL_QUERY_PARAM_STATE) public redirectUrl: string;
+    @Input(ProjectLinks.URL_QUERY_PARAM_CODE) public code: string;
 
     private navigationService = inject(NavigationService);
     private loginService = inject(LoginService);
 
     public ngOnInit() {
-        if (!this.searchString.includes("?code=")) {
-            if (this.redirectUrl) {
-                this.navigationService.navigateToLogin(this.redirectUrl);
-            } else {
-                this.navigationService.navigateToHome();
-            }
+        if (this.code) {
+            this.loginService.githubLogin({ code: this.code }, this.redirectUrl);
+        } else if (this.redirectUrl) {
+            this.navigationService.navigateToLogin(this.redirectUrl);
+        } else {
+            this.navigationService.navigateToHome();
         }
     }
 }

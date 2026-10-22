@@ -12,7 +12,7 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { LoginMethodsService } from "src/app/auth/login-methods.service";
 import { NavigationService } from "src/app/services/navigation.service";
 
-export const forbidAnonymousAccessGuardFn: CanActivateFn = () => {
+export const forbidAnonymousAccessGuardFn: CanActivateFn = (_route, state) => {
     const loggedUserService = inject(LoggedUserService);
     const loginMethodsService = inject(LoginMethodsService);
     const navigationService = inject(NavigationService);
@@ -21,6 +21,6 @@ export const forbidAnonymousAccessGuardFn: CanActivateFn = () => {
         return true;
     }
     return loginMethodsService.loginMethods.length > 0
-        ? navigationService.loginUrlTree()
+        ? navigationService.loginUrlTree(state.url)
         : navigationService.loginUnavailableUrlTree();
 };

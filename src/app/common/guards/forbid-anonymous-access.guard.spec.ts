@@ -23,7 +23,8 @@ describe("forbidAnonymousAccessGuardFn", () => {
     let loginMethodsService: LoginMethodsService;
     let router: Router;
 
-    const mockRouterStateSnapshot = {} as RouterStateSnapshot;
+    const DEEP_LINK = "/kamu/dataset?tab=flows&page=2";
+    const mockRouterStateSnapshot = { url: DEEP_LINK } as RouterStateSnapshot;
     const mockActivatedRouteSnapshot = {} as ActivatedRouteSnapshot;
 
     const executeGuard: CanActivateFn = (...guardParameters) =>
@@ -55,7 +56,7 @@ describe("forbidAnonymousAccessGuardFn", () => {
         expect(maybeCurrentlyLoggedInUserSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should redirect to login when user is not logged in", () => {
+    it("should redirect to login with the requested URL when user is not logged in", () => {
         spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([AccountProvider.Password]);
         const maybeCurrentlyLoggedInUserSpy: jasmine.Spy = spyOnProperty(
             loggedUserService,
@@ -65,7 +66,9 @@ describe("forbidAnonymousAccessGuardFn", () => {
 
         const result = executeGuard(mockActivatedRouteSnapshot, mockRouterStateSnapshot);
 
-        expect(router.serializeUrl(result as UrlTree)).toEqual(`/${ProjectLinks.URL_LOGIN}`);
+        expect(router.serializeUrl(result as UrlTree)).toEqual(
+            `/${ProjectLinks.URL_LOGIN}?${ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL}=${encodeURIComponent(DEEP_LINK)}`,
+        );
         expect(maybeCurrentlyLoggedInUserSpy).toHaveBeenCalledTimes(1);
     });
 

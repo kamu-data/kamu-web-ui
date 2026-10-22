@@ -64,9 +64,10 @@ export class LoginService {
         /* istanbul ignore else */
         if (githubClientId) {
             const githubLoginOauthUrl = `https://github.com/login/oauth/authorize?scope=user:email&client_id=${githubClientId}`;
-            if (redirectUrl)
-                return `${githubLoginOauthUrl}&redirect_uri=${window.location.origin}/${ProjectLinks.URL_GITHUB_CALLBACK}?${ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL}=${redirectUrl}`;
-            else {
+            if (redirectUrl) {
+                // GitHub requires the registered callback URL as is, so the target travels in `state`
+                return `${githubLoginOauthUrl}&${ProjectLinks.URL_QUERY_PARAM_STATE}=${encodeURIComponent(redirectUrl)}`;
+            } else {
                 return githubLoginOauthUrl;
             }
         } else {

@@ -12,6 +12,7 @@ import { map, Observable } from "rxjs";
 
 import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ondestroy.adapter";
 import { requireValue } from "@common/helpers/app.helpers";
+import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
 import ProjectLinks from "src/app/project-links";
@@ -21,6 +22,12 @@ export abstract class BaseComponent extends UnsubscribeDestroyRefAdapter {
 
     protected get searchString(): string {
         return window.location.search;
+    }
+
+    /** `null` when the URL has no page */
+    protected pageFromUrl(): MaybeNull<number> {
+        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
+        return pageParam ? +pageParam : null;
     }
 
     protected getDatasetInfoFromUrl(): DatasetInfo {

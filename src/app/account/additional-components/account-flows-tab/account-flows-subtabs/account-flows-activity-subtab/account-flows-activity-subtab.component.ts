@@ -122,7 +122,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
         );
         this.flowConnectionData$ = triggerWithInitial$.pipe(
             tap(() => {
-                this.getPageFromUrl();
+                this.currentPage = this.pageFromUrl() ?? this.currentPage;
             }),
             switchMap((params) =>
                 polling$.pipe(

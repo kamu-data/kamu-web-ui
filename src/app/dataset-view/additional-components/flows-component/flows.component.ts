@@ -129,6 +129,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     public ngOnInit(): void {
         this.filterByStatus = null;
+        this.currentPage = this.pageFromUrl() ?? 1;
         this.refreshFlow();
     }
 
@@ -150,6 +151,13 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         this.onlySystemFlows = false;
         this.searchByAccount = [];
         this.onResetFilters();
+        this.currentPage = this.pageFromUrl() ?? 1;
+        this.refreshFlow();
+    }
+
+    // For changes that lead to the URL without a page
+    private refreshFromFirstPage(): void {
+        this.currentPage = 1;
         this.refreshFlow();
     }
 
@@ -278,7 +286,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             tab: DatasetViewTypeEnum.Flows,
             webhookId: this.flowsSelectionState.webhooksIds,
         });
-        this.refreshFlow();
+        this.refreshFromFirstPage();
     }
 
     public pauseWebhook(subscriptionId: string): void {
@@ -309,7 +317,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             tab: DatasetViewTypeEnum.Flows,
             category: event.value as FlowsSelectedCategory,
         });
-        this.refreshFlow();
+        this.refreshFromFirstPage();
     }
 
     public onSelectionWebhooksChange(category: MaybeUndefined<WebhooksSelectedCategory>): void {
@@ -320,7 +328,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             tab: DatasetViewTypeEnum.Flows,
             category: category,
         });
-        this.refreshFlow();
+        this.refreshFromFirstPage();
     }
 
     public onToggleWebhookFilter(states: FlowProcessEffectiveState[], subprocesses: WebhookFlowSubProcess[]): void {
@@ -337,7 +345,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             category: this.flowsSelectionState.flowsCategory,
             webhooksState: states.length ? states : undefined,
         });
-        this.refreshFlow();
+        this.refreshFromFirstPage();
     }
 
     public removeSelectedWebhook(subscriptionName: string, subprocesses: WebhookFlowSubProcess[]): void {
@@ -351,7 +359,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             tab: DatasetViewTypeEnum.Flows,
             webhookId: this.flowsSelectionState.webhooksIds,
         });
-        this.refreshFlow();
+        this.refreshFromFirstPage();
     }
 
     public get isRoot(): boolean {
@@ -383,6 +391,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public onPageChange(page: number): void {
+        this.currentPage = page;
         if (page === 1) {
             this.navigationService.navigateToDatasetView({
                 accountName: this.flowsData.datasetBasics.owner.accountName,
@@ -451,7 +460,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             this.searchByAccount = [];
         }
         this.searchByFilters(filters);
-        this.refreshFlow();
+        this.refreshFromFirstPage();
     }
 
     public onResetFilters(): void {

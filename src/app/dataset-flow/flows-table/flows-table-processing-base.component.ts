@@ -22,7 +22,6 @@ import {
     FlowsTableFiltersOptions,
 } from "src/app/dataset-flow/flows-table/flows-table.types";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
-import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
 @Directive()
@@ -51,13 +50,6 @@ export abstract class FlowsTableProcessingBaseComponent extends BaseComponent {
         datasetsIds?: string[],
         order?: FlowRunOrder,
     ): void;
-
-    public getPageFromUrl(): void {
-        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
-        if (pageParam) {
-            this.currentPage = +requireValue(pageParam);
-        }
-    }
 
     public onAbortFlow(params: CancelFlowArgs): void {
         const datasetId: string = requireValue(

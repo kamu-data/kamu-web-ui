@@ -20,7 +20,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
-import { promiseWithCatch, requireValue } from "@common/helpers/app.helpers";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import {
     DatasetBasicsFragment,
@@ -35,7 +35,6 @@ import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dat
 import { EditKeyValueModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.component";
 import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
 import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
 export interface EnvVariableElement {
@@ -80,7 +79,7 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
     private environmentVariablesService = inject(DatasetEnvironmentVariablesService);
 
     public ngOnInit(): void {
-        this.getPageFromUrl();
+        this.currentPage = this.pageFromUrl() ?? this.currentPage;
         this.updateTable(this.currentPage);
     }
 
@@ -94,13 +93,6 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
 
     public get allowUpdateEnvVars(): boolean {
         return this.datasetPermissions.permissions.envVars.canUpdate;
-    }
-
-    public getPageFromUrl(): void {
-        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
-        if (pageParam) {
-            this.currentPage = +requireValue(pageParam);
-        }
     }
 
     public onAddOrEditRow(envVar?: ViewDatasetEnvVar): void {

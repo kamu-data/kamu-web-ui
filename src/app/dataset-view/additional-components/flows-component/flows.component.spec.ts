@@ -969,4 +969,62 @@ describe("FlowsComponent", () => {
             expect(component.busyIds$.value.has(SUBSCRIPTION_ID)).toBeFalse();
         });
     });
+
+    describe("page of flow runs", () => {
+        let datasetFlowsListSpy: jasmine.Spy;
+
+        // The API pages from 0, the URL and the pagination from 1
+        function lastRequestedPage(): number {
+            return (datasetFlowsListSpy.calls.mostRecent().args[0] as { page: number }).page + 1;
+        }
+
+        beforeEach(() => {
+            spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+                of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+            );
+            datasetFlowsListSpy = spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(
+                of(mockFlowsTableData),
+            );
+            spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
+            spyOn(navigationService, "navigateToDatasetView");
+        });
+
+        it("should start from the page in the URL", fakeAsync(() => {
+            fixture.detectChanges();
+            tick();
+
+            expect(lastRequestedPage()).toEqual(2);
+            discardPeriodicTasks();
+        }));
+
+        it("should stay on the page shown when a card action refreshes the flows", fakeAsync(() => {
+            spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+            fixture.detectChanges();
+            tick();
+            component.onPageChange(3);
+            tick();
+
+            component.toggleStateDatasetFlowConfigs({
+                state: FlowProcessEffectiveState.Failing,
+                datasetBasics: mockDatasetBasicsRootFragment,
+            });
+            tick(component.TIMEOUT_REFRESH_FLOW);
+
+            expect(lastRequestedPage()).toEqual(3);
+            discardPeriodicTasks();
+        }));
+
+        it("should go back to the first page when another category is chosen", fakeAsync(() => {
+            fixture.detectChanges();
+            tick();
+            component.onPageChange(3);
+            tick();
+
+            component.onSelectionFlowsChange({ value: "updates" } as MatChipListboxChange);
+            tick();
+
+            expect(lastRequestedPage()).toEqual(1);
+            discardPeriodicTasks();
+        }));
+    });
 });

@@ -96,7 +96,31 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
 - A manual `subscribe` in a component or directive pipes through
   `takeUntilDestroyed(this.destroyRef)`. `destroyRef` comes from the base classes below; outside
   them, `private destroyRef = inject(DestroyRef)`.
-- API observables complete after one value (`first()`), so one-shot calls need no teardown.
+- API observables complete after one value (`first()`), so one-shot calls need no teardown. A
+  mutation must not get one when its service reports the result itself, as a toast in its `map`:
+  tear down only what follows it, such as the delay before a refresh, so the result still shows
+  when the user leaves the page mid-request.
+
+### Busy state of an action
+
+A button whose action shows its result only later (a mutation, a delay, a refresh) stays
+disabled until then, or a second click repeats the action against a stale label.
+
+- Build the action as one observable chain, from the mutation to the refreshed data, and pipe it
+  through `trackBusy(busy$)` for one action or `trackBusyKey(busyKeys$, key)` for one per item,
+  both from `@common/helpers/app.helpers`. The template reads the subject with `async`
+  (`(busy$ | async) ?? false`, or `@let busyIds = busyIds$ | async;` and
+  `busyIds?.has(id) ?? false`). `finalize` ends the busy state on completion, error and
+  unsubscribe, so no branch clears it by hand and an error still reaches the global handler.
+- An action that did not happen, such as a failed trigger or a cancelled confirmation,
+  completes without a value (`filter(Boolean)`, `EMPTY`) rather than emitting `false` for the
+  caller to branch on.
+- A confirmation the user answers first stays outside the busy chain:
+  `confirm$.pipe(switchMap(() => action$.pipe(trackBusyKey(...))))`. The modal closes on Escape
+  without calling its `handler`, so a busy state that began before it would never end.
+- To wait for data loaded after some point, compose the streams the loading already has, for
+  example `loadStarted$.pipe(take(1), switchMap(() => loaded$.pipe(take(1))))` under a
+  `switchMap` that cancels older loads, not a counter or flag compared later.
 
 ### Render timing, DOM access and timers
 
@@ -136,7 +160,7 @@ code added itself, or a third-party callback triggers none of them.
 | Class | Gives you | Extend when |
 |---|---|---|
 | `UnsubscribeDestroyRefAdapter` | `protected destroyRef` | The component subscribes and needs nothing else |
-| `BaseComponent` | the above + `activatedRoute`, `getDatasetInfoFromUrl()`, `datasetInfoFromUrlChanges` | It reads route parameters |
+| `BaseComponent` | the above + `activatedRoute`, `getDatasetInfoFromUrl()`, `datasetInfoFromUrlChanges`, `pageFromUrl()` | It reads route parameters |
 | `BaseProcessingComponent` | `BaseComponent` + `navigationService`, `modalService` | It navigates or opens modals |
 | `BaseDatasetDataComponent` | `BaseProcessingComponent` + `datasetService`, `datasetSubsService`, `datasetBasics$`, `datasetPermissions$` | It shows the current dataset |
 | `BaseFormControlComponent<T>` | `BaseComponent` + `ControlValueAccessor` / `Validator` plumbing | It is a custom form control |
@@ -194,6 +218,7 @@ code added itself, or a third-party callback triggers none of them.
 | Class interceptors through `HTTP_INTERCEPTORS` and `withInterceptorsFromDi()` | Their order follows provider registration rather than a list, and they need the DI bridge that Angular keeps only for compatibility |
 | Constructor injection | Inconsistent with the rest of the codebase; `inject()` works in base classes and field initializers |
 | Default change detection on new components | Every feature is built for `OnPush`; Default hides missing `markForCheck` calls until a parent switches |
+| A busy flag set before an action and cleared in its callbacks, or a counter of loads compared later | The flag missed the error, cancel and leave paths until each got its own branch, and a later poll response could clear it early; the counter was mutable bookkeeping for what `switchMap` and two subjects already express. `trackBusy` / `trackBusyKey` over the whole chain cover every path through `finalize` |
 | Component-level `Subject` + `ngOnDestroy` teardown | `takeUntilDestroyed(this.destroyRef)` does the same with less code and cannot be forgotten in `ngOnDestroy` |
 | `setTimeout(fn, N)` to wait until the view has rendered | Guesses the timing: too short on a slow machine, wasted time on a fast one, and without zone.js it triggers no change detection; `afterNextRender` runs exactly after the render |
 | DOM work in `ngAfterViewChecked` | Runs after every change detection pass in the app: the markdown Run-button helper queried the whole document on each pass, and the dynamic event view recreated all its property components each time |

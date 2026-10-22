@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Changed
+- Account flows, Processes: resuming an auto-stopped process asks for confirmation, as the dataset's Flows tab does, and "Update now" refreshes the card shortly after instead of on the next poll
+### Fixed
+- Flow process cards on the dataset's Flows tab and the account's Processes:
+  - triggering, pausing or resuming no longer refreshes the page after you have left it
+  - the buttons wait for the result of the previous action, so a second click no longer repeats it; webhook pause and resume as well
+- Dataset Flows tab: refreshing keeps the page of flow runs you are on, and a link to a page of runs opens that page
+
 ## [0.72.0] - 2026-10-21
 ### Changed
 - Dataset header: "Derive from" counter includes private derived datasets for maintainers

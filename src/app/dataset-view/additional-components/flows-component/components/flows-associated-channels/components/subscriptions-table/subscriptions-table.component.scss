@@ -40,3 +40,17 @@ table {
 .action-cell {
     text-align: center;
 }
+
+.action-button {
+    padding: 0;
+    border: 0;
+    background: none;
+
+    &:disabled {
+        opacity: 0.5;
+
+        .mat-icon-size:hover {
+            cursor: default;
+        }
+    }
+}

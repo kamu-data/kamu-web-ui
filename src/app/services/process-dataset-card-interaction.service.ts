@@ -7,11 +7,10 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { Observable, of, take } from "rxjs";
+import { filter, map, Observable, of, take } from "rxjs";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
-import AppValues from "@common/values/app.values";
 import { DatasetBasicsFragment, DatasetKind, FlowProcessEffectiveState } from "@api/kamu.graphql.interface";
 
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
@@ -22,49 +21,45 @@ import { DatasetFlowsService } from "src/app/dataset-view/additional-components/
 export class ProcessDatasetCardInteractionService {
     private flowsService = inject(DatasetFlowsService);
     private modalService = inject(ModalService);
-    public readonly TIMEOUT_REFRESH_FLOW = AppValues.TIMEOUT_REFRESH_FLOW_MS;
 
-    public handleTrigger(datasetBasics: DatasetBasicsFragment, onSuccess: () => void): void {
+    /** Emits once whether the flow was triggered */
+    public handleTrigger(datasetBasics: DatasetBasicsFragment): Observable<boolean> {
         const datasetTrigger$ =
             datasetBasics.kind === DatasetKind.Root
                 ? this.flowsService.datasetTriggerIngestFlow({ datasetId: datasetBasics.id })
                 : this.flowsService.datasetTriggerTransformFlow({ datasetId: datasetBasics.id });
 
-        const obs$ = datasetTrigger$.pipe(take(1));
-
-        obs$.subscribe((success: boolean) => {
-            if (success) {
-                setTimeout(onSuccess, this.TIMEOUT_REFRESH_FLOW);
-            }
-        });
+        return datasetTrigger$.pipe(take(1));
     }
 
+    /**
+     * Emits once when pausing or resuming may go ahead: resuming an auto-stopped process asks first.
+     * A cancel completes without a value; a confirmation closed with Escape never answers.
+     */
+    public confirmToggleState(state: FlowProcessEffectiveState): Observable<void> {
+        if (state === FlowProcessEffectiveState.StoppedAuto) {
+            return this.confirmResume().pipe(
+                filter(Boolean),
+                map(() => undefined),
+            );
+        }
+        return of(undefined);
+    }
+
+    /** Pauses or resumes the dataset's flows without asking, and emits once they are toggled */
     public handleToggleState(params: {
         state: FlowProcessEffectiveState;
         datasetBasics: DatasetBasicsFragment;
-        onSuccess: () => void;
-        confirmModal?: boolean;
-    }): void {
-        const { state, datasetBasics, onSuccess, confirmModal } = params;
+    }): Observable<void> {
+        const { state, datasetBasics } = params;
+        const toggle$ = [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing].includes(state)
+            ? this.flowsService.datasetPauseFlows({ datasetId: datasetBasics.id })
+            : this.flowsService.datasetResumeFlows({ datasetId: datasetBasics.id });
+        return toggle$.pipe(take(1));
+    }
 
-        const executeToggle = () => {
-            let operation$: Observable<void> = of();
-            if ([FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing].includes(state)) {
-                operation$ = this.flowsService.datasetPauseFlows({
-                    datasetId: datasetBasics.id,
-                });
-            } else {
-                operation$ = this.flowsService.datasetResumeFlows({
-                    datasetId: datasetBasics.id,
-                });
-            }
-            const obs$ = operation$.pipe(take(1));
-            obs$.subscribe(() => {
-                setTimeout(onSuccess, this.TIMEOUT_REFRESH_FLOW);
-            });
-        };
-
-        if (confirmModal && state === FlowProcessEffectiveState.StoppedAuto) {
+    private confirmResume(): Observable<boolean> {
+        return new Observable<boolean>((subscriber) => {
             promiseWithCatch(
                 this.modalService.error({
                     title: "Resume updates",
@@ -72,14 +67,11 @@ export class ProcessDatasetCardInteractionService {
                     yesButtonText: "Ok",
                     noButtonText: "Cancel",
                     handler: (ok) => {
-                        if (ok) {
-                            executeToggle();
-                        }
+                        subscriber.next(Boolean(ok));
+                        subscriber.complete();
                     },
                 }),
             );
-        } else {
-            executeToggle();
-        }
+        });
     }
 }

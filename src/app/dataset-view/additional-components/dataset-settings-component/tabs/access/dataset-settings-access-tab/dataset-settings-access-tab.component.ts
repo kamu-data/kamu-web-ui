@@ -22,7 +22,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
-import { promiseWithCatch, requireValue } from "@common/helpers/app.helpers";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
@@ -35,7 +35,6 @@ import { CollaboratorModalResultType } from "src/app/dataset-view/additional-com
 import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 import { EditCollaboratorModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/edit-collaborator-modal/edit-collaborator-modal.component";
 import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
@@ -89,7 +88,7 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     }
 
     public ngOnInit(): void {
-        this.getPageFromUrl();
+        this.currentPage = this.pageFromUrl() ?? this.currentPage;
         this.updateTable(this.currentPage);
         this.router.events
             .pipe(filter((event) => event instanceof NavigationEnd))
@@ -112,13 +111,6 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
                 this.pageBasedInfo = result.pageInfo;
                 this.cdr.detectChanges();
             });
-    }
-
-    public getPageFromUrl(): void {
-        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
-        if (pageParam) {
-            this.currentPage = +requireValue(pageParam);
-        }
     }
 
     public onPageChange(page: number): void {

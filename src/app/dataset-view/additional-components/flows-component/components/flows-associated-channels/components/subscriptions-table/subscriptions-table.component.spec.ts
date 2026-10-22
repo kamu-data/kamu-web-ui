@@ -5,15 +5,17 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { WebhookFlowSubProcess } from "@api/kamu.graphql.interface";
+import { FlowProcessEffectiveState, WebhookFlowSubProcess } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowsProcessesQuery } from "@api/mock/dataset-flow.mock";
 
 import { SubscriptionsTableComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-associated-channels/components/subscriptions-table/subscriptions-table.component";
+import { SubscriptionsTableHarness } from "src/app/dataset-view/additional-components/flows-component/components/flows-associated-channels/components/subscriptions-table/subscriptions-table.harness";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 
 describe("SubscriptionsTableComponent", () => {
@@ -61,5 +63,31 @@ describe("SubscriptionsTableComponent", () => {
         const webhookSettingsClickedSpy = spyOn(component.webhookSettingsClicked, "emit");
         component.navigateToWebhookSettings(MOCK_SUBSCRIPTION_ID);
         expect(webhookSettingsClickedSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should pause an active subscription and resume any other from its toggle", async () => {
+        const table = await TestbedHarnessEnvironment.harnessForFixture(fixture, SubscriptionsTableHarness);
+        const pauseWebhookClickedSpy = spyOn(component.pauseWebhookClicked, "emit");
+        const resumeWebhookClickedSpy = spyOn(component.resumeWebhookClicked, "emit");
+
+        for (const subprocess of component.subprocesses) {
+            await table.clickToggle(subprocess.id);
+        }
+
+        const active = component.subprocesses.filter(
+            (s) => s.summary.effectiveState === FlowProcessEffectiveState.Active,
+        );
+        expect(pauseWebhookClickedSpy.calls.allArgs()).toEqual(active.map((s) => [s.id]));
+        expect(resumeWebhookClickedSpy.calls.count()).toEqual(component.subprocesses.length - active.length);
+    });
+
+    it("should disable the toggle of a subscription whose action is in progress", async () => {
+        const table = await TestbedHarnessEnvironment.harnessForFixture(fixture, SubscriptionsTableHarness);
+        const [busy, idle] = component.subprocesses;
+
+        fixture.componentRef.setInput("busySubscriptionIds", new Set([busy.id]));
+
+        expect(await table.isToggleDisabled(busy.id)).toBeTrue();
+        expect(await table.isToggleDisabled(idle.id)).toBeFalse();
     });
 });

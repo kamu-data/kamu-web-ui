@@ -14,7 +14,19 @@ import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 
-import { BehaviorSubject, debounceTime, map, Observable, startWith, Subject, switchMap, take, tap, timer } from "rxjs";
+import {
+    BehaviorSubject,
+    debounceTime,
+    filter,
+    map,
+    Observable,
+    startWith,
+    Subject,
+    switchMap,
+    take,
+    tap,
+    timer,
+} from "rxjs";
 
 import { DateTimeAdapter, OWL_DATE_TIME_FORMATS } from "@danielmoncada/angular-datetime-picker";
 import { MomentDateTimeAdapter } from "@danielmoncada/angular-datetime-picker-moment-adapter";
@@ -23,6 +35,7 @@ import { ToastrService } from "ngx-toastr";
 
 import { environment } from "@env/environment";
 import { BaseComponent } from "@common/components/base.component";
+import { trackBusyKey } from "@common/helpers/app.helpers";
 import { MY_MOMENT_FORMATS } from "@common/helpers/data.helpers";
 import AppValues from "@common/values/app.values";
 import {
@@ -111,7 +124,10 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
     public flowsMode: ProcessCardGroup = ProcessCardGroup.ALL;
     public activeRollup: FlowProcessGroupRollupDataFragment;
     private readonly loadingCardsSubject$ = new BehaviorSubject<boolean>(false);
-    private readonly toggleCardStateSubject$ = new BehaviorSubject<boolean>(false);
+    /** IDs of the cards whose action has not shown its result yet, as `trackByCardId` gives them */
+    public readonly busyCardIds$ = new BehaviorSubject<ReadonlySet<string>>(new Set());
+    private readonly cardsLoadStarted$ = new Subject<void>();
+    private readonly cardsLoaded$ = new Subject<void>();
     public readonly fetchTrigger$ = new Subject<void>();
     public readonly ROLLUP_OPTIONS = RollupFiltersOptions;
 
@@ -144,6 +160,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
 
         this.accountFlowsCardsData$ = triggerWithInitial$.pipe(
             switchMap(() => polling$),
+            tap(() => this.cardsLoadStarted$.next()),
             switchMap(() => this.setCardsStrategy(this.flowsMode)),
 
             tap((data: CardsStrategyResult) => {
@@ -153,7 +170,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
                 this.processesCards = [...newChunkCards];
 
                 this.loadingCardsSubject$.next(false);
-                this.toggleCardStateSubject$.next(false);
+                this.cardsLoaded$.next();
             }),
             map((data: CardsStrategyResult) => {
                 return {
@@ -209,9 +226,15 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
     }
 
     public updateNow(datasetBasics: DatasetBasicsFragment): void {
-        this.datasetCardService.handleTrigger(datasetBasics, () => {
-            this.toastrService.success("Flow scheduled");
-        });
+        this.datasetCardService
+            .handleTrigger(datasetBasics)
+            .pipe(
+                filter(Boolean),
+                tap(() => this.toastrService.success("Flow scheduled")),
+                switchMap(() => this.refreshCardsAfterDelay()),
+                trackBusyKey(this.busyCardIds$, datasetBasics.id),
+            )
+            .subscribe();
     }
 
     public onToggleRollup(): void {
@@ -223,14 +246,22 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
         datasetBasics: DatasetBasicsFragment;
     }): void {
         this.processesPerPage = this.processesCards.length;
-        this.toggleCardStateSubject$.next(true);
-        this.datasetCardService.handleToggleState({
-            state: params.state,
-            datasetBasics: params.datasetBasics,
-            onSuccess: () => {
-                this.refreshNow();
-            },
-        });
+        this.datasetCardService
+            .confirmToggleState(params.state)
+            .pipe(
+                switchMap(() =>
+                    this.datasetCardService
+                        .handleToggleState({
+                            state: params.state,
+                            datasetBasics: params.datasetBasics,
+                        })
+                        .pipe(
+                            switchMap(() => this.refreshCardsAfterDelay()),
+                            trackBusyKey(this.busyCardIds$, params.datasetBasics.id),
+                        ),
+                ),
+            )
+            .subscribe();
     }
 
     public toggleWebhookCardState(params: {
@@ -239,7 +270,6 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
         state: FlowProcessEffectiveState;
     }): void {
         this.processesPerPage = this.processesCards.length;
-        this.toggleCardStateSubject$.next(true);
         const result$: Observable<boolean> =
             params.state === FlowProcessEffectiveState.Active
                 ? this.datasetWebhooksService.datasetWebhookPauseSubscription(
@@ -250,15 +280,32 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
                       params.datasetBasics.id,
                       params.subscriptionId,
                   );
-        result$.pipe(take(1)).subscribe((result: boolean) => {
-            if (result) {
-                timer(this.TIMEOUT_REFRESH_FLOW)
-                    .pipe(takeUntilDestroyed(this.destroyRef))
-                    .subscribe(() => {
-                        this.refreshNow();
-                    });
-            }
-        });
+        result$
+            .pipe(
+                take(1),
+                filter(Boolean),
+                switchMap(() => this.refreshCardsAfterDelay()),
+                trackBusyKey(this.busyCardIds$, params.subscriptionId),
+            )
+            .subscribe();
+    }
+
+    /**
+     * Completes once cards requested after the delay arrive; a load that was under way already is not enough.
+     * Only this part is tied to the page: the mutation before it still reports its result after leaving.
+     */
+    private refreshCardsAfterDelay(): Observable<void> {
+        return timer(this.TIMEOUT_REFRESH_FLOW).pipe(
+            switchMap(() => {
+                this.refreshNow();
+                // A new load cancels the one under way, so the cards arriving after a start come from that load
+                return this.cardsLoadStarted$.pipe(
+                    take(1),
+                    switchMap(() => this.cardsLoaded$.pipe(take(1))),
+                );
+            }),
+            takeUntilDestroyed(this.destroyRef),
+        );
     }
 
     public refreshNow(): void {

@@ -18,7 +18,7 @@ import {
     WebhookFlowSubProcess,
     WebhookFlowSubProcessGroup,
 } from "@api/kamu.graphql.interface";
-import { MaybeUndefined } from "@interface/app.types";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import { SubscriptionsTableComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-associated-channels/components/subscriptions-table/subscriptions-table.component";
 import {
@@ -48,6 +48,8 @@ export class FlowsAssociatedChannelsComponent {
     @Input({ required: true }) public flowsSelectionState: FlowsSelectionState;
     @Input({ required: true }) public webhooksData: WebhookFlowSubProcessGroup;
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    /** Subscriptions whose pause or resume has not shown its result yet */
+    @Input() public busySubscriptionIds: MaybeNull<ReadonlySet<string>> = null;
     @Output() public webhookSettingsClicked: EventEmitter<string> = new EventEmitter<string>();
     @Output() public subcriptionClicked: EventEmitter<WebhookFlowSubProcess> =
         new EventEmitter<WebhookFlowSubProcess>();

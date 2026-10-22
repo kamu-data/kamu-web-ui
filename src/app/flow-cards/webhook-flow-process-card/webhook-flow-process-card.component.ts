@@ -51,6 +51,8 @@ export class WebhookFlowProcessCardComponent {
     @Input({ required: true }) public summary: FlowProcessSummary;
     @Input({ required: true }) public subscriptionId: string;
     @Input({ required: true }) public subscriptionName: string;
+    /** Disables the state toggle while its previous action has not shown its result yet */
+    @Input() public actionInProgress = false;
 
     @Output() public toggleWebhookCardStateEmitter = new EventEmitter<{
         datasetBasics: DatasetBasicsFragment;

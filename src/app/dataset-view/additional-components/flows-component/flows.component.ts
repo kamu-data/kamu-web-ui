@@ -6,17 +6,18 @@
  */
 
 import { AsyncPipe, NgClass } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { RouterLink } from "@angular/router";
 
-import { combineLatest, map, Observable, of, switchMap, take, tap, timer } from "rxjs";
+import { BehaviorSubject, combineLatest, filter, map, Observable, of, switchMap, take, tap, timer } from "rxjs";
 
 import { environment } from "@env/environment";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+import { trackBusyKey } from "@common/helpers/app.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import { SourceEventEditorLinkPipe } from "@common/pipes/source-event-editor-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
@@ -84,30 +85,34 @@ import { ProcessDatasetCardInteractionService } from "src/app/services/process-d
         SourceEventEditorLinkPipe,
     ],
 })
-export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit {
+export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit, OnChanges {
     @Input(RoutingResolvers.DATASET_VIEW_FLOWS_KEY) public flowsData: DatasetOverviewTabData;
     @Input(ProjectLinks.URL_QUERY_PARAM_WEBHOOK_ID) public set setWebhookId(value: MaybeNull<string>) {
-        const ids = value ? value.split(",") : [];
-        ids.forEach((id: string) => this.flowsSelectionStateService.addWebhookId(id));
+        this.webhookIdParam = value;
+        this.applyWebhookIdParam();
     }
     @Input(ProjectLinks.URL_QUERY_PARAM_WEBHOOKS_STATE) public set setWebhookState(value: MaybeNull<string>) {
-        const states = value ? (value.split(",") as FlowProcessEffectiveState[]) : [];
-        this.flowsSelectionStateService.setWebhookFilterButtons(states);
-        if (this.flowsSelectionState.webhookFilterButtons.length) {
-            this.flowsSelectionStateService.setWebhooksCategory("webhooks");
-        }
+        this.webhookStateParam = value;
+        this.applyWebhookStateParam();
     }
     @Input(ProjectLinks.URL_QUERY_PARAM_FLOWS_CATEGORY) public set setFlowsCategory(value: FlowsCategoryUnion) {
-        if (value === "webhooks") {
-            this.flowsSelectionStateService.setWebhooksCategory(value);
-        } else {
-            this.flowsSelectionStateService.setFlowsCategory(value);
-        }
+        this.flowsCategoryParam = value;
+        this.applyFlowsCategoryParam();
     }
+
+    // The query parameters as last bound: the router does not bind an unchanged one again
+    private webhookIdParam: MaybeNull<string> = null;
+    private webhookStateParam: MaybeNull<string> = null;
+    private flowsCategoryParam: FlowsCategoryUnion;
 
     public selectedDatasetItems: DatasetBasicsFragment[] = [];
     public selectedAccountItems: AccountFragment[] = [];
     public selectedStatusItems: FilterStatusType[] = [];
+    /**
+     * IDs of the datasets and webhook subscriptions whose action has not shown its result yet: their labels
+     * show the state from before an action until the refresh, so their buttons stay disabled till then
+     */
+    public readonly busyIds$ = new BehaviorSubject<ReadonlySet<string>>(new Set());
 
     private datasetWebhooksService = inject(DatasetWebhooksService);
     private flowsSelectionStateService = inject(FlowsSelectionStateService);
@@ -124,7 +129,57 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     public ngOnInit(): void {
         this.filterByStatus = null;
+        this.currentPage = this.pageFromUrl() ?? 1;
         this.refreshFlow();
+    }
+
+    public ngOnChanges(changes: SimpleChanges): void {
+        const previousFlowsData = changes["flowsData"]?.previousValue as MaybeUndefined<DatasetOverviewTabData>;
+        if (previousFlowsData && previousFlowsData.datasetBasics.id !== this.flowsData.datasetBasics.id) {
+            this.startOverForAnotherDataset();
+        }
+    }
+
+    // The router keeps this component when it moves to another dataset's Flows tab
+    private startOverForAnotherDataset(): void {
+        this.flowsSelectionStateService.reset();
+        this.applyWebhookIdParam();
+        this.applyWebhookStateParam();
+        this.applyFlowsCategoryParam();
+        this.filterByStatus = null;
+        this.filterInitiator = null;
+        this.onlySystemFlows = false;
+        this.searchByAccount = [];
+        this.onResetFilters();
+        this.currentPage = this.pageFromUrl() ?? 1;
+        this.refreshFlow();
+    }
+
+    // For changes that lead to the URL without a page
+    private refreshFromFirstPage(): void {
+        this.currentPage = 1;
+        this.refreshFlow();
+    }
+
+    private applyWebhookIdParam(): void {
+        const ids = this.webhookIdParam ? this.webhookIdParam.split(",") : [];
+        ids.forEach((id: string) => this.flowsSelectionStateService.addWebhookId(id));
+    }
+
+    private applyWebhookStateParam(): void {
+        const states = this.webhookStateParam ? (this.webhookStateParam.split(",") as FlowProcessEffectiveState[]) : [];
+        this.flowsSelectionStateService.setWebhookFilterButtons(states);
+        if (this.flowsSelectionState.webhookFilterButtons.length) {
+            this.flowsSelectionStateService.setWebhooksCategory("webhooks");
+        }
+    }
+
+    private applyFlowsCategoryParam(): void {
+        if (this.flowsCategoryParam === "webhooks") {
+            this.flowsSelectionStateService.setWebhooksCategory(this.flowsCategoryParam);
+        } else {
+            this.flowsSelectionStateService.setFlowsCategory(this.flowsCategoryParam);
+        }
     }
 
     public get showPanelButtons(): boolean {
@@ -231,37 +286,27 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             tab: DatasetViewTypeEnum.Flows,
             webhookId: this.flowsSelectionState.webhooksIds,
         });
-        this.refreshFlow();
+        this.refreshFromFirstPage();
     }
 
     public pauseWebhook(subscriptionId: string): void {
-        this.datasetWebhooksService
-            .datasetWebhookPauseSubscription(this.flowsData.datasetBasics.id, subscriptionId)
-            .pipe(take(1))
-            .subscribe((result: boolean) => {
-                if (result) {
-                    timer(AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS)
-                        .pipe(takeUntilDestroyed(this.destroyRef))
-                        .subscribe(() => {
-                            this.refreshFlow();
-                        });
-                }
-            });
+        this.refreshAfterAction(
+            subscriptionId,
+            this.datasetWebhooksService
+                .datasetWebhookPauseSubscription(this.flowsData.datasetBasics.id, subscriptionId)
+                .pipe(take(1), filter(Boolean)),
+            AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS,
+        ).subscribe();
     }
 
     public resumeWebhook(subscriptionId: string): void {
-        this.datasetWebhooksService
-            .datasetWebhookResumeSubscription(this.flowsData.datasetBasics.id, subscriptionId)
-            .pipe(take(1))
-            .subscribe((result: boolean) => {
-                if (result) {
-                    timer(AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS)
-                        .pipe(takeUntilDestroyed(this.destroyRef))
-                        .subscribe(() => {
-                            this.refreshFlow();
-                        });
-                }
-            });
+        this.refreshAfterAction(
+            subscriptionId,
+            this.datasetWebhooksService
+                .datasetWebhookResumeSubscription(this.flowsData.datasetBasics.id, subscriptionId)
+                .pipe(take(1), filter(Boolean)),
+            AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS,
+        ).subscribe();
     }
 
     public onSelectionFlowsChange(event: MatChipListboxChange): void {
@@ -272,7 +317,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             tab: DatasetViewTypeEnum.Flows,
             category: event.value as FlowsSelectedCategory,
         });
-        this.refreshFlow();
+        this.refreshFromFirstPage();
     }
 
     public onSelectionWebhooksChange(category: MaybeUndefined<WebhooksSelectedCategory>): void {
@@ -283,7 +328,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             tab: DatasetViewTypeEnum.Flows,
             category: category,
         });
-        this.refreshFlow();
+        this.refreshFromFirstPage();
     }
 
     public onToggleWebhookFilter(states: FlowProcessEffectiveState[], subprocesses: WebhookFlowSubProcess[]): void {
@@ -300,7 +345,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             category: this.flowsSelectionState.flowsCategory,
             webhooksState: states.length ? states : undefined,
         });
-        this.refreshFlow();
+        this.refreshFromFirstPage();
     }
 
     public removeSelectedWebhook(subscriptionName: string, subprocesses: WebhookFlowSubProcess[]): void {
@@ -314,7 +359,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             tab: DatasetViewTypeEnum.Flows,
             webhookId: this.flowsSelectionState.webhooksIds,
         });
-        this.refreshFlow();
+        this.refreshFromFirstPage();
     }
 
     public get isRoot(): boolean {
@@ -346,6 +391,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public onPageChange(page: number): void {
+        this.currentPage = page;
         if (page === 1) {
             this.navigationService.navigateToDatasetView({
                 accountName: this.flowsData.datasetBasics.owner.accountName,
@@ -366,23 +412,48 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public updateNow(): void {
-        this.datasetCardService.handleTrigger(this.flowsData.datasetBasics, () => {
-            this.refreshFlow();
-        });
+        this.refreshAfterAction(
+            this.flowsData.datasetBasics.id,
+            this.datasetCardService.handleTrigger(this.flowsData.datasetBasics).pipe(filter(Boolean)),
+            this.TIMEOUT_REFRESH_FLOW,
+        ).subscribe();
     }
 
     public toggleStateDatasetFlowConfigs(params: {
         state: FlowProcessEffectiveState;
         datasetBasics: DatasetBasicsFragment;
     }): void {
-        this.datasetCardService.handleToggleState({
-            state: params.state,
-            datasetBasics: params.datasetBasics,
-            onSuccess: () => {
-                this.refreshFlow();
-            },
-            confirmModal: true,
-        });
+        this.datasetCardService
+            .confirmToggleState(params.state)
+            .pipe(
+                switchMap(() =>
+                    this.refreshAfterAction(
+                        params.datasetBasics.id,
+                        this.datasetCardService.handleToggleState({
+                            state: params.state,
+                            datasetBasics: params.datasetBasics,
+                        }),
+                        this.TIMEOUT_REFRESH_FLOW,
+                    ),
+                ),
+            )
+            .subscribe();
+    }
+
+    /**
+     * Refreshes the flows `delayMs` after the action succeeded; `busyId` is busy from subscription till then.
+     * `succeeded$` emits once when the action succeeded, and completes without a value otherwise.
+     */
+    private refreshAfterAction(busyId: string, succeeded$: Observable<unknown>, delayMs: number): Observable<unknown> {
+        const datasetId = this.flowsData.datasetBasics.id;
+        return succeeded$.pipe(
+            // Only the delayed refresh is tied to the page: the mutation still reports its result after leaving
+            switchMap(() => timer(delayMs).pipe(takeUntilDestroyed(this.destroyRef))),
+            // The router may have moved the tab to another dataset meanwhile, which loaded its own flows
+            filter(() => this.flowsData.datasetBasics.id === datasetId),
+            tap(() => this.refreshFlow()),
+            trackBusyKey(this.busyIds$, busyId),
+        );
     }
 
     public onSearchByFiltersChange(filters: MaybeNull<FlowsTableFiltersOptions>): void {
@@ -393,7 +464,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             this.searchByAccount = [];
         }
         this.searchByFilters(filters);
-        this.refreshFlow();
+        this.refreshFromFirstPage();
     }
 
     public onResetFilters(): void {

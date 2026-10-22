@@ -247,13 +247,19 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
     }): void {
         this.processesPerPage = this.processesCards.length;
         this.datasetCardService
-            .handleToggleState({
-                state: params.state,
-                datasetBasics: params.datasetBasics,
-            })
+            .confirmToggleState(params.state)
             .pipe(
-                switchMap(() => this.refreshCardsAfterDelay()),
-                trackBusyKey(this.busyCardIds$, params.datasetBasics.id),
+                switchMap(() =>
+                    this.datasetCardService
+                        .handleToggleState({
+                            state: params.state,
+                            datasetBasics: params.datasetBasics,
+                        })
+                        .pipe(
+                            switchMap(() => this.refreshCardsAfterDelay()),
+                            trackBusyKey(this.busyCardIds$, params.datasetBasics.id),
+                        ),
+                ),
             )
             .subscribe();
     }

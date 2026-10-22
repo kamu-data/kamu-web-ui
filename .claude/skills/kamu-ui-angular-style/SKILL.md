@@ -115,6 +115,9 @@ disabled until then, or a second click repeats the action against a stale label.
 - An action that did not happen, such as a failed trigger or a cancelled confirmation,
   completes without a value (`filter(Boolean)`, `EMPTY`) rather than emitting `false` for the
   caller to branch on.
+- A confirmation the user answers first stays outside the busy chain:
+  `confirm$.pipe(switchMap(() => action$.pipe(trackBusyKey(...))))`. The modal closes on Escape
+  without calling its `handler`, so a busy state that began before it would never end.
 - To wait for data loaded after some point, compose the streams the loading already has, for
   example `loadStarted$.pipe(take(1), switchMap(() => loaded$.pipe(take(1))))` under a
   `switchMap` that cancels older loads, not a counter or flag compared later.

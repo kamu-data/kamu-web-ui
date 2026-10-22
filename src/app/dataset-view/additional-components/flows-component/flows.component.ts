@@ -296,7 +296,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                 .datasetWebhookPauseSubscription(this.flowsData.datasetBasics.id, subscriptionId)
                 .pipe(take(1), filter(Boolean)),
             AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS,
-        );
+        ).subscribe();
     }
 
     public resumeWebhook(subscriptionId: string): void {
@@ -306,7 +306,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                 .datasetWebhookResumeSubscription(this.flowsData.datasetBasics.id, subscriptionId)
                 .pipe(take(1), filter(Boolean)),
             AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS,
-        );
+        ).subscribe();
     }
 
     public onSelectionFlowsChange(event: MatChipListboxChange): void {
@@ -416,40 +416,44 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             this.flowsData.datasetBasics.id,
             this.datasetCardService.handleTrigger(this.flowsData.datasetBasics).pipe(filter(Boolean)),
             this.TIMEOUT_REFRESH_FLOW,
-        );
+        ).subscribe();
     }
 
     public toggleStateDatasetFlowConfigs(params: {
         state: FlowProcessEffectiveState;
         datasetBasics: DatasetBasicsFragment;
     }): void {
-        this.refreshAfterAction(
-            params.datasetBasics.id,
-            this.datasetCardService.handleToggleState({
-                state: params.state,
-                datasetBasics: params.datasetBasics,
-            }),
-            this.TIMEOUT_REFRESH_FLOW,
-        );
+        this.datasetCardService
+            .confirmToggleState(params.state)
+            .pipe(
+                switchMap(() =>
+                    this.refreshAfterAction(
+                        params.datasetBasics.id,
+                        this.datasetCardService.handleToggleState({
+                            state: params.state,
+                            datasetBasics: params.datasetBasics,
+                        }),
+                        this.TIMEOUT_REFRESH_FLOW,
+                    ),
+                ),
+            )
+            .subscribe();
     }
 
     /**
-     * Refreshes the flows `delayMs` after the action succeeded, keeping `busyId` busy till then.
+     * Refreshes the flows `delayMs` after the action succeeded; `busyId` is busy from subscription till then.
      * `succeeded$` emits once when the action succeeded, and completes without a value otherwise.
      */
-    private refreshAfterAction(busyId: string, succeeded$: Observable<unknown>, delayMs: number): void {
+    private refreshAfterAction(busyId: string, succeeded$: Observable<unknown>, delayMs: number): Observable<unknown> {
         const datasetId = this.flowsData.datasetBasics.id;
-        succeeded$
-            .pipe(
-                // Only the delayed refresh is tied to the page: the mutation still reports its result after leaving
-                switchMap(() => timer(delayMs).pipe(takeUntilDestroyed(this.destroyRef))),
-                // The router may have moved the tab to another dataset meanwhile, which loaded its own flows
-                filter(() => this.flowsData.datasetBasics.id === datasetId),
-                trackBusyKey(this.busyIds$, busyId),
-            )
-            .subscribe(() => {
-                this.refreshFlow();
-            });
+        return succeeded$.pipe(
+            // Only the delayed refresh is tied to the page: the mutation still reports its result after leaving
+            switchMap(() => timer(delayMs).pipe(takeUntilDestroyed(this.destroyRef))),
+            // The router may have moved the tab to another dataset meanwhile, which loaded its own flows
+            filter(() => this.flowsData.datasetBasics.id === datasetId),
+            tap(() => this.refreshFlow()),
+            trackBusyKey(this.busyIds$, busyId),
+        );
     }
 
     public onSearchByFiltersChange(filters: MaybeNull<FlowsTableFiltersOptions>): void {

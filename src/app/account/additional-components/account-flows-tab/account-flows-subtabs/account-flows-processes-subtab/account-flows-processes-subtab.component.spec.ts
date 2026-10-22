@@ -846,6 +846,18 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         expect(component.busyCardIds$.value.size).toEqual(0);
     });
 
+    it("should not hold a dataset card busy while the resume confirmation is open, as Escape closes it unanswered", () => {
+        spyOn(TestBed.inject(ModalService), "error").and.returnValue(Promise.resolve(""));
+        const resumeSpy = spyOn(datasetFlowsService, "datasetResumeFlows");
+        component.toggleStateDatasetCard({
+            state: FlowProcessEffectiveState.StoppedAuto,
+            datasetBasics: mockDatasetBasicsRootFragment,
+        });
+
+        expect(resumeSpy).not.toHaveBeenCalled();
+        expect(component.busyCardIds$.value.size).toEqual(0);
+    });
+
     it("should keep a webhook card busy until the cards refreshed after its toggle arrive", fakeAsync(() => {
         spyOn(datasetWebhooksService, "datasetWebhookPauseSubscription").and.returnValue(of(true));
         fixture.detectChanges();

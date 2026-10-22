@@ -7,7 +7,7 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { filter, Observable, switchMap, take } from "rxjs";
+import { filter, map, Observable, of, take } from "rxjs";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
@@ -33,26 +33,29 @@ export class ProcessDatasetCardInteractionService {
     }
 
     /**
-     * Pauses or resumes the dataset's flows and emits once they are toggled.
-     * Resuming an auto-stopped process asks first; a cancel completes without emitting.
+     * Emits once when pausing or resuming may go ahead: resuming an auto-stopped process asks first.
+     * A cancel completes without a value; a confirmation closed with Escape never answers.
      */
+    public confirmToggleState(state: FlowProcessEffectiveState): Observable<void> {
+        if (state === FlowProcessEffectiveState.StoppedAuto) {
+            return this.confirmResume().pipe(
+                filter(Boolean),
+                map(() => undefined),
+            );
+        }
+        return of(undefined);
+    }
+
+    /** Pauses or resumes the dataset's flows without asking, and emits once they are toggled */
     public handleToggleState(params: {
         state: FlowProcessEffectiveState;
         datasetBasics: DatasetBasicsFragment;
     }): Observable<void> {
         const { state, datasetBasics } = params;
-
-        const toggle = (): Observable<void> => {
-            const toggle$ = [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing].includes(state)
-                ? this.flowsService.datasetPauseFlows({ datasetId: datasetBasics.id })
-                : this.flowsService.datasetResumeFlows({ datasetId: datasetBasics.id });
-            return toggle$.pipe(take(1));
-        };
-
-        if (state === FlowProcessEffectiveState.StoppedAuto) {
-            return this.confirmResume().pipe(filter(Boolean), switchMap(toggle));
-        }
-        return toggle();
+        const toggle$ = [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing].includes(state)
+            ? this.flowsService.datasetPauseFlows({ datasetId: datasetBasics.id })
+            : this.flowsService.datasetResumeFlows({ datasetId: datasetBasics.id });
+        return toggle$.pipe(take(1));
     }
 
     private confirmResume(): Observable<boolean> {

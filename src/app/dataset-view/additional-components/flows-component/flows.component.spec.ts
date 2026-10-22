@@ -206,7 +206,10 @@ describe("FlowsComponent", () => {
             state: FlowProcessEffectiveState.Active,
             datasetBasics: mockDatasetBasicsRootFragment,
         });
-        expect(handleToggleStateSpy).toHaveBeenCalledTimes(1);
+        expect(handleToggleStateSpy).toHaveBeenCalledOnceWith({
+            state: FlowProcessEffectiveState.Active,
+            datasetBasics: mockDatasetBasicsRootFragment,
+        });
     });
 
     it(`should check toggle state for dataset flow when state=${FlowProcessEffectiveState.StoppedAuto}`, fakeAsync(() => {
@@ -825,6 +828,18 @@ describe("FlowsComponent", () => {
                 state: FlowProcessEffectiveState.StoppedAuto,
                 datasetBasics: mockDatasetBasicsRootFragment,
             });
+            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBeFalse();
+        });
+
+        it("should not start while the resume confirmation is open, as Escape closes it unanswered", () => {
+            spyOn(modalService, "error").and.returnValue(Promise.resolve(""));
+            const resumeSpy = spyOn(flowsService, "datasetResumeFlows");
+            component.toggleStateDatasetFlowConfigs({
+                state: FlowProcessEffectiveState.StoppedAuto,
+                datasetBasics: mockDatasetBasicsRootFragment,
+            });
+
+            expect(resumeSpy).not.toHaveBeenCalled();
             expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBeFalse();
         });
 

@@ -10,6 +10,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from "@angular/material/table";
 
 import { DatasetBasicsFragment, FlowProcessEffectiveState, WebhookFlowSubProcess } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 import { webhooksStateMapper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import { SubprocessStatusFilterPipe } from "src/app/dataset-view/additional-components/flows-component/pipes/subprocess-status-filter.pipe";
@@ -31,6 +32,8 @@ export class SubscriptionsTableComponent {
     @Input({ required: true }) public subprocesses: WebhookFlowSubProcess[];
     @Input({ required: true }) public webhookTableFilters: FlowProcessEffectiveState[];
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    /** Subscriptions whose pause or resume has not shown its result yet */
+    @Input() public busySubscriptionIds: MaybeNull<ReadonlySet<string>> = null;
     @Output() public webhookSettingsClicked: EventEmitter<string> = new EventEmitter<string>();
     @Output() public subscriptionClicked: EventEmitter<WebhookFlowSubProcess> =
         new EventEmitter<WebhookFlowSubProcess>();

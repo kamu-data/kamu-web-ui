@@ -124,8 +124,8 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
     public flowsMode: ProcessCardGroup = ProcessCardGroup.ALL;
     public activeRollup: FlowProcessGroupRollupDataFragment;
     private readonly loadingCardsSubject$ = new BehaviorSubject<boolean>(false);
-    /** IDs of the datasets whose card action has not shown its result yet */
-    public readonly datasetCardsBusy$ = new BehaviorSubject<ReadonlySet<string>>(new Set());
+    /** IDs of the cards whose action has not shown its result yet, as `trackByCardId` gives them */
+    public readonly busyCardIds$ = new BehaviorSubject<ReadonlySet<string>>(new Set());
     private readonly cardsLoadStarted$ = new Subject<void>();
     private readonly cardsLoaded$ = new Subject<void>();
     public readonly fetchTrigger$ = new Subject<void>();
@@ -232,7 +232,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
                 filter(Boolean),
                 tap(() => this.toastrService.success("Flow scheduled")),
                 switchMap(() => this.refreshCardsAfterDelay()),
-                trackBusyKey(this.datasetCardsBusy$, datasetBasics.id),
+                trackBusyKey(this.busyCardIds$, datasetBasics.id),
             )
             .subscribe();
     }
@@ -253,7 +253,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
             })
             .pipe(
                 switchMap(() => this.refreshCardsAfterDelay()),
-                trackBusyKey(this.datasetCardsBusy$, params.datasetBasics.id),
+                trackBusyKey(this.busyCardIds$, params.datasetBasics.id),
             )
             .subscribe();
     }
@@ -279,6 +279,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
                 take(1),
                 filter(Boolean),
                 switchMap(() => this.refreshCardsAfterDelay()),
+                trackBusyKey(this.busyCardIds$, params.subscriptionId),
             )
             .subscribe();
     }

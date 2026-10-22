@@ -946,4 +946,27 @@ describe("FlowsComponent", () => {
             discardPeriodicTasks();
         }));
     });
+
+    describe("webhook subscription action in progress", () => {
+        const SUBSCRIPTION_ID = "1234-4444-43222";
+
+        it("should last from a pause until the refresh", fakeAsync(() => {
+            spyOn(datasetWebhooksService, "datasetWebhookPauseSubscription").and.returnValue(of(true));
+            const refreshFlowSpy = spyOn(component, "refreshFlow");
+            component.pauseWebhook(SUBSCRIPTION_ID);
+
+            tick(AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS - 1);
+            expect(component.busyIds$.value.has(SUBSCRIPTION_ID)).toBeTrue();
+
+            tick(1);
+            expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+            expect(component.busyIds$.value.has(SUBSCRIPTION_ID)).toBeFalse();
+        }));
+
+        it("should end when the resume fails", () => {
+            spyOn(datasetWebhooksService, "datasetWebhookResumeSubscription").and.returnValue(of(false));
+            component.resumeWebhook(SUBSCRIPTION_ID);
+            expect(component.busyIds$.value.has(SUBSCRIPTION_ID)).toBeFalse();
+        });
+    });
 });

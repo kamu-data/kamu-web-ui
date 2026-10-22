@@ -56,6 +56,8 @@
                 <button
                     type="button"
                     (click)="toggleWebhookCardState(datasetBasics, subscriptionId, summary.effectiveState)"
+                    [disabled]="actionInProgress"
+                    data-test-id="webhook-card-toggle-state"
                     class="badge-button border-1 bg-light border rounded-2 px-2 btn btn-sm"
                 >
                     <mat-icon class="text-muted fs-4 d-block">

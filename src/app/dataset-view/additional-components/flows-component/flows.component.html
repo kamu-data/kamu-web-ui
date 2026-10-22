@@ -1,4 +1,5 @@
 <div class="search-result-container__content mb-20 container-main">
+    @let busyIds = busyIds$ | async;
     @if (flowConnectionData$ | async; as flowConnectionData) {
         @if (flowConnectionData.flowsData.connectionDataForWidget.nodes.length) {
             <div>
@@ -17,9 +18,7 @@
                                         <app-dataset-flow-process-card
                                             [datasetBasics]="flowsData.datasetBasics"
                                             [summary]="flowConnectionData.flowProcesses.primary.summary"
-                                            [actionInProgress]="
-                                                (busyIds$ | async)?.has(flowsData.datasetBasics.id) ?? false
-                                            "
+                                            [actionInProgress]="busyIds?.has(flowsData.datasetBasics.id) ?? false"
                                             (updateNowEmitter)="updateNow()"
                                             (toggleStateDatasetCardEmitter)="toggleStateDatasetFlowConfigs($event)"
                                         />
@@ -54,6 +53,7 @@
                                         [flowsSelectionState]="flowsSelectionState"
                                         [webhooksData]="flowConnectionData.flowProcesses.webhooks"
                                         [datasetBasics]="flowsData.datasetBasics"
+                                        [busySubscriptionIds]="busyIds"
                                         (webhookSettingsClicked)="navigateToWebhookSettings($event)"
                                         (subcriptionClicked)="navigateToSubscription($event)"
                                         (pauseWebhookClicked)="pauseWebhook($event)"

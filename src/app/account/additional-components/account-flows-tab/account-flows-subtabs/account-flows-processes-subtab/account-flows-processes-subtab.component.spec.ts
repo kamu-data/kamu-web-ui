@@ -731,14 +731,14 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
                 state: FlowProcessEffectiveState.Active,
                 datasetBasics: mockDatasetBasicsRootFragment,
             });
-            expect(component.datasetCardsBusy$.value.has(datasetId)).toBeTrue();
+            expect(component.busyCardIds$.value.has(datasetId)).toBeTrue();
 
             tick(component.TIMEOUT_REFRESH_FLOW);
-            expect(component.datasetCardsBusy$.value.has(datasetId)).toBeTrue();
+            expect(component.busyCardIds$.value.has(datasetId)).toBeTrue();
 
             // The refresh request is debounced
             tick(300);
-            expect(component.datasetCardsBusy$.value.has(datasetId)).toBeFalse();
+            expect(component.busyCardIds$.value.has(datasetId)).toBeFalse();
             discardPeriodicTasks();
         }));
 
@@ -766,11 +766,11 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             });
             tick(component.TIMEOUT_REFRESH_FLOW);
             inFlightPoll$.next(cards);
-            expect(component.datasetCardsBusy$.value.has(datasetId)).toBeTrue();
+            expect(component.busyCardIds$.value.has(datasetId)).toBeTrue();
 
             tick(300);
             refreshedCards$.next(cards);
-            expect(component.datasetCardsBusy$.value.has(datasetId)).toBeFalse();
+            expect(component.busyCardIds$.value.has(datasetId)).toBeFalse();
             discardPeriodicTasks();
         }));
 
@@ -782,20 +782,20 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             const derivedDataset = { ...mockDatasetBasicsDerivedFragment, id: "derived-dataset-id" };
             component.updateNow(mockDatasetBasicsRootFragment);
             component.updateNow(derivedDataset);
-            expect([...component.datasetCardsBusy$.value]).toEqual([datasetId, derivedDataset.id]);
+            expect([...component.busyCardIds$.value]).toEqual([datasetId, derivedDataset.id]);
 
             rootTrigger$.next(false);
-            expect([...component.datasetCardsBusy$.value]).toEqual([derivedDataset.id]);
+            expect([...component.busyCardIds$.value]).toEqual([derivedDataset.id]);
         });
 
         it("should last while 'Update now' is waiting for the trigger", () => {
             const trigger$ = new Subject<boolean>();
             spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(trigger$);
             component.updateNow(mockDatasetBasicsRootFragment);
-            expect(component.datasetCardsBusy$.value.has(datasetId)).toBeTrue();
+            expect(component.busyCardIds$.value.has(datasetId)).toBeTrue();
 
             trigger$.next(false);
-            expect(component.datasetCardsBusy$.value.has(datasetId)).toBeFalse();
+            expect(component.busyCardIds$.value.has(datasetId)).toBeFalse();
         });
 
         it("should end when the toggle request fails, and leave the error to the global handler", fakeAsync(() => {
@@ -807,7 +807,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
                 datasetBasics: mockDatasetBasicsRootFragment,
             });
 
-            expect(component.datasetCardsBusy$.value.has(datasetId)).toBeFalse();
+            expect(component.busyCardIds$.value.has(datasetId)).toBeFalse();
             expect(() => tick()).toThrowError("Network failure");
         }));
     });
@@ -843,6 +843,25 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         });
 
         expect(resumeSpy).not.toHaveBeenCalled();
-        expect(component.datasetCardsBusy$.value.size).toEqual(0);
+        expect(component.busyCardIds$.value.size).toEqual(0);
     });
+
+    it("should keep a webhook card busy until the cards refreshed after its toggle arrive", fakeAsync(() => {
+        spyOn(datasetWebhooksService, "datasetWebhookPauseSubscription").and.returnValue(of(true));
+        fixture.detectChanges();
+        tick(0);
+        component.toggleWebhookCardState({
+            state: FlowProcessEffectiveState.Active,
+            datasetBasics: mockDatasetBasicsRootFragment,
+            subscriptionId: MOCK_SUBSCRIPTION_ID,
+        });
+        expect(component.busyCardIds$.value.has(MOCK_SUBSCRIPTION_ID)).toBeTrue();
+
+        tick(component.TIMEOUT_REFRESH_FLOW);
+        expect(component.busyCardIds$.value.has(MOCK_SUBSCRIPTION_ID)).toBeTrue();
+
+        tick(300);
+        expect(component.busyCardIds$.value.has(MOCK_SUBSCRIPTION_ID)).toBeFalse();
+        discardPeriodicTasks();
+    }));
 });

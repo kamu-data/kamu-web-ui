@@ -109,8 +109,8 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public selectedAccountItems: AccountFragment[] = [];
     public selectedStatusItems: FilterStatusType[] = [];
     /**
-     * IDs of the datasets whose card action has not shown its result yet: the card's label shows the state
-     * from before an action until the refresh, so the card stays disabled till then
+     * IDs of the datasets and webhook subscriptions whose action has not shown its result yet: their labels
+     * show the state from before an action until the refresh, so their buttons stay disabled till then
      */
     public readonly busyIds$ = new BehaviorSubject<ReadonlySet<string>>(new Set());
 
@@ -282,33 +282,23 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public pauseWebhook(subscriptionId: string): void {
-        this.datasetWebhooksService
-            .datasetWebhookPauseSubscription(this.flowsData.datasetBasics.id, subscriptionId)
-            .pipe(take(1))
-            .subscribe((result: boolean) => {
-                if (result) {
-                    timer(AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS)
-                        .pipe(takeUntilDestroyed(this.destroyRef))
-                        .subscribe(() => {
-                            this.refreshFlow();
-                        });
-                }
-            });
+        this.refreshAfterAction(
+            subscriptionId,
+            this.datasetWebhooksService
+                .datasetWebhookPauseSubscription(this.flowsData.datasetBasics.id, subscriptionId)
+                .pipe(take(1), filter(Boolean)),
+            AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS,
+        );
     }
 
     public resumeWebhook(subscriptionId: string): void {
-        this.datasetWebhooksService
-            .datasetWebhookResumeSubscription(this.flowsData.datasetBasics.id, subscriptionId)
-            .pipe(take(1))
-            .subscribe((result: boolean) => {
-                if (result) {
-                    timer(AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS)
-                        .pipe(takeUntilDestroyed(this.destroyRef))
-                        .subscribe(() => {
-                            this.refreshFlow();
-                        });
-                }
-            });
+        this.refreshAfterAction(
+            subscriptionId,
+            this.datasetWebhooksService
+                .datasetWebhookResumeSubscription(this.flowsData.datasetBasics.id, subscriptionId)
+                .pipe(take(1), filter(Boolean)),
+            AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS,
+        );
     }
 
     public onSelectionFlowsChange(event: MatChipListboxChange): void {
@@ -413,8 +403,10 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public updateNow(): void {
-        this.runDatasetCardAction(
+        this.refreshAfterAction(
+            this.flowsData.datasetBasics.id,
             this.datasetCardService.handleTrigger(this.flowsData.datasetBasics).pipe(filter(Boolean)),
+            this.TIMEOUT_REFRESH_FLOW,
         );
     }
 
@@ -422,24 +414,29 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         state: FlowProcessEffectiveState;
         datasetBasics: DatasetBasicsFragment;
     }): void {
-        this.runDatasetCardAction(
+        this.refreshAfterAction(
+            params.datasetBasics.id,
             this.datasetCardService.handleToggleState({
                 state: params.state,
                 datasetBasics: params.datasetBasics,
             }),
+            this.TIMEOUT_REFRESH_FLOW,
         );
     }
 
-    /** `succeeded$` emits once when the action succeeded, and completes without a value otherwise */
-    private runDatasetCardAction(succeeded$: Observable<unknown>): void {
+    /**
+     * Refreshes the flows `delayMs` after the action succeeded, keeping `busyId` busy till then.
+     * `succeeded$` emits once when the action succeeded, and completes without a value otherwise.
+     */
+    private refreshAfterAction(busyId: string, succeeded$: Observable<unknown>, delayMs: number): void {
         const datasetId = this.flowsData.datasetBasics.id;
         succeeded$
             .pipe(
                 // Only the delayed refresh is tied to the page: the mutation still reports its result after leaving
-                switchMap(() => timer(this.TIMEOUT_REFRESH_FLOW).pipe(takeUntilDestroyed(this.destroyRef))),
+                switchMap(() => timer(delayMs).pipe(takeUntilDestroyed(this.destroyRef))),
                 // The router may have moved the tab to another dataset meanwhile, which loaded its own flows
                 filter(() => this.flowsData.datasetBasics.id === datasetId),
-                trackBusyKey(this.busyIds$, datasetId),
+                trackBusyKey(this.busyIds$, busyId),
             )
             .subscribe(() => {
                 this.refreshFlow();

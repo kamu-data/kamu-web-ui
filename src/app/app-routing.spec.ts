@@ -296,13 +296,15 @@ describe("Router", () => {
             await configureRouter(false);
         });
 
-        it("an anonymous user is redirected to login", fakeAsync(() => {
+        it("an anonymous user is redirected to login, which returns to the requested page", fakeAsync(() => {
             spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([AccountProvider.Password]);
 
             promiseWithCatch(router.navigate([ProjectLinks.URL_DATASET_CREATE]));
             tick();
 
-            expect(location.path()).toBe("/" + ProjectLinks.URL_LOGIN);
+            expect(location.path()).toBe(
+                `/${ProjectLinks.URL_LOGIN}?${ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL}=${encodeURIComponent(`/${ProjectLinks.URL_DATASET_CREATE}`)}`,
+            );
             flush();
         }));
 

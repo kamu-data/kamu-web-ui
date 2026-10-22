@@ -33,6 +33,7 @@ import { AppConfigService } from "src/app/app-config.service";
 import { EthereumGatewayFactory } from "src/app/auth/login/ethereum/ethereum.gateway.factory";
 import { MockEthereumGateway, MockEthereumGatewayFactory } from "src/app/auth/login/ethereum/mock.ethereum.gateway";
 import { LoginService } from "src/app/auth/login/login.service";
+import ProjectLinks from "src/app/project-links";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { SessionStorageService } from "src/app/services/session-storage.service";
@@ -197,6 +198,18 @@ describe("LoginService", () => {
                 .githubLoginLink(null)
                 .includes("https://github.com/login/oauth/authorize?scope=user:email&client_id=mockId"),
         ).toEqual(true);
+    });
+
+    it("should pass the redirect URL to GitHub in state and keep the registered callback URL", () => {
+        spyOnProperty(appConfigService, "githubClientId", "get").and.returnValue("mockId");
+        const deepLink = "/kamu/dataset?tab=flows&page=2";
+
+        const githubUrl = new URL(service.githubLoginLink(deepLink));
+
+        expect(githubUrl.searchParams.get("client_id")).toEqual("mockId");
+        expect(githubUrl.searchParams.get(ProjectLinks.URL_QUERY_PARAM_STATE)).toEqual(deepLink);
+        expect(githubUrl.searchParams.has("redirect_uri")).toBeFalse();
+        expect(githubUrl.searchParams.has("page")).toBeFalse();
     });
 
     it("should successfully complete web3 wallet login flow", fakeAsync(() => {

@@ -20,10 +20,6 @@ import ProjectLinks from "src/app/project-links";
 export abstract class BaseComponent extends UnsubscribeDestroyRefAdapter {
     protected activatedRoute = inject(ActivatedRoute);
 
-    protected get searchString(): string {
-        return window.location.search;
-    }
-
     /** `null` when the URL has no page */
     protected pageFromUrl(): MaybeNull<number> {
         const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);

@@ -16,6 +16,7 @@ import { AuthApi } from "@api/auth.api";
 
 import { GithubCallbackComponent } from "src/app/auth/login/github-callback/github.callback";
 import { LoginService } from "src/app/auth/login/login.service";
+import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
 describe("GithubCallbackComponent", () => {
@@ -54,6 +55,17 @@ describe("GithubCallbackComponent", () => {
         fixture.detectChanges();
 
         expect(githubLoginSpy).toHaveBeenCalledWith({ code: GITHUB_TEST_CODE }, undefined);
+    });
+
+    it("should log in with the code and return to the page carried in state", () => {
+        const navigateToLoginSpy = spyOn(navigationService, "navigateToLogin").and.stub();
+        const redirectUrl = "/kamu/dataset?tab=flows&page=2";
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_STATE, redirectUrl);
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_CODE, GITHUB_TEST_CODE);
+        fixture.detectChanges();
+
+        expect(githubLoginSpy).toHaveBeenCalledOnceWith({ code: GITHUB_TEST_CODE }, redirectUrl);
+        expect(navigateToLoginSpy).not.toHaveBeenCalled();
     });
 
     it("should don't call githubLogin method", () => {

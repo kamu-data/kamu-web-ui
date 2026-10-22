@@ -17,6 +17,7 @@ import { of, Subject, throwError } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
+import { environment } from "@env/environment";
 import { ModalService } from "@common/components/modal/modal.service";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
@@ -737,6 +738,38 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
             // The refresh request is debounced
             tick(300);
+            expect(component.datasetCardsBusy$.value.has(datasetId)).toBeFalse();
+            discardPeriodicTasks();
+        }));
+
+        it("should not end with cards whose load started before the refresh was requested", fakeAsync(() => {
+            const cards = {
+                cards: mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
+                    .allCards as AccountFlowProcessCardConnectionDataFragment,
+                rollup: mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
+                    .fullRollup as FlowProcessGroupRollupDataFragment,
+            };
+            const inFlightPoll$ = new Subject<typeof cards>();
+            const refreshedCards$ = new Subject<typeof cards>();
+            const loads = [of(cards), inFlightPoll$, refreshedCards$];
+            // Polls after these answer at once
+            getAccountAllCardsSpy.and.callFake(() => loads.shift() ?? of(cards));
+            spyOn(datasetFlowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+            fixture.detectChanges();
+            tick(0);
+
+            // The next poll starts after the toggle and answers while the refresh is debounced
+            tick(environment.delay_polling_ms - 1000);
+            component.toggleStateDatasetCard({
+                state: FlowProcessEffectiveState.Active,
+                datasetBasics: mockDatasetBasicsRootFragment,
+            });
+            tick(component.TIMEOUT_REFRESH_FLOW);
+            inFlightPoll$.next(cards);
+            expect(component.datasetCardsBusy$.value.has(datasetId)).toBeTrue();
+
+            tick(300);
+            refreshedCards$.next(cards);
             expect(component.datasetCardsBusy$.value.has(datasetId)).toBeFalse();
             discardPeriodicTasks();
         }));

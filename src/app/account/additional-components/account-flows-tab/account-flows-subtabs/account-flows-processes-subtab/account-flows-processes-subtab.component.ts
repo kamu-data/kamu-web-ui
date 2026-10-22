@@ -126,6 +126,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
     private readonly loadingCardsSubject$ = new BehaviorSubject<boolean>(false);
     /** IDs of the datasets whose card action has not shown its result yet */
     public readonly datasetCardsBusy$ = new BehaviorSubject<ReadonlySet<string>>(new Set());
+    private readonly cardsLoadStarted$ = new Subject<void>();
     private readonly cardsLoaded$ = new Subject<void>();
     public readonly fetchTrigger$ = new Subject<void>();
     public readonly ROLLUP_OPTIONS = RollupFiltersOptions;
@@ -159,6 +160,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
 
         this.accountFlowsCardsData$ = triggerWithInitial$.pipe(
             switchMap(() => polling$),
+            tap(() => this.cardsLoadStarted$.next()),
             switchMap(() => this.setCardsStrategy(this.flowsMode)),
 
             tap((data: CardsStrategyResult) => {
@@ -282,14 +284,18 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
     }
 
     /**
-     * Completes once the cards loaded after the delay arrive.
+     * Completes once cards requested after the delay arrive; a load that was under way already is not enough.
      * Only this part is tied to the page: the mutation before it still reports its result after leaving.
      */
     private refreshCardsAfterDelay(): Observable<void> {
         return timer(this.TIMEOUT_REFRESH_FLOW).pipe(
             switchMap(() => {
                 this.refreshNow();
-                return this.cardsLoaded$.pipe(take(1));
+                // A new load cancels the one under way, so the cards arriving after a start come from that load
+                return this.cardsLoadStarted$.pipe(
+                    take(1),
+                    switchMap(() => this.cardsLoaded$.pipe(take(1))),
+                );
             }),
             takeUntilDestroyed(this.destroyRef),
         );

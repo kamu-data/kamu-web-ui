@@ -12,7 +12,7 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from
 import { MatButtonToggleChange } from "@angular/material/button-toggle";
 import { ActivatedRoute } from "@angular/router";
 
-import { of } from "rxjs";
+import { of, Subject } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
@@ -573,6 +573,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         fixture.detectChanges();
         tick(0);
         const processesSubtab = await loadHarness();
+        expect(getAccountPrimaryCardsSpy).not.toHaveBeenCalled();
 
         await processesSubtab.selectFlowsMode("Datasets");
         tick(300);
@@ -611,7 +612,6 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             await card.clickUpdateNow();
 
             expect(triggerIngestSpy).toHaveBeenCalledTimes(1);
-            tick(component.TIMEOUT_REFRESH_FLOW);
             expect(toastrSuccessSpy).toHaveBeenCalledOnceWith("Flow scheduled");
             discardPeriodicTasks();
         }));
@@ -622,7 +622,6 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             const card = await loadFirstDatasetCard();
 
             await card.clickUpdateNow();
-            tick(component.TIMEOUT_REFRESH_FLOW);
 
             expect(toastrSuccessSpy).not.toHaveBeenCalled();
             discardPeriodicTasks();
@@ -676,6 +675,32 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         });
 
         fixture.destroy();
+        tick(component.TIMEOUT_REFRESH_FLOW);
+        expect(refreshNowSpy).not.toHaveBeenCalled();
+    }));
+
+    it("should still report a scheduled flow when the trigger responds after the page is left", () => {
+        const toastrSuccessSpy = spyOn(toastrService, "success");
+        const trigger$ = new Subject<boolean>();
+        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(trigger$);
+        component.updateNow(mockDatasetBasicsRootFragment);
+
+        fixture.destroy();
+        trigger$.next(true);
+        expect(toastrSuccessSpy).toHaveBeenCalledOnceWith("Flow scheduled");
+    });
+
+    it("should not refresh cards when a dataset card toggle responds after the page is left", fakeAsync(() => {
+        const pause$ = new Subject<void>();
+        spyOn(datasetFlowsService, "datasetPauseFlows").and.returnValue(pause$);
+        const refreshNowSpy = spyOn(component, "refreshNow");
+        component.toggleStateDatasetCard({
+            state: FlowProcessEffectiveState.Active,
+            datasetBasics: mockDatasetBasicsRootFragment,
+        });
+
+        fixture.destroy();
+        pause$.next();
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(refreshNowSpy).not.toHaveBeenCalled();
     }));

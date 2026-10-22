@@ -775,4 +775,16 @@ describe("FlowsComponent", () => {
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(refreshFlowSpy).not.toHaveBeenCalled();
     }));
+
+    it("should not refresh flows when the trigger responds after the page is left", fakeAsync(() => {
+        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        const trigger$ = new Subject<boolean>();
+        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(trigger$);
+        component.updateNow();
+
+        fixture.destroy();
+        trigger$.next(true);
+        tick(component.TIMEOUT_REFRESH_FLOW);
+        expect(refreshFlowSpy).not.toHaveBeenCalled();
+    }));
 });

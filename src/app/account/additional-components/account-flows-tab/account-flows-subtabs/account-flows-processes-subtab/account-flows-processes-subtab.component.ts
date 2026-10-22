@@ -209,14 +209,11 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
     }
 
     public updateNow(datasetBasics: DatasetBasicsFragment): void {
-        this.datasetCardService
-            .handleTrigger(datasetBasics)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((success: boolean) => {
-                if (success) {
-                    this.toastrService.success("Flow scheduled");
-                }
-            });
+        this.datasetCardService.handleTrigger(datasetBasics).subscribe((success: boolean) => {
+            if (success) {
+                this.toastrService.success("Flow scheduled");
+            }
+        });
     }
 
     public onToggleRollup(): void {
@@ -234,7 +231,6 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
                 state: params.state,
                 datasetBasics: params.datasetBasics,
             })
-            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.refreshNowAfterDelay();
             });

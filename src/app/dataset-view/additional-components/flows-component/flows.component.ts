@@ -366,14 +366,11 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public updateNow(): void {
-        this.datasetCardService
-            .handleTrigger(this.flowsData.datasetBasics)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((success: boolean) => {
-                if (success) {
-                    this.refreshFlowAfterDelay();
-                }
-            });
+        this.datasetCardService.handleTrigger(this.flowsData.datasetBasics).subscribe((success: boolean) => {
+            if (success) {
+                this.refreshFlowAfterDelay();
+            }
+        });
     }
 
     public toggleStateDatasetFlowConfigs(params: {
@@ -386,7 +383,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                 datasetBasics: params.datasetBasics,
                 confirmModal: true,
             })
-            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.refreshFlowAfterDelay();
             });

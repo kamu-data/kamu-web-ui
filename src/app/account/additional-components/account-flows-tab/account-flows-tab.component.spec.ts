@@ -87,8 +87,10 @@ describe("AccountFlowsTabComponent", () => {
 
     it("should empty block is visible", fakeAsync(() => {
         fixture.detectChanges();
-        mockFlowsTableData.connectionDataForWidget.nodes = [];
-        spyOn(accountService, "getAccountListFlows").and.returnValue(of(mockFlowsTableData));
+        // A copy, since `mockFlowsTableData` shares its connections with other fixtures
+        const flowsTableData = structuredClone(mockFlowsTableData);
+        flowsTableData.connectionDataForWidget.nodes = [];
+        spyOn(accountService, "getAccountListFlows").and.returnValue(of(flowsTableData));
         tick();
         fixture.detectChanges();
 

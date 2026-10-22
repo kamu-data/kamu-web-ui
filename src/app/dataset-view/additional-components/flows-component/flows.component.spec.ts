@@ -19,6 +19,7 @@ import { provideToastr } from "ngx-toastr";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import {
     DatasetFlowProcesses,
@@ -41,6 +42,7 @@ import { DatasetFlowsService } from "src/app/dataset-view/additional-components/
 import { FlowsSelectionStateService } from "src/app/dataset-view/additional-components/flows-component/services/flows-selection-state.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetFlowProcessCardHarness } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.harness";
+import ProjectLinks from "src/app/project-links";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
@@ -845,6 +847,84 @@ describe("FlowsComponent", () => {
 
             expect(component.datasetCardBusy$.value).toBeFalse();
             expect(() => tick()).toThrowError("Network failure");
+        }));
+    });
+
+    describe("switching to another dataset's Flows tab", () => {
+        const otherDatasetFlowsData = {
+            datasetBasics: { ...mockDatasetBasicsDerivedFragment, id: "other-dataset-id" },
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            overviewUpdate: mockOverviewUpdate,
+        };
+        let datasetFlowsProcessesSpy: jasmine.Spy;
+
+        beforeEach(() => {
+            datasetFlowsProcessesSpy = spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+                of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+            );
+            spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData));
+            spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
+            fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_FLOWS_KEY, component.flowsData);
+        });
+
+        function switchTo(flowsData: typeof component.flowsData): void {
+            fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_FLOWS_KEY, flowsData);
+            fixture.detectChanges();
+            tick();
+        }
+
+        it("should load the other dataset's flows", fakeAsync(() => {
+            fixture.detectChanges();
+            tick();
+            datasetFlowsProcessesSpy.calls.reset();
+
+            switchTo(otherDatasetFlowsData);
+
+            expect(datasetFlowsProcessesSpy).toHaveBeenCalledOnceWith({ datasetId: "other-dataset-id" });
+            discardPeriodicTasks();
+        }));
+
+        it("should keep only the selection the current URL asks for", fakeAsync(() => {
+            const selectionStateService = fixture.debugElement.injector.get(FlowsSelectionStateService);
+            fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_WEBHOOK_ID, "subscription-from-url");
+            fixture.detectChanges();
+            tick();
+            selectionStateService.addWebhookId("subscription-of-the-previous-dataset");
+
+            switchTo(otherDatasetFlowsData);
+
+            expect(selectionStateService.snapshot.webhooksIds).toEqual(["subscription-from-url"]);
+            discardPeriodicTasks();
+        }));
+
+        it("should clear the filters chosen for the previous dataset", fakeAsync(() => {
+            fixture.detectChanges();
+            tick();
+            component.onSearchByFiltersChange({
+                status: [FlowStatus.Finished],
+                accounts: [mockAccountDetails],
+                datasets: [],
+                onlySystemFlows: false,
+            });
+            tick();
+
+            switchTo(otherDatasetFlowsData);
+
+            expect(component.searchByAccount).toEqual([]);
+            expect(component.selectedStatusItems).toEqual([]);
+            expect(component.onlySystemFlows).toBeFalse();
+            discardPeriodicTasks();
+        }));
+
+        it("should not start over when the data of the same dataset is resolved again", fakeAsync(() => {
+            fixture.detectChanges();
+            tick();
+            datasetFlowsProcessesSpy.calls.reset();
+
+            switchTo({ ...component.flowsData });
+
+            expect(datasetFlowsProcessesSpy).not.toHaveBeenCalled();
+            discardPeriodicTasks();
         }));
     });
 });

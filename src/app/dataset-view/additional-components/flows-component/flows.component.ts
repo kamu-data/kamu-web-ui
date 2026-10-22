@@ -6,7 +6,7 @@
  */
 
 import { AsyncPipe, NgClass } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
@@ -85,26 +85,25 @@ import { ProcessDatasetCardInteractionService } from "src/app/services/process-d
         SourceEventEditorLinkPipe,
     ],
 })
-export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit {
+export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit, OnChanges {
     @Input(RoutingResolvers.DATASET_VIEW_FLOWS_KEY) public flowsData: DatasetOverviewTabData;
     @Input(ProjectLinks.URL_QUERY_PARAM_WEBHOOK_ID) public set setWebhookId(value: MaybeNull<string>) {
-        const ids = value ? value.split(",") : [];
-        ids.forEach((id: string) => this.flowsSelectionStateService.addWebhookId(id));
+        this.webhookIdParam = value;
+        this.applyWebhookIdParam();
     }
     @Input(ProjectLinks.URL_QUERY_PARAM_WEBHOOKS_STATE) public set setWebhookState(value: MaybeNull<string>) {
-        const states = value ? (value.split(",") as FlowProcessEffectiveState[]) : [];
-        this.flowsSelectionStateService.setWebhookFilterButtons(states);
-        if (this.flowsSelectionState.webhookFilterButtons.length) {
-            this.flowsSelectionStateService.setWebhooksCategory("webhooks");
-        }
+        this.webhookStateParam = value;
+        this.applyWebhookStateParam();
     }
     @Input(ProjectLinks.URL_QUERY_PARAM_FLOWS_CATEGORY) public set setFlowsCategory(value: FlowsCategoryUnion) {
-        if (value === "webhooks") {
-            this.flowsSelectionStateService.setWebhooksCategory(value);
-        } else {
-            this.flowsSelectionStateService.setFlowsCategory(value);
-        }
+        this.flowsCategoryParam = value;
+        this.applyFlowsCategoryParam();
     }
+
+    // The query parameters as last bound: the router does not bind an unchanged one again
+    private webhookIdParam: MaybeNull<string> = null;
+    private webhookStateParam: MaybeNull<string> = null;
+    private flowsCategoryParam: FlowsCategoryUnion;
 
     public selectedDatasetItems: DatasetBasicsFragment[] = [];
     public selectedAccountItems: AccountFragment[] = [];
@@ -128,6 +127,48 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public ngOnInit(): void {
         this.filterByStatus = null;
         this.refreshFlow();
+    }
+
+    public ngOnChanges(changes: SimpleChanges): void {
+        const previousFlowsData = changes["flowsData"]?.previousValue as MaybeUndefined<DatasetOverviewTabData>;
+        if (previousFlowsData && previousFlowsData.datasetBasics.id !== this.flowsData.datasetBasics.id) {
+            this.startOverForAnotherDataset();
+        }
+    }
+
+    // The router keeps this component when it moves to another dataset's Flows tab
+    private startOverForAnotherDataset(): void {
+        this.flowsSelectionStateService.reset();
+        this.applyWebhookIdParam();
+        this.applyWebhookStateParam();
+        this.applyFlowsCategoryParam();
+        this.filterByStatus = null;
+        this.filterInitiator = null;
+        this.onlySystemFlows = false;
+        this.searchByAccount = [];
+        this.onResetFilters();
+        this.refreshFlow();
+    }
+
+    private applyWebhookIdParam(): void {
+        const ids = this.webhookIdParam ? this.webhookIdParam.split(",") : [];
+        ids.forEach((id: string) => this.flowsSelectionStateService.addWebhookId(id));
+    }
+
+    private applyWebhookStateParam(): void {
+        const states = this.webhookStateParam ? (this.webhookStateParam.split(",") as FlowProcessEffectiveState[]) : [];
+        this.flowsSelectionStateService.setWebhookFilterButtons(states);
+        if (this.flowsSelectionState.webhookFilterButtons.length) {
+            this.flowsSelectionStateService.setWebhooksCategory("webhooks");
+        }
+    }
+
+    private applyFlowsCategoryParam(): void {
+        if (this.flowsCategoryParam === "webhooks") {
+            this.flowsSelectionStateService.setWebhooksCategory(this.flowsCategoryParam);
+        } else {
+            this.flowsSelectionStateService.setFlowsCategory(this.flowsCategoryParam);
+        }
     }
 
     public get showPanelButtons(): boolean {

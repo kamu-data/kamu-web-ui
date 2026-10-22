@@ -423,7 +423,6 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             this.datasetCardService.handleToggleState({
                 state: params.state,
                 datasetBasics: params.datasetBasics,
-                confirmModal: true,
             }),
         );
     }

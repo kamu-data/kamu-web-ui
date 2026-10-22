@@ -17,6 +17,7 @@ import { of, Subject, throwError } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
+import { ModalService } from "@common/components/modal/modal.service";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
@@ -33,6 +34,7 @@ import {
     mockAccountFlowsPrimaryCardsQuery,
     mockAccountFlowsWebhookCardsQuery,
 } from "@api/mock/account.mock";
+import { ModalArgumentsInterface } from "@interface/modal.interface";
 
 import { AccountService } from "src/app/account/account.service";
 import { AccountFlowsProcessesSubtabComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/account-flows-processes-subtab.component";
@@ -63,6 +65,13 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     const MOCK_SUBSCRIPTION_ID = "121223-21212-567788";
 
     let getAccountAllCardsSpy: jasmine.Spy;
+
+    function answerConfirmModal(ok: boolean): jasmine.Spy {
+        return spyOn(TestBed.inject(ModalService), "error").and.callFake((options: ModalArgumentsInterface) => {
+            options.handler?.call(undefined, ok);
+            return Promise.resolve("");
+        });
+    }
 
     // Tick before loading: the first poll runs on an interval, which the harness's own flush skips
     function loadHarness(): Promise<AccountFlowsProcessesSubtabHarness> {
@@ -214,6 +223,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     it("should check to toggle dataset card with stopped state", fakeAsync(() => {
+        answerConfirmModal(true);
         const datasetResumeFlowsSpy = spyOn(datasetFlowsService, "datasetResumeFlows").and.returnValue(of(void 0));
         component.toggleStateDatasetCard({
             state: FlowProcessEffectiveState.StoppedAuto,
@@ -627,7 +637,8 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             discardPeriodicTasks();
         }));
 
-        it("should resume an auto-stopped process from the card without confirmation and refresh the cards", fakeAsync(async () => {
+        it("should resume an auto-stopped process from the card after confirmation and refresh the cards", fakeAsync(async () => {
+            const modalSpy = answerConfirmModal(true);
             const resumeSpy = spyOn(datasetFlowsService, "datasetResumeFlows").and.returnValue(of(void 0));
             const card = await loadFirstDatasetCard();
             const refreshNowSpy = spyOn(component, "refreshNow");
@@ -635,6 +646,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             expect(await card.getToggleStateLabel()).toEqual("Resume updates");
             await card.clickToggleState();
 
+            expect(modalSpy).toHaveBeenCalledTimes(1);
             expect(resumeSpy).toHaveBeenCalledTimes(1);
             expect(await card.isToggleStateDisabled()).toBeTrue();
             expect(await card.isUpdateNowDisabled()).toBeTrue();
@@ -739,7 +751,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             component.updateNow(derivedDataset);
             expect([...component.datasetCardsBusy$.value]).toEqual([datasetId, derivedDataset.id]);
 
-            rootTrigger$.next(true);
+            rootTrigger$.next(false);
             expect([...component.datasetCardsBusy$.value]).toEqual([derivedDataset.id]);
         });
 
@@ -765,5 +777,39 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             expect(component.datasetCardsBusy$.value.has(datasetId)).toBeFalse();
             expect(() => tick()).toThrowError("Network failure");
         }));
+    });
+
+    it("should refresh the cards after 'Update now' only once the delay passes", fakeAsync(() => {
+        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
+        const refreshNowSpy = spyOn(component, "refreshNow");
+        component.updateNow(mockDatasetBasicsRootFragment);
+
+        tick(component.TIMEOUT_REFRESH_FLOW - 1);
+        expect(refreshNowSpy).not.toHaveBeenCalled();
+
+        tick(1);
+        expect(refreshNowSpy).toHaveBeenCalledTimes(1);
+    }));
+
+    it("should not refresh the cards after 'Update now' once destroyed", fakeAsync(() => {
+        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
+        const refreshNowSpy = spyOn(component, "refreshNow");
+        component.updateNow(mockDatasetBasicsRootFragment);
+
+        fixture.destroy();
+        tick(component.TIMEOUT_REFRESH_FLOW);
+        expect(refreshNowSpy).not.toHaveBeenCalled();
+    }));
+
+    it("should leave an auto-stopped process alone when the resume confirmation is cancelled", () => {
+        answerConfirmModal(false);
+        const resumeSpy = spyOn(datasetFlowsService, "datasetResumeFlows");
+        component.toggleStateDatasetCard({
+            state: FlowProcessEffectiveState.StoppedAuto,
+            datasetBasics: mockDatasetBasicsRootFragment,
+        });
+
+        expect(resumeSpy).not.toHaveBeenCalled();
+        expect(component.datasetCardsBusy$.value.size).toEqual(0);
     });
 });

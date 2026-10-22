@@ -34,14 +34,13 @@ export class ProcessDatasetCardInteractionService {
 
     /**
      * Pauses or resumes the dataset's flows and emits once they are toggled.
-     * With `confirmModal`, resuming an auto-stopped process asks first; a cancel completes without emitting.
+     * Resuming an auto-stopped process asks first; a cancel completes without emitting.
      */
     public handleToggleState(params: {
         state: FlowProcessEffectiveState;
         datasetBasics: DatasetBasicsFragment;
-        confirmModal?: boolean;
     }): Observable<void> {
-        const { state, datasetBasics, confirmModal } = params;
+        const { state, datasetBasics } = params;
 
         const toggle = (): Observable<void> => {
             const toggle$ = [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing].includes(state)
@@ -50,7 +49,7 @@ export class ProcessDatasetCardInteractionService {
             return toggle$.pipe(take(1));
         };
 
-        if (confirmModal && state === FlowProcessEffectiveState.StoppedAuto) {
+        if (state === FlowProcessEffectiveState.StoppedAuto) {
             return this.confirmResume().pipe(filter(Boolean), switchMap(toggle));
         }
         return toggle();

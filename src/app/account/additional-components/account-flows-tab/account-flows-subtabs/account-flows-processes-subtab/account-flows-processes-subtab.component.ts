@@ -226,12 +226,13 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
     public updateNow(datasetBasics: DatasetBasicsFragment): void {
         this.datasetCardService
             .handleTrigger(datasetBasics)
-            .pipe(trackBusyKey(this.datasetCardsBusy$, datasetBasics.id))
-            .subscribe((success: boolean) => {
-                if (success) {
-                    this.toastrService.success("Flow scheduled");
-                }
-            });
+            .pipe(
+                filter(Boolean),
+                tap(() => this.toastrService.success("Flow scheduled")),
+                switchMap(() => this.refreshCardsAfterDelay()),
+                trackBusyKey(this.datasetCardsBusy$, datasetBasics.id),
+            )
+            .subscribe();
     }
 
     public onToggleRollup(): void {

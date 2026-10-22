@@ -199,7 +199,7 @@ describe("FlowsComponent", () => {
     }));
 
     it(`should check toggle state for dataset flow when state=${FlowProcessEffectiveState.Active}`, () => {
-        const handleToggleStateSpy = spyOn(datasetCardService, "handleToggleState");
+        const handleToggleStateSpy = spyOn(datasetCardService, "handleToggleState").and.returnValue(of(void 0));
         component.toggleStateDatasetFlowConfigs({
             state: FlowProcessEffectiveState.Active,
             datasetBasics: mockDatasetBasicsRootFragment,
@@ -716,4 +716,63 @@ describe("FlowsComponent", () => {
             discardPeriodicTasks();
         }));
     });
+
+    it("should refresh flows after 'Update now' only once the delay passes", fakeAsync(() => {
+        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
+        component.updateNow();
+
+        tick(component.TIMEOUT_REFRESH_FLOW - 1);
+        expect(refreshFlowSpy).not.toHaveBeenCalled();
+
+        tick(1);
+        expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+    }));
+
+    it("should not refresh flows after 'Update now' once destroyed", fakeAsync(() => {
+        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
+        component.updateNow();
+
+        fixture.destroy();
+        tick(component.TIMEOUT_REFRESH_FLOW);
+        expect(refreshFlowSpy).not.toHaveBeenCalled();
+    }));
+
+    it("should not refresh flows when 'Update now' fails to trigger", fakeAsync(() => {
+        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(false));
+        component.updateNow();
+
+        tick(component.TIMEOUT_REFRESH_FLOW);
+        expect(refreshFlowSpy).not.toHaveBeenCalled();
+    }));
+
+    it("should refresh flows after pausing the dataset flows only once the delay passes", fakeAsync(() => {
+        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+        component.toggleStateDatasetFlowConfigs({
+            state: FlowProcessEffectiveState.Failing,
+            datasetBasics: mockDatasetBasicsRootFragment,
+        });
+
+        tick(component.TIMEOUT_REFRESH_FLOW - 1);
+        expect(refreshFlowSpy).not.toHaveBeenCalled();
+
+        tick(1);
+        expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
+    }));
+
+    it("should not refresh flows after pausing the dataset flows once destroyed", fakeAsync(() => {
+        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+        component.toggleStateDatasetFlowConfigs({
+            state: FlowProcessEffectiveState.Failing,
+            datasetBasics: mockDatasetBasicsRootFragment,
+        });
+
+        fixture.destroy();
+        tick(component.TIMEOUT_REFRESH_FLOW);
+        expect(refreshFlowSpy).not.toHaveBeenCalled();
+    }));
 });

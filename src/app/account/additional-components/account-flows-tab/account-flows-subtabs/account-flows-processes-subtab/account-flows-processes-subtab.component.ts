@@ -209,9 +209,14 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
     }
 
     public updateNow(datasetBasics: DatasetBasicsFragment): void {
-        this.datasetCardService.handleTrigger(datasetBasics, () => {
-            this.toastrService.success("Flow scheduled");
-        });
+        this.datasetCardService
+            .handleTrigger(datasetBasics)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((success: boolean) => {
+                if (success) {
+                    this.toastrService.success("Flow scheduled");
+                }
+            });
     }
 
     public onToggleRollup(): void {
@@ -224,13 +229,15 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
     }): void {
         this.processesPerPage = this.processesCards.length;
         this.toggleCardStateSubject$.next(true);
-        this.datasetCardService.handleToggleState({
-            state: params.state,
-            datasetBasics: params.datasetBasics,
-            onSuccess: () => {
-                this.refreshNow();
-            },
-        });
+        this.datasetCardService
+            .handleToggleState({
+                state: params.state,
+                datasetBasics: params.datasetBasics,
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.refreshNowAfterDelay();
+            });
     }
 
     public toggleWebhookCardState(params: {
@@ -252,13 +259,17 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
                   );
         result$.pipe(take(1)).subscribe((result: boolean) => {
             if (result) {
-                timer(this.TIMEOUT_REFRESH_FLOW)
-                    .pipe(takeUntilDestroyed(this.destroyRef))
-                    .subscribe(() => {
-                        this.refreshNow();
-                    });
+                this.refreshNowAfterDelay();
             }
         });
+    }
+
+    private refreshNowAfterDelay(): void {
+        timer(this.TIMEOUT_REFRESH_FLOW)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.refreshNow();
+            });
     }
 
     public refreshNow(): void {

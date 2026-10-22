@@ -366,23 +366,38 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     public updateNow(): void {
-        this.datasetCardService.handleTrigger(this.flowsData.datasetBasics, () => {
-            this.refreshFlow();
-        });
+        this.datasetCardService
+            .handleTrigger(this.flowsData.datasetBasics)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((success: boolean) => {
+                if (success) {
+                    this.refreshFlowAfterDelay();
+                }
+            });
     }
 
     public toggleStateDatasetFlowConfigs(params: {
         state: FlowProcessEffectiveState;
         datasetBasics: DatasetBasicsFragment;
     }): void {
-        this.datasetCardService.handleToggleState({
-            state: params.state,
-            datasetBasics: params.datasetBasics,
-            onSuccess: () => {
+        this.datasetCardService
+            .handleToggleState({
+                state: params.state,
+                datasetBasics: params.datasetBasics,
+                confirmModal: true,
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.refreshFlowAfterDelay();
+            });
+    }
+
+    private refreshFlowAfterDelay(): void {
+        timer(this.TIMEOUT_REFRESH_FLOW)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
                 this.refreshFlow();
-            },
-            confirmModal: true,
-        });
+            });
     }
 
     public onSearchByFiltersChange(filters: MaybeNull<FlowsTableFiltersOptions>): void {

@@ -642,4 +642,41 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             discardPeriodicTasks();
         }));
     });
+
+    it("should report a scheduled flow as soon as the trigger succeeds", () => {
+        const toastrSuccessSpy = spyOn(toastrService, "success");
+        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
+
+        component.updateNow(mockDatasetBasicsRootFragment);
+
+        expect(toastrSuccessSpy).toHaveBeenCalledOnceWith("Flow scheduled");
+    });
+
+    it("should refresh cards once the delay after a dataset card toggle passes", fakeAsync(() => {
+        spyOn(datasetFlowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+        const refreshNowSpy = spyOn(component, "refreshNow");
+        component.toggleStateDatasetCard({
+            state: FlowProcessEffectiveState.Active,
+            datasetBasics: mockDatasetBasicsRootFragment,
+        });
+
+        tick(component.TIMEOUT_REFRESH_FLOW - 1);
+        expect(refreshNowSpy).not.toHaveBeenCalled();
+
+        tick(1);
+        expect(refreshNowSpy).toHaveBeenCalledTimes(1);
+    }));
+
+    it("should not refresh cards after a dataset card toggle once destroyed", fakeAsync(() => {
+        spyOn(datasetFlowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+        const refreshNowSpy = spyOn(component, "refreshNow");
+        component.toggleStateDatasetCard({
+            state: FlowProcessEffectiveState.Active,
+            datasetBasics: mockDatasetBasicsRootFragment,
+        });
+
+        fixture.destroy();
+        tick(component.TIMEOUT_REFRESH_FLOW);
+        expect(refreshNowSpy).not.toHaveBeenCalled();
+    }));
 });

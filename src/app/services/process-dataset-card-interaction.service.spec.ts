@@ -5,15 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { fakeAsync, TestBed, tick } from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { lastValueFrom, Observable, of, toArray } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { ModalService } from "@common/components/modal/modal.service";
-import AppValues from "@common/values/app.values";
 import { FlowProcessEffectiveState } from "@api/kamu.graphql.interface";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
@@ -25,7 +24,6 @@ describe("ProcessDatasetCardInteractionService", () => {
     let service: ProcessDatasetCardInteractionService;
     let flowsService: DatasetFlowsService;
     let modalService: ModalService;
-    let onSuccessSpy: jasmine.Spy;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -34,7 +32,6 @@ describe("ProcessDatasetCardInteractionService", () => {
         service = TestBed.inject(ProcessDatasetCardInteractionService);
         flowsService = TestBed.inject(DatasetFlowsService);
         modalService = TestBed.inject(ModalService);
-        onSuccessSpy = jasmine.createSpy("onSuccess");
     });
 
     function answerConfirmModal(ok: boolean): jasmine.Spy {
@@ -44,137 +41,134 @@ describe("ProcessDatasetCardInteractionService", () => {
         });
     }
 
+    function emissions<T>(source$: Observable<T>): Promise<T[]> {
+        return lastValueFrom(source$.pipe(toArray()));
+    }
+
     it("should be created", () => {
         expect(service).toBeTruthy();
     });
 
     describe("handleTrigger", () => {
-        it("should trigger an ingest flow for a root dataset and report success after the delay", fakeAsync(() => {
+        it("should trigger an ingest flow for a root dataset and emit its success", async () => {
             const triggerIngestSpy = spyOn(flowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
             const triggerTransformSpy = spyOn(flowsService, "datasetTriggerTransformFlow");
 
-            service.handleTrigger(mockDatasetBasicsRootFragment, onSuccessSpy);
-
+            expect(await emissions(service.handleTrigger(mockDatasetBasicsRootFragment))).toEqual([true]);
             expect(triggerIngestSpy).toHaveBeenCalledOnceWith({ datasetId: mockDatasetBasicsRootFragment.id });
             expect(triggerTransformSpy).not.toHaveBeenCalled();
-            tick(AppValues.TIMEOUT_REFRESH_FLOW_MS - 1);
-            expect(onSuccessSpy).not.toHaveBeenCalled();
-            tick(1);
-            expect(onSuccessSpy).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it("should trigger a transform flow for a derivative dataset", fakeAsync(() => {
+        it("should trigger a transform flow for a derivative dataset", async () => {
             const triggerIngestSpy = spyOn(flowsService, "datasetTriggerIngestFlow");
             const triggerTransformSpy = spyOn(flowsService, "datasetTriggerTransformFlow").and.returnValue(of(true));
 
-            service.handleTrigger(mockDatasetBasicsDerivedFragment, onSuccessSpy);
-            tick(AppValues.TIMEOUT_REFRESH_FLOW_MS);
-
+            expect(await emissions(service.handleTrigger(mockDatasetBasicsDerivedFragment))).toEqual([true]);
             expect(triggerTransformSpy).toHaveBeenCalledOnceWith({ datasetId: mockDatasetBasicsDerivedFragment.id });
             expect(triggerIngestSpy).not.toHaveBeenCalled();
-            expect(onSuccessSpy).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it("should not report success when the trigger fails", fakeAsync(() => {
+        it("should emit `false` when the trigger fails", async () => {
             spyOn(flowsService, "datasetTriggerIngestFlow").and.returnValue(of(false));
 
-            service.handleTrigger(mockDatasetBasicsRootFragment, onSuccessSpy);
-            tick(AppValues.TIMEOUT_REFRESH_FLOW_MS);
-
-            expect(onSuccessSpy).not.toHaveBeenCalled();
-        }));
+            expect(await emissions(service.handleTrigger(mockDatasetBasicsRootFragment))).toEqual([false]);
+        });
     });
 
     describe("handleToggleState", () => {
         [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing].forEach((state) => {
-            it(`should pause the flows for state=${state} and report success after the delay`, fakeAsync(() => {
+            it(`should pause the flows for state=${state} and emit once`, async () => {
                 const pauseSpy = spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
                 const resumeSpy = spyOn(flowsService, "datasetResumeFlows");
 
-                service.handleToggleState({
-                    state,
-                    datasetBasics: mockDatasetBasicsRootFragment,
-                    onSuccess: onSuccessSpy,
-                });
+                const toggled = await emissions(
+                    service.handleToggleState({ state, datasetBasics: mockDatasetBasicsRootFragment }),
+                );
 
+                expect(toggled.length).toEqual(1);
                 expect(pauseSpy).toHaveBeenCalledOnceWith({ datasetId: mockDatasetBasicsRootFragment.id });
                 expect(resumeSpy).not.toHaveBeenCalled();
-                tick(AppValues.TIMEOUT_REFRESH_FLOW_MS - 1);
-                expect(onSuccessSpy).not.toHaveBeenCalled();
-                tick(1);
-                expect(onSuccessSpy).toHaveBeenCalledTimes(1);
-            }));
+            });
         });
 
         [FlowProcessEffectiveState.PausedManual, FlowProcessEffectiveState.StoppedAuto].forEach((state) => {
-            it(`should resume the flows for state=${state} without asking when no confirmation is requested`, fakeAsync(() => {
+            it(`should resume the flows for state=${state} without asking when no confirmation is requested`, async () => {
                 const modalSpy = spyOn(modalService, "error");
                 const pauseSpy = spyOn(flowsService, "datasetPauseFlows");
                 const resumeSpy = spyOn(flowsService, "datasetResumeFlows").and.returnValue(of(void 0));
 
-                service.handleToggleState({
-                    state,
-                    datasetBasics: mockDatasetBasicsRootFragment,
-                    onSuccess: onSuccessSpy,
-                });
-                tick(AppValues.TIMEOUT_REFRESH_FLOW_MS);
+                const toggled = await emissions(
+                    service.handleToggleState({ state, datasetBasics: mockDatasetBasicsRootFragment }),
+                );
 
+                expect(toggled.length).toEqual(1);
                 expect(modalSpy).not.toHaveBeenCalled();
                 expect(resumeSpy).toHaveBeenCalledOnceWith({ datasetId: mockDatasetBasicsRootFragment.id });
                 expect(pauseSpy).not.toHaveBeenCalled();
-                expect(onSuccessSpy).toHaveBeenCalledTimes(1);
-            }));
+            });
         });
 
-        it("should resume an auto-stopped process once the confirmation is accepted", fakeAsync(() => {
+        it("should resume an auto-stopped process once the confirmation is accepted", async () => {
             const modalSpy = answerConfirmModal(true);
             const resumeSpy = spyOn(flowsService, "datasetResumeFlows").and.returnValue(of(void 0));
 
-            service.handleToggleState({
-                state: FlowProcessEffectiveState.StoppedAuto,
-                datasetBasics: mockDatasetBasicsRootFragment,
-                onSuccess: onSuccessSpy,
-                confirmModal: true,
-            });
-            tick(AppValues.TIMEOUT_REFRESH_FLOW_MS);
+            const toggled = await emissions(
+                service.handleToggleState({
+                    state: FlowProcessEffectiveState.StoppedAuto,
+                    datasetBasics: mockDatasetBasicsRootFragment,
+                    confirmModal: true,
+                }),
+            );
 
+            expect(toggled.length).toEqual(1);
             expect(modalSpy).toHaveBeenCalledTimes(1);
             expect(resumeSpy).toHaveBeenCalledTimes(1);
-            expect(onSuccessSpy).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it("should leave an auto-stopped process alone when the confirmation is cancelled", fakeAsync(() => {
+        it("should complete without emitting when the confirmation is cancelled", async () => {
             const modalSpy = answerConfirmModal(false);
             const resumeSpy = spyOn(flowsService, "datasetResumeFlows");
 
+            const toggled = await emissions(
+                service.handleToggleState({
+                    state: FlowProcessEffectiveState.StoppedAuto,
+                    datasetBasics: mockDatasetBasicsRootFragment,
+                    confirmModal: true,
+                }),
+            );
+
+            expect(toggled).toEqual([]);
+            expect(modalSpy).toHaveBeenCalledTimes(1);
+            expect(resumeSpy).not.toHaveBeenCalled();
+        });
+
+        it("should ask for confirmation only once the result is subscribed to", () => {
+            const modalSpy = answerConfirmModal(true);
+
             service.handleToggleState({
                 state: FlowProcessEffectiveState.StoppedAuto,
                 datasetBasics: mockDatasetBasicsRootFragment,
-                onSuccess: onSuccessSpy,
                 confirmModal: true,
             });
-            tick(AppValues.TIMEOUT_REFRESH_FLOW_MS);
 
-            expect(modalSpy).toHaveBeenCalledTimes(1);
-            expect(resumeSpy).not.toHaveBeenCalled();
-            expect(onSuccessSpy).not.toHaveBeenCalled();
-        }));
+            expect(modalSpy).not.toHaveBeenCalled();
+        });
 
-        it("should not ask for confirmation before pausing, even when confirmation is requested", fakeAsync(() => {
+        it("should not ask for confirmation before pausing, even when confirmation is requested", async () => {
             const modalSpy = spyOn(modalService, "error");
             const pauseSpy = spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
 
-            service.handleToggleState({
-                state: FlowProcessEffectiveState.Active,
-                datasetBasics: mockDatasetBasicsRootFragment,
-                onSuccess: onSuccessSpy,
-                confirmModal: true,
-            });
-            tick(AppValues.TIMEOUT_REFRESH_FLOW_MS);
+            const toggled = await emissions(
+                service.handleToggleState({
+                    state: FlowProcessEffectiveState.Active,
+                    datasetBasics: mockDatasetBasicsRootFragment,
+                    confirmModal: true,
+                }),
+            );
 
+            expect(toggled.length).toEqual(1);
             expect(modalSpy).not.toHaveBeenCalled();
             expect(pauseSpy).toHaveBeenCalledTimes(1);
-            expect(onSuccessSpy).toHaveBeenCalledTimes(1);
-        }));
+        });
     });
 });

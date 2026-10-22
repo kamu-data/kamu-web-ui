@@ -636,12 +636,6 @@ markdown {
     }
 }
 
-.app-mat-chip {
-    & ::ng-deep .mat-standard-chip {
-        cursor: pointer;
-    }
-}
-
 .mat-standard-chip {
     min-height: 25px;
     border-radius: 16px;
@@ -737,22 +731,6 @@ markdown {
     line-height: 18px;
     border: 1px solid $very-light-grey;
     border-radius: 2em;
-}
-
-.signed-commit__popup-header {
-    .mat-typography {
-        h3 {
-            margin: 0 !important;
-        }
-    }
-
-    ::ng-deep ngb-popover-window.bs-popover-left > .arrow {
-        display: none;
-    }
-
-    ::ng-deep ngb-popover-window .popover-header {
-        margin: 0;
-    }
 }
 
 .overflow-visible {

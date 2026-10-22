@@ -1,0 +1,15 @@
+angular2-multiselect.flow-filter-multiselect .cuppa-dropdown {
+    width: 260px;
+    height: 38px;
+
+    .c-label {
+        width: 140px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .list-area {
+        margin-bottom: 20px;
+    }
+}

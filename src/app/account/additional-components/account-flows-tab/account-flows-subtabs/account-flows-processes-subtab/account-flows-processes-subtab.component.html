@@ -17,7 +17,11 @@
 
 <div class="my-4 d-flex flex-row align-items-center">
     <span class="fw-500 me-4">View:</span>
-    <mat-button-toggle-group [(ngModel)]="accountFlowsData.datasetsFiltersMode" (change)="onChangeFiltersMode($event)">
+    <mat-button-toggle-group
+        [(ngModel)]="accountFlowsData.datasetsFiltersMode"
+        [hideSingleSelectionIndicator]="true"
+        (change)="onChangeFiltersMode($event)"
+    >
         @for (item of CARD_FILTERS_MODE_OPTIONS; track item) {
             <mat-button-toggle [value]="item.value">
                 <mat-icon aria-hidden="true" class="fs-4 mr-2px">{{ item.iconName }}</mat-icon
@@ -33,6 +37,7 @@
             [(ngModel)]="dashboardFiltersState.selectedFlowProcessStates"
             (change)="onToggleRollup()"
             multiple
+            [hideMultipleSelectionIndicator]="true"
             class="me-4"
         >
             @for (item of ROLLUP_OPTIONS; track item) {

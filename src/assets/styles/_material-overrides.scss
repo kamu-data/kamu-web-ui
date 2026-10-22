@@ -1,0 +1,51 @@
+@use "@angular/material" as mat;
+
+// Mixins only: a component includes them, this file emits nothing.
+// The prebuilt theme sets checkbox and slide-toggle tokens on `html`, so `:host` overrides them.
+// It sets chip and radio tokens on the component element, so include those on the element itself.
+
+@mixin checkbox-no-state-layer {
+    @include mat.checkbox-overrides(
+        (
+            unselected-hover-state-layer-opacity: 0,
+            unselected-focus-state-layer-opacity: 0,
+            unselected-pressed-state-layer-opacity: 0,
+            selected-hover-state-layer-opacity: 0,
+            selected-focus-state-layer-opacity: 0,
+            selected-pressed-state-layer-opacity: 0,
+        )
+    );
+}
+
+@mixin slide-toggle-no-state-layer {
+    @include mat.slide-toggle-overrides(
+        (
+            unselected-hover-state-layer-opacity: 0,
+            unselected-focus-state-layer-opacity: 0,
+            unselected-pressed-state-layer-opacity: 0,
+            selected-hover-state-layer-opacity: 0,
+            selected-focus-state-layer-opacity: 0,
+            selected-pressed-state-layer-opacity: 0,
+        )
+    );
+}
+
+@mixin radio-no-ripple {
+    @include mat.radio-overrides(
+        (
+            ripple-color: transparent,
+            checked-ripple-color: transparent,
+        )
+    );
+}
+
+@mixin dataset-chip {
+    @include mat.chips-overrides(
+        (
+            elevated-container-color: #f6f8fa,
+            label-text-color: #0969da,
+            label-text-size: 12px,
+            label-text-weight: 500,
+        )
+    );
+}

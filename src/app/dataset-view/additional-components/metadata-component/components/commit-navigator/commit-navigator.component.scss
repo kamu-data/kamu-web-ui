@@ -1,35 +1,5 @@
 @use "var" as *;
 
-.paginate-container {
-    margin-top: 16px;
-    margin-bottom: 16px;
-    text-align: center;
-    display: grid;
-    justify-content: center;
-}
-
-ngb-pagination {
-    ::ng-deep {
-        .page-item {
-            .page-link {
-                border: none;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                border-radius: 6px;
-
-                & span {
-                    display: none;
-                }
-            }
-        }
-
-        * {
-            font-size: 14px;
-        }
-    }
-}
-
 .date {
     height: 33px;
 }

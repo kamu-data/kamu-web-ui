@@ -1,16 +1,10 @@
+@use "material-overrides" as overrides;
+
+mat-chip.mat-mdc-standard-chip {
+    @include overrides.dataset-chip;
+}
+
 :host {
-    ::ng-deep {
-        .mat-mdc-standard-chip {
-            --mat-chip-elevated-container-color: #f6f8fa;
-
-            .mdc-evolution-chip__text-label {
-                color: #0969da !important;
-                font-size: 12px;
-                font-weight: 500;
-            }
-        }
-    }
-
     mat-button-toggle-group {
         height: 32px;
         align-items: center;

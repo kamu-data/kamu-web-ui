@@ -1,16 +1,11 @@
-::ng-deep {
-    .mat-mdc-checkbox {
-        --mat-checkbox-state-layer-size: 25px;
+@use "@angular/material" as mat;
 
-        .mdc-checkbox__background {
-            width: 16px;
-            height: 16px;
-        }
-    }
-
-    .mdc-tab__ripple {
-        display: none;
-    }
+:host {
+    @include mat.checkbox-overrides(
+        (
+            state-layer-size: 25px,
+        )
+    );
 }
 
 .help-icon {

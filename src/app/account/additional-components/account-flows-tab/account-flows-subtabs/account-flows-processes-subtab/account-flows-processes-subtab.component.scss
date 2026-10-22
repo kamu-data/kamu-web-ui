@@ -1,3 +1,4 @@
+@use "@angular/material" as mat;
 @use "var" as *;
 
 .mat-button-toggle-appearance-standard.mat-button-toggle-checked {
@@ -6,21 +7,11 @@
 }
 
 :host {
-    ::ng-deep {
-        .mat-button-toggle-button {
-            .mat-button-toggle-label-content {
-                line-height: 36px !important;
-            }
-        }
-
-        .mat-button-toggle-checkbox-wrapper {
-            display: none;
-        }
-
-        .mat-button-toggle-checked .mat-button-toggle-button:has(.mat-button-toggle-checkbox-wrapper) {
-            padding-left: 0;
-        }
-    }
+    @include mat.button-toggle-overrides(
+        (
+            height: 36px,
+        )
+    );
 }
 
 .mt-50px {
@@ -95,15 +86,6 @@
 
 .ml-55px {
     margin-left: 55px;
-}
-
-::ng-deep {
-    .ng-select.ng-select-single {
-        .ng-select-container {
-            min-height: 32px;
-            height: 32px;
-        }
-    }
 }
 
 #from-datepicker,

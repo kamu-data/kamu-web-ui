@@ -1,0 +1,16 @@
+@use "@angular/material" as mat;
+
+// Menus render in the overlay container, outside any component, so the override is global.
+// It sits on the item, so only item labels read it; other content in a menu keeps its size.
+.mat-mdc-menu-item {
+    @include mat.menu-overrides(
+        (
+            item-label-text-size: 14px,
+            item-label-text-tracking: normal,
+        )
+    );
+}
+
+.mat-mdc-menu-content .mat-mdc-menu-item:not([disabled]):hover {
+    text-decoration: none;
+}

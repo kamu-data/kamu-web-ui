@@ -6,32 +6,6 @@
     text-align: center;
     display: grid;
     justify-content: center;
-
-    ngb-pagination {
-        ::ng-deep {
-            .page-item {
-                .page-link {
-                    border: none;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    border-radius: 6px;
-
-                    & span {
-                        display: none;
-                    }
-                }
-            }
-        }
-    }
-}
-
-ngb-pagination {
-    ::ng-deep {
-        * {
-            font-size: 14px;
-        }
-    }
 }
 
 %page-button {

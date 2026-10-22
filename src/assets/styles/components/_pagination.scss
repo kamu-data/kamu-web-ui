@@ -1,0 +1,14 @@
+ngb-pagination.app-pagination {
+    .page-item .page-link {
+        font-size: 14px;
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 6px;
+
+        & span {
+            display: none;
+        }
+    }
+}

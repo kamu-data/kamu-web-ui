@@ -1,16 +1,8 @@
+@use "material-overrides" as overrides;
 @use "var" as *;
 
 :host {
-    ::ng-deep {
-        .mdc-checkbox__ripple {
-            display: none;
-        }
-
-        .mdc-checkbox__background {
-            width: 16px;
-            height: 16px;
-        }
-    }
+    @include overrides.checkbox-no-state-layer;
 }
 
 h2 {

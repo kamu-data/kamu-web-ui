@@ -1,3 +1,5 @@
+@use "material-overrides" as overrides;
+
 h4 {
     font-weight: 500;
     letter-spacing: normal;
@@ -17,16 +19,8 @@ h4 {
     }
 }
 
-:host ::ng-deep .mat-mdc-radio-button.has-nested-form .mdc-form-field {
-    align-items: flex-start;
-}
-
-:host ::ng-deep .mat-mdc-radio-button.has-nested-form .mdc-label {
-    display: block;
-}
-
-:host ::ng-deep .mat-mdc-radio-button.has-nested-form .mdc-radio {
-    margin-top: -7px;
+mat-radio-button.mat-mdc-radio-button {
+    @include overrides.radio-no-ripple;
 }
 
 .nested-fieldset:disabled {

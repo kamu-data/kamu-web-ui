@@ -803,17 +803,17 @@ describe("FlowsComponent", () => {
             });
 
             tick(component.TIMEOUT_REFRESH_FLOW - 1);
-            expect(component.datasetCardBusy$.value).toBeTrue();
+            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBeTrue();
 
             tick(1);
             expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
-            expect(component.datasetCardBusy$.value).toBeFalse();
+            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBeFalse();
         }));
 
         it("should end when 'Update now' fails to trigger", () => {
             spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(false));
             component.updateNow();
-            expect(component.datasetCardBusy$.value).toBeFalse();
+            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBeFalse();
         });
 
         it("should end when the resume confirmation is cancelled", () => {
@@ -825,7 +825,7 @@ describe("FlowsComponent", () => {
                 state: FlowProcessEffectiveState.StoppedAuto,
                 datasetBasics: mockDatasetBasicsRootFragment,
             });
-            expect(component.datasetCardBusy$.value).toBeFalse();
+            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBeFalse();
         });
 
         it("should end when the page is left before the refresh", fakeAsync(() => {
@@ -836,7 +836,7 @@ describe("FlowsComponent", () => {
             });
 
             fixture.destroy();
-            expect(component.datasetCardBusy$.value).toBeFalse();
+            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBeFalse();
         }));
 
         it("should end when the request fails, and leave the error to the global handler", fakeAsync(() => {
@@ -845,7 +845,7 @@ describe("FlowsComponent", () => {
             );
             component.updateNow();
 
-            expect(component.datasetCardBusy$.value).toBeFalse();
+            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBeFalse();
             expect(() => tick()).toThrowError("Network failure");
         }));
     });
@@ -913,6 +913,25 @@ describe("FlowsComponent", () => {
             expect(component.searchByAccount).toEqual([]);
             expect(component.selectedStatusItems).toEqual([]);
             expect(component.onlySystemFlows).toBeFalse();
+            discardPeriodicTasks();
+        }));
+
+        it("should leave a card action of the previous dataset out of the new tab", fakeAsync(() => {
+            spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+            fixture.detectChanges();
+            tick();
+            component.toggleStateDatasetFlowConfigs({
+                state: FlowProcessEffectiveState.Failing,
+                datasetBasics: mockDatasetBasicsRootFragment,
+            });
+
+            switchTo(otherDatasetFlowsData);
+            expect(component.busyIds$.value.has("other-dataset-id")).toBeFalse();
+
+            const refreshFlowSpy = spyOn(component, "refreshFlow");
+            tick(component.TIMEOUT_REFRESH_FLOW);
+            expect(refreshFlowSpy).not.toHaveBeenCalled();
+            expect(component.busyIds$.value.size).toEqual(0);
             discardPeriodicTasks();
         }));
 

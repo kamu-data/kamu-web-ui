@@ -17,7 +17,7 @@ import { BehaviorSubject, combineLatest, filter, map, Observable, of, switchMap,
 
 import { environment } from "@env/environment";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
-import { trackBusy } from "@common/helpers/app.helpers";
+import { trackBusyKey } from "@common/helpers/app.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import { SourceEventEditorLinkPipe } from "@common/pipes/source-event-editor-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
@@ -108,8 +108,11 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public selectedDatasetItems: DatasetBasicsFragment[] = [];
     public selectedAccountItems: AccountFragment[] = [];
     public selectedStatusItems: FilterStatusType[] = [];
-    /** The card's label shows the state from before an action until the refresh, so it stays disabled till then */
-    public readonly datasetCardBusy$ = new BehaviorSubject<boolean>(false);
+    /**
+     * IDs of the datasets whose card action has not shown its result yet: the card's label shows the state
+     * from before an action until the refresh, so the card stays disabled till then
+     */
+    public readonly busyIds$ = new BehaviorSubject<ReadonlySet<string>>(new Set());
 
     private datasetWebhooksService = inject(DatasetWebhooksService);
     private flowsSelectionStateService = inject(FlowsSelectionStateService);
@@ -429,11 +432,14 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     /** `succeeded$` emits once when the action succeeded, and completes without a value otherwise */
     private runDatasetCardAction(succeeded$: Observable<unknown>): void {
+        const datasetId = this.flowsData.datasetBasics.id;
         succeeded$
             .pipe(
                 // Only the delayed refresh is tied to the page: the mutation still reports its result after leaving
                 switchMap(() => timer(this.TIMEOUT_REFRESH_FLOW).pipe(takeUntilDestroyed(this.destroyRef))),
-                trackBusy(this.datasetCardBusy$),
+                // The router may have moved the tab to another dataset meanwhile, which loaded its own flows
+                filter(() => this.flowsData.datasetBasics.id === datasetId),
+                trackBusyKey(this.busyIds$, datasetId),
             )
             .subscribe(() => {
                 this.refreshFlow();

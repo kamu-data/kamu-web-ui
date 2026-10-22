@@ -17,7 +17,9 @@
                                         <app-dataset-flow-process-card
                                             [datasetBasics]="flowsData.datasetBasics"
                                             [summary]="flowConnectionData.flowProcesses.primary.summary"
-                                            [actionInProgress]="(datasetCardBusy$ | async) ?? false"
+                                            [actionInProgress]="
+                                                (busyIds$ | async)?.has(flowsData.datasetBasics.id) ?? false
+                                            "
                                             (updateNowEmitter)="updateNow()"
                                             (toggleStateDatasetCardEmitter)="toggleStateDatasetFlowConfigs($event)"
                                         />

@@ -9,15 +9,15 @@
             [minZoomLevel]="LINEAGE_CONFIG.minZoomLevel"
             [maxZoomLevel]="LINEAGE_CONFIG.maxZoomLevel"
             [panOnZoom]="LINEAGE_CONFIG.panOnZoom"
-            [autoCenter]="LINEAGE_CONFIG.autoCenter"
-            [autoZoom]="LINEAGE_CONFIG.autoZoom"
             [showMiniMap]="LINEAGE_CONFIG.showMiniMap"
+            [miniMapMaxWidth]="LINEAGE_CONFIG.miniMapMaxWidth"
             [miniMapPosition]="LINEAGE_CONFIG.miniMapPosition"
             [links]="graph.links"
             [nodes]="graph.nodes"
             [view]="view"
             [layout]="LINEAGE_CONFIG.layout"
             [nodeHeight]="LINEAGE_CONFIG.nodeHeight"
+            (stateChange)="onGraphStateChange($event)"
         >
             <ng-template #defsTemplate>
                 <svg:marker
@@ -36,6 +36,7 @@
                 @if (node.data.kind === LineageGraphNodeKind.Dataset) {
                     <svg:g class="node">
                         <svg:rect
+                            attr.data-test-id="lineage-node-{{ node.data.kind }}-{{ node.label }}"
                             [attr.width]="node.dimension.width + 18"
                             [attr.height]="node.dimension.height"
                             [attr.rx]="5"
@@ -82,7 +83,10 @@
                     </svg:g>
                 }
                 @if (node.data && node.data.dataObject && node.data.dataObject.access === LineageNodeAccess.PRIVATE) {
-                    <svg:g [attr.transform]="'translate(' + node.dimension.width + ', 0)'">
+                    <svg:g
+                        attr.data-test-id="lineage-private-icon-{{ node.label }}"
+                        [attr.transform]="'translate(' + node.dimension.width + ', 0)'"
+                    >
                         <image
                             [attr.x]="5"
                             [attr.y]="-12"
@@ -95,6 +99,7 @@
                 @if (node.data.kind === LineageGraphNodeKind.Source) {
                     <svg:g class="node">
                         <svg:rect
+                            attr.data-test-id="lineage-node-{{ node.data.kind }}-{{ node.label }}"
                             [attr.width]="node.dimension.width * 1.1"
                             [attr.height]="50"
                             [attr.rx]="5"
@@ -122,6 +127,7 @@
                 @if (node.data.kind === LineageGraphNodeKind.Mqtt) {
                     <svg:g class="node">
                         <svg:rect
+                            attr.data-test-id="lineage-node-{{ node.data.kind }}-{{ node.label }}"
                             [attr.width]="node.dimension.width * 1.1"
                             [attr.height]="50"
                             [attr.rx]="5"
@@ -149,6 +155,7 @@
                 @if (node.data.kind === LineageGraphNodeKind.EthereumLogs) {
                     <svg:g class="node">
                         <svg:rect
+                            attr.data-test-id="lineage-node-{{ node.data.kind }}-{{ node.label }}"
                             [attr.width]="node.dimension.width"
                             [attr.height]="50"
                             [attr.rx]="5"
@@ -176,6 +183,7 @@
                 @if (node.data.kind === LineageGraphNodeKind.DatasetNotAccessable) {
                     <svg:g class="node">
                         <svg:rect
+                            attr.data-test-id="lineage-node-{{ node.data.kind }}-{{ node.label }}"
                             [attr.width]="node.dimension.width + 12"
                             [attr.height]="node.dimension.height"
                             [attr.rx]="5"
@@ -207,6 +215,7 @@
                 @if (node.data.kind === LineageGraphNodeKind.PushSource) {
                     <svg:g class="node">
                         <svg:rect
+                            attr.data-test-id="lineage-node-{{ node.data.kind }}-{{ node.label }}"
                             [attr.width]="node.dimension.width"
                             [attr.height]="50"
                             [attr.rx]="5"
@@ -244,7 +253,7 @@
             </button>
         </div>
         @if (showSidePanel && currentDataset) {
-            <div class="side-panel">
+            <div class="side-panel" data-test-id="side-panel" [style.width.px]="LINEAGE_CONFIG.sidePanelWidth">
                 <div class="side-panel__title d-flex fw-bold">
                     <div class="account-avatar">
                         <img [src]="currentDataset.owner.avatarUrl" data-test-id="side-panel-avatar" />
@@ -260,7 +269,9 @@
                     </div>
                 </div>
                 <div class="side-panel__permissions mt-1">
-                    <span class="badge-access">{{ isPrivateVisibility ? "Private" : "Public" }}</span>
+                    <span class="badge-access" data-test-id="side-panel-access">{{
+                        isPrivateVisibility ? "Private" : "Public"
+                    }}</span>
                     <span class="badge-verified">Verified</span>
                 </div>
                 <div class="mt-3 info d-flex align-items-center">
@@ -329,7 +340,7 @@
                                 [dataTestId]="'side-panel-dataset-watermark'"
                             />
                         } @else {
-                            <span> No watermark</span>
+                            <span data-test-id="side-panel-no-watermark"> No watermark</span>
                         }
                     </span>
                 </div>

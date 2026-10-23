@@ -28,4 +28,10 @@ describe("WidgetHeightService", () => {
         service.setWidgetOffsetTop(mockOffsetTop);
         expect(service.widgetHeight).toEqual(result);
     });
+
+    it("should not let the widget shrink below its minimum height", () => {
+        spyOnProperty(window, "innerHeight").and.returnValue(300);
+        service.setWidgetOffsetTop(100);
+        expect(service.widgetHeight).toEqual(200);
+    });
 });

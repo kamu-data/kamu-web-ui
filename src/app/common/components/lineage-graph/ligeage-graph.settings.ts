@@ -16,11 +16,12 @@ export const LINEAGE_CONFIG: LineageGraphConfig = {
     minZoomLevel: 0.3,
     maxZoomLevel: 4.0,
     panOnZoom: true,
-    autoZoom: true,
-    autoCenter: true,
     showMiniMap: true,
+    miniMapMaxWidth: 100,
     nodeHeight: 70,
     miniMapPosition: MiniMapPosition.UpperLeft,
+    sidePanelWidth: 270,
+    overlayGap: 10,
 };
 
 export interface LineageGraphConfig {
@@ -32,9 +33,11 @@ export interface LineageGraphConfig {
     minZoomLevel: number;
     maxZoomLevel: number;
     panOnZoom: boolean;
-    autoZoom: boolean;
-    autoCenter: boolean;
     showMiniMap: boolean;
+    miniMapMaxWidth: number;
     nodeHeight: number;
     miniMapPosition: MiniMapPosition;
+    sidePanelWidth: number;
+    // Space kept between the graph and the minimap or side panel drawn over it
+    overlayGap: number;
 }

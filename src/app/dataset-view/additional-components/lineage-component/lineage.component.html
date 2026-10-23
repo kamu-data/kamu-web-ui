@@ -8,7 +8,9 @@
                 (onClickPrivateNodeEvent)="onClickPrivateNode($event)"
             />
         } @else {
-            <p>The current dataset is derivative. Not enough data to build the graph.</p>
+            <p data-test-id="lineage-not-enough-data">
+                The current dataset is derivative. Not enough data to build the graph.
+            </p>
         }
     </div>
 }

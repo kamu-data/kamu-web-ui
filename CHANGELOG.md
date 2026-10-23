@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dataset Flows tab: refreshing keeps the page of flow runs you are on, and a link to a page of runs opens that page
 - Nodes that require signing in: after signing in, you return to the link you opened instead of the home page, also when signing in with GitHub
 - GitHub sign-in: a sign-in link prepared by someone else no longer signs you into their account
+- Lineage tab: the graph opens centred and zoomed out to fit, clear of the minimap and the information panel, and fits again when the window is resized
 
 ## [0.72.0] - 2026-10-21
 ### Changed

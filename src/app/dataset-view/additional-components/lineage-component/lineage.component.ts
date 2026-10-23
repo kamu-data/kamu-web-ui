@@ -76,10 +76,10 @@ export class LineageComponent extends BaseComponent {
         this.toastr.success("Copied ID");
     }
 
-    public onSelectDataset(accountName?: string, datasetName?: string): void {
+    public onSelectDataset(accountName: string, datasetName: string): void {
         this.navigationService.navigateToDatasetView({
-            accountName: accountName ?? this.datasetInfoData.accountName,
-            datasetName: datasetName ?? this.datasetInfoData.datasetName,
+            accountName,
+            datasetName,
             tab: DatasetViewTypeEnum.Lineage,
         });
     }

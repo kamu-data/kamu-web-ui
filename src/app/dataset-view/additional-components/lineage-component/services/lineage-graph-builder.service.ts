@@ -199,7 +199,7 @@ export class LineageGraphBuilderService {
                     }
 
                     source2DatasetLinks.push({
-                        id: `${sourceNode?.id}__and__${sourceNodeLabel}`,
+                        id: `${sourceNode?.id}__and__${datasetId}`,
                         source: sourceNode?.id,
                         target: datasetId,
                     } as Edge);

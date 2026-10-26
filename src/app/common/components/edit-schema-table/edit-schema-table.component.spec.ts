@@ -16,8 +16,13 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { NgSelectComponent } from "@ng-select/ng-select";
 
 import { findComponentInstance, findElement, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { MaybeNull } from "@interface/app.types";
-import { DataSchemaField, DataSchemaListField, OdfTypes } from "@interface/dataset-schema.interface";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import {
+    DataSchemaField,
+    DataSchemaListField,
+    DataSchemaTypeField,
+    OdfTypes,
+} from "@interface/dataset-schema.interface";
 
 import { TypeEditorComponent } from "./components/type-editor/type-editor.component";
 import { EditSchemaTableComponent } from "./edit-schema-table.component";
@@ -57,6 +62,13 @@ function structField(name: string, nestedFields: DataSchemaField[] = []): DataSc
 
 function stringField(name: string): DataSchemaField {
     return { name, type: { kind: OdfTypes.String } };
+}
+
+function requireListType(type: MaybeUndefined<DataSchemaTypeField>): DataSchemaListField {
+    if (type?.kind !== OdfTypes.List) {
+        throw new Error(`Expected a List type, got ${JSON.stringify(type)}`);
+    }
+    return type;
 }
 
 // ---------------------------------------------------------------------------
@@ -314,8 +326,7 @@ describe("EditSchemaTableComponent", () => {
             await table.save();
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted?.[0].type as DataSchemaListField;
-            expect(emitted.kind).toBe(OdfTypes.List);
+            const emitted = requireListType(host.lastEmitted?.[0].type);
             expect(emitted.itemType.kind).toBe(OdfTypes.Struct);
             if (emitted.itemType.kind === OdfTypes.Struct) {
                 expect(emitted.itemType.fields).toEqual([{ name: "sku", type: { kind: OdfTypes.String } }]);
@@ -350,8 +361,7 @@ describe("EditSchemaTableComponent", () => {
             await table.save();
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted?.[0].type as DataSchemaListField;
-            expect(emitted.kind).toBe(OdfTypes.List);
+            const emitted = requireListType(host.lastEmitted?.[0].type);
             expect(emitted.itemType.kind).toBe(OdfTypes.Struct);
             if (emitted.itemType.kind === OdfTypes.Struct) {
                 expect(emitted.itemType.fields).toEqual([{ name: "sku", type: { kind: OdfTypes.String } }]);

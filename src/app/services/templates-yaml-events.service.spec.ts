@@ -7,9 +7,8 @@
 
 import { TestBed } from "@angular/core/testing";
 
-import { parse } from "yaml";
-
-import { DataSchemaField, DatasetSchema, OdfTypes } from "@interface/dataset-schema.interface";
+import { readSchemaOf, requireDatasetSchema } from "@common/components/edit-schema-table/schema-editor.fixtures.spec";
+import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import {
     FetchKind,
@@ -51,53 +50,49 @@ describe("TemplatesYamlEventsService", () => {
     });
 
     it("should emit read.schema as { fields } object form for polling source", () => {
+        const fields: DataSchemaField[] = [
+            { name: "id", type: { kind: OdfTypes.Int64 } },
+            {
+                name: "address",
+                type: {
+                    kind: OdfTypes.Struct,
+                    fields: [{ name: "city", type: { kind: OdfTypes.String } }],
+                },
+            },
+        ];
         const params = {
             fetch: { kind: FetchKind.URL, url: "http://example.com" },
-            read: {
-                kind: ReadKind.CSV,
-                schema: [
-                    { name: "id", type: { kind: OdfTypes.Int64 } },
-                    {
-                        name: "address",
-                        type: {
-                            kind: OdfTypes.Struct,
-                            fields: [{ name: "city", type: { kind: OdfTypes.String } }],
-                        },
-                    },
-                ] as DataSchemaField[],
-            },
+            read: { kind: ReadKind.CSV, schema: fields },
             merge: { kind: MergeKind.APPEND },
         };
         const yaml = service.buildYamlSetPollingSourceEvent(params, null);
-        const parsed = parse(yaml) as { content: { read: { schema: DatasetSchema } } };
-        expect(parsed.content.read.schema.fields).toEqual(params.read.schema);
-        expect(Array.isArray(parsed.content.read.schema)).toBeFalse();
+        const schema = readSchemaOf(yaml);
+        expect(requireDatasetSchema(schema).fields).toEqual(fields);
+        expect(Array.isArray(schema)).toBeFalse();
     });
 
     it("should emit read.schema as { fields } object form for push source", () => {
+        const fields: DataSchemaField[] = [{ name: "id", type: { kind: OdfTypes.Int64 } }];
         const params = {
             sourceName: "test",
-            read: {
-                kind: ReadKind.CSV,
-                schema: [{ name: "id", type: { kind: OdfTypes.Int64 } }] as DataSchemaField[],
-            },
+            read: { kind: ReadKind.CSV, schema: fields },
             merge: { kind: MergeKind.APPEND },
         };
         const yaml = service.buildYamlAddPushSourceEvent(params, null);
-        const parsed = parse(yaml) as { content: { read: { schema: DatasetSchema } } };
-        expect(parsed.content.read.schema.fields).toEqual(params.read.schema);
-        expect(Array.isArray(parsed.content.read.schema)).toBeFalse();
+        const schema = readSchemaOf(yaml);
+        expect(requireDatasetSchema(schema).fields).toEqual(fields);
+        expect(Array.isArray(schema)).toBeFalse();
     });
 
     it("should pass through read.schema unchanged when schema is empty for polling source", () => {
+        const emptyFields: DataSchemaField[] = [];
         const params = {
             fetch: { kind: FetchKind.URL, url: "http://example.com" },
-            read: { kind: ReadKind.CSV, schema: [] as DataSchemaField[] },
+            read: { kind: ReadKind.CSV, schema: emptyFields },
             merge: { kind: MergeKind.APPEND },
         };
         const yaml = service.buildYamlSetPollingSourceEvent(params, null);
-        const parsed = parse(yaml) as { content: { read: { schema: DataSchemaField[] } } };
-        expect(parsed.content.read.schema).toEqual([]);
+        expect(readSchemaOf(yaml)).toEqual([]);
     });
 
     it("should round-trip a field name with spaces through buildYamlSetPollingSourceEvent", () => {
@@ -111,9 +106,9 @@ describe("TemplatesYamlEventsService", () => {
             merge: { kind: MergeKind.APPEND },
         };
         const yaml = service.buildYamlSetPollingSourceEvent(params, null);
-        const parsed = parse(yaml) as { content: { read: { schema: DatasetSchema } } };
-        expect(parsed.content.read.schema.fields).toEqual(schemaWithSpace);
-        expect(Array.isArray(parsed.content.read.schema)).toBeFalse();
+        const schema = readSchemaOf(yaml);
+        expect(requireDatasetSchema(schema).fields).toEqual(schemaWithSpace);
+        expect(Array.isArray(schema)).toBeFalse();
     });
 
     it("should round-trip a field name with spaces through buildYamlAddPushSourceEvent", () => {
@@ -127,8 +122,8 @@ describe("TemplatesYamlEventsService", () => {
             merge: { kind: MergeKind.APPEND },
         };
         const yaml = service.buildYamlAddPushSourceEvent(params, null);
-        const parsed = parse(yaml) as { content: { read: { schema: DatasetSchema } } };
-        expect(parsed.content.read.schema.fields).toEqual(schemaWithSpace);
-        expect(Array.isArray(parsed.content.read.schema)).toBeFalse();
+        const schema = readSchemaOf(yaml);
+        expect(requireDatasetSchema(schema).fields).toEqual(schemaWithSpace);
+        expect(Array.isArray(schema)).toBeFalse();
     });
 });

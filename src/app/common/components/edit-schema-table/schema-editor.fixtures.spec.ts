@@ -33,7 +33,9 @@
  *     tracking   Option<String>
  */
 
-import { DataSchemaField, DatasetSchema, OdfTypes } from "@interface/dataset-schema.interface";
+import { parse } from "yaml";
+
+import { DataSchemaField, DataSchemaTypeField, DatasetSchema, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { EditSchemaTableHarness } from "./edit-schema-table.harness";
 
@@ -121,6 +123,57 @@ export const ORDER_SCHEMA_ODF_JSON: string = JSON.stringify(ORDER_SCHEMA_DATASET
 export const ORDER_SCHEMA_LEGACY_FLAT: DataSchemaField[] = ORDER_SCHEMA;
 
 // ---------------------------------------------------------------------------
+// Reading a schema back from a serialized event
+// ---------------------------------------------------------------------------
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isSchemaType(value: unknown): value is DataSchemaTypeField {
+    if (!isRecord(value) || !Object.values<unknown>(OdfTypes).includes(value.kind)) {
+        return false;
+    }
+    switch (value.kind) {
+        case OdfTypes.Option:
+            return isSchemaType(value.inner);
+        case OdfTypes.List:
+            return isSchemaType(value.itemType);
+        case OdfTypes.Map:
+            return isSchemaType(value.keyType) && isSchemaType(value.valueType);
+        case OdfTypes.Struct:
+            return Array.isArray(value.fields) && value.fields.every(isSchemaField);
+        case OdfTypes.Timestamp:
+        case OdfTypes.Duration:
+        case OdfTypes.Time:
+            return typeof value.unit === "string";
+        default:
+            return true;
+    }
+}
+
+function isSchemaField(value: unknown): value is DataSchemaField {
+    return isRecord(value) && typeof value.name === "string" && isSchemaType(value.type);
+}
+
+/** Parses an event YAML and returns its `content.read.schema`, whatever its shape. */
+export function readSchemaOf(yaml: string): unknown {
+    const event: unknown = parse(yaml);
+    if (!isRecord(event) || !isRecord(event.content) || !isRecord(event.content.read)) {
+        throw new Error(`Expected an event with content.read, got: ${yaml}`);
+    }
+    return event.content.read.schema;
+}
+
+/** Returns the value as a schema in the `{ fields }` form; throws when any field does not fit `DataSchemaField`. */
+export function requireDatasetSchema(value: unknown): DatasetSchema {
+    if (!isRecord(value) || !Array.isArray(value.fields) || !value.fields.every(isSchemaField)) {
+        throw new Error(`Expected a { fields } schema, got: ${JSON.stringify(value)}`);
+    }
+    return { fields: value.fields };
+}
+
+// ---------------------------------------------------------------------------
 // Sanity assertions — these run as part of the test suite to catch any
 // typo in the fixture before it silently breaks a downstream test.
 // ---------------------------------------------------------------------------
@@ -194,8 +247,8 @@ describe("ORDER_SCHEMA fixture sanity", () => {
     });
 
     it("ORDER_SCHEMA_ODF_JSON round-trips through JSON.parse", () => {
-        const parsed = JSON.parse(ORDER_SCHEMA_ODF_JSON) as { fields: DataSchemaField[] };
-        expect(parsed.fields).toEqual(ORDER_SCHEMA);
+        const parsed: unknown = JSON.parse(ORDER_SCHEMA_ODF_JSON);
+        expect(parsed).toEqual({ fields: ORDER_SCHEMA });
     });
 
     it("ORDER_SCHEMA_DATASET wraps fields in the { fields } object form", () => {

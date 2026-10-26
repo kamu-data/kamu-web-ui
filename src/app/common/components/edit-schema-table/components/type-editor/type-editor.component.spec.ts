@@ -55,6 +55,49 @@ class TestHostComponent implements OnChanges {
 }
 
 // ---------------------------------------------------------------------------
+// Narrowing an emitted type to the member a test reads
+// ---------------------------------------------------------------------------
+
+function unexpectedType(expected: string, type: MaybeNull<DataSchemaTypeField>): Error {
+    return new Error(`Expected ${expected} type, got ${JSON.stringify(type)}`);
+}
+
+function requireTimeField(type: MaybeNull<DataSchemaTypeField>): DataSchemaTimeField {
+    if (type?.kind !== OdfTypes.Timestamp && type?.kind !== OdfTypes.Time && type?.kind !== OdfTypes.Duration) {
+        throw unexpectedType("a Timestamp, Time or Duration", type);
+    }
+    return type;
+}
+
+function requireOptionField(type: MaybeNull<DataSchemaTypeField>): DataSchemaOptionField {
+    if (type?.kind !== OdfTypes.Option) {
+        throw unexpectedType("an Option", type);
+    }
+    return type;
+}
+
+function requireListField(type: MaybeNull<DataSchemaTypeField>): DataSchemaListField {
+    if (type?.kind !== OdfTypes.List) {
+        throw unexpectedType("a List", type);
+    }
+    return type;
+}
+
+function requireMapField(type: MaybeNull<DataSchemaTypeField>): DataSchemaMapField {
+    if (type?.kind !== OdfTypes.Map) {
+        throw unexpectedType("a Map", type);
+    }
+    return type;
+}
+
+function requireStructField(type: MaybeNull<DataSchemaTypeField>): DataSchemaStructField {
+    if (type?.kind !== OdfTypes.Struct) {
+        throw unexpectedType("a Struct", type);
+    }
+    return type;
+}
+
+// ---------------------------------------------------------------------------
 // Suite
 // ---------------------------------------------------------------------------
 
@@ -119,7 +162,7 @@ describe("TypeEditorComponent", () => {
         it("emits unit and timezone when switching to Timestamp", () => {
             selectKind(OdfTypes.Timestamp);
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaTimeField;
+            const emitted = requireTimeField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.Timestamp);
             expect(emitted.unit).toBeDefined();
             expect(emitted.timezone).toBeDefined();
@@ -130,7 +173,7 @@ describe("TypeEditorComponent", () => {
             fixture.detectChanges();
             editor().changeUnitTime({ label: "Second", value: "Second" });
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaTimeField;
+            const emitted = requireTimeField(host.lastEmitted);
             expect(emitted.unit).toBe("Second");
         });
 
@@ -139,7 +182,7 @@ describe("TypeEditorComponent", () => {
             fixture.detectChanges();
             editor().changeTimezone({ label: "UTC", value: "UTC" });
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaTimeField;
+            const emitted = requireTimeField(host.lastEmitted);
             expect(emitted.timezone).toBe("UTC");
         });
     });
@@ -153,7 +196,7 @@ describe("TypeEditorComponent", () => {
             it(`emits unit (no timezone) when switching to ${kind}`, () => {
                 selectKind(kind);
                 fixture.detectChanges();
-                const emitted = host.lastEmitted as DataSchemaTimeField;
+                const emitted = requireTimeField(host.lastEmitted);
                 expect(emitted.kind).toBe(kind);
                 expect(emitted.unit).toBeDefined();
                 expect((emitted as { timezone?: string }).timezone).toBeUndefined();
@@ -173,7 +216,7 @@ describe("TypeEditorComponent", () => {
         it("emits Option<String> when Optional is enabled", () => {
             editor().changeOptional(true);
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaOptionField;
+            const emitted = requireOptionField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.Option);
             expect(emitted.inner).toEqual({ kind: OdfTypes.String });
         });
@@ -189,7 +232,7 @@ describe("TypeEditorComponent", () => {
             optionalToggle.click();
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted as DataSchemaOptionField;
+            const emitted = requireOptionField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.Option);
             expect(emitted.inner).toEqual({ kind: OdfTypes.String });
             expect(optionalToggle.getAttribute("aria-checked")).toBe("true");
@@ -209,7 +252,7 @@ describe("TypeEditorComponent", () => {
             fixture.detectChanges();
             selectKind(OdfTypes.Int64);
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaOptionField;
+            const emitted = requireOptionField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.Option);
             expect(emitted.inner).toEqual({ kind: OdfTypes.Int64 });
         });
@@ -223,7 +266,7 @@ describe("TypeEditorComponent", () => {
         it("emits List<String> on switch to List", () => {
             selectKind(OdfTypes.List);
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaListField;
+            const emitted = requireListField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.List);
             expect(emitted.itemType).toBeDefined();
         });
@@ -233,7 +276,7 @@ describe("TypeEditorComponent", () => {
             fixture.detectChanges();
             editor().typeListChange({ kind: OdfTypes.Float64 });
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaListField;
+            const emitted = requireListField(host.lastEmitted);
             expect(emitted.itemType).toEqual({ kind: OdfTypes.Float64 });
         });
     });
@@ -246,7 +289,7 @@ describe("TypeEditorComponent", () => {
         it("emits Map<String, String> on switch to Map", () => {
             selectKind(OdfTypes.Map);
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaMapField;
+            const emitted = requireMapField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.Map);
             expect(emitted.keyType).toBeDefined();
             expect(emitted.valueType).toBeDefined();
@@ -261,7 +304,7 @@ describe("TypeEditorComponent", () => {
             fixture.detectChanges();
             editor().typeMapKeyChange({ kind: OdfTypes.Int32 });
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaMapField;
+            const emitted = requireMapField(host.lastEmitted);
             expect(emitted.keyType).toEqual({ kind: OdfTypes.Int32 });
             expect(emitted.valueType).toEqual({ kind: OdfTypes.String });
         });
@@ -275,7 +318,7 @@ describe("TypeEditorComponent", () => {
             fixture.detectChanges();
             editor().typeMapValueChange({ kind: OdfTypes.Int64 });
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaMapField;
+            const emitted = requireMapField(host.lastEmitted);
             expect(emitted.keyType).toEqual({ kind: OdfTypes.String });
             expect(emitted.valueType).toEqual({ kind: OdfTypes.Int64 });
         });
@@ -299,10 +342,10 @@ describe("TypeEditorComponent", () => {
             });
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted as DataSchemaListField;
+            const emitted = requireListField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.List);
-            expect((emitted.itemType as DataSchemaMapField).kind).toBe(OdfTypes.Map);
-            expect((emitted.itemType as DataSchemaMapField).valueType).toEqual({ kind: OdfTypes.String });
+            expect(requireMapField(emitted.itemType).kind).toBe(OdfTypes.Map);
+            expect(requireMapField(emitted.itemType).valueType).toEqual({ kind: OdfTypes.String });
         });
     });
 
@@ -315,7 +358,7 @@ describe("TypeEditorComponent", () => {
             selectKind(OdfTypes.Timestamp);
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted as DataSchemaTimeField;
+            const emitted = requireTimeField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.Timestamp);
             expect(emitted.unit).toBeDefined();
             expect(emitted.timezone).toBeDefined();
@@ -332,10 +375,10 @@ describe("TypeEditorComponent", () => {
             });
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted as DataSchemaListField;
+            const emitted = requireListField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.List);
             expect(emitted.itemType.kind).toBe(OdfTypes.Struct);
-            expect((emitted.itemType as DataSchemaStructField).fields.map((f) => f.name)).toContain("sku");
+            expect(requireStructField(emitted.itemType).fields.map((f) => f.name)).toContain("sku");
         });
 
         it("Option<List<String>>: enable Optional then set base type to List<String>", () => {
@@ -345,10 +388,10 @@ describe("TypeEditorComponent", () => {
             selectKind(OdfTypes.List);
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted as DataSchemaOptionField;
+            const emitted = requireOptionField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.Option);
             expect(emitted.inner.kind).toBe(OdfTypes.List);
-            expect((emitted.inner as DataSchemaListField).itemType.kind).toBe(OdfTypes.String);
+            expect(requireListField(emitted.inner).itemType.kind).toBe(OdfTypes.String);
         });
     });
 
@@ -375,7 +418,7 @@ describe("TypeEditorComponent", () => {
             selectKind(OdfTypes.Struct);
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted as DataSchemaStructField;
+            const emitted = requireStructField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.Struct);
             expect(emitted.fields.map((f) => f.name)).toContain("sku");
         });
@@ -396,10 +439,10 @@ describe("TypeEditorComponent", () => {
             selectKind(OdfTypes.List);
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted as DataSchemaListField;
+            const emitted = requireListField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.List);
             expect(emitted.itemType.kind).toBe(OdfTypes.Struct);
-            expect((emitted.itemType as DataSchemaStructField).fields.map((f) => f.name)).toContain("qty");
+            expect(requireStructField(emitted.itemType).fields.map((f) => f.name)).toContain("qty");
         });
     });
 
@@ -445,7 +488,7 @@ describe("TypeEditorComponent", () => {
             selectKindViaApi(OdfTypes.Struct);
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted as DataSchemaStructField;
+            const emitted = requireStructField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.Struct);
             expect(emitted.fields.map((f) => f.name)).toContain("sku");
         });
@@ -466,10 +509,10 @@ describe("TypeEditorComponent", () => {
             selectKindViaApi(OdfTypes.List);
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted as DataSchemaListField;
+            const emitted = requireListField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.List);
             expect(emitted.itemType.kind).toBe(OdfTypes.Struct);
-            expect((emitted.itemType as DataSchemaStructField).fields.map((f) => f.name)).toContain("qty");
+            expect(requireStructField(emitted.itemType).fields.map((f) => f.name)).toContain("qty");
         });
 
         // Regression test: the Timestamp unit/timezone ng-selects previously updated
@@ -498,8 +541,7 @@ describe("TypeEditorComponent", () => {
                     "root:type:ts:unit",
                     (v) => (v as MaybeNull<{ value?: string }>)?.value === "Second",
                 );
-                const emitted = host.lastEmitted as DataSchemaTimeField;
-                expect(emitted).not.toBeNull();
+                const emitted = requireTimeField(host.lastEmitted);
                 expect(emitted.unit).toBe("Second");
             });
 
@@ -510,8 +552,7 @@ describe("TypeEditorComponent", () => {
                     "root:type:ts:timezone",
                     (v) => (v as MaybeNull<{ value?: string }>)?.value === "UTC",
                 );
-                const emitted = host.lastEmitted as DataSchemaTimeField;
-                expect(emitted).not.toBeNull();
+                const emitted = requireTimeField(host.lastEmitted);
                 expect(emitted.timezone).toBe("UTC");
             });
         });

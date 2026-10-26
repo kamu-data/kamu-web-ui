@@ -7498,23 +7498,8 @@ export type DeleteAccountByNameMutation = { __typename?: 'Mutation', accounts: {
 export type AccountBasicsFragment = { __typename?: 'Account', id: string, accountName: string, accountProvider: AccountProvider, avatarUrl?: string | null };
 
 export type DatasetConnectionDataFragment = { __typename?: 'DatasetConnection', nodes: Array<(
-    { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentPollingSource?: { __typename?: 'SetPollingSource', fetch:
-          | (
-            { __typename?: 'FetchStepContainer' }
-            & FetchStepContainerDataFragment
-          )
-          | { __typename?: 'FetchStepEthereumLogs' }
-          | (
-            { __typename?: 'FetchStepFilesGlob' }
-            & FetchStepFilesGlobDataFragment
-          )
-          | { __typename?: 'FetchStepMqtt' }
-          | (
-            { __typename?: 'FetchStepUrl' }
-            & FetchStepUrlDataFragment
-          )
-         } | null, currentTransform?: { __typename?: 'SetTransform', inputs: Array<{ __typename: 'TransformInput' }>, transform: { __typename?: 'TransformSql', engine: string } } | null } }
-    & DatasetBasicsFragment
+    { __typename?: 'Dataset' }
+    & DatasetWithFlowsDataFragment
   )> };
 
 export type DatasetFlowProcessConnectionDataFragment = { __typename?: 'DatasetFlowProcessConnection', totalCount: number, nodes: Array<{ __typename?: 'DatasetFlowProcess', flowType: DatasetFlowType, dataset: (
@@ -7528,21 +7513,36 @@ export type DatasetFlowProcessConnectionDataFragment = { __typename?: 'DatasetFl
     & DatasetPageInfoFragment
   ) };
 
+type AccountFlowProcessCardData_DatasetFlowProcess_Fragment = { __typename?: 'DatasetFlowProcess', flowType: DatasetFlowType, dataset: (
+    { __typename?: 'Dataset' }
+    & DatasetBasicsFragment
+  ), summary: (
+    { __typename?: 'FlowProcessSummary' }
+    & FlowProcessSummaryDataFragment
+  ) };
+
+type AccountFlowProcessCardData_WebhookFlowSubProcess_Fragment = { __typename?: 'WebhookFlowSubProcess', id: string, name: string, parentDataset?: (
+    { __typename?: 'Dataset' }
+    & DatasetBasicsFragment
+  ) | null, summary: (
+    { __typename?: 'FlowProcessSummary' }
+    & FlowProcessSummaryDataFragment
+  ) };
+
+export type AccountFlowProcessCardDataFragment =
+  | AccountFlowProcessCardData_DatasetFlowProcess_Fragment
+  | AccountFlowProcessCardData_WebhookFlowSubProcess_Fragment
+;
+
 export type AccountFlowProcessCardConnectionDataFragment = { __typename?: 'AccountFlowProcessCardConnection', totalCount: number, nodes: Array<
-    | { __typename?: 'DatasetFlowProcess', flowType: DatasetFlowType, dataset: (
-        { __typename?: 'Dataset' }
-        & DatasetBasicsFragment
-      ), summary: (
-        { __typename?: 'FlowProcessSummary' }
-        & FlowProcessSummaryDataFragment
-      ) }
-    | { __typename?: 'WebhookFlowSubProcess', id: string, name: string, parentDataset?: (
-        { __typename?: 'Dataset' }
-        & DatasetBasicsFragment
-      ) | null, summary: (
-        { __typename?: 'FlowProcessSummary' }
-        & FlowProcessSummaryDataFragment
-      ) }
+    | (
+      { __typename?: 'DatasetFlowProcess' }
+      & AccountFlowProcessCardData_DatasetFlowProcess_Fragment
+    )
+    | (
+      { __typename?: 'WebhookFlowSubProcess' }
+      & AccountFlowProcessCardData_WebhookFlowSubProcess_Fragment
+    )
   >, pageInfo: (
     { __typename?: 'PageBasedInfo' }
     & DatasetPageInfoFragment
@@ -7564,6 +7564,17 @@ export type WebhookFlowSubProcessConnectionDataFragment = { __typename?: 'Webhoo
 export type AccountWithEmailFragment = { __typename?: 'Account', id: string, accountName: string, displayName: string, avatarUrl?: string | null, email: string };
 
 export type AccountFragment = { __typename?: 'Account', id: string, accountName: string, displayName: string, accountType: AccountType, avatarUrl?: string | null, isAdmin?: boolean | null, accountProvider: AccountProvider };
+
+export type DatasetWithFlowsDataFragment = (
+  { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentPollingSource?: (
+      { __typename?: 'SetPollingSource' }
+      & SetPollingSourceFetchDataFragment
+    ) | null, currentTransform?: (
+      { __typename?: 'SetTransform' }
+      & SetTransformEngineDataFragment
+    ) | null } }
+  & DatasetBasicsFragment
+);
 
 export type LoginWeb3WalletMutationVariables = Exact<{
   account: Scalars['EvmWalletAddress']['input'];
@@ -8244,22 +8255,62 @@ export type GetDatasetFlowTriggerQueryVariables = Exact<{
 }>;
 
 
-export type GetDatasetFlowTriggerQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', flows: { __typename?: 'DatasetFlows', triggers: { __typename?: 'DatasetFlowTriggers', byType?: { __typename?: 'FlowTrigger', paused: boolean, schedule?:
-              | { __typename?: 'Cron5ComponentExpression', cron5ComponentExpression: string }
-              | (
-                { __typename?: 'TimeDelta' }
-                & TimeDeltaDataFragment
-              )
-             | null, reactive?: { __typename?: 'FlowTriggerReactiveRule', forBreakingChange: FlowTriggerBreakingChangeRule, forNewData:
-                | { __typename: 'FlowTriggerBatchingRuleBuffering', minRecordsToAwait: number, maxBatchingInterval: (
-                    { __typename?: 'TimeDelta' }
-                    & TimeDeltaDataFragment
-                  ) }
-                | { __typename: 'FlowTriggerBatchingRuleImmediate' }
-               } | null, stopPolicy:
-              | { __typename: 'FlowTriggerStopPolicyAfterConsecutiveFailures', maxFailures: number }
-              | { __typename: 'FlowTriggerStopPolicyNever' }
-             } | null } } } | null } };
+export type GetDatasetFlowTriggerQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', flows: { __typename?: 'DatasetFlows', triggers: { __typename?: 'DatasetFlowTriggers', byType?: (
+            { __typename?: 'FlowTrigger' }
+            & FlowTriggerDataFragment
+          ) | null } } } | null } };
+
+export type FlowTriggerDataFragment = { __typename?: 'FlowTrigger', paused: boolean, schedule?:
+    | (
+      { __typename?: 'Cron5ComponentExpression' }
+      & FlowTriggerScheduleRuleData_Cron5ComponentExpression_Fragment
+    )
+    | (
+      { __typename?: 'TimeDelta' }
+      & FlowTriggerScheduleRuleData_TimeDelta_Fragment
+    )
+   | null, reactive?: (
+    { __typename?: 'FlowTriggerReactiveRule' }
+    & FlowTriggerReactiveRuleDataFragment
+  ) | null, stopPolicy:
+    | (
+      { __typename?: 'FlowTriggerStopPolicyAfterConsecutiveFailures' }
+      & FlowTriggerStopPolicyData_FlowTriggerStopPolicyAfterConsecutiveFailures_Fragment
+    )
+    | (
+      { __typename?: 'FlowTriggerStopPolicyNever' }
+      & FlowTriggerStopPolicyData_FlowTriggerStopPolicyNever_Fragment
+    )
+   };
+
+export type FlowTriggerReactiveRuleDataFragment = { __typename?: 'FlowTriggerReactiveRule', forBreakingChange: FlowTriggerBreakingChangeRule, forNewData:
+    | { __typename: 'FlowTriggerBatchingRuleBuffering', minRecordsToAwait: number, maxBatchingInterval: (
+        { __typename?: 'TimeDelta' }
+        & TimeDeltaDataFragment
+      ) }
+    | { __typename: 'FlowTriggerBatchingRuleImmediate' }
+   };
+
+type FlowTriggerScheduleRuleData_Cron5ComponentExpression_Fragment = { __typename?: 'Cron5ComponentExpression', cron5ComponentExpression: string };
+
+type FlowTriggerScheduleRuleData_TimeDelta_Fragment = (
+  { __typename?: 'TimeDelta' }
+  & TimeDeltaDataFragment
+);
+
+export type FlowTriggerScheduleRuleDataFragment =
+  | FlowTriggerScheduleRuleData_Cron5ComponentExpression_Fragment
+  | FlowTriggerScheduleRuleData_TimeDelta_Fragment
+;
+
+type FlowTriggerStopPolicyData_FlowTriggerStopPolicyAfterConsecutiveFailures_Fragment = { __typename: 'FlowTriggerStopPolicyAfterConsecutiveFailures', maxFailures: number };
+
+type FlowTriggerStopPolicyData_FlowTriggerStopPolicyNever_Fragment = { __typename: 'FlowTriggerStopPolicyNever' };
+
+export type FlowTriggerStopPolicyDataFragment =
+  | FlowTriggerStopPolicyData_FlowTriggerStopPolicyAfterConsecutiveFailures_Fragment
+  | FlowTriggerStopPolicyData_FlowTriggerStopPolicyNever_Fragment
+;
 
 export type TimeDeltaDataFragment = { __typename?: 'TimeDelta', every: number, unit: TimeUnit };
 
@@ -8405,6 +8456,60 @@ export type FlowConnectionDataFragment = { __typename?: 'FlowConnection', totalC
     { __typename?: 'PageBasedInfo' }
     & DatasetPageInfoFragment
   ) };
+
+type FlowDescriptionData_FlowDescriptionDatasetExecuteTransform_Fragment = { __typename?: 'FlowDescriptionDatasetExecuteTransform', transform: (
+    { __typename?: 'SetTransform' }
+    & SetTransformEngineDataFragment
+  ), transformResult?:
+    | { __typename?: 'FlowDescriptionUpdateResultSuccess', numBlocks: number, numRecords: number, updatedWatermark?: string | null }
+    | { __typename?: 'FlowDescriptionUpdateResultUnknown', message: string }
+    | { __typename?: 'FlowDescriptionUpdateResultUpToDate', uncacheable: boolean }
+   | null };
+
+type FlowDescriptionData_FlowDescriptionDatasetHardCompaction_Fragment = { __typename?: 'FlowDescriptionDatasetHardCompaction', compactionResult?:
+    | { __typename?: 'FlowDescriptionReorganizationNothingToDo', message: string, dummy?: string | null }
+    | { __typename?: 'FlowDescriptionReorganizationSuccess', originalBlocksCount: number, resultingBlocksCount: number, newHead: string }
+   | null };
+
+type FlowDescriptionData_FlowDescriptionDatasetPollingIngest_Fragment = { __typename?: 'FlowDescriptionDatasetPollingIngest', pollingSource: (
+    { __typename?: 'SetPollingSource' }
+    & SetPollingSourceFetchDataFragment
+  ), ingestResult?:
+    | { __typename?: 'FlowDescriptionUpdateResultSuccess', numBlocks: number, numRecords: number, updatedWatermark?: string | null }
+    | { __typename?: 'FlowDescriptionUpdateResultUnknown', message: string }
+    | { __typename?: 'FlowDescriptionUpdateResultUpToDate', uncacheable: boolean }
+   | null };
+
+type FlowDescriptionData_FlowDescriptionDatasetPushIngest_Fragment = { __typename?: 'FlowDescriptionDatasetPushIngest', sourceName?: string | null, ingestResult?:
+    | { __typename?: 'FlowDescriptionUpdateResultSuccess', numBlocks: number, numRecords: number, updatedWatermark?: string | null }
+    | { __typename?: 'FlowDescriptionUpdateResultUnknown', message: string }
+    | { __typename?: 'FlowDescriptionUpdateResultUpToDate', uncacheable: boolean }
+   | null };
+
+type FlowDescriptionData_FlowDescriptionDatasetReset_Fragment = { __typename?: 'FlowDescriptionDatasetReset', resetResult?: { __typename?: 'FlowDescriptionResetResult', newHead: string } | null };
+
+type FlowDescriptionData_FlowDescriptionDatasetResetToMetadata_Fragment = { __typename?: 'FlowDescriptionDatasetResetToMetadata', resetToMetadataResult?:
+    | { __typename?: 'FlowDescriptionReorganizationNothingToDo', message: string, dummy?: string | null }
+    | { __typename?: 'FlowDescriptionReorganizationSuccess', originalBlocksCount: number, resultingBlocksCount: number, newHead: string }
+   | null };
+
+type FlowDescriptionData_FlowDescriptionSystemGc_Fragment = { __typename?: 'FlowDescriptionSystemGC', dummy: boolean };
+
+type FlowDescriptionData_FlowDescriptionUnknown_Fragment = { __typename?: 'FlowDescriptionUnknown' };
+
+type FlowDescriptionData_FlowDescriptionWebhookDeliver_Fragment = { __typename?: 'FlowDescriptionWebhookDeliver', targetUrl: string, label: string, eventType: string };
+
+export type FlowDescriptionDataFragment =
+  | FlowDescriptionData_FlowDescriptionDatasetExecuteTransform_Fragment
+  | FlowDescriptionData_FlowDescriptionDatasetHardCompaction_Fragment
+  | FlowDescriptionData_FlowDescriptionDatasetPollingIngest_Fragment
+  | FlowDescriptionData_FlowDescriptionDatasetPushIngest_Fragment
+  | FlowDescriptionData_FlowDescriptionDatasetReset_Fragment
+  | FlowDescriptionData_FlowDescriptionDatasetResetToMetadata_Fragment
+  | FlowDescriptionData_FlowDescriptionSystemGc_Fragment
+  | FlowDescriptionData_FlowDescriptionUnknown_Fragment
+  | FlowDescriptionData_FlowDescriptionWebhookDeliver_Fragment
+;
 
 export type FlowDownstreamLinkDataFragment = { __typename?: 'FlowDownstreamLink', flowId: string, activatedAt: string, datasetId?: string | null, dataset?:
     | { __typename: 'DatasetAccessResultAccessible', dataset: (
@@ -8614,48 +8719,42 @@ export type FlowSummaryDataWithTriggerFragment = (
 );
 
 export type FlowSummaryDataFragment = { __typename?: 'Flow', flowId: string, datasetId?: string | null, status: FlowStatus, taskIds: Array<string>, description:
-    | { __typename?: 'FlowDescriptionDatasetExecuteTransform', transform: { __typename?: 'SetTransform', inputs: Array<{ __typename: 'TransformInput' }>, transform: { __typename?: 'TransformSql', engine: string } }, transformResult?:
-        | { __typename?: 'FlowDescriptionUpdateResultSuccess', numBlocks: number, numRecords: number, updatedWatermark?: string | null }
-        | { __typename?: 'FlowDescriptionUpdateResultUnknown', message: string }
-        | { __typename?: 'FlowDescriptionUpdateResultUpToDate', uncacheable: boolean }
-       | null }
-    | { __typename?: 'FlowDescriptionDatasetHardCompaction', compactionResult?:
-        | { __typename?: 'FlowDescriptionReorganizationNothingToDo', message: string, dummy?: string | null }
-        | { __typename?: 'FlowDescriptionReorganizationSuccess', originalBlocksCount: number, resultingBlocksCount: number, newHead: string }
-       | null }
-    | { __typename?: 'FlowDescriptionDatasetPollingIngest', pollingSource: { __typename?: 'SetPollingSource', fetch:
-          | (
-            { __typename?: 'FetchStepContainer' }
-            & FetchStepContainerDataFragment
-          )
-          | { __typename?: 'FetchStepEthereumLogs' }
-          | (
-            { __typename?: 'FetchStepFilesGlob' }
-            & FetchStepFilesGlobDataFragment
-          )
-          | { __typename?: 'FetchStepMqtt' }
-          | (
-            { __typename?: 'FetchStepUrl' }
-            & FetchStepUrlDataFragment
-          )
-         }, ingestResult?:
-        | { __typename?: 'FlowDescriptionUpdateResultSuccess', numBlocks: number, numRecords: number, updatedWatermark?: string | null }
-        | { __typename?: 'FlowDescriptionUpdateResultUnknown', message: string }
-        | { __typename?: 'FlowDescriptionUpdateResultUpToDate', uncacheable: boolean }
-       | null }
-    | { __typename?: 'FlowDescriptionDatasetPushIngest', sourceName?: string | null, ingestResult?:
-        | { __typename?: 'FlowDescriptionUpdateResultSuccess', numBlocks: number, numRecords: number, updatedWatermark?: string | null }
-        | { __typename?: 'FlowDescriptionUpdateResultUnknown', message: string }
-        | { __typename?: 'FlowDescriptionUpdateResultUpToDate', uncacheable: boolean }
-       | null }
-    | { __typename?: 'FlowDescriptionDatasetReset', resetResult?: { __typename?: 'FlowDescriptionResetResult', newHead: string } | null }
-    | { __typename?: 'FlowDescriptionDatasetResetToMetadata', resetToMetadataResult?:
-        | { __typename?: 'FlowDescriptionReorganizationNothingToDo', message: string, dummy?: string | null }
-        | { __typename?: 'FlowDescriptionReorganizationSuccess', originalBlocksCount: number, resultingBlocksCount: number, newHead: string }
-       | null }
-    | { __typename?: 'FlowDescriptionSystemGC', dummy: boolean }
-    | { __typename?: 'FlowDescriptionUnknown' }
-    | { __typename?: 'FlowDescriptionWebhookDeliver', targetUrl: string, label: string, eventType: string }
+    | (
+      { __typename?: 'FlowDescriptionDatasetExecuteTransform' }
+      & FlowDescriptionData_FlowDescriptionDatasetExecuteTransform_Fragment
+    )
+    | (
+      { __typename?: 'FlowDescriptionDatasetHardCompaction' }
+      & FlowDescriptionData_FlowDescriptionDatasetHardCompaction_Fragment
+    )
+    | (
+      { __typename?: 'FlowDescriptionDatasetPollingIngest' }
+      & FlowDescriptionData_FlowDescriptionDatasetPollingIngest_Fragment
+    )
+    | (
+      { __typename?: 'FlowDescriptionDatasetPushIngest' }
+      & FlowDescriptionData_FlowDescriptionDatasetPushIngest_Fragment
+    )
+    | (
+      { __typename?: 'FlowDescriptionDatasetReset' }
+      & FlowDescriptionData_FlowDescriptionDatasetReset_Fragment
+    )
+    | (
+      { __typename?: 'FlowDescriptionDatasetResetToMetadata' }
+      & FlowDescriptionData_FlowDescriptionDatasetResetToMetadata_Fragment
+    )
+    | (
+      { __typename?: 'FlowDescriptionSystemGC' }
+      & FlowDescriptionData_FlowDescriptionSystemGc_Fragment
+    )
+    | (
+      { __typename?: 'FlowDescriptionUnknown' }
+      & FlowDescriptionData_FlowDescriptionUnknown_Fragment
+    )
+    | (
+      { __typename?: 'FlowDescriptionWebhookDeliver' }
+      & FlowDescriptionData_FlowDescriptionWebhookDeliver_Fragment
+    )
   , initiator?: (
     { __typename?: 'Account' }
     & AccountFragment
@@ -8905,7 +9004,10 @@ export type AddPushSourceEventFragment = { __typename?: 'AddPushSource', sourceN
 
 export type DataSchemaInfoFragment = { __typename?: 'DataSchema', format: DataSchemaFormat, content: string };
 
-export type DataSliceDataFragment = { __typename?: 'DataSlice', logicalHash: string, physicalHash: string, size: number, offsetInterval: { __typename?: 'OffsetInterval', start: number, end: number } };
+export type DataSliceDataFragment = { __typename?: 'DataSlice', logicalHash: string, physicalHash: string, size: number, offsetInterval: (
+    { __typename?: 'OffsetInterval' }
+    & OffsetIntervalDataFragment
+  ) };
 
 export type DisablePollingSourceEventFragment = { __typename?: 'DisablePollingSource', dummy?: string | null };
 
@@ -8914,6 +9016,8 @@ export type ExecuteTransformEventFragment = { __typename?: 'ExecuteTransform', p
     & DataSliceDataFragment
   ) | null, newCheckpoint?: { __typename?: 'Checkpoint', physicalHash: string, size: number } | null };
 
+export type OffsetIntervalDataFragment = { __typename?: 'OffsetInterval', start: number, end: number };
+
 export type SeedEventFragment = { __typename?: 'Seed', datasetId: string, datasetKind: DatasetKind };
 
 export type SetAttachmentsEventFragment = { __typename?: 'SetAttachments', attachments: { __typename?: 'AttachmentsEmbedded', items: Array<{ __typename?: 'AttachmentEmbedded', path: string, content: string }> } };
@@ -8921,6 +9025,23 @@ export type SetAttachmentsEventFragment = { __typename?: 'SetAttachments', attac
 export type SetDataSchemaEventFragment = { __typename?: 'SetDataSchema', schema: { __typename?: 'DataSchema', format: DataSchemaFormat, content: string } };
 
 export type SetLicenseEventFragment = { __typename?: 'SetLicense', shortName: string, name: string, spdxId?: string | null, websiteUrl: string };
+
+export type SetPollingSourceFetchDataFragment = { __typename?: 'SetPollingSource', fetch:
+    | (
+      { __typename?: 'FetchStepContainer' }
+      & FetchStepContainerDataFragment
+    )
+    | { __typename?: 'FetchStepEthereumLogs' }
+    | (
+      { __typename?: 'FetchStepFilesGlob' }
+      & FetchStepFilesGlobDataFragment
+    )
+    | { __typename?: 'FetchStepMqtt' }
+    | (
+      { __typename?: 'FetchStepUrl' }
+      & FetchStepUrlDataFragment
+    )
+   };
 
 export type SetPollingSourceEventFragment = { __typename?: 'SetPollingSource', fetch:
     | (
@@ -9007,9 +9128,16 @@ export type SetPollingSourceEventFragment = { __typename?: 'SetPollingSource', f
     & PreprocessStepDataFragment
   ) | null };
 
+export type SetTransformEngineDataFragment = { __typename?: 'SetTransform', inputs: Array<{ __typename: 'TransformInput' }>, transform: { __typename?: 'TransformSql', engine: string } };
+
 export type SetVocabEventFragment = { __typename?: 'SetVocab', offsetColumn?: string | null, operationTypeColumn?: string | null, systemTimeColumn?: string | null, eventTimeColumn?: string | null };
 
-export type FetchStepContainerDataFragment = { __typename?: 'FetchStepContainer', image: string, command?: Array<string> | null, args?: Array<string> | null, env?: Array<{ __typename?: 'EnvVar', name: string, value?: string | null }> | null };
+export type EnvVarDataFragment = { __typename?: 'EnvVar', name: string, value?: string | null };
+
+export type FetchStepContainerDataFragment = { __typename?: 'FetchStepContainer', image: string, command?: Array<string> | null, args?: Array<string> | null, env?: Array<(
+    { __typename?: 'EnvVar' }
+    & EnvVarDataFragment
+  )> | null };
 
 export type FetchStepEthereumLogsDataFragment = { __typename?: 'FetchStepEthereumLogs', chainId?: number | null, nodeUrl?: string | null, filter?: string | null, signature?: string | null };
 
@@ -9019,13 +9147,23 @@ export type FetchStepFilesGlobDataFragment = { __typename?: 'FetchStepFilesGlob'
     | { __typename: 'EventTimeSourceFromSystemTime' }
    | null, cache?: { __typename: 'SourceCachingForever' } | null };
 
-export type FetchStepMqttDataFragment = { __typename?: 'FetchStepMqtt', host: string, port: number, username?: string | null, password?: string | null, topics: Array<{ __typename?: 'MqttTopicSubscription', path: string, qos?: MqttQos | null }> };
+export type FetchStepMqttDataFragment = { __typename?: 'FetchStepMqtt', host: string, port: number, username?: string | null, password?: string | null, topics: Array<(
+    { __typename?: 'MqttTopicSubscription' }
+    & MqttTopicSubscriptionDataFragment
+  )> };
 
 export type FetchStepUrlDataFragment = { __typename?: 'FetchStepUrl', url: string, eventTime?:
     | { __typename: 'EventTimeSourceFromMetadata' }
     | { __typename?: 'EventTimeSourceFromPath', pattern: string, timestampFormat?: string | null }
     | { __typename: 'EventTimeSourceFromSystemTime' }
-   | null, headers?: Array<{ __typename?: 'RequestHeader', name: string, value: string }> | null, cache?: { __typename: 'SourceCachingForever' } | null };
+   | null, headers?: Array<(
+    { __typename?: 'RequestHeader' }
+    & RequestHeaderDataFragment
+  )> | null, cache?: { __typename: 'SourceCachingForever' } | null };
+
+export type MqttTopicSubscriptionDataFragment = { __typename?: 'MqttTopicSubscription', path: string, qos?: MqttQos | null };
+
+export type RequestHeaderDataFragment = { __typename?: 'RequestHeader', name: string, value: string };
 
 export type MergeStrategyAppendDataFragment = { __typename: 'MergeStrategyAppend' };
 
@@ -9041,7 +9179,13 @@ export type PrepStepDecompressDataFragment = { __typename?: 'PrepStepDecompress'
 
 export type PrepStepPipeDataFragment = { __typename?: 'PrepStepPipe', command: Array<string> };
 
-export type PreprocessStepDataFragment = { __typename?: 'TransformSql', engine: string, version?: string | null, queries: Array<{ __typename?: 'SqlQueryStep', query: string, alias?: string | null }>, temporalTables?: Array<{ __typename?: 'TemporalTable', name: string, primaryKey: Array<string> }> | null };
+export type PreprocessStepDataFragment = { __typename?: 'TransformSql', engine: string, version?: string | null, queries: Array<(
+    { __typename?: 'SqlQueryStep' }
+    & SqlQueryStepDataFragment
+  )>, temporalTables?: Array<(
+    { __typename?: 'TemporalTable' }
+    & TemporalTableDataFragment
+  )> | null };
 
 export type ReadStepCsvDataFragment = { __typename?: 'ReadStepCsv', separator?: string | null, encoding?: string | null, quote?: string | null, escape?: string | null, header?: boolean | null, inferSchema?: boolean | null, nullValue?: string | null, dateFormat?: string | null, timestampFormat?: string | null, schema?: (
     { __typename?: 'DataSchema' }
@@ -9082,6 +9226,8 @@ export type AccessTokenDataFragment = { __typename?: 'ViewAccessToken', id: stri
     { __typename?: 'Account' }
     & AccountFragment
   ) };
+
+export type BlockRefDataFragment = { __typename?: 'BlockRef', name: string, blockHash: string };
 
 export type CurrentSourceFetchUrlFragment = { __typename?: 'DatasetMetadata', currentPollingSource?: { __typename?: 'SetPollingSource', fetch:
       | { __typename?: 'FetchStepContainer' }
@@ -9183,6 +9329,14 @@ export type DatasetLastUpdateFragment = { __typename?: 'Dataset', metadata: { __
           { __typename?: 'PageBasedInfo' }
           & DatasetPageInfoFragment
         ) } } } };
+
+export type DatasetLineageMetadataDataFragment = (
+  { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
+    { __typename?: 'SetLicense' }
+    & LicenseFragment
+  ) | null }
+  & CurrentSourceFetchUrlFragment
+);
 
 export type DatasetLineageFragment = (
   { __typename: 'Dataset', metadata: (
@@ -9302,11 +9456,8 @@ export type DatasetLineageBasicsFragment = (
     { __typename?: 'DatasetData' }
     & DatasetDataSizeFragment
   ), metadata: (
-    { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
-      { __typename?: 'SetLicense' }
-      & LicenseFragment
-    ) | null }
-    & CurrentSourceFetchUrlFragment
+    { __typename?: 'DatasetMetadata' }
+    & DatasetLineageMetadataDataFragment
   ), owner: { __typename?: 'Account', avatarUrl?: string | null } }
   & DatasetBasicsFragment
 );
@@ -9320,7 +9471,10 @@ export type DatasetStreamLineageBasicsFragment = (
 );
 
 export type DatasetMetadataSummaryFragment = (
-  { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentDownstreamDependenciesCount: number, chain: { __typename?: 'MetadataChain', refs: Array<{ __typename?: 'BlockRef', name: string, blockHash: string }> }, currentInfo: (
+  { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentDownstreamDependenciesCount: number, chain: { __typename?: 'MetadataChain', refs: Array<(
+        { __typename?: 'BlockRef' }
+        & BlockRefDataFragment
+      )> }, currentInfo: (
       { __typename?: 'SetInfo' }
       & DatasetCurrentInfoFragment
     ), currentLicense?: (
@@ -9346,8 +9500,13 @@ export type DatasetMetadataSummaryFragment = (
   & DatasetLastUpdateFragment
 );
 
+export type DatasetOverviewMetadataDataFragment = { __typename?: 'DatasetMetadata', currentArchetype?: DatasetArchetype | null, currentPollingSource?: { __typename: 'SetPollingSource' } | null, currentTransform?: { __typename: 'SetTransform' } | null, currentPushSources: Array<{ __typename: 'AddPushSource' }> };
+
 export type DatasetOverviewFragment = (
-  { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentArchetype?: DatasetArchetype | null, currentPollingSource?: { __typename: 'SetPollingSource' } | null, currentTransform?: { __typename: 'SetTransform' } | null, currentPushSources: Array<{ __typename: 'AddPushSource' }> } }
+  { __typename?: 'Dataset', metadata: (
+    { __typename?: 'DatasetMetadata' }
+    & DatasetOverviewMetadataDataFragment
+  ) }
   & DatasetDescriptionFragment
   & DatasetDetailsFragment
   & DatasetReadmeFragment
@@ -9377,15 +9536,18 @@ export type DatasetSearchOverviewFragment = (
   & DatasetBasicsFragment
 );
 
-export type DatasetTransformContentFragment = { __typename?: 'TransformSql', engine: string, version?: string | null, queries: Array<{ __typename?: 'SqlQueryStep', alias?: string | null, query: string }>, temporalTables?: Array<{ __typename?: 'TemporalTable', name: string, primaryKey: Array<string> }> | null };
+export type DatasetTransformContentFragment = { __typename?: 'TransformSql', engine: string, version?: string | null, queries: Array<(
+    { __typename?: 'SqlQueryStep' }
+    & SqlQueryStepDataFragment
+  )>, temporalTables?: Array<(
+    { __typename?: 'TemporalTable' }
+    & TemporalTableDataFragment
+  )> | null };
 
-export type DatasetTransformFragment = { __typename?: 'SetTransform', inputs: Array<{ __typename?: 'TransformInput', datasetRef: string, alias: string, inputDataset:
-      | { __typename?: 'TransformInputDatasetAccessible', message: string, dataset: (
-          { __typename?: 'Dataset' }
-          & DatasetBasicsFragment
-        ) }
-      | { __typename?: 'TransformInputDatasetNotAccessible', message: string, datasetRef: string }
-     }>, transform: (
+export type DatasetTransformFragment = { __typename?: 'SetTransform', inputs: Array<(
+    { __typename?: 'TransformInput' }
+    & TransformInputDataFragment
+  )>, transform: (
     { __typename?: 'TransformSql' }
     & DatasetTransformContentFragment
   ) };
@@ -9401,54 +9563,147 @@ export type MetadataBlockFragment = { __typename?: 'MetadataBlockExtended', bloc
     & AccountBasicsFragment
   ), event:
     | (
-      { __typename: 'AddData' }
-      & AddDataEventFragment
+      { __typename?: 'AddData' }
+      & MetadataEventData_AddData_Fragment
     )
     | (
-      { __typename: 'AddPushSource' }
-      & AddPushSourceEventFragment
+      { __typename?: 'AddPushSource' }
+      & MetadataEventData_AddPushSource_Fragment
     )
     | (
-      { __typename: 'DisablePollingSource' }
-      & DisablePollingSourceEventFragment
-    )
-    | { __typename: 'DisablePushSource' }
-    | (
-      { __typename: 'ExecuteTransform' }
-      & ExecuteTransformEventFragment
+      { __typename?: 'DisablePollingSource' }
+      & MetadataEventData_DisablePollingSource_Fragment
     )
     | (
-      { __typename: 'Seed' }
-      & SeedEventFragment
+      { __typename?: 'DisablePushSource' }
+      & MetadataEventData_DisablePushSource_Fragment
     )
     | (
-      { __typename: 'SetAttachments' }
-      & SetAttachmentsEventFragment
+      { __typename?: 'ExecuteTransform' }
+      & MetadataEventData_ExecuteTransform_Fragment
     )
     | (
-      { __typename: 'SetDataSchema' }
-      & SetDataSchemaEventFragment
+      { __typename?: 'Seed' }
+      & MetadataEventData_Seed_Fragment
     )
     | (
-      { __typename: 'SetInfo' }
-      & DatasetCurrentInfoFragment
+      { __typename?: 'SetAttachments' }
+      & MetadataEventData_SetAttachments_Fragment
     )
     | (
-      { __typename: 'SetLicense' }
-      & SetLicenseEventFragment
+      { __typename?: 'SetDataSchema' }
+      & MetadataEventData_SetDataSchema_Fragment
     )
     | (
-      { __typename: 'SetPollingSource' }
-      & SetPollingSourceEventFragment
+      { __typename?: 'SetInfo' }
+      & MetadataEventData_SetInfo_Fragment
     )
     | (
-      { __typename: 'SetTransform' }
-      & DatasetTransformFragment
+      { __typename?: 'SetLicense' }
+      & MetadataEventData_SetLicense_Fragment
     )
     | (
-      { __typename: 'SetVocab' }
-      & SetVocabEventFragment
+      { __typename?: 'SetPollingSource' }
+      & MetadataEventData_SetPollingSource_Fragment
     )
+    | (
+      { __typename?: 'SetTransform' }
+      & MetadataEventData_SetTransform_Fragment
+    )
+    | (
+      { __typename?: 'SetVocab' }
+      & MetadataEventData_SetVocab_Fragment
+    )
+   };
+
+type MetadataEventData_AddData_Fragment = (
+  { __typename: 'AddData' }
+  & AddDataEventFragment
+);
+
+type MetadataEventData_AddPushSource_Fragment = (
+  { __typename: 'AddPushSource' }
+  & AddPushSourceEventFragment
+);
+
+type MetadataEventData_DisablePollingSource_Fragment = (
+  { __typename: 'DisablePollingSource' }
+  & DisablePollingSourceEventFragment
+);
+
+type MetadataEventData_DisablePushSource_Fragment = { __typename: 'DisablePushSource' };
+
+type MetadataEventData_ExecuteTransform_Fragment = (
+  { __typename: 'ExecuteTransform' }
+  & ExecuteTransformEventFragment
+);
+
+type MetadataEventData_Seed_Fragment = (
+  { __typename: 'Seed' }
+  & SeedEventFragment
+);
+
+type MetadataEventData_SetAttachments_Fragment = (
+  { __typename: 'SetAttachments' }
+  & SetAttachmentsEventFragment
+);
+
+type MetadataEventData_SetDataSchema_Fragment = (
+  { __typename: 'SetDataSchema' }
+  & SetDataSchemaEventFragment
+);
+
+type MetadataEventData_SetInfo_Fragment = (
+  { __typename: 'SetInfo' }
+  & DatasetCurrentInfoFragment
+);
+
+type MetadataEventData_SetLicense_Fragment = (
+  { __typename: 'SetLicense' }
+  & SetLicenseEventFragment
+);
+
+type MetadataEventData_SetPollingSource_Fragment = (
+  { __typename: 'SetPollingSource' }
+  & SetPollingSourceEventFragment
+);
+
+type MetadataEventData_SetTransform_Fragment = (
+  { __typename: 'SetTransform' }
+  & DatasetTransformFragment
+);
+
+type MetadataEventData_SetVocab_Fragment = (
+  { __typename: 'SetVocab' }
+  & SetVocabEventFragment
+);
+
+export type MetadataEventDataFragment =
+  | MetadataEventData_AddData_Fragment
+  | MetadataEventData_AddPushSource_Fragment
+  | MetadataEventData_DisablePollingSource_Fragment
+  | MetadataEventData_DisablePushSource_Fragment
+  | MetadataEventData_ExecuteTransform_Fragment
+  | MetadataEventData_Seed_Fragment
+  | MetadataEventData_SetAttachments_Fragment
+  | MetadataEventData_SetDataSchema_Fragment
+  | MetadataEventData_SetInfo_Fragment
+  | MetadataEventData_SetLicense_Fragment
+  | MetadataEventData_SetPollingSource_Fragment
+  | MetadataEventData_SetTransform_Fragment
+  | MetadataEventData_SetVocab_Fragment
+;
+
+export type SqlQueryStepDataFragment = { __typename?: 'SqlQueryStep', alias?: string | null, query: string };
+
+export type TemporalTableDataFragment = { __typename?: 'TemporalTable', name: string, primaryKey: Array<string> };
+
+export type TransformInputDataFragment = { __typename?: 'TransformInput', datasetRef: string, alias: string, inputDataset:
+    | { __typename?: 'TransformInputDatasetAccessible', message: string, dataset: (
+        { __typename?: 'Dataset' }
+        & DatasetBasicsFragment
+      ) }
+    | { __typename?: 'TransformInputDatasetNotAccessible', message: string, datasetRef: string }
    };
 
 export type WebhookSubscriptionDataFragment = { __typename?: 'WebhookSubscription', id: string, label: string, datasetId?: string | null, targetUrl: string, eventTypes: Array<string>, status: WebhookSubscriptionStatus };
@@ -9716,6 +9971,12 @@ export const DatasetBasicsFragmentDoc = gql`
   }
 }
     ${AccountBasicsFragmentDoc}`;
+export const RequestHeaderDataFragmentDoc = gql`
+    fragment RequestHeaderData on RequestHeader {
+  name
+  value
+}
+    `;
 export const FetchStepUrlDataFragmentDoc = gql`
     fragment FetchStepUrlData on FetchStepUrl {
   url
@@ -9732,14 +9993,13 @@ export const FetchStepUrlDataFragmentDoc = gql`
     }
   }
   headers {
-    name
-    value
+    ...RequestHeaderData
   }
   cache {
     __typename
   }
 }
-    `;
+    ${RequestHeaderDataFragmentDoc}`;
 export const FetchStepFilesGlobDataFragmentDoc = gql`
     fragment FetchStepFilesGlobData on FetchStepFilesGlob {
   path
@@ -9761,46 +10021,67 @@ export const FetchStepFilesGlobDataFragmentDoc = gql`
   order
 }
     `;
+export const EnvVarDataFragmentDoc = gql`
+    fragment EnvVarData on EnvVar {
+  name
+  value
+}
+    `;
 export const FetchStepContainerDataFragmentDoc = gql`
     fragment FetchStepContainerData on FetchStepContainer {
   image
   command
   args
   env {
-    name
-    value
+    ...EnvVarData
+  }
+}
+    ${EnvVarDataFragmentDoc}`;
+export const SetPollingSourceFetchDataFragmentDoc = gql`
+    fragment SetPollingSourceFetchData on SetPollingSource {
+  fetch {
+    ...FetchStepUrlData
+    ...FetchStepFilesGlobData
+    ...FetchStepContainerData
+  }
+}
+    ${FetchStepUrlDataFragmentDoc}
+${FetchStepFilesGlobDataFragmentDoc}
+${FetchStepContainerDataFragmentDoc}`;
+export const SetTransformEngineDataFragmentDoc = gql`
+    fragment SetTransformEngineData on SetTransform {
+  inputs {
+    __typename
+  }
+  transform {
+    ... on TransformSql {
+      engine
+    }
   }
 }
     `;
-export const DatasetConnectionDataFragmentDoc = gql`
-    fragment DatasetConnectionData on DatasetConnection {
-  nodes {
-    ...DatasetBasics
-    metadata {
-      currentPollingSource {
-        fetch {
-          ...FetchStepUrlData
-          ...FetchStepFilesGlobData
-          ...FetchStepContainerData
-        }
-      }
-      currentTransform {
-        inputs {
-          __typename
-        }
-        transform {
-          ... on TransformSql {
-            engine
-          }
-        }
-      }
+export const DatasetWithFlowsDataFragmentDoc = gql`
+    fragment DatasetWithFlowsData on Dataset {
+  ...DatasetBasics
+  metadata {
+    currentPollingSource {
+      ...SetPollingSourceFetchData
+    }
+    currentTransform {
+      ...SetTransformEngineData
     }
   }
 }
     ${DatasetBasicsFragmentDoc}
-${FetchStepUrlDataFragmentDoc}
-${FetchStepFilesGlobDataFragmentDoc}
-${FetchStepContainerDataFragmentDoc}`;
+${SetPollingSourceFetchDataFragmentDoc}
+${SetTransformEngineDataFragmentDoc}`;
+export const DatasetConnectionDataFragmentDoc = gql`
+    fragment DatasetConnectionData on DatasetConnection {
+  nodes {
+    ...DatasetWithFlowsData
+  }
+}
+    ${DatasetWithFlowsDataFragmentDoc}`;
 export const FlowProcessSummaryDataFragmentDoc = gql`
     fragment FlowProcessSummaryData on FlowProcessSummary {
   effectiveState
@@ -9842,36 +10123,41 @@ export const DatasetFlowProcessConnectionDataFragmentDoc = gql`
     ${DatasetBasicsFragmentDoc}
 ${FlowProcessSummaryDataFragmentDoc}
 ${DatasetPageInfoFragmentDoc}`;
+export const AccountFlowProcessCardDataFragmentDoc = gql`
+    fragment AccountFlowProcessCardData on AccountFlowProcessCard {
+  ... on DatasetFlowProcess {
+    flowType
+    dataset {
+      ...DatasetBasics
+    }
+    summary {
+      ...FlowProcessSummaryData
+    }
+  }
+  ... on WebhookFlowSubProcess {
+    id
+    name
+    parentDataset {
+      ...DatasetBasics
+    }
+    summary {
+      ...FlowProcessSummaryData
+    }
+  }
+}
+    ${DatasetBasicsFragmentDoc}
+${FlowProcessSummaryDataFragmentDoc}`;
 export const AccountFlowProcessCardConnectionDataFragmentDoc = gql`
     fragment AccountFlowProcessCardConnectionData on AccountFlowProcessCardConnection {
   nodes {
-    ... on DatasetFlowProcess {
-      flowType
-      dataset {
-        ...DatasetBasics
-      }
-      summary {
-        ...FlowProcessSummaryData
-      }
-    }
-    ... on WebhookFlowSubProcess {
-      id
-      name
-      parentDataset {
-        ...DatasetBasics
-      }
-      summary {
-        ...FlowProcessSummaryData
-      }
-    }
+    ...AccountFlowProcessCardData
   }
   totalCount
   pageInfo {
     ...DatasetPageInfo
   }
 }
-    ${DatasetBasicsFragmentDoc}
-${FlowProcessSummaryDataFragmentDoc}
+    ${AccountFlowProcessCardDataFragmentDoc}
 ${DatasetPageInfoFragmentDoc}`;
 export const WebhookFlowSubProcessConnectionDataFragmentDoc = gql`
     fragment WebhookFlowSubProcessConnectionData on WebhookFlowSubProcessConnection {
@@ -10020,6 +10306,150 @@ export const FlowRetryPolicyDataFragmentDoc = gql`
   backoffType
 }
     ${TimeDeltaDataFragmentDoc}`;
+export const FlowTriggerScheduleRuleDataFragmentDoc = gql`
+    fragment FlowTriggerScheduleRuleData on FlowTriggerScheduleRule {
+  ... on TimeDelta {
+    ...TimeDeltaData
+  }
+  ... on Cron5ComponentExpression {
+    cron5ComponentExpression
+  }
+}
+    ${TimeDeltaDataFragmentDoc}`;
+export const FlowTriggerReactiveRuleDataFragmentDoc = gql`
+    fragment FlowTriggerReactiveRuleData on FlowTriggerReactiveRule {
+  forNewData {
+    __typename
+    ... on FlowTriggerBatchingRuleBuffering {
+      maxBatchingInterval {
+        ...TimeDeltaData
+      }
+      minRecordsToAwait
+    }
+  }
+  forBreakingChange
+}
+    ${TimeDeltaDataFragmentDoc}`;
+export const FlowTriggerStopPolicyDataFragmentDoc = gql`
+    fragment FlowTriggerStopPolicyData on FlowTriggerStopPolicy {
+  __typename
+  ... on FlowTriggerStopPolicyAfterConsecutiveFailures {
+    maxFailures
+  }
+}
+    `;
+export const FlowTriggerDataFragmentDoc = gql`
+    fragment FlowTriggerData on FlowTrigger {
+  paused
+  schedule {
+    ...FlowTriggerScheduleRuleData
+  }
+  reactive {
+    ...FlowTriggerReactiveRuleData
+  }
+  stopPolicy {
+    ...FlowTriggerStopPolicyData
+  }
+}
+    ${FlowTriggerScheduleRuleDataFragmentDoc}
+${FlowTriggerReactiveRuleDataFragmentDoc}
+${FlowTriggerStopPolicyDataFragmentDoc}`;
+export const FlowDescriptionDataFragmentDoc = gql`
+    fragment FlowDescriptionData on FlowDescription {
+  ... on FlowDescriptionDatasetPollingIngest {
+    pollingSource {
+      ...SetPollingSourceFetchData
+    }
+    ingestResult {
+      ... on FlowDescriptionUpdateResultUpToDate {
+        uncacheable
+      }
+      ... on FlowDescriptionUpdateResultSuccess {
+        numBlocks
+        numRecords
+        updatedWatermark
+      }
+      ... on FlowDescriptionUpdateResultUnknown {
+        message
+      }
+    }
+  }
+  ... on FlowDescriptionDatasetPushIngest {
+    sourceName
+    ingestResult {
+      ... on FlowDescriptionUpdateResultUpToDate {
+        uncacheable
+      }
+      ... on FlowDescriptionUpdateResultSuccess {
+        numBlocks
+        numRecords
+        updatedWatermark
+      }
+      ... on FlowDescriptionUpdateResultUnknown {
+        message
+      }
+    }
+  }
+  ... on FlowDescriptionDatasetExecuteTransform {
+    transform {
+      ...SetTransformEngineData
+    }
+    transformResult {
+      ... on FlowDescriptionUpdateResultUpToDate {
+        uncacheable
+      }
+      ... on FlowDescriptionUpdateResultSuccess {
+        numBlocks
+        numRecords
+        updatedWatermark
+      }
+      ... on FlowDescriptionUpdateResultUnknown {
+        message
+      }
+    }
+  }
+  ... on FlowDescriptionDatasetHardCompaction {
+    compactionResult {
+      ... on FlowDescriptionReorganizationSuccess {
+        originalBlocksCount
+        resultingBlocksCount
+        newHead
+      }
+      ... on FlowDescriptionReorganizationNothingToDo {
+        message
+        dummy
+      }
+    }
+  }
+  ... on FlowDescriptionSystemGC {
+    dummy
+  }
+  ... on FlowDescriptionDatasetReset {
+    resetResult {
+      newHead
+    }
+  }
+  ... on FlowDescriptionDatasetResetToMetadata {
+    resetToMetadataResult {
+      ... on FlowDescriptionReorganizationSuccess {
+        originalBlocksCount
+        resultingBlocksCount
+        newHead
+      }
+      ... on FlowDescriptionReorganizationNothingToDo {
+        message
+        dummy
+      }
+    }
+  }
+  ... on FlowDescriptionWebhookDeliver {
+    targetUrl
+    label
+    eventType
+  }
+}
+    ${SetPollingSourceFetchDataFragmentDoc}
+${SetTransformEngineDataFragmentDoc}`;
 export const FlowOutcomeDataFragmentDoc = gql`
     fragment FlowOutcomeData on FlowOutcome {
   ... on FlowSuccessResult {
@@ -10091,108 +10521,7 @@ export const FlowStartConditionDataFragmentDoc = gql`
 export const FlowSummaryDataFragmentDoc = gql`
     fragment FlowSummaryData on Flow {
   description {
-    ... on FlowDescriptionDatasetPollingIngest {
-      pollingSource {
-        fetch {
-          ...FetchStepUrlData
-          ...FetchStepFilesGlobData
-          ...FetchStepContainerData
-        }
-      }
-      ingestResult {
-        ... on FlowDescriptionUpdateResultUpToDate {
-          uncacheable
-        }
-        ... on FlowDescriptionUpdateResultSuccess {
-          numBlocks
-          numRecords
-          updatedWatermark
-        }
-        ... on FlowDescriptionUpdateResultUnknown {
-          message
-        }
-      }
-    }
-    ... on FlowDescriptionDatasetPushIngest {
-      sourceName
-      ingestResult {
-        ... on FlowDescriptionUpdateResultUpToDate {
-          uncacheable
-        }
-        ... on FlowDescriptionUpdateResultSuccess {
-          numBlocks
-          numRecords
-          updatedWatermark
-        }
-        ... on FlowDescriptionUpdateResultUnknown {
-          message
-        }
-      }
-    }
-    ... on FlowDescriptionDatasetExecuteTransform {
-      transform {
-        inputs {
-          __typename
-        }
-        transform {
-          ... on TransformSql {
-            engine
-          }
-        }
-      }
-      transformResult {
-        ... on FlowDescriptionUpdateResultUpToDate {
-          uncacheable
-        }
-        ... on FlowDescriptionUpdateResultSuccess {
-          numBlocks
-          numRecords
-          updatedWatermark
-        }
-        ... on FlowDescriptionUpdateResultUnknown {
-          message
-        }
-      }
-    }
-    ... on FlowDescriptionDatasetHardCompaction {
-      compactionResult {
-        ... on FlowDescriptionReorganizationSuccess {
-          originalBlocksCount
-          resultingBlocksCount
-          newHead
-        }
-        ... on FlowDescriptionReorganizationNothingToDo {
-          message
-          dummy
-        }
-      }
-    }
-    ... on FlowDescriptionSystemGC {
-      dummy
-    }
-    ... on FlowDescriptionDatasetReset {
-      resetResult {
-        newHead
-      }
-    }
-    ... on FlowDescriptionDatasetResetToMetadata {
-      resetToMetadataResult {
-        ... on FlowDescriptionReorganizationSuccess {
-          originalBlocksCount
-          resultingBlocksCount
-          newHead
-        }
-        ... on FlowDescriptionReorganizationNothingToDo {
-          message
-          dummy
-        }
-      }
-    }
-    ... on FlowDescriptionWebhookDeliver {
-      targetUrl
-      label
-      eventType
-    }
+    ...FlowDescriptionData
   }
   flowId
   datasetId
@@ -10220,9 +10549,7 @@ export const FlowSummaryDataFragmentDoc = gql`
     maxAttempts
   }
 }
-    ${FetchStepUrlDataFragmentDoc}
-${FetchStepFilesGlobDataFragmentDoc}
-${FetchStepContainerDataFragmentDoc}
+    ${FlowDescriptionDataFragmentDoc}
 ${AccountFragmentDoc}
 ${FlowOutcomeDataFragmentDoc}
 ${FlowTimingRecordsDataFragmentDoc}
@@ -10652,6 +10979,19 @@ export const LicenseFragmentDoc = gql`
   websiteUrl
 }
     `;
+export const DatasetLineageMetadataDataFragmentDoc = gql`
+    fragment DatasetLineageMetadataData on DatasetMetadata {
+  ...CurrentSourceFetchUrl
+  currentPushSources {
+    sourceName
+  }
+  currentLicense {
+    ...License
+  }
+  currentWatermark
+}
+    ${CurrentSourceFetchUrlFragmentDoc}
+${LicenseFragmentDoc}`;
 export const DatasetLineageBasicsFragmentDoc = gql`
     fragment DatasetLineageBasics on Dataset {
   createdAt
@@ -10661,14 +11001,7 @@ export const DatasetLineageBasicsFragmentDoc = gql`
     ...DatasetDataSize
   }
   metadata {
-    ...CurrentSourceFetchUrl
-    currentPushSources {
-      sourceName
-    }
-    currentLicense {
-      ...License
-    }
-    currentWatermark
+    ...DatasetLineageMetadataData
   }
   owner {
     avatarUrl
@@ -10676,8 +11009,7 @@ export const DatasetLineageBasicsFragmentDoc = gql`
 }
     ${DatasetBasicsFragmentDoc}
 ${DatasetDataSizeFragmentDoc}
-${CurrentSourceFetchUrlFragmentDoc}
-${LicenseFragmentDoc}`;
+${DatasetLineageMetadataDataFragmentDoc}`;
 export const DatasetStreamLineageBasicsFragmentDoc = gql`
     fragment DatasetStreamLineageBasics on Dataset {
   createdAt
@@ -10901,10 +11233,22 @@ export const DatasetLineageFragmentDoc = gql`
 ${CurrentSourceFetchUrlFragmentDoc}
 ${LicenseFragmentDoc}
 ${DatasetStreamLineageBasicsFragmentDoc}`;
+export const BlockRefDataFragmentDoc = gql`
+    fragment BlockRefData on BlockRef {
+  name
+  blockHash
+}
+    `;
 export const DatasetCurrentInfoFragmentDoc = gql`
     fragment DatasetCurrentInfo on SetInfo {
   description
   keywords
+}
+    `;
+export const MqttTopicSubscriptionDataFragmentDoc = gql`
+    fragment MqttTopicSubscriptionData on MqttTopicSubscription {
+  path
+  qos
 }
     `;
 export const FetchStepMqttDataFragmentDoc = gql`
@@ -10914,11 +11258,10 @@ export const FetchStepMqttDataFragmentDoc = gql`
   username
   password
   topics {
-    path
-    qos
+    ...MqttTopicSubscriptionData
   }
 }
-    `;
+    ${MqttTopicSubscriptionDataFragmentDoc}`;
 export const FetchStepEthereumLogsDataFragmentDoc = gql`
     fragment FetchStepEthereumLogsData on FetchStepEthereumLogs {
   chainId
@@ -11036,20 +11379,31 @@ export const PrepStepPipeDataFragmentDoc = gql`
   command
 }
     `;
+export const SqlQueryStepDataFragmentDoc = gql`
+    fragment SqlQueryStepData on SqlQueryStep {
+  alias
+  query
+}
+    `;
+export const TemporalTableDataFragmentDoc = gql`
+    fragment TemporalTableData on TemporalTable {
+  name
+  primaryKey
+}
+    `;
 export const PreprocessStepDataFragmentDoc = gql`
     fragment PreprocessStepData on TransformSql {
   engine
   version
   queries {
-    query
-    alias
+    ...SqlQueryStepData
   }
   temporalTables {
-    name
-    primaryKey
+    ...TemporalTableData
   }
 }
-    `;
+    ${SqlQueryStepDataFragmentDoc}
+${TemporalTableDataFragmentDoc}`;
 export const SetPollingSourceEventFragmentDoc = gql`
     fragment SetPollingSourceEvent on SetPollingSource {
   fetch {
@@ -11103,43 +11457,47 @@ ${MergeStrategyUpsertStreamDataFragmentDoc}
 ${PrepStepDecompressDataFragmentDoc}
 ${PrepStepPipeDataFragmentDoc}
 ${PreprocessStepDataFragmentDoc}`;
+export const TransformInputDataFragmentDoc = gql`
+    fragment TransformInputData on TransformInput {
+  datasetRef
+  alias
+  inputDataset {
+    ... on TransformInputDatasetAccessible {
+      message
+      dataset {
+        ...DatasetBasics
+      }
+    }
+    ... on TransformInputDatasetNotAccessible {
+      message
+      datasetRef
+    }
+  }
+}
+    ${DatasetBasicsFragmentDoc}`;
 export const DatasetTransformContentFragmentDoc = gql`
     fragment DatasetTransformContent on TransformSql {
   engine
   version
   queries {
-    alias
-    query
+    ...SqlQueryStepData
   }
   temporalTables {
-    name
-    primaryKey
+    ...TemporalTableData
   }
 }
-    `;
+    ${SqlQueryStepDataFragmentDoc}
+${TemporalTableDataFragmentDoc}`;
 export const DatasetTransformFragmentDoc = gql`
     fragment DatasetTransform on SetTransform {
   inputs {
-    datasetRef
-    alias
-    inputDataset {
-      ... on TransformInputDatasetAccessible {
-        message
-        dataset {
-          ...DatasetBasics
-        }
-      }
-      ... on TransformInputDatasetNotAccessible {
-        message
-        datasetRef
-      }
-    }
+    ...TransformInputData
   }
   transform {
     ...DatasetTransformContent
   }
 }
-    ${DatasetBasicsFragmentDoc}
+    ${TransformInputDataFragmentDoc}
 ${DatasetTransformContentFragmentDoc}`;
 export const SetVocabEventFragmentDoc = gql`
     fragment SetVocabEvent on SetVocab {
@@ -11198,17 +11556,22 @@ export const SeedEventFragmentDoc = gql`
   datasetKind
 }
     `;
+export const OffsetIntervalDataFragmentDoc = gql`
+    fragment OffsetIntervalData on OffsetInterval {
+  start
+  end
+}
+    `;
 export const DataSliceDataFragmentDoc = gql`
     fragment DataSliceData on DataSlice {
   offsetInterval {
-    start
-    end
+    ...OffsetIntervalData
   }
   logicalHash
   physicalHash
   size
 }
-    `;
+    ${OffsetIntervalDataFragmentDoc}`;
 export const ExecuteTransformEventFragmentDoc = gql`
     fragment ExecuteTransformEvent on ExecuteTransform {
   queryInputs {
@@ -11282,33 +11645,23 @@ export const DisablePollingSourceEventFragmentDoc = gql`
   dummy
 }
     `;
-export const MetadataBlockFragmentDoc = gql`
-    fragment MetadataBlock on MetadataBlockExtended {
-  blockHash
-  prevBlockHash
-  systemTime
-  sequenceNumber
-  author {
-    ...AccountBasics
-  }
-  event {
-    __typename
-    ...SeedEvent
-    ...SetVocabEvent
-    ...DatasetTransform
-    ...ExecuteTransformEvent
-    ...AddDataEvent
-    ...SetAttachmentsEvent
-    ...DatasetCurrentInfo
-    ...SetLicenseEvent
-    ...SetPollingSourceEvent
-    ...AddPushSourceEvent
-    ...SetDataSchemaEvent
-    ...DisablePollingSourceEvent
-  }
+export const MetadataEventDataFragmentDoc = gql`
+    fragment MetadataEventData on MetadataEvent {
+  __typename
+  ...SeedEvent
+  ...SetVocabEvent
+  ...DatasetTransform
+  ...ExecuteTransformEvent
+  ...AddDataEvent
+  ...SetAttachmentsEvent
+  ...DatasetCurrentInfo
+  ...SetLicenseEvent
+  ...SetPollingSourceEvent
+  ...AddPushSourceEvent
+  ...SetDataSchemaEvent
+  ...DisablePollingSourceEvent
 }
-    ${AccountBasicsFragmentDoc}
-${SeedEventFragmentDoc}
+    ${SeedEventFragmentDoc}
 ${SetVocabEventFragmentDoc}
 ${DatasetTransformFragmentDoc}
 ${ExecuteTransformEventFragmentDoc}
@@ -11320,6 +11673,21 @@ ${SetPollingSourceEventFragmentDoc}
 ${AddPushSourceEventFragmentDoc}
 ${SetDataSchemaEventFragmentDoc}
 ${DisablePollingSourceEventFragmentDoc}`;
+export const MetadataBlockFragmentDoc = gql`
+    fragment MetadataBlock on MetadataBlockExtended {
+  blockHash
+  prevBlockHash
+  systemTime
+  sequenceNumber
+  author {
+    ...AccountBasics
+  }
+  event {
+    ...MetadataEventData
+  }
+}
+    ${AccountBasicsFragmentDoc}
+${MetadataEventDataFragmentDoc}`;
 export const DatasetLastUpdateFragmentDoc = gql`
     fragment DatasetLastUpdate on Dataset {
   metadata {
@@ -11343,8 +11711,7 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
   metadata {
     chain {
       refs {
-        name
-        blockHash
+        ...BlockRefData
       }
     }
     currentInfo {
@@ -11374,7 +11741,8 @@ export const DatasetMetadataSummaryFragmentDoc = gql`
   ...DatasetReadme
   ...DatasetLastUpdate
 }
-    ${DatasetCurrentInfoFragmentDoc}
+    ${BlockRefDataFragmentDoc}
+${DatasetCurrentInfoFragmentDoc}
 ${LicenseFragmentDoc}
 ${SetPollingSourceEventFragmentDoc}
 ${DatasetTransformFragmentDoc}
@@ -11412,6 +11780,20 @@ export const DatasetDetailsFragmentDoc = gql`
   }
 }
     ${LicenseFragmentDoc}`;
+export const DatasetOverviewMetadataDataFragmentDoc = gql`
+    fragment DatasetOverviewMetadataData on DatasetMetadata {
+  currentArchetype
+  currentPollingSource {
+    __typename
+  }
+  currentTransform {
+    __typename
+  }
+  currentPushSources {
+    __typename
+  }
+}
+    `;
 export const DatasetOverviewFragmentDoc = gql`
     fragment DatasetOverview on Dataset {
   ...DatasetDescription
@@ -11419,22 +11801,14 @@ export const DatasetOverviewFragmentDoc = gql`
   ...DatasetReadme
   ...DatasetLastUpdate
   metadata {
-    currentArchetype
-    currentPollingSource {
-      __typename
-    }
-    currentTransform {
-      __typename
-    }
-    currentPushSources {
-      __typename
-    }
+    ...DatasetOverviewMetadataData
   }
 }
     ${DatasetDescriptionFragmentDoc}
 ${DatasetDetailsFragmentDoc}
 ${DatasetReadmeFragmentDoc}
-${DatasetLastUpdateFragmentDoc}`;
+${DatasetLastUpdateFragmentDoc}
+${DatasetOverviewMetadataDataFragmentDoc}`;
 export const DatasetPermissionsFragmentDoc = gql`
     fragment DatasetPermissions on Dataset {
   permissions {
@@ -13419,40 +13793,14 @@ export const GetDatasetFlowTriggerDocument = gql`
       flows {
         triggers {
           byType(datasetFlowType: $datasetFlowType) {
-            paused
-            schedule {
-              ... on TimeDelta {
-                ...TimeDeltaData
-              }
-              ... on Cron5ComponentExpression {
-                cron5ComponentExpression
-              }
-            }
-            reactive {
-              forNewData {
-                __typename
-                ... on FlowTriggerBatchingRuleBuffering {
-                  maxBatchingInterval {
-                    ...TimeDeltaData
-                  }
-                  minRecordsToAwait
-                }
-              }
-              forBreakingChange
-            }
-            stopPolicy {
-              __typename
-              ... on FlowTriggerStopPolicyAfterConsecutiveFailures {
-                maxFailures
-              }
-            }
+            ...FlowTriggerData
           }
         }
       }
     }
   }
 }
-    ${TimeDeltaDataFragmentDoc}`;
+    ${FlowTriggerDataFragmentDoc}`;
 
   @Injectable({
     providedIn: 'root'

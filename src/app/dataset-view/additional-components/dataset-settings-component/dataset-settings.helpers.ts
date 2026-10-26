@@ -9,7 +9,7 @@ import { isNil } from "@common/helpers/app.helpers";
 import {
     DatasetBasicsFragment,
     DatasetKind,
-    DatasetOverviewFragment,
+    DatasetOverviewMetadataDataFragment,
     DatasetPermissionsFragment,
 } from "@api/kamu.graphql.interface";
 
@@ -21,7 +21,7 @@ export function isSettingsTabAccessibleHelper(
     featureFlags: AppUIConfigFeatureFlags,
     datasetBasics: DatasetBasicsFragment,
     datasetPermissions: DatasetPermissionsFragment,
-    datasetMetadata: DatasetOverviewFragment["metadata"],
+    datasetMetadata: DatasetOverviewMetadataDataFragment,
 ): boolean {
     switch (tab) {
         case SettingsTabsEnum.GENERAL:

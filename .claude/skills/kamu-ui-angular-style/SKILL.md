@@ -55,8 +55,9 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
   neither the app nor its specs need a cast to pass data in:
   - GraphQL data takes the generated fragment type its query selects
     (`DatasetFlowProcessDataFragment`), never the schema type (`DatasetFlowProcess`), which
-    claims fields the query never fetched. When the slice has no fragment, add one
-    (`kamu-ui-graphql-api`, "Documents").
+    claims fields the query never fetched, and never a type cut out of a bigger fragment
+    (`XxxFragment["field"]`). When the slice has no fragment, add one (`kamu-ui-graphql-api`,
+    "Documents").
   - An input bound from a route or query parameter is `MaybeUndefined<T>`: the router sets it to
     `undefined` when the parameter is missing.
 - Templates use the built-in control flow: `@if` / `@else`, `@for` and `@switch`. Never

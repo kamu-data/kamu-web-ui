@@ -1,7 +1,6 @@
 fragment DataSliceData on DataSlice {
   offsetInterval {
-    start
-    end
+    ...OffsetIntervalData
   }
   logicalHash
   physicalHash

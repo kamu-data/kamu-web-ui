@@ -1,0 +1,9 @@
+fragment FlowTriggerScheduleRuleData on FlowTriggerScheduleRule {
+  ... on TimeDelta {
+    ...TimeDeltaData
+  }
+
+  ... on Cron5ComponentExpression {
+    cron5ComponentExpression
+  }
+}

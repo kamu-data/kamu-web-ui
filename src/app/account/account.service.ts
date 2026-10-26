@@ -25,10 +25,10 @@ import {
     ChangeAccountUsernameMutation,
     ChangeAdminPasswordMutation,
     ChangeUserPasswordMutation,
-    DatasetConnectionDataFragment,
     DatasetFlowProcessConnectionDataFragment,
     DatasetsByAccountNameQuery,
     DatasetsTotalCountByAccountNameQuery,
+    DatasetWithFlowsDataFragment,
     DeleteAccountByNameMutation,
     FlowConnectionDataFragment,
     FlowConnectionWidgetDataFragment,
@@ -171,14 +171,15 @@ export class AccountService {
         );
     }
 
-    public getDatasetsWithFlows(accounName: string): Observable<DatasetConnectionDataFragment["nodes"]> {
+    public getDatasetsWithFlows(accounName: string): Observable<DatasetWithFlowsDataFragment[]> {
         return this.accountApi.accountDatasetsWithFlows(accounName).pipe(
             map((data: AccountListDatasetsWithFlowsQuery) => {
-                return data.accounts.byName?.flows?.runs.listDatasetsWithFlow.nodes.sort((a, b) => {
+                const datasets = data.accounts.byName?.flows.runs.listDatasetsWithFlow.nodes ?? [];
+                return datasets.sort((a, b) => {
                     if (a.name < b.name) return -1;
                     if (a.name > b.name) return 1;
                     return 0;
-                }) as DatasetConnectionDataFragment["nodes"];
+                });
             }),
         );
     }

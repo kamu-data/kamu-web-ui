@@ -12,6 +12,8 @@ import { excludeAgoWord, isNil, pluralize } from "@common/helpers/app.helpers";
 import { DataHelpers } from "@common/helpers/data.helpers";
 import AppValues from "@common/values/app.values";
 import {
+    FlowDescriptionDataFragment,
+    FlowOutcomeDataFragment,
     FlowStartConditionDataFragment,
     FlowStatus,
     FlowSummaryDataFragment,
@@ -22,8 +24,8 @@ import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
 /** The part of a flow needed to describe its type and status */
 export type FlowStatusInfo = {
     status: FlowStatus;
-    outcome?: MaybeNull<Pick<NonNullable<FlowSummaryDataFragment["outcome"]>, "__typename">>;
-    description: Pick<FlowSummaryDataFragment["description"], "__typename">;
+    outcome?: MaybeNull<Pick<FlowOutcomeDataFragment, "__typename">>;
+    description: Pick<FlowDescriptionDataFragment, "__typename">;
 };
 
 export class FlowTableHelpers {

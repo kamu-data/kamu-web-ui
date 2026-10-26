@@ -5,16 +5,13 @@
  * included in the LICENSE file.
  */
 
+import { FlowTriggerReactiveRuleDataFragment, FlowTriggerStopPolicyDataFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
-import {
-    FlowTriggerReactiveData,
-    FlowTriggerStopPolicyData,
-} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-trigger.types";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
 export interface DatasetSettingsTransformOptionsTabData extends DatasetViewData {
-    reactive: MaybeNull<FlowTriggerReactiveData>;
-    stopPolicy: MaybeNull<FlowTriggerStopPolicyData>;
+    reactive: MaybeNull<FlowTriggerReactiveRuleDataFragment>;
+    stopPolicy: MaybeNull<FlowTriggerStopPolicyDataFragment>;
     paused: boolean;
 }

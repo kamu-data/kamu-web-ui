@@ -34,6 +34,7 @@ import {
     FlowStatus,
     FlowSummaryDataFragment,
     FlowTriggerBreakingChangeRule,
+    FlowTriggerScheduleRuleDataFragment,
     GetDatasetFlowConfigsQuery,
     GetDatasetFlowTriggerQuery,
     GetDatasetListFlowsQuery,
@@ -53,7 +54,6 @@ import {
     mockFlowSetTransformFragment,
 } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
-import { FlowTriggerScheduleData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-trigger.types";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetMainDataId,
@@ -255,7 +255,7 @@ export const mockPauseDatasetFlowTriggerSuccess: PauseDatasetFlowTriggerMutation
     },
 };
 
-export const mockCronSchedule: FlowTriggerScheduleData = {
+export const mockCronSchedule: FlowTriggerScheduleRuleDataFragment = {
     __typename: "Cron5ComponentExpression",
     cron5ComponentExpression: "* * * * ?",
 };

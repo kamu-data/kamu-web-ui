@@ -14,6 +14,7 @@ import {
     DatasetKind,
     DatasetLineageBasicsFragment,
     DatasetOverviewFragment,
+    DatasetOverviewMetadataDataFragment,
     SetPollingSourceEventFragment,
 } from "@api/kamu.graphql.interface";
 import { TEST_AVATAR_URL } from "@api/mock/auth.mock";
@@ -1682,14 +1683,14 @@ export const mockOverviewWithSetLicense: DatasetOverviewFragment = {
     lastUpdatedAt: "2022-08-05T21:15:03.947245004+00:00",
 };
 
-export const datasetMetadataDerivativeDataset: DatasetOverviewFragment["metadata"] = {
+export const datasetMetadataDerivativeDataset: DatasetOverviewMetadataDataFragment = {
     ...structuredClone(mockOverviewDataUpdate.overview.metadata),
     currentPollingSource: null,
     currentTransform: { __typename: "SetTransform" },
     currentPushSources: [],
 };
 
-export const datasetMetadataRootDataset: DatasetOverviewFragment["metadata"] = {
+export const datasetMetadataRootDataset: DatasetOverviewMetadataDataFragment = {
     ...structuredClone(mockOverviewDataUpdate.overview.metadata),
     currentPollingSource: { __typename: "SetPollingSource" },
     currentTransform: null,

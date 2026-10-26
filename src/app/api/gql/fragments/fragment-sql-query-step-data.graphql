@@ -1,0 +1,4 @@
+fragment SqlQueryStepData on SqlQueryStep {
+  alias
+  query
+}

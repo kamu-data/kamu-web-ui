@@ -1,0 +1,15 @@
+fragment MetadataEventData on MetadataEvent {
+  __typename
+  ...SeedEvent
+  ...SetVocabEvent
+  ...DatasetTransform
+  ...ExecuteTransformEvent
+  ...AddDataEvent
+  ...SetAttachmentsEvent
+  ...DatasetCurrentInfo
+  ...SetLicenseEvent
+  ...SetPollingSourceEvent
+  ...AddPushSourceEvent
+  ...SetDataSchemaEvent
+  ...DisablePollingSourceEvent
+}

@@ -5,6 +5,22 @@ import jasminePlugin from "eslint-plugin-jasmine";
 import licenseHeaderPlugin from "eslint-plugin-license-header";
 import globals from "globals";
 
+// Code that needs part of a query result types it with a named sub-fragment, not a type cut out of a
+// bigger generated one
+const fragmentSliceRestrictions = [
+  {
+    selector: "TSIndexedAccessType[objectType.typeName.name=/(Fragment|Query|Mutation)$/]",
+    message:
+      'Extract a named sub-fragment in the .graphql document and use its XxxFragment type instead of XxxFragment["field"].',
+  },
+  {
+    selector:
+      "TSTypeReference[typeName.name='Extract'] > TSTypeParameterInstantiation > TSTypeReference:first-child[typeName.name=/(Fragment|Query|Mutation)$/]",
+    message:
+      "Spread a named fragment on the union member in the .graphql document and use its XxxFragment type instead of Extract<>.",
+  },
+];
+
 export default [
   {
     // Global ignore patterns
@@ -80,6 +96,8 @@ export default [
       "jasmine/no-unsafe-spy": "off",
       "jasmine/no-focused-tests": "error",
       "jasmine/no-disabled-tests": "error",
+
+      "no-restricted-syntax": ["error", ...fragmentSliceRestrictions],
     },
   },
   // Specs set inputs through setComponentInput(), which type-checks the input name and value,
@@ -90,6 +108,7 @@ export default [
     rules: {
       "no-restricted-syntax": [
         "error",
+        ...fragmentSliceRestrictions,
         {
           selector: "CallExpression[callee.property.name='setInput']",
           message:

@@ -1,0 +1,11 @@
+fragment DatasetWithFlowsData on Dataset {
+  ...DatasetBasics
+  metadata {
+    currentPollingSource {
+      ...SetPollingSourceFetchData
+    }
+    currentTransform {
+      ...SetTransformEngineData
+    }
+  }
+}

@@ -10,21 +10,21 @@ import { RedirectCommand } from "@angular/router";
 
 import { map, Observable, of, switchMap } from "rxjs";
 
-import { DatasetFlowType } from "@api/kamu.graphql.interface";
+import {
+    DatasetFlowType,
+    FlowTriggerDataFragment,
+    FlowTriggerStopPolicyDataFragment,
+} from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
 
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { resolveSettingsTabAccess } from "src/app/dataset-view/additional-components/dataset-settings-component/resolvers/settings-tab-access.helpers";
 import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
-import {
-    DatasetFlowTriggerData,
-    FlowTriggerStopPolicyData,
-} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-trigger.types";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
 export interface FlowTriggerTabData extends DatasetViewData {
     paused: boolean;
-    stopPolicy: MaybeNull<FlowTriggerStopPolicyData>;
+    stopPolicy: MaybeNull<FlowTriggerStopPolicyDataFragment>;
 }
 
 /**
@@ -36,7 +36,7 @@ export interface FlowTriggerTabData extends DatasetViewData {
 export function requestFlowTriggerTabData<TRule extends object>(
     tab: SettingsTabsEnum,
     flowType: DatasetFlowType,
-    pickRule: (trigger: MaybeNullOrUndefined<DatasetFlowTriggerData>) => TRule,
+    pickRule: (trigger: MaybeNullOrUndefined<FlowTriggerDataFragment>) => TRule,
 ): Observable<(FlowTriggerTabData & TRule) | RedirectCommand> {
     const datasetFlowTriggerService = inject(DatasetFlowTriggerService);
 

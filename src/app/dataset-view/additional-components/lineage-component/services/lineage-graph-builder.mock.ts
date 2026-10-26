@@ -9,6 +9,7 @@ import {
     DatasetAccessResultNotAccessible,
     DatasetKind,
     DatasetLineageBasicsFragment,
+    DatasetLineageMetadataDataFragment,
     FetchStepEthereumLogs,
 } from "@api/kamu.graphql.interface";
 
@@ -19,7 +20,7 @@ function mockLineageDataset(
     id: string,
     name: string,
     kind: DatasetKind,
-    metadata: Partial<DatasetLineageBasicsFragment["metadata"]> = {},
+    metadata: Partial<DatasetLineageMetadataDataFragment> = {},
 ): DatasetLineageBasicsFragment {
     return {
         ...mockGraphNode,

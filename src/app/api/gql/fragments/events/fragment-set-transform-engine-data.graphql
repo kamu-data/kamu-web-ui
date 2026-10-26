@@ -1,0 +1,10 @@
+fragment SetTransformEngineData on SetTransform {
+  inputs {
+    __typename
+  }
+  transform {
+    ... on TransformSql {
+      engine
+    }
+  }
+}

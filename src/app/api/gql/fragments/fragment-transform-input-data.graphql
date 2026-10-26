@@ -1,0 +1,17 @@
+fragment TransformInputData on TransformInput {
+  datasetRef
+  alias
+  inputDataset {
+    ... on TransformInputDatasetAccessible {
+      message
+      dataset {
+        ...DatasetBasics
+      }
+    }
+
+    ... on TransformInputDatasetNotAccessible {
+      message
+      datasetRef
+    }
+  }
+}

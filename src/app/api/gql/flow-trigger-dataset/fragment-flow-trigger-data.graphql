@@ -1,0 +1,14 @@
+fragment FlowTriggerData on FlowTrigger {
+  paused
+  schedule {
+    ...FlowTriggerScheduleRuleData
+  }
+
+  reactive {
+    ...FlowTriggerReactiveRuleData
+  }
+
+  stopPolicy {
+    ...FlowTriggerStopPolicyData
+  }
+}

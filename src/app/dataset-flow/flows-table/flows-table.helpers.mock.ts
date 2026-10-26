@@ -15,6 +15,8 @@ import {
     FetchStepUrlDataFragment,
     FlowStatus,
     FlowSummaryDataFragment,
+    SetPollingSourceFetchDataFragment,
+    SetTransformEngineDataFragment,
     TimeUnit,
 } from "@api/kamu.graphql.interface";
 
@@ -61,16 +63,7 @@ export const expectationsDescriptionEndOfMessage = [
     "running",
 ];
 
-type FlowDescription = FlowSummaryDataFragment["description"];
-type FlowPollingSource = NonNullable<
-    Extract<FlowDescription, { __typename?: "FlowDescriptionDatasetPollingIngest" }>["pollingSource"]
->;
-type FlowSetTransform = Extract<
-    FlowDescription,
-    { __typename?: "FlowDescriptionDatasetExecuteTransform" }
->["transform"];
-
-export const mockFlowPollingSourceFragmentFetchUrl: FlowPollingSource & {
+export const mockFlowPollingSourceFragmentFetchUrl: SetPollingSourceFetchDataFragment & {
     fetch: { __typename: "FetchStepUrl" } & FetchStepUrlDataFragment;
 } = {
     __typename: "SetPollingSource" as const,
@@ -83,7 +76,7 @@ export const mockFlowPollingSourceFragmentFetchUrl: FlowPollingSource & {
     },
 };
 
-export const mockFlowPollingSourceFragmentFetchImage: FlowPollingSource & {
+export const mockFlowPollingSourceFragmentFetchImage: SetPollingSourceFetchDataFragment & {
     fetch: { __typename: "FetchStepContainer" } & FetchStepContainerDataFragment;
 } = {
     __typename: "SetPollingSource" as const,
@@ -93,7 +86,7 @@ export const mockFlowPollingSourceFragmentFetchImage: FlowPollingSource & {
     },
 };
 
-export const mockFlowPollingSourceFragmentFetchStepFilesGlob: FlowPollingSource & {
+export const mockFlowPollingSourceFragmentFetchStepFilesGlob: SetPollingSourceFetchDataFragment & {
     fetch: { __typename: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment;
 } = {
     __typename: "SetPollingSource" as const,
@@ -103,7 +96,7 @@ export const mockFlowPollingSourceFragmentFetchStepFilesGlob: FlowPollingSource 
     },
 };
 
-export const mockFlowSetTransformFragment: FlowSetTransform = {
+export const mockFlowSetTransformFragment: SetTransformEngineDataFragment = {
     __typename: "SetTransform" as const,
     inputs: [
         {

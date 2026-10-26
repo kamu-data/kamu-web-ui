@@ -19,6 +19,7 @@ import { parseDataRows } from "@common/helpers/data.helpers";
 import { DatasetNotFoundError, SqlExecutionError } from "@common/values/errors";
 import { DatasetApi } from "@api/dataset.api";
 import {
+    BlockRefDataFragment,
     CompareChainsStatus,
     DataQueryResultSuccessViewFragment,
     DatasetAccessResultNotAccessible,
@@ -117,7 +118,7 @@ export class DatasetService {
         );
     }
 
-    private setHeadBlockHash(refs: DatasetMetadataSummaryFragment["metadata"]["chain"]["refs"]): void {
+    private setHeadBlockHash(refs: BlockRefDataFragment[]): void {
         const head = refs?.find((item) => item.name === "head");
         this.currentHeadBlockHash = head?.blockHash ?? "";
     }

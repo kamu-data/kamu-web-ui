@@ -7,6 +7,7 @@
 
 import {
     AccountFlowProcessCardConnectionDataFragment,
+    AccountFlowProcessCardDataFragment,
     DatasetFlowProcessConnectionDataFragment,
     FlowProcessEffectiveState,
     FlowProcessGroupRollupDataFragment,
@@ -379,11 +380,9 @@ export interface DashboardFiltersOptions {
     isFirstInitialization: boolean;
 }
 
-export type AccountFlowProcessCardData = AccountFlowProcessCardConnectionDataFragment["nodes"][number];
-
 export interface FlowProcessCardListing {
     totalCount: number;
-    nodes: AccountFlowProcessCardData[];
+    nodes: AccountFlowProcessCardDataFragment[];
 }
 
 export type AccountFlowCardsConnectionData =

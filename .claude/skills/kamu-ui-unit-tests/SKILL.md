@@ -191,7 +191,9 @@ or misspelled field before any test runs. A type assertion switches that check o
 - Every exported mock is declared with its type:
   - a response fixture with the generated `XxxQuery` / `XxxMutation`;
   - a slice of GraphQL data with the generated `XxxFragment`, or with the union member a spec
-    needs (`{ __typename: "AddData" } & AddDataEventFragment`);
+    needs (`{ __typename: "AddData" } & AddDataEventFragment`); a part of a bigger fragment
+    takes its named sub-fragment type, never `XxxFragment["field"]` (`kamu-ui-graphql-api`,
+    "Documents");
   - a view model with its app interface (`OverviewUpdate`).
 
   A field the spec does not need takes its empty value (`schema: null`, `[]`); it is not dropped

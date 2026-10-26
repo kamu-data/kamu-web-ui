@@ -13,8 +13,7 @@ fragment FetchStepUrlData on FetchStepUrl {
     }
   }
   headers {
-    name
-    value
+    ...RequestHeaderData
   }
   cache {
     __typename

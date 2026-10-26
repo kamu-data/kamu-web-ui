@@ -1,0 +1,4 @@
+fragment MqttTopicSubscriptionData on MqttTopicSubscription {
+  path
+  qos
+}

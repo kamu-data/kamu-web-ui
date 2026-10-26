@@ -1,0 +1,110 @@
+fragment FlowDescriptionData on FlowDescription {
+  ... on FlowDescriptionDatasetPollingIngest {
+    pollingSource {
+      ...SetPollingSourceFetchData
+    }
+
+    ingestResult {
+      ... on FlowDescriptionUpdateResultUpToDate {
+        uncacheable
+      }
+
+      ... on FlowDescriptionUpdateResultSuccess {
+        numBlocks
+        numRecords
+        updatedWatermark
+      }
+
+      ... on FlowDescriptionUpdateResultUnknown {
+        message
+      }
+    }
+  }
+
+  ... on FlowDescriptionDatasetPushIngest {
+    sourceName
+    ingestResult {
+      ... on FlowDescriptionUpdateResultUpToDate {
+        uncacheable
+      }
+
+      ... on FlowDescriptionUpdateResultSuccess {
+        numBlocks
+        numRecords
+        updatedWatermark
+      }
+
+      ... on FlowDescriptionUpdateResultUnknown {
+        message
+      }
+    }
+  }
+
+  ... on FlowDescriptionDatasetExecuteTransform {
+    transform {
+      ...SetTransformEngineData
+    }
+
+    transformResult {
+      ... on FlowDescriptionUpdateResultUpToDate {
+        uncacheable
+      }
+
+      ... on FlowDescriptionUpdateResultSuccess {
+        numBlocks
+        numRecords
+        updatedWatermark
+      }
+
+      ... on FlowDescriptionUpdateResultUnknown {
+        message
+      }
+    }
+  }
+
+  ... on FlowDescriptionDatasetHardCompaction {
+    compactionResult {
+      ... on FlowDescriptionReorganizationSuccess {
+        originalBlocksCount
+        resultingBlocksCount
+        newHead
+      }
+
+      ... on FlowDescriptionReorganizationNothingToDo {
+        message
+        dummy
+      }
+    }
+  }
+
+  ... on FlowDescriptionSystemGC {
+    dummy
+  }
+
+  ... on FlowDescriptionDatasetReset {
+    resetResult {
+      newHead
+    }
+  }
+
+  ... on FlowDescriptionDatasetResetToMetadata {
+    resetToMetadataResult {
+      ... on FlowDescriptionReorganizationSuccess {
+        originalBlocksCount
+        resultingBlocksCount
+        newHead
+      }
+
+      ... on FlowDescriptionReorganizationNothingToDo {
+        message
+        dummy
+      }
+    }
+  }
+
+  ... on FlowDescriptionWebhookDeliver {
+    targetUrl
+    label
+    eventType
+  }
+}

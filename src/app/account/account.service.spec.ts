@@ -18,7 +18,7 @@ import { DatasetApi } from "@api/dataset.api";
 import {
     AccountFlowFilters,
     AccountFragment,
-    DatasetConnectionDataFragment,
+    DatasetWithFlowsDataFragment,
     FlowProcessOrderField,
     OrderingDirection,
 } from "@api/kamu.graphql.interface";
@@ -136,7 +136,7 @@ describe("AccountService", () => {
         const subscription$ = service
             .getDatasetsWithFlows(TEST_LOGIN)
             .pipe(first())
-            .subscribe((data: DatasetConnectionDataFragment["nodes"]) => {
+            .subscribe((data: DatasetWithFlowsDataFragment[]) => {
                 const listDatasets =
                     mockAccountListDatasetsWithFlowsQuery.accounts.byName?.flows?.runs.listDatasetsWithFlow;
                 expect(data.length).toEqual(requireValue(listDatasets ?? null).nodes.length);

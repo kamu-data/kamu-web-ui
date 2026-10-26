@@ -5,7 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { DatasetBasicsFragment, DatasetTransformFragment } from "@api/kamu.graphql.interface";
+import {
+    DatasetBasicsFragment,
+    DatasetTransformFragment,
+    TransformInputDataFragment,
+} from "@api/kamu.graphql.interface";
 
 import { SET_TRANSFORM_SOURCE_DESCRIPTORS } from "src/app/dataset-block/metadata-block/components/event-details/components/set-transform-event/set-transform-event.source";
 import { EventSectionBuilder } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/builders/event-section.builder";
@@ -13,8 +17,6 @@ import {
     EventRow,
     EventSection,
 } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
-
-type TransformInputData = DatasetTransformFragment["inputs"][number];
 
 enum SetTransformSection {
     INPUTS = "inputs",
@@ -95,7 +97,7 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<DatasetTrans
     private valueTransformMapper(
         key: keyof DatasetBasicsFragment,
         value: unknown,
-        inputItem: TransformInputData,
+        inputItem: TransformInputDataFragment,
     ): unknown {
         switch (key) {
             case "kind":

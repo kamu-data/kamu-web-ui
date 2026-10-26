@@ -15,4 +15,6 @@ class TestEnvironmentModule {}
 // First, initialize the Angular testing environment.
 getTestBed().initTestEnvironment([BrowserTestingModule, TestEnvironmentModule], platformBrowserTesting(), {
     teardown: { destroyAfterEach: true },
+    errorOnUnknownElements: true,
+    errorOnUnknownProperties: true,
 });

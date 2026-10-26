@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DebugElement, Type } from "@angular/core";
+import { DebugElement, reflectComponentType, Type } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatIconRegistry } from "@angular/material/icon";
 import { By, DomSanitizer } from "@angular/platform-browser";
@@ -16,6 +16,25 @@ import { ReplaySubject } from "rxjs";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import ProjectLinks from "src/app/project-links";
+
+/**
+ * Sets an `@Input` of the fixture's component, named by its class field, through
+ * `ComponentRef.setInput()`, so `ngOnChanges`, setters and OnPush re-rendering run as in the app.
+ * The field name and the value are type-checked against the component; an alias is resolved from
+ * the component's metadata. Throws when the field is not an input.
+ */
+export function setComponentInput<C, K extends keyof C & string>(
+    fixture: ComponentFixture<C>,
+    name: K,
+    value: C[K],
+): void {
+    const componentType = fixture.componentRef.componentType;
+    const input = reflectComponentType(componentType)?.inputs.find((item) => item.propName === name);
+    if (!input) {
+        throw new Error(`"${name}" is not an @Input of ${componentType.name}`);
+    }
+    fixture.componentRef.setInput(input.templateName, value);
+}
 
 export function findElement<T>(fixture: ComponentFixture<T>, selector: string): DebugElement {
     return fixture.debugElement.query(By.css(selector));

@@ -64,22 +64,25 @@ export class PrepareStepComponent extends BaseComponent implements OnInit {
     }
 
     private initExistingPrepareStep(event: AddPollingSourceEditFormType): void {
-        let group: FormGroup;
         if (event.prepare && this.sectionForm.length === 0) {
             event.prepare.forEach((item) => {
+                // A step of a kind the form has no editor for is left out rather than shown as another step
                 if (item.kind === PrepareKind.PIPE && Array.isArray(item.command)) {
-                    group = this.fb.group({
-                        kind: this.fb.control(PrepareKind.PIPE),
-                        command: this.fb.control(item.command.join(" "), Validators.required),
-                    });
+                    this.sectionForm.push(
+                        this.fb.group({
+                            kind: this.fb.control(PrepareKind.PIPE),
+                            command: this.fb.control(item.command.join(" "), Validators.required),
+                        }),
+                    );
                 } else if (item.kind === PrepareKind.DECOMPRESS) {
-                    group = this.fb.group({
-                        kind: this.fb.control(PrepareKind.DECOMPRESS),
-                        format: this.fb.control(item.format),
-                        subPath: this.fb.control(item.subPath),
-                    });
+                    this.sectionForm.push(
+                        this.fb.group({
+                            kind: this.fb.control(PrepareKind.DECOMPRESS),
+                            format: this.fb.control(item.format),
+                            subPath: this.fb.control(item.subPath),
+                        }),
+                    );
                 }
-                this.sectionForm.push(group);
             });
         }
     }

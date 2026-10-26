@@ -53,6 +53,24 @@ describe("PrepareStepComponent", () => {
         });
     });
 
+    describe("editing an event with a step of an unknown kind", () => {
+        beforeEach(() =>
+            createComponent(
+                mockSetPollingSourceEventYaml.replace(
+                    "    - kind: Pipe\n",
+                    "    - kind: Unknown\n      value: 1\n    - kind: Pipe\n",
+                ),
+            ),
+        );
+
+        it("should load only the steps of known kinds", () => {
+            expect(component.sectionForm.value).toEqual([
+                { kind: PrepareKind.PIPE, command: "jq -c .result[]" },
+                { kind: PrepareKind.DECOMPRESS, format: "zip", subPath: null },
+            ]);
+        });
+    });
+
     describe("starting without steps", () => {
         beforeEach(() => createComponent(null));
 

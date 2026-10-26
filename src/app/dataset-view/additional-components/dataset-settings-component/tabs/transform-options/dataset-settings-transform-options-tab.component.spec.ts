@@ -90,10 +90,10 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         const domTransformTriggerFormValue = await transformTriggerFormHarness.currentFormValue();
         expect(domTransformTriggerFormValue).toEqual({
             forNewData: {
-                batchingRuleType: BatchingRuleType.IMMEDIATE,
+                batchingRuleType: null,
                 buffering: undefined,
             },
-            forBreakingChange: FlowTriggerBreakingChangeRule.NoAction,
+            forBreakingChange: null,
         });
     });
 

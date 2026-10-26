@@ -19,12 +19,11 @@ import {
     RedirectCommand,
     ResolveFn,
     Router,
-    RouterEvent,
     RouterStateSnapshot,
     UrlTree,
 } from "@angular/router";
 
-import { firstValueFrom, isObservable, ReplaySubject } from "rxjs";
+import { firstValueFrom, isObservable } from "rxjs";
 
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
@@ -49,8 +48,17 @@ export function setComponentInput<C, K extends keyof C & string>(
     fixture.componentRef.setInput(input.templateName, value);
 }
 
-export function findElement<T>(fixture: ComponentFixture<T>, selector: string): DebugElement {
+/** The first element matching a CSS selector; `null` when none is rendered. */
+export function findElement<T>(fixture: ComponentFixture<T>, selector: string): MaybeNull<DebugElement> {
     return fixture.debugElement.query(By.css(selector));
+}
+
+function dataTestIdSelector(id: string): string {
+    return `[data-test-id="${id}"]`;
+}
+
+function queryByDataTestId<T>(fixture: ComponentFixture<T>, id: string): MaybeNull<DebugElement> {
+    return findElement(fixture, dataTestIdSelector(id));
 }
 
 /** A DOM element class, such as `HTMLButtonElement`, that a lookup checks its result against. */
@@ -68,14 +76,6 @@ function checkElementClass<E extends Element>(node: unknown, elementClass: Eleme
 }
 
 /**
- * The native element of a `DebugElement`, checked to be an instance of `elementClass`.
- * Throws when it is not.
- */
-export function nativeElementOf<E extends Element>(debugElement: DebugElement, elementClass: ElementClass<E>): E {
-    return checkElementClass(debugElement.nativeElement, elementClass, `Element ${debugElement.name}`);
-}
-
-/**
  * The native element matching a CSS selector, checked to be an `elementClass` (`HTMLElement`
  * by default). Throws when nothing matches or the element is of another class.
  */
@@ -90,7 +90,7 @@ export function findNativeElement<T>(
     selector: string,
     elementClass: ElementClass<Element> = HTMLElement,
 ): Element {
-    const debugElement: MaybeNull<DebugElement> = findElement(fixture, selector);
+    const debugElement = findElement(fixture, selector);
     if (!debugElement) {
         throw new Error(`Element "${selector}" not found`);
     }
@@ -120,11 +120,25 @@ export function findElementByDataTestId<T>(
     id: string,
     elementClass: ElementClass<Element> = HTMLElement,
 ): MaybeUndefined<Element> {
-    const debugElement: MaybeNull<DebugElement> = fixture.debugElement.query(By.css(`[data-test-id="${id}"]`));
+    const debugElement = queryByDataTestId(fixture, id);
     if (!debugElement) {
         return undefined;
     }
     return checkElementClass(debugElement.nativeElement, elementClass, `Element "${id}"`);
+}
+
+/**
+ * Every element with the given `data-test-id`, in DOM order, each checked to be an
+ * `elementClass`; an empty array when none is rendered. Throws when an element is of another class.
+ */
+export function findAllElementsByDataTestId<T, E extends Element>(
+    fixture: ComponentFixture<T>,
+    id: string,
+    elementClass: ElementClass<E>,
+): E[] {
+    return fixture.debugElement
+        .queryAll(By.css(dataTestIdSelector(id)))
+        .map((debugElement) => checkElementClass(debugElement.nativeElement, elementClass, `Element "${id}"`));
 }
 
 /**
@@ -193,14 +207,6 @@ export function checkButtonDisabled<T>(fixture: ComponentFixture<T>, dataTestId:
     const element = getElementByDataTestId(fixture, dataTestId, HTMLButtonElement);
     expect(element.disabled).toEqual(isDisabled);
 }
-
-export const routerMockEventSubject = new ReplaySubject<RouterEvent>(1);
-
-export const routerMock = {
-    navigate: () => null,
-    events: routerMockEventSubject.asObservable(),
-    url: "/",
-};
 
 export const snapshotParamMapMock = {
     provide: ActivatedRoute,
@@ -273,7 +279,7 @@ export function findComponentInstanceByDataTestId<T, C>(
     id: string,
     directive: Type<C>,
 ): C {
-    const debugElement: MaybeNull<DebugElement> = fixture.debugElement.query(By.css(`[data-test-id="${id}"]`));
+    const debugElement = queryByDataTestId(fixture, id);
     if (!debugElement) {
         throw new Error(`Element "${id}" not found`);
     }
@@ -421,9 +427,10 @@ export function routeSnapshot(options: RouteSnapshotOptions = {}): ActivatedRout
 
 /**
  * The router state a guard or resolver receives. The class has no public constructor, and the
- * app's guards and resolvers read only its `url`, so specs share this one stand-in.
+ * app's guards and resolvers read only its `url`, so `runCanActivate` and `runResolver` pass this
+ * one stand-in.
  */
-export function routerStateSnapshot(url: string = "/"): RouterStateSnapshot {
+function routerStateSnapshot(url: string = "/"): RouterStateSnapshot {
     return { url } as RouterStateSnapshot;
 }
 

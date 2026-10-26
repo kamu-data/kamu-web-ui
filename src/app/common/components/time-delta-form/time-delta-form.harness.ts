@@ -45,9 +45,7 @@ export class TimeDeltaFormHarness extends ComponentHarness {
         const units: TimeUnit[] = [];
         for (const option of optionElements) {
             const value: unknown = await option.getProperty("value");
-            if (typeof value === "string" && Object.values(TimeUnit).includes(value as TimeUnit)) {
-                units.push(value as TimeUnit);
-            }
+            units.push(TimeDeltaFormHarness.toTimeUnit(value));
         }
         return units;
     }
@@ -79,13 +77,16 @@ export class TimeDeltaFormHarness extends ComponentHarness {
         }
     }
 
-    public async getTimeDelta(): Promise<{ every: number; unit: TimeUnit }> {
+    public async getTimeDelta(): Promise<{ every: number; unit: MaybeNull<TimeUnit> }> {
         const input = await this.locatorEveryInput();
         const select = await this.locatorUnitSelect();
 
+        const every: unknown = await input.getProperty("value");
+        const unit: unknown = await select.getProperty("value");
         return {
-            every: Number(await input.getProperty("value")),
-            unit: await select.getProperty("value"),
+            every: Number(every),
+            // A select with no option chosen has the value ""
+            unit: unit === "" ? null : TimeDeltaFormHarness.toTimeUnit(unit),
         };
     }
 
@@ -107,5 +108,13 @@ export class TimeDeltaFormHarness extends ComponentHarness {
         }
 
         return null;
+    }
+
+    private static toTimeUnit(value: unknown): TimeUnit {
+        const unit = Object.values(TimeUnit).find((timeUnit) => timeUnit === value);
+        if (unit === undefined) {
+            throw new Error(`Unexpected time unit: ${String(value)}`);
+        }
+        return unit;
     }
 }

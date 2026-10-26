@@ -8,14 +8,13 @@
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { By } from "@angular/platform-browser";
 
 import { provideToastr } from "ngx-toastr";
 
 import {
     dispatchInputEvent,
+    findAllElementsByDataTestId,
     getElementByDataTestId,
-    nativeElementOf,
     registerMatSvgIcons,
     setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
@@ -64,9 +63,7 @@ describe("BlockNavigationComponent", () => {
 
         dispatchInputEvent(fixture, "searchHash", testSearchHash);
 
-        const blockHashes = fixture.debugElement
-            .queryAll(By.css('[data-test-id="block-hash"]'))
-            .map((element) => nativeElementOf(element, HTMLElement));
+        const blockHashes = findAllElementsByDataTestId(fixture, "block-hash", HTMLElement);
         const matchingBlocks = mockHistoryUpdate.history.filter((block) => block.blockHash.includes(testSearchHash));
         expect(matchingBlocks.length).toBeGreaterThan(0);
         expect(blockHashes.length).toEqual(matchingBlocks.length);

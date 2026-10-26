@@ -82,7 +82,8 @@ export default [
       "jasmine/no-disabled-tests": "error",
     },
   },
-  // Specs set inputs through setComponentInput(), which type-checks the input name and value
+  // Specs set inputs through setComponentInput(), which type-checks the input name and value,
+  // and leave ngOnChanges to change detection, which passes the changes Angular really produces
   {
     files: ["src/app/**/*.spec.ts"],
     ignores: ["src/app/common/helpers/base-test.helpers.spec.ts"],
@@ -93,6 +94,11 @@ export default [
           selector: "CallExpression[callee.property.name='setInput']",
           message:
             'Use setComponentInput(fixture, "field", value) from @common/helpers/base-test.helpers.spec: it type-checks the input name and value.',
+        },
+        {
+          selector: "CallExpression[callee.property.name='ngOnChanges']",
+          message:
+            "Set the input with setComponentInput() and run fixture.detectChanges(): a hand-built SimpleChanges is a change Angular never produces.",
         },
       ],
     },

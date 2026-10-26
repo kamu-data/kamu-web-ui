@@ -7,7 +7,6 @@
 
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { SimpleChanges } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
 import { of } from "rxjs";
@@ -111,16 +110,10 @@ describe("ReadmeSectionComponent", () => {
     }));
 
     it("should check readme updated in the onChanges hook", () => {
+        fixture.detectChanges();
         const modifiedReadmeContent = mockReadmeContent + "modified";
-        const readmeSimpleChanges: SimpleChanges = {
-            currentReadme: {
-                previousValue: mockReadmeContent,
-                currentValue: modifiedReadmeContent,
-                firstChange: false,
-                isFirstChange: () => false,
-            },
-        };
-        component.ngOnChanges(readmeSimpleChanges);
+        setComponentInput(fixture, "currentReadme", modifiedReadmeContent);
+        fixture.detectChanges();
         expect(component.readmeState).toEqual(modifiedReadmeContent);
     });
 

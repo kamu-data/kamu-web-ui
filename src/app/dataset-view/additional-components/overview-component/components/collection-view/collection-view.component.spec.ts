@@ -6,7 +6,6 @@
  */
 
 import { provideHttpClient } from "@angular/common/http";
-import { SimpleChanges } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
 import { delay, of } from "rxjs";
@@ -56,16 +55,7 @@ describe("CollectionViewComponent", () => {
         fixture = TestBed.createComponent(CollectionViewComponent);
         component = fixture.componentInstance;
         setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
-        const datasetBasicsSimpleChanges: SimpleChanges = {
-            datasetBasics: {
-                previousValue: undefined,
-                currentValue: mockDatasetBasicsRootFragment,
-                firstChange: true,
-                isFirstChange: () => true,
-            },
-        };
         setComponentInput(fixture, "pathPrefix", "/test-folder");
-        component.ngOnChanges(datasetBasicsSimpleChanges);
 
         fixture.detectChanges();
     });

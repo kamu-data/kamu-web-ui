@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { SimpleChanges } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
@@ -71,16 +70,8 @@ describe("DynamicTableComponent", () => {
     });
 
     it("should check column names", () => {
+        setComponentInput(fixture, "dataRows", []);
         fixture.detectChanges();
-        const nodesSimpleChanges: SimpleChanges = {
-            dataRows: {
-                previousValue: undefined,
-                currentValue: [],
-                firstChange: true,
-                isFirstChange: () => true,
-            },
-        };
-        component.ngOnChanges(nodesSimpleChanges);
 
         component.displayedColumns.forEach((item: string, index: number) => {
             const el = getElementByDataTestId(fixture, `column-header-name-${index}`);

@@ -26,7 +26,7 @@ describe("SetAttachmentsEventComponent", () => {
 
         fixture = TestBed.createComponent(SetAttachmentsEventComponent);
         component = fixture.componentInstance;
-        component.event = mockSetAttachments;
+        fixture.componentRef.setInput("event", mockSetAttachments);
         fixture.detectChanges();
     });
 

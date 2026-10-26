@@ -22,7 +22,10 @@ describe("DatasetNamePropertyComponent", () => {
 
         fixture = TestBed.createComponent(DatasetNamePropertyComponent);
         component = fixture.componentInstance;
-        component.data = { datasetName: "test", ownerAccountName: "testOwner" };
+        fixture.componentRef.setInput("data", { datasetName: "test", ownerAccountName: "testOwner" } satisfies {
+            datasetName: string;
+            ownerAccountName: string;
+        });
         fixture.detectChanges();
     });
 

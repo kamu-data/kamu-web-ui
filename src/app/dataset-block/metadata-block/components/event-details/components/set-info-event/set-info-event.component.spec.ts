@@ -23,7 +23,7 @@ describe("SetInfoEventComponent", () => {
 
         fixture = TestBed.createComponent(SetInfoEventComponent);
         component = fixture.componentInstance;
-        component.event = mockSetInfo;
+        fixture.componentRef.setInput("event", mockSetInfo);
         fixture.detectChanges();
     });
 

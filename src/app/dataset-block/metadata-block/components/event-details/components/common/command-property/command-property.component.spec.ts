@@ -22,7 +22,7 @@ describe("CommandPropertyComponent", () => {
 
         fixture = TestBed.createComponent(CommandPropertyComponent);
         component = fixture.componentInstance;
-        component.data = ["command1", "command2"];
+        fixture.componentRef.setInput("data", ["command1", "command2"] satisfies string[]);
         fixture.detectChanges();
     });
 

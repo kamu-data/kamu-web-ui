@@ -22,7 +22,7 @@ describe("EnginePropertyComponent", () => {
 
         fixture = TestBed.createComponent(EnginePropertyComponent);
         component = fixture.componentInstance;
-        component.data = "spark";
+        fixture.componentRef.setInput("data", "spark");
         fixture.detectChanges();
     });
 

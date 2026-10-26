@@ -40,7 +40,7 @@ describe("CardsPropertyComponent", () => {
 
         fixture = TestBed.createComponent(CardsPropertyComponent);
         component = fixture.componentInstance;
-        component.data = ["id", "name", "type"];
+        fixture.componentRef.setInput("data", ["id", "name", "type"] satisfies string[]);
         fixture.detectChanges();
     });
 

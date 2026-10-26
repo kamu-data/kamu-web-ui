@@ -20,10 +20,12 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "@api/mock/dataset.mock";
 
 import { MetadataBlockComponent } from "src/app/dataset-block/metadata-block/metadata-block.component";
+import { MetadataBlockInfo } from "src/app/dataset-block/metadata-block/metadata-block.types";
 
 describe("MetadataBlockComponent", () => {
     let component: MetadataBlockComponent;
@@ -70,11 +72,11 @@ describe("MetadataBlockComponent", () => {
         fixture = TestBed.createComponent(MetadataBlockComponent);
         component = fixture.componentInstance;
         loader = TestbedHarnessEnvironment.loader(fixture);
-        component.metadata = {
+        fixture.componentRef.setInput(RoutingResolvers.METADATA_BLOCK_KEY, {
             block: blockFragment,
             blockAsYaml: "test yaml",
             downstreamsCount: 0,
-        };
+        } satisfies MetadataBlockInfo);
         fixture.detectChanges();
     });
 

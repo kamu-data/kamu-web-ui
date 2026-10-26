@@ -37,7 +37,7 @@ describe("SeedEventComponent", () => {
         fixture = TestBed.createComponent(SeedEventComponent);
         toastService = TestBed.inject(ToastrService);
         component = fixture.componentInstance;
-        component.event = mockSeed;
+        fixture.componentRef.setInput("event", mockSeed);
         fixture.detectChanges();
     });
 

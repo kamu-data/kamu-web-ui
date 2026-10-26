@@ -23,7 +23,7 @@ describe("SetLicenseEventComponent", () => {
 
         fixture = TestBed.createComponent(SetLicenseEventComponent);
         component = fixture.componentInstance;
-        component.event = mockSetLicense;
+        fixture.componentRef.setInput("event", mockSetLicense);
         fixture.detectChanges();
     });
 

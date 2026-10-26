@@ -26,7 +26,7 @@ describe("SetDataSchemaEventComponent", () => {
 
         fixture = TestBed.createComponent(SetDataSchemaEventComponent);
         component = fixture.componentInstance;
-        component.event = mockSetDataSchema;
+        fixture.componentRef.setInput("event", mockSetDataSchema);
         fixture.detectChanges();
     });
 

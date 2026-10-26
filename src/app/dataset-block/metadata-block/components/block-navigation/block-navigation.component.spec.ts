@@ -37,7 +37,7 @@ describe("BlockNavigationComponent", () => {
 
         fixture = TestBed.createComponent(BlockNavigationComponent);
         component = fixture.componentInstance;
-        component.datasetInfo = MOCK_DATASET_INFO;
+        fixture.componentRef.setInput("datasetInfo", MOCK_DATASET_INFO);
         fixture.detectChanges();
     });
 

@@ -23,7 +23,7 @@ describe("SetVocabEventComponent", () => {
 
         fixture = TestBed.createComponent(SetVocabEventComponent);
         component = fixture.componentInstance;
-        component.event = mockSetVocab;
+        fixture.componentRef.setInput("event", mockSetVocab);
         fixture.detectChanges();
     });
 

@@ -6,32 +6,23 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
+import { routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
 import { datasetInfoResolverFn } from "@common/resolvers/dataset-info.resolver";
-import { DatasetInfo } from "@interface/navigation.interface";
 
 describe("datasetInfoResolverFn", () => {
-    const executeResolver: ResolveFn<DatasetInfo> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => datasetInfoResolverFn(...resolverParameters));
-
     beforeEach(() => {
         TestBed.configureTestingModule({});
     });
 
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
-    });
-
     it("should check activeTabResolver", async () => {
-        const mockState = {} as RouterStateSnapshot;
-        const mockRoute = {
+        const route = routeSnapshot({
             params: {
                 accountName: "mockAccountName",
                 datasetName: "mockDatasetName",
             },
-        } as unknown as ActivatedRouteSnapshot;
-        const result = await executeResolver(mockRoute, mockState);
+        });
+        const result = await runResolver(datasetInfoResolverFn, route);
 
         expect(result).toEqual({
             accountName: "mockAccountName",

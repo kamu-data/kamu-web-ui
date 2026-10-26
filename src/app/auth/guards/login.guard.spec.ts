@@ -6,10 +6,10 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot, UrlTree } from "@angular/router";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
 
+import { expectRedirectTo, routeSnapshot, runCanActivate } from "@common/helpers/base-test.helpers.spec";
 import { RedirectUrlTestModule } from "@common/modules/redirect-url-test.module";
 import { AccountProvider } from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "@interface/app.types";
@@ -24,10 +24,6 @@ describe("loginGuard", () => {
     let loginMethodsService: LoginMethodsService;
     let loggedUserService: LoggedUserService;
     let appConfigService: AppConfigService;
-    let router: Router;
-
-    const executeGuard: CanActivateFn = (...guardParameters) =>
-        TestBed.runInInjectionContext(() => loginGuard(...guardParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -36,7 +32,6 @@ describe("loginGuard", () => {
         loginMethodsService = TestBed.inject(LoginMethodsService);
         loggedUserService = TestBed.inject(LoggedUserService);
         appConfigService = TestBed.inject(AppConfigService);
-        router = TestBed.inject(Router);
     });
 
     interface TestCase {
@@ -135,18 +130,18 @@ describe("loginGuard", () => {
             expectedRedirect: undefined,
         },
     ].forEach((testCase: TestCase) => {
-        it(`should ${testCase.description}`, () => {
+        it(`should ${testCase.description}`, async () => {
             spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue(testCase.loginMethods);
             spyOnProperty(loginMethodsService, "loadFailed", "get").and.returnValue(testCase.loadFailed ?? false);
             spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(testCase.isAuthenticated);
             spyOnProperty(appConfigService, "allowAnonymous", "get").and.returnValue(testCase.allowAnonymous);
 
-            const result = executeGuard({} as ActivatedRouteSnapshot, { url: testCase.url } as RouterStateSnapshot);
+            const result = await runCanActivate(loginGuard, routeSnapshot(), testCase.url);
 
             if (testCase.expectedRedirect === undefined) {
                 expect(result).toBeTrue();
             } else {
-                expect(router.serializeUrl(result as UrlTree)).toEqual(testCase.expectedRedirect);
+                expectRedirectTo(result, testCase.expectedRedirect);
             }
         });
     });

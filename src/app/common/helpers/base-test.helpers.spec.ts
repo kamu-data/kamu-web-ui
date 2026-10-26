@@ -9,9 +9,22 @@ import { DebugElement, reflectComponentType, Type } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatIconRegistry } from "@angular/material/icon";
 import { By, DomSanitizer } from "@angular/platform-browser";
-import { ActivatedRoute, RedirectCommand, Router, RouterEvent } from "@angular/router";
+import {
+    ActivatedRoute,
+    ActivatedRouteSnapshot,
+    CanActivateFn,
+    Data,
+    GuardResult,
+    Params,
+    RedirectCommand,
+    ResolveFn,
+    Router,
+    RouterEvent,
+    RouterStateSnapshot,
+    UrlTree,
+} from "@angular/router";
 
-import { ReplaySubject } from "rxjs";
+import { firstValueFrom, isObservable, ReplaySubject } from "rxjs";
 
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
@@ -265,8 +278,79 @@ export function registerMatSvgIcons(): void {
  */
 export function expectPageNotFoundRedirect(result: unknown): void {
     expect(result).toBeInstanceOf(RedirectCommand);
-    const command = result as RedirectCommand;
-    const redirectUrl = TestBed.inject(Router).serializeUrl(command.redirectTo);
-    expect(redirectUrl).toEqual(`/${ProjectLinks.URL_PAGE_NOT_FOUND}`);
-    expect(command.navigationBehaviorOptions?.skipLocationChange).toBeTrue();
+    if (result instanceof RedirectCommand) {
+        const redirectUrl = TestBed.inject(Router).serializeUrl(result.redirectTo);
+        expect(redirectUrl).toEqual(`/${ProjectLinks.URL_PAGE_NOT_FOUND}`);
+        expect(result.navigationBehaviorOptions?.skipLocationChange).toBeTrue();
+    }
+}
+
+/**
+ * Asserts that a guard or resolver result redirects to `url`, whether as a `UrlTree` or a
+ * `RedirectCommand`.
+ */
+export function expectRedirectTo(result: unknown, url: string): void {
+    const target = result instanceof RedirectCommand ? result.redirectTo : result;
+    expect(target).toBeInstanceOf(UrlTree);
+    if (target instanceof UrlTree) {
+        expect(TestBed.inject(Router).serializeUrl(target)).toEqual(url);
+    }
+}
+
+export interface RouteSnapshotOptions {
+    params?: Params;
+    queryParams?: Params;
+    data?: Data;
+    parent?: ActivatedRouteSnapshot;
+    children?: ActivatedRouteSnapshot[];
+}
+
+/**
+ * A real `ActivatedRouteSnapshot`, as a guard or resolver receives it; `parent` and `children`
+ * place it in a route tree.
+ */
+export function routeSnapshot(options: RouteSnapshotOptions = {}): ActivatedRouteSnapshot {
+    const snapshot = new ActivatedRouteSnapshot();
+    snapshot.params = options.params ?? {};
+    snapshot.queryParams = options.queryParams ?? {};
+    snapshot.data = options.data ?? {};
+    const parent = options.parent ?? null;
+    const children = options.children ?? [];
+    // Outside a navigation a snapshot has no router state, which these getters read the tree from
+    Object.defineProperties(snapshot, {
+        parent: { value: parent },
+        children: { value: children },
+        firstChild: { value: children.length ? children[0] : null },
+        root: { value: parent ? parent.root : snapshot },
+        pathFromRoot: { value: [...(parent ? parent.pathFromRoot : []), snapshot] },
+    });
+    return snapshot;
+}
+
+/**
+ * The router state a guard or resolver receives. The class has no public constructor, and the
+ * app's guards and resolvers read only its `url`, so specs share this one stand-in.
+ */
+export function routerStateSnapshot(url: string = "/"): RouterStateSnapshot {
+    return { url } as RouterStateSnapshot;
+}
+
+/** Runs a functional `CanActivate` guard in the TestBed injector and waits for its result. */
+export async function runCanActivate(
+    guard: CanActivateFn,
+    route: ActivatedRouteSnapshot = routeSnapshot(),
+    url: string = "/",
+): Promise<GuardResult> {
+    const result = TestBed.runInInjectionContext(() => guard(route, routerStateSnapshot(url)));
+    return isObservable(result) ? firstValueFrom(result) : result;
+}
+
+/** Runs a functional resolver in the TestBed injector and waits for its value or redirect. */
+export async function runResolver<T>(
+    resolver: ResolveFn<T>,
+    route: ActivatedRouteSnapshot = routeSnapshot(),
+    url: string = "/",
+): Promise<T | RedirectCommand> {
+    const result = TestBed.runInInjectionContext(() => resolver(route, routerStateSnapshot(url)));
+    return isObservable(result) ? firstValueFrom(result) : result;
 }

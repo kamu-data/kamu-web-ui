@@ -6,19 +6,13 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import {
-    ActivatedRouteSnapshot,
-    convertToParamMap,
-    RedirectCommand,
-    ResolveFn,
-    Router,
-    RouterStateSnapshot,
-} from "@angular/router";
+import { RedirectCommand } from "@angular/router";
 
-import { firstValueFrom, Observable, of } from "rxjs";
+import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
+import { expectRedirectTo, routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 import { MaybeNull } from "@interface/app.types";
@@ -41,10 +35,6 @@ describe("addPollingSourceResolverFn", () => {
     let editService: EditPollingSourceService;
     let datasetService: DatasetService;
     let datasetSubsService: DatasetSubscriptionsService;
-    let router: Router;
-
-    const executeResolver: ResolveFn<MaybeNull<string>> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => addPollingSourceResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -53,26 +43,26 @@ describe("addPollingSourceResolverFn", () => {
         editService = TestBed.inject(EditPollingSourceService);
         datasetService = TestBed.inject(DatasetService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        router = TestBed.inject(Router);
         spyOn(datasetService, "requestDatasetBasicDataWithPermissions").and.returnValue(of(undefined));
     });
 
-    function resolve(datasetBasics: DatasetBasicsFragment, permissions: DatasetPermissionsFragment): Promise<unknown> {
+    function resolve(
+        datasetBasics: DatasetBasicsFragment,
+        permissions: DatasetPermissionsFragment,
+    ): Promise<MaybeNull<string> | RedirectCommand> {
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(datasetBasics));
         spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(of(permissions));
-        const route = {
-            paramMap: convertToParamMap({
+        const route = routeSnapshot({
+            params: {
                 [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME,
                 [ProjectLinks.URL_PARAM_DATASET_NAME]: TEST_DATASET_NAME,
-            }),
-        } as ActivatedRouteSnapshot;
-        return firstValueFrom(executeResolver(route, {} as RouterStateSnapshot) as Observable<unknown>);
+            },
+        });
+        return runResolver(addPollingSourceResolverFn, route);
     }
 
     function expectOverviewRedirect(data: unknown): void {
-        expect(data).toBeInstanceOf(RedirectCommand);
-        const redirectUrl = router.serializeUrl((data as RedirectCommand).redirectTo);
-        expect(redirectUrl).toEqual(`/${TEST_ACCOUNT_NAME}/${TEST_DATASET_NAME}`);
+        expectRedirectTo(data, `/${TEST_ACCOUNT_NAME}/${TEST_DATASET_NAME}`);
     }
 
     it("should resolve the event YAML of an editable dataset", async () => {

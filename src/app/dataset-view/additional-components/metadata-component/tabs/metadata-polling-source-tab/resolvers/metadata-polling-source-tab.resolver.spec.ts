@@ -6,13 +6,13 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { RedirectCommand } from "@angular/router";
 
-import { firstValueFrom, Observable, of } from "rxjs";
+import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
-import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
+import { expectPageNotFoundRedirect, runResolver } from "@common/helpers/base-test.helpers.spec";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 
 import {
@@ -34,12 +34,6 @@ describe("metadataPollingSourceTabResolverFn", () => {
     let datasetService: DatasetService;
     let datasetSubsService: DatasetSubscriptionsService;
 
-    const routeSnapshot = {} as ActivatedRouteSnapshot;
-    const mockState = {} as RouterStateSnapshot;
-
-    const executeResolver: ResolveFn<MetadataTabData> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => metadataPollingSourceTabResolverFn(...resolverParameters));
-
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo],
@@ -51,10 +45,13 @@ describe("metadataPollingSourceTabResolverFn", () => {
         );
     });
 
-    function resolve(datasetBasics: DatasetBasicsFragment, metadataUpdate: MetadataSchemaUpdate): Promise<unknown> {
+    function resolve(
+        datasetBasics: DatasetBasicsFragment,
+        metadataUpdate: MetadataSchemaUpdate,
+    ): Promise<MetadataTabData | RedirectCommand> {
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(datasetBasics));
         spyOnProperty(datasetSubsService, "metadataSchemaChanges", "get").and.returnValue(of(metadataUpdate));
-        return firstValueFrom(executeResolver(routeSnapshot, mockState) as Observable<unknown>);
+        return runResolver(metadataPollingSourceTabResolverFn);
     }
 
     it("should resolve the metadata summary for a root dataset", async () => {

@@ -6,42 +6,31 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
+import { routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
 import { FlowStatus } from "@api/kamu.graphql.interface";
 
 import {
     AccountFlowsNav,
     ProcessCardFilterMode,
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
-import {
-    accountFlowsResolverFn,
-    AccountFlowsType,
-} from "src/app/account/additional-components/account-flows-tab/resolvers/account-flows.resolver";
+import { accountFlowsResolverFn } from "src/app/account/additional-components/account-flows-tab/resolvers/account-flows.resolver";
 import ProjectLinks from "src/app/project-links";
 
 describe("accountFlowsResolverFn", () => {
-    const executeResolver: ResolveFn<AccountFlowsType> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => accountFlowsResolverFn(...resolverParameters));
-
     beforeEach(() => {
         TestBed.configureTestingModule({});
     });
 
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
-    });
-
     it("should check accountFlowsResolverFn without status", async () => {
-        const mockState = {} as RouterStateSnapshot;
-        const mockRoute = {
-            queryParamMap: convertToParamMap({
+        const route = routeSnapshot({
+            queryParams: {
                 [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_NAV]: AccountFlowsNav.ACTIVITY,
                 [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS]: undefined,
                 [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_FILTERS_MODE]: undefined,
-            }),
-        } as ActivatedRouteSnapshot;
-        const result = await executeResolver(mockRoute, mockState);
+            },
+        });
+        const result = await runResolver(accountFlowsResolverFn, route);
 
         expect(result).toEqual({
             activeNav: AccountFlowsNav.ACTIVITY,
@@ -51,15 +40,14 @@ describe("accountFlowsResolverFn", () => {
     });
 
     it("should check accountFlowsResolverFn with statuses", async () => {
-        const mockState = {} as RouterStateSnapshot;
-        const mockRoute = {
-            queryParamMap: convertToParamMap({
+        const route = routeSnapshot({
+            queryParams: {
                 [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_NAV]: AccountFlowsNav.ACTIVITY,
                 [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS]: "RUNNING,RETRYING",
                 [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_FILTERS_MODE]: undefined,
-            }),
-        } as ActivatedRouteSnapshot;
-        const result = await executeResolver(mockRoute, mockState);
+            },
+        });
+        const result = await runResolver(accountFlowsResolverFn, route);
 
         expect(result).toEqual({
             activeNav: AccountFlowsNav.ACTIVITY,

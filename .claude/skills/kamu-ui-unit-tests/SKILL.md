@@ -157,18 +157,23 @@ One case per api method: assert the variables sent, flush a fixture typed with t
 
 ## Guard, resolver and interceptor tests
 
-- Run a functional guard or resolver inside the TestBed injector:
-  `const executeGuard: CanActivateFn = (...p) => TestBed.runInInjectionContext(() => adminGuard(...p));`.
+- Run a functional guard or resolver with `runCanActivate(guard, route, url)` or
+  `runResolver(resolver, route, url)` from `@common/helpers/base-test.helpers.spec`, in an
+  `async` test: they run it in the TestBed injector and await an observable or promise result.
   Stub the services it injects with `spyOn` / `spyOnProperty`.
+- Build the route it receives with `routeSnapshot({ params, queryParams, data, parent, children })`:
+  a real `ActivatedRouteSnapshot`, whose `paramMap`, `parent` and `pathFromRoot` work as in a
+  navigation. `RouterStateSnapshot` has no public constructor, so the helpers pass the one
+  stand-in `routerStateSnapshot(url)`; the app's guards and resolvers read only its `url`.
 - A guard redirect is asserted by where it leads, not by `false`:
-  `` expect(router.serializeUrl(result as UrlTree)).toEqual(`/${ProjectLinks.URL_LOGIN}`) ``
-  (`common/guards/forbid-anonymous-access.guard.spec.ts`).
-- Collect a resolver's value with `await firstValueFrom(executeResolver(route, state) as Observable<T>)`
-  in an `async` test, and an expected error with
-  `await expectAsync(firstValueFrom(...)).toBeRejectedWithError(...)`. A redirect is checked with
-  `expectPageNotFoundRedirect(data)` from `@common/helpers/base-test.helpers.spec`; a resolver
-  built on another one also gets a test that the `RedirectCommand` passes through and its own
-  fetch is not called (`dataset-settings-scheduling-tab.resolver.spec.ts`).
+  `` expectRedirectTo(await runCanActivate(guard, route, url), `/${ProjectLinks.URL_LOGIN}`) ``
+  (`account/guards/account.guard.spec.ts`).
+- An expected resolver error is checked with
+  `await expectAsync(runResolver(...)).toBeRejectedWithError(...)`. A page-not-found redirect is
+  checked with `expectPageNotFoundRedirect(data)`; a resolver built on another one also gets a
+  test that the `RedirectCommand` passes through and its own fetch is not called
+  (`dataset-settings-scheduling-tab.resolver.spec.ts`). Narrow a `T | RedirectCommand` result
+  with `instanceof`, never with a cast.
 - Interceptors: `provideHttpClient(withInterceptors([fn]))` + `provideHttpClientTesting()`,
   requests driven through `HttpClient` and answered with `HttpTestingController`; timing runs in
   `fakeAsync` (`common/components/spinner/spinner.interceptor.spec.ts`).

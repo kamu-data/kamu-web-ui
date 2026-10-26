@@ -8,25 +8,23 @@
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
+
+import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { runResolver } from "@common/helpers/base-test.helpers.spec";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
 import { AccountStorageQuotaService } from "src/app/account/settings/tabs/storage-tab/account-storage-quota.service";
 import { accountSettingsStorageResolverFn } from "src/app/account/settings/tabs/storage-tab/resolver/account-settings-storage.resolver";
-import { AccountStorageQuota } from "src/app/account/settings/tabs/storage-tab/storage-tab.model";
+import { mockStorageQuotaWithinLimit } from "src/app/account/settings/tabs/storage-tab/storage-tab.mock";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 describe("accountSettingsStorageResolverFn", () => {
     let accountStorageQuotaService: AccountStorageQuotaService;
     let loggedUserService: LoggedUserService;
-    let router: Router;
-
-    const executeResolver: ResolveFn<AccountStorageQuota> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => accountSettingsStorageResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -36,19 +34,16 @@ describe("accountSettingsStorageResolverFn", () => {
 
         accountStorageQuotaService = TestBed.inject(AccountStorageQuotaService);
         loggedUserService = TestBed.inject(LoggedUserService);
-        router = TestBed.inject(Router);
-    });
-
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
     });
 
     it("should check resolver", async () => {
-        const routeSnapshot = {} as ActivatedRouteSnapshot;
-        const fetchStorageQuotaSpy = spyOn(accountStorageQuotaService, "fetchStorageQuota");
+        const fetchStorageQuotaSpy = spyOn(accountStorageQuotaService, "fetchStorageQuota").and.returnValue(
+            of(mockStorageQuotaWithinLimit),
+        );
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        await executeResolver(routeSnapshot, router.routerState.snapshot);
+        const result = await runResolver(accountSettingsStorageResolverFn);
 
         expect(fetchStorageQuotaSpy).toHaveBeenCalledOnceWith(mockAccountDetails.accountName);
+        expect(result).toEqual(mockStorageQuotaWithinLimit);
     });
 });

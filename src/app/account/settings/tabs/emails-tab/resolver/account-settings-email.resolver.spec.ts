@@ -8,13 +8,14 @@
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, ResolveFn, Router } from "@angular/router";
+
+import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { AccountWithEmailFragment } from "@api/kamu.graphql.interface";
-import { mockAccountDetails } from "@api/mock/auth.mock";
+import { runResolver } from "@common/helpers/base-test.helpers.spec";
+import { mockAccountDetails, mockAccountDetailsWithEmail } from "@api/mock/auth.mock";
 
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 import { accountSettingsEmailResolverFn } from "src/app/account/settings/tabs/emails-tab/resolver/account-settings-email.resolver";
@@ -23,10 +24,6 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 describe("accountSettingsEmailResolverFn", () => {
     let accountEmailService: AccountEmailService;
     let loggedUserService: LoggedUserService;
-    let router: Router;
-
-    const executeResolver: ResolveFn<AccountWithEmailFragment> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => accountSettingsEmailResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -36,19 +33,16 @@ describe("accountSettingsEmailResolverFn", () => {
 
         accountEmailService = TestBed.inject(AccountEmailService);
         loggedUserService = TestBed.inject(LoggedUserService);
-        router = TestBed.inject(Router);
-    });
-
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
     });
 
     it("should check resolver", async () => {
-        const routeSnapshot = {} as ActivatedRouteSnapshot;
-        const fetchAccountWithEmailSpy = spyOn(accountEmailService, "fetchAccountWithEmail");
+        const fetchAccountWithEmailSpy = spyOn(accountEmailService, "fetchAccountWithEmail").and.returnValue(
+            of(mockAccountDetailsWithEmail),
+        );
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        await executeResolver(routeSnapshot, router.routerState.snapshot);
+        const result = await runResolver(accountSettingsEmailResolverFn);
 
         expect(fetchAccountWithEmailSpy).toHaveBeenCalledOnceWith(mockAccountDetails.accountName);
+        expect(result).toEqual(mockAccountDetailsWithEmail);
     });
 });

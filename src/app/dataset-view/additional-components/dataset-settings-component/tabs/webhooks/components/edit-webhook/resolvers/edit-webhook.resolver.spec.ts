@@ -6,16 +6,17 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { RedirectCommand } from "@angular/router";
 
-import { firstValueFrom, Observable, of, throwError } from "rxjs";
+import { of, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
+import { requireValue } from "@common/helpers/app.helpers";
+import { expectPageNotFoundRedirect, routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
-import { DatasetPermissionsFragment, WebhookSubscription } from "@api/kamu.graphql.interface";
+import { DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
 import { mockDatasetWebhookByIdQuery } from "@api/mock/webhooks.mock";
 
 import { AppConfigService } from "src/app/app-config.service";
@@ -38,13 +39,7 @@ describe("editWebhookResolverFn", () => {
     let appConfigService: AppConfigService;
     let datasetWebhooksService: DatasetWebhooksService;
     const mockWebhookID = "sadasdasdds";
-    const mockRoute = {
-        paramMap: convertToParamMap({ [ProjectLinks.URL_PARAM_WEBHOOK_ID]: mockWebhookID }),
-    } as ActivatedRouteSnapshot;
-    const mockState = {} as RouterStateSnapshot;
-
-    const executeResolver: ResolveFn<EditWebhooksType> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => editWebhookResolverFn(...resolverParameters));
+    const route = routeSnapshot({ params: { [ProjectLinks.URL_PARAM_WEBHOOK_ID]: mockWebhookID } });
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -64,14 +59,15 @@ describe("editWebhookResolverFn", () => {
 
     function resolve(
         permissions: DatasetPermissionsFragment = mockFullPowerDatasetPermissionsFragment,
-    ): Promise<unknown> {
+    ): Promise<EditWebhooksType | RedirectCommand> {
         spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(of(permissions));
-        return firstValueFrom(executeResolver(mockRoute, mockState) as Observable<unknown>);
+        return runResolver(editWebhookResolverFn, route);
     }
 
     it("should request the webhook from the route and resolve it with the dataset", async () => {
-        const mockWebhookSubscription = mockDatasetWebhookByIdQuery.datasets.byId?.webhooks
-            .subscription as WebhookSubscription;
+        const mockWebhookSubscription = requireValue(
+            mockDatasetWebhookByIdQuery.datasets.byId?.webhooks.subscription ?? null,
+        );
         const datasetWebhookSubscriptionByIdSpy = spyOn(
             datasetWebhooksService,
             "datasetWebhookSubscriptionById",

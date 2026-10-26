@@ -6,14 +6,14 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { RedirectCommand } from "@angular/router";
 
-import { firstValueFrom, Observable, of, throwError } from "rxjs";
+import { of, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
+import { expectPageNotFoundRedirect, runResolver } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
 
@@ -36,9 +36,6 @@ describe("datasetSettingsWebhooksResolverFn", () => {
     let appConfigService: AppConfigService;
     let datasetWebhooksService: DatasetWebhooksService;
 
-    const executeResolver: ResolveFn<DatasetSettingsWebhookTabData> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => datasetSettingsWebhooksResolverFn(...resolverParameters));
-
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo, provideToastr()],
@@ -57,11 +54,9 @@ describe("datasetSettingsWebhooksResolverFn", () => {
 
     function resolve(
         permissions: DatasetPermissionsFragment = mockFullPowerDatasetPermissionsFragment,
-    ): Promise<unknown> {
+    ): Promise<DatasetSettingsWebhookTabData | RedirectCommand> {
         spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(of(permissions));
-        return firstValueFrom(
-            executeResolver({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot) as Observable<unknown>,
-        );
+        return runResolver(datasetSettingsWebhooksResolverFn);
     }
 
     it("should resolve the dataset with its webhook subscriptions", async () => {

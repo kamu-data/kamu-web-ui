@@ -8,20 +8,18 @@
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
-import { firstValueFrom, Observable, of, throwError } from "rxjs";
+import { of, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
+import { expectPageNotFoundRedirect, routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
 import { DatasetNotFoundError } from "@common/values/errors";
 import { DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 
-import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { flowDetailsResolverFn } from "src/app/dataset-flow/dataset-flow-details/resolvers/flow-details.resolver";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -34,15 +32,11 @@ import {
 } from "src/app/search/mock.data";
 
 describe("flowDetailsResolverFn", () => {
-    const mockRouterStateSnapshot = {} as RouterStateSnapshot;
     const TEST_FLOW_ID = "test-flow-id";
 
     let datasetService: DatasetService;
     let datasetSubsService: DatasetSubscriptionsService;
     let datasetFlowsService: DatasetFlowsService;
-
-    const executeResolver: ResolveFn<DatasetFlowByIdResponse> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => flowDetailsResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -61,14 +55,14 @@ describe("flowDetailsResolverFn", () => {
     }
 
     function resolve(): Promise<unknown> {
-        const mockRoute = {
-            paramMap: convertToParamMap({
+        const route = routeSnapshot({
+            params: {
                 [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME,
                 [ProjectLinks.URL_PARAM_DATASET_NAME]: TEST_DATASET_NAME,
                 [ProjectLinks.URL_PARAM_FLOW_ID]: TEST_FLOW_ID,
-            }),
-        } as ActivatedRouteSnapshot;
-        return firstValueFrom(executeResolver(mockRoute, mockRouterStateSnapshot) as Observable<unknown>);
+            },
+        });
+        return runResolver(flowDetailsResolverFn, route);
     }
 
     it("should load the dataset from the route and resolve its flow", async () => {

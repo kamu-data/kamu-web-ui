@@ -6,13 +6,13 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { RedirectCommand, Router } from "@angular/router";
+import { RedirectCommand } from "@angular/router";
 
 import { firstValueFrom, of, Subject, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
-import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
+import { expectPageNotFoundRedirect, expectRedirectTo } from "@common/helpers/base-test.helpers.spec";
 import { DatasetNotFoundError } from "@common/values/errors";
 import { DatasetBasicsFragment, DatasetKind, DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
@@ -36,7 +36,6 @@ describe("dataset access helpers", () => {
 
     let datasetService: DatasetService;
     let datasetSubsService: DatasetSubscriptionsService;
-    let router: Router;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -44,7 +43,6 @@ describe("dataset access helpers", () => {
         });
         datasetService = TestBed.inject(DatasetService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        router = TestBed.inject(Router);
     });
 
     function mockDataset(
@@ -125,9 +123,10 @@ describe("dataset access helpers", () => {
 
         function expectOverviewRedirect(data: unknown): void {
             expect(data).toBeInstanceOf(RedirectCommand);
-            const command = data as RedirectCommand;
-            expect(router.serializeUrl(command.redirectTo)).toEqual(`/${TEST_ACCOUNT_NAME}/${TEST_DATASET_NAME}`);
-            expect(command.navigationBehaviorOptions?.skipLocationChange).toBeFalsy();
+            expectRedirectTo(data, `/${TEST_ACCOUNT_NAME}/${TEST_DATASET_NAME}`);
+            if (data instanceof RedirectCommand) {
+                expect(data.navigationBehaviorOptions?.skipLocationChange).toBeFalsy();
+            }
         }
 
         it("should emit the dataset when the user may commit to it and it has the expected kind", async () => {

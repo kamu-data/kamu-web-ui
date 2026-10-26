@@ -8516,7 +8516,10 @@ export type FlowDownstreamLinkDataFragment = { __typename?: 'FlowDownstreamLink'
         { __typename?: 'Dataset' }
         & DatasetBasicsFragment
       ) }
-    | { __typename: 'DatasetAccessResultNotAccessible', id: string }
+    | (
+      { __typename: 'DatasetAccessResultNotAccessible' }
+      & DatasetAccessResultNotAccessibleDataFragment
+    )
    | null, flow?: { __typename?: 'Flow', flowId: string, status: FlowStatus, outcome?:
       | { __typename: 'FlowAbortedResult' }
       | { __typename: 'FlowFailedError' }
@@ -9022,7 +9025,10 @@ export type SeedEventFragment = { __typename?: 'Seed', datasetId: string, datase
 
 export type SetAttachmentsEventFragment = { __typename?: 'SetAttachments', attachments: { __typename?: 'AttachmentsEmbedded', items: Array<{ __typename?: 'AttachmentEmbedded', path: string, content: string }> } };
 
-export type SetDataSchemaEventFragment = { __typename?: 'SetDataSchema', schema: { __typename?: 'DataSchema', format: DataSchemaFormat, content: string } };
+export type SetDataSchemaEventFragment = { __typename?: 'SetDataSchema', schema: (
+    { __typename?: 'DataSchema' }
+    & DataSchemaInfoFragment
+  ) };
 
 export type SetLicenseEventFragment = { __typename?: 'SetLicense', shortName: string, name: string, spdxId?: string | null, websiteUrl: string };
 
@@ -9134,6 +9140,18 @@ export type SetVocabEventFragment = { __typename?: 'SetVocab', offsetColumn?: st
 
 export type EnvVarDataFragment = { __typename?: 'EnvVar', name: string, value?: string | null };
 
+type EventTimeSourceData_EventTimeSourceFromMetadata_Fragment = { __typename: 'EventTimeSourceFromMetadata' };
+
+type EventTimeSourceData_EventTimeSourceFromPath_Fragment = { __typename?: 'EventTimeSourceFromPath', pattern: string, timestampFormat?: string | null };
+
+type EventTimeSourceData_EventTimeSourceFromSystemTime_Fragment = { __typename: 'EventTimeSourceFromSystemTime' };
+
+export type EventTimeSourceDataFragment =
+  | EventTimeSourceData_EventTimeSourceFromMetadata_Fragment
+  | EventTimeSourceData_EventTimeSourceFromPath_Fragment
+  | EventTimeSourceData_EventTimeSourceFromSystemTime_Fragment
+;
+
 export type FetchStepContainerDataFragment = { __typename?: 'FetchStepContainer', image: string, command?: Array<string> | null, args?: Array<string> | null, env?: Array<(
     { __typename?: 'EnvVar' }
     & EnvVarDataFragment
@@ -9142,9 +9160,18 @@ export type FetchStepContainerDataFragment = { __typename?: 'FetchStepContainer'
 export type FetchStepEthereumLogsDataFragment = { __typename?: 'FetchStepEthereumLogs', chainId?: number | null, nodeUrl?: string | null, filter?: string | null, signature?: string | null };
 
 export type FetchStepFilesGlobDataFragment = { __typename?: 'FetchStepFilesGlob', path: string, order?: SourceOrdering | null, eventTime?:
-    | { __typename: 'EventTimeSourceFromMetadata' }
-    | { __typename?: 'EventTimeSourceFromPath', pattern: string, timestampFormat?: string | null }
-    | { __typename: 'EventTimeSourceFromSystemTime' }
+    | (
+      { __typename?: 'EventTimeSourceFromMetadata' }
+      & EventTimeSourceData_EventTimeSourceFromMetadata_Fragment
+    )
+    | (
+      { __typename?: 'EventTimeSourceFromPath' }
+      & EventTimeSourceData_EventTimeSourceFromPath_Fragment
+    )
+    | (
+      { __typename?: 'EventTimeSourceFromSystemTime' }
+      & EventTimeSourceData_EventTimeSourceFromSystemTime_Fragment
+    )
    | null, cache?: { __typename: 'SourceCachingForever' } | null };
 
 export type FetchStepMqttDataFragment = { __typename?: 'FetchStepMqtt', host: string, port: number, username?: string | null, password?: string | null, topics: Array<(
@@ -9153,9 +9180,18 @@ export type FetchStepMqttDataFragment = { __typename?: 'FetchStepMqtt', host: st
   )> };
 
 export type FetchStepUrlDataFragment = { __typename?: 'FetchStepUrl', url: string, eventTime?:
-    | { __typename: 'EventTimeSourceFromMetadata' }
-    | { __typename?: 'EventTimeSourceFromPath', pattern: string, timestampFormat?: string | null }
-    | { __typename: 'EventTimeSourceFromSystemTime' }
+    | (
+      { __typename?: 'EventTimeSourceFromMetadata' }
+      & EventTimeSourceData_EventTimeSourceFromMetadata_Fragment
+    )
+    | (
+      { __typename?: 'EventTimeSourceFromPath' }
+      & EventTimeSourceData_EventTimeSourceFromPath_Fragment
+    )
+    | (
+      { __typename?: 'EventTimeSourceFromSystemTime' }
+      & EventTimeSourceData_EventTimeSourceFromSystemTime_Fragment
+    )
    | null, headers?: Array<(
     { __typename?: 'RequestHeader' }
     & RequestHeaderDataFragment
@@ -9230,21 +9266,44 @@ export type AccessTokenDataFragment = { __typename?: 'ViewAccessToken', id: stri
 export type BlockRefDataFragment = { __typename?: 'BlockRef', name: string, blockHash: string };
 
 export type CurrentSourceFetchUrlFragment = { __typename?: 'DatasetMetadata', currentPollingSource?: { __typename?: 'SetPollingSource', fetch:
-      | { __typename?: 'FetchStepContainer' }
-      | { __typename?: 'FetchStepEthereumLogs', nodeUrl?: string | null, chainId?: number | null }
-      | { __typename?: 'FetchStepFilesGlob' }
-      | { __typename?: 'FetchStepMqtt', host: string, port: number }
-      | { __typename?: 'FetchStepUrl', url: string }
+      | (
+        { __typename?: 'FetchStepContainer' }
+        & FetchStepData_FetchStepContainer_Fragment
+      )
+      | (
+        { __typename?: 'FetchStepEthereumLogs' }
+        & FetchStepData_FetchStepEthereumLogs_Fragment
+      )
+      | (
+        { __typename?: 'FetchStepFilesGlob' }
+        & FetchStepData_FetchStepFilesGlob_Fragment
+      )
+      | (
+        { __typename?: 'FetchStepMqtt' }
+        & FetchStepData_FetchStepMqtt_Fragment
+      )
+      | (
+        { __typename?: 'FetchStepUrl' }
+        & FetchStepData_FetchStepUrl_Fragment
+      )
      } | null };
 
 export type DataQueryResultSuccessViewFragment = { __typename?: 'DataQueryResultSuccess', schema: { __typename?: 'DataSchema', format: DataSchemaFormat, content: string }, data: { __typename?: 'DataBatch', format: DataBatchFormat, content: string }, datasets: Array<{ __typename?: 'DatasetState', id: string, alias: string, blockHash?: string | null }> };
+
+export type DatasetAccessResultNotAccessibleDataFragment = { __typename?: 'DatasetAccessResultNotAccessible', id: string };
 
 export type DatasetBasicsFragment = { __typename?: 'Dataset', id: string, kind: DatasetKind, name: string, alias: string, owner: (
     { __typename?: 'Account' }
     & AccountBasicsFragment
   ), visibility:
-    | { __typename: 'PrivateDatasetVisibility' }
-    | { __typename?: 'PublicDatasetVisibility', anonymousAvailable: boolean }
+    | (
+      { __typename?: 'PrivateDatasetVisibility' }
+      & DatasetVisibilityOutputData_PrivateDatasetVisibility_Fragment
+    )
+    | (
+      { __typename?: 'PublicDatasetVisibility' }
+      & DatasetVisibilityOutputData_PublicDatasetVisibility_Fragment
+    )
    };
 
 export type DatasetCurrentInfoFragment = { __typename?: 'SetInfo', description?: string | null, keywords?: Array<string> | null };
@@ -9384,37 +9443,55 @@ export type DatasetLineageFragment = (
                                                   ) }
                                                   & DatasetStreamLineageBasicsFragment
                                                 ) }
-                                              | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
+                                              | (
+                                                { __typename?: 'DatasetAccessResultNotAccessible' }
+                                                & DatasetAccessResultNotAccessibleDataFragment
+                                              )
                                             > }
                                             & CurrentSourceFetchUrlFragment
                                           ) }
                                           & DatasetStreamLineageBasicsFragment
                                         ) }
-                                      | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
+                                      | (
+                                        { __typename?: 'DatasetAccessResultNotAccessible' }
+                                        & DatasetAccessResultNotAccessibleDataFragment
+                                      )
                                     > }
                                     & CurrentSourceFetchUrlFragment
                                   ) }
                                   & DatasetStreamLineageBasicsFragment
                                 ) }
-                              | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
+                              | (
+                                { __typename?: 'DatasetAccessResultNotAccessible' }
+                                & DatasetAccessResultNotAccessibleDataFragment
+                              )
                             > }
                             & CurrentSourceFetchUrlFragment
                           ) }
                           & DatasetStreamLineageBasicsFragment
                         ) }
-                      | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
+                      | (
+                        { __typename?: 'DatasetAccessResultNotAccessible' }
+                        & DatasetAccessResultNotAccessibleDataFragment
+                      )
                     > }
                     & CurrentSourceFetchUrlFragment
                   ) }
                   & DatasetStreamLineageBasicsFragment
                 ) }
-              | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
+              | (
+                { __typename?: 'DatasetAccessResultNotAccessible' }
+                & DatasetAccessResultNotAccessibleDataFragment
+              )
             > }
             & CurrentSourceFetchUrlFragment
           ) }
           & DatasetStreamLineageBasicsFragment
         ) }
-      | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
+      | (
+        { __typename?: 'DatasetAccessResultNotAccessible' }
+        & DatasetAccessResultNotAccessibleDataFragment
+      )
     >, currentDownstreamDependencies: Array<
       | { __typename?: 'DatasetAccessResultAccessible', dataset: (
           { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentDownstreamDependencies: Array<
@@ -9428,23 +9505,38 @@ export type DatasetLineageFragment = (
                                           { __typename?: 'Dataset' }
                                           & DatasetStreamLineageBasicsFragment
                                         ) }
-                                      | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
+                                      | (
+                                        { __typename?: 'DatasetAccessResultNotAccessible' }
+                                        & DatasetAccessResultNotAccessibleDataFragment
+                                      )
                                     > } }
                                   & DatasetStreamLineageBasicsFragment
                                 ) }
-                              | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
+                              | (
+                                { __typename?: 'DatasetAccessResultNotAccessible' }
+                                & DatasetAccessResultNotAccessibleDataFragment
+                              )
                             > } }
                           & DatasetStreamLineageBasicsFragment
                         ) }
-                      | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
+                      | (
+                        { __typename?: 'DatasetAccessResultNotAccessible' }
+                        & DatasetAccessResultNotAccessibleDataFragment
+                      )
                     > } }
                   & DatasetStreamLineageBasicsFragment
                 ) }
-              | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
+              | (
+                { __typename?: 'DatasetAccessResultNotAccessible' }
+                & DatasetAccessResultNotAccessibleDataFragment
+              )
             > } }
           & DatasetStreamLineageBasicsFragment
         ) }
-      | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
+      | (
+        { __typename?: 'DatasetAccessResultNotAccessible' }
+        & DatasetAccessResultNotAccessibleDataFragment
+      )
     > }
     & CurrentSourceFetchUrlFragment
   ) }
@@ -9531,7 +9623,10 @@ export type DatasetSearchOverviewFragment = (
           { __typename?: 'Dataset' }
           & DatasetBasicsFragment
         ) }
-      | { __typename?: 'DatasetAccessResultNotAccessible', id: string }
+      | (
+        { __typename?: 'DatasetAccessResultNotAccessible' }
+        & DatasetAccessResultNotAccessibleDataFragment
+      )
     > } }
   & DatasetBasicsFragment
 );
@@ -9552,7 +9647,34 @@ export type DatasetTransformFragment = { __typename?: 'SetTransform', inputs: Ar
     & DatasetTransformContentFragment
   ) };
 
+type DatasetVisibilityOutputData_PrivateDatasetVisibility_Fragment = { __typename: 'PrivateDatasetVisibility' };
+
+type DatasetVisibilityOutputData_PublicDatasetVisibility_Fragment = { __typename?: 'PublicDatasetVisibility', anonymousAvailable: boolean };
+
+export type DatasetVisibilityOutputDataFragment =
+  | DatasetVisibilityOutputData_PrivateDatasetVisibility_Fragment
+  | DatasetVisibilityOutputData_PublicDatasetVisibility_Fragment
+;
+
 export type EngineDescDataFragment = { __typename?: 'EngineDesc', name: string, dialect: QueryDialect, latestImage: string };
+
+type FetchStepData_FetchStepContainer_Fragment = { __typename?: 'FetchStepContainer' };
+
+type FetchStepData_FetchStepEthereumLogs_Fragment = { __typename?: 'FetchStepEthereumLogs', nodeUrl?: string | null, chainId?: number | null };
+
+type FetchStepData_FetchStepFilesGlob_Fragment = { __typename?: 'FetchStepFilesGlob' };
+
+type FetchStepData_FetchStepMqtt_Fragment = { __typename?: 'FetchStepMqtt', host: string, port: number };
+
+type FetchStepData_FetchStepUrl_Fragment = { __typename?: 'FetchStepUrl', url: string };
+
+export type FetchStepDataFragment =
+  | FetchStepData_FetchStepContainer_Fragment
+  | FetchStepData_FetchStepEthereumLogs_Fragment
+  | FetchStepData_FetchStepFilesGlob_Fragment
+  | FetchStepData_FetchStepMqtt_Fragment
+  | FetchStepData_FetchStepUrl_Fragment
+;
 
 export type FlowProcessGroupRollupDataFragment = { __typename?: 'FlowProcessGroupRollup', total: number, active: number, failing: number, paused: number, stopped: number, unconfigured: number, worstConsecutiveFailures: number };
 
@@ -9952,6 +10074,16 @@ export const AccountBasicsFragmentDoc = gql`
   avatarUrl
 }
     `;
+export const DatasetVisibilityOutputDataFragmentDoc = gql`
+    fragment DatasetVisibilityOutputData on DatasetVisibilityOutput {
+  ... on PrivateDatasetVisibility {
+    __typename
+  }
+  ... on PublicDatasetVisibility {
+    anonymousAvailable
+  }
+}
+    `;
 export const DatasetBasicsFragmentDoc = gql`
     fragment DatasetBasics on Dataset {
   id
@@ -9962,15 +10094,25 @@ export const DatasetBasicsFragmentDoc = gql`
   }
   alias
   visibility {
-    ... on PrivateDatasetVisibility {
-      __typename
-    }
-    ... on PublicDatasetVisibility {
-      anonymousAvailable
-    }
+    ...DatasetVisibilityOutputData
   }
 }
-    ${AccountBasicsFragmentDoc}`;
+    ${AccountBasicsFragmentDoc}
+${DatasetVisibilityOutputDataFragmentDoc}`;
+export const EventTimeSourceDataFragmentDoc = gql`
+    fragment EventTimeSourceData on EventTimeSource {
+  ... on EventTimeSourceFromPath {
+    pattern
+    timestampFormat
+  }
+  ... on EventTimeSourceFromMetadata {
+    __typename
+  }
+  ... on EventTimeSourceFromSystemTime {
+    __typename
+  }
+}
+    `;
 export const RequestHeaderDataFragmentDoc = gql`
     fragment RequestHeaderData on RequestHeader {
   name
@@ -9981,16 +10123,7 @@ export const FetchStepUrlDataFragmentDoc = gql`
     fragment FetchStepUrlData on FetchStepUrl {
   url
   eventTime {
-    ... on EventTimeSourceFromPath {
-      pattern
-      timestampFormat
-    }
-    ... on EventTimeSourceFromMetadata {
-      __typename
-    }
-    ... on EventTimeSourceFromSystemTime {
-      __typename
-    }
+    ...EventTimeSourceData
   }
   headers {
     ...RequestHeaderData
@@ -9999,28 +10132,20 @@ export const FetchStepUrlDataFragmentDoc = gql`
     __typename
   }
 }
-    ${RequestHeaderDataFragmentDoc}`;
+    ${EventTimeSourceDataFragmentDoc}
+${RequestHeaderDataFragmentDoc}`;
 export const FetchStepFilesGlobDataFragmentDoc = gql`
     fragment FetchStepFilesGlobData on FetchStepFilesGlob {
   path
   eventTime {
-    ... on EventTimeSourceFromPath {
-      pattern
-      timestampFormat
-    }
-    ... on EventTimeSourceFromMetadata {
-      __typename
-    }
-    ... on EventTimeSourceFromSystemTime {
-      __typename
-    }
+    ...EventTimeSourceData
   }
   cache {
     __typename
   }
   order
 }
-    `;
+    ${EventTimeSourceDataFragmentDoc}`;
 export const EnvVarDataFragmentDoc = gql`
     fragment EnvVarData on EnvVar {
   name
@@ -10670,6 +10795,11 @@ export const FlowEventRetryPolicyModifiedDataFragmentDoc = gql`
   }
 }
     ${TimeDeltaDataFragmentDoc}`;
+export const DatasetAccessResultNotAccessibleDataFragmentDoc = gql`
+    fragment DatasetAccessResultNotAccessibleData on DatasetAccessResultNotAccessible {
+  id
+}
+    `;
 export const FlowDownstreamLinkDataFragmentDoc = gql`
     fragment FlowDownstreamLinkData on FlowDownstreamLink {
   flowId
@@ -10683,7 +10813,7 @@ export const FlowDownstreamLinkDataFragmentDoc = gql`
       }
     }
     ... on DatasetAccessResultNotAccessible {
-      id
+      ...DatasetAccessResultNotAccessibleData
     }
   }
   flow {
@@ -10697,7 +10827,8 @@ export const FlowDownstreamLinkDataFragmentDoc = gql`
     }
   }
 }
-    ${DatasetBasicsFragmentDoc}`;
+    ${DatasetBasicsFragmentDoc}
+${DatasetAccessResultNotAccessibleDataFragmentDoc}`;
 export const FlowHistoryDataFragmentDoc = gql`
     fragment FlowHistoryData on FlowEvent {
   __typename
@@ -10952,25 +11083,30 @@ ${PostgreSqlDeslDataFragmentDoc}
 ${KafkaProtocolDescDataFragmentDoc}
 ${WebSocketProtocolDescDataFragmentDoc}
 ${OdataProtocolDescDataFragmentDoc}`;
+export const FetchStepDataFragmentDoc = gql`
+    fragment FetchStepData on FetchStep {
+  ... on FetchStepUrl {
+    url
+  }
+  ... on FetchStepMqtt {
+    host
+    port
+  }
+  ... on FetchStepEthereumLogs {
+    nodeUrl
+    chainId
+  }
+}
+    `;
 export const CurrentSourceFetchUrlFragmentDoc = gql`
     fragment CurrentSourceFetchUrl on DatasetMetadata {
   currentPollingSource {
     fetch {
-      ... on FetchStepUrl {
-        url
-      }
-      ... on FetchStepMqtt {
-        host
-        port
-      }
-      ... on FetchStepEthereumLogs {
-        nodeUrl
-        chainId
-      }
+      ...FetchStepData
     }
   }
 }
-    `;
+    ${FetchStepDataFragmentDoc}`;
 export const LicenseFragmentDoc = gql`
     fragment License on SetLicense {
   shortName
@@ -11039,7 +11175,7 @@ export const DatasetLineageFragmentDoc = gql`
     currentWatermark
     currentUpstreamDependencies {
       ... on DatasetAccessResultNotAccessible {
-        id
+        ...DatasetAccessResultNotAccessibleData
       }
       ... on DatasetAccessResultAccessible {
         dataset {
@@ -11055,7 +11191,7 @@ export const DatasetLineageFragmentDoc = gql`
             currentWatermark
             currentUpstreamDependencies {
               ... on DatasetAccessResultNotAccessible {
-                id
+                ...DatasetAccessResultNotAccessibleData
               }
               ... on DatasetAccessResultAccessible {
                 dataset {
@@ -11071,7 +11207,7 @@ export const DatasetLineageFragmentDoc = gql`
                     currentWatermark
                     currentUpstreamDependencies {
                       ... on DatasetAccessResultNotAccessible {
-                        id
+                        ...DatasetAccessResultNotAccessibleData
                       }
                       ... on DatasetAccessResultAccessible {
                         dataset {
@@ -11087,7 +11223,7 @@ export const DatasetLineageFragmentDoc = gql`
                             currentWatermark
                             currentUpstreamDependencies {
                               ... on DatasetAccessResultNotAccessible {
-                                id
+                                ...DatasetAccessResultNotAccessibleData
                               }
                               ... on DatasetAccessResultAccessible {
                                 dataset {
@@ -11103,7 +11239,7 @@ export const DatasetLineageFragmentDoc = gql`
                                     currentWatermark
                                     currentUpstreamDependencies {
                                       ... on DatasetAccessResultNotAccessible {
-                                        id
+                                        ...DatasetAccessResultNotAccessibleData
                                       }
                                       ... on DatasetAccessResultAccessible {
                                         dataset {
@@ -11119,7 +11255,7 @@ export const DatasetLineageFragmentDoc = gql`
                                             currentWatermark
                                             currentUpstreamDependencies {
                                               ... on DatasetAccessResultNotAccessible {
-                                                id
+                                                ...DatasetAccessResultNotAccessibleData
                                               }
                                               ... on DatasetAccessResultAccessible {
                                                 dataset {
@@ -11159,7 +11295,7 @@ export const DatasetLineageFragmentDoc = gql`
     }
     currentDownstreamDependencies {
       ... on DatasetAccessResultNotAccessible {
-        id
+        ...DatasetAccessResultNotAccessibleData
       }
       ... on DatasetAccessResultAccessible {
         dataset {
@@ -11170,7 +11306,7 @@ export const DatasetLineageFragmentDoc = gql`
             }
             currentDownstreamDependencies {
               ... on DatasetAccessResultNotAccessible {
-                id
+                ...DatasetAccessResultNotAccessibleData
               }
               ... on DatasetAccessResultAccessible {
                 dataset {
@@ -11181,7 +11317,7 @@ export const DatasetLineageFragmentDoc = gql`
                     }
                     currentDownstreamDependencies {
                       ... on DatasetAccessResultNotAccessible {
-                        id
+                        ...DatasetAccessResultNotAccessibleData
                       }
                       ... on DatasetAccessResultAccessible {
                         dataset {
@@ -11192,7 +11328,7 @@ export const DatasetLineageFragmentDoc = gql`
                             }
                             currentDownstreamDependencies {
                               ... on DatasetAccessResultNotAccessible {
-                                id
+                                ...DatasetAccessResultNotAccessibleData
                               }
                               ... on DatasetAccessResultAccessible {
                                 dataset {
@@ -11203,7 +11339,7 @@ export const DatasetLineageFragmentDoc = gql`
                                     }
                                     currentDownstreamDependencies {
                                       ... on DatasetAccessResultNotAccessible {
-                                        id
+                                        ...DatasetAccessResultNotAccessibleData
                                       }
                                       ... on DatasetAccessResultAccessible {
                                         dataset {
@@ -11232,6 +11368,7 @@ export const DatasetLineageFragmentDoc = gql`
     ${DatasetLineageBasicsFragmentDoc}
 ${CurrentSourceFetchUrlFragmentDoc}
 ${LicenseFragmentDoc}
+${DatasetAccessResultNotAccessibleDataFragmentDoc}
 ${DatasetStreamLineageBasicsFragmentDoc}`;
 export const BlockRefDataFragmentDoc = gql`
     fragment BlockRefData on BlockRef {
@@ -11635,11 +11772,10 @@ export const SetLicenseEventFragmentDoc = gql`
 export const SetDataSchemaEventFragmentDoc = gql`
     fragment SetDataSchemaEvent on SetDataSchema {
   schema(format: ODF_JSON) {
-    format
-    content
+    ...DataSchemaInfo
   }
 }
-    `;
+    ${DataSchemaInfoFragmentDoc}`;
 export const DisablePollingSourceEventFragmentDoc = gql`
     fragment DisablePollingSourceEvent on DisablePollingSource {
   dummy
@@ -11853,7 +11989,7 @@ export const DatasetSearchOverviewFragmentDoc = gql`
     }
     currentDownstreamDependencies {
       ... on DatasetAccessResultNotAccessible {
-        id
+        ...DatasetAccessResultNotAccessibleData
       }
       ... on DatasetAccessResultAccessible {
         dataset {
@@ -11865,7 +12001,8 @@ export const DatasetSearchOverviewFragmentDoc = gql`
 }
     ${DatasetBasicsFragmentDoc}
 ${DatasetCurrentInfoFragmentDoc}
-${LicenseFragmentDoc}`;
+${LicenseFragmentDoc}
+${DatasetAccessResultNotAccessibleDataFragmentDoc}`;
 export const EngineDescDataFragmentDoc = gql`
     fragment EngineDescData on EngineDesc {
   name

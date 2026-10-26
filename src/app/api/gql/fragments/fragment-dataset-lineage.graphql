@@ -12,7 +12,7 @@ fragment DatasetLineage on Dataset {
     currentWatermark
     currentUpstreamDependencies {
       ... on DatasetAccessResultNotAccessible {
-        id
+        ...DatasetAccessResultNotAccessibleData
       }
       ... on DatasetAccessResultAccessible {
         dataset {
@@ -28,7 +28,7 @@ fragment DatasetLineage on Dataset {
             currentWatermark
             currentUpstreamDependencies {
               ... on DatasetAccessResultNotAccessible {
-                id
+                ...DatasetAccessResultNotAccessibleData
               }
 
               ... on DatasetAccessResultAccessible {
@@ -45,7 +45,7 @@ fragment DatasetLineage on Dataset {
                     currentWatermark
                     currentUpstreamDependencies {
                       ... on DatasetAccessResultNotAccessible {
-                        id
+                        ...DatasetAccessResultNotAccessibleData
                       }
 
                       ... on DatasetAccessResultAccessible {
@@ -62,7 +62,7 @@ fragment DatasetLineage on Dataset {
                             currentWatermark
                             currentUpstreamDependencies {
                               ... on DatasetAccessResultNotAccessible {
-                                id
+                                ...DatasetAccessResultNotAccessibleData
                               }
 
                               ... on DatasetAccessResultAccessible {
@@ -79,7 +79,7 @@ fragment DatasetLineage on Dataset {
                                     currentWatermark
                                     currentUpstreamDependencies {
                                       ... on DatasetAccessResultNotAccessible {
-                                        id
+                                        ...DatasetAccessResultNotAccessibleData
                                       }
 
                                       ... on DatasetAccessResultAccessible {
@@ -96,7 +96,7 @@ fragment DatasetLineage on Dataset {
                                             currentWatermark
                                             currentUpstreamDependencies {
                                               ... on DatasetAccessResultNotAccessible {
-                                                id
+                                                ...DatasetAccessResultNotAccessibleData
                                               }
 
                                               ... on DatasetAccessResultAccessible {
@@ -137,7 +137,7 @@ fragment DatasetLineage on Dataset {
     }
     currentDownstreamDependencies {
       ... on DatasetAccessResultNotAccessible {
-        id
+        ...DatasetAccessResultNotAccessibleData
       }
 
       ... on DatasetAccessResultAccessible {
@@ -149,7 +149,7 @@ fragment DatasetLineage on Dataset {
             }
             currentDownstreamDependencies {
               ... on DatasetAccessResultNotAccessible {
-                id
+                ...DatasetAccessResultNotAccessibleData
               }
 
               ... on DatasetAccessResultAccessible {
@@ -161,7 +161,7 @@ fragment DatasetLineage on Dataset {
                     }
                     currentDownstreamDependencies {
                       ... on DatasetAccessResultNotAccessible {
-                        id
+                        ...DatasetAccessResultNotAccessibleData
                       }
 
                       ... on DatasetAccessResultAccessible {
@@ -173,7 +173,7 @@ fragment DatasetLineage on Dataset {
                             }
                             currentDownstreamDependencies {
                               ... on DatasetAccessResultNotAccessible {
-                                id
+                                ...DatasetAccessResultNotAccessibleData
                               }
 
                               ... on DatasetAccessResultAccessible {
@@ -185,7 +185,7 @@ fragment DatasetLineage on Dataset {
                                     }
                                     currentDownstreamDependencies {
                                       ... on DatasetAccessResultNotAccessible {
-                                        id
+                                        ...DatasetAccessResultNotAccessibleData
                                       }
 
                                       ... on DatasetAccessResultAccessible {

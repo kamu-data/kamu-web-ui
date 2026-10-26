@@ -13,11 +13,7 @@ import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
 import { DatasetCollaborationApi } from "@api/dataset-collaboration.api";
-import {
-    AccountWithRoleConnectionDataFragment,
-    DatasetAccessRole,
-    NameLookupResult,
-} from "@api/kamu.graphql.interface";
+import { AccountFragment, AccountWithRoleConnectionDataFragment, DatasetAccessRole } from "@api/kamu.graphql.interface";
 import {
     mockDatasetListCollaboratorsQuery,
     mockDatasetSearchCollaboratorQuery,
@@ -83,7 +79,7 @@ describe("DatasetCollaborationsService", () => {
                 page,
                 perPage,
             })
-            .subscribe((result: NameLookupResult[]) => {
+            .subscribe((result: AccountFragment[]) => {
                 expect(result.length).toEqual(1);
                 expect(result[0].accountName).toEqual(
                     mockDatasetSearchCollaboratorQuery.search.nameLookup.nodes[0].accountName,

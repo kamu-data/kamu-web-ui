@@ -1,0 +1,15 @@
+fragment FetchStepData on FetchStep {
+  ... on FetchStepUrl {
+    url
+  }
+
+  ... on FetchStepMqtt {
+    host
+    port
+  }
+
+  ... on FetchStepEthereumLogs {
+    nodeUrl
+    chainId
+  }
+}

@@ -17,7 +17,7 @@ import { NgbActiveModal, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-b
 
 import { BaseComponent } from "@common/components/base.component";
 import AppValues from "@common/values/app.values";
-import { DatasetAccessRole, DatasetBasicsFragment, NameLookupResult } from "@api/kamu.graphql.interface";
+import { AccountFragment, DatasetAccessRole, DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import {
@@ -46,7 +46,7 @@ export class AddPeopleModalComponent extends BaseComponent {
     @Input({ required: true }) public activeCollaboratorsIds: string[] = [];
     public role: MaybeNull<DatasetAccessRole> = null;
     public searchPerson: string = "";
-    public selectedCollaborator: MaybeNull<NameLookupResult>;
+    public selectedCollaborator: MaybeNull<AccountFragment>;
     public searching: boolean = false;
 
     public readonly DatasetAccessRole: typeof DatasetAccessRole = DatasetAccessRole;
@@ -58,7 +58,7 @@ export class AddPeopleModalComponent extends BaseComponent {
     private cdr = inject(ChangeDetectorRef);
     private datasetCollaborationsService = inject(DatasetCollaborationsService);
 
-    public search: OperatorFunction<string, readonly NameLookupResult[]> = (text$: Observable<string>) =>
+    public search: OperatorFunction<string, readonly AccountFragment[]> = (text$: Observable<string>) =>
         text$.pipe(
             debounceTime(AppValues.SHORT_DELAY_MS),
             distinctUntilChanged(),
@@ -84,12 +84,12 @@ export class AddPeopleModalComponent extends BaseComponent {
             ),
         );
 
-    public formatter(x: NameLookupResult | string): string {
+    public formatter(x: AccountFragment | string): string {
         return typeof x !== "string" ? x.accountName : x;
     }
 
-    public onSelectItem(event: NgbTypeaheadSelectItemEvent): void {
-        const account = event.item as NameLookupResult;
+    public onSelectItem(event: NgbTypeaheadSelectItemEvent<AccountFragment>): void {
+        const account = event.item;
         this.selectedCollaborator = account;
         this.searchPerson = "";
     }

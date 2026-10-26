@@ -7,12 +7,6 @@ fragment DatasetBasics on Dataset {
   }
   alias
   visibility {
-    ... on PrivateDatasetVisibility {
-      __typename
-    }
-
-    ... on PublicDatasetVisibility {
-      anonymousAvailable
-    }
+    ...DatasetVisibilityOutputData
   }
 }

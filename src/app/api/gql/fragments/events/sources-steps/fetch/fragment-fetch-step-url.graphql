@@ -1,16 +1,7 @@
 fragment FetchStepUrlData on FetchStepUrl {
   url
   eventTime {
-    ... on EventTimeSourceFromPath {
-      pattern
-      timestampFormat
-    }
-    ... on EventTimeSourceFromMetadata {
-      __typename
-    }
-    ... on EventTimeSourceFromSystemTime {
-      __typename
-    }
+    ...EventTimeSourceData
   }
   headers {
     ...RequestHeaderData

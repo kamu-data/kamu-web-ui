@@ -12,14 +12,14 @@ import { map, Observable, switchMap } from "rxjs";
 import { Edge, Node } from "@swimlane/ngx-graph";
 
 import { LineageNodeSizeService } from "@common/components/lineage-graph/lineage-node-size.service";
-import { isNil } from "@common/helpers/app.helpers";
+import { isNil, requireValue } from "@common/helpers/app.helpers";
 import { chainNameFromId } from "@common/helpers/ethereum.helpers";
 import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
 import {
-    DatasetAccessResultNotAccessible,
+    DatasetAccessResultNotAccessibleDataFragment,
     DatasetKind,
     DatasetLineageBasicsFragment,
-    FetchStep,
+    FetchStepDataFragment,
 } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
@@ -105,10 +105,10 @@ export class LineageGraphBuilderService {
     }
 
     private buildDatasetGraphNodes(
-        uniqueDatasets: (DatasetLineageBasicsFragment | DatasetAccessResultNotAccessible)[],
+        uniqueDatasets: (DatasetLineageBasicsFragment | DatasetAccessResultNotAccessibleDataFragment)[],
         currentDataset: DatasetLineageBasicsFragment,
     ): Node[] {
-        return uniqueDatasets.map((dataset: DatasetLineageBasicsFragment | DatasetAccessResultNotAccessible) => {
+        return uniqueDatasets.map((dataset) => {
             if (dataset.__typename === "Dataset") {
                 return {
                     id: this.sanitizeID(dataset.id),
@@ -131,7 +131,7 @@ export class LineageGraphBuilderService {
                     } as LineageGraphNodeData,
                 };
             } else {
-                const id = (dataset as DatasetAccessResultNotAccessible).id;
+                const id = dataset.id;
                 return {
                     id: this.sanitizeID(id),
                     label: id,
@@ -145,14 +145,9 @@ export class LineageGraphBuilderService {
     }
 
     private buildDatasetEdges(lineageUpdate: LineageUpdate): Edge[] {
-        return lineageUpdate.edges.map((edge: (DatasetLineageBasicsFragment | DatasetAccessResultNotAccessible)[]) => {
-            const edgeStart =
-                edge[0].__typename === "Dataset" ? edge[0].id : (edge[0] as DatasetAccessResultNotAccessible).id;
-
-            const edgeEnd =
-                edge[1].__typename === "Dataset" ? edge[1].id : (edge[1] as DatasetAccessResultNotAccessible).id;
-            const source: string = this.sanitizeID(edgeStart);
-            const target: string = this.sanitizeID(edgeEnd);
+        return lineageUpdate.edges.map((edge) => {
+            const source: string = this.sanitizeID(edge[0].id);
+            const target: string = this.sanitizeID(edge[1].id);
             return {
                 id: `${source}__and__${target}`,
                 source,
@@ -234,7 +229,9 @@ export class LineageGraphBuilderService {
         if (qualifyingDatasetsUrl.length) {
             qualifyingDatasetsUrl.forEach((dataset: DatasetLineageBasicsFragment) => {
                 const datasetId = this.sanitizeID(dataset.id);
-                sourceNodeLabel = this.buildSourceNodeLabel(dataset.metadata.currentPollingSource?.fetch as FetchStep);
+                sourceNodeLabel = this.buildSourceNodeLabel(
+                    requireValue(dataset.metadata.currentPollingSource?.fetch ?? null),
+                );
 
                 let sourceNode: MaybeUndefined<Node> = sourceNodesByLabel.get(sourceNodeLabel);
                 if (isNil(sourceNode)) {
@@ -274,7 +271,7 @@ export class LineageGraphBuilderService {
         AddPushSource: LineageGraphNodeKind.PushSource,
     };
 
-    private buildSourceNodeLabel(step: FetchStep): string {
+    private buildSourceNodeLabel(step: FetchStepDataFragment): string {
         switch (step.__typename) {
             case "FetchStepUrl":
                 return this.getDomainFromUrl(step.url);

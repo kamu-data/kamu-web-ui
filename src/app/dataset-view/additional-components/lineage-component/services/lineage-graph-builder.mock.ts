@@ -6,11 +6,11 @@
  */
 
 import {
-    DatasetAccessResultNotAccessible,
+    DatasetAccessResultNotAccessibleDataFragment,
     DatasetKind,
     DatasetLineageBasicsFragment,
     DatasetLineageMetadataDataFragment,
-    FetchStepEthereumLogs,
+    FetchStepDataFragment,
 } from "@api/kamu.graphql.interface";
 
 import { mockGraphNode } from "src/app/dataset-view/additional-components/data-tabs.mock";
@@ -38,7 +38,7 @@ function mockLineageDataset(
     };
 }
 
-function mockEthereumRoot(id: string, name: string, fetch: FetchStepEthereumLogs): DatasetLineageBasicsFragment {
+function mockEthereumRoot(id: string, name: string, fetch: FetchStepDataFragment): DatasetLineageBasicsFragment {
     return mockLineageDataset(id, name, DatasetKind.Root, {
         currentPollingSource: { __typename: "SetPollingSource", fetch },
     });
@@ -89,10 +89,9 @@ export const mockLineageUpdateWithEthereumSources: LineageUpdate = {
     origin: MOCK_DERIVED_DATASET,
 };
 
-export const MOCK_INACCESSIBLE_DATASET: DatasetAccessResultNotAccessible = {
+export const MOCK_INACCESSIBLE_DATASET: DatasetAccessResultNotAccessibleDataFragment = {
     __typename: "DatasetAccessResultNotAccessible",
     id: "did:odf:hidden",
-    message: "Dataset is not accessible",
 };
 
 // DatasetService emits inaccessible datasets among the nodes and edges, although LineageUpdate does not type them

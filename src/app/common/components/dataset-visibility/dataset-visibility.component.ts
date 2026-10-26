@@ -8,7 +8,7 @@
 import { NgClass } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import { DatasetVisibilityOutput } from "@api/kamu.graphql.interface";
+import { DatasetVisibilityOutputDataFragment } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-dataset-visibility",
@@ -21,7 +21,7 @@ import { DatasetVisibilityOutput } from "@api/kamu.graphql.interface";
     ],
 })
 export class DatasetVisibilityComponent {
-    @Input({ required: true }) public datasetVisibility: DatasetVisibilityOutput;
+    @Input({ required: true }) public datasetVisibility: DatasetVisibilityOutputDataFragment;
 
     public get isPrivate(): boolean {
         return this.datasetVisibility.__typename === "PrivateDatasetVisibility";

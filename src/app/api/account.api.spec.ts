@@ -45,7 +45,6 @@ import {
     DeleteAccountByNameMutation,
     FlowConnectionDataFragment,
     FlowProcessOrderField,
-    ModifyPasswordSuccess,
     OrderingDirection,
 } from "@api/kamu.graphql.interface";
 import {
@@ -258,11 +257,7 @@ describe("AccountApi", () => {
         service
             .changeAdminPassword({ accountName: ACCOUNT_NAME, password: NEW_PASSWORD })
             .subscribe((state: ChangeAdminPasswordMutation) => {
-                if (state.accounts.byName?.modifyPassword.__typename === "ModifyPasswordSuccess")
-                    expect(state.accounts.byName?.modifyPassword.message).toEqual(
-                        (mockChangeAdminPasswordMutation.accounts.byName?.modifyPassword as ModifyPasswordSuccess)
-                            .message,
-                    );
+                expect(state).toEqual(mockChangeAdminPasswordMutation);
             });
         const op = controller.expectOne(ChangeAdminPasswordDocument);
         expect(op.operation.variables.accountName).toEqual(ACCOUNT_NAME);
@@ -277,13 +272,7 @@ describe("AccountApi", () => {
         service
             .changeUserPassword({ accountName: ACCOUNT_NAME, oldPassword: OLD_PASSWORD, newPassword: NEW_PASSWORD })
             .subscribe((state: ChangeUserPasswordMutation) => {
-                if (state.accounts.byName?.modifyPasswordWithConfirmation.__typename === "ModifyPasswordSuccess")
-                    expect(state.accounts.byName?.modifyPasswordWithConfirmation.message).toEqual(
-                        (
-                            mockChangeUserPasswordMutation.accounts.byName
-                                ?.modifyPasswordWithConfirmation as ModifyPasswordSuccess
-                        ).message,
-                    );
+                expect(state).toEqual(mockChangeUserPasswordMutation);
             });
         const op = controller.expectOne(ChangeUserPasswordDocument);
         expect(op.operation.variables.accountName).toEqual(ACCOUNT_NAME);

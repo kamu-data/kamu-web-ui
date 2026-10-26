@@ -7,7 +7,7 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import { EventTimeSource } from "@api/kamu.graphql.interface";
+import { EventTimeSourceDataFragment } from "@api/kamu.graphql.interface";
 
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 
@@ -17,7 +17,7 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventTimePropertyComponent extends BasePropertyComponent {
-    @Input({ required: true }) public data: EventTimeSource;
+    @Input({ required: true }) public data: EventTimeSourceDataFragment;
 
     public get isFromMetadata(): boolean {
         return this.data.__typename === "EventTimeSourceFromMetadata";

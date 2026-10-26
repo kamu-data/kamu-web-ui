@@ -13,12 +13,12 @@ import { ToastrService } from "ngx-toastr";
 
 import { DatasetCollaborationApi } from "@api/dataset-collaboration.api";
 import {
+    AccountFragment,
     AccountWithRoleConnectionDataFragment,
     DatasetAccessRole,
     DatasetListCollaboratorsQuery,
     DatasetUserRoleQuery,
     LookupFilters,
-    NameLookupResult,
     SearchCollaboratorQuery,
     SetRoleCollaboratorMutation,
     UnsetRoleCollaboratorMutation,
@@ -52,10 +52,10 @@ export class DatasetCollaborationsService {
         filters: LookupFilters;
         page: number;
         perPage: number;
-    }): Observable<NameLookupResult[]> {
+    }): Observable<AccountFragment[]> {
         return this.datasetCollaborationApi
             .searchCollaborator(params)
-            .pipe(map((result: SearchCollaboratorQuery) => result.search.nameLookup.nodes as NameLookupResult[]));
+            .pipe(map((result: SearchCollaboratorQuery) => result.search.nameLookup.nodes));
     }
 
     public setRoleCollaborator(params: {

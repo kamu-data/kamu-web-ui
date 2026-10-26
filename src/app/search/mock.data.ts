@@ -28,16 +28,15 @@ import {
     DatasetCurrentInfoFragment,
     DatasetHeadBlockHashQuery,
     DatasetKind,
+    DatasetPageInfoFragment,
     DatasetPermissionsFragment,
+    DatasetVisibilityOutputDataFragment,
     DeleteDatasetMutation,
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
     GetDatasetLineageQuery,
     GetDatasetMainDataQuery,
     LicenseFragment,
-    PageBasedInfo,
-    PrivateDatasetVisibility,
-    PublicDatasetVisibility,
     RenameDatasetMutation,
     SearchDatasetsOverviewQuery,
     UpdateReadmeMutation,
@@ -68,7 +67,7 @@ import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions
 import { SqlQueryExplanationResponse } from "src/app/query-explainer/query-explainer.types";
 import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
 
-export const mockPageBasedInfo: PageBasedInfo = {
+export const mockPageBasedInfo: DatasetPageInfoFragment = {
     currentPage: 1,
     hasNextPage: true,
     hasPreviousPage: true,
@@ -87,14 +86,13 @@ export const mockOwnerFieldsWithAvatar: AccountBasicsFragment = {
     accountProvider: AccountProvider.Password,
 };
 
-export const mockPublicDatasetVisibility: PublicDatasetVisibility = {
+export const mockPublicDatasetVisibility: DatasetVisibilityOutputDataFragment = {
     __typename: "PublicDatasetVisibility",
     anonymousAvailable: true,
 };
 
-export const mockPrivateDatasetVisibility: PrivateDatasetVisibility = {
+export const mockPrivateDatasetVisibility: DatasetVisibilityOutputDataFragment = {
     __typename: "PrivateDatasetVisibility",
-    dummy: "",
 };
 
 export const mockAutocompleteItems: DatasetAutocompleteItem[] = [

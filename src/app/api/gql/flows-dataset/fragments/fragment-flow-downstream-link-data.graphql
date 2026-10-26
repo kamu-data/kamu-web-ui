@@ -10,7 +10,7 @@ fragment FlowDownstreamLinkData on FlowDownstreamLink {
       }
     }
     ... on DatasetAccessResultNotAccessible {
-      id
+      ...DatasetAccessResultNotAccessibleData
     }
   }
   flow {

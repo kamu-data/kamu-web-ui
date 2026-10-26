@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 
 import { NgbPagination, NgbPaginationNext, NgbPaginationPrevious } from "@ng-bootstrap/ng-bootstrap";
 
-import { PageBasedInfo } from "@api/kamu.graphql.interface";
+import { DatasetPageInfoFragment } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-pagination",
@@ -25,7 +25,7 @@ import { PageBasedInfo } from "@api/kamu.graphql.interface";
 })
 export class PaginationComponent {
     @Input({ required: true }) public currentPage: number;
-    @Input({ required: true }) public pageInfo: PageBasedInfo;
+    @Input({ required: true }) public pageInfo: DatasetPageInfoFragment;
     @Output() public pageChangeEvent = new EventEmitter<number>();
 
     private previousPage: number;

@@ -1,0 +1,5 @@
+fragment FlowEventStartConditionUpdatedData on FlowEventStartConditionUpdated {
+  startCondition {
+    ...FlowStartConditionData
+  }
+}

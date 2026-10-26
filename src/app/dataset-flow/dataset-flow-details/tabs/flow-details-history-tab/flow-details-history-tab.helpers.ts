@@ -12,22 +12,17 @@ import { DataHelpers } from "@common/helpers/data.helpers";
 import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
 import AppValues from "@common/values/app.values";
 import {
-    FlowActivationCause,
-    FlowConfigSnapshotModified,
-    FlowEventActivationCauseAdded,
-    FlowEventInitiated,
-    FlowEventRetryPolicyModified,
-    FlowEventScheduledForActivation,
-    FlowEventStartConditionUpdated,
-    FlowEventTaskChanged,
+    FlowActivationCauseDataFragment,
+    FlowEventRetryPolicyModifiedDataFragment,
+    FlowEventStartConditionUpdatedDataFragment,
+    FlowEventTaskChangedDataFragment,
     FlowHistoryDataFragment,
     FlowOutcomeDataFragment,
     FlowRetryBackoffType,
-    FlowStartCondition,
     FlowStatus,
     FlowSummaryDataFragment,
     TaskStatus,
-    TimeDelta,
+    TimeDeltaDataFragment,
 } from "@api/kamu.graphql.interface";
 
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
@@ -42,20 +37,18 @@ export class DatasetFlowDetailsHelpers {
         const eventTypename = flowEvent.__typename;
         switch (eventTypename) {
             case "FlowEventInitiated":
-                return `Flow initiated ${this.describeActivationCause((flowEvent as FlowEventInitiated).activationCause)}`;
+                return `Flow initiated ${this.describeActivationCause(flowEvent.activationCause)}`;
             case "FlowEventAborted":
                 return "Flow was aborted";
             case "FlowEventTaskChanged": {
-                const event = flowEvent as FlowEventTaskChanged;
                 return `${FlowTableHelpers.flowTypeDescription(
                     flowDetails,
-                )} task ${DatasetFlowDetailsHelpers.flowEventEndOfMessage(event)}`;
+                )} task ${DatasetFlowDetailsHelpers.flowEventEndOfMessage(flowEvent)}`;
             }
             case "FlowEventActivationCauseAdded":
-                return `Additionally triggered ${this.describeActivationCause((flowEvent as FlowEventActivationCauseAdded).activationCause)}`;
+                return `Additionally triggered ${this.describeActivationCause(flowEvent.activationCause)}`;
             case "FlowEventStartConditionUpdated": {
-                const startConditionEvent = flowEvent as FlowEventStartConditionUpdated;
-                return `Waiting for ${this.describeStartCondition(startConditionEvent)}`;
+                return `Waiting for ${this.describeStartCondition(flowEvent)}`;
             }
             case "FlowEventScheduledForActivation":
                 return "Flow scheduled for activation";
@@ -89,10 +82,9 @@ export class DatasetFlowDetailsHelpers {
             case "FlowEventRetryPolicyModified":
                 return { icon: "replay", class: "text-muted" };
             case "FlowEventTaskChanged": {
-                const event = flowEvent as FlowEventTaskChanged;
-                switch (event.taskStatus) {
+                switch (flowEvent.taskStatus) {
                     case TaskStatus.Finished:
-                        switch (event.task.outcome?.__typename) {
+                        switch (flowEvent.task.outcome?.__typename) {
                             case "TaskOutcomeSuccess":
                                 return { icon: "check_circle", class: "completed-status" };
                             case "TaskOutcomeFailed":
@@ -144,10 +136,9 @@ export class DatasetFlowDetailsHelpers {
         switch (eventTypename) {
             case "FlowEventInitiated":
             case "FlowEventActivationCauseAdded":
-                return this.describeActivationCauseDetails((flowEvent as FlowEventInitiated).activationCause);
+                return this.describeActivationCauseDetails(flowEvent.activationCause);
             case "FlowConfigSnapshotModified": {
-                const event = flowEvent as FlowConfigSnapshotModified;
-                switch (event.configSnapshot.__typename) {
+                switch (flowEvent.configSnapshot.__typename) {
                     case "FlowConfigRuleCompaction":
                         return "Modified by compaction rule";
                     case "FlowConfigRuleIngest":
@@ -165,29 +156,27 @@ export class DatasetFlowDetailsHelpers {
             case "FlowEventCompleted":
                 return "";
             case "FlowEventScheduledForActivation": {
-                const event = flowEvent as FlowEventScheduledForActivation;
-                return `Activating at ${format(event.scheduledForActivationAt, AppValues.CRON_EXPRESSION_DATE_FORMAT)}`;
+                return `Activating at ${format(flowEvent.scheduledForActivationAt, AppValues.CRON_EXPRESSION_DATE_FORMAT)}`;
             }
             case "FlowEventTaskChanged": {
-                const event = flowEvent as FlowEventTaskChanged;
-                switch (event.taskStatus) {
+                switch (flowEvent.taskStatus) {
                     case TaskStatus.Running:
-                        return this.describeTaskIdentity(event.taskId, flowDetails);
+                        return this.describeTaskIdentity(flowEvent.taskId, flowDetails);
                     case TaskStatus.Finished:
-                        switch (event.task.outcome?.__typename) {
+                        switch (flowEvent.task.outcome?.__typename) {
                             case "TaskOutcomeCancelled":
                                 return "Task was cancelled";
                             case "TaskOutcomeFailed": {
                                 let mainMessage: string;
-                                switch (event.task.outcome.reason.__typename) {
+                                switch (flowEvent.task.outcome.reason.__typename) {
                                     case "TaskFailureReasonGeneral":
-                                        mainMessage = `An${event.task.outcome.reason.recoverable ? "" : " unrecoverable"} error occurred, see logs for more details`;
+                                        mainMessage = `An${flowEvent.task.outcome.reason.recoverable ? "" : " unrecoverable"} error occurred, see logs for more details`;
                                         break;
                                     case "TaskFailureReasonInputDatasetCompacted":
-                                        mainMessage = `Input dataset <span class="text-small text-danger">${event.task.outcome.reason.inputDataset.name}</span> was compacted`;
+                                        mainMessage = `Input dataset <span class="text-small text-danger">${flowEvent.task.outcome.reason.inputDataset.name}</span> was compacted`;
                                         break;
                                     case "TaskFailureReasonWebhookDeliveryProblem":
-                                        mainMessage = `${event.task.outcome.reason.message}<br>Target URL: ${event.task.outcome.reason.targetUrl}`;
+                                        mainMessage = `${flowEvent.task.outcome.reason.message}<br>Target URL: ${flowEvent.task.outcome.reason.targetUrl}`;
                                         break;
                                     /* istanbul ignore next */
                                     default:
@@ -195,12 +184,12 @@ export class DatasetFlowDetailsHelpers {
                                 }
 
                                 if (flowDetails.retryPolicy) {
-                                    if (event.nextAttemptAt) {
+                                    if (flowEvent.nextAttemptAt) {
                                         const nextRetryAttemptNo =
-                                            flowDetails.taskIds.findIndex((taskId) => taskId === event.taskId) + 1;
+                                            flowDetails.taskIds.findIndex((taskId) => taskId === flowEvent.taskId) + 1;
                                         return (
                                             `${mainMessage}<br/>Retry attempt ${nextRetryAttemptNo} of ${flowDetails.retryPolicy.maxAttempts} ` +
-                                            `scheduled in ${DataHelpers.durationTask(event.eventTime, event.nextAttemptAt)}`
+                                            `scheduled in ${DataHelpers.durationTask(flowEvent.eventTime, flowEvent.nextAttemptAt)}`
                                         );
                                     } else {
                                         return `${mainMessage}<br/>No more retry attempts left`;
@@ -302,8 +291,7 @@ export class DatasetFlowDetailsHelpers {
                 }
             }
             case "FlowEventStartConditionUpdated": {
-                const startConditionEvent = flowEvent as FlowEventStartConditionUpdated;
-                return this.describeStartConditionDetails(startConditionEvent, flowDetails);
+                return this.describeStartConditionDetails(flowEvent, flowDetails);
             }
             /* istanbul ignore next */
             default:
@@ -311,7 +299,7 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    public static flowEventEndOfMessage(element: FlowEventTaskChanged): string {
+    public static flowEventEndOfMessage(element: FlowEventTaskChangedDataFragment): string {
         switch (element.taskStatus) {
             case TaskStatus.Finished:
                 switch (element.task.outcome?.__typename) {
@@ -333,7 +321,7 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    private static describeActivationCause(activationCause: FlowActivationCause): string {
+    private static describeActivationCause(activationCause: FlowActivationCauseDataFragment): string {
         switch (activationCause.__typename) {
             case "FlowActivationCauseAutoPolling":
                 return "automatically";
@@ -361,7 +349,7 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    private static describeActivationCauseDetails(activationCause: FlowActivationCause): string {
+    private static describeActivationCauseDetails(activationCause: FlowActivationCauseDataFragment): string {
         switch (activationCause.__typename) {
             case "FlowActivationCauseAutoPolling":
             case "FlowActivationCauseIterationFinished":
@@ -399,7 +387,7 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    private static describeStartCondition(startConditionEvent: FlowEventStartConditionUpdated): string {
+    private static describeStartCondition(startConditionEvent: FlowEventStartConditionUpdatedDataFragment): string {
         switch (startConditionEvent.startCondition.__typename) {
             case "FlowStartConditionThrottling":
                 return "throttling condition";
@@ -416,10 +404,10 @@ export class DatasetFlowDetailsHelpers {
     }
 
     private static describeStartConditionDetails(
-        startConditionEvent: FlowEventStartConditionUpdated,
+        startConditionEvent: FlowEventStartConditionUpdatedDataFragment,
         flowDetails: FlowSummaryDataFragment,
     ): string {
-        const startCondition: FlowStartCondition = startConditionEvent.startCondition;
+        const startCondition = startConditionEvent.startCondition;
         switch (startCondition.__typename) {
             case "FlowStartConditionThrottling":
                 return `Wake up time at ${format(
@@ -455,7 +443,7 @@ export class DatasetFlowDetailsHelpers {
         }
     }
 
-    private static describeRetryPolicy(event: FlowEventRetryPolicyModified): string {
+    private static describeRetryPolicy(event: FlowEventRetryPolicyModifiedDataFragment): string {
         const retryPolicy = event.retryPolicy;
         if (!retryPolicy) {
             return "Retries disabled";
@@ -467,7 +455,7 @@ export class DatasetFlowDetailsHelpers {
         );
     }
 
-    private static describeTimeDelta(timeDelta: TimeDelta): string {
+    private static describeTimeDelta(timeDelta: TimeDeltaDataFragment): string {
         const unit = timeDelta.unit.toLowerCase().slice(0, -1);
         return `${timeDelta.every} ${pluralize(unit, timeDelta.every)}`;
     }

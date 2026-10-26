@@ -7,8 +7,9 @@
 
 import timekeeper from "timekeeper";
 
-import { FlowHistoryDataFragment, FlowStatus } from "@api/kamu.graphql.interface";
+import { FlowEventTaskChangedDataFragment, FlowStatus, TaskOutcomeDataFragment } from "@api/kamu.graphql.interface";
 import { mockFlowSummaryDataFragments } from "@api/mock/dataset-flow.mock";
+import { MaybeNull } from "@interface/app.types";
 
 import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
 import {
@@ -36,9 +37,7 @@ import {
 } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 
 describe("DatasetFlowDetailsHelpers", () => {
-    type TaskChangedEvent = Extract<FlowHistoryDataFragment, { __typename: "FlowEventTaskChanged" }>;
-
-    function finishedTaskWithOutcome(outcome: TaskChangedEvent["task"]["outcome"]): TaskChangedEvent {
+    function finishedTaskWithOutcome(outcome: MaybeNull<TaskOutcomeDataFragment>): FlowEventTaskChangedDataFragment {
         const event = mockHistoryFragmentWithFinishedStatus;
         if (event.__typename !== "FlowEventTaskChanged") {
             throw new Error("The finished-status mock must be a FlowEventTaskChanged event");

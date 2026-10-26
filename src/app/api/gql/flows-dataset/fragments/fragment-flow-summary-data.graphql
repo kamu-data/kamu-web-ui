@@ -134,44 +134,11 @@ fragment FlowSummaryData on Flow {
   }
 
   timing {
-    initiatedAt
-    firstAttemptScheduledAt
-    scheduledAt
-    awaitingExecutorSince
-    runningSince
-    lastAttemptFinishedAt
+    ...FlowTimingRecordsData
   }
 
   startCondition {
-    __typename
-    ... on FlowStartConditionThrottling {
-      intervalSec
-      wakeUpAt
-      shiftedFrom
-    }
-
-    ... on FlowStartConditionReactive {
-      activeBatchingRule {
-        __typename
-        ... on FlowTriggerBatchingRuleBuffering {
-          maxBatchingInterval {
-            ...TimeDeltaData
-          }
-          minRecordsToAwait
-        }
-      }
-      batchingDeadline
-      accumulatedRecordsCount
-      watermarkModified
-    }
-
-    ... on FlowStartConditionSchedule {
-      wakeUpAt
-    }
-
-    ... on FlowStartConditionExecutor {
-      taskId
-    }
+    ...FlowStartConditionData
   }
 
   configSnapshot {

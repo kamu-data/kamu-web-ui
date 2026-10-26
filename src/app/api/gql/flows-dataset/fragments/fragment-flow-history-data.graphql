@@ -8,72 +8,12 @@ fragment FlowHistoryData on FlowEvent {
 
   ... on FlowEventInitiated {
     activationCause {
-      __typename
-      ... on FlowActivationCauseAutoPolling {
-        __typename
-      }
-      ... on FlowActivationCauseIterationFinished {
-        __typename
-      }
-      ... on FlowActivationCauseManual {
-        initiator {
-          ...Account
-        }
-      }
-      ... on FlowActivationCauseDatasetUpdate {
-        datasetId
-        dataset {
-          ...DatasetBasics
-        }
-        source {
-          __typename
-          ... on FlowActivationCauseDatasetUpdateSourceUpstreamFlow {
-            flowId
-          }
-          ... on FlowActivationCauseDatasetUpdateSourceHttpIngest {
-            sourceName
-          }
-          ... on FlowActivationCauseDatasetUpdateSourceSmartProtocolPush {
-            accountName
-            isForce
-          }
-        }
-      }
+      ...FlowActivationCauseData
     }
   }
 
   ... on FlowEventStartConditionUpdated {
-    startCondition {
-      __typename
-      ... on FlowStartConditionThrottling {
-        intervalSec
-        wakeUpAt
-        shiftedFrom
-      }
-
-      ... on FlowStartConditionReactive {
-        activeBatchingRule {
-          __typename
-          ... on FlowTriggerBatchingRuleBuffering {
-            minRecordsToAwait
-            maxBatchingInterval {
-              ...TimeDeltaData
-            }
-          }
-        }
-        batchingDeadline
-        accumulatedRecordsCount
-        watermarkModified
-      }
-
-      ... on FlowStartConditionSchedule {
-        wakeUpAt
-      }
-
-      ... on FlowStartConditionExecutor {
-        taskId
-      }
-    }
+    ...FlowEventStartConditionUpdatedData
   }
 
   ... on FlowEventScheduledForActivation {
@@ -82,71 +22,12 @@ fragment FlowHistoryData on FlowEvent {
   }
 
   ... on FlowEventTaskChanged {
-    __typename
-    taskId
-    taskStatus
-    task {
-      outcome {
-        __typename
-        ... on TaskOutcomeFailed {
-          reason {
-            __typename
-            ... on TaskFailureReasonGeneral {
-              message
-              recoverable
-            }
-
-            ... on TaskFailureReasonInputDatasetCompacted {
-              message
-              inputDataset {
-                ...DatasetBasics
-              }
-            }
-
-            ... on TaskFailureReasonWebhookDeliveryProblem {
-              message
-              targetUrl
-            }
-          }
-        }
-      }
-    }
-    nextAttemptAt
+    ...FlowEventTaskChangedData
   }
 
   ... on FlowEventActivationCauseAdded {
     activationCause {
-      __typename
-      ... on FlowActivationCauseAutoPolling {
-        __typename
-      }
-      ... on FlowActivationCauseIterationFinished {
-        __typename
-      }
-      ... on FlowActivationCauseManual {
-        initiator {
-          ...Account
-        }
-      }
-      ... on FlowActivationCauseDatasetUpdate {
-        datasetId
-        dataset {
-          ...DatasetBasics
-        }
-        source {
-          __typename
-          ... on FlowActivationCauseDatasetUpdateSourceUpstreamFlow {
-            flowId
-          }
-          ... on FlowActivationCauseDatasetUpdateSourceHttpIngest {
-            sourceName
-          }
-          ... on FlowActivationCauseDatasetUpdateSourceSmartProtocolPush {
-            accountName
-            isForce
-          }
-        }
-      }
+      ...FlowActivationCauseData
     }
   }
 
@@ -157,13 +38,7 @@ fragment FlowHistoryData on FlowEvent {
   }
 
   ... on FlowEventRetryPolicyModified {
-    retryPolicy {
-      maxAttempts
-      minDelay {
-        ...TimeDeltaData
-      }
-      backoffType
-    }
+    ...FlowEventRetryPolicyModifiedData
   }
 
   ... on FlowEventCompleted {

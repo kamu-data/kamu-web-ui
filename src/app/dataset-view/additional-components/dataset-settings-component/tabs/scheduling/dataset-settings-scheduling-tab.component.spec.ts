@@ -15,7 +15,7 @@ import { provideToastr } from "ngx-toastr";
 
 import { getElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { TimeDelta, TimeUnit } from "@api/kamu.graphql.interface";
+import { TimeDeltaInput, TimeUnit } from "@api/kamu.graphql.interface";
 
 import {
     FlowTriggerStopPolicyType,
@@ -41,7 +41,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     const MOCK_PARAM_EVERY = 10;
     const MOCK_PARAM_UNIT = TimeUnit.Minutes;
     const MOCK_CRON_EXPRESSION = "0 0 * * ?";
-    const MOCK_INPUT_TIME_DELTA: TimeDelta = {
+    const MOCK_INPUT_TIME_DELTA: TimeDeltaInput = {
         every: MOCK_PARAM_EVERY,
         unit: MOCK_PARAM_UNIT,
     };

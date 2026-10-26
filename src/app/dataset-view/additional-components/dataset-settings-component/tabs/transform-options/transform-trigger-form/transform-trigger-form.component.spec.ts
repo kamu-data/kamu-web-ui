@@ -14,8 +14,9 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angul
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { FlowTriggerBreakingChangeRule, TimeDelta, TimeUnit } from "@api/kamu.graphql.interface";
+import { FlowTriggerBreakingChangeRule, TimeUnit } from "@api/kamu.graphql.interface";
 
 import { BatchingRuleType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { TransformTriggerFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.component";
@@ -128,7 +129,7 @@ describe("TransformTriggerFormComponent", () => {
         await transformTriggerFormHarness.setSelectedBatchingRuleType(BatchingRuleType.BUFFERING);
 
         const MIN_RECORDS = 100;
-        const MAX_BATCHING_INTERVAL: TimeDelta = { every: 5, unit: TimeUnit.Minutes };
+        const MAX_BATCHING_INTERVAL: TimeDeltaFormValue = { every: 5, unit: TimeUnit.Minutes };
         await transformTriggerFormHarness.enterBufferingBatchingRule(MIN_RECORDS, MAX_BATCHING_INTERVAL);
 
         const bufferingFormValue = await transformTriggerFormHarness.getBufferingFormValue();
@@ -159,7 +160,7 @@ describe("TransformTriggerFormComponent", () => {
         await transformTriggerFormHarness.setSelectedBatchingRuleType(BatchingRuleType.BUFFERING);
 
         const MIN_RECORDS = 50;
-        const MAX_BATCHING_INTERVAL: TimeDelta = { every: 1, unit: TimeUnit.Hours };
+        const MAX_BATCHING_INTERVAL: TimeDeltaFormValue = { every: 1, unit: TimeUnit.Hours };
         await transformTriggerFormHarness.enterBufferingBatchingRule(MIN_RECORDS, MAX_BATCHING_INTERVAL);
 
         await transformTriggerFormHarness.setSelectedBreakingChangeRule(FlowTriggerBreakingChangeRule.NoAction);

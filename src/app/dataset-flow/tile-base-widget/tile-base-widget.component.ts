@@ -11,7 +11,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
 
 import AppValues from "@common/values/app.values";
-import { Dataset, DatasetBasicsFragment, FlowItemWidgetDataFragment, FlowStatus } from "@api/kamu.graphql.interface";
+import { DatasetBasicsFragment, FlowItemWidgetDataFragment, FlowStatus } from "@api/kamu.graphql.interface";
 
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
@@ -74,9 +74,7 @@ export class TileBaseWidgetComponent {
 
     public datasetAliasByDescription(node: FlowItemWidgetDataFragment): string {
         if (node.datasetId) {
-            const dataset = (this.involvedDatasets as Dataset[]).find(
-                (dataset) => dataset.id === node.datasetId,
-            ) as Dataset;
+            const dataset = this.involvedDatasets.find((dataset) => dataset.id === node.datasetId);
             return dataset?.alias || "";
         }
         return "";

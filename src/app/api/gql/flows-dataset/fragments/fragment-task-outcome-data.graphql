@@ -1,0 +1,24 @@
+fragment TaskOutcomeData on TaskOutcome {
+  __typename
+  ... on TaskOutcomeFailed {
+    reason {
+      __typename
+      ... on TaskFailureReasonGeneral {
+        message
+        recoverable
+      }
+
+      ... on TaskFailureReasonInputDatasetCompacted {
+        message
+        inputDataset {
+          ...DatasetBasics
+        }
+      }
+
+      ... on TaskFailureReasonWebhookDeliveryProblem {
+        message
+        targetUrl
+      }
+    }
+  }
+}

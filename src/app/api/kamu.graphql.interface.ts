@@ -8372,6 +8372,32 @@ export type DatasetResumeFlowsMutationVariables = Exact<{
 
 export type DatasetResumeFlowsMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', flows: { __typename?: 'DatasetFlowsMut', triggers: { __typename?: 'DatasetFlowTriggersMut', resumeFlows: boolean } } } | null } };
 
+type FlowActivationCauseData_FlowActivationCauseAutoPolling_Fragment = { __typename: 'FlowActivationCauseAutoPolling' };
+
+type FlowActivationCauseData_FlowActivationCauseDatasetUpdate_Fragment = { __typename: 'FlowActivationCauseDatasetUpdate', datasetId: string, dataset?: (
+    { __typename?: 'Dataset' }
+    & DatasetBasicsFragment
+  ) | null, source:
+    | { __typename: 'FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange' }
+    | { __typename: 'FlowActivationCauseDatasetUpdateSourceHttpIngest', sourceName?: string | null }
+    | { __typename: 'FlowActivationCauseDatasetUpdateSourceSmartProtocolPush', accountName?: string | null, isForce: boolean }
+    | { __typename: 'FlowActivationCauseDatasetUpdateSourceUpstreamFlow', flowId: string }
+   };
+
+type FlowActivationCauseData_FlowActivationCauseIterationFinished_Fragment = { __typename: 'FlowActivationCauseIterationFinished' };
+
+type FlowActivationCauseData_FlowActivationCauseManual_Fragment = { __typename: 'FlowActivationCauseManual', initiator: (
+    { __typename?: 'Account' }
+    & AccountFragment
+  ) };
+
+export type FlowActivationCauseDataFragment =
+  | FlowActivationCauseData_FlowActivationCauseAutoPolling_Fragment
+  | FlowActivationCauseData_FlowActivationCauseDatasetUpdate_Fragment
+  | FlowActivationCauseData_FlowActivationCauseIterationFinished_Fragment
+  | FlowActivationCauseData_FlowActivationCauseManual_Fragment
+;
+
 export type FlowConnectionDataFragment = { __typename?: 'FlowConnection', totalCount: number, nodes: Array<(
     { __typename?: 'Flow' }
     & FlowSummaryDataWithTriggerFragment
@@ -8402,6 +8428,45 @@ export type FlowDownstreamLinkDataFragment = { __typename?: 'FlowDownstreamLink'
       | { __typename: 'FlowDescriptionWebhookDeliver' }
      } | null };
 
+export type FlowEventRetryPolicyModifiedDataFragment = { __typename?: 'FlowEventRetryPolicyModified', retryPolicy?: { __typename?: 'FlowRetryPolicy', maxAttempts: number, backoffType: FlowRetryBackoffType, minDelay: (
+      { __typename?: 'TimeDelta' }
+      & TimeDeltaDataFragment
+    ) } | null };
+
+export type FlowEventStartConditionUpdatedDataFragment = { __typename?: 'FlowEventStartConditionUpdated', startCondition:
+    | (
+      { __typename?: 'FlowStartConditionExecutor' }
+      & FlowStartConditionData_FlowStartConditionExecutor_Fragment
+    )
+    | (
+      { __typename?: 'FlowStartConditionReactive' }
+      & FlowStartConditionData_FlowStartConditionReactive_Fragment
+    )
+    | (
+      { __typename?: 'FlowStartConditionSchedule' }
+      & FlowStartConditionData_FlowStartConditionSchedule_Fragment
+    )
+    | (
+      { __typename?: 'FlowStartConditionThrottling' }
+      & FlowStartConditionData_FlowStartConditionThrottling_Fragment
+    )
+   };
+
+export type FlowEventTaskChangedDataFragment = { __typename: 'FlowEventTaskChanged', eventId: string, eventTime: string, taskId: string, taskStatus: TaskStatus, nextAttemptAt?: string | null, task: { __typename?: 'Task', outcome?:
+      | (
+        { __typename?: 'TaskOutcomeCancelled' }
+        & TaskOutcomeData_TaskOutcomeCancelled_Fragment
+      )
+      | (
+        { __typename?: 'TaskOutcomeFailed' }
+        & TaskOutcomeData_TaskOutcomeFailed_Fragment
+      )
+      | (
+        { __typename?: 'TaskOutcomeSuccess' }
+        & TaskOutcomeData_TaskOutcomeSuccess_Fragment
+      )
+     | null } };
+
 type FlowHistoryData_FlowConfigSnapshotModified_Fragment = { __typename: 'FlowConfigSnapshotModified', eventId: string, eventTime: string, configSnapshot:
     | { __typename: 'FlowConfigRuleCompaction' }
     | { __typename: 'FlowConfigRuleIngest' }
@@ -8411,21 +8476,22 @@ type FlowHistoryData_FlowConfigSnapshotModified_Fragment = { __typename: 'FlowCo
 type FlowHistoryData_FlowEventAborted_Fragment = { __typename: 'FlowEventAborted', eventId: string, eventTime: string };
 
 type FlowHistoryData_FlowEventActivationCauseAdded_Fragment = { __typename: 'FlowEventActivationCauseAdded', eventId: string, eventTime: string, activationCause:
-    | { __typename: 'FlowActivationCauseAutoPolling' }
-    | { __typename: 'FlowActivationCauseDatasetUpdate', datasetId: string, dataset?: (
-        { __typename?: 'Dataset' }
-        & DatasetBasicsFragment
-      ) | null, source:
-        | { __typename: 'FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange' }
-        | { __typename: 'FlowActivationCauseDatasetUpdateSourceHttpIngest', sourceName?: string | null }
-        | { __typename: 'FlowActivationCauseDatasetUpdateSourceSmartProtocolPush', accountName?: string | null, isForce: boolean }
-        | { __typename: 'FlowActivationCauseDatasetUpdateSourceUpstreamFlow', flowId: string }
-       }
-    | { __typename: 'FlowActivationCauseIterationFinished' }
-    | { __typename: 'FlowActivationCauseManual', initiator: (
-        { __typename?: 'Account' }
-        & AccountFragment
-      ) }
+    | (
+      { __typename?: 'FlowActivationCauseAutoPolling' }
+      & FlowActivationCauseData_FlowActivationCauseAutoPolling_Fragment
+    )
+    | (
+      { __typename?: 'FlowActivationCauseDatasetUpdate' }
+      & FlowActivationCauseData_FlowActivationCauseDatasetUpdate_Fragment
+    )
+    | (
+      { __typename?: 'FlowActivationCauseIterationFinished' }
+      & FlowActivationCauseData_FlowActivationCauseIterationFinished_Fragment
+    )
+    | (
+      { __typename?: 'FlowActivationCauseManual' }
+      & FlowActivationCauseData_FlowActivationCauseManual_Fragment
+    )
    };
 
 type FlowHistoryData_FlowEventCompleted_Fragment = { __typename: 'FlowEventCompleted', eventId: string, eventTime: string, downstreamFlows: Array<(
@@ -8434,55 +8500,40 @@ type FlowHistoryData_FlowEventCompleted_Fragment = { __typename: 'FlowEventCompl
   )> };
 
 type FlowHistoryData_FlowEventInitiated_Fragment = { __typename: 'FlowEventInitiated', eventId: string, eventTime: string, activationCause:
-    | { __typename: 'FlowActivationCauseAutoPolling' }
-    | { __typename: 'FlowActivationCauseDatasetUpdate', datasetId: string, dataset?: (
-        { __typename?: 'Dataset' }
-        & DatasetBasicsFragment
-      ) | null, source:
-        | { __typename: 'FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange' }
-        | { __typename: 'FlowActivationCauseDatasetUpdateSourceHttpIngest', sourceName?: string | null }
-        | { __typename: 'FlowActivationCauseDatasetUpdateSourceSmartProtocolPush', accountName?: string | null, isForce: boolean }
-        | { __typename: 'FlowActivationCauseDatasetUpdateSourceUpstreamFlow', flowId: string }
-       }
-    | { __typename: 'FlowActivationCauseIterationFinished' }
-    | { __typename: 'FlowActivationCauseManual', initiator: (
-        { __typename?: 'Account' }
-        & AccountFragment
-      ) }
+    | (
+      { __typename?: 'FlowActivationCauseAutoPolling' }
+      & FlowActivationCauseData_FlowActivationCauseAutoPolling_Fragment
+    )
+    | (
+      { __typename?: 'FlowActivationCauseDatasetUpdate' }
+      & FlowActivationCauseData_FlowActivationCauseDatasetUpdate_Fragment
+    )
+    | (
+      { __typename?: 'FlowActivationCauseIterationFinished' }
+      & FlowActivationCauseData_FlowActivationCauseIterationFinished_Fragment
+    )
+    | (
+      { __typename?: 'FlowActivationCauseManual' }
+      & FlowActivationCauseData_FlowActivationCauseManual_Fragment
+    )
    };
 
-type FlowHistoryData_FlowEventRetryPolicyModified_Fragment = { __typename: 'FlowEventRetryPolicyModified', eventId: string, eventTime: string, retryPolicy?: { __typename?: 'FlowRetryPolicy', maxAttempts: number, backoffType: FlowRetryBackoffType, minDelay: (
-      { __typename?: 'TimeDelta' }
-      & TimeDeltaDataFragment
-    ) } | null };
+type FlowHistoryData_FlowEventRetryPolicyModified_Fragment = (
+  { __typename: 'FlowEventRetryPolicyModified', eventId: string, eventTime: string }
+  & FlowEventRetryPolicyModifiedDataFragment
+);
 
 type FlowHistoryData_FlowEventScheduledForActivation_Fragment = { __typename: 'FlowEventScheduledForActivation', scheduledForActivationAt: string, eventId: string, eventTime: string };
 
-type FlowHistoryData_FlowEventStartConditionUpdated_Fragment = { __typename: 'FlowEventStartConditionUpdated', eventId: string, eventTime: string, startCondition:
-    | { __typename: 'FlowStartConditionExecutor', taskId: string }
-    | { __typename: 'FlowStartConditionReactive', batchingDeadline: string, accumulatedRecordsCount: number, watermarkModified: boolean, activeBatchingRule:
-        | { __typename: 'FlowTriggerBatchingRuleBuffering', minRecordsToAwait: number, maxBatchingInterval: (
-            { __typename?: 'TimeDelta' }
-            & TimeDeltaDataFragment
-          ) }
-        | { __typename: 'FlowTriggerBatchingRuleImmediate' }
-       }
-    | { __typename: 'FlowStartConditionSchedule', wakeUpAt: string }
-    | { __typename: 'FlowStartConditionThrottling', intervalSec: number, wakeUpAt: string, shiftedFrom: string }
-   };
+type FlowHistoryData_FlowEventStartConditionUpdated_Fragment = (
+  { __typename: 'FlowEventStartConditionUpdated', eventId: string, eventTime: string }
+  & FlowEventStartConditionUpdatedDataFragment
+);
 
-type FlowHistoryData_FlowEventTaskChanged_Fragment = { __typename: 'FlowEventTaskChanged', taskId: string, taskStatus: TaskStatus, nextAttemptAt?: string | null, eventId: string, eventTime: string, task: { __typename?: 'Task', outcome?:
-      | { __typename: 'TaskOutcomeCancelled' }
-      | { __typename: 'TaskOutcomeFailed', reason:
-          | { __typename: 'TaskFailureReasonGeneral', message: string, recoverable: boolean }
-          | { __typename: 'TaskFailureReasonInputDatasetCompacted', message: string, inputDataset: (
-              { __typename?: 'Dataset' }
-              & DatasetBasicsFragment
-            ) }
-          | { __typename: 'TaskFailureReasonWebhookDeliveryProblem', message: string, targetUrl: string }
-         }
-      | { __typename: 'TaskOutcomeSuccess' }
-     | null } };
+type FlowHistoryData_FlowEventTaskChanged_Fragment = (
+  { __typename: 'FlowEventTaskChanged', eventId: string, eventTime: string }
+  & FlowEventTaskChangedDataFragment
+);
 
 export type FlowHistoryDataFragment =
   | FlowHistoryData_FlowConfigSnapshotModified_Fragment
@@ -8509,7 +8560,10 @@ export type FlowItemWidgetDataFragment = { __typename?: 'Flow', flowId: string, 
       { __typename?: 'FlowSuccessResult' }
       & FlowOutcomeData_FlowSuccessResult_Fragment
     )
-   | null, timing: { __typename?: 'FlowTimingRecords', initiatedAt: string, firstAttemptScheduledAt?: string | null, scheduledAt?: string | null, awaitingExecutorSince?: string | null, runningSince?: string | null, lastAttemptFinishedAt?: string | null } };
+   | null, timing: (
+    { __typename?: 'FlowTimingRecords' }
+    & FlowTimingRecordsDataFragment
+  ) };
 
 type FlowOutcomeData_FlowAbortedResult_Fragment = { __typename?: 'FlowAbortedResult', message: string };
 
@@ -8528,6 +8582,27 @@ export type FlowOutcomeDataFragment =
   | FlowOutcomeData_FlowAbortedResult_Fragment
   | FlowOutcomeData_FlowFailedError_Fragment
   | FlowOutcomeData_FlowSuccessResult_Fragment
+;
+
+type FlowStartConditionData_FlowStartConditionExecutor_Fragment = { __typename: 'FlowStartConditionExecutor', taskId: string };
+
+type FlowStartConditionData_FlowStartConditionReactive_Fragment = { __typename: 'FlowStartConditionReactive', batchingDeadline: string, accumulatedRecordsCount: number, watermarkModified: boolean, activeBatchingRule:
+    | { __typename: 'FlowTriggerBatchingRuleBuffering', minRecordsToAwait: number, maxBatchingInterval: (
+        { __typename?: 'TimeDelta' }
+        & TimeDeltaDataFragment
+      ) }
+    | { __typename: 'FlowTriggerBatchingRuleImmediate' }
+   };
+
+type FlowStartConditionData_FlowStartConditionSchedule_Fragment = { __typename: 'FlowStartConditionSchedule', wakeUpAt: string };
+
+type FlowStartConditionData_FlowStartConditionThrottling_Fragment = { __typename: 'FlowStartConditionThrottling', intervalSec: number, wakeUpAt: string, shiftedFrom: string };
+
+export type FlowStartConditionDataFragment =
+  | FlowStartConditionData_FlowStartConditionExecutor_Fragment
+  | FlowStartConditionData_FlowStartConditionReactive_Fragment
+  | FlowStartConditionData_FlowStartConditionSchedule_Fragment
+  | FlowStartConditionData_FlowStartConditionThrottling_Fragment
 ;
 
 export type FlowSummaryDataWithTriggerFragment = (
@@ -8597,22 +8672,52 @@ export type FlowSummaryDataFragment = { __typename?: 'Flow', flowId: string, dat
       { __typename?: 'FlowSuccessResult' }
       & FlowOutcomeData_FlowSuccessResult_Fragment
     )
-   | null, timing: { __typename?: 'FlowTimingRecords', initiatedAt: string, firstAttemptScheduledAt?: string | null, scheduledAt?: string | null, awaitingExecutorSince?: string | null, runningSince?: string | null, lastAttemptFinishedAt?: string | null }, startCondition?:
-    | { __typename: 'FlowStartConditionExecutor', taskId: string }
-    | { __typename: 'FlowStartConditionReactive', batchingDeadline: string, accumulatedRecordsCount: number, watermarkModified: boolean, activeBatchingRule:
-        | { __typename: 'FlowTriggerBatchingRuleBuffering', minRecordsToAwait: number, maxBatchingInterval: (
-            { __typename?: 'TimeDelta' }
-            & TimeDeltaDataFragment
-          ) }
-        | { __typename: 'FlowTriggerBatchingRuleImmediate' }
-       }
-    | { __typename: 'FlowStartConditionSchedule', wakeUpAt: string }
-    | { __typename: 'FlowStartConditionThrottling', intervalSec: number, wakeUpAt: string, shiftedFrom: string }
+   | null, timing: (
+    { __typename?: 'FlowTimingRecords' }
+    & FlowTimingRecordsDataFragment
+  ), startCondition?:
+    | (
+      { __typename?: 'FlowStartConditionExecutor' }
+      & FlowStartConditionData_FlowStartConditionExecutor_Fragment
+    )
+    | (
+      { __typename?: 'FlowStartConditionReactive' }
+      & FlowStartConditionData_FlowStartConditionReactive_Fragment
+    )
+    | (
+      { __typename?: 'FlowStartConditionSchedule' }
+      & FlowStartConditionData_FlowStartConditionSchedule_Fragment
+    )
+    | (
+      { __typename?: 'FlowStartConditionThrottling' }
+      & FlowStartConditionData_FlowStartConditionThrottling_Fragment
+    )
    | null, configSnapshot?:
     | { __typename?: 'FlowConfigRuleCompaction' }
     | { __typename?: 'FlowConfigRuleIngest', fetchUncacheable: boolean, fetchNextIteration: boolean }
     | { __typename?: 'FlowConfigRuleReset' }
    | null, retryPolicy?: { __typename?: 'FlowRetryPolicy', maxAttempts: number } | null };
+
+export type FlowTimingRecordsDataFragment = { __typename?: 'FlowTimingRecords', initiatedAt: string, firstAttemptScheduledAt?: string | null, scheduledAt?: string | null, awaitingExecutorSince?: string | null, runningSince?: string | null, lastAttemptFinishedAt?: string | null };
+
+type TaskOutcomeData_TaskOutcomeCancelled_Fragment = { __typename: 'TaskOutcomeCancelled' };
+
+type TaskOutcomeData_TaskOutcomeFailed_Fragment = { __typename: 'TaskOutcomeFailed', reason:
+    | { __typename: 'TaskFailureReasonGeneral', message: string, recoverable: boolean }
+    | { __typename: 'TaskFailureReasonInputDatasetCompacted', message: string, inputDataset: (
+        { __typename?: 'Dataset' }
+        & DatasetBasicsFragment
+      ) }
+    | { __typename: 'TaskFailureReasonWebhookDeliveryProblem', message: string, targetUrl: string }
+   };
+
+type TaskOutcomeData_TaskOutcomeSuccess_Fragment = { __typename: 'TaskOutcomeSuccess' };
+
+export type TaskOutcomeDataFragment =
+  | TaskOutcomeData_TaskOutcomeCancelled_Fragment
+  | TaskOutcomeData_TaskOutcomeFailed_Fragment
+  | TaskOutcomeData_TaskOutcomeSuccess_Fragment
+;
 
 export type FlowConnectionWidgetDataFragment = { __typename?: 'FlowConnection', totalCount: number, nodes: Array<(
     { __typename?: 'Flow' }
@@ -9943,6 +10048,46 @@ export const FlowOutcomeDataFragmentDoc = gql`
   }
 }
     ${DatasetBasicsFragmentDoc}`;
+export const FlowTimingRecordsDataFragmentDoc = gql`
+    fragment FlowTimingRecordsData on FlowTimingRecords {
+  initiatedAt
+  firstAttemptScheduledAt
+  scheduledAt
+  awaitingExecutorSince
+  runningSince
+  lastAttemptFinishedAt
+}
+    `;
+export const FlowStartConditionDataFragmentDoc = gql`
+    fragment FlowStartConditionData on FlowStartCondition {
+  __typename
+  ... on FlowStartConditionThrottling {
+    intervalSec
+    wakeUpAt
+    shiftedFrom
+  }
+  ... on FlowStartConditionReactive {
+    activeBatchingRule {
+      __typename
+      ... on FlowTriggerBatchingRuleBuffering {
+        maxBatchingInterval {
+          ...TimeDeltaData
+        }
+        minRecordsToAwait
+      }
+    }
+    batchingDeadline
+    accumulatedRecordsCount
+    watermarkModified
+  }
+  ... on FlowStartConditionSchedule {
+    wakeUpAt
+  }
+  ... on FlowStartConditionExecutor {
+    taskId
+  }
+}
+    ${TimeDeltaDataFragmentDoc}`;
 export const FlowSummaryDataFragmentDoc = gql`
     fragment FlowSummaryData on Flow {
   description {
@@ -10059,40 +10204,10 @@ export const FlowSummaryDataFragmentDoc = gql`
     ...FlowOutcomeData
   }
   timing {
-    initiatedAt
-    firstAttemptScheduledAt
-    scheduledAt
-    awaitingExecutorSince
-    runningSince
-    lastAttemptFinishedAt
+    ...FlowTimingRecordsData
   }
   startCondition {
-    __typename
-    ... on FlowStartConditionThrottling {
-      intervalSec
-      wakeUpAt
-      shiftedFrom
-    }
-    ... on FlowStartConditionReactive {
-      activeBatchingRule {
-        __typename
-        ... on FlowTriggerBatchingRuleBuffering {
-          maxBatchingInterval {
-            ...TimeDeltaData
-          }
-          minRecordsToAwait
-        }
-      }
-      batchingDeadline
-      accumulatedRecordsCount
-      watermarkModified
-    }
-    ... on FlowStartConditionSchedule {
-      wakeUpAt
-    }
-    ... on FlowStartConditionExecutor {
-      taskId
-    }
+    ...FlowStartConditionData
   }
   configSnapshot {
     ... on FlowConfigRuleIngest {
@@ -10110,7 +10225,8 @@ ${FetchStepFilesGlobDataFragmentDoc}
 ${FetchStepContainerDataFragmentDoc}
 ${AccountFragmentDoc}
 ${FlowOutcomeDataFragmentDoc}
-${TimeDeltaDataFragmentDoc}`;
+${FlowTimingRecordsDataFragmentDoc}
+${FlowStartConditionDataFragmentDoc}`;
 export const FlowSummaryDataWithTriggerFragmentDoc = gql`
     fragment FlowSummaryDataWithTrigger on Flow {
   ...FlowSummaryData
@@ -10134,6 +10250,99 @@ export const FlowConnectionDataFragmentDoc = gql`
 }
     ${FlowSummaryDataWithTriggerFragmentDoc}
 ${DatasetPageInfoFragmentDoc}`;
+export const FlowActivationCauseDataFragmentDoc = gql`
+    fragment FlowActivationCauseData on FlowActivationCause {
+  __typename
+  ... on FlowActivationCauseAutoPolling {
+    __typename
+  }
+  ... on FlowActivationCauseIterationFinished {
+    __typename
+  }
+  ... on FlowActivationCauseManual {
+    initiator {
+      ...Account
+    }
+  }
+  ... on FlowActivationCauseDatasetUpdate {
+    datasetId
+    dataset {
+      ...DatasetBasics
+    }
+    source {
+      __typename
+      ... on FlowActivationCauseDatasetUpdateSourceUpstreamFlow {
+        flowId
+      }
+      ... on FlowActivationCauseDatasetUpdateSourceHttpIngest {
+        sourceName
+      }
+      ... on FlowActivationCauseDatasetUpdateSourceSmartProtocolPush {
+        accountName
+        isForce
+      }
+    }
+  }
+}
+    ${AccountFragmentDoc}
+${DatasetBasicsFragmentDoc}`;
+export const FlowEventStartConditionUpdatedDataFragmentDoc = gql`
+    fragment FlowEventStartConditionUpdatedData on FlowEventStartConditionUpdated {
+  startCondition {
+    ...FlowStartConditionData
+  }
+}
+    ${FlowStartConditionDataFragmentDoc}`;
+export const TaskOutcomeDataFragmentDoc = gql`
+    fragment TaskOutcomeData on TaskOutcome {
+  __typename
+  ... on TaskOutcomeFailed {
+    reason {
+      __typename
+      ... on TaskFailureReasonGeneral {
+        message
+        recoverable
+      }
+      ... on TaskFailureReasonInputDatasetCompacted {
+        message
+        inputDataset {
+          ...DatasetBasics
+        }
+      }
+      ... on TaskFailureReasonWebhookDeliveryProblem {
+        message
+        targetUrl
+      }
+    }
+  }
+}
+    ${DatasetBasicsFragmentDoc}`;
+export const FlowEventTaskChangedDataFragmentDoc = gql`
+    fragment FlowEventTaskChangedData on FlowEventTaskChanged {
+  __typename
+  eventId
+  eventTime
+  taskId
+  taskStatus
+  task {
+    outcome {
+      ...TaskOutcomeData
+    }
+  }
+  nextAttemptAt
+}
+    ${TaskOutcomeDataFragmentDoc}`;
+export const FlowEventRetryPolicyModifiedDataFragmentDoc = gql`
+    fragment FlowEventRetryPolicyModifiedData on FlowEventRetryPolicyModified {
+  retryPolicy {
+    maxAttempts
+    minDelay {
+      ...TimeDeltaData
+    }
+    backoffType
+  }
+}
+    ${TimeDeltaDataFragmentDoc}`;
 export const FlowDownstreamLinkDataFragmentDoc = gql`
     fragment FlowDownstreamLinkData on FlowDownstreamLink {
   flowId
@@ -10172,136 +10381,22 @@ export const FlowHistoryDataFragmentDoc = gql`
   }
   ... on FlowEventInitiated {
     activationCause {
-      __typename
-      ... on FlowActivationCauseAutoPolling {
-        __typename
-      }
-      ... on FlowActivationCauseIterationFinished {
-        __typename
-      }
-      ... on FlowActivationCauseManual {
-        initiator {
-          ...Account
-        }
-      }
-      ... on FlowActivationCauseDatasetUpdate {
-        datasetId
-        dataset {
-          ...DatasetBasics
-        }
-        source {
-          __typename
-          ... on FlowActivationCauseDatasetUpdateSourceUpstreamFlow {
-            flowId
-          }
-          ... on FlowActivationCauseDatasetUpdateSourceHttpIngest {
-            sourceName
-          }
-          ... on FlowActivationCauseDatasetUpdateSourceSmartProtocolPush {
-            accountName
-            isForce
-          }
-        }
-      }
+      ...FlowActivationCauseData
     }
   }
   ... on FlowEventStartConditionUpdated {
-    startCondition {
-      __typename
-      ... on FlowStartConditionThrottling {
-        intervalSec
-        wakeUpAt
-        shiftedFrom
-      }
-      ... on FlowStartConditionReactive {
-        activeBatchingRule {
-          __typename
-          ... on FlowTriggerBatchingRuleBuffering {
-            minRecordsToAwait
-            maxBatchingInterval {
-              ...TimeDeltaData
-            }
-          }
-        }
-        batchingDeadline
-        accumulatedRecordsCount
-        watermarkModified
-      }
-      ... on FlowStartConditionSchedule {
-        wakeUpAt
-      }
-      ... on FlowStartConditionExecutor {
-        taskId
-      }
-    }
+    ...FlowEventStartConditionUpdatedData
   }
   ... on FlowEventScheduledForActivation {
     __typename
     scheduledForActivationAt
   }
   ... on FlowEventTaskChanged {
-    __typename
-    taskId
-    taskStatus
-    task {
-      outcome {
-        __typename
-        ... on TaskOutcomeFailed {
-          reason {
-            __typename
-            ... on TaskFailureReasonGeneral {
-              message
-              recoverable
-            }
-            ... on TaskFailureReasonInputDatasetCompacted {
-              message
-              inputDataset {
-                ...DatasetBasics
-              }
-            }
-            ... on TaskFailureReasonWebhookDeliveryProblem {
-              message
-              targetUrl
-            }
-          }
-        }
-      }
-    }
-    nextAttemptAt
+    ...FlowEventTaskChangedData
   }
   ... on FlowEventActivationCauseAdded {
     activationCause {
-      __typename
-      ... on FlowActivationCauseAutoPolling {
-        __typename
-      }
-      ... on FlowActivationCauseIterationFinished {
-        __typename
-      }
-      ... on FlowActivationCauseManual {
-        initiator {
-          ...Account
-        }
-      }
-      ... on FlowActivationCauseDatasetUpdate {
-        datasetId
-        dataset {
-          ...DatasetBasics
-        }
-        source {
-          __typename
-          ... on FlowActivationCauseDatasetUpdateSourceUpstreamFlow {
-            flowId
-          }
-          ... on FlowActivationCauseDatasetUpdateSourceHttpIngest {
-            sourceName
-          }
-          ... on FlowActivationCauseDatasetUpdateSourceSmartProtocolPush {
-            accountName
-            isForce
-          }
-        }
-      }
+      ...FlowActivationCauseData
     }
   }
   ... on FlowConfigSnapshotModified {
@@ -10310,13 +10405,7 @@ export const FlowHistoryDataFragmentDoc = gql`
     }
   }
   ... on FlowEventRetryPolicyModified {
-    retryPolicy {
-      maxAttempts
-      minDelay {
-        ...TimeDeltaData
-      }
-      backoffType
-    }
+    ...FlowEventRetryPolicyModifiedData
   }
   ... on FlowEventCompleted {
     eventId
@@ -10326,9 +10415,10 @@ export const FlowHistoryDataFragmentDoc = gql`
     }
   }
 }
-    ${AccountFragmentDoc}
-${DatasetBasicsFragmentDoc}
-${TimeDeltaDataFragmentDoc}
+    ${FlowActivationCauseDataFragmentDoc}
+${FlowEventStartConditionUpdatedDataFragmentDoc}
+${FlowEventTaskChangedDataFragmentDoc}
+${FlowEventRetryPolicyModifiedDataFragmentDoc}
 ${FlowDownstreamLinkDataFragmentDoc}`;
 export const FlowItemWidgetDataFragmentDoc = gql`
     fragment FlowItemWidgetData on Flow {
@@ -10342,15 +10432,11 @@ export const FlowItemWidgetDataFragmentDoc = gql`
     ...FlowOutcomeData
   }
   timing {
-    initiatedAt
-    firstAttemptScheduledAt
-    scheduledAt
-    awaitingExecutorSince
-    runningSince
-    lastAttemptFinishedAt
+    ...FlowTimingRecordsData
   }
 }
-    ${FlowOutcomeDataFragmentDoc}`;
+    ${FlowOutcomeDataFragmentDoc}
+${FlowTimingRecordsDataFragmentDoc}`;
 export const FlowConnectionWidgetDataFragmentDoc = gql`
     fragment FlowConnectionWidgetData on FlowConnection {
   nodes {

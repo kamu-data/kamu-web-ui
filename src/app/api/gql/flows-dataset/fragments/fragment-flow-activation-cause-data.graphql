@@ -1,0 +1,33 @@
+fragment FlowActivationCauseData on FlowActivationCause {
+  __typename
+  ... on FlowActivationCauseAutoPolling {
+    __typename
+  }
+  ... on FlowActivationCauseIterationFinished {
+    __typename
+  }
+  ... on FlowActivationCauseManual {
+    initiator {
+      ...Account
+    }
+  }
+  ... on FlowActivationCauseDatasetUpdate {
+    datasetId
+    dataset {
+      ...DatasetBasics
+    }
+    source {
+      __typename
+      ... on FlowActivationCauseDatasetUpdateSourceUpstreamFlow {
+        flowId
+      }
+      ... on FlowActivationCauseDatasetUpdateSourceHttpIngest {
+        sourceName
+      }
+      ... on FlowActivationCauseDatasetUpdateSourceSmartProtocolPush {
+        accountName
+        isForce
+      }
+    }
+  }
+}

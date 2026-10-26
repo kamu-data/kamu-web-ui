@@ -1,0 +1,9 @@
+fragment FlowEventRetryPolicyModifiedData on FlowEventRetryPolicyModified {
+  retryPolicy {
+    maxAttempts
+    minDelay {
+      ...TimeDeltaData
+    }
+    backoffType
+  }
+}

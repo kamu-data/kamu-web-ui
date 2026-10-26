@@ -26,8 +26,6 @@ import {
     DatasetTriggerResetFlowDocument,
     DatasetTriggerResetToMetadataFlowDocument,
     DatasetTriggerTransformFlowDocument,
-    FlowConfigRuleCompaction,
-    FlowConfigRuleIngest,
     FlowConnectionDataFragment,
     FlowTriggerBreakingChangeRule,
     GetDatasetFlowConfigsDocument,
@@ -99,7 +97,7 @@ describe("DatasetFlowApi", () => {
                 const configType = res.datasets.byId?.flows.configs.byType;
                 const configRule = configType?.rule;
                 expect(configRule?.__typename).toEqual("FlowConfigRuleIngest");
-                expect((configRule as FlowConfigRuleIngest)?.fetchUncacheable).toEqual(false);
+                expect(configRule).toEqual(jasmine.objectContaining({ fetchUncacheable: false }));
             });
 
         const op = controller.expectOne(GetDatasetFlowConfigsDocument);
@@ -118,10 +116,7 @@ describe("DatasetFlowApi", () => {
                 const configRule = configType?.rule;
                 expect(configRule?.__typename).toEqual("FlowConfigRuleCompaction");
 
-                const compactionConfig = configRule as FlowConfigRuleCompaction;
-
-                expect(compactionConfig).toBeDefined();
-                expect(compactionConfig).toEqual({
+                expect(configRule).toEqual({
                     __typename: "FlowConfigRuleCompaction",
                     maxSliceSize: 1000000,
                     maxSliceRecords: 50000,

@@ -40,7 +40,6 @@ import {
     ChangeAdminPasswordMutation,
     ChangeUserPasswordDocument,
     ChangeUserPasswordMutation,
-    DatasetFlowProcess,
     DatasetFlowType,
     DeleteAccountByNameDocument,
     DeleteAccountByNameMutation,
@@ -309,9 +308,9 @@ describe("AccountApi", () => {
                 expect(result.accounts.byName?.flows.processes.allCards.nodes.length).toEqual(
                     mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes.allCards.nodes.length,
                 );
-                expect(
-                    (result.accounts.byName?.flows.processes.allCards.nodes[0] as DatasetFlowProcess).flowType,
-                ).toEqual(DatasetFlowType.Ingest);
+                expect(result.accounts.byName?.flows.processes.allCards.nodes[0]).toEqual(
+                    jasmine.objectContaining({ flowType: DatasetFlowType.Ingest }),
+                );
             });
         const op = controller.expectOne(AccountFlowsAsCardsDocument);
         expect(op.operation.variables.name).toEqual(ACCOUNT_NAME);
@@ -334,9 +333,9 @@ describe("AccountApi", () => {
                 expect(result.accounts.byName?.flows.processes.primaryCards.nodes.length).toEqual(
                     mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes.primaryCards.nodes.length,
                 );
-                expect(
-                    (result.accounts.byName?.flows.processes.primaryCards.nodes[0] as DatasetFlowProcess).flowType,
-                ).toEqual(DatasetFlowType.Ingest);
+                expect(result.accounts.byName?.flows.processes.primaryCards.nodes[0].flowType).toEqual(
+                    DatasetFlowType.Ingest,
+                );
             });
         const op = controller.expectOne(AccountPrimaryCardsDocument);
         expect(op.operation.variables.name).toEqual(ACCOUNT_NAME);

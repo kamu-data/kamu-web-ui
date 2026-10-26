@@ -9,11 +9,6 @@ fragment FlowItemWidgetData on Flow {
     ...FlowOutcomeData
   }
   timing {
-    initiatedAt
-    firstAttemptScheduledAt
-    scheduledAt
-    awaitingExecutorSince
-    runningSince
-    lastAttemptFinishedAt
+    ...FlowTimingRecordsData
   }
 }

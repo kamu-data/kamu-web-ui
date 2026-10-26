@@ -1712,7 +1712,7 @@ export const mockDatasetFlowsInitiatorsQuery: DatasetFlowsInitiatorsQuery = {
             flows: {
                 runs: {
                     listFlowInitiators: {
-                        totalCount: 1,
+                        totalCount: mockDatasetFlowInitiators.length,
                         nodes: mockDatasetFlowInitiators,
                         __typename: "AccountConnection",
                     },

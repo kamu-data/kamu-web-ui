@@ -358,11 +358,13 @@ describe("DatasetFlowsService", () => {
     it("should check flows initiators", () => {
         spyOn(datasetFlowApi, "getDatasetFlowsInitiators").and.returnValue(of(mockDatasetFlowsInitiatorsQuery));
 
+        const initiatorsBefore = [...mockDatasetFlowInitiators];
+
         const subscription$ = service.flowsInitiators(MOCK_DATASET_ID).subscribe((data: AccountFragment[]) => {
-            expect(data.length).toEqual(mockDatasetFlowInitiators.length);
-            expect(data[0].accountName).toEqual("bamu");
+            expect(data.map((initiator) => initiator.accountName)).toEqual(["bamu", "kamu", "kamu"]);
         });
 
         expect(subscription$.closed).toBeTrue();
+        expect(mockDatasetFlowInitiators).toEqual(initiatorsBefore);
     });
 });

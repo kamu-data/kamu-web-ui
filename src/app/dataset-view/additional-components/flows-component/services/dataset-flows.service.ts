@@ -229,11 +229,12 @@ export class DatasetFlowsService {
     public flowsInitiators(datasetId: string): Observable<AccountFragment[]> {
         return this.datasetFlowApi.getDatasetFlowsInitiators(datasetId).pipe(
             map((data: DatasetFlowsInitiatorsQuery) => {
-                return data.datasets.byId?.flows.runs.listFlowInitiators.nodes.sort((a, b) => {
+                const initiators = data.datasets.byId?.flows.runs.listFlowInitiators.nodes ?? [];
+                return [...initiators].sort((a, b) => {
                     if (a.accountName < b.accountName) return -1;
                     if (a.accountName > b.accountName) return 1;
                     return 0;
-                }) as AccountFragment[];
+                });
             }),
         );
     }

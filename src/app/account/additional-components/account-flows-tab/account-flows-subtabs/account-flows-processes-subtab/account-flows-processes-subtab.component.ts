@@ -39,8 +39,6 @@ import { trackBusyKey } from "@common/helpers/app.helpers";
 import { MY_MOMENT_FORMATS } from "@common/helpers/data.helpers";
 import AppValues from "@common/values/app.values";
 import {
-    AccountFlowProcessCard,
-    Dataset,
     DatasetBasicsFragment,
     FlowProcessEffectiveState,
     FlowProcessFilters,
@@ -55,6 +53,7 @@ import { RecentActivityFiltersViewComponent } from "src/app/account/additional-c
 import { TriageFiltersViewComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/components/triage-filters-view/triage-filters-view.component";
 import { UpcomingScheduledFiltersViewComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/components/upcoming-scheduled-filters-view/upcoming-scheduled-filters-view.component";
 import {
+    AccountFlowProcessCardData,
     AccountFlowsNav,
     CARD_FILTERS_MODE_OPTIONS,
     CardFilterDescriptor,
@@ -119,7 +118,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
 
     public accountFlowsCardsData$: Observable<FlowProcessCardListing>;
     public hasNextPage = false;
-    public processesCards: AccountFlowProcessCard[] = [];
+    public processesCards: AccountFlowProcessCardData[] = [];
     public processesPerPage: number = AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE;
     public flowsMode: ProcessCardGroup = ProcessCardGroup.ALL;
     public activeRollup: FlowProcessGroupRollupDataFragment;
@@ -165,7 +164,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
 
             tap((data: CardsStrategyResult) => {
                 this.activeRollup = data.rollup;
-                const newChunkCards = data.cards.nodes as AccountFlowProcessCard[];
+                const newChunkCards = data.cards.nodes;
                 this.hasNextPage = data.cards.pageInfo.hasNextPage;
                 this.processesCards = [...newChunkCards];
 
@@ -191,10 +190,6 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
 
     private setFlowProcessFilters(mode: ProcessCardFilterMode): FlowProcessFilters {
         return this.accountFlowsFiltersService.setFlowProcessFilters(mode);
-    }
-
-    public itemToBasics(value: Dataset): DatasetBasicsFragment {
-        return value as DatasetBasicsFragment;
     }
 
     public rollupAvailabilityMapper(mode: ProcessCardFilterMode, state: FlowProcessEffectiveState): boolean {
@@ -341,7 +336,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
         this.refreshNow();
     }
 
-    public trackByCardId(item: AccountFlowProcessCard): string {
+    public trackByCardId(item: AccountFlowProcessCardData): string {
         if ("dataset" in item) {
             return item.dataset.id;
         } else {

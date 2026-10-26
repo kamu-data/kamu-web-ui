@@ -114,7 +114,7 @@
                     @if (card.__typename === "DatasetFlowProcess") {
                         <div>
                             <app-dataset-flow-process-card
-                                [datasetBasics]="itemToBasics(card.dataset)"
+                                [datasetBasics]="card.dataset"
                                 [summary]="card.summary"
                                 [showFlowsHistoryLink]="true"
                                 [actionInProgress]="busyCardIds?.has(card.dataset.id) ?? false"
@@ -127,7 +127,7 @@
                         <div>
                             @if (card.parentDataset) {
                                 <app-webhook-flow-process-card
-                                    [datasetBasics]="itemToBasics(card.parentDataset)"
+                                    [datasetBasics]="card.parentDataset"
                                     [summary]="card.summary"
                                     [subscriptionId]="card.id"
                                     [subscriptionName]="card.name"

@@ -14,8 +14,9 @@ import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
-import { Account, FlowStatus } from "@api/kamu.graphql.interface";
+import { FlowStatus } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowsTableData } from "@api/mock/dataset-flow.mock";
 
@@ -126,7 +127,8 @@ describe("AccountFlowsActivitySubtabComponent", () => {
 
     it("should check to apply filter status in the request", () => {
         component.filters = {
-            accounts: mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators.nodes as Account[],
+            accounts: requireValue(mockDatasetFlowsInitiatorsQuery.datasets.byId ?? null).flows.runs.listFlowInitiators
+                .nodes,
             datasets: mockDatasets,
             status: [FlowStatus.Finished],
             onlySystemFlows: false,
@@ -155,8 +157,9 @@ describe("AccountFlowsActivitySubtabComponent", () => {
     }));
 
     it("should check search by filters with filters=null", () => {
-        component.searchByAccount = mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators
-            .nodes as Account[];
+        component.searchByAccount = requireValue(
+            mockDatasetFlowsInitiatorsQuery.datasets.byId ?? null,
+        ).flows.runs.listFlowInitiators.nodes;
         component.searchByDataset = mockDatasets;
         fixture.detectChanges();
         component.onSearchByFiltersChange(null);
@@ -166,8 +169,8 @@ describe("AccountFlowsActivitySubtabComponent", () => {
     });
 
     it("should check search by filters with filters options", () => {
-        const accounts = mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators
-            .nodes as Account[];
+        const accounts = requireValue(mockDatasetFlowsInitiatorsQuery.datasets.byId ?? null).flows.runs
+            .listFlowInitiators.nodes;
         const filterOptions: FlowsTableFiltersOptions = {
             accounts,
             datasets: mockDatasets,

@@ -6,8 +6,8 @@
  */
 
 import {
-    AccountFlowProcessCard,
     AccountFlowProcessCardConnectionDataFragment,
+    DatasetFlowProcessConnectionDataFragment,
     FlowProcessEffectiveState,
     FlowProcessGroupRollupDataFragment,
     FlowProcessOrderField,
@@ -15,6 +15,7 @@ import {
     FlowStatus,
     InitiatorFilterInput,
     OrderingDirection,
+    WebhookFlowSubProcessConnectionDataFragment,
 } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
@@ -378,13 +379,20 @@ export interface DashboardFiltersOptions {
     isFirstInitialization: boolean;
 }
 
+export type AccountFlowProcessCardData = AccountFlowProcessCardConnectionDataFragment["nodes"][number];
+
 export interface FlowProcessCardListing {
     totalCount: number;
-    nodes: AccountFlowProcessCard[];
+    nodes: AccountFlowProcessCardData[];
 }
 
+export type AccountFlowCardsConnectionData =
+    | AccountFlowProcessCardConnectionDataFragment
+    | DatasetFlowProcessConnectionDataFragment
+    | WebhookFlowSubProcessConnectionDataFragment;
+
 export interface CardsStrategyResult {
-    cards: AccountFlowProcessCardConnectionDataFragment;
+    cards: AccountFlowCardsConnectionData;
     rollup: FlowProcessGroupRollupDataFragment;
 }
 

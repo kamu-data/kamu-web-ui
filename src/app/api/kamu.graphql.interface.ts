@@ -7295,11 +7295,24 @@ export type CreateAccessTokenMutationVariables = Exact<{
 
 export type CreateAccessTokenMutation = { __typename?: 'Mutation', accounts: { __typename?: 'AccountsMut', byId?: { __typename?: 'AccountMut', accessTokens: { __typename?: 'AccountAccessTokensMut', createAccessToken:
           | { __typename?: 'CreateAccessTokenResultDuplicate', message: string, tokenName: string }
-          | { __typename?: 'CreateAccessTokenResultSuccess', message: string, token: { __typename?: 'CreatedAccessToken', id: string, name: string, composed: string, account: (
-                { __typename?: 'Account' }
-                & AccountFragment
-              ) } }
+          | { __typename?: 'CreateAccessTokenResultSuccess', message: string, token: (
+              { __typename?: 'CreatedAccessToken' }
+              & CreatedAccessTokenDataFragment
+            ) }
          } } | null } };
+
+export type AccessTokenConnectionDataFragment = { __typename?: 'AccessTokenConnection', totalCount: number, nodes: Array<(
+    { __typename?: 'ViewAccessToken' }
+    & AccessTokenDataFragment
+  )>, pageInfo: (
+    { __typename?: 'PageBasedInfo' }
+    & DatasetPageInfoFragment
+  ) };
+
+export type CreatedAccessTokenDataFragment = { __typename?: 'CreatedAccessToken', id: string, name: string, composed: string, account: (
+    { __typename?: 'Account' }
+    & AccountFragment
+  ) };
 
 export type ListAccessTokensQueryVariables = Exact<{
   accountId: Scalars['AccountID']['input'];
@@ -7308,13 +7321,10 @@ export type ListAccessTokensQueryVariables = Exact<{
 }>;
 
 
-export type ListAccessTokensQuery = { __typename?: 'Query', accounts: { __typename?: 'Accounts', byId?: { __typename?: 'Account', accessTokens: { __typename?: 'AccountAccessTokens', listAccessTokens: { __typename?: 'AccessTokenConnection', totalCount: number, nodes: Array<(
-            { __typename?: 'ViewAccessToken' }
-            & AccessTokenDataFragment
-          )>, pageInfo: (
-            { __typename?: 'PageBasedInfo' }
-            & DatasetPageInfoFragment
-          ) } } } | null } };
+export type ListAccessTokensQuery = { __typename?: 'Query', accounts: { __typename?: 'Accounts', byId?: { __typename?: 'Account', accessTokens: { __typename?: 'AccountAccessTokens', listAccessTokens: (
+          { __typename?: 'AccessTokenConnection' }
+          & AccessTokenConnectionDataFragment
+        ) } } | null } };
 
 export type RevokeAccessTokenMutationVariables = Exact<{
   accountId: Scalars['AccountID']['input'];
@@ -9472,6 +9482,58 @@ export type WebhookEventTypesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type WebhookEventTypesQuery = { __typename?: 'Query', webhooks: { __typename?: 'Webhooks', eventTypes: Array<string> } };
 
+export const AccountFragmentDoc = gql`
+    fragment Account on Account {
+  id
+  accountName
+  displayName
+  accountType
+  avatarUrl
+  isAdmin
+  accountProvider
+}
+    `;
+export const AccessTokenDataFragmentDoc = gql`
+    fragment AccessTokenData on ViewAccessToken {
+  id
+  name
+  createdAt
+  revokedAt
+  account {
+    ...Account
+  }
+}
+    ${AccountFragmentDoc}`;
+export const DatasetPageInfoFragmentDoc = gql`
+    fragment DatasetPageInfo on PageBasedInfo {
+  hasNextPage
+  hasPreviousPage
+  currentPage
+  totalPages
+}
+    `;
+export const AccessTokenConnectionDataFragmentDoc = gql`
+    fragment AccessTokenConnectionData on AccessTokenConnection {
+  nodes {
+    ...AccessTokenData
+  }
+  totalCount
+  pageInfo {
+    ...DatasetPageInfo
+  }
+}
+    ${AccessTokenDataFragmentDoc}
+${DatasetPageInfoFragmentDoc}`;
+export const CreatedAccessTokenDataFragmentDoc = gql`
+    fragment CreatedAccessTokenData on CreatedAccessToken {
+  id
+  name
+  composed
+  account {
+    ...Account
+  }
+}
+    ${AccountFragmentDoc}`;
 export const AccountBasicsFragmentDoc = gql`
     fragment AccountBasics on Account {
   id
@@ -9604,14 +9666,6 @@ export const FlowProcessSummaryDataFragmentDoc = gql`
   autoStoppedAt
   runningSince
   pausedAt
-}
-    `;
-export const DatasetPageInfoFragmentDoc = gql`
-    fragment DatasetPageInfo on PageBasedInfo {
-  hasNextPage
-  hasPreviousPage
-  currentPage
-  totalPages
 }
     `;
 export const DatasetFlowProcessConnectionDataFragmentDoc = gql`
@@ -9749,17 +9803,6 @@ export const VersionedFileEntryDataFragmentDoc = gql`
     url
     expiresAt
   }
-}
-    `;
-export const AccountFragmentDoc = gql`
-    fragment Account on Account {
-  id
-  accountName
-  displayName
-  accountType
-  avatarUrl
-  isAdmin
-  accountProvider
 }
     `;
 export const AccountWithRoleDataFragmentDoc = gql`
@@ -10316,17 +10359,6 @@ export const DatasetFlowProcessesDataFragmentDoc = gql`
 }
     ${DatasetFlowProcessDataFragmentDoc}
 ${WebhookFlowSubProcessGroupDataFragmentDoc}`;
-export const AccessTokenDataFragmentDoc = gql`
-    fragment AccessTokenData on ViewAccessToken {
-  id
-  name
-  createdAt
-  revokedAt
-  account {
-    ...Account
-  }
-}
-    ${AccountFragmentDoc}`;
 export const DatasetDataSizeFragmentDoc = gql`
     fragment DatasetDataSize on DatasetData {
   numRecordsTotal
@@ -11262,12 +11294,7 @@ export const CreateAccessTokenDocument = gql`
           ... on CreateAccessTokenResultSuccess {
             message
             token {
-              id
-              name
-              composed
-              account {
-                ...Account
-              }
+              ...CreatedAccessTokenData
             }
           }
           ... on CreateAccessTokenResultDuplicate {
@@ -11279,7 +11306,7 @@ export const CreateAccessTokenDocument = gql`
     }
   }
 }
-    ${AccountFragmentDoc}`;
+    ${CreatedAccessTokenDataFragmentDoc}`;
 
   @Injectable({
     providedIn: 'root'
@@ -11297,20 +11324,13 @@ export const ListAccessTokensDocument = gql`
     byId(accountId: $accountId) {
       accessTokens {
         listAccessTokens(page: $page, perPage: $perPage) {
-          nodes {
-            ...AccessTokenData
-          }
-          totalCount
-          pageInfo {
-            ...DatasetPageInfo
-          }
+          ...AccessTokenConnectionData
         }
       }
     }
   }
 }
-    ${AccessTokenDataFragmentDoc}
-${DatasetPageInfoFragmentDoc}`;
+    ${AccessTokenConnectionDataFragmentDoc}`;
 
   @Injectable({
     providedIn: 'root'

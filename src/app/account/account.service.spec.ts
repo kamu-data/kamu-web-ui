@@ -12,13 +12,13 @@ import { first, of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { AccountApi } from "@api/account.api";
 import { DatasetApi } from "@api/dataset.api";
 import {
     AccountFlowFilters,
-    AccountFlowProcessCardConnectionDataFragment,
     AccountFragment,
-    Dataset,
+    DatasetConnectionDataFragment,
     FlowProcessOrderField,
     OrderingDirection,
 } from "@api/kamu.graphql.interface";
@@ -136,10 +136,10 @@ describe("AccountService", () => {
         const subscription$ = service
             .getDatasetsWithFlows(TEST_LOGIN)
             .pipe(first())
-            .subscribe((data: Dataset[]) => {
+            .subscribe((data: DatasetConnectionDataFragment["nodes"]) => {
                 const listDatasets =
                     mockAccountListDatasetsWithFlowsQuery.accounts.byName?.flows?.runs.listDatasetsWithFlow;
-                expect(data.length).toEqual(listDatasets?.nodes.length as number);
+                expect(data.length).toEqual(requireValue(listDatasets ?? null).nodes.length);
                 expect(data[0].name).toEqual("account.tokens.transfers");
             });
 
@@ -261,8 +261,7 @@ describe("AccountService", () => {
 
         const subscription$ = service.getAccountAllCards(CARDS_PARAMS).subscribe((result: CardsStrategyResult) => {
             expect(result.cards).toEqual(
-                mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
-                    .allCards as AccountFlowProcessCardConnectionDataFragment,
+                requireValue(mockAccountFlowsAsCardsQuery.accounts.byName ?? null).flows.processes.allCards,
             );
         });
 
@@ -274,8 +273,7 @@ describe("AccountService", () => {
 
         const subscription$ = service.getAccountPrimaryCards(CARDS_PARAMS).subscribe((result: CardsStrategyResult) => {
             expect(result.cards).toEqual(
-                mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
-                    .primaryCards as AccountFlowProcessCardConnectionDataFragment,
+                requireValue(mockAccountFlowsPrimaryCardsQuery.accounts.byName ?? null).flows.processes.primaryCards,
             );
         });
 
@@ -287,8 +285,7 @@ describe("AccountService", () => {
 
         const subscription$ = service.getAccountWebhookCards(CARDS_PARAMS).subscribe((result: CardsStrategyResult) => {
             expect(result.cards).toEqual(
-                mockAccountFlowsWebhookCardsQuery.accounts.byName?.flows.processes
-                    .webhookCards as AccountFlowProcessCardConnectionDataFragment,
+                requireValue(mockAccountFlowsWebhookCardsQuery.accounts.byName ?? null).flows.processes.webhookCards,
             );
         });
 

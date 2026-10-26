@@ -24,7 +24,12 @@ import { FormValidationErrorsDirective } from "@common/directives/form-validatio
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
-import { AccessTokenConnection, CreatedAccessToken, PageBasedInfo, ViewAccessToken } from "@api/kamu.graphql.interface";
+import {
+    AccessTokenConnectionDataFragment,
+    AccessTokenDataFragment,
+    CreatedAccessTokenDataFragment,
+    DatasetPageInfoFragment,
+} from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { AccountSettingsTabs, TokenCreateStep } from "src/app/account/settings/account-settings.constants";
@@ -65,7 +70,7 @@ export class AccessTokensTabComponent extends BaseComponent {
     private loggedUserService = inject(LoggedUserService);
 
     @Input(RoutingResolvers.ACCOUNT_SETTINGS_ACCESS_TOKENS_KEY) public set tokenConnectionData(
-        value: AccessTokenConnection,
+        value: AccessTokenConnectionDataFragment,
     ) {
         this.tokenConnection = value;
         this.dataSource.data = value.nodes;
@@ -74,13 +79,13 @@ export class AccessTokensTabComponent extends BaseComponent {
         this.pageBasedInfo = value.pageInfo;
     }
 
-    public tokenConnection: AccessTokenConnection;
+    public tokenConnection: AccessTokenConnectionDataFragment;
     @ViewChild(MatSort) private sort: MatSort;
     public searchTokenName: string = "";
-    public dataSource = new MatTableDataSource();
+    public dataSource = new MatTableDataSource<AccessTokenDataFragment>();
     public composedToken = "";
     public currentCreateStep = TokenCreateStep.INITIAL;
-    public pageBasedInfo: PageBasedInfo;
+    public pageBasedInfo: DatasetPageInfoFragment;
     public createTokenForm: FormGroup<CreateTokenFormType> = this.fb.group({
         name: ["", [Validators.required, Validators.maxLength(100)]],
     });
@@ -114,8 +119,8 @@ export class AccessTokensTabComponent extends BaseComponent {
     }
 
     public toggleTokens(): void {
-        this.dataSource.filterPredicate = (data: unknown, filter: string): boolean => {
-            return String(Boolean((data as ViewAccessToken).revokedAt)) === filter;
+        this.dataSource.filterPredicate = (data: AccessTokenDataFragment, filter: string): boolean => {
+            return String(Boolean(data.revokedAt)) === filter;
         };
         if (this.showRevokedToken) {
             this.dataSource.filter = "";
@@ -156,7 +161,7 @@ export class AccessTokensTabComponent extends BaseComponent {
         this.accessTokenService
             .createAccessTokens(this.accountId, this.createTokenForm.controls.name.value as string)
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((newToken: MaybeNull<CreatedAccessToken>) => {
+            .subscribe((newToken: MaybeNull<CreatedAccessTokenDataFragment>) => {
                 if (newToken) {
                     this.deleteComposedToken();
                     this.createTokenForm.controls.name.reset();
@@ -176,8 +181,8 @@ export class AccessTokensTabComponent extends BaseComponent {
     }
 
     public applyFilter(searchToken: string): void {
-        this.dataSource.filterPredicate = (data: unknown, filter: string): boolean => {
-            return (data as ViewAccessToken).name.toLowerCase().includes(filter.trim().toLowerCase());
+        this.dataSource.filterPredicate = (data: AccessTokenDataFragment, filter: string): boolean => {
+            return data.name.toLowerCase().includes(filter.trim().toLowerCase());
         };
         this.dataSource.filter = searchToken.trim().toLowerCase();
     }

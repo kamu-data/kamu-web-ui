@@ -13,8 +13,9 @@ import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
 import { AccessTokenApi } from "@api/access-token.api";
-import { AccessTokenConnection, CreatedAccessToken } from "@api/kamu.graphql.interface";
+import { AccessTokenConnectionDataFragment, CreatedAccessTokenDataFragment } from "@api/kamu.graphql.interface";
 import {
+    mockAccessTokenConnectionData,
     mockCreateAccessTokenMutation,
     mockCreateAccessTokenMutationError,
     mockListAccessTokensQuery,
@@ -54,10 +55,8 @@ describe("AccessTokenService", () => {
         );
         const subscription$ = service
             .listAccessTokens({ accountId: TEST_ACCOUNT_ID, page: PAGE, perPage: PER_PAGE })
-            .subscribe((data: AccessTokenConnection) => {
-                expect(data.totalCount).toEqual(
-                    mockListAccessTokensQuery.accounts.byId?.accessTokens.listAccessTokens.totalCount as number,
-                );
+            .subscribe((data: AccessTokenConnectionDataFragment) => {
+                expect(data.totalCount).toEqual(mockAccessTokenConnectionData.totalCount);
             });
 
         expect(listAccessTokensSpy).toHaveBeenCalledTimes(1);
@@ -72,7 +71,7 @@ describe("AccessTokenService", () => {
         );
         const subscription$ = service
             .createAccessTokens(TEST_ACCOUNT_ID, TOKEN_NAME)
-            .subscribe((data: MaybeNull<CreatedAccessToken>) => {
+            .subscribe((data: MaybeNull<CreatedAccessTokenDataFragment>) => {
                 if (data) {
                     expect(data.composed).toEqual(result);
                 }
@@ -90,7 +89,7 @@ describe("AccessTokenService", () => {
         );
         const subscription$ = service
             .createAccessTokens(TEST_ACCOUNT_ID, TOKEN_NAME)
-            .subscribe((data: MaybeNull<CreatedAccessToken>) => {
+            .subscribe((data: MaybeNull<CreatedAccessTokenDataFragment>) => {
                 expect(data).toEqual(null);
             });
 

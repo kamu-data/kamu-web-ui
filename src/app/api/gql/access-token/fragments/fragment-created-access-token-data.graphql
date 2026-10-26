@@ -1,0 +1,8 @@
+fragment CreatedAccessTokenData on CreatedAccessToken {
+  id
+  name
+  composed
+  account {
+    ...Account
+  }
+}

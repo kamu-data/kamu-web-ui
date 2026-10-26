@@ -16,8 +16,7 @@ import { provideToastr } from "ngx-toastr";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { AccessTokenConnection, CreateAccessTokenResultSuccess } from "@api/kamu.graphql.interface";
-import { mockCreateAccessTokenMutation, mockListAccessTokensQuery, TOKEN_ID } from "@api/mock/access-token.mock";
+import { mockAccessTokenConnectionData, mockCreatedAccessTokenData, TOKEN_ID } from "@api/mock/access-token.mock";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
@@ -82,8 +81,7 @@ describe("AccessTokensTabComponent", () => {
         component = fixture.componentInstance;
         navigateToSettingsSpy = spyOn(navigationService, "navigateToSettings");
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        component.tokenConnection = mockListAccessTokensQuery.accounts.byId?.accessTokens
-            .listAccessTokens as AccessTokenConnection;
+        component.tokenConnection = mockAccessTokenConnectionData;
     });
 
     it("should create", () => {
@@ -104,11 +102,9 @@ describe("AccessTokensTabComponent", () => {
 
     it("should check generate new token button", () => {
         component.currentCreateStep = TokenCreateStep.GENERATE;
-        const response = (
-            mockCreateAccessTokenMutation.accounts.byId?.accessTokens
-                .createAccessToken as CreateAccessTokenResultSuccess
-        ).token;
-        const createAccessTokensSpy = spyOn(accessTokenService, "createAccessTokens").and.returnValue(of(response));
+        const createAccessTokensSpy = spyOn(accessTokenService, "createAccessTokens").and.returnValue(
+            of(mockCreatedAccessTokenData),
+        );
         component.createTokenForm.controls.name.setValue("token-name");
         fixture.detectChanges();
 

@@ -21,8 +21,8 @@ import { provideToastr } from "ngx-toastr";
 
 import { PageNotFoundComponent } from "@common/components/page-not-found/page-not-found.component";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
-import { AccessTokenConnection, AccountProvider } from "@api/kamu.graphql.interface";
-import { mockListAccessTokensQuery } from "@api/mock/access-token.mock";
+import { AccountProvider } from "@api/kamu.graphql.interface";
+import { mockAccessTokenConnectionData } from "@api/mock/access-token.mock";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { MaybeUndefined } from "@interface/app.types";
 
@@ -76,11 +76,7 @@ describe("Router", () => {
                 {
                     provide: accountSettingsAccessTokensResolverFn,
                     useValue: {
-                        resolve: () =>
-                            of(
-                                mockListAccessTokensQuery.accounts.byId?.accessTokens
-                                    .listAccessTokens as AccessTokenConnection,
-                            ),
+                        resolve: () => of(mockAccessTokenConnectionData),
                     },
                 },
                 {

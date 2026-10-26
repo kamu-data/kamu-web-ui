@@ -19,15 +19,11 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 
 import { environment } from "@env/environment";
 import { ModalService } from "@common/components/modal/modal.service";
+import { requireValue } from "@common/helpers/app.helpers";
 import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
-import {
-    AccountFlowProcessCardConnectionDataFragment,
-    FlowProcessEffectiveState,
-    FlowProcessGroupRollupDataFragment,
-    FlowStatus,
-} from "@api/kamu.graphql.interface";
+import { FlowProcessEffectiveState, FlowStatus } from "@api/kamu.graphql.interface";
 import {
     mockAccountFlowsAsCardsQuery,
     mockAccountFlowsAsCardsQueryEmpty,
@@ -127,10 +123,8 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         });
         getAccountAllCardsSpy = spyOn(accountService, "getAccountAllCards").and.returnValue(
             of({
-                cards: mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
-                    .allCards as AccountFlowProcessCardConnectionDataFragment,
-                rollup: mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
-                    .fullRollup as FlowProcessGroupRollupDataFragment,
+                cards: requireValue(mockAccountFlowsAsCardsQuery.accounts.byName ?? null).flows.processes.allCards,
+                rollup: requireValue(mockAccountFlowsAsCardsQuery.accounts.byName ?? null).flows.processes.fullRollup,
             }),
         );
     });
@@ -144,10 +138,9 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         fixture.detectChanges();
         getAccountAllCardsSpy.and.returnValue(
             of({
-                cards: mockAccountFlowsAsCardsQueryEmpty.accounts.byName?.flows.processes
-                    .allCards as AccountFlowProcessCardConnectionDataFragment,
-                rollup: mockAccountFlowsAsCardsQueryEmpty.accounts.byName?.flows.processes
-                    .fullRollup as FlowProcessGroupRollupDataFragment,
+                cards: requireValue(mockAccountFlowsAsCardsQueryEmpty.accounts.byName ?? null).flows.processes.allCards,
+                rollup: requireValue(mockAccountFlowsAsCardsQueryEmpty.accounts.byName ?? null).flows.processes
+                    .fullRollup,
             }),
         );
         tick(0);
@@ -162,10 +155,10 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         fixture.detectChanges();
         getAccountAllCardsSpy.and.returnValue(
             of({
-                cards: mockAccountFlowsAsCardsQueryWithWebhook.accounts.byName?.flows.processes
-                    .allCards as AccountFlowProcessCardConnectionDataFragment,
-                rollup: mockAccountFlowsAsCardsQueryWithWebhook.accounts.byName?.flows.processes
-                    .fullRollup as FlowProcessGroupRollupDataFragment,
+                cards: requireValue(mockAccountFlowsAsCardsQueryWithWebhook.accounts.byName ?? null).flows.processes
+                    .allCards,
+                rollup: requireValue(mockAccountFlowsAsCardsQueryWithWebhook.accounts.byName ?? null).flows.processes
+                    .fullRollup,
             }),
         );
         tick(0);
@@ -480,10 +473,10 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
         const getAccountPrimaryCardsSpy = spyOn(accountService, "getAccountPrimaryCards").and.returnValue(
             of({
-                cards: mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
-                    .primaryCards as AccountFlowProcessCardConnectionDataFragment,
-                rollup: mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
-                    .primaryRollup as FlowProcessGroupRollupDataFragment,
+                cards: requireValue(mockAccountFlowsPrimaryCardsQuery.accounts.byName ?? null).flows.processes
+                    .primaryCards,
+                rollup: requireValue(mockAccountFlowsPrimaryCardsQuery.accounts.byName ?? null).flows.processes
+                    .primaryRollup,
             }),
         );
         fixture.detectChanges();
@@ -497,10 +490,10 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
         const getAccountWebhookCardsSpy = spyOn(accountService, "getAccountWebhookCards").and.returnValue(
             of({
-                cards: mockAccountFlowsWebhookCardsQuery.accounts.byName?.flows.processes
-                    .webhookCards as AccountFlowProcessCardConnectionDataFragment,
-                rollup: mockAccountFlowsWebhookCardsQuery.accounts.byName?.flows.processes
-                    .webhookRollup as FlowProcessGroupRollupDataFragment,
+                cards: requireValue(mockAccountFlowsWebhookCardsQuery.accounts.byName ?? null).flows.processes
+                    .webhookCards,
+                rollup: requireValue(mockAccountFlowsWebhookCardsQuery.accounts.byName ?? null).flows.processes
+                    .webhookRollup,
             }),
         );
         fixture.detectChanges();
@@ -542,14 +535,12 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     it("should count only the paused processes in the paused mode", () => {
-        const rollup = mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
-            .fullRollup as FlowProcessGroupRollupDataFragment;
+        const rollup = requireValue(mockAccountFlowsAsCardsQuery.accounts.byName ?? null).flows.processes.fullRollup;
         expect(component.totalProcessesCountByMode(ProcessCardFilterMode.PAUSED, rollup)).toEqual(rollup.paused);
     });
 
     it("should reject an unsupported filters mode when counting processes", () => {
-        const rollup = mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
-            .fullRollup as FlowProcessGroupRollupDataFragment;
+        const rollup = requireValue(mockAccountFlowsAsCardsQuery.accounts.byName ?? null).flows.processes.fullRollup;
         expect(() => component.totalProcessesCountByMode("unsupported" as ProcessCardFilterMode, rollup)).toThrowError(
             "Unsupported process card view mode",
         );
@@ -575,10 +566,10 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     it("should load the dataset cards only once the 'Datasets' chip is selected", fakeAsync(async () => {
         const getAccountPrimaryCardsSpy = spyOn(accountService, "getAccountPrimaryCards").and.returnValue(
             of({
-                cards: mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
-                    .primaryCards as AccountFlowProcessCardConnectionDataFragment,
-                rollup: mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
-                    .primaryRollup as FlowProcessGroupRollupDataFragment,
+                cards: requireValue(mockAccountFlowsPrimaryCardsQuery.accounts.byName ?? null).flows.processes
+                    .primaryCards,
+                rollup: requireValue(mockAccountFlowsPrimaryCardsQuery.accounts.byName ?? null).flows.processes
+                    .primaryRollup,
             }),
         );
         fixture.detectChanges();
@@ -744,10 +735,8 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
         it("should not end with cards whose load started before the refresh was requested", fakeAsync(() => {
             const cards = {
-                cards: mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
-                    .allCards as AccountFlowProcessCardConnectionDataFragment,
-                rollup: mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
-                    .fullRollup as FlowProcessGroupRollupDataFragment,
+                cards: requireValue(mockAccountFlowsAsCardsQuery.accounts.byName ?? null).flows.processes.allCards,
+                rollup: requireValue(mockAccountFlowsAsCardsQuery.accounts.byName ?? null).flows.processes.fullRollup,
             };
             const inFlightPoll$ = new Subject<typeof cards>();
             const refreshedCards$ = new Subject<typeof cards>();

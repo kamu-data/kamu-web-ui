@@ -1,0 +1,9 @@
+fragment AccessTokenConnectionData on AccessTokenConnection {
+  nodes {
+    ...AccessTokenData
+  }
+  totalCount
+  pageInfo {
+    ...DatasetPageInfo
+  }
+}

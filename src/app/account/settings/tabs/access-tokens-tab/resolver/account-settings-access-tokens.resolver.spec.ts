@@ -9,10 +9,13 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
+import { mockAccessTokenConnectionData } from "@api/mock/access-token.mock";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
@@ -35,10 +38,13 @@ describe("accountSettingsAccessTokensResolverFn", () => {
     });
 
     it("should check resolver ", async () => {
-        const listAccessTokensSpy = spyOn(accessTokenService, "listAccessTokens");
+        const listAccessTokensSpy = spyOn(accessTokenService, "listAccessTokens").and.returnValue(
+            of(mockAccessTokenConnectionData),
+        );
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
 
-        await runResolver(accountSettingsAccessTokensResolverFn);
+        const result = await runResolver(accountSettingsAccessTokensResolverFn);
+        expect(result).toEqual(mockAccessTokenConnectionData);
         expect(listAccessTokensSpy).toHaveBeenCalledOnceWith({
             accountId: mockAccountDetails.id,
             page: 0,
@@ -49,7 +55,9 @@ describe("accountSettingsAccessTokensResolverFn", () => {
     it("should check resolver with query param 'page'", async () => {
         const PAGE = 2;
         const route = routeSnapshot({ queryParams: { [ProjectLinks.URL_QUERY_PARAM_PAGE]: PAGE } });
-        const listAccessTokensSpy = spyOn(accessTokenService, "listAccessTokens");
+        const listAccessTokensSpy = spyOn(accessTokenService, "listAccessTokens").and.returnValue(
+            of(mockAccessTokenConnectionData),
+        );
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
 
         await runResolver(accountSettingsAccessTokensResolverFn, route);

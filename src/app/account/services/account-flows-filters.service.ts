@@ -9,6 +9,7 @@ import { Injectable } from "@angular/core";
 
 import { BehaviorSubject } from "rxjs";
 
+import { unexpectedValueError } from "@common/helpers/app.helpers";
 import { stripSecondsFromDateToISOString } from "@common/helpers/data.helpers";
 import {
     FlowProcessEffectiveState,
@@ -74,7 +75,7 @@ export class AccountFlowsFiltersService {
                 return [FlowProcessEffectiveState.PausedManual];
             /* istanbul ignore next */
             default:
-                throw new Error("Unknown filters mode");
+                throw unexpectedValueError(mode, "process card filter mode");
         }
     }
 
@@ -192,7 +193,7 @@ export class AccountFlowsFiltersService {
             }
             /* istanbul ignore next */
             default:
-                throw new Error("Unknown filters mode");
+                throw unexpectedValueError(mode, "process card filter mode");
         }
     }
 

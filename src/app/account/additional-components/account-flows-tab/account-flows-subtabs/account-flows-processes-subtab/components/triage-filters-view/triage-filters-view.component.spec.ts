@@ -12,6 +12,7 @@ import timekeeper from "timekeeper";
 import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
 import { TriageFiltersViewComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/components/triage-filters-view/triage-filters-view.component";
+import { mockDashboardFilters } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.mock";
 import { RangeLastAttempt } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 
 describe("TriageFiltersViewComponent", () => {
@@ -24,21 +25,7 @@ describe("TriageFiltersViewComponent", () => {
         });
         fixture = TestBed.createComponent(TriageFiltersViewComponent);
         component = fixture.componentInstance;
-        setComponentInput(fixture, "dashboardFilters", {
-            fromFilterDate: undefined,
-            toFilterDate: undefined,
-            lastFailureDate: undefined,
-            nextPlannedBeforeDate: undefined,
-            nextPlannedAfterDate: undefined,
-            selectedOrderDirection: true,
-            selectedOrderField: undefined,
-            selectedQuickRangeLastAttempt: undefined,
-            selectedQuickRangeLastFailure: undefined,
-            selectedQuickRangeNextAttempt: undefined,
-            selectedFlowProcessStates: [],
-            minConsecutiveFailures: 0,
-            isFirstInitialization: false,
-        });
+        setComponentInput(fixture, "dashboardFilters", mockDashboardFilters());
     });
 
     it("should create", () => {
@@ -53,14 +40,20 @@ describe("TriageFiltersViewComponent", () => {
     });
 
     it("should check to change last attempt filter", () => {
-        component.dashboardFilters.selectedQuickRangeLastAttempt = RangeLastAttempt.LAST_5_MINUTES;
+        setComponentInput(fixture, "dashboardFilters", {
+            ...component.dashboardFilters,
+            selectedQuickRangeLastAttempt: RangeLastAttempt.LAST_5_MINUTES,
+        });
         fixture.detectChanges();
         component.onChangeLastAttemptFilter();
         expect(component.dashboardFilters.selectedQuickRangeLastAttempt).toBeUndefined();
     });
 
     it("should check to change last failure filter", () => {
-        component.dashboardFilters.selectedQuickRangeLastFailure = RangeLastAttempt.LAST_5_MINUTES;
+        setComponentInput(fixture, "dashboardFilters", {
+            ...component.dashboardFilters,
+            selectedQuickRangeLastFailure: RangeLastAttempt.LAST_5_MINUTES,
+        });
         fixture.detectChanges();
         component.onChangeLastFailureFilter();
         expect(component.dashboardFilters.selectedQuickRangeLastFailure).toBeUndefined();

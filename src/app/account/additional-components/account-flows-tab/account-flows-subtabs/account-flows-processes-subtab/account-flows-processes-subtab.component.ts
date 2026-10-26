@@ -46,6 +46,7 @@ import {
     FlowProcessGroupRollupDataFragment,
     FlowProcessOrderField,
 } from "@api/kamu.graphql.interface";
+import { MaybeUndefined } from "@interface/app.types";
 
 import { AccountTabs } from "src/app/account/account.constants";
 import { AccountService } from "src/app/account/account.service";
@@ -107,7 +108,18 @@ import { ProcessDatasetCardInteractionService } from "src/app/services/process-d
 })
 export class AccountFlowsProcessesSubtabComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public accountName: string;
-    @Input({ required: true }) public accountFlowsData: AccountFlowsType;
+    @Input({ required: true }) public set accountFlowsData(value: AccountFlowsType) {
+        this.accountFlowsDataValue = value;
+        // Also reached by back/forward navigation between modes, which reuses this component
+        if (value.datasetsFiltersMode !== this.defaultsAppliedForMode) {
+            this.applyModeDefaults(value.datasetsFiltersMode);
+        }
+    }
+    public get accountFlowsData(): AccountFlowsType {
+        return this.accountFlowsDataValue;
+    }
+    private accountFlowsDataValue: AccountFlowsType;
+    private defaultsAppliedForMode: MaybeUndefined<ProcessCardFilterMode>;
 
     private readonly accountService = inject(AccountService);
     private readonly navigationService = inject(NavigationService);
@@ -141,7 +153,6 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
     public readonly ProcessCardGroup: typeof ProcessCardGroup = ProcessCardGroup;
 
     public ngOnInit(): void {
-        this.accountFlowsFiltersService.applyModeDefaults(this.accountFlowsData.datasetsFiltersMode);
         this.loadingCardsSubject$.next(true);
         this.fetchCardsData();
     }
@@ -327,7 +338,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
         const nextNav = event.value as ProcessCardFilterMode;
         this.resetRequestParams();
         this.accountFlowsFiltersService.resetFilters(nextNav);
-        this.accountFlowsFiltersService.applyModeDefaults(nextNav);
+        this.applyModeDefaults(nextNav);
         this.navigationService.navigateToOwnerView(
             this.accountName,
             AccountTabs.FLOWS,
@@ -337,6 +348,11 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
             nextNav,
         );
         this.refreshNow();
+    }
+
+    private applyModeDefaults(mode: ProcessCardFilterMode): void {
+        this.accountFlowsFiltersService.applyModeDefaults(mode);
+        this.defaultsAppliedForMode = mode;
     }
 
     public trackByCardId(item: AccountFlowProcessCardDataFragment): string {

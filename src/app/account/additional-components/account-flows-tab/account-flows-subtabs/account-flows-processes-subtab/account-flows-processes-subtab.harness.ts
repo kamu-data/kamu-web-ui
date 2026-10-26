@@ -52,23 +52,22 @@ export class AccountFlowsProcessesSubtabHarness extends ComponentHarness {
         await chips.selectChips({ text: chipText });
     }
 
-    /** Clicks the "View:" toggle of the given mode */
     public async selectFiltersMode(mode: ProcessCardFilterMode): Promise<void> {
-        const toggle = await this.locatorFor(
-            MatButtonToggleHarness.with({
-                selector: `[data-test-id="${AccountFlowsProcessesSubtabHarness.FILTERS_MODE_TEST_ID_PREFIX}${mode}"]`,
-            }),
-        )();
+        const toggle = await this.getFiltersModeToggle(mode);
         await toggle.check();
     }
 
     public async isFiltersModeSelected(mode: ProcessCardFilterMode): Promise<boolean> {
-        const toggle = await this.locatorFor(
+        const toggle = await this.getFiltersModeToggle(mode);
+        return toggle.isChecked();
+    }
+
+    private getFiltersModeToggle(mode: ProcessCardFilterMode): Promise<MatButtonToggleHarness> {
+        return this.locatorFor(
             MatButtonToggleHarness.with({
                 selector: `[data-test-id="${AccountFlowsProcessesSubtabHarness.FILTERS_MODE_TEST_ID_PREFIX}${mode}"]`,
             }),
         )();
-        return toggle.isChecked();
     }
 
     /** States checked in the rollup toggles, which appear once the first cards have loaded */

@@ -8,7 +8,7 @@
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
-import { ActivatedRoute, NavigationEnd } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 
 import { of } from "rxjs";
 import { first } from "rxjs/operators";
@@ -22,7 +22,6 @@ import {
     findNativeElement,
     getElementByDataTestId,
     registerMatSvgIcons,
-    routerMockEventSubject,
     setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
@@ -41,10 +40,6 @@ describe("AppHeaderComponent", () => {
     let searchApi: SearchApi;
     let navigationService: NavigationService;
     const DEFAULT_SEARCH_QUERY = "defaultSearchQuery";
-    function pushNavigationEnd(): void {
-        routerMockEventSubject.next(new NavigationEnd(1, ProjectLinks.URL_SEARCH, ""));
-    }
-
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [AppHeaderComponent],
@@ -103,10 +98,13 @@ describe("AppHeaderComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check initial value search input", () => {
-        pushNavigationEnd();
-        fixture.detectChanges();
+    it("should take the initial search query from the route", () => {
         expect(component.searchQuery).toEqual(DEFAULT_SEARCH_QUERY);
+    });
+
+    it("should take the search query from the URL after a navigation", async () => {
+        await TestBed.inject(Router).navigateByUrl(`/?${ProjectLinks.URL_QUERY_PARAM_QUERY}=navigated`);
+        expect(component.searchQuery).toEqual("navigated");
     });
 
     it("should check focus on input", () => {

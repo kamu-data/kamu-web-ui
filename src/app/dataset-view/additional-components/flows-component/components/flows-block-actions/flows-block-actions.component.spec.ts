@@ -12,9 +12,9 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { DatasetFlowProcess } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowsProcessesQuery } from "@api/mock/dataset-flow.mock";
 
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -39,7 +39,7 @@ describe("FlowsBlockActionsComponent", () => {
         setComponentInput(
             fixture,
             "flowProcess",
-            mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.primary as DatasetFlowProcess,
+            requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.primary ?? null),
         );
         setComponentInput(fixture, "hasPushSources", false);
     });

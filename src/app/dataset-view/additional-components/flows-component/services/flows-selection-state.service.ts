@@ -9,7 +9,7 @@ import { Injectable } from "@angular/core";
 
 import { BehaviorSubject } from "rxjs";
 
-import { DatasetFlowProcesses, FlowProcessEffectiveState } from "@api/kamu.graphql.interface";
+import { DatasetFlowProcessesDataFragment, FlowProcessEffectiveState } from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "@interface/app.types";
 
 import {
@@ -110,7 +110,7 @@ export class FlowsSelectionStateService {
         this.patch({ webhooksIds: [] });
     }
 
-    public initFlowsSelectionState(flowProcesses: DatasetFlowProcesses): void {
+    public initFlowsSelectionState(flowProcesses: DatasetFlowProcessesDataFragment): void {
         const { webhooksIds, webhookFilterButtons } = this.snapshot;
         if (webhookFilterButtons.length) {
             const ids = flowProcesses.webhooks.subprocesses

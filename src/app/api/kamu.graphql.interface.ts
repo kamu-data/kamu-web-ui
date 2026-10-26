@@ -8083,6 +8083,14 @@ export type ExposedEnvVariableValueQueryVariables = Exact<{
 
 export type ExposedEnvVariableValueQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byOwnerAndName?: { __typename?: 'Dataset', envVars: { __typename?: 'DatasetEnvVars', exposedValue: string } } | null } };
 
+export type ViewDatasetEnvVarConnectionDataFragment = { __typename?: 'ViewDatasetEnvVarConnection', totalCount: number, nodes: Array<(
+    { __typename?: 'ViewDatasetEnvVar' }
+    & ViewDatasetEnvVarDataFragment
+  )>, pageInfo: (
+    { __typename?: 'PageBasedInfo' }
+    & DatasetPageInfoFragment
+  ) };
+
 export type ViewDatasetEnvVarDataFragment = { __typename?: 'ViewDatasetEnvVar', key: string, value?: string | null, isSecret: boolean };
 
 export type ListEnvVariablesQueryVariables = Exact<{
@@ -8094,13 +8102,10 @@ export type ListEnvVariablesQueryVariables = Exact<{
 
 
 export type ListEnvVariablesQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byOwnerAndName?: (
-      { __typename?: 'Dataset', envVars: { __typename?: 'DatasetEnvVars', listEnvVariables: { __typename?: 'ViewDatasetEnvVarConnection', totalCount: number, nodes: Array<(
-            { __typename?: 'ViewDatasetEnvVar' }
-            & ViewDatasetEnvVarDataFragment
-          )>, pageInfo: (
-            { __typename?: 'PageBasedInfo' }
-            & DatasetPageInfoFragment
-          ) } } }
+      { __typename?: 'Dataset', envVars: { __typename?: 'DatasetEnvVars', listEnvVariables: (
+          { __typename?: 'ViewDatasetEnvVarConnection' }
+          & ViewDatasetEnvVarConnectionDataFragment
+        ) } }
       & DatasetBasicsFragment
     ) | null } };
 
@@ -8661,21 +8666,41 @@ export type DatasetFlowsProcessesQueryVariables = Exact<{
 }>;
 
 
-export type DatasetFlowsProcessesQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', flows: { __typename?: 'DatasetFlows', processes: { __typename?: 'DatasetFlowProcesses', primary: { __typename?: 'DatasetFlowProcess', flowType: DatasetFlowType, summary: (
-              { __typename?: 'FlowProcessSummary' }
-              & FlowProcessSummaryDataFragment
-            ) }, webhooks: { __typename?: 'WebhookFlowSubProcessGroup', rollup: (
-              { __typename?: 'FlowProcessGroupRollup' }
-              & FlowProcessGroupRollupDataFragment
-            ), subprocesses: Array<{ __typename?: 'WebhookFlowSubProcess', id: string, name: string, summary: (
-                { __typename?: 'FlowProcessSummary' }
-                & FlowProcessSummaryDataFragment
-              ) }> } } } } | null } };
+export type DatasetFlowsProcessesQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', flows: { __typename?: 'DatasetFlows', processes: (
+          { __typename?: 'DatasetFlowProcesses' }
+          & DatasetFlowProcessesDataFragment
+        ) } } | null } };
+
+export type DatasetFlowProcessDataFragment = { __typename?: 'DatasetFlowProcess', flowType: DatasetFlowType, summary: (
+    { __typename?: 'FlowProcessSummary' }
+    & FlowProcessSummaryDataFragment
+  ) };
+
+export type DatasetFlowProcessesDataFragment = { __typename?: 'DatasetFlowProcesses', primary: (
+    { __typename?: 'DatasetFlowProcess' }
+    & DatasetFlowProcessDataFragment
+  ), webhooks: (
+    { __typename?: 'WebhookFlowSubProcessGroup' }
+    & WebhookFlowSubProcessGroupDataFragment
+  ) };
 
 export type FlowProcessSummaryDataFragment = { __typename?: 'FlowProcessSummary', effectiveState: FlowProcessEffectiveState, consecutiveFailures: number, lastSuccessAt?: string | null, lastAttemptAt?: string | null, lastFailureAt?: string | null, nextPlannedAt?: string | null, autoStoppedReason?: FlowProcessAutoStopReason | null, autoStoppedAt?: string | null, runningSince?: string | null, pausedAt?: string | null, stopPolicy:
     | { __typename?: 'FlowTriggerStopPolicyAfterConsecutiveFailures', maxFailures: number }
     | { __typename?: 'FlowTriggerStopPolicyNever', dummy: boolean }
    };
+
+export type WebhookFlowSubProcessDataFragment = { __typename?: 'WebhookFlowSubProcess', id: string, name: string, summary: (
+    { __typename?: 'FlowProcessSummary' }
+    & FlowProcessSummaryDataFragment
+  ) };
+
+export type WebhookFlowSubProcessGroupDataFragment = { __typename?: 'WebhookFlowSubProcessGroup', rollup: (
+    { __typename?: 'FlowProcessGroupRollup' }
+    & FlowProcessGroupRollupDataFragment
+  ), subprocesses: Array<(
+    { __typename?: 'WebhookFlowSubProcess' }
+    & WebhookFlowSubProcessDataFragment
+  )> };
 
 export type AddDataEventFragment = { __typename?: 'AddData', prevCheckpoint?: string | null, prevOffset?: number | null, newWatermark?: string | null, newData?: { __typename?: 'DataSlice', logicalHash: string, physicalHash: string, size: number, offsetInterval: { __typename?: 'OffsetInterval', start: number, end: number } } | null, newCheckpoint?: { __typename?: 'Checkpoint', physicalHash: string, size: number } | null, newSourceState?: { __typename?: 'SourceState', sourceName: string, kind: string, value: string } | null };
 
@@ -9692,6 +9717,18 @@ export const ViewDatasetEnvVarDataFragmentDoc = gql`
   isSecret
 }
     `;
+export const ViewDatasetEnvVarConnectionDataFragmentDoc = gql`
+    fragment ViewDatasetEnvVarConnectionData on ViewDatasetEnvVarConnection {
+  totalCount
+  nodes {
+    ...ViewDatasetEnvVarData
+  }
+  pageInfo {
+    ...DatasetPageInfo
+  }
+}
+    ${ViewDatasetEnvVarDataFragmentDoc}
+${DatasetPageInfoFragmentDoc}`;
 export const AccountFragmentDoc = gql`
     fragment Account on Account {
   id
@@ -10153,6 +10190,56 @@ export const FlowConnectionWidgetDataFragmentDoc = gql`
   totalCount
 }
     ${FlowItemWidgetDataFragmentDoc}`;
+export const DatasetFlowProcessDataFragmentDoc = gql`
+    fragment DatasetFlowProcessData on DatasetFlowProcess {
+  flowType
+  summary {
+    ...FlowProcessSummaryData
+  }
+}
+    ${FlowProcessSummaryDataFragmentDoc}`;
+export const FlowProcessGroupRollupDataFragmentDoc = gql`
+    fragment FlowProcessGroupRollupData on FlowProcessGroupRollup {
+  total
+  active
+  failing
+  paused
+  stopped
+  unconfigured
+  worstConsecutiveFailures
+}
+    `;
+export const WebhookFlowSubProcessDataFragmentDoc = gql`
+    fragment WebhookFlowSubProcessData on WebhookFlowSubProcess {
+  id
+  name
+  summary {
+    ...FlowProcessSummaryData
+  }
+}
+    ${FlowProcessSummaryDataFragmentDoc}`;
+export const WebhookFlowSubProcessGroupDataFragmentDoc = gql`
+    fragment WebhookFlowSubProcessGroupData on WebhookFlowSubProcessGroup {
+  rollup {
+    ...FlowProcessGroupRollupData
+  }
+  subprocesses {
+    ...WebhookFlowSubProcessData
+  }
+}
+    ${FlowProcessGroupRollupDataFragmentDoc}
+${WebhookFlowSubProcessDataFragmentDoc}`;
+export const DatasetFlowProcessesDataFragmentDoc = gql`
+    fragment DatasetFlowProcessesData on DatasetFlowProcesses {
+  primary {
+    ...DatasetFlowProcessData
+  }
+  webhooks {
+    ...WebhookFlowSubProcessGroupData
+  }
+}
+    ${DatasetFlowProcessDataFragmentDoc}
+${WebhookFlowSubProcessGroupDataFragmentDoc}`;
 export const AccessTokenDataFragmentDoc = gql`
     fragment AccessTokenData on ViewAccessToken {
   id
@@ -11074,17 +11161,6 @@ export const DatasetSearchOverviewFragmentDoc = gql`
     ${DatasetBasicsFragmentDoc}
 ${DatasetCurrentInfoFragmentDoc}
 ${LicenseFragmentDoc}`;
-export const FlowProcessGroupRollupDataFragmentDoc = gql`
-    fragment FlowProcessGroupRollupData on FlowProcessGroupRollup {
-  total
-  active
-  failing
-  paused
-  stopped
-  unconfigured
-  worstConsecutiveFailures
-}
-    `;
 export const CreateAccessTokenDocument = gql`
     mutation createAccessToken($accountId: AccountID!, $tokenName: String!) {
   accounts {
@@ -12789,21 +12865,14 @@ export const ListEnvVariablesDocument = gql`
       ...DatasetBasics
       envVars {
         listEnvVariables(page: $page, perPage: $perPage) {
-          totalCount
-          nodes {
-            ...ViewDatasetEnvVarData
-          }
-          pageInfo {
-            ...DatasetPageInfo
-          }
+          ...ViewDatasetEnvVarConnectionData
         }
       }
     }
   }
 }
     ${DatasetBasicsFragmentDoc}
-${ViewDatasetEnvVarDataFragmentDoc}
-${DatasetPageInfoFragmentDoc}`;
+${ViewDatasetEnvVarConnectionDataFragmentDoc}`;
 
   @Injectable({
     providedIn: 'root'
@@ -13512,31 +13581,13 @@ export const DatasetFlowsProcessesDocument = gql`
     byId(datasetId: $datasetId) {
       flows {
         processes {
-          primary {
-            flowType
-            summary {
-              ...FlowProcessSummaryData
-            }
-          }
-          webhooks {
-            rollup {
-              ...FlowProcessGroupRollupData
-            }
-            subprocesses {
-              id
-              name
-              summary {
-                ...FlowProcessSummaryData
-              }
-            }
-          }
+          ...DatasetFlowProcessesData
         }
       }
     }
   }
 }
-    ${FlowProcessSummaryDataFragmentDoc}
-${FlowProcessGroupRollupDataFragmentDoc}`;
+    ${DatasetFlowProcessesDataFragmentDoc}`;
 
   @Injectable({
     providedIn: 'root'

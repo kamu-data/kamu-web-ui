@@ -14,7 +14,7 @@ import { provideToastr } from "ngx-toastr";
 
 import { requireValue } from "@common/helpers/app.helpers";
 import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
-import { FlowProcessEffectiveState, WebhookFlowSubProcess } from "@api/kamu.graphql.interface";
+import { FlowProcessEffectiveState, WebhookFlowSubProcessDataFragment } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowsProcessesQuery } from "@api/mock/dataset-flow.mock";
 
 import { SubscriptionsTableComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-associated-channels/components/subscriptions-table/subscriptions-table.component";
@@ -26,7 +26,7 @@ describe("FlowsAssociatedChannelsComponent", () => {
     let fixture: ComponentFixture<FlowsAssociatedChannelsComponent>;
 
     const subscriptionId = "a9f33c51-aeda-4003-865f-8dc9712619d7";
-    const flowProcess: WebhookFlowSubProcess = {
+    const flowProcess: WebhookFlowSubProcessDataFragment = {
         id: "b8bd7dfe-c517-4c91-b0ba-4f8402fb09fb",
         name: "Website-hook",
         summary: {

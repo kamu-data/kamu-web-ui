@@ -17,7 +17,7 @@ import {
     ExposedEnvVariableValueQuery,
     ListEnvVariablesQuery,
     UpsertEnvVariableMutation,
-    ViewDatasetEnvVarConnection,
+    ViewDatasetEnvVarConnectionDataFragment,
 } from "@api/kamu.graphql.interface";
 
 @Injectable({
@@ -32,13 +32,14 @@ export class DatasetEnvironmentVariablesService {
         datasetName: string;
         page: number;
         perPage: number;
-    }): Observable<ViewDatasetEnvVarConnection> {
+    }): Observable<ViewDatasetEnvVarConnectionDataFragment> {
         return this.environmentVariablesApi
             .listEnvironmentVariables(params)
             .pipe(
                 map(
                     (result: ListEnvVariablesQuery) =>
-                        result.datasets.byOwnerAndName?.envVars.listEnvVariables as ViewDatasetEnvVarConnection,
+                        result.datasets.byOwnerAndName?.envVars
+                            .listEnvVariables as ViewDatasetEnvVarConnectionDataFragment,
                 ),
             );
     }

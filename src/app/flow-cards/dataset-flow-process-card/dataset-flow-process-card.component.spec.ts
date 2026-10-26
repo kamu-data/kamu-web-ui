@@ -12,9 +12,10 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import timekeeper from "timekeeper";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { DatasetBasicsFragment, FlowProcessEffectiveState, FlowProcessSummary } from "@api/kamu.graphql.interface";
+import { DatasetBasicsFragment, FlowProcessEffectiveState } from "@api/kamu.graphql.interface";
 import { mockAccountFlowsAsCardsQuery } from "@api/mock/account.mock";
 
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -26,8 +27,9 @@ describe("DatasetFlowProcessCardComponent", () => {
     let component: DatasetFlowProcessCardComponent;
     let fixture: ComponentFixture<DatasetFlowProcessCardComponent>;
 
-    const mockSummary = mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes.allCards.nodes[0]
-        .summary as FlowProcessSummary;
+    const mockSummary = requireValue(
+        mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes.allCards.nodes[0].summary ?? null,
+    );
 
     function createCard(
         effectiveState: FlowProcessEffectiveState,

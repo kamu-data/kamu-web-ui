@@ -18,7 +18,7 @@ import {
     DatasetBasicsFragment,
     DatasetKind,
     FlowProcessEffectiveState,
-    FlowProcessSummary,
+    FlowProcessSummaryDataFragment,
 } from "@api/kamu.graphql.interface";
 
 import {
@@ -48,7 +48,7 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 })
 export class WebhookFlowProcessCardComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    @Input({ required: true }) public summary: FlowProcessSummary;
+    @Input({ required: true }) public summary: FlowProcessSummaryDataFragment;
     @Input({ required: true }) public subscriptionId: string;
     @Input({ required: true }) public subscriptionName: string;
     /** Disables the state toggle while its previous action has not shown its result yet */
@@ -68,7 +68,10 @@ export class WebhookFlowProcessCardComponent {
         return DatasetFlowBadgeHelpers.badgeStyles(effectiveState);
     }
 
-    public badgeMessages(dataset: DatasetBasicsFragment, summary: FlowProcessSummary): DatasetFlowsBadgeTexts {
+    public badgeMessages(
+        dataset: DatasetBasicsFragment,
+        summary: FlowProcessSummaryDataFragment,
+    ): DatasetFlowsBadgeTexts {
         const isRoot = dataset.kind === DatasetKind.Root;
         return DatasetFlowBadgeHelpers.badgeMessages(summary, isRoot);
     }

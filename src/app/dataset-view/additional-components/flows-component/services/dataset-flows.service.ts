@@ -17,7 +17,7 @@ import {
     CancelFlowRunMutation,
     DatasetBasicsFragment,
     DatasetFlowFilters,
-    DatasetFlowProcesses,
+    DatasetFlowProcessesDataFragment,
     DatasetFlowsInitiatorsQuery,
     DatasetFlowsProcessesQuery,
     DatasetPauseFlowsMutation,
@@ -47,10 +47,10 @@ export class DatasetFlowsService {
     private datasetFlowApi = inject(DatasetFlowApi);
     private toastrService = inject(ToastrService);
 
-    public datasetFlowsProcesses(params: { datasetId: string }): Observable<DatasetFlowProcesses> {
+    public datasetFlowsProcesses(params: { datasetId: string }): Observable<DatasetFlowProcessesDataFragment> {
         return this.datasetFlowApi.getDatasetFlowsProcesses(params).pipe(
             map((data: DatasetFlowsProcessesQuery) => {
-                return data.datasets.byId?.flows.processes as DatasetFlowProcesses;
+                return data.datasets.byId?.flows.processes as DatasetFlowProcessesDataFragment;
             }),
         );
     }

@@ -1,0 +1,6 @@
+fragment DatasetFlowProcessData on DatasetFlowProcess {
+  flowType
+  summary {
+    ...FlowProcessSummaryData
+  }
+}

@@ -1,0 +1,8 @@
+fragment DatasetFlowProcessesData on DatasetFlowProcesses {
+  primary {
+    ...DatasetFlowProcessData
+  }
+  webhooks {
+    ...WebhookFlowSubProcessGroupData
+  }
+}

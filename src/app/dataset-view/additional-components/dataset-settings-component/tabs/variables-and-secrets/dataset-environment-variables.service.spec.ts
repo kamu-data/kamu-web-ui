@@ -12,8 +12,9 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { EnvironmentVariablesApi } from "@api/environment-variables.api";
-import { ViewDatasetEnvVar, ViewDatasetEnvVarConnection } from "@api/kamu.graphql.interface";
+import { ViewDatasetEnvVarConnectionDataFragment } from "@api/kamu.graphql.interface";
 import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_ID, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 import {
@@ -60,10 +61,11 @@ describe("EnvironmentVariablesService", () => {
                 page: MOCK_PAGE,
                 perPage: MOCK_PER_PAGE,
             })
-            .subscribe((result: ViewDatasetEnvVarConnection) => {
+            .subscribe((result: ViewDatasetEnvVarConnectionDataFragment) => {
                 expect(result.nodes).toEqual(
-                    mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables
-                        .nodes as ViewDatasetEnvVar[],
+                    requireValue(
+                        mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes ?? null,
+                    ),
                 );
             });
 

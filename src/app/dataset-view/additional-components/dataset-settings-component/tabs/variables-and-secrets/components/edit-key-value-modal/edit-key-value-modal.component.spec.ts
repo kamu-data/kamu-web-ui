@@ -14,8 +14,8 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { findElementByDataTestId, setComponentInput, setFieldValue } from "@common/helpers/base-test.helpers.spec";
-import { ViewDatasetEnvVar } from "@api/kamu.graphql.interface";
 import { mockListEnvVariablesQuery } from "@api/mock/environment-variables-and-secrets.mock";
 
 import { EditKeyValueModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.component";
@@ -131,7 +131,7 @@ describe("EditKeyValueModalComponent", () => {
         setComponentInput(
             fixture,
             "row",
-            mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes[0] as ViewDatasetEnvVar,
+            requireValue(mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes[0] ?? null),
         );
         fixture.detectChanges();
         component.onEditRow();
@@ -143,7 +143,7 @@ describe("EditKeyValueModalComponent", () => {
         setComponentInput(
             fixture,
             "row",
-            mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes[2] as ViewDatasetEnvVar,
+            requireValue(mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes[2] ?? null),
         );
         const exposedEnvVariableValueSpy = spyOn(
             evnironmentVariablesService,
@@ -158,7 +158,7 @@ describe("EditKeyValueModalComponent", () => {
         setComponentInput(
             fixture,
             "row",
-            mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes[1] as ViewDatasetEnvVar,
+            requireValue(mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes[1] ?? null),
         );
 
         fixture.detectChanges();

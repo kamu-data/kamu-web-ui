@@ -17,7 +17,7 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { BaseComponent } from "@common/components/base.component";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { noWhitespaceValidator } from "@common/helpers/data.helpers";
-import { DatasetBasicsFragment, ViewDatasetEnvVar } from "@api/kamu.graphql.interface";
+import { DatasetBasicsFragment, ViewDatasetEnvVarDataFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { EnvAndSecretsFormType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.types";
@@ -45,7 +45,7 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
     private fb = inject(FormBuilder);
     private evnironmentVariablesService = inject(DatasetEnvironmentVariablesService);
 
-    @Input({ required: true }) public row: MaybeNull<ViewDatasetEnvVar>;
+    @Input({ required: true }) public row: MaybeNull<ViewDatasetEnvVarDataFragment>;
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     public readonly KEY_MAX_LENGTH = 200;
     public readonly IS_SECRET_CONTROL_TOOLTIP =

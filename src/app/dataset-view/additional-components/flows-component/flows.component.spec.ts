@@ -18,14 +18,10 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { ModalService } from "@common/components/modal/modal.service";
+import { requireValue } from "@common/helpers/app.helpers";
 import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
-import {
-    DatasetFlowProcesses,
-    DatasetFlowType,
-    FlowProcessEffectiveState,
-    FlowStatus,
-} from "@api/kamu.graphql.interface";
+import { DatasetFlowType, FlowProcessEffectiveState, FlowStatus } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { mockDatasetFlowsProcessesQuery, mockFlowsTableData } from "@api/mock/dataset-flow.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
@@ -140,7 +136,7 @@ describe("FlowsComponent", () => {
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(flowsTableDataWithoutRuns()));
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
         // The first poll runs on an interval, which the harness's own flush skips
         fixture.detectChanges();
@@ -158,7 +154,7 @@ describe("FlowsComponent", () => {
         );
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
         tick();
         fixture.detectChanges();
@@ -285,7 +281,7 @@ describe("FlowsComponent", () => {
     it("should show the init loading block until the flow runs arrive", fakeAsync(async () => {
         const flowsList$ = new Subject<FlowsTableData>();
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(flowsList$);
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
@@ -301,7 +297,7 @@ describe("FlowsComponent", () => {
 
     it("should check 'update now' link for root dataset with PollingSource", fakeAsync(async () => {
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(flowsTableDataWithoutRuns()));
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
@@ -328,7 +324,7 @@ describe("FlowsComponent", () => {
             overviewUpdate: copyMockOverviewUpdate,
         });
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(flowsTableDataWithoutRuns()));
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
@@ -413,7 +409,7 @@ describe("FlowsComponent", () => {
     });
 
     it("should check to navigate to subscription", () => {
-        const processes = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses;
+        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.navigateToSubscription(processes.webhooks.subprocesses[0]);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
@@ -452,7 +448,7 @@ describe("FlowsComponent", () => {
     });
 
     it("should check remove selected webhook", () => {
-        const processes = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses;
+        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.removeSelectedWebhook("qwer", processes.webhooks.subprocesses);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
@@ -463,7 +459,7 @@ describe("FlowsComponent", () => {
     });
 
     it("should check toggle webhook filter if states not exist", () => {
-        const processes = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses;
+        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.onToggleWebhookFilter([FlowProcessEffectiveState.Active], processes.webhooks.subprocesses);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
@@ -474,7 +470,7 @@ describe("FlowsComponent", () => {
     });
 
     it("should check toggle webhook filter if states  exist", () => {
-        const processes = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses;
+        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.onToggleWebhookFilter([], processes.webhooks.subprocesses);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
@@ -512,7 +508,7 @@ describe("FlowsComponent", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const clearFlowsCategorySpy = spyOn(serviceInComponent, "clearFlowsCategory");
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData).pipe(delay(10)));
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
@@ -530,7 +526,7 @@ describe("FlowsComponent", () => {
         setComponentInput(fixture, "setWebhookState", mockStates);
 
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData).pipe(delay(10)));
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([mockAccountDetails]));
@@ -597,7 +593,7 @@ describe("FlowsComponent", () => {
 
         beforeEach(() => {
             spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-                of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+                of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
             );
             datasetFlowsListSpy = spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(
                 of(mockFlowsTableData),
@@ -683,7 +679,7 @@ describe("FlowsComponent", () => {
     describe("dataset process card", () => {
         beforeEach(() => {
             spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-                of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+                of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
             );
             spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData));
             spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
@@ -882,7 +878,7 @@ describe("FlowsComponent", () => {
 
         beforeEach(() => {
             datasetFlowsProcessesSpy = spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-                of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+                of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
             );
             spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData));
             spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
@@ -1002,7 +998,7 @@ describe("FlowsComponent", () => {
 
         beforeEach(() => {
             spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-                of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+                of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
             );
             datasetFlowsListSpy = spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(
                 of(mockFlowsTableData),

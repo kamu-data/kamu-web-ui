@@ -12,6 +12,7 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { mockAccountDetailsWithEmail } from "@api/mock/auth.mock";
 
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
@@ -33,7 +34,7 @@ describe("EmailsTabComponent", () => {
         fixture = TestBed.createComponent(EmailsTabComponent);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        component.account = mockAccountDetailsWithEmail;
+        fixture.componentRef.setInput(RoutingResolvers.ACCOUNT_SETTINGS_EMAIL_KEY, mockAccountDetailsWithEmail);
         spyOn(navigationService, "navigateToSettings");
         fixture.detectChanges();
     });

@@ -28,7 +28,7 @@ describe("DataAccessRestTabComponent", () => {
 
         fixture = TestBed.createComponent(DataAccessRestTabComponent);
         component = fixture.componentInstance;
-        component.rest = mockDatasetEndPoints.rest;
+        fixture.componentRef.setInput("rest", mockDatasetEndPoints.rest);
         fixture.detectChanges();
     });
 

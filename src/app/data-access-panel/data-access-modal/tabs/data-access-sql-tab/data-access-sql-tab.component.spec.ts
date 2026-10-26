@@ -28,9 +28,9 @@ describe("DataAccessSqlTabComponent", () => {
 
         fixture = TestBed.createComponent(DataAccessSqlTabComponent);
         component = fixture.componentInstance;
-        component.flightSql = mockDatasetEndPoints.flightsql;
-        component.jdbc = mockDatasetEndPoints.jdbc;
-        component.postgreSql = mockDatasetEndPoints.postgresql;
+        fixture.componentRef.setInput("flightSql", mockDatasetEndPoints.flightsql);
+        fixture.componentRef.setInput("jdbc", mockDatasetEndPoints.jdbc);
+        fixture.componentRef.setInput("postgreSql", mockDatasetEndPoints.postgresql);
         fixture.detectChanges();
     });
 

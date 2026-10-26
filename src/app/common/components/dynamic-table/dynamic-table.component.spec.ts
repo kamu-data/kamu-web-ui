@@ -13,6 +13,7 @@ import { provideMarkdown } from "ngx-markdown";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
 import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
+import { DynamicTableColumnDescriptor } from "@common/components/dynamic-table/dynamic-table.interface";
 import { MOCK_DATA_ROWS, MOCK_DATA_ROWS_SHOW_MORE_BADGE } from "@common/components/dynamic-table/dynamic-table.mock";
 import { findElementByDataTestId, getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 
@@ -32,14 +33,14 @@ describe("DynamicTableComponent", () => {
         ngbModalService = TestBed.inject(NgbModal);
         toastService = TestBed.inject(ToastrService);
         component = fixture.componentInstance;
-        component.columnDescriptors = [
+        fixture.componentRef.setInput("columnDescriptors", [
             { columnName: "offset" },
             { columnName: "op" },
             { columnName: "system_time" },
             { columnName: "block_time" },
-        ];
-        component.hasTableHeader = true;
-        component.idTable = "idTable";
+        ] satisfies DynamicTableColumnDescriptor[]);
+        fixture.componentRef.setInput("hasTableHeader", true);
+        fixture.componentRef.setInput("idTable", "idTable");
     });
 
     it("should create", () => {
@@ -47,8 +48,8 @@ describe("DynamicTableComponent", () => {
     });
 
     it("should check to copy cell content", () => {
-        component.dataRows = MOCK_DATA_ROWS_SHOW_MORE_BADGE;
-        component.columnDescriptors = [
+        fixture.componentRef.setInput("dataRows", MOCK_DATA_ROWS_SHOW_MORE_BADGE);
+        fixture.componentRef.setInput("columnDescriptors", [
             {
                 columnName: "name",
             },
@@ -58,7 +59,7 @@ describe("DynamicTableComponent", () => {
             {
                 columnName: "description",
             },
-        ];
+        ] satisfies DynamicTableColumnDescriptor[]);
         fixture.detectChanges();
         const successToastServiceSpy = spyOn(toastService, "success");
         const cell0 = findElementByDataTestId(fixture, "column-name-type-0");
@@ -85,13 +86,13 @@ describe("DynamicTableComponent", () => {
     });
 
     it("should check table if schemaFields is empty", () => {
-        component.columnDescriptors = [];
+        fixture.componentRef.setInput("columnDescriptors", []);
         fixture.detectChanges();
         expect(component.dataSource.data).toEqual([]);
     });
 
     it("should check column 'op' classes", () => {
-        component.dataRows = MOCK_DATA_ROWS;
+        fixture.componentRef.setInput("dataRows", MOCK_DATA_ROWS);
         fixture.detectChanges();
 
         const cell0 = findElementByDataTestId(fixture, "column-name-op-0");
@@ -105,8 +106,8 @@ describe("DynamicTableComponent", () => {
     });
 
     it("The 'showMore' badge should be checked", () => {
-        component.dataRows = MOCK_DATA_ROWS_SHOW_MORE_BADGE;
-        component.columnDescriptors = [
+        fixture.componentRef.setInput("dataRows", MOCK_DATA_ROWS_SHOW_MORE_BADGE);
+        fixture.componentRef.setInput("columnDescriptors", [
             {
                 columnName: "name",
             },
@@ -119,7 +120,7 @@ describe("DynamicTableComponent", () => {
             {
                 columnName: "description",
             },
-        ];
+        ] satisfies DynamicTableColumnDescriptor[]);
         fixture.detectChanges();
 
         const showMoreBadge = findElementByDataTestId(fixture, "show-more-type-0");
@@ -127,8 +128,8 @@ describe("DynamicTableComponent", () => {
     });
 
     it("The 'showInfo' tooltip should be checked", () => {
-        component.dataRows = MOCK_DATA_ROWS_SHOW_MORE_BADGE;
-        component.columnDescriptors = [
+        fixture.componentRef.setInput("dataRows", MOCK_DATA_ROWS_SHOW_MORE_BADGE);
+        fixture.componentRef.setInput("columnDescriptors", [
             {
                 columnName: "name",
                 showInfoBadge: {
@@ -138,7 +139,7 @@ describe("DynamicTableComponent", () => {
             {
                 columnName: "type",
             },
-        ];
+        ] satisfies DynamicTableColumnDescriptor[]);
         fixture.detectChanges();
 
         const showInfoIcon = findElementByDataTestId(fixture, "show-info-name-0");
@@ -147,8 +148,8 @@ describe("DynamicTableComponent", () => {
 
     it("The 'showMore' badge should open the modal window", () => {
         const ngbModalServiceSpy = spyOn(ngbModalService, "open").and.callThrough();
-        component.dataRows = MOCK_DATA_ROWS_SHOW_MORE_BADGE;
-        component.columnDescriptors = [
+        fixture.componentRef.setInput("dataRows", MOCK_DATA_ROWS_SHOW_MORE_BADGE);
+        fixture.componentRef.setInput("columnDescriptors", [
             {
                 columnName: "name",
             },
@@ -161,7 +162,7 @@ describe("DynamicTableComponent", () => {
             {
                 columnName: "description",
             },
-        ];
+        ] satisfies DynamicTableColumnDescriptor[]);
         fixture.detectChanges();
 
         const showMoreBadge = findElementByDataTestId(fixture, "show-more-type-0");

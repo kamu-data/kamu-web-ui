@@ -13,6 +13,7 @@ import { Apollo } from "apollo-angular";
 
 import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { mockSearchOverviewResponse } from "@api/mock/search.mock";
 import { SearchApi } from "@api/search.api";
 
@@ -45,7 +46,7 @@ describe("SearchComponent", () => {
         searchService = TestBed.inject(SearchService);
         searchApi = TestBed.inject(SearchApi);
         component = fixture.componentInstance;
-        component.data = mockDatasetSearchResult;
+        fixture.componentRef.setInput(RoutingResolvers.SEARCH_KEY, mockDatasetSearchResult);
         component.ngOnInit();
         fixture.detectChanges();
     });
@@ -55,8 +56,8 @@ describe("SearchComponent", () => {
     });
 
     it("should initially search query/page from active route", () => {
-        component.search = DEFAULT_SEARCH_QUERY;
-        component.page = DEFAULT_SEARCH_PAGE;
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_QUERY, DEFAULT_SEARCH_QUERY);
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_PAGE, DEFAULT_SEARCH_PAGE);
 
         expect(component.searchValue).toEqual(DEFAULT_SEARCH_QUERY);
         expect(component.currentPage).toEqual(DEFAULT_SEARCH_PAGE);
@@ -70,7 +71,7 @@ describe("SearchComponent", () => {
     it("should check onPageChange method with page", () => {
         const testSearchValue = "test";
         const testCurrentPage = 2;
-        component.search = testSearchValue;
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_QUERY, testSearchValue);
         fixture.detectChanges();
         const navigationServiceSpy = spyOn(navigationService, "navigateToSearch");
         component.onPageChange(testCurrentPage);
@@ -80,7 +81,7 @@ describe("SearchComponent", () => {
 
     it("should check onPageChange method when page equal 0", () => {
         const testSearchValue = "test";
-        component.search = testSearchValue;
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_QUERY, testSearchValue);
         fixture.detectChanges();
         const navigationServiceSpy = spyOn(navigationService, "navigateToSearch");
         component.onPageChange(1);

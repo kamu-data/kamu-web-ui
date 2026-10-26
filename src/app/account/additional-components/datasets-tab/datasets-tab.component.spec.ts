@@ -8,7 +8,9 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute, convertToParamMap } from "@angular/router";
 
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { mockDatasetsAccountResponse, TEST_ACCOUNT_NAME } from "@api/mock/dataset.mock";
+import { DatasetsAccountResolverResponse } from "@interface/dataset.interface";
 
 import { AccountTabs } from "src/app/account/account.constants";
 import { DatasetsTabComponent } from "src/app/account/additional-components/datasets-tab/datasets-tab.component";
@@ -44,10 +46,10 @@ describe("DatasetsTabComponent", () => {
         fixture = TestBed.createComponent(DatasetsTabComponent);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        component.accountResolverResponse = {
+        fixture.componentRef.setInput(RoutingResolvers.ACCOUNT_DATASETS_KEY, {
             datasetsResponse: mockDatasetsAccountResponse,
             accountName: TEST_ACCOUNT_NAME,
-        };
+        } satisfies DatasetsAccountResolverResponse);
         fixture.detectChanges();
     });
 

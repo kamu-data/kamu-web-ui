@@ -28,7 +28,7 @@ describe("AdminChangePasswordComponent", () => {
         fixture = TestBed.createComponent(AdminChangePasswordComponent);
         accountService = TestBed.inject(AccountService);
         component = fixture.componentInstance;
-        component.accountName = "accountName";
+        fixture.componentRef.setInput("accountName", "accountName");
         fixture.detectChanges();
     });
 

@@ -33,7 +33,7 @@ describe("DataAccessLinkTabComponent", () => {
 
         fixture = TestBed.createComponent(DataAccessLinkTabComponent);
         component = fixture.componentInstance;
-        component.webLink = mockDatasetEndPoints.webLink;
+        fixture.componentRef.setInput("webLink", mockDatasetEndPoints.webLink);
         fixture.detectChanges();
     });
 

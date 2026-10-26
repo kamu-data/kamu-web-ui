@@ -29,14 +29,14 @@ describe("DatasetVisibilityComponent", () => {
     });
 
     it("should check dataset visibility is public", () => {
-        component.datasetVisibility = mockPublicDatasetVisibility;
+        fixture.componentRef.setInput("datasetVisibility", mockPublicDatasetVisibility);
         fixture.detectChanges();
         const badgeElemnet = findElementByDataTestId(fixture, "dataset-visibility") as HTMLSpanElement;
         expect(badgeElemnet.textContent?.trim()).toEqual("Public");
     });
 
     it("should check dataset visibility is private", () => {
-        component.datasetVisibility = mockPrivateDatasetVisibility;
+        fixture.componentRef.setInput("datasetVisibility", mockPrivateDatasetVisibility);
         fixture.detectChanges();
         const badgeElemnet = findElementByDataTestId(fixture, "dataset-visibility") as HTMLSpanElement;
         expect(badgeElemnet.textContent?.trim()).toEqual("Private");

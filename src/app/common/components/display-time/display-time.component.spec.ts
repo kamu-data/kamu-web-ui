@@ -48,7 +48,7 @@ describe("DisplayTimeComponent", () => {
     });
 
     function testRelativeTime(expectedResult: string, date: Date): void {
-        component.data = date.toISOString();
+        fixture.componentRef.setInput("data", date.toISOString());
         fixture.detectChanges();
 
         expect(component.relativeTime).toBe(expectedResult);

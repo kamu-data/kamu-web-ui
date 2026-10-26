@@ -12,7 +12,10 @@ import timekeeper from "timekeeper";
 import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 
 import { UpcomingScheduledFiltersViewComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/components/upcoming-scheduled-filters-view/upcoming-scheduled-filters-view.component";
-import { RangeLastAttempt } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import {
+    DashboardFiltersOptions,
+    RangeLastAttempt,
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 
 describe("UpcomingScheduledFiltersViewComponent", () => {
     let component: UpcomingScheduledFiltersViewComponent;
@@ -24,7 +27,7 @@ describe("UpcomingScheduledFiltersViewComponent", () => {
         });
         fixture = TestBed.createComponent(UpcomingScheduledFiltersViewComponent);
         component = fixture.componentInstance;
-        component.dashboardFilters = {
+        fixture.componentRef.setInput("dashboardFilters", {
             fromFilterDate: undefined,
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -38,7 +41,7 @@ describe("UpcomingScheduledFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-        };
+        } satisfies DashboardFiltersOptions);
     });
 
     beforeAll(() => {
@@ -55,7 +58,7 @@ describe("UpcomingScheduledFiltersViewComponent", () => {
     });
 
     it("should check clear nextPlannedAfterDate control", () => {
-        component.dashboardFilters = {
+        fixture.componentRef.setInput("dashboardFilters", {
             fromFilterDate: undefined,
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -69,14 +72,14 @@ describe("UpcomingScheduledFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-        };
+        } satisfies DashboardFiltersOptions);
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "clear-after-control");
         expect(component.dashboardFilters.nextPlannedAfterDate).toEqual(undefined);
     });
 
     it("should check clear nextPlannedBeforeDate control", () => {
-        component.dashboardFilters = {
+        fixture.componentRef.setInput("dashboardFilters", {
             fromFilterDate: undefined,
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -90,14 +93,14 @@ describe("UpcomingScheduledFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-        };
+        } satisfies DashboardFiltersOptions);
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "clear-before-control");
         expect(component.dashboardFilters.nextPlannedBeforeDate).toEqual(undefined);
     });
 
     it("should check to change next attempt filter", () => {
-        component.dashboardFilters = {
+        fixture.componentRef.setInput("dashboardFilters", {
             fromFilterDate: undefined,
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -111,14 +114,14 @@ describe("UpcomingScheduledFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-        };
+        } satisfies DashboardFiltersOptions);
         fixture.detectChanges();
         component.onChangeNextAttemptFilter();
         expect(component.dashboardFilters.selectedQuickRangeNextAttempt).toEqual(undefined);
     });
 
     it("should check to change quick range next attempt", () => {
-        component.dashboardFilters = {
+        fixture.componentRef.setInput("dashboardFilters", {
             fromFilterDate: undefined,
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -132,7 +135,7 @@ describe("UpcomingScheduledFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-        };
+        } satisfies DashboardFiltersOptions);
         fixture.detectChanges();
         component.onQuickRangeNextAttempt({
             id: 1,

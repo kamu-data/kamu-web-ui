@@ -25,7 +25,7 @@ describe("ReproducedResultSectionComponent", () => {
         });
         fixture = TestBed.createComponent(ReproducedResultSectionComponent);
         component = fixture.componentInstance;
-        component.dataJsonAoS = mockQueryExplainerOutput;
+        fixture.componentRef.setInput("dataJsonAoS", mockQueryExplainerOutput);
     });
 
     it("should create", () => {
@@ -34,7 +34,7 @@ describe("ReproducedResultSectionComponent", () => {
     });
 
     it("should check empty data result", () => {
-        component.dataJsonAoS = mockQueryExplainerEmptyOutput;
+        fixture.componentRef.setInput("dataJsonAoS", mockQueryExplainerEmptyOutput);
         fixture.detectChanges();
         const emptyElement = findElementByDataTestId(fixture, "emptyResult");
         expect(emptyElement?.textContent?.trim()).toEqual("0 records");

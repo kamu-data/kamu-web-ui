@@ -28,7 +28,7 @@ describe("DataAccessKamuCliTabComponent", () => {
 
         fixture = TestBed.createComponent(DataAccessKamuCliTabComponent);
         component = fixture.componentInstance;
-        component.cli = mockDatasetEndPoints.cli;
+        fixture.componentRef.setInput("cli", mockDatasetEndPoints.cli);
         fixture.detectChanges();
     });
 

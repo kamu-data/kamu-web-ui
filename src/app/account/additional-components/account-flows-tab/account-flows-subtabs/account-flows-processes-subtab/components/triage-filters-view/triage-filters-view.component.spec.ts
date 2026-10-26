@@ -12,7 +12,10 @@ import timekeeper from "timekeeper";
 import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 
 import { TriageFiltersViewComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/components/triage-filters-view/triage-filters-view.component";
-import { RangeLastAttempt } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import {
+    DashboardFiltersOptions,
+    RangeLastAttempt,
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 
 describe("TriageFiltersViewComponent", () => {
     let component: TriageFiltersViewComponent;
@@ -24,7 +27,7 @@ describe("TriageFiltersViewComponent", () => {
         });
         fixture = TestBed.createComponent(TriageFiltersViewComponent);
         component = fixture.componentInstance;
-        component.dashboardFilters = {
+        fixture.componentRef.setInput("dashboardFilters", {
             fromFilterDate: undefined,
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -38,7 +41,7 @@ describe("TriageFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-        };
+        } satisfies DashboardFiltersOptions);
     });
 
     it("should create", () => {

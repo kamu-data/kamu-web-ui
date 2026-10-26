@@ -14,7 +14,6 @@ import { Apollo } from "apollo-angular";
 
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { FlowProcessSummary } from "@api/kamu.graphql.interface";
 import { mockAccountFlowsAsCardsQuery } from "@api/mock/account.mock";
 
 import { WebhookFlowProcessCardComponent } from "src/app/flow-cards/webhook-flow-process-card/webhook-flow-process-card.component";
@@ -36,10 +35,12 @@ describe("WebhookFlowProcessCardComponent", () => {
 
         fixture = TestBed.createComponent(WebhookFlowProcessCardComponent);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsRootFragment;
-        component.subscriptionId = MOCK_SUBSCRIPTION_ID;
-        component.summary = mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes.allCards.nodes[0]
-            .summary as FlowProcessSummary;
+        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
+        fixture.componentRef.setInput("subscriptionId", MOCK_SUBSCRIPTION_ID);
+        fixture.componentRef.setInput(
+            "summary",
+            mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes.allCards.nodes[0].summary,
+        );
         fixture.detectChanges();
     });
 

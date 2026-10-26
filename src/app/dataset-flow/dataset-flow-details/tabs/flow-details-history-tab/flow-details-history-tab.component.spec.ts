@@ -10,6 +10,7 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { provideRouter } from "@angular/router";
 
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { FlowStatus, TaskStatus } from "@api/kamu.graphql.interface";
 import {
     mockDatasetFlowByIdResponse,
@@ -47,7 +48,7 @@ describe("FlowDetailsHistoryTabComponent", () => {
             Object.assign(mockResponse, mockOverrides);
         }
 
-        component.response = mockResponse;
+        fixture.componentRef.setInput(RoutingResolvers.FLOW_DETAILS_HISTORY_KEY, mockResponse);
         fixture.detectChanges();
 
         harness = await loader.getHarness(FlowDetailsHistoryTabHarness);

@@ -38,8 +38,8 @@ describe("DisplayHashComponent", () => {
         fixture = TestBed.createComponent(DisplayHashComponent);
         toastService = TestBed.inject(ToastrService);
         component = fixture.componentInstance;
-        component.value = TEST_BLOCK_HASH;
-        component.navigationTargetDataset = mockDatasetInfo;
+        fixture.componentRef.setInput("value", TEST_BLOCK_HASH);
+        fixture.componentRef.setInput("navigationTargetDataset", mockDatasetInfo);
         fixture.detectChanges();
     });
 
@@ -48,7 +48,7 @@ describe("DisplayHashComponent", () => {
     });
 
     it("should check copyToClipboard button is exist", () => {
-        component.showCopyButton = true;
+        fixture.componentRef.setInput("showCopyButton", true);
         fixture.detectChanges();
 
         const copyToClipboardButton = getElementByDataTestId(fixture, "copyToClipboardButton");
@@ -57,14 +57,14 @@ describe("DisplayHashComponent", () => {
 
     it("should check copyToClipboard button is work", () => {
         const successToastServiceSpy = spyOn(toastService, "success");
-        component.showCopyButton = true;
+        fixture.componentRef.setInput("showCopyButton", true);
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "copyToClipboardButton");
         expect(successToastServiceSpy).toHaveBeenCalledWith("Copied");
     });
 
     it("should check hash length", () => {
-        component.navigationTargetDataset = undefined;
+        fixture.componentRef.setInput("navigationTargetDataset", undefined);
         fixture.detectChanges();
         const spanElement = getElementByDataTestId(fixture, "notNavigableValue");
         expect(spanElement.textContent?.length).toEqual(8);

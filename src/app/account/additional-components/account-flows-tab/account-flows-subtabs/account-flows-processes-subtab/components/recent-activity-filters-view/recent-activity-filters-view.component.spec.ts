@@ -12,7 +12,10 @@ import timekeeper from "timekeeper";
 import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 
 import { RecentActivityFiltersViewComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/components/recent-activity-filters-view/recent-activity-filters-view.component";
-import { RangeLastAttempt } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import {
+    DashboardFiltersOptions,
+    RangeLastAttempt,
+} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 
 describe("RecentActivityFiltersViewComponent", () => {
     let component: RecentActivityFiltersViewComponent;
@@ -24,7 +27,7 @@ describe("RecentActivityFiltersViewComponent", () => {
         });
         fixture = TestBed.createComponent(RecentActivityFiltersViewComponent);
         component = fixture.componentInstance;
-        component.dashboardFilters = {
+        fixture.componentRef.setInput("dashboardFilters", {
             fromFilterDate: undefined,
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -38,7 +41,7 @@ describe("RecentActivityFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-        };
+        } satisfies DashboardFiltersOptions);
     });
 
     it("should create", () => {
@@ -54,7 +57,7 @@ describe("RecentActivityFiltersViewComponent", () => {
     });
 
     it("should check to clear 'from' control", () => {
-        component.dashboardFilters = {
+        fixture.componentRef.setInput("dashboardFilters", {
             fromFilterDate: new Date(),
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -68,14 +71,14 @@ describe("RecentActivityFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-        };
+        } satisfies DashboardFiltersOptions);
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "clear-from-control");
         expect(component.dashboardFilters.fromFilterDate).toEqual(undefined);
     });
 
     it("should check to clear 'to' control", () => {
-        component.dashboardFilters = {
+        fixture.componentRef.setInput("dashboardFilters", {
             fromFilterDate: undefined,
             toFilterDate: new Date(),
             lastFailureDate: undefined,
@@ -89,14 +92,14 @@ describe("RecentActivityFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-        };
+        } satisfies DashboardFiltersOptions);
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "clear-to-control");
         expect(component.dashboardFilters.toFilterDate).toEqual(undefined);
     });
 
     it("should check to change quick range last attempt", () => {
-        component.dashboardFilters = {
+        fixture.componentRef.setInput("dashboardFilters", {
             fromFilterDate: undefined,
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -110,7 +113,7 @@ describe("RecentActivityFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-        };
+        } satisfies DashboardFiltersOptions);
         fixture.detectChanges();
         component.onQuickRangeLastAttempt({
             id: 1,

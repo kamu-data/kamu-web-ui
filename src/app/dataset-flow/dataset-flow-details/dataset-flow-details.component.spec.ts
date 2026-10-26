@@ -18,13 +18,18 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { FlowStatus } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowByIdResponse, mockFlowSummaryDataFragments } from "@api/mock/dataset-flow.mock";
 
 import { DatasetFlowDetailsComponent } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.component";
-import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import {
+    DatasetFlowByIdResponse,
+    FlowDetailsTabs,
+} from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import ProjectLinks from "src/app/project-links";
 import {
     mockDatasetBasicsRootFragment,
     mockDatasetInfo,
@@ -80,10 +85,10 @@ describe("DatasetFlowDetailsComponent", () => {
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        component.flowId = MOCK_FLOW_ID;
-        component.activeTab = FlowDetailsTabs.HISTORY;
-        component.flowDetails = mockDatasetFlowByIdResponse;
-        component.datasetInfo = mockDatasetInfo;
+        fixture.componentRef.setInput(ProjectLinks.URL_PARAM_FLOW_ID, MOCK_FLOW_ID);
+        fixture.componentRef.setInput(RoutingResolvers.FLOW_DETAILS_ACTIVE_TAB_KEY, FlowDetailsTabs.HISTORY);
+        fixture.componentRef.setInput(RoutingResolvers.FLOW_DETAILS_KEY, mockDatasetFlowByIdResponse);
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_INFO_KEY, mockDatasetInfo);
         spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
             of(mockFullPowerDatasetPermissionsFragment),
         );
@@ -129,17 +134,17 @@ describe("DatasetFlowDetailsComponent", () => {
         }));
 
         it("should keep refreshing an unfinished flow until shortly after it finishes", fakeAsync(() => {
-            component.flowDetails = {
+            fixture.componentRef.setInput(RoutingResolvers.FLOW_DETAILS_KEY, {
                 ...mockDatasetFlowByIdResponse,
                 flow: { ...mockFlowSummaryDataFragments[0], status: FlowStatus.Running },
-            };
+            } satisfies DatasetFlowByIdResponse);
             navigateToFlowDetailsSpy.calls.reset();
             component.ngOnInit();
 
             tick(interval * 3);
             expect(navigateToFlowDetailsSpy).toHaveBeenCalledTimes(3);
 
-            component.flowDetails = mockDatasetFlowByIdResponse;
+            fixture.componentRef.setInput(RoutingResolvers.FLOW_DETAILS_KEY, mockDatasetFlowByIdResponse);
             tick(interval * 5);
             expect(navigateToFlowDetailsSpy).toHaveBeenCalledTimes(
                 3 + DatasetFlowDetailsComponent.REFRESHES_AFTER_FINISH,

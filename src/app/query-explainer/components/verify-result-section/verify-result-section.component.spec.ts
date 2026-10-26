@@ -25,7 +25,7 @@ describe("VerifyResultSectionComponent", () => {
         });
         fixture = TestBed.createComponent(VerifyResultSectionComponent);
         component = fixture.componentInstance;
-        component.verifyResponse = mockVerifyQueryResponseSuccess;
+        fixture.componentRef.setInput("verifyResponse", mockVerifyQueryResponseSuccess);
     });
 
     it("should create", () => {
@@ -33,14 +33,14 @@ describe("VerifyResultSectionComponent", () => {
     });
 
     it("should check verify result is successfull", () => {
-        component.verifyResponse = mockVerifyQueryResponseSuccess;
+        fixture.componentRef.setInput("verifyResponse", mockVerifyQueryResponseSuccess);
         fixture.detectChanges();
         const resultElem = findElementByDataTestId(fixture, "verification-success");
         expect(resultElem?.innerText.trim()).toEqual("Verification successful");
     });
 
     it("should check verify result is failed", () => {
-        component.verifyResponse = mockVerifyQueryOutputMismatchError;
+        fixture.componentRef.setInput("verifyResponse", mockVerifyQueryOutputMismatchError);
         fixture.detectChanges();
         const resultElem = findElementByDataTestId(fixture, "verification-failed");
         expect(resultElem?.innerText.trim()).toEqual("Verification failed");

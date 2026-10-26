@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { SimpleChange } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { BaseEditorComponent } from "src/app/editor/components/base-editor/base-editor.component";
@@ -35,28 +34,19 @@ export function sharedBasedEditorComponentTest(environmentFactory: () => BaseEdi
 
     it("on error should call setErrorMarker", () => {
         const errorTest = "error text";
-        const simpleChanges = {
-            error: new SimpleChange(undefined, errorTest, true),
-        };
         const setErrorMarkerSpy = spyOn(monacoService, "setErrorMarker");
 
-        component.error = errorTest;
+        fixture.componentRef.setInput("error", errorTest);
         fixture.detectChanges();
-        component.ngOnChanges(simpleChanges);
 
         expect(setErrorMarkerSpy).toHaveBeenCalledOnceWith(component.editorModel, component.getErrorDetails(errorTest));
     });
 
     it("on empty error should call clearErrorMarker", () => {
-        const simpleChanges = {
-            error: new SimpleChange("some value", null, false),
-        };
-
         const clearErrorMarkerSpy = spyOn(monacoService, "clearErrorMarker");
 
-        component.error = null;
+        fixture.componentRef.setInput("error", null);
         fixture.detectChanges();
-        component.ngOnChanges(simpleChanges);
 
         expect(clearErrorMarkerSpy).toHaveBeenCalledOnceWith(component.editorModel);
     });

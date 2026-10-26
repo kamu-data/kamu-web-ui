@@ -25,9 +25,9 @@ describe("TileBaseWidgetComponent", () => {
 
         fixture = TestBed.createComponent(TileBaseWidgetComponent);
         component = fixture.componentInstance;
-        component.nodes = mockFlowItemWidgetDataFragments;
-        component.involvedDatasets = mockDatasets;
-        component.displayAlias = true;
+        fixture.componentRef.setInput("nodes", mockFlowItemWidgetDataFragments);
+        fixture.componentRef.setInput("involvedDatasets", mockDatasets);
+        fixture.componentRef.setInput("displayAlias", true);
         fixture.detectChanges();
     });
 

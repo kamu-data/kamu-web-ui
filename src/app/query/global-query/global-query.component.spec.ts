@@ -18,6 +18,7 @@ import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import ProjectLinks from "src/app/project-links";
 import { GlobalQueryComponent } from "src/app/query/global-query/global-query.component";
 import { NavigationService } from "src/app/services/navigation.service";
 import { SqlQueryService } from "src/app/services/sql-query.service";
@@ -37,7 +38,7 @@ describe("GlobalQueryComponent", () => {
         });
         fixture = TestBed.createComponent(GlobalQueryComponent);
         component = fixture.componentInstance;
-        component.sqlQuery = SQL_QUERY;
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_SQL_QUERY, SQL_QUERY);
         sqlQueryService = TestBed.inject(SqlQueryService);
         navigationService = TestBed.inject(NavigationService);
         engineService = TestBed.inject(EngineService);

@@ -22,7 +22,6 @@ import timekeeper from "timekeeper";
 import { ModalService } from "@common/components/modal/modal.service";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { Account } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowSummaryDataFragments } from "@api/mock/dataset-flow.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
@@ -31,6 +30,7 @@ import {
     mockDatasets,
     mockFlowSummaryDataFragmentShowForceLink,
 } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
+import { FlowsTableOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 
 describe("FlowsTableComponent", () => {
@@ -64,16 +64,18 @@ describe("FlowsTableComponent", () => {
         toastService = TestBed.inject(ToastrService);
         component = fixture.componentInstance;
         loader = TestbedHarnessEnvironment.loader(fixture);
-        component.nodes = mockFlowSummaryDataFragments;
-        component.filterByStatus = null;
-        component.searchByAccount = [];
-        component.tableOptions = {
+        fixture.componentRef.setInput("nodes", mockFlowSummaryDataFragments);
+        fixture.componentRef.setInput("filterByStatus", null);
+        fixture.componentRef.setInput("searchByAccount", []);
+        fixture.componentRef.setInput("tableOptions", {
             displayColumns: ["description", "information", "creator", "options"],
-        };
-        component.involvedDatasets = mockDatasets;
+        } satisfies FlowsTableOptions);
+        fixture.componentRef.setInput("involvedDatasets", mockDatasets);
 
-        component.accountFlowInitiators = mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators
-            .nodes as Account[];
+        fixture.componentRef.setInput(
+            "accountFlowInitiators",
+            mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators.nodes,
+        );
         fixture.detectChanges();
     });
 

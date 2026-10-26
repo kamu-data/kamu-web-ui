@@ -68,7 +68,7 @@ describe("QueryExplainerComponent", () => {
         spyOn(datasetService, "requestDatasetInfoById").and.returnValue(of(mockDatasetByIdQuery));
         fixture = TestBed.createComponent(QueryExplainerComponent);
         component = fixture.componentInstance;
-        component.uploadToken = "";
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN, "");
         fixture.detectChanges();
     });
 

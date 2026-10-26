@@ -45,8 +45,8 @@ describe("DatasetViewHeaderComponent", () => {
         datasetService = TestBed.inject(DatasetService);
         spyOnProperty(datasetService, "downstreamsCountChanges", "get").and.returnValue(of(1));
         component = fixture.componentInstance;
-        component.datasetInfo = mockDatasetInfo;
-        component.datasetBasics = mockDatasetBasicsRootFragment;
+        fixture.componentRef.setInput("datasetInfo", mockDatasetInfo);
+        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
         fixture.detectChanges();
     });
 

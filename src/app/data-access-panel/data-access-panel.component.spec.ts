@@ -29,8 +29,8 @@ describe("DataAccessPanelComponent", () => {
         fixture = TestBed.createComponent(DataAccessPanelComponent);
         ngbModalService = TestBed.inject(NgbModal);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsDerivedFragment;
-        component.isUserLogged = true;
+        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsDerivedFragment);
+        fixture.componentRef.setInput("isUserLogged", true);
         fixture.detectChanges();
     });
 

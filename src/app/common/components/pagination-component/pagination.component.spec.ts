@@ -22,8 +22,8 @@ describe("PaginationComponent", () => {
 
         fixture = TestBed.createComponent(PaginationComponent);
         component = fixture.componentInstance;
-        component.currentPage = 1;
-        component.pageInfo = mockPageBasedInfo;
+        fixture.componentRef.setInput("currentPage", 1);
+        fixture.componentRef.setInput("pageInfo", mockPageBasedInfo);
         fixture.detectChanges();
     });
 

@@ -28,8 +28,8 @@ describe("DataAccessStreamTabComponent", () => {
 
         fixture = TestBed.createComponent(DataAccessStreamTabComponent);
         component = fixture.componentInstance;
-        component.kafka = mockDatasetEndPoints.kafka;
-        component.websocket = mockDatasetEndPoints.websocket;
+        fixture.componentRef.setInput("kafka", mockDatasetEndPoints.kafka);
+        fixture.componentRef.setInput("websocket", mockDatasetEndPoints.websocket);
         fixture.detectChanges();
     });
 

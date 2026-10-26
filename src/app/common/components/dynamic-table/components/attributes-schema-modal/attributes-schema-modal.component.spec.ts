@@ -23,12 +23,12 @@ describe("AttributesSchemaModalComponent", () => {
         });
         fixture = TestBed.createComponent(AttributesSchemaModalComponent);
         component = fixture.componentInstance;
-        component.element = {
+        fixture.componentRef.setInput("element", {
             name: "offset",
             type: {
                 kind: OdfTypes.String,
             },
-        };
+        });
         fixture.detectChanges();
     });
 

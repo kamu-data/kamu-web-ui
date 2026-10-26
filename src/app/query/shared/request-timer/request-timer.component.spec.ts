@@ -31,27 +31,14 @@ describe("RequestTimerComponent", () => {
 
     it("should check rennder result time", fakeAsync(() => {
         const testClass = "mock-class";
-        const timeElement = findElementByDataTestId(fixture, "duration-request-time");
-        component.class = testClass;
         const resultTime = "00:00:01.00";
-        component.ngOnChanges({
-            sqlLoading: {
-                previousValue: undefined,
-                currentValue: true,
-                firstChange: true,
-                isFirstChange: () => true,
-            },
-        });
-        tick(1000);
-        component.ngOnChanges({
-            sqlLoading: {
-                previousValue: true,
-                currentValue: false,
-                firstChange: false,
-                isFirstChange: () => false,
-            },
-        });
+        fixture.componentRef.setInput("class", testClass);
+        fixture.componentRef.setInput("sqlLoading", true);
         fixture.detectChanges();
+        tick(1000);
+        fixture.componentRef.setInput("sqlLoading", false);
+        fixture.detectChanges();
+        const timeElement = findElementByDataTestId(fixture, "duration-request-time");
         expect(timeElement?.textContent?.trim()).toEqual(resultTime);
         expect(timeElement?.classList).toContain(testClass);
         flush();

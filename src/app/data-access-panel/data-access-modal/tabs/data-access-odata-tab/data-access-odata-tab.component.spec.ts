@@ -28,7 +28,7 @@ describe("DataAccessOdataTabComponent", () => {
 
         fixture = TestBed.createComponent(DataAccessOdataTabComponent);
         component = fixture.componentInstance;
-        component.odata = mockDatasetEndPoints.odata;
+        fixture.componentRef.setInput("odata", mockDatasetEndPoints.odata);
         fixture.detectChanges();
     });
 

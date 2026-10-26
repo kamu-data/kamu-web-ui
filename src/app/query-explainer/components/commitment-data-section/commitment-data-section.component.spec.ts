@@ -12,6 +12,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 
 import { CommitmentDataSectionComponent } from "src/app/query-explainer/components/commitment-data-section/commitment-data-section.component";
+import { QueryExplainerComponentData } from "src/app/query-explainer/query-explainer.component";
 import {
     mockQueryExplainerResponse,
     mockVerifyQueryResponseSuccess,
@@ -31,10 +32,10 @@ describe("CommitmentDataSectionComponent", () => {
 
         fixture = TestBed.createComponent(CommitmentDataSectionComponent);
         component = fixture.componentInstance;
-        component.commitmentData = {
+        fixture.componentRef.setInput("commitmentData", {
             sqlQueryExplainerResponse: mockQueryExplainerResponse,
             sqlQueryVerify: mockVerifyQueryResponseSuccess,
-        };
+        } satisfies QueryExplainerComponentData);
         fixture.detectChanges();
     });
 

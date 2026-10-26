@@ -34,9 +34,9 @@ describe("DatasetViewMenuComponent", () => {
 
         fixture = TestBed.createComponent(DatasetViewMenuComponent);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsDerivedFragment;
-        component.datasetPermissions = mockFullPowerDatasetPermissionsFragment;
-        component.datasetViewType = DatasetViewTypeEnum.Metadata;
+        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsDerivedFragment);
+        fixture.componentRef.setInput("datasetPermissions", mockFullPowerDatasetPermissionsFragment);
+        fixture.componentRef.setInput("datasetViewType", DatasetViewTypeEnum.Metadata);
 
         fixture.detectChanges();
     });

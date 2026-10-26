@@ -19,13 +19,13 @@ describe("FlowTablePanelFiltersComponent", () => {
         });
         fixture = TestBed.createComponent(FlowTablePanelFiltersComponent);
         component = fixture.componentInstance;
-        component.onlySystemFlows = false;
-        component.hasDatasetColumn = false;
-        component.accountFlowInitiators = [];
-        component.involvedDatasets = [];
-        component.selectedDatasetItems = [];
-        component.selectedAccountItems = [];
-        component.selectedStatusItems = [];
+        fixture.componentRef.setInput("onlySystemFlows", false);
+        fixture.componentRef.setInput("hasDatasetColumn", false);
+        fixture.componentRef.setInput("accountFlowInitiators", []);
+        fixture.componentRef.setInput("involvedDatasets", []);
+        fixture.componentRef.setInput("selectedDatasetItems", []);
+        fixture.componentRef.setInput("selectedAccountItems", []);
+        fixture.componentRef.setInput("selectedStatusItems", []);
         fixture.detectChanges();
     });
 

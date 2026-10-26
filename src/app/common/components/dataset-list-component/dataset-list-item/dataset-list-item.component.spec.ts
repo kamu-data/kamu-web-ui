@@ -46,9 +46,9 @@ describe("DatasetListItemComponent", () => {
 
         fixture = TestBed.createComponent(DatasetListItemComponent);
         component = fixture.componentInstance;
-        component.row = mockDatasetListItem;
-        component.isClickableRow = true;
-        component.rowIndex = 0;
+        fixture.componentRef.setInput("row", mockDatasetListItem);
+        fixture.componentRef.setInput("isClickableRow", true);
+        fixture.componentRef.setInput("rowIndex", 0);
         navigationService = TestBed.inject(NavigationService);
         fixture.detectChanges();
     });

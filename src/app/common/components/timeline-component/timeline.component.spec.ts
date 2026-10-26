@@ -34,11 +34,11 @@ describe("TimelineComponent", () => {
 
         fixture = TestBed.createComponent(TimelineComponent);
         component = fixture.componentInstance;
-        component.datasetName = TEST_DATASET_NAME;
-        component.pageInfo = mockPageBasedInfo;
-        component.history = [
+        fixture.componentRef.setInput("datasetName", TEST_DATASET_NAME);
+        fixture.componentRef.setInput("pageInfo", mockPageBasedInfo);
+        fixture.componentRef.setInput("history", [
             mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHash as MetadataBlockFragment,
-        ];
+        ] satisfies MetadataBlockFragment[]);
 
         fixture.detectChanges();
     });

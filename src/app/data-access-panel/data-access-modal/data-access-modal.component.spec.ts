@@ -46,7 +46,7 @@ describe("DataAccessModalComponent", () => {
         protocolsService = TestBed.inject(ProtocolsService);
         getProtocolsSpy = spyOn(protocolsService, "getProtocols").and.returnValue(of(mockDatasetEndPoints));
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsRootFragment;
+        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
         fixture.detectChanges();
     });
 

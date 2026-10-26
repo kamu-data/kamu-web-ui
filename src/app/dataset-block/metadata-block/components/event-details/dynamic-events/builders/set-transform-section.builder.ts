@@ -49,14 +49,12 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<DatasetTrans
                             const rows: EventRow[] = [];
                             const inputDataset = item.inputDataset;
                             const { fields, sectionType } =
-                                inputDataset.__typename === "TransformInputDatasetNotAccessible"
-                                    ? { fields: inputDataset, sectionType: inputDataset.__typename }
-                                    : "dataset" in inputDataset
-                                      ? {
-                                            fields: inputDataset.dataset,
-                                            sectionType: `${inputDataset.dataset.__typename}`,
-                                        }
-                                      : { fields: {}, sectionType: "" };
+                                "dataset" in inputDataset
+                                    ? {
+                                          fields: inputDataset.dataset,
+                                          sectionType: inputDataset.dataset.__typename ?? "",
+                                      }
+                                    : { fields: inputDataset, sectionType: inputDataset.__typename ?? "" };
 
                             Object.entries(fields).forEach(([key, value]) => {
                                 if (event.__typename && key !== "__typename" && ["id", "name", "alias"].includes(key)) {

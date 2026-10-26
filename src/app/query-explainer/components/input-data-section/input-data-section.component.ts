@@ -23,6 +23,7 @@ import { DatasetInfo } from "@interface/navigation.interface";
 
 import ProjectLinks from "src/app/project-links";
 import { QueryExplainerComponentData } from "src/app/query-explainer/query-explainer.component";
+import { verifyQueryError } from "src/app/query-explainer/query-explainer.helpers";
 import { VerifyQueryError, VerifyQueryKindError } from "src/app/query-explainer/query-explainer.types";
 
 @Component({
@@ -54,8 +55,7 @@ export class InputDataSectionComponent {
     private markdownFormatPipe = inject(MarkdownFormatPipe);
 
     public get verifyError(): MaybeNull<VerifyQueryError> {
-        const response = this.inputData.sqlQueryVerify;
-        return response?.ok === false ? response.error : null;
+        return verifyQueryError(this.inputData.sqlQueryVerify);
     }
 
     public isDatasetBlockNotFoundError(error: MaybeNull<VerifyQueryError>, blockHash: string): boolean {

@@ -66,7 +66,7 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
     @Input(RoutingResolvers.DATASET_INFO_KEY) public datasetInfo: DatasetInfo;
 
     public readonly DISPLAY_COLUMNS: string[] = ["key", "value", "actions"];
-    public dataSource = new MatTableDataSource();
+    public dataSource = new MatTableDataSource<ViewDatasetEnvVarDataFragment>();
     @ViewChild(MatSort) private sort: MatSort;
     public pageBasedInfo: DatasetPageInfoFragment;
     public readonly PER_PAGE = 15;
@@ -116,8 +116,8 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
     }
 
     public applyFilter(search: string): void {
-        this.dataSource.filterPredicate = (data: unknown, filter: string): boolean => {
-            return (data as ViewDatasetEnvVarDataFragment).key.toLowerCase().includes(filter.trim().toLowerCase());
+        this.dataSource.filterPredicate = (data: ViewDatasetEnvVarDataFragment, filter: string): boolean => {
+            return data.key.toLowerCase().includes(filter.trim().toLowerCase());
         };
         this.dataSource.filter = search.trim().toLowerCase();
     }

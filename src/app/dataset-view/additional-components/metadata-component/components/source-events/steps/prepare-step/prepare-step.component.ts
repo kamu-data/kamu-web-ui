@@ -66,7 +66,7 @@ export class PrepareStepComponent extends BaseComponent implements OnInit {
     private initExistingPrepareStep(event: AddPollingSourceEditFormType): void {
         if (event.prepare && this.sectionForm.length === 0) {
             event.prepare.forEach((item) => {
-                // A step of a kind the form has no editor for is left out rather than shown as another step
+                // Steps of a kind the form has no editor for are skipped
                 if (item.kind === PrepareKind.PIPE && Array.isArray(item.command)) {
                     this.sectionForm.push(
                         this.fb.group({

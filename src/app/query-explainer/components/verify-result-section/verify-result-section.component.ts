@@ -10,6 +10,7 @@ import { MatIconModule } from "@angular/material/icon";
 
 import { MaybeNull } from "@interface/app.types";
 
+import { verifyQueryError } from "src/app/query-explainer/query-explainer.helpers";
 import {
     VerifyQueryError,
     VerifyQueryKindError,
@@ -31,7 +32,7 @@ export class VerifyResultSectionComponent {
     @Input({ required: true }) public verifyResponse: MaybeNull<VerifyQueryResponse>;
 
     public get verifyError(): MaybeNull<VerifyQueryError> {
-        return this.verifyResponse?.ok === false ? this.verifyResponse.error : null;
+        return verifyQueryError(this.verifyResponse);
     }
 
     public get outputMismatchError(): MaybeNull<VerifyQueryOutputMismatchError> {

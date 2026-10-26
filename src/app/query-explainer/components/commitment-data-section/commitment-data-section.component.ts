@@ -12,6 +12,7 @@ import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/c
 import { MaybeNull } from "@interface/app.types";
 
 import { QueryExplainerComponentData } from "src/app/query-explainer/query-explainer.component";
+import { verifyQueryError } from "src/app/query-explainer/query-explainer.helpers";
 import { VerifyQueryError, VerifyQueryKindError } from "src/app/query-explainer/query-explainer.types";
 
 @Component({
@@ -29,8 +30,7 @@ export class CommitmentDataSectionComponent {
     @Input({ required: true }) public commitmentData: QueryExplainerComponentData;
 
     public get verifyError(): MaybeNull<VerifyQueryError> {
-        const response = this.commitmentData.sqlQueryVerify;
-        return response?.ok === false ? response.error : null;
+        return verifyQueryError(this.commitmentData.sqlQueryVerify);
     }
 
     public isInputHashError(error: MaybeNull<VerifyQueryError>): boolean {

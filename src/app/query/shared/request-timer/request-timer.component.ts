@@ -59,6 +59,9 @@ export class RequestTimerComponent extends BaseComponent implements OnChanges, O
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
+        if (!changes.sqlLoading) {
+            return;
+        }
         if (changes.sqlLoading.currentValue) {
             this.resetTimer();
             this.runTimer();

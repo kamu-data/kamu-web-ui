@@ -44,6 +44,21 @@ describe("RequestTimerComponent", () => {
         flush();
     }));
 
+    it("should keep the timer running when only the class changes", fakeAsync(() => {
+        setComponentInput(fixture, "class", "mock-class");
+        setComponentInput(fixture, "sqlLoading", true);
+        fixture.detectChanges();
+        tick(1000);
+        setComponentInput(fixture, "class", "another-class");
+        fixture.detectChanges();
+        tick(1000);
+        setComponentInput(fixture, "sqlLoading", false);
+        fixture.detectChanges();
+        const timeElement = findElementByDataTestId(fixture, "duration-request-time");
+        expect(timeElement?.textContent?.trim()).toEqual("00:00:02.00");
+        flush();
+    }));
+
     it("should show a reset time when the tab is hidden during a request", fakeAsync(() => {
         setComponentInput(fixture, "class", "mock-class");
         setComponentInput(fixture, "sqlLoading", true);

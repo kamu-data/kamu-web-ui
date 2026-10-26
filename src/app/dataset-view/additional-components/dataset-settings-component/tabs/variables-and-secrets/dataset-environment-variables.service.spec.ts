@@ -13,6 +13,7 @@ import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
 import { requireValue } from "@common/helpers/app.helpers";
+import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { EnvironmentVariablesApi } from "@api/environment-variables.api";
 import { ViewDatasetEnvVarConnectionDataFragment } from "@api/kamu.graphql.interface";
 import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
@@ -51,9 +52,9 @@ describe("EnvironmentVariablesService", () => {
     });
 
     it("should fetch list environment variables", () => {
-        const listEnvironmentVariablesSpy = spyOn(environmentVariablesApi, "listEnvironmentVariables").and.returnValue(
-            of(mockListEnvVariablesQuery),
-        );
+        const listEnvironmentVariablesSpy = vi
+            .spyOn(environmentVariablesApi, "listEnvironmentVariables")
+            .mockReturnValue(of(mockListEnvVariablesQuery));
 
         const subscription$ = service
             .listEnvVariables({
@@ -71,14 +72,14 @@ describe("EnvironmentVariablesService", () => {
             });
 
         expect(listEnvironmentVariablesSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should upsert environment variable with success", () => {
-        const saveEnvironmentVariableSpy = spyOn(environmentVariablesApi, "upsertEnvironmentVariable").and.returnValue(
-            of(mockUpsertEnvVariableMutationCreated),
-        );
-        const toastrServiceSuccessSpy = spyOn(toastrService, "success");
+        const saveEnvironmentVariableSpy = vi
+            .spyOn(environmentVariablesApi, "upsertEnvironmentVariable")
+            .mockReturnValue(of(mockUpsertEnvVariableMutationCreated));
+        const toastrServiceSuccessSpy = stubMethod(toastrService, "success");
 
         const subscription$ = service
             .upsertEnvVariable({
@@ -92,15 +93,14 @@ describe("EnvironmentVariablesService", () => {
 
         expect(toastrServiceSuccessSpy).toHaveBeenCalledTimes(1);
         expect(saveEnvironmentVariableSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should delete environment variable with success", () => {
-        const deleteEnvironmentVariableSpy = spyOn(
-            environmentVariablesApi,
-            "deleteEnvironmentVariable",
-        ).and.returnValue(of(mockDeleteEnvVariableMutation));
-        const toastrServiceSuccessSpy = spyOn(toastrService, "success");
+        const deleteEnvironmentVariableSpy = vi
+            .spyOn(environmentVariablesApi, "deleteEnvironmentVariable")
+            .mockReturnValue(of(mockDeleteEnvVariableMutation));
+        const toastrServiceSuccessSpy = stubMethod(toastrService, "success");
 
         const subscription$ = service
             .deleteEnvVariable({
@@ -112,15 +112,14 @@ describe("EnvironmentVariablesService", () => {
 
         expect(toastrServiceSuccessSpy).toHaveBeenCalledTimes(1);
         expect(deleteEnvironmentVariableSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should delete environment variable with error", () => {
-        const deleteEnvironmentVariableSpy = spyOn(
-            environmentVariablesApi,
-            "deleteEnvironmentVariable",
-        ).and.returnValue(of(mockDeleteEnvVariableMutationError));
-        const toastrServiceErrorSpy = spyOn(toastrService, "error");
+        const deleteEnvironmentVariableSpy = vi
+            .spyOn(environmentVariablesApi, "deleteEnvironmentVariable")
+            .mockReturnValue(of(mockDeleteEnvVariableMutationError));
+        const toastrServiceErrorSpy = stubMethod(toastrService, "error");
 
         const subscription$ = service
             .deleteEnvVariable({
@@ -132,13 +131,13 @@ describe("EnvironmentVariablesService", () => {
 
         expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
         expect(deleteEnvironmentVariableSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check exposed variable value", () => {
-        const exposedEnvVariableValueSpy = spyOn(environmentVariablesApi, "exposedEnvVariableValue").and.returnValue(
-            of(mockExposedEnvVariableValueQuery),
-        );
+        const exposedEnvVariableValueSpy = vi
+            .spyOn(environmentVariablesApi, "exposedEnvVariableValue")
+            .mockReturnValue(of(mockExposedEnvVariableValueQuery));
 
         const subscription$ = service
             .exposedEnvVariableValue({
@@ -149,6 +148,6 @@ describe("EnvironmentVariablesService", () => {
             .subscribe((result) => expect(result).toEqual(MOCK_EXPOSED_ENV_VAR_VALUE));
 
         expect(exposedEnvVariableValueSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 });

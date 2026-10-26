@@ -21,6 +21,7 @@ import {
     findElementByDataTestId,
     getElementByDataTestId,
     setComponentInput,
+    stubMethod,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockUploadPrepareResponse } from "@api/mock/upload-file.mock";
@@ -51,7 +52,7 @@ describe("QueryAndResultSectionsComponent", () => {
         toastrService = TestBed.inject(ToastrService);
         fileUploadService = TestBed.inject(FileUploadService);
         engineService = TestBed.inject(EngineService);
-        spyOn(engineService, "engines").and.returnValue(of(mockEngines));
+        vi.spyOn(engineService, "engines").mockReturnValue(of(mockEngines));
 
         setComponentInput(fixture, "sqlLoading", false);
         setComponentInput(fixture, "sqlRequestCode", "select * from 'mock-dataset'");
@@ -62,10 +63,12 @@ describe("QueryAndResultSectionsComponent", () => {
     });
 
     it("should check run sql query", () => {
-        const runSQLRequestSpy = spyOn(component, "runSQLRequest");
+        const runSQLRequestSpy = vi.spyOn(component, "runSQLRequest").mockImplementation(() => {});
         component.runSql(null);
 
-        expect(runSQLRequestSpy).toHaveBeenCalledOnceWith({ query: "select * from 'mock-dataset'" }, true);
+        expect(runSQLRequestSpy).toHaveBeenCalledTimes(1);
+
+        expect(runSQLRequestSpy).toHaveBeenCalledWith({ query: "select * from 'mock-dataset'" }, true);
     });
 
     it("should check 'Run' button is disabled", () => {
@@ -79,7 +82,7 @@ describe("QueryAndResultSectionsComponent", () => {
         component.editorLoaded = false;
         fixture.detectChanges();
 
-        expect(component.editorLoaded).toBeFalse();
+        expect(component.editorLoaded).toBe(false);
         const progressBarElementBefore = findElementByDataTestId(fixture, "editor-progress-bar");
         expect(progressBarElementBefore).toBeDefined();
 
@@ -108,7 +111,7 @@ describe("QueryAndResultSectionsComponent", () => {
 
     it("should calculate sql request params", () => {
         fixture.detectChanges();
-        const sqlReq = spyOn(component.runSQLRequestEmit, "emit");
+        const sqlReq = vi.spyOn(component.runSQLRequestEmit, "emit").mockImplementation(() => {});
         const limit = 1;
         const params: DatasetRequestBySql = {
             query: component.sqlRequestCode,
@@ -123,12 +126,12 @@ describe("QueryAndResultSectionsComponent", () => {
         component.loadMore(limit);
         params.skip = component.currentData.length;
 
-        expect(sqlReq.calls.argsFor(1)).toEqual([params]);
+        expect(vi.mocked(sqlReq).mock.calls[1]).toEqual([params]);
     });
 
     it("should check click on `Share query` button", fakeAsync(() => {
-        const toastServiceSpy = spyOn(toastrService, "success");
-        const clipboardCopySpy = spyOn(clipboard, "copy");
+        const toastServiceSpy = stubMethod(toastrService, "success");
+        const clipboardCopySpy = stubMethod(clipboard, "copy");
         tick();
         fixture.detectChanges();
 
@@ -139,17 +142,17 @@ describe("QueryAndResultSectionsComponent", () => {
     }));
 
     it("should check click on `Copy as curl command` button", () => {
-        const toastServiceSpy = spyOn(toastrService, "success");
-        const clipboardCopySpy = spyOn(clipboard, "copy");
+        const toastServiceSpy = stubMethod(toastrService, "success");
+        const clipboardCopySpy = stubMethod(clipboard, "copy");
         component.copyCurlCommand();
         expect(toastServiceSpy).toHaveBeenCalledWith("Copied command to clipboard");
         expect(clipboardCopySpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check click on `Verify` button", () => {
-        const uploadFilePrepareSpy = spyOn(fileUploadService, "uploadFilePrepare").and.returnValue(
-            of(mockUploadPrepareResponse),
-        );
+        const uploadFilePrepareSpy = vi
+            .spyOn(fileUploadService, "uploadFilePrepare")
+            .mockReturnValue(of(mockUploadPrepareResponse));
         component.verifyQueryResult();
         expect(uploadFilePrepareSpy).toHaveBeenCalledTimes(1);
     });
@@ -157,10 +160,11 @@ describe("QueryAndResultSectionsComponent", () => {
     it("should run the query when the Generate proof' switch is enabled", () => {
         component.enabledProof = true;
         fixture.detectChanges();
-        const runSQLRequestEmitSpy = spyOn(component.runSQLRequestEmit, "emit");
+        const runSQLRequestEmitSpy = vi.spyOn(component.runSQLRequestEmit, "emit").mockImplementation(() => {});
 
         component.runSQLRequest({ query: "select * from 'mock-dataset'" });
-        expect(runSQLRequestEmitSpy).toHaveBeenCalledOnceWith({
+        expect(runSQLRequestEmitSpy).toHaveBeenCalledTimes(1);
+        expect(runSQLRequestEmitSpy).toHaveBeenCalledWith({
             query: "select * from 'mock-dataset'",
             enabledProof: true,
         });

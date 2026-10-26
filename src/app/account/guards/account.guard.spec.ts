@@ -28,7 +28,7 @@ describe("accountGuard", () => {
         `/${TEST_ACCOUNT_NAME}/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.FLOWS}#top`,
     ].forEach((url) => {
         it(`should allow the tab URL ${url}`, async () => {
-            expect(await runCanActivate(accountGuard, route, url)).toBeTrue();
+            expect(await runCanActivate(accountGuard, route, url)).toBe(true);
         });
     });
 

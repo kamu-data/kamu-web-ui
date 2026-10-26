@@ -16,6 +16,7 @@ import { of, shareReplay } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
+import type { Mock } from "vitest";
 
 import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { FlowStatus } from "@api/kamu.graphql.interface";
@@ -41,7 +42,7 @@ describe("DatasetFlowDetailsComponent", () => {
     let datasetSubsService: DatasetSubscriptionsService;
     let datasetService: DatasetService;
     let navigationService: NavigationService;
-    let navigateToFlowDetailsSpy: jasmine.Spy;
+    let navigateToFlowDetailsSpy: Mock;
     const MOCK_FLOW_ID = "3";
 
     beforeEach(async () => {
@@ -81,11 +82,11 @@ describe("DatasetFlowDetailsComponent", () => {
         datasetService = TestBed.inject(DatasetService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         navigationService = TestBed.inject(NavigationService);
-        spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
+        vi.spyOn(datasetSubsService, "permissionsChanges", "get").mockReturnValue(
             of(mockFullPowerDatasetPermissionsFragment),
         );
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
-        navigateToFlowDetailsSpy = spyOn(navigationService, "navigateToFlowDetails");
+        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(of(mockDatasetBasicsRootFragment));
+        navigateToFlowDetailsSpy = vi.spyOn(navigationService, "navigateToFlowDetails").mockImplementation(() => {});
         render(mockDatasetFlowByIdResponse);
     });
 
@@ -128,7 +129,7 @@ describe("DatasetFlowDetailsComponent", () => {
         const interval = DatasetFlowDetailsComponent.REFRESH_INTERVAL_MS;
 
         it("should refresh a finished flow a few more times, then stop", fakeAsync(() => {
-            navigateToFlowDetailsSpy.calls.reset();
+            navigateToFlowDetailsSpy.mockClear();
             render(mockDatasetFlowByIdResponse);
 
             tick(interval * 5);
@@ -136,7 +137,7 @@ describe("DatasetFlowDetailsComponent", () => {
         }));
 
         it("should keep refreshing an unfinished flow until shortly after it finishes", fakeAsync(() => {
-            navigateToFlowDetailsSpy.calls.reset();
+            navigateToFlowDetailsSpy.mockClear();
             render({
                 ...mockDatasetFlowByIdResponse,
                 flow: { ...mockFlowSummaryDataFragments[0], status: FlowStatus.Running },

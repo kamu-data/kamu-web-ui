@@ -11,6 +11,7 @@ import { RedirectCommand } from "@angular/router";
 import { firstValueFrom, of, Subject, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
+import type { Mock } from "vitest";
 
 import { expectPageNotFoundRedirect, expectRedirectTo } from "@common/helpers/base-test.helpers.spec";
 import { DatasetNotFoundError } from "@common/values/errors";
@@ -48,10 +49,10 @@ describe("dataset access helpers", () => {
     function mockDataset(
         datasetBasics: DatasetBasicsFragment = mockDatasetBasicsRootFragment,
         datasetPermissions: DatasetPermissionsFragment = mockFullPowerDatasetPermissionsFragment,
-    ): jasmine.Spy {
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(datasetBasics));
-        spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(of(datasetPermissions));
-        return spyOn(datasetService, "requestDatasetBasicDataWithPermissions").and.returnValue(of(undefined));
+    ): Mock {
+        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(of(datasetBasics));
+        vi.spyOn(datasetSubsService, "permissionsChanges", "get").mockReturnValue(of(datasetPermissions));
+        return vi.spyOn(datasetService, "requestDatasetBasicDataWithPermissions").mockReturnValue(of(undefined));
     }
 
     describe("requestDatasetWithPermissions", () => {
@@ -64,7 +65,9 @@ describe("dataset access helpers", () => {
 
             const data = await resolve();
 
-            expect(requestSpy).toHaveBeenCalledOnceWith(datasetInfo);
+            expect(requestSpy).toHaveBeenCalledTimes(1);
+
+            expect(requestSpy).toHaveBeenCalledWith(datasetInfo);
             expect(data).toEqual({
                 datasetBasics: mockDatasetBasicsRootFragment,
                 datasetPermissions: mockFullPowerDatasetPermissionsFragment,
@@ -72,12 +75,12 @@ describe("dataset access helpers", () => {
         });
 
         it("should not emit before the dataset request completes", () => {
-            spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
-            spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
+            vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(of(mockDatasetBasicsRootFragment));
+            vi.spyOn(datasetSubsService, "permissionsChanges", "get").mockReturnValue(
                 of(mockFullPowerDatasetPermissionsFragment),
             );
             const request$ = new Subject<void>();
-            spyOn(datasetService, "requestDatasetBasicDataWithPermissions").and.returnValue(request$);
+            vi.spyOn(datasetService, "requestDatasetBasicDataWithPermissions").mockReturnValue(request$);
             const emitted: unknown[] = [];
 
             TestBed.runInInjectionContext(() => requestDatasetWithPermissions(datasetInfo)).subscribe((data) =>
@@ -96,7 +99,7 @@ describe("dataset access helpers", () => {
         });
 
         it("should redirect to page not found when the dataset does not exist", async () => {
-            spyOn(datasetService, "requestDatasetBasicDataWithPermissions").and.returnValue(
+            vi.spyOn(datasetService, "requestDatasetBasicDataWithPermissions").mockReturnValue(
                 throwError(() => new DatasetNotFoundError()),
             );
 
@@ -106,11 +109,11 @@ describe("dataset access helpers", () => {
         });
 
         it("should propagate other errors", async () => {
-            spyOn(datasetService, "requestDatasetBasicDataWithPermissions").and.returnValue(
+            vi.spyOn(datasetService, "requestDatasetBasicDataWithPermissions").mockReturnValue(
                 throwError(() => new Error("failed")),
             );
 
-            await expectAsync(resolve()).toBeRejectedWithError("failed");
+            await expect(resolve()).rejects.toThrowError("failed");
         });
     });
 
@@ -157,7 +160,7 @@ describe("dataset access helpers", () => {
         });
 
         it("should redirect to page not found when the dataset does not exist", async () => {
-            spyOn(datasetService, "requestDatasetBasicDataWithPermissions").and.returnValue(
+            vi.spyOn(datasetService, "requestDatasetBasicDataWithPermissions").mockReturnValue(
                 throwError(() => new DatasetNotFoundError()),
             );
 

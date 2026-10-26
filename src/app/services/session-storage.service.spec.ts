@@ -23,13 +23,13 @@ describe("SessionStorageService", () => {
     });
 
     it("should be check set state for side panel", () => {
-        expect(service.isSidePanelVisible).toBeFalse();
+        expect(service.isSidePanelVisible).toBe(false);
 
         service.setSidePanelVisible(true);
-        expect(service.isSidePanelVisible).toBeTrue();
+        expect(service.isSidePanelVisible).toBe(true);
 
         service.setSidePanelVisible(false);
-        expect(service.isSidePanelVisible).toBeFalse();
+        expect(service.isSidePanelVisible).toBe(false);
     });
 
     it("should hand out the pending GitHub sign-in only once", () => {

@@ -8,8 +8,10 @@
 import { TestBed } from "@angular/core/testing";
 
 import { provideToastr, ToastrService } from "ngx-toastr";
+import type { Mock } from "vitest";
 
 import { ModalService } from "@common/components/modal/modal.service";
+import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import {
     AccountNotFoundError,
     AuthenticationError,
@@ -55,28 +57,30 @@ describe("ErrorHandlerService", () => {
     });
 
     it("should show modal window when SQL query execution fails", () => {
-        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.callThrough();
+        const toastrServiceSpy: Mock = vi.spyOn(toastrService, "error");
         service.handleError(new SqlExecutionError());
         expect(toastrServiceSpy).toHaveBeenCalledWith("", "", { timeOut: 3000 });
     });
 
     it("should show modal window when SQL query execution fails with extra error message", () => {
-        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.callThrough();
+        const toastrServiceSpy: Mock = vi.spyOn(toastrService, "error");
         const errorText = "executing SQL failed";
         service.handleError(new SqlExecutionError(errorText));
         expect(toastrServiceSpy).toHaveBeenCalledWith("", errorText, { timeOut: 3000 });
     });
 
     it("should show modal window when SQL query is invalid", () => {
-        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.callThrough();
+        const toastrServiceSpy: Mock = vi.spyOn(toastrService, "error");
         const errorText = "bad SQL";
         service.handleError(new InvalidSqlError(errorText));
         expect(toastrServiceSpy).toHaveBeenCalledWith("", errorText, { timeOut: 3000 });
     });
 
     it("should show redirect to 404 page on dataset not found", () => {
-        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.stub();
-        const navigationServiceSpy: jasmine.Spy = spyOn(navigationService, "navigateToPageNotFound").and.stub();
+        const toastrServiceSpy: Mock = stubMethod(toastrService, "error");
+        const navigationServiceSpy: Mock = vi
+            .spyOn(navigationService, "navigateToPageNotFound")
+            .mockImplementation(() => {});
 
         service.handleError(new DatasetNotFoundError());
 
@@ -85,8 +89,10 @@ describe("ErrorHandlerService", () => {
     });
 
     it("should show redirect to 404 page on account not found", () => {
-        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.stub();
-        const navigationServiceSpy: jasmine.Spy = spyOn(navigationService, "navigateToPageNotFound").and.stub();
+        const toastrServiceSpy: Mock = stubMethod(toastrService, "error");
+        const navigationServiceSpy: Mock = vi
+            .spyOn(navigationService, "navigateToPageNotFound")
+            .mockImplementation(() => {});
 
         service.handleError(new AccountNotFoundError());
 
@@ -95,21 +101,25 @@ describe("ErrorHandlerService", () => {
     });
 
     it("should show modal window when dataset operation fails", () => {
-        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.callThrough();
+        const toastrServiceSpy: Mock = vi.spyOn(toastrService, "error");
         service.handleError(new DatasetOperationError([{ message: "First" }, { message: "Second" }]));
-        expect(toastrServiceSpy).toHaveBeenCalledOnceWith("First. Second");
+        expect(toastrServiceSpy).toHaveBeenCalledTimes(1);
+        expect(toastrServiceSpy).toHaveBeenCalledWith("First. Second");
     });
 
     it("should show a toast that stays when a file upload fails", () => {
-        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.callThrough();
+        const toastrServiceSpy: Mock = vi.spyOn(toastrService, "error");
         service.handleError(new FileUploadError([{ message: "Upload failed" }]));
-        expect(toastrServiceSpy).toHaveBeenCalledOnceWith("Upload failed", "", { disableTimeOut: "timeOut" });
+        expect(toastrServiceSpy).toHaveBeenCalledTimes(1);
+        expect(toastrServiceSpy).toHaveBeenCalledWith("Upload failed", "", { disableTimeOut: "timeOut" });
     });
 
     it("should log authentication errors, terminate session, and show Toastr", () => {
-        const consoleErrorSpy: jasmine.Spy = spyOn(console, "error").and.stub();
-        const authApiTerminateSessionSpy: jasmine.Spy = spyOn(loggedUserServiceMock, "terminateSession").and.stub();
-        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.stub();
+        const consoleErrorSpy: Mock = vi.spyOn(console, "error").mockImplementation(() => {});
+        const authApiTerminateSessionSpy: Mock = vi
+            .spyOn(loggedUserServiceMock, "terminateSession")
+            .mockImplementation(() => {});
+        const toastrServiceSpy: Mock = stubMethod(toastrService, "error");
 
         service.handleError(new AuthenticationError([]));
 
@@ -117,9 +127,9 @@ describe("ErrorHandlerService", () => {
         expect(authApiTerminateSessionSpy).toHaveBeenCalledWith();
         expect(toastrServiceSpy).toHaveBeenCalledWith(ErrorTexts.ERROR_UNKNOWN_AUTHENTICATION);
 
-        consoleErrorSpy.calls.reset();
-        authApiTerminateSessionSpy.calls.reset();
-        toastrServiceSpy.calls.reset();
+        consoleErrorSpy.mockClear();
+        authApiTerminateSessionSpy.mockClear();
+        toastrServiceSpy.mockClear();
 
         const ERROR_TEXT = "some authentication error";
         const ERROR = new Error(ERROR_TEXT);
@@ -131,8 +141,8 @@ describe("ErrorHandlerService", () => {
     });
 
     it("should log unknown errors", () => {
-        const toastrServiceSpy: jasmine.Spy = spyOn(toastrService, "error").and.callThrough();
-        const consoleErrorSpy: jasmine.Spy = spyOn(console, "error").and.stub();
+        const toastrServiceSpy: Mock = vi.spyOn(toastrService, "error");
+        const consoleErrorSpy: Mock = vi.spyOn(console, "error").mockImplementation(() => {});
         const unknownError = new Error("Some Unknown Error");
 
         service.handleError(unknownError);

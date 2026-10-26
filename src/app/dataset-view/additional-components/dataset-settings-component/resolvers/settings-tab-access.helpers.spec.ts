@@ -39,15 +39,15 @@ describe("resolveSettingsTabAccess", () => {
         datasetService = TestBed.inject(DatasetService);
         datasetSubService = TestBed.inject(DatasetSubscriptionsService);
         appConfigService = TestBed.inject(AppConfigService);
-        spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue(
+        vi.spyOn(appConfigService, "featureFlags", "get").mockReturnValue(
             AppValues.DEFAULT_UI_CONFIGURATION.featureFlags,
         );
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
-        spyOnProperty(datasetSubService, "overviewChanges", "get").and.returnValue(of(mockOverviewUpdate));
+        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(of(mockDatasetBasicsRootFragment));
+        vi.spyOn(datasetSubService, "overviewChanges", "get").mockReturnValue(of(mockOverviewUpdate));
     });
 
     function resolve(permissions: DatasetPermissionsFragment): Promise<unknown> {
-        spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(of(permissions));
+        vi.spyOn(datasetSubService, "permissionsChanges", "get").mockReturnValue(of(permissions));
         return firstValueFrom(TestBed.runInInjectionContext(() => resolveSettingsTabAccess(SettingsTabsEnum.GENERAL)));
     }
 

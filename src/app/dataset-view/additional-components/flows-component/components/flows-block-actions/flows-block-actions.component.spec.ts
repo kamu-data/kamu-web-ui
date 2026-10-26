@@ -63,7 +63,7 @@ describe("FlowsBlockActionsComponent", () => {
 
     it("should check `Refresh flow` button", () => {
         fixture.detectChanges();
-        const refreshEmitterEmitSpy = spyOn(component.refreshEmitter, "emit");
+        const refreshEmitterEmitSpy = vi.spyOn(component.refreshEmitter, "emit").mockImplementation(() => {});
         component.refreshFlow();
         expect(refreshEmitterEmitSpy).toHaveBeenCalledTimes(1);
     });

@@ -41,18 +41,18 @@ describe("FlowDetailsLogsTabComponent", () => {
     });
 
     it("should check grafanaTaskDetailsURL getter with value", () => {
-        spyOnProperty(appConfigService, "grafanaLogs", "get").and.returnValue({ taskDetailsUrl: "mock-value" });
+        vi.spyOn(appConfigService, "grafanaLogs", "get").mockReturnValue({ taskDetailsUrl: "mock-value" });
         expect(component.grafanaTaskDetailsURL).toEqual("mock-value");
     });
 
     it("should check grafanaTaskDetailsURL getter with null", () => {
-        spyOnProperty(appConfigService, "grafanaLogs", "get").and.returnValue(null);
+        vi.spyOn(appConfigService, "grafanaLogs", "get").mockReturnValue(null);
         expect(component.grafanaTaskDetailsURL).toEqual("");
     });
 
     it("should check grafana logs block is visible", () => {
-        spyOnProperty(loggedUserService, "isAdmin", "get").and.returnValue(true);
-        spyOnProperty(component, "grafanaTaskDetailsURL", "get").and.returnValue("http://mock.url");
+        vi.spyOn(loggedUserService, "isAdmin", "get").mockReturnValue(true);
+        vi.spyOn(component, "grafanaTaskDetailsURL", "get").mockReturnValue("http://mock.url");
         setComponentInput(fixture, "flowDetails", {
             ...mockDatasetFlowByIdResponse,
             flowHistory: [
@@ -76,8 +76,8 @@ describe("FlowDetailsLogsTabComponent", () => {
     });
 
     it("should check grafana logs block is not visible", () => {
-        spyOnProperty(loggedUserService, "isAdmin", "get").and.returnValue(false);
-        spyOnProperty(component, "grafanaTaskDetailsURL", "get").and.returnValue("http://mock.url");
+        vi.spyOn(loggedUserService, "isAdmin", "get").mockReturnValue(false);
+        vi.spyOn(component, "grafanaTaskDetailsURL", "get").mockReturnValue("http://mock.url");
         fixture.detectChanges();
 
         const grafanaLogsBlock = findElementByDataTestId(fixture, "grafana-logs-section");

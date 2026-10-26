@@ -89,12 +89,12 @@ class CodexHookTest(unittest.TestCase):
 
     @unittest.skipUnless(PRETTIER_AVAILABLE, "node_modules not installed")
     def test_post_patch_formats_and_reports_added_line_violations(self):
-        self.harness.write_ts("example.spec.ts", 'fit("x",()=>{})')
+        self.harness.write_ts("example.spec.ts", 'it.only("x",()=>{})')
         result = self.harness.invoke("PostToolUse", "apply_patch", command=self.harness.patch(
-            '*** Add File: example.spec.ts\n+fit("x",()=>{})'))
+            '*** Add File: example.spec.ts\n+it.only("x",()=>{})'))
         self.assertEqual(result.returncode, 2)
         self.assertIn("focused or disabled tests", result.stderr)
-        self.assertIn('fit("x", () => {})', (self.harness.root / "example.spec.ts").read_text())
+        self.assertIn('it.only("x", () => {})', (self.harness.root / "example.spec.ts").read_text())
 
     def test_post_patch_provides_regeneration_context(self):
         output = self.harness.run("PostToolUse", "apply_patch", command=self.harness.patch(

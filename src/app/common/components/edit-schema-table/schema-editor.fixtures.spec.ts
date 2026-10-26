@@ -330,7 +330,7 @@ describe("ORDER_SCHEMA fixture sanity", () => {
     });
 
     it("ORDER_SCHEMA_DATASET wraps fields in the { fields } object form", () => {
-        expect(Array.isArray(ORDER_SCHEMA_DATASET)).toBeFalse();
+        expect(Array.isArray(ORDER_SCHEMA_DATASET)).toBe(false);
         expect(ORDER_SCHEMA_DATASET.fields).toBe(ORDER_SCHEMA);
     });
 });

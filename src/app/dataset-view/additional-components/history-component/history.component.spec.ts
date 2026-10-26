@@ -80,7 +80,7 @@ describe("HistoryComponent", () => {
         component = fixture.componentInstance;
         setComponentInput(fixture, "datasetInfo", MOCK_DATASET_INFO);
 
-        spyOn(datasetService, "requestDatasetHistory").and.returnValue(of());
+        vi.spyOn(datasetService, "requestDatasetHistory").mockReturnValue(of());
         datasetSubsService.emitHistoryChanged(mockHistoryUpdate);
         fixture.detectChanges();
     });
@@ -91,9 +91,12 @@ describe("HistoryComponent", () => {
 
     it("should check change page", () => {
         const page = 2;
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
         component.onPageChange(page);
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledOnceWith({
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
             datasetName: MOCK_DATASET_INFO.datasetName,
             accountName: MOCK_DATASET_INFO.accountName,
             tab: DatasetViewTypeEnum.History,

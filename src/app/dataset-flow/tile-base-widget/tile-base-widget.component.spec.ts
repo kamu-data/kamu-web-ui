@@ -133,6 +133,6 @@ describe("TileBaseWidgetComponent", () => {
 
     it(`should check href for tile element`, () => {
         const tileElement = getElementByDataTestId(fixture, "tile-element-0", HTMLAnchorElement);
-        expect(tileElement.href.includes("kamu/account.tokens.transfers/flow-details/414/history")).toBeTrue();
+        expect(tileElement.href.includes("kamu/account.tokens.transfers/flow-details/414/history")).toBe(true);
     });
 });

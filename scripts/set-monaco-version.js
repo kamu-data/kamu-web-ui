@@ -10,11 +10,10 @@ const version = require("../node_modules/monaco-editor/package.json").version;
 // Patch angular.json
 const angularJsonPath = path.resolve(__dirname, "../angular.json");
 const angularJson = JSON.parse(fs.readFileSync(angularJsonPath, "utf8"));
-const architect = angularJson.projects["kamu-platform"].architect;
-for (const target of [architect.build, architect.test]) {
-  const monacoAsset = target.options.assets.find((a) => a.input === "node_modules/monaco-editor");
-  monacoAsset.output = `/assets/monaco-${version}/`;
-}
+// The unit-test target builds through the build target, so it takes these assets from there too.
+const buildOptions = angularJson.projects["kamu-platform"].architect.build.options;
+const monacoAsset = buildOptions.assets.find((a) => a.input === "node_modules/monaco-editor");
+monacoAsset.output = `/assets/monaco-${version}/`;
 fs.writeFileSync(angularJsonPath, JSON.stringify(angularJson, null, 2) + "\n");
 
 // Generate monaco-version.ts

@@ -24,11 +24,12 @@ class AddedTextTest(unittest.TestCase):
                 self.assertTrue(flagged(line))
 
     def test_focused_and_disabled_specs_are_flagged_in_specs_only(self):
-        for line in ['fdescribe("X", () => {', '    fit("works", () => {', '    xit("later", () => {', 'xdescribe("X", () => {']:
+        for line in ['describe.only("X", () => {', '    it.only("works", () => {', '    it.skip("later", () => {',
+                     'describe.skip("X", () => {', '    test.only("works", () => {']:
             with self.subTest(line=line):
                 self.assertTrue(flagged(line, "src/app/x.component.spec.ts"))
                 self.assertFalse(flagged(line, "src/app/x.component.ts"))
-        for line in ['    it("works", () => {', "    this.fit(1);", "    profit(1);"]:
+        for line in ['    it("works", () => {', "    this.it.only(1);", "    split.skip(1);"]:
             with self.subTest(line=line):
                 self.assertFalse(flagged(line, "src/app/x.component.spec.ts"))
 

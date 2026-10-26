@@ -83,19 +83,21 @@ describe("DatasetSettingsComponent", () => {
 
     it("should check navigate to action list item", () => {
         setComponentInput(fixture, "activeTab", SettingsTabsEnum.SCHEDULING);
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
-        spyOn(component, "visibilitySettingsMenuItem").and.returnValue(true);
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
+        vi.spyOn(component, "visibilitySettingsMenuItem").mockReturnValue(true);
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, `action-list-${SettingsTabsEnum.SCHEDULING}-tab`);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({ section: SettingsTabsEnum.SCHEDULING }),
+            expect.objectContaining({ section: SettingsTabsEnum.SCHEDULING }),
         );
 
         setComponentInput(fixture, "activeTab", SettingsTabsEnum.GENERAL);
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, `action-list-${SettingsTabsEnum.GENERAL}-tab`);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({ section: SettingsTabsEnum.GENERAL }),
+            expect.objectContaining({ section: SettingsTabsEnum.GENERAL }),
         );
     });
 });

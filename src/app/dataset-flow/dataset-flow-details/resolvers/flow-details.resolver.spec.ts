@@ -14,7 +14,12 @@ import { of, throwError } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { expectPageNotFoundRedirect, routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
+import {
+    expectPageNotFoundRedirect,
+    routeSnapshot,
+    runResolver,
+    stubMethod,
+} from "@common/helpers/base-test.helpers.spec";
 import { DatasetNotFoundError } from "@common/values/errors";
 import { DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
@@ -47,11 +52,11 @@ describe("flowDetailsResolverFn", () => {
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
 
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
+        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(of(mockDatasetBasicsRootFragment));
     });
 
     function mockPermissions(permissions: DatasetPermissionsFragment = mockFullPowerDatasetPermissionsFragment): void {
-        spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(of(permissions));
+        vi.spyOn(datasetSubsService, "permissionsChanges", "get").mockReturnValue(of(permissions));
     }
 
     function resolve(): Promise<unknown> {
@@ -67,21 +72,23 @@ describe("flowDetailsResolverFn", () => {
 
     it("should load the dataset from the route and resolve its flow", async () => {
         mockPermissions();
-        const requestDatasetBasicDataWithPermissionsSpy = spyOn(
-            datasetService,
-            "requestDatasetBasicDataWithPermissions",
-        ).and.returnValue(of(undefined));
-        const datasetFlowByIdSpy = spyOn(datasetFlowsService, "datasetFlowById").and.returnValue(
-            of(mockDatasetFlowByIdResponse),
-        );
+        const requestDatasetBasicDataWithPermissionsSpy = vi
+            .spyOn(datasetService, "requestDatasetBasicDataWithPermissions")
+            .mockReturnValue(of(undefined));
+        const datasetFlowByIdSpy = vi
+            .spyOn(datasetFlowsService, "datasetFlowById")
+            .mockReturnValue(of(mockDatasetFlowByIdResponse));
 
         const data = await resolve();
 
-        expect(requestDatasetBasicDataWithPermissionsSpy).toHaveBeenCalledOnceWith({
+        expect(requestDatasetBasicDataWithPermissionsSpy).toHaveBeenCalledTimes(1);
+
+        expect(requestDatasetBasicDataWithPermissionsSpy).toHaveBeenCalledWith({
             accountName: TEST_ACCOUNT_NAME,
             datasetName: TEST_DATASET_NAME,
         });
-        expect(datasetFlowByIdSpy).toHaveBeenCalledOnceWith({
+        expect(datasetFlowByIdSpy).toHaveBeenCalledTimes(1);
+        expect(datasetFlowByIdSpy).toHaveBeenCalledWith({
             datasetId: mockDatasetBasicsRootFragment.id,
             flowId: TEST_FLOW_ID,
         });
@@ -90,8 +97,8 @@ describe("flowDetailsResolverFn", () => {
 
     it("should redirect to page not found when the dataset has no such flow", async () => {
         mockPermissions();
-        spyOn(datasetService, "requestDatasetBasicDataWithPermissions").and.returnValue(of(undefined));
-        spyOn(datasetFlowsService, "datasetFlowById").and.returnValue(of(undefined));
+        vi.spyOn(datasetService, "requestDatasetBasicDataWithPermissions").mockReturnValue(of(undefined));
+        vi.spyOn(datasetFlowsService, "datasetFlowById").mockReturnValue(of(undefined));
 
         const data = await resolve();
 
@@ -100,10 +107,10 @@ describe("flowDetailsResolverFn", () => {
 
     it("should redirect to page not found when the dataset does not exist", async () => {
         mockPermissions();
-        spyOn(datasetService, "requestDatasetBasicDataWithPermissions").and.returnValue(
+        vi.spyOn(datasetService, "requestDatasetBasicDataWithPermissions").mockReturnValue(
             throwError(() => new DatasetNotFoundError()),
         );
-        const datasetFlowByIdSpy = spyOn(datasetFlowsService, "datasetFlowById").and.stub();
+        const datasetFlowByIdSpy = stubMethod(datasetFlowsService, "datasetFlowById");
 
         const data = await resolve();
 
@@ -113,8 +120,8 @@ describe("flowDetailsResolverFn", () => {
 
     it("should redirect to page not found without loading the flow when the user may not view flows", async () => {
         mockPermissions(mockReadonlyDatasetPermissionsFragment);
-        spyOn(datasetService, "requestDatasetBasicDataWithPermissions").and.returnValue(of(undefined));
-        const datasetFlowByIdSpy = spyOn(datasetFlowsService, "datasetFlowById").and.stub();
+        vi.spyOn(datasetService, "requestDatasetBasicDataWithPermissions").mockReturnValue(of(undefined));
+        const datasetFlowByIdSpy = stubMethod(datasetFlowsService, "datasetFlowById");
 
         const data = await resolve();
 
@@ -125,21 +132,21 @@ describe("flowDetailsResolverFn", () => {
     it("should propagate other errors from loading the dataset", async () => {
         mockPermissions();
         const errorMessage = "Failed to fetch dataset permissions";
-        spyOn(datasetService, "requestDatasetBasicDataWithPermissions").and.returnValue(
+        vi.spyOn(datasetService, "requestDatasetBasicDataWithPermissions").mockReturnValue(
             throwError(() => new Error(errorMessage)),
         );
-        const datasetFlowByIdSpy = spyOn(datasetFlowsService, "datasetFlowById").and.stub();
+        const datasetFlowByIdSpy = stubMethod(datasetFlowsService, "datasetFlowById");
 
-        await expectAsync(resolve()).toBeRejectedWithError(errorMessage);
+        await expect(resolve()).rejects.toThrowError(errorMessage);
         expect(datasetFlowByIdSpy).not.toHaveBeenCalled();
     });
 
     it("should propagate errors from loading the flow", async () => {
         mockPermissions();
         const errorMessage = "Failed to fetch flow details";
-        spyOn(datasetService, "requestDatasetBasicDataWithPermissions").and.returnValue(of(undefined));
-        spyOn(datasetFlowsService, "datasetFlowById").and.returnValue(throwError(() => new Error(errorMessage)));
+        vi.spyOn(datasetService, "requestDatasetBasicDataWithPermissions").mockReturnValue(of(undefined));
+        vi.spyOn(datasetFlowsService, "datasetFlowById").mockReturnValue(throwError(() => new Error(errorMessage)));
 
-        await expectAsync(resolve()).toBeRejectedWithError(errorMessage);
+        await expect(resolve()).rejects.toThrowError(errorMessage);
     });
 });

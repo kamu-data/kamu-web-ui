@@ -49,9 +49,9 @@ describe("FileUploadService", () => {
         appConfigService = TestBed.inject(AppConfigService);
         httpTestingController = TestBed.inject(HttpTestingController);
         navigationService = TestBed.inject(NavigationService);
-        spyOn(navigationService, "navigateToDatasetView");
-        spyOnProperty(appConfigService, "apiServerHttpUrl", "get").and.returnValue(mockUrl);
-        spyOn(protocolsService, "getProtocols").and.returnValue(of(mockDatasetEndPoints));
+        vi.spyOn(navigationService, "navigateToDatasetView").mockImplementation(() => {});
+        vi.spyOn(appConfigService, "apiServerHttpUrl", "get").mockReturnValue(mockUrl);
+        vi.spyOn(protocolsService, "getProtocols").mockReturnValue(of(mockDatasetEndPoints));
     });
 
     it("should be created", () => {
@@ -59,9 +59,9 @@ describe("FileUploadService", () => {
     });
 
     it("should check upload file", () => {
-        spyOn(service, "uploadFilePrepare").and.returnValue(of(mockUploadPrepareResponse));
-        spyOn(service, "uploadPostFile").and.returnValue(of({}));
-        spyOn(service, "ingestDataToDataset").and.returnValue(of({}));
+        vi.spyOn(service, "uploadFilePrepare").mockReturnValue(of(mockUploadPrepareResponse));
+        vi.spyOn(service, "uploadPostFile").mockReturnValue(of({}));
+        vi.spyOn(service, "ingestDataToDataset").mockReturnValue(of({}));
 
         service
             .uploadFile(mockFile, mockDatasetBasicsRootFragment)

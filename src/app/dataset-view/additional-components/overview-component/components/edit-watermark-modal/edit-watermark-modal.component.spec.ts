@@ -51,7 +51,7 @@ describe("EditWatermarkModalComponent", () => {
         datasetCommitService = TestBed.inject(DatasetCommitService);
         loggedUserService = TestBed.inject(LoggedUserService);
         setComponentInput(fixture, "datasetBasics", mockDatasetBasicsDerivedFragment);
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
     });
 
     it("should create", () => {
@@ -77,8 +77,8 @@ describe("EditWatermarkModalComponent", () => {
 
     it("should check commit SetWatermark event", () => {
         fixture.detectChanges();
-        const commitSetWatermarkEventSpy = spyOn(component, "commitSetWatermarkEvent").and.callThrough();
-        spyOn(datasetCommitService, "updateWatermark").and.returnValue(of());
+        const commitSetWatermarkEventSpy = vi.spyOn(component, "commitSetWatermarkEvent");
+        vi.spyOn(datasetCommitService, "updateWatermark").mockReturnValue(of());
         emitClickOnElementByDataTestId(fixture, "commit-setWatermark-event");
         expect(commitSetWatermarkEventSpy).toHaveBeenCalledTimes(1);
     });

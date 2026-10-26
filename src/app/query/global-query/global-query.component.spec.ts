@@ -42,8 +42,8 @@ describe("GlobalQueryComponent", () => {
         sqlQueryService = TestBed.inject(SqlQueryService);
         navigationService = TestBed.inject(NavigationService);
         engineService = TestBed.inject(EngineService);
-        spyOn(engineService, "engines").and.returnValue(of(mockEngines));
-        spyOn(navigationService, "navigateToDatasetView");
+        vi.spyOn(engineService, "engines").mockReturnValue(of(mockEngines));
+        vi.spyOn(navigationService, "navigateToDatasetView").mockImplementation(() => {});
         fixture.detectChanges();
     });
 
@@ -56,8 +56,8 @@ describe("GlobalQueryComponent", () => {
     });
 
     it("should check run sql request code ", () => {
-        const requestDataSqlRunSpy = spyOn(sqlQueryService, "requestDataSqlRun").and.returnValue(of());
+        const requestDataSqlRunSpy = vi.spyOn(sqlQueryService, "requestDataSqlRun").mockReturnValue(of());
         component.runSQLRequest({ query: SQL_QUERY });
-        expect(requestDataSqlRunSpy).toHaveBeenCalledWith(jasmine.objectContaining({ query: SQL_QUERY }));
+        expect(requestDataSqlRunSpy).toHaveBeenCalledWith(expect.objectContaining({ query: SQL_QUERY }));
     });
 });

@@ -32,14 +32,14 @@ describe("FeatureFlagsService", () => {
     });
 
     it("should check #getEffectiveFeatureShowMode method", () => {
-        spyOnProperty(appConfigService, "featuresRuntimeConfig", "get").and.returnValue({
+        vi.spyOn(appConfigService, "featuresRuntimeConfig", "get").mockReturnValue({
             showMode: FeatureShowMode.DEVELOP,
         });
         expect(service.getEffectiveFeatureShowMode()).toEqual(FeatureShowMode.DEVELOP);
     });
 
     it("should check #getEffectiveFeatureShowMode method with null", () => {
-        spyOnProperty(appConfigService, "featuresRuntimeConfig", "get").and.returnValue(null);
+        vi.spyOn(appConfigService, "featuresRuntimeConfig", "get").mockReturnValue(null);
         expect(service.getEffectiveFeatureShowMode()).toEqual(FeatureShowMode.PRODUCTION);
     });
 

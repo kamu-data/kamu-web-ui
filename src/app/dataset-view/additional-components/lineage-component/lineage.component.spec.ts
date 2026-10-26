@@ -11,6 +11,7 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
+import type { Mock } from "vitest";
 
 import { LineageGraphComponent } from "@common/components/lineage-graph/lineage-graph.component";
 import { LineageNodeSizeService } from "@common/components/lineage-graph/lineage-node-size.service";
@@ -19,6 +20,7 @@ import {
     findComponentInstances,
     findElementByDataTestId,
     setComponentInput,
+    stubMethod,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
@@ -40,7 +42,7 @@ describe("LineageComponent", () => {
     let accountService: AccountService;
     let navigationService: NavigationService;
     let toastrService: ToastrService;
-    let navigationServiceSpy: jasmine.Spy;
+    let navigationServiceSpy: Mock;
     let datasetService: DatasetService;
     let datasetSubsService: DatasetSubscriptionsService;
 
@@ -54,11 +56,11 @@ describe("LineageComponent", () => {
         navigationService = TestBed.inject(NavigationService);
         toastrService = TestBed.inject(ToastrService);
         datasetService = TestBed.inject(DatasetService);
-        spyOn(datasetService, "requestDatasetLineage").and.returnValue(of(undefined));
+        vi.spyOn(datasetService, "requestDatasetLineage").mockReturnValue(of(undefined));
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        spyOn(TestBed.inject(LineageNodeSizeService), "whenFontsReady").and.returnValue(of(undefined));
-        spyOn(accountService, "fetchMultipleAccountsByName").and.returnValue(of());
-        navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
+        vi.spyOn(TestBed.inject(LineageNodeSizeService), "whenFontsReady").mockReturnValue(of(undefined));
+        vi.spyOn(accountService, "fetchMultipleAccountsByName").mockReturnValue(of());
+        navigationServiceSpy = vi.spyOn(navigationService, "navigateToDatasetView").mockImplementation(() => {});
 
         fixture = TestBed.createComponent(LineageComponent);
         component = fixture.componentInstance;
@@ -95,7 +97,7 @@ describe("LineageComponent", () => {
 
     it("should check click on lineage node ", () => {
         fixture.detectChanges();
-        const selectDatasetSpy = spyOn(component, "onSelectDataset");
+        const selectDatasetSpy = vi.spyOn(component, "onSelectDataset").mockImplementation(() => {});
         component.onClickNode(mockNode);
 
         expect(selectDatasetSpy).toHaveBeenCalledWith(
@@ -105,9 +107,10 @@ describe("LineageComponent", () => {
     });
 
     it("should check click on private node", () => {
-        const toastrServiceSpy = spyOn(toastrService, "success");
+        const toastrServiceSpy = stubMethod(toastrService, "success");
         component.onClickPrivateNode(mockNode);
-        expect(toastrServiceSpy).toHaveBeenCalledOnceWith("Copied ID");
+        expect(toastrServiceSpy).toHaveBeenCalledTimes(1);
+        expect(toastrServiceSpy).toHaveBeenCalledWith("Copied ID");
     });
 
     it("should check click on lineage nodes with equal dataset name, but different account name ", () => {
@@ -128,7 +131,7 @@ describe("LineageComponent", () => {
         const testDatasetName = "alberta.tcc";
         component.onSelectDataset(testAccountName, testDatasetName);
         expect(navigationServiceSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({ accountName: testAccountName, datasetName: testDatasetName }),
+            expect.objectContaining({ accountName: testAccountName, datasetName: testDatasetName }),
         );
     });
 });

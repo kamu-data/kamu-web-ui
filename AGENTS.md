@@ -47,7 +47,7 @@ load the skill, never route around it through another tool. Hook setup and limit
 
 ## Node version
 
-Every Node tool (`npm`, `ng`, `eslint`, `prettier`, `karma`) runs on the version
+Every Node tool (`npm`, `ng`, `eslint`, `prettier`, `vitest`) runs on the version
 [`.nvmrc`](.nvmrc) pins, selected through nvm. The machine's default Node may be older and fail
 in confusing ways (stylelint, for one, refuses to start below Node 20).
 
@@ -181,7 +181,7 @@ prompt for approval.
 Reusable role prompts for build and test delegation live in
 [`.claude/agents/ng-builder.md`](.claude/agents/ng-builder.md) (lint, stylelint, dev and
 production builds, chunk tables) and [`.claude/agents/ng-tester.md`](.claude/agents/ng-tester.md)
-(Karma runs and failure triage); treat them as canonical instead of duplicating them.
+(Vitest runs and failure triage); treat them as canonical instead of duplicating them.
 
 ## Scope
 

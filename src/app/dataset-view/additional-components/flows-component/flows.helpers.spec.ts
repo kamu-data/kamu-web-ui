@@ -93,8 +93,8 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Ingest active",
-                subMessage: "Last run: 2025-10-13, 7:53:08 PM",
-                additionalMessage: "Next planned: 2025-10-13, 7:55:08 PM",
+                subMessage: "Last run: 2025-10-13, 4:53:08 PM",
+                additionalMessage: "Next planned: 2025-10-13, 4:55:08 PM",
             },
         },
         {
@@ -104,8 +104,8 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Transform active",
-                subMessage: "Last run: 2025-10-13, 7:53:08 PM",
-                additionalMessage: "Next planned: 2025-10-13, 7:55:08 PM",
+                subMessage: "Last run: 2025-10-13, 4:53:08 PM",
+                additionalMessage: "Next planned: 2025-10-13, 4:55:08 PM",
             },
         },
         {
@@ -116,7 +116,7 @@ describe("Flows badge messages helper", () => {
             expectedResult: {
                 message: "Ingest active",
                 subMessage: "Ingest running...",
-                additionalMessage: "Next planned: 2025-10-13, 7:55:08 PM",
+                additionalMessage: "Next planned: 2025-10-13, 4:55:08 PM",
             },
         },
         {
@@ -127,7 +127,7 @@ describe("Flows badge messages helper", () => {
             expectedResult: {
                 message: "Transform active",
                 subMessage: "Transform running...",
-                additionalMessage: "Next planned: 2025-10-13, 7:55:08 PM",
+                additionalMessage: "Next planned: 2025-10-13, 4:55:08 PM",
             },
         },
         {
@@ -168,8 +168,8 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Ingest failing",
-                subMessage: "Last failure at: 2025-10-13, 4:29:36 PM",
-                additionalMessage: "Next planned: 2025-10-13, 7:55:08 PM, 1/1 consecutive failures",
+                subMessage: "Last failure at: 2025-10-13, 1:29:36 PM",
+                additionalMessage: "Next planned: 2025-10-13, 4:55:08 PM, 1/1 consecutive failures",
             },
         },
         {
@@ -184,8 +184,8 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Transform failing",
-                subMessage: "Last failure at: 2025-10-13, 4:29:36 PM",
-                additionalMessage: "Next planned: 2025-10-13, 7:55:08 PM, 1/1 consecutive failures",
+                subMessage: "Last failure at: 2025-10-13, 1:29:36 PM",
+                additionalMessage: "Next planned: 2025-10-13, 4:55:08 PM, 1/1 consecutive failures",
             },
         },
         {
@@ -200,7 +200,7 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Ingest failing",
-                subMessage: "Last failure at: 2025-10-13, 4:29:36 PM",
+                subMessage: "Last failure at: 2025-10-13, 1:29:36 PM",
                 additionalMessage: "1 consecutive failures",
             },
         },
@@ -214,8 +214,8 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Ingest paused",
-                subMessage: "Reason: paused manually by user at 2025-10-13, 7:53:08 PM",
-                additionalMessage: "Last success at: 2025-10-13, 7:53:08 PM",
+                subMessage: "Reason: paused manually by user at 2025-10-13, 4:53:08 PM",
+                additionalMessage: "Last success at: 2025-10-13, 4:53:08 PM",
             },
         },
         {
@@ -228,8 +228,8 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Transform paused",
-                subMessage: "Reason: paused manually by user at 2025-10-13, 7:53:08 PM",
-                additionalMessage: "Last success at: 2025-10-13, 7:53:08 PM",
+                subMessage: "Reason: paused manually by user at 2025-10-13, 4:53:08 PM",
+                additionalMessage: "Last success at: 2025-10-13, 4:53:08 PM",
             },
         },
         {
@@ -249,7 +249,7 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Ingest stopped",
-                subMessage: "Last run: 2025-10-13, 4:29:36 PM",
+                subMessage: "Last run: 2025-10-13, 1:29:36 PM",
                 additionalMessage: "Reason: stop policy 2 consecutive failures - 2/2 consecutive failures",
             },
         },
@@ -270,7 +270,7 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Transform stopped",
-                subMessage: "Last run: 2025-10-13, 4:29:36 PM",
+                subMessage: "Last run: 2025-10-13, 1:29:36 PM",
                 additionalMessage: "Reason: stop policy 2 consecutive failures - 2/2 consecutive failures",
             },
         },
@@ -287,7 +287,7 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Transform stopped",
-                subMessage: "Last run: 2025-10-13, 4:29:36 PM",
+                subMessage: "Last run: 2025-10-13, 1:29:36 PM",
                 additionalMessage: "Reason: unrecoverable failure",
             },
         },
@@ -304,7 +304,7 @@ describe("Flows badge messages helper", () => {
             },
             expectedResult: {
                 message: "Transform stopped",
-                subMessage: "Last run: 2025-10-13, 4:29:36 PM",
+                subMessage: "Last run: 2025-10-13, 1:29:36 PM",
                 additionalMessage: "Reason: unrecoverable failure",
             },
         },

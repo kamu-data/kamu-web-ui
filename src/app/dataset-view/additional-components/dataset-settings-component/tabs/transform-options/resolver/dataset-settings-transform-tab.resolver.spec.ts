@@ -12,9 +12,15 @@ import { of } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
+import type { Mock } from "vitest";
 
 import { requireValue } from "@common/helpers/app.helpers";
-import { expectPageNotFoundRedirect, routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
+import {
+    expectPageNotFoundRedirect,
+    routeSnapshot,
+    runResolver,
+    stubMethod,
+} from "@common/helpers/base-test.helpers.spec";
 import { DatasetFlowType } from "@api/kamu.graphql.interface";
 import { mockGetDatasetFlowTriggersBatchingQuery } from "@api/mock/dataset-flow.mock";
 
@@ -35,7 +41,7 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
     let datasetSubsService: DatasetSubscriptionsService;
     let datasetFlowTriggerService: DatasetFlowTriggerService;
 
-    let permissionsChangesSpy: jasmine.Spy;
+    let permissionsChangesSpy: Mock;
 
     function resolve(): Promise<DatasetSettingsTransformOptionsTabData | RedirectCommand> {
         const route = routeSnapshot({ data: { tab: SettingsTabsEnum.TRANSFORM_SETTINGS } });
@@ -48,7 +54,7 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
             providers: [provideToastr()],
         });
 
-        spyOnProperty(TestBed.inject(DatasetService), "datasetChanges", "get").and.returnValue(
+        vi.spyOn(TestBed.inject(DatasetService), "datasetChanges", "get").mockReturnValue(
             of(mockDatasetBasicsDerivedFragment),
         );
 
@@ -59,17 +65,17 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
             __typename: "SetTransform",
         };
 
-        spyOnProperty(datasetSubsService, "overviewChanges", "get").and.returnValue(of(cloneDataUpdate));
-        permissionsChangesSpy = spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
-            of(mockFullPowerDatasetPermissionsFragment),
-        );
+        vi.spyOn(datasetSubsService, "overviewChanges", "get").mockReturnValue(of(cloneDataUpdate));
+        permissionsChangesSpy = vi
+            .spyOn(datasetSubsService, "permissionsChanges", "get")
+            .mockReturnValue(of(mockFullPowerDatasetPermissionsFragment));
 
         datasetFlowTriggerService = TestBed.inject(DatasetFlowTriggerService);
     });
 
     it("should pass the redirect through without fetching flow triggers when the tab is not accessible", async () => {
-        permissionsChangesSpy.and.returnValue(of(mockReadonlyDatasetPermissionsFragment));
-        const fetchDatasetFlowTriggerSpy = spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger");
+        permissionsChangesSpy.mockReturnValue(of(mockReadonlyDatasetPermissionsFragment));
+        const fetchDatasetFlowTriggerSpy = stubMethod(datasetFlowTriggerService, "fetchDatasetFlowTrigger");
 
         const data = await resolve();
 
@@ -78,29 +84,33 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
     });
 
     it("should call fetchDatasetFlowTrigger with correct parameters", async () => {
-        const fetchDatasetFlowTriggerSpy = spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").and.returnValue(
-            of({
-                datasets: {
-                    byId: {
-                        flows: {
-                            triggers: {
-                                byType: {
-                                    paused: true,
-                                    reactive: null,
-                                    stopPolicy: {
-                                        __typename: "FlowTriggerStopPolicyNever",
+        const fetchDatasetFlowTriggerSpy = vi
+            .spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger")
+            .mockReturnValue(
+                of({
+                    datasets: {
+                        byId: {
+                            flows: {
+                                triggers: {
+                                    byType: {
+                                        paused: true,
+                                        reactive: null,
+                                        stopPolicy: {
+                                            __typename: "FlowTriggerStopPolicyNever",
+                                        },
                                     },
                                 },
                             },
                         },
                     },
-                },
-            }),
-        );
+                }),
+            );
 
         const data = await resolve();
 
-        expect(fetchDatasetFlowTriggerSpy).toHaveBeenCalledOnceWith(
+        expect(fetchDatasetFlowTriggerSpy).toHaveBeenCalledTimes(1);
+
+        expect(fetchDatasetFlowTriggerSpy).toHaveBeenCalledWith(
             mockDatasetBasicsDerivedFragment.id,
             DatasetFlowType.ExecuteTransform,
         );
@@ -116,7 +126,7 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
     });
 
     it("should correctly map flowTriggers to paused and reactive", async () => {
-        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").and.returnValue(
+        vi.spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").mockReturnValue(
             of(mockGetDatasetFlowTriggersBatchingQuery),
         );
 
@@ -137,7 +147,7 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
     });
 
     it("should correctly map flowTriggers when no data is defined", async () => {
-        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").and.returnValue(
+        vi.spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").mockReturnValue(
             of({
                 datasets: {
                     __typename: "Datasets",
@@ -165,8 +175,10 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
 
     it("should handle errors from fetchDatasetFlowTrigger", async () => {
         const errorMessage = "Failed to fetch flow triggers";
-        spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").and.throwError(errorMessage);
+        vi.spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").mockImplementation(() => {
+            throw new Error(errorMessage);
+        });
 
-        await expectAsync(resolve()).toBeRejectedWithError(errorMessage);
+        await expect(resolve()).rejects.toThrowError(errorMessage);
     });
 });

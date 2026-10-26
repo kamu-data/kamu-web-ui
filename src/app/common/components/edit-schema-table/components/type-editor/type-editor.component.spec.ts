@@ -43,9 +43,12 @@ import { TypeEditorComponent } from "./type-editor.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class TestHostComponent implements OnChanges {
-    @Input() public value: DataSchemaTypeField = { kind: OdfTypes.String };
-    @Input() public typePath: string = "root:type:field";
-    @Output() public typeChange = new EventEmitter<DataSchemaTypeField>();
+    @Input()
+    public value: DataSchemaTypeField = { kind: OdfTypes.String };
+    @Input()
+    public typePath: string = "root:type:field";
+    @Output()
+    public typeChange = new EventEmitter<DataSchemaTypeField>();
 
     public lastEmitted: MaybeNull<DataSchemaTypeField> = null;
 
@@ -111,7 +114,7 @@ describe("TypeEditorComponent", () => {
             it(`emits { kind: ${kind} } when changeEditorType is called with ${kind}`, () => {
                 selectKind(kind);
                 fixture.detectChanges();
-                expect(host.lastEmitted).toEqual(jasmine.objectContaining({ kind }));
+                expect(host.lastEmitted).toEqual(expect.objectContaining({ kind }));
             });
         });
     });
@@ -184,7 +187,7 @@ describe("TypeEditorComponent", () => {
 
             expect(optionalToggle.getAttribute("role")).toBe("switch");
             expect(optionalToggle.getAttribute("aria-checked")).toBe("false");
-            expect(optionalToggle.classList.contains("optional-toggle-active")).toBeFalse();
+            expect(optionalToggle.classList.contains("optional-toggle-active")).toBe(false);
 
             optionalToggle.click();
             fixture.detectChanges();
@@ -193,7 +196,7 @@ describe("TypeEditorComponent", () => {
             expect(emitted.kind).toBe(OdfTypes.Option);
             expect(emitted.inner).toEqual({ kind: OdfTypes.String });
             expect(optionalToggle.getAttribute("aria-checked")).toBe("true");
-            expect(optionalToggle.classList.contains("optional-toggle-active")).toBeTrue();
+            expect(optionalToggle.classList.contains("optional-toggle-active")).toBe(true);
         });
 
         it("emits the inner type when Optional is disabled", () => {
@@ -414,12 +417,12 @@ describe("TypeEditorComponent", () => {
 
         it("selecting Int64 from the kind panel emits { kind: Int64 }", () => {
             selectKindViaApi(OdfTypes.Int64);
-            expect(host.lastEmitted).toEqual(jasmine.objectContaining({ kind: OdfTypes.Int64 }));
+            expect(host.lastEmitted).toEqual(expect.objectContaining({ kind: OdfTypes.Int64 }));
         });
 
         it("selecting Struct from the kind panel emits { kind: Struct, fields: [] }", () => {
             selectKindViaApi(OdfTypes.Struct);
-            expect(host.lastEmitted).toEqual(jasmine.objectContaining({ kind: OdfTypes.Struct }));
+            expect(host.lastEmitted).toEqual(expect.objectContaining({ kind: OdfTypes.Struct }));
         });
 
         it("Struct→String→Struct via ng-select API preserves children", () => {
@@ -490,8 +493,10 @@ describe("TypeEditorComponent", () => {
             });
 
             it("selecting a timezone from the Timestamp timezone dropdown emits via typeChange", () => {
-                // Only "UTC" is a valid option today, but re-selecting it must still
-                // fire (change) and reach typeChange — proving the binding exists at all.
+                // "UTC" is the only option, so the field starts without a timezone: selecting the
+                // current value again is no change, and ng-select emits none.
+                host.value = { kind: OdfTypes.Timestamp, unit: "Millisecond" };
+                fixture.detectChanges();
                 selectFromNgSelectByDataTestId("root:type:ts:timezone", "UTC");
                 const emitted = requireTimeField(host.lastEmitted);
                 expect(emitted.timezone).toBe("UTC");

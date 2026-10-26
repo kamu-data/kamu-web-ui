@@ -36,7 +36,7 @@ import { FlowStopPolicyFormHarness } from "src/app/dataset-view/additional-compo
 })
 class TestFlowStopPolicyFormComponent {
     public readonly hostForm = new FormGroup({
-        updatesEnabled: new FormControl(false),
+        updatesEnabled: new FormControl(false, { nonNullable: true }),
         stopPolicy: FlowStopPolicyFormComponent.buildForm(),
     });
 
@@ -97,16 +97,16 @@ describe("FlowStopPolicyFormComponent", () => {
     });
 
     it("should have controls disabled when updates are disabled", () => {
-        expect(hostComponent.hostForm.controls.updatesEnabled.value).toBeFalse();
-        expect(component.stopPolicyTypeControl.disabled).toBeTrue();
-        expect(component.maxFailuresControl.disabled).toBeTrue();
+        expect(hostComponent.hostForm.controls.updatesEnabled.value).toBe(false);
+        expect(component.stopPolicyTypeControl.disabled).toBe(true);
+        expect(component.maxFailuresControl.disabled).toBe(true);
 
         hostComponent.hostForm.controls.updatesEnabled.setValue(true);
         fixture.detectChanges();
 
-        expect(component.stopPolicyTypeControl.disabled).toBeFalse();
+        expect(component.stopPolicyTypeControl.disabled).toBe(false);
         // Max failures should still be disabled until "after consecutive failures" is selected
-        expect(component.maxFailuresControl.disabled).toBeTrue();
+        expect(component.maxFailuresControl.disabled).toBe(true);
     });
 
     it("should set 'never' stop policy type via harness and reflect in form", async () => {
@@ -119,7 +119,7 @@ describe("FlowStopPolicyFormComponent", () => {
         await fixture.whenStable();
 
         expect(component.stopPolicyTypeControl.value).toBe(FlowTriggerStopPolicyType.NEVER);
-        expect(component.maxFailuresControl.disabled).toBeTrue();
+        expect(component.maxFailuresControl.disabled).toBe(true);
     });
 
     it("should set 'after consecutive failures' stop policy type via harness and reflect in form", async () => {
@@ -132,7 +132,7 @@ describe("FlowStopPolicyFormComponent", () => {
         await fixture.whenStable();
 
         expect(component.stopPolicyTypeControl.value).toBe(FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES);
-        expect(component.maxFailuresControl.disabled).toBeFalse();
+        expect(component.maxFailuresControl.disabled).toBe(false);
     });
 
     it("should set max failures via harness and reflect in form", async () => {
@@ -173,7 +173,7 @@ describe("FlowStopPolicyFormComponent", () => {
     });
 
     it("should validate form with default values", () => {
-        expect(component.form.valid).toBeFalse(); // Should be invalid due to required stopPolicyType
+        expect(component.form.valid).toBe(false); // Should be invalid due to required stopPolicyType
         expect(component.form.errors).toBeUndefined();
     });
 
@@ -183,7 +183,7 @@ describe("FlowStopPolicyFormComponent", () => {
         fixture.detectChanges();
         await stopPolicyFormHarness.setSelectedStopPolicyType(FlowTriggerStopPolicyType.NEVER);
 
-        expect(component.form.valid).toBeTrue();
+        expect(component.form.valid).toBe(true);
         expect(component.form.errors).toBeNull();
     });
 
@@ -194,10 +194,10 @@ describe("FlowStopPolicyFormComponent", () => {
         await stopPolicyFormHarness.setSelectedStopPolicyType(FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES);
         await stopPolicyFormHarness.setMaxFailures(2);
 
-        expect(component.form.valid).toBeTrue();
+        expect(component.form.valid).toBe(true);
         expect(component.form.errors).toBeNull();
-        expect(component.maxFailuresControl.hasError("min")).toBeFalse();
-        expect(component.maxFailuresControl.hasError("required")).toBeFalse();
+        expect(component.maxFailuresControl.hasError("min")).toBe(false);
+        expect(component.maxFailuresControl.hasError("required")).toBe(false);
     });
 
     it("should show validation error for max failures less than 1", async () => {
@@ -209,8 +209,8 @@ describe("FlowStopPolicyFormComponent", () => {
         // Set invalid value (less than 1)
         await stopPolicyFormHarness.setMaxFailures(0);
 
-        expect(component.form.valid).toBeFalse();
-        expect(component.maxFailuresControl.hasError("min")).toBeTrue();
+        expect(component.form.valid).toBe(false);
+        expect(component.maxFailuresControl.hasError("min")).toBe(true);
     });
 
     it("should build stop policy input for 'never' policy", () => {
@@ -245,23 +245,23 @@ describe("FlowStopPolicyFormComponent", () => {
         // First select "after consecutive failures"
         await stopPolicyFormHarness.setSelectedStopPolicyType(FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES);
         fixture.detectChanges();
-        expect(component.maxFailuresControl.disabled).toBeFalse();
+        expect(component.maxFailuresControl.disabled).toBe(false);
 
         // Then switch to "never"
         await stopPolicyFormHarness.setSelectedStopPolicyType(FlowTriggerStopPolicyType.NEVER);
         fixture.detectChanges();
-        expect(component.maxFailuresControl.disabled).toBeTrue();
+        expect(component.maxFailuresControl.disabled).toBe(true);
     });
 
     it("should disable stop policy type control when updates are disabled", () => {
         // First enable updates
         hostComponent.hostForm.controls.updatesEnabled.setValue(true);
         fixture.detectChanges();
-        expect(component.stopPolicyTypeControl.disabled).toBeFalse();
+        expect(component.stopPolicyTypeControl.disabled).toBe(false);
 
         // Then disable updates
         hostComponent.hostForm.controls.updatesEnabled.setValue(false);
         fixture.detectChanges();
-        expect(component.stopPolicyTypeControl.disabled).toBeTrue();
+        expect(component.stopPolicyTypeControl.disabled).toBe(true);
     });
 });

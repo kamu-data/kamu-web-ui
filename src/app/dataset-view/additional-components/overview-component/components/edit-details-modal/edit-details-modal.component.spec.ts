@@ -14,6 +14,7 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 
 import {
+    createSpyObj,
     emitClickOnElementByDataTestId,
     getInputElementByDataTestId,
     setComponentInput,
@@ -36,7 +37,7 @@ describe("EditDetailsModalComponent", () => {
         return {
             input: getInputElementByDataTestId(fixture, "input-keyword"),
             value,
-            chipInput: jasmine.createSpyObj<MatChipInput>("MatChipInput", ["clear"]),
+            chipInput: createSpyObj<MatChipInput>({ clear: undefined }),
         };
     }
 
@@ -79,7 +80,7 @@ describe("EditDetailsModalComponent", () => {
     });
 
     it("should check commit event", () => {
-        const commitSetInfoEventSpy = spyOn(component, "commitSetInfoEvent").and.stub();
+        const commitSetInfoEventSpy = vi.spyOn(component, "commitSetInfoEvent").mockImplementation(() => {});
 
         component.addKeywordFromInput(keywordInputEvent("keyword1"));
         fixture.detectChanges();

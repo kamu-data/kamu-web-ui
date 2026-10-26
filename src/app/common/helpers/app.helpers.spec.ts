@@ -35,7 +35,7 @@ describe("AppHelpers", () => {
     });
 
     it("should check promiseWithCatch with success", () => {
-        const consoleErrorSpy = spyOn(console, "error").and.stub();
+        const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
         const emptyPromise = async () => {
             /* Intentionally empty */
         };
@@ -45,7 +45,7 @@ describe("AppHelpers", () => {
 
     it("should check promiseWithCatch with failure", fakeAsync(() => {
         const testError = new Error("test");
-        const consoleErrorSpy = spyOn(console, "error").and.stub();
+        const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
         const failingPromise = async () => {
             await new Promise((resolve) => {
                 setTimeout(() => {
@@ -176,16 +176,16 @@ describe("AppHelpers", () => {
             const busy$ = new BehaviorSubject<boolean>(false);
             const source$ = new Subject<number>();
             const tracked$ = source$.pipe(trackBusy(busy$));
-            expect(busy$.value).toBeFalse();
+            expect(busy$.value).toBe(false);
 
             tracked$.subscribe();
-            expect(busy$.value).toBeTrue();
+            expect(busy$.value).toBe(true);
 
             source$.next(1);
-            expect(busy$.value).toBeTrue();
+            expect(busy$.value).toBe(true);
 
             source$.complete();
-            expect(busy$.value).toBeFalse();
+            expect(busy$.value).toBe(false);
         });
 
         it("should stop being busy when the source errors, passing the error on", () => {
@@ -196,17 +196,17 @@ describe("AppHelpers", () => {
                 .pipe(trackBusy(busy$))
                 .subscribe({ error: (e: unknown) => (error = e) });
 
-            expect(busy$.value).toBeFalse();
+            expect(busy$.value).toBe(false);
             expect(error).toEqual(new Error("failure"));
         });
 
         it("should stop being busy on unsubscribe", () => {
             const busy$ = new BehaviorSubject<boolean>(false);
             const subscription = NEVER.pipe(trackBusy(busy$)).subscribe();
-            expect(busy$.value).toBeTrue();
+            expect(busy$.value).toBe(true);
 
             subscription.unsubscribe();
-            expect(busy$.value).toBeFalse();
+            expect(busy$.value).toBe(false);
         });
     });
 

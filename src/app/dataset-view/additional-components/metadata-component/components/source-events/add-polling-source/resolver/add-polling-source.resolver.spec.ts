@@ -12,7 +12,7 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
-import { expectRedirectTo, routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
+import { expectRedirectTo, routeSnapshot, runResolver, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { DatasetBasicsFragment, DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 import { MaybeNull } from "@interface/app.types";
@@ -43,15 +43,15 @@ describe("addPollingSourceResolverFn", () => {
         editService = TestBed.inject(EditPollingSourceService);
         datasetService = TestBed.inject(DatasetService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        spyOn(datasetService, "requestDatasetBasicDataWithPermissions").and.returnValue(of(undefined));
+        vi.spyOn(datasetService, "requestDatasetBasicDataWithPermissions").mockReturnValue(of(undefined));
     });
 
     function resolve(
         datasetBasics: DatasetBasicsFragment,
         permissions: DatasetPermissionsFragment,
     ): Promise<MaybeNull<string> | RedirectCommand> {
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(datasetBasics));
-        spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(of(permissions));
+        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(of(datasetBasics));
+        vi.spyOn(datasetSubsService, "permissionsChanges", "get").mockReturnValue(of(permissions));
         const route = routeSnapshot({
             params: {
                 [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME,
@@ -67,11 +67,13 @@ describe("addPollingSourceResolverFn", () => {
     }
 
     it("should resolve the event YAML of an editable dataset", async () => {
-        const getEventAsYamlSpy = spyOn(editService, "getEventAsYaml").and.returnValue(of(TEST_EVENT_YAML));
+        const getEventAsYamlSpy = vi.spyOn(editService, "getEventAsYaml").mockReturnValue(of(TEST_EVENT_YAML));
 
         const data = await resolve(mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment);
 
-        expect(getEventAsYamlSpy).toHaveBeenCalledOnceWith({
+        expect(getEventAsYamlSpy).toHaveBeenCalledTimes(1);
+
+        expect(getEventAsYamlSpy).toHaveBeenCalledWith({
             accountName: TEST_ACCOUNT_NAME,
             datasetName: TEST_DATASET_NAME,
         });
@@ -79,7 +81,7 @@ describe("addPollingSourceResolverFn", () => {
     });
 
     it("should redirect to the dataset overview without loading the event when the user may not commit", async () => {
-        const getEventAsYamlSpy = spyOn(editService, "getEventAsYaml").and.stub();
+        const getEventAsYamlSpy = stubMethod(editService, "getEventAsYaml");
 
         const data = await resolve(mockDatasetBasicsRootFragment, mockReadonlyDatasetPermissionsFragment);
 
@@ -88,7 +90,7 @@ describe("addPollingSourceResolverFn", () => {
     });
 
     it("should redirect to the dataset overview without loading the event for a dataset of another kind", async () => {
-        const getEventAsYamlSpy = spyOn(editService, "getEventAsYaml").and.stub();
+        const getEventAsYamlSpy = stubMethod(editService, "getEventAsYaml");
 
         const data = await resolve(mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment);
 

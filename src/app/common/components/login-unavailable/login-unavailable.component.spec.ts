@@ -23,8 +23,8 @@ describe("LoginUnavailableComponent", () => {
         supportEmail: MaybeUndefined<string>,
         loadFailed: boolean = false,
     ): Promise<LoginUnavailableHarness> {
-        spyOnProperty(TestBed.inject(AppConfigService), "supportEmail", "get").and.returnValue(supportEmail);
-        spyOnProperty(TestBed.inject(LoginMethodsService), "loadFailed", "get").and.returnValue(loadFailed);
+        vi.spyOn(TestBed.inject(AppConfigService), "supportEmail", "get").mockReturnValue(supportEmail);
+        vi.spyOn(TestBed.inject(LoginMethodsService), "loadFailed", "get").mockReturnValue(loadFailed);
         const fixture = TestBed.createComponent(LoginUnavailableComponent);
         fixture.detectChanges();
         return TestbedHarnessEnvironment.harnessForFixture(fixture, LoginUnavailableHarness);
@@ -69,7 +69,7 @@ describe("LoginUnavailableComponent", () => {
 
         it("should not offer to try again", async () => {
             const harness = await createHarness(undefined);
-            expect(await harness.hasTryAgainButton()).toBeFalse();
+            expect(await harness.hasTryAgainButton()).toBe(false);
         });
     });
 
@@ -92,10 +92,10 @@ describe("LoginUnavailableComponent", () => {
         });
 
         it("should reload the page on try again", async () => {
-            const reloadSpy = spyOn(TestBed.inject(NavigationService), "reloadPage");
+            const reloadSpy = vi.spyOn(TestBed.inject(NavigationService), "reloadPage").mockImplementation(() => {});
             const harness = await createHarness(undefined, true);
 
-            expect(await harness.hasTryAgainButton()).toBeTrue();
+            expect(await harness.hasTryAgainButton()).toBe(true);
             await harness.clickTryAgain();
 
             expect(reloadSpy).toHaveBeenCalledTimes(1);

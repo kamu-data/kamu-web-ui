@@ -23,6 +23,7 @@ import {
     getElementByDataTestId,
     getInputElementByDataTestId,
     setComponentInput,
+    stubMethod,
 } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
@@ -108,14 +109,15 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     });
 
     it("should scroll to the section from the URL fragment once the view is rendered", () => {
-        const scrollSpy = spyOn(HTMLElement.prototype, "scrollIntoView");
+        const scrollSpy = vi.spyOn(HTMLElement.prototype, "scrollIntoView").mockImplementation(() => {});
 
         component.jumpToSection("visibility");
         expect(scrollSpy).not.toHaveBeenCalled();
 
         fixture.detectChanges();
         TestBed.inject(ApplicationRef).tick();
-        expect(scrollSpy).toHaveBeenCalledOnceWith({ behavior: "smooth" });
+        expect(scrollSpy).toHaveBeenCalledTimes(1);
+        expect(scrollSpy).toHaveBeenCalledWith({ behavior: "smooth" });
     });
 
     it("should check default state of properties", () => {
@@ -153,12 +155,14 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     });
 
     it("should check rename dataset", () => {
-        const renameDatasetSpy = spyOn(datasetSettingsService, "renameDataset").and.returnValue(of());
+        const renameDatasetSpy = vi.spyOn(datasetSettingsService, "renameDataset").mockReturnValue(of());
 
         dispatchInputEvent(fixture, Elements.RenameDatasetInput, "someName");
         emitClickOnElementByDataTestId(fixture, Elements.RenameDatasetButton);
 
-        expect(renameDatasetSpy).toHaveBeenCalledOnceWith({
+        expect(renameDatasetSpy).toHaveBeenCalledTimes(1);
+
+        expect(renameDatasetSpy).toHaveBeenCalledWith({
             accountId: TEST_ACCOUNT_ID,
             accountName: component.datasetBasics.owner.accountName,
             datasetId: component.datasetBasics.id,
@@ -174,7 +178,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         tick();
 
         const elemInput = getInputElementByDataTestId(fixture, "rename-dataset-input");
-        expect(elemInput).toHaveClass("error-border-color");
+        expect(elemInput.classList.contains("error-border-color")).toBe(true);
 
         checkVisible(fixture, Elements.RenameDatasetErrorCustom, true);
 
@@ -182,7 +186,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     }));
 
     it("should check rename validation required", () => {
-        const renameDatasetSpy = spyOn(component, "renameDataset").and.stub();
+        const renameDatasetSpy = vi.spyOn(component, "renameDataset").mockImplementation(() => {});
 
         dispatchInputEvent(fixture, Elements.RenameDatasetInput, "");
         emitClickOnElementByDataTestId(fixture, Elements.RenameDatasetButton);
@@ -196,7 +200,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     });
 
     it("should check rename validation pattern", () => {
-        const renameDatasetSpy = spyOn(component, "renameDataset").and.stub();
+        const renameDatasetSpy = vi.spyOn(component, "renameDataset").mockImplementation(() => {});
 
         dispatchInputEvent(fixture, Elements.RenameDatasetInput, "#illegal#");
         emitClickOnElementByDataTestId(fixture, Elements.RenameDatasetButton);
@@ -219,17 +223,21 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
         tick();
 
-        expect(renameDatasetInput).not.toHaveClass("error-border-color");
+        expect(renameDatasetInput.classList.contains("error-border-color")).toBe(false);
         flush();
     }));
 
     it("should check delete modal window is shown and sends API call after confirm", fakeAsync(() => {
-        const hasOutOfSyncPushRemotesSpy = spyOn(datasetService, "hasOutOfSyncPushRemotes").and.returnValue(of(true));
-        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, true);
-            return Promise.resolve("");
-        });
-        const deleteDatasetSpy = spyOn(datasetSettingsService, "deleteDataset").and.returnValue(of());
+        const hasOutOfSyncPushRemotesSpy = vi
+            .spyOn(datasetService, "hasOutOfSyncPushRemotes")
+            .mockReturnValue(of(true));
+        const modalServiceSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
+        const deleteDatasetSpy = vi.spyOn(datasetSettingsService, "deleteDataset").mockReturnValue(of());
 
         emitClickOnElementByDataTestId(fixture, Elements.DeleteDatasetButton);
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
@@ -238,18 +246,24 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
         tick();
 
-        expect(deleteDatasetSpy).toHaveBeenCalledOnceWith(component.datasetBasics.owner.id, component.datasetBasics.id);
+        expect(deleteDatasetSpy).toHaveBeenCalledTimes(1);
+
+        expect(deleteDatasetSpy).toHaveBeenCalledWith(component.datasetBasics.owner.id, component.datasetBasics.id);
 
         flush();
     }));
 
     it("should check delete modal window is shown and does not send API call after reject", fakeAsync(() => {
-        const hasOutOfSyncPushRemotesSpy = spyOn(datasetService, "hasOutOfSyncPushRemotes").and.returnValue(of(false));
-        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, false);
-            return Promise.resolve("");
-        });
-        const deleteDatasetSpy = spyOn(datasetSettingsService, "deleteDataset").and.stub();
+        const hasOutOfSyncPushRemotesSpy = vi
+            .spyOn(datasetService, "hasOutOfSyncPushRemotes")
+            .mockReturnValue(of(false));
+        const modalServiceSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, false);
+                return Promise.resolve("");
+            });
+        const deleteDatasetSpy = stubMethod(datasetSettingsService, "deleteDataset");
 
         emitClickOnElementByDataTestId(fixture, Elements.DeleteDatasetButton);
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
@@ -264,14 +278,16 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     }));
 
     it("should check reset modal window is shown and sends API call after confirm for Reset to Seed mode", fakeAsync(() => {
-        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, true);
-            return Promise.resolve("");
-        });
-        const datasetTriggerResetFlowSpy = spyOn(datasetFlowsService, "datasetTriggerResetFlow").and.returnValue(
-            of(true),
-        );
-        const navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
+        const modalServiceSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
+        const datasetTriggerResetFlowSpy = vi
+            .spyOn(datasetFlowsService, "datasetTriggerResetFlow")
+            .mockReturnValue(of(true));
+        const navigationServiceSpy = vi.spyOn(navigationService, "navigateToDatasetView").mockImplementation(() => {});
         emitClickOnElementByDataTestId(fixture, Elements.ResetDatasetButton);
         tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS);
 
@@ -290,15 +306,16 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
     it("should check reset modal window is shown and sends API call after confirm for Flatten metadata mode", fakeAsync(() => {
         component.resetDatasetForm.patchValue({ mode: DatasetResetMode.RESET_METADATA_ONLY });
-        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, true);
-            return Promise.resolve("");
-        });
-        const navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
-        const datasetTriggerResetToMetadataFlowSpy = spyOn(
-            datasetFlowsService,
-            "datasetTriggerResetToMetadataFlow",
-        ).and.returnValue(of(true));
+        const modalServiceSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
+        const navigationServiceSpy = vi.spyOn(navigationService, "navigateToDatasetView").mockImplementation(() => {});
+        const datasetTriggerResetToMetadataFlowSpy = vi
+            .spyOn(datasetFlowsService, "datasetTriggerResetToMetadataFlow")
+            .mockReturnValue(of(true));
 
         emitClickOnElementByDataTestId(fixture, Elements.ResetDatasetButton);
         tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS);
@@ -313,11 +330,13 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     }));
 
     it("should check change dataset visibility", () => {
-        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, true);
-            return Promise.resolve("");
-        });
-        const setVisibilitySpy = spyOn(datasetSettingsService, "setVisibility").and.callFake(() => of());
+        const modalServiceSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
+        const setVisibilitySpy = vi.spyOn(datasetSettingsService, "setVisibility").mockImplementation(() => of());
 
         component.changeVisibilityDataset();
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
@@ -325,12 +344,12 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     });
 
     it("should navigate to flows after a reset only once the delay passes, and not after destroy", fakeAsync(() => {
-        spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
+        vi.spyOn(modalService, "error").mockImplementation((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
         });
-        spyOn(datasetFlowsService, "datasetTriggerResetFlow").and.returnValue(of(true));
-        const navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
+        vi.spyOn(datasetFlowsService, "datasetTriggerResetFlow").mockReturnValue(of(true));
+        const navigationServiceSpy = vi.spyOn(navigationService, "navigateToDatasetView").mockImplementation(() => {});
         emitClickOnElementByDataTestId(fixture, Elements.ResetDatasetButton);
 
         tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS - 1);

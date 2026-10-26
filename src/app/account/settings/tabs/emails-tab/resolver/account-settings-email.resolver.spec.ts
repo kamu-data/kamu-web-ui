@@ -36,13 +36,15 @@ describe("accountSettingsEmailResolverFn", () => {
     });
 
     it("should check resolver", async () => {
-        const fetchAccountWithEmailSpy = spyOn(accountEmailService, "fetchAccountWithEmail").and.returnValue(
-            of(mockAccountDetailsWithEmail),
-        );
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        const fetchAccountWithEmailSpy = vi
+            .spyOn(accountEmailService, "fetchAccountWithEmail")
+            .mockReturnValue(of(mockAccountDetailsWithEmail));
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
         const result = await runResolver(accountSettingsEmailResolverFn);
 
-        expect(fetchAccountWithEmailSpy).toHaveBeenCalledOnceWith(mockAccountDetails.accountName);
+        expect(fetchAccountWithEmailSpy).toHaveBeenCalledTimes(1);
+
+        expect(fetchAccountWithEmailSpy).toHaveBeenCalledWith(mockAccountDetails.accountName);
         expect(result).toEqual(mockAccountDetailsWithEmail);
     });
 });

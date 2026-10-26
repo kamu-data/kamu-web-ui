@@ -37,7 +37,7 @@ describe("WebhooksService", () => {
     });
 
     it("should check return event types", () => {
-        spyOn(webhooksApi, "webhookEventTypes").and.returnValue(of(mockWebhookEventTypesQuery));
+        vi.spyOn(webhooksApi, "webhookEventTypes").mockReturnValue(of(mockWebhookEventTypesQuery));
 
         service.eventTypes().subscribe((result: SubscribedEventType[]) => {
             expect(result).toEqual([{ value: "DATASET.REF.UPDATED", name: "Dataset Updated" }]);

@@ -11,6 +11,7 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core
 
 import { GraphComponent, NgxGraphStates } from "@swimlane/ngx-graph";
 import timekeeper from "timekeeper";
+import type { Mock } from "vitest";
 
 import { LineageGraphComponent } from "@common/components/lineage-graph/lineage-graph.component";
 import { LineageGraphHarness } from "@common/components/lineage-graph/lineage-graph.harness";
@@ -45,7 +46,7 @@ describe("LineageGraphComponent", () => {
     let harness: LineageGraphHarness;
     let widgetHeightService: WidgetHeightService;
     let sessionStorageService: SessionStorageService;
-    let setSidePanelVisibleSpy: jasmine.Spy;
+    let setSidePanelVisibleSpy: Mock;
     const FROZEN_TIME = new Date("2023-10-01 12:00:00");
     const MOCK_GRAPH: LineageGraph = { links: MOCK_LINKS, nodes: MOCK_NODES };
 
@@ -64,7 +65,7 @@ describe("LineageGraphComponent", () => {
 
         widgetHeightService = TestBed.inject(WidgetHeightService);
         sessionStorageService = TestBed.inject(SessionStorageService);
-        setSidePanelVisibleSpy = spyOn(sessionStorageService, "setSidePanelVisible");
+        setSidePanelVisibleSpy = vi.spyOn(sessionStorageService, "setSidePanelVisible").mockImplementation(() => {});
     });
 
     interface RenderOptions {
@@ -74,7 +75,7 @@ describe("LineageGraphComponent", () => {
     }
 
     function create(options: RenderOptions = {}): void {
-        spyOnProperty(sessionStorageService, "isSidePanelVisible").and.returnValue(options.sidePanelVisible ?? false);
+        vi.spyOn(sessionStorageService, "isSidePanelVisible", "get").mockReturnValue(options.sidePanelVisible ?? false);
 
         fixture = TestBed.createComponent(LineageGraphComponent);
         component = fixture.componentInstance;
@@ -108,16 +109,16 @@ describe("LineageGraphComponent", () => {
         });
 
         it("should render a node for every dataset", async () => {
-            expect(await harness.hasNode(LineageGraphNodeKind.Dataset, CURRENT_NODE.label ?? "")).toBeTrue();
-            expect(await harness.hasNode(LineageGraphNodeKind.Dataset, OTHER_NODE.label ?? "")).toBeTrue();
+            expect(await harness.hasNode(LineageGraphNodeKind.Dataset, CURRENT_NODE.label ?? "")).toBe(true);
+            expect(await harness.hasNode(LineageGraphNodeKind.Dataset, OTHER_NODE.label ?? "")).toBe(true);
             expect(
                 await harness.hasNode(LineageGraphNodeKind.DatasetNotAccessable, INACCESSIBLE_NODE.label ?? ""),
-            ).toBeTrue();
+            ).toBe(true);
         });
 
         it("should not emit a click on the current dataset", async () => {
-            expect(CURRENT_NODE.data.dataObject.isCurrent).toBeTrue();
-            const onClickNodeEventSpy = spyOn(component.onClickNodeEvent, "emit");
+            expect(CURRENT_NODE.data.dataObject.isCurrent).toBe(true);
+            const onClickNodeEventSpy = vi.spyOn(component.onClickNodeEvent, "emit").mockImplementation(() => {});
 
             await harness.clickNode(LineageGraphNodeKind.Dataset, CURRENT_NODE.label ?? "");
 
@@ -125,28 +126,34 @@ describe("LineageGraphComponent", () => {
         });
 
         it("should emit a click on another dataset", async () => {
-            const onClickNodeEventSpy = spyOn(component.onClickNodeEvent, "emit");
+            const onClickNodeEventSpy = vi.spyOn(component.onClickNodeEvent, "emit").mockImplementation(() => {});
 
             await harness.clickNode(LineageGraphNodeKind.Dataset, OTHER_NODE.label ?? "");
 
-            expect(onClickNodeEventSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ id: OTHER_NODE.id }));
+            expect(onClickNodeEventSpy).toHaveBeenCalledTimes(1);
+
+            expect(onClickNodeEventSpy).toHaveBeenCalledWith(expect.objectContaining({ id: OTHER_NODE.id }));
         });
 
         it("should emit a private click on an inaccessible dataset", async () => {
-            const onClickNodeEventSpy = spyOn(component.onClickNodeEvent, "emit");
-            const onClickPrivateNodeEventSpy = spyOn(component.onClickPrivateNodeEvent, "emit");
+            const onClickNodeEventSpy = vi.spyOn(component.onClickNodeEvent, "emit").mockImplementation(() => {});
+            const onClickPrivateNodeEventSpy = vi
+                .spyOn(component.onClickPrivateNodeEvent, "emit")
+                .mockImplementation(() => {});
 
             await harness.clickNode(LineageGraphNodeKind.DatasetNotAccessable, INACCESSIBLE_NODE.label ?? "");
 
-            expect(onClickPrivateNodeEventSpy).toHaveBeenCalledOnceWith(
-                jasmine.objectContaining({ id: INACCESSIBLE_NODE.id }),
+            expect(onClickPrivateNodeEventSpy).toHaveBeenCalledTimes(1);
+
+            expect(onClickPrivateNodeEventSpy).toHaveBeenCalledWith(
+                expect.objectContaining({ id: INACCESSIBLE_NODE.id }),
             );
             expect(onClickNodeEventSpy).not.toHaveBeenCalled();
         });
 
         it("should mark private datasets with a lock icon", async () => {
-            expect(await harness.hasPrivateIcon(CURRENT_NODE.label ?? "")).toBeTrue();
-            expect(await harness.hasPrivateIcon(INACCESSIBLE_NODE.label ?? "")).toBeFalse();
+            expect(await harness.hasPrivateIcon(CURRENT_NODE.label ?? "")).toBe(true);
+            expect(await harness.hasPrivateIcon(INACCESSIBLE_NODE.label ?? "")).toBe(false);
         });
 
         it("should render the default avatar for an owner without one", () => {
@@ -164,21 +171,20 @@ describe("LineageGraphComponent", () => {
 
         for (const node of MOCK_SOURCE_NODES) {
             const kind = node.data.kind;
-            expect(await harness.hasNode(kind, node.label ?? ""))
-                .withContext(kind)
-                .toBeTrue();
+            expect(await harness.hasNode(kind, node.label ?? ""), kind).toBe(true);
         }
     });
 
     describe("side panel", () => {
         it("should toggle the side panel and remember the choice", async () => {
             await render();
-            expect(await harness.isSidePanelShown()).toBeFalse();
+            expect(await harness.isSidePanelShown()).toBe(false);
 
             await harness.toggleSidePanel();
 
-            expect(await harness.isSidePanelShown()).toBeTrue();
-            expect(setSidePanelVisibleSpy).toHaveBeenCalledOnceWith(true);
+            expect(await harness.isSidePanelShown()).toBe(true);
+            expect(setSidePanelVisibleSpy).toHaveBeenCalledTimes(1);
+            expect(setSidePanelVisibleSpy).toHaveBeenCalledWith(true);
         });
 
         it("should show a public dataset without a license", async () => {
@@ -228,7 +234,7 @@ describe("LineageGraphComponent", () => {
     describe("view size", () => {
         it("should measure the view again when the window is resized", async () => {
             await render();
-            const spyOnResize = spyOn(component, "changeLineageGraphView").and.callThrough();
+            const spyOnResize = vi.spyOn(component, "changeLineageGraphView");
             window.dispatchEvent(new Event("resize"));
             window.dispatchEvent(new Event("resize"));
             expect(spyOnResize).toHaveBeenCalledTimes(2);
@@ -236,7 +242,7 @@ describe("LineageGraphComponent", () => {
 
         it("should take the view height from the widget height", () => {
             const mockHeight = 1000;
-            const widgetHeightSpy = spyOnProperty(widgetHeightService, "widgetHeight").and.returnValue(mockHeight);
+            const widgetHeightSpy = vi.spyOn(widgetHeightService, "widgetHeight", "get").mockReturnValue(mockHeight);
             create();
             expect(component.view[1]).toEqual(mockHeight);
             expect(widgetHeightSpy).toHaveBeenCalledWith();
@@ -244,10 +250,10 @@ describe("LineageGraphComponent", () => {
     });
 
     it("should measure the view from its container once rendered", async () => {
-        spyOnProperty(sessionStorageService, "isSidePanelVisible").and.returnValue(false);
+        vi.spyOn(sessionStorageService, "isSidePanelVisible", "get").mockReturnValue(false);
         fixture = TestBed.createComponent(LineageGraphComponent);
         component = fixture.componentInstance;
-        const changeViewSpy = spyOn(component, "changeLineageGraphView").and.callThrough();
+        const changeViewSpy = vi.spyOn(component, "changeLineageGraphView");
         setComponentInput(fixture, "graph", MOCK_GRAPH);
         setComponentInput(fixture, "currentDataset", mockGraphNode);
 
@@ -260,8 +266,8 @@ describe("LineageGraphComponent", () => {
 
     describe("fitting the graph", () => {
         let graph: GraphComponent;
-        let zoomSpy: jasmine.Spy;
-        let panToSpy: jasmine.Spy;
+        let zoomSpy: Mock;
+        let panToSpy: Mock;
 
         function layOut(viewWidth: number, graphWidth: number, graphHeight: number): void {
             graph = findComponentInstance(fixture, GraphComponent);
@@ -269,9 +275,9 @@ describe("LineageGraphComponent", () => {
             graph.graphDims = { width: graphWidth, height: graphHeight };
             graph.minimapOffsetX = -100;
             graph.minimapOffsetY = -50;
-            spyOnProperty(graph, "zoomLevel").and.returnValue(1);
-            zoomSpy = spyOn(graph, "zoom");
-            panToSpy = spyOn(graph, "panTo");
+            vi.spyOn(graph, "zoomLevel", "get").mockReturnValue(1);
+            zoomSpy = vi.spyOn(graph, "zoom").mockImplementation(() => {});
+            panToSpy = vi.spyOn(graph, "panTo").mockImplementation(() => {});
             graph.stateChange.emit({ state: NgxGraphStates.Output });
         }
 
@@ -314,7 +320,7 @@ describe("LineageGraphComponent", () => {
         it("should keep the viewport on a pan or zoom", async () => {
             await render();
             graph = findComponentInstance(fixture, GraphComponent);
-            zoomSpy = spyOn(graph, "zoom");
+            zoomSpy = vi.spyOn(graph, "zoom").mockImplementation(() => {});
 
             graph.stateChange.emit({ state: NgxGraphStates.Transform });
 
@@ -326,7 +332,7 @@ describe("LineageGraphComponent", () => {
             // Lets ngx-graph finish its own layout passes, which also mark its view for check
             flush();
             layOut(1000 + MINIMAP_INSET, 2000, 400);
-            const markForCheckSpy = spyOn(graph.cd, "markForCheck");
+            const markForCheckSpy = vi.spyOn(graph.cd, "markForCheck").mockImplementation(() => {});
 
             tick(499);
             expect(markForCheckSpy).not.toHaveBeenCalled();

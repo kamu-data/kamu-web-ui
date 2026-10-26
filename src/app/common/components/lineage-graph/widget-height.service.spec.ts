@@ -24,13 +24,13 @@ describe("WidgetHeightService", () => {
     it("should check widget height", () => {
         const mockOffsetTop = 100;
         const result = 840;
-        spyOnProperty(window, "innerHeight").and.returnValue(1000);
+        vi.spyOn(window, "innerHeight", "get").mockReturnValue(1000);
         service.setWidgetOffsetTop(mockOffsetTop);
         expect(service.widgetHeight).toEqual(result);
     });
 
     it("should not let the widget shrink below its minimum height", () => {
-        spyOnProperty(window, "innerHeight").and.returnValue(300);
+        vi.spyOn(window, "innerHeight", "get").mockReturnValue(300);
         service.setWidgetOffsetTop(100);
         expect(service.widgetHeight).toEqual(200);
     });

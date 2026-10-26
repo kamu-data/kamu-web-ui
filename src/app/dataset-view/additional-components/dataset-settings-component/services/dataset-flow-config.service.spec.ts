@@ -13,6 +13,7 @@ import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
+import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { DatasetFlowApi } from "@api/dataset-flow.api";
 import {
     DatasetFlowType,
@@ -63,7 +64,7 @@ describe("DatasetFlowConfigService", () => {
     });
 
     it("should check setDatasetFlowIngestConfig with success", () => {
-        spyOn(datasetFlowApi, "setDatasetFlowIngestConfig").and.returnValue(of(mockSetIngestFlowConfigMutation));
+        vi.spyOn(datasetFlowApi, "setDatasetFlowIngestConfig").mockReturnValue(of(mockSetIngestFlowConfigMutation));
         const subscription$ = service
             .setDatasetIngestFlowConfigs({
                 datasetId: MOCK_DATASET_ID,
@@ -74,12 +75,14 @@ describe("DatasetFlowConfigService", () => {
                 expect(res).toEqual(true);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check setDatasetFlowIngestConfig with error", () => {
-        spyOn(datasetFlowApi, "setDatasetFlowIngestConfig").and.returnValue(of(mockSetIngestFlowConfigMutationError));
-        const toastrServiceErrorSpy = spyOn(toastService, "error");
+        vi.spyOn(datasetFlowApi, "setDatasetFlowIngestConfig").mockReturnValue(
+            of(mockSetIngestFlowConfigMutationError),
+        );
+        const toastrServiceErrorSpy = stubMethod(toastService, "error");
         const subscription$ = service
             .setDatasetIngestFlowConfigs({
                 datasetId: MOCK_DATASET_ID,
@@ -91,11 +94,11 @@ describe("DatasetFlowConfigService", () => {
                 expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check setDatasetFlowCompactionConfig with success", () => {
-        spyOn(datasetFlowApi, "setDatasetFlowCompactionConfig").and.returnValue(
+        vi.spyOn(datasetFlowApi, "setDatasetFlowCompactionConfig").mockReturnValue(
             of(mockSetCompactionFlowConfigMutation),
         );
         const subscription$ = service
@@ -107,14 +110,14 @@ describe("DatasetFlowConfigService", () => {
                 expect(res).toEqual(true);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check setCompactionFlowConfigs with error", () => {
-        spyOn(datasetFlowApi, "setDatasetFlowCompactionConfig").and.returnValue(
+        vi.spyOn(datasetFlowApi, "setDatasetFlowCompactionConfig").mockReturnValue(
             of(mockSetCompactionFlowConfigMutationError),
         );
-        const toastrServiceErrorSpy = spyOn(toastService, "error");
+        const toastrServiceErrorSpy = stubMethod(toastService, "error");
         const subscription$ = service
             .setDatasetCompactionFlowConfigs({
                 datasetId: MOCK_DATASET_ID,
@@ -125,11 +128,11 @@ describe("DatasetFlowConfigService", () => {
                 expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check fetchDatasetFlowConfigs method", () => {
-        spyOn(datasetFlowApi, "getDatasetFlowConfigs").and.returnValue(of(mockIngestGetDatasetFlowConfigsSuccess));
+        vi.spyOn(datasetFlowApi, "getDatasetFlowConfigs").mockReturnValue(of(mockIngestGetDatasetFlowConfigsSuccess));
         const subscription$ = service
             .fetchDatasetFlowConfigs(MOCK_DATASET_ID, DatasetFlowType.HardCompaction)
             .subscribe((res: GetDatasetFlowConfigsQuery) => {
@@ -143,6 +146,6 @@ describe("DatasetFlowConfigService", () => {
                 );
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 });

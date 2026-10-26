@@ -52,7 +52,9 @@ describe("MetadataPollingSourceTabComponent", () => {
     });
 
     it("should check to redirect to 'polling-source' route", () => {
-        const navigateToAddPollingSourceSpy = spyOn(navigationService, "navigateToAddPollingSource");
+        const navigateToAddPollingSourceSpy = vi
+            .spyOn(navigationService, "navigateToAddPollingSource")
+            .mockImplementation(() => {});
         component.navigateToEditPollingSource();
         expect(navigateToAddPollingSourceSpy).toHaveBeenCalledTimes(1);
     });

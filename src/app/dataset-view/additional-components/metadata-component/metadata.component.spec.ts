@@ -96,7 +96,7 @@ describe("MetadataComponent", () => {
 
     it("should check page change", () => {
         const pageNumber = 1;
-        const pageChangeEmitSpy = spyOn(component.pageChangeEmit, "emit");
+        const pageChangeEmitSpy = vi.spyOn(component.pageChangeEmit, "emit").mockImplementation(() => {});
         component.onPageChange(pageNumber);
         expect(pageChangeEmitSpy).toHaveBeenCalledWith(pageNumber);
     });

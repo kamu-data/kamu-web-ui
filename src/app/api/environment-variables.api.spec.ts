@@ -66,7 +66,7 @@ describe("EnvironmentVariablesApi", () => {
             })
             .subscribe((result: UpsertEnvVariableMutation) => {
                 expect(result.datasets.byId?.envVars.upsertEnvVariable).toEqual(
-                    jasmine.objectContaining({
+                    expect.objectContaining({
                         __typename: "UpsertDatasetEnvVarResultCreated",
                         message: MOCK_UPSERT_ENV_VAR_CREATED_MESSAGE,
                     }),
@@ -95,7 +95,7 @@ describe("EnvironmentVariablesApi", () => {
             })
             .subscribe((result: UpsertEnvVariableMutation) => {
                 expect(result.datasets.byId?.envVars.upsertEnvVariable).toEqual(
-                    jasmine.objectContaining({
+                    expect.objectContaining({
                         __typename: "UpsertDatasetEnvVarResultUpdated",
                         message: MOCK_UPSERT_ENV_VAR_UPDATED_MESSAGE,
                     }),
@@ -124,7 +124,7 @@ describe("EnvironmentVariablesApi", () => {
             })
             .subscribe((result: UpsertEnvVariableMutation) => {
                 expect(result.datasets.byId?.envVars.upsertEnvVariable).toEqual(
-                    jasmine.objectContaining({
+                    expect.objectContaining({
                         __typename: "UpsertDatasetEnvVarUpToDate",
                         message: MOCK_UPSERT_ENV_VAR_UP_TO_DATE_MESSAGE,
                     }),

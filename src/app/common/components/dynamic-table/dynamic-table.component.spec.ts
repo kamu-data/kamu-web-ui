@@ -17,6 +17,7 @@ import {
     findElementByDataTestId,
     getElementByDataTestId,
     setComponentInput,
+    stubMethod,
 } from "@common/helpers/base-test.helpers.spec";
 
 describe("DynamicTableComponent", () => {
@@ -63,7 +64,7 @@ describe("DynamicTableComponent", () => {
             },
         ]);
         fixture.detectChanges();
-        const successToastServiceSpy = spyOn(toastService, "success");
+        const successToastServiceSpy = stubMethod(toastService, "success");
         const cell0 = findElementByDataTestId(fixture, "column-name-type-0");
         cell0?.click();
         expect(successToastServiceSpy).toHaveBeenCalledWith("Copied");
@@ -141,7 +142,7 @@ describe("DynamicTableComponent", () => {
     });
 
     it("The 'showMore' badge should open the modal window", () => {
-        const ngbModalServiceSpy = spyOn(ngbModalService, "open").and.callThrough();
+        const ngbModalServiceSpy = vi.spyOn(ngbModalService, "open");
         setComponentInput(fixture, "dataRows", MOCK_DATA_ROWS_SHOW_MORE_BADGE);
         setComponentInput(fixture, "columnDescriptors", [
             {

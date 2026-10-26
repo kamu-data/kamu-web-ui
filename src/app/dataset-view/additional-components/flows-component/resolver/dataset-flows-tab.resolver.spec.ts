@@ -33,14 +33,14 @@ describe("datasetFlowsTabResolverFn", () => {
         });
         datasetService = TestBed.inject(DatasetService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        spyOnProperty(datasetSubsService, "overviewChanges", "get").and.returnValue(of(mockOverviewUpdate));
+        vi.spyOn(datasetSubsService, "overviewChanges", "get").mockReturnValue(of(mockOverviewUpdate));
     });
 
     it("should resolve the dataset, its permissions and the overview", async () => {
-        spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
+        vi.spyOn(datasetSubsService, "permissionsChanges", "get").mockReturnValue(
             of(mockFullPowerDatasetPermissionsFragment),
         );
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
+        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(of(mockDatasetBasicsRootFragment));
 
         const data = await runResolver(datasetFlowsTabResolverFn);
 
@@ -52,10 +52,10 @@ describe("datasetFlowsTabResolverFn", () => {
     });
 
     it("should redirect to page not found when the user may not view flows", async () => {
-        spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
+        vi.spyOn(datasetSubsService, "permissionsChanges", "get").mockReturnValue(
             of(mockReadonlyDatasetPermissionsFragment),
         );
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
+        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(of(mockDatasetBasicsRootFragment));
 
         const data = await runResolver(datasetFlowsTabResolverFn);
 
@@ -63,10 +63,10 @@ describe("datasetFlowsTabResolverFn", () => {
     });
 
     it("should redirect to page not found when the dataset cannot be loaded", async () => {
-        spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
+        vi.spyOn(datasetSubsService, "permissionsChanges", "get").mockReturnValue(
             of(mockFullPowerDatasetPermissionsFragment),
         );
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(throwError(() => new Error("fail")));
+        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(throwError(() => new Error("fail")));
 
         const data = await runResolver(datasetFlowsTabResolverFn);
 

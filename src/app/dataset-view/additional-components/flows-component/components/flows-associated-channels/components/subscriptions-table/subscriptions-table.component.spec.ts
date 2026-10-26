@@ -47,33 +47,35 @@ describe("SubscriptionsTableComponent", () => {
     });
 
     it("should check #navigateToSubscription", () => {
-        const subscriptionClickedSpy = spyOn(component.subscriptionClicked, "emit");
+        const subscriptionClickedSpy = vi.spyOn(component.subscriptionClicked, "emit").mockImplementation(() => {});
         component.navigateToSubscription(component.subprocesses[0]);
         expect(subscriptionClickedSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check #pauseWebhook", () => {
-        const pauseWebhookClickedSpy = spyOn(component.pauseWebhookClicked, "emit");
+        const pauseWebhookClickedSpy = vi.spyOn(component.pauseWebhookClicked, "emit").mockImplementation(() => {});
         component.pauseWebhook(MOCK_SUBSCRIPTION_ID);
         expect(pauseWebhookClickedSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check #resumeWebhook", () => {
-        const resumeWebhookClickedSpy = spyOn(component.resumeWebhookClicked, "emit");
+        const resumeWebhookClickedSpy = vi.spyOn(component.resumeWebhookClicked, "emit").mockImplementation(() => {});
         component.resumeWebhook(MOCK_SUBSCRIPTION_ID);
         expect(resumeWebhookClickedSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check #navigateToWebhookSettings", () => {
-        const webhookSettingsClickedSpy = spyOn(component.webhookSettingsClicked, "emit");
+        const webhookSettingsClickedSpy = vi
+            .spyOn(component.webhookSettingsClicked, "emit")
+            .mockImplementation(() => {});
         component.navigateToWebhookSettings(MOCK_SUBSCRIPTION_ID);
         expect(webhookSettingsClickedSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should pause an active subscription and resume any other from its toggle", async () => {
         const table = await TestbedHarnessEnvironment.harnessForFixture(fixture, SubscriptionsTableHarness);
-        const pauseWebhookClickedSpy = spyOn(component.pauseWebhookClicked, "emit");
-        const resumeWebhookClickedSpy = spyOn(component.resumeWebhookClicked, "emit");
+        const pauseWebhookClickedSpy = vi.spyOn(component.pauseWebhookClicked, "emit").mockImplementation(() => {});
+        const resumeWebhookClickedSpy = vi.spyOn(component.resumeWebhookClicked, "emit").mockImplementation(() => {});
 
         for (const subprocess of component.subprocesses) {
             await table.clickToggle(subprocess.id);
@@ -82,8 +84,10 @@ describe("SubscriptionsTableComponent", () => {
         const active = component.subprocesses.filter(
             (s) => s.summary.effectiveState === FlowProcessEffectiveState.Active,
         );
-        expect(pauseWebhookClickedSpy.calls.allArgs()).toEqual(active.map((s) => [s.id]));
-        expect(resumeWebhookClickedSpy.calls.count()).toEqual(component.subprocesses.length - active.length);
+        expect(vi.mocked(pauseWebhookClickedSpy).mock.calls).toEqual(active.map((s) => [s.id]));
+        expect(vi.mocked(resumeWebhookClickedSpy).mock.calls.length).toEqual(
+            component.subprocesses.length - active.length,
+        );
     });
 
     it("should disable the toggle of a subscription whose action is in progress", async () => {
@@ -92,7 +96,7 @@ describe("SubscriptionsTableComponent", () => {
 
         setComponentInput(fixture, "busySubscriptionIds", new Set([busy.id]));
 
-        expect(await table.isToggleDisabled(busy.id)).toBeTrue();
-        expect(await table.isToggleDisabled(idle.id)).toBeFalse();
+        expect(await table.isToggleDisabled(busy.id)).toBe(true);
+        expect(await table.isToggleDisabled(idle.id)).toBe(false);
     });
 });

@@ -10,6 +10,7 @@ import { TestBed } from "@angular/core/testing";
 import { firstValueFrom, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
+import type { Mock } from "vitest";
 
 import { requireValue } from "@common/helpers/app.helpers";
 import { DatasetApi } from "@api/dataset.api";
@@ -32,7 +33,9 @@ describe("BlockService", () => {
     let service: BlockService;
     let datasetApi: DatasetApi;
 
-    function csvReadStep(schemaContent: MaybeNull<string>): { __typename: "ReadStepCsv" } & ReadStepCsvDataFragment {
+    function csvReadStep(schemaContent: MaybeNull<string>): {
+        __typename: "ReadStepCsv";
+    } & ReadStepCsvDataFragment {
         return {
             __typename: "ReadStepCsv",
             schema: schemaContent
@@ -54,7 +57,7 @@ describe("BlockService", () => {
     });
 
     it("should check get block from api", async () => {
-        spyOn(datasetApi, "getBlockByHash").and.returnValue(of(mockGetMetadataBlockQuery));
+        vi.spyOn(datasetApi, "getBlockByHash").mockReturnValue(of(mockGetMetadataBlockQuery));
         const metadata = requireValue(mockGetMetadataBlockQuery.datasets.byOwnerAndName ?? null).metadata;
 
         const result = await firstValueFrom(service.requestMetadataBlock(mockDatasetInfo, TEST_BLOCK_HASH));
@@ -68,7 +71,7 @@ describe("BlockService", () => {
 
     it("should emit nothing usable for a block hash the dataset does not have", async () => {
         const dataset = requireValue(mockGetMetadataBlockQuery.datasets.byOwnerAndName ?? null);
-        spyOn(datasetApi, "getBlockByHash").and.returnValue(
+        vi.spyOn(datasetApi, "getBlockByHash").mockReturnValue(
             of({
                 ...mockGetMetadataBlockQuery,
                 datasets: {
@@ -117,9 +120,9 @@ describe("BlockService", () => {
         }
 
         it("should extract DataSchemaField[] from a GQL SetPollingSource event", () => {
-            const spy = spyOn(datasetApi, "getSchemaFieldsByEventType").and.returnValue(
-                of(mockProjection(odfJsonContent)),
-            );
+            const spy = vi
+                .spyOn(datasetApi, "getSchemaFieldsByEventType")
+                .mockReturnValue(of(mockProjection(odfJsonContent)));
             const expected: DataSchemaField[] = [
                 { name: "id", type: { kind: OdfTypes.Int32 } },
                 { name: "name", type: { kind: OdfTypes.String } },
@@ -134,13 +137,13 @@ describe("BlockService", () => {
                 .subscribe((fields) => (result = fields));
 
             expect(spy).toHaveBeenCalledWith(
-                jasmine.objectContaining({ eventTypes: [MetadataEventType.SetPollingSource] }),
+                expect.objectContaining({ eventTypes: [MetadataEventType.SetPollingSource] }),
             );
             expect(result).toEqual(expected);
         });
 
         it("should return [] when the block has no schema", () => {
-            spyOn(datasetApi, "getSchemaFieldsByEventType").and.returnValue(of(mockProjection(null)));
+            vi.spyOn(datasetApi, "getSchemaFieldsByEventType").mockReturnValue(of(mockProjection(null)));
 
             let result: DataSchemaField[] = [{ name: "sentinel", type: { kind: OdfTypes.String } }];
             service
@@ -157,7 +160,7 @@ describe("BlockService", () => {
             const emptyQuery: DatasetBlocksSchemaByEventTypeQuery = {
                 datasets: { byOwnerAndName: { metadata: { metadataProjection: [] } } },
             };
-            spyOn(datasetApi, "getSchemaFieldsByEventType").and.returnValue(of(emptyQuery));
+            vi.spyOn(datasetApi, "getSchemaFieldsByEventType").mockReturnValue(of(emptyQuery));
 
             let result: DataSchemaField[] = [{ name: "sentinel", type: { kind: OdfTypes.String } }];
             service
@@ -199,9 +202,9 @@ describe("BlockService", () => {
         }
 
         it("should extract DataSchemaField[] from an AddPushSource event", () => {
-            const spy = spyOn(datasetApi, "getSchemaFieldsByEventType").and.returnValue(
-                of(mockPushProjection(odfJsonContent)),
-            );
+            const spy = vi
+                .spyOn(datasetApi, "getSchemaFieldsByEventType")
+                .mockReturnValue(of(mockPushProjection(odfJsonContent)));
             const expected: DataSchemaField[] = [{ name: "amount", type: { kind: OdfTypes.Float64 } }];
 
             let result: DataSchemaField[] = [];
@@ -214,7 +217,7 @@ describe("BlockService", () => {
                 .subscribe((fields) => (result = fields));
 
             expect(spy).toHaveBeenCalledWith(
-                jasmine.objectContaining({ eventTypes: [MetadataEventType.AddPushSource] }),
+                expect.objectContaining({ eventTypes: [MetadataEventType.AddPushSource] }),
             );
             expect(result).toEqual(expected);
         });
@@ -223,7 +226,7 @@ describe("BlockService", () => {
             const emptyQuery: DatasetBlocksSchemaByEventTypeQuery = {
                 datasets: { byOwnerAndName: { metadata: { metadataProjection: [] } } },
             };
-            spyOn(datasetApi, "getSchemaFieldsByEventType").and.returnValue(of(emptyQuery));
+            vi.spyOn(datasetApi, "getSchemaFieldsByEventType").mockReturnValue(of(emptyQuery));
 
             let result: DataSchemaField[] = [{ name: "sentinel", type: { kind: OdfTypes.String } }];
             service
@@ -277,7 +280,7 @@ describe("BlockService", () => {
                     },
                 },
             };
-            spyOn(datasetApi, "getSchemaFieldsByEventType").and.returnValue(of(multiSourceQuery));
+            vi.spyOn(datasetApi, "getSchemaFieldsByEventType").mockReturnValue(of(multiSourceQuery));
 
             let result: DataSchemaField[] = [];
             service
@@ -325,19 +328,21 @@ describe("BlockService", () => {
             );
         }
 
-        let getBlocksByEventTypeSpy: jasmine.Spy;
+        let getBlocksByEventTypeSpy: Mock;
 
         beforeEach(() => {
-            getBlocksByEventTypeSpy = spyOn(datasetApi, "getBlocksByEventType").and.returnValue(
-                of(mockBlocksEncodedByEventTypeQuery),
-            );
+            getBlocksByEventTypeSpy = vi
+                .spyOn(datasetApi, "getBlocksByEventType")
+                .mockReturnValue(of(mockBlocksEncodedByEventTypeQuery));
         });
 
         it("should emit the encoded block of the named source", async () => {
             const result = await requestBlock("source-b");
 
-            expect(getBlocksByEventTypeSpy).toHaveBeenCalledOnceWith(
-                jasmine.objectContaining({
+            expect(getBlocksByEventTypeSpy).toHaveBeenCalledTimes(1);
+
+            expect(getBlocksByEventTypeSpy).toHaveBeenCalledWith(
+                expect.objectContaining({
                     accountName: mockDatasetInfo.accountName,
                     datasetName: mockDatasetInfo.datasetName,
                     encoding: MetadataManifestFormat.Yaml,

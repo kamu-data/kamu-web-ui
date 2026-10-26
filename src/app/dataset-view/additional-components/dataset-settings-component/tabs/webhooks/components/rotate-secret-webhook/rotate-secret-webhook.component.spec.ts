@@ -41,7 +41,7 @@ describe("RotateSecretWebhookComponent", () => {
         component = fixture.componentInstance;
         setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
         setComponentInput(fixture, "webhookId", "55-23456-888-890");
-        spyOn(datasetWebhooksService, "datasetWebhookRotateSecret").and.returnValue(of("mock-secret"));
+        vi.spyOn(datasetWebhooksService, "datasetWebhookRotateSecret").mockReturnValue(of("mock-secret"));
 
         fixture.detectChanges();
     });
@@ -55,7 +55,7 @@ describe("RotateSecretWebhookComponent", () => {
     });
 
     it("should check navigate to webhooks list", () => {
-        const navigateToWebhooksSpy = spyOn(navigationService, "navigateToWebhooks");
+        const navigateToWebhooksSpy = vi.spyOn(navigationService, "navigateToWebhooks").mockImplementation(() => {});
         component.navigateToListWebhooks();
         expect(navigateToWebhooksSpy).toHaveBeenCalledTimes(1);
     });

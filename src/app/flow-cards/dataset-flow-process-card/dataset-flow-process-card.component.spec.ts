@@ -33,7 +33,10 @@ describe("DatasetFlowProcessCardComponent", () => {
 
     function createCard(
         effectiveState: FlowProcessEffectiveState,
-        options: { datasetBasics?: DatasetBasicsFragment; runningSince?: string } = {},
+        options: {
+            datasetBasics?: DatasetBasicsFragment;
+            runningSince?: string;
+        } = {},
     ): Promise<DatasetFlowProcessCardHarness> {
         fixture = TestBed.createComponent(DatasetFlowProcessCardComponent);
         component = fixture.componentInstance;
@@ -68,20 +71,26 @@ describe("DatasetFlowProcessCardComponent", () => {
 
     it("should emit the dataset when 'Update now' is clicked", async () => {
         const card = await createCard(FlowProcessEffectiveState.Active);
-        const updateNowEmitterSpy = spyOn(component.updateNowEmitter, "emit");
+        const updateNowEmitterSpy = vi.spyOn(component.updateNowEmitter, "emit").mockImplementation(() => {});
 
         await card.clickUpdateNow();
 
-        expect(updateNowEmitterSpy).toHaveBeenCalledOnceWith(mockDatasetBasicsRootFragment);
+        expect(updateNowEmitterSpy).toHaveBeenCalledTimes(1);
+
+        expect(updateNowEmitterSpy).toHaveBeenCalledWith(mockDatasetBasicsRootFragment);
     });
 
     it("should emit the current state and dataset when the state toggle is clicked", async () => {
         const card = await createCard(FlowProcessEffectiveState.Failing);
-        const toggleStateDatasetCardEmitterSpy = spyOn(component.toggleStateDatasetCardEmitter, "emit");
+        const toggleStateDatasetCardEmitterSpy = vi
+            .spyOn(component.toggleStateDatasetCardEmitter, "emit")
+            .mockImplementation(() => {});
 
         await card.clickToggleState();
 
-        expect(toggleStateDatasetCardEmitterSpy).toHaveBeenCalledOnceWith({
+        expect(toggleStateDatasetCardEmitterSpy).toHaveBeenCalledTimes(1);
+
+        expect(toggleStateDatasetCardEmitterSpy).toHaveBeenCalledWith({
             state: FlowProcessEffectiveState.Failing,
             datasetBasics: mockDatasetBasicsRootFragment,
         });
@@ -98,7 +107,7 @@ describe("DatasetFlowProcessCardComponent", () => {
 
             expect(await card.getStateText()).toEqual(stateText);
             expect(await card.getToggleStateLabel()).toEqual(label);
-            expect(await card.isToggleStateDisabled()).toBeFalse();
+            expect(await card.isToggleStateDisabled()).toBe(false);
         });
     });
 
@@ -106,7 +115,7 @@ describe("DatasetFlowProcessCardComponent", () => {
         const card = await createCard(FlowProcessEffectiveState.Unconfigured);
 
         expect(await card.getStateText()).toEqual("UNCONFIGURED");
-        expect(await card.isToggleStateDisabled()).toBeTrue();
+        expect(await card.isToggleStateDisabled()).toBe(true);
     });
 
     it("should show for how long the running flow has been running", async () => {
@@ -137,12 +146,12 @@ describe("DatasetFlowProcessCardComponent", () => {
 
     it("should disable both buttons while an action is in progress", async () => {
         const card = await createCard(FlowProcessEffectiveState.Active);
-        expect(await card.isUpdateNowDisabled()).toBeFalse();
-        expect(await card.isToggleStateDisabled()).toBeFalse();
+        expect(await card.isUpdateNowDisabled()).toBe(false);
+        expect(await card.isToggleStateDisabled()).toBe(false);
 
         setComponentInput(fixture, "actionInProgress", true);
 
-        expect(await card.isUpdateNowDisabled()).toBeTrue();
-        expect(await card.isToggleStateDisabled()).toBeTrue();
+        expect(await card.isUpdateNowDisabled()).toBe(true);
+        expect(await card.isToggleStateDisabled()).toBe(true);
     });
 });

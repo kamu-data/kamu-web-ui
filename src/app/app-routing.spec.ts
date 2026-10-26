@@ -9,7 +9,6 @@ import { Location } from "@angular/common";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideLocationMocks } from "@angular/common/testing";
-import { Provider } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { Router, ROUTES } from "@angular/router";
 
@@ -50,7 +49,7 @@ describe("Router", () => {
     let loggedUserService: LoggedUserService;
     let loginMethodsService: LoginMethodsService;
 
-    async function configureRouter(allowAnonymous: boolean, extraProviders: Provider[] = []): Promise<void> {
+    async function configureRouter(allowAnonymous: boolean): Promise<void> {
         await TestBed.configureTestingModule({
             imports: [ApolloTestingModule, PageNotFoundComponent, LoginComponent],
             providers: [
@@ -104,7 +103,7 @@ describe("Router", () => {
                 },
                 provideHttpClient(),
                 provideHttpClientTesting(),
-                ...extraProviders,
+                provideLocationMocks(),
             ],
         }).compileComponents();
 
@@ -154,8 +153,8 @@ describe("Router", () => {
 
             // A real await, because fakeAsync's tick() cannot wait for the lazy chunk of a loadComponent route
             it(`Route to ${url} lands on the component with active login`, async () => {
-                spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-                spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+                vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
+                vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
                 await router.navigate([url]);
                 if (url === ProjectLinks.URL_SETTINGS) {
                     expect(location.path()).toBe("/" + url + "/access-tokens");
@@ -177,7 +176,7 @@ describe("Router", () => {
 
         // A real await: two-segment URLs also match ":accountName/:datasetName", whose routes load lazily
         it("admin dashboard redirects a user who is not an admin to the default page", async () => {
-            spyOnProperty(loggedUserService, "isAdmin", "get").and.returnValue(false);
+            vi.spyOn(loggedUserService, "isAdmin", "get").mockReturnValue(false);
 
             await router.navigate([ProjectLinks.URL_ADMIN_DASHBOARD]);
 
@@ -193,7 +192,7 @@ describe("Router", () => {
 
         describe("#login routes", () => {
             it("login redirects to default page when not allowed in configuration", fakeAsync(() => {
-                spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([]);
+                vi.spyOn(loginMethodsService, "loginMethods", "get").mockReturnValue([]);
 
                 promiseWithCatch(router.navigate([ProjectLinks.URL_LOGIN]));
                 tick();
@@ -203,7 +202,7 @@ describe("Router", () => {
             }));
 
             it("login redirects to default page when user is already logged", fakeAsync(() => {
-                spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+                vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
 
                 promiseWithCatch(router.navigate([ProjectLinks.URL_LOGIN]));
                 tick();
@@ -213,8 +212,8 @@ describe("Router", () => {
             }));
 
             it("login with a redirect URL opens Login component when allowed and not logged in", fakeAsync(() => {
-                spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([AccountProvider.Password]);
-                spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
+                vi.spyOn(loginMethodsService, "loginMethods", "get").mockReturnValue([AccountProvider.Password]);
+                vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(false);
 
                 promiseWithCatch(
                     router.navigate([ProjectLinks.URL_LOGIN], {
@@ -230,7 +229,7 @@ describe("Router", () => {
             }));
 
             it("login with a redirect URL redirects to default page when user is already logged", fakeAsync(() => {
-                spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+                vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
 
                 promiseWithCatch(
                     router.navigate([ProjectLinks.URL_LOGIN], {
@@ -244,8 +243,8 @@ describe("Router", () => {
             }));
 
             it("login opens Login component when allowed and not logged in", fakeAsync(() => {
-                spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([AccountProvider.Password]);
-                spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
+                vi.spyOn(loginMethodsService, "loginMethods", "get").mockReturnValue([AccountProvider.Password]);
+                vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(false);
 
                 promiseWithCatch(router.navigate([ProjectLinks.URL_LOGIN]));
                 tick();
@@ -258,7 +257,7 @@ describe("Router", () => {
 
     describe("browser history", () => {
         beforeEach(async () => {
-            await configureRouter(true, [provideLocationMocks()]);
+            await configureRouter(true);
         });
 
         it("a guard redirect adds no history entry for the refused page", fakeAsync(() => {
@@ -282,7 +281,7 @@ describe("Router", () => {
         });
 
         it("an anonymous user is redirected to login, which returns to the requested page", fakeAsync(() => {
-            spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([AccountProvider.Password]);
+            vi.spyOn(loginMethodsService, "loginMethods", "get").mockReturnValue([AccountProvider.Password]);
 
             promiseWithCatch(router.navigate([ProjectLinks.URL_DATASET_CREATE]));
             tick();
@@ -303,19 +302,21 @@ describe("Router", () => {
 
         describe("and no login method", () => {
             beforeEach(() => {
-                spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([]);
+                vi.spyOn(loginMethodsService, "loginMethods", "get").mockReturnValue([]);
             });
 
             ["", ProjectLinks.URL_SEARCH, ProjectLinks.URL_LOGIN].forEach((url: string) => {
                 it(`navigation to "/${url}" settles on the login-unavailable page`, fakeAsync(() => {
-                    let navigated: MaybeUndefined<boolean>;
+                    // The initial navigation already lands on the page, so a redirect to it is skipped
+                    // and resolves `false`; a redirect loop would reject or never settle.
+                    let outcome: MaybeUndefined<"resolved" | "rejected">;
                     router.navigate([url]).then(
-                        (result) => (navigated = result),
-                        () => (navigated = false),
+                        () => (outcome = "resolved"),
+                        () => (outcome = "rejected"),
                     );
                     tick();
 
-                    expect(navigated).toBeTrue();
+                    expect(outcome).toBe("resolved");
                     expect(location.path()).toBe("/" + ProjectLinks.URL_LOGIN_UNAVAILABLE);
                     flush();
                 }));

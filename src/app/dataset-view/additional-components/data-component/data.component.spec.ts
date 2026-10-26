@@ -15,6 +15,7 @@ import { of } from "rxjs";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import type { Mock } from "vitest";
 
 import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
@@ -43,7 +44,7 @@ describe("DataComponent", () => {
     let ngbModalService: NgbModal;
     let navigationService: NavigationService;
     let sqlQueryService: SqlQueryService;
-    let requestDataSqlRunSpy: jasmine.Spy;
+    let requestDataSqlRunSpy: Mock;
     let engineService: EngineService;
     let queryMicriDbTrackerService: QueryMicroDbTrackerService;
 
@@ -88,9 +89,9 @@ describe("DataComponent", () => {
         sqlQueryService = TestBed.inject(SqlQueryService);
         engineService = TestBed.inject(EngineService);
         queryMicriDbTrackerService = TestBed.inject(QueryMicroDbTrackerService);
-        spyOn(engineService, "engines").and.returnValue(of(mockEngines));
-        spyOn(navigationService, "navigateToDatasetView");
-        spyOn(navigationService, "navigateWithSqlQuery");
+        vi.spyOn(engineService, "engines").mockReturnValue(of(mockEngines));
+        vi.spyOn(navigationService, "navigateToDatasetView").mockImplementation(() => {});
+        vi.spyOn(navigationService, "navigateWithSqlQuery").mockImplementation(() => {});
 
         component = fixture.componentInstance;
         setComponentInput(fixture, "dataTabData", {
@@ -99,7 +100,7 @@ describe("DataComponent", () => {
             overviewUpdate: mockRootOverviewUpdate,
         });
         component.sqlLoading = false;
-        requestDataSqlRunSpy = spyOn(sqlQueryService, "requestDataSqlRun").and.returnValue(of().pipe());
+        requestDataSqlRunSpy = vi.spyOn(sqlQueryService, "requestDataSqlRun").mockReturnValue(of().pipe());
     });
 
     it("should create", () => {
@@ -107,7 +108,7 @@ describe("DataComponent", () => {
     });
 
     it("should check run sql button", fakeAsync(() => {
-        const getQuerySpy = spyOn(queryMicriDbTrackerService, "getQuery").and.resolveTo({
+        const getQuerySpy = vi.spyOn(queryMicriDbTrackerService, "getQuery").mockResolvedValue({
             query: "select * from 'test.table'",
             timestamp: 121223224,
         });
@@ -124,7 +125,7 @@ describe("DataComponent", () => {
     }));
 
     it("should check add data", () => {
-        const ngbModalServiceSpy = spyOn(ngbModalService, "open").and.callThrough();
+        const ngbModalServiceSpy = vi.spyOn(ngbModalService, "open");
 
         component.addData(mockDerivedOverviewUpdate);
         expect(ngbModalServiceSpy).toHaveBeenCalledTimes(1);
@@ -138,7 +139,7 @@ describe("DataComponent", () => {
         };
         await queryMicriDbTrackerService.saveQuery("kamu/mockNameRoot", mockQuery);
 
-        spyOn(queryMicriDbTrackerService, "getQuery").and.resolveTo(mockEntry);
+        vi.spyOn(queryMicriDbTrackerService, "getQuery").mockResolvedValue(mockEntry);
 
         fixture.detectChanges();
         await fixture.whenStable();
@@ -147,14 +148,14 @@ describe("DataComponent", () => {
     });
 
     it("should check set query with offset", async () => {
-        spyOn(location, "getState").and.returnValue({ start: 0, end: 100 });
+        vi.spyOn(location, "getState").mockReturnValue({ start: 0, end: 100 });
         const mockQuery = "select * from 'kamu/mockNameRoot'";
         const mockEntry = {
             query: mockQuery,
             timestamp: Date.now(),
         };
 
-        spyOn(queryMicriDbTrackerService, "getQuery").and.resolveTo(mockEntry);
+        vi.spyOn(queryMicriDbTrackerService, "getQuery").mockResolvedValue(mockEntry);
 
         fixture.detectChanges();
         await fixture.whenStable();

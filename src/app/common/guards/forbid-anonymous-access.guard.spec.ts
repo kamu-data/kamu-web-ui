@@ -8,6 +8,7 @@
 import { TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
+import type { Mock } from "vitest";
 
 import { forbidAnonymousAccessGuardFn } from "@common/guards/forbid-anonymous-access.guard";
 import { expectRedirectTo, routeSnapshot, runCanActivate } from "@common/helpers/base-test.helpers.spec";
@@ -33,11 +34,9 @@ describe("forbidAnonymousAccessGuardFn", () => {
     });
 
     it("should return true when user is logged in", async () => {
-        const maybeCurrentlyLoggedInUserSpy: jasmine.Spy = spyOnProperty(
-            loggedUserService,
-            "maybeCurrentlyLoggedInUser",
-            "get",
-        ).and.returnValue(mockAccountDetails);
+        const maybeCurrentlyLoggedInUserSpy: Mock = vi
+            .spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get")
+            .mockReturnValue(mockAccountDetails);
 
         const result = await runCanActivate(forbidAnonymousAccessGuardFn, routeSnapshot(), DEEP_LINK);
 
@@ -46,12 +45,10 @@ describe("forbidAnonymousAccessGuardFn", () => {
     });
 
     it("should redirect to login with the requested URL when user is not logged in", async () => {
-        spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([AccountProvider.Password]);
-        const maybeCurrentlyLoggedInUserSpy: jasmine.Spy = spyOnProperty(
-            loggedUserService,
-            "maybeCurrentlyLoggedInUser",
-            "get",
-        ).and.returnValue(null);
+        vi.spyOn(loginMethodsService, "loginMethods", "get").mockReturnValue([AccountProvider.Password]);
+        const maybeCurrentlyLoggedInUserSpy: Mock = vi
+            .spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get")
+            .mockReturnValue(null);
 
         const result = await runCanActivate(forbidAnonymousAccessGuardFn, routeSnapshot(), DEEP_LINK);
 
@@ -67,9 +64,9 @@ describe("forbidAnonymousAccessGuardFn", () => {
         { description: "the login methods could not be loaded", loadFailed: true },
     ].forEach(({ description, loadFailed }) => {
         it(`should redirect to the login-unavailable page when ${description}`, async () => {
-            spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(null);
-            spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([]);
-            spyOnProperty(loginMethodsService, "loadFailed", "get").and.returnValue(loadFailed);
+            vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(null);
+            vi.spyOn(loginMethodsService, "loginMethods", "get").mockReturnValue([]);
+            vi.spyOn(loginMethodsService, "loadFailed", "get").mockReturnValue(loadFailed);
 
             const result = await runCanActivate(forbidAnonymousAccessGuardFn, routeSnapshot(), DEEP_LINK);
 

@@ -86,13 +86,13 @@ describe("IngestConfigurationRuleFormComponent", () => {
     });
 
     it("should enable fetchUncacheable via harness and reflect in form", async () => {
-        expect(component.fetchUncacheableControl.value).toBeFalse();
-        expect(await ingestConfigurationRuleFormHarness.isFetchUncacheableEnabled()).toBeFalse();
+        expect(component.fetchUncacheableControl.value).toBe(false);
+        expect(await ingestConfigurationRuleFormHarness.isFetchUncacheableEnabled()).toBe(false);
 
         await ingestConfigurationRuleFormHarness.enableFetchUncacheable();
 
-        expect(component.fetchUncacheableControl.value).toBeTrue();
-        expect(await ingestConfigurationRuleFormHarness.isFetchUncacheableEnabled()).toBeTrue();
+        expect(component.fetchUncacheableControl.value).toBe(true);
+        expect(await ingestConfigurationRuleFormHarness.isFetchUncacheableEnabled()).toBe(true);
 
         await expectFormValueToEqual({
             fetchUncacheable: true,
@@ -101,13 +101,13 @@ describe("IngestConfigurationRuleFormComponent", () => {
     });
 
     it("should enable fetchNextIteration via harness and reflect in form", async () => {
-        expect(component.fetchNextIterationControl.value).toBeFalse();
-        expect(await ingestConfigurationRuleFormHarness.isFetchNextIterationEnabled()).toBeFalse();
+        expect(component.fetchNextIterationControl.value).toBe(false);
+        expect(await ingestConfigurationRuleFormHarness.isFetchNextIterationEnabled()).toBe(false);
 
         await ingestConfigurationRuleFormHarness.enableFetchNextIteration();
 
-        expect(component.fetchNextIterationControl.value).toBeTrue();
-        expect(await ingestConfigurationRuleFormHarness.isFetchNextIterationEnabled()).toBeTrue();
+        expect(component.fetchNextIterationControl.value).toBe(true);
+        expect(await ingestConfigurationRuleFormHarness.isFetchNextIterationEnabled()).toBe(true);
 
         await expectFormValueToEqual({
             fetchUncacheable: false,
@@ -118,14 +118,14 @@ describe("IngestConfigurationRuleFormComponent", () => {
     it("should disable fetchUncacheable via harness and reflect in form", async () => {
         // First enable it
         await ingestConfigurationRuleFormHarness.enableFetchUncacheable();
-        expect(component.fetchUncacheableControl.value).toBeTrue();
-        expect(await ingestConfigurationRuleFormHarness.isFetchUncacheableEnabled()).toBeTrue();
+        expect(component.fetchUncacheableControl.value).toBe(true);
+        expect(await ingestConfigurationRuleFormHarness.isFetchUncacheableEnabled()).toBe(true);
 
         // Then disable it
         await ingestConfigurationRuleFormHarness.disableFetchUncacheable();
 
-        expect(component.fetchUncacheableControl.value).toBeFalse();
-        expect(await ingestConfigurationRuleFormHarness.isFetchUncacheableEnabled()).toBeFalse();
+        expect(component.fetchUncacheableControl.value).toBe(false);
+        expect(await ingestConfigurationRuleFormHarness.isFetchUncacheableEnabled()).toBe(false);
 
         await expectFormValueToEqual({
             fetchUncacheable: false,
@@ -136,14 +136,14 @@ describe("IngestConfigurationRuleFormComponent", () => {
     it("should disable fetchNextIteration via harness and reflect in form", async () => {
         // First enable it
         await ingestConfigurationRuleFormHarness.enableFetchNextIteration();
-        expect(component.fetchNextIterationControl.value).toBeTrue();
-        expect(await ingestConfigurationRuleFormHarness.isFetchNextIterationEnabled()).toBeTrue();
+        expect(component.fetchNextIterationControl.value).toBe(true);
+        expect(await ingestConfigurationRuleFormHarness.isFetchNextIterationEnabled()).toBe(true);
 
         // Then disable it
         await ingestConfigurationRuleFormHarness.disableFetchNextIteration();
 
-        expect(component.fetchNextIterationControl.value).toBeFalse();
-        expect(await ingestConfigurationRuleFormHarness.isFetchNextIterationEnabled()).toBeFalse();
+        expect(component.fetchNextIterationControl.value).toBe(false);
+        expect(await ingestConfigurationRuleFormHarness.isFetchNextIterationEnabled()).toBe(false);
 
         await expectFormValueToEqual({
             fetchUncacheable: false,
@@ -205,12 +205,12 @@ describe("IngestConfigurationRuleFormComponent", () => {
 
     it("should validate form is always valid", () => {
         // Form should be valid by default
-        expect(component.form.valid).toBeTrue();
+        expect(component.form.valid).toBe(true);
         expect(component.form.errors).toBeNull();
 
         // Form should still be valid after enabling fetchUncacheable
         component.form.patchValue({ fetchUncacheable: true });
-        expect(component.form.valid).toBeTrue();
+        expect(component.form.valid).toBe(true);
         expect(component.form.errors).toBeNull();
     });
 });

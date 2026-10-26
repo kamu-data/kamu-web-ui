@@ -10,6 +10,7 @@ import { TestBed } from "@angular/core/testing";
 import { firstValueFrom } from "rxjs";
 
 import { NodeDimension } from "@swimlane/ngx-graph";
+import type { Mock } from "vitest";
 
 import { LineageNodeSizeService } from "@common/components/lineage-graph/lineage-node-size.service";
 import { requireValue } from "@common/helpers/app.helpers";
@@ -41,9 +42,9 @@ import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscr
 describe("LineageGraphBuilderService", () => {
     let service: LineageGraphBuilderService;
     let datasetSubsService: DatasetSubscriptionsService;
-    let datasetNodeSizeSpy: jasmine.Spy;
-    let sourceNodeSizeSpy: jasmine.Spy;
-    let inaccessibleNodeSizeSpy: jasmine.Spy;
+    let datasetNodeSizeSpy: Mock;
+    let sourceNodeSizeSpy: Mock;
+    let inaccessibleNodeSizeSpy: Mock;
 
     const DATASET_NODE_SIZE: NodeDimension = { width: 200, height: 70 };
     const SOURCE_NODE_SIZE: NodeDimension = { width: 150, height: 70 };
@@ -54,11 +55,11 @@ describe("LineageGraphBuilderService", () => {
         service = TestBed.inject(LineageGraphBuilderService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         const nodeSizeService = TestBed.inject(LineageNodeSizeService);
-        datasetNodeSizeSpy = spyOn(nodeSizeService, "datasetNodeSize").and.returnValue(DATASET_NODE_SIZE);
-        sourceNodeSizeSpy = spyOn(nodeSizeService, "sourceNodeSize").and.returnValue(SOURCE_NODE_SIZE);
-        inaccessibleNodeSizeSpy = spyOn(nodeSizeService, "inaccessibleNodeSize").and.returnValue(
-            INACCESSIBLE_NODE_SIZE,
-        );
+        datasetNodeSizeSpy = vi.spyOn(nodeSizeService, "datasetNodeSize").mockReturnValue(DATASET_NODE_SIZE);
+        sourceNodeSizeSpy = vi.spyOn(nodeSizeService, "sourceNodeSize").mockReturnValue(SOURCE_NODE_SIZE);
+        inaccessibleNodeSizeSpy = vi
+            .spyOn(nodeSizeService, "inaccessibleNodeSize")
+            .mockReturnValue(INACCESSIBLE_NODE_SIZE);
     });
 
     async function buildGraph(lineage: LineageUpdate): Promise<LineageGraphUpdate> {
@@ -83,7 +84,7 @@ describe("LineageGraphBuilderService", () => {
     });
 
     it("should build the graph even when a font fails to load", async () => {
-        spyOn(document.fonts, "load").and.returnValue(Promise.reject(new Error("Font download blocked")));
+        vi.spyOn(document.fonts, "load").mockReturnValue(Promise.reject(new Error("Font download blocked")));
         const update = await buildGraph(mockLineageGraphUpdate);
         expect(update.graph.nodes.length).toBeGreaterThan(0);
     });
@@ -133,8 +134,10 @@ describe("LineageGraphBuilderService", () => {
         await buildGraph(mockLineageGraphUpdateWithMqttSource);
 
         const dataset = mockLineageGraphUpdateWithMqttSource.origin;
-        expect(datasetNodeSizeSpy).toHaveBeenCalledOnceWith(dataset.name, dataset.owner.accountName);
-        expect(sourceNodeSizeSpy).toHaveBeenCalledOnceWith(LineageGraphNodeKind.Mqtt, "test.mosquitto.org:1883");
+        expect(datasetNodeSizeSpy).toHaveBeenCalledTimes(1);
+        expect(datasetNodeSizeSpy).toHaveBeenCalledWith(dataset.name, dataset.owner.accountName);
+        expect(sourceNodeSizeSpy).toHaveBeenCalledTimes(1);
+        expect(sourceNodeSizeSpy).toHaveBeenCalledWith(LineageGraphNodeKind.Mqtt, "test.mosquitto.org:1883");
     });
 
     it("should give a lone dataset a hidden self-loop, so that the layout does not crash", async () => {
@@ -168,7 +171,8 @@ describe("LineageGraphBuilderService", () => {
                 data: { kind: LineageGraphNodeKind.DatasetNotAccessable },
             },
         ]);
-        expect(inaccessibleNodeSizeSpy).toHaveBeenCalledOnceWith(
+        expect(inaccessibleNodeSizeSpy).toHaveBeenCalledTimes(1);
+        expect(inaccessibleNodeSizeSpy).toHaveBeenCalledWith(
             new DisplayDatasetIdPipe().transform(MOCK_INACCESSIBLE_DATASET.id),
         );
         expect(update.graph.links).toEqual([

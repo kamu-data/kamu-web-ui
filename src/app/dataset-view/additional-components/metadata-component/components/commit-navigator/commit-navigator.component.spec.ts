@@ -36,13 +36,13 @@ describe("CommitNavigatorComponent", () => {
     });
 
     it("should change page backward", () => {
-        const pageChangeSpy = spyOn(component.pageChange, "emit");
+        const pageChangeSpy = vi.spyOn(component.pageChange, "emit").mockImplementation(() => {});
         emitClickOnElementByDataTestId(fixture, "backward-link");
         expect(pageChangeSpy).toHaveBeenCalledWith(INITIAL_PAGE_INDEX - 1);
     });
 
     it("should change page forward", () => {
-        const pageChangeSpy = spyOn(component.pageChange, "emit");
+        const pageChangeSpy = vi.spyOn(component.pageChange, "emit").mockImplementation(() => {});
         emitClickOnElementByDataTestId(fixture, "forward-link");
         expect(pageChangeSpy).toHaveBeenCalledWith(INITIAL_PAGE_INDEX + 1);
     });

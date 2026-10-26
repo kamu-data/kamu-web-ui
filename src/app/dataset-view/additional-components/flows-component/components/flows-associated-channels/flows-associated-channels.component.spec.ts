@@ -76,36 +76,43 @@ describe("FlowsAssociatedChannelsComponent", () => {
     });
 
     it("should check to navigate webhook settings", () => {
-        const navigateToWebhookSettingsEmitterSpy = spyOn(component.webhookSettingsClicked, "emit");
+        const navigateToWebhookSettingsEmitterSpy = vi
+            .spyOn(component.webhookSettingsClicked, "emit")
+            .mockImplementation(() => {});
         component.navigateToWebhookSettings(subscriptionId);
         expect(navigateToWebhookSettingsEmitterSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to subscription", () => {
-        const navigateToSubscriptionEmitterSpy = spyOn(component.subcriptionClicked, "emit");
+        const navigateToSubscriptionEmitterSpy = vi
+            .spyOn(component.subcriptionClicked, "emit")
+            .mockImplementation(() => {});
         component.navigateToSubscription(flowProcess);
         expect(navigateToSubscriptionEmitterSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to pause subscription", () => {
-        const pauseWebhookEmitterSpy = spyOn(component.pauseWebhookClicked, "emit");
+        const pauseWebhookEmitterSpy = vi.spyOn(component.pauseWebhookClicked, "emit").mockImplementation(() => {});
         component.pauseWebhook(subscriptionId);
         expect(pauseWebhookEmitterSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to resume subscription", () => {
-        const resumeWebhookEmitterSpy = spyOn(component.resumeWebhookClicked, "emit");
+        const resumeWebhookEmitterSpy = vi.spyOn(component.resumeWebhookClicked, "emit").mockImplementation(() => {});
         component.resumeWebhook(subscriptionId);
         expect(resumeWebhookEmitterSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to select 1 state", async () => {
-        const selectionWebhooksEmitterSpy = spyOn(component.selectionWebhooksClicked, "emit");
+        const selectionWebhooksEmitterSpy = vi
+            .spyOn(component.selectionWebhooksClicked, "emit")
+            .mockImplementation(() => {});
         const chips = await TestbedHarnessEnvironment.loader(fixture).getHarness(
             MatChipListboxHarness.with({ selector: '[data-test-id="webhooks-category-chips"]' }),
         );
         await chips.selectChips({ text: "Webhooks" });
-        expect(selectionWebhooksEmitterSpy).toHaveBeenCalledOnceWith("webhooks");
+        expect(selectionWebhooksEmitterSpy).toHaveBeenCalledTimes(1);
+        expect(selectionWebhooksEmitterSpy).toHaveBeenCalledWith("webhooks");
     });
 
     it("should check toggle webhook filter", async () => {
@@ -116,18 +123,23 @@ describe("FlowsAssociatedChannelsComponent", () => {
             webhooksIds: [],
             subscriptions: [],
         });
-        const toggleWebhookFilterClickedSpy = spyOn(component.toggleWebhookFilterClicked, "emit");
+        const toggleWebhookFilterClickedSpy = vi
+            .spyOn(component.toggleWebhookFilterClicked, "emit")
+            .mockImplementation(() => {});
         const toggles = await TestbedHarnessEnvironment.loader(fixture).getHarness(
             MatButtonToggleGroupHarness.with({ selector: '[data-test-id="webhook-filter-toggles"]' }),
         );
         const [activeToggle] = await toggles.getToggles({ text: /^Active:/ });
         await activeToggle.check();
-        expect(toggleWebhookFilterClickedSpy).toHaveBeenCalledOnceWith([FlowProcessEffectiveState.Active]);
+        expect(toggleWebhookFilterClickedSpy).toHaveBeenCalledTimes(1);
+        expect(toggleWebhookFilterClickedSpy).toHaveBeenCalledWith([FlowProcessEffectiveState.Active]);
     });
 
     it("should check remove selected webhook", () => {
         const mockSubscriptionName = "1233-444334-3232e32";
-        const removeSelectedWebhookClickedSpy = spyOn(component.removeSelectedWebhookClicked, "emit");
+        const removeSelectedWebhookClickedSpy = vi
+            .spyOn(component.removeSelectedWebhookClicked, "emit")
+            .mockImplementation(() => {});
         component.removeSelectedWebhook(mockSubscriptionName);
         expect(removeSelectedWebhookClickedSpy).toHaveBeenCalledTimes(1);
     });

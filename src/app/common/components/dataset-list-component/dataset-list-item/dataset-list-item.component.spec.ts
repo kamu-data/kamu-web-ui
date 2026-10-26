@@ -62,7 +62,7 @@ describe("DatasetListItemComponent", () => {
     });
 
     it("should check navigate to owner view", () => {
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+        const navigateToOwnerViewSpy = vi.spyOn(navigationService, "navigateToOwnerView").mockImplementation(() => {});
         emitClickOnElementByDataTestId(fixture, "button-popover-verified");
         emitClickOnElementByDataTestId(fixture, "dataset-owner-name");
 

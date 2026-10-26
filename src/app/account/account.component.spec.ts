@@ -14,6 +14,7 @@ import { BehaviorSubject, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import type { Mock } from "vitest";
 
 import { getElementByDataTestId, registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
@@ -40,7 +41,7 @@ describe("AccountComponent", () => {
         [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: mockAccountDetails.accountName,
     });
 
-    let fetchAccountByNameSpy: jasmine.Spy;
+    let fetchAccountByNameSpy: Mock;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -64,9 +65,9 @@ describe("AccountComponent", () => {
 
         accountService = TestBed.inject(AccountService);
         loggedUserService = TestBed.inject(LoggedUserService);
-        fetchAccountByNameSpy = spyOn(accountService, "fetchAccountByName").and.returnValue(of(mockAccountDetails));
-        spyOnProperty(loggedUserService, "loggedInUserChanges", "get").and.returnValue(of(null));
-        spyOn(accountService, "getDatasetsTotalCountByAccountName").and.returnValue(of(1));
+        fetchAccountByNameSpy = vi.spyOn(accountService, "fetchAccountByName").mockReturnValue(of(mockAccountDetails));
+        vi.spyOn(loggedUserService, "loggedInUserChanges", "get").mockReturnValue(of(null));
+        vi.spyOn(accountService, "getDatasetsTotalCountByAccountName").mockReturnValue(of(1));
 
         registerMatSvgIcons();
 
@@ -93,7 +94,7 @@ describe("AccountComponent", () => {
     it("should check isLoggedUser property", () => {
         expect(component.isLoggedUser(mockAccountDetails)).toEqual(false);
 
-        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
         mockParams.next({ [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: mockAccountDetails.accountName });
 
         expect(component.isLoggedUser(mockAccountDetails)).toEqual(true);
@@ -108,7 +109,8 @@ describe("AccountComponent", () => {
 
     it("should check API calls when account is found", () => {
         fixture.detectChanges();
-        expect(fetchAccountByNameSpy).toHaveBeenCalledOnceWith(mockAccountDetails.accountName);
+        expect(fetchAccountByNameSpy).toHaveBeenCalledTimes(1);
+        expect(fetchAccountByNameSpy).toHaveBeenCalledWith(mockAccountDetails.accountName);
     });
 
     it("should highlight the tab the route resolved as active", () => {
@@ -123,7 +125,7 @@ describe("AccountComponent", () => {
     });
 
     it("should check routers link ", () => {
-        spyOn(component, "showFlows").and.returnValue(true);
+        vi.spyOn(component, "showFlows").mockReturnValue(true);
         fixture.detectChanges();
         const datasetsTabLink = getElementByDataTestId(fixture, "link-account-datasets-tab", HTMLAnchorElement);
         expect(datasetsTabLink.href).toContain(`/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.DATASETS}`);

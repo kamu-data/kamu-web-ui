@@ -29,21 +29,21 @@ describe("accountPasswordProviderGuard", () => {
     });
 
     it("should allow an account with a password", async () => {
-        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        expect(await runCanActivate(accountPasswordProviderGuard)).toBeTrue();
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+        expect(await runCanActivate(accountPasswordProviderGuard)).toBe(true);
     });
 
     it("should redirect an account from another provider home", async () => {
         const cloneMockAccountDetails = structuredClone(mockAccountDetails);
         cloneMockAccountDetails.accountProvider = AccountProvider.OauthGithub;
 
-        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(cloneMockAccountDetails);
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(cloneMockAccountDetails);
 
         expectRedirectTo(await runCanActivate(accountPasswordProviderGuard), "/");
     });
 
     it("should redirect an anonymous user home", async () => {
-        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(null);
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(null);
 
         expectRedirectTo(await runCanActivate(accountPasswordProviderGuard), "/");
     });

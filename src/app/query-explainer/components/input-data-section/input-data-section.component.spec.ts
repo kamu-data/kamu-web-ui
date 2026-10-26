@@ -118,7 +118,7 @@ describe("InputDataSectionComponent", () => {
         });
         fixture.detectChanges();
         const hashElem = findElementByDataTestId(fixture, "input-dataset-hash");
-        expect(hashElem?.classList.contains("error-color")).toBeTrue();
+        expect(hashElem?.classList.contains("error-color")).toBe(true);
     });
 
     it("should check isDatasetNotFoundError error is exist", () => {
@@ -128,6 +128,6 @@ describe("InputDataSectionComponent", () => {
         });
         fixture.detectChanges();
         const hashElem = findElementByDataTestId(fixture, "input-dataset-id-0");
-        expect(hashElem?.classList.contains("error-color")).toBeTrue();
+        expect(hashElem?.classList.contains("error-color")).toBe(true);
     });
 });

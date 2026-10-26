@@ -12,6 +12,7 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
+import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { DatasetCollaborationApi } from "@api/dataset-collaboration.api";
 import { AccountFragment, AccountWithRoleConnectionDataFragment, DatasetAccessRole } from "@api/kamu.graphql.interface";
 import {
@@ -46,9 +47,9 @@ describe("DatasetCollaborationsService", () => {
     });
 
     it("should fetch list collaborators", () => {
-        const listCollaboratorsSpy = spyOn(datasetCollaborationApi, "listCollaborators").and.returnValue(
-            of(mockDatasetListCollaboratorsQuery),
-        );
+        const listCollaboratorsSpy = vi
+            .spyOn(datasetCollaborationApi, "listCollaborators")
+            .mockReturnValue(of(mockDatasetListCollaboratorsQuery));
 
         const subscription$ = service
             .listCollaborators({
@@ -60,13 +61,13 @@ describe("DatasetCollaborationsService", () => {
             });
 
         expect(listCollaboratorsSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should search collaborator", () => {
-        const searchCollaboratorSpy = spyOn(datasetCollaborationApi, "searchCollaborator").and.returnValue(
-            of(mockDatasetSearchCollaboratorQuery),
-        );
+        const searchCollaboratorSpy = vi
+            .spyOn(datasetCollaborationApi, "searchCollaborator")
+            .mockReturnValue(of(mockDatasetSearchCollaboratorQuery));
         const page = 1;
         const perPage = 10;
         const query = "bmi";
@@ -86,14 +87,14 @@ describe("DatasetCollaborationsService", () => {
             });
 
         expect(searchCollaboratorSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should set role for collaborator", () => {
-        const setRoleCollaboratorSpy = spyOn(datasetCollaborationApi, "setRoleCollaborator").and.returnValue(
-            of(mockSetRoleCollaboratorMutation),
-        );
-        const successSpy = spyOn(toastrService, "success");
+        const setRoleCollaboratorSpy = vi
+            .spyOn(datasetCollaborationApi, "setRoleCollaborator")
+            .mockReturnValue(of(mockSetRoleCollaboratorMutation));
+        const successSpy = stubMethod(toastrService, "success");
         const role = DatasetAccessRole.Editor;
 
         const subscription$ = service
@@ -109,14 +110,14 @@ describe("DatasetCollaborationsService", () => {
             });
 
         expect(setRoleCollaboratorSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should unset role for collaborator", () => {
-        const unsetRoleCollaboratorSpy = spyOn(datasetCollaborationApi, "unsetRoleCollaborator").and.returnValue(
-            of(mockUnsetRoleCollaboratorMutation),
-        );
-        const successSpy = spyOn(toastrService, "success");
+        const unsetRoleCollaboratorSpy = vi
+            .spyOn(datasetCollaborationApi, "unsetRoleCollaborator")
+            .mockReturnValue(of(mockUnsetRoleCollaboratorMutation));
+        const successSpy = stubMethod(toastrService, "success");
 
         const subscription$ = service
             .unsetRoleCollaborator({
@@ -130,29 +131,29 @@ describe("DatasetCollaborationsService", () => {
             });
 
         expect(unsetRoleCollaboratorSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should get role by dataset Id", () => {
-        const getDatasetUserRoleSpy = spyOn(datasetCollaborationApi, "getDatasetUserRole").and.returnValue(
-            of(mockDatasetUserRoleQuery),
-        );
+        const getDatasetUserRoleSpy = vi
+            .spyOn(datasetCollaborationApi, "getDatasetUserRole")
+            .mockReturnValue(of(mockDatasetUserRoleQuery));
 
         const subscription$ = service.getRoleByDatasetId(TEST_DATASET_ID).subscribe((result) => {
             expect(result).toEqual(MOCK_DATASET_USER_ROLE);
         });
 
         expect(getDatasetUserRoleSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should give no role when the dataset is not found", () => {
-        spyOn(datasetCollaborationApi, "getDatasetUserRole").and.returnValue(of({ datasets: { byId: null } }));
+        vi.spyOn(datasetCollaborationApi, "getDatasetUserRole").mockReturnValue(of({ datasets: { byId: null } }));
 
         const subscription$ = service.getRoleByDatasetId(TEST_DATASET_ID).subscribe((result) => {
             expect(result).toBeNull();
         });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 });

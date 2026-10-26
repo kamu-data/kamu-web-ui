@@ -16,6 +16,7 @@ import { BehaviorSubject, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
+import type { Mock } from "vitest";
 
 import { SpinnerComponent } from "@common/components/spinner/spinner/spinner.component";
 import {
@@ -127,8 +128,8 @@ describe("LoginComponent", () => {
     describe("Main test suite", () => {
         beforeEach(() => {
             appConfigService = TestBed.inject(AppConfigService);
-            spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue(MOCK_FEATURE_FLAGS);
-            spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([
+            vi.spyOn(appConfigService, "featureFlags", "get").mockReturnValue(MOCK_FEATURE_FLAGS);
+            vi.spyOn(loginMethodsService, "loginMethods", "get").mockReturnValue([
                 AccountProvider.OauthGithub,
                 AccountProvider.Password,
                 AccountProvider.Web3Wallet,
@@ -150,7 +151,7 @@ describe("LoginComponent", () => {
         });
 
         it("select Github method should redirect to Github endpoint and show spinner", () => {
-            const spyGotoGithub = spyOn(loginService, "gotoGithub").and.stub();
+            const spyGotoGithub = vi.spyOn(loginService, "gotoGithub").mockImplementation(() => {});
 
             emitClickOnElementByDataTestId(fixture, Elements.SELECT_METHOD_GITHUB);
             fixture.detectChanges();
@@ -178,18 +179,20 @@ describe("LoginComponent", () => {
             });
 
             it("Submit good password login form", () => {
-                const loginServicePasswordSubmit = spyOn(loginService, "passwordLogin").and.stub();
+                const loginServicePasswordSubmit = vi.spyOn(loginService, "passwordLogin").mockImplementation(() => {});
 
                 setFieldValue(fixture, Elements.INPUT_LOGIN, TEST_LOGIN);
                 setFieldValue(fixture, Elements.INPUT_PASSWORD, TEST_PASSWORD);
                 fixture.detectChanges();
 
                 checkButtonDisabled(fixture, Elements.SUBMIT_PASSWORD, false);
-                expect(component.passwordLoginForm.valid).toBeTrue();
+                expect(component.passwordLoginForm.valid).toBe(true);
 
                 emitClickOnElementByDataTestId(fixture, Elements.SUBMIT_PASSWORD);
 
-                expect(loginServicePasswordSubmit).toHaveBeenCalledOnceWith(
+                expect(loginServicePasswordSubmit).toHaveBeenCalledTimes(1);
+
+                expect(loginServicePasswordSubmit).toHaveBeenCalledWith(
                     {
                         login: TEST_LOGIN,
                         password: TEST_PASSWORD,
@@ -200,19 +203,19 @@ describe("LoginComponent", () => {
 
             it("Missing login or password leads to disable submit", () => {
                 checkButtonDisabled(fixture, Elements.SUBMIT_PASSWORD, true);
-                expect(component.passwordLoginForm.valid).toBeFalse();
+                expect(component.passwordLoginForm.valid).toBe(false);
 
                 setFieldValue(fixture, Elements.INPUT_LOGIN, TEST_LOGIN);
                 fixture.detectChanges();
 
                 checkButtonDisabled(fixture, Elements.SUBMIT_PASSWORD, true);
-                expect(component.passwordLoginForm.valid).toBeFalse();
+                expect(component.passwordLoginForm.valid).toBe(false);
 
                 setFieldValue(fixture, Elements.INPUT_PASSWORD, TEST_PASSWORD);
                 fixture.detectChanges();
 
                 checkButtonDisabled(fixture, Elements.SUBMIT_PASSWORD, false);
-                expect(component.passwordLoginForm.valid).toBeTrue();
+                expect(component.passwordLoginForm.valid).toBe(true);
             });
 
             [
@@ -271,15 +274,17 @@ describe("LoginComponent", () => {
             });
             fixture.detectChanges();
 
-            const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromPasswordLogin").and.returnValue(
-                of(mockPasswordLoginResponse.auth.login),
-            );
-            const navigationSpy = spyOn(navigationService, "navigateToReturnToCli").and.stub();
+            const authApiSpy = vi
+                .spyOn(authApi, "fetchAccountAndTokenFromPasswordLogin")
+                .mockReturnValue(of(mockPasswordLoginResponse.auth.login));
+            const navigationSpy = vi.spyOn(navigationService, "navigateToReturnToCli").mockImplementation(() => {});
 
             const credentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
             loginService.passwordLogin(credentials, null);
 
-            expect(authApiSpy).toHaveBeenCalledOnceWith(credentials, SOME_DEVICE_CODE);
+            expect(authApiSpy).toHaveBeenCalledTimes(1);
+
+            expect(authApiSpy).toHaveBeenCalledWith(credentials, SOME_DEVICE_CODE);
             expect(navigationSpy).toHaveBeenCalledTimes(1);
         });
     });
@@ -287,14 +292,14 @@ describe("LoginComponent", () => {
     [AccountProvider.OauthGithub, AccountProvider.Password, AccountProvider.Web3Wallet].forEach(
         (loginMethod: AccountProvider) => {
             describe("One-method-config", () => {
-                let spyGotoGithub: jasmine.Spy;
+                let spyGotoGithub: Mock;
 
                 beforeEach(() => {
                     appConfigService = TestBed.inject(AppConfigService);
-                    spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue(MOCK_FEATURE_FLAGS);
-                    spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([loginMethod]);
+                    vi.spyOn(appConfigService, "featureFlags", "get").mockReturnValue(MOCK_FEATURE_FLAGS);
+                    vi.spyOn(loginMethodsService, "loginMethods", "get").mockReturnValue([loginMethod]);
 
-                    spyGotoGithub = spyOn(loginService, "gotoGithub").and.stub();
+                    spyGotoGithub = vi.spyOn(loginService, "gotoGithub").mockImplementation(() => {});
 
                     createFixture();
                 });
@@ -320,8 +325,8 @@ describe("LoginComponent", () => {
     describe("Zero-method-config", () => {
         beforeEach(() => {
             appConfigService = TestBed.inject(AppConfigService);
-            spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue(MOCK_FEATURE_FLAGS);
-            spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue([]);
+            vi.spyOn(appConfigService, "featureFlags", "get").mockReturnValue(MOCK_FEATURE_FLAGS);
+            vi.spyOn(loginMethodsService, "loginMethods", "get").mockReturnValue([]);
         });
 
         it("component should throw error", () => {

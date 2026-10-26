@@ -20,7 +20,7 @@ import timekeeper from "timekeeper";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import { requireValue } from "@common/helpers/app.helpers";
-import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowSummaryDataFragments } from "@api/mock/dataset-flow.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
@@ -106,13 +106,15 @@ describe("FlowsTableComponent", () => {
     });
 
     it("should check show modal window for aborting flow", () => {
-        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, false);
-            return Promise.resolve("");
-        });
+        const modalWindowSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, false);
+                return Promise.resolve("");
+            });
         component.abortFlow(mockFlowSummaryDataFragments[0]);
         expect(modalWindowSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 title: "Abort flow",
                 message: "Do you want to abort this flow?",
             }),
@@ -120,10 +122,12 @@ describe("FlowsTableComponent", () => {
     });
 
     it("should check show modal window for aborting flow with enabled schedule", () => {
-        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, false);
-            return Promise.resolve("");
-        });
+        const modalWindowSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, false);
+                return Promise.resolve("");
+            });
         component.abortFlow({
             ...mockFlowSummaryDataFragments[0],
             relatedTrigger: {
@@ -134,7 +138,7 @@ describe("FlowsTableComponent", () => {
             },
         });
         expect(modalWindowSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 title: "Abort flow",
                 message: "Do you want to abort this flow? This will also pause the scheduled updates.",
             }),
@@ -142,10 +146,12 @@ describe("FlowsTableComponent", () => {
     });
 
     it("should check show modal window for aborting flow with paused schedule", () => {
-        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, false);
-            return Promise.resolve("");
-        });
+        const modalWindowSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, false);
+                return Promise.resolve("");
+            });
         component.abortFlow({
             ...mockFlowSummaryDataFragments[0],
             relatedTrigger: {
@@ -156,7 +162,7 @@ describe("FlowsTableComponent", () => {
             },
         });
         expect(modalWindowSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 title: "Abort flow",
                 message: "Do you want to abort this flow?",
             }),
@@ -168,14 +174,16 @@ describe("FlowsTableComponent", () => {
     });
 
     it("should check trigger flow with force update option", async () => {
-        const datasetTriggerIngestFlowSpy = spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(
-            of(true),
-        );
-        const forceUpdateModalSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, true);
-            return Promise.resolve("");
-        });
-        const toastrServiceSuccessSpy = spyOn(toastService, "success");
+        const datasetTriggerIngestFlowSpy = vi
+            .spyOn(datasetFlowsService, "datasetTriggerIngestFlow")
+            .mockReturnValue(of(true));
+        const forceUpdateModalSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
+        const toastrServiceSuccessSpy = stubMethod(toastService, "success");
 
         component.onForceUpdate(mockFlowSummaryDataFragmentShowForceLink);
 

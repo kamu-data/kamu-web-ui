@@ -36,25 +36,29 @@ export function sharedBasedEditorComponentTest(environmentFactory: () => BaseEdi
 
     it("on error should call setErrorMarker", () => {
         const errorTest = "error text";
-        const setErrorMarkerSpy = spyOn(monacoService, "setErrorMarker");
+        const setErrorMarkerSpy = vi.spyOn(monacoService, "setErrorMarker").mockImplementation(() => {});
 
         setComponentInput(fixture, "error", errorTest);
         fixture.detectChanges();
 
-        expect(setErrorMarkerSpy).toHaveBeenCalledOnceWith(component.editorModel, component.getErrorDetails(errorTest));
+        expect(setErrorMarkerSpy).toHaveBeenCalledTimes(1);
+
+        expect(setErrorMarkerSpy).toHaveBeenCalledWith(component.editorModel, component.getErrorDetails(errorTest));
     });
 
     it("on empty error should call clearErrorMarker", () => {
-        const clearErrorMarkerSpy = spyOn(monacoService, "clearErrorMarker");
+        const clearErrorMarkerSpy = vi.spyOn(monacoService, "clearErrorMarker").mockImplementation(() => {});
 
         setComponentInput(fixture, "error", null);
         fixture.detectChanges();
 
-        expect(clearErrorMarkerSpy).toHaveBeenCalledOnceWith(component.editorModel);
+        expect(clearErrorMarkerSpy).toHaveBeenCalledTimes(1);
+
+        expect(clearErrorMarkerSpy).toHaveBeenCalledWith(component.editorModel);
     });
 
     it("should emit templateChange on modelChange", () => {
-        const templateChangeSpy = spyOn(component.templateChange, "emit");
+        const templateChangeSpy = vi.spyOn(component.templateChange, "emit").mockImplementation(() => {});
 
         component.modelChange();
 
@@ -62,7 +66,7 @@ export function sharedBasedEditorComponentTest(environmentFactory: () => BaseEdi
     });
 
     it("should emit onEditorLoaded on onInitEditor", () => {
-        const onEditorLoadedSpy = spyOn(component.onEditorLoaded, "emit");
+        const onEditorLoadedSpy = vi.spyOn(component.onEditorLoaded, "emit").mockImplementation(() => {});
 
         component.onInitEditor(createEditorMock());
 

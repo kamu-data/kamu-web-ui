@@ -48,7 +48,7 @@ describe("ErrorPageLayoutComponent", () => {
 
     it("should keep the actions out of the text block", () => {
         const description = getElementByDataTestId(fixture, "error-page-description");
-        expect(description.contains(getElementByDataTestId(fixture, "projected-message"))).toBeTrue();
-        expect(description.contains(getElementByDataTestId(fixture, "projected-action"))).toBeFalse();
+        expect(description.contains(getElementByDataTestId(fixture, "projected-message"))).toBe(true);
+        expect(description.contains(getElementByDataTestId(fixture, "projected-action"))).toBe(false);
     });
 });

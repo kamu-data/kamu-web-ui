@@ -74,7 +74,7 @@ describe("BlockNavigationComponent", () => {
 
     it("should check change page number ", () => {
         const testPage = 2;
-        const onPageChangeEmitSpy = spyOn(component.onPageChangeEmit, "emit");
+        const onPageChangeEmitSpy = vi.spyOn(component.onPageChangeEmit, "emit").mockImplementation(() => {});
         component.onPageChange(testPage);
 
         expect(onPageChangeEmitSpy).toHaveBeenCalledWith(testPage);

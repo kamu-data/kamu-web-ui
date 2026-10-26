@@ -131,15 +131,15 @@ describe("loginGuard", () => {
         },
     ].forEach((testCase: TestCase) => {
         it(`should ${testCase.description}`, async () => {
-            spyOnProperty(loginMethodsService, "loginMethods", "get").and.returnValue(testCase.loginMethods);
-            spyOnProperty(loginMethodsService, "loadFailed", "get").and.returnValue(testCase.loadFailed ?? false);
-            spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(testCase.isAuthenticated);
-            spyOnProperty(appConfigService, "allowAnonymous", "get").and.returnValue(testCase.allowAnonymous);
+            vi.spyOn(loginMethodsService, "loginMethods", "get").mockReturnValue(testCase.loginMethods);
+            vi.spyOn(loginMethodsService, "loadFailed", "get").mockReturnValue(testCase.loadFailed ?? false);
+            vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(testCase.isAuthenticated);
+            vi.spyOn(appConfigService, "allowAnonymous", "get").mockReturnValue(testCase.allowAnonymous);
 
             const result = await runCanActivate(loginGuard, routeSnapshot(), testCase.url);
 
             if (testCase.expectedRedirect === undefined) {
-                expect(result).toBeTrue();
+                expect(result).toBe(true);
             } else {
                 expectRedirectTo(result, testCase.expectedRedirect);
             }

@@ -999,15 +999,15 @@ export const durationBlockTextResults: string[] = [
 ];
 
 export const tooltipTextResults: string[] = [
-    "waiting for: Mar 14th 2024 12:24:29 PM GMT+02:00",
-    "Wake up time: Mar 14th 2024 2:24:29 PM GMT+02:00",
-    "Wake up time: Mar 14th 2024 3:24:29 PM GMT+02:00",
-    "Deadline time: Mar 14th 2024 2:24:29 PM GMT+02:00",
-    "Planned retry time: Mar 14th 2024 1:44:29 PM GMT+02:00",
-    "Start running time: Mar 14th 2024 12:34:29 PM GMT+02:00",
-    "Completed time: Mar 14th 2024 2:24:29 PM GMT+02:00",
-    "Aborted time: Mar 14th 2024 11:24:29 AM GMT+02:00",
-    "Start running time: Mar 14th 2024 11:24:29 AM GMT+02:00",
+    "waiting for: Mar 14th 2024 10:24:29 AM GMT+00:00",
+    "Wake up time: Mar 14th 2024 12:24:29 PM GMT+00:00",
+    "Wake up time: Mar 14th 2024 1:24:29 PM GMT+00:00",
+    "Deadline time: Mar 14th 2024 12:24:29 PM GMT+00:00",
+    "Planned retry time: Mar 14th 2024 11:44:29 AM GMT+00:00",
+    "Start running time: Mar 14th 2024 10:34:29 AM GMT+00:00",
+    "Completed time: Mar 14th 2024 12:24:29 PM GMT+00:00",
+    "Aborted time: Mar 14th 2024 9:24:29 AM GMT+00:00",
+    "Start running time: Mar 14th 2024 9:24:29 AM GMT+00:00",
 ];
 
 export const mockDatasets: DatasetBasicsFragment[] = [

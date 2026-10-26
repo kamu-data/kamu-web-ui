@@ -17,6 +17,7 @@ jobs:
       - run: npm run prettier-check
       - run: npm run lint
       - run: npm run stylelint
+      - run: npx playwright install --with-deps chromium
       - run: npm run test
       - run: npm run build
       - run: npm run build-prod

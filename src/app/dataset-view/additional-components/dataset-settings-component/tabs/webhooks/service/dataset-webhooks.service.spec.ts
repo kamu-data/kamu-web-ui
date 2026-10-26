@@ -13,6 +13,7 @@ import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
 import { requireValue } from "@common/helpers/app.helpers";
+import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { WebhookSubscriptionDataFragment } from "@api/kamu.graphql.interface";
 import { TEST_DATASET_ID } from "@api/mock/dataset.mock";
 import {
@@ -63,9 +64,9 @@ describe("DatasetWebhooksService", () => {
     });
 
     it("should check dataset webhook subscriptions", () => {
-        const datasetWebhookSubscriptionsSpy = spyOn(webhooksApi, "datasetWebhookSubscriptions").and.returnValue(
-            of(mockDatasetWebhookSubscriptionsQuery),
-        );
+        const datasetWebhookSubscriptionsSpy = vi
+            .spyOn(webhooksApi, "datasetWebhookSubscriptions")
+            .mockReturnValue(of(mockDatasetWebhookSubscriptionsQuery));
 
         service.datasetWebhookSubscriptions(DATASET_ID).subscribe((result: WebhookSubscriptionDataFragment[]) => {
             expect(result.length).toEqual(
@@ -76,23 +77,26 @@ describe("DatasetWebhooksService", () => {
     });
 
     it("should check dataset webhook subscription by Id", async () => {
-        const datasetWebhookSubscriptionByIdSpy = spyOn(webhooksApi, "datasetWebhookSubscriptionById").and.returnValue(
-            of(mockDatasetWebhookByIdQuery),
-        );
+        const datasetWebhookSubscriptionByIdSpy = vi
+            .spyOn(webhooksApi, "datasetWebhookSubscriptionById")
+            .mockReturnValue(of(mockDatasetWebhookByIdQuery));
 
         const result = await firstValueFrom(
             service.datasetWebhookSubscriptionById({ datasetId: DATASET_ID, id: MOCK_SUBSCRIPTION_ID }),
         );
 
         expect(result).toEqual(requireValue(mockDatasetWebhookByIdQuery.datasets.byId?.webhooks.subscription ?? null));
-        expect(datasetWebhookSubscriptionByIdSpy).toHaveBeenCalledOnceWith({
+        expect(datasetWebhookSubscriptionByIdSpy).toHaveBeenCalledTimes(1);
+        expect(datasetWebhookSubscriptionByIdSpy).toHaveBeenCalledWith({
             datasetId: DATASET_ID,
             id: MOCK_SUBSCRIPTION_ID,
         });
     });
 
     it("should emit null for a webhook subscription the dataset does not have", async () => {
-        spyOn(webhooksApi, "datasetWebhookSubscriptionById").and.returnValue(of(mockDatasetWebhookByIdNotFoundQuery));
+        vi.spyOn(webhooksApi, "datasetWebhookSubscriptionById").mockReturnValue(
+            of(mockDatasetWebhookByIdNotFoundQuery),
+        );
 
         const result = await firstValueFrom(
             service.datasetWebhookSubscriptionById({ datasetId: DATASET_ID, id: MOCK_SUBSCRIPTION_ID }),
@@ -102,10 +106,9 @@ describe("DatasetWebhooksService", () => {
     });
 
     it("should check create dataset webhook subscription with success", () => {
-        const datasetWebhookCreateSubscriptionSpy = spyOn(
-            webhooksApi,
-            "datasetWebhookCreateSubscription",
-        ).and.returnValue(of(mockDatasetWebhookCreateSubscriptionMutation));
+        const datasetWebhookCreateSubscriptionSpy = vi
+            .spyOn(webhooksApi, "datasetWebhookCreateSubscription")
+            .mockReturnValue(of(mockDatasetWebhookCreateSubscriptionMutation));
 
         service
             .datasetWebhookCreateSubscription(DATASET_ID, mockWebhookSubscriptionInput)
@@ -117,11 +120,10 @@ describe("DatasetWebhooksService", () => {
     });
 
     it("should check create dataset webhook subscription with error", () => {
-        const datasetWebhookCreateSubscriptionSpy = spyOn(
-            webhooksApi,
-            "datasetWebhookCreateSubscription",
-        ).and.returnValue(of(mockDatasetWebhookCreateSubscriptionMutationError));
-        const toastrServiceErrorSpy = spyOn(toastrService, "error");
+        const datasetWebhookCreateSubscriptionSpy = vi
+            .spyOn(webhooksApi, "datasetWebhookCreateSubscription")
+            .mockReturnValue(of(mockDatasetWebhookCreateSubscriptionMutationError));
+        const toastrServiceErrorSpy = stubMethod(toastrService, "error");
 
         service
             .datasetWebhookCreateSubscription(DATASET_ID, mockWebhookSubscriptionInput)
@@ -134,10 +136,9 @@ describe("DatasetWebhooksService", () => {
     });
 
     it("should check remove dataset webhook subscription with success", () => {
-        const datasetWebhookRemoveSubscriptionSpy = spyOn(
-            webhooksApi,
-            "datasetWebhookRemoveSubscription",
-        ).and.returnValue(of(mockDatasetWebhookRemoveSubscriptionMutation));
+        const datasetWebhookRemoveSubscriptionSpy = vi
+            .spyOn(webhooksApi, "datasetWebhookRemoveSubscription")
+            .mockReturnValue(of(mockDatasetWebhookRemoveSubscriptionMutation));
 
         service.datasetWebhookRemoveSubscription(DATASET_ID, MOCK_SUBSCRIPTION_ID).subscribe((result: boolean) => {
             expect(result).toEqual(true);
@@ -147,9 +148,9 @@ describe("DatasetWebhooksService", () => {
     });
 
     it("should check rotate secret", () => {
-        const datasetWebhookRotateSecretSpy = spyOn(webhooksApi, "datasetWebhookRotateSecret").and.returnValue(
-            of(mockDatasetWebhookRotateSecretMutation),
-        );
+        const datasetWebhookRotateSecretSpy = vi
+            .spyOn(webhooksApi, "datasetWebhookRotateSecret")
+            .mockReturnValue(of(mockDatasetWebhookRotateSecretMutation));
 
         service.datasetWebhookRotateSecret(DATASET_ID, MOCK_SUBSCRIPTION_ID).subscribe((result: string) => {
             expect(result).toEqual(MOCK_ROTATED_WEBHOOK_SECRET);
@@ -159,11 +160,10 @@ describe("DatasetWebhooksService", () => {
     });
 
     it("should check remove dataset webhook subscription with error", () => {
-        const datasetWebhookRemoveSubscriptionSpy = spyOn(
-            webhooksApi,
-            "datasetWebhookRemoveSubscription",
-        ).and.returnValue(of(mockDatasetWebhookRemoveSubscriptionMutationError));
-        const toastrServiceErrorSpy = spyOn(toastrService, "error");
+        const datasetWebhookRemoveSubscriptionSpy = vi
+            .spyOn(webhooksApi, "datasetWebhookRemoveSubscription")
+            .mockReturnValue(of(mockDatasetWebhookRemoveSubscriptionMutationError));
+        const toastrServiceErrorSpy = stubMethod(toastrService, "error");
 
         service.datasetWebhookRemoveSubscription(DATASET_ID, MOCK_SUBSCRIPTION_ID).subscribe((result: boolean) => {
             expect(result).toEqual(false);
@@ -174,11 +174,10 @@ describe("DatasetWebhooksService", () => {
     });
 
     it("should check pause dataset webhook subscription with success", () => {
-        const datasetWebhookPauseSubscriptionSpy = spyOn(
-            webhooksApi,
-            "datasetWebhookPauseSubscription",
-        ).and.returnValue(of(mockDatasetWebhookPauseSubscriptionMutation));
-        const toastrServiceSuccessSpy = spyOn(toastrService, "success");
+        const datasetWebhookPauseSubscriptionSpy = vi
+            .spyOn(webhooksApi, "datasetWebhookPauseSubscription")
+            .mockReturnValue(of(mockDatasetWebhookPauseSubscriptionMutation));
+        const toastrServiceSuccessSpy = stubMethod(toastrService, "success");
 
         service.datasetWebhookPauseSubscription(DATASET_ID, MOCK_SUBSCRIPTION_ID).subscribe((result: boolean) => {
             expect(result).toEqual(true);
@@ -189,11 +188,10 @@ describe("DatasetWebhooksService", () => {
     });
 
     it("should check pause dataset webhook subscription with error", () => {
-        const datasetWebhookPauseSubscriptionSpy = spyOn(
-            webhooksApi,
-            "datasetWebhookPauseSubscription",
-        ).and.returnValue(of(mockDatasetWebhookPauseSubscriptionMutationError));
-        const toastrServiceErrorSpy = spyOn(toastrService, "error");
+        const datasetWebhookPauseSubscriptionSpy = vi
+            .spyOn(webhooksApi, "datasetWebhookPauseSubscription")
+            .mockReturnValue(of(mockDatasetWebhookPauseSubscriptionMutationError));
+        const toastrServiceErrorSpy = stubMethod(toastrService, "error");
 
         service.datasetWebhookPauseSubscription(DATASET_ID, MOCK_SUBSCRIPTION_ID).subscribe((result: boolean) => {
             expect(result).toEqual(false);
@@ -204,11 +202,10 @@ describe("DatasetWebhooksService", () => {
     });
 
     it("should check resume dataset webhook subscription with success", () => {
-        const datasetWebhookResumeSubscriptionSpy = spyOn(
-            webhooksApi,
-            "datasetWebhookResumeSubscription",
-        ).and.returnValue(of(mockDatasetWebhookResumeSubscriptionMutation));
-        const toastrServiceSuccessSpy = spyOn(toastrService, "success");
+        const datasetWebhookResumeSubscriptionSpy = vi
+            .spyOn(webhooksApi, "datasetWebhookResumeSubscription")
+            .mockReturnValue(of(mockDatasetWebhookResumeSubscriptionMutation));
+        const toastrServiceSuccessSpy = stubMethod(toastrService, "success");
 
         service.datasetWebhookResumeSubscription(DATASET_ID, MOCK_SUBSCRIPTION_ID).subscribe((result: boolean) => {
             expect(result).toEqual(true);
@@ -219,11 +216,10 @@ describe("DatasetWebhooksService", () => {
     });
 
     it("should check resume dataset webhook subscription with error", () => {
-        const datasetWebhookResumeSubscriptionSpy = spyOn(
-            webhooksApi,
-            "datasetWebhookResumeSubscription",
-        ).and.returnValue(of(mockDatasetWebhookResumeSubscriptionMutationError));
-        const toastrServiceErrorSpy = spyOn(toastrService, "error");
+        const datasetWebhookResumeSubscriptionSpy = vi
+            .spyOn(webhooksApi, "datasetWebhookResumeSubscription")
+            .mockReturnValue(of(mockDatasetWebhookResumeSubscriptionMutationError));
+        const toastrServiceErrorSpy = stubMethod(toastrService, "error");
 
         service.datasetWebhookResumeSubscription(DATASET_ID, MOCK_SUBSCRIPTION_ID).subscribe((result: boolean) => {
             expect(result).toEqual(false);
@@ -234,11 +230,10 @@ describe("DatasetWebhooksService", () => {
     });
 
     it("should check reactivate dataset webhook subscription with success", () => {
-        const datasetWebhookReactivateSubscriptionSpy = spyOn(
-            webhooksApi,
-            "datasetWebhookReactivateSubscription",
-        ).and.returnValue(of(mockDatasetWebhookReactivateSubscriptionMutation));
-        const toastrServiceSuccessSpy = spyOn(toastrService, "success");
+        const datasetWebhookReactivateSubscriptionSpy = vi
+            .spyOn(webhooksApi, "datasetWebhookReactivateSubscription")
+            .mockReturnValue(of(mockDatasetWebhookReactivateSubscriptionMutation));
+        const toastrServiceSuccessSpy = stubMethod(toastrService, "success");
 
         service.datasetWebhookReactivateSubscription(DATASET_ID, MOCK_SUBSCRIPTION_ID).subscribe((result: boolean) => {
             expect(result).toEqual(true);
@@ -249,11 +244,10 @@ describe("DatasetWebhooksService", () => {
     });
 
     it("should check reactivate dataset webhook subscription with error", () => {
-        const datasetWebhookReactivateSubscriptionSpy = spyOn(
-            webhooksApi,
-            "datasetWebhookReactivateSubscription",
-        ).and.returnValue(of(mockDatasetWebhookReactivateSubscriptionMutationError));
-        const toastrServiceErrorSpy = spyOn(toastrService, "error");
+        const datasetWebhookReactivateSubscriptionSpy = vi
+            .spyOn(webhooksApi, "datasetWebhookReactivateSubscription")
+            .mockReturnValue(of(mockDatasetWebhookReactivateSubscriptionMutationError));
+        const toastrServiceErrorSpy = stubMethod(toastrService, "error");
 
         service.datasetWebhookReactivateSubscription(DATASET_ID, MOCK_SUBSCRIPTION_ID).subscribe((result: boolean) => {
             expect(result).toEqual(false);
@@ -264,11 +258,10 @@ describe("DatasetWebhooksService", () => {
     });
 
     it("should check update dataset webhook subscription with success", () => {
-        const datasetWebhookUpdateSubscriptionSpy = spyOn(
-            webhooksApi,
-            "datasetWebhookUpdateSubscription",
-        ).and.returnValue(of(mockDatasetWebhookUpdateSubscriptionMutation));
-        const toastrServiceSuccessSpy = spyOn(toastrService, "success");
+        const datasetWebhookUpdateSubscriptionSpy = vi
+            .spyOn(webhooksApi, "datasetWebhookUpdateSubscription")
+            .mockReturnValue(of(mockDatasetWebhookUpdateSubscriptionMutation));
+        const toastrServiceSuccessSpy = stubMethod(toastrService, "success");
 
         service
             .datasetWebhookUpdateSubscription({
@@ -285,11 +278,10 @@ describe("DatasetWebhooksService", () => {
     });
 
     it("should check update dataset webhook subscription with error", () => {
-        const datasetWebhookUpdateSubscriptionSpy = spyOn(
-            webhooksApi,
-            "datasetWebhookUpdateSubscription",
-        ).and.returnValue(of(mockDatasetWebhookUpdateSubscriptionMutationError));
-        const toastrServiceErrorSpy = spyOn(toastrService, "error");
+        const datasetWebhookUpdateSubscriptionSpy = vi
+            .spyOn(webhooksApi, "datasetWebhookUpdateSubscription")
+            .mockReturnValue(of(mockDatasetWebhookUpdateSubscriptionMutationError));
+        const toastrServiceErrorSpy = stubMethod(toastrService, "error");
 
         service
             .datasetWebhookUpdateSubscription({

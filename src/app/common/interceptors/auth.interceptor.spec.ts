@@ -50,7 +50,7 @@ describe("authInterceptor", () => {
 
         const req = httpMock.expectOne(`${appConfigStub.apiServerHttpUrl}/data`);
 
-        expect(req.request.headers.has("Authorization")).toBeTrue();
+        expect(req.request.headers.has("Authorization")).toBe(true);
         expect(req.request.headers.get("Authorization")).toBe("Bearer test-token");
 
         req.flush({});
@@ -63,7 +63,7 @@ describe("authInterceptor", () => {
 
         const req = httpMock.expectOne(`${appConfigStub.apiServerHttpUrl}/data`);
 
-        expect(req.request.headers.has("Authorization")).toBeFalse();
+        expect(req.request.headers.has("Authorization")).toBe(false);
 
         req.flush({});
     });
@@ -75,7 +75,7 @@ describe("authInterceptor", () => {
 
         const req = httpMock.expectOne(`${appConfigStub.apiServerHttpUrl}/data`);
 
-        expect(req.request.headers.has("Authorization")).toBeFalse();
+        expect(req.request.headers.has("Authorization")).toBe(false);
 
         req.flush({});
     });
@@ -102,7 +102,7 @@ describe("authInterceptor", () => {
 
         const req = httpMock.expectOne("https://other.example.com/data");
 
-        expect(req.request.headers.has("Authorization")).toBeFalse();
+        expect(req.request.headers.has("Authorization")).toBe(false);
 
         req.flush({});
     });

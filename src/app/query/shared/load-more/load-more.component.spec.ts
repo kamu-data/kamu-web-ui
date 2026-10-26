@@ -50,7 +50,7 @@ describe("LoadMoreComponent", () => {
 
     it("button click should emmit output with default limit", () => {
         const defaultLimit = AppValues.SQL_QUERY_LIMIT;
-        const loadMoreEmit = spyOn(component.loadMoreEmit, "emit");
+        const loadMoreEmit = vi.spyOn(component.loadMoreEmit, "emit").mockImplementation(() => {});
         emitClickOnElementByDataTestId(fixture, "btn-load-more");
         expect(loadMoreEmit).toHaveBeenCalledWith(defaultLimit);
     });

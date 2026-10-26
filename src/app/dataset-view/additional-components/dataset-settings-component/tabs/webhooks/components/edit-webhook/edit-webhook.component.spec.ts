@@ -55,18 +55,17 @@ describe("EditWebhookComponent", () => {
     });
 
     it("should check to add webhook", () => {
-        spyOn(navigationService, "navigateToWebhooks");
-        const datasetWebhookUpdateSubscriptionSpy = spyOn(
-            datasetWebhooksService,
-            "datasetWebhookUpdateSubscription",
-        ).and.returnValue(of(true));
+        vi.spyOn(navigationService, "navigateToWebhooks").mockImplementation(() => {});
+        const datasetWebhookUpdateSubscriptionSpy = vi
+            .spyOn(datasetWebhooksService, "datasetWebhookUpdateSubscription")
+            .mockReturnValue(of(true));
 
         component.updateWebhook();
         expect(datasetWebhookUpdateSubscriptionSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to navigate to webhooks list", () => {
-        const navigateToWebhooksSpy = spyOn(navigationService, "navigateToWebhooks");
+        const navigateToWebhooksSpy = vi.spyOn(navigationService, "navigateToWebhooks").mockImplementation(() => {});
         component.navigateToListWebhooks();
         expect(navigateToWebhooksSpy).toHaveBeenCalledTimes(1);
     });

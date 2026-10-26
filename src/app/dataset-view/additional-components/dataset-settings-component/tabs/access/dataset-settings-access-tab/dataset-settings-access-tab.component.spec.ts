@@ -81,8 +81,8 @@ describe("DatasetSettingsAccessTabComponent", () => {
         loggedUserService = TestBed.inject(LoggedUserService);
         ngbModal = TestBed.inject(NgbModal);
         modalService = TestBed.inject(ModalService);
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        spyOn(datasetCollaborationsService, "listCollaborators").and.returnValue(
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+        vi.spyOn(datasetCollaborationsService, "listCollaborators").mockReturnValue(
             of(mockDatasetCollaboratorsConnection),
         );
         component = fixture.componentInstance;
@@ -99,11 +99,14 @@ describe("DatasetSettingsAccessTabComponent", () => {
 
     it("should check change page", () => {
         const page = 2;
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
 
         component.onPageChange(page);
         expect(component.currentPage).toEqual(page);
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ page }));
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(expect.objectContaining({ page }));
     });
 
     [
@@ -117,31 +120,37 @@ describe("DatasetSettingsAccessTabComponent", () => {
     });
 
     it("should check click on 'Add people' button", async () => {
-        const ngbModalOpenSpy = spyOn(ngbModal, "open").and.callThrough();
+        const ngbModalOpenSpy = vi.spyOn(ngbModal, "open");
         await component.addPeople();
-        expect(ngbModalOpenSpy).toHaveBeenCalledOnceWith(AddPeopleModalComponent);
+        expect(ngbModalOpenSpy).toHaveBeenCalledTimes(1);
+        expect(ngbModalOpenSpy).toHaveBeenCalledWith(AddPeopleModalComponent);
     });
 
     it("should check click on 'Edit' button", () => {
-        const ngbModalOpenSpy = spyOn(ngbModal, "open").and.callThrough();
+        const ngbModalOpenSpy = vi.spyOn(ngbModal, "open");
         component.editCollaborator(MOCK_ACCOUNT_WITH_ROLE);
 
-        expect(ngbModalOpenSpy).toHaveBeenCalledOnceWith(EditCollaboratorModalComponent);
+        expect(ngbModalOpenSpy).toHaveBeenCalledTimes(1);
+
+        expect(ngbModalOpenSpy).toHaveBeenCalledWith(EditCollaboratorModalComponent);
     });
 
     it("should check remove collaborator", () => {
-        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, true);
-            return Promise.resolve("");
-        });
-        const unsetRoleCollaboratorSpy = spyOn(datasetCollaborationsService, "unsetRoleCollaborator").and.callFake(() =>
-            of(),
-        );
+        const modalWindowSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
+        const unsetRoleCollaboratorSpy = vi
+            .spyOn(datasetCollaborationsService, "unsetRoleCollaborator")
+            .mockImplementation(() => of());
 
         component.removeCollaborator(MOCK_ACCOUNT_WITH_ROLE);
         expect(modalWindowSpy).toHaveBeenCalledTimes(1);
-        expect(unsetRoleCollaboratorSpy).toHaveBeenCalledOnceWith(
-            jasmine.objectContaining({
+        expect(unsetRoleCollaboratorSpy).toHaveBeenCalledTimes(1);
+        expect(unsetRoleCollaboratorSpy).toHaveBeenCalledWith(
+            expect.objectContaining({
                 datasetId: component.datasetBasics.id,
                 accountIds: [MOCK_ACCOUNT_WITH_ROLE.account.id],
             }),
@@ -149,19 +158,22 @@ describe("DatasetSettingsAccessTabComponent", () => {
     });
 
     it("should check remove all collaborators", () => {
-        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, true);
-            return Promise.resolve("");
-        });
-        const unsetRoleCollaboratorSpy = spyOn(datasetCollaborationsService, "unsetRoleCollaborator").and.callFake(() =>
-            of(),
-        );
+        const modalWindowSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
+        const unsetRoleCollaboratorSpy = vi
+            .spyOn(datasetCollaborationsService, "unsetRoleCollaborator")
+            .mockImplementation(() => of());
         component.masterToggle();
 
         component.removeAllMembers();
         expect(modalWindowSpy).toHaveBeenCalledTimes(1);
-        expect(unsetRoleCollaboratorSpy).toHaveBeenCalledOnceWith(
-            jasmine.objectContaining({
+        expect(unsetRoleCollaboratorSpy).toHaveBeenCalledTimes(1);
+        expect(unsetRoleCollaboratorSpy).toHaveBeenCalledWith(
+            expect.objectContaining({
                 datasetId: component.datasetBasics.id,
                 accountIds: [mockDatasetCollaboratorsConnection.nodes[0].account.id],
             }),

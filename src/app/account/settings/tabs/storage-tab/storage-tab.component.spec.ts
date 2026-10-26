@@ -8,8 +8,9 @@
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import type { Mock } from "vitest";
+
 import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
-import { MaybeUndefined } from "@interface/app.types";
 
 import { StorageTabComponent } from "src/app/account/settings/tabs/storage-tab/storage-tab.component";
 import { StorageTabHarness } from "src/app/account/settings/tabs/storage-tab/storage-tab.harness";
@@ -24,7 +25,7 @@ import { AppConfigService } from "src/app/app-config.service";
 
 describe("StorageTabComponent", () => {
     let fixture: ComponentFixture<StorageTabComponent>;
-    let supportEmailSpy: jasmine.Spy<() => MaybeUndefined<string>>;
+    let supportEmailSpy: Mock;
 
     const TEST_SUPPORT_EMAIL = "support@example.com";
 
@@ -33,9 +34,9 @@ describe("StorageTabComponent", () => {
             imports: [StorageTabComponent],
         }).compileComponents();
 
-        supportEmailSpy = spyOnProperty(TestBed.inject(AppConfigService), "supportEmail", "get").and.returnValue(
-            TEST_SUPPORT_EMAIL,
-        );
+        supportEmailSpy = vi
+            .spyOn(TestBed.inject(AppConfigService), "supportEmail", "get")
+            .mockReturnValue(TEST_SUPPORT_EMAIL);
     });
 
     async function render(quota: AccountStorageQuota): Promise<StorageTabHarness> {
@@ -57,31 +58,31 @@ describe("StorageTabComponent", () => {
         expect(await storageTab.getSegmentWidthPercent("data")).toEqual(50);
         expect(await storageTab.getSegmentWidthPercent("checkpoints")).toEqual(4);
         expect(await storageTab.getSegmentWidthPercent("linked-objects")).toEqual(10);
-        expect(await storageTab.isUnlimited()).toBeFalse();
-        expect(await storageTab.hasNearQuotaWarning()).toBeFalse();
-        expect(await storageTab.isQuotaExhausted()).toBeFalse();
+        expect(await storageTab.isUnlimited()).toBe(false);
+        expect(await storageTab.hasNearQuotaWarning()).toBe(false);
+        expect(await storageTab.isQuotaExhausted()).toBe(false);
     });
 
     it("should warn when the quota is almost used", async () => {
         const storageTab = await render(mockStorageQuotaNearLimit);
 
-        expect(await storageTab.hasNearQuotaWarning()).toBeTrue();
-        expect(await storageTab.isQuotaExhausted()).toBeFalse();
+        expect(await storageTab.hasNearQuotaWarning()).toBe(true);
+        expect(await storageTab.isQuotaExhausted()).toBe(false);
         expect(await storageTab.getSupportLink()).toEqual(`mailto:${TEST_SUPPORT_EMAIL}`);
     });
 
     it("should fill the bar and point to support when the quota is exhausted", async () => {
         const storageTab = await render(mockStorageQuotaReached);
 
-        expect(await storageTab.isQuotaExhausted()).toBeTrue();
-        expect(await storageTab.hasNearQuotaWarning()).toBeFalse();
+        expect(await storageTab.isQuotaExhausted()).toBe(true);
+        expect(await storageTab.hasNearQuotaWarning()).toBe(false);
         expect(await storageTab.getSegmentWidthPercent("data")).toEqual(100);
         expect(await storageTab.getRemaining()).toEqual("no space left");
         expect(await storageTab.getSupportLink()).toEqual(`mailto:${TEST_SUPPORT_EMAIL}`);
     });
 
     it("should refer to the administrator when no support email is configured", async () => {
-        supportEmailSpy.and.returnValue(undefined);
+        supportEmailSpy.mockReturnValue(undefined);
         const storageTab = await render(mockStorageQuotaReached);
 
         expect(await storageTab.getSupportLink()).toBeNull();
@@ -91,12 +92,12 @@ describe("StorageTabComponent", () => {
     it("should show an unlimited quota without a percentage or warnings", async () => {
         const storageTab = await render(mockStorageQuotaUnlimited);
 
-        expect(await storageTab.isUnlimited()).toBeTrue();
+        expect(await storageTab.isUnlimited()).toBe(true);
         expect(await storageTab.getSummary()).toEqual("1.9 GB used · Unlimited");
         expect(await storageTab.getExplanation()).toContain("no storage limit");
         expect(await storageTab.getRemaining()).toBeNull();
-        expect(await storageTab.hasNearQuotaWarning()).toBeFalse();
-        expect(await storageTab.isQuotaExhausted()).toBeFalse();
+        expect(await storageTab.hasNearQuotaWarning()).toBe(false);
+        expect(await storageTab.isQuotaExhausted()).toBe(false);
         expect(await storageTab.getSegmentWidthPercent("data")).toEqual(75);
         expect(await storageTab.getSegmentWidthPercent("checkpoints")).toEqual(25);
         expect(await storageTab.getSegmentWidthPercent("linked-objects")).toEqual(0);

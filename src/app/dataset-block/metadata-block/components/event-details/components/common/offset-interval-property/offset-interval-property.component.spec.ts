@@ -11,6 +11,7 @@ import { of, Subject } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
+import type { Mock } from "vitest";
 
 import {
     checkButtonDisabled,
@@ -32,7 +33,7 @@ describe("OffsetIntervalPropertyComponent", () => {
     let component: OffsetIntervalPropertyComponent;
     let fixture: ComponentFixture<OffsetIntervalPropertyComponent>;
     let navigationService: NavigationService;
-    let requestDatasetInfoByIdSpy: jasmine.Spy;
+    let requestDatasetInfoByIdSpy: Mock;
 
     const DATASET_ID = "did:odf:dataset";
     const DATA_TEST_ID = "interval";
@@ -56,22 +57,26 @@ describe("OffsetIntervalPropertyComponent", () => {
         component = fixture.componentInstance;
         navigationService = TestBed.inject(NavigationService);
         setComponentInput(fixture, "dataTestId", DATA_TEST_ID);
-        requestDatasetInfoByIdSpy = spyOn(TestBed.inject(DatasetService), "requestDatasetInfoById").and.returnValue(
-            of(mockDatasetByIdQuery),
-        );
+        requestDatasetInfoByIdSpy = vi
+            .spyOn(TestBed.inject(DatasetService), "requestDatasetInfoById")
+            .mockReturnValue(of(mockDatasetByIdQuery));
     });
 
     it("should load the dataset by its id and open its data for the interval", () => {
         setComponentInput(fixture, "data", mockData);
         fixture.detectChanges();
-        const navigateSpy = spyOn(navigationService, "navigateToDatasetView");
+        const navigateSpy = vi.spyOn(navigationService, "navigateToDatasetView").mockImplementation(() => {});
 
-        expect(requestDatasetInfoByIdSpy).toHaveBeenCalledOnceWith(DATASET_ID);
+        expect(requestDatasetInfoByIdSpy).toHaveBeenCalledTimes(1);
+
+        expect(requestDatasetInfoByIdSpy).toHaveBeenCalledWith(DATASET_ID);
         expect(findElementByDataTestId(fixture, `${DATA_TEST_ID}-start`)?.textContent).toEqual("0");
         emitClickOnElementByDataTestId(fixture, "see-data");
 
-        expect(navigateSpy).toHaveBeenCalledOnceWith(
-            jasmine.objectContaining({
+        expect(navigateSpy).toHaveBeenCalledTimes(1);
+
+        expect(navigateSpy).toHaveBeenCalledWith(
+            expect.objectContaining({
                 datasetName: TEST_DATASET_NAME,
                 tab: DatasetViewTypeEnum.Data,
                 state: { start: 0, end: 596125 },
@@ -92,12 +97,13 @@ describe("OffsetIntervalPropertyComponent", () => {
     it("should open the data of the dataset from the URL when there is no dataset id", () => {
         setComponentInput(fixture, "data", { ...mockData, datasetId: null });
         fixture.detectChanges();
-        const navigateSpy = spyOn(navigationService, "navigateToDatasetView");
+        const navigateSpy = vi.spyOn(navigationService, "navigateToDatasetView").mockImplementation(() => {});
 
         emitClickOnElementByDataTestId(fixture, "see-data");
 
         expect(requestDatasetInfoByIdSpy).not.toHaveBeenCalled();
-        expect(navigateSpy).toHaveBeenCalledOnceWith({
+        expect(navigateSpy).toHaveBeenCalledTimes(1);
+        expect(navigateSpy).toHaveBeenCalledWith({
             accountName: "accountName",
             datasetName: "datasetName",
             tab: DatasetViewTypeEnum.Data,
@@ -116,8 +122,8 @@ describe("OffsetIntervalPropertyComponent", () => {
         setComponentInput(fixture, "data", mockData);
         fixture.detectChanges();
         const otherResponse$ = new Subject<DatasetByIdQuery>();
-        requestDatasetInfoByIdSpy.and.returnValue(otherResponse$);
-        const navigateSpy = spyOn(navigationService, "navigateToDatasetView");
+        requestDatasetInfoByIdSpy.mockReturnValue(otherResponse$);
+        const navigateSpy = vi.spyOn(navigationService, "navigateToDatasetView").mockImplementation(() => {});
 
         setComponentInput(fixture, "data", { ...mockData, datasetId: OTHER_DATASET_ID });
         fixture.detectChanges();
@@ -129,14 +135,15 @@ describe("OffsetIntervalPropertyComponent", () => {
         fixture.detectChanges();
         checkButtonDisabled(fixture, "see-data", false);
         emitClickOnElementByDataTestId(fixture, "see-data");
-        expect(navigateSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ datasetName: OTHER_DATASET_NAME }));
+        expect(navigateSpy).toHaveBeenCalledTimes(1);
+        expect(navigateSpy).toHaveBeenCalledWith(expect.objectContaining({ datasetName: OTHER_DATASET_NAME }));
     });
 
     it("should not open any dataset when the new id does not resolve to one", () => {
         setComponentInput(fixture, "data", mockData);
         fixture.detectChanges();
-        requestDatasetInfoByIdSpy.and.returnValue(of({ datasets: { __typename: "Datasets", byId: null } }));
-        const navigateSpy = spyOn(navigationService, "navigateToDatasetView");
+        requestDatasetInfoByIdSpy.mockReturnValue(of({ datasets: { __typename: "Datasets", byId: null } }));
+        const navigateSpy = vi.spyOn(navigationService, "navigateToDatasetView").mockImplementation(() => {});
 
         setComponentInput(fixture, "data", { ...mockData, datasetId: OTHER_DATASET_ID });
         fixture.detectChanges();

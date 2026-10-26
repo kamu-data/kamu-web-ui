@@ -38,7 +38,7 @@ class TestIngestTriggerFormComponent {
     public readonly label = "Enable automatic updates";
 
     public readonly hostForm = new FormGroup({
-        updatesEnabled: new FormControl(false),
+        updatesEnabled: new FormControl(false, { nonNullable: true }),
         ingestTrigger: IngestTriggerFormComponent.buildForm(),
     });
 
@@ -84,23 +84,23 @@ describe("IngestTriggerFormComponent", () => {
     });
 
     it("should enable updates toggle via harness and reflect in form", () => {
-        expect(component.updatesEnabledControl.value).toBeFalse();
+        expect(component.updatesEnabledControl.value).toBe(false);
 
         hostComponent.hostForm.controls.updatesEnabled.setValue(true);
 
-        expect(component.updatesEnabledControl.value).toBeTrue();
-        expect(component.scheduleTypeControl.disabled).toBeFalse();
+        expect(component.updatesEnabledControl.value).toBe(true);
+        expect(component.scheduleTypeControl.disabled).toBe(false);
         // initially disabled, because we did not select any schedule type
-        expect(component.timeDeltaControl.disabled).toBeTrue();
-        expect(component.cronExpressionControl.disabled).toBeTrue();
+        expect(component.timeDeltaControl.disabled).toBe(true);
+        expect(component.cronExpressionControl.disabled).toBe(true);
 
         hostComponent.hostForm.controls.updatesEnabled.setValue(false);
 
-        expect(component.updatesEnabledControl.value).toBeFalse();
-        expect(component.scheduleTypeControl.disabled).toBeTrue();
+        expect(component.updatesEnabledControl.value).toBe(false);
+        expect(component.scheduleTypeControl.disabled).toBe(true);
         // still disabled, because we did not select any schedule type
-        expect(component.timeDeltaControl.disabled).toBeTrue();
-        expect(component.cronExpressionControl.disabled).toBeTrue();
+        expect(component.timeDeltaControl.disabled).toBe(true);
+        expect(component.cronExpressionControl.disabled).toBe(true);
     });
 
     it("should check switch polling options", async () => {
@@ -112,14 +112,14 @@ describe("IngestTriggerFormComponent", () => {
         // Click on CRON radio button
         await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
         expect(component.scheduleTypeControl.value).toEqual(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
-        expect(component.cronExpressionControl.disabled).toBeFalse();
-        expect(component.timeDeltaControl.disabled).toBeTrue();
+        expect(component.cronExpressionControl.disabled).toBe(false);
+        expect(component.timeDeltaControl.disabled).toBe(true);
 
         // Click on time delta radio button
         await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.TIME_DELTA);
         expect(component.scheduleTypeControl.value).toEqual(ScheduleType.TIME_DELTA);
-        expect(component.cronExpressionControl.disabled).toBeTrue();
-        expect(component.timeDeltaControl.disabled).toBeFalse();
+        expect(component.cronExpressionControl.disabled).toBe(true);
+        expect(component.timeDeltaControl.disabled).toBe(false);
     });
 
     it("should fill form with cron expression and reflect in form state", async () => {
@@ -168,16 +168,16 @@ describe("IngestTriggerFormComponent", () => {
         await ingestTriggerFormHarness.setCronExpression(MOCK_INVALID_CRON_EXPRESSION);
 
         // Ensure errors and status are set correctly
-        expect(component.form.invalid).toBeTrue();
+        expect(component.form.invalid).toBe(true);
         expect(component.form.errors).toBeNull();
 
-        expect(component.cronExpressionControl.invalid).toBeTrue();
+        expect(component.cronExpressionControl.invalid).toBe(true);
         expect(component.cronExpressionControl.get("cronExpression")?.errors).toEqual({
             invalidCronExpression:
                 "Cron expression must consist of 5 fields (minute, hour, day of month, month, day of week), but got 2.",
         });
 
-        expect(component.timeDeltaControl.invalid).toBeFalse();
+        expect(component.timeDeltaControl.invalid).toBe(false);
         expect(component.timeDeltaControl.errors).toBeNull();
     });
 
@@ -191,13 +191,13 @@ describe("IngestTriggerFormComponent", () => {
         await ingestTriggerFormHarness.setTimeDeltaSchedule({ every: 100, unit: TimeUnit.Minutes }); // Invalid value
 
         // Ensure errors and status are set correctly
-        expect(component.form.invalid).toBeTrue();
+        expect(component.form.invalid).toBe(true);
         expect(component.form.errors).toBeNull();
 
-        expect(component.cronExpressionControl.invalid).toBeFalse();
+        expect(component.cronExpressionControl.invalid).toBe(false);
         expect(component.cronExpressionControl.errors).toBeNull();
 
-        expect(component.timeDeltaControl.invalid).toBeTrue();
+        expect(component.timeDeltaControl.invalid).toBe(true);
         expect(component.timeDeltaControl.get("every")?.errors).toEqual({
             range: {
                 message: "Value should be between 1 to 60",
@@ -208,34 +208,34 @@ describe("IngestTriggerFormComponent", () => {
 
     it("should keep controls disabled when schedule type changes while updates are disabled", () => {
         // Initially updates are disabled
-        expect(component.updatesEnabledControl.value).toBeFalse();
-        expect(component.scheduleTypeControl.disabled).toBeTrue();
-        expect(component.timeDeltaControl.disabled).toBeTrue();
-        expect(component.cronExpressionControl.disabled).toBeTrue();
+        expect(component.updatesEnabledControl.value).toBe(false);
+        expect(component.scheduleTypeControl.disabled).toBe(true);
+        expect(component.timeDeltaControl.disabled).toBe(true);
+        expect(component.cronExpressionControl.disabled).toBe(true);
 
         // Programmatically change schedule type while updates are disabled
         // This simulates loading a saved value while the form is in disabled state
         component.scheduleTypeControl.setValue(ScheduleType.TIME_DELTA);
 
         // Controls should remain disabled despite schedule type change
-        expect(component.scheduleTypeControl.disabled).toBeTrue();
-        expect(component.timeDeltaControl.disabled).toBeTrue();
-        expect(component.cronExpressionControl.disabled).toBeTrue();
+        expect(component.scheduleTypeControl.disabled).toBe(true);
+        expect(component.timeDeltaControl.disabled).toBe(true);
+        expect(component.cronExpressionControl.disabled).toBe(true);
 
         // Change to cron expression type
         component.scheduleTypeControl.setValue(ScheduleType.CRON_5_COMPONENT_EXPRESSION);
 
         // Controls should still remain disabled
-        expect(component.scheduleTypeControl.disabled).toBeTrue();
-        expect(component.timeDeltaControl.disabled).toBeTrue();
-        expect(component.cronExpressionControl.disabled).toBeTrue();
+        expect(component.scheduleTypeControl.disabled).toBe(true);
+        expect(component.timeDeltaControl.disabled).toBe(true);
+        expect(component.cronExpressionControl.disabled).toBe(true);
 
         // Now enable updates - controls should become enabled based on schedule type
         hostComponent.hostForm.controls.updatesEnabled.setValue(true);
 
-        expect(component.scheduleTypeControl.disabled).toBeFalse();
+        expect(component.scheduleTypeControl.disabled).toBe(false);
         // Only cron control should be enabled since schedule type is CRON_5_COMPONENT_EXPRESSION
-        expect(component.cronExpressionControl.disabled).toBeFalse();
-        expect(component.timeDeltaControl.disabled).toBeTrue();
+        expect(component.cronExpressionControl.disabled).toBe(false);
+        expect(component.timeDeltaControl.disabled).toBe(true);
     });
 });

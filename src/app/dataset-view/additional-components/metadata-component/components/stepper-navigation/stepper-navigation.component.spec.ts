@@ -41,7 +41,7 @@ describe("StepperNavigationComponent", () => {
     });
 
     it("should check next button is working", () => {
-        const changeStepEmitterSpy = spyOn(component.changeStepEmitter, "emit").and.callThrough();
+        const changeStepEmitterSpy = vi.spyOn(component.changeStepEmitter, "emit");
         setComponentInput(fixture, "prevStep", null);
         setComponentInput(fixture, "validStep", true);
         setComponentInput(fixture, "nextStep", SetPollingSourceSection.READ);
@@ -51,7 +51,7 @@ describe("StepperNavigationComponent", () => {
     });
 
     it("should check save button is working", () => {
-        const changeStepEmitterSpy = spyOn(component.saveEventEmitter, "emit").and.callThrough();
+        const changeStepEmitterSpy = vi.spyOn(component.saveEventEmitter, "emit");
         setComponentInput(fixture, "prevStep", SetPollingSourceSection.READ);
         setComponentInput(fixture, "validStep", true);
         setComponentInput(fixture, "nextStep", null);
@@ -61,7 +61,7 @@ describe("StepperNavigationComponent", () => {
     });
 
     it("should check edit button is working", () => {
-        const changeStepEmitterSpy = spyOn(component.editYamlEmitter, "emit").and.callThrough();
+        const changeStepEmitterSpy = vi.spyOn(component.editYamlEmitter, "emit");
         setComponentInput(fixture, "prevStep", SetPollingSourceSection.READ);
         setComponentInput(fixture, "validStep", true);
         setComponentInput(fixture, "nextStep", null);

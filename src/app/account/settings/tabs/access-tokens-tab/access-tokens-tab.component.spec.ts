@@ -13,6 +13,7 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import type { Mock } from "vitest";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import {
@@ -38,7 +39,7 @@ describe("AccessTokensTabComponent", () => {
     let modalService: ModalService;
     let loggedUserService: LoggedUserService;
     const MOCK_PAGE = 3;
-    let navigateToSettingsSpy: jasmine.Spy;
+    let navigateToSettingsSpy: Mock;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -83,8 +84,8 @@ describe("AccessTokensTabComponent", () => {
         modalService = TestBed.inject(ModalService);
         loggedUserService = TestBed.inject(LoggedUserService);
         component = fixture.componentInstance;
-        navigateToSettingsSpy = spyOn(navigationService, "navigateToSettings");
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        navigateToSettingsSpy = vi.spyOn(navigationService, "navigateToSettings").mockImplementation(() => {});
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
         setComponentInput(fixture, "tokenConnectionData", mockAccessTokenConnectionData);
     });
 
@@ -95,7 +96,8 @@ describe("AccessTokensTabComponent", () => {
 
     it("should check change page", () => {
         component.onPageChange(MOCK_PAGE);
-        expect(navigateToSettingsSpy).toHaveBeenCalledOnceWith(AccountSettingsTabs.ACCESS_TOKENS, MOCK_PAGE);
+        expect(navigateToSettingsSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToSettingsSpy).toHaveBeenCalledWith(AccountSettingsTabs.ACCESS_TOKENS, MOCK_PAGE);
     });
 
     it("should check add new token button", () => {
@@ -106,9 +108,9 @@ describe("AccessTokensTabComponent", () => {
 
     it("should check generate new token button", () => {
         component.currentCreateStep = TokenCreateStep.GENERATE;
-        const createAccessTokensSpy = spyOn(accessTokenService, "createAccessTokens").and.returnValue(
-            of(mockCreatedAccessTokenData),
-        );
+        const createAccessTokensSpy = vi
+            .spyOn(accessTokenService, "createAccessTokens")
+            .mockReturnValue(of(mockCreatedAccessTokenData));
         component.createTokenForm.controls.name.setValue("token-name");
         fixture.detectChanges();
 
@@ -152,11 +154,13 @@ describe("AccessTokensTabComponent", () => {
     });
 
     it("should check revoke token", () => {
-        const revokeAccessTokensSpy = spyOn(accessTokenService, "revokeAccessTokens").and.returnValue(of());
-        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, true);
-            return Promise.resolve("");
-        });
+        const revokeAccessTokensSpy = vi.spyOn(accessTokenService, "revokeAccessTokens").mockReturnValue(of());
+        const modalWindowSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
         component.deleteToken(TOKEN_ID);
 
         expect(revokeAccessTokensSpy).toHaveBeenCalledTimes(1);

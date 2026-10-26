@@ -13,7 +13,7 @@ import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
-import { getElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { getElementByDataTestId, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { TimeDeltaInput, TimeUnit } from "@api/kamu.graphql.interface";
 
@@ -89,7 +89,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         expect(component.form.status).toBe("VALID");
 
         const saveButton = getSaveButton();
-        expect(saveButton.disabled).toBeFalse();
+        expect(saveButton.disabled).toBe(false);
     });
 
     it("should check form is valid when loaded with time delta schedule", async () => {
@@ -161,7 +161,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     });
 
     it("should check 'Save' button works for ROOT dataset with time delta", async () => {
-        const setDatasetFlowTriggerSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTrigger").and.callThrough();
+        const setDatasetFlowTriggerSpy = vi.spyOn(datasetFlowTriggerService, "setDatasetFlowTrigger");
 
         component.form.controls.updatesEnabled.setValue(true);
 
@@ -173,12 +173,12 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         await stopPolicyFormHarness.setSelectedStopPolicyType(FlowTriggerStopPolicyType.NEVER);
 
         const saveButton = getSaveButton();
-        expect(saveButton.disabled).toBeFalse();
+        expect(saveButton.disabled).toBe(false);
 
         saveButton.click();
 
         expect(setDatasetFlowTriggerSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 triggerRuleInput: {
                     schedule: {
                         timeDelta: MOCK_INPUT_TIME_DELTA,
@@ -189,7 +189,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     });
 
     it("should check 'Save' button works for ROOT dataset with cron expression", async () => {
-        const setDatasetFlowTriggerSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTrigger").and.callThrough();
+        const setDatasetFlowTriggerSpy = vi.spyOn(datasetFlowTriggerService, "setDatasetFlowTrigger");
 
         component.form.controls.updatesEnabled.setValue(true);
 
@@ -200,12 +200,12 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         await stopPolicyFormHarness.setMaxFailures(3);
 
         const saveButton = getSaveButton();
-        expect(saveButton.disabled).toBeFalse();
+        expect(saveButton.disabled).toBe(false);
 
         saveButton.click();
 
         expect(setDatasetFlowTriggerSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 triggerRuleInput: {
                     schedule: {
                         cron5ComponentExpression: `${MOCK_CRON_EXPRESSION}`,
@@ -216,7 +216,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     });
 
     it("should check 'Save' button is ignored in invalid state for time delta", async () => {
-        const setDatasetFlowTriggerSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTrigger").and.stub();
+        const setDatasetFlowTriggerSpy = stubMethod(datasetFlowTriggerService, "setDatasetFlowTrigger");
 
         component.form.controls.updatesEnabled.setValue(true);
 
@@ -228,14 +228,14 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         await stopPolicyFormHarness.setSelectedStopPolicyType(FlowTriggerStopPolicyType.NEVER);
 
         const saveButton = getSaveButton();
-        expect(saveButton.disabled).toBeTrue();
+        expect(saveButton.disabled).toBe(true);
 
         saveButton.click(); // will be ignored
         expect(setDatasetFlowTriggerSpy).not.toHaveBeenCalled();
     });
 
     it("should check 'Save' button is ignored in invalid state for cron expression", async () => {
-        const setDatasetFlowTriggerSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTrigger").and.stub();
+        const setDatasetFlowTriggerSpy = stubMethod(datasetFlowTriggerService, "setDatasetFlowTrigger");
 
         component.form.controls.updatesEnabled.setValue(true);
 
@@ -244,22 +244,19 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         await stopPolicyFormHarness.setSelectedStopPolicyType(FlowTriggerStopPolicyType.NEVER);
 
         const saveButton = getSaveButton();
-        expect(saveButton.disabled).toBeTrue();
+        expect(saveButton.disabled).toBe(true);
 
         saveButton.click(); // will be ignored
         expect(setDatasetFlowTriggerSpy).not.toHaveBeenCalled();
     });
 
     it("should check 'Save' button works for disabling updates", () => {
-        const pauseDatasetFlowTriggerSpy = spyOn(
-            datasetFlowTriggerService,
-            "pauseDatasetFlowTrigger",
-        ).and.callThrough();
+        const pauseDatasetFlowTriggerSpy = vi.spyOn(datasetFlowTriggerService, "pauseDatasetFlowTrigger");
 
         component.form.controls.updatesEnabled.setValue(false);
 
         const saveButton = getSaveButton();
-        expect(saveButton.disabled).toBeFalse();
+        expect(saveButton.disabled).toBe(false);
 
         saveButton.click();
 

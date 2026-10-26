@@ -52,7 +52,7 @@ describe("ProcessFormService", () => {
     });
 
     it("should check transform form is call", () => {
-        const transformFormSpy = spyOn(service, "transformForm").and.callThrough();
+        const transformFormSpy = vi.spyOn(service, "transformForm");
         const initialResult = {
             fetch: {
                 order: "NONE",
@@ -155,6 +155,6 @@ describe("ProcessFormService", () => {
         };
         service.transformForm(formGroupFetchContainer);
 
-        expect(formGroupFetchContainer.value).toEqual(jasmine.objectContaining(expectedResult));
+        expect(formGroupFetchContainer.value).toEqual(expect.objectContaining(expectedResult));
     });
 });

@@ -14,6 +14,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { findComponentInstance, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
@@ -73,7 +74,7 @@ describe("SetTransformComponent", () => {
         loggedUserService = TestBed.inject(LoggedUserService);
         modalService = TestBed.inject(NgbModal);
 
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
     });
 
     function createComponent(eventYamlByHash: string): void {
@@ -99,23 +100,27 @@ describe("SetTransformComponent", () => {
         });
 
         it("should check save event", () => {
-            const commitEventToDatasetSpy = spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(of());
+            const commitEventToDatasetSpy = vi
+                .spyOn(datasetCommitService, "commitEventToDataset")
+                .mockReturnValue(of());
             component.onSaveEvent();
             expect(commitEventToDatasetSpy).toHaveBeenCalledTimes(1);
         });
 
         it("should save the event's engine while the engine list has not loaded", () => {
-            const commitEventToDatasetSpy = spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(of());
+            const commitEventToDatasetSpy = vi
+                .spyOn(datasetCommitService, "commitEventToDataset")
+                .mockReturnValue(of());
 
             component.onSaveEvent();
 
-            expect(commitEventToDatasetSpy.calls.mostRecent().args[0].event).toContain(
+            expect(requireValue(commitEventToDatasetSpy.mock.lastCall ?? null)[0].event).toContain(
                 `engine: ${mockParseSetTransformYamlType.transform.engine}`,
             );
         });
 
         it("should check open modal window to edit event", () => {
-            const modalServiceOpenSpy = spyOn(modalService, "open").and.callThrough();
+            const modalServiceOpenSpy = vi.spyOn(modalService, "open");
             component.onEditYaml();
             expect(modalServiceOpenSpy).toHaveBeenCalledTimes(1);
         });
@@ -123,7 +128,7 @@ describe("SetTransformComponent", () => {
 
     describe("loading input schemas", () => {
         beforeEach(() => {
-            spyOn(datasetService, "requestDatasetSchema").and.callFake(() => of(mockGetDatasetSchemaQuery));
+            vi.spyOn(datasetService, "requestDatasetSchema").mockImplementation(() => of(mockGetDatasetSchemaQuery));
             createComponent(mockSetTransformEventYaml);
         });
 
@@ -135,11 +140,13 @@ describe("SetTransformComponent", () => {
         });
 
         it("should keep the event's inputs when saving without changes", () => {
-            const commitEventToDatasetSpy = spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(of());
+            const commitEventToDatasetSpy = vi
+                .spyOn(datasetCommitService, "commitEventToDataset")
+                .mockReturnValue(of());
 
             component.onSaveEvent();
 
-            const event = commitEventToDatasetSpy.calls.mostRecent().args[0].event;
+            const event = requireValue(commitEventToDatasetSpy.mock.lastCall ?? null)[0].event;
             mockParseSetTransformYamlType.inputs.forEach((input) => {
                 expect(event).toContain(input.datasetRef);
                 expect(event).toContain(input.alias);
@@ -157,7 +164,7 @@ describe("SetTransformComponent", () => {
         const [failedInput, loadedInput] = mockParseSetTransformYamlType.inputs;
 
         beforeEach(() => {
-            spyOn(datasetService, "requestDatasetSchema").and.callFake((datasetRef: string) =>
+            vi.spyOn(datasetService, "requestDatasetSchema").mockImplementation((datasetRef: string) =>
                 datasetRef === failedInput.datasetRef
                     ? throwError(() => new Error("request failed"))
                     : of(mockGetDatasetSchemaQuery),

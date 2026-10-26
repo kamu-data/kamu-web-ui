@@ -49,17 +49,17 @@ describe("ModalComponent", () => {
     });
 
     it("should execute the command it receives on init", () => {
-        const getCommandSpy = spyOn(modalService, "getCommand").and.returnValue(of(MOCK_COMMAND_INTERFACE));
+        const getCommandSpy = vi.spyOn(modalService, "getCommand").mockReturnValue(of(MOCK_COMMAND_INTERFACE));
         fixture = TestBed.createComponent(ModalComponent);
         component = fixture.componentInstance;
-        const executeSpy = spyOn(component, "_execute").and.callThrough();
+        const executeSpy = vi.spyOn(component, "_execute");
         fixture.detectChanges();
         expect(executeSpy).toHaveBeenCalledTimes(1);
         expect(getCommandSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check _execute method", () => {
-        const closeSpy = spyOn(component, "_close").and.callThrough();
+        const closeSpy = vi.spyOn(component, "_close");
         component._execute(MOCK_COMMAND_INTERFACE);
         expect(closeSpy).toHaveBeenCalledTimes(1);
     });
@@ -81,13 +81,13 @@ describe("ModalComponent", () => {
     });
 
     it("should check _close", () => {
-        const locationSpy = spyOn(location, "back");
+        const locationSpy = vi.spyOn(location, "back").mockImplementation(() => {});
         component._close(true);
         expect(locationSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should keep a single keydown listener across opened modals", () => {
-        const processSpy = spyOn(component, "_processKDB");
+        const processSpy = vi.spyOn(component, "_processKDB").mockImplementation(() => {});
         component._execute(MOCK_COMMAND_INTERFACE);
         component._execute(MOCK_COMMAND_INTERFACE);
 
@@ -100,7 +100,7 @@ describe("ModalComponent", () => {
     });
 
     it("should remove the keydown listener on destroy", () => {
-        const processSpy = spyOn(component, "_processKDB");
+        const processSpy = vi.spyOn(component, "_processKDB").mockImplementation(() => {});
         component._execute(MOCK_COMMAND_INTERFACE);
         fixture.destroy();
 

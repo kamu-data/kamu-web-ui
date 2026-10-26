@@ -45,7 +45,9 @@ describe("MetadataPushSourcesTabComponent", () => {
     });
 
     it("should check navigate to edit AddPushSource event with source name", () => {
-        const navigateToAddPollingSourceSpy = spyOn(navigationService, "navigateToAddPushSource");
+        const navigateToAddPollingSourceSpy = vi
+            .spyOn(navigationService, "navigateToAddPushSource")
+            .mockImplementation(() => {});
         component.datasetMetadataTabData.datasetBasics = mockDatasetBasicsRootFragment;
 
         const sourceName = "mockName";

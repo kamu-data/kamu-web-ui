@@ -35,7 +35,7 @@ describe("EngineSectionComponent", () => {
         component = fixture.componentInstance;
         engineService = TestBed.inject(EngineService);
         setComponentInput(fixture, "knownEngines", mockEngines.data.knownEngines);
-        spyOn(engineService, "engines").and.returnValue(of(mockEngines));
+        vi.spyOn(engineService, "engines").mockReturnValue(of(mockEngines));
     });
 
     it("should create", () => {

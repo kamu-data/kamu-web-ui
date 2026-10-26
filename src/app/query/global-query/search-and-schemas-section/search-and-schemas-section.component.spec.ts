@@ -13,6 +13,7 @@ import { of, throwError } from "rxjs";
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import type { Mock } from "vitest";
 
 import {
     dispatchInputEvent,
@@ -36,7 +37,7 @@ describe("SearchAndSchemasSectionComponent", () => {
     let sqlQueryService: SqlQueryService;
     let datasetService: DatasetService;
     let searchApi: SearchApi;
-    let requestDatasetSchemaSpy: jasmine.Spy;
+    let requestDatasetSchemaSpy: Mock;
 
     const selectDatasetEvent: NgbTypeaheadSelectItemEvent<DatasetAutocompleteItem> = {
         item: { dataset: mockDatasetBasicsDerivedFragment, dummy: false, __typename: TypeNames.datasetType },
@@ -54,9 +55,9 @@ describe("SearchAndSchemasSectionComponent", () => {
         datasetService = TestBed.inject(DatasetService);
         searchApi = TestBed.inject(SearchApi);
         sqlQueryService.emitSqlQueryResponseChanged(mockSqlQueryResponseState);
-        requestDatasetSchemaSpy = spyOn(datasetService, "requestDatasetSchema").and.returnValue(
-            of(mockGetDatasetSchemaQuery),
-        );
+        requestDatasetSchemaSpy = vi
+            .spyOn(datasetService, "requestDatasetSchema")
+            .mockReturnValue(of(mockGetDatasetSchemaQuery));
     });
 
     it("should create", () => {
@@ -94,9 +95,9 @@ describe("SearchAndSchemasSectionComponent", () => {
             dummy: false,
             dataset: mockDatasetBasicsDerivedFragment,
         };
-        const searchApiAutocompleteDatasetSearchSpy = spyOn(searchApi, "autocompleteDatasetSearch").and.callFake(() =>
-            of([MOCK_AUTOCOMPLETE_ITEM]),
-        );
+        const searchApiAutocompleteDatasetSearchSpy = vi
+            .spyOn(searchApi, "autocompleteDatasetSearch")
+            .mockImplementation(() => of([MOCK_AUTOCOMPLETE_ITEM]));
 
         const SEARCH_DATASET = "mockDatasetName";
         dispatchInputEvent(fixture, "global-query-search-dataset", SEARCH_DATASET);
@@ -106,8 +107,10 @@ describe("SearchAndSchemasSectionComponent", () => {
         flush();
     }));
 
-    it("should clear search input", () => {
+    it("should clear search input", async () => {
         fixture.detectChanges();
+        // ngModel writes its initial value in a microtask, which would otherwise clear the typed text
+        await fixture.whenStable();
         const SEARCH_DATASET = "mockDatasetName";
         dispatchInputEvent(fixture, "global-query-search-dataset", SEARCH_DATASET);
         expect(component.searchDataset).toEqual(SEARCH_DATASET);
@@ -147,11 +150,11 @@ describe("SearchAndSchemasSectionComponent", () => {
     });
 
     it("should show schemas of the next query after a schema request fails", () => {
-        requestDatasetSchemaSpy.and.returnValue(throwError(() => new Error("request failed")));
+        requestDatasetSchemaSpy.mockReturnValue(throwError(() => new Error("request failed")));
         fixture.detectChanges();
         expect(component.searchResult).toEqual([]);
 
-        requestDatasetSchemaSpy.and.returnValue(of(mockGetDatasetSchemaQuery));
+        requestDatasetSchemaSpy.mockReturnValue(of(mockGetDatasetSchemaQuery));
         sqlQueryService.emitSqlQueryResponseChanged(mockSqlQueryResponseState);
         fixture.detectChanges();
 

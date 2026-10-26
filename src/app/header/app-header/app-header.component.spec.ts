@@ -109,14 +109,14 @@ describe("AppHeaderComponent", () => {
 
     it("should check focus on input", () => {
         const searchInput = getElementByDataTestId(fixture, "searchInput");
-        const focusElementSpy = spyOn(searchInput, "focus").and.callThrough();
+        const focusElementSpy = vi.spyOn(searchInput, "focus");
         component.onClickInput();
         expect(focusElementSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check dataset type", () => {
-        expect(component.isDatasetType(TypeNames.datasetType)).toBeTrue();
-        expect(component.isDatasetType(TypeNames.allDataType)).toBeFalse();
+        expect(component.isDatasetType(TypeNames.datasetType)).toBe(true);
+        expect(component.isDatasetType(TypeNames.allDataType)).toBe(false);
     });
 
     [false, true].forEach((isExpectation: boolean) => {
@@ -126,9 +126,9 @@ describe("AppHeaderComponent", () => {
             emitClickOnElementByDataTestId(fixture, "appHeaderMenuButton");
             fixture.detectChanges();
             if (isExpectation) {
-                expect(headerMenu.classList.contains("details--on")).toBeFalse();
+                expect(headerMenu.classList.contains("details--on")).toBe(false);
             } else {
-                expect(headerMenu.classList.contains("details--on")).toBeTrue();
+                expect(headerMenu.classList.contains("details--on")).toBe(true);
             }
         });
     });
@@ -137,7 +137,7 @@ describe("AppHeaderComponent", () => {
         const emitterSubscription$ = component.onClickedLogin.pipe(first()).subscribe();
         const link = getElementByDataTestId(fixture, "loginHeader");
         link.click();
-        expect(emitterSubscription$.closed).toBeTrue();
+        expect(emitterSubscription$.closed).toBe(true);
     });
 
     it("should not have Login link when user is logged in", () => {
@@ -151,7 +151,7 @@ describe("AppHeaderComponent", () => {
         const emitterSubscription$ = component.onClickedBilling.pipe(first()).subscribe();
         const link = getElementByDataTestId(fixture, "openBillingPlanHeader");
         link.click();
-        expect(emitterSubscription$.closed).toBeTrue();
+        expect(emitterSubscription$.closed).toBe(true);
     });
 
     it("should emit on click Analytics link", () => {
@@ -159,7 +159,7 @@ describe("AppHeaderComponent", () => {
         const emitterSubscription$ = component.onClickedAnalytics.pipe(first()).subscribe();
         const link = getElementByDataTestId(fixture, "openAnalyticsHeader");
         link.click();
-        expect(emitterSubscription$.closed).toBeTrue();
+        expect(emitterSubscription$.closed).toBe(true);
     });
 
     // TODO: test userNameHeader and it's content
@@ -169,7 +169,7 @@ describe("AppHeaderComponent", () => {
         const emitterSubscription$ = component.onClickedLogout.pipe(first()).subscribe();
         const link = getElementByDataTestId(fixture, "openLogoutHeader");
         link.click();
-        expect(emitterSubscription$.closed).toBeTrue();
+        expect(emitterSubscription$.closed).toBe(true);
     });
 
     it("no Log Out link when feature disabled", () => {
@@ -204,7 +204,7 @@ describe("AppHeaderComponent", () => {
         const emitterSubscription$ = component.onClickedHelp.pipe(first()).subscribe();
         const link = getElementByDataTestId(fixture, "openHelpHeader");
         link.click();
-        expect(emitterSubscription$.closed).toBeTrue();
+        expect(emitterSubscription$.closed).toBe(true);
     });
 
     it("should not see add new second link without login", () => {
@@ -233,14 +233,14 @@ describe("AppHeaderComponent", () => {
             const emitterSubscription$ = component.onClickedHelp.pipe(first()).subscribe();
             const link = getElementByDataTestId(fixture, "openHelp");
             link.click();
-            expect(emitterSubscription$.closed).toBeTrue();
+            expect(emitterSubscription$.closed).toBe(true);
         });
 
         it("should emit on click Login link menu", () => {
             const emitterSubscription$ = component.onClickedLogin.pipe(first()).subscribe();
             const link = getElementByDataTestId(fixture, "openLogin");
             link.click();
-            expect(emitterSubscription$.closed).toBeTrue();
+            expect(emitterSubscription$.closed).toBe(true);
         });
 
         it("should not have Login link menu when user is logged in", () => {
@@ -254,7 +254,7 @@ describe("AppHeaderComponent", () => {
             const emitterSubscription$ = component.onClickedBilling.pipe(first()).subscribe();
             const link = getElementByDataTestId(fixture, "openBillingPlan");
             link.click();
-            expect(emitterSubscription$.closed).toBeTrue();
+            expect(emitterSubscription$.closed).toBe(true);
         });
 
         it("should emit on click Analytics link menu", () => {
@@ -262,7 +262,7 @@ describe("AppHeaderComponent", () => {
             const emitterSubscription$ = component.onClickedAnalytics.pipe(first()).subscribe();
             const link = getElementByDataTestId(fixture, "openAnalytics");
             link.click();
-            expect(emitterSubscription$.closed).toBeTrue();
+            expect(emitterSubscription$.closed).toBe(true);
         });
 
         it("should emit on click logout link menu", () => {
@@ -270,7 +270,7 @@ describe("AppHeaderComponent", () => {
             const emitterSubscription$ = component.onClickedLogout.pipe(first()).subscribe();
             const link = getElementByDataTestId(fixture, "openLogout");
             link.click();
-            expect(emitterSubscription$.closed).toBeTrue();
+            expect(emitterSubscription$.closed).toBe(true);
         });
 
         it("no Log Out link menu when feature disabled", () => {
@@ -307,9 +307,9 @@ describe("AppHeaderComponent", () => {
             dummy: false,
             dataset: mockDatasetBasicsDerivedFragment,
         };
-        const searchApiAutocompleteDatasetSearchSpy = spyOn(searchApi, "autocompleteDatasetSearch").and.callFake(() =>
-            of([MOCK_AUTOCOMPLETE_ITEM]),
-        );
+        const searchApiAutocompleteDatasetSearchSpy = vi
+            .spyOn(searchApi, "autocompleteDatasetSearch")
+            .mockImplementation(() => of([MOCK_AUTOCOMPLETE_ITEM]));
 
         // Run search query
         const SEARCH_QUERY = "query";
@@ -331,7 +331,7 @@ describe("AppHeaderComponent", () => {
 
         // After click on selection option, search typeahead should hide
         const typeAheadInputEl = findNativeElement(fixture, "#typeahead-http");
-        const typeAheadInputElBlurSpy = spyOn(typeAheadInputEl, "blur").and.callThrough();
+        const typeAheadInputElBlurSpy = vi.spyOn(typeAheadInputEl, "blur");
 
         // Do actual click
         const typeAheadSelectionEl = findNativeElement(fixture, "button.dropdown-item");
@@ -339,7 +339,7 @@ describe("AppHeaderComponent", () => {
         fixture.detectChanges();
 
         // Ensure emitter callback was hit
-        expect(emitterSubscription$.closed).toBeTrue();
+        expect(emitterSubscription$.closed).toBe(true);
 
         // Ensure focus lost on autocomplete after delay
         tick();
@@ -349,9 +349,9 @@ describe("AppHeaderComponent", () => {
 
     it("should check search method triggers menu click on mobile view", fakeAsync(() => {
         setComponentInput(fixture, "isMobileView", true);
-        const triggerMenuClickSpy = spyOn(component, "triggerMenuClick").and.callThrough();
+        const triggerMenuClickSpy = vi.spyOn(component, "triggerMenuClick");
 
-        const navigateToSearchSpy = spyOn(navigationService, "navigateToSearch");
+        const navigateToSearchSpy = vi.spyOn(navigationService, "navigateToSearch").mockImplementation(() => {});
 
         const event = new KeyboardEvent("keyup", {
             key: "Enter",
@@ -360,14 +360,14 @@ describe("AppHeaderComponent", () => {
         el.dispatchEvent(event);
         tick(AppValues.SHORT_DELAY_MS);
         expect(triggerMenuClickSpy).toHaveBeenCalledWith();
-        expect(component.isCollapsedAppHeaderMenu).toBeTrue();
+        expect(component.isCollapsedAppHeaderMenu).toBe(true);
         expect(navigateToSearchSpy).toHaveBeenCalledWith(DEFAULT_SEARCH_QUERY);
         flush();
     }));
 
     it("should check redirect to initial search page", () => {
         component.searchQuery = "";
-        const navigateToHomeSpy = spyOn(navigationService, "navigateToHome");
+        const navigateToHomeSpy = vi.spyOn(navigationService, "navigateToHome").mockImplementation(() => {});
 
         const event = new KeyboardEvent("keyup", {
             key: "Enter",

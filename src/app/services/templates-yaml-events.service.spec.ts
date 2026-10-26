@@ -68,7 +68,7 @@ describe("TemplatesYamlEventsService", () => {
         const yaml = service.buildYamlSetPollingSourceEvent(params, null);
         const schema = readSchemaOf(yaml);
         expect(requireDatasetSchema(schema).fields).toEqual(fields);
-        expect(Array.isArray(schema)).toBeFalse();
+        expect(Array.isArray(schema)).toBe(false);
     });
 
     it("should emit read.schema as { fields } object form for push source", () => {
@@ -81,7 +81,7 @@ describe("TemplatesYamlEventsService", () => {
         const yaml = service.buildYamlAddPushSourceEvent(params, null);
         const schema = readSchemaOf(yaml);
         expect(requireDatasetSchema(schema).fields).toEqual(fields);
-        expect(Array.isArray(schema)).toBeFalse();
+        expect(Array.isArray(schema)).toBe(false);
     });
 
     it("should pass through read.schema unchanged when schema is empty for polling source", () => {
@@ -108,7 +108,7 @@ describe("TemplatesYamlEventsService", () => {
         const yaml = service.buildYamlSetPollingSourceEvent(params, null);
         const schema = readSchemaOf(yaml);
         expect(requireDatasetSchema(schema).fields).toEqual(schemaWithSpace);
-        expect(Array.isArray(schema)).toBeFalse();
+        expect(Array.isArray(schema)).toBe(false);
     });
 
     it("should round-trip a field name with spaces through buildYamlAddPushSourceEvent", () => {
@@ -124,6 +124,6 @@ describe("TemplatesYamlEventsService", () => {
         const yaml = service.buildYamlAddPushSourceEvent(params, null);
         const schema = readSchemaOf(yaml);
         expect(requireDatasetSchema(schema).fields).toEqual(schemaWithSpace);
-        expect(Array.isArray(schema)).toBeFalse();
+        expect(Array.isArray(schema)).toBe(false);
     });
 });

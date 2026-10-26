@@ -37,13 +37,15 @@ describe("accountSettingsStorageResolverFn", () => {
     });
 
     it("should check resolver", async () => {
-        const fetchStorageQuotaSpy = spyOn(accountStorageQuotaService, "fetchStorageQuota").and.returnValue(
-            of(mockStorageQuotaWithinLimit),
-        );
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        const fetchStorageQuotaSpy = vi
+            .spyOn(accountStorageQuotaService, "fetchStorageQuota")
+            .mockReturnValue(of(mockStorageQuotaWithinLimit));
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
         const result = await runResolver(accountSettingsStorageResolverFn);
 
-        expect(fetchStorageQuotaSpy).toHaveBeenCalledOnceWith(mockAccountDetails.accountName);
+        expect(fetchStorageQuotaSpy).toHaveBeenCalledTimes(1);
+
+        expect(fetchStorageQuotaSpy).toHaveBeenCalledWith(mockAccountDetails.accountName);
         expect(result).toEqual(mockStorageQuotaWithinLimit);
     });
 });

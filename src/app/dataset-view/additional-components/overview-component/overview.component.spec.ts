@@ -19,6 +19,7 @@ import { provideMarkdown } from "ngx-markdown";
 import { provideToastr } from "ngx-toastr";
 
 import {
+    createSpyObj,
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
     getElementByDataTestId,
@@ -72,7 +73,7 @@ describe("OverviewComponent", () => {
 
         fixture = TestBed.createComponent(OverviewComponent);
         component = fixture.componentInstance;
-        spyOn(datasetCollaborationsService, "getRoleByDatasetId").and.returnValue(of(null));
+        vi.spyOn(datasetCollaborationsService, "getRoleByDatasetId").mockReturnValue(of(null));
         setComponentInput(fixture, "datasetOverviewTabData", {
             datasetBasics: structuredClone(mockDatasetBasicsRootFragment),
             datasetPermissions: structuredClone(mockFullPowerDatasetPermissionsFragment),
@@ -109,20 +110,19 @@ describe("OverviewComponent", () => {
     });
 
     it("should check open website", () => {
-        const navigationServiceSpy = spyOn(navigationService, "navigateToWebsite");
+        const navigationServiceSpy = vi.spyOn(navigationService, "navigateToWebsite").mockImplementation(() => {});
         const testWebsite = "http://google.com";
         component.showWebsite(testWebsite);
         expect(navigationServiceSpy).toHaveBeenCalledWith(testWebsite);
     });
 
     it("should open information modal window", async () => {
-        const mockModalRef = jasmine.createSpyObj<NgbModalRef>("NgbModalRef", [], {
-            componentInstance: {},
-            result: Promise.resolve(),
-        });
+        const mockModalRef = createSpyObj<NgbModalRef>({}, { componentInstance: {}, result: Promise.resolve() });
 
-        const openModalSpy = spyOn(modalService, "open").and.returnValue(mockModalRef);
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        const openModalSpy = vi.spyOn(modalService, "open").mockReturnValue(mockModalRef);
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
         component.openInformationModal();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
         await mockModalRef.result;
@@ -130,13 +130,12 @@ describe("OverviewComponent", () => {
     });
 
     it("should open license modal window", async () => {
-        const mockModalRef = jasmine.createSpyObj<NgbModalRef>("NgbModalRef", [], {
-            componentInstance: {},
-            result: Promise.resolve(),
-        });
+        const mockModalRef = createSpyObj<NgbModalRef>({}, { componentInstance: {}, result: Promise.resolve() });
 
-        const openModalSpy = spyOn(modalService, "open").and.returnValue(mockModalRef);
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        const openModalSpy = vi.spyOn(modalService, "open").mockReturnValue(mockModalRef);
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
         component.openLicenseModal();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
         await mockModalRef.result;
@@ -144,28 +143,28 @@ describe("OverviewComponent", () => {
     });
 
     it("should check Update now button is not visible", () => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(false);
         updateView();
         const updateButton = findElementByDataTestId(fixture, "refresh-now-button");
         expect(updateButton).toBe(undefined);
     });
 
     it("should check Update now button is not visible when enableScheduling flag equal false", () => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        spyOnProperty(component, "enableScheduling", "get").and.returnValue(false);
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
+        vi.spyOn(component, "enableScheduling", "get").mockReturnValue(false);
         updateView();
         const updateButton = findElementByDataTestId(fixture, "refresh-now-button");
         expect(updateButton).toBe(undefined);
     });
 
     it("should open set watermark window", () => {
-        const openModalSpy = spyOn(modalService, "open").and.callThrough();
+        const openModalSpy = vi.spyOn(modalService, "open");
         component.openWatermarkModal();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should add data", () => {
-        const openModalSpy = spyOn(modalService, "open").and.callThrough();
+        const openModalSpy = vi.spyOn(modalService, "open");
         component.addData();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
     });
@@ -177,21 +176,23 @@ describe("OverviewComponent", () => {
     });
 
     it("should check visibility 'Get Data' button", () => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
         updateView();
         const buttonElement = findElementByDataTestId(fixture, "get-data-button");
         expect(buttonElement).toBeDefined();
     });
 
     it("should check navigate to flows tab when 'refresh now' button was clicked", fakeAsync(() => {
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
-        spyOnProperty(component, "enableScheduling", "get").and.returnValue(true);
-        spyOnProperty(component, "canSchedule", "get").and.returnValue(true);
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
+        vi.spyOn(component, "enableScheduling", "get").mockReturnValue(true);
+        vi.spyOn(component, "canSchedule", "get").mockReturnValue(true);
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
 
-        const datasetTriggerIngestFlowSpy = spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(
-            of(true),
-        );
+        const datasetTriggerIngestFlowSpy = vi
+            .spyOn(datasetFlowsService, "datasetTriggerIngestFlow")
+            .mockReturnValue(of(true));
         updateView();
 
         emitClickOnElementByDataTestId(fixture, "refresh-now-button");
@@ -209,42 +210,42 @@ describe("OverviewComponent", () => {
             currentOverview().metadata.currentPollingSource = null;
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
 
-            expect(component.canAddSetPollingSource).toBeTrue();
+            expect(component.canAddSetPollingSource).toBe(true);
         });
 
         it("cannot add set polling source when no permissions", () => {
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = false;
             updateView();
 
-            expect(component.canAddSetPollingSource).toBeFalse();
+            expect(component.canAddSetPollingSource).toBe(false);
         });
 
         it("cannot add set polling source when having a derived dataset", () => {
             component.datasetOverviewTabData.datasetBasics.kind = DatasetKind.Derivative;
             updateView();
 
-            expect(component.canAddSetPollingSource).toBeFalse();
+            expect(component.canAddSetPollingSource).toBe(false);
         });
 
         it("cannot add set polling source if polling source already exists", () => {
             currentOverview().metadata.currentPollingSource = { __typename: "SetPollingSource" };
             updateView();
 
-            expect(component.canAddSetPollingSource).toBeFalse();
+            expect(component.canAddSetPollingSource).toBe(false);
         });
 
         it("should check refresh button is disabled when currentPollingSource=undefined=null ", () => {
             currentOverview().metadata.currentPollingSource = null;
-            spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+            vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
             updateView();
 
             const refreshButton = getElementByDataTestId(fixture, "refresh-now-button", HTMLButtonElement);
-            expect(refreshButton.disabled).toBeTrue();
+            expect(refreshButton.disabled).toBe(true);
         });
 
         it("should check show Add data button without currentPollingSource", () => {
             currentOverview().metadata.currentPollingSource = null;
-            spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+            vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
             updateView();
 
@@ -252,7 +253,7 @@ describe("OverviewComponent", () => {
         });
 
         it("should check don't show Add data button with currentPollingSource", () => {
-            spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+            vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
             updateView();
 
             expect(component.showAddDataButton).toEqual(false);
@@ -269,44 +270,44 @@ describe("OverviewComponent", () => {
         it("should be possible to add transform for derived dataset and with commit permissions", () => {
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
 
-            expect(component.canAddSetTransform).toBeTrue();
+            expect(component.canAddSetTransform).toBe(true);
         });
 
         it("cannot add set transform when no permissions", () => {
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = false;
             updateView();
 
-            expect(component.canAddSetTransform).toBeFalse();
+            expect(component.canAddSetTransform).toBe(false);
         });
 
         it("cannot add set transform source when having a root dataset", () => {
             component.datasetOverviewTabData.datasetBasics.kind = DatasetKind.Root;
             updateView();
 
-            expect(component.canAddSetTransform).toBeFalse();
+            expect(component.canAddSetTransform).toBe(false);
         });
 
         it("cannot add set transform if transform already exists", () => {
             currentOverview().metadata.currentTransform = { __typename: "SetTransform" };
             updateView();
 
-            expect(component.canAddSetTransform).toBeFalse();
+            expect(component.canAddSetTransform).toBe(false);
         });
 
         it("should check refresh button is disabled when currentTransform=null", () => {
             currentOverview().metadata.currentTransform = null;
             currentOverview().metadata.currentPollingSource = null;
-            spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+            vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
             updateView();
 
             const refreshButton = getElementByDataTestId(fixture, "refresh-now-button", HTMLButtonElement);
-            expect(refreshButton.disabled).toBeTrue();
+            expect(refreshButton.disabled).toBe(true);
         });
 
         it("should check don't show Add data button with currentTransform", () => {
             component.datasetOverviewTabData.datasetBasics = mockDatasetBasicsDerivedFragment;
             currentOverview().metadata.currentTransform = { __typename: "SetTransform" };
-            spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+            vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
             updateView();
 
             expect(component.showAddDataButton).toEqual(false);
@@ -320,51 +321,51 @@ describe("OverviewComponent", () => {
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
             expect(currentOverview().metadata.currentInfo.description).toBeFalsy();
             expect(currentOverview().metadata.currentInfo.keywords).toBeFalsy();
-            expect(component.hasDatasetInfo).toBeFalse();
-            expect(component.canAddDatasetInfo).toBeTrue();
-            expect(component.canEditDatasetInfo).toBeFalse();
+            expect(component.hasDatasetInfo).toBe(false);
+            expect(component.canAddDatasetInfo).toBe(true);
+            expect(component.canEditDatasetInfo).toBe(false);
         });
 
         it("cannot add or edit dataset info without commit permissions and without existing info", () => {
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = false;
             updateView();
-            expect(component.canAddDatasetInfo).toBeFalse();
-            expect(component.canEditDatasetInfo).toBeFalse();
+            expect(component.canAddDatasetInfo).toBe(false);
+            expect(component.canEditDatasetInfo).toBe(false);
         });
 
         it("cannot add or edit dataset info without commit permissions, but with existing info", () => {
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = false;
             currentInfo().description = "someDescription";
             updateView();
-            expect(component.canAddDatasetInfo).toBeFalse();
-            expect(component.canEditDatasetInfo).toBeFalse();
+            expect(component.canAddDatasetInfo).toBe(false);
+            expect(component.canEditDatasetInfo).toBe(false);
         });
 
         it("cannot add dataset info, if info description is available, but can edit", () => {
             currentInfo().description = "someDescription";
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
             updateView();
-            expect(component.hasDatasetInfo).toBeTrue();
-            expect(component.canAddDatasetInfo).toBeFalse();
-            expect(component.canEditDatasetInfo).toBeTrue();
+            expect(component.hasDatasetInfo).toBe(true);
+            expect(component.canAddDatasetInfo).toBe(false);
+            expect(component.canEditDatasetInfo).toBe(true);
         });
 
         it("cannot add dataset info, if a keyword is defined, but can edit", () => {
             currentInfo().keywords = ["keyword"];
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
             updateView();
-            expect(component.hasDatasetInfo).toBeTrue();
-            expect(component.canAddDatasetInfo).toBeFalse();
-            expect(component.canEditDatasetInfo).toBeTrue();
+            expect(component.hasDatasetInfo).toBe(true);
+            expect(component.canAddDatasetInfo).toBe(false);
+            expect(component.canEditDatasetInfo).toBe(true);
         });
 
         it("can add dataset info, if a keywords array is empty, but can't edit", () => {
             currentInfo().keywords = [];
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
             updateView();
-            expect(component.hasDatasetInfo).toBeFalse();
-            expect(component.canAddDatasetInfo).toBeTrue();
-            expect(component.canEditDatasetInfo).toBeFalse();
+            expect(component.hasDatasetInfo).toBe(false);
+            expect(component.canAddDatasetInfo).toBe(true);
+            expect(component.canEditDatasetInfo).toBe(false);
         });
     });
 
@@ -375,23 +376,23 @@ describe("OverviewComponent", () => {
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
             expect(currentOverview().metadata.currentReadme).toBeFalsy();
 
-            expect(component.canAddReadme).toBeTrue();
-            expect(component.canEditReadme).toBeFalse();
+            expect(component.canAddReadme).toBe(true);
+            expect(component.canEditReadme).toBe(false);
         });
 
         it("cannot add readme if already started adding", () => {
             component.onAddReadme();
 
-            expect(component.canAddReadme).toBeFalse();
-            expect(component.canEditReadme).toBeFalse();
+            expect(component.canAddReadme).toBe(false);
+            expect(component.canEditReadme).toBe(false);
         });
 
         it("cannot add or edit readme without commit permissions and without existing readme", () => {
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = false;
             updateView();
 
-            expect(component.canAddReadme).toBeFalse();
-            expect(component.canEditReadme).toBeFalse();
+            expect(component.canAddReadme).toBe(false);
+            expect(component.canEditReadme).toBe(false);
         });
 
         it("cannot add readme, if readme is available, but can edit", () => {
@@ -399,8 +400,8 @@ describe("OverviewComponent", () => {
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
             updateView();
 
-            expect(component.canAddReadme).toBeFalse();
-            expect(component.canEditReadme).toBeTrue();
+            expect(component.canAddReadme).toBe(false);
+            expect(component.canEditReadme).toBe(true);
         });
     });
 
@@ -410,23 +411,23 @@ describe("OverviewComponent", () => {
             // No license by default
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
             expect(currentOverview().metadata.currentLicense).toBeFalsy();
-            expect(component.canAddLicense).toBeTrue();
-            expect(component.canEditLicense).toBeFalse();
+            expect(component.canAddLicense).toBe(true);
+            expect(component.canEditLicense).toBe(false);
         });
 
         it("cannot add or edit license without commit permissions and without existing license", () => {
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = false;
             updateView();
-            expect(component.canAddLicense).toBeFalse();
-            expect(component.canEditLicense).toBeFalse();
+            expect(component.canAddLicense).toBe(false);
+            expect(component.canEditLicense).toBe(false);
         });
 
         it("cannot add license, if license is available, but can edit", () => {
             currentOverview().metadata.currentLicense = mockSetLicense;
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
             updateView();
-            expect(component.canAddLicense).toBeFalse();
-            expect(component.canEditLicense).toBeTrue();
+            expect(component.canAddLicense).toBe(false);
+            expect(component.canEditLicense).toBe(true);
         });
     });
 
@@ -437,7 +438,7 @@ describe("OverviewComponent", () => {
             // Having watermark by default
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
             expect(currentOverview().metadata.currentWatermark).toBeTruthy();
-            expect(component.canAddWatermark).toBeFalse();
+            expect(component.canAddWatermark).toBe(false);
             expect(component.canEditWatermark).toBeTruthy();
         });
 
@@ -445,36 +446,38 @@ describe("OverviewComponent", () => {
             currentOverview().metadata.currentWatermark = undefined;
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = true;
             updateView();
-            expect(component.canAddWatermark).toBeTrue();
-            expect(component.canEditWatermark).toBeFalse();
+            expect(component.canAddWatermark).toBe(true);
+            expect(component.canEditWatermark).toBe(false);
         });
 
         it("cannot add or edit watermark without commit permissions", () => {
             component.datasetOverviewTabData.datasetPermissions.permissions.metadata.canCommit = false;
             updateView();
-            expect(component.canAddWatermark).toBeFalse();
-            expect(component.canEditWatermark).toBeFalse();
+            expect(component.canAddWatermark).toBe(false);
+            expect(component.canEditWatermark).toBe(false);
             currentOverview().metadata.currentWatermark = undefined;
             updateView();
-            expect(component.canAddWatermark).toBeFalse();
-            expect(component.canEditWatermark).toBeFalse();
+            expect(component.canAddWatermark).toBe(false);
+            expect(component.canEditWatermark).toBe(false);
         });
 
         it("cannot add or edit watermark with derived dataset", () => {
             component.datasetOverviewTabData.datasetBasics.kind = DatasetKind.Derivative;
             updateView();
-            expect(component.canAddWatermark).toBeFalse();
-            expect(component.canEditWatermark).toBeFalse();
+            expect(component.canAddWatermark).toBe(false);
+            expect(component.canEditWatermark).toBe(false);
             currentOverview().metadata.currentWatermark = undefined;
             updateView();
-            expect(component.canAddWatermark).toBeFalse();
-            expect(component.canEditWatermark).toBeFalse();
+            expect(component.canAddWatermark).toBe(false);
+            expect(component.canEditWatermark).toBe(false);
         });
     });
 
     it("should navigate to flows after 'refresh now' only once the delay passes, and not after destroy", fakeAsync(() => {
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
-        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
+        vi.spyOn(datasetFlowsService, "datasetTriggerIngestFlow").mockReturnValue(of(true));
         component.refreshNow();
 
         tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS - 1);

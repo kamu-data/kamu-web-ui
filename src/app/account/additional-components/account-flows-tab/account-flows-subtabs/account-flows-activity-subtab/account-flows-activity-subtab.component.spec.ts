@@ -79,8 +79,8 @@ describe("AccountFlowsActivitySubtabComponent", () => {
             flowGroup: [FlowStatus.Finished],
             datasetsFiltersMode: ProcessCardFilterMode.RECENT_ACTIVITY,
         });
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        spyOn(accountService, "getAccountListFlows").and.returnValue(of(mockFlowsTableData));
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+        vi.spyOn(accountService, "getAccountListFlows").mockReturnValue(of(mockFlowsTableData));
         fixture.detectChanges();
     });
 
@@ -89,9 +89,10 @@ describe("AccountFlowsActivitySubtabComponent", () => {
     });
 
     it("should check navigate to owner view with page=1 ", () => {
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+        const navigateToOwnerViewSpy = vi.spyOn(navigationService, "navigateToOwnerView").mockImplementation(() => {});
         component.onPageChange(1);
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(
             MOCK_ACCOUNT_NAME,
             AccountTabs.FLOWS,
             undefined,
@@ -101,9 +102,10 @@ describe("AccountFlowsActivitySubtabComponent", () => {
     });
 
     it("should check navigate to owner view with page>1 ", () => {
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+        const navigateToOwnerViewSpy = vi.spyOn(navigationService, "navigateToOwnerView").mockImplementation(() => {});
         component.onPageChange(2);
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(
             MOCK_ACCOUNT_NAME,
             AccountTabs.FLOWS,
             2,
@@ -114,9 +116,10 @@ describe("AccountFlowsActivitySubtabComponent", () => {
 
     it("should keep viewed account (not logged user) when paginating another account's flows", () => {
         expect(component.loggedUser.accountName).not.toEqual(MOCK_ACCOUNT_NAME);
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+        const navigateToOwnerViewSpy = vi.spyOn(navigationService, "navigateToOwnerView").mockImplementation(() => {});
         component.onPageChange(3);
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(
             MOCK_ACCOUNT_NAME,
             AccountTabs.FLOWS,
             3,
@@ -133,23 +136,23 @@ describe("AccountFlowsActivitySubtabComponent", () => {
             status: [FlowStatus.Finished],
             onlySystemFlows: false,
         };
-        spyOn(navigationService, "navigateToOwnerView");
-        const onSearchByFiltersChangeSpy = spyOn(component, "onSearchByFiltersChange");
+        vi.spyOn(navigationService, "navigateToOwnerView").mockImplementation(() => {});
+        const onSearchByFiltersChangeSpy = vi.spyOn(component, "onSearchByFiltersChange").mockImplementation(() => {});
         component.onPageChange(2);
         expect(onSearchByFiltersChangeSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to refresh page when filters=null", () => {
         component.filters = null;
-        spyOn(navigationService, "navigateToOwnerView");
-        const refreshNowSpy = spyOn(component, "refreshNow");
+        vi.spyOn(navigationService, "navigateToOwnerView").mockImplementation(() => {});
+        const refreshNowSpy = vi.spyOn(component, "refreshNow").mockImplementation(() => {});
         component.onPageChange(2);
         expect(refreshNowSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check abort flow button", fakeAsync(() => {
-        spyOn(datasetFlowsService, "cancelFlowRun").and.returnValue(of(true));
-        const refreshNowSpy = spyOn(component, "refreshNow");
+        vi.spyOn(datasetFlowsService, "cancelFlowRun").mockReturnValue(of(true));
+        const refreshNowSpy = vi.spyOn(component, "refreshNow").mockImplementation(() => {});
         component.onAbortFlow({ flowId: MOCK_FLOW_ID, datasetId: mockDatasetMainDataId });
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(refreshNowSpy).toHaveBeenCalledTimes(1);
@@ -179,12 +182,12 @@ describe("AccountFlowsActivitySubtabComponent", () => {
         };
         component.currentPage = 2;
 
-        const updateFiltersSpy = spyOn(component.fetchTrigger$, "next");
+        const updateFiltersSpy = vi.spyOn(component.fetchTrigger$, "next").mockImplementation(() => {});
         fixture.detectChanges();
         component.onSearchByFiltersChange(filterOptions);
 
         expect(updateFiltersSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 page: component.currentPage,
                 filterByStatus: [FlowStatus.Finished],
                 filterByInitiator: { accounts: accounts.map((x) => x.id) },
@@ -203,12 +206,12 @@ describe("AccountFlowsActivitySubtabComponent", () => {
         const { status } = filterOptions;
         component.currentPage = 1;
         component.onlySystemFlows = true;
-        const updateFiltersSpy = spyOn(component.fetchTrigger$, "next");
+        const updateFiltersSpy = vi.spyOn(component.fetchTrigger$, "next").mockImplementation(() => {});
         fixture.detectChanges();
         component.onSearchByFiltersChange(filterOptions);
 
         expect(updateFiltersSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 page: component.currentPage,
                 filterByStatus: status,
                 filterByInitiator: { system: true },
@@ -218,7 +221,7 @@ describe("AccountFlowsActivitySubtabComponent", () => {
     });
 
     it("should check to reset filters", () => {
-        spyOn(navigationService, "navigateToOwnerView");
+        vi.spyOn(navigationService, "navigateToOwnerView").mockImplementation(() => {});
         component.selectedAccountItems = [mockAccountDetails];
         component.selectedStatusItems = [{ id: "FINISHED", status: FlowStatus.Finished }];
         component.onResetFilters();
@@ -227,13 +230,13 @@ describe("AccountFlowsActivitySubtabComponent", () => {
     });
 
     it("should check to refresh page", () => {
-        const fetchTableDataSpy = spyOn(component, "fetchTableData");
+        const fetchTableDataSpy = vi.spyOn(component, "fetchTableData").mockImplementation(() => {});
         component.refreshFlow();
         expect(fetchTableDataSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to change navigation", () => {
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+        const navigateToOwnerViewSpy = vi.spyOn(navigationService, "navigateToOwnerView").mockImplementation(() => {});
         const event: NgbNavChangeEvent<AccountFlowsNav> = {
             activeId: AccountFlowsNav.ACTIVITY,
             nextId: AccountFlowsNav.PROCESSES,
@@ -244,14 +247,15 @@ describe("AccountFlowsActivitySubtabComponent", () => {
     });
 
     it("should check to change navigation status with finished status", () => {
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+        const navigateToOwnerViewSpy = vi.spyOn(navigationService, "navigateToOwnerView").mockImplementation(() => {});
         const event: NgbNavChangeEvent<FlowStatus> = {
             activeId: FlowStatus.Running,
             nextId: FlowStatus.Finished,
             preventDefault: () => undefined,
         };
         component.onNavStatusChange(event);
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(
             component.accountName,
             AccountTabs.FLOWS,
             undefined,
@@ -261,14 +265,15 @@ describe("AccountFlowsActivitySubtabComponent", () => {
     });
 
     it("should check to change navigation status with running status", () => {
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+        const navigateToOwnerViewSpy = vi.spyOn(navigationService, "navigateToOwnerView").mockImplementation(() => {});
         const event: NgbNavChangeEvent<FlowStatus> = {
             activeId: FlowStatus.Finished,
             nextId: FlowStatus.Running,
             preventDefault: () => undefined,
         };
         component.onNavStatusChange(event);
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(
             component.accountName,
             AccountTabs.FLOWS,
             undefined,
@@ -278,8 +283,8 @@ describe("AccountFlowsActivitySubtabComponent", () => {
     });
 
     it("should refresh after an abort only once the delay passes, and not after destroy", fakeAsync(() => {
-        spyOn(datasetFlowsService, "cancelFlowRun").and.returnValue(of(true));
-        const refreshNowSpy = spyOn(component, "refreshNow");
+        vi.spyOn(datasetFlowsService, "cancelFlowRun").mockReturnValue(of(true));
+        const refreshNowSpy = vi.spyOn(component, "refreshNow").mockImplementation(() => {});
         component.onAbortFlow({ flowId: MOCK_FLOW_ID, datasetId: mockDatasetMainDataId });
 
         tick(component.TIMEOUT_REFRESH_FLOW - 1);

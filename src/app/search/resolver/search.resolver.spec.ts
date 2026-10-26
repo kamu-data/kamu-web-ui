@@ -14,6 +14,7 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import type { Mock } from "vitest";
 
 import { routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
 import { DatasetSearchResult } from "@interface/search.interface";
@@ -27,8 +28,8 @@ import { SearchService } from "src/app/search/search.service";
 describe("searchResolverFn", () => {
     let searchService: SearchService;
     let appConfigService: AppConfigService;
-    let searchDatasetsSpy: jasmine.Spy;
-    let semanticSearchDatasetsSpy: jasmine.Spy;
+    let searchDatasetsSpy: Mock;
+    let semanticSearchDatasetsSpy: Mock;
     const MOCK_PAGE = 2;
     const MOCK_QUERY = "mock-query";
 
@@ -48,58 +49,66 @@ describe("searchResolverFn", () => {
         });
         searchService = TestBed.inject(SearchService);
         appConfigService = TestBed.inject(AppConfigService);
-        searchDatasetsSpy = spyOn(searchService, "searchDatasets").and.returnValue(of(mockDatasetSearchResult));
-        semanticSearchDatasetsSpy = spyOn(searchService, "semanticSearchDatasets").and.returnValue(
-            of(mockDatasetSearchResult),
-        );
+        searchDatasetsSpy = vi.spyOn(searchService, "searchDatasets").mockReturnValue(of(mockDatasetSearchResult));
+        semanticSearchDatasetsSpy = vi
+            .spyOn(searchService, "semanticSearchDatasets")
+            .mockReturnValue(of(mockDatasetSearchResult));
     });
 
     it("should search the first page with an empty query when no query parameters are given", async () => {
         const data = await resolve({});
 
-        expect(searchDatasetsSpy).toHaveBeenCalledOnceWith("", 0);
+        expect(searchDatasetsSpy).toHaveBeenCalledTimes(1);
+
+        expect(searchDatasetsSpy).toHaveBeenCalledWith("", 0);
         expect(data).toEqual(mockDatasetSearchResult);
     });
 
     it("should not fall back to semantic search for an empty query", async () => {
         const emptyResult = emptySearchResult();
-        searchDatasetsSpy.and.returnValue(of(emptyResult));
+        searchDatasetsSpy.mockReturnValue(of(emptyResult));
 
         const data = await resolve({
             [ProjectLinks.URL_QUERY_PARAM_PAGE]: 1,
             [ProjectLinks.URL_QUERY_PARAM_QUERY]: "",
         });
 
-        expect(searchDatasetsSpy).toHaveBeenCalledOnceWith("", 0);
+        expect(searchDatasetsSpy).toHaveBeenCalledTimes(1);
+
+        expect(searchDatasetsSpy).toHaveBeenCalledWith("", 0);
         expect(semanticSearchDatasetsSpy).not.toHaveBeenCalled();
         expect(data).toEqual(emptyResult);
     });
 
     it("should not fall back to semantic search when the configuration does not enable it", async () => {
         const emptyResult = emptySearchResult();
-        spyOnProperty(appConfigService, "semanticSearchThresholdScore", "get").and.returnValue(undefined);
-        searchDatasetsSpy.and.returnValue(of(emptyResult));
+        vi.spyOn(appConfigService, "semanticSearchThresholdScore", "get").mockReturnValue(undefined);
+        searchDatasetsSpy.mockReturnValue(of(emptyResult));
 
         const data = await resolve({
             [ProjectLinks.URL_QUERY_PARAM_PAGE]: 2,
             [ProjectLinks.URL_QUERY_PARAM_QUERY]: "dd",
         });
 
-        expect(searchDatasetsSpy).toHaveBeenCalledOnceWith("dd", 1);
+        expect(searchDatasetsSpy).toHaveBeenCalledTimes(1);
+
+        expect(searchDatasetsSpy).toHaveBeenCalledWith("dd", 1);
         expect(semanticSearchDatasetsSpy).not.toHaveBeenCalled();
         expect(data).toEqual(emptyResult);
     });
 
     it("should fall back to semantic search when the text search finds nothing", async () => {
-        spyOnProperty(appConfigService, "semanticSearchThresholdScore", "get").and.returnValue(0.5);
-        searchDatasetsSpy.and.returnValue(of(emptySearchResult()));
+        vi.spyOn(appConfigService, "semanticSearchThresholdScore", "get").mockReturnValue(0.5);
+        searchDatasetsSpy.mockReturnValue(of(emptySearchResult()));
 
         const data = await resolve({
             [ProjectLinks.URL_QUERY_PARAM_PAGE]: 2,
             [ProjectLinks.URL_QUERY_PARAM_QUERY]: "dd",
         });
 
-        expect(semanticSearchDatasetsSpy).toHaveBeenCalledOnceWith("dd");
+        expect(semanticSearchDatasetsSpy).toHaveBeenCalledTimes(1);
+
+        expect(semanticSearchDatasetsSpy).toHaveBeenCalledWith("dd");
         expect(data).toEqual(mockDatasetSearchResult);
     });
 
@@ -109,6 +118,8 @@ describe("searchResolverFn", () => {
             [ProjectLinks.URL_QUERY_PARAM_QUERY]: MOCK_QUERY,
         });
 
-        expect(searchDatasetsSpy).toHaveBeenCalledOnceWith(MOCK_QUERY, MOCK_PAGE - 1);
+        expect(searchDatasetsSpy).toHaveBeenCalledTimes(1);
+
+        expect(searchDatasetsSpy).toHaveBeenCalledWith(MOCK_QUERY, MOCK_PAGE - 1);
     });
 });

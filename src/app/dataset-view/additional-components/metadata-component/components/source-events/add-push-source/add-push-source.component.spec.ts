@@ -100,7 +100,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
             }),
             prepare: new FormArray([]),
         });
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
         fixture.detectChanges();
     });
 
@@ -109,7 +109,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
     });
 
     it("should check onSave method", () => {
-        const commitEventToDatasetSpy = spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(of());
+        const commitEventToDatasetSpy = vi.spyOn(datasetCommitService, "commitEventToDataset").mockReturnValue(of());
         component.onSaveEvent();
         expect(commitEventToDatasetSpy).toHaveBeenCalledTimes(1);
     });
@@ -145,7 +145,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
     });
 
     it("should check open edit modal", () => {
-        const openModalSpy = spyOn(modalService, "open").and.returnValue(modalRef);
+        const openModalSpy = vi.spyOn(modalService, "open").mockReturnValue(modalRef);
         component.onEditYaml();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
     });
@@ -197,7 +197,9 @@ describe("AddPushSourceComponent without query parameter name", () => {
     });
 
     it("should check add validator when query parameter name equal null", () => {
-        const addValidatorSpy = spyOn(component.addPushSourceForm.controls.sourceName, "addValidators");
+        const addValidatorSpy = vi
+            .spyOn(component.addPushSourceForm.controls.sourceName, "addValidators")
+            .mockImplementation(() => {});
         fixture.detectChanges();
         expect(addValidatorSpy).toHaveBeenCalledTimes(1);
     });

@@ -39,18 +39,22 @@ describe("datasetViewResolverFn", () => {
         });
         datasetService = TestBed.inject(DatasetService);
         datasetSubService = TestBed.inject(DatasetSubscriptionsService);
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
-        spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(
+        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(of(mockDatasetBasicsRootFragment));
+        vi.spyOn(datasetSubService, "permissionsChanges", "get").mockReturnValue(
             of(mockFullPowerDatasetPermissionsFragment),
         );
     });
 
     it("should request the dataset from the route and resolve it with permissions", async () => {
-        const requestDatasetMainDataSpy = spyOn(datasetService, "requestDatasetMainData").and.returnValue(of(void 0));
+        const requestDatasetMainDataSpy = vi
+            .spyOn(datasetService, "requestDatasetMainData")
+            .mockReturnValue(of(void 0));
 
         const data = await runResolver(datasetViewResolverFn, route, url);
 
-        expect(requestDatasetMainDataSpy).toHaveBeenCalledOnceWith({
+        expect(requestDatasetMainDataSpy).toHaveBeenCalledTimes(1);
+
+        expect(requestDatasetMainDataSpy).toHaveBeenCalledWith({
             accountName: TEST_ACCOUNT_NAME,
             datasetName: TEST_DATASET_NAME,
         });
@@ -61,7 +65,7 @@ describe("datasetViewResolverFn", () => {
     });
 
     it("should redirect to page not found when the dataset cannot be loaded", async () => {
-        spyOn(datasetService, "requestDatasetMainData").and.returnValue(throwError(() => new Error("failed")));
+        vi.spyOn(datasetService, "requestDatasetMainData").mockReturnValue(throwError(() => new Error("failed")));
 
         const data = await runResolver(datasetViewResolverFn, route, url);
 

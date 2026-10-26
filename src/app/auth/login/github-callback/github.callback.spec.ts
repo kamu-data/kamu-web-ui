@@ -10,6 +10,7 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
+import type { Mock } from "vitest";
 
 import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
@@ -27,9 +28,9 @@ describe("GithubCallbackComponent", () => {
     let loginService: LoginService;
     let sessionStorageService: SessionStorageService;
 
-    let navigateToHomeSpy: jasmine.Spy;
-    let navigateToLoginSpy: jasmine.Spy;
-    let githubLoginSpy: jasmine.Spy;
+    let navigateToHomeSpy: Mock;
+    let navigateToLoginSpy: Mock;
+    let githubLoginSpy: Mock;
 
     const GITHUB_TEST_CODE = "11111111";
     const TEST_STATE = "0123456789abcdef0123456789abcdef";
@@ -42,14 +43,14 @@ describe("GithubCallbackComponent", () => {
         }).compileComponents();
 
         navigationService = TestBed.inject(NavigationService);
-        navigateToHomeSpy = spyOn(navigationService, "navigateToHome").and.stub();
-        navigateToLoginSpy = spyOn(navigationService, "navigateToLogin").and.stub();
+        navigateToHomeSpy = vi.spyOn(navigationService, "navigateToHome").mockImplementation(() => {});
+        navigateToLoginSpy = vi.spyOn(navigationService, "navigateToLogin").mockImplementation(() => {});
 
         sessionStorageService = TestBed.inject(SessionStorageService);
         sessionStorageService.reset();
 
         loginService = TestBed.inject(LoginService);
-        githubLoginSpy = spyOn(loginService, "githubLogin");
+        githubLoginSpy = vi.spyOn(loginService, "githubLogin").mockImplementation(() => {});
 
         fixture = TestBed.createComponent(GithubCallbackComponent);
         component = fixture.componentInstance;
@@ -67,7 +68,9 @@ describe("GithubCallbackComponent", () => {
         sessionStorageService.setGithubLoginState({ state: TEST_STATE, redirectUrl: TEST_REDIRECT_URL });
         setCallbackParams({ code: GITHUB_TEST_CODE, state: TEST_STATE });
 
-        expect(githubLoginSpy).toHaveBeenCalledOnceWith({ code: GITHUB_TEST_CODE }, TEST_REDIRECT_URL);
+        expect(githubLoginSpy).toHaveBeenCalledTimes(1);
+
+        expect(githubLoginSpy).toHaveBeenCalledWith({ code: GITHUB_TEST_CODE }, TEST_REDIRECT_URL);
         expect(navigateToLoginSpy).not.toHaveBeenCalled();
         expect(sessionStorageService.takeGithubLoginState()).toBeNull();
     });
@@ -94,7 +97,8 @@ describe("GithubCallbackComponent", () => {
         setCallbackParams({ state: TEST_STATE });
 
         expect(githubLoginSpy).not.toHaveBeenCalled();
-        expect(navigateToLoginSpy).toHaveBeenCalledOnceWith(TEST_REDIRECT_URL);
+        expect(navigateToLoginSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToLoginSpy).toHaveBeenCalledWith(TEST_REDIRECT_URL);
     });
 
     it("should go home without a code or a pending sign-in", () => {

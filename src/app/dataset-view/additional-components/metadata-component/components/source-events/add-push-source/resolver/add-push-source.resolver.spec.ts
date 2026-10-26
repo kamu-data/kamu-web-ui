@@ -11,6 +11,7 @@ import { ActivatedRouteSnapshot, RedirectCommand } from "@angular/router";
 import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
+import type { Mock } from "vitest";
 
 import {
     expectPageNotFoundRedirect,
@@ -37,7 +38,7 @@ describe("addPushSourceResolverFn", () => {
     let editService: EditAddPushSourceService;
     let datasetService: DatasetService;
     let datasetSubsService: DatasetSubscriptionsService;
-    let getEventAsYamlSpy: jasmine.Spy;
+    let getEventAsYamlSpy: Mock;
     const TEST_SOURCE_NAME = "my-source";
     const TEST_EVENT_YAML = "kind: AddPushSource";
 
@@ -48,8 +49,8 @@ describe("addPushSourceResolverFn", () => {
         editService = TestBed.inject(EditAddPushSourceService);
         datasetService = TestBed.inject(DatasetService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        spyOn(datasetService, "requestDatasetBasicDataWithPermissions").and.returnValue(of(undefined));
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
+        vi.spyOn(datasetService, "requestDatasetBasicDataWithPermissions").mockReturnValue(of(undefined));
+        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(of(mockDatasetBasicsRootFragment));
     });
 
     function createRoute(sourceName?: string): ActivatedRouteSnapshot {
@@ -67,15 +68,17 @@ describe("addPushSourceResolverFn", () => {
         eventYaml: MaybeNullOrUndefined<string>,
         permissions: DatasetPermissionsFragment = mockFullPowerDatasetPermissionsFragment,
     ): Promise<MaybeNull<string> | RedirectCommand> {
-        spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(of(permissions));
-        getEventAsYamlSpy = spyOn(editService, "getEventAsYaml").and.returnValue(of(eventYaml));
+        vi.spyOn(datasetSubsService, "permissionsChanges", "get").mockReturnValue(of(permissions));
+        getEventAsYamlSpy = vi.spyOn(editService, "getEventAsYaml").mockReturnValue(of(eventYaml));
         return runResolver(addPushSourceResolverFn, route);
     }
 
     it("should resolve the YAML of the named push source", async () => {
         const data = await resolve(createRoute(TEST_SOURCE_NAME), TEST_EVENT_YAML);
 
-        expect(getEventAsYamlSpy).toHaveBeenCalledOnceWith(
+        expect(getEventAsYamlSpy).toHaveBeenCalledTimes(1);
+
+        expect(getEventAsYamlSpy).toHaveBeenCalledWith(
             { accountName: TEST_ACCOUNT_NAME, datasetName: TEST_DATASET_NAME },
             TEST_SOURCE_NAME,
         );
@@ -85,7 +88,9 @@ describe("addPushSourceResolverFn", () => {
     it("should resolve null when no source name is given", async () => {
         const data = await resolve(createRoute(), null);
 
-        expect(getEventAsYamlSpy).toHaveBeenCalledOnceWith(
+        expect(getEventAsYamlSpy).toHaveBeenCalledTimes(1);
+
+        expect(getEventAsYamlSpy).toHaveBeenCalledWith(
             { accountName: TEST_ACCOUNT_NAME, datasetName: TEST_DATASET_NAME },
             "",
         );

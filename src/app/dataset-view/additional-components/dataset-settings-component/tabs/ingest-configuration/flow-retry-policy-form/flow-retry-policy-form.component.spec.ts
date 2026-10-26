@@ -67,7 +67,10 @@ describe("FlowRetryPolicyFormComponent", () => {
     async function expectFormValueToEqual(expectedValue: {
         retriesEnabled: boolean;
         maxAttempts: number;
-        minDelay: { every: number; unit: TimeUnit };
+        minDelay: {
+            every: number;
+            unit: TimeUnit;
+        };
         backoffType: FlowRetryBackoffType;
     }): Promise<void> {
         const domFormValue = await flowRetryPolicyFormHarness.currentFormValue();
@@ -93,34 +96,34 @@ describe("FlowRetryPolicyFormComponent", () => {
     });
 
     it("should enable retries via harness and reflect in form", async () => {
-        expect(component.retriesEnabled.value).toBeFalse();
-        expect(component.maxAttempts.disabled).toBeTrue();
-        expect(component.minDelay.disabled).toBeTrue();
-        expect(component.backoffType.disabled).toBeTrue();
+        expect(component.retriesEnabled.value).toBe(false);
+        expect(component.maxAttempts.disabled).toBe(true);
+        expect(component.minDelay.disabled).toBe(true);
+        expect(component.backoffType.disabled).toBe(true);
 
         await flowRetryPolicyFormHarness.enableRetries();
         fixture.detectChanges();
         await fixture.whenStable();
 
-        expect(component.retriesEnabled.value).toBeTrue();
-        expect(component.maxAttempts.disabled).toBeFalse();
-        expect(component.minDelay.disabled).toBeFalse();
-        expect(component.backoffType.disabled).toBeFalse();
+        expect(component.retriesEnabled.value).toBe(true);
+        expect(component.maxAttempts.disabled).toBe(false);
+        expect(component.minDelay.disabled).toBe(false);
+        expect(component.backoffType.disabled).toBe(false);
     });
 
     it("should disable retries via harness and reflect in form", async () => {
         // First enable retries
         await flowRetryPolicyFormHarness.enableRetries();
-        expect(component.retriesEnabled.value).toBeTrue();
-        expect(component.maxAttempts.disabled).toBeFalse();
+        expect(component.retriesEnabled.value).toBe(true);
+        expect(component.maxAttempts.disabled).toBe(false);
 
         // Then disable retries
         await flowRetryPolicyFormHarness.disableRetries();
 
-        expect(component.retriesEnabled.value).toBeFalse();
-        expect(component.maxAttempts.disabled).toBeTrue();
-        expect(component.minDelay.disabled).toBeTrue();
-        expect(component.backoffType.disabled).toBeTrue();
+        expect(component.retriesEnabled.value).toBe(false);
+        expect(component.maxAttempts.disabled).toBe(true);
+        expect(component.minDelay.disabled).toBe(true);
+        expect(component.backoffType.disabled).toBe(true);
     });
 
     it("should set max attempts via harness and reflect in form", async () => {
@@ -178,7 +181,7 @@ describe("FlowRetryPolicyFormComponent", () => {
     });
 
     it("should get default form value when retries are disabled", async () => {
-        expect(await flowRetryPolicyFormHarness.isRetriesEnabled()).toBeFalse();
+        expect(await flowRetryPolicyFormHarness.isRetriesEnabled()).toBe(false);
 
         await expectFormValueToEqual({
             retriesEnabled: false,
@@ -243,7 +246,7 @@ describe("FlowRetryPolicyFormComponent", () => {
     });
 
     it("should validate form with default values", () => {
-        expect(component.form.valid).toBeTrue();
+        expect(component.form.valid).toBe(true);
         expect(component.form.errors).toBeNull();
     });
 
@@ -253,7 +256,7 @@ describe("FlowRetryPolicyFormComponent", () => {
         await flowRetryPolicyFormHarness.setMinDelay({ every: 30, unit: TimeUnit.Minutes });
         await flowRetryPolicyFormHarness.setBackoffType(FlowRetryBackoffType.Exponential);
 
-        expect(component.form.valid).toBeTrue();
+        expect(component.form.valid).toBe(true);
         expect(component.form.errors).toBeNull();
     });
 

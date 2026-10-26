@@ -30,7 +30,7 @@ describe("accountSettingsTabGuard", () => {
     });
 
     function runGuard(accountName: string, isAdmin: boolean): Promise<GuardResult> {
-        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue({
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue({
             ...mockAccountDetails,
             isAdmin,
         });
@@ -46,7 +46,7 @@ describe("accountSettingsTabGuard", () => {
     it("should allow an admin viewing another account", async () => {
         const result = await runGuard(OTHER_ACCOUNT_NAME, true);
 
-        expect(result).toBeTrue();
+        expect(result).toBe(true);
     });
 
     it("should redirect an admin on their own account to its datasets tab", async () => {

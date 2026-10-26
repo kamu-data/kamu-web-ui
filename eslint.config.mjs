@@ -1,9 +1,8 @@
 // eslint.config.js
 import tsPlugin from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
-import jasminePlugin from "eslint-plugin-jasmine";
+import vitestPlugin from "@vitest/eslint-plugin";
 import licenseHeaderPlugin from "eslint-plugin-license-header";
-import globals from "globals";
 
 // Code that needs part of a query result types it with a named sub-fragment, not a type cut out of a
 // bigger generated one
@@ -35,7 +34,7 @@ export default [
       "src/app/editor/generated/monaco-version.ts",
     ],
   },
-  // Main configuration for TypeScript files with Jasmine
+  // Main configuration for TypeScript files, specs included
   {
     files: ["src/app/**/*.ts"],
     languageOptions: {
@@ -46,12 +45,12 @@ export default [
         project: ["./tsconfig.json"],
       },
       globals: {
-        ...globals.jasmine, // Add Jasmine globals
+        ...vitestPlugin.environments.env.globals,
       },
     },
     plugins: {
       "@typescript-eslint": tsPlugin,
-      jasmine: jasminePlugin, // Register Jasmine plugin here
+      vitest: vitestPlugin,
     },
     rules: {
       // // TypeScript presets
@@ -92,11 +91,8 @@ export default [
         },
       ],
 
-      // Jasmine custom overrides
-      "jasmine/new-line-before-expect": 0,
-      "jasmine/no-unsafe-spy": "off",
-      "jasmine/no-focused-tests": "error",
-      "jasmine/no-disabled-tests": "error",
+      "vitest/no-focused-tests": "error",
+      "vitest/no-disabled-tests": "error",
 
       "no-restricted-syntax": ["error", ...fragmentSliceRestrictions],
     },
@@ -155,7 +151,6 @@ export default [
     files: ["src/app/**/*.ts"],
     plugins: {
       "license-header": licenseHeaderPlugin,
-      jasmine: jasminePlugin, // Also register Jasmine here if these files use Jasmine
     },
     rules: {
       "license-header/header": ["error", "src/docs/license-header-template.js"],

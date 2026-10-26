@@ -37,8 +37,7 @@ Versions are the ones [`package.json`](package.json) declares.
 - [Angular powered Bootstrap widgets](https://www.npmjs.com/package/@ng-bootstrap/ng-bootstrap)
 - [Prettier](https://www.npmjs.com/package/prettier)
 - [ngx-markdown](https://www.npmjs.com/package/ngx-markdown)
-- [Karma](https://www.npmjs.com/package/karma)
-- [Jasmine](https://jasmine.github.io/)
+- [Vitest](https://vitest.dev/) in browser mode, with [Playwright](https://playwright.dev/) running Chromium
 
 ### Steps for running
 
@@ -121,7 +120,9 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ### Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `npm test` to execute the unit tests once with [Vitest](https://vitest.dev/) in headless Chromium, with a coverage report in `coverage/kamu-platform`; `ng test` runs them in watch mode. Narrow a run with `npm test -- --include <spec file or folder>`.
+
+The first run needs the Playwright browser: `npx playwright install chromium`.
 
 ### Further help
 

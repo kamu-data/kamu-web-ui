@@ -16,10 +16,16 @@ import { delay, of, Subject, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import type { Mock } from "vitest";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import { requireValue } from "@common/helpers/app.helpers";
-import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import {
+    createSpyObj,
+    registerMatSvgIcons,
+    setComponentInput,
+    stubMethod,
+} from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { DatasetFlowType, FlowProcessEffectiveState, FlowStatus } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
@@ -59,7 +65,7 @@ describe("FlowsComponent", () => {
     const MOCK_FLOW_ID = "2";
 
     function chipListboxChange(value: string): MatChipListboxChange {
-        return new MatChipListboxChange(jasmine.createSpyObj<MatChipListbox>("MatChipListbox", ["focus"]), value);
+        return new MatChipListboxChange(createSpyObj<MatChipListbox>({ focus: undefined }), value);
     }
 
     // A copy, since `mockFlowsTableData` shares its connections with other fixtures
@@ -131,15 +137,15 @@ describe("FlowsComponent", () => {
     });
 
     it("should check refresh button", () => {
-        const fetchTableDataSpy = spyOn(component, "fetchTableData");
+        const fetchTableDataSpy = vi.spyOn(component, "fetchTableData").mockImplementation(() => {});
         component.refreshFlow();
         expect(fetchTableDataSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should show the empty block when there are no flow runs", fakeAsync(async () => {
-        spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(flowsTableDataWithoutRuns()));
-        spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
-        spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+        vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(of(flowsTableDataWithoutRuns()));
+        vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
+        vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
             of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
         // The first poll runs on an interval, which the harness's own flush skips
@@ -147,24 +153,24 @@ describe("FlowsComponent", () => {
         tick();
         const flows = await TestbedHarnessEnvironment.harnessForFixture(fixture, FlowsHarness);
 
-        expect(await flows.isEmptyFlowRunsBlockVisible()).toBeTrue();
+        expect(await flows.isEmptyFlowRunsBlockVisible()).toBe(true);
         discardPeriodicTasks();
     }));
 
     it("should check filter by status during the first request", fakeAsync(() => {
         fixture.detectChanges();
-        const datasetFlowsListSpy = spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(
-            of(flowsTableDataWithoutRuns()),
-        );
-        spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
-        spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+        const datasetFlowsListSpy = vi
+            .spyOn(datasetFlowsService, "datasetFlowsList")
+            .mockReturnValue(of(flowsTableDataWithoutRuns()));
+        vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
+        vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
             of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
         tick();
         fixture.detectChanges();
 
         expect(datasetFlowsListSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 filters: {
                     byStatus: null,
                     byInitiator: null,
@@ -176,8 +182,8 @@ describe("FlowsComponent", () => {
     }));
 
     it("should check update now button for root dataset", fakeAsync(() => {
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
-        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
+        const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
+        vi.spyOn(datasetFlowsService, "datasetTriggerIngestFlow").mockReturnValue(of(true));
         component.updateNow();
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
@@ -190,8 +196,8 @@ describe("FlowsComponent", () => {
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: mockOverviewUpdate,
         });
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
-        spyOn(datasetFlowsService, "datasetTriggerTransformFlow").and.returnValue(of(true));
+        const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
+        vi.spyOn(datasetFlowsService, "datasetTriggerTransformFlow").mockReturnValue(of(true));
         component.updateNow();
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
@@ -199,24 +205,27 @@ describe("FlowsComponent", () => {
     }));
 
     it(`should check toggle state for dataset flow when state=${FlowProcessEffectiveState.Active}`, () => {
-        const handleToggleStateSpy = spyOn(datasetCardService, "handleToggleState").and.returnValue(of(void 0));
+        const handleToggleStateSpy = vi.spyOn(datasetCardService, "handleToggleState").mockReturnValue(of(void 0));
         component.toggleStateDatasetFlowConfigs({
             state: FlowProcessEffectiveState.Active,
             datasetBasics: mockDatasetBasicsRootFragment,
         });
-        expect(handleToggleStateSpy).toHaveBeenCalledOnceWith({
+        expect(handleToggleStateSpy).toHaveBeenCalledTimes(1);
+        expect(handleToggleStateSpy).toHaveBeenCalledWith({
             state: FlowProcessEffectiveState.Active,
             datasetBasics: mockDatasetBasicsRootFragment,
         });
     });
 
     it(`should check toggle state for dataset flow when state=${FlowProcessEffectiveState.StoppedAuto}`, fakeAsync(() => {
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
-        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, true);
-            return Promise.resolve("");
-        });
-        const datasetResumeFlowsSpy = spyOn(flowsService, "datasetResumeFlows").and.returnValue(of(void 0));
+        const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
+        const modalServiceSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
+        const datasetResumeFlowsSpy = vi.spyOn(flowsService, "datasetResumeFlows").mockReturnValue(of(void 0));
         component.toggleStateDatasetFlowConfigs({
             state: FlowProcessEffectiveState.StoppedAuto,
             datasetBasics: mockDatasetBasicsRootFragment,
@@ -229,8 +238,8 @@ describe("FlowsComponent", () => {
     }));
 
     it(`should check toggle state for dataset flow when state=${FlowProcessEffectiveState.Failing}`, fakeAsync(() => {
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
-        const datasetPauseFlowsSpy = spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+        const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
+        const datasetPauseFlowsSpy = vi.spyOn(flowsService, "datasetPauseFlows").mockReturnValue(of(void 0));
         component.toggleStateDatasetFlowConfigs({
             state: FlowProcessEffectiveState.Failing,
             datasetBasics: mockDatasetBasicsRootFragment,
@@ -242,8 +251,8 @@ describe("FlowsComponent", () => {
     }));
 
     it("should check abort flow button", fakeAsync(() => {
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
-        spyOn(datasetFlowsService, "cancelFlowRun").and.returnValue(of(true));
+        const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
+        vi.spyOn(datasetFlowsService, "cancelFlowRun").mockReturnValue(of(true));
         component.onAbortFlow({ flowId: MOCK_FLOW_ID, datasetId: mockDatasetMainDataId });
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
@@ -252,9 +261,12 @@ describe("FlowsComponent", () => {
 
     it("should check navigate when page equal 1 ", () => {
         const page = 1;
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
         component.onPageChange(page);
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledOnceWith({
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
             accountName: component.flowsData.datasetBasics.owner.accountName,
             datasetName: component.flowsData.datasetBasics.name,
             tab: DatasetViewTypeEnum.Flows,
@@ -264,9 +276,12 @@ describe("FlowsComponent", () => {
 
     it("should check navigate when page > 1 ", () => {
         const page = 2;
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
         component.onPageChange(page);
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledOnceWith({
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
             accountName: component.flowsData.datasetBasics.owner.accountName,
             datasetName: component.flowsData.datasetBasics.name,
             tab: DatasetViewTypeEnum.Flows,
@@ -284,28 +299,28 @@ describe("FlowsComponent", () => {
 
     it("should show the init loading block until the flow runs arrive", fakeAsync(async () => {
         const flowsList$ = new Subject<FlowsTableData>();
-        spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+        vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
             of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
-        spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(flowsList$);
-        spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
+        vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(flowsList$);
+        vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
         fixture.detectChanges();
         tick();
         const flows = await TestbedHarnessEnvironment.harnessForFixture(fixture, FlowsHarness);
-        expect(await flows.isInitProgressBarVisible()).toBeTrue();
+        expect(await flows.isInitProgressBarVisible()).toBe(true);
 
         flowsList$.next(flowsTableDataWithoutRuns());
-        expect(await flows.isInitProgressBarVisible()).toBeFalse();
+        expect(await flows.isInitProgressBarVisible()).toBe(false);
         discardPeriodicTasks();
     }));
 
     it("should check 'update now' link for root dataset with PollingSource", fakeAsync(async () => {
-        spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+        vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
             of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
-        spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(flowsTableDataWithoutRuns()));
-        spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
-        const updateNowClickSpy = spyOn(component, "updateNow");
+        vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(of(flowsTableDataWithoutRuns()));
+        vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
+        const updateNowClickSpy = vi.spyOn(component, "updateNow").mockImplementation(() => {});
         fixture.detectChanges();
         tick();
         const flows = await TestbedHarnessEnvironment.harnessForFixture(fixture, FlowsHarness);
@@ -327,12 +342,12 @@ describe("FlowsComponent", () => {
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: copyMockOverviewUpdate,
         });
-        spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+        vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
             of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
-        spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(flowsTableDataWithoutRuns()));
-        spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
-        const updateNowClickSpy = spyOn(component, "updateNow");
+        vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(of(flowsTableDataWithoutRuns()));
+        vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
+        const updateNowClickSpy = vi.spyOn(component, "updateNow").mockImplementation(() => {});
         fixture.detectChanges();
         tick();
         const flows = await TestbedHarnessEnvironment.harnessForFixture(fixture, FlowsHarness);
@@ -345,7 +360,7 @@ describe("FlowsComponent", () => {
 
     it("should check to show panel buttons init filter with webhook ids", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
-        const addWebhookIdSpy = spyOn(serviceInComponent, "addWebhookId");
+        const addWebhookIdSpy = vi.spyOn(serviceInComponent, "addWebhookId").mockImplementation(() => {});
         const mockWebhookId = "d20a935e-0ccb-4844-b1bb-f4b5b9b0279a,d20a935e-0ccb-4844-b1bb-f4b5b9b0279b";
         setComponentInput(fixture, "setWebhookId", mockWebhookId);
         expect(addWebhookIdSpy).toHaveBeenCalledTimes(2);
@@ -353,7 +368,7 @@ describe("FlowsComponent", () => {
 
     it("should check to show panel buttons init filter without webhook id", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
-        const addWebhookIdSpy = spyOn(serviceInComponent, "addWebhookId");
+        const addWebhookIdSpy = vi.spyOn(serviceInComponent, "addWebhookId").mockImplementation(() => {});
         const mockWebhookId = null;
         setComponentInput(fixture, "setWebhookId", mockWebhookId);
         expect(addWebhookIdSpy).not.toHaveBeenCalled();
@@ -361,7 +376,7 @@ describe("FlowsComponent", () => {
 
     it("should check to show panel buttons init webhook filter buttons without states", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
-        const setWebhooksCategorySpy = spyOn(serviceInComponent, "setWebhooksCategory");
+        const setWebhooksCategorySpy = vi.spyOn(serviceInComponent, "setWebhooksCategory").mockImplementation(() => {});
         const mockStates = null;
         setComponentInput(fixture, "setWebhookState", mockStates);
         expect(setWebhooksCategorySpy).not.toHaveBeenCalled();
@@ -369,7 +384,7 @@ describe("FlowsComponent", () => {
 
     it("should check to show panel buttons init webhook filter buttons with states", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
-        const setWebhooksCategorySpy = spyOn(serviceInComponent, "setWebhooksCategory");
+        const setWebhooksCategorySpy = vi.spyOn(serviceInComponent, "setWebhooksCategory").mockImplementation(() => {});
         const mockStates = `${FlowProcessEffectiveState.Active},${FlowProcessEffectiveState.Failing}`;
         setComponentInput(fixture, "setWebhookState", mockStates);
         expect(setWebhooksCategorySpy).toHaveBeenCalledTimes(1);
@@ -377,7 +392,7 @@ describe("FlowsComponent", () => {
 
     it("should check to show panel buttons init webhooks category", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
-        const setWebhooksCategorySpy = spyOn(serviceInComponent, "setWebhooksCategory");
+        const setWebhooksCategorySpy = vi.spyOn(serviceInComponent, "setWebhooksCategory").mockImplementation(() => {});
         const category = "webhooks";
         setComponentInput(fixture, "setFlowsCategory", category);
         expect(setWebhooksCategorySpy).toHaveBeenCalledTimes(1);
@@ -385,7 +400,7 @@ describe("FlowsComponent", () => {
 
     it("should check to show panel buttons init flows category", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
-        const setFlowsCategorySpy = spyOn(serviceInComponent, "setFlowsCategory");
+        const setFlowsCategorySpy = vi.spyOn(serviceInComponent, "setFlowsCategory").mockImplementation(() => {});
         const category = "updates";
         setComponentInput(fixture, "setFlowsCategory", category);
         expect(setFlowsCategorySpy).toHaveBeenCalledTimes(1);
@@ -403,10 +418,10 @@ describe("FlowsComponent", () => {
 
     it("should check to navigate to webhook settings", () => {
         const mockSubscriptionId = "1234-4444-43222";
-        const navigateToWebhooksSpy = spyOn(navigationService, "navigateToWebhooks");
+        const navigateToWebhooksSpy = vi.spyOn(navigationService, "navigateToWebhooks").mockImplementation(() => {});
         component.navigateToWebhookSettings(mockSubscriptionId);
         expect(navigateToWebhooksSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 tab: mockSubscriptionId,
             }),
         );
@@ -414,18 +429,19 @@ describe("FlowsComponent", () => {
 
     it("should check to navigate to subscription", () => {
         const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
         component.navigateToSubscription(processes.webhooks.subprocesses[0]);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check pause webhook", fakeAsync(() => {
         const mockSubscriptionId = "1234-4444-43222";
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
-        const datasetWebhookPauseSubscriptionSpy = spyOn(
-            datasetWebhooksService,
-            "datasetWebhookPauseSubscription",
-        ).and.returnValue(of(true));
+        const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
+        const datasetWebhookPauseSubscriptionSpy = vi
+            .spyOn(datasetWebhooksService, "datasetWebhookPauseSubscription")
+            .mockReturnValue(of(true));
         component.pauseWebhook(mockSubscriptionId);
         expect(datasetWebhookPauseSubscriptionSpy).toHaveBeenCalledTimes(1);
         tick(AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS);
@@ -435,11 +451,10 @@ describe("FlowsComponent", () => {
 
     it("should check resume webhook", fakeAsync(() => {
         const mockSubscriptionId = "1234-4444-43222";
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
-        const datasetWebhookResumeSubscriptionSpy = spyOn(
-            datasetWebhooksService,
-            "datasetWebhookResumeSubscription",
-        ).and.returnValue(of(true));
+        const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
+        const datasetWebhookResumeSubscriptionSpy = vi
+            .spyOn(datasetWebhooksService, "datasetWebhookResumeSubscription")
+            .mockReturnValue(of(true));
         component.resumeWebhook(mockSubscriptionId);
         expect(datasetWebhookResumeSubscriptionSpy).toHaveBeenCalledTimes(1);
         tick(AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS);
@@ -453,10 +468,12 @@ describe("FlowsComponent", () => {
 
     it("should check remove selected webhook", () => {
         const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
         component.removeSelectedWebhook("qwer", processes.webhooks.subprocesses);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 webhookId: [],
             }),
         );
@@ -464,10 +481,12 @@ describe("FlowsComponent", () => {
 
     it("should check toggle webhook filter if states not exist", () => {
         const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
         component.onToggleWebhookFilter([FlowProcessEffectiveState.Active], processes.webhooks.subprocesses);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 webhooksState: [FlowProcessEffectiveState.Active],
             }),
         );
@@ -475,20 +494,24 @@ describe("FlowsComponent", () => {
 
     it("should check toggle webhook filter if states  exist", () => {
         const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
         component.onToggleWebhookFilter([], processes.webhooks.subprocesses);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 webhooksState: undefined,
             }),
         );
     });
 
     it("should check selection `Webhooks` chip", () => {
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
         component.onSelectionWebhooksChange("webhooks");
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 category: "webhooks",
             }),
         );
@@ -496,10 +519,12 @@ describe("FlowsComponent", () => {
 
     it("should check selection `Flows`chips", () => {
         const mockEvent = chipListboxChange("updates");
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
         component.onSelectionFlowsChange(mockEvent);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 category: "updates",
             }),
         );
@@ -510,12 +535,12 @@ describe("FlowsComponent", () => {
         setComponentInput(fixture, "setWebhookId", mockWebhookId);
         fixture.detectChanges();
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
-        const clearFlowsCategorySpy = spyOn(serviceInComponent, "clearFlowsCategory");
-        spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+        const clearFlowsCategorySpy = vi.spyOn(serviceInComponent, "clearFlowsCategory").mockImplementation(() => {});
+        vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
             of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
-        spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData).pipe(delay(10)));
-        spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
+        vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(of(mockFlowsTableData).pipe(delay(10)));
+        vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
         tick(10);
         fixture.detectChanges();
 
@@ -525,15 +550,15 @@ describe("FlowsComponent", () => {
 
     it("should check set ProcessTypeFilter with `webhooks` category", fakeAsync(() => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
-        const setWebhooksCategorySpy = spyOn(serviceInComponent, "setWebhooksCategory");
+        const setWebhooksCategorySpy = vi.spyOn(serviceInComponent, "setWebhooksCategory").mockImplementation(() => {});
         const mockStates = `${FlowProcessEffectiveState.Active},${FlowProcessEffectiveState.Failing}`;
         setComponentInput(fixture, "setWebhookState", mockStates);
 
-        spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+        vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
             of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
-        spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData).pipe(delay(10)));
-        spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([mockAccountDetails]));
+        vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(of(mockFlowsTableData).pipe(delay(10)));
+        vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([mockAccountDetails]));
         tick(10);
         fixture.detectChanges();
 
@@ -565,8 +590,8 @@ describe("FlowsComponent", () => {
     });
 
     it("should refresh flows after an abort only once the delay passes, and not after destroy", fakeAsync(() => {
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
-        spyOn(datasetFlowsService, "cancelFlowRun").and.returnValue(of(true));
+        const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
+        vi.spyOn(datasetFlowsService, "cancelFlowRun").mockReturnValue(of(true));
         component.onAbortFlow({ flowId: MOCK_FLOW_ID, datasetId: mockDatasetMainDataId });
 
         tick(component.TIMEOUT_REFRESH_FLOW - 1);
@@ -579,8 +604,8 @@ describe("FlowsComponent", () => {
     }));
 
     it("should refresh flows after pausing a webhook only once the delay passes, and not after destroy", fakeAsync(() => {
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
-        spyOn(datasetWebhooksService, "datasetWebhookPauseSubscription").and.returnValue(of(true));
+        const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
+        vi.spyOn(datasetWebhooksService, "datasetWebhookPauseSubscription").mockReturnValue(of(true));
         component.pauseWebhook("1234-4444-43222");
 
         tick(AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS - 1);
@@ -593,16 +618,16 @@ describe("FlowsComponent", () => {
     }));
 
     describe("process type filter", () => {
-        let datasetFlowsListSpy: jasmine.Spy;
+        let datasetFlowsListSpy: Mock<DatasetFlowsService["datasetFlowsList"]>;
 
         beforeEach(() => {
-            spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+            vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
                 of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
             );
-            datasetFlowsListSpy = spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(
-                of(mockFlowsTableData),
-            );
-            spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
+            datasetFlowsListSpy = vi
+                .spyOn(datasetFlowsService, "datasetFlowsList")
+                .mockReturnValue(of(mockFlowsTableData));
+            vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
         });
 
         it("should request ingest flows only for the `updates` category of a root dataset", fakeAsync(() => {
@@ -610,13 +635,10 @@ describe("FlowsComponent", () => {
             fixture.detectChanges();
             tick();
 
-            expect(datasetFlowsListSpy).toHaveBeenCalledWith(
-                jasmine.objectContaining({
-                    filters: jasmine.objectContaining({
-                        byProcessType: { primary: { byFlowTypes: [DatasetFlowType.Ingest] }, webhooks: undefined },
-                    }),
-                }),
-            );
+            expect(datasetFlowsListSpy.mock.calls.map(([params]) => params.filters.byProcessType)).toContainEqual({
+                primary: { byFlowTypes: [DatasetFlowType.Ingest] },
+                webhooks: undefined,
+            });
             discardPeriodicTasks();
         }));
 
@@ -629,16 +651,10 @@ describe("FlowsComponent", () => {
             fixture.detectChanges();
             tick();
 
-            expect(datasetFlowsListSpy).toHaveBeenCalledWith(
-                jasmine.objectContaining({
-                    filters: jasmine.objectContaining({
-                        byProcessType: {
-                            primary: { byFlowTypes: [DatasetFlowType.ExecuteTransform] },
-                            webhooks: undefined,
-                        },
-                    }),
-                }),
-            );
+            expect(datasetFlowsListSpy.mock.calls.map(([params]) => params.filters.byProcessType)).toContainEqual({
+                primary: { byFlowTypes: [DatasetFlowType.ExecuteTransform] },
+                webhooks: undefined,
+            });
             discardPeriodicTasks();
         }));
 
@@ -648,13 +664,10 @@ describe("FlowsComponent", () => {
             fixture.detectChanges();
             tick();
 
-            expect(datasetFlowsListSpy).toHaveBeenCalledWith(
-                jasmine.objectContaining({
-                    filters: jasmine.objectContaining({
-                        byProcessType: { primary: undefined, webhooks: { subscriptionIds: [] } },
-                    }),
-                }),
-            );
+            expect(datasetFlowsListSpy.mock.calls.map(([params]) => params.filters.byProcessType)).toContainEqual({
+                primary: undefined,
+                webhooks: { subscriptionIds: [] },
+            });
             expect(selectionStateService.snapshot.flowsCategory).toBeUndefined();
             discardPeriodicTasks();
         }));
@@ -670,23 +683,23 @@ describe("FlowsComponent", () => {
             ...component.flowsData,
             overviewUpdate: overviewWithPushSource,
         });
-        expect(component.hasPushSources).toBeTrue();
-        expect(component.isSetPollingSourceEmpty).toBeFalse();
+        expect(component.hasPushSources).toBe(true);
+        expect(component.isSetPollingSourceEmpty).toBe(false);
 
         setComponentInput(fixture, "flowsData", {
             ...component.flowsData,
             datasetBasics: mockDatasetBasicsDerivedFragment,
         });
-        expect(component.isSetTransformEmpty).toBeFalse();
+        expect(component.isSetTransformEmpty).toBe(false);
     });
 
     describe("dataset process card", () => {
         beforeEach(() => {
-            spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+            vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
                 of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
             );
-            spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData));
-            spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
+            vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(of(mockFlowsTableData));
+            vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
         });
 
         async function loadCard(): Promise<DatasetFlowProcessCardHarness> {
@@ -697,35 +710,40 @@ describe("FlowsComponent", () => {
         }
 
         it("should trigger the dataset flow from the card's 'Update now' and refresh the flows", fakeAsync(async () => {
-            const triggerIngestSpy = spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
+            const triggerIngestSpy = vi
+                .spyOn(datasetFlowsService, "datasetTriggerIngestFlow")
+                .mockReturnValue(of(true));
             const card = await loadCard();
-            const refreshFlowSpy = spyOn(component, "refreshFlow");
+            const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
 
             await card.clickUpdateNow();
 
-            expect(triggerIngestSpy).toHaveBeenCalledOnceWith({ datasetId: mockDatasetBasicsRootFragment.id });
-            expect(await card.isUpdateNowDisabled()).toBeTrue();
-            expect(await card.isToggleStateDisabled()).toBeTrue();
+            expect(triggerIngestSpy).toHaveBeenCalledTimes(1);
+
+            expect(triggerIngestSpy).toHaveBeenCalledWith({ datasetId: mockDatasetBasicsRootFragment.id });
+            expect(await card.isUpdateNowDisabled()).toBe(true);
+            expect(await card.isToggleStateDisabled()).toBe(true);
             tick(component.TIMEOUT_REFRESH_FLOW);
             expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
-            expect(await card.isUpdateNowDisabled()).toBeFalse();
+            expect(await card.isUpdateNowDisabled()).toBe(false);
             discardPeriodicTasks();
         }));
 
         it("should resume an auto-stopped process from the card after confirmation and refresh the flows", fakeAsync(async () => {
-            const modalSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
+            const modalSpy = vi.spyOn(modalService, "error").mockImplementation((options: ModalArgumentsInterface) => {
                 options.handler?.call(undefined, true);
                 return Promise.resolve("");
             });
-            const resumeSpy = spyOn(flowsService, "datasetResumeFlows").and.returnValue(of(void 0));
+            const resumeSpy = vi.spyOn(flowsService, "datasetResumeFlows").mockReturnValue(of(void 0));
             const card = await loadCard();
-            const refreshFlowSpy = spyOn(component, "refreshFlow");
+            const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
 
             expect(await card.getToggleStateLabel()).toEqual("Resume updates");
             await card.clickToggleState();
 
             expect(modalSpy).toHaveBeenCalledTimes(1);
-            expect(resumeSpy).toHaveBeenCalledOnceWith({ datasetId: mockDatasetBasicsRootFragment.id });
+            expect(resumeSpy).toHaveBeenCalledTimes(1);
+            expect(resumeSpy).toHaveBeenCalledWith({ datasetId: mockDatasetBasicsRootFragment.id });
             tick(component.TIMEOUT_REFRESH_FLOW);
             expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
             discardPeriodicTasks();
@@ -733,8 +751,8 @@ describe("FlowsComponent", () => {
     });
 
     it("should refresh flows after 'Update now' only once the delay passes", fakeAsync(() => {
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
-        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
+        const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
+        vi.spyOn(datasetFlowsService, "datasetTriggerIngestFlow").mockReturnValue(of(true));
         component.updateNow();
 
         tick(component.TIMEOUT_REFRESH_FLOW - 1);
@@ -745,8 +763,8 @@ describe("FlowsComponent", () => {
     }));
 
     it("should not refresh flows after 'Update now' once destroyed", fakeAsync(() => {
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
-        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
+        const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
+        vi.spyOn(datasetFlowsService, "datasetTriggerIngestFlow").mockReturnValue(of(true));
         component.updateNow();
 
         fixture.destroy();
@@ -755,8 +773,8 @@ describe("FlowsComponent", () => {
     }));
 
     it("should not refresh flows when 'Update now' fails to trigger", fakeAsync(() => {
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
-        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(false));
+        const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
+        vi.spyOn(datasetFlowsService, "datasetTriggerIngestFlow").mockReturnValue(of(false));
         component.updateNow();
 
         tick(component.TIMEOUT_REFRESH_FLOW);
@@ -764,8 +782,8 @@ describe("FlowsComponent", () => {
     }));
 
     it("should refresh flows after pausing the dataset flows only once the delay passes", fakeAsync(() => {
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
-        spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+        const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
+        vi.spyOn(flowsService, "datasetPauseFlows").mockReturnValue(of(void 0));
         component.toggleStateDatasetFlowConfigs({
             state: FlowProcessEffectiveState.Failing,
             datasetBasics: mockDatasetBasicsRootFragment,
@@ -779,8 +797,8 @@ describe("FlowsComponent", () => {
     }));
 
     it("should not refresh flows after pausing the dataset flows once destroyed", fakeAsync(() => {
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
-        spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+        const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
+        vi.spyOn(flowsService, "datasetPauseFlows").mockReturnValue(of(void 0));
         component.toggleStateDatasetFlowConfigs({
             state: FlowProcessEffectiveState.Failing,
             datasetBasics: mockDatasetBasicsRootFragment,
@@ -792,9 +810,9 @@ describe("FlowsComponent", () => {
     }));
 
     it("should not refresh flows when the trigger responds after the page is left", fakeAsync(() => {
-        const refreshFlowSpy = spyOn(component, "refreshFlow");
+        const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
         const trigger$ = new Subject<boolean>();
-        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(trigger$);
+        vi.spyOn(datasetFlowsService, "datasetTriggerIngestFlow").mockReturnValue(trigger$);
         component.updateNow();
 
         fixture.destroy();
@@ -805,29 +823,29 @@ describe("FlowsComponent", () => {
 
     describe("dataset card action in progress", () => {
         it("should last from a toggle until the refresh", fakeAsync(() => {
-            spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
-            const refreshFlowSpy = spyOn(component, "refreshFlow");
+            vi.spyOn(flowsService, "datasetPauseFlows").mockReturnValue(of(void 0));
+            const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
             component.toggleStateDatasetFlowConfigs({
                 state: FlowProcessEffectiveState.Failing,
                 datasetBasics: mockDatasetBasicsRootFragment,
             });
 
             tick(component.TIMEOUT_REFRESH_FLOW - 1);
-            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBeTrue();
+            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBe(true);
 
             tick(1);
             expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
-            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBeFalse();
+            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBe(false);
         }));
 
         it("should end when 'Update now' fails to trigger", () => {
-            spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(false));
+            vi.spyOn(datasetFlowsService, "datasetTriggerIngestFlow").mockReturnValue(of(false));
             component.updateNow();
-            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBeFalse();
+            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBe(false);
         });
 
         it("should end when the resume confirmation is cancelled", () => {
-            spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
+            vi.spyOn(modalService, "error").mockImplementation((options: ModalArgumentsInterface) => {
                 options.handler?.call(undefined, false);
                 return Promise.resolve("");
             });
@@ -835,39 +853,39 @@ describe("FlowsComponent", () => {
                 state: FlowProcessEffectiveState.StoppedAuto,
                 datasetBasics: mockDatasetBasicsRootFragment,
             });
-            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBeFalse();
+            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBe(false);
         });
 
         it("should not start while the resume confirmation is open, as Escape closes it unanswered", () => {
-            spyOn(modalService, "error").and.returnValue(Promise.resolve(""));
-            const resumeSpy = spyOn(flowsService, "datasetResumeFlows");
+            vi.spyOn(modalService, "error").mockReturnValue(Promise.resolve(""));
+            const resumeSpy = stubMethod(flowsService, "datasetResumeFlows");
             component.toggleStateDatasetFlowConfigs({
                 state: FlowProcessEffectiveState.StoppedAuto,
                 datasetBasics: mockDatasetBasicsRootFragment,
             });
 
             expect(resumeSpy).not.toHaveBeenCalled();
-            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBeFalse();
+            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBe(false);
         });
 
         it("should end when the page is left before the refresh", fakeAsync(() => {
-            spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+            vi.spyOn(flowsService, "datasetPauseFlows").mockReturnValue(of(void 0));
             component.toggleStateDatasetFlowConfigs({
                 state: FlowProcessEffectiveState.Failing,
                 datasetBasics: mockDatasetBasicsRootFragment,
             });
 
             fixture.destroy();
-            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBeFalse();
+            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBe(false);
         }));
 
         it("should end when the request fails, and leave the error to the global handler", fakeAsync(() => {
-            spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(
+            vi.spyOn(datasetFlowsService, "datasetTriggerIngestFlow").mockReturnValue(
                 throwError(() => new Error("Network failure")),
             );
             component.updateNow();
 
-            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBeFalse();
+            expect(component.busyIds$.value.has(mockDatasetBasicsRootFragment.id)).toBe(false);
             expect(() => tick()).toThrowError("Network failure");
         }));
     });
@@ -878,14 +896,16 @@ describe("FlowsComponent", () => {
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: mockOverviewUpdate,
         };
-        let datasetFlowsProcessesSpy: jasmine.Spy;
+        let datasetFlowsProcessesSpy: Mock;
 
         beforeEach(() => {
-            datasetFlowsProcessesSpy = spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-                of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
-            );
-            spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData));
-            spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
+            datasetFlowsProcessesSpy = vi
+                .spyOn(datasetFlowsService, "datasetFlowsProcesses")
+                .mockReturnValue(
+                    of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
+                );
+            vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(of(mockFlowsTableData));
+            vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
             setComponentInput(fixture, "flowsData", component.flowsData);
         });
 
@@ -898,11 +918,13 @@ describe("FlowsComponent", () => {
         it("should load the other dataset's flows", fakeAsync(() => {
             fixture.detectChanges();
             tick();
-            datasetFlowsProcessesSpy.calls.reset();
+            datasetFlowsProcessesSpy.mockClear();
 
             switchTo(otherDatasetFlowsData);
 
-            expect(datasetFlowsProcessesSpy).toHaveBeenCalledOnceWith({ datasetId: "other-dataset-id" });
+            expect(datasetFlowsProcessesSpy).toHaveBeenCalledTimes(1);
+
+            expect(datasetFlowsProcessesSpy).toHaveBeenCalledWith({ datasetId: "other-dataset-id" });
             discardPeriodicTasks();
         }));
 
@@ -934,12 +956,12 @@ describe("FlowsComponent", () => {
 
             expect(component.searchByAccount).toEqual([]);
             expect(component.selectedStatusItems).toEqual([]);
-            expect(component.onlySystemFlows).toBeFalse();
+            expect(component.onlySystemFlows).toBe(false);
             discardPeriodicTasks();
         }));
 
         it("should leave a card action of the previous dataset out of the new tab", fakeAsync(() => {
-            spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+            vi.spyOn(flowsService, "datasetPauseFlows").mockReturnValue(of(void 0));
             fixture.detectChanges();
             tick();
             component.toggleStateDatasetFlowConfigs({
@@ -948,9 +970,9 @@ describe("FlowsComponent", () => {
             });
 
             switchTo(otherDatasetFlowsData);
-            expect(component.busyIds$.value.has("other-dataset-id")).toBeFalse();
+            expect(component.busyIds$.value.has("other-dataset-id")).toBe(false);
 
-            const refreshFlowSpy = spyOn(component, "refreshFlow");
+            const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
             tick(component.TIMEOUT_REFRESH_FLOW);
             expect(refreshFlowSpy).not.toHaveBeenCalled();
             expect(component.busyIds$.value.size).toEqual(0);
@@ -960,7 +982,7 @@ describe("FlowsComponent", () => {
         it("should not start over when the data of the same dataset is resolved again", fakeAsync(() => {
             fixture.detectChanges();
             tick();
-            datasetFlowsProcessesSpy.calls.reset();
+            datasetFlowsProcessesSpy.mockClear();
 
             switchTo({ ...component.flowsData });
 
@@ -973,42 +995,42 @@ describe("FlowsComponent", () => {
         const SUBSCRIPTION_ID = "1234-4444-43222";
 
         it("should last from a pause until the refresh", fakeAsync(() => {
-            spyOn(datasetWebhooksService, "datasetWebhookPauseSubscription").and.returnValue(of(true));
-            const refreshFlowSpy = spyOn(component, "refreshFlow");
+            vi.spyOn(datasetWebhooksService, "datasetWebhookPauseSubscription").mockReturnValue(of(true));
+            const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
             component.pauseWebhook(SUBSCRIPTION_ID);
 
             tick(AppValues.SIMULATION_UPDATE_WEBHOOK_STATUS_DELAY_MS - 1);
-            expect(component.busyIds$.value.has(SUBSCRIPTION_ID)).toBeTrue();
+            expect(component.busyIds$.value.has(SUBSCRIPTION_ID)).toBe(true);
 
             tick(1);
             expect(refreshFlowSpy).toHaveBeenCalledTimes(1);
-            expect(component.busyIds$.value.has(SUBSCRIPTION_ID)).toBeFalse();
+            expect(component.busyIds$.value.has(SUBSCRIPTION_ID)).toBe(false);
         }));
 
         it("should end when the resume fails", () => {
-            spyOn(datasetWebhooksService, "datasetWebhookResumeSubscription").and.returnValue(of(false));
+            vi.spyOn(datasetWebhooksService, "datasetWebhookResumeSubscription").mockReturnValue(of(false));
             component.resumeWebhook(SUBSCRIPTION_ID);
-            expect(component.busyIds$.value.has(SUBSCRIPTION_ID)).toBeFalse();
+            expect(component.busyIds$.value.has(SUBSCRIPTION_ID)).toBe(false);
         });
     });
 
     describe("page of flow runs", () => {
-        let datasetFlowsListSpy: jasmine.Spy<DatasetFlowsService["datasetFlowsList"]>;
+        let datasetFlowsListSpy: Mock<DatasetFlowsService["datasetFlowsList"]>;
 
         // The API pages from 0, the URL and the pagination from 1
         function lastRequestedPage(): number {
-            return datasetFlowsListSpy.calls.mostRecent().args[0].page + 1;
+            return requireValue(datasetFlowsListSpy.mock.lastCall ?? null)[0].page + 1;
         }
 
         beforeEach(() => {
-            spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
+            vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
                 of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
             );
-            datasetFlowsListSpy = spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(
-                of(mockFlowsTableData),
-            );
-            spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
-            spyOn(navigationService, "navigateToDatasetView");
+            datasetFlowsListSpy = vi
+                .spyOn(datasetFlowsService, "datasetFlowsList")
+                .mockReturnValue(of(mockFlowsTableData));
+            vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
+            vi.spyOn(navigationService, "navigateToDatasetView").mockImplementation(() => {});
         });
 
         it("should start from the page in the URL", fakeAsync(() => {
@@ -1020,7 +1042,7 @@ describe("FlowsComponent", () => {
         }));
 
         it("should stay on the page shown when a card action refreshes the flows", fakeAsync(() => {
-            spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+            vi.spyOn(flowsService, "datasetPauseFlows").mockReturnValue(of(void 0));
             fixture.detectChanges();
             tick();
             component.onPageChange(3);

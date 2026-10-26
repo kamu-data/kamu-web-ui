@@ -389,11 +389,19 @@ it(`should propagate the name for unknown engines`, () => {
     { case: Math.pow(2, 10), expectation: { size: 1, unit: SliceUnit.KB } },
     { case: Math.pow(2, 20), expectation: { size: 1, unit: SliceUnit.MB } },
     { case: Math.pow(2, 30), expectation: { size: 1, unit: SliceUnit.GB } },
-].forEach((item: { case: number; expectation: { size: number; unit: SliceUnit } }) => {
-    it(`should check slice size mapper with ${item.case} bytes`, () => {
-        expect(sliceSizeMapperReverse(item.case)).toEqual(item.expectation);
-    });
-});
+].forEach(
+    (item: {
+        case: number;
+        expectation: {
+            size: number;
+            unit: SliceUnit;
+        };
+    }) => {
+        it(`should check slice size mapper with ${item.case} bytes`, () => {
+            expect(sliceSizeMapperReverse(item.case)).toEqual(item.expectation);
+        });
+    },
+);
 
 [
     { case: 0, expected: "+A" },

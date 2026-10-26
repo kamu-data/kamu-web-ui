@@ -81,7 +81,7 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         expect(component.form.status).toBe("VALID");
 
         const saveButton = getSaveButton();
-        expect(saveButton.disabled).toBeFalse();
+        expect(saveButton.disabled).toBe(false);
     });
 
     it("should check form is valid when loaded with no reactive rule defined", async () => {
@@ -259,7 +259,7 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
     });
 
     it("should check 'Save' button works with buffering batching rule", async () => {
-        const setDatasetFlowTriggerSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTrigger").and.callThrough();
+        const setDatasetFlowTriggerSpy = vi.spyOn(datasetFlowTriggerService, "setDatasetFlowTrigger");
 
         component.form.controls.updatesEnabled.setValue(true);
 
@@ -271,12 +271,12 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         await stopPolicyFormHarness.setMaxFailures(3);
 
         const saveButton = getSaveButton();
-        expect(saveButton.disabled).toBeFalse();
+        expect(saveButton.disabled).toBe(false);
 
         saveButton.click();
 
         expect(setDatasetFlowTriggerSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 triggerRuleInput: {
                     reactive: {
                         forNewData: {
@@ -296,7 +296,7 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
     });
 
     it("should check 'Save' button works for with immediate batching rule", async () => {
-        const setDatasetFlowTriggerSpy = spyOn(datasetFlowTriggerService, "setDatasetFlowTrigger").and.callThrough();
+        const setDatasetFlowTriggerSpy = vi.spyOn(datasetFlowTriggerService, "setDatasetFlowTrigger");
 
         component.form.controls.updatesEnabled.setValue(true);
 
@@ -306,12 +306,12 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         await stopPolicyFormHarness.setSelectedStopPolicyType(FlowTriggerStopPolicyType.NEVER);
 
         const saveButton = getSaveButton();
-        expect(saveButton.disabled).toBeFalse();
+        expect(saveButton.disabled).toBe(false);
 
         saveButton.click();
 
         expect(setDatasetFlowTriggerSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 triggerRuleInput: {
                     reactive: {
                         forNewData: {
@@ -327,15 +327,12 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
     });
 
     it("should check 'Save' button works for disabling updates", () => {
-        const pauseDatasetFlowTriggerSpy = spyOn(
-            datasetFlowTriggerService,
-            "pauseDatasetFlowTrigger",
-        ).and.callThrough();
+        const pauseDatasetFlowTriggerSpy = vi.spyOn(datasetFlowTriggerService, "pauseDatasetFlowTrigger");
 
         component.form.controls.updatesEnabled.setValue(false);
 
         const saveButton = getSaveButton();
-        expect(saveButton.disabled).toBeFalse();
+        expect(saveButton.disabled).toBe(false);
 
         saveButton.click();
 

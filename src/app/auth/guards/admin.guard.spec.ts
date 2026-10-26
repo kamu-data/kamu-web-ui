@@ -25,12 +25,12 @@ describe("adminGuard", () => {
     });
 
     it("should allow an admin", async () => {
-        spyOnProperty(loggedUserService, "isAdmin", "get").and.returnValue(true);
-        expect(await runCanActivate(adminGuard)).toBeTrue();
+        vi.spyOn(loggedUserService, "isAdmin", "get").mockReturnValue(true);
+        expect(await runCanActivate(adminGuard)).toBe(true);
     });
 
     it("should redirect a user who is not an admin home", async () => {
-        spyOnProperty(loggedUserService, "isAdmin", "get").and.returnValue(false);
+        vi.spyOn(loggedUserService, "isAdmin", "get").mockReturnValue(false);
         expectRedirectTo(await runCanActivate(adminGuard), "/");
     });
 });

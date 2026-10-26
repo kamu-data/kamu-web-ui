@@ -100,10 +100,10 @@ describe("CronExpressionFormComponent", () => {
         await cronHarness.setCronExpression(INVALID_CRON_EXPRESSION);
 
         const isInvalid = await cronHarness.isInvalid();
-        expect(isInvalid).toBeTrue();
+        expect(isInvalid).toBe(true);
 
         const isUntouched = await cronHarness.isUntouched();
-        expect(isUntouched).toBeFalse();
+        expect(isUntouched).toBe(false);
 
         fixture.detectChanges();
 
@@ -118,10 +118,10 @@ describe("CronExpressionFormComponent", () => {
         await cronHarness.setCronExpression(VALID_CRON_EXPRESSION);
 
         const isInvalid = await cronHarness.isInvalid();
-        expect(isInvalid).toBeFalse();
+        expect(isInvalid).toBe(false);
 
         const isUntouched = await cronHarness.isUntouched();
-        expect(isUntouched).toBeFalse();
+        expect(isUntouched).toBe(false);
 
         const errorMessage = await cronHarness.getErrorMessage();
         expect(errorMessage).toBeNull();
@@ -132,10 +132,10 @@ describe("CronExpressionFormComponent", () => {
 
     it("should not show error neither next time for untouched cron expression", async () => {
         const isInvalid = await cronHarness.isInvalid();
-        expect(isInvalid).toBeTrue();
+        expect(isInvalid).toBe(true);
 
         const isUntouched = await cronHarness.isUntouched();
-        expect(isUntouched).toBeTrue();
+        expect(isUntouched).toBe(true);
 
         const errorMessage = await cronHarness.getErrorMessage();
         expect(errorMessage).toBeNull();

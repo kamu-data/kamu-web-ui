@@ -13,6 +13,7 @@ import { Observable, of, Subscription } from "rxjs";
 import { first } from "rxjs/operators";
 
 import { Apollo } from "apollo-angular";
+import type { Mock } from "vitest";
 
 import { requireValue } from "@common/helpers/app.helpers";
 import { DatasetNotFoundError, DatasetOperationError } from "@common/values/errors";
@@ -42,8 +43,8 @@ describe("DatasetCommitService", () => {
     let navigationService: NavigationService;
     let loggedUserService: LoggedUserService;
 
-    let getDatasetInfoSpy: jasmine.Spy;
-    let navigationServiceSpy: jasmine.Spy;
+    let getDatasetInfoSpy: Mock;
+    let navigationServiceSpy: Mock;
 
     const TEST_ACCOUNT_NAME = "accountName";
     const TEST_DATASET_NAME = "datasetName";
@@ -59,10 +60,10 @@ describe("DatasetCommitService", () => {
         commitService = TestBed.inject(DatasetCommitService);
         loggedUserService = TestBed.inject(LoggedUserService);
 
-        getDatasetInfoSpy = spyOn(datasetApi, "getDatasetInfoByAccountAndDatasetName").and.returnValue(
-            of(mockDatasetByAccountAndDatasetNameQuery),
-        );
-        navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
+        getDatasetInfoSpy = vi
+            .spyOn(datasetApi, "getDatasetInfoByAccountAndDatasetName")
+            .mockReturnValue(of(mockDatasetByAccountAndDatasetNameQuery));
+        navigationServiceSpy = vi.spyOn(navigationService, "navigateToDatasetView").mockImplementation(() => {});
     });
 
     it("should be created", () => {
@@ -83,7 +84,8 @@ describe("DatasetCommitService", () => {
     }
 
     function expectNavigatedToDatasetOverview() {
-        expect(navigationServiceSpy).toHaveBeenCalledOnceWith({
+        expect(navigationServiceSpy).toHaveBeenCalledTimes(1);
+        expect(navigationServiceSpy).toHaveBeenCalledWith({
             accountName: TEST_ACCOUNT_NAME,
             datasetName: TEST_DATASET_NAME,
             tab: DatasetViewTypeEnum.Overview,
@@ -108,7 +110,8 @@ describe("DatasetCommitService", () => {
         flush();
 
         expect(eventsCount).toEqual(2);
-        expect(getDatasetInfoSpy).toHaveBeenCalledOnceWith(TEST_ACCOUNT_NAME, TEST_DATASET_NAME);
+        expect(getDatasetInfoSpy).toHaveBeenCalledTimes(1);
+        expect(getDatasetInfoSpy).toHaveBeenCalledWith(TEST_ACCOUNT_NAME, TEST_DATASET_NAME);
     }));
 
     it("should check getIdByAccountNameAndDatasetName() method without cache", fakeAsync(() => {
@@ -121,16 +124,17 @@ describe("DatasetCommitService", () => {
         flush();
 
         expect(eventsCount).toEqual(1);
-        expect(getDatasetInfoSpy).toHaveBeenCalledOnceWith(TEST_ACCOUNT_NAME, TEST_DATASET_NAME);
+        expect(getDatasetInfoSpy).toHaveBeenCalledTimes(1);
+        expect(getDatasetInfoSpy).toHaveBeenCalledWith(TEST_ACCOUNT_NAME, TEST_DATASET_NAME);
     }));
 
     it("should check getIdByAccountNameAndDatasetName() method with not found error", fakeAsync(() => {
-        getDatasetInfoSpy = getDatasetInfoSpy.and.returnValue(of({ datasets: {} }));
+        getDatasetInfoSpy = getDatasetInfoSpy.mockReturnValue(of({ datasets: {} }));
 
         const subscription$ = requestDatasetId().subscribe({
-            next: () => fail("unexpected success"),
+            next: () => expect.fail("unexpected success"),
             error: (e: unknown) => {
-                expect(e instanceof DatasetNotFoundError).toBeTrue();
+                expect(e instanceof DatasetNotFoundError).toBe(true);
             },
         });
 
@@ -138,8 +142,10 @@ describe("DatasetCommitService", () => {
     }));
 
     it("should check commitEventToDataset() method", fakeAsync(() => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        const commitEventSpy = spyOn(datasetApi, "commitEvent").and.returnValue(of(mockCommitEventToDatasetMutation));
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
+        const commitEventSpy = vi
+            .spyOn(datasetApi, "commitEvent")
+            .mockReturnValue(of(mockCommitEventToDatasetMutation));
 
         requestCommitEvent().subscribe((result) => {
             tick();
@@ -147,7 +153,9 @@ describe("DatasetCommitService", () => {
         });
         flush();
 
-        expect(commitEventSpy).toHaveBeenCalledOnceWith({
+        expect(commitEventSpy).toHaveBeenCalledTimes(1);
+
+        expect(commitEventSpy).toHaveBeenCalledWith({
             datasetId: TEST_DATASET_ID,
             event: TEST_EVENT_CONTENT,
             accountId: TEST_ACCOUNT_ID,
@@ -158,8 +166,8 @@ describe("DatasetCommitService", () => {
     [mockCommitEventToDatasetResultAppendError, mockCommitEventToDataseMetadataManifestMalformedError].forEach(
         (errorResponse: CommitEventToDatasetMutation) => {
             it("should check commitEventToDataset() method with soft error", fakeAsync(() => {
-                spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-                const commitEventSpy = spyOn(datasetApi, "commitEvent").and.returnValue(of(errorResponse));
+                vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
+                const commitEventSpy = vi.spyOn(datasetApi, "commitEvent").mockReturnValue(of(errorResponse));
 
                 const errorSubscription$: Subscription = commitService.commitEventErrorOccurrences
                     .pipe(first())
@@ -172,7 +180,9 @@ describe("DatasetCommitService", () => {
                 });
                 flush();
 
-                expect(commitEventSpy).toHaveBeenCalledOnceWith({
+                expect(commitEventSpy).toHaveBeenCalledTimes(1);
+
+                expect(commitEventSpy).toHaveBeenCalledWith({
                     datasetId: TEST_DATASET_ID,
                     event: TEST_EVENT_CONTENT,
                     accountId: TEST_ACCOUNT_ID,
@@ -180,23 +190,23 @@ describe("DatasetCommitService", () => {
                 expect(navigationServiceSpy).not.toHaveBeenCalled();
 
                 // If error triggered, our subscription will be closed
-                expect(errorSubscription$.closed).toBeTrue();
+                expect(errorSubscription$.closed).toBe(true);
             }));
         },
     );
 
     it("should check commitEventToDataset() method with MetadataManifestUnsupportedVersionError error", fakeAsync(() => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        spyOn(datasetApi, "commitEvent").and.returnValue(
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
+        vi.spyOn(datasetApi, "commitEvent").mockReturnValue(
             of(mockCommitEventToDataseMetadataManifestUnsupportedVersionError),
         );
 
         const subscription$ = requestCommitEvent().subscribe({
             next: (result) => {
-                expect(result).toBeFalse();
+                expect(result).toBe(false);
             },
             error: (e: unknown) => {
-                expect(e instanceof DatasetOperationError).toBeTrue();
+                expect(e instanceof DatasetOperationError).toBe(true);
             },
         });
 
@@ -204,14 +214,14 @@ describe("DatasetCommitService", () => {
     }));
 
     it("should check commit to dataset when not found", () => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
         const notFoundResponse: CommitEventToDatasetMutation = { datasets: { byId: null } };
-        spyOn(datasetApi, "commitEvent").and.returnValue(of(notFoundResponse));
+        vi.spyOn(datasetApi, "commitEvent").mockReturnValue(of(notFoundResponse));
 
         const subscription$ = requestCommitEvent().subscribe({
-            next: () => fail("unexpected success"),
+            next: () => expect.fail("unexpected success"),
             error: (e: unknown) => {
-                expect(e instanceof DatasetNotFoundError).toBeTrue();
+                expect(e instanceof DatasetNotFoundError).toBe(true);
             },
         });
 
@@ -219,7 +229,7 @@ describe("DatasetCommitService", () => {
     });
 
     it("commit to dataset without logged user results in exception", () => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(false);
 
         expect(() => requestCommitEvent()).toThrow(
             new DatasetOperationError([new Error(DatasetCommitService.NOT_LOGGED_USER_ERROR)]),
@@ -227,8 +237,10 @@ describe("DatasetCommitService", () => {
     });
 
     it("should check updateReadme() method ", fakeAsync(() => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        const updateReadmeSpy = spyOn(datasetApi, "updateReadme").and.returnValue(of(mockUpdateReadmeSuccessResponse));
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
+        const updateReadmeSpy = vi
+            .spyOn(datasetApi, "updateReadme")
+            .mockReturnValue(of(mockUpdateReadmeSuccessResponse));
         const README_CONTENT = "readme content";
 
         commitService
@@ -243,7 +255,9 @@ describe("DatasetCommitService", () => {
             });
         flush();
 
-        expect(updateReadmeSpy).toHaveBeenCalledOnceWith({
+        expect(updateReadmeSpy).toHaveBeenCalledTimes(1);
+
+        expect(updateReadmeSpy).toHaveBeenCalledWith({
             accountId: TEST_ACCOUNT_ID,
             datasetId: TEST_DATASET_ID,
             content: README_CONTENT,
@@ -252,9 +266,9 @@ describe("DatasetCommitService", () => {
     }));
 
     it("should check update readme for dataset when not found", () => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
         const notFoundResponse: UpdateReadmeMutation = { datasets: { byId: null } };
-        spyOn(datasetApi, "updateReadme").and.returnValue(of(notFoundResponse));
+        vi.spyOn(datasetApi, "updateReadme").mockReturnValue(of(notFoundResponse));
 
         const README_CONTENT = "readme content";
         const subscription$ = commitService
@@ -265,9 +279,9 @@ describe("DatasetCommitService", () => {
                 content: README_CONTENT,
             })
             .subscribe({
-                next: () => fail("unexpected success"),
+                next: () => expect.fail("unexpected success"),
                 error: (e: unknown) => {
-                    expect(e instanceof DatasetNotFoundError).toBeTrue();
+                    expect(e instanceof DatasetNotFoundError).toBe(true);
                 },
             });
 
@@ -275,8 +289,8 @@ describe("DatasetCommitService", () => {
     });
 
     it("should check updateReadme() method with hard error", fakeAsync(() => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        spyOn(datasetApi, "updateReadme").and.returnValue(of(mockUpdateReadmeErrorMessage));
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
+        vi.spyOn(datasetApi, "updateReadme").mockReturnValue(of(mockUpdateReadmeErrorMessage));
 
         const README_CONTENT = "readme content";
         const subscription$ = commitService
@@ -287,9 +301,9 @@ describe("DatasetCommitService", () => {
                 content: README_CONTENT,
             })
             .subscribe({
-                next: () => fail("unexpected success"),
+                next: () => expect.fail("unexpected success"),
                 error: (e: unknown) => {
-                    expect(e instanceof DatasetOperationError).toBeTrue();
+                    expect(e instanceof DatasetOperationError).toBe(true);
                 },
             });
 
@@ -297,7 +311,7 @@ describe("DatasetCommitService", () => {
     }));
 
     it("updating readme for dataset without logged user results in exception", () => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(false);
 
         const README_CONTENT = "readme content";
         expect(() =>

@@ -27,12 +27,12 @@ describe("LineageNodeSizeService", () => {
     });
 
     it("should emit once the fonts are ready", async () => {
-        await expectAsync(firstValueFrom(service.whenFontsReady())).toBeResolved();
+        await expect(firstValueFrom(service.whenFontsReady())).resolves.not.toThrow();
     });
 
     it("should still emit when a font fails to load", async () => {
-        spyOn(document.fonts, "load").and.returnValue(Promise.reject(new Error("Font download blocked")));
-        await expectAsync(firstValueFrom(service.whenFontsReady())).toBeResolved();
+        vi.spyOn(document.fonts, "load").mockReturnValue(Promise.reject(new Error("Font download blocked")));
+        await expect(firstValueFrom(service.whenFontsReady())).resolves.not.toThrow();
     });
 
     it("should give every node the configured height", () => {

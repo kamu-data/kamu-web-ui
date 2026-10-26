@@ -34,14 +34,13 @@ import {
 import { EditSchemaTableComponent } from "../../edit-schema-table.component";
 import {
     DataSchemaTypeOption,
+    SelectableOdfKind,
     TIMEZONE_OPTIONS_LIST,
     TimezoneTimestampOption,
     TYPES_OPTIONS_LIST,
     UNIT_OPTIONS_LIST,
     UnitTimestampOption,
 } from "../../edit-schema-table.types";
-
-type SelectableKind = Exclude<OdfTypes, OdfTypes.Option>;
 
 type ComplexKind = OdfTypes.List | OdfTypes.Map | OdfTypes.Struct;
 
@@ -55,7 +54,7 @@ function isTimeField(value: DataSchemaTypeField): value is DataSchemaTimeField {
     return value.kind === OdfTypes.Timestamp || value.kind === OdfTypes.Time || value.kind === OdfTypes.Duration;
 }
 
-function defaultTypeFieldOfKind(kind: SelectableKind): DataSchemaTypeField {
+function defaultTypeFieldOfKind(kind: SelectableOdfKind): DataSchemaTypeField {
     switch (kind) {
         case OdfTypes.Time:
         case OdfTypes.Duration:
@@ -156,16 +155,8 @@ export class TypeEditorComponent {
         return baseValue.kind === OdfTypes.Struct ? baseValue : null;
     }
 
-    public isComplexType(kind: OdfTypes): boolean {
-        return isComplexKind(kind);
-    }
-
     public changeEditorType(event: DataSchemaTypeOption): void {
         const kind = event.value;
-        // Optionality is set by the optional toggle; the kind list never offers Option.
-        if (kind === OdfTypes.Option) return;
-
-        // Cache the current value before switching away from a complex kind.
         this.cacheComplexValue(this.baseValue);
 
         const cachedValue = isComplexKind(kind) ? this.complexCache[kind] : undefined;

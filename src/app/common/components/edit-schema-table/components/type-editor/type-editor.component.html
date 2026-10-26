@@ -17,11 +17,11 @@
             </ng-template>
         </ng-select>
 
-        @if (selectedKind === "Timestamp") {
+        @if (schemaTimeField; as timeField) {
             <span class="text-muted gap-2">&nbsp;&lt;&nbsp;</span>
             <ng-select
                 class="width-110"
-                [ngModel]="schemaTimeField?.unit"
+                [ngModel]="timeField.unit"
                 [items]="UNIT_OPTIONS_LIST"
                 bindLabel="label"
                 bindValue="value"
@@ -33,40 +33,24 @@
                     <label class="fs-14 inline-block"> {{ item.value }} </label>
                 </ng-template>
             </ng-select>
-            <span class="text-muted">&nbsp;,&nbsp;</span>
-            <ng-select
-                class="width-60"
-                [ngModel]="schemaTimeField?.timezone"
-                [items]="TIMEZONE_OPTIONS_LIST"
-                bindLabel="label"
-                bindValue="value"
-                appendTo="body"
-                [clearable]="false"
-                [attr.data-test-id]="typePath + ':timezone'"
-                (change)="changeTimezone($event)"
-            >
-                <ng-template ng-option-tmp let-item="item" let-index="index">
-                    <label class="fs-14 inline-block"> {{ item.value }} </label>
-                </ng-template>
-            </ng-select>
-            <span class="text-muted">&nbsp;&gt;</span>
-        }
-        @if (selectedKind === OdfTypes.Time || selectedKind === OdfTypes.Duration) {
-            <span class="text-muted gap-2">&nbsp;&lt;&nbsp;</span>
-            <ng-select
-                class="width-110"
-                [ngModel]="schemaTimeField?.unit"
-                [items]="UNIT_OPTIONS_LIST"
-                bindLabel="label"
-                bindValue="value"
-                [clearable]="false"
-                [attr.data-test-id]="typePath + ':unit'"
-                (change)="changeUnitTime($event)"
-            >
-                <ng-template ng-option-tmp let-item="item" let-index="index">
-                    <label class="fs-14 inline-block"> {{ item.value }} </label>
-                </ng-template>
-            </ng-select>
+            @if (timeField.kind === OdfTypes.Timestamp) {
+                <span class="text-muted">&nbsp;,&nbsp;</span>
+                <ng-select
+                    class="width-60"
+                    [ngModel]="timeField.timezone"
+                    [items]="TIMEZONE_OPTIONS_LIST"
+                    bindLabel="label"
+                    bindValue="value"
+                    appendTo="body"
+                    [clearable]="false"
+                    [attr.data-test-id]="typePath + ':timezone'"
+                    (change)="changeTimezone($event)"
+                >
+                    <ng-template ng-option-tmp let-item="item" let-index="index">
+                        <label class="fs-14 inline-block"> {{ item.value }} </label>
+                    </ng-template>
+                </ng-select>
+            }
             <span class="text-muted">&nbsp;&gt;</span>
         }
         <button

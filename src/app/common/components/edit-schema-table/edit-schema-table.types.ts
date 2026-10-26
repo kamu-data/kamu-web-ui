@@ -35,9 +35,12 @@ export interface SchemaField {
     type: DataSchemaTypeField;
 }
 
+/** Optionality has its own toggle in the editor, so Option is never a selectable kind */
+export type SelectableOdfKind = Exclude<OdfTypes, OdfTypes.Option>;
+
 export interface DataSchemaTypeOption {
     label: OdfTypes;
-    value: OdfTypes;
+    value: SelectableOdfKind;
 }
 
 export interface EditSchemaEditingCoordinator {

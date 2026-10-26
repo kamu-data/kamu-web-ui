@@ -13,21 +13,16 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { NgOption, NgSelectComponent } from "@ng-select/ng-select";
+import { NgSelectComponent } from "@ng-select/ng-select";
 
 import { findComponentInstance, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { MaybeNull, MaybeUndefined } from "@interface/app.types";
-import {
-    DataSchemaField,
-    DataSchemaListField,
-    DataSchemaTypeField,
-    OdfTypes,
-} from "@interface/dataset-schema.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { TypeEditorComponent } from "./components/type-editor/type-editor.component";
 import { EditSchemaTableComponent } from "./edit-schema-table.component";
 import { EditSchemaTableHarness } from "./edit-schema-table.harness";
-import { ORDER_SCHEMA } from "./schema-editor.fixtures.spec";
+import { ORDER_SCHEMA, requireListField, selectNgSelectOption } from "./schema-editor.fixtures.spec";
 
 // ---------------------------------------------------------------------------
 // TestHost
@@ -62,13 +57,6 @@ function structField(name: string, nestedFields: DataSchemaField[] = []): DataSc
 
 function stringField(name: string): DataSchemaField {
     return { name, type: { kind: OdfTypes.String } };
-}
-
-function requireListType(type: MaybeUndefined<DataSchemaTypeField>): DataSchemaListField {
-    if (type?.kind !== OdfTypes.List) {
-        throw new Error(`Expected a List type, got ${JSON.stringify(type)}`);
-    }
-    return type;
 }
 
 // ---------------------------------------------------------------------------
@@ -293,14 +281,7 @@ describe("EditSchemaTableComponent", () => {
             await table.editField("amount");
             fixture.detectChanges();
 
-            // Drive the kind ng-select via its public API (no CDK harness for ng-select)
-            const ngSelect = findComponentInstance(fixture, NgSelectComponent);
-            ngSelect.open();
-            fixture.detectChanges();
-            const item: MaybeUndefined<NgOption> = ngSelect.itemsList.findItem(OdfTypes.Int64);
-            if (!item) throw new Error("Int64 option not found in kind ng-select");
-            ngSelect.select(item);
-            fixture.detectChanges();
+            selectNgSelectOption(fixture, findComponentInstance(fixture, NgSelectComponent), OdfTypes.Int64);
 
             await table.save();
             fixture.detectChanges();
@@ -324,7 +305,7 @@ describe("EditSchemaTableComponent", () => {
             await table.save();
             fixture.detectChanges();
 
-            const emitted = requireListType(host.lastEmitted?.[0].type);
+            const emitted = requireListField(host.lastEmitted?.[0].type);
             expect(emitted.itemType.kind).toBe(OdfTypes.Struct);
             if (emitted.itemType.kind === OdfTypes.Struct) {
                 expect(emitted.itemType.fields).toEqual([{ name: "sku", type: { kind: OdfTypes.String } }]);
@@ -359,7 +340,7 @@ describe("EditSchemaTableComponent", () => {
             await table.save();
             fixture.detectChanges();
 
-            const emitted = requireListType(host.lastEmitted?.[0].type);
+            const emitted = requireListField(host.lastEmitted?.[0].type);
             expect(emitted.itemType.kind).toBe(OdfTypes.Struct);
             if (emitted.itemType.kind === OdfTypes.Struct) {
                 expect(emitted.itemType.fields).toEqual([{ name: "sku", type: { kind: OdfTypes.String } }]);

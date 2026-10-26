@@ -10,7 +10,7 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { NgOption, NgSelectComponent } from "@ng-select/ng-select";
+import { NgSelectComponent } from "@ng-select/ng-select";
 
 import {
     findComponentInstance,
@@ -18,18 +18,18 @@ import {
     getElementByDataTestId,
     registerMatSvgIcons,
 } from "@common/helpers/base-test.helpers.spec";
-import { MaybeNull, MaybeUndefined } from "@interface/app.types";
-import {
-    DataSchemaListField,
-    DataSchemaMapField,
-    DataSchemaOptionField,
-    DataSchemaStructField,
-    DataSchemaTimeField,
-    DataSchemaTypeField,
-    OdfTypes,
-} from "@interface/dataset-schema.interface";
+import { MaybeNull } from "@interface/app.types";
+import { DataSchemaTypeField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { TimestampPrecision, TimestampTimezone, TYPES_OPTIONS_LIST } from "../../edit-schema-table.types";
+import {
+    requireListField,
+    requireMapField,
+    requireOptionField,
+    requireStructField,
+    requireTimeField,
+    selectNgSelectOption,
+} from "../../schema-editor.fixtures.spec";
 import { TypeEditorComponent } from "./type-editor.component";
 
 // ---------------------------------------------------------------------------
@@ -57,49 +57,6 @@ class TestHostComponent implements OnChanges {
     public ngOnChanges(): void {
         this.lastEmitted = null;
     }
-}
-
-// ---------------------------------------------------------------------------
-// Narrowing an emitted type to the member a test reads
-// ---------------------------------------------------------------------------
-
-function unexpectedType(expected: string, type: MaybeNull<DataSchemaTypeField>): Error {
-    return new Error(`Expected ${expected} type, got ${JSON.stringify(type)}`);
-}
-
-function requireTimeField(type: MaybeNull<DataSchemaTypeField>): DataSchemaTimeField {
-    if (type?.kind !== OdfTypes.Timestamp && type?.kind !== OdfTypes.Time && type?.kind !== OdfTypes.Duration) {
-        throw unexpectedType("a Timestamp, Time or Duration", type);
-    }
-    return type;
-}
-
-function requireOptionField(type: MaybeNull<DataSchemaTypeField>): DataSchemaOptionField {
-    if (type?.kind !== OdfTypes.Option) {
-        throw unexpectedType("an Option", type);
-    }
-    return type;
-}
-
-function requireListField(type: MaybeNull<DataSchemaTypeField>): DataSchemaListField {
-    if (type?.kind !== OdfTypes.List) {
-        throw unexpectedType("a List", type);
-    }
-    return type;
-}
-
-function requireMapField(type: MaybeNull<DataSchemaTypeField>): DataSchemaMapField {
-    if (type?.kind !== OdfTypes.Map) {
-        throw unexpectedType("a Map", type);
-    }
-    return type;
-}
-
-function requireStructField(type: MaybeNull<DataSchemaTypeField>): DataSchemaStructField {
-    if (type?.kind !== OdfTypes.Struct) {
-        throw unexpectedType("a Struct", type);
-    }
-    return type;
 }
 
 // ---------------------------------------------------------------------------
@@ -214,10 +171,6 @@ describe("TypeEditorComponent", () => {
     // ---------------------------------------------------------------------------
 
     describe("Option type", () => {
-        it("does not expose Option as a kind option", () => {
-            expect(TYPES_OPTIONS_LIST.some((option) => option.value === OdfTypes.Option)).toBeFalse();
-        });
-
         it("emits Option<String> when Optional is enabled", () => {
             editor().changeOptional(true);
             fixture.detectChanges();
@@ -455,16 +408,8 @@ describe("TypeEditorComponent", () => {
     // ---------------------------------------------------------------------------
 
     describe("ng-select wiring (smoke)", () => {
-        // ng-select has no CDK harness. Drive it via NgSelectComponent's public API
-        // (open + select) to avoid DOM timing issues with the option panel.
         function selectKindViaApi(kindValue: OdfTypes): void {
-            const ngSelect = findComponentInstance(fixture, NgSelectComponent);
-            ngSelect.open();
-            fixture.detectChanges();
-            const item: MaybeUndefined<NgOption> = ngSelect.itemsList.findItem(kindValue);
-            if (!item) throw new Error(`ng-select kind option not found: ${kindValue}`);
-            ngSelect.select(item);
-            fixture.detectChanges();
+            selectNgSelectOption(fixture, findComponentInstance(fixture, NgSelectComponent), kindValue);
         }
 
         it("selecting Int64 from the kind panel emits { kind: Int64 }", () => {
@@ -525,13 +470,11 @@ describe("TypeEditorComponent", () => {
                 testId: string,
                 value: TimestampPrecision | TimestampTimezone,
             ): void {
-                const ngSelect = findComponentInstanceByDataTestId(fixture, testId, NgSelectComponent);
-                ngSelect.open();
-                fixture.detectChanges();
-                const item: MaybeUndefined<NgOption> = ngSelect.itemsList.findItem(value);
-                if (!item) throw new Error(`ng-select option not found for ${testId}`);
-                ngSelect.select(item);
-                fixture.detectChanges();
+                selectNgSelectOption(
+                    fixture,
+                    findComponentInstanceByDataTestId(fixture, testId, NgSelectComponent),
+                    value,
+                );
             }
 
             beforeEach(() => {

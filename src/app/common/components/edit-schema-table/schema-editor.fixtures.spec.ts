@@ -33,9 +33,23 @@
  *     tracking   Option<String>
  */
 
+import { ComponentFixture } from "@angular/core/testing";
+
+import { NgOption, NgSelectComponent } from "@ng-select/ng-select";
 import { parse } from "yaml";
 
-import { DataSchemaField, DataSchemaTypeField, DatasetSchema, OdfTypes } from "@interface/dataset-schema.interface";
+import { MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
+import {
+    DataSchemaField,
+    DataSchemaListField,
+    DataSchemaMapField,
+    DataSchemaOptionField,
+    DataSchemaStructField,
+    DataSchemaTimeField,
+    DataSchemaTypeField,
+    DatasetSchema,
+    OdfTypes,
+} from "@interface/dataset-schema.interface";
 
 import { EditSchemaTableHarness } from "./edit-schema-table.harness";
 
@@ -171,6 +185,70 @@ export function requireDatasetSchema(value: unknown): DatasetSchema {
         throw new Error(`Expected a { fields } schema, got: ${JSON.stringify(value)}`);
     }
     return { fields: value.fields };
+}
+
+// ---------------------------------------------------------------------------
+// Narrowing a schema type to the member a test reads
+// ---------------------------------------------------------------------------
+
+function unexpectedType(expected: string, type: MaybeNullOrUndefined<DataSchemaTypeField>): Error {
+    return new Error(`Expected ${expected} type, got ${JSON.stringify(type)}`);
+}
+
+export function requireTimeField(type: MaybeNullOrUndefined<DataSchemaTypeField>): DataSchemaTimeField {
+    if (type?.kind !== OdfTypes.Timestamp && type?.kind !== OdfTypes.Time && type?.kind !== OdfTypes.Duration) {
+        throw unexpectedType("a Timestamp, Time or Duration", type);
+    }
+    return type;
+}
+
+export function requireOptionField(type: MaybeNullOrUndefined<DataSchemaTypeField>): DataSchemaOptionField {
+    if (type?.kind !== OdfTypes.Option) {
+        throw unexpectedType("an Option", type);
+    }
+    return type;
+}
+
+export function requireListField(type: MaybeNullOrUndefined<DataSchemaTypeField>): DataSchemaListField {
+    if (type?.kind !== OdfTypes.List) {
+        throw unexpectedType("a List", type);
+    }
+    return type;
+}
+
+export function requireMapField(type: MaybeNullOrUndefined<DataSchemaTypeField>): DataSchemaMapField {
+    if (type?.kind !== OdfTypes.Map) {
+        throw unexpectedType("a Map", type);
+    }
+    return type;
+}
+
+export function requireStructField(type: MaybeNullOrUndefined<DataSchemaTypeField>): DataSchemaStructField {
+    if (type?.kind !== OdfTypes.Struct) {
+        throw unexpectedType("a Struct", type);
+    }
+    return type;
+}
+
+// ---------------------------------------------------------------------------
+// Driving ng-select, which has no CDK harness
+// ---------------------------------------------------------------------------
+
+/**
+ * Selects the option with the given value through NgSelectComponent's public API (open, then select),
+ * which avoids the DOM timing of its option panel. Throws when no option has that value.
+ */
+export function selectNgSelectOption<T>(
+    fixture: ComponentFixture<T>,
+    ngSelect: NgSelectComponent,
+    value: unknown,
+): void {
+    ngSelect.open();
+    fixture.detectChanges();
+    const item: MaybeUndefined<NgOption> = ngSelect.itemsList.findItem(value);
+    if (!item) throw new Error(`ng-select option not found: ${JSON.stringify(value)}`);
+    ngSelect.select(item);
+    fixture.detectChanges();
 }
 
 // ---------------------------------------------------------------------------

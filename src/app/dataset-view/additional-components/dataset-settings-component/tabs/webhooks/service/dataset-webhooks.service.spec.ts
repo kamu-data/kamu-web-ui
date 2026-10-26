@@ -16,6 +16,7 @@ import { requireValue } from "@common/helpers/app.helpers";
 import { WebhookSubscriptionDataFragment } from "@api/kamu.graphql.interface";
 import { TEST_DATASET_ID } from "@api/mock/dataset.mock";
 import {
+    MOCK_ROTATED_WEBHOOK_SECRET,
     mockDatasetWebhookByIdNotFoundQuery,
     mockDatasetWebhookByIdQuery,
     mockDatasetWebhookCreateSubscriptionMutation,
@@ -151,10 +152,7 @@ describe("DatasetWebhooksService", () => {
         );
 
         service.datasetWebhookRotateSecret(DATASET_ID, MOCK_SUBSCRIPTION_ID).subscribe((result: string) => {
-            expect(result).toEqual(
-                mockDatasetWebhookRotateSecretMutation.datasets.byId?.webhooks.subscription?.rotateSecret
-                    .newSecret as string,
-            );
+            expect(result).toEqual(MOCK_ROTATED_WEBHOOK_SECRET);
         });
 
         expect(datasetWebhookRotateSecretSpy).toHaveBeenCalledTimes(1);

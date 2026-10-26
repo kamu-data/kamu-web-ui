@@ -993,11 +993,11 @@ describe("FlowsComponent", () => {
     });
 
     describe("page of flow runs", () => {
-        let datasetFlowsListSpy: jasmine.Spy;
+        let datasetFlowsListSpy: jasmine.Spy<DatasetFlowsService["datasetFlowsList"]>;
 
         // The API pages from 0, the URL and the pagination from 1
         function lastRequestedPage(): number {
-            return (datasetFlowsListSpy.calls.mostRecent().args[0] as { page: number }).page + 1;
+            return datasetFlowsListSpy.calls.mostRecent().args[0].page + 1;
         }
 
         beforeEach(() => {

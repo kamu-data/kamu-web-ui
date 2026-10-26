@@ -20,6 +20,10 @@ export const MOCK_PAGE = 1;
 export const MOCK_VAR_KEY = "mock-key";
 export const MOCK_VAR_VALUE = "mock-value";
 export const MOCK_NEW_VALUE = "mock-new-value";
+export const MOCK_UPSERT_ENV_VAR_CREATED_MESSAGE = "Created";
+export const MOCK_UPSERT_ENV_VAR_UPDATED_MESSAGE = "Updated";
+export const MOCK_UPSERT_ENV_VAR_UP_TO_DATE_MESSAGE = "Dataset env var is up to date";
+export const MOCK_EXPOSED_ENV_VAR_VALUE = "value-10";
 
 export const mockListEnvVariablesQuery: ListEnvVariablesQuery = {
     datasets: {
@@ -90,7 +94,7 @@ export const mockUpsertEnvVariableMutationCreated: UpsertEnvVariableMutation = {
         byId: {
             envVars: {
                 upsertEnvVariable: {
-                    message: "Created",
+                    message: MOCK_UPSERT_ENV_VAR_CREATED_MESSAGE,
                     envVar: {
                         key: "key-1",
                         value: "value-1",
@@ -112,7 +116,7 @@ export const mockUpsertEnvVariableMutationUpdated: UpsertEnvVariableMutation = {
         byId: {
             envVars: {
                 upsertEnvVariable: {
-                    message: "Updated",
+                    message: MOCK_UPSERT_ENV_VAR_UPDATED_MESSAGE,
                     envVar: {
                         key: "key1",
                         value: "value12",
@@ -134,7 +138,7 @@ export const mockUpsertEnvVariableMutationUpToDate: UpsertEnvVariableMutation = 
         byId: {
             envVars: {
                 upsertEnvVariable: {
-                    message: "Dataset env var is up to date",
+                    message: MOCK_UPSERT_ENV_VAR_UP_TO_DATE_MESSAGE,
                     __typename: "UpsertDatasetEnvVarUpToDate",
                 },
                 __typename: "DatasetEnvVarsMut",
@@ -183,7 +187,7 @@ export const mockExposedEnvVariableValueQuery: ExposedEnvVariableValueQuery = {
     datasets: {
         byOwnerAndName: {
             envVars: {
-                exposedValue: "value-10",
+                exposedValue: MOCK_EXPOSED_ENV_VAR_VALUE,
                 __typename: "DatasetEnvVars",
             },
             __typename: "Dataset",

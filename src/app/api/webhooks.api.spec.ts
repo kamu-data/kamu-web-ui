@@ -33,6 +33,7 @@ import {
 } from "@api/kamu.graphql.interface";
 import { TEST_DATASET_ID } from "@api/mock/dataset.mock";
 import {
+    MOCK_CREATE_WEBHOOK_SUBSCRIPTION_SUCCESS_MESSAGE,
     mockDatasetWebhookByIdQuery,
     mockDatasetWebhookCreateSubscriptionMutation,
     mockDatasetWebhookPauseSubscriptionMutation,
@@ -109,8 +110,7 @@ describe("WebhooksApi", () => {
                     "CreateWebhookSubscriptionResultSuccess"
                 ) {
                     expect(res.datasets.byId?.webhooks.createSubscription.message).toEqual(
-                        mockDatasetWebhookCreateSubscriptionMutation.datasets.byId?.webhooks.createSubscription
-                            .message as string,
+                        MOCK_CREATE_WEBHOOK_SUBSCRIPTION_SUCCESS_MESSAGE,
                     );
                 }
             });

@@ -22,6 +22,9 @@ import {
 
 import { CreateWebhookSubscriptionSuccess } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
 
+export const MOCK_CREATE_WEBHOOK_SUBSCRIPTION_SUCCESS_MESSAGE = "Success";
+export const MOCK_ROTATED_WEBHOOK_SECRET = "5cb25e871e60edcfcb3227ebf5a5fe9457280eb3603bf5d489e732eddda187c3";
+
 export const mockWebhookEventTypesQuery: WebhookEventTypesQuery = {
     webhooks: {
         __typename: "Webhooks",
@@ -56,7 +59,7 @@ export const mockDatasetWebhookCreateSubscriptionMutation: DatasetWebhookCreateS
                     __typename: "CreateWebhookSubscriptionResultSuccess",
                     secret: "ec37fd23ac2b9e2319f65720f93115f731be99391b4963bf14ffc7e27ff467c7",
                     subscriptionId: "11e3422b-7cf2-4176-9568-539e0071ae86",
-                    message: "Success",
+                    message: MOCK_CREATE_WEBHOOK_SUBSCRIPTION_SUCCESS_MESSAGE,
                 },
                 __typename: "DatasetWebhooksMut",
             },
@@ -328,7 +331,7 @@ export const mockDatasetWebhookRotateSecretMutation: DatasetWebhookRotateSecretM
             webhooks: {
                 subscription: {
                     rotateSecret: {
-                        newSecret: "5cb25e871e60edcfcb3227ebf5a5fe9457280eb3603bf5d489e732eddda187c3",
+                        newSecret: MOCK_ROTATED_WEBHOOK_SECRET,
                         message: "Success",
                         __typename: "RotateWebhookSubscriptionSecretSuccess",
                     },

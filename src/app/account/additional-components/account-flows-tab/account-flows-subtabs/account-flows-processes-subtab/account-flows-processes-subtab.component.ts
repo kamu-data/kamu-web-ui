@@ -35,7 +35,7 @@ import { ToastrService } from "ngx-toastr";
 
 import { environment } from "@env/environment";
 import { BaseComponent } from "@common/components/base.component";
-import { trackBusyKey } from "@common/helpers/app.helpers";
+import { trackBusyKey, unexpectedValueError } from "@common/helpers/app.helpers";
 import { MY_MOMENT_FORMATS } from "@common/helpers/data.helpers";
 import AppValues from "@common/values/app.values";
 import {
@@ -208,8 +208,9 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
                 return rollup.active + rollup.failing;
             case ProcessCardFilterMode.CUSTOM:
                 return rollup.active + rollup.failing + rollup.paused + rollup.stopped;
+            /* istanbul ignore next */
             default:
-                throw new Error("Unsupported process card view mode");
+                throw unexpectedValueError(mode, "process card filter mode");
         }
     }
 

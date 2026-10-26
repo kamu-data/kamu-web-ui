@@ -25,6 +25,9 @@ import { TEST_ACCOUNT_ID, TEST_ACCOUNT_NAME, TEST_DATASET_ID, TEST_DATASET_NAME 
 import {
     MOCK_PAGE,
     MOCK_PER_PAGE,
+    MOCK_UPSERT_ENV_VAR_CREATED_MESSAGE,
+    MOCK_UPSERT_ENV_VAR_UP_TO_DATE_MESSAGE,
+    MOCK_UPSERT_ENV_VAR_UPDATED_MESSAGE,
     MOCK_VAR_KEY,
     MOCK_VAR_VALUE,
     mockDeleteEnvVariableMutation,
@@ -64,7 +67,7 @@ describe("EnvironmentVariablesApi", () => {
             .subscribe((result: UpsertEnvVariableMutation) => {
                 if (result.datasets.byId?.envVars.upsertEnvVariable.__typename === "UpsertDatasetEnvVarResultCreated") {
                     expect(result.datasets.byId?.envVars.upsertEnvVariable.message).toEqual(
-                        mockUpsertEnvVariableMutationCreated.datasets.byId?.envVars.upsertEnvVariable.message as string,
+                        MOCK_UPSERT_ENV_VAR_CREATED_MESSAGE,
                     );
                 }
             });
@@ -92,7 +95,7 @@ describe("EnvironmentVariablesApi", () => {
             .subscribe((result: UpsertEnvVariableMutation) => {
                 if (result.datasets.byId?.envVars.upsertEnvVariable.__typename === "UpsertDatasetEnvVarResultUpdated") {
                     expect(result.datasets.byId?.envVars.upsertEnvVariable.message).toEqual(
-                        mockUpsertEnvVariableMutationUpdated.datasets.byId?.envVars.upsertEnvVariable.message as string,
+                        MOCK_UPSERT_ENV_VAR_UPDATED_MESSAGE,
                     );
                 }
             });
@@ -118,9 +121,9 @@ describe("EnvironmentVariablesApi", () => {
                 isSecret: true,
             })
             .subscribe((result: UpsertEnvVariableMutation) => {
-                if (result.datasets.byId?.envVars.upsertEnvVariable.__typename === "UpsertDatasetEnvVarResultUpdated") {
+                if (result.datasets.byId?.envVars.upsertEnvVariable.__typename === "UpsertDatasetEnvVarUpToDate") {
                     expect(result.datasets.byId?.envVars.upsertEnvVariable.message).toEqual(
-                        mockUpsertEnvVariableMutationCreated.datasets.byId?.envVars.upsertEnvVariable.message as string,
+                        MOCK_UPSERT_ENV_VAR_UP_TO_DATE_MESSAGE,
                     );
                 }
             });

@@ -6,6 +6,7 @@
  */
 
 import {
+    AccountFragment,
     AccountProvider,
     AccountType,
     CancelFlowRunMutation,
@@ -1672,6 +1673,39 @@ export const mockDatasetFlowCompactionMutationError: SetDatasetFlowTriggerMutati
     },
 };
 
+export const mockDatasetFlowInitiators: AccountFragment[] = [
+    {
+        id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+        accountName: "kamu",
+        displayName: "kamu",
+        accountType: AccountType.User,
+        avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+        isAdmin: true,
+        __typename: "Account",
+        accountProvider: AccountProvider.Password,
+    },
+    {
+        id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+        accountName: "bamu",
+        displayName: "bamu",
+        accountType: AccountType.User,
+        avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+        isAdmin: true,
+        __typename: "Account",
+        accountProvider: AccountProvider.Password,
+    },
+    {
+        id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+        accountName: "kamu",
+        displayName: "kamu",
+        accountType: AccountType.User,
+        avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+        isAdmin: true,
+        __typename: "Account",
+        accountProvider: AccountProvider.Password,
+    },
+];
+
 export const mockDatasetFlowsInitiatorsQuery: DatasetFlowsInitiatorsQuery = {
     datasets: {
         byId: {
@@ -1679,38 +1713,7 @@ export const mockDatasetFlowsInitiatorsQuery: DatasetFlowsInitiatorsQuery = {
                 runs: {
                     listFlowInitiators: {
                         totalCount: 1,
-                        nodes: [
-                            {
-                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                                accountName: "kamu",
-                                displayName: "kamu",
-                                accountType: AccountType.User,
-                                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                isAdmin: true,
-                                __typename: "Account",
-                                accountProvider: AccountProvider.Password,
-                            },
-                            {
-                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                                accountName: "bamu",
-                                displayName: "bamu",
-                                accountType: AccountType.User,
-                                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                isAdmin: true,
-                                __typename: "Account",
-                                accountProvider: AccountProvider.Password,
-                            },
-                            {
-                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                                accountName: "kamu",
-                                displayName: "kamu",
-                                accountType: AccountType.User,
-                                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                isAdmin: true,
-                                __typename: "Account",
-                                accountProvider: AccountProvider.Password,
-                            },
-                        ],
+                        nodes: mockDatasetFlowInitiators,
                         __typename: "AccountConnection",
                     },
                     __typename: "DatasetFlowRuns",

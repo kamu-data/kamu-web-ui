@@ -21,7 +21,6 @@ import { FlowTriggerBreakingChangeRule, TimeUnit } from "@api/kamu.graphql.inter
 import { BatchingRuleType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { TransformTriggerFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.component";
 import { TransformTriggerFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.harness";
-import { TransformTriggerFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.types";
 
 @Component({
     imports: [
@@ -165,8 +164,7 @@ describe("TransformTriggerFormComponent", () => {
 
         await transformTriggerFormHarness.setSelectedBreakingChangeRule(FlowTriggerBreakingChangeRule.NoAction);
 
-        const domFormValue = await transformTriggerFormHarness.currentFormValue();
-        expect(domFormValue).toEqual({
+        const expectedFormValue = {
             forNewData: {
                 batchingRuleType: BatchingRuleType.BUFFERING,
                 buffering: {
@@ -175,8 +173,9 @@ describe("TransformTriggerFormComponent", () => {
                 },
             },
             forBreakingChange: FlowTriggerBreakingChangeRule.NoAction,
-        });
-        expect(component.form.getRawValue() as TransformTriggerFormValue).toEqual(domFormValue);
+        };
+        expect(await transformTriggerFormHarness.currentFormValue()).toEqual(expectedFormValue);
+        expect(component.form.getRawValue()).toEqual(expectedFormValue);
         expect(component.form.valid).toBeTrue();
     });
 
@@ -194,7 +193,7 @@ describe("TransformTriggerFormComponent", () => {
             forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
         });
 
-        expect(component.form.getRawValue() as TransformTriggerFormValue).toEqual({
+        expect(component.form.getRawValue()).toEqual({
             forNewData: {
                 batchingRuleType: BatchingRuleType.IMMEDIATE,
                 // Note: in raw value we will see the disabled form

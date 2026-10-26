@@ -67,6 +67,8 @@ import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions
 import { SqlQueryExplanationResponse } from "src/app/query-explainer/query-explainer.types";
 import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
 
+export const MOCK_DATASET_HEAD_BLOCK_HASH = "f16207c1039f6d9f5e107a2285ccfe04bc88cb65ddd2b217ceb62b717774b2f85f1f5";
+
 export const mockPageBasedInfo: DatasetPageInfoFragment = {
     currentPage: 1,
     hasNextPage: true,
@@ -138,7 +140,7 @@ export const mockMetadataCurrentInfo: DatasetCurrentInfoFragment = {
     ],
 };
 
-export const mockMetadataCurrentLicense: LicenseFragment = {
+export const mockMetadataCurrentLicense: LicenseFragment & { spdxId: string } = {
     __typename: "SetLicense",
     shortName: "OGL-Canada-2.0",
     name: "Open Government Licence - Canada",
@@ -433,7 +435,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                     refs: [
                         {
                             name: "head",
-                            blockHash: "f16207c1039f6d9f5e107a2285ccfe04bc88cb65ddd2b217ceb62b717774b2f85f1f5",
+                            blockHash: MOCK_DATASET_HEAD_BLOCK_HASH,
                         },
                     ],
                     blocks: {
@@ -1630,7 +1632,7 @@ export const mockDatasetHeadBlockHashQuery: DatasetHeadBlockHashQuery = {
                     refs: [
                         {
                             name: "head",
-                            blockHash: "f16207c1039f6d9f5e107a2285ccfe04bc88cb65ddd2b217ceb62b717774b2f85f1f5",
+                            blockHash: MOCK_DATASET_HEAD_BLOCK_HASH,
                         },
                     ],
                 },

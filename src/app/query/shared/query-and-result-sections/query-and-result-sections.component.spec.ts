@@ -123,8 +123,7 @@ describe("QueryAndResultSectionsComponent", () => {
         component.loadMore(limit);
         params.skip = component.currentData.length;
 
-        const secondCallParams = sqlReq.calls.allArgs()[1] as DatasetRequestBySql[];
-        expect(secondCallParams).toEqual([params]);
+        expect(sqlReq.calls.argsFor(1)).toEqual([params]);
     });
 
     it("should check click on `Share query` button", fakeAsync(() => {

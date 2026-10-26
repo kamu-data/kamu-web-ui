@@ -41,6 +41,7 @@ import {
 } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
+    MOCK_DATASET_HEAD_BLOCK_HASH,
     mockDatasetHeadBlockHashQuery,
     mockDatasetHistoryResponse,
     mockDatasetInfo,
@@ -314,9 +315,7 @@ describe("AppDatasetService", () => {
         const requestDatasetHashLastBlockSubscription$ = service
             .requestDatasetHeadBlockHash(TEST_ACCOUNT_NAME, TEST_DATASET_NAME)
             .subscribe((result: string) => {
-                expect(result).toEqual(
-                    mockDatasetHeadBlockHashQuery.datasets.byOwnerAndName?.metadata.chain.refs[0].blockHash as string,
-                );
+                expect(result).toEqual(MOCK_DATASET_HEAD_BLOCK_HASH);
             });
 
         expect(requestDatasetHashLastBlockSubscription$.closed).toBeTrue();

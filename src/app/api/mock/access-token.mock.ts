@@ -19,6 +19,7 @@ export const PAGE = 1;
 export const PER_PAGE = 15;
 export const TOKEN_NAME = "test-name";
 export const TOKEN_ID = "df649c7c-a4cb-4a8c-b39a-e879f8e9b3b6";
+export const MOCK_CREATE_ACCESS_TOKEN_SUCCESS_MESSAGE = "Success";
 
 export const mockCreatedAccessTokenData: CreatedAccessTokenDataFragment = {
     id: "514bcfec-1c58-44ce-aee8-867477b100d2",
@@ -42,7 +43,7 @@ export const mockCreateAccessTokenMutation: CreateAccessTokenMutation = {
         byId: {
             accessTokens: {
                 createAccessToken: {
-                    message: "Success",
+                    message: MOCK_CREATE_ACCESS_TOKEN_SUCCESS_MESSAGE,
                     token: mockCreatedAccessTokenData,
                     __typename: "CreateAccessTokenResultSuccess",
                 },

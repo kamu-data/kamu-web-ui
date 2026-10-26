@@ -285,11 +285,13 @@ export const mockAccountChangeEmailMutationSuccess: AccountChangeEmailMutation =
     },
 };
 
+export const MOCK_CHANGE_EMAIL_NON_UNIQUE_MESSAGE = "Non unique email";
+
 export const mockAccountChangeEmailMutationError: AccountChangeEmailMutation = {
     accounts: {
         byName: {
             updateEmail: {
-                message: "Non unique email",
+                message: MOCK_CHANGE_EMAIL_NON_UNIQUE_MESSAGE,
                 __typename: "UpdateEmailNonUnique",
             },
             __typename: "AccountMut",

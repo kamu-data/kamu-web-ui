@@ -10,7 +10,7 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { NgSelectComponent } from "@ng-select/ng-select";
+import { NgOption, NgSelectComponent } from "@ng-select/ng-select";
 
 import {
     findComponentInstance,
@@ -18,7 +18,7 @@ import {
     getElementByDataTestId,
     registerMatSvgIcons,
 } from "@common/helpers/base-test.helpers.spec";
-import { MaybeNull } from "@interface/app.types";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 import {
     DataSchemaListField,
     DataSchemaMapField,
@@ -29,7 +29,7 @@ import {
     OdfTypes,
 } from "@interface/dataset-schema.interface";
 
-import { TYPES_OPTIONS_LIST } from "../../edit-schema-table.types";
+import { TimestampPrecision, TimestampTimezone, TYPES_OPTIONS_LIST } from "../../edit-schema-table.types";
 import { TypeEditorComponent } from "./type-editor.component";
 
 // ---------------------------------------------------------------------------
@@ -204,7 +204,7 @@ describe("TypeEditorComponent", () => {
                 const emitted = requireTimeField(host.lastEmitted);
                 expect(emitted.kind).toBe(kind);
                 expect(emitted.unit).toBeDefined();
-                expect((emitted as { timezone?: string }).timezone).toBeUndefined();
+                expect(emitted.timezone).toBeUndefined();
             });
         });
     });
@@ -461,9 +461,7 @@ describe("TypeEditorComponent", () => {
             const ngSelect = findComponentInstance(fixture, NgSelectComponent);
             ngSelect.open();
             fixture.detectChanges();
-            const item = ngSelect.itemsList.items.find(
-                (i) => (i.value as MaybeNull<{ value?: OdfTypes }>)?.value === kindValue,
-            );
+            const item: MaybeUndefined<NgOption> = ngSelect.itemsList.findItem(kindValue);
             if (!item) throw new Error(`ng-select kind option not found: ${kindValue}`);
             ngSelect.select(item);
             fixture.detectChanges();
@@ -523,11 +521,14 @@ describe("TypeEditorComponent", () => {
         // value.unit/value.timezone via ngModel but had no (change) binding, so edits
         // never reached typeChange and were lost when the parent saved editingRow.
         describe("Timestamp unit/timezone wiring", () => {
-            function selectFromNgSelectByDataTestId(testId: string, predicate: (value: unknown) => boolean): void {
+            function selectFromNgSelectByDataTestId(
+                testId: string,
+                value: TimestampPrecision | TimestampTimezone,
+            ): void {
                 const ngSelect = findComponentInstanceByDataTestId(fixture, testId, NgSelectComponent);
                 ngSelect.open();
                 fixture.detectChanges();
-                const item = ngSelect.itemsList.items.find((i) => predicate(i.value));
+                const item: MaybeUndefined<NgOption> = ngSelect.itemsList.findItem(value);
                 if (!item) throw new Error(`ng-select option not found for ${testId}`);
                 ngSelect.select(item);
                 fixture.detectChanges();
@@ -540,10 +541,7 @@ describe("TypeEditorComponent", () => {
             });
 
             it("selecting a unit from the Timestamp unit dropdown emits the new unit via typeChange", () => {
-                selectFromNgSelectByDataTestId(
-                    "root:type:ts:unit",
-                    (v) => (v as MaybeNull<{ value?: string }>)?.value === "Second",
-                );
+                selectFromNgSelectByDataTestId("root:type:ts:unit", "Second");
                 const emitted = requireTimeField(host.lastEmitted);
                 expect(emitted.unit).toBe("Second");
             });
@@ -551,10 +549,7 @@ describe("TypeEditorComponent", () => {
             it("selecting a timezone from the Timestamp timezone dropdown emits via typeChange", () => {
                 // Only "UTC" is a valid option today, but re-selecting it must still
                 // fire (change) and reach typeChange — proving the binding exists at all.
-                selectFromNgSelectByDataTestId(
-                    "root:type:ts:timezone",
-                    (v) => (v as MaybeNull<{ value?: string }>)?.value === "UTC",
-                );
+                selectFromNgSelectByDataTestId("root:type:ts:timezone", "UTC");
                 const emitted = requireTimeField(host.lastEmitted);
                 expect(emitted.timezone).toBe("UTC");
             });

@@ -20,6 +20,7 @@ import { AccountFragment, DatasetFlowProcessesDataFragment } from "@api/kamu.gra
 import {
     mockCancelFlowRunMutationError,
     mockCancelFlowRunMutationSuccess,
+    mockDatasetFlowInitiators,
     mockDatasetFlowsInitiatorsQuery,
     mockDatasetFlowsProcessesQuery,
     mockDatasetPauseFlowsMutationError,
@@ -358,9 +359,7 @@ describe("DatasetFlowsService", () => {
         spyOn(datasetFlowApi, "getDatasetFlowsInitiators").and.returnValue(of(mockDatasetFlowsInitiatorsQuery));
 
         const subscription$ = service.flowsInitiators(MOCK_DATASET_ID).subscribe((data: AccountFragment[]) => {
-            expect(data.length).toEqual(
-                mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators.nodes.length as number,
-            );
+            expect(data.length).toEqual(mockDatasetFlowInitiators.length);
             expect(data[0].accountName).toEqual("bamu");
         });
 

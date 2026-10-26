@@ -15,6 +15,8 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 import { DatasetCollaborationApi } from "@api/dataset-collaboration.api";
 import { AccountFragment, AccountWithRoleConnectionDataFragment, DatasetAccessRole } from "@api/kamu.graphql.interface";
 import {
+    MOCK_DATASET_USER_ROLE,
+    mockDatasetCollaboratorsConnection,
     mockDatasetListCollaboratorsQuery,
     mockDatasetSearchCollaboratorQuery,
     mockDatasetUserRoleQuery,
@@ -54,10 +56,7 @@ describe("DatasetCollaborationsService", () => {
             })
             .subscribe((result: AccountWithRoleConnectionDataFragment) => {
                 expect(result.totalCount).toEqual(1);
-                expect(result.nodes[0].role).toEqual(
-                    mockDatasetListCollaboratorsQuery.datasets.byId?.collaboration.accountRoles.nodes[0]
-                        .role as DatasetAccessRole,
-                );
+                expect(result.nodes[0].role).toEqual(mockDatasetCollaboratorsConnection.nodes[0].role);
             });
 
         expect(listCollaboratorsSpy).toHaveBeenCalledTimes(1);
@@ -140,7 +139,7 @@ describe("DatasetCollaborationsService", () => {
         );
 
         const subscription$ = service.getRoleByDatasetId(TEST_DATASET_ID).subscribe((result) => {
-            expect(result).toEqual(mockDatasetUserRoleQuery.datasets.byId?.role as DatasetAccessRole);
+            expect(result).toEqual(MOCK_DATASET_USER_ROLE);
         });
 
         expect(getDatasetUserRoleSpy).toHaveBeenCalledTimes(1);

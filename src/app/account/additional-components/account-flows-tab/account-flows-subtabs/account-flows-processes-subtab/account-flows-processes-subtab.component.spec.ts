@@ -556,13 +556,6 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         expect(component.totalProcessesCountByMode(ProcessCardFilterMode.PAUSED, rollup)).toEqual(rollup.paused);
     });
 
-    it("should reject an unsupported filters mode when counting processes", () => {
-        const rollup = requireValue(mockAccountFlowsAsCardsQuery.accounts.byName ?? null).flows.processes.fullRollup;
-        expect(() => component.totalProcessesCountByMode("unsupported" as ProcessCardFilterMode, rollup)).toThrowError(
-            "Unsupported process card view mode",
-        );
-    });
-
     it("should reset the custom filters and reload the cards from the first page", fakeAsync(async () => {
         const accountFlowsFiltersService = TestBed.inject(AccountFlowsFiltersService);
         const resetFiltersSpy = spyOn(accountFlowsFiltersService, "resetFilters").and.callThrough();

@@ -14,6 +14,7 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 
 import { AccountApi } from "@api/account.api";
 import {
+    MOCK_CHANGE_EMAIL_NON_UNIQUE_MESSAGE,
     mockAccountChangeEmailMutationError,
     mockAccountChangeEmailMutationSuccess,
     mockAccountWithEmailQuery,
@@ -76,9 +77,7 @@ describe("AccountEmailService", () => {
         );
         service.changeEmailAddress({ accountName: TEST_ACCOUNT_NAME, newEmail: TEST_ACCOUNT_EMAIL }).subscribe(() => {
             expect(changeAccountEmailSpy).toHaveBeenCalledTimes(1);
-            expect(emitRenameAccountEmailErrorOccurredSpy).toHaveBeenCalledWith(
-                mockAccountChangeEmailMutationError.accounts.byName?.updateEmail.message as string,
-            );
+            expect(emitRenameAccountEmailErrorOccurredSpy).toHaveBeenCalledWith(MOCK_CHANGE_EMAIL_NON_UNIQUE_MESSAGE);
         });
     });
 });

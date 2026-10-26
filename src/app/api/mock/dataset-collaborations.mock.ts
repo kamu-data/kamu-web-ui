@@ -139,10 +139,12 @@ export const mockUnsetRoleCollaboratorMutation: UnsetRoleCollaboratorMutation = 
     },
 };
 
+export const MOCK_DATASET_USER_ROLE = DatasetAccessRole.Maintainer;
+
 export const mockDatasetUserRoleQuery: DatasetUserRoleQuery = {
     datasets: {
         byId: {
-            role: null,
+            role: MOCK_DATASET_USER_ROLE,
             __typename: "Dataset",
         },
         __typename: "Datasets",

@@ -13,7 +13,7 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { NgSelectComponent } from "@ng-select/ng-select";
+import { NgOption, NgSelectComponent } from "@ng-select/ng-select";
 
 import { findComponentInstance, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
@@ -297,9 +297,7 @@ describe("EditSchemaTableComponent", () => {
             const ngSelect = findComponentInstance(fixture, NgSelectComponent);
             ngSelect.open();
             fixture.detectChanges();
-            const item = ngSelect.itemsList.items.find(
-                (i) => (i.value as MaybeNull<{ value?: OdfTypes }>)?.value === OdfTypes.Int64,
-            );
+            const item: MaybeUndefined<NgOption> = ngSelect.itemsList.findItem(OdfTypes.Int64);
             if (!item) throw new Error("Int64 option not found in kind ng-select");
             ngSelect.select(item);
             fixture.detectChanges();

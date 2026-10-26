@@ -18,6 +18,7 @@ import { ViewDatasetEnvVarConnectionDataFragment } from "@api/kamu.graphql.inter
 import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_ID, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 import {
+    MOCK_EXPOSED_ENV_VAR_VALUE,
     MOCK_PAGE,
     MOCK_PER_PAGE,
     MOCK_VAR_KEY,
@@ -145,11 +146,7 @@ describe("EnvironmentVariablesService", () => {
                 datasetName: TEST_DATASET_NAME,
                 datasetEnvVarKey: MOCK_VAR_KEY,
             })
-            .subscribe((result) =>
-                expect(result).toEqual(
-                    mockExposedEnvVariableValueQuery.datasets.byOwnerAndName?.envVars.exposedValue as string,
-                ),
-            );
+            .subscribe((result) => expect(result).toEqual(MOCK_EXPOSED_ENV_VAR_VALUE));
 
         expect(exposedEnvVariableValueSpy).toHaveBeenCalledTimes(1);
         expect(subscription$.closed).toBeTrue();

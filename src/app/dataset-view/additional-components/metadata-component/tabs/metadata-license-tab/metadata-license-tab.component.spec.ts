@@ -75,7 +75,7 @@ describe("MetadataLicenseTabComponent", () => {
         const licenseName = findElementByDataTestId(fixture, "license-name");
         expect(licenseName?.innerText.trim()).toEqual(mockMetadataCurrentLicense.name);
         const licenseSpdxId = findElementByDataTestId(fixture, "license-spdxId");
-        expect(licenseSpdxId?.innerText.trim()).toEqual(mockMetadataCurrentLicense.spdxId as string);
+        expect(licenseSpdxId?.innerText.trim()).toEqual(mockMetadataCurrentLicense.spdxId);
         const licenseWebsiteUrl = findElementByDataTestId(fixture, "license-websiteUrl");
         expect(licenseWebsiteUrl?.innerText.trim()).toEqual(mockMetadataCurrentLicense.websiteUrl);
     });

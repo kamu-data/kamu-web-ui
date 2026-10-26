@@ -206,8 +206,9 @@ or misspelled field before any test runs. A type assertion switches that check o
 
   A field the spec does not need takes its empty value (`schema: null`, `[]`); it is not dropped
   from the type with `Omit` or `Partial`.
-- Test data is never asserted into shape: no `{ ... } as T`, no `mock.a?.b as T`, no
-  `as unknown as T`. Replace each one as follows:
+- Specs and mocks hold no type assertions at all: no `{ ... } as T`, no `mock.a?.b as T`, no
+  `as unknown as T`, no `as HTMLButtonElement`. eslint's `consistent-type-assertions` rejects
+  every one. Replace each as follows:
 
   | The value | Use |
   |---|---|
@@ -215,12 +216,15 @@ or misspelled field before any test runs. A type assertion switches that check o
   | is one member of a `__typename` union | a mock typed with that member, or an `if` on `__typename` |
   | is a variant of a typed mock | a spread: `{ ...structuredClone(mockX), field: value }` |
   | is a browser object such as `File` | the constructor: `new File(["a,b"], "data.csv", { type: "text/csv" })` |
+  | is a DOM element or a component instance | the typed lookups ("DOM helpers") |
+  | is a spy's call arguments | the spy `spyOn` returned, typed as `jasmine.Spy<Service["method"]>` |
   | still does not fit the component's input | a wrong input type: type the input with what reaches it (`kamu-ui-angular-style`, "Component anatomy"), not the value with a cast |
 
 - `as const` on a literal and `satisfies T` on a typed local constant are fine: neither hides a
-  field.
-- Specs and mocks that still hold assertions are legacy. Remove the ones in the tests and mock
-  entries you change, and never add new ones.
+  field, and the rule allows both.
+- A value that cannot be typed honestly, such as a router snapshot with no public constructor or
+  a scalar codegen types wrongly (`uint64FromApi`), gets a named helper in
+  `base-test.helpers.spec.ts`, the one file the rule exempts.
 
 ## Mocks and fixtures
 

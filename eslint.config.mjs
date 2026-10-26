@@ -132,16 +132,14 @@ export default [
       ],
     },
   },
-  // Test data is declared with its type, never asserted into shape: an assertion hides missing,
-  // misspelled and stale fields. base-test.helpers fakes the one router object with no constructor.
+  // Specs and mocks never assert a type: an assertion hides missing, misspelled and stale fields,
+  // and a wrong element or union member. base-test.helpers holds the few values that cannot be
+  // typed honestly, such as the router snapshot with no public constructor.
   {
     files: ["src/app/**/*.spec.ts", "src/app/**/*mock*.ts", "src/app/**/mock.data.ts"],
     ignores: ["src/app/common/helpers/base-test.helpers.spec.ts"],
     rules: {
-      "@typescript-eslint/consistent-type-assertions": [
-        "error",
-        { assertionStyle: "as", objectLiteralTypeAssertions: "never" },
-      ],
+      "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "never" }],
     },
   },
   // License header plugin for specific files

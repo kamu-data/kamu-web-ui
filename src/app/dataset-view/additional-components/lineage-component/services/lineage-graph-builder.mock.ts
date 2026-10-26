@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { uint64FromApi } from "@common/helpers/base-test.helpers.spec";
 import {
     DatasetAccessResultNotAccessibleDataFragment,
     DatasetKind,
@@ -64,8 +65,7 @@ export const mockLineageUpdateWithSharedPushSource: LineageUpdate = {
     origin: MOCK_DERIVED_DATASET,
 };
 
-// The API sends Uint64 as a string, although codegen types it as a number
-const MOCK_CHAIN_ID_FROM_API = "1" as unknown as number;
+const MOCK_CHAIN_ID_FROM_API = uint64FromApi("1");
 
 export const MOCK_ETHEREUM_NODE_URL = "https://eth.example.com";
 

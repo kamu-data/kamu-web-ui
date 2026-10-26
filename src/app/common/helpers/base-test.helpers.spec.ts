@@ -446,3 +446,8 @@ export async function runResolver<T>(
     const result = TestBed.runInInjectionContext(() => resolver(route, routerStateSnapshot(url)));
     return isObservable(result) ? firstValueFrom(result) : result;
 }
+
+/** A `Uint64` value as the API sends it: a string, although codegen types the scalar as a number. */
+export function uint64FromApi(value: string): number {
+    return value as unknown as number;
+}

@@ -13,7 +13,11 @@ import { of } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
 
-import { getInputElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import {
+    getElementByDataTestId,
+    getInputElementByDataTestId,
+    registerMatSvgIcons,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetVisibility } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
@@ -59,7 +63,7 @@ describe("DatasetCreateComponent", () => {
         datasetCreateService.emitErrorMessageChanged(errorMessage);
         tick();
         fixture.detectChanges();
-        const element = getInputElementByDataTestId(fixture, "create-error-message");
+        const element = getElementByDataTestId(fixture, "create-error-message");
         expect(element.textContent).toEqual(errorMessage);
         flush();
     }));
@@ -182,13 +186,16 @@ describe("DatasetCreateComponent", () => {
         const mockFile = new File(["test content"], "test.yaml", {
             type: "text/html",
         });
-        const mockEvt = { target: { files: [mockFile] } };
-        try {
-            const result = await component.onFileSelected(mockEvt as unknown as Event);
-            expect(result).toBe("# You can edit this file\ntest content");
-        } catch (error) {
-            fail(error);
-        }
+        const fileInput = getElementByDataTestId(fixture, "input-file", HTMLInputElement);
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(mockFile);
+        fileInput.files = dataTransfer.files;
+        const onFileSelectedSpy = spyOn(component, "onFileSelected").and.callThrough();
+        fileInput.dispatchEvent(new Event("change"));
+
+        expect(onFileSelectedSpy).toHaveBeenCalledTimes(1);
+        const result = await onFileSelectedSpy.calls.mostRecent().returnValue;
+        expect(result).toBe("# You can edit this file\ntest content");
     });
 
     it("should check call uploadFile when file not picked)", async () => {
@@ -197,13 +204,13 @@ describe("DatasetCreateComponent", () => {
         checkboxInput.click();
         fixture.detectChanges();
 
-        const mockEvt = { target: { files: [] } };
-        try {
-            const result = await component.onFileSelected(mockEvt as unknown as Event);
-            expect(result).toBe("");
-        } catch (error) {
-            fail(error);
-        }
+        const fileInput = getElementByDataTestId(fixture, "input-file", HTMLInputElement);
+        const onFileSelectedSpy = spyOn(component, "onFileSelected").and.callThrough();
+        fileInput.dispatchEvent(new Event("change"));
+
+        expect(onFileSelectedSpy).toHaveBeenCalledTimes(1);
+        const result = await onFileSelectedSpy.calls.mostRecent().returnValue;
+        expect(result).toBe("");
     });
 
     [

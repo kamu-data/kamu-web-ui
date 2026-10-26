@@ -19,7 +19,7 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 
 import { SpinnerComponent } from "@common/components/spinner/spinner/spinner.component";
 import {
-    checkInputDisabled,
+    checkButtonDisabled,
     checkVisible,
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
@@ -184,7 +184,7 @@ describe("LoginComponent", () => {
                 setFieldValue(fixture, Elements.INPUT_PASSWORD, TEST_PASSWORD);
                 fixture.detectChanges();
 
-                checkInputDisabled(fixture, Elements.SUBMIT_PASSWORD, false);
+                checkButtonDisabled(fixture, Elements.SUBMIT_PASSWORD, false);
                 expect(component.passwordLoginForm.valid).toBeTrue();
 
                 emitClickOnElementByDataTestId(fixture, Elements.SUBMIT_PASSWORD);
@@ -199,19 +199,19 @@ describe("LoginComponent", () => {
             });
 
             it("Missing login or password leads to disable submit", () => {
-                checkInputDisabled(fixture, Elements.SUBMIT_PASSWORD, true);
+                checkButtonDisabled(fixture, Elements.SUBMIT_PASSWORD, true);
                 expect(component.passwordLoginForm.valid).toBeFalse();
 
                 setFieldValue(fixture, Elements.INPUT_LOGIN, TEST_LOGIN);
                 fixture.detectChanges();
 
-                checkInputDisabled(fixture, Elements.SUBMIT_PASSWORD, true);
+                checkButtonDisabled(fixture, Elements.SUBMIT_PASSWORD, true);
                 expect(component.passwordLoginForm.valid).toBeFalse();
 
                 setFieldValue(fixture, Elements.INPUT_PASSWORD, TEST_PASSWORD);
                 fixture.detectChanges();
 
-                checkInputDisabled(fixture, Elements.SUBMIT_PASSWORD, false);
+                checkButtonDisabled(fixture, Elements.SUBMIT_PASSWORD, false);
                 expect(component.passwordLoginForm.valid).toBeTrue();
             });
 
@@ -253,7 +253,8 @@ describe("LoginComponent", () => {
                     const inputElement: HTMLInputElement = getElementByDataTestId(
                         fixture,
                         inputElementName,
-                    ) as HTMLInputElement;
+                        HTMLInputElement,
+                    );
                     inputElement.dispatchEvent(new KeyboardEvent("keyup", { key: " " }));
 
                     fixture.detectChanges();

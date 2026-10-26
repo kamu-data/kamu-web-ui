@@ -15,7 +15,11 @@ import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { dispatchInputEvent, emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import {
+    dispatchInputEvent,
+    emitClickOnElementByDataTestId,
+    nativeElementOf,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { SearchApi } from "@api/search.api";
@@ -140,8 +144,8 @@ describe("SearchAndSchemasSectionComponent", () => {
         fixture.detectChanges();
 
         const panelsAfter = fixture.debugElement.queryAll(By.css('[data-test-id="schema-panel"]'));
-        expect(panelsAfter.map((panel) => panel.nativeElement as HTMLElement)).toEqual(
-            panelsBefore.map((panel) => panel.nativeElement as HTMLElement),
+        expect(panelsAfter.map((panel) => nativeElementOf(panel, HTMLElement))).toEqual(
+            panelsBefore.map((panel) => nativeElementOf(panel, HTMLElement)),
         );
     });
 

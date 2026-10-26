@@ -76,7 +76,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     }
 
     function getSaveButton(): HTMLButtonElement {
-        return getElementByDataTestId(fixture, "save-ingest-configuration-btn") as HTMLButtonElement;
+        return getElementByDataTestId(fixture, "save-ingest-configuration-btn", HTMLButtonElement);
     }
 
     // Helper function to validate form state consistency

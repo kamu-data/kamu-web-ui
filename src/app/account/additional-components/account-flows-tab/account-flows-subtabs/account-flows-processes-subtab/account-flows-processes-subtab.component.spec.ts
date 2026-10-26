@@ -9,7 +9,7 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
-import { MatButtonToggleChange } from "@angular/material/button-toggle";
+import { MatButtonToggle, MatButtonToggleChange } from "@angular/material/button-toggle";
 import { ActivatedRoute } from "@angular/router";
 
 import { of, Subject, throwError } from "rxjs";
@@ -20,7 +20,11 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 import { environment } from "@env/environment";
 import { ModalService } from "@common/components/modal/modal.service";
 import { requireValue } from "@common/helpers/app.helpers";
-import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import {
+    findComponentInstanceByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { FlowProcessEffectiveState, FlowStatus } from "@api/kamu.graphql.interface";
@@ -33,6 +37,7 @@ import {
 } from "@api/mock/account.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
+import { AccountTabs } from "src/app/account/account.constants";
 import { AccountService } from "src/app/account/account.service";
 import { AccountFlowsProcessesSubtabComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/account-flows-processes-subtab.component";
 import { AccountFlowsProcessesSubtabHarness } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/account-flows-processes-subtab.harness";
@@ -253,15 +258,27 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         discardPeriodicTasks();
     }));
 
-    it("should check to change filters mode", () => {
-        const mockChangeEvent = {
-            value: ProcessCardFilterMode.RECENT_ACTIVITY,
-        };
+    it("should check to change filters mode", fakeAsync(() => {
+        fixture.detectChanges();
+        tick(0);
+        const toggle = findComponentInstanceByDataTestId(
+            fixture,
+            `filters-mode-${ProcessCardFilterMode.RECENT_ACTIVITY}`,
+            MatButtonToggle,
+        );
 
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-        component.onChangeFiltersMode(mockChangeEvent as MatButtonToggleChange);
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledTimes(1);
-    });
+        component.onChangeFiltersMode(new MatButtonToggleChange(toggle, ProcessCardFilterMode.RECENT_ACTIVITY));
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
+            MOCK_ACCOUNT_NAME,
+            AccountTabs.FLOWS,
+            undefined,
+            AccountFlowsNav.PROCESSES,
+            undefined,
+            ProcessCardFilterMode.RECENT_ACTIVITY,
+        );
+        discardPeriodicTasks();
+    }));
 
     it("should check to get cards for ProcessCardFilterMode.CUSTOM mode", fakeAsync(async () => {
         spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({

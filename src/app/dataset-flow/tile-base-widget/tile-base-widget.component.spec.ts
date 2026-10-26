@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { findElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { getElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { FlowItemWidgetDataFragment } from "@api/kamu.graphql.interface";
 import { mockFlowItemWidgetDataFragments } from "@api/mock/dataset-flow.mock";
 
@@ -132,7 +132,7 @@ describe("TileBaseWidgetComponent", () => {
     });
 
     it(`should check href for tile element`, () => {
-        const tileElement = findElementByDataTestId(fixture, "tile-element-0") as HTMLLinkElement;
+        const tileElement = getElementByDataTestId(fixture, "tile-element-0", HTMLAnchorElement);
         expect(tileElement.href.includes("kamu/account.tokens.transfers/flow-details/414/history")).toBeTrue();
     });
 });

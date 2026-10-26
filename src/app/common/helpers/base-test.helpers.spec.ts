@@ -53,8 +53,48 @@ export function findElement<T>(fixture: ComponentFixture<T>, selector: string): 
     return fixture.debugElement.query(By.css(selector));
 }
 
-export function findNativeElement<T>(fixture: ComponentFixture<T>, selector: string): HTMLElement {
-    return findElement(fixture, selector).nativeElement as HTMLElement;
+/** A DOM element class, such as `HTMLButtonElement`, that a lookup checks its result against. */
+export type ElementClass<E extends Element> = new () => E;
+
+function describeNode(node: unknown): string {
+    return node instanceof Element ? `<${node.tagName.toLowerCase()}> (${node.constructor.name})` : String(node);
+}
+
+function checkElementClass<E extends Element>(node: unknown, elementClass: ElementClass<E>, what: string): E {
+    if (node instanceof elementClass) {
+        return node;
+    }
+    throw new Error(`${what} is ${describeNode(node)}, expected ${elementClass.name}`);
+}
+
+/**
+ * The native element of a `DebugElement`, checked to be an instance of `elementClass`.
+ * Throws when it is not.
+ */
+export function nativeElementOf<E extends Element>(debugElement: DebugElement, elementClass: ElementClass<E>): E {
+    return checkElementClass(debugElement.nativeElement, elementClass, `Element ${debugElement.name}`);
+}
+
+/**
+ * The native element matching a CSS selector, checked to be an `elementClass` (`HTMLElement`
+ * by default). Throws when nothing matches or the element is of another class.
+ */
+export function findNativeElement<T>(fixture: ComponentFixture<T>, selector: string): HTMLElement;
+export function findNativeElement<T, E extends Element>(
+    fixture: ComponentFixture<T>,
+    selector: string,
+    elementClass: ElementClass<E>,
+): E;
+export function findNativeElement<T>(
+    fixture: ComponentFixture<T>,
+    selector: string,
+    elementClass: ElementClass<Element> = HTMLElement,
+): Element {
+    const debugElement: MaybeNull<DebugElement> = findElement(fixture, selector);
+    if (!debugElement) {
+        throw new Error(`Element "${selector}" not found`);
+    }
+    return checkElementClass(debugElement.nativeElement, elementClass, `Element "${selector}"`);
 }
 
 export function emitClickOnElement<T>(fixture: ComponentFixture<T>, selector: string): void {
@@ -62,21 +102,47 @@ export function emitClickOnElement<T>(fixture: ComponentFixture<T>, selector: st
 }
 
 export function emitClickOnElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): void {
-    const debugElement: MaybeNull<DebugElement> = fixture.debugElement.query(By.css(`[data-test-id="${id}"]`));
-    (debugElement.nativeElement as HTMLElement).click();
+    getElementByDataTestId(fixture, id).click();
 }
 
-export function findElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): MaybeUndefined<HTMLElement> {
+/**
+ * The element with the given `data-test-id`, checked to be an `elementClass` (`HTMLElement` by
+ * default); `undefined` when none is rendered. Throws when the element is of another class.
+ */
+export function findElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): MaybeUndefined<HTMLElement>;
+export function findElementByDataTestId<T, E extends Element>(
+    fixture: ComponentFixture<T>,
+    id: string,
+    elementClass: ElementClass<E>,
+): MaybeUndefined<E>;
+export function findElementByDataTestId<T>(
+    fixture: ComponentFixture<T>,
+    id: string,
+    elementClass: ElementClass<Element> = HTMLElement,
+): MaybeUndefined<Element> {
     const debugElement: MaybeNull<DebugElement> = fixture.debugElement.query(By.css(`[data-test-id="${id}"]`));
-    if (debugElement) {
-        return debugElement.nativeElement as HTMLElement;
-    } else {
+    if (!debugElement) {
         return undefined;
     }
+    return checkElementClass(debugElement.nativeElement, elementClass, `Element "${id}"`);
 }
 
-export function getElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): HTMLElement {
-    const element: MaybeUndefined<HTMLElement> = findElementByDataTestId(fixture, id);
+/**
+ * The element with the given `data-test-id`, checked to be an `elementClass` (`HTMLElement` by
+ * default). Throws when none is rendered or the element is of another class.
+ */
+export function getElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): HTMLElement;
+export function getElementByDataTestId<T, E extends Element>(
+    fixture: ComponentFixture<T>,
+    id: string,
+    elementClass: ElementClass<E>,
+): E;
+export function getElementByDataTestId<T>(
+    fixture: ComponentFixture<T>,
+    id: string,
+    elementClass: ElementClass<Element> = HTMLElement,
+): Element {
+    const element = findElementByDataTestId(fixture, id, elementClass);
     if (element) {
         return element;
     }
@@ -105,20 +171,26 @@ function setFieldElementValue(element: SupportedInputElement, value: string): vo
 }
 
 export function setFieldValue<T>(fixture: ComponentFixture<T>, dataTestId: string, value: string): void {
-    const element: SupportedInputElement = getElementByDataTestId(fixture, dataTestId) as SupportedInputElement;
-    expect(element).not.toBeNull();
+    const element = getElementByDataTestId(fixture, dataTestId);
+    if (!(
+        element instanceof HTMLInputElement ||
+        element instanceof HTMLTextAreaElement ||
+        element instanceof HTMLSelectElement
+    )) {
+        throw new Error(
+            `Element "${dataTestId}" is ${describeNode(element)}, expected an input, textarea or select element`,
+        );
+    }
     setFieldElementValue(element, value);
 }
 
 export function checkInputDisabled<T>(fixture: ComponentFixture<T>, dataTestId: string, isDisabled: boolean): void {
-    const element: MaybeNull<HTMLInputElement> = getElementByDataTestId(fixture, dataTestId) as HTMLInputElement;
-    expect(element).not.toBeNull();
+    const element = getElementByDataTestId(fixture, dataTestId, HTMLInputElement);
     expect(element.disabled).toEqual(isDisabled);
 }
 
 export function checkButtonDisabled<T>(fixture: ComponentFixture<T>, dataTestId: string, isDisabled: boolean): void {
-    const element: MaybeNull<HTMLButtonElement> = getElementByDataTestId(fixture, dataTestId) as HTMLButtonElement;
-    expect(element).not.toBeNull();
+    const element = getElementByDataTestId(fixture, dataTestId, HTMLButtonElement);
     expect(element.disabled).toEqual(isDisabled);
 }
 
@@ -165,7 +237,7 @@ export const snapshotRedirectUrlMock = {
 };
 
 export function getInputElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): HTMLInputElement {
-    return getElementByDataTestId(fixture, id) as HTMLInputElement;
+    return getElementByDataTestId(fixture, id, HTMLInputElement);
 }
 
 /**
@@ -190,6 +262,26 @@ export function findComponentInstance<T, C>(
     const match = findComponentInstances(fixture, directive).find(predicate);
     if (!match) throw new Error(`No instance of ${directive.name} matching the given predicate was found`);
     return match;
+}
+
+/**
+ * The instance of a component or directive class on the element with the given `data-test-id`.
+ * Throws when no such element is rendered or the class is not on it.
+ */
+export function findComponentInstanceByDataTestId<T, C>(
+    fixture: ComponentFixture<T>,
+    id: string,
+    directive: Type<C>,
+): C {
+    const debugElement: MaybeNull<DebugElement> = fixture.debugElement.query(By.css(`[data-test-id="${id}"]`));
+    if (!debugElement) {
+        throw new Error(`Element "${id}" not found`);
+    }
+    const instance = debugElement.injector.get(directive, null, { self: true });
+    if (!instance) {
+        throw new Error(`Element "${id}" has no ${directive.name}`);
+    }
+    return instance;
 }
 
 export function dispatchInputEvent<T>(fixture: ComponentFixture<T>, id: string, value: string): void {

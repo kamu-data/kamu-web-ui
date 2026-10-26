@@ -12,7 +12,12 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { NgSelectComponent } from "@ng-select/ng-select";
 
-import { findElement, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import {
+    findComponentInstance,
+    findComponentInstanceByDataTestId,
+    getElementByDataTestId,
+    registerMatSvgIcons,
+} from "@common/helpers/base-test.helpers.spec";
 import { MaybeNull } from "@interface/app.types";
 import {
     DataSchemaListField,
@@ -119,7 +124,7 @@ describe("TypeEditorComponent", () => {
     });
 
     function editor(): TypeEditorComponent {
-        return fixture.debugElement.children[0].componentInstance as TypeEditorComponent;
+        return findComponentInstance(fixture, TypeEditorComponent);
     }
 
     // Mirrors what ng-select's [(ngModel)] does before firing (change): writes the new kind
@@ -222,8 +227,7 @@ describe("TypeEditorComponent", () => {
         });
 
         it("toggles Optional through the UI switch and reflects its accessibility state", () => {
-            const optionalToggle = findElement(fixture, `[data-test-id="root:type:field:optional"]`)
-                .nativeElement as HTMLButtonElement;
+            const optionalToggle = getElementByDataTestId(fixture, "root:type:field:optional", HTMLButtonElement);
 
             expect(optionalToggle.getAttribute("role")).toBe("switch");
             expect(optionalToggle.getAttribute("aria-checked")).toBe("false");
@@ -454,7 +458,7 @@ describe("TypeEditorComponent", () => {
         // ng-select has no CDK harness. Drive it via NgSelectComponent's public API
         // (open + select) to avoid DOM timing issues with the option panel.
         function selectKindViaApi(kindValue: OdfTypes): void {
-            const ngSelect = findElement(fixture, "ng-select").componentInstance as NgSelectComponent;
+            const ngSelect = findComponentInstance(fixture, NgSelectComponent);
             ngSelect.open();
             fixture.detectChanges();
             const item = ngSelect.itemsList.items.find(
@@ -520,8 +524,7 @@ describe("TypeEditorComponent", () => {
         // never reached typeChange and were lost when the parent saved editingRow.
         describe("Timestamp unit/timezone wiring", () => {
             function selectFromNgSelectByDataTestId(testId: string, predicate: (value: unknown) => boolean): void {
-                const ngSelect = findElement(fixture, `[data-test-id="${testId}"]`)
-                    .componentInstance as NgSelectComponent;
+                const ngSelect = findComponentInstanceByDataTestId(fixture, testId, NgSelectComponent);
                 ngSelect.open();
                 fixture.detectChanges();
                 const item = ngSelect.itemsList.items.find((i) => predicate(i.value));

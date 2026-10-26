@@ -12,11 +12,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { provideToastr } from "ngx-toastr";
 
 import { TimelineComponent } from "@common/components/timeline-component/timeline.component";
-import {
-    findElementByDataTestId,
-    registerMatSvgIcons,
-    setComponentInput,
-} from "@common/helpers/base-test.helpers.spec";
+import { getElementByDataTestId, registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { mockMetadataBlockByHash, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
@@ -49,7 +45,7 @@ describe("TimelineComponent", () => {
     });
 
     it("should check avatar url", () => {
-        const imageElement = findElementByDataTestId(fixture, "timeline-avatarUrl-0") as HTMLImageElement;
+        const imageElement = getElementByDataTestId(fixture, "timeline-avatarUrl-0", HTMLImageElement);
         const src = mockMetadataBlockByHash.author.avatarUrl;
         const result = src ? src : AppValues.DEFAULT_AVATAR_URL;
         expect(imageElement.src).toEqual(result);

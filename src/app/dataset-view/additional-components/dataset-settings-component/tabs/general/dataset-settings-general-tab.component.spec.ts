@@ -20,6 +20,7 @@ import {
     dispatchInputEvent,
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
+    getElementByDataTestId,
     getInputElementByDataTestId,
     setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
@@ -148,9 +149,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
         expect(component.isAllowedToDeleteDataset).toEqual(true);
         expect(component.renameDatasetForm.disabled).toEqual(true);
-        expect((findElementByDataTestId(fixture, Elements.RenameDatasetButton) as HTMLButtonElement).disabled).toEqual(
-            true,
-        );
+        expect(getElementByDataTestId(fixture, Elements.RenameDatasetButton, HTMLButtonElement).disabled).toEqual(true);
     });
 
     it("should check rename dataset", () => {

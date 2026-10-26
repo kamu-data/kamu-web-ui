@@ -76,7 +76,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     }
 
     function getSaveButton(): HTMLButtonElement {
-        return getElementByDataTestId(fixture, "save-btn") as HTMLButtonElement;
+        return getElementByDataTestId(fixture, "save-btn", HTMLButtonElement);
     }
 
     it("should create", () => {

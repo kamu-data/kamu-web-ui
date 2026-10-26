@@ -15,6 +15,7 @@ import { provideToastr } from "ngx-toastr";
 import {
     dispatchInputEvent,
     getElementByDataTestId,
+    nativeElementOf,
     registerMatSvgIcons,
     setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
@@ -65,7 +66,7 @@ describe("BlockNavigationComponent", () => {
 
         const blockHashes = fixture.debugElement
             .queryAll(By.css('[data-test-id="block-hash"]'))
-            .map((element) => element.nativeElement as HTMLElement);
+            .map((element) => nativeElementOf(element, HTMLElement));
         const matchingBlocks = mockHistoryUpdate.history.filter((block) => block.blockHash.includes(testSearchHash));
         expect(matchingBlocks.length).toBeGreaterThan(0);
         expect(blockHashes.length).toEqual(matchingBlocks.length);

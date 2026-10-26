@@ -23,7 +23,7 @@
         (change)="onChangeFiltersMode($event)"
     >
         @for (item of CARD_FILTERS_MODE_OPTIONS; track item) {
-            <mat-button-toggle [value]="item.value">
+            <mat-button-toggle [value]="item.value" [attr.data-test-id]="'filters-mode-' + item.value">
                 <mat-icon aria-hidden="true" class="fs-4 mr-2px">{{ item.iconName }}</mat-icon
                 >{{ item.label }}</mat-button-toggle
             >

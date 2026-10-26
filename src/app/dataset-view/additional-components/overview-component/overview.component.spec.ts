@@ -21,6 +21,7 @@ import { provideToastr } from "ngx-toastr";
 import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
+    getElementByDataTestId,
     registerMatSvgIcons,
     setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
@@ -246,7 +247,7 @@ describe("OverviewComponent", () => {
             spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
             updateView();
 
-            const refreshButton = findElementByDataTestId(fixture, "refresh-now-button") as HTMLButtonElement;
+            const refreshButton = getElementByDataTestId(fixture, "refresh-now-button", HTMLButtonElement);
             expect(refreshButton.disabled).toBeTrue();
         });
 
@@ -307,7 +308,7 @@ describe("OverviewComponent", () => {
             spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
             updateView();
 
-            const refreshButton = findElementByDataTestId(fixture, "refresh-now-button") as HTMLButtonElement;
+            const refreshButton = getElementByDataTestId(fixture, "refresh-now-button", HTMLButtonElement);
             expect(refreshButton.disabled).toBeTrue();
         });
 

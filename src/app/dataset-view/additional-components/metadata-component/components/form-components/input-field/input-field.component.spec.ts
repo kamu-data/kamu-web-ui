@@ -9,11 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
-import {
-    dispatchInputEvent,
-    getInputElementByDataTestId,
-    setComponentInput,
-} from "@common/helpers/base-test.helpers.spec";
+import { dispatchInputEvent, getElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 
@@ -51,7 +47,7 @@ describe("InputFieldComponent", () => {
         fixture.detectChanges();
         dispatchInputEvent(fixture, "input", "");
 
-        const requiredMessage = getInputElementByDataTestId(fixture, "error-message");
+        const requiredMessage = getElementByDataTestId(fixture, "error-message");
         expect(requiredMessage.textContent?.trim()).toBe("Input is required");
     });
 
@@ -67,7 +63,7 @@ describe("InputFieldComponent", () => {
 
         dispatchInputEvent(fixture, "input", "mock");
 
-        const maxLengthMessage = getInputElementByDataTestId(fixture, "error-message");
+        const maxLengthMessage = getElementByDataTestId(fixture, "error-message");
         expect(maxLengthMessage.textContent?.trim()).toBe("Input can't exceed 1 characters");
     });
 
@@ -76,7 +72,7 @@ describe("InputFieldComponent", () => {
 
         dispatchInputEvent(fixture, "input", "mock");
 
-        const patternMessage = getInputElementByDataTestId(fixture, "error-message");
+        const patternMessage = getElementByDataTestId(fixture, "error-message");
         expect(patternMessage.textContent?.trim()).toBe("Input format is wrong");
     });
 });

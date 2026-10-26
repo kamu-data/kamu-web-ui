@@ -5,6 +5,7 @@
             class="ms-2"
             [(ngModel)]="flowsSelectionState.webhooksCategory"
             (change)="onSelectionWebhooksChange($event)"
+            data-test-id="webhooks-category-chips"
         >
             <mat-chip-option [value]="'webhooks'"> Webhooks</mat-chip-option>
         </mat-chip-listbox>
@@ -16,6 +17,7 @@
             (change)="onToggleWebhookFilter($event)"
             multiple
             [disabled]="!isWebhookCategoryActive"
+            data-test-id="webhook-filter-toggles"
         >
             @for (item of WEBHOOKS_FILTERS_OPTIONS; track item) {
                 <mat-button-toggle [value]="item.state"

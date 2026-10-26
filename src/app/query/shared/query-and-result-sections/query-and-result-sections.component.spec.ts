@@ -71,7 +71,7 @@ describe("QueryAndResultSectionsComponent", () => {
     it("should check 'Run' button is disabled", () => {
         setComponentInput(fixture, "sqlLoading", true);
         fixture.detectChanges();
-        const runButtonElem = findElementByDataTestId(fixture, "runSqlQueryButton") as HTMLButtonElement;
+        const runButtonElem = getElementByDataTestId(fixture, "runSqlQueryButton", HTMLButtonElement);
         expect(runButtonElem.disabled).toEqual(true);
     });
 
@@ -99,7 +99,7 @@ describe("QueryAndResultSectionsComponent", () => {
         fixture.detectChanges();
         tick();
         fixture.detectChanges();
-        const runSqlButton = findElementByDataTestId(fixture, "runSqlQueryButton") as HTMLButtonElement;
+        const runSqlButton = getElementByDataTestId(fixture, "runSqlQueryButton", HTMLButtonElement);
         const elem = getElementByDataTestId(fixture, "sql-error-message");
         expect(runSqlButton.disabled).toBe(false);
         expect(elem.textContent).toEqual(mockSqlErrorUpdate.error);

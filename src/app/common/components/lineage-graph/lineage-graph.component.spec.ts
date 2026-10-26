@@ -18,7 +18,7 @@ import { MOCK_GRAPH_WITH_SOURCES, MOCK_SOURCE_NODES } from "@common/components/l
 import { WidgetHeightService } from "@common/components/lineage-graph/widget-height.service";
 import {
     findComponentInstance,
-    findElementByDataTestId,
+    getElementByDataTestId,
     setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
@@ -150,8 +150,12 @@ describe("LineageGraphComponent", () => {
         });
 
         it("should render the default avatar for an owner without one", () => {
-            const avatarElement = findElementByDataTestId(fixture, `account-avatar-${CURRENT_NODE.label}`);
-            expect(avatarElement?.getAttribute("xlink:href")).toEqual(AppValues.DEFAULT_AVATAR_URL);
+            const avatarElement = getElementByDataTestId(
+                fixture,
+                `account-avatar-${CURRENT_NODE.label}`,
+                SVGImageElement,
+            );
+            expect(avatarElement.getAttribute("xlink:href")).toEqual(AppValues.DEFAULT_AVATAR_URL);
         });
     });
 

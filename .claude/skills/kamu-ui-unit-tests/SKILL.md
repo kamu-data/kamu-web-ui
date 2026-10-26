@@ -128,9 +128,17 @@ present or absent, with no harness to extend), the helpers in
 `@common/helpers/base-test.helpers.spec` select by `data-test-id`:
 `getElementByDataTestId`, `findElementByDataTestId`, `emitClickOnElementByDataTestId`,
 `checkVisible`, `setFieldValue`, `dispatchInputEvent`, `checkButtonDisabled`,
-`checkInputDisabled`, `findComponentInstance`, `findComponentInstances`, plus `routerMock`,
-`snapshotParamMapMock` and `registerMatSvgIcons()`. Add an attribute to the template rather
-than selecting by CSS class or element structure.
+`checkInputDisabled`, `findComponentInstance`, `findComponentInstances`,
+`findComponentInstanceByDataTestId`, plus `routerMock`, `snapshotParamMapMock` and
+`registerMatSvgIcons()`. Add an attribute to the template rather than selecting by CSS class or
+element structure.
+
+A spec never casts a lookup result. `getElementByDataTestId`, `findElementByDataTestId` and
+`findNativeElement` take the element class as an optional last argument
+(`getElementByDataTestId(fixture, "save-btn", HTMLButtonElement)`) and return that type;
+`nativeElementOf(debugElement, HTMLElement)` does the same for a `DebugElement`. Each checks the
+class with `instanceof` and throws on a mismatch. A component instance comes from
+`findComponentInstance` or `findComponentInstanceByDataTestId`, never from `componentInstance`.
 
 A spec does not query `fixture.debugElement` inline (`query(By.directive(...))`,
 `queryAll(...)`): rendered components and directives are reached through

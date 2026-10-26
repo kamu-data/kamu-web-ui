@@ -11,7 +11,7 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
-import { findElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { getElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { EngineDescDataFragment } from "@api/kamu.graphql.interface";
@@ -53,7 +53,7 @@ describe("EngineSectionComponent", () => {
             setComponentInput(fixture, "selectedEngine", item.testCase);
             fixture.detectChanges();
             tick();
-            const image = findElementByDataTestId(fixture, "engine-image") as HTMLInputElement;
+            const image = getElementByDataTestId(fixture, "engine-image", HTMLInputElement);
             expect(image.value).toEqual(item.expected.latestImage);
             expect(component.selectedEngine.toUpperCase()).toBe(item.expected.name.toUpperCase());
             expect(component.selectedImage).toBe(item.expected.latestImage);

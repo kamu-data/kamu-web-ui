@@ -15,7 +15,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { NgSelectComponent } from "@ng-select/ng-select";
 
-import { findComponentInstance, findElement, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { findComponentInstance, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 import {
     DataSchemaField,
@@ -294,7 +294,7 @@ describe("EditSchemaTableComponent", () => {
             fixture.detectChanges();
 
             // Drive the kind ng-select via its public API (no CDK harness for ng-select)
-            const ngSelect = findElement(fixture, "ng-select").componentInstance as NgSelectComponent;
+            const ngSelect = findComponentInstance(fixture, NgSelectComponent);
             ngSelect.open();
             fixture.detectChanges();
             const item = ngSelect.itemsList.items.find(

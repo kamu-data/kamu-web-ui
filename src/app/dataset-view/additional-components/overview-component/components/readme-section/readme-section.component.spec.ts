@@ -145,7 +145,7 @@ describe("ReadmeSectionComponent", () => {
         await fixture.whenStable();
         fixture.detectChanges();
 
-        const runButtonElement = getElementByDataTestId(fixture, "markdown-run-button") as HTMLLinkElement;
+        const runButtonElement = getElementByDataTestId(fixture, "markdown-run-button", HTMLAnchorElement);
         expect(
             runButtonElement.href.includes(
                 "kamu/mockNameDerived/data?sqlQuery=select%20*%20from%20%27account.tokens.portfolio.market-value%27",
@@ -165,7 +165,7 @@ describe("ReadmeSectionComponent", () => {
         await fixture.whenStable();
         fixture.detectChanges();
 
-        const runButtonElement = getElementByDataTestId(fixture, "markdown-run-button") as HTMLLinkElement;
+        const runButtonElement = getElementByDataTestId(fixture, "markdown-run-button", HTMLAnchorElement);
         expect(
             runButtonElement.href.includes(
                 "kamu/mockNameDerived/data?sqlQuery=select%0A*%0Afrom%20%27account.tokens.portfolio.market-value%27",

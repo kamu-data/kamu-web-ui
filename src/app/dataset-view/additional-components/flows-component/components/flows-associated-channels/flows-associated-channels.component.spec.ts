@@ -5,9 +5,10 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MatButtonToggleChange } from "@angular/material/button-toggle";
-import { MatChipListboxChange } from "@angular/material/chips";
+import { MatButtonToggleGroupHarness } from "@angular/material/button-toggle/testing";
+import { MatChipListboxHarness } from "@angular/material/chips/testing";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
@@ -98,22 +99,30 @@ describe("FlowsAssociatedChannelsComponent", () => {
         expect(resumeWebhookEmitterSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check to select 1 state", () => {
-        const mockChangeEvent = {
-            value: "webhooks",
-        };
+    it("should check to select 1 state", async () => {
         const selectionWebhooksEmitterSpy = spyOn(component.selectionWebhooksClicked, "emit");
-        component.onSelectionWebhooksChange(mockChangeEvent as MatChipListboxChange);
-        expect(selectionWebhooksEmitterSpy).toHaveBeenCalledTimes(1);
+        const chips = await TestbedHarnessEnvironment.loader(fixture).getHarness(
+            MatChipListboxHarness.with({ selector: '[data-test-id="webhooks-category-chips"]' }),
+        );
+        await chips.selectChips({ text: "Webhooks" });
+        expect(selectionWebhooksEmitterSpy).toHaveBeenCalledOnceWith("webhooks");
     });
 
-    it("should check toggle webhook filter", () => {
-        const mockChangeEvent = {
-            value: [FlowProcessEffectiveState.Active],
-        };
+    it("should check toggle webhook filter", async () => {
+        setComponentInput(fixture, "flowsSelectionState", {
+            flowsCategory: undefined,
+            webhooksCategory: "webhooks",
+            webhookFilterButtons: [],
+            webhooksIds: [],
+            subscriptions: [],
+        });
         const toggleWebhookFilterClickedSpy = spyOn(component.toggleWebhookFilterClicked, "emit");
-        component.onToggleWebhookFilter(mockChangeEvent as MatButtonToggleChange);
-        expect(toggleWebhookFilterClickedSpy).toHaveBeenCalledTimes(1);
+        const toggles = await TestbedHarnessEnvironment.loader(fixture).getHarness(
+            MatButtonToggleGroupHarness.with({ selector: '[data-test-id="webhook-filter-toggles"]' }),
+        );
+        const [activeToggle] = await toggles.getToggles({ text: /^Active:/ });
+        await activeToggle.check();
+        expect(toggleWebhookFilterClickedSpy).toHaveBeenCalledOnceWith([FlowProcessEffectiveState.Active]);
     });
 
     it("should check remove selected webhook", () => {

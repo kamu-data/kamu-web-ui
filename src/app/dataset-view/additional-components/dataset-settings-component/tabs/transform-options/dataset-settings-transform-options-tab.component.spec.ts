@@ -74,7 +74,7 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
     });
 
     function getSaveButton(): HTMLButtonElement {
-        return getElementByDataTestId(fixture, "save-btn") as HTMLButtonElement;
+        return getElementByDataTestId(fixture, "save-btn", HTMLButtonElement);
     }
 
     it("should check 'Save' button is enabled with no reactive rule is defined", () => {

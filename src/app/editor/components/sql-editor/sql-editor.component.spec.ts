@@ -139,8 +139,10 @@ describe("SqlEditorComponent", () => {
 
         function action(id: string): monaco.editor.IActionDescriptor {
             const found = actions.find((a) => a.id === id);
-            expect(found).toBeDefined();
-            return found as monaco.editor.IActionDescriptor;
+            if (!found) {
+                throw new Error(`The editor got no action "${id}"`);
+            }
+            return found;
         }
 
         beforeEach(() => {

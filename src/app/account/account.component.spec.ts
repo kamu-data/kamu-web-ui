@@ -15,11 +15,7 @@ import { BehaviorSubject, of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import {
-    findElementByDataTestId,
-    registerMatSvgIcons,
-    setComponentInput,
-} from "@common/helpers/base-test.helpers.spec";
+import { getElementByDataTestId, registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { mockAccountDetails, TEST_AVATAR_URL, TEST_LOGIN } from "@api/mock/auth.mock";
 
@@ -105,7 +101,7 @@ describe("AccountComponent", () => {
 
     it("should show the avatar image without linking to it", () => {
         fixture.detectChanges();
-        const avatar = findElementByDataTestId(fixture, "account-avatar") as HTMLImageElement;
+        const avatar = getElementByDataTestId(fixture, "account-avatar", HTMLImageElement);
         expect(avatar.src).toEqual(TEST_AVATAR_URL);
         expect(avatar.closest("a")).toBeNull();
     });
@@ -126,10 +122,10 @@ describe("AccountComponent", () => {
     it("should check routers link ", () => {
         spyOn(component, "showFlows").and.returnValue(true);
         fixture.detectChanges();
-        const datasetsTabLink = findElementByDataTestId(fixture, "link-account-datasets-tab") as HTMLLinkElement;
+        const datasetsTabLink = getElementByDataTestId(fixture, "link-account-datasets-tab", HTMLAnchorElement);
         expect(datasetsTabLink.href).toContain(`/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.DATASETS}`);
 
-        const flowsTabLink = findElementByDataTestId(fixture, "link-account-flows-tab") as HTMLLinkElement;
+        const flowsTabLink = getElementByDataTestId(fixture, "link-account-flows-tab", HTMLAnchorElement);
         expect(flowsTabLink.href).toContain(`/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.FLOWS}`);
     });
 });

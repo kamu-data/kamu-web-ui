@@ -1,6 +1,6 @@
 ---
 name: kamu-ui-unit-tests
-description: Unit test conventions for Kamu Web UI — Karma + Jasmine specs next to their source, TestBed setup, CDK component harnesses (Material and custom *.harness.ts), data-test-id selectors and the shared DOM helpers, Apollo testing for api classes, mock fixtures, fake async and frozen time, render hooks and timers in specs, and running a narrowed test set. Use before writing or editing any *.spec.ts, *.harness.ts or mock file.
+description: Unit test conventions for Kamu Web UI — Karma + Jasmine specs next to their source, TestBed setup, CDK component harnesses (Material and custom *.harness.ts), data-test-id selectors and the shared DOM helpers, Apollo testing for api classes, mock fixtures and their typing (no type assertions on test data), fake async and frozen time, render hooks and timers in specs, and running a narrowed test set. Use before writing or editing any *.spec.ts, *.harness.ts or mock file.
 ---
 
 # Kamu UI Unit Tests
@@ -54,9 +54,13 @@ beforeEach(async () => {
   checks the name and the value's type, including misspelled properties of an object literal; an
   alias (`@Input(RoutingResolvers.X)`) is resolved for you, and a field that is not an input
   throws. eslint rejects a direct `componentRef.setInput()` in a spec, since it takes the name as
-  a string and the value as `unknown`. Do not add `as` to a value to make it fit: when a mock
-  reached through optional chaining does not match, unwrap it with
-  `requireValue(mock.a?.b ?? null)`.
+  a string and the value as `unknown`. A value that does not fit is never cast to fit; see
+  [Types in specs and mocks](#types-in-specs-and-mocks).
+- Lifecycle hooks run through change detection, never by hand. To test how a component reacts to
+  an input change, set the input and call `fixture.detectChanges()`. Never call `ngOnChanges`
+  with a hand-built `SimpleChanges` (eslint rejects it). Never call `ngOnInit()` again on a
+  component the first `detectChanges()` already initialised: it subscribes a second time and
+  tests a state the app never reaches. Older specs that still do it are fixed when next edited.
 - `src/test.ts` sets `errorOnUnknownProperties` and `errorOnUnknownElements`, so binding an
   unknown property or using an undeclared element in a spec template throws instead of logging.
 - The same NG0100 also flags a template value that differs on every evaluation, such as a getter
@@ -174,6 +178,35 @@ One case per api method: assert the variables sent, flush a fixture typed with t
   that reaches a `loadChildren` or `loadComponent` route needs an `async` test with `await
   router.navigate(...)`, since `tick()` does not wait for a lazy chunk.
 
+## Types in specs and mocks
+
+The compiler is the first check a spec gets: test data typed as the app's data catches a stale
+or misspelled field before any test runs. A type assertion switches that check off.
+
+- Every exported mock is declared with its type:
+  - a response fixture with the generated `XxxQuery` / `XxxMutation`;
+  - a slice of GraphQL data with the generated `XxxFragment`, or with the union member a spec
+    needs (`{ __typename: "AddData" } & AddDataEventFragment`);
+  - a view model with its app interface (`OverviewUpdate`).
+
+  A field the spec does not need takes its empty value (`schema: null`, `[]`); it is not dropped
+  from the type with `Omit` or `Partial`.
+- Test data is never asserted into shape: no `{ ... } as T`, no `mock.a?.b as T`, no
+  `as unknown as T`. Replace each one as follows:
+
+  | The value | Use |
+  |---|---|
+  | sits behind optional chaining in a typed fixture | `requireValue(mock.a?.b ?? null)` from `@common/helpers/app.helpers` |
+  | is one member of a `__typename` union | a mock typed with that member, or an `if` on `__typename` |
+  | is a variant of a typed mock | a spread: `{ ...structuredClone(mockX), field: value }` |
+  | is a browser object such as `File` | the constructor: `new File(["a,b"], "data.csv", { type: "text/csv" })` |
+  | still does not fit the component's input | a wrong input type: type the input with what reaches it (`kamu-ui-angular-style`, "Component anatomy"), not the value with a cast |
+
+- `as const` on a literal and `satisfies T` on a typed local constant are fine: neither hides a
+  field.
+- Specs and mocks that still hold assertions are legacy. Remove the ones in the tests and mock
+  entries you change, and never add new ones.
+
 ## Mocks and fixtures
 
 - GraphQL response fixtures: `src/app/api/mock/<domain>.mock.ts`, named `mock<OperationName>`
@@ -209,6 +242,8 @@ One case per api method: assert the variables sent, flush a fixture typed with t
 |---|---|
 | Assigning an input field directly (`component.foo = x`) | Skips `ngOnChanges` and setters and does not re-render an OnPush view: readme-section specs asserted on a state `ngOnChanges` would have overwritten, and clicked a button the real view hides |
 | `fixture.componentRef.setInput("name", value)` with `satisfies` added by hand | The name is a string and the value `unknown`, so nothing is checked unless someone remembers `satisfies`, and an unknown name only logged NG0303. Moving 397 calls to the typed helper exposed 16 mismatches, among them a GitHub callback input typed `string` that the router sets to `undefined` |
+| Calling `ngOnChanges` with a hand-built `SimpleChanges` | Tests a change Angular never sends. The base-editor specs ran the hook twice per change, once through change detection and once by hand. The request-timer spec hid that the hook threw when only its `class` input changed |
+| Casting test data to the expected type (`{ ... } as T`, `mock.a?.b as T`) | Hides missing, misspelled and stale fields. The overview mocks kept `addedOutputData` after the schema renamed it to `newData`, and carried a polling source the query never fetches. The casts in the flows and secrets specs covered component inputs typed with full schema types that the app's data never matched |
 | Selecting elements by CSS class or tag structure | Breaks on styling changes; `data-test-id` is the contract between template and test |
 | Raw `nativeElement` clicks inside Material components | Depends on Material's internal DOM; the Material harnesses are the supported API |
 | Hand-built Apollo response objects inline in specs | Not reusable and not type-checked against codegen; fixtures go to `api/mock/` |

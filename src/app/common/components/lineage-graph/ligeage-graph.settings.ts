@@ -24,6 +24,16 @@ export const LINEAGE_CONFIG: LineageGraphConfig = {
     overlayGap: 10,
 };
 
+// Horizontal offsets inside a node box, shared by the node templates and the node size calculation
+export const LINEAGE_NODE_LAYOUT = {
+    padding: 10,
+    datasetLabelX: 10,
+    datasetAccountX: 35,
+    sourceLabelX: 35,
+    wideIconLabelX: 55,
+    inaccessibleLabelX: 12,
+} as const;
+
 export interface LineageGraphConfig {
     layout: string;
     enableDrag: boolean;

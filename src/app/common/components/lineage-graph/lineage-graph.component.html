@@ -37,7 +37,7 @@
                     <svg:g class="node">
                         <svg:rect
                             attr.data-test-id="lineage-node-{{ node.data.kind }}-{{ node.label }}"
-                            [attr.width]="node.dimension.width + 18"
+                            [attr.width]="node.dimension.width"
                             [attr.height]="node.dimension.height"
                             [attr.rx]="5"
                             [attr.fill]="node.data.dataObject.kind === DatasetKind.Root ? '#FFCBA6' : '#BDDEF1'"
@@ -54,7 +54,7 @@
                         />
                         <svg:text
                             alignment-baseline="central"
-                            [attr.x]="10"
+                            [attr.x]="LINEAGE_NODE_LAYOUT.datasetLabelX"
                             [attr.y]="node.dimension.height * 0.6"
                             [attr.font-weight]="'600'"
                             [attr.cursor]="'pointer'"
@@ -74,7 +74,7 @@
                         <svg:text
                             alignment-baseline="central"
                             (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
-                            [attr.x]="35"
+                            [attr.x]="LINEAGE_NODE_LAYOUT.datasetAccountX"
                             [attr.y]="18"
                             [attr.font-weight]="'normal'"
                         >
@@ -88,7 +88,7 @@
                         [attr.transform]="'translate(' + node.dimension.width + ', 0)'"
                     >
                         <image
-                            [attr.x]="5"
+                            [attr.x]="-10"
                             [attr.y]="-12"
                             [attr.width]="20"
                             [attr.height]="20"
@@ -100,7 +100,7 @@
                     <svg:g class="node">
                         <svg:rect
                             attr.data-test-id="lineage-node-{{ node.data.kind }}-{{ node.label }}"
-                            [attr.width]="node.dimension.width * 1.1"
+                            [attr.width]="node.dimension.width"
                             [attr.height]="50"
                             [attr.rx]="5"
                             [attr.fill]="'#FFF'"
@@ -115,7 +115,7 @@
                         />
                         <svg:text
                             alignment-baseline="central"
-                            [attr.x]="33"
+                            [attr.x]="LINEAGE_NODE_LAYOUT.sourceLabelX"
                             [attr.y]="node.dimension.height / 2"
                             [attr.font-weight]="'normal'"
                             [attr.cursor]="'pointer'"
@@ -128,7 +128,7 @@
                     <svg:g class="node">
                         <svg:rect
                             attr.data-test-id="lineage-node-{{ node.data.kind }}-{{ node.label }}"
-                            [attr.width]="node.dimension.width * 1.1"
+                            [attr.width]="node.dimension.width"
                             [attr.height]="50"
                             [attr.rx]="5"
                             [attr.fill]="'#FFF'"
@@ -143,7 +143,7 @@
                         />
                         <svg:text
                             alignment-baseline="central"
-                            [attr.x]="35"
+                            [attr.x]="LINEAGE_NODE_LAYOUT.sourceLabelX"
                             [attr.y]="node.dimension.height / 2"
                             [attr.font-weight]="'normal'"
                             [attr.cursor]="'pointer'"
@@ -163,7 +163,7 @@
                             [attr.cursor]="'pointer'"
                         />
                         <image
-                            [attr.x]="-45"
+                            [attr.x]="0"
                             [attr.y]="node.dimension.height / 2 - 20"
                             [attr.width]="50"
                             [attr.height]="40"
@@ -171,7 +171,7 @@
                         />
                         <svg:text
                             alignment-baseline="central"
-                            [attr.x]="0"
+                            [attr.x]="LINEAGE_NODE_LAYOUT.wideIconLabelX"
                             [attr.y]="node.dimension.height / 2"
                             [attr.font-weight]="'normal'"
                             [attr.cursor]="'pointer'"
@@ -184,7 +184,7 @@
                     <svg:g class="node">
                         <svg:rect
                             attr.data-test-id="lineage-node-{{ node.data.kind }}-{{ node.label }}"
-                            [attr.width]="node.dimension.width + 12"
+                            [attr.width]="node.dimension.width"
                             [attr.height]="node.dimension.height"
                             [attr.rx]="5"
                             [attr.fill]="'#d6D6D6'"
@@ -193,7 +193,7 @@
                         />
                         <svg:text
                             alignment-baseline="central"
-                            [attr.x]="node.dimension.width * 0.12"
+                            [attr.x]="LINEAGE_NODE_LAYOUT.inaccessibleLabelX"
                             [attr.y]="node.dimension.height / 2"
                             [attr.font-weight]="'600'"
                             [attr.cursor]="'pointer'"
@@ -201,9 +201,9 @@
                         >
                             {{ node.label | displayDatasetId }}
                         </svg:text>
-                        <svg:g [attr.transform]="'translate(' + (node.dimension.width - 15) + ', 0)'">
+                        <svg:g [attr.transform]="'translate(' + node.dimension.width + ', 0)'">
                             <image
-                                [attr.x]="17"
+                                [attr.x]="-10"
                                 [attr.y]="-12"
                                 [attr.width]="20"
                                 [attr.height]="20"
@@ -223,7 +223,7 @@
                             [attr.cursor]="'pointer'"
                         />
                         <image
-                            [attr.x]="-45"
+                            [attr.x]="0"
                             [attr.y]="node.dimension.height / 2 - 20"
                             [attr.width]="50"
                             [attr.height]="40"
@@ -231,7 +231,7 @@
                         />
                         <svg:text
                             alignment-baseline="central"
-                            [attr.x]="5"
+                            [attr.x]="LINEAGE_NODE_LAYOUT.wideIconLabelX"
                             [attr.y]="node.dimension.height / 2"
                             [attr.font-weight]="'normal'"
                             [attr.cursor]="'pointer'"

@@ -9,9 +9,11 @@ import { TestBed } from "@angular/core/testing";
 
 import { firstValueFrom } from "rxjs";
 
-import { Node } from "@swimlane/ngx-graph";
+import { Node, NodeDimension } from "@swimlane/ngx-graph";
 
+import { LineageNodeSizeService } from "@common/components/lineage-graph/lineage-node-size.service";
 import { requireValue } from "@common/helpers/app.helpers";
+import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
 
 import {
     mockBuildGraphNodesResult,
@@ -39,11 +41,24 @@ import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscr
 describe("LineageGraphBuilderService", () => {
     let service: LineageGraphBuilderService;
     let datasetSubsService: DatasetSubscriptionsService;
+    let datasetNodeSizeSpy: jasmine.Spy;
+    let sourceNodeSizeSpy: jasmine.Spy;
+    let inaccessibleNodeSizeSpy: jasmine.Spy;
+
+    const DATASET_NODE_SIZE: NodeDimension = { width: 200, height: 70 };
+    const SOURCE_NODE_SIZE: NodeDimension = { width: 150, height: 70 };
+    const INACCESSIBLE_NODE_SIZE: NodeDimension = { width: 120, height: 70 };
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
         service = TestBed.inject(LineageGraphBuilderService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
+        const nodeSizeService = TestBed.inject(LineageNodeSizeService);
+        datasetNodeSizeSpy = spyOn(nodeSizeService, "datasetNodeSize").and.returnValue(DATASET_NODE_SIZE);
+        sourceNodeSizeSpy = spyOn(nodeSizeService, "sourceNodeSize").and.returnValue(SOURCE_NODE_SIZE);
+        inaccessibleNodeSizeSpy = spyOn(nodeSizeService, "inaccessibleNodeSize").and.returnValue(
+            INACCESSIBLE_NODE_SIZE,
+        );
     });
 
     async function buildGraph(lineage: LineageUpdate): Promise<LineageGraphUpdate> {
@@ -65,6 +80,12 @@ describe("LineageGraphBuilderService", () => {
         datasetSubsService.emitLineageChanged(null);
         const update = await firstValueFrom(service.buildGraph());
         expect(update).toBeNull();
+    });
+
+    it("should build the graph even when a font fails to load", async () => {
+        spyOn(document.fonts, "load").and.returnValue(Promise.reject(new Error("Font download blocked")));
+        const update = await buildGraph(mockLineageGraphUpdate);
+        expect(update.graph.nodes.length).toBeGreaterThan(0);
     });
 
     it("should check get current dataset", async () => {
@@ -96,7 +117,23 @@ describe("LineageGraphBuilderService", () => {
 
     it("should check nodes were built correctly", async () => {
         const update = await buildGraph(mockLineageGraphUpdate);
-        expect(update.graph.nodes).toEqual(mockBuildGraphNodesResult);
+        expect(update.graph.nodes).toEqual(
+            mockBuildGraphNodesResult.map((node: Node) => ({
+                ...node,
+                dimension:
+                    (node.data as LineageGraphNodeData).kind === LineageGraphNodeKind.Dataset
+                        ? DATASET_NODE_SIZE
+                        : SOURCE_NODE_SIZE,
+            })),
+        );
+    });
+
+    it("should size every node from its texts", async () => {
+        await buildGraph(mockLineageGraphUpdateWithMqttSource);
+
+        const dataset = mockLineageGraphUpdateWithMqttSource.origin;
+        expect(datasetNodeSizeSpy).toHaveBeenCalledOnceWith(dataset.name, dataset.owner.accountName);
+        expect(sourceNodeSizeSpy).toHaveBeenCalledOnceWith(LineageGraphNodeKind.Mqtt, "test.mosquitto.org:1883");
     });
 
     it("should give a lone dataset a hidden self-loop, so that the layout does not crash", async () => {
@@ -126,9 +163,13 @@ describe("LineageGraphBuilderService", () => {
             {
                 id: inaccessibleId,
                 label: MOCK_INACCESSIBLE_DATASET.id,
+                dimension: INACCESSIBLE_NODE_SIZE,
                 data: { kind: LineageGraphNodeKind.DatasetNotAccessable },
             } as Node,
         ]);
+        expect(inaccessibleNodeSizeSpy).toHaveBeenCalledOnceWith(
+            new DisplayDatasetIdPipe().transform(MOCK_INACCESSIBLE_DATASET.id),
+        );
         expect(update.graph.links).toEqual([
             { id: `${inaccessibleId}__and__${derivedId}`, source: inaccessibleId, target: derivedId },
         ]);

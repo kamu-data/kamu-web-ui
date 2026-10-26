@@ -63,17 +63,20 @@ export const mockLineageUpdateWithSharedPushSource: LineageUpdate = {
     origin: MOCK_DERIVED_DATASET,
 };
 
+// The API sends Uint64 as a string, although codegen types it as a number
+const MOCK_CHAIN_ID_FROM_API = "1" as unknown as number;
+
 export const MOCK_ETHEREUM_NODE_URL = "https://eth.example.com";
 
 const mockEthereumRootWithNodeUrl = mockEthereumRoot("did:odf:eth-node", "eth-node", {
     __typename: "FetchStepEthereumLogs",
     nodeUrl: MOCK_ETHEREUM_NODE_URL,
-    chainId: 1,
+    chainId: MOCK_CHAIN_ID_FROM_API,
 });
 const mockEthereumRootWithChainOnly = mockEthereumRoot("did:odf:eth-chain", "eth-chain", {
     __typename: "FetchStepEthereumLogs",
     nodeUrl: null,
-    chainId: 1,
+    chainId: MOCK_CHAIN_ID_FROM_API,
 });
 
 export const mockLineageUpdateWithEthereumSources: LineageUpdate = {

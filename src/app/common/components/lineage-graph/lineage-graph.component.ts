@@ -37,7 +37,11 @@ import {
 } from "@swimlane/ngx-graph";
 
 import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
-import { LINEAGE_CONFIG, LineageGraphConfig } from "@common/components/lineage-graph/ligeage-graph.settings";
+import {
+    LINEAGE_CONFIG,
+    LINEAGE_NODE_LAYOUT,
+    LineageGraphConfig,
+} from "@common/components/lineage-graph/ligeage-graph.settings";
 import { WidgetHeightService } from "@common/components/lineage-graph/widget-height.service";
 import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
 import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
@@ -82,6 +86,7 @@ export class LineageGraphComponent implements OnInit, OnChanges {
     public readonly LineageNodeAccess: typeof LineageNodeAccess = LineageNodeAccess;
     public readonly DatasetKind: typeof DatasetKind = DatasetKind;
     public readonly LINEAGE_CONFIG: LineageGraphConfig = LINEAGE_CONFIG;
+    public readonly LINEAGE_NODE_LAYOUT = LINEAGE_NODE_LAYOUT;
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
     public readonly INITIAL_GRAPH_VIEW_WIDTH: number = window.innerWidth - 120;
     private static readonly MINIMAP_THROTTLE_MS = 500;

@@ -8,7 +8,7 @@
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { MaybeUndefined } from "@interface/app.types";
 
 import { StorageTabComponent } from "src/app/account/settings/tabs/storage-tab/storage-tab.component";
@@ -40,7 +40,7 @@ describe("StorageTabComponent", () => {
 
     async function render(quota: AccountStorageQuota): Promise<StorageTabHarness> {
         fixture = TestBed.createComponent(StorageTabComponent);
-        fixture.componentRef.setInput(RoutingResolvers.ACCOUNT_SETTINGS_STORAGE_KEY, quota);
+        setComponentInput(fixture, "storageQuota", quota);
         return TestbedHarnessEnvironment.harnessForFixture(fixture, StorageTabHarness);
     }
 

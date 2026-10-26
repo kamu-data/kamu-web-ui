@@ -18,7 +18,7 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import timekeeper from "timekeeper";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
@@ -50,7 +50,7 @@ describe("EditWatermarkModalComponent", () => {
         component = fixture.componentInstance;
         datasetCommitService = TestBed.inject(DatasetCommitService);
         loggedUserService = TestBed.inject(LoggedUserService);
-        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsDerivedFragment);
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsDerivedFragment);
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
     });
 
@@ -69,7 +69,7 @@ describe("EditWatermarkModalComponent", () => {
     });
 
     it("should check init minLocalWatermark when currentWatermark is not null", () => {
-        fixture.componentRef.setInput("currentWatermark", "2023-03-12T00:00:00+00:00");
+        setComponentInput(fixture, "currentWatermark", "2023-03-12T00:00:00+00:00");
         fixture.detectChanges();
         const result = "2023-03-12T00:00:00.000Z";
         expect(component.minLocalWatermark).toEqual(result);

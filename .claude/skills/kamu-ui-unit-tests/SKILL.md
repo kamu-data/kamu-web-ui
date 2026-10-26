@@ -32,7 +32,7 @@ beforeEach(async () => {
     fixture = TestBed.createComponent(FlowsTableComponent);
     component = fixture.componentInstance;
     loader = TestbedHarnessEnvironment.loader(fixture);
-    fixture.componentRef.setInput("nodes", mockFlowSummaryDataFragments);
+    setComponentInput(fixture, "nodes", mockFlowSummaryDataFragments);
     fixture.detectChanges();
 });
 ```
@@ -46,12 +46,19 @@ beforeEach(async () => {
 - TestBed runs with zone-based change detection, like the app, and with exhaustive
   `checkNoChanges` (`src/test.ts`). `fixture.detectChanges()` does not re-render an OnPush
   component whose state a test changed after the first render, and the exhaustive check fails such
-  a spec with NG0100. Set inputs with `fixture.componentRef.setInput()`; after changing internal
-  state, call `fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck()`.
-- `setInput()` takes the value as `unknown`, so an object literal passed to it is not checked
-  against the input's type. Add `satisfies <InputType>` to the literal
-  (`setInput("featureFlags", { ... } satisfies AppUIConfigFeatureFlags)`) so a misspelled or
-  missing property fails to compile. Do not use `as`, which hides both.
+  a spec with NG0100. Set inputs with `setComponentInput(fixture, "field", value)` from
+  `@common/helpers/base-test.helpers.spec`; after changing internal state, call
+  `fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck()`.
+- `setComponentInput` goes through `ComponentRef.setInput()`, so `ngOnChanges`, setters and
+  OnPush re-rendering run as in the app. It names the input by its class field, so the compiler
+  checks the name and the value's type, including misspelled properties of an object literal; an
+  alias (`@Input(RoutingResolvers.X)`) is resolved for you, and a field that is not an input
+  throws. eslint rejects a direct `componentRef.setInput()` in a spec, since it takes the name as
+  a string and the value as `unknown`. Do not add `as` to a value to make it fit: when a mock
+  reached through optional chaining does not match, unwrap it with
+  `requireValue(mock.a?.b ?? null)`.
+- `src/test.ts` sets `errorOnUnknownProperties` and `errorOnUnknownElements`, so binding an
+  unknown property or using an undeclared element in a spec template throws instead of logging.
 - The same NG0100 also flags a template value that differs on every evaluation, such as a getter
   returning `new Date()`: give the component a field it updates at a defined moment instead.
 - Mock collaborators with `spyOn(service, "method").and.returnValue(of(...))` on the real
@@ -200,6 +207,8 @@ One case per api method: assert the variables sent, flush a fixture typed with t
 
 | Approach | Why rejected |
 |---|---|
+| Assigning an input field directly (`component.foo = x`) | Skips `ngOnChanges` and setters and does not re-render an OnPush view: readme-section specs asserted on a state `ngOnChanges` would have overwritten, and clicked a button the real view hides |
+| `fixture.componentRef.setInput("name", value)` with `satisfies` added by hand | The name is a string and the value `unknown`, so nothing is checked unless someone remembers `satisfies`, and an unknown name only logged NG0303. Moving 397 calls to the typed helper exposed 16 mismatches, among them a GitHub callback input typed `string` that the router sets to `undefined` |
 | Selecting elements by CSS class or tag structure | Breaks on styling changes; `data-test-id` is the contract between template and test |
 | Raw `nativeElement` clicks inside Material components | Depends on Material's internal DOM; the Material harnesses are the supported API |
 | Hand-built Apollo response objects inline in specs | Not reusable and not type-checked against codegen; fixtures go to `api/mock/` |

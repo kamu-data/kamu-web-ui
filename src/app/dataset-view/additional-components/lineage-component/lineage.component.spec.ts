@@ -19,9 +19,9 @@ import {
     findComponentInstance,
     findComponentInstances,
     findElementByDataTestId,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 import { AccountService } from "src/app/account/account.service";
 import { mockLineageGraphUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
@@ -63,7 +63,7 @@ describe("LineageComponent", () => {
 
         fixture = TestBed.createComponent(LineageComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(RoutingResolvers.DATASET_INFO_KEY, MOCK_DATASET_INFO);
+        setComponentInput(fixture, "datasetInfo", MOCK_DATASET_INFO);
         fixture.detectChanges();
     });
 

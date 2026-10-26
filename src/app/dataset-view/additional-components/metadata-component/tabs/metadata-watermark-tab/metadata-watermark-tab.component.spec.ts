@@ -12,9 +12,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 import {
     mockMetadataDerivedUpdate,
@@ -22,7 +21,6 @@ import {
     mockOverviewDataUpdateNullable,
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataWatermarkTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-watermark-tab/metadata-watermark-tab.component";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
@@ -39,7 +37,7 @@ describe("MetadataWatermarkTabComponent", () => {
         fixture = TestBed.createComponent(MetadataWatermarkTabComponent);
         modalService = TestBed.inject(NgbModal);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(RoutingResolvers.METADATA_WATERMARK_TAB_KEY, {
+        setComponentInput(fixture, "datasetMetadataTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: {
@@ -48,7 +46,7 @@ describe("MetadataWatermarkTabComponent", () => {
                 overview: structuredClone(mockOverviewDataUpdateNullable.overview),
                 size: mockOverviewDataUpdate.size,
             } as OverviewUpdate,
-        } satisfies DatasetOverviewTabData);
+        });
         registerMatSvgIcons();
         fixture.detectChanges();
     });

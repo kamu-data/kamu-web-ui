@@ -14,8 +14,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
-import { findComponentInstance } from "@common/helpers/base-test.helpers.spec";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { findComponentInstance, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -80,8 +79,8 @@ describe("SetTransformComponent", () => {
     function createComponent(eventYamlByHash: string): void {
         fixture = TestBed.createComponent(SetTransformComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(RoutingResolvers.SET_TRANSFORM_KEY, eventYamlByHash);
-        fixture.componentRef.setInput(RoutingResolvers.DATASET_INFO_KEY, mockDatasetInfo);
+        setComponentInput(fixture, "eventYamlByHash", eventYamlByHash);
+        setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
         fixture.detectChanges();
     }
 

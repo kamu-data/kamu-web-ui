@@ -12,9 +12,8 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { mockCreateWebhookSubscriptionSuccess } from "@api/mock/webhooks.mock";
 
 import { AddWebhookComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/add-webhook/add-webhook.component";
@@ -44,7 +43,7 @@ describe("AddWebhookComponent", () => {
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
         spyOn(webhooksService, "eventTypes").and.returnValue(of([]));
-        fixture.componentRef.setInput(RoutingResolvers.WEBHOOKS_ADD_NEW_KEY, mockDatasetBasicsRootFragment);
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
         fixture.detectChanges();
     });
 

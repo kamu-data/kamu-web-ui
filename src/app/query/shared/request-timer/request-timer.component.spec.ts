@@ -7,7 +7,7 @@
 
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
-import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { findElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { RequestTimerComponent } from "src/app/query/shared/request-timer/request-timer.component";
@@ -32,11 +32,11 @@ describe("RequestTimerComponent", () => {
     it("should check rennder result time", fakeAsync(() => {
         const testClass = "mock-class";
         const resultTime = "00:00:01.00";
-        fixture.componentRef.setInput("class", testClass);
-        fixture.componentRef.setInput("sqlLoading", true);
+        setComponentInput(fixture, "class", testClass);
+        setComponentInput(fixture, "sqlLoading", true);
         fixture.detectChanges();
         tick(1000);
-        fixture.componentRef.setInput("sqlLoading", false);
+        setComponentInput(fixture, "sqlLoading", false);
         fixture.detectChanges();
         const timeElement = findElementByDataTestId(fixture, "duration-request-time");
         expect(timeElement?.textContent?.trim()).toEqual(resultTime);
@@ -45,8 +45,8 @@ describe("RequestTimerComponent", () => {
     }));
 
     it("should show a reset time when the tab is hidden during a request", fakeAsync(() => {
-        fixture.componentRef.setInput("class", "mock-class");
-        fixture.componentRef.setInput("sqlLoading", true);
+        setComponentInput(fixture, "class", "mock-class");
+        setComponentInput(fixture, "sqlLoading", true);
         fixture.detectChanges();
         tick(1000);
         const timeElement = findElementByDataTestId(fixture, "duration-request-time");

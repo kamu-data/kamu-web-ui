@@ -14,6 +14,7 @@ import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { Account, FlowStatus } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowsTableData } from "@api/mock/dataset-flow.mock";
@@ -25,7 +26,6 @@ import {
     AccountFlowsNav,
     ProcessCardFilterMode,
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
-import { AccountFlowsType } from "src/app/account/additional-components/account-flows-tab/resolvers/account-flows.resolver";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockDatasets } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 import { FlowsTableFiltersOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
@@ -72,12 +72,12 @@ describe("AccountFlowsActivitySubtabComponent", () => {
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
         accountService = TestBed.inject(AccountService);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("accountName", MOCK_ACCOUNT_NAME);
-        fixture.componentRef.setInput("accountFlowsData", {
+        setComponentInput(fixture, "accountName", MOCK_ACCOUNT_NAME);
+        setComponentInput(fixture, "accountFlowsData", {
             activeNav: AccountFlowsNav.PROCESSES,
             flowGroup: [FlowStatus.Finished],
             datasetsFiltersMode: ProcessCardFilterMode.RECENT_ACTIVITY,
-        } satisfies AccountFlowsType);
+        });
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         spyOn(accountService, "getAccountListFlows").and.returnValue(of(mockFlowsTableData));
         fixture.detectChanges();

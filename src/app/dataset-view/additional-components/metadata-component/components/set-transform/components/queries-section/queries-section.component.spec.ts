@@ -12,6 +12,7 @@ import {
     checkInputDisabled,
     checkVisible,
     emitClickOnElementByDataTestId,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 
 import { QueriesSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/queries-section/queries-section.component";
@@ -32,7 +33,7 @@ describe("QueriesSectionComponent", () => {
     // Renders once per test: replacing the queries after the first render disposes Monaco editors
     // that are still loading, which Monaco reports as uncaught "Canceled" errors
     function render(queries: QueriesSectionComponent["queries"]): void {
-        fixture.componentRef.setInput("queries", queries);
+        setComponentInput(fixture, "queries", queries);
         fixture.detectChanges();
     }
 

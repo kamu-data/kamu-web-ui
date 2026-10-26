@@ -12,8 +12,9 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import { DatasetFlowProcess } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowsProcessesQuery } from "@api/mock/dataset-flow.mock";
 
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -34,12 +35,13 @@ describe("FlowsBlockActionsComponent", () => {
 
         fixture = TestBed.createComponent(FlowsBlockActionsComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
-        fixture.componentRef.setInput(
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
+        setComponentInput(
+            fixture,
             "flowProcess",
-            mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.primary,
+            mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.primary as DatasetFlowProcess,
         );
-        fixture.componentRef.setInput("hasPushSources", false);
+        setComponentInput(fixture, "hasPushSources", false);
     });
 
     it("should create", () => {
@@ -48,13 +50,13 @@ describe("FlowsBlockActionsComponent", () => {
     });
 
     it("should check redirect section for derivative dataset", () => {
-        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsDerivedFragment);
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsDerivedFragment);
         fixture.detectChanges();
         expect(component.redirectSection).toEqual(SettingsTabsEnum.TRANSFORM_SETTINGS);
     });
 
     it("should check redirect section for root dataset", () => {
-        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
         fixture.detectChanges();
         expect(component.redirectSection).toEqual(SettingsTabsEnum.SCHEDULING);
     });

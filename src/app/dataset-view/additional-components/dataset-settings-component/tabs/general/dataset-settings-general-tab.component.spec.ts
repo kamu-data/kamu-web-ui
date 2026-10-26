@@ -21,8 +21,8 @@ import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
     getInputElementByDataTestId,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
@@ -31,7 +31,6 @@ import { DatasetSettingsService } from "src/app/dataset-view/additional-componen
 import { DatasetSettingsGeneralTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.component";
 import { DatasetResetMode } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.types";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
-import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -77,10 +76,10 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
         fixture = TestBed.createComponent(DatasetSettingsGeneralTabComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(RoutingResolvers.DATASET_SETTINGS_GENERAL_KEY, {
+        setComponentInput(fixture, "generalTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: structuredClone(mockFullPowerDatasetPermissionsFragment),
-        } satisfies DatasetViewData);
+        });
 
         datasetSettingsService = TestBed.inject(DatasetSettingsService);
         modalService = TestBed.inject(ModalService);
@@ -126,7 +125,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     function setDatasetPermissions(general: { canDelete?: boolean; canRename?: boolean }): void {
         const datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
         Object.assign(datasetPermissions.permissions.general, general);
-        fixture.componentRef.setInput(RoutingResolvers.DATASET_SETTINGS_GENERAL_KEY, {
+        setComponentInput(fixture, "generalTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions,
         });

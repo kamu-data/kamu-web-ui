@@ -9,6 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { provideToastr } from "ngx-toastr";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { SetDataSchemaEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/set-data-schema-event/set-data-schema-event.component";
@@ -26,7 +27,7 @@ describe("SetDataSchemaEventComponent", () => {
 
         fixture = TestBed.createComponent(SetDataSchemaEventComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("event", mockSetDataSchema);
+        setComponentInput(fixture, "event", mockSetDataSchema);
         fixture.detectChanges();
     });
 

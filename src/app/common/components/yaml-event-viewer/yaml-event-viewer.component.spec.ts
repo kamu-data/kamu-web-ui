@@ -9,6 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { YamlEventViewerComponent } from "@common/components/yaml-event-viewer/yaml-event-viewer.component";
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("YamlEventViewerComponent with SetTransform", () => {
@@ -23,7 +24,7 @@ describe("YamlEventViewerComponent with SetTransform", () => {
 
         fixture = TestBed.createComponent<YamlEventViewerComponent>(YamlEventViewerComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("data", "test");
+        setComponentInput(fixture, "data", "test");
         fixture.detectChanges();
     });
 

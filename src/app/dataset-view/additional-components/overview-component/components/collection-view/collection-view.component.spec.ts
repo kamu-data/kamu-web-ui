@@ -14,7 +14,11 @@ import { delay, of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import {
+    findElementByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import { DatasetApi } from "@api/dataset.api";
 
 import {
@@ -51,7 +55,7 @@ describe("CollectionViewComponent", () => {
         datasetService = TestBed.inject(DatasetService);
         fixture = TestBed.createComponent(CollectionViewComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
         const datasetBasicsSimpleChanges: SimpleChanges = {
             datasetBasics: {
                 previousValue: undefined,
@@ -60,7 +64,7 @@ describe("CollectionViewComponent", () => {
                 isFirstChange: () => true,
             },
         };
-        fixture.componentRef.setInput("pathPrefix", "/test-folder");
+        setComponentInput(fixture, "pathPrefix", "/test-folder");
         component.ngOnChanges(datasetBasicsSimpleChanges);
 
         fixture.detectChanges();

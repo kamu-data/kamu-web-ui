@@ -14,13 +14,11 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 import { RotateSecretWebhookComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/rotate-secret-webhook/rotate-secret-webhook.component";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
-import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 
@@ -41,8 +39,8 @@ describe("RotateSecretWebhookComponent", () => {
 
         fixture = TestBed.createComponent(RotateSecretWebhookComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(RoutingResolvers.WEBHOOKS_ROTATE_SECRET, mockDatasetBasicsRootFragment);
-        fixture.componentRef.setInput(ProjectLinks.URL_PARAM_WEBHOOK_ID, "55-23456-888-890");
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
+        setComponentInput(fixture, "webhookId", "55-23456-888-890");
         spyOn(datasetWebhooksService, "datasetWebhookRotateSecret").and.returnValue(of("mock-secret"));
 
         fixture.detectChanges();

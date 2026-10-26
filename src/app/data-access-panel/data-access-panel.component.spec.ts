@@ -10,6 +10,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { DataAccessPanelComponent } from "src/app/data-access-panel/data-access-panel.component";
@@ -29,8 +30,8 @@ describe("DataAccessPanelComponent", () => {
         fixture = TestBed.createComponent(DataAccessPanelComponent);
         ngbModalService = TestBed.inject(NgbModal);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsDerivedFragment);
-        fixture.componentRef.setInput("isUserLogged", true);
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsDerivedFragment);
+        setComponentInput(fixture, "isUserLogged", true);
         fixture.detectChanges();
     });
 

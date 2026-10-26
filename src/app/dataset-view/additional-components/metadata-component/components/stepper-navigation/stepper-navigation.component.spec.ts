@@ -9,7 +9,7 @@ import { CdkStepper } from "@angular/cdk/stepper";
 import { ChangeDetectorRef, ElementRef } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
 import { SetPollingSourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { StepperNavigationComponent } from "src/app/dataset-view/additional-components/metadata-component/components/stepper-navigation/stepper-navigation.component";
@@ -42,9 +42,9 @@ describe("StepperNavigationComponent", () => {
 
     it("should check next button is working", () => {
         const changeStepEmitterSpy = spyOn(component.changeStepEmitter, "emit").and.callThrough();
-        fixture.componentRef.setInput("prevStep", null);
-        fixture.componentRef.setInput("validStep", true);
-        fixture.componentRef.setInput("nextStep", SetPollingSourceSection.READ);
+        setComponentInput(fixture, "prevStep", null);
+        setComponentInput(fixture, "validStep", true);
+        setComponentInput(fixture, "nextStep", SetPollingSourceSection.READ);
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "next-button");
         expect(changeStepEmitterSpy).toHaveBeenCalledWith(SetPollingSourceSection.READ);
@@ -52,9 +52,9 @@ describe("StepperNavigationComponent", () => {
 
     it("should check save button is working", () => {
         const changeStepEmitterSpy = spyOn(component.saveEventEmitter, "emit").and.callThrough();
-        fixture.componentRef.setInput("prevStep", SetPollingSourceSection.READ);
-        fixture.componentRef.setInput("validStep", true);
-        fixture.componentRef.setInput("nextStep", null);
+        setComponentInput(fixture, "prevStep", SetPollingSourceSection.READ);
+        setComponentInput(fixture, "validStep", true);
+        setComponentInput(fixture, "nextStep", null);
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "save-button");
         expect(changeStepEmitterSpy).toHaveBeenCalledWith();
@@ -62,9 +62,9 @@ describe("StepperNavigationComponent", () => {
 
     it("should check edit button is working", () => {
         const changeStepEmitterSpy = spyOn(component.editYamlEmitter, "emit").and.callThrough();
-        fixture.componentRef.setInput("prevStep", SetPollingSourceSection.READ);
-        fixture.componentRef.setInput("validStep", true);
-        fixture.componentRef.setInput("nextStep", null);
+        setComponentInput(fixture, "prevStep", SetPollingSourceSection.READ);
+        setComponentInput(fixture, "validStep", true);
+        setComponentInput(fixture, "nextStep", null);
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "edit-button");
         expect(changeStepEmitterSpy).toHaveBeenCalledWith();

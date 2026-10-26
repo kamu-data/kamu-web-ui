@@ -13,9 +13,12 @@ import { MatIconModule } from "@angular/material/icon";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 
-import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import {
+    findElementByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 import {
     mockMetadataDerivedUpdate,
@@ -23,7 +26,6 @@ import {
     mockOverviewDataUpdateNullable,
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataLicenseTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-license-tab/metadata-license-tab.component";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import {
     mockDatasetBasicsDerivedFragment,
@@ -47,7 +49,7 @@ describe("MetadataLicenseTabComponent", () => {
         modalService = TestBed.inject(NgbModal);
         component = fixture.componentInstance;
 
-        fixture.componentRef.setInput(RoutingResolvers.METADATA_LICENSE_TAB_KEY, {
+        setComponentInput(fixture, "datasetMetadataTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: {
@@ -56,7 +58,7 @@ describe("MetadataLicenseTabComponent", () => {
                 overview: structuredClone(mockOverviewDataUpdateNullable.overview),
                 size: mockOverviewDataUpdate.size,
             } as OverviewUpdate,
-        } satisfies DatasetOverviewTabData);
+        });
 
         fixture.detectChanges();
     });

@@ -16,6 +16,7 @@ import {
     emitClickOnElementByDataTestId,
     getElementByDataTestId,
     getInputElementByDataTestId,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
@@ -40,13 +41,13 @@ describe("EditLicenseModalComponent", () => {
 
         fixture = TestBed.createComponent(EditLicenseModalComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsDerivedFragment);
-        fixture.componentRef.setInput("currentState", {
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsDerivedFragment);
+        setComponentInput(fixture, "currentState", {
             schema: mockMetadataDerivedUpdate.schema,
             data: mockOverviewDataUpdate.content,
             overview: mockOverviewWithSetLicense as DatasetOverviewFragment,
             size: mockOverviewDataUpdate.size as DatasetDataSizeFragment,
-        } satisfies EditLicenseModalComponent["currentState"]);
+        });
         fixture.detectChanges();
     });
 

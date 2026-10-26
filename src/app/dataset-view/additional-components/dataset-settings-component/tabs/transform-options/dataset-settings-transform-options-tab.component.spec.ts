@@ -13,9 +13,8 @@ import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
-import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { getElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { FlowTriggerBreakingChangeRule, TimeUnit } from "@api/kamu.graphql.interface";
 
 import {
@@ -26,7 +25,6 @@ import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-compo
 import { FlowStopPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.component";
 import { FlowStopPolicyFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.harness";
 import { DatasetSettingsTransformOptionsTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.component";
-import { DatasetSettingsTransformOptionsTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.data";
 import { TransformTriggerFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.harness";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
@@ -49,13 +47,13 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         datasetFlowTriggerService = TestBed.inject(DatasetFlowTriggerService);
 
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(RoutingResolvers.DATASET_SETTINGS_TRANSFORM_KEY, {
+        setComponentInput(fixture, "transformTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             reactive: null,
             stopPolicy: null,
             paused: true,
-        } satisfies DatasetSettingsTransformOptionsTabData);
+        });
 
         fixture.detectChanges();
         await fixture.whenStable();

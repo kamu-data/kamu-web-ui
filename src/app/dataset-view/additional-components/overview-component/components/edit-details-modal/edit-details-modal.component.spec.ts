@@ -13,7 +13,11 @@ import { MatChipInputEvent } from "@angular/material/chips";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 
-import { emitClickOnElementByDataTestId, getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import {
+    emitClickOnElementByDataTestId,
+    getElementByDataTestId,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
 
@@ -37,13 +41,13 @@ describe("EditDetailsModalComponent", () => {
 
         fixture = TestBed.createComponent(EditDetailsModalComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsDerivedFragment);
-        fixture.componentRef.setInput("currentState", {
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsDerivedFragment);
+        setComponentInput(fixture, "currentState", {
             schema: mockMetadataDerivedUpdate.schema,
             data: mockOverviewDataUpdate.content,
             overview: mockOverviewDataUpdate.overview as DatasetOverviewFragment,
             size: mockOverviewDataUpdate.size as DatasetDataSizeFragment,
-        } satisfies EditDetailsModalComponent["currentState"]);
+        });
         fixture.detectChanges();
     });
 
@@ -52,12 +56,12 @@ describe("EditDetailsModalComponent", () => {
     });
 
     it("should check initialize details", () => {
-        fixture.componentRef.setInput("currentState", {
+        setComponentInput(fixture, "currentState", {
             schema: mockMetadataDerivedUpdate.schema,
             data: mockOverviewDataUpdate.content,
             overview: mockOverviewWithSetInfo as DatasetOverviewFragment,
             size: mockOverviewDataUpdate.size as DatasetDataSizeFragment,
-        } satisfies EditDetailsModalComponent["currentState"]);
+        });
         fixture.detectChanges();
         component.ngOnInit();
 

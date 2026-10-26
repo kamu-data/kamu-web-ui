@@ -9,13 +9,10 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import timekeeper from "timekeeper";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
 import { TriageFiltersViewComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/components/triage-filters-view/triage-filters-view.component";
-import {
-    DashboardFiltersOptions,
-    RangeLastAttempt,
-} from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { RangeLastAttempt } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 
 describe("TriageFiltersViewComponent", () => {
     let component: TriageFiltersViewComponent;
@@ -27,7 +24,7 @@ describe("TriageFiltersViewComponent", () => {
         });
         fixture = TestBed.createComponent(TriageFiltersViewComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("dashboardFilters", {
+        setComponentInput(fixture, "dashboardFilters", {
             fromFilterDate: undefined,
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -41,7 +38,7 @@ describe("TriageFiltersViewComponent", () => {
             selectedFlowProcessStates: [],
             minConsecutiveFailures: 0,
             isFirstInitialization: false,
-        } satisfies DashboardFiltersOptions);
+        });
     });
 
     it("should create", () => {

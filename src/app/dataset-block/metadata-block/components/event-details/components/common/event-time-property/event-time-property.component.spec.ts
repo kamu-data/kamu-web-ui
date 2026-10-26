@@ -7,8 +7,8 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { EventTimeSource } from "@api/kamu.graphql.interface";
 
 import { EventTimePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/event-time-property/event-time-property.component";
 
@@ -23,7 +23,7 @@ describe("EventTimePropertyComponent", () => {
 
         fixture = TestBed.createComponent(EventTimePropertyComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("data", { __typename: "EventTimeSourceFromMetadata" } satisfies EventTimeSource);
+        setComponentInput(fixture, "data", { __typename: "EventTimeSourceFromMetadata" });
         fixture.detectChanges();
     });
 

@@ -12,7 +12,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import timekeeper from "timekeeper";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetBasicsFragment, FlowProcessEffectiveState, FlowProcessSummary } from "@api/kamu.graphql.interface";
 import { mockAccountFlowsAsCardsQuery } from "@api/mock/account.mock";
@@ -35,12 +35,12 @@ describe("DatasetFlowProcessCardComponent", () => {
     ): Promise<DatasetFlowProcessCardHarness> {
         fixture = TestBed.createComponent(DatasetFlowProcessCardComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("datasetBasics", options.datasetBasics ?? mockDatasetBasicsRootFragment);
-        fixture.componentRef.setInput("summary", {
+        setComponentInput(fixture, "datasetBasics", options.datasetBasics ?? mockDatasetBasicsRootFragment);
+        setComponentInput(fixture, "summary", {
             ...mockSummary,
             effectiveState,
             runningSince: options.runningSince ?? null,
-        } satisfies FlowProcessSummary);
+        });
         fixture.detectChanges();
         return TestbedHarnessEnvironment.harnessForFixture(fixture, DatasetFlowProcessCardHarness);
     }
@@ -138,7 +138,7 @@ describe("DatasetFlowProcessCardComponent", () => {
         expect(await card.isUpdateNowDisabled()).toBeFalse();
         expect(await card.isToggleStateDisabled()).toBeFalse();
 
-        fixture.componentRef.setInput("actionInProgress", true);
+        setComponentInput(fixture, "actionInProgress", true);
 
         expect(await card.isUpdateNowDisabled()).toBeTrue();
         expect(await card.isToggleStateDisabled()).toBeTrue();

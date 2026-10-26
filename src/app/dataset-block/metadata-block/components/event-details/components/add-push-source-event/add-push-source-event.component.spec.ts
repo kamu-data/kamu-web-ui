@@ -9,7 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { provideToastr } from "ngx-toastr";
 
-import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { getElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { ReadStepCsv } from "@api/kamu.graphql.interface";
 
@@ -28,7 +28,8 @@ describe("AddPushSourceEventComponent", () => {
 
         fixture = TestBed.createComponent(AddPushSourceEventComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(
+        setComponentInput(
+            fixture,
             "event",
             Object.assign({}, mockAddPushSource, {
                 unsupportedKey: { name: "" },

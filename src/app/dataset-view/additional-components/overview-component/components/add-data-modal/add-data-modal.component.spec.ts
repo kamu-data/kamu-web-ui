@@ -14,6 +14,7 @@ import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 
 import { ModalService } from "@common/components/modal/modal.service";
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockFile } from "@api/mock/upload-file.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
@@ -45,7 +46,7 @@ describe("AddDataModalComponent", () => {
         fileUploadService = TestBed.inject(FileUploadService);
         modalService = TestBed.inject(ModalService);
         configService = TestBed.inject(AppConfigService);
-        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
         spyOnProperty(configService, "ingestUploadFileLimitMb", "get").and.returnValue(50);
 
         fixture.detectChanges();

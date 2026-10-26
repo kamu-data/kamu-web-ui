@@ -15,8 +15,11 @@ import { BehaviorSubject, of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import {
+    findElementByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { mockAccountDetails, TEST_AVATAR_URL, TEST_LOGIN } from "@api/mock/auth.mock";
 
@@ -73,7 +76,7 @@ describe("AccountComponent", () => {
 
         fixture = TestBed.createComponent(AccountComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(ProjectLinks.URL_PARAM_ACCOUNT_NAME, TEST_LOGIN);
+        setComponentInput(fixture, "accountName", TEST_LOGIN);
     });
 
     it("should create", () => {
@@ -115,7 +118,7 @@ describe("AccountComponent", () => {
     it("should check activeTab when URL not exist query param tab", () => {
         fixture.detectChanges();
         mockQueryParams.next({ page: 1 });
-        fixture.componentRef.setInput(RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY, AccountTabs.DATASETS);
+        setComponentInput(fixture, "activeTab", AccountTabs.DATASETS);
 
         expect(component.activeTab).toEqual(AccountTabs.DATASETS);
     });

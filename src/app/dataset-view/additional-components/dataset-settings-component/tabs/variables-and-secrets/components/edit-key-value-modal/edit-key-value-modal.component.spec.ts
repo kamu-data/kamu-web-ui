@@ -14,7 +14,8 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { findElementByDataTestId, setFieldValue } from "@common/helpers/base-test.helpers.spec";
+import { findElementByDataTestId, setComponentInput, setFieldValue } from "@common/helpers/base-test.helpers.spec";
+import { ViewDatasetEnvVar } from "@api/kamu.graphql.interface";
 import { mockListEnvVariablesQuery } from "@api/mock/environment-variables-and-secrets.mock";
 
 import { EditKeyValueModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.component";
@@ -64,7 +65,7 @@ describe("EditKeyValueModalComponent", () => {
         fixture = TestBed.createComponent(EditKeyValueModalComponent);
         evnironmentVariablesService = TestBed.inject(DatasetEnvironmentVariablesService);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
     });
 
     it("should create", () => {
@@ -72,7 +73,7 @@ describe("EditKeyValueModalComponent", () => {
     });
 
     it("should check display error messages for key", () => {
-        fixture.componentRef.setInput("row", null);
+        setComponentInput(fixture, "row", null);
         fixture.detectChanges();
         setFieldValue(fixture, "key", "");
 
@@ -111,7 +112,7 @@ describe("EditKeyValueModalComponent", () => {
         const evnironmentVariablesServiceSpy = spyOn(evnironmentVariablesService, "upsertEnvVariable").and.returnValue(
             of(),
         );
-        fixture.componentRef.setInput("row", null);
+        setComponentInput(fixture, "row", null);
         fixture.detectChanges();
         setFieldValue(fixture, "key", "key-1");
         fixture.detectChanges();
@@ -127,9 +128,10 @@ describe("EditKeyValueModalComponent", () => {
         const evnironmentVariablesServiceSpy = spyOn(evnironmentVariablesService, "upsertEnvVariable").and.returnValue(
             of(),
         );
-        fixture.componentRef.setInput(
+        setComponentInput(
+            fixture,
             "row",
-            mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes[0],
+            mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes[0] as ViewDatasetEnvVar,
         );
         fixture.detectChanges();
         component.onEditRow();
@@ -138,9 +140,10 @@ describe("EditKeyValueModalComponent", () => {
     });
 
     it("should check fetch exposed value", () => {
-        fixture.componentRef.setInput(
+        setComponentInput(
+            fixture,
             "row",
-            mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes[2],
+            mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes[2] as ViewDatasetEnvVar,
         );
         const exposedEnvVariableValueSpy = spyOn(
             evnironmentVariablesService,
@@ -152,9 +155,10 @@ describe("EditKeyValueModalComponent", () => {
     });
 
     it("should check 'key' control has 'readonly' attribute", () => {
-        fixture.componentRef.setInput(
+        setComponentInput(
+            fixture,
             "row",
-            mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes[1],
+            mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes[1] as ViewDatasetEnvVar,
         );
 
         fixture.detectChanges();

@@ -15,7 +15,7 @@ import { NgbActiveModal, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bo
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { DatasetAccessRole, NameLookupResult } from "@api/kamu.graphql.interface";
@@ -42,8 +42,8 @@ describe("AddPeopleModalComponent", () => {
         datasetCollaborationsService = TestBed.inject(DatasetCollaborationsService);
         ngbActiveModal = TestBed.inject(NgbActiveModal);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
-        fixture.componentRef.setInput("activeCollaboratorsIds", []);
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
+        setComponentInput(fixture, "activeCollaboratorsIds", []);
         fixture.detectChanges();
     });
 

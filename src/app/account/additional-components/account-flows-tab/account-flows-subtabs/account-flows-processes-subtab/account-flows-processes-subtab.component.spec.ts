@@ -19,7 +19,7 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 
 import { environment } from "@env/environment";
 import { ModalService } from "@common/components/modal/modal.service";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import {
@@ -45,7 +45,6 @@ import {
     ProcessCardFilterMode,
     ProcessCardGroup,
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
-import { AccountFlowsType } from "src/app/account/additional-components/account-flows-tab/resolvers/account-flows.resolver";
 import { AccountFlowsFiltersService } from "src/app/account/services/account-flows-filters.service";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
@@ -120,12 +119,12 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
         toastrService = TestBed.inject(ToastrService);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("accountName", MOCK_ACCOUNT_NAME);
-        fixture.componentRef.setInput("accountFlowsData", {
+        setComponentInput(fixture, "accountName", MOCK_ACCOUNT_NAME);
+        setComponentInput(fixture, "accountFlowsData", {
             activeNav: AccountFlowsNav.PROCESSES,
             flowGroup: [FlowStatus.Finished],
             datasetsFiltersMode: ProcessCardFilterMode.CUSTOM,
-        } satisfies AccountFlowsType);
+        });
         getAccountAllCardsSpy = spyOn(accountService, "getAccountAllCards").and.returnValue(
             of({
                 cards: mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes

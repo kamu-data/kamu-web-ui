@@ -10,6 +10,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import timekeeper from "timekeeper";
 
 import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 describe("DisplayTimeComponent", () => {
@@ -48,7 +49,7 @@ describe("DisplayTimeComponent", () => {
     });
 
     function testRelativeTime(expectedResult: string, date: Date): void {
-        fixture.componentRef.setInput("data", date.toISOString());
+        setComponentInput(fixture, "data", date.toISOString());
         fixture.detectChanges();
 
         expect(component.relativeTime).toBe(expectedResult);

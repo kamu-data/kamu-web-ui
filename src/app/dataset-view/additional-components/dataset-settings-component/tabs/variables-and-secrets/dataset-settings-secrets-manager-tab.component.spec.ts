@@ -17,8 +17,7 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
 import { ModalService } from "@common/components/modal/modal.service";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { ViewDatasetEnvVarConnection } from "@api/kamu.graphql.interface";
 import { MOCK_VAR_KEY, mockListEnvVariablesQuery } from "@api/mock/environment-variables-and-secrets.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
@@ -26,7 +25,6 @@ import { ModalArgumentsInterface } from "@interface/modal.interface";
 import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
 import { DatasetSettingsSecretsManagerTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-settings-secrets-manager-tab.component";
 import { MOCK_DATASET_INFO } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -83,11 +81,11 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
         modalService = TestBed.inject(ModalService);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(RoutingResolvers.DATASET_SETTINGS_VARIABLES_AND_SECRETS_KEY, {
+        setComponentInput(fixture, "variablesAndSecretsTabData", {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-        } satisfies DatasetViewData);
-        fixture.componentRef.setInput(RoutingResolvers.DATASET_INFO_KEY, MOCK_DATASET_INFO);
+        });
+        setComponentInput(fixture, "datasetInfo", MOCK_DATASET_INFO);
         spyOn(environmentVariablesService, "listEnvVariables").and.returnValue(
             of(
                 mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars

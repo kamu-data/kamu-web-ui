@@ -9,6 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SetPollingSourceTooltipsTexts } from "@common/tooltips/set-polling-source-tooltips.text";
 
 import { SelectDateFormatFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/select-date-format-field/select-date-format-field.component";
@@ -50,10 +51,10 @@ describe("SelectDateFormatFieldComponent", () => {
             }),
         });
         component.controlName = "eventTime";
-        fixture.componentRef.setInput("innerTooltips", {
+        setComponentInput(fixture, "innerTooltips", {
             fromMetadata: SetPollingSourceTooltipsTexts.EVENT_TIME_FROM_METADATA,
             fromPath: SetPollingSourceTooltipsTexts.EVENT_TIME_FROM_PATH,
-        } satisfies Record<string, string>);
+        });
         component.currentSource = EventTimeSourceKind.FROM_METADATA;
         fixture.detectChanges();
     });

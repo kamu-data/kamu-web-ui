@@ -12,7 +12,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { requireValue } from "@common/helpers/app.helpers";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockAccountFlowsAsCardsQuery } from "@api/mock/account.mock";
 
@@ -35,11 +36,14 @@ describe("WebhookFlowProcessCardComponent", () => {
 
         fixture = TestBed.createComponent(WebhookFlowProcessCardComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
-        fixture.componentRef.setInput("subscriptionId", MOCK_SUBSCRIPTION_ID);
-        fixture.componentRef.setInput(
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
+        setComponentInput(fixture, "subscriptionId", MOCK_SUBSCRIPTION_ID);
+        setComponentInput(
+            fixture,
             "summary",
-            mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes.allCards.nodes[0].summary,
+            requireValue(
+                mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes.allCards.nodes[0].summary ?? null,
+            ),
         );
         fixture.detectChanges();
     });
@@ -65,7 +69,7 @@ describe("WebhookFlowProcessCardComponent", () => {
         const card = await TestbedHarnessEnvironment.harnessForFixture(fixture, WebhookFlowProcessCardHarness);
         expect(await card.isToggleStateDisabled()).toBeFalse();
 
-        fixture.componentRef.setInput("actionInProgress", true);
+        setComponentInput(fixture, "actionInProgress", true);
 
         expect(await card.isToggleStateDisabled()).toBeTrue();
     });

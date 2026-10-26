@@ -9,7 +9,11 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
-import { dispatchInputEvent, getInputElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import {
+    dispatchInputEvent,
+    getInputElementByDataTestId,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 
@@ -27,15 +31,16 @@ describe("InputFieldComponent", () => {
         fixture = TestBed.createComponent(InputFieldComponent);
         component = fixture.componentInstance;
 
-        fixture.componentRef.setInput(
+        setComponentInput(
+            fixture,
             "form",
             new FormGroup({
                 test: new FormControl("", [Validators.required, Validators.pattern(AppValues.URL_PATTERN)]),
             }),
         );
-        fixture.componentRef.setInput("controlName", "test");
-        fixture.componentRef.setInput("dataTestId", "input");
-        fixture.componentRef.setInput("label", "Input");
+        setComponentInput(fixture, "controlName", "test");
+        setComponentInput(fixture, "dataTestId", "input");
+        setComponentInput(fixture, "label", "Input");
     });
 
     it("should create", () => {
@@ -51,7 +56,8 @@ describe("InputFieldComponent", () => {
     });
 
     it("should check maxLength validation error", () => {
-        fixture.componentRef.setInput(
+        setComponentInput(
+            fixture,
             "form",
             new FormGroup({
                 test: new FormControl("", [Validators.maxLength(1)]),

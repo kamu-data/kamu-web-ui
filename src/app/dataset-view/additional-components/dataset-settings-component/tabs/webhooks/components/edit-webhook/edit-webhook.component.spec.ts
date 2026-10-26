@@ -12,13 +12,12 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
 
 import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
 import { EditWebhookComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/edit-webhook.component";
-import { EditWebhooksType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/edit-webhooks.types";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -38,7 +37,7 @@ describe("EditWebhookComponent", () => {
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(RoutingResolvers.WEBHOOKS_EDIT_KEY, {
+        setComponentInput(fixture, "editWebhooksData", {
             datasetBasics: mockDatasetBasicsRootFragment,
             subscription: {
                 targetUrl: "https://mock.com",
@@ -47,7 +46,7 @@ describe("EditWebhookComponent", () => {
                 id: "112-32323-3232-323",
                 label: "",
             },
-        } satisfies EditWebhooksType);
+        });
         fixture.detectChanges();
     });
 

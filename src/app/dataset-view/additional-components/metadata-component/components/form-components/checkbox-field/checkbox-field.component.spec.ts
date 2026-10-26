@@ -8,7 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
 
-import { getInputElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { getInputElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { CheckboxFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/checkbox-field/checkbox-field.component";
@@ -28,7 +28,7 @@ describe("CheckboxFieldComponent", () => {
         component.controlName = "test";
         component.tooltip = "Test tooltip";
         component.dataTestId = "checkbox";
-        fixture.componentRef.setInput("checked", false);
+        setComponentInput(fixture, "checked", false);
         fixture.detectChanges();
     });
 

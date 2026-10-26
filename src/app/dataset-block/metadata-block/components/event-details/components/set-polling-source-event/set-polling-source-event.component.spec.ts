@@ -11,7 +11,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { provideToastr } from "ngx-toastr";
 
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
-import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { getElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { FetchStepMqtt, FetchStepUrl, PrepStepDecompress } from "@api/kamu.graphql.interface";
 
@@ -40,7 +40,8 @@ describe("SetPollingSourceEventComponent", () => {
     });
 
     it("should check render event data", () => {
-        fixture.componentRef.setInput(
+        setComponentInput(
+            fixture,
             "event",
             Object.assign({}, mockSetPollingSourceEvent, {
                 unsupportedKey: { name: "" },
@@ -83,7 +84,8 @@ describe("SetPollingSourceEventComponent", () => {
     });
 
     it("should check render unsupported section", () => {
-        fixture.componentRef.setInput(
+        setComponentInput(
+            fixture,
             "event",
             Object.assign({}, mockSetPollingSourceEvent, {
                 unsupportedKey: { name: "" },
@@ -96,7 +98,7 @@ describe("SetPollingSourceEventComponent", () => {
 
     it("should check render event data with FetchStepMqtt", () => {
         const fetchStep = mockSetPollingSourceEventWithFetchStepMqtt.fetch as FetchStepMqtt;
-        fixture.componentRef.setInput("event", mockSetPollingSourceEventWithFetchStepMqtt);
+        setComponentInput(fixture, "event", mockSetPollingSourceEventWithFetchStepMqtt);
         fixture.detectChanges();
         const host = getElementByDataTestId(fixture, "setPollingSource-FetchStepMqtt-host");
         expect(host.innerText).toEqual(fetchStep.host);
@@ -112,7 +114,7 @@ describe("SetPollingSourceEventComponent", () => {
     });
 
     it("should keep the rendered property components on later change detection", () => {
-        fixture.componentRef.setInput("event", mockSetPollingSourceEvent);
+        setComponentInput(fixture, "event", mockSetPollingSourceEvent);
         fixture.detectChanges();
         const urlBefore = getElementByDataTestId(fixture, "setPollingSource-fetchStepUrl-url");
 

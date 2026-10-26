@@ -8,6 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormArray, FormGroup } from "@angular/forms";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { TopicsFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/topics-field/topics-field.component";
@@ -24,7 +25,7 @@ describe("TopicsFieldComponent", () => {
         fixture = TestBed.createComponent(TopicsFieldComponent);
         component = fixture.componentInstance;
         component.controlName = "topics";
-        fixture.componentRef.setInput("buttonText", "Add new topics");
+        setComponentInput(fixture, "buttonText", "Add new topics");
         component.form = new FormGroup({
             [component.controlName]: new FormArray([]),
         });

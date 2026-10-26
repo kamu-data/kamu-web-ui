@@ -21,13 +21,13 @@ import {
     findElementByDataTestId,
     getElementByDataTestId,
     registerMatSvgIcons,
+    setComponentInput,
     setFieldValue,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockDatasetByIdQuery } from "@api/mock/dataset.mock";
 
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import ProjectLinks from "src/app/project-links";
 import { QueryExplainerComponent } from "src/app/query-explainer/query-explainer.component";
 import {
     mockQueryExplainerOutput,
@@ -68,7 +68,7 @@ describe("QueryExplainerComponent", () => {
         spyOn(datasetService, "requestDatasetInfoById").and.returnValue(of(mockDatasetByIdQuery));
         fixture = TestBed.createComponent(QueryExplainerComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN, "");
+        setComponentInput(fixture, "uploadToken", "");
         fixture.detectChanges();
     });
 
@@ -116,7 +116,7 @@ describe("QueryExplainerComponent", () => {
             timer(0).pipe(ignoreElements()),
         );
         fixture = TestBed.createComponent(QueryExplainerComponent);
-        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN, "uploaded-token");
+        setComponentInput(fixture, "uploadToken", "uploaded-token");
         fixture.detectChanges();
         expect(findElementByDataTestId(fixture, "input-textarea")).toBeUndefined();
 

@@ -7,6 +7,8 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
+
 import { BaseEditorComponent } from "src/app/editor/components/base-editor/base-editor.component";
 import { editorMock, editorModelMock } from "src/app/editor/mock/editor.mock";
 import { MonacoService } from "src/app/editor/services/monaco.service";
@@ -36,7 +38,7 @@ export function sharedBasedEditorComponentTest(environmentFactory: () => BaseEdi
         const errorTest = "error text";
         const setErrorMarkerSpy = spyOn(monacoService, "setErrorMarker");
 
-        fixture.componentRef.setInput("error", errorTest);
+        setComponentInput(fixture, "error", errorTest);
         fixture.detectChanges();
 
         expect(setErrorMarkerSpy).toHaveBeenCalledOnceWith(component.editorModel, component.getErrorDetails(errorTest));
@@ -45,7 +47,7 @@ export function sharedBasedEditorComponentTest(environmentFactory: () => BaseEdi
     it("on empty error should call clearErrorMarker", () => {
         const clearErrorMarkerSpy = spyOn(monacoService, "clearErrorMarker");
 
-        fixture.componentRef.setInput("error", null);
+        setComponentInput(fixture, "error", null);
         fixture.detectChanges();
 
         expect(clearErrorMarkerSpy).toHaveBeenCalledOnceWith(component.editorModel);

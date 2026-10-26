@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
 import { EngineSelectComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
 import { Engine } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine-section.types";
@@ -24,8 +24,8 @@ describe("EngineSelectComponent", () => {
 
         fixture = TestBed.createComponent(EngineSelectComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("data", mockEngines.data.knownEngines);
-        fixture.componentRef.setInput("engine", Engine.Spark);
+        setComponentInput(fixture, "data", mockEngines.data.knownEngines);
+        setComponentInput(fixture, "engine", Engine.Spark);
         fixture.detectChanges();
     });
 

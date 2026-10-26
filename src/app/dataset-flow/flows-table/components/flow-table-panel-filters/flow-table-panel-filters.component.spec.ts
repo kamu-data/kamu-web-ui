@@ -7,6 +7,8 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
+
 import { FlowTablePanelFiltersComponent } from "src/app/dataset-flow/flows-table/components/flow-table-panel-filters/flow-table-panel-filters.component";
 
 describe("FlowTablePanelFiltersComponent", () => {
@@ -19,13 +21,13 @@ describe("FlowTablePanelFiltersComponent", () => {
         });
         fixture = TestBed.createComponent(FlowTablePanelFiltersComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("onlySystemFlows", false);
-        fixture.componentRef.setInput("hasDatasetColumn", false);
-        fixture.componentRef.setInput("accountFlowInitiators", []);
-        fixture.componentRef.setInput("involvedDatasets", []);
-        fixture.componentRef.setInput("selectedDatasetItems", []);
-        fixture.componentRef.setInput("selectedAccountItems", []);
-        fixture.componentRef.setInput("selectedStatusItems", []);
+        setComponentInput(fixture, "onlySystemFlows", false);
+        setComponentInput(fixture, "hasDatasetColumn", false);
+        setComponentInput(fixture, "accountFlowInitiators", []);
+        setComponentInput(fixture, "involvedDatasets", []);
+        setComponentInput(fixture, "selectedDatasetItems", []);
+        setComponentInput(fixture, "selectedAccountItems", []);
+        setComponentInput(fixture, "selectedStatusItems", []);
         fixture.detectChanges();
     });
 

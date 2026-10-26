@@ -7,6 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { SetInfoEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/set-info-event/set-info-event.component";
@@ -23,7 +24,7 @@ describe("SetInfoEventComponent", () => {
 
         fixture = TestBed.createComponent(SetInfoEventComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("event", mockSetInfo);
+        setComponentInput(fixture, "event", mockSetInfo);
         fixture.detectChanges();
     });
 

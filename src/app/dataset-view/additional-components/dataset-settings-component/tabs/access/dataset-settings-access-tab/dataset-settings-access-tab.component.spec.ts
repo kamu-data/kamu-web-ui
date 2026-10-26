@@ -16,8 +16,7 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { ModalService } from "@common/components/modal/modal.service";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { AccountWithRoleConnection, DatasetAccessRole } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { MOCK_ACCOUNT_WITH_ROLE, mockDatasetListCollaboratorsQuery } from "@api/mock/dataset-collaborations.mock";
@@ -28,7 +27,6 @@ import { AddPeopleModalComponent } from "src/app/dataset-view/additional-compone
 import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 import { DatasetSettingsAccessTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-settings-access-tab.component";
 import { EditCollaboratorModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/edit-collaborator-modal/edit-collaborator-modal.component";
-import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 
@@ -91,10 +89,10 @@ describe("DatasetSettingsAccessTabComponent", () => {
             ),
         );
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(RoutingResolvers.DATASET_SETTINGS_ACCESS_KEY, {
+        setComponentInput(fixture, "accessViewData", {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-        } satisfies DatasetViewData);
+        });
         fixture.detectChanges();
     });
 

@@ -20,6 +20,7 @@ import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
     getElementByDataTestId,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockUploadPrepareResponse } from "@api/mock/upload-file.mock";
@@ -52,8 +53,8 @@ describe("QueryAndResultSectionsComponent", () => {
         engineService = TestBed.inject(EngineService);
         spyOn(engineService, "engines").and.returnValue(of(mockEngines));
 
-        fixture.componentRef.setInput("sqlLoading", false);
-        fixture.componentRef.setInput("sqlRequestCode", "select * from 'mock-dataset'");
+        setComponentInput(fixture, "sqlLoading", false);
+        setComponentInput(fixture, "sqlRequestCode", "select * from 'mock-dataset'");
     });
 
     it("should create", () => {
@@ -68,7 +69,7 @@ describe("QueryAndResultSectionsComponent", () => {
     });
 
     it("should check 'Run' button is disabled", () => {
-        fixture.componentRef.setInput("sqlLoading", true);
+        setComponentInput(fixture, "sqlLoading", true);
         fixture.detectChanges();
         const runButtonElem = findElementByDataTestId(fixture, "runSqlQueryButton") as HTMLButtonElement;
         expect(runButtonElem.disabled).toEqual(true);
@@ -92,8 +93,8 @@ describe("QueryAndResultSectionsComponent", () => {
     }));
 
     it("should check invalid SQL result update", fakeAsync(() => {
-        fixture.componentRef.setInput("sqlRequestCode", "select * from 'mock-dataset'");
-        fixture.componentRef.setInput("sqlError", mockSqlErrorUpdate.error);
+        setComponentInput(fixture, "sqlRequestCode", "select * from 'mock-dataset'");
+        setComponentInput(fixture, "sqlError", mockSqlErrorUpdate.error);
         tick();
         fixture.detectChanges();
         tick();

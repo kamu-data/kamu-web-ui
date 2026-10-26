@@ -26,7 +26,7 @@ import {
 
 import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
 
-export const mockAddData: AddDataEventFragment = {
+export const mockAddData: { __typename: "AddData" } & AddDataEventFragment = {
     __typename: "AddData",
     newWatermark: "2022-08-01T00:00:00+00:00",
     prevCheckpoint: null,

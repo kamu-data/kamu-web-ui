@@ -11,6 +11,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { FlowProcessEffectiveState } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowsProcessesQuery } from "@api/mock/dataset-flow.mock";
 
@@ -30,12 +32,13 @@ describe("SubscriptionsTableComponent", () => {
         });
         fixture = TestBed.createComponent(SubscriptionsTableComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
-        fixture.componentRef.setInput(
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
+        setComponentInput(
+            fixture,
             "subprocesses",
-            mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.webhooks.subprocesses,
+            requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.webhooks.subprocesses ?? null),
         );
-        fixture.componentRef.setInput("webhookTableFilters", []);
+        setComponentInput(fixture, "webhookTableFilters", []);
         fixture.detectChanges();
     });
 
@@ -87,7 +90,7 @@ describe("SubscriptionsTableComponent", () => {
         const table = await TestbedHarnessEnvironment.harnessForFixture(fixture, SubscriptionsTableHarness);
         const [busy, idle] = component.subprocesses;
 
-        fixture.componentRef.setInput("busySubscriptionIds", new Set([busy.id]));
+        setComponentInput(fixture, "busySubscriptionIds", new Set([busy.id]));
 
         expect(await table.isToggleDisabled(busy.id)).toBeTrue();
         expect(await table.isToggleDisabled(idle.id)).toBeFalse();

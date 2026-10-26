@@ -14,6 +14,7 @@ import {
     checkVisible,
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { MaybeUndefined } from "@interface/app.types";
 
@@ -175,8 +176,8 @@ describe("SqlEditorComponent", () => {
 
     describe("placeholder", () => {
         it("should check placeholder is shown for an empty query", () => {
-            fixture.componentRef.setInput("template", "");
-            fixture.componentRef.setInput("placeholder", "Type your SQL here");
+            setComponentInput(fixture, "template", "");
+            setComponentInput(fixture, "placeholder", "Type your SQL here");
             fixture.detectChanges();
 
             const placeholder = findElementByDataTestId(fixture, "sql-editor-placeholder");
@@ -184,7 +185,7 @@ describe("SqlEditorComponent", () => {
         });
 
         it("should check placeholder is hidden once there is a query", () => {
-            fixture.componentRef.setInput("template", "select 1");
+            setComponentInput(fixture, "template", "select 1");
             fixture.detectChanges();
 
             checkVisible(fixture, "sql-editor-placeholder", false);
@@ -193,7 +194,7 @@ describe("SqlEditorComponent", () => {
         it("should check clicking the placeholder focuses the editor", () => {
             const focusSpy = jasmine.createSpy("focus");
             component.onInitEditor({ ...editorMock, focus: focusSpy });
-            fixture.componentRef.setInput("template", "");
+            setComponentInput(fixture, "template", "");
             fixture.detectChanges();
 
             emitClickOnElementByDataTestId(fixture, "sql-editor-placeholder");
@@ -202,7 +203,7 @@ describe("SqlEditorComponent", () => {
         });
 
         it("should check clicking the placeholder before the editor loads does nothing", () => {
-            fixture.componentRef.setInput("template", "");
+            setComponentInput(fixture, "template", "");
             fixture.detectChanges();
 
             expect(() => emitClickOnElementByDataTestId(fixture, "sql-editor-placeholder")).not.toThrow();

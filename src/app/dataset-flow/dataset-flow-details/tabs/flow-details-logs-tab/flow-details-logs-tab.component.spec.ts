@@ -9,14 +9,12 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
 
-import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { findElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { TaskStatus } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { FlowDetailsLogsTabComponent } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-logs-tab/flow-details-logs-tab.component";
 
 describe("FlowDetailsLogsTabComponent", () => {
@@ -35,7 +33,7 @@ describe("FlowDetailsLogsTabComponent", () => {
         fixture = TestBed.createComponent(FlowDetailsLogsTabComponent);
         appConfigService = TestBed.inject(AppConfigService);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(RoutingResolvers.FLOW_DETAILS_LOGS_KEY, mockDatasetFlowByIdResponse);
+        setComponentInput(fixture, "flowDetails", mockDatasetFlowByIdResponse);
     });
 
     it("should create", () => {
@@ -55,7 +53,7 @@ describe("FlowDetailsLogsTabComponent", () => {
     it("should check grafana logs block is visible", () => {
         spyOnProperty(loggedUserService, "isAdmin", "get").and.returnValue(true);
         spyOnProperty(component, "grafanaTaskDetailsURL", "get").and.returnValue("http://mock.url");
-        fixture.componentRef.setInput(RoutingResolvers.FLOW_DETAILS_LOGS_KEY, {
+        setComponentInput(fixture, "flowDetails", {
             ...mockDatasetFlowByIdResponse,
             flowHistory: [
                 {
@@ -70,7 +68,7 @@ describe("FlowDetailsLogsTabComponent", () => {
                     nextAttemptAt: null,
                 },
             ],
-        } satisfies DatasetFlowByIdResponse);
+        });
         fixture.detectChanges();
 
         const grafanaLogsBlock = findElementByDataTestId(fixture, "grafana-logs-section");

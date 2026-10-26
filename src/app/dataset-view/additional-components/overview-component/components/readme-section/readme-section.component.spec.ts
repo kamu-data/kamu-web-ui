@@ -21,6 +21,7 @@ import {
     findNativeElement,
     getElementByDataTestId,
     registerMatSvgIcons,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockAccountDetails } from "@api/mock/auth.mock";
@@ -51,8 +52,8 @@ describe("ReadmeSectionComponent", () => {
         component = fixture.componentInstance;
         datasetCommitService = TestBed.inject(DatasetCommitService);
         loggedUserService = TestBed.inject(LoggedUserService);
-        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsDerivedFragment);
-        fixture.componentRef.setInput("currentReadme", mockReadmeContent);
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsDerivedFragment);
+        setComponentInput(fixture, "currentReadme", mockReadmeContent);
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
     });
 
@@ -89,9 +90,9 @@ describe("ReadmeSectionComponent", () => {
 
     it("should check push button 'cancel changes' when currentReadme is not exist", () => {
         fixture.detectChanges();
-        fixture.componentRef.setInput("currentReadme", null);
+        setComponentInput(fixture, "currentReadme", null);
         fixture.detectChanges();
-        fixture.componentRef.setInput("editingInProgress", true);
+        setComponentInput(fixture, "editingInProgress", true);
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "cancel-changes");
         expect(component.readmeState).toEqual("");
@@ -124,7 +125,8 @@ describe("ReadmeSectionComponent", () => {
     });
 
     it("should check Run and Copy buttons exist", async () => {
-        fixture.componentRef.setInput(
+        setComponentInput(
+            fixture,
             "currentReadme",
             "```sql" + "\nselect * from 'account.tokens.portfolio.market-value'" + "\n```",
         );
@@ -139,7 +141,8 @@ describe("ReadmeSectionComponent", () => {
     });
 
     it("should check Run button navigate to Data tab", async () => {
-        fixture.componentRef.setInput(
+        setComponentInput(
+            fixture,
             "currentReadme",
             "```sql" + "\nselect * from 'account.tokens.portfolio.market-value'" + "\n```",
         );
@@ -158,7 +161,8 @@ describe("ReadmeSectionComponent", () => {
     });
 
     it("should check Run button navigate to Data tab with line breaks", async () => {
-        fixture.componentRef.setInput(
+        setComponentInput(
+            fixture,
             "currentReadme",
             "```sql" + "\nselect\n*\nfrom 'account.tokens.portfolio.market-value'" + "\n```",
         );

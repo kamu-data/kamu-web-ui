@@ -13,7 +13,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { BaseDynamicEventHarness } from "src/app/dataset-block/metadata-block/components/event-details/components/base-dynamic-event/base-dynamic-event.harness";
@@ -34,7 +34,7 @@ describe("ExecuteTransformEventComponent", () => {
 
         fixture = TestBed.createComponent(ExecuteTransformEventComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("event", mockExecuteTransform);
+        setComponentInput(fixture, "event", mockExecuteTransform);
         fixture.detectChanges();
     });
 

@@ -16,6 +16,7 @@ import {
     dispatchInputEvent,
     getElementByDataTestId,
     registerMatSvgIcons,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
@@ -37,7 +38,7 @@ describe("BlockNavigationComponent", () => {
 
         fixture = TestBed.createComponent(BlockNavigationComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("datasetInfo", MOCK_DATASET_INFO);
+        setComponentInput(fixture, "datasetInfo", MOCK_DATASET_INFO);
         fixture.detectChanges();
     });
 
@@ -58,7 +59,7 @@ describe("BlockNavigationComponent", () => {
 
     it("should check search highlights the matching part of each block hash", () => {
         const testSearchHash = "zW1";
-        fixture.componentRef.setInput("datasetHistory", mockHistoryUpdate);
+        setComponentInput(fixture, "datasetHistory", mockHistoryUpdate);
 
         dispatchInputEvent(fixture, "searchHash", testSearchHash);
 

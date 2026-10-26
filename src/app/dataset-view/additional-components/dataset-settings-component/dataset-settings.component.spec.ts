@@ -15,8 +15,11 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import {
+    emitClickOnElementByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 
 import {
     mockMetadataRootUpdate,
@@ -24,7 +27,6 @@ import {
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { DatasetSettingsComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.component";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -71,7 +73,7 @@ describe("DatasetSettingsComponent", () => {
         fixture = TestBed.createComponent(DatasetSettingsComponent);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_SETTINGS_KEY, {
+        setComponentInput(fixture, "datasetSettingsTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: {
@@ -80,7 +82,7 @@ describe("DatasetSettingsComponent", () => {
                 overview: structuredClone(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
                 size: mockOverviewDataUpdate.size,
             } as OverviewUpdate,
-        } satisfies DatasetOverviewTabData);
+        });
         fixture.detectChanges();
     });
 
@@ -89,10 +91,7 @@ describe("DatasetSettingsComponent", () => {
     });
 
     it("should check navigate to action list item", () => {
-        fixture.componentRef.setInput(
-            RoutingResolvers.DATASET_VIEW_SETTINGS_ACTIVE_SECTION_KEY,
-            SettingsTabsEnum.SCHEDULING,
-        );
+        setComponentInput(fixture, "activeTab", SettingsTabsEnum.SCHEDULING);
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         spyOn(component, "visibilitySettingsMenuItem").and.returnValue(true);
         fixture.detectChanges();
@@ -101,10 +100,7 @@ describe("DatasetSettingsComponent", () => {
             jasmine.objectContaining({ section: SettingsTabsEnum.SCHEDULING }),
         );
 
-        fixture.componentRef.setInput(
-            RoutingResolvers.DATASET_VIEW_SETTINGS_ACTIVE_SECTION_KEY,
-            SettingsTabsEnum.GENERAL,
-        );
+        setComponentInput(fixture, "activeTab", SettingsTabsEnum.GENERAL);
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, `action-list-${SettingsTabsEnum.GENERAL}-tab`);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(

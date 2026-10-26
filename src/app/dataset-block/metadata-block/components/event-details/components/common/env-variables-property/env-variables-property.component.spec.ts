@@ -9,8 +9,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { provideToastr } from "ngx-toastr";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { EnvVar } from "@api/kamu.graphql.interface";
 
 import { EnvVariablesPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/env-variables-property/env-variables-property.component";
 
@@ -26,10 +26,10 @@ describe("EnvVariablesPropertyComponent", () => {
 
         fixture = TestBed.createComponent(EnvVariablesPropertyComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("data", [
+        setComponentInput(fixture, "data", [
             { name: "testName1", value: null },
             { name: "testName2", value: "testValue" },
-        ] satisfies EnvVar[]);
+        ]);
         fixture.detectChanges();
     });
 

@@ -9,8 +9,9 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { provideToastr } from "ngx-toastr";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { MqttQos, MqttTopicSubscription } from "@api/kamu.graphql.interface";
+import { MqttQos } from "@api/kamu.graphql.interface";
 
 import { TopicsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/topics-property/topics-property.component";
 
@@ -26,9 +27,7 @@ describe("TopicsPropertyComponent", () => {
 
         fixture = TestBed.createComponent(TopicsPropertyComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("data", [
-            { path: "test.com", qos: MqttQos.AtMostOnce },
-        ] satisfies MqttTopicSubscription[]);
+        setComponentInput(fixture, "data", [{ path: "test.com", qos: MqttQos.AtMostOnce }]);
         fixture.detectChanges();
     });
 

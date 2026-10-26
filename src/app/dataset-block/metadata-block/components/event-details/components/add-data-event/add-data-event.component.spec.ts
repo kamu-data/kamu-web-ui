@@ -13,7 +13,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { AddDataEventFragment } from "@api/kamu.graphql.interface";
 
@@ -39,7 +39,7 @@ describe("AddDataEventComponent", () => {
 
         fixture = TestBed.createComponent(AddDataEventComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("event", mockAddData);
+        setComponentInput(fixture, "event", mockAddData);
         fixture.detectChanges();
         harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, BaseDynamicEventHarness);
     });
@@ -67,7 +67,7 @@ describe("AddDataEventComponent", () => {
             },
         } satisfies AddDataEventFragment;
 
-        fixture.componentRef.setInput("event", nextEvent);
+        setComponentInput(fixture, "event", nextEvent);
 
         expect(await harness.getSectionTitles()).toEqual(["New data", "New checkpoint"]);
         expect(await harness.getPropertyText(OFFSET_START_TEST_ID)).toEqual("596126");

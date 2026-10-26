@@ -8,6 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { NonNullableFormBuilder, Validators } from "@angular/forms";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 
 import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
@@ -24,7 +25,8 @@ describe("WebhookFormComponent", () => {
         fixture = TestBed.createComponent(WebhookFormComponent);
         fb = TestBed.inject(NonNullableFormBuilder);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(
+        setComponentInput(
+            fixture,
             "createOrEditSubscriptionForm",
             fb.group({
                 targetUrl: fb.control("", [Validators.required, Validators.pattern(AppValues.URL_PATTERN_ONLY_HTTPS)]),
@@ -32,7 +34,7 @@ describe("WebhookFormComponent", () => {
                 label: fb.control("", [Validators.maxLength(100)]),
             }),
         );
-        fixture.componentRef.setInput("dropdownList", []);
+        setComponentInput(fixture, "dropdownList", []);
         fixture.detectChanges();
     });
 

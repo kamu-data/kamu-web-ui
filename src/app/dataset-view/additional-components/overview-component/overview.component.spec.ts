@@ -22,9 +22,9 @@ import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
     registerMatSvgIcons,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import {
     AccountProvider,
@@ -42,7 +42,6 @@ import {
 import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { OverviewComponent } from "src/app/dataset-view/additional-components/overview-component/overview.component";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
@@ -87,7 +86,7 @@ describe("OverviewComponent", () => {
         fixture = TestBed.createComponent(OverviewComponent);
         component = fixture.componentInstance;
         spyOn(datasetCollaborationsService, "getRoleByDatasetId").and.returnValue(of(null));
-        fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_OVERVIEW_KEY, {
+        setComponentInput(fixture, "datasetOverviewTabData", {
             datasetBasics: {
                 id: mockOverviewDataUpdate.overview.id,
                 kind: mockOverviewDataUpdate.overview.kind,
@@ -108,17 +107,14 @@ describe("OverviewComponent", () => {
                 overview: structuredClone(mockOverviewDataUpdate.overview),
                 size: mockOverviewDataUpdate.size,
             } as OverviewUpdate,
-        } satisfies DatasetOverviewTabData);
+        });
         fixture.detectChanges();
     });
 
     // Tests change the tab data in place and stub getters; the resolver delivers a new object instead,
     // so pass a fresh copy through the input to re-render the OnPush view.
     function updateView(): void {
-        fixture.componentRef.setInput(
-            RoutingResolvers.DATASET_VIEW_OVERVIEW_KEY,
-            structuredClone(component.datasetOverviewTabData),
-        );
+        setComponentInput(fixture, "datasetOverviewTabData", structuredClone(component.datasetOverviewTabData));
         fixture.detectChanges();
     }
 

@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
 import { CommitNavigatorComponent } from "src/app/dataset-view/additional-components/metadata-component/components/commit-navigator/commit-navigator.component";
 
@@ -25,9 +25,9 @@ describe("CommitNavigatorComponent", () => {
 
         fixture = TestBed.createComponent(CommitNavigatorComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("pageIndex", INITIAL_PAGE_INDEX);
-        fixture.componentRef.setInput("limit", INITIAL_LIMIT);
-        fixture.componentRef.setInput("total", INITIAL_TOTAL);
+        setComponentInput(fixture, "pageIndex", INITIAL_PAGE_INDEX);
+        setComponentInput(fixture, "limit", INITIAL_LIMIT);
+        setComponentInput(fixture, "total", INITIAL_TOTAL);
         fixture.detectChanges();
     });
 

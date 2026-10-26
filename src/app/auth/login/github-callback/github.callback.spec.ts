@@ -11,12 +11,12 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { AuthApi } from "@api/auth.api";
 
 import { GithubCallbackComponent } from "src/app/auth/login/github-callback/github.callback";
 import { LoginService } from "src/app/auth/login/login.service";
-import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 import { SessionStorageService } from "src/app/services/session-storage.service";
 
@@ -105,8 +105,8 @@ describe("GithubCallbackComponent", () => {
     });
 
     function setCallbackParams(params: { code?: string; state?: string }): void {
-        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_CODE, params.code);
-        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_STATE, params.state);
+        setComponentInput(fixture, "code", params.code);
+        setComponentInput(fixture, "state", params.state);
         fixture.detectChanges();
     }
 });

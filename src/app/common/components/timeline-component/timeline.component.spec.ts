@@ -12,7 +12,11 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { provideToastr } from "ngx-toastr";
 
 import { TimelineComponent } from "@common/components/timeline-component/timeline.component";
-import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import {
+    findElementByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
@@ -34,11 +38,11 @@ describe("TimelineComponent", () => {
 
         fixture = TestBed.createComponent(TimelineComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("datasetName", TEST_DATASET_NAME);
-        fixture.componentRef.setInput("pageInfo", mockPageBasedInfo);
-        fixture.componentRef.setInput("history", [
+        setComponentInput(fixture, "datasetName", TEST_DATASET_NAME);
+        setComponentInput(fixture, "pageInfo", mockPageBasedInfo);
+        setComponentInput(fixture, "history", [
             mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHash as MetadataBlockFragment,
-        ] satisfies MetadataBlockFragment[]);
+        ]);
 
         fixture.detectChanges();
     });

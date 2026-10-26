@@ -13,6 +13,7 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { VersionedFileEntryDataFragment } from "@api/kamu.graphql.interface";
 
@@ -58,7 +59,7 @@ describe("VersionedFileViewComponent", () => {
         toastrService = TestBed.inject(ToastrService);
         fixture = TestBed.createComponent(VersionedFileViewComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
     });
 
     it("should create", () => {

@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { findElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
 import { VerifyResultSectionComponent } from "src/app/query-explainer/components/verify-result-section/verify-result-section.component";
 import {
@@ -25,7 +25,7 @@ describe("VerifyResultSectionComponent", () => {
         });
         fixture = TestBed.createComponent(VerifyResultSectionComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("verifyResponse", mockVerifyQueryResponseSuccess);
+        setComponentInput(fixture, "verifyResponse", mockVerifyQueryResponseSuccess);
     });
 
     it("should create", () => {
@@ -33,14 +33,14 @@ describe("VerifyResultSectionComponent", () => {
     });
 
     it("should check verify result is successfull", () => {
-        fixture.componentRef.setInput("verifyResponse", mockVerifyQueryResponseSuccess);
+        setComponentInput(fixture, "verifyResponse", mockVerifyQueryResponseSuccess);
         fixture.detectChanges();
         const resultElem = findElementByDataTestId(fixture, "verification-success");
         expect(resultElem?.innerText.trim()).toEqual("Verification successful");
     });
 
     it("should check verify result is failed", () => {
-        fixture.componentRef.setInput("verifyResponse", mockVerifyQueryOutputMismatchError);
+        setComponentInput(fixture, "verifyResponse", mockVerifyQueryOutputMismatchError);
         fixture.detectChanges();
         const resultElem = findElementByDataTestId(fixture, "verification-failed");
         expect(resultElem?.innerText.trim()).toEqual("Verification failed");

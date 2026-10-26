@@ -10,6 +10,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { MOCK_ACCOUNT_WITH_ROLE } from "@api/mock/dataset-collaborations.mock";
 
 import { EditCollaboratorModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/edit-collaborator-modal/edit-collaborator-modal.component";
@@ -27,7 +28,7 @@ describe("EditCollaboratorModalComponent", () => {
         fixture = TestBed.createComponent(EditCollaboratorModalComponent);
         ngbActiveModal = TestBed.inject(NgbActiveModal);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("collaborator", MOCK_ACCOUNT_WITH_ROLE);
+        setComponentInput(fixture, "collaborator", MOCK_ACCOUNT_WITH_ROLE);
         fixture.detectChanges();
     });
 

@@ -8,7 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormArray, FormGroup } from "@angular/forms";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { KeyValueFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/key-value-field/key-value-field.component";
@@ -25,7 +25,7 @@ describe("KeyValueFieldComponent", () => {
         fixture = TestBed.createComponent(KeyValueFieldComponent);
         component = fixture.componentInstance;
         component.controlName = "primaryKey";
-        fixture.componentRef.setInput("buttonText", "Add key");
+        setComponentInput(fixture, "buttonText", "Add key");
         component.form = new FormGroup({
             [component.controlName]: new FormArray([]),
         });

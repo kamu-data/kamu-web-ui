@@ -15,7 +15,7 @@ export default [
       "coverage/**",
       "**/kamu.graphql.interface.ts",
       "**/add-license.js",
-      "src/app/editor/generated/monaco-version.ts"
+      "src/app/editor/generated/monaco-version.ts",
     ],
   },
   // Main configuration for TypeScript files with Jasmine
@@ -80,6 +80,21 @@ export default [
       "jasmine/no-unsafe-spy": "off",
       "jasmine/no-focused-tests": "error",
       "jasmine/no-disabled-tests": "error",
+    },
+  },
+  // Specs set inputs through setComponentInput(), which type-checks the input name and value
+  {
+    files: ["src/app/**/*.spec.ts"],
+    ignores: ["src/app/common/helpers/base-test.helpers.spec.ts"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "CallExpression[callee.property.name='setInput']",
+          message:
+            'Use setComponentInput(fixture, "field", value) from @common/helpers/base-test.helpers.spec: it type-checks the input name and value.',
+        },
+      ],
     },
   },
   // License header plugin for specific files

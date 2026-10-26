@@ -16,7 +16,7 @@ import { Apollo } from "apollo-angular";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import { SearchAdditionalButtonsNavHarness } from "@common/components/search-additional-buttons/search-additional-buttons-nav.harness";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
@@ -45,8 +45,8 @@ describe("DatasetViewHeaderComponent", () => {
         datasetService = TestBed.inject(DatasetService);
         spyOnProperty(datasetService, "downstreamsCountChanges", "get").and.returnValue(of(1));
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("datasetInfo", mockDatasetInfo);
-        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
+        setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
         fixture.detectChanges();
     });
 

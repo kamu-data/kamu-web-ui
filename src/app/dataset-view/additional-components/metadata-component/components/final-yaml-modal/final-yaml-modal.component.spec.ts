@@ -12,7 +12,7 @@ import { of } from "rxjs";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { DatasetInfo } from "@interface/navigation.interface";
@@ -44,8 +44,8 @@ describe("FinalYamlModalComponent", () => {
         activeModal = TestBed.inject(NgbActiveModal);
         loggedUserService = TestBed.inject(LoggedUserService);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("yamlTemplate", "test yaml");
-        fixture.componentRef.setInput("datasetInfo", testDatasetInfo);
+        setComponentInput(fixture, "yamlTemplate", "test yaml");
+        setComponentInput(fixture, "datasetInfo", testDatasetInfo);
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         fixture.detectChanges();
     });

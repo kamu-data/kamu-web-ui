@@ -12,7 +12,7 @@ import { ActivatedRoute } from "@angular/router";
 import { interval } from "rxjs";
 import { map, take } from "rxjs/operators";
 
-import { getInputElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { getInputElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 
 import { TypeaheadFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/typeahead-field/typeahead-field.component";
@@ -47,7 +47,7 @@ describe("TypeaheadFieldComponent", () => {
 
         fixture = TestBed.createComponent(TypeaheadFieldComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("data", ["test1", "test2"] satisfies string[]);
+        setComponentInput(fixture, "data", ["test1", "test2"]);
         component.controlName = "name";
         component.dataTestId = "typeahead";
         component.form = new FormGroup({

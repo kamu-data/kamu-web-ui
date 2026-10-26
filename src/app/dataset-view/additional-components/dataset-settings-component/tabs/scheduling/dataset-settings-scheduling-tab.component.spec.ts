@@ -13,9 +13,8 @@ import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
-import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { getElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { TimeDelta, TimeUnit } from "@api/kamu.graphql.interface";
 
 import {
@@ -24,7 +23,6 @@ import {
 } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
 import { DatasetSettingsSchedulingTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.component";
-import { DatasetSettingsSchedulingTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.data";
 import { IngestTriggerFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger-form.harness";
 import { FlowStopPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.component";
 import { FlowStopPolicyFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.harness";
@@ -57,13 +55,13 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         datasetFlowTriggerService = TestBed.inject(DatasetFlowTriggerService);
 
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(RoutingResolvers.DATASET_SETTINGS_SCHEDULING_KEY, {
+        setComponentInput(fixture, "schedulingTabData", {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             schedule: null,
             stopPolicy: null,
             paused: true,
-        } satisfies DatasetSettingsSchedulingTabData);
+        });
 
         fixture.detectChanges();
         await fixture.whenStable();

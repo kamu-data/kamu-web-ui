@@ -16,6 +16,7 @@ import {
     checkButtonDisabled,
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetByIdQuery } from "@api/kamu.graphql.interface";
@@ -54,14 +55,14 @@ describe("OffsetIntervalPropertyComponent", () => {
         fixture = TestBed.createComponent(OffsetIntervalPropertyComponent);
         component = fixture.componentInstance;
         navigationService = TestBed.inject(NavigationService);
-        fixture.componentRef.setInput("dataTestId", DATA_TEST_ID);
+        setComponentInput(fixture, "dataTestId", DATA_TEST_ID);
         requestDatasetInfoByIdSpy = spyOn(TestBed.inject(DatasetService), "requestDatasetInfoById").and.returnValue(
             of(mockDatasetByIdQuery),
         );
     });
 
     it("should load the dataset by its id and open its data for the interval", () => {
-        fixture.componentRef.setInput("data", mockData);
+        setComponentInput(fixture, "data", mockData);
         fixture.detectChanges();
         const navigateSpy = spyOn(navigationService, "navigateToDatasetView");
 
@@ -79,9 +80,9 @@ describe("OffsetIntervalPropertyComponent", () => {
     });
 
     it("should not load the dataset again when only the interval changes", () => {
-        fixture.componentRef.setInput("data", mockData);
+        setComponentInput(fixture, "data", mockData);
         fixture.detectChanges();
-        fixture.componentRef.setInput("data", { ...mockData, block: { ...mockData.block, end: 600000 } });
+        setComponentInput(fixture, "data", { ...mockData, block: { ...mockData.block, end: 600000 } });
         fixture.detectChanges();
 
         expect(requestDatasetInfoByIdSpy).toHaveBeenCalledTimes(1);
@@ -89,7 +90,7 @@ describe("OffsetIntervalPropertyComponent", () => {
     });
 
     it("should open the data of the dataset from the URL when there is no dataset id", () => {
-        fixture.componentRef.setInput("data", { ...mockData, datasetId: null });
+        setComponentInput(fixture, "data", { ...mockData, datasetId: null });
         fixture.detectChanges();
         const navigateSpy = spyOn(navigationService, "navigateToDatasetView");
 
@@ -105,20 +106,20 @@ describe("OffsetIntervalPropertyComponent", () => {
     });
 
     it("should show a dash when there is no interval", () => {
-        fixture.componentRef.setInput("data", { block: null, datasetId: DATASET_ID });
+        setComponentInput(fixture, "data", { block: null, datasetId: DATASET_ID });
         fixture.detectChanges();
 
         expect(findElementByDataTestId(fixture, "empty-block")?.textContent).toEqual("-");
     });
 
     it("should keep See data disabled until the dataset for a new id loads, then open that dataset", () => {
-        fixture.componentRef.setInput("data", mockData);
+        setComponentInput(fixture, "data", mockData);
         fixture.detectChanges();
         const otherResponse$ = new Subject<DatasetByIdQuery>();
         requestDatasetInfoByIdSpy.and.returnValue(otherResponse$);
         const navigateSpy = spyOn(navigationService, "navigateToDatasetView");
 
-        fixture.componentRef.setInput("data", { ...mockData, datasetId: OTHER_DATASET_ID });
+        setComponentInput(fixture, "data", { ...mockData, datasetId: OTHER_DATASET_ID });
         fixture.detectChanges();
         checkButtonDisabled(fixture, "see-data", true);
         component.navigateToQuery();
@@ -132,12 +133,12 @@ describe("OffsetIntervalPropertyComponent", () => {
     });
 
     it("should not open any dataset when the new id does not resolve to one", () => {
-        fixture.componentRef.setInput("data", mockData);
+        setComponentInput(fixture, "data", mockData);
         fixture.detectChanges();
         requestDatasetInfoByIdSpy.and.returnValue(of({ datasets: { __typename: "Datasets", byId: null } }));
         const navigateSpy = spyOn(navigationService, "navigateToDatasetView");
 
-        fixture.componentRef.setInput("data", { ...mockData, datasetId: OTHER_DATASET_ID });
+        setComponentInput(fixture, "data", { ...mockData, datasetId: OTHER_DATASET_ID });
         fixture.detectChanges();
         checkButtonDisabled(fixture, "see-data", true);
         component.navigateToQuery();

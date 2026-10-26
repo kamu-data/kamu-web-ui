@@ -10,6 +10,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { provideMarkdown } from "ngx-markdown";
 
 import { AttributesSchemaModalComponent } from "@common/components/dynamic-table/components/attributes-schema-modal/attributes-schema-modal.component";
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { OdfTypes } from "@interface/dataset-schema.interface";
 
 describe("AttributesSchemaModalComponent", () => {
@@ -23,7 +24,7 @@ describe("AttributesSchemaModalComponent", () => {
         });
         fixture = TestBed.createComponent(AttributesSchemaModalComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("element", {
+        setComponentInput(fixture, "element", {
             name: "offset",
             type: {
                 kind: OdfTypes.String,

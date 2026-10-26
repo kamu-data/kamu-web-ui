@@ -17,6 +17,7 @@ import {
     findComponentInstance,
     findComponentInstances,
     registerMatSvgIcons,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { AddDataEventFragment, MetadataBlockFragment } from "@api/kamu.graphql.interface";
@@ -46,7 +47,7 @@ describe("EventDetailsComponent", () => {
 
         fixture = TestBed.createComponent(EventDetailsComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("block", mockBlock);
+        setComponentInput(fixture, "block", mockBlock);
         fixture.detectChanges();
     });
 
@@ -57,7 +58,7 @@ describe("EventDetailsComponent", () => {
     it("should render the component for the block's event type", () => {
         expect(findComponentInstance(fixture, ExecuteTransformEventComponent)).toBeTruthy();
 
-        fixture.componentRef.setInput("block", { ...mockBlock, event: mockAddData });
+        setComponentInput(fixture, "block", { ...mockBlock, event: mockAddData });
         fixture.detectChanges();
 
         expect(findComponentInstance(fixture, AddDataEventComponent)).toBeTruthy();
@@ -66,7 +67,7 @@ describe("EventDetailsComponent", () => {
 
     it("should show the new values when switching between blocks of the same event type", async () => {
         const offsetEndTestId = "add-data-data-slice-offset-interval-end";
-        fixture.componentRef.setInput("block", { ...mockBlock, event: mockAddData });
+        setComponentInput(fixture, "block", { ...mockBlock, event: mockAddData });
         const harness = await TestbedHarnessEnvironment.loader(fixture).getHarness(BaseDynamicEventHarness);
         expect(await harness.getPropertyText(offsetEndTestId)).toEqual("596125");
 
@@ -80,16 +81,16 @@ describe("EventDetailsComponent", () => {
                 offsetInterval: { __typename: "OffsetInterval", start: 596126, end: 600000 },
             },
         } satisfies AddDataEventFragment;
-        fixture.componentRef.setInput("block", { ...mockBlock, event: nextEvent });
+        setComponentInput(fixture, "block", { ...mockBlock, event: nextEvent });
 
         expect(await harness.getPropertyText(offsetEndTestId)).toEqual("600000");
     });
 
     it("should render the unsupported event view for an event type without its own view", () => {
-        fixture.componentRef.setInput("block", {
+        setComponentInput(fixture, "block", {
             ...mockBlock,
             event: { __typename: "DisablePollingSource" },
-        } satisfies MetadataBlockFragment);
+        });
         fixture.detectChanges();
 
         expect(findComponentInstance(fixture, UnsupportedEventComponent)).toBeTruthy();

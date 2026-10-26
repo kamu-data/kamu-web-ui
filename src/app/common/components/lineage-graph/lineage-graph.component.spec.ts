@@ -16,7 +16,11 @@ import { LineageGraphComponent } from "@common/components/lineage-graph/lineage-
 import { LineageGraphHarness } from "@common/components/lineage-graph/lineage-graph.harness";
 import { MOCK_GRAPH_WITH_SOURCES, MOCK_SOURCE_NODES } from "@common/components/lineage-graph/lineage-graph.mock";
 import { WidgetHeightService } from "@common/components/lineage-graph/widget-height.service";
-import { findComponentInstance, findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import {
+    findComponentInstance,
+    findElementByDataTestId,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { DatasetLineageBasicsFragment } from "@api/kamu.graphql.interface";
@@ -69,8 +73,8 @@ describe("LineageGraphComponent", () => {
 
         fixture = TestBed.createComponent(LineageGraphComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("graph", options.graph ?? MOCK_GRAPH);
-        fixture.componentRef.setInput("currentDataset", options.currentDataset ?? mockGraphNode);
+        setComponentInput(fixture, "graph", options.graph ?? MOCK_GRAPH);
+        setComponentInput(fixture, "currentDataset", options.currentDataset ?? mockGraphNode);
         fixture.detectChanges();
     }
 
@@ -238,8 +242,8 @@ describe("LineageGraphComponent", () => {
         fixture = TestBed.createComponent(LineageGraphComponent);
         component = fixture.componentInstance;
         const changeViewSpy = spyOn(component, "changeLineageGraphView").and.callThrough();
-        fixture.componentRef.setInput("graph", MOCK_GRAPH);
-        fixture.componentRef.setInput("currentDataset", mockGraphNode);
+        setComponentInput(fixture, "graph", MOCK_GRAPH);
+        setComponentInput(fixture, "currentDataset", mockGraphNode);
 
         fixture.detectChanges();
         TestBed.inject(ApplicationRef).tick();

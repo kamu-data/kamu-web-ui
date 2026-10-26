@@ -17,8 +17,7 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
@@ -35,7 +34,6 @@ import {
 import { AddPushSourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 import { AddPushSourceComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
-import ProjectLinks from "src/app/project-links";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 
 const providersSection = (name: string) => {
@@ -88,9 +86,9 @@ describe("AddPushSourceComponent with query parameter name", () => {
         datasetCommitService = TestBed.inject(DatasetCommitService);
         loggedUserService = TestBed.inject(LoggedUserService);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(RoutingResolvers.ADD_PUSH_SOURCE_KEY, mockAddPushSourceYaml);
-        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_PUSH_SOURCE_NAME, "mockSourceName");
-        fixture.componentRef.setInput(RoutingResolvers.DATASET_INFO_KEY, mockDatasetInfo);
+        setComponentInput(fixture, "eventYamlByHash", mockAddPushSourceYaml);
+        setComponentInput(fixture, "queryParamName", "mockSourceName");
+        setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
         component.addPushSourceForm = new FormGroup({
             sourceName: new FormControl(""),
             read: new FormGroup({
@@ -138,7 +136,7 @@ describe("AddPushSourceComponent with query parameter name", () => {
     });
 
     it("should check an existing preprocess step is shown when the editor opens", () => {
-        fixture.componentRef.setInput(RoutingResolvers.ADD_PUSH_SOURCE_KEY, mockAddPushSourceYamlWithPreprocess);
+        setComponentInput(fixture, "eventYamlByHash", mockAddPushSourceYamlWithPreprocess);
         component.ngOnInit();
         expect(component.showPreprocessStep).toEqual(true);
     });
@@ -180,9 +178,9 @@ describe("AddPushSourceComponent without query parameter name", () => {
 
         fixture = TestBed.createComponent(AddPushSourceComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_PUSH_SOURCE_NAME, "");
-        fixture.componentRef.setInput(RoutingResolvers.ADD_PUSH_SOURCE_KEY, mockAddPushSourceYaml);
-        fixture.componentRef.setInput(RoutingResolvers.DATASET_INFO_KEY, mockDatasetInfo);
+        setComponentInput(fixture, "queryParamName", "");
+        setComponentInput(fixture, "eventYamlByHash", mockAddPushSourceYaml);
+        setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
         component.addPushSourceForm = new FormGroup({
             sourceName: new FormControl("mockName"),
             read: new FormGroup({

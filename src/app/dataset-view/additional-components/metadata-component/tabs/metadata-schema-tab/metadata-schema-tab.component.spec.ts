@@ -11,8 +11,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { provideToastr } from "ngx-toastr";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
 import {
     mockMetadataDerivedUpdate,
@@ -20,7 +19,6 @@ import {
     mockOverviewDataUpdateNullable,
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataSchemaTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-schema-tab/metadata-schema-tab.component";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
@@ -36,7 +34,7 @@ describe("MetadataSchemaTabComponent", () => {
         registerMatSvgIcons();
         fixture = TestBed.createComponent(MetadataSchemaTabComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(RoutingResolvers.METADATA_SCHEMA_TAB_KEY, {
+        setComponentInput(fixture, "datasetMetadataTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: {
@@ -45,7 +43,7 @@ describe("MetadataSchemaTabComponent", () => {
                 overview: structuredClone(mockOverviewDataUpdateNullable.overview),
                 size: mockOverviewDataUpdate.size,
             } as OverviewUpdate,
-        } satisfies DatasetOverviewTabData);
+        });
 
         fixture.detectChanges();
     });

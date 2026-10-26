@@ -10,7 +10,7 @@ import { FormGroupDirective } from "@angular/forms";
 
 import { Apollo } from "apollo-angular";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { MaybeNull } from "@interface/app.types";
 
@@ -37,8 +37,8 @@ describe("PrepareStepComponent", () => {
     function createComponent(eventYamlByHash: MaybeNull<string>): void {
         fixture = TestBed.createComponent(PrepareStepComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("sectionName", SetPollingSourceSection.PREPARE);
-        fixture.componentRef.setInput("eventYamlByHash", eventYamlByHash);
+        setComponentInput(fixture, "sectionName", SetPollingSourceSection.PREPARE);
+        setComponentInput(fixture, "eventYamlByHash", eventYamlByHash);
         fixture.detectChanges();
     }
 

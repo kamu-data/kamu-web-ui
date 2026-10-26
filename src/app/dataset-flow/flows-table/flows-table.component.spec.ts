@@ -20,7 +20,8 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 import timekeeper from "timekeeper";
 
 import { ModalService } from "@common/components/modal/modal.service";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { requireValue } from "@common/helpers/app.helpers";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowSummaryDataFragments } from "@api/mock/dataset-flow.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
@@ -30,7 +31,6 @@ import {
     mockDatasets,
     mockFlowSummaryDataFragmentShowForceLink,
 } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
-import { FlowsTableOptions } from "src/app/dataset-flow/flows-table/flows-table.types";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 
 describe("FlowsTableComponent", () => {
@@ -64,17 +64,18 @@ describe("FlowsTableComponent", () => {
         toastService = TestBed.inject(ToastrService);
         component = fixture.componentInstance;
         loader = TestbedHarnessEnvironment.loader(fixture);
-        fixture.componentRef.setInput("nodes", mockFlowSummaryDataFragments);
-        fixture.componentRef.setInput("filterByStatus", null);
-        fixture.componentRef.setInput("searchByAccount", []);
-        fixture.componentRef.setInput("tableOptions", {
+        setComponentInput(fixture, "nodes", mockFlowSummaryDataFragments);
+        setComponentInput(fixture, "filterByStatus", null);
+        setComponentInput(fixture, "searchByAccount", []);
+        setComponentInput(fixture, "tableOptions", {
             displayColumns: ["description", "information", "creator", "options"],
-        } satisfies FlowsTableOptions);
-        fixture.componentRef.setInput("involvedDatasets", mockDatasets);
+        });
+        setComponentInput(fixture, "involvedDatasets", mockDatasets);
 
-        fixture.componentRef.setInput(
+        setComponentInput(
+            fixture,
             "accountFlowInitiators",
-            mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators.nodes,
+            requireValue(mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators.nodes ?? null),
         );
         fixture.detectChanges();
     });

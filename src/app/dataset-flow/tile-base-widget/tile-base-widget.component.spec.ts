@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { findElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { FlowItemWidgetDataFragment } from "@api/kamu.graphql.interface";
 import { mockFlowItemWidgetDataFragments } from "@api/mock/dataset-flow.mock";
 
@@ -25,9 +25,9 @@ describe("TileBaseWidgetComponent", () => {
 
         fixture = TestBed.createComponent(TileBaseWidgetComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("nodes", mockFlowItemWidgetDataFragments);
-        fixture.componentRef.setInput("involvedDatasets", mockDatasets);
-        fixture.componentRef.setInput("displayAlias", true);
+        setComponentInput(fixture, "nodes", mockFlowItemWidgetDataFragments);
+        setComponentInput(fixture, "involvedDatasets", mockDatasets);
+        setComponentInput(fixture, "displayAlias", true);
         fixture.detectChanges();
     });
 

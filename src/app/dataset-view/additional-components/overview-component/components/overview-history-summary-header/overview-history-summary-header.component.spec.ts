@@ -11,7 +11,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { provideToastr } from "ngx-toastr";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { requireValue } from "@common/helpers/app.helpers";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { AccountProvider } from "@api/kamu.graphql.interface";
@@ -33,12 +34,13 @@ describe("OverviewHistorySummaryHeaderComponent", () => {
 
         fixture = TestBed.createComponent(OverviewHistorySummaryHeaderComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(
+        setComponentInput(
+            fixture,
             "metadataBlockFragment",
-            mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHash,
+            requireValue(mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHash ?? null),
         );
-        fixture.componentRef.setInput("numBlocksTotal", 3);
-        fixture.componentRef.setInput("datasetName", TEST_DATASET_NAME);
+        setComponentInput(fixture, "numBlocksTotal", 3);
+        setComponentInput(fixture, "datasetName", TEST_DATASET_NAME);
         fixture.detectChanges();
     });
 
@@ -47,7 +49,7 @@ describe("OverviewHistorySummaryHeaderComponent", () => {
     });
 
     it("should check default values", () => {
-        fixture.componentRef.setInput("metadataBlockFragment", undefined);
+        setComponentInput(fixture, "metadataBlockFragment", undefined);
         fixture.detectChanges();
 
         expect(component.descriptionForMetadataBlock).toBe("");

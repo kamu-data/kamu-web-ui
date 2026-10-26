@@ -15,12 +15,11 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
 import { MOCK_DATASET_INFO } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import { DatasetViewComponent } from "src/app/dataset-view/dataset-view.component";
-import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
@@ -83,12 +82,12 @@ describe("DatasetViewComponent", () => {
         fixture = TestBed.createComponent(DatasetViewComponent);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_ACTIVE_TAB_KEY, DatasetViewTypeEnum.Overview);
-        fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_KEY, {
+        setComponentInput(fixture, "datasetViewType", DatasetViewTypeEnum.Overview);
+        setComponentInput(fixture, "datasetViewState", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-        } satisfies DatasetViewData);
-        fixture.componentRef.setInput(RoutingResolvers.DATASET_INFO_KEY, MOCK_DATASET_INFO);
+        });
+        setComponentInput(fixture, "datasetInfo", MOCK_DATASET_INFO);
     });
 
     it("should create", () => {

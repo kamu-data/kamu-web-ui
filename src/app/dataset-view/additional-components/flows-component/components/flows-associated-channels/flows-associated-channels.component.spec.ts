@@ -12,15 +12,12 @@ import { MatChipListboxChange } from "@angular/material/chips";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import {
-    FlowProcessEffectiveState,
-    WebhookFlowSubProcess,
-    WebhookFlowSubProcessGroup,
-} from "@api/kamu.graphql.interface";
+import { FlowProcessEffectiveState, WebhookFlowSubProcess } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowsProcessesQuery } from "@api/mock/dataset-flow.mock";
 
 import { SubscriptionsTableComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-associated-channels/components/subscriptions-table/subscriptions-table.component";
 import { FlowsAssociatedChannelsComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-associated-channels/flows-associated-channels.component";
+import { FlowsSelectionState } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 
 describe("FlowsAssociatedChannelsComponent", () => {
@@ -56,16 +53,18 @@ describe("FlowsAssociatedChannelsComponent", () => {
         });
         fixture = TestBed.createComponent(FlowsAssociatedChannelsComponent);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsRootFragment;
-        component.webhooksData = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes
-            .webhooks as WebhookFlowSubProcessGroup;
-        component.flowsSelectionState = {
+        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
+        fixture.componentRef.setInput(
+            "webhooksData",
+            mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.webhooks,
+        );
+        fixture.componentRef.setInput("flowsSelectionState", {
             flowsCategory: undefined,
             webhooksCategory: undefined,
             webhookFilterButtons: [],
             webhooksIds: [],
             subscriptions: [],
-        };
+        } satisfies FlowsSelectionState);
         fixture.detectChanges();
     });
 

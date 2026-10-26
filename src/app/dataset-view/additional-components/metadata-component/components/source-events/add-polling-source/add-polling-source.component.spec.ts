@@ -20,6 +20,7 @@ import {
     emitClickOnElementByDataTestId,
     getElementByDataTestId,
 } from "@common/helpers/base-test.helpers.spec";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { OdfDefaultValues } from "@common/values/app-odf-default.values";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
@@ -81,9 +82,9 @@ describe("AddPollingSourceComponent", () => {
         modalRef = modalService.open(FinalYamlModalComponent);
         component = fixture.componentInstance;
         component.showPreprocessStep = false;
-        component.eventYamlByHash = MOCK_EVENT_YAML;
+        fixture.componentRef.setInput(RoutingResolvers.ADD_POLLING_SOURCE_KEY, MOCK_EVENT_YAML);
         component.currentStep = SetPollingSourceSection.FETCH;
-        component.datasetInfo = mockDatasetInfo;
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_INFO_KEY, mockDatasetInfo);
 
         component.pollingSourceForm = new FormGroup({
             fetch: new FormGroup({
@@ -185,7 +186,10 @@ describe("AddPollingSourceComponent", () => {
     });
 
     it("should check the preprocess step is hidden when the source has none", () => {
-        component.eventYamlByHash = mockSetPollingSourceEventYamlWithoutPreprocess;
+        fixture.componentRef.setInput(
+            RoutingResolvers.ADD_POLLING_SOURCE_KEY,
+            mockSetPollingSourceEventYamlWithoutPreprocess,
+        );
         component.ngOnInit();
         expect(component.showPreprocessStep).toEqual(false);
     });

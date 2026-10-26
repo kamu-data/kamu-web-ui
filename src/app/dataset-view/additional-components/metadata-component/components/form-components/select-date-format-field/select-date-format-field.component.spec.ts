@@ -50,10 +50,10 @@ describe("SelectDateFormatFieldComponent", () => {
             }),
         });
         component.controlName = "eventTime";
-        component.innerTooltips = {
+        fixture.componentRef.setInput("innerTooltips", {
             fromMetadata: SetPollingSourceTooltipsTexts.EVENT_TIME_FROM_METADATA,
             fromPath: SetPollingSourceTooltipsTexts.EVENT_TIME_FROM_PATH,
-        };
+        } satisfies Record<string, string>);
         component.currentSource = EventTimeSourceKind.FROM_METADATA;
         fixture.detectChanges();
     });

@@ -37,13 +37,13 @@ describe("EditDetailsModalComponent", () => {
 
         fixture = TestBed.createComponent(EditDetailsModalComponent);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsDerivedFragment;
-        component.currentState = {
+        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsDerivedFragment);
+        fixture.componentRef.setInput("currentState", {
             schema: mockMetadataDerivedUpdate.schema,
             data: mockOverviewDataUpdate.content,
             overview: mockOverviewDataUpdate.overview as DatasetOverviewFragment,
             size: mockOverviewDataUpdate.size as DatasetDataSizeFragment,
-        };
+        } satisfies EditDetailsModalComponent["currentState"]);
         fixture.detectChanges();
     });
 
@@ -52,12 +52,12 @@ describe("EditDetailsModalComponent", () => {
     });
 
     it("should check initialize details", () => {
-        component.currentState = {
+        fixture.componentRef.setInput("currentState", {
             schema: mockMetadataDerivedUpdate.schema,
             data: mockOverviewDataUpdate.content,
             overview: mockOverviewWithSetInfo as DatasetOverviewFragment,
             size: mockOverviewDataUpdate.size as DatasetDataSizeFragment,
-        };
+        } satisfies EditDetailsModalComponent["currentState"]);
         fixture.detectChanges();
         component.ngOnInit();
 

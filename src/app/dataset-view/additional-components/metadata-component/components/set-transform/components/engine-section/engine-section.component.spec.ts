@@ -34,7 +34,7 @@ describe("EngineSectionComponent", () => {
         fixture = TestBed.createComponent(EngineSectionComponent);
         component = fixture.componentInstance;
         engineService = TestBed.inject(EngineService);
-        component.knownEngines = mockEngines.data.knownEngines;
+        fixture.componentRef.setInput("knownEngines", mockEngines.data.knownEngines);
         spyOn(engineService, "engines").and.returnValue(of(mockEngines));
         fixture.detectChanges();
     });
@@ -50,7 +50,7 @@ describe("EngineSectionComponent", () => {
         { testCase: "risingwave", expected: mockEngines.data.knownEngines[3] },
     ].forEach((item: { testCase: string; expected: EngineDesc }) => {
         it(`should check init ${item.testCase} engine and image`, fakeAsync(() => {
-            component.selectedEngine = item.testCase;
+            fixture.componentRef.setInput("selectedEngine", item.testCase);
             component.ngOnInit();
             tick();
             const image = findElementByDataTestId(fixture, "engine-image") as HTMLInputElement;
@@ -62,7 +62,7 @@ describe("EngineSectionComponent", () => {
     });
 
     it("should check the default engine applies when none is passed in", fakeAsync(() => {
-        component.selectedEngine = "";
+        fixture.componentRef.setInput("selectedEngine", "");
         fixture.detectChanges();
         component.ngOnInit();
         tick();

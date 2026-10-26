@@ -51,8 +51,8 @@ describe("ReadmeSectionComponent", () => {
         component = fixture.componentInstance;
         datasetCommitService = TestBed.inject(DatasetCommitService);
         loggedUserService = TestBed.inject(LoggedUserService);
-        component.datasetBasics = mockDatasetBasicsDerivedFragment;
-        component.currentReadme = mockReadmeContent;
+        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsDerivedFragment);
+        fixture.componentRef.setInput("currentReadme", mockReadmeContent);
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
     });
 
@@ -89,8 +89,9 @@ describe("ReadmeSectionComponent", () => {
 
     it("should check push button 'cancel changes' when currentReadme is not exist", () => {
         fixture.detectChanges();
-        component.currentReadme = null;
-        emitClickOnElementByDataTestId(fixture, "show-edit-tabs");
+        fixture.componentRef.setInput("currentReadme", null);
+        fixture.detectChanges();
+        fixture.componentRef.setInput("editingInProgress", true);
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "cancel-changes");
         expect(component.readmeState).toEqual("");
@@ -123,7 +124,10 @@ describe("ReadmeSectionComponent", () => {
     });
 
     it("should check Run and Copy buttons exist", async () => {
-        component.readmeState = "```sql" + "\nselect * from 'account.tokens.portfolio.market-value'" + "\n```";
+        fixture.componentRef.setInput(
+            "currentReadme",
+            "```sql" + "\nselect * from 'account.tokens.portfolio.market-value'" + "\n```",
+        );
         component.viewMode = EditMode.Preview;
         fixture.detectChanges();
         await fixture.whenStable();
@@ -135,7 +139,10 @@ describe("ReadmeSectionComponent", () => {
     });
 
     it("should check Run button navigate to Data tab", async () => {
-        component.readmeState = "```sql" + "\nselect * from 'account.tokens.portfolio.market-value'" + "\n```";
+        fixture.componentRef.setInput(
+            "currentReadme",
+            "```sql" + "\nselect * from 'account.tokens.portfolio.market-value'" + "\n```",
+        );
         component.viewMode = EditMode.Preview;
 
         fixture.detectChanges();
@@ -151,7 +158,10 @@ describe("ReadmeSectionComponent", () => {
     });
 
     it("should check Run button navigate to Data tab with line breaks", async () => {
-        component.readmeState = "```sql" + "\nselect\n*\nfrom 'account.tokens.portfolio.market-value'" + "\n```";
+        fixture.componentRef.setInput(
+            "currentReadme",
+            "```sql" + "\nselect\n*\nfrom 'account.tokens.portfolio.market-value'" + "\n```",
+        );
         component.viewMode = EditMode.Preview;
 
         fixture.detectChanges();

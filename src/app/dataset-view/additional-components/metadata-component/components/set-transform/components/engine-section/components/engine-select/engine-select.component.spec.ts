@@ -24,8 +24,8 @@ describe("EngineSelectComponent", () => {
 
         fixture = TestBed.createComponent(EngineSelectComponent);
         component = fixture.componentInstance;
-        component.data = mockEngines.data.knownEngines;
-        component.engine = Engine.Spark;
+        fixture.componentRef.setInput("data", mockEngines.data.knownEngines);
+        fixture.componentRef.setInput("engine", Engine.Spark);
         fixture.detectChanges();
     });
 

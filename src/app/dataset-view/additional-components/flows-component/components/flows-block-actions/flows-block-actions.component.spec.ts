@@ -14,7 +14,6 @@ import { provideToastr } from "ngx-toastr";
 
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { DatasetFlowProcess } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowsProcessesQuery } from "@api/mock/dataset-flow.mock";
 
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -35,10 +34,12 @@ describe("FlowsBlockActionsComponent", () => {
 
         fixture = TestBed.createComponent(FlowsBlockActionsComponent);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsRootFragment;
-        component.flowProcess = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes
-            .primary as DatasetFlowProcess;
-        component.hasPushSources = false;
+        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
+        fixture.componentRef.setInput(
+            "flowProcess",
+            mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.primary,
+        );
+        fixture.componentRef.setInput("hasPushSources", false);
     });
 
     it("should create", () => {
@@ -47,13 +48,13 @@ describe("FlowsBlockActionsComponent", () => {
     });
 
     it("should check redirect section for derivative dataset", () => {
-        component.datasetBasics = mockDatasetBasicsDerivedFragment;
+        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsDerivedFragment);
         fixture.detectChanges();
         expect(component.redirectSection).toEqual(SettingsTabsEnum.TRANSFORM_SETTINGS);
     });
 
     it("should check redirect section for root dataset", () => {
-        component.datasetBasics = mockDatasetBasicsRootFragment;
+        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
         fixture.detectChanges();
         expect(component.redirectSection).toEqual(SettingsTabsEnum.SCHEDULING);
     });

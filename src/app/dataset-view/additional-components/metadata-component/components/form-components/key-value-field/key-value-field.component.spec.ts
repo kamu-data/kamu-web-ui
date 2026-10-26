@@ -25,7 +25,7 @@ describe("KeyValueFieldComponent", () => {
         fixture = TestBed.createComponent(KeyValueFieldComponent);
         component = fixture.componentInstance;
         component.controlName = "primaryKey";
-        component.buttonText = "Add key";
+        fixture.componentRef.setInput("buttonText", "Add key");
         component.form = new FormGroup({
             [component.controlName]: new FormArray([]),
         });

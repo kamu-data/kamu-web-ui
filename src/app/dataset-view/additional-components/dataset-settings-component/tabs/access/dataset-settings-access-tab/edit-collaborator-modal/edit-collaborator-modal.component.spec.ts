@@ -27,7 +27,7 @@ describe("EditCollaboratorModalComponent", () => {
         fixture = TestBed.createComponent(EditCollaboratorModalComponent);
         ngbActiveModal = TestBed.inject(NgbActiveModal);
         component = fixture.componentInstance;
-        component.collaborator = MOCK_ACCOUNT_WITH_ROLE;
+        fixture.componentRef.setInput("collaborator", MOCK_ACCOUNT_WITH_ROLE);
         fixture.detectChanges();
     });
 

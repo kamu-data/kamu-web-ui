@@ -24,7 +24,7 @@ describe("TopicsFieldComponent", () => {
         fixture = TestBed.createComponent(TopicsFieldComponent);
         component = fixture.componentInstance;
         component.controlName = "topics";
-        component.buttonText = "Add new topics";
+        fixture.componentRef.setInput("buttonText", "Add new topics");
         component.form = new FormGroup({
             [component.controlName]: new FormArray([]),
         });

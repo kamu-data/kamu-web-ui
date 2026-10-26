@@ -50,7 +50,7 @@ describe("EditWatermarkModalComponent", () => {
         component = fixture.componentInstance;
         datasetCommitService = TestBed.inject(DatasetCommitService);
         loggedUserService = TestBed.inject(LoggedUserService);
-        component.datasetBasics = mockDatasetBasicsDerivedFragment;
+        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsDerivedFragment);
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
     });
 
@@ -69,7 +69,7 @@ describe("EditWatermarkModalComponent", () => {
     });
 
     it("should check init minLocalWatermark when currentWatermark is not null", () => {
-        component.currentWatermark = "2023-03-12T00:00:00+00:00";
+        fixture.componentRef.setInput("currentWatermark", "2023-03-12T00:00:00+00:00");
         fixture.detectChanges();
         const result = "2023-03-12T00:00:00.000Z";
         expect(component.minLocalWatermark).toEqual(result);

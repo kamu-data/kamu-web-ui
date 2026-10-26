@@ -45,7 +45,7 @@ describe("AddDataModalComponent", () => {
         fileUploadService = TestBed.inject(FileUploadService);
         modalService = TestBed.inject(ModalService);
         configService = TestBed.inject(AppConfigService);
-        component.datasetBasics = mockDatasetBasicsRootFragment;
+        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
         spyOnProperty(configService, "ingestUploadFileLimitMb", "get").and.returnValue(50);
 
         fixture.detectChanges();

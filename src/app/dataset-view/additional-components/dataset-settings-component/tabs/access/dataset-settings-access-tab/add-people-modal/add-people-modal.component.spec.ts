@@ -42,8 +42,8 @@ describe("AddPeopleModalComponent", () => {
         datasetCollaborationsService = TestBed.inject(DatasetCollaborationsService);
         ngbActiveModal = TestBed.inject(NgbActiveModal);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsRootFragment;
-        component.activeCollaboratorsIds = [];
+        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
+        fixture.componentRef.setInput("activeCollaboratorsIds", []);
         fixture.detectChanges();
     });
 

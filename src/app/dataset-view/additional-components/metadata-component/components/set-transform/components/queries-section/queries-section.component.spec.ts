@@ -32,7 +32,7 @@ describe("QueriesSectionComponent", () => {
     // Renders once per test: replacing the queries after the first render disposes Monaco editors
     // that are still loading, which Monaco reports as uncaught "Canceled" errors
     function render(queries: QueriesSectionComponent["queries"]): void {
-        component.queries = queries;
+        fixture.componentRef.setInput("queries", queries);
         fixture.detectChanges();
     }
 

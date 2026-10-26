@@ -24,12 +24,15 @@ describe("WebhookFormComponent", () => {
         fixture = TestBed.createComponent(WebhookFormComponent);
         fb = TestBed.inject(NonNullableFormBuilder);
         component = fixture.componentInstance;
-        component.createOrEditSubscriptionForm = fb.group({
-            targetUrl: fb.control("", [Validators.required, Validators.pattern(AppValues.URL_PATTERN_ONLY_HTTPS)]),
-            eventTypes: fb.control<string[]>([], [Validators.required]),
-            label: fb.control("", [Validators.maxLength(100)]),
-        });
-        component.dropdownList = [];
+        fixture.componentRef.setInput(
+            "createOrEditSubscriptionForm",
+            fb.group({
+                targetUrl: fb.control("", [Validators.required, Validators.pattern(AppValues.URL_PATTERN_ONLY_HTTPS)]),
+                eventTypes: fb.control<string[]>([], [Validators.required]),
+                label: fb.control("", [Validators.maxLength(100)]),
+            }),
+        );
+        fixture.componentRef.setInput("dropdownList", []);
         fixture.detectChanges();
     });
 

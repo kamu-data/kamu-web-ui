@@ -19,6 +19,7 @@ import {
     mockSetPollingSourceEventYamlWithoutPreprocess,
     mockSetPollingSourceEventYamlWithQuery,
 } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { PreprocessStepValue } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { PreprocessStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/preprocess-step/preprocess-step.component";
 import { mockPreprocessStepValue } from "src/app/search/mock.data";
 
@@ -34,9 +35,9 @@ describe("PreprocessStepComponent", () => {
 
         fixture = TestBed.createComponent(PreprocessStepComponent);
         component = fixture.componentInstance;
-        component.eventYamlByHash = mockSetPollingSourceEventYaml;
-        component.showPreprocessStep = true;
-        component.preprocessValue = mockPreprocessStepValue;
+        fixture.componentRef.setInput("eventYamlByHash", mockSetPollingSourceEventYaml);
+        fixture.componentRef.setInput("showPreprocessStep", true);
+        fixture.componentRef.setInput("preprocessValue", mockPreprocessStepValue);
     });
 
     it("should create", () => {
@@ -58,36 +59,39 @@ describe("PreprocessStepComponent", () => {
     });
 
     it("should check init default state with queries", () => {
-        component.preprocessValue = mockPreprocessStepValueWithoutQueries;
+        fixture.componentRef.setInput("preprocessValue", mockPreprocessStepValueWithoutQueries);
         fixture.detectChanges();
         expect(component.preprocessValue.queries.length).toEqual(1);
     });
 
     it("should check init default state with query", () => {
-        component.eventYamlByHash = mockSetPollingSourceEventYamlWithQuery;
-        component.preprocessValue = mockPreprocessStepValueWithoutQueries;
+        fixture.componentRef.setInput("eventYamlByHash", mockSetPollingSourceEventYamlWithQuery);
+        fixture.componentRef.setInput("preprocessValue", mockPreprocessStepValueWithoutQueries);
         fixture.detectChanges();
         expect(component.preprocessValue.queries.length).toEqual(1);
         expect(component.preprocessValue.queries[0].query).toBeDefined();
     });
 
     it("should check init default state without queries", () => {
-        component.eventYamlByHash = mockSetPollingSourceEventYamlWithoutPreprocess;
-        component.preprocessValue = mockPreprocessStepValueWithoutQueries;
+        fixture.componentRef.setInput("eventYamlByHash", mockSetPollingSourceEventYamlWithoutPreprocess);
+        fixture.componentRef.setInput("preprocessValue", mockPreprocessStepValueWithoutQueries);
         fixture.detectChanges();
         expect(component.preprocessValue.queries.length).toEqual(1);
     });
 
     it("should check the stored engine of an existing preprocess step is selected", () => {
-        component.eventYamlByHash = mockSetPollingSourceEventYaml;
-        component.preprocessValue = { engine: "", queries: [] };
+        fixture.componentRef.setInput("eventYamlByHash", mockSetPollingSourceEventYaml);
+        fixture.componentRef.setInput("preprocessValue", { engine: "", queries: [] } satisfies PreprocessStepValue);
         fixture.detectChanges();
         expect(component.preprocessValue.engine).toEqual("spark");
     });
 
     it("should check an engine already chosen in the editor is kept", () => {
-        component.eventYamlByHash = mockSetPollingSourceEventYaml;
-        component.preprocessValue = { engine: "flink", queries: [] };
+        fixture.componentRef.setInput("eventYamlByHash", mockSetPollingSourceEventYaml);
+        fixture.componentRef.setInput("preprocessValue", {
+            engine: "flink",
+            queries: [],
+        } satisfies PreprocessStepValue);
         fixture.detectChanges();
         expect(component.preprocessValue.engine).toEqual("flink");
     });

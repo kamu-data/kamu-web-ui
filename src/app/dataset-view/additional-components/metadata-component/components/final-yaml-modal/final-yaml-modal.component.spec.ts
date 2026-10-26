@@ -44,8 +44,8 @@ describe("FinalYamlModalComponent", () => {
         activeModal = TestBed.inject(NgbActiveModal);
         loggedUserService = TestBed.inject(LoggedUserService);
         component = fixture.componentInstance;
-        component.yamlTemplate = "test yaml";
-        component.datasetInfo = testDatasetInfo;
+        fixture.componentRef.setInput("yamlTemplate", "test yaml");
+        fixture.componentRef.setInput("datasetInfo", testDatasetInfo);
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         fixture.detectChanges();
     });

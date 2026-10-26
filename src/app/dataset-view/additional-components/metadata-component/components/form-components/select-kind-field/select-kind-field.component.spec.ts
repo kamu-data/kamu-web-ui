@@ -25,10 +25,13 @@ describe("SelectKindFieldComponent", () => {
 
         fixture = TestBed.createComponent(SelectKindFieldComponent);
         component = fixture.componentInstance;
-        component.data = FETCH_STEP_RADIO_CONTROLS;
-        component.form = new FormGroup({
-            kind: new FormControl(FetchKind.URL),
-        });
+        fixture.componentRef.setInput("data", FETCH_STEP_RADIO_CONTROLS);
+        fixture.componentRef.setInput(
+            "form",
+            new FormGroup({
+                kind: new FormControl(FetchKind.URL),
+            }),
+        );
         fixture.detectChanges();
     });
 

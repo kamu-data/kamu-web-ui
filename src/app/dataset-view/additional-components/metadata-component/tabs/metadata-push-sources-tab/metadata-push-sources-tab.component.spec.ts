@@ -11,8 +11,10 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 import { mockMetadataRootUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
 import { MetadataPushSourcesTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-push-sources-tab/metadata-push-sources-tab.component";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -31,11 +33,11 @@ describe("MetadataPushSourcesTabComponent", () => {
         fixture = TestBed.createComponent(MetadataPushSourcesTabComponent);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        component.datasetMetadataTabData = {
+        fixture.componentRef.setInput(RoutingResolvers.METADATA_PUSH_SOURCES_TAB_KEY, {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             metadataSummary: mockMetadataRootUpdate.metadataSummary,
-        };
+        } satisfies MetadataTabData);
 
         fixture.detectChanges();
     });

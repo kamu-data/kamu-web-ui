@@ -14,6 +14,7 @@ import { RouterModule } from "@angular/router";
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { DatasetKind } from "@api/kamu.graphql.interface";
 
 import {
@@ -24,6 +25,7 @@ import {
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataComponent } from "src/app/dataset-view/additional-components/metadata-component/metadata.component";
 import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
@@ -52,7 +54,7 @@ describe("MetadataComponent", () => {
         fixture = TestBed.createComponent(MetadataComponent);
         component = fixture.componentInstance;
         datasetSubsService.emitMetadataSchemaChanged(mockMetadataDerivedUpdate);
-        component.datasetMetadataTabData = {
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_METADATA_KEY, {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: {
@@ -61,8 +63,8 @@ describe("MetadataComponent", () => {
                 overview: structuredClone(mockOverviewDataUpdateNullable.overview),
                 size: mockOverviewDataUpdate.size,
             } as OverviewUpdate,
-        };
-        component.activeTab = MetadataTabs.Schema;
+        } satisfies DatasetOverviewTabData);
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_METADATA_ACTIVE_TAB_KEY, MetadataTabs.Schema);
         fixture.detectChanges();
     });
 

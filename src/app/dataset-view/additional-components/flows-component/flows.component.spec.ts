@@ -40,7 +40,7 @@ import { FlowsComponent } from "src/app/dataset-view/additional-components/flows
 import { FlowsHarness } from "src/app/dataset-view/additional-components/flows-component/flows.harness";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { FlowsSelectionStateService } from "src/app/dataset-view/additional-components/flows-component/services/flows-selection-state.service";
-import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetFlowProcessCardHarness } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.harness";
 import ProjectLinks from "src/app/project-links";
 import {
@@ -121,11 +121,11 @@ describe("FlowsComponent", () => {
         datasetCardService = TestBed.inject(ProcessDatasetCardInteractionService);
 
         component = fixture.componentInstance;
-        component.flowsData = {
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_FLOWS_KEY, {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: mockOverviewUpdate,
-        };
+        } satisfies DatasetOverviewTabData);
     });
 
     it("should create", () => {
@@ -187,11 +187,11 @@ describe("FlowsComponent", () => {
     }));
 
     it("should check update now button for derivative dataset", fakeAsync(() => {
-        component.flowsData = {
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_FLOWS_KEY, {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: mockOverviewUpdate,
-        };
+        } satisfies DatasetOverviewTabData);
         const refreshFlowSpy = spyOn(component, "refreshFlow");
         spyOn(datasetFlowsService, "datasetTriggerTransformFlow").and.returnValue(of(true));
         component.updateNow();
@@ -324,11 +324,11 @@ describe("FlowsComponent", () => {
         copyMockOverviewUpdate.overview.metadata.currentTransform = {
             __typename: "SetTransform",
         };
-        component.flowsData = {
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_FLOWS_KEY, {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: copyMockOverviewUpdate,
-        };
+        } satisfies DatasetOverviewTabData);
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
             of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
         );
@@ -349,7 +349,7 @@ describe("FlowsComponent", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const addWebhookIdSpy = spyOn(serviceInComponent, "addWebhookId");
         const mockWebhookId = "d20a935e-0ccb-4844-b1bb-f4b5b9b0279a,d20a935e-0ccb-4844-b1bb-f4b5b9b0279b";
-        component.setWebhookId = mockWebhookId;
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_WEBHOOK_ID, mockWebhookId);
         expect(addWebhookIdSpy).toHaveBeenCalledTimes(2);
     });
 
@@ -357,7 +357,7 @@ describe("FlowsComponent", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const addWebhookIdSpy = spyOn(serviceInComponent, "addWebhookId");
         const mockWebhookId = null;
-        component.setWebhookId = mockWebhookId;
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_WEBHOOK_ID, mockWebhookId);
         expect(addWebhookIdSpy).not.toHaveBeenCalled();
     });
 
@@ -365,7 +365,7 @@ describe("FlowsComponent", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const setWebhooksCategorySpy = spyOn(serviceInComponent, "setWebhooksCategory");
         const mockStates = null;
-        component.setWebhookState = mockStates;
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_WEBHOOKS_STATE, mockStates);
         expect(setWebhooksCategorySpy).not.toHaveBeenCalled();
     });
 
@@ -373,7 +373,7 @@ describe("FlowsComponent", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const setWebhooksCategorySpy = spyOn(serviceInComponent, "setWebhooksCategory");
         const mockStates = `${FlowProcessEffectiveState.Active},${FlowProcessEffectiveState.Failing}`;
-        component.setWebhookState = mockStates;
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_WEBHOOKS_STATE, mockStates);
         expect(setWebhooksCategorySpy).toHaveBeenCalledTimes(1);
     });
 
@@ -381,7 +381,7 @@ describe("FlowsComponent", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const setWebhooksCategorySpy = spyOn(serviceInComponent, "setWebhooksCategory");
         const category = "webhooks";
-        component.setFlowsCategory = category;
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_FLOWS_CATEGORY, category);
         expect(setWebhooksCategorySpy).toHaveBeenCalledTimes(1);
     });
 
@@ -389,7 +389,7 @@ describe("FlowsComponent", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const setFlowsCategorySpy = spyOn(serviceInComponent, "setFlowsCategory");
         const category = "updates";
-        component.setFlowsCategory = category;
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_FLOWS_CATEGORY, category);
         expect(setFlowsCategorySpy).toHaveBeenCalledTimes(1);
     });
 
@@ -509,7 +509,7 @@ describe("FlowsComponent", () => {
 
     it("should check set ProcessTypeFilter with webhookId", fakeAsync(() => {
         const mockWebhookId = "d20a935e-0ccb-4844-b1bb-f4b5b9b0279a,d20a935e-0ccb-4844-b1bb-f4b5b9b0279b";
-        component.setWebhookId = mockWebhookId;
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_WEBHOOK_ID, mockWebhookId);
         fixture.detectChanges();
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const clearFlowsCategorySpy = spyOn(serviceInComponent, "clearFlowsCategory");
@@ -529,7 +529,7 @@ describe("FlowsComponent", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const setWebhooksCategorySpy = spyOn(serviceInComponent, "setWebhooksCategory");
         const mockStates = `${FlowProcessEffectiveState.Active},${FlowProcessEffectiveState.Failing}`;
-        component.setWebhookState = mockStates;
+        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_WEBHOOKS_STATE, mockStates);
 
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
             of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
@@ -608,7 +608,7 @@ describe("FlowsComponent", () => {
         });
 
         it("should request ingest flows only for the `updates` category of a root dataset", fakeAsync(() => {
-            component.setFlowsCategory = "updates";
+            fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_FLOWS_CATEGORY, "updates");
             fixture.detectChanges();
             tick();
 
@@ -623,8 +623,11 @@ describe("FlowsComponent", () => {
         }));
 
         it("should request transform flows only for the `updates` category of a derivative dataset", fakeAsync(() => {
-            component.flowsData = { ...component.flowsData, datasetBasics: mockDatasetBasicsDerivedFragment };
-            component.setFlowsCategory = "updates";
+            fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_FLOWS_KEY, {
+                ...component.flowsData,
+                datasetBasics: mockDatasetBasicsDerivedFragment,
+            } satisfies DatasetOverviewTabData);
+            fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_FLOWS_CATEGORY, "updates");
             fixture.detectChanges();
             tick();
 
@@ -643,7 +646,7 @@ describe("FlowsComponent", () => {
 
         it("should request webhook flows only for the `webhooks` category and drop the flows category", fakeAsync(() => {
             const selectionStateService = fixture.debugElement.injector.get(FlowsSelectionStateService);
-            component.setFlowsCategory = "webhooks";
+            fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_FLOWS_CATEGORY, "webhooks");
             fixture.detectChanges();
             tick();
 
@@ -665,11 +668,17 @@ describe("FlowsComponent", () => {
         overviewWithPushSource.overview.metadata.currentTransform = null;
         overviewWithPushSource.overview.metadata.currentPushSources = [{ __typename: "AddPushSource" }];
 
-        component.flowsData = { ...component.flowsData, overviewUpdate: overviewWithPushSource };
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_FLOWS_KEY, {
+            ...component.flowsData,
+            overviewUpdate: overviewWithPushSource,
+        } satisfies DatasetOverviewTabData);
         expect(component.hasPushSources).toBeTrue();
         expect(component.isSetPollingSourceEmpty).toBeFalse();
 
-        component.flowsData = { ...component.flowsData, datasetBasics: mockDatasetBasicsDerivedFragment };
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_FLOWS_KEY, {
+            ...component.flowsData,
+            datasetBasics: mockDatasetBasicsDerivedFragment,
+        } satisfies DatasetOverviewTabData);
         expect(component.isSetTransformEmpty).toBeFalse();
     });
 

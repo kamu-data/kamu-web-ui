@@ -40,13 +40,13 @@ describe("EditLicenseModalComponent", () => {
 
         fixture = TestBed.createComponent(EditLicenseModalComponent);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsDerivedFragment;
-        component.currentState = {
+        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsDerivedFragment);
+        fixture.componentRef.setInput("currentState", {
             schema: mockMetadataDerivedUpdate.schema,
             data: mockOverviewDataUpdate.content,
             overview: mockOverviewWithSetLicense as DatasetOverviewFragment,
             size: mockOverviewDataUpdate.size as DatasetDataSizeFragment,
-        };
+        } satisfies EditLicenseModalComponent["currentState"]);
         fixture.detectChanges();
     });
 

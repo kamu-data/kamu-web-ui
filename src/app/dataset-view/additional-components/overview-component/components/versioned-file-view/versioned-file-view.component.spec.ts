@@ -58,7 +58,7 @@ describe("VersionedFileViewComponent", () => {
         toastrService = TestBed.inject(ToastrService);
         fixture = TestBed.createComponent(VersionedFileViewComponent);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsRootFragment;
+        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
     });
 
     it("should create", () => {

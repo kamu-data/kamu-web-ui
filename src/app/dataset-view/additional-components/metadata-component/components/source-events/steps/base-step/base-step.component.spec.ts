@@ -35,10 +35,10 @@ describe("BaseStepComponent", () => {
 
         fixture = TestBed.createComponent(BaseStepComponent);
         component = fixture.componentInstance;
-        component.defaultKind = FetchKind.URL;
-        component.sectionFormData = FETCH_FORM_DATA;
-        component.sectionStepRadioData = FETCH_STEP_RADIO_CONTROLS;
-        component.sectionName = SetPollingSourceSection.FETCH;
+        fixture.componentRef.setInput("defaultKind", FetchKind.URL);
+        fixture.componentRef.setInput("sectionFormData", FETCH_FORM_DATA);
+        fixture.componentRef.setInput("sectionStepRadioData", FETCH_STEP_RADIO_CONTROLS);
+        fixture.componentRef.setInput("sectionName", SetPollingSourceSection.FETCH);
         fixture.detectChanges();
     });
 

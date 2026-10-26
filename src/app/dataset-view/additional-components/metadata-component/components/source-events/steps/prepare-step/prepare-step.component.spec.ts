@@ -37,8 +37,8 @@ describe("PrepareStepComponent", () => {
     function createComponent(eventYamlByHash: MaybeNull<string>): void {
         fixture = TestBed.createComponent(PrepareStepComponent);
         component = fixture.componentInstance;
-        component.sectionName = SetPollingSourceSection.PREPARE;
-        component.eventYamlByHash = eventYamlByHash;
+        fixture.componentRef.setInput("sectionName", SetPollingSourceSection.PREPARE);
+        fixture.componentRef.setInput("eventYamlByHash", eventYamlByHash);
         fixture.detectChanges();
     }
 

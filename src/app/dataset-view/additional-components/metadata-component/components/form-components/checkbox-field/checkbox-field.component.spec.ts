@@ -28,7 +28,7 @@ describe("CheckboxFieldComponent", () => {
         component.controlName = "test";
         component.tooltip = "Test tooltip";
         component.dataTestId = "checkbox";
-        component.checked = false;
+        fixture.componentRef.setInput("checked", false);
         fixture.detectChanges();
     });
 

@@ -51,7 +51,7 @@ describe("CollectionViewComponent", () => {
         datasetService = TestBed.inject(DatasetService);
         fixture = TestBed.createComponent(CollectionViewComponent);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsRootFragment;
+        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
         const datasetBasicsSimpleChanges: SimpleChanges = {
             datasetBasics: {
                 previousValue: undefined,
@@ -60,7 +60,7 @@ describe("CollectionViewComponent", () => {
                 isFirstChange: () => true,
             },
         };
-        component.pathPrefix = "/test-folder";
+        fixture.componentRef.setInput("pathPrefix", "/test-folder");
         component.ngOnChanges(datasetBasicsSimpleChanges);
 
         fixture.detectChanges();

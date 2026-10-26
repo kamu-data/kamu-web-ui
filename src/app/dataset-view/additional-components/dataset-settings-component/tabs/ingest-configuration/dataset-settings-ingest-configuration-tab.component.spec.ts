@@ -15,10 +15,12 @@ import { provideToastr } from "ngx-toastr";
 
 import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { FlowRetryBackoffType, TimeUnit } from "@api/kamu.graphql.interface";
 
 import { DatasetFlowConfigService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-config.service";
 import { DatasetSettingsIngestConfigurationTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.component";
+import { DatasetSettingsIngestConfigurationTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.data";
 import { FlowRetryPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/flow-retry-policy-form/flow-retry-policy-form.component";
 import { FlowRetryPolicyFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/flow-retry-policy-form/flow-retry-policy-form.harness";
 import { IngestConfigurationRuleFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/ingest-configuration-rule-form/ingest-configuration-rule-form.harness";
@@ -50,7 +52,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
         datasetFlowConfigService = TestBed.inject(DatasetFlowConfigService);
 
         component = fixture.componentInstance;
-        component.ingestConfigurationTabData = {
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_SETTINGS_INGEST_CONFIGURATION_KEY, {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             ingestionRule: {
@@ -59,7 +61,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
                 fetchNextIteration: false,
             },
             retryPolicy: null,
-        };
+        } satisfies DatasetSettingsIngestConfigurationTabData);
 
         fixture.detectChanges();
         await fixture.whenStable();

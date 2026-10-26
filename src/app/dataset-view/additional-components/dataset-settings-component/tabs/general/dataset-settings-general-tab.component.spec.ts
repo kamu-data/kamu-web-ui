@@ -31,6 +31,7 @@ import { DatasetSettingsService } from "src/app/dataset-view/additional-componen
 import { DatasetSettingsGeneralTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.component";
 import { DatasetResetMode } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.types";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -76,10 +77,10 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
         fixture = TestBed.createComponent(DatasetSettingsGeneralTabComponent);
         component = fixture.componentInstance;
-        component.generalTabData = {
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_SETTINGS_GENERAL_KEY, {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: structuredClone(mockFullPowerDatasetPermissionsFragment),
-        };
+        } satisfies DatasetViewData);
 
         datasetSettingsService = TestBed.inject(DatasetSettingsService);
         modalService = TestBed.inject(ModalService);

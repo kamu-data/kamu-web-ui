@@ -11,7 +11,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { FlowProcessEffectiveState, WebhookFlowSubProcess } from "@api/kamu.graphql.interface";
+import { FlowProcessEffectiveState } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowsProcessesQuery } from "@api/mock/dataset-flow.mock";
 
 import { SubscriptionsTableComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-associated-channels/components/subscriptions-table/subscriptions-table.component";
@@ -30,10 +30,12 @@ describe("SubscriptionsTableComponent", () => {
         });
         fixture = TestBed.createComponent(SubscriptionsTableComponent);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsRootFragment;
-        component.subprocesses = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.webhooks
-            .subprocesses as WebhookFlowSubProcess[];
-        component.webhookTableFilters = [];
+        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
+        fixture.componentRef.setInput(
+            "subprocesses",
+            mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.webhooks.subprocesses,
+        );
+        fixture.componentRef.setInput("webhookTableFilters", []);
         fixture.detectChanges();
     });
 

@@ -17,11 +17,13 @@ import { provideToastr } from "ngx-toastr";
 import { ModalService } from "@common/components/modal/modal.service";
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { WebhookSubscription, WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
 import { mockDatasetWebhookByIdQuery } from "@api/mock/webhooks.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
 import { ListWebhooksComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/list-webhooks/list-webhooks.component";
+import { DatasetSettingsWebhookTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
@@ -47,11 +49,11 @@ describe("ListWebhooksComponent", () => {
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);
         modalService = TestBed.inject(ModalService);
         component = fixture.componentInstance;
-        component.webhooksViewData = {
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_SETTINGS_WEBHOOKS_KEY, {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             subscriptions: [],
-        };
+        } satisfies DatasetSettingsWebhookTabData);
 
         fixture.detectChanges();
     });

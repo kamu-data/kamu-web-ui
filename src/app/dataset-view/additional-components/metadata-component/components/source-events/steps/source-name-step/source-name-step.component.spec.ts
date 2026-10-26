@@ -23,9 +23,12 @@ describe("SourceNameStepComponent", () => {
 
         fixture = TestBed.createComponent(SourceNameStepComponent);
         component = fixture.componentInstance;
-        component.form = component.form = new FormGroup({
-            sourceName: new FormControl(""),
-        });
+        fixture.componentRef.setInput(
+            "form",
+            new FormGroup({
+                sourceName: new FormControl(""),
+            }),
+        );
         fixture.detectChanges();
     });
 

@@ -15,11 +15,13 @@ import { provideToastr } from "ngx-toastr";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
 import { DatasetSettingsCompactingTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.component";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 
@@ -64,10 +66,10 @@ describe("DatasetSettingsCompactingTabComponent", () => {
         modalService = TestBed.inject(ModalService);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
         navigationService = TestBed.inject(NavigationService);
-        component.compactingTabData = {
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_SETTINGS_COMPACTION_KEY, {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: structuredClone(mockFullPowerDatasetPermissionsFragment),
-        };
+        } satisfies DatasetViewData);
         fixture.detectChanges();
     });
 

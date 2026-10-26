@@ -17,6 +17,7 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 
 import { DataComponent } from "src/app/dataset-view/additional-components/data-component/data.component";
@@ -28,6 +29,7 @@ import {
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import ProjectLinks from "src/app/project-links";
 import {
@@ -96,7 +98,7 @@ describe("DataComponent", () => {
         spyOn(navigationService, "navigateWithSqlQuery");
 
         component = fixture.componentInstance;
-        component.dataTabData = {
+        fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_DATA_KEY, {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: {
@@ -105,7 +107,7 @@ describe("DataComponent", () => {
                 overview: structuredClone(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
                 size: mockOverviewDataUpdate.size,
             } as OverviewUpdate,
-        };
+        } satisfies DatasetOverviewTabData);
         component.sqlLoading = false;
         requestDataSqlRunSpy = spyOn(sqlQueryService, "requestDataSqlRun").and.returnValue(of().pipe());
     });

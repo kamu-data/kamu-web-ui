@@ -25,9 +25,9 @@ describe("CommitNavigatorComponent", () => {
 
         fixture = TestBed.createComponent(CommitNavigatorComponent);
         component = fixture.componentInstance;
-        component.pageIndex = INITIAL_PAGE_INDEX;
-        component.limit = INITIAL_LIMIT;
-        component.total = INITIAL_TOTAL;
+        fixture.componentRef.setInput("pageIndex", INITIAL_PAGE_INDEX);
+        fixture.componentRef.setInput("limit", INITIAL_LIMIT);
+        fixture.componentRef.setInput("total", INITIAL_TOTAL);
         fixture.detectChanges();
     });
 
@@ -43,7 +43,6 @@ describe("CommitNavigatorComponent", () => {
 
     it("should change page forward", () => {
         const pageChangeSpy = spyOn(component.pageChange, "emit");
-        component.ngOnChanges();
         emitClickOnElementByDataTestId(fixture, "forward-link");
         expect(pageChangeSpy).toHaveBeenCalledWith(INITIAL_PAGE_INDEX + 1);
     });

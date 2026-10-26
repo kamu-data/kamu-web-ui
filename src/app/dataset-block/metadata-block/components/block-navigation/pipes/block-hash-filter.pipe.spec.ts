@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "@api/mock/dataset.mock";
 
@@ -18,8 +19,9 @@ describe("BlockHashFilterPipe", () => {
     });
 
     it("should check pipe when search filter is empty", () => {
-        const block = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
-            .blockByHash as MetadataBlockFragment;
+        const block = requireValue(
+            mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHash ?? null,
+        );
         const mockBlocks: MetadataBlockFragment[] = [block];
         const defaultSearchFilter = "";
 
@@ -33,8 +35,9 @@ describe("BlockHashFilterPipe", () => {
         { searchFilter: "zW1qqqqqqqq", match: false },
     ].forEach(({ searchFilter, match }) => {
         it(`should check pipe when search filter is ${match ? "" : "not"}matches part of the hash`, () => {
-            const block = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
-                .blockByHash as MetadataBlockFragment;
+            const block = requireValue(
+                mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHash ?? null,
+            );
             const mockBlocks: MetadataBlockFragment[] = [block];
             const defaultSearchFilter = searchFilter;
 

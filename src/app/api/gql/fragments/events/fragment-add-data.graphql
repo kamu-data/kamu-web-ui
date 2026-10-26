@@ -2,13 +2,7 @@ fragment AddDataEvent on AddData {
   prevCheckpoint
   prevOffset
   newData {
-    offsetInterval {
-      start
-      end
-    }
-    logicalHash
-    physicalHash
-    size
+    ...DataSliceData
   }
   newCheckpoint {
     physicalHash

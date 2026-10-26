@@ -13,6 +13,7 @@ query datasetBlocksEncodedByEventType(
           }
 
           event {
+            __typename
             ... on AddPushSource {
               sourceName
             }

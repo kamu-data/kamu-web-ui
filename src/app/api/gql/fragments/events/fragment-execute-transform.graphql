@@ -9,13 +9,7 @@ fragment ExecuteTransformEvent on ExecuteTransform {
   prevCheckpoint
   prevOffset
   newData {
-    offsetInterval {
-      start
-      end
-    }
-    logicalHash
-    physicalHash
-    size
+    ...DataSliceData
   }
   newCheckpoint {
     physicalHash

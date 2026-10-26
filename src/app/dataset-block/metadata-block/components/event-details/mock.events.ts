@@ -7,21 +7,24 @@
 
 import {
     AddDataEventFragment,
-    AddPushSource,
+    AddPushSourceEventFragment,
     CompressionFormat,
     DataSchemaFormat,
+    DatasetCurrentInfoFragment,
     DatasetKind,
     DatasetTransformFragment,
     ExecuteTransformEventFragment,
+    FetchStepMqttDataFragment,
+    FetchStepUrlDataFragment,
     MqttQos,
-    ReadStepCsv,
-    Seed,
-    SetAttachments,
-    SetDataSchema,
-    SetInfo,
-    SetLicense,
-    SetPollingSource,
-    SetVocab,
+    PrepStepDecompressDataFragment,
+    ReadStepCsvDataFragment,
+    SeedEventFragment,
+    SetAttachmentsEventFragment,
+    SetDataSchemaEventFragment,
+    SetLicenseEventFragment,
+    SetPollingSourceEventFragment,
+    SetVocabEventFragment,
 } from "@api/kamu.graphql.interface";
 
 import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
@@ -48,44 +51,44 @@ export const mockAddData: { __typename: "AddData" } & AddDataEventFragment = {
     },
 };
 
-const setPollingSourceReadStep: ReadStepCsv = {
-    __typename: "ReadStepCsv",
-    schema: {
-        format: DataSchemaFormat.OdfJson,
-        content:
-            '{"fields":[{"name":"id","type":{"kind":"Option","inner":{"kind":"Int64"}}},{"name":"source","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"captures","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"capture_measure","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"taxon_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"scientific_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"parent_taxon","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"year","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"rfmo","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_code","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"flag","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"ocean","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"latitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"longitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"dataset_organisation","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_acknowledgement","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_url","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_date","type":{"kind":"Date"}}]}',
-        __typename: "DataSchema",
-    },
-    separator: ",",
-    encoding: null,
-    quote: null,
-    escape: null,
-    header: true,
-    inferSchema: false,
-    nullValue: null,
-    dateFormat: null,
-    timestampFormat: null,
+export const mockFetchStepUrl: { __typename: "FetchStepUrl" } & FetchStepUrlDataFragment = {
+    __typename: "FetchStepUrl",
+    url: "https://www.alberta.ca/data/stats/covid-19-alberta-statistics-data.csv",
+    eventTime: null,
 };
 
-export const mockSetPollingSourceEvent: SetPollingSource = {
+export const mockPrepStepDecompress: { __typename: "PrepStepDecompress" } & PrepStepDecompressDataFragment = {
+    __typename: "PrepStepDecompress",
+    format: CompressionFormat.Gzip,
+    subPath: "http://test.com",
+};
+
+export const mockSetPollingSourceEvent: SetPollingSourceEventFragment = {
     __typename: "SetPollingSource",
-    fetch: {
-        __typename: "FetchStepUrl",
-        url: "https://www.alberta.ca/data/stats/covid-19-alberta-statistics-data.csv",
-        eventTime: null,
+    fetch: mockFetchStepUrl,
+    read: {
+        __typename: "ReadStepCsv",
+        schema: {
+            format: DataSchemaFormat.OdfJson,
+            content:
+                '{"fields":[{"name":"id","type":{"kind":"Option","inner":{"kind":"Int64"}}},{"name":"source","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"captures","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"capture_measure","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"taxon_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"scientific_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"parent_taxon","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"year","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"rfmo","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_code","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"flag","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"ocean","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"latitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"longitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"dataset_organisation","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_acknowledgement","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_url","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_date","type":{"kind":"Date"}}]}',
+            __typename: "DataSchema",
+        },
+        separator: ",",
+        encoding: null,
+        quote: null,
+        escape: null,
+        header: true,
+        inferSchema: false,
+        nullValue: null,
+        dateFormat: null,
+        timestampFormat: null,
     },
-    read: setPollingSourceReadStep,
     merge: {
         __typename: "MergeStrategyLedger",
         primaryKey: ["id"],
     },
-    prepare: [
-        {
-            __typename: "PrepStepDecompress",
-            format: CompressionFormat.Gzip,
-            subPath: "http://test.com",
-        },
-    ],
+    prepare: [mockPrepStepDecompress],
     preprocess: {
         __typename: "TransformSql",
         engine: "spark",
@@ -101,36 +104,36 @@ export const mockSetPollingSourceEvent: SetPollingSource = {
     },
 };
 
-const setPollingSourceWithMqttReadStep: ReadStepCsv = {
-    __typename: "ReadStepCsv",
-    schema: {
-        format: DataSchemaFormat.OdfJson,
-        content:
-            '{"fields":[{"name":"id","type":{"kind":"Option","inner":{"kind":"Int64"}}},{"name":"source","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"captures","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"capture_measure","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"taxon_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"scientific_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"parent_taxon","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"year","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"rfmo","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_code","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"flag","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"ocean","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"latitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"longitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"dataset_organisation","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_acknowledgement","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_url","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_date","type":{"kind":"Date"}}]}',
-        __typename: "DataSchema",
-    },
-    separator: ",",
-    encoding: null,
-    quote: null,
-    escape: null,
-    header: true,
-    inferSchema: false,
-    nullValue: null,
-    dateFormat: null,
-    timestampFormat: null,
+export const mockFetchStepMqtt: { __typename: "FetchStepMqtt" } & FetchStepMqttDataFragment = {
+    __typename: "FetchStepMqtt",
+    host: "test.mosquitto.org",
+    port: 1183,
+    username: "mock-user",
+    password: "123456",
+    topics: [{ __typename: "MqttTopicSubscription", path: "dev.kamu.example.mqtt.temp", qos: MqttQos.AtMostOnce }],
 };
 
-export const mockSetPollingSourceEventWithFetchStepMqtt: SetPollingSource = {
+export const mockSetPollingSourceEventWithFetchStepMqtt: SetPollingSourceEventFragment = {
     __typename: "SetPollingSource",
-    fetch: {
-        __typename: "FetchStepMqtt",
-        host: "test.mosquitto.org",
-        port: 1183,
-        username: "mock-user",
-        password: "123456",
-        topics: [{ __typename: "MqttTopicSubscription", path: "dev.kamu.example.mqtt.temp", qos: MqttQos.AtMostOnce }],
+    fetch: mockFetchStepMqtt,
+    read: {
+        __typename: "ReadStepCsv",
+        schema: {
+            format: DataSchemaFormat.OdfJson,
+            content:
+                '{"fields":[{"name":"id","type":{"kind":"Option","inner":{"kind":"Int64"}}},{"name":"source","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"captures","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"capture_measure","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"taxon_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"scientific_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"parent_taxon","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"year","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"rfmo","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_code","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"flag","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"ocean","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"latitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"longitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"dataset_organisation","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_acknowledgement","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_url","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_date","type":{"kind":"Date"}}]}',
+            __typename: "DataSchema",
+        },
+        separator: ",",
+        encoding: null,
+        quote: null,
+        escape: null,
+        header: true,
+        inferSchema: false,
+        nullValue: null,
+        dateFormat: null,
+        timestampFormat: null,
     },
-    read: setPollingSourceWithMqttReadStep,
     merge: {
         __typename: "MergeStrategyLedger",
         primaryKey: ["id"],
@@ -139,7 +142,7 @@ export const mockSetPollingSourceEventWithFetchStepMqtt: SetPollingSource = {
     preprocess: null,
 };
 
-export const mockSeed: Seed = {
+export const mockSeed: SeedEventFragment = {
     __typename: "Seed",
     datasetId: "sadasdfdsdefdfdf",
     datasetKind: DatasetKind.Root,
@@ -217,7 +220,7 @@ export const mockExecuteTransform: ExecuteTransformEventFragment = {
     },
 };
 
-export const mockSetLicense: SetLicense = {
+export const mockSetLicense: SetLicenseEventFragment = {
     __typename: "SetLicense",
     shortName: "OGL-Canada-2.0",
     name: "Open Government Licence - Canada",
@@ -225,7 +228,7 @@ export const mockSetLicense: SetLicense = {
     websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
 };
 
-export const mockSetAttachments: SetAttachments = {
+export const mockSetAttachments: SetAttachmentsEventFragment = {
     __typename: "SetAttachments",
     attachments: {
         __typename: "AttachmentsEmbedded",
@@ -240,7 +243,7 @@ export const mockSetAttachments: SetAttachments = {
     },
 };
 
-export const mockSetInfo: SetInfo = {
+export const mockSetInfo: DatasetCurrentInfoFragment = {
     __typename: "SetInfo",
     description: "Confirmed positive cases of COVID-19 in Ontario.",
     keywords: [
@@ -255,7 +258,7 @@ export const mockSetInfo: SetInfo = {
     ],
 };
 
-export const mockSetVocab: SetVocab = {
+export const mockSetVocab: SetVocabEventFragment = {
     __typename: "SetVocab",
     systemTimeColumn: null,
     eventTimeColumn: "case_reported_date",
@@ -263,7 +266,7 @@ export const mockSetVocab: SetVocab = {
     operationTypeColumn: null,
 };
 
-export const mockSetDataSchema: SetDataSchema = {
+export const mockSetDataSchema: SetDataSchemaEventFragment = {
     __typename: "SetDataSchema",
     schema: {
         __typename: "DataSchema",
@@ -273,7 +276,7 @@ export const mockSetDataSchema: SetDataSchema = {
     },
 };
 
-const addPushSourceReadStep: ReadStepCsv = {
+export const mockAddPushSourceReadStepCsv: { __typename: "ReadStepCsv" } & ReadStepCsvDataFragment = {
     __typename: "ReadStepCsv",
     schema: {
         format: DataSchemaFormat.OdfJson,
@@ -292,10 +295,10 @@ const addPushSourceReadStep: ReadStepCsv = {
     timestampFormat: null,
 };
 
-export const mockAddPushSource: AddPushSource = {
+export const mockAddPushSource: AddPushSourceEventFragment = {
     __typename: "AddPushSource",
     sourceName: "mock1",
-    read: addPushSourceReadStep,
+    read: mockAddPushSourceReadStepCsv,
     merge: {
         __typename: "MergeStrategyLedger",
         primaryKey: ["id"],

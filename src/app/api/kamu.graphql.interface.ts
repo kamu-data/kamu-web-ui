@@ -7789,19 +7789,19 @@ export type DatasetBlocksEncodedByEventTypeQueryVariables = Exact<{
 
 
 export type DatasetBlocksEncodedByEventTypeQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byOwnerAndName?: { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', metadataProjection: Array<{ __typename?: 'MetadataBlockExtended', encoded?: { __typename?: 'EncodedBlock', content: string } | null, event:
-            | { __typename?: 'AddData' }
-            | { __typename?: 'AddPushSource', sourceName: string }
-            | { __typename?: 'DisablePollingSource' }
-            | { __typename?: 'DisablePushSource' }
-            | { __typename?: 'ExecuteTransform' }
-            | { __typename?: 'Seed' }
-            | { __typename?: 'SetAttachments' }
-            | { __typename?: 'SetDataSchema' }
-            | { __typename?: 'SetInfo' }
-            | { __typename?: 'SetLicense' }
-            | { __typename?: 'SetPollingSource' }
-            | { __typename?: 'SetTransform' }
-            | { __typename?: 'SetVocab' }
+            | { __typename: 'AddData' }
+            | { __typename: 'AddPushSource', sourceName: string }
+            | { __typename: 'DisablePollingSource' }
+            | { __typename: 'DisablePushSource' }
+            | { __typename: 'ExecuteTransform' }
+            | { __typename: 'Seed' }
+            | { __typename: 'SetAttachments' }
+            | { __typename: 'SetDataSchema' }
+            | { __typename: 'SetInfo' }
+            | { __typename: 'SetLicense' }
+            | { __typename: 'SetPollingSource' }
+            | { __typename: 'SetTransform' }
+            | { __typename: 'SetVocab' }
            }> } } | null } };
 
 export type DatasetBlocksSchemaByEventTypeQueryVariables = Exact<{
@@ -8712,7 +8712,10 @@ export type WebhookFlowSubProcessGroupDataFragment = { __typename?: 'WebhookFlow
     & WebhookFlowSubProcessDataFragment
   )> };
 
-export type AddDataEventFragment = { __typename?: 'AddData', prevCheckpoint?: string | null, prevOffset?: number | null, newWatermark?: string | null, newData?: { __typename?: 'DataSlice', logicalHash: string, physicalHash: string, size: number, offsetInterval: { __typename?: 'OffsetInterval', start: number, end: number } } | null, newCheckpoint?: { __typename?: 'Checkpoint', physicalHash: string, size: number } | null, newSourceState?: { __typename?: 'SourceState', sourceName: string, kind: string, value: string } | null };
+export type AddDataEventFragment = { __typename?: 'AddData', prevCheckpoint?: string | null, prevOffset?: number | null, newWatermark?: string | null, newData?: (
+    { __typename?: 'DataSlice' }
+    & DataSliceDataFragment
+  ) | null, newCheckpoint?: { __typename?: 'Checkpoint', physicalHash: string, size: number } | null, newSourceState?: { __typename?: 'SourceState', sourceName: string, kind: string, value: string } | null };
 
 export type AddPushSourceEventFragment = { __typename?: 'AddPushSource', sourceName: string, read:
     | (
@@ -8771,9 +8774,14 @@ export type AddPushSourceEventFragment = { __typename?: 'AddPushSource', sourceN
 
 export type DataSchemaInfoFragment = { __typename?: 'DataSchema', format: DataSchemaFormat, content: string };
 
+export type DataSliceDataFragment = { __typename?: 'DataSlice', logicalHash: string, physicalHash: string, size: number, offsetInterval: { __typename?: 'OffsetInterval', start: number, end: number } };
+
 export type DisablePollingSourceEventFragment = { __typename?: 'DisablePollingSource', dummy?: string | null };
 
-export type ExecuteTransformEventFragment = { __typename?: 'ExecuteTransform', prevCheckpoint?: string | null, prevOffset?: number | null, newWatermark?: string | null, queryInputs: Array<{ __typename?: 'ExecuteTransformInput', datasetId: string, prevBlockHash?: string | null, newBlockHash?: string | null, prevOffset?: number | null, newOffset?: number | null }>, newData?: { __typename?: 'DataSlice', logicalHash: string, physicalHash: string, size: number, offsetInterval: { __typename?: 'OffsetInterval', start: number, end: number } } | null, newCheckpoint?: { __typename?: 'Checkpoint', physicalHash: string, size: number } | null };
+export type ExecuteTransformEventFragment = { __typename?: 'ExecuteTransform', prevCheckpoint?: string | null, prevOffset?: number | null, newWatermark?: string | null, queryInputs: Array<{ __typename?: 'ExecuteTransformInput', datasetId: string, prevBlockHash?: string | null, newBlockHash?: string | null, prevOffset?: number | null, newOffset?: number | null }>, newData?: (
+    { __typename?: 'DataSlice' }
+    & DataSliceDataFragment
+  ) | null, newCheckpoint?: { __typename?: 'Checkpoint', physicalHash: string, size: number } | null };
 
 export type SeedEventFragment = { __typename?: 'Seed', datasetId: string, datasetKind: DatasetKind };
 
@@ -10896,6 +10904,17 @@ export const SeedEventFragmentDoc = gql`
   datasetKind
 }
     `;
+export const DataSliceDataFragmentDoc = gql`
+    fragment DataSliceData on DataSlice {
+  offsetInterval {
+    start
+    end
+  }
+  logicalHash
+  physicalHash
+  size
+}
+    `;
 export const ExecuteTransformEventFragmentDoc = gql`
     fragment ExecuteTransformEvent on ExecuteTransform {
   queryInputs {
@@ -10908,13 +10927,7 @@ export const ExecuteTransformEventFragmentDoc = gql`
   prevCheckpoint
   prevOffset
   newData {
-    offsetInterval {
-      start
-      end
-    }
-    logicalHash
-    physicalHash
-    size
+    ...DataSliceData
   }
   newCheckpoint {
     physicalHash
@@ -10922,19 +10935,13 @@ export const ExecuteTransformEventFragmentDoc = gql`
   }
   newWatermark
 }
-    `;
+    ${DataSliceDataFragmentDoc}`;
 export const AddDataEventFragmentDoc = gql`
     fragment AddDataEvent on AddData {
   prevCheckpoint
   prevOffset
   newData {
-    offsetInterval {
-      start
-      end
-    }
-    logicalHash
-    physicalHash
-    size
+    ...DataSliceData
   }
   newCheckpoint {
     physicalHash
@@ -10947,7 +10954,7 @@ export const AddDataEventFragmentDoc = gql`
     value
   }
 }
-    `;
+    ${DataSliceDataFragmentDoc}`;
 export const SetAttachmentsEventFragmentDoc = gql`
     fragment SetAttachmentsEvent on SetAttachments {
   attachments {
@@ -12203,6 +12210,7 @@ export const DatasetBlocksEncodedByEventTypeDocument = gql`
             content
           }
           event {
+            __typename
             ... on AddPushSource {
               sourceName
             }

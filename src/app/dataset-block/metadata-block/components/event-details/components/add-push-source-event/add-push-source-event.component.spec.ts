@@ -11,10 +11,12 @@ import { provideToastr } from "ngx-toastr";
 
 import { getElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { ReadStepCsv } from "@api/kamu.graphql.interface";
 
 import { AddPushSourceEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/add-push-source-event/add-push-source-event.component";
-import { mockAddPushSource } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
+import {
+    mockAddPushSource,
+    mockAddPushSourceReadStepCsv,
+} from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
 describe("AddPushSourceEventComponent", () => {
     let component: AddPushSourceEventComponent;
@@ -51,7 +53,7 @@ describe("AddPushSourceEventComponent", () => {
         const schema = getElementByDataTestId(fixture, "addPushSource-readStepCsv-schema");
         expect(schema).toBeDefined();
 
-        const mockSeparator = (mockAddPushSource.read as ReadStepCsv).separator;
+        const mockSeparator = mockAddPushSourceReadStepCsv.separator;
         if (mockSeparator) {
             const separator = getElementByDataTestId(fixture, "addPushSource-readStepCsv-separator");
             expect(separator.innerText).toEqual(mockSeparator);

@@ -13,7 +13,7 @@ import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-
 import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
 import { parseCurrentSchema } from "@common/helpers/app.helpers";
 import { schemaAsDataRows } from "@common/helpers/data-schema.helpers";
-import { SetDataSchema } from "@api/kamu.graphql.interface";
+import { SetDataSchemaEventFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DataSchemaField, DatasetSchema } from "@interface/dataset-schema.interface";
 
@@ -28,7 +28,7 @@ import { DataSchemaField, DatasetSchema } from "@interface/dataset-schema.interf
     ],
 })
 export class SetDataSchemaEventComponent extends BaseComponent {
-    @Input({ required: true }) public event: SetDataSchema;
+    @Input({ required: true }) public event: SetDataSchemaEventFragment;
 
     public get datasetSchema(): MaybeNull<DatasetSchema> {
         return parseCurrentSchema(this.event.schema);

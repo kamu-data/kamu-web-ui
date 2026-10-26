@@ -5,13 +5,7 @@
  * included in the LICENSE file.
  */
 
-import {
-    Dataset,
-    SetTransform,
-    TransformInput,
-    TransformInputDatasetAccessible,
-    TransformInputDatasetNotAccessible,
-} from "@api/kamu.graphql.interface";
+import { DatasetBasicsFragment, DatasetTransformFragment } from "@api/kamu.graphql.interface";
 
 import { SET_TRANSFORM_SOURCE_DESCRIPTORS } from "src/app/dataset-block/metadata-block/components/event-details/components/set-transform-event/set-transform-event.source";
 import { EventSectionBuilder } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/builders/event-section.builder";
@@ -20,15 +14,17 @@ import {
     EventSection,
 } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
 
+type TransformInputData = DatasetTransformFragment["inputs"][number];
+
 enum SetTransformSection {
     INPUTS = "inputs",
     TRANSFORM = "transform",
 }
 
-export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform> {
-    public buildEventSections(event: SetTransform): EventSection[] {
+export class SetTransformSectionBuilder extends EventSectionBuilder<DatasetTransformFragment> {
+    public buildEventSections(event: DatasetTransformFragment): EventSection[] {
         const result: EventSection[] = [];
-        Object.entries(event).forEach(([section, data]) => {
+        Object.keys(event).forEach((section) => {
             if (section !== "__typename") {
                 switch (section as SetTransformSection) {
                     case SetTransformSection.TRANSFORM: {
@@ -37,7 +33,7 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
                             rows: this.buildEventRows(
                                 event,
                                 SET_TRANSFORM_SOURCE_DESCRIPTORS,
-                                section as keyof SetTransform,
+                                section as keyof DatasetTransformFragment,
                                 false,
                             ),
                         });
@@ -47,47 +43,28 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
                     case SetTransformSection.INPUTS: {
                         const numInputsParts = event.inputs.length;
 
-                        (data as TransformInput[]).forEach((item, index) => {
+                        event.inputs.forEach((item, index) => {
                             const rows: EventRow[] = [];
-                            const object = item.datasetRef
-                                ? {
-                                      dataset: item.inputDataset,
-                                      alias: item.alias,
-                                      datasetRef: item.datasetRef,
-                                  }
-                                : {
-                                      dataset: item.inputDataset,
-                                      alias: item.alias,
-                                  };
+                            const inputDataset = item.inputDataset;
+                            const { fields, sectionType } =
+                                inputDataset.__typename === "TransformInputDatasetNotAccessible"
+                                    ? { fields: inputDataset, sectionType: inputDataset.__typename }
+                                    : "dataset" in inputDataset
+                                      ? {
+                                            fields: inputDataset.dataset,
+                                            sectionType: `${inputDataset.dataset.__typename}`,
+                                        }
+                                      : { fields: {}, sectionType: "" };
 
-                            const notAccessibleType =
-                                "__typename" in object.dataset &&
-                                object.dataset.__typename === "TransformInputDatasetNotAccessible";
-
-                            Object.entries(
-                                notAccessibleType
-                                    ? (object.dataset as TransformInputDatasetNotAccessible)
-                                    : (object.dataset as TransformInputDatasetAccessible).dataset,
-                            ).forEach(([key, value]) => {
-                                if (
-                                    event.__typename &&
-                                    item.inputDataset &&
-                                    key !== "__typename" &&
-                                    ["id", "name", "alias"].includes(key)
-                                ) {
+                            Object.entries(fields).forEach(([key, value]) => {
+                                if (event.__typename && key !== "__typename" && ["id", "name", "alias"].includes(key)) {
                                     rows.push(
                                         this.buildSupportedRow(
                                             event.__typename,
                                             SET_TRANSFORM_SOURCE_DESCRIPTORS,
-                                            notAccessibleType
-                                                ? ((item.inputDataset as TransformInputDatasetNotAccessible)
-                                                      .__typename as string)
-                                                : ((item.inputDataset as TransformInputDatasetAccessible).dataset
-                                                      .__typename as string),
+                                            sectionType,
                                             key,
-                                            // this.keyTransformMapper(key as keyof Dataset),
-
-                                            this.valueTransformMapper(key as keyof Dataset, value, item),
+                                            this.valueTransformMapper(key as keyof DatasetBasicsFragment, value, item),
                                         ),
                                     );
                                 }
@@ -115,12 +92,16 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<SetTransform
         return kind.slice(0, 1) + kind.slice(1).toLowerCase();
     }
 
-    private valueTransformMapper(key: keyof Dataset, value: unknown, inputItem: TransformInput): unknown {
+    private valueTransformMapper(
+        key: keyof DatasetBasicsFragment,
+        value: unknown,
+        inputItem: TransformInputData,
+    ): unknown {
         switch (key) {
             case "kind":
                 return this.kindDatasetCapitalize(value as string);
             case "name":
-                return (inputItem.inputDataset as TransformInputDatasetAccessible).dataset.id;
+                return "dataset" in inputItem.inputDataset ? inputItem.inputDataset.dataset.id : value;
 
             default:
                 return value;

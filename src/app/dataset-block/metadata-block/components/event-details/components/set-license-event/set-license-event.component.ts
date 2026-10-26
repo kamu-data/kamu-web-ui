@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { BaseComponent } from "@common/components/base.component";
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
-import { SetLicense } from "@api/kamu.graphql.interface";
+import { SetLicenseEventFragment } from "@api/kamu.graphql.interface";
 
 import { LinkPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/link-property/link-property.component";
 
@@ -24,5 +24,5 @@ import { LinkPropertyComponent } from "src/app/dataset-block/metadata-block/comp
     ],
 })
 export class SetLicenseEventComponent extends BaseComponent {
-    @Input({ required: true }) public event: SetLicense;
+    @Input({ required: true }) public event: SetLicenseEventFragment;
 }

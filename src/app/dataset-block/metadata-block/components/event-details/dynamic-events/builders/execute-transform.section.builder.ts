@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DataSlice, ExecuteTransform, ExecuteTransformInput } from "@api/kamu.graphql.interface";
+import { DataSliceDataFragment, ExecuteTransformEventFragment } from "@api/kamu.graphql.interface";
 
 import { EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS } from "src/app/dataset-block/metadata-block/components/event-details/components/execute-transform-event/execute-transform-event.source";
 import { EventSectionBuilder } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/builders/event-section.builder";
@@ -23,7 +23,7 @@ export enum ExecuteTransformSection {
     NEW_WATERMARK = "newWatermark",
 }
 
-export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteTransform> {
+export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteTransformEventFragment> {
     private sectionTitleMapper: Record<string, string> = {
         queryInputs: "Query inputs",
         prevCheckpoint: "Previous checkpoint",
@@ -33,7 +33,7 @@ export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteT
         newWatermark: "New watermark",
     };
 
-    public buildEventSections(event: ExecuteTransform): EventSection[] {
+    public buildEventSections(event: ExecuteTransformEventFragment): EventSection[] {
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
             if (data && section !== "__typename") {
@@ -44,7 +44,7 @@ export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteT
                             rows: this.buildEventRows(
                                 event,
                                 EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS,
-                                section as keyof ExecuteTransform,
+                                section as keyof ExecuteTransformEventFragment,
                                 false,
                             ),
                         });
@@ -52,7 +52,7 @@ export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteT
                     }
                     case ExecuteTransformSection.NEW_DATA: {
                         const rows: EventRow[] = [];
-                        Object.entries(data as DataSlice).forEach(([key, value]) => {
+                        Object.entries(data as DataSliceDataFragment).forEach(([key, value]) => {
                             if (event.__typename && key !== "__typename") {
                                 rows.push(
                                     this.buildSupportedRow(
@@ -60,7 +60,7 @@ export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteT
                                         EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS,
                                         "DataSlice",
                                         key,
-                                        this.valueTransformMapper(key as keyof DataSlice, value),
+                                        this.valueTransformMapper(key as keyof DataSliceDataFragment, value),
                                     ),
                                 );
                             }
@@ -111,7 +111,7 @@ export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteT
 
                     case ExecuteTransformSection.QUERY_INPUTS: {
                         const numQueryInputs = event.queryInputs.length;
-                        (data as ExecuteTransformInput[]).forEach((item, index) => {
+                        event.queryInputs.forEach((item, index) => {
                             let rows: EventRow[] = [];
                             Object.entries({
                                 ...item,
@@ -149,7 +149,7 @@ export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteT
         return result;
     }
 
-    private valueTransformMapper(key: keyof ExecuteTransformInput | keyof DataSlice, value: unknown): unknown {
+    private valueTransformMapper(key: keyof DataSliceDataFragment, value: unknown): unknown {
         switch (key) {
             case "offsetInterval":
                 return {

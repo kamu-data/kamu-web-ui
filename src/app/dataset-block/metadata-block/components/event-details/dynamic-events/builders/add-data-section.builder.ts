@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AddData, DataSlice } from "@api/kamu.graphql.interface";
+import { AddDataEventFragment, DataSliceDataFragment } from "@api/kamu.graphql.interface";
 
 import { ADD_DATA_SOURCE_DESCRIPTORS } from "src/app/dataset-block/metadata-block/components/event-details/components/add-data-event/add-data-event.source";
 import { EventSectionBuilder } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/builders/event-section.builder";
@@ -23,7 +23,7 @@ export enum AddDataSection {
     NEW_SOURCE_STATE = "newSourceState",
 }
 
-export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
+export class AddDataSectionBuilder extends EventSectionBuilder<AddDataEventFragment> {
     private sectionTitleMapper: Record<string, string> = {
         prevCheckpoint: "Previous checkpoint",
         newData: "New data",
@@ -32,7 +32,7 @@ export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
         prevOffset: "Previous offset",
         newSourceState: "New source state",
     };
-    public buildEventSections(event: AddData): EventSection[] {
+    public buildEventSections(event: AddDataEventFragment): EventSection[] {
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
             if (data && section !== "__typename") {
@@ -44,7 +44,7 @@ export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
                             rows: this.buildEventRows(
                                 event,
                                 ADD_DATA_SOURCE_DESCRIPTORS,
-                                section as keyof AddData,
+                                section as keyof AddDataEventFragment,
                                 false,
                             ),
                         });
@@ -53,7 +53,7 @@ export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
 
                     case AddDataSection.NEW_DATA: {
                         const rows: EventRow[] = [];
-                        Object.entries(data as DataSlice).forEach(([key, value]) => {
+                        Object.entries(data as DataSliceDataFragment).forEach(([key, value]) => {
                             if (event.__typename && key !== "__typename") {
                                 rows.push(
                                     this.buildSupportedRow(
@@ -61,7 +61,7 @@ export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
                                         ADD_DATA_SOURCE_DESCRIPTORS,
                                         "DataSlice",
                                         key,
-                                        this.valueTransformMapper(key as keyof DataSlice, value),
+                                        this.valueTransformMapper(key as keyof DataSliceDataFragment, value),
                                     ),
                                 );
                             }
@@ -122,7 +122,7 @@ export class AddDataSectionBuilder extends EventSectionBuilder<AddData> {
         return result;
     }
 
-    private valueTransformMapper(key: keyof DataSlice, value: unknown): unknown {
+    private valueTransformMapper(key: keyof DataSliceDataFragment, value: unknown): unknown {
         switch (key) {
             case "offsetInterval":
                 return {

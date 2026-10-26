@@ -10,7 +10,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { BaseComponent } from "@common/components/base.component";
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
-import { SetVocab } from "@api/kamu.graphql.interface";
+import { SetVocabEventFragment } from "@api/kamu.graphql.interface";
 
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
 
@@ -27,7 +27,7 @@ import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/com
     ],
 })
 export class SetVocabEventComponent extends BaseComponent {
-    @Input({ required: true }) public event: SetVocab;
+    @Input({ required: true }) public event: SetVocabEventFragment;
     public viewDataMapper: Record<string, { label: string; tooltip: string }> = {
         offsetColumn: { label: "Offset column:", tooltip: "Name of the offset column." },
         operationTypeColumn: { label: "Operation type column:", tooltip: "Name of the operation type column." },

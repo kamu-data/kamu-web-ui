@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { BaseComponent } from "@common/components/base.component";
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
-import { SetInfo } from "@api/kamu.graphql.interface";
+import { DatasetCurrentInfoFragment } from "@api/kamu.graphql.interface";
 
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
 
@@ -24,5 +24,5 @@ import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/com
     ],
 })
 export class SetInfoEventComponent extends BaseComponent {
-    @Input({ required: true }) public event: SetInfo;
+    @Input({ required: true }) public event: DatasetCurrentInfoFragment;
 }

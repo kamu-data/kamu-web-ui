@@ -13,6 +13,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import {
     findComponentInstance,
     findComponentInstances,
@@ -20,7 +21,7 @@ import {
     setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { AddDataEventFragment, MetadataBlockFragment } from "@api/kamu.graphql.interface";
+import { AddDataEventFragment } from "@api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery } from "@api/mock/dataset.mock";
 
 import { AddDataEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/add-data-event/add-data-event.component";
@@ -34,8 +35,9 @@ describe("EventDetailsComponent", () => {
     let component: EventDetailsComponent;
     let fixture: ComponentFixture<EventDetailsComponent>;
 
-    const mockBlock = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
-        .blockByHash as MetadataBlockFragment;
+    const mockBlock = requireValue(
+        mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHash ?? null,
+    );
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({

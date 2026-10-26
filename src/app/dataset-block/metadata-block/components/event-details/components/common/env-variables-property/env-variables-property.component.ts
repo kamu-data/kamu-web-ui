@@ -14,7 +14,7 @@ import {
     DynamicTableDataRow,
 } from "@common/components/dynamic-table/dynamic-table.interface";
 import { extractSchemaFieldsFromData } from "@common/helpers/data-schema.helpers";
-import { EnvVar } from "@api/kamu.graphql.interface";
+import { FetchStepContainerDataFragment } from "@api/kamu.graphql.interface";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
@@ -30,11 +30,11 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     ],
 })
 export class EnvVariablesPropertyComponent extends BasePropertyComponent {
-    @Input({ required: true }) public data: EnvVar[];
+    @Input({ required: true }) public data: NonNullable<FetchStepContainerDataFragment["env"]>;
 
     public get tableSource(): DynamicTableDataRow[] {
         const result: DynamicTableDataRow[] = [];
-        this.data.forEach(({ name, value }: EnvVar) =>
+        this.data.forEach(({ name, value }) =>
             result.push({
                 name: {
                     value: name,

@@ -17,7 +17,6 @@ import {
     DataSchemaFormat,
     DatasetBlocksEncodedByEventTypeQuery,
     DatasetBlocksSchemaByEventTypeQuery,
-    MetadataBlockFragment,
     MetadataEventType,
     MetadataManifestFormat,
     ReadStepCsvDataFragment,
@@ -61,8 +60,8 @@ describe("BlockService", () => {
         const result = await firstValueFrom(service.requestMetadataBlock(mockDatasetInfo, TEST_BLOCK_HASH));
 
         expect(result).toEqual({
-            block: metadata.chain.blockByHash as MetadataBlockFragment,
-            blockAsYaml: metadata.chain.blockByHashEncoded as string,
+            block: requireValue(metadata.chain.blockByHash ?? null),
+            blockAsYaml: requireValue(metadata.chain.blockByHashEncoded ?? null),
             downstreamsCount: metadata.currentDownstreamDependenciesCount,
         });
     });

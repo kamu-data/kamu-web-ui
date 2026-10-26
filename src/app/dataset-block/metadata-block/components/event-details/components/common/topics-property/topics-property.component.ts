@@ -14,7 +14,7 @@ import {
     DynamicTableDataRow,
 } from "@common/components/dynamic-table/dynamic-table.interface";
 import { extractSchemaFieldsFromData } from "@common/helpers/data-schema.helpers";
-import { MqttTopicSubscription } from "@api/kamu.graphql.interface";
+import { FetchStepMqttDataFragment } from "@api/kamu.graphql.interface";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
@@ -30,18 +30,18 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     ],
 })
 export class TopicsPropertyComponent extends BasePropertyComponent {
-    @Input({ required: true }) public data: MqttTopicSubscription[];
+    @Input({ required: true }) public data: FetchStepMqttDataFragment["topics"];
 
     public get tableSource(): DynamicTableDataRow[] {
         const result: DynamicTableDataRow[] = [];
-        this.data.forEach(({ path, qos }: MqttTopicSubscription) =>
+        this.data.forEach(({ path, qos }) =>
             result.push({
                 path: {
                     value: path,
                     cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
                 },
                 qos: {
-                    value: (qos as string) ?? "",
+                    value: qos ?? "",
                     cssClass: DynamicTableColumnClassEnum.PRIMARY_COLOR,
                 },
             }),

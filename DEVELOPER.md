@@ -120,7 +120,7 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ### Running unit tests
 
-Run `npm test` to execute the unit tests once with [Vitest](https://vitest.dev/) in headless Chromium, with a coverage report in `coverage/kamu-platform`; `ng test` runs them in watch mode. Narrow a run with `npm test -- --include <spec file or folder>`.
+Run `npm test` to execute the unit tests once with [Vitest](https://vitest.dev/) in headless Chromium; `npm run test-coverage` does the same and writes a coverage report to `coverage/kamu-platform`, and `ng test` runs them in watch mode. Narrow a run with `npm test -- --include <spec file or folder>`.
 
 The first run needs the Playwright browser: `npx playwright install chromium`.
 

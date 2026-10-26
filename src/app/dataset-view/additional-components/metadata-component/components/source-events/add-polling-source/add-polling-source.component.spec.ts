@@ -193,6 +193,7 @@ describe("AddPollingSourceComponent", () => {
         component.currentStep = SetPollingSourceSection.FETCH;
         setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
         component.pollingSourceForm = buildPollingSourceForm();
+        component.showPreprocessStep = true;
         fixture.detectChanges();
         expect(component.showPreprocessStep).toEqual(false);
     });

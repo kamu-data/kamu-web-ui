@@ -9,7 +9,6 @@ import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { SimpleChanges } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatTableHarness } from "@angular/material/table/testing";
 
@@ -90,17 +89,20 @@ describe("FlowsTableComponent", () => {
         expect(rows.length).toBe(8);
     });
 
-    it("should check ngOnChanges", () => {
-        const nodesSimpleChanges: SimpleChanges = {
-            nodes: {
-                previousValue: undefined,
-                currentValue: mockFlowSummaryDataFragments,
-                firstChange: true,
-                isFirstChange: () => true,
-            },
-        };
-        component.ngOnChanges(nodesSimpleChanges);
-        expect(component.dataSource.data).toEqual(mockFlowSummaryDataFragments);
+    it("should show the new nodes when the input changes", () => {
+        const nodes = mockFlowSummaryDataFragments.slice(0, 1);
+        setComponentInput(fixture, "nodes", nodes);
+        fixture.detectChanges();
+        expect(component.dataSource.data).toEqual(nodes);
+    });
+
+    it("should leave the nodes it was given unchanged when the input changes", () => {
+        const givenNodes = structuredClone(mockFlowSummaryDataFragments);
+        const nextNodes = structuredClone(mockFlowSummaryDataFragments.slice(0, 1));
+        nextNodes[0].flowId = "changed-flow-id";
+        setComponentInput(fixture, "nodes", nextNodes);
+        fixture.detectChanges();
+        expect(mockFlowSummaryDataFragments).toEqual(givenNodes);
     });
 
     it("should check show modal window for aborting flow", () => {

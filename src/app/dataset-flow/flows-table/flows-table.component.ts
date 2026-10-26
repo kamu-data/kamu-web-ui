@@ -112,7 +112,8 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         new MatTableDataSource<FlowSummaryDataWithTriggerFragment>();
 
     public ngOnInit(): void {
-        this.dataSource.data = this.nodes;
+        // The table patches its rows in place on later changes, so it owns copies, not the parent's data
+        this.dataSource.data = this.nodes.map((node) => ({ ...node }));
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
@@ -138,7 +139,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
                 Object.assign(existing, newNode);
                 existingData[i] = existing;
             } else {
-                existingData[i] = newNode;
+                existingData[i] = { ...newNode };
             }
         }
 

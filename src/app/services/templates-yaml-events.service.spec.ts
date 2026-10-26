@@ -7,7 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 
-import { readSchemaOf, requireDatasetSchema } from "@common/components/edit-schema-table/schema-editor.fixtures.spec";
+import { readSchemaOf, requireDatasetSchema } from "@common/components/edit-schema-table/schema-editor.mock";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import {

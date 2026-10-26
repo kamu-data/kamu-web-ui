@@ -29,7 +29,7 @@ import {
     ORDER_SCHEMA_ODF_JSON,
     readSchemaOf,
     requireDatasetSchema,
-} from "@common/components/edit-schema-table/schema-editor.fixtures.spec";
+} from "@common/components/edit-schema-table/schema-editor.mock";
 import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetApi } from "@api/dataset.api";

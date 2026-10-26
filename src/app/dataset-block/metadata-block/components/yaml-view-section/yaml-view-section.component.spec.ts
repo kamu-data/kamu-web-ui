@@ -10,7 +10,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { provideMarkdown } from "ngx-markdown";
 
 import { findElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
-import { metadataBlockSetVocab } from "@common/helpers/data.helpers.spec";
+import { metadataBlockSetVocab } from "@common/helpers/data.helpers.mock";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
 

@@ -95,6 +95,21 @@ export default [
       "vitest/no-disabled-tests": "error",
 
       "no-restricted-syntax": ["error", ...fragmentSliceRestrictions],
+
+      // Spec files share one module cache: a spec imported by another runs its tests inside that
+      // file, and Vitest then finds no tests in it. Only the two helper files without tests of
+      // their own, which the test target excludes, may be imported.
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              regex: "^(?!.*/(base-test\\.helpers|base-editor\\.component)\\.spec$).*\\.spec$",
+              message: "Move what other files need into a .mock.ts file; a spec file is never imported.",
+            },
+          ],
+        },
+      ],
     },
   },
   // Specs set inputs through setComponentInput(), which type-checks the input name and value,

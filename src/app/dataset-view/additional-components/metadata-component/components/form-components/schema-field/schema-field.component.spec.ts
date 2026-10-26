@@ -12,7 +12,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
 
 import { EditSchemaTableHarness } from "@common/components/edit-schema-table/edit-schema-table.harness";
-import { ORDER_SCHEMA } from "@common/components/edit-schema-table/schema-editor.fixtures.spec";
+import { ORDER_SCHEMA } from "@common/components/edit-schema-table/schema-editor.mock";
 import {
     SchemaValidationErrorCode,
     SchemaWarningCode,

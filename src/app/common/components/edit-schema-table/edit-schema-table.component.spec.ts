@@ -22,7 +22,7 @@ import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 import { TypeEditorComponent } from "./components/type-editor/type-editor.component";
 import { EditSchemaTableComponent } from "./edit-schema-table.component";
 import { EditSchemaTableHarness } from "./edit-schema-table.harness";
-import { ORDER_SCHEMA, requireListField, selectNgSelectOption } from "./schema-editor.fixtures.spec";
+import { ORDER_SCHEMA, requireListField, selectNgSelectOption } from "./schema-editor.mock";
 
 // ---------------------------------------------------------------------------
 // TestHost

@@ -236,6 +236,11 @@ or misspelled field before any test runs. A type assertion switches that check o
 - GraphQL response fixtures: `src/app/api/mock/<domain>.mock.ts`, named `mock<OperationName>`
   and typed with the generated result type, so codegen changes break them at compile time.
   Shared constants such as `TEST_DATASET_ID` live there too.
+- A spec file is never imported by another file (eslint `no-restricted-imports`): spec files share
+  one module cache, so an imported spec runs its tests inside the importing file, and Vitest then
+  fails it with "No test suite found". Anything other specs need goes into a `.mock.ts` file
+  (`schema-editor.mock.ts`). `base-test.helpers.spec.ts` and `base-editor.component.spec.ts`
+  hold no tests of their own; the test target excludes them, and only they may be imported.
 - Feature-local view-model fixtures: `<name>.mock.ts` beside the code. Older files use other
   names (`mock.data.ts`, `*.mocks.ts`); leave them, but name new ones `.mock.ts`.
 

@@ -29,7 +29,7 @@ import {
     requireStructField,
     requireTimeField,
     selectNgSelectOption,
-} from "../../schema-editor.fixtures.spec";
+} from "../../schema-editor.mock";
 import { TypeEditorComponent } from "./type-editor.component";
 
 // ---------------------------------------------------------------------------

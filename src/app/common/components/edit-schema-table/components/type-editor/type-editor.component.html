@@ -21,7 +21,7 @@
             <span class="text-muted gap-2">&nbsp;&lt;&nbsp;</span>
             <ng-select
                 class="width-110"
-                [ngModel]="schemaTimeField.unit"
+                [ngModel]="schemaTimeField?.unit"
                 [items]="UNIT_OPTIONS_LIST"
                 bindLabel="label"
                 bindValue="value"
@@ -36,7 +36,7 @@
             <span class="text-muted">&nbsp;,&nbsp;</span>
             <ng-select
                 class="width-60"
-                [ngModel]="schemaTimeField.timezone"
+                [ngModel]="schemaTimeField?.timezone"
                 [items]="TIMEZONE_OPTIONS_LIST"
                 bindLabel="label"
                 bindValue="value"
@@ -55,7 +55,7 @@
             <span class="text-muted gap-2">&nbsp;&lt;&nbsp;</span>
             <ng-select
                 class="width-110"
-                [ngModel]="schemaTimeField.unit"
+                [ngModel]="schemaTimeField?.unit"
                 [items]="UNIT_OPTIONS_LIST"
                 bindLabel="label"
                 bindValue="value"
@@ -83,13 +83,13 @@
         </button>
     </div>
 
-    @if (selectedKind === OdfTypes.List) {
+    @if (schemaListField; as listField) {
         <div class="d-flex flex-column mt-2" [class.ms-2]="depth > 0">
             <span class="text-muted fs-12 d-block">Item Type</span>
             <div>
                 <app-type-editor
                     #typeEditor
-                    [value]="schemaListField.itemType"
+                    [value]="listField.itemType"
                     [depth]="depth + 1"
                     [typePath]="typePath + '.item'"
                     (typeChange)="typeListChange($event)"
@@ -97,14 +97,14 @@
             </div>
         </div>
     }
-    @if (selectedKind === OdfTypes.Map) {
+    @if (schemaMapField; as mapField) {
         <div class="d-flex flex-column mt-2" [class.ms-2]="depth > 0">
             <span class="text-muted fs-12 d-block">Key Type</span>
             <div>
                 <app-type-editor
                     #typeEditor
                     [depth]="depth + 1"
-                    [value]="schemaMapField.keyType"
+                    [value]="mapField.keyType"
                     [typePath]="typePath + '.key'"
                     (typeChange)="typeMapKeyChange($event)"
                 />
@@ -116,18 +116,18 @@
                 <app-type-editor
                     #typeEditor
                     [depth]="depth + 1"
-                    [value]="schemaMapField.valueType"
+                    [value]="mapField.valueType"
                     [typePath]="typePath + '.value'"
                     (typeChange)="typeMapValueChange($event)"
                 />
             </div>
         </div>
     }
-    @if (selectedKind === OdfTypes.Struct) {
+    @if (schemaStructField; as structField) {
         <div class="nested-struct-editor mt-2" [class.ms-2]="depth > 0">
             <app-edit-schema-table
                 #nestedEditSchemaTable
-                [fields]="schemaStructField.fields"
+                [fields]="structField.fields"
                 [depth]="depth + 1"
                 [tablePath]="typePath + '.fields'"
                 (fieldsChange)="typeStructFieldsChange($event)"

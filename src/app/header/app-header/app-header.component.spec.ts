@@ -127,6 +127,7 @@ describe("AppHeaderComponent", () => {
             component.isCollapsedAppHeaderMenu = isExpectation;
             const headerMenu = findNativeElement(fixture, "#app-header");
             emitClickOnElementByDataTestId(fixture, "appHeaderMenuButton");
+            fixture.detectChanges();
             if (isExpectation) {
                 expect(headerMenu.classList.contains("details--on")).toBeFalse();
             } else {
@@ -362,6 +363,7 @@ describe("AppHeaderComponent", () => {
         el.dispatchEvent(event);
         tick(AppValues.SHORT_DELAY_MS);
         expect(triggerMenuClickSpy).toHaveBeenCalledWith();
+        expect(component.isCollapsedAppHeaderMenu).toBeTrue();
         expect(navigateToSearchSpy).toHaveBeenCalledWith(DEFAULT_SEARCH_QUERY);
         flush();
     }));

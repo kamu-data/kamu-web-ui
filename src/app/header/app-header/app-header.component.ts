@@ -36,7 +36,6 @@ import { DisplayAccountNamePipe } from "@common/pipes/display-account-name.pipe"
 import AppValues from "@common/values/app.values";
 import { AccountFragment, AccountProvider } from "@api/kamu.graphql.interface";
 import { SearchApi } from "@api/search.api";
-import { MaybeNull } from "@interface/app.types";
 import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface";
 
 import { AccountTabs } from "src/app/account/account.constants";
@@ -91,6 +90,8 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
 
     @ViewChild("appHeaderMenuButton")
     private appHeaderMenuButton: ElementRef<HTMLElement>;
+    @ViewChild("typeaheadInput")
+    private typeaheadInput?: ElementRef<HTMLInputElement>;
 
     public readonly DEFAULT_USER_DISPLAY_NAME: string = AppValues.DEFAULT_USER_DISPLAY_NAME;
     public readonly AccountTabs: typeof AccountTabs = AccountTabs;
@@ -170,10 +171,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
     }
 
     public onClickInput(): void {
-        const typeaheadInput: MaybeNull<HTMLElement> = document.getElementById("typeahead-http");
-        if (typeaheadInput) {
-            typeaheadInput.focus();
-        }
+        this.typeaheadInput?.nativeElement.focus();
     }
 
     public onSelectItem(event: NgbTypeaheadSelectItemEvent): void {
@@ -181,25 +179,13 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
         if (event.item) {
             this.onSelectedDataset.emit(event.item as DatasetAutocompleteItem);
             setTimeout(() => {
-                const typeaheadInput: MaybeNull<HTMLElement> = document.getElementById("typeahead-http");
-                if (typeaheadInput) {
-                    typeaheadInput.blur();
-                }
+                this.typeaheadInput?.nativeElement.blur();
             });
         }
     }
 
     public toggleAppHeaderMenu(): void {
-        const appHeaderButton: MaybeNull<HTMLElement> = document.getElementById("app-header");
-
         this.isCollapsedAppHeaderMenu = !this.isCollapsedAppHeaderMenu;
-        if (appHeaderButton) {
-            if (this.isCollapsedAppHeaderMenu) {
-                appHeaderButton.classList.add("details--on");
-            } else {
-                appHeaderButton.classList.remove("details--on");
-            }
-        }
     }
 
     public onFocus(event: Event): void {
@@ -248,7 +234,6 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
         el.focus();
         el.click();
         el.blur();
-        this.isCollapsedAppHeaderMenu = !this.isCollapsedAppHeaderMenu;
     }
 
     public onHelp(): void {

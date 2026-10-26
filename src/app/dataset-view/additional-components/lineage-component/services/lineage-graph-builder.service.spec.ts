@@ -9,7 +9,7 @@ import { TestBed } from "@angular/core/testing";
 
 import { firstValueFrom } from "rxjs";
 
-import { Node, NodeDimension } from "@swimlane/ngx-graph";
+import { NodeDimension } from "@swimlane/ngx-graph";
 
 import { LineageNodeSizeService } from "@common/components/lineage-graph/lineage-node-size.service";
 import { requireValue } from "@common/helpers/app.helpers";
@@ -21,7 +21,7 @@ import {
     mockLineageGraphUpdateWithMqttSource,
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import {
-    LineageGraphNodeData,
+    LineageGraphNode,
     LineageGraphNodeKind,
     LineageGraphUpdate,
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
@@ -68,8 +68,8 @@ describe("LineageGraphBuilderService", () => {
         return requireValue(update);
     }
 
-    function nodesOfKind(update: LineageGraphUpdate, kind: LineageGraphNodeKind): Node[] {
-        return update.graph.nodes.filter((node: Node) => (node.data as LineageGraphNodeData).kind === kind);
+    function nodesOfKind(update: LineageGraphUpdate, kind: LineageGraphNodeKind): LineageGraphNode[] {
+        return update.graph.nodes.filter((node: LineageGraphNode) => node.data.kind === kind);
     }
 
     it("should be created", () => {
@@ -102,7 +102,9 @@ describe("LineageGraphBuilderService", () => {
     it("should check source nodes length with URL", async () => {
         const update = await buildGraph(mockLineageGraphUpdate);
         const dataSourceUrl = mockLineageGraphUpdate.nodes.filter(
-            (node) => node.metadata.currentPollingSource?.fetch.__typename === "FetchStepUrl",
+            (node) =>
+                node.__typename === "Dataset" &&
+                node.metadata.currentPollingSource?.fetch.__typename === "FetchStepUrl",
         );
         expect(nodesOfKind(update, LineageGraphNodeKind.Source).length).toEqual(dataSourceUrl.length);
     });
@@ -110,7 +112,9 @@ describe("LineageGraphBuilderService", () => {
     it("should check source nodes length with MQTT", async () => {
         const update = await buildGraph(mockLineageGraphUpdateWithMqttSource);
         const dataSourceMqtt = mockLineageGraphUpdateWithMqttSource.nodes.filter(
-            (node) => node.metadata.currentPollingSource?.fetch.__typename === "FetchStepMqtt",
+            (node) =>
+                node.__typename === "Dataset" &&
+                node.metadata.currentPollingSource?.fetch.__typename === "FetchStepMqtt",
         );
         expect(nodesOfKind(update, LineageGraphNodeKind.Mqtt).length).toEqual(dataSourceMqtt.length);
     });
@@ -118,12 +122,9 @@ describe("LineageGraphBuilderService", () => {
     it("should check nodes were built correctly", async () => {
         const update = await buildGraph(mockLineageGraphUpdate);
         expect(update.graph.nodes).toEqual(
-            mockBuildGraphNodesResult.map((node: Node) => ({
+            mockBuildGraphNodesResult.map((node: LineageGraphNode) => ({
                 ...node,
-                dimension:
-                    (node.data as LineageGraphNodeData).kind === LineageGraphNodeKind.Dataset
-                        ? DATASET_NODE_SIZE
-                        : SOURCE_NODE_SIZE,
+                dimension: node.data.kind === LineageGraphNodeKind.Dataset ? DATASET_NODE_SIZE : SOURCE_NODE_SIZE,
             })),
         );
     });
@@ -179,7 +180,7 @@ describe("LineageGraphBuilderService", () => {
         const update = await buildGraph(mockLineageUpdateWithSharedPushSource);
 
         const pushSourceNodes = nodesOfKind(update, LineageGraphNodeKind.PushSource);
-        expect(pushSourceNodes.map((node: Node) => node.label)).toEqual([MOCK_SHARED_PUSH_SOURCE_NAME]);
+        expect(pushSourceNodes.map((node: LineageGraphNode) => node.label)).toEqual([MOCK_SHARED_PUSH_SOURCE_NAME]);
 
         const pushSourceLinks = update.graph.links.filter((link) => link.source === pushSourceNodes[0].id);
         expect(pushSourceLinks.map((link) => link.target)).toEqual(["didodfpush-a", "didodfpush-b"]);
@@ -189,7 +190,9 @@ describe("LineageGraphBuilderService", () => {
     it("should label an Ethereum source by its node URL, otherwise by its chain name", async () => {
         const update = await buildGraph(mockLineageUpdateWithEthereumSources);
 
-        const labels = nodesOfKind(update, LineageGraphNodeKind.EthereumLogs).map((node: Node) => node.label);
+        const labels = nodesOfKind(update, LineageGraphNodeKind.EthereumLogs).map(
+            (node: LineageGraphNode) => node.label,
+        );
         expect(labels).toEqual([MOCK_ETHEREUM_NODE_URL, "mainnet"]);
     });
 });

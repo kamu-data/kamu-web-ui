@@ -94,12 +94,9 @@ export const MOCK_INACCESSIBLE_DATASET: DatasetAccessResultNotAccessibleDataFrag
     id: "did:odf:hidden",
 };
 
-// DatasetService emits inaccessible datasets among the nodes and edges, although LineageUpdate does not type them
-const mockInaccessibleLineageEntry = MOCK_INACCESSIBLE_DATASET as unknown as DatasetLineageBasicsFragment;
-
 export const mockLineageUpdateWithInaccessibleDataset: LineageUpdate = {
-    nodes: [MOCK_DERIVED_DATASET, mockInaccessibleLineageEntry],
-    edges: [[mockInaccessibleLineageEntry, MOCK_DERIVED_DATASET]],
+    nodes: [MOCK_DERIVED_DATASET, MOCK_INACCESSIBLE_DATASET],
+    edges: [[MOCK_INACCESSIBLE_DATASET, MOCK_DERIVED_DATASET]],
     origin: MOCK_DERIVED_DATASET,
 };
 

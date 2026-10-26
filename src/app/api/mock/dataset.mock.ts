@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { Edge, Node } from "@swimlane/ngx-graph";
+import { Edge } from "@swimlane/ngx-graph";
 
 import {
     CompareChainsStatus,
@@ -26,7 +26,8 @@ import { TEST_LOGIN } from "@api/mock/auth.mock";
 import { DatasetsAccountResponse } from "@interface/dataset.interface";
 
 import {
-    LineageGraphNodeData,
+    LineageGraphDatasetNode,
+    LineageGraphNode,
     LineageGraphNodeKind,
     LineageNodeAccess,
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
@@ -466,80 +467,86 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
     },
 };
 
-export const MOCK_NODES: Node[] = [
-    {
-        id: "didodfz4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
-        label: "com.naturalearthdata.admin0.countries.50m",
-        data: {
-            kind: LineageGraphNodeKind.Dataset,
-            dataObject: {
-                id: "did:odf:z4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
-                name: "com.naturalearthdata.admin0.countries.50m",
-                kind: DatasetKind.Root,
-                isCurrent: true,
-                access: LineageNodeAccess.PRIVATE,
-                accountName: "kamu",
-            },
-        } satisfies LineageGraphNodeData,
-        meta: {
-            forceDimensions: false,
+export const MOCK_CURRENT_DATASET_NODE: LineageGraphDatasetNode = {
+    id: "didodfz4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
+    label: "com.naturalearthdata.admin0.countries.50m",
+    data: {
+        kind: LineageGraphNodeKind.Dataset,
+        dataObject: {
+            id: "did:odf:z4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
+            name: "com.naturalearthdata.admin0.countries.50m",
+            kind: DatasetKind.Root,
+            isCurrent: true,
+            access: LineageNodeAccess.PRIVATE,
+            accountName: "kamu",
         },
-        dimension: {
-            width: 308.9427490234375,
-            height: 30,
-        },
-        position: {
-            x: 174.47137451171875,
-            y: 65,
-        },
-        transform: "translate(20, 50)",
     },
-    {
-        id: "didodfz4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
-        label: "com.naturalearthdata.admin0.countries",
-        data: {
-            kind: LineageGraphNodeKind.Dataset,
-            dataObject: {
-                id: "did:odf:z4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
-                name: "com.naturalearthdata.admin0.countries",
-                kind: DatasetKind.Derivative,
-                isCurrent: false,
-                accountName: "kamu",
-                access: LineageNodeAccess.PRIVATE,
-            },
-        } satisfies LineageGraphNodeData,
-        meta: {
-            forceDimensions: false,
-        },
-        dimension: {
-            width: 279.571044921875,
-            height: 90,
-        },
-        position: {
-            x: 568.728271484375,
-            y: 65,
-        },
-        transform: "translate(428.9427490234375, 20)",
+    meta: {
+        forceDimensions: false,
     },
-    {
-        id: "didodfz4k88e8rpDWw3gTvq1bNkCJ4m6UyXfGhZsLa2HdE9RtKjVcYoMnB",
-        label: "covid19.canada.case-details",
-        data: {
-            kind: LineageGraphNodeKind.DatasetNotAccessable,
-        },
-        meta: {
-            forceDimensions: false,
-        },
-        dimension: {
-            width: 308.9427490234375,
-            height: 30,
-        },
-        position: {
-            x: 174.47137451171875,
-            y: 65,
-        },
-        transform: "translate(20, 50)",
+    dimension: {
+        width: 308.9427490234375,
+        height: 30,
     },
+    position: {
+        x: 174.47137451171875,
+        y: 65,
+    },
+    transform: "translate(20, 50)",
+};
+
+export const MOCK_OTHER_DATASET_NODE: LineageGraphDatasetNode = {
+    id: "didodfz4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
+    label: "com.naturalearthdata.admin0.countries",
+    data: {
+        kind: LineageGraphNodeKind.Dataset,
+        dataObject: {
+            id: "did:odf:z4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
+            name: "com.naturalearthdata.admin0.countries",
+            kind: DatasetKind.Derivative,
+            isCurrent: false,
+            accountName: "kamu",
+            access: LineageNodeAccess.PRIVATE,
+        },
+    },
+    meta: {
+        forceDimensions: false,
+    },
+    dimension: {
+        width: 279.571044921875,
+        height: 90,
+    },
+    position: {
+        x: 568.728271484375,
+        y: 65,
+    },
+    transform: "translate(428.9427490234375, 20)",
+};
+
+export const MOCK_INACCESSIBLE_NODE: LineageGraphNode = {
+    id: "didodfz4k88e8rpDWw3gTvq1bNkCJ4m6UyXfGhZsLa2HdE9RtKjVcYoMnB",
+    label: "covid19.canada.case-details",
+    data: {
+        kind: LineageGraphNodeKind.DatasetNotAccessable,
+    },
+    meta: {
+        forceDimensions: false,
+    },
+    dimension: {
+        width: 308.9427490234375,
+        height: 30,
+    },
+    position: {
+        x: 174.47137451171875,
+        y: 65,
+    },
+    transform: "translate(20, 50)",
+};
+
+export const MOCK_NODES: LineageGraphNode[] = [
+    MOCK_CURRENT_DATASET_NODE,
+    MOCK_OTHER_DATASET_NODE,
+    MOCK_INACCESSIBLE_NODE,
 ];
 
 export const MOCK_LINKS: Edge[] = [

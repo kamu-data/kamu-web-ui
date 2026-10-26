@@ -32,7 +32,6 @@ import {
     LayoutService,
     NgxGraphStateChangeEvent,
     NgxGraphStates,
-    Node,
     NodeDimension,
 } from "@swimlane/ngx-graph";
 
@@ -51,6 +50,8 @@ import { MaybeUndefined } from "@interface/app.types";
 
 import {
     LineageGraph,
+    LineageGraphNode,
+    LineageGraphNodeData,
     LineageGraphNodeKind,
     LineageNodeAccess,
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
@@ -79,8 +80,8 @@ import { SessionStorageService } from "src/app/services/session-storage.service"
 export class LineageGraphComponent implements OnInit, OnChanges {
     @Input({ required: true }) public graph: LineageGraph;
     @Input({ required: true }) public currentDataset: DatasetLineageBasicsFragment;
-    @Output() public onClickNodeEvent = new EventEmitter<Node>();
-    @Output() public onClickPrivateNodeEvent = new EventEmitter<Node>();
+    @Output() public onClickNodeEvent = new EventEmitter<LineageGraphNode>();
+    @Output() public onClickPrivateNodeEvent = new EventEmitter<LineageGraphNode>();
 
     public readonly LineageGraphNodeKind: typeof LineageGraphNodeKind = LineageGraphNodeKind;
     public readonly LineageNodeAccess: typeof LineageNodeAccess = LineageNodeAccess;
@@ -143,11 +144,16 @@ export class LineageGraphComponent implements OnInit, OnChanges {
         }
     }
 
-    public onClickNode(node: Node): void {
+    /** Gives the node template, whose context ngx-graph does not type, the data of a node to switch on */
+    public nodeData(node: LineageGraphNode): LineageGraphNodeData {
+        return node.data;
+    }
+
+    public onClickNode(node: LineageGraphNode): void {
         this.onClickNodeEvent.emit(node);
     }
 
-    public onClickPrivateNode(node: Node): void {
+    public onClickPrivateNode(node: LineageGraphNode): void {
         this.onClickPrivateNodeEvent.emit(node);
     }
 

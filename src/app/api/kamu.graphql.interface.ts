@@ -9403,37 +9403,37 @@ export type DatasetLineageFragment = (
       { __typename?: 'SetLicense' }
       & LicenseFragment
     ) | null, currentUpstreamDependencies: Array<
-      | { __typename?: 'DatasetAccessResultAccessible', dataset: (
+      | { __typename: 'DatasetAccessResultAccessible', dataset: (
           { __typename?: 'Dataset', metadata: (
             { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
               { __typename?: 'SetLicense' }
               & LicenseFragment
             ) | null, currentUpstreamDependencies: Array<
-              | { __typename?: 'DatasetAccessResultAccessible', dataset: (
+              | { __typename: 'DatasetAccessResultAccessible', dataset: (
                   { __typename?: 'Dataset', metadata: (
                     { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
                       { __typename?: 'SetLicense' }
                       & LicenseFragment
                     ) | null, currentUpstreamDependencies: Array<
-                      | { __typename?: 'DatasetAccessResultAccessible', dataset: (
+                      | { __typename: 'DatasetAccessResultAccessible', dataset: (
                           { __typename?: 'Dataset', metadata: (
                             { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
                               { __typename?: 'SetLicense' }
                               & LicenseFragment
                             ) | null, currentUpstreamDependencies: Array<
-                              | { __typename?: 'DatasetAccessResultAccessible', dataset: (
+                              | { __typename: 'DatasetAccessResultAccessible', dataset: (
                                   { __typename?: 'Dataset', metadata: (
                                     { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
                                       { __typename?: 'SetLicense' }
                                       & LicenseFragment
                                     ) | null, currentUpstreamDependencies: Array<
-                                      | { __typename?: 'DatasetAccessResultAccessible', dataset: (
+                                      | { __typename: 'DatasetAccessResultAccessible', dataset: (
                                           { __typename?: 'Dataset', metadata: (
                                             { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
                                               { __typename?: 'SetLicense' }
                                               & LicenseFragment
                                             ) | null, currentUpstreamDependencies: Array<
-                                              | { __typename?: 'DatasetAccessResultAccessible', dataset: (
+                                              | { __typename: 'DatasetAccessResultAccessible', dataset: (
                                                   { __typename?: 'Dataset', metadata: (
                                                     { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
                                                       { __typename?: 'SetLicense' }
@@ -9444,7 +9444,7 @@ export type DatasetLineageFragment = (
                                                   & DatasetStreamLineageBasicsFragment
                                                 ) }
                                               | (
-                                                { __typename?: 'DatasetAccessResultNotAccessible' }
+                                                { __typename: 'DatasetAccessResultNotAccessible' }
                                                 & DatasetAccessResultNotAccessibleDataFragment
                                               )
                                             > }
@@ -9453,7 +9453,7 @@ export type DatasetLineageFragment = (
                                           & DatasetStreamLineageBasicsFragment
                                         ) }
                                       | (
-                                        { __typename?: 'DatasetAccessResultNotAccessible' }
+                                        { __typename: 'DatasetAccessResultNotAccessible' }
                                         & DatasetAccessResultNotAccessibleDataFragment
                                       )
                                     > }
@@ -9462,7 +9462,7 @@ export type DatasetLineageFragment = (
                                   & DatasetStreamLineageBasicsFragment
                                 ) }
                               | (
-                                { __typename?: 'DatasetAccessResultNotAccessible' }
+                                { __typename: 'DatasetAccessResultNotAccessible' }
                                 & DatasetAccessResultNotAccessibleDataFragment
                               )
                             > }
@@ -9471,7 +9471,7 @@ export type DatasetLineageFragment = (
                           & DatasetStreamLineageBasicsFragment
                         ) }
                       | (
-                        { __typename?: 'DatasetAccessResultNotAccessible' }
+                        { __typename: 'DatasetAccessResultNotAccessible' }
                         & DatasetAccessResultNotAccessibleDataFragment
                       )
                     > }
@@ -9480,7 +9480,7 @@ export type DatasetLineageFragment = (
                   & DatasetStreamLineageBasicsFragment
                 ) }
               | (
-                { __typename?: 'DatasetAccessResultNotAccessible' }
+                { __typename: 'DatasetAccessResultNotAccessible' }
                 & DatasetAccessResultNotAccessibleDataFragment
               )
             > }
@@ -9489,52 +9489,52 @@ export type DatasetLineageFragment = (
           & DatasetStreamLineageBasicsFragment
         ) }
       | (
-        { __typename?: 'DatasetAccessResultNotAccessible' }
+        { __typename: 'DatasetAccessResultNotAccessible' }
         & DatasetAccessResultNotAccessibleDataFragment
       )
     >, currentDownstreamDependencies: Array<
-      | { __typename?: 'DatasetAccessResultAccessible', dataset: (
+      | { __typename: 'DatasetAccessResultAccessible', dataset: (
           { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentDownstreamDependencies: Array<
-              | { __typename?: 'DatasetAccessResultAccessible', dataset: (
+              | { __typename: 'DatasetAccessResultAccessible', dataset: (
                   { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentDownstreamDependencies: Array<
-                      | { __typename?: 'DatasetAccessResultAccessible', dataset: (
+                      | { __typename: 'DatasetAccessResultAccessible', dataset: (
                           { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentDownstreamDependencies: Array<
-                              | { __typename?: 'DatasetAccessResultAccessible', dataset: (
+                              | { __typename: 'DatasetAccessResultAccessible', dataset: (
                                   { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentDownstreamDependencies: Array<
-                                      | { __typename?: 'DatasetAccessResultAccessible', dataset: (
-                                          { __typename?: 'Dataset' }
+                                      | { __typename: 'DatasetAccessResultAccessible', dataset: (
+                                          { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }> } }
                                           & DatasetStreamLineageBasicsFragment
                                         ) }
                                       | (
-                                        { __typename?: 'DatasetAccessResultNotAccessible' }
+                                        { __typename: 'DatasetAccessResultNotAccessible' }
                                         & DatasetAccessResultNotAccessibleDataFragment
                                       )
                                     > } }
                                   & DatasetStreamLineageBasicsFragment
                                 ) }
                               | (
-                                { __typename?: 'DatasetAccessResultNotAccessible' }
+                                { __typename: 'DatasetAccessResultNotAccessible' }
                                 & DatasetAccessResultNotAccessibleDataFragment
                               )
                             > } }
                           & DatasetStreamLineageBasicsFragment
                         ) }
                       | (
-                        { __typename?: 'DatasetAccessResultNotAccessible' }
+                        { __typename: 'DatasetAccessResultNotAccessible' }
                         & DatasetAccessResultNotAccessibleDataFragment
                       )
                     > } }
                   & DatasetStreamLineageBasicsFragment
                 ) }
               | (
-                { __typename?: 'DatasetAccessResultNotAccessible' }
+                { __typename: 'DatasetAccessResultNotAccessible' }
                 & DatasetAccessResultNotAccessibleDataFragment
               )
             > } }
           & DatasetStreamLineageBasicsFragment
         ) }
       | (
-        { __typename?: 'DatasetAccessResultNotAccessible' }
+        { __typename: 'DatasetAccessResultNotAccessible' }
         & DatasetAccessResultNotAccessibleDataFragment
       )
     > }
@@ -11174,6 +11174,7 @@ export const DatasetLineageFragmentDoc = gql`
     }
     currentWatermark
     currentUpstreamDependencies {
+      __typename
       ... on DatasetAccessResultNotAccessible {
         ...DatasetAccessResultNotAccessibleData
       }
@@ -11190,6 +11191,7 @@ export const DatasetLineageFragmentDoc = gql`
             }
             currentWatermark
             currentUpstreamDependencies {
+              __typename
               ... on DatasetAccessResultNotAccessible {
                 ...DatasetAccessResultNotAccessibleData
               }
@@ -11206,6 +11208,7 @@ export const DatasetLineageFragmentDoc = gql`
                     }
                     currentWatermark
                     currentUpstreamDependencies {
+                      __typename
                       ... on DatasetAccessResultNotAccessible {
                         ...DatasetAccessResultNotAccessibleData
                       }
@@ -11222,6 +11225,7 @@ export const DatasetLineageFragmentDoc = gql`
                             }
                             currentWatermark
                             currentUpstreamDependencies {
+                              __typename
                               ... on DatasetAccessResultNotAccessible {
                                 ...DatasetAccessResultNotAccessibleData
                               }
@@ -11238,6 +11242,7 @@ export const DatasetLineageFragmentDoc = gql`
                                     }
                                     currentWatermark
                                     currentUpstreamDependencies {
+                                      __typename
                                       ... on DatasetAccessResultNotAccessible {
                                         ...DatasetAccessResultNotAccessibleData
                                       }
@@ -11254,6 +11259,7 @@ export const DatasetLineageFragmentDoc = gql`
                                             }
                                             currentWatermark
                                             currentUpstreamDependencies {
+                                              __typename
                                               ... on DatasetAccessResultNotAccessible {
                                                 ...DatasetAccessResultNotAccessibleData
                                               }
@@ -11294,6 +11300,7 @@ export const DatasetLineageFragmentDoc = gql`
       }
     }
     currentDownstreamDependencies {
+      __typename
       ... on DatasetAccessResultNotAccessible {
         ...DatasetAccessResultNotAccessibleData
       }
@@ -11305,6 +11312,7 @@ export const DatasetLineageFragmentDoc = gql`
               sourceName
             }
             currentDownstreamDependencies {
+              __typename
               ... on DatasetAccessResultNotAccessible {
                 ...DatasetAccessResultNotAccessibleData
               }
@@ -11316,6 +11324,7 @@ export const DatasetLineageFragmentDoc = gql`
                       sourceName
                     }
                     currentDownstreamDependencies {
+                      __typename
                       ... on DatasetAccessResultNotAccessible {
                         ...DatasetAccessResultNotAccessibleData
                       }
@@ -11327,6 +11336,7 @@ export const DatasetLineageFragmentDoc = gql`
                               sourceName
                             }
                             currentDownstreamDependencies {
+                              __typename
                               ... on DatasetAccessResultNotAccessible {
                                 ...DatasetAccessResultNotAccessibleData
                               }
@@ -11338,12 +11348,18 @@ export const DatasetLineageFragmentDoc = gql`
                                       sourceName
                                     }
                                     currentDownstreamDependencies {
+                                      __typename
                                       ... on DatasetAccessResultNotAccessible {
                                         ...DatasetAccessResultNotAccessibleData
                                       }
                                       ... on DatasetAccessResultAccessible {
                                         dataset {
                                           ...DatasetStreamLineageBasics
+                                          metadata {
+                                            currentPushSources {
+                                              sourceName
+                                            }
+                                          }
                                         }
                                       }
                                     }

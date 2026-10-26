@@ -22,7 +22,6 @@ import {
     BlockRefDataFragment,
     CompareChainsStatus,
     DataQueryResultSuccessViewFragment,
-    DatasetAccessResultNotAccessibleDataFragment,
     DatasetBasicsFragment,
     DatasetByIdQuery,
     DatasetDataSizeFragment,
@@ -42,7 +41,7 @@ import {
 } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetSchema } from "@interface/dataset-schema.interface";
-import { DatasetLineageNode } from "@interface/dataset.interface";
+import { DatasetLineageEntry, DatasetLineageNode } from "@interface/dataset.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
 
 import {
@@ -317,7 +316,7 @@ export class DatasetService {
         lineage: DatasetLineageFragment,
     ): void {
         const lineageResponse: DatasetLineageNode = this.lineageResponseFromRawQuery(originDatasetBasics, lineage);
-        this.updateLineageGraph(lineageResponse);
+        this.updateLineageGraph(originDatasetBasics, lineageResponse);
     }
 
     private lineageResponseFromRawQuery(
@@ -333,7 +332,7 @@ export class DatasetService {
                     basics:
                         downDependency.__typename === "DatasetAccessResultAccessible"
                             ? downDependency.dataset
-                            : (downDependency as DatasetAccessResultNotAccessibleDataFragment),
+                            : downDependency,
                     upstreamDependencies: [],
                     downstreamDependencies:
                         downDependency.__typename === "DatasetAccessResultAccessible"
@@ -342,7 +341,7 @@ export class DatasetService {
                                       basics:
                                           downDependency2.__typename === "DatasetAccessResultAccessible"
                                               ? downDependency2.dataset
-                                              : (downDependency2 as DatasetAccessResultNotAccessibleDataFragment),
+                                              : downDependency2,
                                       upstreamDependencies: [],
                                       downstreamDependencies:
                                           downDependency2.__typename === "DatasetAccessResultAccessible"
@@ -353,7 +352,7 @@ export class DatasetService {
                                                                 downDependency3.__typename ===
                                                                 "DatasetAccessResultAccessible"
                                                                     ? downDependency3.dataset
-                                                                    : (downDependency3 as DatasetAccessResultNotAccessibleDataFragment),
+                                                                    : downDependency3,
                                                             upstreamDependencies: [],
                                                             downstreamDependencies:
                                                                 downDependency3.__typename ===
@@ -365,7 +364,7 @@ export class DatasetService {
                                                                                       downDependency4.__typename ===
                                                                                       "DatasetAccessResultAccessible"
                                                                                           ? downDependency4.dataset
-                                                                                          : (downDependency4 as DatasetAccessResultNotAccessibleDataFragment),
+                                                                                          : downDependency4,
                                                                                   upstreamDependencies: [],
                                                                                   downstreamDependencies:
                                                                                       downDependency4.__typename ===
@@ -376,8 +375,8 @@ export class DatasetService {
                                                                                                         basics:
                                                                                                             downDependency5.__typename ===
                                                                                                             "DatasetAccessResultAccessible"
-                                                                                                                ? (downDependency5.dataset as DatasetLineageBasicsFragment)
-                                                                                                                : (downDependency5 as DatasetAccessResultNotAccessibleDataFragment),
+                                                                                                                ? downDependency5.dataset
+                                                                                                                : downDependency5,
                                                                                                         upstreamDependencies:
                                                                                                             [],
                                                                                                         downstreamDependencies:
@@ -404,7 +403,7 @@ export class DatasetService {
                     basics:
                         upDependency.__typename === "DatasetAccessResultAccessible"
                             ? upDependency.dataset
-                            : (upDependency as DatasetAccessResultNotAccessibleDataFragment),
+                            : upDependency,
                     downstreamDependencies: [],
                     upstreamDependencies:
                         upDependency.__typename === "DatasetAccessResultAccessible"
@@ -413,7 +412,7 @@ export class DatasetService {
                                       basics:
                                           upDependency2.__typename === "DatasetAccessResultAccessible"
                                               ? upDependency2.dataset
-                                              : (upDependency2 as DatasetAccessResultNotAccessibleDataFragment),
+                                              : upDependency2,
                                       downstreamDependencies: [],
                                       upstreamDependencies:
                                           upDependency2.__typename === "DatasetAccessResultAccessible"
@@ -424,7 +423,7 @@ export class DatasetService {
                                                                 upDependency3.__typename ===
                                                                 "DatasetAccessResultAccessible"
                                                                     ? upDependency3.dataset
-                                                                    : (upDependency3 as DatasetAccessResultNotAccessibleDataFragment),
+                                                                    : upDependency3,
                                                             downstreamDependencies: [],
                                                             upstreamDependencies:
                                                                 upDependency3.__typename ===
@@ -436,7 +435,7 @@ export class DatasetService {
                                                                                       upDependency4.__typename ===
                                                                                       "DatasetAccessResultAccessible"
                                                                                           ? upDependency4.dataset
-                                                                                          : (upDependency4 as DatasetAccessResultNotAccessibleDataFragment),
+                                                                                          : upDependency4,
                                                                                   downstreamDependencies: [],
                                                                                   upstreamDependencies:
                                                                                       upDependency4.__typename ===
@@ -448,7 +447,7 @@ export class DatasetService {
                                                                                                             upDependency5.__typename ===
                                                                                                             "DatasetAccessResultAccessible"
                                                                                                                 ? upDependency5.dataset
-                                                                                                                : (upDependency5 as DatasetAccessResultNotAccessibleDataFragment),
+                                                                                                                : upDependency5,
                                                                                                         downstreamDependencies:
                                                                                                             [],
                                                                                                         upstreamDependencies:
@@ -473,13 +472,13 @@ export class DatasetService {
         };
     }
 
-    private updateLineageGraph(origin: DatasetLineageNode) {
-        const lineageGraphEdges: DatasetLineageBasicsFragment[][] = [];
-        const lineageGraphNodes: DatasetLineageBasicsFragment[] = [];
+    private updateLineageGraph(originDatasetBasics: DatasetLineageBasicsFragment, origin: DatasetLineageNode) {
+        const lineageGraphEdges: DatasetLineageEntry[][] = [];
+        const lineageGraphNodes: DatasetLineageEntry[] = [];
 
         this.updateLineageGraphRecords(origin, lineageGraphNodes, lineageGraphEdges);
         this.datasetSubsService.emitLineageChanged({
-            origin: origin.basics as DatasetLineageBasicsFragment,
+            origin: originDatasetBasics,
             nodes: lineageGraphNodes,
             edges: lineageGraphEdges,
         });
@@ -491,31 +490,20 @@ export class DatasetService {
 
     private updateLineageGraphRecords(
         currentNode: DatasetLineageNode,
-        lineageGraphNodes: DatasetLineageBasicsFragment[],
-        lineageGraphEdges: DatasetLineageBasicsFragment[][],
+        lineageGraphNodes: DatasetLineageEntry[],
+        lineageGraphEdges: DatasetLineageEntry[][],
     ) {
-        if (
-            !lineageGraphNodes.some(
-                (existingNode: DatasetLineageBasicsFragment) =>
-                    existingNode.id === (currentNode.basics as DatasetLineageBasicsFragment).id,
-            )
-        ) {
-            lineageGraphNodes.push(currentNode.basics as DatasetLineageBasicsFragment);
+        if (!lineageGraphNodes.some((existingNode: DatasetLineageEntry) => existingNode.id === currentNode.basics.id)) {
+            lineageGraphNodes.push(currentNode.basics);
         }
 
         currentNode.downstreamDependencies.forEach((dependency: DatasetLineageNode) => {
-            lineageGraphEdges.push([
-                currentNode.basics as DatasetLineageBasicsFragment,
-                dependency.basics as DatasetLineageBasicsFragment,
-            ]);
+            lineageGraphEdges.push([currentNode.basics, dependency.basics]);
             this.updateLineageGraphRecords(dependency, lineageGraphNodes, lineageGraphEdges);
         });
 
         currentNode.upstreamDependencies.forEach((dependency: DatasetLineageNode) => {
-            lineageGraphEdges.push([
-                dependency.basics as DatasetLineageBasicsFragment,
-                currentNode.basics as DatasetLineageBasicsFragment,
-            ]);
+            lineageGraphEdges.push([dependency.basics, currentNode.basics]);
             this.updateLineageGraphRecords(dependency, lineageGraphNodes, lineageGraphEdges);
         });
     }

@@ -5,8 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { Node } from "@swimlane/ngx-graph";
-
 import { DynamicTableColumnClassEnum } from "@common/components/dynamic-table/dynamic-table.interface";
 import {
     CurrentSourceFetchUrlFragment,
@@ -20,7 +18,11 @@ import {
 import { TEST_AVATAR_URL } from "@api/mock/auth.mock";
 import { OdfTypes } from "@interface/dataset-schema.interface";
 
-import { LineageNodeAccess } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
+import {
+    LineageGraphNode,
+    LineageGraphNodeKind,
+    LineageNodeAccess,
+} from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 import {
     DatasetHistoryUpdate,
     DataSqlErrorUpdate,
@@ -618,24 +620,23 @@ export const mockLineageGraphUpdateWithMqttSource: LineageUpdate = {
     edges: [],
 };
 
-export const mockBuildGraphNodesResult: Node[] = [
+export const mockBuildGraphNodesResult: LineageGraphNode[] = [
     {
         id: "source-node-didodfz4k88e8egJJeQEd4HHuL4BSwYTWm8qiWxzqhydvHQcX2TPCrMyP",
         label: "s3.us-west-2.amazonaws.com",
         data: {
-            kind: "source",
-            dataObject: {},
+            kind: LineageGraphNodeKind.Source,
         },
     },
     {
         id: "didodfz4k88e8egJJeQEd4HHuL4BSwYTWm8qiWxzqhydvHQcX2TPCrMyP",
         label: "alberta.case-details",
         data: {
-            kind: "dataset",
+            kind: LineageGraphNodeKind.Dataset,
             dataObject: {
                 id: "did:odf:z4k88e8egJJeQEd4HHuL4BSwYTWm8qiWxzqhydvHQcX2TPCrMyP",
                 name: "alberta.case-details",
-                kind: "ROOT",
+                kind: DatasetKind.Root,
                 isCurrent: true,
                 access: LineageNodeAccess.PUBLIC,
                 accountName: "kamu",
@@ -647,11 +648,11 @@ export const mockBuildGraphNodesResult: Node[] = [
         id: "didodfz4k88e8jmNqgCt5L84XPdaog32MttcHzGiXcktfuTuDY3QKwiyK",
         label: "alberta.case-details.hm",
         data: {
-            kind: "dataset",
+            kind: LineageGraphNodeKind.Dataset,
             dataObject: {
                 id: "did:odf:z4k88e8jmNqgCt5L84XPdaog32MttcHzGiXcktfuTuDY3QKwiyK",
                 name: "alberta.case-details.hm",
-                kind: "DERIVATIVE",
+                kind: DatasetKind.Derivative,
                 isCurrent: false,
                 access: LineageNodeAccess.PUBLIC,
                 accountName: "kamu",
@@ -663,11 +664,11 @@ export const mockBuildGraphNodesResult: Node[] = [
         id: "didodfz4k88e8nN5SdNPxsc5oeqwdCLvjzcvJzoyEQ938E87A15nTrkAk",
         label: "canada.case-details",
         data: {
-            kind: "dataset",
+            kind: LineageGraphNodeKind.Dataset,
             dataObject: {
                 id: "did:odf:z4k88e8nN5SdNPxsc5oeqwdCLvjzcvJzoyEQ938E87A15nTrkAk",
                 name: "canada.case-details",
-                kind: "DERIVATIVE",
+                kind: DatasetKind.Derivative,
                 isCurrent: false,
                 access: LineageNodeAccess.PUBLIC,
                 accountName: "kamu",
@@ -679,11 +680,11 @@ export const mockBuildGraphNodesResult: Node[] = [
         id: "didodfz4k88e8qAReYmLPFUyaKfk1UHCSY2Mkh6X1AHxuUGNhec76QsGq",
         label: "canada.daily-cases",
         data: {
-            kind: "dataset",
+            kind: LineageGraphNodeKind.Dataset,
             dataObject: {
                 id: "did:odf:z4k88e8qAReYmLPFUyaKfk1UHCSY2Mkh6X1AHxuUGNhec76QsGq",
                 name: "canada.daily-cases",
-                kind: "DERIVATIVE",
+                kind: DatasetKind.Derivative,
                 isCurrent: false,
                 access: LineageNodeAccess.PUBLIC,
                 accountName: "kamu",

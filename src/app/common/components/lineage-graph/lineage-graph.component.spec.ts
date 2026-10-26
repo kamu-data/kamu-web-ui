@@ -24,12 +24,17 @@ import {
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { DatasetLineageBasicsFragment } from "@api/kamu.graphql.interface";
-import { MOCK_LINKS, MOCK_NODES } from "@api/mock/dataset.mock";
+import {
+    MOCK_CURRENT_DATASET_NODE,
+    MOCK_INACCESSIBLE_NODE,
+    MOCK_LINKS,
+    MOCK_NODES,
+    MOCK_OTHER_DATASET_NODE,
+} from "@api/mock/dataset.mock";
 
 import { mockGraphNode } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import {
     LineageGraph,
-    LineageGraphNodeData,
     LineageGraphNodeKind,
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 import { SessionStorageService } from "src/app/services/session-storage.service";
@@ -44,9 +49,9 @@ describe("LineageGraphComponent", () => {
     const FROZEN_TIME = new Date("2023-10-01 12:00:00");
     const MOCK_GRAPH: LineageGraph = { links: MOCK_LINKS, nodes: MOCK_NODES };
 
-    const CURRENT_NODE = MOCK_NODES[0];
-    const OTHER_NODE = MOCK_NODES[1];
-    const INACCESSIBLE_NODE = MOCK_NODES[2];
+    const CURRENT_NODE = MOCK_CURRENT_DATASET_NODE;
+    const OTHER_NODE = MOCK_OTHER_DATASET_NODE;
+    const INACCESSIBLE_NODE = MOCK_INACCESSIBLE_NODE;
 
     // The fit leaves this much room on the left for the minimap, and on the right for an open side panel
     const MINIMAP_INSET = 110;
@@ -111,7 +116,7 @@ describe("LineageGraphComponent", () => {
         });
 
         it("should not emit a click on the current dataset", async () => {
-            expect((CURRENT_NODE.data as LineageGraphNodeData).dataObject.isCurrent).toBeTrue();
+            expect(CURRENT_NODE.data.dataObject.isCurrent).toBeTrue();
             const onClickNodeEventSpy = spyOn(component.onClickNodeEvent, "emit");
 
             await harness.clickNode(LineageGraphNodeKind.Dataset, CURRENT_NODE.label ?? "");
@@ -154,7 +159,7 @@ describe("LineageGraphComponent", () => {
         await render({ graph: MOCK_GRAPH_WITH_SOURCES });
 
         for (const node of MOCK_SOURCE_NODES) {
-            const kind = (node.data as LineageGraphNodeData).kind;
+            const kind = node.data.kind;
             expect(await harness.hasNode(kind, node.label ?? ""))
                 .withContext(kind)
                 .toBeTrue();

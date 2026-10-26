@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { Node } from "@swimlane/ngx-graph";
 import { GraphQLError } from "graphql";
 
 import { DynamicTableColumnClassEnum } from "@common/components/dynamic-table/dynamic-table.interface";
@@ -49,7 +48,7 @@ import { DatasetInfo } from "@interface/navigation.interface";
 import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode, TypeNames } from "@interface/search.interface";
 
 import {
-    LineageGraphNodeData,
+    LineageGraphDatasetNode,
     LineageGraphNodeKind,
     LineageNodeAccess,
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
@@ -1520,7 +1519,7 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
     },
 };
 
-export const mockNode: Node = {
+export const mockNode: LineageGraphDatasetNode = {
     id: "testId",
     label: "british-columbia.case-details.hm",
     data: {
@@ -1533,10 +1532,10 @@ export const mockNode: Node = {
             access: LineageNodeAccess.PUBLIC,
             accountName: mockDatasetBasicsDerivedFragment.owner.accountName,
         },
-    } satisfies LineageGraphNodeData,
+    },
 };
 
-export const mockNodesWithEqualNames: Node[] = [
+export const mockNodesWithEqualNames: LineageGraphDatasetNode[] = [
     {
         id: "testId1",
         label: "british-columbia.case-details.hm",
@@ -1550,7 +1549,7 @@ export const mockNodesWithEqualNames: Node[] = [
                 access: LineageNodeAccess.PUBLIC,
                 accountName: "accountName1",
             },
-        } satisfies LineageGraphNodeData,
+        },
     },
     {
         id: "testId2",
@@ -1565,7 +1564,7 @@ export const mockNodesWithEqualNames: Node[] = [
                 access: LineageNodeAccess.PUBLIC,
                 accountName: "accountName2",
             },
-        } satisfies LineageGraphNodeData,
+        },
     },
     {
         id: "testId3",
@@ -1580,7 +1579,7 @@ export const mockNodesWithEqualNames: Node[] = [
                 access: LineageNodeAccess.PUBLIC,
                 accountName: "accountName3",
             },
-        } satisfies LineageGraphNodeData,
+        },
     },
 ];
 

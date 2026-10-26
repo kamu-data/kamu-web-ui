@@ -12,8 +12,11 @@ import {
     DatasetSearchOverviewFragment,
 } from "@api/kamu.graphql.interface";
 
+/** A dataset in the lineage graph: its basics when the user can access it, only its ID otherwise */
+export type DatasetLineageEntry = DatasetLineageBasicsFragment | DatasetAccessResultNotAccessibleDataFragment;
+
 export interface DatasetLineageNode {
-    basics: DatasetLineageBasicsFragment | DatasetAccessResultNotAccessibleDataFragment;
+    basics: DatasetLineageEntry;
     downstreamDependencies: DatasetLineageNode[];
     upstreamDependencies: DatasetLineageNode[];
 }

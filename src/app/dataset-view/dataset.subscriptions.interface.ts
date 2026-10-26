@@ -17,6 +17,7 @@ import {
 } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetSchema } from "@interface/dataset-schema.interface";
+import { DatasetLineageEntry } from "@interface/dataset.interface";
 
 export interface OverviewUpdate {
     schema: MaybeNull<DatasetSchema>;
@@ -47,7 +48,7 @@ export interface DatasetHistoryUpdate {
 }
 
 export interface LineageUpdate {
-    nodes: DatasetLineageBasicsFragment[];
-    edges: DatasetLineageBasicsFragment[][];
+    nodes: DatasetLineageEntry[];
+    edges: DatasetLineageEntry[][];
     origin: DatasetLineageBasicsFragment;
 }

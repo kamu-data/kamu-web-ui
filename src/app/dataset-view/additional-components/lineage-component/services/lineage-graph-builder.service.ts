@@ -9,24 +9,21 @@ import { inject, Injectable } from "@angular/core";
 
 import { map, Observable, switchMap } from "rxjs";
 
-import { Edge, Node } from "@swimlane/ngx-graph";
+import { Edge } from "@swimlane/ngx-graph";
 
 import { LineageNodeSizeService } from "@common/components/lineage-graph/lineage-node-size.service";
-import { isNil, requireValue } from "@common/helpers/app.helpers";
+import { requireValue } from "@common/helpers/app.helpers";
 import { chainNameFromId } from "@common/helpers/ethereum.helpers";
 import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
-import {
-    DatasetAccessResultNotAccessibleDataFragment,
-    DatasetKind,
-    DatasetLineageBasicsFragment,
-    FetchStepDataFragment,
-} from "@api/kamu.graphql.interface";
+import { DatasetKind, DatasetLineageBasicsFragment, FetchStepDataFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { DatasetLineageEntry } from "@interface/dataset.interface";
 
 import {
     LineageGraph,
-    LineageGraphNodeData,
+    LineageGraphNode,
     LineageGraphNodeKind,
+    LineageGraphSourceNodeKind,
     LineageGraphUpdate,
     LineageNodeAccess,
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
@@ -46,10 +43,14 @@ export class LineageGraphBuilderService {
             switchMap(() => this.datasetSubsService.lineageChanges),
             map((lineageUpdate: MaybeNull<LineageUpdate>) => {
                 if (lineageUpdate) {
-                    const uniqueDatasets: DatasetLineageBasicsFragment[] = this.collectUniqueDatasets(lineageUpdate);
+                    const uniqueDatasets: DatasetLineageEntry[] = this.collectUniqueDatasets(lineageUpdate);
+                    const accessibleDatasets: DatasetLineageBasicsFragment[] = uniqueDatasets.filter(
+                        (dataset: DatasetLineageEntry): dataset is DatasetLineageBasicsFragment =>
+                            dataset.__typename === "Dataset",
+                    );
 
                     const datasetSubgraph: LineageGraph = this.buildDatasetSubgraph(lineageUpdate, uniqueDatasets);
-                    const sourceSubgraph: LineageGraph = this.buildSourceSubgraph(uniqueDatasets);
+                    const sourceSubgraph: LineageGraph = this.buildSourceSubgraph(accessibleDatasets);
 
                     const graph: LineageGraph = {
                         nodes: [...sourceSubgraph.nodes, ...datasetSubgraph.nodes],
@@ -80,24 +81,21 @@ export class LineageGraphBuilderService {
         );
     }
 
-    private collectUniqueDatasets(lineageUpdate: LineageUpdate): DatasetLineageBasicsFragment[] {
-        const datasetsById: Map<string, DatasetLineageBasicsFragment> = new Map<string, DatasetLineageBasicsFragment>();
+    private collectUniqueDatasets(lineageUpdate: LineageUpdate): DatasetLineageEntry[] {
+        const datasetsById: Map<string, DatasetLineageEntry> = new Map<string, DatasetLineageEntry>();
         // Added one unique dataset, if lineage has only ROOT dataset
         if (lineageUpdate.nodes.length === 1 && lineageUpdate.origin.kind === DatasetKind.Root) {
             datasetsById.set(lineageUpdate.origin.id, lineageUpdate.origin);
         }
-        lineageUpdate.edges.forEach((edge: DatasetLineageBasicsFragment[]) =>
-            edge.forEach((dataset: DatasetLineageBasicsFragment) => {
+        lineageUpdate.edges.forEach((edge: DatasetLineageEntry[]) =>
+            edge.forEach((dataset: DatasetLineageEntry) => {
                 datasetsById.set(dataset.id, dataset);
             }),
         );
         return [...datasetsById.values()];
     }
 
-    private buildDatasetSubgraph(
-        lineageUpdate: LineageUpdate,
-        uniqueDatasets: DatasetLineageBasicsFragment[],
-    ): LineageGraph {
+    private buildDatasetSubgraph(lineageUpdate: LineageUpdate, uniqueDatasets: DatasetLineageEntry[]): LineageGraph {
         return {
             nodes: this.buildDatasetGraphNodes(uniqueDatasets, lineageUpdate.origin),
             links: this.buildDatasetEdges(lineageUpdate),
@@ -105,10 +103,10 @@ export class LineageGraphBuilderService {
     }
 
     private buildDatasetGraphNodes(
-        uniqueDatasets: (DatasetLineageBasicsFragment | DatasetAccessResultNotAccessibleDataFragment)[],
+        uniqueDatasets: DatasetLineageEntry[],
         currentDataset: DatasetLineageBasicsFragment,
-    ): Node[] {
-        return uniqueDatasets.map((dataset) => {
+    ): LineageGraphNode[] {
+        return uniqueDatasets.map((dataset: DatasetLineageEntry): LineageGraphNode => {
             if (dataset.__typename === "Dataset") {
                 return {
                     id: this.sanitizeID(dataset.id),
@@ -128,7 +126,7 @@ export class LineageGraphBuilderService {
                             accountName: dataset.owner.accountName,
                             avatarUrl: dataset.owner.avatarUrl,
                         },
-                    } as LineageGraphNodeData,
+                    },
                 };
             } else {
                 const id = dataset.id;
@@ -158,7 +156,7 @@ export class LineageGraphBuilderService {
 
     private buildSourceSubgraph(uniqueDatasets: DatasetLineageBasicsFragment[]): LineageGraph {
         const source2DatasetLinks: Edge[] = [];
-        const sourceNodesByLabel = new Map<string, Node>();
+        const sourceNodesByLabel = new Map<string, LineageGraphNode>();
 
         this.buildSourceNodesByType(uniqueDatasets, sourceNodesByLabel, source2DatasetLinks, "FetchStepUrl");
         this.buildSourceNodesByType(uniqueDatasets, sourceNodesByLabel, source2DatasetLinks, "FetchStepMqtt");
@@ -171,7 +169,7 @@ export class LineageGraphBuilderService {
 
     private buildPushSourceNodes(
         uniqueDatasets: DatasetLineageBasicsFragment[],
-        sourceNodesByLabel: Map<string, Node>,
+        sourceNodesByLabel: Map<string, LineageGraphNode>,
         source2DatasetLinks: Edge[],
         kind: string,
     ): void {
@@ -187,8 +185,8 @@ export class LineageGraphBuilderService {
                     const datasetId = this.sanitizeID(dataset.id);
                     sourceNodeLabel = pushSource.sourceName;
 
-                    let sourceNode: MaybeUndefined<Node> = sourceNodesByLabel.get(sourceNodeLabel);
-                    if (isNil(sourceNode)) {
+                    let sourceNode: MaybeUndefined<LineageGraphNode> = sourceNodesByLabel.get(sourceNodeLabel);
+                    if (sourceNode === undefined) {
                         sourceNode = {
                             id: `source-node-${sourceNodeLabel}`,
                             label: sourceNodeLabel,
@@ -196,19 +194,16 @@ export class LineageGraphBuilderService {
                                 this.graphNodeKindMapper[kind],
                                 sourceNodeLabel,
                             ),
-                            data: {
-                                kind: this.graphNodeKindMapper[kind],
-                                dataObject: {},
-                            } as LineageGraphNodeData,
+                            data: { kind: this.graphNodeKindMapper[kind] },
                         };
                         sourceNodesByLabel.set(sourceNodeLabel, sourceNode);
                     }
 
                     source2DatasetLinks.push({
-                        id: `${sourceNode?.id}__and__${datasetId}`,
-                        source: sourceNode?.id,
+                        id: `${sourceNode.id}__and__${datasetId}`,
+                        source: sourceNode.id,
                         target: datasetId,
-                    } as Edge);
+                    });
                 });
             });
         }
@@ -216,7 +211,7 @@ export class LineageGraphBuilderService {
 
     private buildSourceNodesByType(
         uniqueDatasets: DatasetLineageBasicsFragment[],
-        sourceNodesByLabel: Map<string, Node>,
+        sourceNodesByLabel: Map<string, LineageGraphNode>,
         source2DatasetLinks: Edge[],
         kind: string,
     ): void {
@@ -233,25 +228,22 @@ export class LineageGraphBuilderService {
                     requireValue(dataset.metadata.currentPollingSource?.fetch ?? null),
                 );
 
-                let sourceNode: MaybeUndefined<Node> = sourceNodesByLabel.get(sourceNodeLabel);
-                if (isNil(sourceNode)) {
+                let sourceNode: MaybeUndefined<LineageGraphNode> = sourceNodesByLabel.get(sourceNodeLabel);
+                if (sourceNode === undefined) {
                     sourceNode = {
                         id: `source-node-${datasetId}`,
                         label: sourceNodeLabel,
                         dimension: this.nodeSizeService.sourceNodeSize(this.graphNodeKindMapper[kind], sourceNodeLabel),
-                        data: {
-                            kind: this.graphNodeKindMapper[kind],
-                            dataObject: {},
-                        } as LineageGraphNodeData,
+                        data: { kind: this.graphNodeKindMapper[kind] },
                     };
                     sourceNodesByLabel.set(sourceNodeLabel, sourceNode);
                 }
 
                 source2DatasetLinks.push({
-                    id: `${sourceNode?.id}__and__${datasetId}`,
-                    source: sourceNode?.id,
+                    id: `${sourceNode.id}__and__${datasetId}`,
+                    source: sourceNode.id,
                     target: datasetId,
-                } as Edge);
+                });
             });
         }
     }
@@ -264,7 +256,7 @@ export class LineageGraphBuilderService {
         return new URL(url).hostname;
     }
 
-    private graphNodeKindMapper: Record<string, LineageGraphNodeKind> = {
+    private graphNodeKindMapper: Record<string, LineageGraphSourceNodeKind> = {
         FetchStepUrl: LineageGraphNodeKind.Source,
         FetchStepMqtt: LineageGraphNodeKind.Mqtt,
         FetchStepEthereumLogs: LineageGraphNodeKind.EthereumLogs,

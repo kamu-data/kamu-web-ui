@@ -21,6 +21,7 @@ import {
     GetDatasetBasicsWithPermissionsQuery,
     GetDatasetDataSqlRunQuery,
     GetMetadataBlockQuery,
+    MetadataBlockFragment,
 } from "@api/kamu.graphql.interface";
 import { TEST_LOGIN } from "@api/mock/auth.mock";
 import { DatasetsAccountResponse } from "@interface/dataset.interface";
@@ -397,6 +398,50 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
     },
 };
 
+export const mockMetadataBlockByHash: MetadataBlockFragment = {
+    __typename: "MetadataBlockExtended",
+    blockHash: "zW1hNbxPz28K1oLNGbddudUzKKLT9LDPh8chjksEo6HcDev",
+    prevBlockHash: "zW1abnmxotsSC7H6SyfbL7bpWtQrMSQktUfiJds3KWX1xfm",
+    systemTime: "2022-08-05T21:20:08.053635579+00:00",
+    sequenceNumber: 6,
+    author: {
+        __typename: "Account",
+        ...mockOwnerFieldsWithAvatar,
+    },
+    event: {
+        __typename: "ExecuteTransform",
+        newData: {
+            __typename: "DataSlice",
+            offsetInterval: {
+                __typename: "OffsetInterval",
+                start: 0,
+                end: 596125,
+            },
+            logicalHash: "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
+            physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
+            size: 2323,
+        },
+        prevCheckpoint: null,
+        prevOffset: null,
+        newWatermark: "2022-08-01T00:00:00+00:00",
+        queryInputs: [
+            {
+                __typename: "ExecuteTransformInput",
+                datasetId: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+                prevBlockHash: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
+                newBlockHash: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
+                prevOffset: null,
+                newOffset: 596125,
+            },
+        ],
+        newCheckpoint: {
+            __typename: "Checkpoint",
+            physicalHash: "zW1otipGpjScUH8C2RfaF4s8RshReBbQVPDf2fPrp2R8Ft2",
+            size: 2560,
+        },
+    },
+};
+
 export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
     datasets: {
         __typename: "Datasets",
@@ -408,49 +453,7 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                     __typename: "MetadataChain",
                     blockByHashEncoded:
                         "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2022-08-05T21:17:30.621941313Z\n  prevBlockHash: zW1auBfep4NvrY6RqNN7asdjTzuNMAugdcsw7VfrsQFDqj1\n  sequenceNumber: 3\n  event:\n    kind: setInfo\n    description: British Columbia COVID-19 case data updated regularly from the B.C. Centre for Disease Control, Provincial Health Services Authority and the B.C. Ministry of Health.\n    keywords:\n    - Healthcare\n    - Epidemiology\n    - COVID-19\n    - SARS-CoV-2\n    - Disaggregated\n    - Anonymized\n    - British Columbia\n    - Canada\n",
-                    blockByHash: {
-                        __typename: "MetadataBlockExtended",
-                        blockHash: "zW1hNbxPz28K1oLNGbddudUzKKLT9LDPh8chjksEo6HcDev",
-                        prevBlockHash: "zW1abnmxotsSC7H6SyfbL7bpWtQrMSQktUfiJds3KWX1xfm",
-                        systemTime: "2022-08-05T21:20:08.053635579+00:00",
-                        sequenceNumber: 6,
-                        author: {
-                            __typename: "Account",
-                            ...mockOwnerFieldsWithAvatar,
-                        },
-                        event: {
-                            __typename: "ExecuteTransform",
-                            newData: {
-                                __typename: "DataSlice",
-                                offsetInterval: {
-                                    __typename: "OffsetInterval",
-                                    start: 0,
-                                    end: 596125,
-                                },
-                                logicalHash: "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
-                                physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
-                                size: 2323,
-                            },
-                            prevCheckpoint: null,
-                            prevOffset: null,
-                            newWatermark: "2022-08-01T00:00:00+00:00",
-                            queryInputs: [
-                                {
-                                    __typename: "ExecuteTransformInput",
-                                    datasetId: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
-                                    prevBlockHash: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
-                                    newBlockHash: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
-                                    prevOffset: null,
-                                    newOffset: 596125,
-                                },
-                            ],
-                            newCheckpoint: {
-                                __typename: "Checkpoint",
-                                physicalHash: "zW1otipGpjScUH8C2RfaF4s8RshReBbQVPDf2fPrp2R8Ft2",
-                                size: 2560,
-                            },
-                        },
-                    },
+                    blockByHash: mockMetadataBlockByHash,
                 },
                 currentDownstreamDependenciesCount: 3,
             },

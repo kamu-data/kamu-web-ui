@@ -14,10 +14,13 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { VersionedFileEntryDataFragment } from "@api/kamu.graphql.interface";
 
 import { VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
-import { mockDatasetAsVersionedFileQuery } from "src/app/search/mock.data";
+import {
+    MOCK_VERSIONED_FILE_NAME,
+    mockDatasetAsVersionedFileQuery,
+    mockVersionedFileEntryLatest,
+} from "src/app/search/mock.data";
 
 import { DatasetAsVersionedFileService } from "../../../../services/dataset-as-versioned-file.service";
 import { FileInformationSectionComponent } from "./file-information-section.component";
@@ -28,9 +31,8 @@ describe("FileInformationSectionComponent", () => {
     let datasetAsVersionedFileService: DatasetAsVersionedFileService;
 
     const MOCK_VERSIONED_VIEW_FILE: VersionedFileView = {
-        name: mockDatasetAsVersionedFileQuery.datasets.byId?.name as string,
-        fileInfo: mockDatasetAsVersionedFileQuery.datasets.byId?.asVersionedFile
-            ?.latest as VersionedFileEntryDataFragment,
+        name: MOCK_VERSIONED_FILE_NAME,
+        fileInfo: mockVersionedFileEntryLatest,
         countVersions: mockDatasetAsVersionedFileQuery.datasets.byId?.asVersionedFile?.versions.totalCount,
     };
 

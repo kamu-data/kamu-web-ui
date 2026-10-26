@@ -8,6 +8,7 @@
 import {
     AccountProvider,
     AccountType,
+    AccountWithRoleConnectionDataFragment,
     AccountWithRoleDataFragment,
     DatasetAccessRole,
     DatasetKind,
@@ -33,6 +34,34 @@ export const MOCK_ACCOUNT_WITH_ROLE: AccountWithRoleDataFragment = {
     role: DatasetAccessRole.Maintainer,
 };
 
+export const mockDatasetCollaboratorsConnection: AccountWithRoleConnectionDataFragment = {
+    nodes: [
+        {
+            account: {
+                id: "did:odf:fed0137bc34f6025c18860e00d69737134224c02b6c27e069c9f3610a93ace02aba01",
+                accountName: "test-user",
+                displayName: "Test User",
+                accountType: AccountType.User,
+                avatarUrl: "https://avatars.githubusercontent.com/u/51016717?v=4",
+                isAdmin: false,
+                __typename: "Account",
+                accountProvider: AccountProvider.Password,
+            },
+            role: DatasetAccessRole.Maintainer,
+            __typename: "AccountWithRole",
+        },
+    ],
+    totalCount: 1,
+    pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+        currentPage: 0,
+        totalPages: 1,
+        __typename: "PageBasedInfo",
+    },
+    __typename: "AccountWithRoleConnection",
+};
+
 export const mockDatasetListCollaboratorsQuery: DatasetListCollaboratorsQuery = {
     datasets: {
         byId: {
@@ -49,33 +78,7 @@ export const mockDatasetListCollaboratorsQuery: DatasetListCollaboratorsQuery = 
             },
             __typename: "Dataset",
             collaboration: {
-                accountRoles: {
-                    nodes: [
-                        {
-                            account: {
-                                id: "did:odf:fed0137bc34f6025c18860e00d69737134224c02b6c27e069c9f3610a93ace02aba01",
-                                accountName: "test-user",
-                                displayName: "Test User",
-                                accountType: AccountType.User,
-                                avatarUrl: "https://avatars.githubusercontent.com/u/51016717?v=4",
-                                isAdmin: false,
-                                __typename: "Account",
-                                accountProvider: AccountProvider.Password,
-                            },
-                            role: DatasetAccessRole.Maintainer,
-                            __typename: "AccountWithRole",
-                        },
-                    ],
-                    totalCount: 1,
-                    pageInfo: {
-                        hasNextPage: false,
-                        hasPreviousPage: false,
-                        currentPage: 0,
-                        totalPages: 1,
-                        __typename: "PageBasedInfo",
-                    },
-                    __typename: "AccountWithRoleConnection",
-                },
+                accountRoles: mockDatasetCollaboratorsConnection,
                 __typename: "DatasetCollaboration",
             },
         },

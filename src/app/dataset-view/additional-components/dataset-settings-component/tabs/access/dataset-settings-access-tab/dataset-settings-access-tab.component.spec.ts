@@ -17,9 +17,9 @@ import { provideToastr } from "ngx-toastr";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
-import { AccountWithRoleConnectionDataFragment, DatasetAccessRole } from "@api/kamu.graphql.interface";
+import { DatasetAccessRole } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
-import { MOCK_ACCOUNT_WITH_ROLE, mockDatasetListCollaboratorsQuery } from "@api/mock/dataset-collaborations.mock";
+import { MOCK_ACCOUNT_WITH_ROLE, mockDatasetCollaboratorsConnection } from "@api/mock/dataset-collaborations.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -83,10 +83,7 @@ describe("DatasetSettingsAccessTabComponent", () => {
         modalService = TestBed.inject(ModalService);
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         spyOn(datasetCollaborationsService, "listCollaborators").and.returnValue(
-            of(
-                mockDatasetListCollaboratorsQuery.datasets.byId?.collaboration
-                    .accountRoles as AccountWithRoleConnectionDataFragment,
-            ),
+            of(mockDatasetCollaboratorsConnection),
         );
         component = fixture.componentInstance;
         setComponentInput(fixture, "accessViewData", {
@@ -166,9 +163,7 @@ describe("DatasetSettingsAccessTabComponent", () => {
         expect(unsetRoleCollaboratorSpy).toHaveBeenCalledOnceWith(
             jasmine.objectContaining({
                 datasetId: component.datasetBasics.id,
-                accountIds: [
-                    mockDatasetListCollaboratorsQuery.datasets.byId?.collaboration.accountRoles.nodes[0].account.id,
-                ],
+                accountIds: [mockDatasetCollaboratorsConnection.nodes[0].account.id],
             }),
         );
     });

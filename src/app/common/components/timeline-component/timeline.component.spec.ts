@@ -19,8 +19,7 @@ import {
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
-import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
-import { mockGetMetadataBlockQuery, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
+import { mockMetadataBlockByHash, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 
 import { mockPageBasedInfo } from "src/app/search/mock.data";
 
@@ -40,9 +39,7 @@ describe("TimelineComponent", () => {
         component = fixture.componentInstance;
         setComponentInput(fixture, "datasetName", TEST_DATASET_NAME);
         setComponentInput(fixture, "pageInfo", mockPageBasedInfo);
-        setComponentInput(fixture, "history", [
-            mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHash as MetadataBlockFragment,
-        ]);
+        setComponentInput(fixture, "history", [mockMetadataBlockByHash]);
 
         fixture.detectChanges();
     });
@@ -53,7 +50,7 @@ describe("TimelineComponent", () => {
 
     it("should check avatar url", () => {
         const imageElement = findElementByDataTestId(fixture, "timeline-avatarUrl-0") as HTMLImageElement;
-        const src = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHash?.author.avatarUrl;
+        const src = mockMetadataBlockByHash.author.avatarUrl;
         const result = src ? src : AppValues.DEFAULT_AVATAR_URL;
         expect(imageElement.src).toEqual(result);
     });

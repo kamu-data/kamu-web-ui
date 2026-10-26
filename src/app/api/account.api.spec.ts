@@ -12,6 +12,7 @@ import { first } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { AccountApi } from "@api/account.api";
 import {
     AccountByNameDocument,
@@ -43,7 +44,6 @@ import {
     DatasetFlowType,
     DeleteAccountByNameDocument,
     DeleteAccountByNameMutation,
-    FlowConnectionDataFragment,
     FlowProcessOrderField,
     OrderingDirection,
 } from "@api/kamu.graphql.interface";
@@ -146,9 +146,8 @@ describe("AccountApi", () => {
                 filters: ACCOUNT_FILTERS,
             })
             .subscribe((list: AccountListFlowsQuery) => {
-                expect((list.accounts.byName?.flows?.runs.table as FlowConnectionDataFragment).totalCount).toEqual(
-                    (mockAccountListFlowsQuery.accounts.byName?.flows?.runs.table as FlowConnectionDataFragment)
-                        .totalCount,
+                expect(requireValue(list.accounts.byName?.flows.runs.table ?? null).totalCount).toEqual(
+                    requireValue(mockAccountListFlowsQuery.accounts.byName?.flows.runs.table ?? null).totalCount,
                 );
             });
 

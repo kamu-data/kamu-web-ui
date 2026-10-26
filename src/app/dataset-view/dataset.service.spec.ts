@@ -13,15 +13,13 @@ import { first } from "rxjs/operators";
 import { ApolloLink, InMemoryCache } from "@apollo/client/core";
 import { Apollo, APOLLO_OPTIONS } from "apollo-angular";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { DatasetNotFoundError, SqlExecutionError } from "@common/values/errors";
 import { DatasetApi } from "@api/dataset.api";
 import {
     DataQueryResultErrorKind,
     DatasetBasicsFragment,
-    DatasetDataSizeFragment,
-    DatasetOverviewFragment,
     DatasetPermissionsFragment,
-    MetadataBlockFragment,
 } from "@api/kamu.graphql.interface";
 import {
     mockDatasetBasicsWithPermissionQuery,
@@ -88,19 +86,17 @@ describe("AppDatasetService", () => {
         const datasetChangesSubscription$ = service.datasetChanges
             .pipe(first())
             .subscribe((dataset: DatasetBasicsFragment) => {
-                const expectedDatasetBasics = mockDatasetMainDataResponse.datasets
-                    .byOwnerAndName as DatasetBasicsFragment;
+                const expectedDatasetBasics = requireValue(mockDatasetMainDataResponse.datasets.byOwnerAndName ?? null);
                 expect(dataset).toBe(expectedDatasetBasics);
             });
 
         const datasetOverviewSubscription$ = datasetSubsService.overviewChanges
             .pipe(first())
             .subscribe((overviewDataUpdate: OverviewUpdate) => {
-                const expectedOverview = mockDatasetMainDataResponse.datasets.byOwnerAndName as DatasetOverviewFragment;
+                const expectedOverview = requireValue(mockDatasetMainDataResponse.datasets.byOwnerAndName ?? null);
                 expect(overviewDataUpdate.overview).toEqual(expectedOverview);
 
-                const expectedSize = mockDatasetMainDataResponse.datasets.byOwnerAndName
-                    ?.data as DatasetDataSizeFragment;
+                const expectedSize = requireValue(mockDatasetMainDataResponse.datasets.byOwnerAndName?.data ?? null);
                 expect(overviewDataUpdate.size).toEqual(expectedSize);
             });
 
@@ -210,8 +206,9 @@ describe("AppDatasetService", () => {
             .pipe(first())
             .subscribe((historyUpdate: MaybeNull<DatasetHistoryUpdate>) => {
                 if (historyUpdate) {
-                    const expectedNodes = mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks
-                        .nodes as MetadataBlockFragment[];
+                    const expectedNodes = requireValue(
+                        mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks.nodes ?? null,
+                    );
                     expect(historyUpdate.history).toBe(expectedNodes);
                     expect(historyUpdate.pageInfo).toEqual({
                         __typename: "PageBasedInfo",

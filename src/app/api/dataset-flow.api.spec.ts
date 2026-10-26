@@ -10,6 +10,7 @@ import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { DatasetFlowApi } from "@api/dataset-flow.api";
 import {
     CancelFlowRunDocument,
@@ -26,7 +27,6 @@ import {
     DatasetTriggerResetFlowDocument,
     DatasetTriggerResetToMetadataFlowDocument,
     DatasetTriggerTransformFlowDocument,
-    FlowConnectionDataFragment,
     FlowTriggerBreakingChangeRule,
     GetDatasetFlowConfigsDocument,
     GetDatasetFlowConfigsQuery,
@@ -382,7 +382,7 @@ describe("DatasetFlowApi", () => {
                 filters: MOCK_FILTERS,
             })
             .subscribe((res: GetDatasetListFlowsQuery) => {
-                expect((res.datasets.byId?.flows.runs.table as FlowConnectionDataFragment).totalCount).toEqual(2);
+                expect(requireValue(res.datasets.byId?.flows.runs.table ?? null).totalCount).toEqual(2);
             });
 
         const op = controller.expectOne(GetDatasetListFlowsDocument);

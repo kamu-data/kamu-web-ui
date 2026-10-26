@@ -8,9 +8,6 @@
 import timekeeper from "timekeeper";
 
 import {
-    FetchStepContainer,
-    FetchStepFilesGlob,
-    FetchStepUrl,
     FlowStatus,
     FlowSummaryDataFragment,
     FlowTriggerBreakingChangeRule,
@@ -142,19 +139,19 @@ describe("FlowTableHelpers", () => {
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and FetchStepUrl`, () => {
         expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[0])).toEqual(
-            `Polling data from url: ${(mockFlowPollingSourceFragmentFetchUrl.fetch as FetchStepUrl).url}`,
+            `Polling data from url: ${mockFlowPollingSourceFragmentFetchUrl.fetch.url}`,
         );
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and FetchStepContainer`, () => {
         expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[8])).toEqual(
-            `Polling data from image: ${(mockFlowPollingSourceFragmentFetchImage.fetch as FetchStepContainer).image}`,
+            `Polling data from image: ${mockFlowPollingSourceFragmentFetchImage.fetch.image}`,
         );
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and FetchStepFilesGlob`, () => {
         expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[3])).toEqual(
-            `Polling data from file: ${(mockFlowPollingSourceFragmentFetchStepFilesGlob.fetch as FetchStepFilesGlob).path}`,
+            `Polling data from file: ${mockFlowPollingSourceFragmentFetchStepFilesGlob.fetch.path}`,
         );
     });
 
@@ -166,7 +163,7 @@ describe("FlowTableHelpers", () => {
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and waiting status `, () => {
         expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[3])).toEqual(
-            `Polling data from file: ${(mockFlowPollingSourceFragmentFetchStepFilesGlob.fetch as FetchStepFilesGlob).path}`,
+            `Polling data from file: ${mockFlowPollingSourceFragmentFetchStepFilesGlob.fetch.path}`,
         );
     });
 

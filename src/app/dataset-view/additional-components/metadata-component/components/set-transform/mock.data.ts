@@ -90,7 +90,7 @@ export const mockGetDatasetSchemaQuery: GetDatasetSchemaQuery = {
     },
 };
 
-export const mockParseSetTransformYamlType = {
+export const mockParseSetTransformYamlType: SetTransformYamlType = {
     kind: "SetTransform",
     inputs: [
         {
@@ -123,7 +123,7 @@ export const mockParseSetTransformYamlType = {
             },
         ],
     },
-} satisfies SetTransformYamlType;
+};
 
 export const mockPreprocessStepValue: PreprocessStepValue = {
     engine: "SPARK",

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { Node } from "@swimlane/ngx-graph";
+import { Edge, Node } from "@swimlane/ngx-graph";
 
 import {
     CompareChainsStatus,
@@ -545,37 +545,10 @@ export const MOCK_NODES: Node[] = [
     },
 ];
 
-export const MOCK_LINKS = [
+export const MOCK_LINKS: Edge[] = [
     {
         id: "didodfz4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj__and__didodfz4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
         source: "didodfz4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
         target: "didodfz4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
-    },
-];
-
-export const MOCK_CLUSTERS = [
-    {
-        id: "ROOT_cluster",
-        label: "ROOT",
-        data: {
-            customColor: "#A52A2A59",
-        },
-        position: {
-            x: 10,
-            y: 10,
-        },
-        childNodeIds: ["did:odf:z4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj"],
-    },
-    {
-        id: "DERIVATIVE_cluster",
-        label: "DERIVATIVE",
-        data: {
-            customColor: "#00800039",
-        },
-        position: {
-            x: 10,
-            y: 10,
-        },
-        childNodeIds: ["did:odf:z4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC"],
     },
 ];

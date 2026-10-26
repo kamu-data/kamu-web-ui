@@ -21,8 +21,8 @@ const TEXT_FONT_WEIGHT = 400;
 
 /**
  * Sizes lineage nodes from their texts, so that ngx-graph keeps the given dimensions instead of measuring
- * the rendered nodes. It measures the minimap copies as well, whose text browsers size inconsistently at
- * the minimap's scale.
+ * the rendered nodes: ngx-graph also measures each node's minimap copy, whose text browsers size
+ * inconsistently at the minimap's scale.
  */
 @Injectable({
     providedIn: "root",
@@ -30,9 +30,15 @@ const TEXT_FONT_WEIGHT = 400;
 export class LineageNodeSizeService {
     private context: MaybeNull<CanvasRenderingContext2D> = null;
 
-    /** Emits once the page fonts have loaded, so that text is measured in the font it renders with */
+    /** Emits once the node fonts have loaded, so that text is measured in the font it renders with */
     public whenFontsReady(): Observable<void> {
-        return from(document.fonts.ready).pipe(map(() => undefined));
+        // Browsers load a font face only once something uses it, so the faces are requested explicitly
+        return from(
+            Promise.all([
+                document.fonts.load(this.font(LABEL_FONT_WEIGHT)),
+                document.fonts.load(this.font(TEXT_FONT_WEIGHT)),
+            ]),
+        ).pipe(map(() => undefined));
     }
 
     public datasetNodeSize(datasetName: string, accountName: string): NodeDimension {
@@ -65,10 +71,14 @@ export class LineageNodeSizeService {
 
     private textWidth(text: string, fontWeight: number): number {
         const context = this.canvasContext();
+        context.font = this.font(fontWeight);
+        return context.measureText(text).width;
+    }
+
+    private font(fontWeight: number): string {
         // Node texts inherit the page font
         const { fontSize, fontFamily } = getComputedStyle(document.body);
-        context.font = `${fontWeight} ${fontSize} ${fontFamily}`;
-        return context.measureText(text).width;
+        return `${fontWeight} ${fontSize} ${fontFamily}`;
     }
 
     private canvasContext(): CanvasRenderingContext2D {

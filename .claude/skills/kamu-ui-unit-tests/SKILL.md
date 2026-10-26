@@ -60,7 +60,7 @@ beforeEach(async () => {
   an input change, set the input and call `fixture.detectChanges()`. Never call `ngOnChanges`
   with a hand-built `SimpleChanges` (eslint rejects it). Never call `ngOnInit()` again on a
   component the first `detectChanges()` already initialised: it subscribes a second time and
-  tests a state the app never reaches. Older specs that still do it are fixed when next edited.
+  tests a state the app never reaches.
 - `src/test.ts` sets `errorOnUnknownProperties` and `errorOnUnknownElements`, so binding an
   unknown property or using an undeclared element in a spec template throws instead of logging.
 - The same NG0100 also flags a template value that differs on every evaluation, such as a getter
@@ -126,24 +126,24 @@ specs written with the DOM helpers stay as they are until they are rewritten for
 In specs that already use them, and in a new spec only for a single trivial check (one element
 present or absent, with no harness to extend), the helpers in
 `@common/helpers/base-test.helpers.spec` select by `data-test-id`:
-`getElementByDataTestId`, `findElementByDataTestId`, `emitClickOnElementByDataTestId`,
-`checkVisible`, `setFieldValue`, `dispatchInputEvent`, `checkButtonDisabled`,
-`checkInputDisabled`, `findComponentInstance`, `findComponentInstances`,
-`findComponentInstanceByDataTestId`, plus `routerMock`, `snapshotParamMapMock` and
-`registerMatSvgIcons()`. Add an attribute to the template rather than selecting by CSS class or
+`getElementByDataTestId`, `findElementByDataTestId`, `findAllElementsByDataTestId`,
+`emitClickOnElementByDataTestId`, `checkVisible`, `setFieldValue`, `dispatchInputEvent`,
+`checkButtonDisabled`, `checkInputDisabled`, `findComponentInstance`, `findComponentInstances`,
+`findComponentInstanceByDataTestId`, plus `snapshotParamMapMock` and `registerMatSvgIcons()`. Add an attribute to the template rather than selecting by CSS class or
 element structure.
 
 A spec never casts a lookup result. `getElementByDataTestId`, `findElementByDataTestId` and
 `findNativeElement` take the element class as an optional last argument
 (`getElementByDataTestId(fixture, "save-btn", HTMLButtonElement)`) and return that type;
-`nativeElementOf(debugElement, HTMLElement)` does the same for a `DebugElement`. Each checks the
-class with `instanceof` and throws on a mismatch. A component instance comes from
-`findComponentInstance` or `findComponentInstanceByDataTestId`, never from `componentInstance`.
+`findAllElementsByDataTestId(fixture, "block-hash", HTMLElement)` requires it and returns every
+match. Each checks the class with `instanceof` and throws on a mismatch. A component instance
+comes from `findComponentInstance` or `findComponentInstanceByDataTestId`, never from a
+`DebugElement`'s `componentInstance`.
 
 A spec does not query `fixture.debugElement` inline (`query(By.directive(...))`,
-`queryAll(...)`): rendered components and directives are reached through
-`findComponentInstance` / `findComponentInstances`, and a query no helper covers yet becomes a
-new helper in `base-test.helpers.spec.ts`.
+`queryAll(...)`): elements are reached through the lookups above, rendered components and
+directives through `findComponentInstance` / `findComponentInstances`, and a query no helper
+covers yet becomes a new helper in `base-test.helpers.spec.ts`.
 
 ## API class tests
 
@@ -171,8 +171,8 @@ One case per api method: assert the variables sent, flush a fixture typed with t
   Stub the services it injects with `spyOn` / `spyOnProperty`.
 - Build the route it receives with `routeSnapshot({ params, queryParams, data, parent, children })`:
   a real `ActivatedRouteSnapshot`, whose `paramMap`, `parent` and `pathFromRoot` work as in a
-  navigation. `RouterStateSnapshot` has no public constructor, so the helpers pass the one
-  stand-in `routerStateSnapshot(url)`; the app's guards and resolvers read only its `url`.
+  navigation. The router state they pass is a stand-in that carries only `url`, the one field
+  the app's guards and resolvers read.
 - A guard redirect is asserted by where it leads, not by `false`:
   `` expectRedirectTo(await runCanActivate(guard, route, url), `/${ProjectLinks.URL_LOGIN}`) ``
   (`account/guards/account.guard.spec.ts`).
@@ -198,17 +198,16 @@ or misspelled field before any test runs. A type assertion switches that check o
 
 - Every exported mock is declared with its type:
   - a response fixture with the generated `XxxQuery` / `XxxMutation`;
-  - a slice of GraphQL data with the generated `XxxFragment`, or with the union member a spec
-    needs (`{ __typename: "AddData" } & AddDataEventFragment`); a part of a bigger fragment
-    takes its named sub-fragment type, never `XxxFragment["field"]` (`kamu-ui-graphql-api`,
-    "Documents");
+  - a slice of GraphQL data with the fragment type the code under test takes
+    (`kamu-ui-graphql-api`, "Documents"), or with the union member a spec needs
+    (`{ __typename: "AddData" } & AddDataEventFragment`);
   - a view model with its app interface (`OverviewUpdate`).
 
   A field the spec does not need takes its empty value (`schema: null`, `[]`); it is not dropped
   from the type with `Omit` or `Partial`.
-- Specs and mocks hold no type assertions at all: no `{ ... } as T`, no `mock.a?.b as T`, no
-  `as unknown as T`, no `as HTMLButtonElement`. eslint's `consistent-type-assertions` rejects
-  every one. Replace each as follows:
+- Specs, mocks, harnesses and the test modules in `common/modules` hold no type assertions at
+  all: no `{ ... } as T`, no `mock.a?.b as T`, no `as unknown as T`, no `as HTMLButtonElement`.
+  eslint's `consistent-type-assertions` rejects every one. Replace each as follows:
 
   | The value | Use |
   |---|---|
@@ -217,6 +216,7 @@ or misspelled field before any test runs. A type assertion switches that check o
   | is a variant of a typed mock | a spread: `{ ...structuredClone(mockX), field: value }` |
   | is a browser object such as `File` | the constructor: `new File(["a,b"], "data.csv", { type: "text/csv" })` |
   | is a DOM element or a component instance | the typed lookups ("DOM helpers") |
+  | is a DOM property a harness reads, such as a `<select>` value | a lookup in the enum's values that throws on anything else (`time-delta-form.harness.ts`) |
   | is a spy's call arguments | the spy `spyOn` returned, typed as `jasmine.Spy<Service["method"]>` |
   | still does not fit the component's input | a wrong input type: type the input with what reaches it (`kamu-ui-angular-style`, "Component anatomy"), not the value with a cast |
 
@@ -260,9 +260,9 @@ or misspelled field before any test runs. A type assertion switches that check o
 | Approach | Why rejected |
 |---|---|
 | Assigning an input field directly (`component.foo = x`) | Skips `ngOnChanges` and setters and does not re-render an OnPush view: readme-section specs asserted on a state `ngOnChanges` would have overwritten, and clicked a button the real view hides |
-| `fixture.componentRef.setInput("name", value)` with `satisfies` added by hand | The name is a string and the value `unknown`, so nothing is checked unless someone remembers `satisfies`, and an unknown name only logged NG0303. Moving 397 calls to the typed helper exposed 16 mismatches, among them a GitHub callback input typed `string` that the router sets to `undefined` |
-| Calling `ngOnChanges` with a hand-built `SimpleChanges` | Tests a change Angular never sends. The base-editor specs ran the hook twice per change, once through change detection and once by hand. The request-timer spec hid that the hook threw when only its `class` input changed |
-| Casting test data to the expected type (`{ ... } as T`, `mock.a?.b as T`) | Hides missing, misspelled and stale fields. The overview mocks kept `addedOutputData` after the schema renamed it to `newData`, and carried a polling source the query never fetches. The casts in the flows and secrets specs covered component inputs typed with full schema types that the app's data never matched |
+| `fixture.componentRef.setInput("name", value)` with `satisfies` added by hand | The name is a string and the value `unknown`, so nothing is checked unless someone remembers `satisfies`, and an unknown name only logs NG0303. Values that do not fit their inputs pass unnoticed, such as `undefined` for a GitHub callback input typed `string` that the router does set to `undefined` |
+| Calling `ngOnChanges` with a hand-built `SimpleChanges` | Tests a change Angular never sends. Combined with change detection it runs the hook twice per change, and a hand-picked change set hides a hook that throws on a change Angular does send, such as one where only the request timer's `class` input changed |
+| Casting test data to the expected type (`{ ... } as T`, `mock.a?.b as T`) | Hides missing, misspelled and stale fields: a cast mock keeps a field the schema has renamed (`addedOutputData` for `newData`) or one the query never fetches, and still compiles. It also hides a wrong input type, such as a component input typed with a full schema type that the app's data never matches |
 | Selecting elements by CSS class or tag structure | Breaks on styling changes; `data-test-id` is the contract between template and test |
 | Raw `nativeElement` clicks inside Material components | Depends on Material's internal DOM; the Material harnesses are the supported API |
 | Hand-built Apollo response objects inline in specs | Not reusable and not type-checked against codegen; fixtures go to `api/mock/` |

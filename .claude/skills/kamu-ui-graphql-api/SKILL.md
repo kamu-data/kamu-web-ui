@@ -135,7 +135,7 @@ response fixture in `src/app/api/mock/<domain>.mock.ts` — the pattern is owned
 | Approach | Why rejected |
 |---|---|
 | Injecting `XxxGQL` directly in components or domain services | Spreads fetch policy and result unwrapping across the app; the api class is the one place they live |
-| Typing results with full schema types (`DatasetFlowProcesses`, `ViewDatasetEnvVar`) | The type promises fields the query never fetched, so the compiler cannot tell when code reads one, and every spec had to cast its fragment-shaped mocks up to the schema type. The flows and secrets tabs now take fragment types and their specs need no casts |
+| Typing results with full schema types (`DatasetFlowProcesses`, `ViewDatasetEnvVar`) | The type promises fields the query never fetched, so the compiler cannot tell when code reads one, and every spec has to cast its fragment-shaped mocks up to the schema type, which hides a stale field as well. A fragment-typed input takes the same mocks with no cast |
 | Typing a part of a result as `XxxFragment["field"]` or `Extract<XxxFragment, …>` | The type has no name to search for or read in a signature, chains grow with the nesting (`["datasets"]["byId"]…["byType"]`), and the selection it describes cannot be reused by another document. A named sub-fragment gives the part a name in both the document and the code |
 | Inline `gql` template literals in TypeScript | Codegen would not see them, so there would be no generated types or `Document` for tests |
 | Editing `kamu.graphql.interface.ts` to unblock a build | Overwritten by the next codegen; fix the document or the schema instead |
